@@ -1,6 +1,7 @@
+use serde::Deserialize;
 use serde::Serialize;
 
-#[derive(Clone, Debug, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct FolderMenuItem {
     pub page_id: String,

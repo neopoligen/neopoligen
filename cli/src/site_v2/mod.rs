@@ -90,19 +90,43 @@ impl SiteV2 {
         }
     }
 
-    pub fn make_folder_menu_data(&self) {
-        let mut binding = self.holder.lock().unwrap();
-        binding.insert("alfa".to_string(), "asdf".to_string());
-    }
+    // pub fn make_folder_menu_data(&self) {
+    //     let mut binding = self.holder.lock().unwrap();
+    //     binding.insert("initial_menu_data".to_string(), "asdf".to_string());
+    // }
 
     pub fn folder_menu(&self, args: &[Value]) -> Vec<FolderMenuItem> {
-        self.make_folder_menu_data();
         let mut binding = self.holder.lock().unwrap();
-        match binding.get("alfa") {
-            Some(v) => println!("got it"),
-            None => println!("didn't get it"),
+        match binding.get("initial_menu_data") {
+            Some(data) => serde_json::from_str(&data).unwrap(),
+            None => {
+                let r = args[1]
+                    .try_iter()
+                    .unwrap()
+                    .filter_map(|folder_vecs| {
+                        let folder_pattern: Vec<String> = folder_vecs
+                            .try_iter()
+                            .unwrap()
+                            .map(|f| f.to_string())
+                            .collect();
+                        self.folder_menu_index_finder(folder_pattern)
+                    })
+                    .collect();
+                binding.insert(
+                    "initial_menu_data".to_string(),
+                    serde_json::to_string(&r).expect("json serializtion"),
+                );
+                r
+            }
         }
+    }
 
+    pub fn folder_menu_legacy(&self, args: &[Value]) -> Vec<FolderMenuItem> {
+        let binding = self.holder.lock().unwrap();
+        match binding.get("initial_menu_data") {
+            Some(_) => println!("got it"),
+            None => {}
+        }
         let r = args[1]
             .try_iter()
             .unwrap()
