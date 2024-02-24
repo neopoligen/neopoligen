@@ -19,7 +19,7 @@ use std::collections::BTreeMap;
 use std::fs;
 use url::Url;
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct SiteBuilder<'a> {
     pub config: Config,
     pub env: Environment<'a>,

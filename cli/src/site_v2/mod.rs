@@ -13,13 +13,15 @@ use minijinja::Value;
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
 use std::path::PathBuf;
+use std::sync::Mutex;
 use walkdir::WalkDir;
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct SiteV2 {
     pub config: Config,
     pub pages: BTreeMap<String, Page>,
     pub page_templates: BTreeMap<String, String>,
+    pub holder: Option<Mutex<BTreeMap<String, String>>>,
 }
 
 impl SiteV2 {

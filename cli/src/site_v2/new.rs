@@ -8,6 +8,7 @@ impl SiteV2 {
             config,
             pages: BTreeMap::new(),
             page_templates: BTreeMap::new(),
+            holder: None,
         }
     }
 }

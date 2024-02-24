@@ -9,6 +9,7 @@ impl SiteV2 {
             config: Config::mock_basic_config(),
             pages: BTreeMap::new(),
             page_templates: BTreeMap::new(),
+            holder: None,
         };
         let page_set = vec![
             Page::level1a_index(),

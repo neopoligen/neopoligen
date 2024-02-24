@@ -9,6 +9,7 @@ impl SiteV2 {
             config: Config::mock_basic_config(),
             pages: BTreeMap::new(),
             page_templates: BTreeMap::new(),
+            holder: None,
         };
         let p1 = Page::id12345c_tags();
         let p2 = Page::test_with_tags_2();
