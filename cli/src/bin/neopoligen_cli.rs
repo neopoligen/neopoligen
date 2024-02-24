@@ -38,7 +38,6 @@ async fn main() {
             Ok(neo_config) => {
                 let mut site_root = document_dir().unwrap();
                 site_root.push("Neopoligen");
-                site_root.push("sites");
                 site_root.push(neo_config.active_site);
                 let site_config = Config::new(site_root);
                 build_site(site_config.clone());

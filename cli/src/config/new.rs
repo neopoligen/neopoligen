@@ -18,7 +18,7 @@ impl Config {
         ));
 
         let site_general_configuration_root =
-            PathBuf::from(format!("{}/{}", site_configuration_root.display(),));
+            PathBuf::from(format!("{}", site_configuration_root.display(),));
 
         let default_language =
             get_config_file_lines(&site_general_configuration_root, "default-language.txt")[0]
