@@ -41,7 +41,7 @@ async fn main() {
                 site_root.push(neo_config.active_site);
                 let site_config = Config::new(site_root);
                 build_site(site_config.clone());
-                if false {
+                if true {
                     // this is the tmp flag to turn off the watch without getting a warning
                     run_web_server(site_config).await;
                 }
