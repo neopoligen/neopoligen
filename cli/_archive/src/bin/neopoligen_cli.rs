@@ -1,5 +1,5 @@
 use axum::Router;
-use dirs::config_dir;
+// use dirs::config_dir;
 use dirs::document_dir;
 use neopoligen_cli::config::Config;
 use neopoligen_cli::site_builder::SiteBuilder;
@@ -8,12 +8,14 @@ use notify_debouncer_mini::notify::*;
 use notify_debouncer_mini::DebounceEventResult;
 use notify_debouncer_mini::DebouncedEventKind;
 use serde::Deserialize;
-use serde_json;
+// use serde_json;
 use std::fs;
 use std::path::Path;
 // use std::path::PathBuf;
 use std::time::Duration;
 // use tauri::{api::shell::open, Manager};
+// use serde::Serialize;
+// use toml::Table;
 use tower_http::services::ServeDir;
 use tower_livereload::LiveReloadLayer;
 use tower_livereload::Reloader;
@@ -28,21 +30,32 @@ pub struct NeoConfig {
     active_site: String,
 }
 
+#[derive(Deserialize)]
+pub struct EngineConfig {
+    settings: EngineConfigSettings,
+}
+
+#[derive(Deserialize)]
+pub struct EngineConfigSettings {
+    active_site: String,
+}
+
 #[tokio::main]
 async fn main() {
     println!("Starting process...");
-    let mut neo_config_file = config_dir().unwrap();
-    neo_config_file.push("Neopoligen/config.json");
-    match fs::read_to_string(&neo_config_file) {
-        Ok(neo_config_string) => match serde_json::from_str::<NeoConfig>(&neo_config_string) {
-            Ok(neo_config) => {
+    let mut engine_config_file = document_dir().unwrap();
+    engine_config_file.push("Neopoligen");
+    engine_config_file.push("config.toml");
+    match fs::read_to_string(&engine_config_file) {
+        Ok(engine_config_string) => match toml::from_str::<EngineConfig>(&engine_config_string) {
+            Ok(engine_config) => {
                 let mut site_root = document_dir().unwrap();
                 site_root.push("Neopoligen");
-                site_root.push(neo_config.active_site);
+                site_root.push(engine_config.settings.active_site);
                 let site_config = Config::new(site_root);
                 build_site(site_config.clone());
+                // this is the tmp flag to turn off the watch without getting a warning
                 if true {
-                    // this is the tmp flag to turn off the watch without getting a warning
                     run_web_server(site_config).await;
                 }
             }
@@ -50,6 +63,7 @@ async fn main() {
                 println!("{}", e)
             }
         },
+
         Err(e) => {
             println!("{}", e)
         }
