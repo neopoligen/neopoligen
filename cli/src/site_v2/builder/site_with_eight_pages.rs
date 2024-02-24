@@ -2,6 +2,7 @@ use crate::config::Config;
 use crate::page::Page;
 use crate::site_v2::SiteV2;
 use std::collections::BTreeMap;
+use std::sync::Mutex;
 
 impl SiteV2 {
     pub fn site_with_eight_pages() -> SiteV2 {
@@ -9,7 +10,7 @@ impl SiteV2 {
             config: Config::mock_basic_config(),
             pages: BTreeMap::new(),
             page_templates: BTreeMap::new(),
-            holder: None,
+            holder: Mutex::new(BTreeMap::new()),
         };
         let p1 = Page::id12345c_tags();
         let p2 = Page::test_with_tags_2();

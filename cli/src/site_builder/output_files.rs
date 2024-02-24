@@ -2,14 +2,25 @@ use crate::site_builder::SiteBuilder;
 use crate::site_v2::SiteV2;
 use minijinja::context;
 use minijinja::Value;
+use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
+use std::sync::Mutex;
 
 impl SiteBuilder<'_> {
     pub fn output_files(&self) {
         let template_file = "includes/splitter.jinja";
         let mut site = SiteV2::new(self.config.clone());
         site.load_pages();
+
+        // let binding = &site.holder.lock().unwrap();
+        // let test_value = binding.lock().unwrap();
+        // test_value.insert("ping".to_string(), "pong".to_string());
+
+        // site.holder = Some(Mutex::new(BTreeMap::new()));
+        // let binding = &mut site.holder.unwrap();
+        // let test_value = binding.lock().unwrap();
+        // // test_value.insert("ping".to_string(), "pong".to_string());
 
         /////////////////////////////////////
         // Here be dragons

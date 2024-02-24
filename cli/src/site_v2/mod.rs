@@ -21,7 +21,7 @@ pub struct SiteV2 {
     pub config: Config,
     pub pages: BTreeMap<String, Page>,
     pub page_templates: BTreeMap<String, String>,
-    pub holder: Option<Mutex<BTreeMap<String, String>>>,
+    pub holder: Mutex<BTreeMap<String, String>>,
 }
 
 impl SiteV2 {
@@ -90,7 +90,19 @@ impl SiteV2 {
         }
     }
 
+    pub fn make_folder_menu_data(&self) {
+        let mut binding = self.holder.lock().unwrap();
+        binding.insert("alfa".to_string(), "asdf".to_string());
+    }
+
     pub fn folder_menu(&self, args: &[Value]) -> Vec<FolderMenuItem> {
+        self.make_folder_menu_data();
+        let mut binding = self.holder.lock().unwrap();
+        match binding.get("alfa") {
+            Some(v) => println!("got it"),
+            None => println!("didn't get it"),
+        }
+
         let r = args[1]
             .try_iter()
             .unwrap()
