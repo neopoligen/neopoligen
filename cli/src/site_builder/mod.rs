@@ -16,6 +16,8 @@ use crate::site_v2::SiteV2;
 use fs_extra::dir::copy;
 use minijinja::Environment;
 use std::collections::BTreeMap;
+use std::fs;
+use url::Url;
 
 #[derive(Debug, Clone)]
 pub struct SiteBuilder<'a> {
@@ -36,6 +38,22 @@ impl SiteBuilder<'_> {
         output_images_dir.push("images");
         match copy(images_dir, output_images_dir, &options) {
             Ok(_) => (),
+            Err(e) => println!("{}", e),
+        }
+    }
+
+    pub fn make_cname_file(&self) {
+        match Url::parse(self.config.domain.as_str()) {
+            Ok(url) => {
+                let mut cname_path = self.config.folders.site_output_root.clone();
+                cname_path.push("CNAME");
+                match url.host_str() {
+                    Some(domain) => {
+                        let _ = fs::write(cname_path, domain);
+                    }
+                    None => println!("Could not get domain name from config file"),
+                }
+            }
             Err(e) => println!("{}", e),
         }
     }

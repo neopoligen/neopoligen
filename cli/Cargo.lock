@@ -2233,6 +2233,7 @@ dependencies = [
  "tracing-appender",
  "tracing-chrome",
  "tracing-subscriber",
+ "url",
  "urlencoding",
  "uuid",
  "walkdir",

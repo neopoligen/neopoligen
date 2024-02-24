@@ -23,6 +23,7 @@ impl SiteBuilder<'_> {
             self.copy_assets();
             self.copy_extras();
             self.deploy_images();
+            self.make_cname_file();
         } else {
             println!("Encountered template errors. Process stopped");
         }
