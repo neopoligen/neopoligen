@@ -18,22 +18,6 @@ pub struct Site {
 }
 
 impl Site {
-    pub fn page_title_old(&self, id: &str) -> Option<String> {
-        let mut cache = self.cache.lock().unwrap();
-        let page_titles = cache.get_mut("page_title").unwrap();
-        match page_titles.get(id) {
-            Some(title) => title.clone(),
-            None => {
-                let title = match self.pages.get(id) {
-                    Some(page) => get_title_section_title(&page.ast),
-                    None => Some("(missing page)".to_string()),
-                };
-                page_titles.insert(id.to_string(), title.clone());
-                title
-            }
-        }
-    }
-
     pub fn page_title(&self, id: &str) -> Option<String> {
         let mut cache = self.cache.lock().unwrap();
         let page_titles = cache.get_mut("page_title").unwrap();
@@ -56,25 +40,6 @@ impl Site {
                 title
             }
         }
-
-        // match self.pages.get(id) {
-        //     Some(page) => get_title_from_metadata(&page.ast),
-        //     None => None,
-        // }
-
-        // let mut cache = self.cache.lock().unwrap();
-        // let page_titles = cache.get_mut("page_title").unwrap();
-        // match page_titles.get(id) {
-        //     Some(title) => title.clone(),
-        //     None => {
-        //         let title = match self.pages.get(id) {
-        //             Some(page) => get_title_section_title(&page.ast),
-        //             None => Some("(missing page)".to_string()),
-        //         };
-        //         page_titles.insert(id.to_string(), title.clone());
-        //         title
-        //     }
-        // }
     }
 
     fn prep_cache(&self) {
