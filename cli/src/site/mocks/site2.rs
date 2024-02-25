@@ -4,26 +4,26 @@ use crate::site::Site;
 impl Site {
     pub fn site2() -> Site {
         let mut site = Site::new();
-        site.pages.insert("s1_index".to_string(), Page::s1_index());
+        site.pages.insert("id_index".to_string(), Page::s2_index());
         site.pages
-            .insert("s1_only_metadata".to_string(), Page::s1_only_metadata());
+            .insert("id_only_metadata".to_string(), Page::s2_only_metadata());
         site.pages.insert(
-            "s1_title_from_content".to_string(),
-            Page::s1_title_from_content(),
+            "id_title_from_content".to_string(),
+            Page::s2_title_from_content(),
         );
         site.pages
-            .insert("s1_title_from_text".to_string(), Page::s1_title_from_text());
+            .insert("id_title_from_text".to_string(), Page::s2_title_from_text());
         site.pages.insert(
-            "s1_title_with_inline_span".to_string(),
-            Page::s1_title_with_inline_span(),
+            "id_title_with_inline_span".to_string(),
+            Page::s2_title_with_inline_span(),
         );
         site.pages.insert(
-            "s1_title_in_metadata".to_string(),
-            Page::s1_title_in_metadata(),
+            "id_title_in_metadata".to_string(),
+            Page::s2_title_in_metadata(),
         );
         site.pages.insert(
-            "s1_title_with_nested_spans".to_string(),
-            Page::s1_title_with_nested_spans(),
+            "id_title_with_nested_spans".to_string(),
+            Page::s2_title_with_nested_spans(),
         );
         site
     }

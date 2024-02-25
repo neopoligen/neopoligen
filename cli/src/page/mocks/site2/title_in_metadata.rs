@@ -4,18 +4,18 @@ use crate::page::Page;
 use std::path::PathBuf;
 
 impl Page {
-    pub fn s1_title_with_inline_span() -> Page {
+    pub fn s2_title_in_metadata() -> Page {
         let config = Config::site1_config();
-        let source_path = PathBuf::from(
-            "leading_folder/Neopoligen/dev-test-site/content/s1_title_with_inline_span.neo",
-        );
+        let source_path =
+            PathBuf::from("leading_folder/Neopoligen/dev-test-site/content/title_in_metadata.neo");
         let source = r#"-- title
 
-Title <<strong|With Inline>> Span
+This title should be overridded by metadata
 
 -- metadata
--- date: 2022-07-08 11:31:29
--- id: s1_title_with_inline_span
+-- date: 2024-02-24 19:11:09
+-- id: id_title_in_metadata
+-- title: This is the override title from metadata
 "#
         .to_string();
         let ast = parse(&source, &config);

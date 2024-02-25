@@ -4,19 +4,18 @@ use crate::page::Page;
 use std::path::PathBuf;
 
 impl Page {
-    pub fn s1_title_in_metadata() -> Page {
+    pub fn s2_title_with_nested_spans() -> Page {
         let config = Config::site1_config();
         let source_path = PathBuf::from(
-            "leading_folder/Neopoligen/dev-test-site/content/s1_title_in_metadata.neo",
+            "leading_folder/Neopoligen/dev-test-site/content/title_with_nested_spans.neo",
         );
         let source = r#"-- title
 
-This title should be overridded by metadata
+Nested <<strong|<<em|Span>>>> Test
 
 -- metadata
--- date: 2024-02-24 19:11:09
--- id: s1_title_in_metadata
--- title: This is the override title from metadata
+-- date: 2021-02-14 08:22:04
+-- id: id_title_with_nested_spans
 "#
         .to_string();
         let ast = parse(&source, &config);

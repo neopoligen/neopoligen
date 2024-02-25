@@ -4,17 +4,18 @@ use crate::page::Page;
 use std::path::PathBuf;
 
 impl Page {
-    pub fn s1_title_from_content() -> Page {
+    pub fn s2_title_with_inline_span() -> Page {
         let config = Config::site1_config();
         let source_path = PathBuf::from(
-            "leading_folder/Neopoligen/dev-test-site/content/s1_title_from_content.neo",
+            "leading_folder/Neopoligen/dev-test-site/content/title_with_inline_span.neo",
         );
-        let source = r#"-- bookmark
--- title: This Is A Title From A Bookmark Attribute
+        let source = r#"-- title
+
+Title <<strong|With Inline>> Span
 
 -- metadata
--- date: 2023-02-07 01:47:31
--- id: s1_title_from_content
+-- date: 2022-07-08 11:31:29
+-- id: title_with_inline_span
 "#
         .to_string();
         let ast = parse(&source, &config);

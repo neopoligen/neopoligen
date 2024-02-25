@@ -4,10 +4,10 @@ use crate::page::Page;
 use std::path::PathBuf;
 
 impl Page {
-    pub fn s1_title_from_text() -> Page {
+    pub fn s2_title_from_text() -> Page {
         let config = Config::site1_config();
         let source_path =
-            PathBuf::from("leading_folder/Neopoligen/dev-test-site/content/s1_title_from_text.neo");
+            PathBuf::from("leading_folder/Neopoligen/dev-test-site/content/title_from_text.neo");
         let source = r#"-- p
 
 This is a title from the first few words 
@@ -17,7 +17,7 @@ metadata
 
 -- metadata
 -- date: 2024-02-24 19:11:09
--- id: s1_title_from_text
+-- id: id_title_from_text
 "#
         .to_string();
         let ast = parse(&source, &config);
