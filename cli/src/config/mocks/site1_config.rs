@@ -115,7 +115,7 @@ impl Config {
 
         let standard_spans: Vec<String> = vec!["strong".to_string(), "link".to_string()];
 
-        let mut main_body_section_excludes: Vec<String> = vec![
+        let main_body_section_excludes: Vec<String> = vec![
             "comment".to_string(),
             "metadata".to_string(),
             "title".to_string(),

@@ -11,28 +11,24 @@ use std::sync::Mutex;
 
 pub struct Site {
     pub pages: BTreeMap<String, Page>,
-    pub cache: Mutex<BTreeMap<String, BTreeMap<String, String>>>,
+    pub cache: Mutex<BTreeMap<String, BTreeMap<String, Option<String>>>>,
 }
 
 impl Site {
     pub fn page_title(&self, id: &str) -> Option<String> {
-        let cache = self.cache.lock().unwrap();
-        let page_titles = cache.get("page_title").unwrap();
+        let mut cache = self.cache.lock().unwrap();
+        let page_titles = cache.get_mut("page_title").unwrap();
         match page_titles.get(id) {
-            Some(title) => Some(title.to_string()),
+            Some(title) => title.clone(),
             None => {
                 let title = match self.pages.get(id) {
-                    Some(page) => match get_title_section_title(&page.ast) {
-                        Some(t) => t,
-                        None => "Untitled".to_string(),
-                    },
-                    None => "(missing page)".to_string(),
+                    Some(page) => get_title_section_title(&page.ast),
+                    None => None,
                 };
-                Some(title)
+                page_titles.insert(id.to_string(), title.clone());
+                title
             }
         }
-
-        ////get_title_section_title(&self.pages.)
     }
 
     fn prep_cache(&self) {
