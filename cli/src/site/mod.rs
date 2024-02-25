@@ -12,6 +12,7 @@ use serde::Serialize;
 use std::collections::BTreeMap;
 use std::fmt::Display;
 use std::sync::Mutex;
+use urlencoding::encode;
 
 #[derive(Debug, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
@@ -22,8 +23,29 @@ pub struct Site {
 }
 
 impl Site {
-    pub fn page_href(&self, id: &str) -> String {
-        format!("/{}/{}/?{}", "en", "_index", "integration-site-home-page")
+    pub fn page_href(&self, id: &str) -> Option<String> {
+        match self.pages.get(id) {
+            Some(page) => Some(format!(
+                "/{}/{}/?{}",
+                self.config.default_language, id, "integration-site-home-page"
+            )),
+            None => None,
+        }
+    }
+
+    pub fn page_href_title(&self, id: &str) -> Option<String> {
+        match self.page_title(id) {
+            Some(title) => Some(title.to_lowercase().replace(" ", "-").to_string()),
+            None => None,
+        }
+
+        // match self.pages.get(id) {
+        //     Some(page) => Some(format!(
+        //         "/{}/{}/?{}",
+        //         self.config.default_language, id, "integration-site-home-page"
+        //     )),
+        //     None => None,
+        // }
     }
 
     pub fn page_ids(&self) -> Vec<String> {
