@@ -7,7 +7,7 @@ impl Page {
     pub fn s2_title_with_nested_spans() -> Page {
         let config = Config::site1_config();
         let source_path = PathBuf::from(
-            "leading_folder/Neopoligen/dev-test-site/content/title_with_nested_spans.neo",
+            "leading_folder/Neopoligen/test-site2/content/title_with_nested_spans.neo",
         );
         let source = r#"-- title
 

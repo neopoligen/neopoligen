@@ -7,7 +7,7 @@ impl Page {
     pub fn s2_title_in_metadata() -> Page {
         let config = Config::site1_config();
         let source_path =
-            PathBuf::from("leading_folder/Neopoligen/dev-test-site/content/title_in_metadata.neo");
+            PathBuf::from("leading_folder/Neopoligen/test-site2/content/title_in_metadata.neo");
         let source = r#"-- title
 
 This title should be overridded by metadata

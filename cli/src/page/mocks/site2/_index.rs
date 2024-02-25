@@ -6,8 +6,7 @@ use std::path::PathBuf;
 impl Page {
     pub fn s2_index() -> Page {
         let config = Config::site2_config();
-        let source_path =
-            PathBuf::from("leading_folder/Neopoligen/dev-test-site/content/_index.neo");
+        let source_path = PathBuf::from("leading_folder/Neopoligen/test-site2/content/_index.neo");
         let source = r#"-- title
 
 Site 2 Home Page

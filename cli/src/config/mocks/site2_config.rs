@@ -5,8 +5,8 @@ use std::path::PathBuf;
 
 impl Config {
     pub fn site2_config() -> Config {
-        let project_root = PathBuf::from("some-project-root");
-        let theme_name = String::from("dev-theme");
+        let project_root = PathBuf::from("test-site2");
+        let theme_name = String::from("dev-theme2");
 
         let configuration_root =
             PathBuf::from(format!("{}/{}", project_root.display(), "configuration"));

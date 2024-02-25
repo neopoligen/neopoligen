@@ -7,7 +7,7 @@ impl Page {
     pub fn s2_title_from_text() -> Page {
         let config = Config::site1_config();
         let source_path =
-            PathBuf::from("leading_folder/Neopoligen/dev-test-site/content/title_from_text.neo");
+            PathBuf::from("leading_folder/Neopoligen/test-site2/content/title_from_text.neo");
         let source = r#"-- p
 
 This is a title from the first few words 

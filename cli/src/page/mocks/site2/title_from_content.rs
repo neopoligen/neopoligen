@@ -7,7 +7,7 @@ impl Page {
     pub fn s2_title_from_content() -> Page {
         let config = Config::site1_config();
         let source_path =
-            PathBuf::from("leading_folder/Neopoligen/dev-test-site/content/title_from_content.neo");
+            PathBuf::from("leading_folder/Neopoligen/test-site2/content/title_from_content.neo");
         let source = r#"-- bookmark
 -- title: This Is A Title From A Bookmark Attribute
 
