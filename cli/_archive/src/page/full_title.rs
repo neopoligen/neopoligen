@@ -137,13 +137,14 @@ mod test {
     //     assert_eq!(left, right);
     // }
 
-    #[test]
-    fn full_title_test_from_nested_inilne_spans() {
-        let p = Page::title_with_nested_inline_spans();
-        let left = Some("Span Nested In Title".to_string());
-        let right = p.full_title();
-        assert_eq!(left, right);
-    }
+    // MOVED TO SITE_WITH_CACHE
+    // #[test]
+    // fn full_title_test_from_nested_inilne_spans() {
+    //     let p = Page::title_with_nested_inline_spans();
+    //     let left = Some("Span Nested In Title".to_string());
+    //     let right = p.full_title();
+    //     assert_eq!(left, right);
+    // }
 
     #[test]
     fn full_title_test_title_in_metadata() {

@@ -25,4 +25,12 @@ mod page_title {
         let right = site.page_title("page_id_that_does_not_exist");
         assert_eq!(left, right);
     }
+
+    #[test]
+    pub fn page_title_with_nested_spans() {
+        let site = Site::site1();
+        let left = Some("Nested Span Test".to_string());
+        let right = site.page_title("site1_title_with_nested_spans");
+        assert_eq!(left, right);
+    }
 }

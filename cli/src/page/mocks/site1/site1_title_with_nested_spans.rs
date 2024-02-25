@@ -11,7 +11,7 @@ impl Page {
         );
         let source = r#"-- title
 
-Nest <<strong|<<em|Span>>>> Test
+Nested <<strong|<<em|Span>>>> Test
 
 -- metadata
 -- date: 2024-02-24 19:11:09
