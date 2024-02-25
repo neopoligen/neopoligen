@@ -1,8 +1,11 @@
+use crate::config::Config;
+use crate::page::parse::parse;
 use crate::page::Page;
 use std::path::PathBuf;
 
 impl Page {
     pub fn site1_index() -> Page {
+        let config = Config::site1_config();
         let source_path =
             PathBuf::from("leading_folder/Neopoligen/dev-test-site/content/_index.neo");
         let source = r#"-- title
@@ -17,8 +20,7 @@ The initial test page
 -- path: /
 "#
         .to_string();
-
-        let ast = vec![];
+        let ast = parse(&source, &config);
         Page {
             ast,
             source,

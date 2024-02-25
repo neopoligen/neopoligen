@@ -1,4 +1,5 @@
 pub mod mocks;
+pub mod parse;
 
 use crate::child::Child;
 use serde::Serialize;

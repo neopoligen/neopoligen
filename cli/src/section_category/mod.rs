@@ -41,6 +41,7 @@ pub enum SectionCategory {
     ListSectionFull { containers: Vec<Child> },  // [Done]
     ListSectionEnd { containers: Vec<Child> },   // [Done]
 
+    // TODO: Rename Preformatted to Raw
     PreformattedSectionStart { text: Option<String> }, // [Done]
     PreformattedSectionFull { text: Option<String> },  // [Done]
     PreformattedSectionEnd { containers: Vec<Child> }, // [Done]
