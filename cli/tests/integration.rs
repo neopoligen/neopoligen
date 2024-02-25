@@ -1,5 +1,5 @@
 mod integration {
-    use minijinja::{context, Environment};
+    use minijinja::{context, Environment, Value};
     // use neopoligen_cli::config::Config;
     use neopoligen_cli::page::Page;
     use neopoligen_cli::site::Site;
@@ -21,13 +21,13 @@ mod integration {
             "splitter.jinja",
             r#"{%- import "includes/macros.jinja" as macros -%}
 {%- include "global_vars" -%}
-{#- for page_id in site.page_ids() -#}
+{%- for page_id in site.page_ids() -%}PADSASDASD
 {# {{ macros.log(page_id, "") }} #}
 {# site.output_path_for_page(page_id) #}
 --- PAGE_DATA_SPLIT ---
 {# include site.template_for_page(page_id) #}
 --- PAGE_SEPERATOR ---
-{# endfor -#}"#
+{% endfor -%}"#
                 .to_string(),
         )
         .unwrap();
@@ -51,7 +51,10 @@ This is the page output
         let skeleton = env.get_template("splitter.jinja").unwrap();
 
         // let left = "This is the published post page".to_string();
-        let right = skeleton.render(context!(name => "World")).unwrap();
+        let right = skeleton
+            .render(context!(site => 
+        Value::from_object(site)))
+            .unwrap();
         dbg!(right);
         // assert_eq!(left, right);
     }
