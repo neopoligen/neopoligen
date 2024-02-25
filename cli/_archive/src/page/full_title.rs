@@ -119,23 +119,23 @@ mod test {
     use super::*;
     use pretty_assertions::assert_eq;
 
-    
-    #[test]
-    fn full_title_test() {
-        // MOVED TO SITEV3
-        let p = Page::test_with_title_metadata_and_one_p();
-        let left = Some("Tango Foxtrot".to_string());
-        let right = p.full_title();
-        assert_eq!(left, right);
-    }
+    // MOVED TO SITE_WITH_CACHE
+    // #[test]
+    // fn full_title_test() {
+    //     let p = Page::test_with_title_metadata_and_one_p();
+    //     let left = Some("Tango Foxtrot".to_string());
+    //     let right = p.full_title();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    fn full_title_test_from_inilne_span() {
-        let p = Page::title_with_inline_span();
-        let left = Some("Span In Title".to_string());
-        let right = p.full_title();
-        assert_eq!(left, right);
-    }
+    // MOVED TO SITE_WITH_CACHE
+    // #[test]
+    // fn full_title_test_from_inline_span() {
+    //     let p = Page::title_with_inline_span();
+    //     let left = Some("Span In Title".to_string());
+    //     let right = p.full_title();
+    //     assert_eq!(left, right);
+    // }
 
     #[test]
     fn full_title_test_from_nested_inilne_spans() {

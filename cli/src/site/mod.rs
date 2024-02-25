@@ -26,7 +26,7 @@ impl Site {
             None => {
                 let title = match self.pages.get(id) {
                     Some(page) => get_title_section_title(&page.ast),
-                    None => None,
+                    None => Some("(missing page)".to_string()),
                 };
                 page_titles.insert(id.to_string(), title.clone());
                 title

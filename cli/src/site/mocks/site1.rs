@@ -10,6 +10,10 @@ impl Site {
             "site1_title_with_inline_span".to_string(),
             Page::site1_title_with_inline_span(),
         );
+        site.pages.insert(
+            "site1_title_with_nested_spans".to_string(),
+            Page::site1_title_with_nested_spans(),
+        );
         site
     }
 }
