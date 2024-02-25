@@ -63,7 +63,7 @@ mod test {
         let target_section_source_response = "-- /list".to_string();
         let key_value_attributes = BTreeMap::new();
         let flag_attributes = BTreeSet::new();
-        let config = Config::mock_basic_config();
+        let config = Config::site1_config();
         let left = Ok((
             "-- div",
             Child::Section(Section {
@@ -97,7 +97,7 @@ mod test {
     //     let target_section_source_response = "-- /p\n\ndelta lima".to_string();
     //     let key_value_attributes = BTreeMap::new();
     //     let flag_attributes = BTreeSet::new();
-    //     let config = Config::mock_basic_config();
+    //     let config = Config::site1_config();
     //     let left = Ok((
     //         "-- hr\n\n",
     //         Child::Section(Section {
@@ -145,7 +145,7 @@ mod test {
     //     let target_section_source_response = "-- /p\n\ntango alfa\nbravo".to_string();
     //     let key_value_attributes = BTreeMap::new();
     //     let flag_attributes = BTreeSet::new();
-    //     let config = Config::mock_basic_config();
+    //     let config = Config::site1_config();
     //     let left = Ok((
     //         "-- hr\n\n",
     //         Child::Section(Section {
@@ -202,7 +202,7 @@ mod test {
     //         "-- /p\n\ndelta echo\nwhiskey\n\nmike oscar\npapa".to_string();
     //     let key_value_attributes = BTreeMap::new();
     //     let flag_attributes = BTreeSet::new();
-    //     let config = Config::mock_basic_config();
+    //     let config = Config::site1_config();
     //     let left = Ok((
     //         "-- hr\n\n",
     //         Child::Section(Section {

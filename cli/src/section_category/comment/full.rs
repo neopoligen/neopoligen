@@ -60,7 +60,7 @@ mod test {
     //     let source = "\n\n-- p\n\n";
     //     let r#type = "comment";
     //     let attributes = vec![];
-    //     let config = Config::mock_basic_config();
+    //     let config = Config::site1_config();
     //     let left = Ok((
     //         "-- p\n\n",
     //         Child::Section(Section {
@@ -83,7 +83,7 @@ mod test {
     //     let source = "nothing to see here\n\n-- hr\n\n";
     //     let r#type = "comment";
     //     let attributes = vec![];
-    //     let config = Config::mock_basic_config();
+    //     let config = Config::site1_config();
     //     let left = Ok((
     //         "-- hr\n\n",
     //         Child::Section(Section {

@@ -45,7 +45,7 @@ mod test {
     // #[ignore]
     fn child_full_basic() {
         let source = "-- title\n\nTitle Sierra\n\n--p";
-        let config = Config::mock_basic_config();
+        let config = Config::site1_config();
         let left = Ok((
             "--p",
             Child::Section(Section {

@@ -79,7 +79,7 @@
 //     // #[ignore]
 //     fn list_item_integration() {
 //         let source = "- juliette foxtrot\n\n- whiskey\n\n-- p";
-//         let config = Config::mock_basic_config();
+//         let config = Config::site1_config();
 //         let left = Ok((
 //             "- whiskey\n\n-- p",
 //             Child::Block(vec![

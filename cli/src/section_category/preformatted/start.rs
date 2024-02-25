@@ -60,7 +60,7 @@ mod test {
         let key_value_attributes =  BTreeMap::new();
         let flag_attributes = BTreeSet::new();
         let r#type = "code";
-        let config = Config::mock_basic_config();
+        let config = Config::site1_config();
         let initial_source = "-- code\n\nbravo hotel\n\n-- /code";
         let left = Ok((
             "-- /code",

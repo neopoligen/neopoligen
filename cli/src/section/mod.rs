@@ -336,7 +336,7 @@ mod test {
     // #[ignore]
     fn section_integration_full() {
         let source = "-- title\n-- class: alfa\n-- class: bravo\n\nTitle Echo\n\n-- p";
-        let config = Config::mock_basic_config();
+        let config = Config::site1_config();
         let mut key_value_attributes = BTreeMap::new();
         key_value_attributes.insert("class".to_string(), "alfa bravo".to_string());
         let left = Ok((
@@ -376,7 +376,7 @@ mod test {
         // this is exactly the same as above but there's a space after the
         // `-- title`` to make sure that doesn't cause issues
         let source = "-- title \n-- class: alfa\n-- class: bravo\n\nTitle Echo\n\n-- p";
-        let config = Config::mock_basic_config();
+        let config = Config::site1_config();
         let mut key_value_attributes = BTreeMap::new();
         key_value_attributes.insert("class".to_string(), "alfa bravo".to_string());
         let left = Ok((

@@ -56,7 +56,7 @@ mod test {
     // #[ignore]
     fn basic_link() {
         let source = "<<strong|Hotel>>";
-        let config = Config::mock_basic_config();
+        let config = Config::site1_config();
         let left = Ok((
             "",
             Span::StandardSpan {

@@ -80,7 +80,7 @@ mod test {
     #[ignore]
     fn call_with_no_params() {
         let source = "\n\n-- hr";
-        let config = Config::mock_basic_config();
+        let config = Config::site1_config();
         let r#type = "random-color-square";
         let attributes = vec![];
         let target_text = "#1b3184".to_string();
@@ -102,7 +102,7 @@ mod test {
     #[ignore]
     fn call_with_params() {
         let source = "\n\n-- p";
-        let config = Config::mock_basic_config();
+        let config = Config::site1_config();
         let r#type = "random-color-square";
         let attributes = vec![
             SectionAttribute::KeyValue {

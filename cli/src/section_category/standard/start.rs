@@ -60,7 +60,7 @@ mod test {
         let key_value_attributes = BTreeMap::new();
         let flag_attributes = BTreeSet::new();
         let r#type = "tldr";
-        let config = Config::mock_basic_config();
+        let config = Config::site1_config();
         let left = Ok((
             "-- /tldr\n\n-- div",
             Child::Section(Section {
@@ -93,7 +93,7 @@ mod test {
         let r#type = "div";
         let key_value_attributes = BTreeMap::new();
         let flag_attributes = BTreeSet::new();
-        let config = Config::mock_basic_config();
+        let config = Config::site1_config();
         let left = Ok((
             "-- /div\n\n-- hr\n\n",
             Child::Section(Section {
@@ -141,7 +141,7 @@ mod test {
         let r#type = "p";
         let key_value_attributes = BTreeMap::new();
         let flag_attributes = BTreeSet::new();
-        let config = Config::mock_basic_config();
+        let config = Config::site1_config();
         let left = Ok((
             "-- /p\n\n-- hr\n\n",
             Child::Section(Section {
@@ -197,7 +197,7 @@ mod test {
         let r#type = "div";
         let key_value_attributes = BTreeMap::new();
         let flag_attributes = BTreeSet::new();
-        let config = Config::mock_basic_config();
+        let config = Config::site1_config();
         let left = Ok((
             "-- /div\n\n-- hr\n\n",
             Child::Section(Section {

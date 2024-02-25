@@ -63,7 +63,7 @@ mod test {
         let r#type = "title";
         let key_value_attributes = BTreeMap::new();
         let flag_attributes = BTreeSet::new();
-        let config = Config::mock_basic_config();
+        let config = Config::site1_config();
         let initial_source = "-- title\n\n-- p\n\n";
         let left = Ok((
             "-- p\n\n",
@@ -96,7 +96,7 @@ mod test {
         let r#type = "p";
         let key_value_attributes = BTreeMap::new();
         let flag_attributes = BTreeSet::new();
-        let config = Config::mock_basic_config();
+        let config = Config::site1_config();
         let left = Ok((
             "-- hr\n\n",
             Child::Section(Section {
@@ -143,7 +143,7 @@ mod test {
         let key_value_attributes = BTreeMap::new();
         let flag_attributes = BTreeSet::new();
         let initial_source = "-- p\n\ntango alfa\nbravo\n\n-- hr\n\n";
-        let config = Config::mock_basic_config();
+        let config = Config::site1_config();
         let left = Ok((
             "-- hr\n\n",
             Child::Section(Section {
@@ -199,7 +199,7 @@ mod test {
         let r#type = "p";
         let key_value_attributes = BTreeMap::new();
         let flag_attributes = BTreeSet::new();
-        let config = Config::mock_basic_config();
+        let config = Config::site1_config();
         let left = Ok((
             "-- hr\n\n",
             Child::Section(Section {

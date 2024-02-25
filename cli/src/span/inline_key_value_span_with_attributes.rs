@@ -117,7 +117,7 @@ mod test {
     // #[ignore]
     fn basic_link() {
         let source = "<<ilink: a1b2c3d4|Sierra|id: delta|example_flag>>";
-        let config = Config::mock_basic_config();
+        let config = Config::site1_config();
         let mut key_value_attributes = BTreeMap::new();
         key_value_attributes.insert("id".to_string(), "delta".to_string());
         let mut flag_attributes = BTreeSet::new();
@@ -144,7 +144,7 @@ mod test {
     // // #[ignore]
     // fn basic_link() {
     //     let source = "<<link|bravo|example.com>>";
-    //     let config = Config::mock_basic_config();
+    //     let config = Config::site1_config();
     //     let mut flag_attributes = BTreeSet::new();
     //     flag_attributes.insert("example.com".to_string());
     //     let left = Ok((
@@ -170,7 +170,7 @@ mod test {
     // // #[ignore]
     // fn multiple_attributes() {
     //     let source = "<<link|Sierra|id: bravo|hidden>>";
-    //     let config = Config::mock_basic_config();
+    //     let config = Config::site1_config();
     //     let mut key_value_attributes = BTreeMap::new();
     //     key_value_attributes.insert("id".to_string(), "bravo".to_string());
     //     let mut flag_attributes = BTreeSet::new();
