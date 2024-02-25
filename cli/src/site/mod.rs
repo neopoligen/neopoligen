@@ -15,24 +15,30 @@ pub struct Site {
 }
 
 impl Site {
-    pub fn page_title(&self, id: &str) -> String {
-        let title = match self.pages.get(id) {
-            Some(page) => match get_title_section_title(&page.ast) {
-                Some(t) => t,
-                None => "Untitled".to_string(),
-            },
-            None => "(missing page)".to_string(),
-        };
-        title
-        //get_title_section_title(&self.pages.)
-        // let mut cache = self.cache.lock().unwrap();
-        // match cache.get("page_title") {
-        //     Some(c) => {}
-        //     None => {}
-        // }
+    pub fn page_title(&self, id: &str) -> Option<String> {
+        let cache = self.cache.lock().unwrap();
+        let page_titles = cache.get("page_title").unwrap();
+        match page_titles.get(id) {
+            Some(title) => Some(title.to_string()),
+            None => {
+                let title = match self.pages.get(id) {
+                    Some(page) => match get_title_section_title(&page.ast) {
+                        Some(t) => t,
+                        None => "Untitled".to_string(),
+                    },
+                    None => "(missing page)".to_string(),
+                };
+                Some(title)
+            }
+        }
+
+        ////get_title_section_title(&self.pages.)
     }
 
     fn prep_cache(&self) {
+        // NOTE: everything relies on the cache being set up. So,
+        // everything unwraps directly. If something hasn't been
+        // added yet it'll trigger an intended panic
         let mut c = self.cache.lock().unwrap();
         c.insert("page_title".to_string(), BTreeMap::new());
     }
