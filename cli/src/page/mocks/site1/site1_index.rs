@@ -16,7 +16,7 @@ The initial test page
 
 -- metadata
 -- date: 2024-02-24 19:11:09
--- id: site1_index 
+-- id: site1_index
 -- path: /
 "#
         .to_string();
