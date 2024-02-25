@@ -1,5 +1,6 @@
 pub mod mocks;
 pub mod new;
+pub mod object;
 
 use crate::child::Child;
 use crate::page::Page;
@@ -8,6 +9,7 @@ use crate::section_category::SectionCategory;
 use crate::span::Span;
 use serde::Serialize;
 use std::collections::BTreeMap;
+use std::fmt::Display;
 use std::sync::Mutex;
 
 #[derive(Debug, Serialize)]
@@ -173,4 +175,10 @@ fn page_title_from_title_section(ast: &Vec<Child>) -> Option<String> {
         }
         _ => None,
     })
+}
+
+impl Display for Site {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "")
+    }
 }
