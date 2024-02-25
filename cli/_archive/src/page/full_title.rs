@@ -1,3 +1,7 @@
+// DEPRECATED AND TRANSFERRED
+// All the tested functionality for this file
+// has been moved to the site with cache struct
+
 use crate::child::Child;
 use crate::page::Page;
 use crate::section::Section;
@@ -155,21 +159,23 @@ mod test {
     //     assert_eq!(left, right);
     // }
 
-    #[test]
-    fn full_title_test_title_in_bookmark() {
-        let p = Page::title_in_bookmark();
-        let left = Some("This is the title from a bookmark".to_string());
-        let right = p.full_title();
-        assert_eq!(left, right);
-    }
+    // MOVED TO SITE_WITH_CACHE
+    // #[test]
+    // fn full_title_test_title_in_bookmark() {
+    //     let p = Page::title_in_bookmark();
+    //     let left = Some("This is the title from a bookmark".to_string());
+    //     let right = p.full_title();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    fn full_title_test_from_first_few_words() {
-        let p = Page::title_via_standard_section();
-        let left = Some("Title from first few words of".to_string());
-        let right = p.full_title();
-        assert_eq!(left, right);
-    }
+    // MOVED TO SITE_WITH_CACHE
+    // #[test]
+    // fn full_title_test_from_first_few_words() {
+    //     let p = Page::title_via_standard_section();
+    //     let left = Some("Title from first few words of".to_string());
+    //     let right = p.full_title();
+    //     assert_eq!(left, right);
+    // }
 
     // MOVED TO SITE_WITH_CACHE
     // #[test]

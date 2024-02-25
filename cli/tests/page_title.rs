@@ -27,6 +27,14 @@ mod page_title {
     }
 
     #[test]
+    pub fn page_title_from_first_few_words() {
+        let site = Site::site1();
+        let left = Some("This is a title from the".to_string());
+        let right = site.page_title("s1_title_from_text");
+        assert_eq!(left, right);
+    }
+
+    #[test]
     pub fn page_title_from_id() {
         let site = Site::site1();
         let left = Some("only_metadata".to_string());

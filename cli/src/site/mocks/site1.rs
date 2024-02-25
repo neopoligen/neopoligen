@@ -11,6 +11,8 @@ impl Site {
             "s1_title_from_content".to_string(),
             Page::s1_title_from_content(),
         );
+        site.pages
+            .insert("s1_title_from_text".to_string(), Page::s1_title_from_text());
         site.pages.insert(
             "s1_title_with_inline_span".to_string(),
             Page::s1_title_with_inline_span(),
