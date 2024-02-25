@@ -34,6 +34,27 @@ impl Site {
         }
     }
 
+    pub fn page_title_dev(&self, id: &str) -> Option<String> {
+        match self.pages.get(id) {
+            Some(page) => get_title_from_metadata(&page.ast),
+            None => None,
+        }
+
+        // let mut cache = self.cache.lock().unwrap();
+        // let page_titles = cache.get_mut("page_title").unwrap();
+        // match page_titles.get(id) {
+        //     Some(title) => title.clone(),
+        //     None => {
+        //         let title = match self.pages.get(id) {
+        //             Some(page) => get_title_section_title(&page.ast),
+        //             None => Some("(missing page)".to_string()),
+        //         };
+        //         page_titles.insert(id.to_string(), title.clone());
+        //         title
+        //     }
+        // }
+    }
+
     fn prep_cache(&self) {
         // NOTE: everything relies on the cache being set up. So,
         // everything unwraps directly. If something hasn't been
@@ -71,6 +92,26 @@ fn get_span_words(span: &Span) -> Vec<String> {
             .concat(),
         _ => vec!["".to_string()],
     }
+}
+
+fn get_title_from_metadata(ast: &Vec<Child>) -> Option<String> {
+    ast.iter().find_map(|child| {
+        if let Child::Section(section) = child {
+            if &section.r#type == "metadata" {
+                section.key_value_attributes.iter().find_map(|attr| {
+                    if attr.0 == "title" {
+                        Some(Some(attr.1.to_string()))
+                    } else {
+                        None
+                    }
+                })
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    })?
 }
 
 fn get_title_section_title(ast: &Vec<Child>) -> Option<String> {

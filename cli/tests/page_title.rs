@@ -33,4 +33,11 @@ mod page_title {
         let right = site.page_title("s1_title_with_nested_spans");
         assert_eq!(left, right);
     }
+    #[test]
+    pub fn page_title_in_metadata() {
+        let site = Site::site1();
+        let left = Some("This is the override title from metadata".to_string());
+        let right = site.page_title_dev("s1_title_in_metadata");
+        assert_eq!(left, right);
+    }
 }
