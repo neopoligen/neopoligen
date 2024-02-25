@@ -23,11 +23,7 @@ pub fn preformatted_section_end<'a>(
     config: &'a Config,
     initial_source: &str,
 ) -> IResult<&'a str, Child> {
-    if config
-        .section_categories
-        .preformatted
-        .contains(&r#type.to_string())
-    {
+    if config.section_categories.raw.contains(&r#type.to_string()) {
         let (source, containers) = many0(|src| child(src, config))(source)?;
         let (source, _) = tuple((space0, line_ending))(source)?;
         let (source, _) = multispace0(source)?;
@@ -39,10 +35,10 @@ pub fn preformatted_section_end<'a>(
             template: "default".to_string(),
             r#type: r#type.to_string(),
             source: initial_source
-            .replace(source, "")
-            .as_str()
-            .trim()
-            .to_string(),
+                .replace(source, "")
+                .as_str()
+                .trim()
+                .to_string(),
         });
         Ok((source, section))
     } else {
@@ -61,7 +57,7 @@ mod test {
     fn preformatted_section_end_integration() {
         let src = "papa mike\n\n-- div";
         let r#type = "code";
-        let key_value_attributes =  BTreeMap::new();
+        let key_value_attributes = BTreeMap::new();
         let flag_attributes = BTreeSet::new();
         let config = Config::site1_config();
         let initial_source = "-- /pre\n\npapa mike\n\n-- div";

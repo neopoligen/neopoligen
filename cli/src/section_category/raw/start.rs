@@ -19,11 +19,7 @@ pub fn preformatted_section_start<'a>(
     config: &'a Config,
     initial_source: &str,
 ) -> IResult<&'a str, Child> {
-    if config
-        .section_categories
-        .preformatted
-        .contains(&r#type.to_string())
-    {
+    if config.section_categories.raw.contains(&r#type.to_string()) {
         let end_target = format!("\n-- /{}", r#type);
         let (source, text) = take_until(end_target.as_str())(source)?;
         let (source, _) = tag("\n")(source)?;
@@ -37,10 +33,10 @@ pub fn preformatted_section_start<'a>(
             template: "default".to_string(),
             r#type: r#type.to_string(),
             source: initial_source
-            .replace(source, "")
-            .as_str()
-            .trim()
-            .to_string(),
+                .replace(source, "")
+                .as_str()
+                .trim()
+                .to_string(),
         });
         Ok((source, section))
     } else {
@@ -57,7 +53,7 @@ mod test {
     // #[ignore]
     fn preformatted_section_start_integration() {
         let src = "bravo hotel\n\n-- /code";
-        let key_value_attributes =  BTreeMap::new();
+        let key_value_attributes = BTreeMap::new();
         let flag_attributes = BTreeSet::new();
         let r#type = "code";
         let config = Config::site1_config();
@@ -82,7 +78,8 @@ mod test {
             key_value_attributes,
             flag_attributes,
             &config,
-            initial_source,);
+            initial_source,
+        );
         assert_eq!(left, right);
     }
 }

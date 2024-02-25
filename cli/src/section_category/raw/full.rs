@@ -19,11 +19,7 @@ pub fn preformatted_section_full<'a>(
     config: &'a Config,
     initial_source: &str,
 ) -> IResult<&'a str, Child> {
-    if config
-        .section_categories
-        .preformatted
-        .contains(&r#type.to_string())
-    {
+    if config.section_categories.raw.contains(&r#type.to_string()) {
         let (source, text) = take_until("\n--")(source)?;
         let (source, _) = multispace0(source)?;
         let section = Child::Section(Section {

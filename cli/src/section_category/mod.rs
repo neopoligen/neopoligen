@@ -4,7 +4,7 @@ pub mod detail;
 pub mod json;
 pub mod json_plugin;
 pub mod list;
-pub mod preformatted;
+pub mod raw;
 pub mod standard;
 pub mod table;
 pub mod text_plugin;
