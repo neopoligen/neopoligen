@@ -25,8 +25,8 @@ mod test {
     fn ast_basic_test() {
         let page = Page::s2_index();
         let mut metadata_key_value_attrs = BTreeMap::new();
-        metadata_key_value_attrs.insert("date".to_string(), "2024-02-24 19:11:09".to_string());
-        metadata_key_value_attrs.insert("id".to_string(), "site1_index".to_string());
+        metadata_key_value_attrs.insert("date".to_string(), "2020-01-14 13:13:36".to_string());
+        metadata_key_value_attrs.insert("id".to_string(), "id_index".to_string());
         metadata_key_value_attrs.insert("path".to_string(), "/".to_string());
         let left = vec![
             Child::Section(Section {
@@ -45,7 +45,7 @@ mod test {
                                 template: "spans/space.jinja".to_string(),
                             },
                             Span::Word {
-                                text: "1".to_string(),
+                                text: "2".to_string(),
                                 template: "spans/word.jinja".to_string(),
                             },
                             Span::Space {
@@ -99,7 +99,7 @@ mod test {
                 },
                 template: "default".to_string(),
                 r#type: "title".to_string(),
-                source: "-- title\n\nSite 1 Home Page\n\nThe initial test page".to_string(),
+                source: "-- title\n\nSite 2 Home Page\n\nThe initial test page".to_string(),
             }),
             Child::Section(Section {
                 key_value_attributes: metadata_key_value_attrs,
@@ -108,7 +108,7 @@ mod test {
                 category: SectionCategory::JsonSectionFull { object: None },
                 template: "default".to_string(),
                 r#type: "metadata".to_string(),
-                source: "-- metadata\n-- date: 2024-02-24 19:11:09\n-- id: site1_index\n-- path: /"
+                source: "-- metadata\n-- date: 2020-01-14 13:13:36\n-- id: id_index\n-- path: /"
                     .to_string(),
             }),
         ];
