@@ -113,7 +113,8 @@ impl Config {
 
         let key_value_spans: Vec<String> = vec!["class".to_string(), "ilink".to_string()];
 
-        let standard_spans: Vec<String> = vec!["strong".to_string(), "link".to_string()];
+        let standard_spans: Vec<String> =
+            vec!["strong".to_string(), "link".to_string(), "em".to_string()];
 
         let main_body_section_excludes: Vec<String> = vec![
             "comment".to_string(),

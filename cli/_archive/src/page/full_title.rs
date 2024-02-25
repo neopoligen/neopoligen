@@ -119,8 +119,10 @@ mod test {
     use super::*;
     use pretty_assertions::assert_eq;
 
+    
     #[test]
     fn full_title_test() {
+        // MOVED TO SITEV3
         let p = Page::test_with_title_metadata_and_one_p();
         let left = Some("Tango Foxtrot".to_string());
         let right = p.full_title();
