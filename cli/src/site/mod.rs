@@ -26,9 +26,9 @@ impl Site {
             None => {
                 let title = match self.pages.get(id) {
                     Some(page) => {
-                        if let Some(title) = get_title_from_metadata(&page.ast) {
+                        if let Some(title) = page_title_from_metadata(&page.ast) {
                             Some(title)
-                        } else if let Some(title) = get_title_section_title(&page.ast) {
+                        } else if let Some(title) = page_title_from_title_section(&page.ast) {
                             Some(title)
                         } else if let Some(title) = page_title_from_id(&page.ast) {
                             Some(title)
@@ -83,7 +83,7 @@ fn get_span_words(span: &Span) -> Vec<String> {
     }
 }
 
-fn get_title_from_metadata(ast: &Vec<Child>) -> Option<String> {
+fn page_title_from_metadata(ast: &Vec<Child>) -> Option<String> {
     ast.iter().find_map(|child| {
         if let Child::Section(section) = child {
             if &section.r#type == "metadata" {
@@ -123,7 +123,7 @@ fn page_title_from_id(ast: &Vec<Child>) -> Option<String> {
     })?
 }
 
-fn get_title_section_title(ast: &Vec<Child>) -> Option<String> {
+fn page_title_from_title_section(ast: &Vec<Child>) -> Option<String> {
     ast.iter().find_map(|child| match child {
         Child::Section(sec) => {
             if sec.r#type == String::from("title") {
