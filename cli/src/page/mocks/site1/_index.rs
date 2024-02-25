@@ -19,11 +19,6 @@ This is the integration test site
 -- path: /
 "#
         .to_string();
-        let ast = parse(&source, &config);
-        Page {
-            ast,
-            source,
-            source_path,
-        }
+        Page::new(source_path, source, &config).unwrap()
     }
 }

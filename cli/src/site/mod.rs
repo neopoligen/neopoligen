@@ -18,6 +18,10 @@ pub struct Site {
 }
 
 impl Site {
+    pub fn page_ids(&self) -> Vec<String> {
+        self.pages.iter().map(|page| page.0.to_string()).collect()
+    }
+
     pub fn page_title(&self, id: &str) -> Option<String> {
         let mut cache = self.cache.lock().unwrap();
         let page_titles = cache.get_mut("page_title").unwrap();
