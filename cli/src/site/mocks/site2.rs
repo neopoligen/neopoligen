@@ -2,7 +2,7 @@ use crate::page::Page;
 use crate::site::Site;
 
 impl Site {
-    pub fn site1() -> Site {
+    pub fn site2() -> Site {
         let mut site = Site::new();
         site.pages.insert("s1_index".to_string(), Page::s1_index());
         site.pages
