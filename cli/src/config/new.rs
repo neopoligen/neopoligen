@@ -18,37 +18,17 @@ impl Config {
 
         let default_language =
             get_config_file_lines(&configuration_root, "default-language.txt")[0].clone();
-
         let files_root = PathBuf::from(format!("{}/{}", project_root.display(), "files"));
-
         let images_root = PathBuf::from(format!("{}/{}", project_root.display(), "images"));
-
         let plugins_root = PathBuf::from(format!("{}/{}", project_root.display(), "plugins"));
-
         let content_root = PathBuf::from(format!("{}/{}", project_root.display(), "content"));
-
         let themes_root = PathBuf::from(format!("{}/{}", project_root.display(), "themes"));
-
         let output_root = PathBuf::from(format!("{}/{}", project_root.display(), "docs"));
 
-        // TODO: This is the way to do things now with pulling lines like this
-        // change anything that calls config files to this approach
         let theme_name = get_config_file_lines(&configuration_root, "theme.txt")
             .first()
             .unwrap()
             .to_string();
-
-        // let theme_name_config_file = PathBuf::from(format!(
-        //     "{}/{}",
-        //     configuration_root.display(),
-        //     "theme-to-use.txt"
-        // ));
-
-        // let theme_name = fs::read_to_string(theme_name_config_file)
-        //     .unwrap()
-        //     .as_str()
-        //     .trim()
-        //     .to_string();
 
         let mut theme_root = themes_root.clone();
         theme_root.push(&theme_name);
@@ -104,8 +84,6 @@ impl Config {
         // Section Categories
         let section_folders = get_folders_in_folder(&theme_sections_root.clone());
 
-        // TODO: Rename "preformatted" to "raw" in the
-        // rest of the code (it's already been done here)
         let mut checklist: BTreeSet<String> = BTreeSet::new();
         let mut comment: BTreeSet<String> = BTreeSet::new();
         let mut detail: BTreeSet<String> = BTreeSet::new();
@@ -143,21 +121,6 @@ impl Config {
 
         let main_body_section_excludes =
             get_config_file_lines(&configuration_root, "main-body-section-excludes.txt");
-
-        // let main_body_section_excludes_file = PathBuf::from(format!(
-        //     "{}/{}",
-        //     &folders.theme_configuration_root.display(),
-        //     "main-body-section-excludes.txt"
-        // ));
-
-        // let mut main_body_section_excludes: BTreeSet<String> = BTreeSet::new();
-        // fs::read_to_string(main_body_section_excludes_file)
-        //     .unwrap()
-        //     .as_str()
-        //     .lines()
-        //     .for_each(|sec| {
-        //         main_body_section_excludes.insert(sec.to_string());
-        //     });
 
         // Plugins
 
@@ -203,21 +166,10 @@ impl Config {
         let now = Local::now();
         let time_zone_offset = now.offset();
 
-        // TODO: Switch to this pull instead of reading the file
-        // here and then parsing that was in the next
-        // block of comments
         let domain = get_config_file_lines(&configuration_root, "domain.txt")
             .first()
             .unwrap()
             .to_string();
-
-        // let mut domain_file = configuration_root.clone();
-        // domain_file.push("domain.txt");
-        // let domain = fs::read_to_string(domain_file)
-        //     .unwrap()
-        //     .as_str()
-        //     .trim()
-        //     .to_string();
 
         let span_file_paths = get_file_paths_for_extension(&folders.theme_spans_root, "jinja");
         let unsorted_standard_spans: Vec<String> = span_file_paths
@@ -253,20 +205,6 @@ impl Config {
 
         let input_date_formats =
             get_config_file_lines(&configuration_root, "input-date-formats.txt");
-
-        // TODO: Remove this when the lines above are working
-        // to load input_date_formats
-        // let mut date_formats_file = configuration_root.clone();
-        // date_formats_file.push("input-date-formats.txt");
-        // let input_date_formats: Vec<String> = fs::read_to_string(date_formats_file)
-        //     .unwrap()
-        //     .as_str()
-        //     .lines()
-        //     .filter_map(|l| match l {
-        //         "" => None,
-        //         _ => Some(l.trim().to_string()),
-        //     })
-        //     .collect();
 
         let section_attribute_excludes =
             get_config_file_lines(&configuration_root, "section-attribute-excludes.txt");
