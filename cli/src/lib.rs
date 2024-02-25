@@ -11,6 +11,7 @@ pub mod list_item;
 pub mod page;
 pub mod section;
 pub mod section_attribute;
+pub mod section_category;
 pub mod site;
 pub mod span;
 pub mod span_attribute;

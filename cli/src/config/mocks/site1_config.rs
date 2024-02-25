@@ -1,33 +1,23 @@
 use crate::config::*;
 use std::collections::BTreeMap;
+use std::collections::BTreeSet;
 use std::path::PathBuf;
 
 impl Config {
     pub fn site1_config() -> Config {
-        let site_project_root = PathBuf::from("some-project-root");
+        let project_root = PathBuf::from("some-project-root");
         let theme_name = String::from("dev-theme");
 
-        let site_configuration_root = PathBuf::from(format!(
-            "{}/{}",
-            site_project_root.display(),
-            "configuration"
-        ));
+        let configuration_root =
+            PathBuf::from(format!("{}/{}", project_root.display(), "configuration"));
 
-        let site_production_content_root =
-            PathBuf::from(format!("{}/{}", site_project_root.display(), "pages"));
-        let site_extras_root =
-            PathBuf::from(format!("{}/{}", site_project_root.display(), "extras"));
-        let site_images_root =
-            PathBuf::from(format!("{}/{}", site_project_root.display(), "images"));
-        let site_plugins_root = PathBuf::from(format!(
-            "{}/{}",
-            site_configuration_root.display(),
-            "plugins"
-        ));
-        let site_output_root = PathBuf::from(format!("{}/{}", site_project_root.display(), "docs"));
-        let site_themes_root =
-            PathBuf::from(format!("{}/{}", site_project_root.display(), "themes"));
-        let theme_root = PathBuf::from(format!("{}/{}", site_themes_root.display(), theme_name));
+        let content_root = PathBuf::from(format!("{}/{}", project_root.display(), "pages"));
+        let files_root = PathBuf::from(format!("{}/{}", project_root.display(), "extras"));
+        let images_root = PathBuf::from(format!("{}/{}", project_root.display(), "images"));
+        let plugins_root = PathBuf::from(format!("{}/{}", configuration_root.display(), "plugins"));
+        let output_root = PathBuf::from(format!("{}/{}", project_root.display(), "docs"));
+        let themes_root = PathBuf::from(format!("{}/{}", project_root.display(), "themes"));
+        let theme_root = PathBuf::from(format!("{}/{}", themes_root.display(), theme_name));
         let theme_configuration_root =
             PathBuf::from(format!("{}/{}", theme_root.display(), "configuration"));
         let theme_assets_root = PathBuf::from(format!("{}/{}", theme_root.display(), "assets"));
@@ -44,14 +34,14 @@ impl Config {
         let theme_wrappers_root = PathBuf::from(format!("{}/{}", theme_root.display(), "wrappers"));
 
         let folders = ConfigFolders {
-            site_configuration_root: site_configuration_root.clone(),
-            site_extras_root,
-            site_images_root,
-            site_output_root,
-            site_plugins_root,
-            site_production_content_root,
-            site_project_root,
-            site_themes_root,
+            configuration_root: configuration_root.clone(),
+            files_root,
+            images_root,
+            output_root,
+            plugins_root,
+            content_root,
+            project_root,
+            themes_root,
             theme_assets_root,
             theme_configuration_root: theme_configuration_root.clone(),
             theme_sections_root,
@@ -81,8 +71,8 @@ impl Config {
         list.insert("notes".to_string());
         list.insert("list".to_string());
 
-        let mut preformatted = BTreeSet::new();
-        preformatted.insert("code".to_string());
+        let mut raw = BTreeSet::new();
+        raw.insert("code".to_string());
 
         let mut standard = BTreeSet::new();
         standard.insert("bookmark".to_string());
@@ -107,7 +97,7 @@ impl Config {
             json,
             json_plugin,
             list,
-            preformatted,
+            raw,
             standard,
             table,
             text_plugin,
@@ -125,14 +115,15 @@ impl Config {
 
         let standard_spans: Vec<String> = vec!["strong".to_string(), "link".to_string()];
 
-        let mut main_body_section_excludes: BTreeSet<String> = BTreeSet::new();
-        main_body_section_excludes.insert("comment".to_string());
-        main_body_section_excludes.insert("metadata".to_string());
-        main_body_section_excludes.insert("title".to_string());
+        let mut main_body_section_excludes: Vec<String> = vec![
+            "comment".to_string(),
+            "metadata".to_string(),
+            "title".to_string(),
+        ];
 
         let text_plugins: BTreeMap<String, String> = BTreeMap::new();
 
-        let time_zone_offset = -5;
+        let time_zone_offset = "-5:00".to_string();
 
         let domain = "localhost".to_string();
 

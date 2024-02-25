@@ -18,7 +18,7 @@ The initial test page
 "#
         .to_string();
 
-        let ast = "".to_string();
+        let ast = vec![];
         Page {
             ast,
             source,

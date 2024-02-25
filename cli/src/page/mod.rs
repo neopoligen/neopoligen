@@ -1,6 +1,7 @@
 pub mod mocks;
 
 use crate::child::Child;
+use serde::Serialize;
 use std::path::PathBuf;
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
