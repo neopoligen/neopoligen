@@ -37,7 +37,7 @@ mod page_title {
     pub fn page_title_in_metadata() {
         let site = Site::site1();
         let left = Some("This is the override title from metadata".to_string());
-        let right = site.page_title_dev("s1_title_in_metadata");
+        let right = site.page_title("s1_title_in_metadata");
         assert_eq!(left, right);
     }
 }
