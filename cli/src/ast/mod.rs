@@ -23,7 +23,7 @@ mod test {
 
     #[test]
     fn ast_basic_test() {
-        let page = Page::site1_index();
+        let page = Page::s1_index();
         let mut metadata_key_value_attrs = BTreeMap::new();
         metadata_key_value_attrs.insert("date".to_string(), "2024-02-24 19:11:09".to_string());
         metadata_key_value_attrs.insert("id".to_string(), "site1_index".to_string());

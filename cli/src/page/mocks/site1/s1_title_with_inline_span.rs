@@ -4,20 +4,18 @@ use crate::page::Page;
 use std::path::PathBuf;
 
 impl Page {
-    pub fn site1_index() -> Page {
+    pub fn s1_title_with_inline_span() -> Page {
         let config = Config::site1_config();
-        let source_path =
-            PathBuf::from("leading_folder/Neopoligen/dev-test-site/content/_index.neo");
+        let source_path = PathBuf::from(
+            "leading_folder/Neopoligen/dev-test-site/content/s1_title_with_inline_span.neo",
+        );
         let source = r#"-- title
 
-Site 1 Home Page
-
-The initial test page
+Title <<strong|With Inline>> Span
 
 -- metadata
 -- date: 2024-02-24 19:11:09
--- id: site1_index
--- path: /
+-- id: s1_title_with_inline_span
 "#
         .to_string();
         let ast = parse(&source, &config);
