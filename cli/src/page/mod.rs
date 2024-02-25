@@ -1,9 +1,12 @@
-pub mod builders;
+pub mod mocks;
 
+use crate::child::Child;
 use std::path::PathBuf;
 
+#[derive(Clone, Debug, PartialEq, Serialize)]
+#[serde(tag = "type", rename_all = "lowercase")]
 pub struct Page {
-    pub ast: String,
+    pub ast: Vec<Child>,
     pub source: String,
     pub source_path: PathBuf,
 }

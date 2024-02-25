@@ -1,7 +1,17 @@
+pub mod block;
 pub mod builder;
+pub mod child;
 pub mod config;
 pub mod config_folders;
 pub mod config_section_categories;
 pub mod helpers;
+pub mod json_plugin;
+pub mod list;
+pub mod list_item;
 pub mod page;
+pub mod section;
+pub mod section_attribute;
 pub mod site;
+pub mod span;
+pub mod span_attribute;
+pub mod text_plugin;
