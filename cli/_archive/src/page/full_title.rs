@@ -171,11 +171,12 @@ mod test {
         assert_eq!(left, right);
     }
 
-    #[test]
-    fn full_title_test_with_only_id() {
-        let p = Page::no_title_or_standard_sections();
-        let left = Some("Page id996622".to_string());
-        let right = p.full_title();
-        assert_eq!(left, right);
-    }
+    // MOVED TO SITE_WITH_CACHE
+    // #[test]
+    // fn full_title_test_with_only_id() {
+    //     let p = Page::no_title_or_standard_sections();
+    //     let left = Some("Page id996622".to_string());
+    //     let right = p.full_title();
+    //     assert_eq!(left, right);
+    // }
 }

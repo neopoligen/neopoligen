@@ -11,15 +11,7 @@ mod page_title {
     }
 
     #[test]
-    pub fn page_title_with_inline_span() {
-        let site = Site::site1();
-        let left = Some("Title With Inline Span".to_string());
-        let right = site.page_title("s1_title_with_inline_span");
-        assert_eq!(left, right);
-    }
-
-    #[test]
-    pub fn page_title_with_missing_page() {
+    pub fn page_title_for_missing_page() {
         let site = Site::site1();
         let left = Some("(missing page)".to_string());
         let right = site.page_title("page_id_that_does_not_exist");
@@ -27,10 +19,18 @@ mod page_title {
     }
 
     #[test]
-    pub fn page_title_with_nested_spans() {
+    pub fn page_title_from_content() {
         let site = Site::site1();
-        let left = Some("Nested Span Test".to_string());
-        let right = site.page_title("s1_title_with_nested_spans");
+        let left = Some("This Is A Title From A Bookmark Attribute".to_string());
+        let right = site.page_title("s1_title_from_content");
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    pub fn page_title_from_id() {
+        let site = Site::site1();
+        let left = Some("only_metadata".to_string());
+        let right = site.page_title("s1_only_metadata");
         assert_eq!(left, right);
     }
 
@@ -43,10 +43,18 @@ mod page_title {
     }
 
     #[test]
-    pub fn page_title_from_id() {
+    pub fn page_title_with_inline_span() {
         let site = Site::site1();
-        let left = Some("only_metadata".to_string());
-        let right = site.page_title("s1_only_metadata");
+        let left = Some("Title With Inline Span".to_string());
+        let right = site.page_title("s1_title_with_inline_span");
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    pub fn page_title_with_nested_spans() {
+        let site = Site::site1();
+        let left = Some("Nested Span Test".to_string());
+        let right = site.page_title("s1_title_with_nested_spans");
         assert_eq!(left, right);
     }
 }

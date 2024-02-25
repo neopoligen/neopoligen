@@ -30,6 +30,8 @@ impl Site {
                             Some(title)
                         } else if let Some(title) = page_title_from_title_section(&page.ast) {
                             Some(title)
+                        } else if let Some(title) = page_title_from_any_section(&page.ast) {
+                            Some(title)
                         } else if let Some(title) = page_title_from_id(&page.ast) {
                             Some(title)
                         } else {
@@ -81,6 +83,16 @@ fn get_span_words(span: &Span) -> Vec<String> {
             .concat(),
         _ => vec!["".to_string()],
     }
+}
+
+fn page_title_from_any_section(ast: &Vec<Child>) -> Option<String> {
+    ast.iter().find_map(|child| match child {
+        Child::Section(sec) => match sec.key_value_attributes.get("title") {
+            Some(title) => Some(title.to_string()),
+            None => None,
+        },
+        _ => None,
+    })
 }
 
 fn page_title_from_metadata(ast: &Vec<Child>) -> Option<String> {
