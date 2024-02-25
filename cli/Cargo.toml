@@ -9,9 +9,9 @@ rstest = "0.18.2"
 divan = "0.1.13"
 
 
-[[bench]]
-name = "basic"
-harness = false
+#[[bench]]
+#name = "basic"
+#harness = false
 
 [dependencies]
 Inflector = "0.11.4"
