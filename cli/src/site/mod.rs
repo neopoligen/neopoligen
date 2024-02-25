@@ -3,6 +3,7 @@ pub mod new;
 pub mod object;
 
 use crate::child::Child;
+use crate::config::Config;
 use crate::page::Page;
 use crate::section::Section;
 use crate::section_category::SectionCategory;
@@ -17,9 +18,14 @@ use std::sync::Mutex;
 pub struct Site {
     pub pages: BTreeMap<String, Page>,
     pub cache: Mutex<BTreeMap<String, BTreeMap<String, Option<String>>>>,
+    pub config: Config,
 }
 
 impl Site {
+    pub fn page_href(&self, id: &str) -> String {
+        format!("/{}/{}/?{}", "en", "_index", "integration-site-home-page")
+    }
+
     pub fn page_ids(&self) -> Vec<String> {
         self.pages.iter().map(|page| page.0.to_string()).collect()
     }

@@ -1,6 +1,7 @@
 mod integration {
     use minijinja::{context, Environment, Value};
     // use neopoligen_cli::config::Config;
+    use neopoligen_cli::config::Config;
     use neopoligen_cli::page::Page;
     use neopoligen_cli::site::Site;
     // use pretty_assertions::assert_eq;
@@ -21,9 +22,8 @@ mod integration {
             "splitter.jinja",
             r#"{%- import "includes/macros.jinja" as macros -%}
 {%- include "global_vars" -%}
-{%- for page_id in site.page_ids() -%}PADSASDASD
-{# {{ macros.log(page_id, "") }} #}
-{# site.output_path_for_page(page_id) #}
+{%- for page_id in site.page_ids() -%}
+{# site.page_href(page_id) #}
 --- PAGE_DATA_SPLIT ---
 {# include site.template_for_page(page_id) #}
 --- PAGE_SEPERATOR ---
@@ -41,7 +41,8 @@ This is the page output
 --- PAGE_SEPERATOR ---
 "#
         .to_string();
-        let mut site = Site::new();
+        let config = Config::site1_config();
+        let mut site = Site::new(config);
         let page = Page::s1_index();
         site.pages.insert(page.id().unwrap(), page);
         let mut env = Environment::new();

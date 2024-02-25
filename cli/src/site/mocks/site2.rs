@@ -1,9 +1,11 @@
+use crate::config::Config;
 use crate::page::Page;
 use crate::site::Site;
 
 impl Site {
     pub fn site2() -> Site {
-        let mut site = Site::new();
+        let config = Config::site2_config();
+        let mut site = Site::new(config);
         site.pages.insert("id_index".to_string(), Page::s2_index());
         site.pages
             .insert("id_only_metadata".to_string(), Page::s2_only_metadata());
