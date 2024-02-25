@@ -1,4 +1,5 @@
 pub mod mocks;
+pub mod new;
 
 use crate::child::Child;
 use crate::page::Page;
@@ -24,12 +25,16 @@ impl Site {
         };
         title
         //get_title_section_title(&self.pages.)
-
         // let mut cache = self.cache.lock().unwrap();
         // match cache.get("page_title") {
         //     Some(c) => {}
         //     None => {}
         // }
+    }
+
+    fn prep_cache(&self) {
+        let mut c = self.cache.lock().unwrap();
+        c.insert("page_title".to_string(), BTreeMap::new());
     }
 }
 
