@@ -30,8 +30,10 @@ impl Site {
                             Some(title)
                         } else if let Some(title) = get_title_section_title(&page.ast) {
                             Some(title)
+                        } else if let Some(title) = page_title_from_id(&page.ast) {
+                            Some(title)
                         } else {
-                            None
+                            Some("no title".to_string())
                         }
                     }
                     None => Some("(missing page)".to_string()),
@@ -87,6 +89,26 @@ fn get_title_from_metadata(ast: &Vec<Child>) -> Option<String> {
             if &section.r#type == "metadata" {
                 section.key_value_attributes.iter().find_map(|attr| {
                     if attr.0 == "title" {
+                        Some(Some(attr.1.to_string()))
+                    } else {
+                        None
+                    }
+                })
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    })?
+}
+
+fn page_title_from_id(ast: &Vec<Child>) -> Option<String> {
+    ast.iter().find_map(|child| {
+        if let Child::Section(section) = child {
+            if &section.r#type == "metadata" {
+                section.key_value_attributes.iter().find_map(|attr| {
+                    if attr.0 == "id" {
                         Some(Some(attr.1.to_string()))
                     } else {
                         None

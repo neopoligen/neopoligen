@@ -4,20 +4,13 @@ use crate::page::Page;
 use std::path::PathBuf;
 
 impl Page {
-    pub fn s1_index() -> Page {
+    pub fn s1_only_metadata() -> Page {
         let config = Config::site1_config();
         let source_path =
-            PathBuf::from("leading_folder/Neopoligen/dev-test-site/content/_index.neo");
-        let source = r#"-- title
-
-Site 1 Home Page
-
-The initial test page
-
--- metadata
--- date: 2020-01-14 13:13:36
--- id: s1_index
--- path: /
+            PathBuf::from("leading_folder/Neopoligen/dev-test-site/content/s1_only_metadata.neo");
+        let source = r#"-- metadata
+-- date: 2022-12-01 14:31:29
+-- id: only_metadata 
 "#
         .to_string();
         let ast = parse(&source, &config);

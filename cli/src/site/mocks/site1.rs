@@ -17,6 +17,8 @@ impl Site {
             "s1_title_in_metadata".to_string(),
             Page::s1_title_in_metadata(),
         );
+        site.pages
+            .insert("s1_only_metadata".to_string(), Page::s1_only_metadata());
         site
     }
 }

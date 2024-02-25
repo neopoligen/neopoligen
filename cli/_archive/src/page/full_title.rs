@@ -146,13 +146,14 @@ mod test {
     //     assert_eq!(left, right);
     // }
 
-    #[test]
-    fn full_title_test_title_in_metadata() {
-        let p = Page::title_in_metadata();
-        let left = Some("This should be the title. It's from the metadata".to_string());
-        let right = p.full_title();
-        assert_eq!(left, right);
-    }
+    // MOVED TO SITE_WITH_CACHE
+    // #[test]
+    // fn full_title_test_title_in_metadata() {
+    //     let p = Page::title_in_metadata();
+    //     let left = Some("This should be the title. It's from the metadata".to_string());
+    //     let right = p.full_title();
+    //     assert_eq!(left, right);
+    // }
 
     #[test]
     fn full_title_test_title_in_bookmark() {
