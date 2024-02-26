@@ -66,7 +66,11 @@ impl Site {
     pub fn page_template(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         if self.pages.contains_key(&id) {
-            Some(format!("pages/{}/{}.jinja", "post", "published"))
+            Some(format!(
+                "pages/{}/{}.jinja",
+                self.page_type(args).unwrap(),
+                "published"
+            ))
         } else {
             None
         }
