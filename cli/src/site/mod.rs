@@ -63,13 +63,40 @@ impl Site {
         }
     }
 
+    pub fn page_status(&self, args: &[Value]) -> Option<String> {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
+            Some(page) => match page.ast.iter().find_map(|child| {
+                if let Child::Section(section) = child {
+                    if &section.r#type == "metadata" {
+                        section.key_value_attributes.iter().find_map(|attr| {
+                            if attr.0 == "status" {
+                                Some(Some(attr.1.to_string()))
+                            } else {
+                                None
+                            }
+                        })
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            }) {
+                Some(type_from_metadata) => type_from_metadata,
+                None => Some("published".to_string()),
+            },
+            None => None,
+        }
+    }
+
     pub fn page_template(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         if self.pages.contains_key(&id) {
             Some(format!(
                 "pages/{}/{}.jinja",
                 self.page_type(args).unwrap(),
-                "published"
+                self.page_status(args).unwrap(),
             ))
         } else {
             None
