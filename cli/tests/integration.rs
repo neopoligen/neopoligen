@@ -17,7 +17,7 @@ mod integration {
             .unwrap();
         env.add_template_owned(
             "pages/post/published.jinja",
-            "this is the template".to_string(),
+            "This is the page output".to_string(),
         )
         .unwrap();
     }
@@ -30,7 +30,7 @@ mod integration {
 {%- for page_id in site.page_ids() -%}
 {{ site.page_output_path(page_id) }}
 --- PAGE_DATA_SPLIT ---
-{# include site.template_for_page(page_id) #}
+{% include site.page_template(page_id) %}
 --- PAGE_SEPERATOR ---
 {% endfor -%}"#
                 .to_string(),
@@ -39,7 +39,7 @@ mod integration {
     }
 
     #[test]
-    #[ignore]
+    // #[ignore]
     fn single_page_test() {
         let config = Config::site1_config();
         let mut site = Site::new(config);

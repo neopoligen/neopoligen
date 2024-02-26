@@ -13,6 +13,7 @@ impl Object for Site {
             "page_ids" => Ok(Value::from_serializable(&self.page_ids())),
             "page_href" => Ok(Value::from_serializable(&self.page_href(args))),
             "page_output_path" => Ok(Value::from_serializable(&self.page_output_path(args))),
+            "page_template" => Ok(Value::from_serializable(&self.page_template(args))),
             _ => Ok(Value::from("")),
         }
     }
