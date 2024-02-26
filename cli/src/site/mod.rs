@@ -50,6 +50,19 @@ impl Site {
         self.pages.iter().map(|page| page.0.to_string()).collect()
     }
 
+    pub fn page_output_path(&self, args: &[Value]) -> Option<String> {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
+            Some(_) => Some(format!(
+                "{}/{}/{}/index.html",
+                self.config.folders.output_root.display(),
+                self.config.default_language,
+                &id,
+            )),
+            None => None,
+        }
+    }
+
     pub fn page_title(&self, id: &str) -> Option<String> {
         let mut cache = self.cache.lock().unwrap();
         let page_titles = cache.get_mut("page_title").unwrap();

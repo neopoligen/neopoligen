@@ -5,8 +5,8 @@ use std::path::PathBuf;
 
 impl Config {
     pub fn site1_config() -> Config {
-        let project_root = PathBuf::from("some-project-root");
-        let theme_name = String::from("dev-theme");
+        let project_root = PathBuf::from("leading-dir/Neopoligen/integration-site");
+        let theme_name = String::from("integration-theme");
 
         let configuration_root =
             PathBuf::from(format!("{}/{}", project_root.display(), "configuration"));

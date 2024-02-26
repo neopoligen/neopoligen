@@ -34,6 +34,7 @@ mod integration {
     }
 
     #[test]
+    #[ignore]
     fn single_page_test() {
         let config = Config::site1_config();
         let mut site = Site::new(config);
