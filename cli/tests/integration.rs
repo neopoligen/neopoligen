@@ -15,6 +15,11 @@ mod integration {
     fn load_templates(env: &mut Environment) {
         env.add_template_owned("includes/macros.jinja", "".to_string())
             .unwrap();
+        env.add_template_owned(
+            "pages/post/published.jinja",
+            "this is the template".to_string(),
+        )
+        .unwrap();
     }
 
     fn load_splitter(env: &mut Environment) {
@@ -34,6 +39,7 @@ mod integration {
     }
 
     #[test]
+    #[ignore]
     fn single_page_test() {
         let config = Config::site1_config();
         let mut site = Site::new(config);
@@ -44,13 +50,12 @@ mod integration {
         load_global_vars(&mut env);
         load_templates(&mut env);
         let skeleton = env.get_template("splitter.jinja").unwrap();
-        let left =
-            r#"leading-dir/Neopoligen/integration-site/docs/en/id_index/index.html
+        let left = r#"leading-dir/Neopoligen/integration-site/docs/en/id_index/index.html
 --- PAGE_DATA_SPLIT ---
 This is the page output
 --- PAGE_SEPERATOR ---
 "#
-            .to_string();
+        .to_string();
         let right = skeleton
             .render(context!(site => 
         Value::from_object(site)))

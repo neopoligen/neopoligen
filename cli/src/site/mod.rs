@@ -63,6 +63,15 @@ impl Site {
         }
     }
 
+    pub fn page_template(&self, args: &[Value]) -> Option<String> {
+        let id = args[0].to_string();
+        if self.pages.contains_key(&id) {
+            Some(format!("pages/{}/{}.jinja", "post", "published"))
+        } else {
+            None
+        }
+    }
+
     pub fn page_title(&self, id: &str) -> Option<String> {
         let mut cache = self.cache.lock().unwrap();
         let page_titles = cache.get_mut("page_title").unwrap();
@@ -90,6 +99,30 @@ impl Site {
                 page_titles.insert(id.to_string(), title.clone());
                 title
             }
+        }
+    }
+
+    pub fn page_type(&self, args: &[Value]) -> Option<String> {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
+            Some(page) => page.ast.iter().find_map(|child| {
+                if let Child::Section(section) = child {
+                    if &section.r#type == "metadata" {
+                        section.key_value_attributes.iter().find_map(|attr| {
+                            if attr.0 == "type" {
+                                Some(Some(attr.1.to_string()))
+                            } else {
+                                None
+                            }
+                        })
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            })?,
+            None => None,
         }
     }
 

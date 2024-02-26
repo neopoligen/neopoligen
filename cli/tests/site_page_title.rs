@@ -1,4 +1,4 @@
-mod page_title {
+mod site_page_title {
     use neopoligen_cli::site::Site;
     use pretty_assertions::assert_eq;
 

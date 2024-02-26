@@ -14,7 +14,8 @@ This Is Page/File Alfa
 -- metadata
 -- date: 2021-09-23 18:45:57
 -- id: page-alfa 
--- path: /
+-- type: post 
+-- status: published
 "#
         .to_string();
         Page::new(source_path, source, &config).unwrap()
