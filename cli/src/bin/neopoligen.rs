@@ -1,5 +1,6 @@
 use dirs::document_dir;
 use neopoligen::config::Config;
+use neopoligen::file_set::FileSet;
 use serde::Deserialize;
 use std::fs;
 
@@ -23,13 +24,10 @@ fn main() {
                 let mut site_root = document_dir().unwrap();
                 site_root.push("Neopoligen");
                 site_root.push(engine_config.settings.active_site);
-                let site_config = Config::new(site_root);
-
-                // build_site(site_config.clone());
-                // // this is the tmp flag to turn off the watch without getting a warning
-                // if true {
-                //     run_web_server(site_config).await;
-                // }
+                let config = Config::new(site_root);
+                let mut file_set = FileSet::new();
+                file_set.load_content(&config.folders.content_root);
+                file_set.load_templates(&config.folders.theme_root);
             }
             Err(e) => {
                 println!("{}", e)
