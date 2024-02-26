@@ -41,14 +41,6 @@ impl Site {
             ),
             None => None,
         }
-
-        // match self.pages.get(id) {
-        //     Some(page) => Some(format!(
-        //         "/{}/{}/?{}",
-        //         self.config.default_language, id, "integration-site-home-page"
-        //     )),
-        //     None => None,
-        // }
     }
 
     pub fn page_ids(&self) -> Vec<String> {
