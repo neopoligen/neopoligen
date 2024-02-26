@@ -27,6 +27,10 @@ impl Site {
             "id_title_with_nested_spans".to_string(),
             Page::s2_title_with_nested_spans(),
         );
+        site.pages.insert(
+            "id-no-type-or-status-in-metadata".to_string(),
+            Page::s2_no_type_or_status_in_metadata(),
+        );
         site
     }
 }

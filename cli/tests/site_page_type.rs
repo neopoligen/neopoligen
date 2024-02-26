@@ -10,4 +10,12 @@ mod site_page_type {
         let right = site.page_type(&[Value::from("page-alfa")]);
         assert_eq!(left, right);
     }
+
+    #[test]
+    pub fn page_type_not_in_metadata() {
+        let site = Site::site2();
+        let left = Some("post".to_string());
+        let right = site.page_type(&[Value::from("id-no-type-or-status-in-metadata")]);
+        assert_eq!(left, right);
+    }
 }

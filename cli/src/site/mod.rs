@@ -105,7 +105,7 @@ impl Site {
     pub fn page_type(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {
-            Some(page) => page.ast.iter().find_map(|child| {
+            Some(page) => match page.ast.iter().find_map(|child| {
                 if let Child::Section(section) = child {
                     if &section.r#type == "metadata" {
                         section.key_value_attributes.iter().find_map(|attr| {
@@ -121,7 +121,10 @@ impl Site {
                 } else {
                     None
                 }
-            })?,
+            }) {
+                Some(type_from_metadata) => type_from_metadata,
+                None => Some("post".to_string()),
+            },
             None => None,
         }
     }

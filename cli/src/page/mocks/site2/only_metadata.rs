@@ -5,7 +5,7 @@ use std::path::PathBuf;
 
 impl Page {
     pub fn s2_only_metadata() -> Page {
-        let config = Config::site1_config();
+        let config = Config::site2_config();
         let source_path =
             PathBuf::from("leading_folder/Neopoligen/test-site2/content/only_metadata.neo");
         let source = r#"-- metadata
