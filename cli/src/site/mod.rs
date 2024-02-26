@@ -25,9 +25,11 @@ pub struct Site {
 impl Site {
     pub fn page_href(&self, id: &str) -> Option<String> {
         match self.pages.get(id) {
-            Some(page) => Some(format!(
+            Some(_) => Some(format!(
                 "/{}/{}/?{}",
-                self.config.default_language, id, "integration-site-home-page"
+                self.config.default_language,
+                id,
+                self.page_href_title(id).unwrap()
             )),
             None => None,
         }
