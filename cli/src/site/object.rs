@@ -12,6 +12,7 @@ impl Object for Site {
         match name {
             "page_ids" => Ok(Value::from_serializable(&self.page_ids())),
             "page_href" => Ok(Value::from_serializable(&self.page_href(args))),
+            "page_output_path" => Ok(Value::from_serializable(&self.page_output_path(args))),
             _ => Ok(Value::from("")),
         }
     }
