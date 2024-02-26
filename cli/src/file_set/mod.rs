@@ -11,8 +11,8 @@ use walkdir::{DirEntry, WalkDir};
 // manually for testing.
 
 pub struct FileSet {
-    content: BTreeMap<PathBuf, String>,
-    templates: BTreeMap<String, String>,
+    pub content: BTreeMap<PathBuf, String>,
+    pub templates: BTreeMap<String, String>,
 }
 
 impl FileSet {
@@ -36,12 +36,29 @@ impl FileSet {
                     }
                 }
             });
-        dbg!("loading content");
-        dbg!(dir);
     }
 
-    pub fn load_templates(&mut self, templates_root: &PathBuf) {
-        dbg!("loading templates");
-        dbg!(templates_root);
+    pub fn load_templates(&mut self, dir: &PathBuf) {
+        WalkDir::new(dir)
+            .into_iter()
+            .filter(|entry| match entry.as_ref().unwrap().path().extension() {
+                Some(ext) => ext.to_str().unwrap() == "jinja",
+                None => false,
+            })
+            .for_each(|entry| {
+                let path = entry.as_ref().unwrap().path().to_path_buf();
+                match fs::read_to_string(&path) {
+                    Ok(content) => {
+                        let template_name = path.strip_prefix(dir.to_str().unwrap()).unwrap();
+                        self.templates
+                            .insert(template_name.to_string_lossy().to_string(), content);
+                        ()
+                    }
+                    Err(e) => {
+                        println!("{}", e);
+                        ()
+                    }
+                }
+            });
     }
 }

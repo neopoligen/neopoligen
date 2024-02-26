@@ -1,4 +1,5 @@
 use crate::config::Config;
+use crate::file_set::FileSet;
 use crate::site::Site;
 use std::collections::BTreeMap;
 use std::sync::Mutex;

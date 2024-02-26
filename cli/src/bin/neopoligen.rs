@@ -28,6 +28,7 @@ fn main() {
                 let mut file_set = FileSet::new();
                 file_set.load_content(&config.folders.content_root);
                 file_set.load_templates(&config.folders.theme_root);
+                dbg!(file_set.templates);
             }
             Err(e) => {
                 println!("{}", e)
