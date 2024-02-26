@@ -35,7 +35,10 @@ impl Site {
 
     pub fn page_href_title(&self, id: &str) -> Option<String> {
         match self.page_title(id) {
-            Some(title) => Some(title.to_lowercase().replace(" ", "-").to_string()),
+            Some(title) => Some(
+                urlencoding::encode(&title.to_lowercase().replace(" ", "-").to_string())
+                    .into_owned(),
+            ),
             None => None,
         }
 
