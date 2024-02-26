@@ -74,21 +74,10 @@ mod integration_solo {
         load_splitter(&mut env);
         load_global_vars(&mut env);
         load_templates(&mut env);
-        // let skeleton = env.get_template("splitter.jinja").unwrap();
-        let outputs = create_outputs(&env, site);
-        dbg!("------------------------------");
-        dbg!(outputs);
-
-        // let left = r#"leading-dir/Neopoligen/integration-site/docs/en/id_index/index.html
-        // --- PAGE_DATA_SPLIT ---
-        // This is the page output
-        // --- PAGE_SEPERATOR ---
-        // "#
-        // .to_string();
-        // let right = skeleton
-        //     .render(context!(site =>
-        // Value::from_object(site)))
-        //     .unwrap();
-        // assert_eq!(left, right);
+        let left_path = "leading-dir/Neopoligen/integration-site/docs/en/id_index/index.html";
+        let left_content = r#"This is the page output"#.to_string();
+        let right = &create_outputs(&env, site)[0];
+        assert_eq!(left_path, right.0);
+        assert_eq!(left_content, right.1);
     }
 }
