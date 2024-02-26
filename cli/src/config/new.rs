@@ -15,9 +15,8 @@ impl Config {
     pub fn new(project_root: PathBuf) -> Config {
         let configuration_root =
             PathBuf::from(format!("{}/{}", project_root.display(), "configuration"));
-
         let default_language =
-            get_config_file_lines(&configuration_root, "default-language.txt")[0].clone();
+            get_config_file_single_line(&configuration_root, "default-language.txt").unwrap();
         let files_root = PathBuf::from(format!("{}/{}", project_root.display(), "files"));
         let images_root = PathBuf::from(format!("{}/{}", project_root.display(), "images"));
         let plugins_root = PathBuf::from(format!("{}/{}", project_root.display(), "plugins"));
@@ -25,10 +24,7 @@ impl Config {
         let themes_root = PathBuf::from(format!("{}/{}", project_root.display(), "themes"));
         let output_root = PathBuf::from(format!("{}/{}", project_root.display(), "docs"));
 
-        let theme_name = get_config_file_lines(&configuration_root, "theme.txt")
-            .first()
-            .unwrap()
-            .to_string();
+        let theme_name = get_config_file_single_line(&configuration_root, "theme.txt").unwrap();
 
         let mut theme_root = themes_root.clone();
         theme_root.push(&theme_name);
@@ -120,7 +116,7 @@ impl Config {
         });
 
         let main_body_section_excludes =
-            get_config_file_lines(&configuration_root, "main-body-section-excludes.txt");
+            get_config_file_lines(&theme_configuration_root, "main-body-excludes.txt");
 
         // Plugins
 
@@ -207,7 +203,7 @@ impl Config {
             get_config_file_lines(&configuration_root, "input-date-formats.txt");
 
         let section_attribute_excludes =
-            get_config_file_lines(&configuration_root, "section-attribute-excludes.txt");
+            get_config_file_lines(&theme_configuration_root, "section-attribute-excludes.txt");
 
         let section_categories = ConfigSectionCategories {
             checklist,
@@ -257,6 +253,27 @@ fn get_config_file_lines(file_dir: &PathBuf, file_name: &str) -> Vec<String> {
                 }
             })
             .collect(),
+        Err(e) => panic!(
+            "\nERROR: Could not read config file:\n({})\n{}\n",
+            e,
+            &file_path.display()
+        ),
+    }
+}
+
+fn get_config_file_single_line(file_dir: &PathBuf, file_name: &str) -> Option<String> {
+    let mut file_path = file_dir.clone();
+    file_path.push(file_name);
+    match fs::read_to_string(&file_path) {
+        Ok(data) => data.lines().find_map(|line| {
+            if line.trim().starts_with("#") {
+                None
+            } else if line.trim() != "" {
+                Some(line.trim().to_string())
+            } else {
+                None
+            }
+        }),
         Err(e) => panic!(
             "\nERROR: Could not read config file:\n({})\n{}\n",
             e,

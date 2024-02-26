@@ -1,12 +1,12 @@
 mod integration_solo {
     use minijinja::{context, Environment, Value};
     // use neopoligen_cli::config::Config;
-    use neopoligen_cli::config::Config;
-    use neopoligen_cli::page::Page;
-    use neopoligen_cli::site::Site;
+    use neopoligen::config::Config;
+    use neopoligen::page::Page;
+    use neopoligen::site::Site;
     use pretty_assertions::assert_eq;
     // use std::path::PathBuf;
-    use std::collections::BTreeMap;
+    // use std::collections::BTreeMap;
 
     fn load_global_vars(env: &mut Environment) {
         env.add_template_owned("global_vars", "".to_string())
