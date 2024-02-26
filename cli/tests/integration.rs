@@ -61,15 +61,6 @@ mod integration_solo {
                 vec![]
             }
         }
-
-        // let combined_output = skeleton
-        //     .render(context!(site => Value::from_object(site)))
-        //     .unwrap();
-        // dbg!(combined_output);
-        // let pages: Vec<_> = combined_output.split("--- PAGE_SEPARATOR ---").collect();
-        // // dbg!(&pages);
-
-        // vec![]
     }
 
     #[test]
