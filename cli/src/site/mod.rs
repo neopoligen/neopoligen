@@ -12,7 +12,6 @@ use serde::Serialize;
 use std::collections::BTreeMap;
 use std::fmt::Display;
 use std::sync::Mutex;
-use urlencoding::encode;
 
 #[derive(Debug, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
