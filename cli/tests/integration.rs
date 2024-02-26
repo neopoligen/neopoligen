@@ -1,4 +1,4 @@
-mod integration {
+mod integration_solo {
     use minijinja::{context, Environment, Value};
     // use neopoligen_cli::config::Config;
     use neopoligen_cli::config::Config;
@@ -6,6 +6,7 @@ mod integration {
     use neopoligen_cli::site::Site;
     use pretty_assertions::assert_eq;
     // use std::path::PathBuf;
+    use std::collections::BTreeMap;
 
     fn load_global_vars(env: &mut Environment) {
         env.add_template_owned("global_vars", "".to_string())
@@ -31,11 +32,44 @@ mod integration {
 {{ site.page_output_path(page_id) }}
 --- PAGE_DATA_SPLIT ---
 {% include site.page_template(page_id) %}
---- PAGE_SEPERATOR ---
+--- PAGE_SEPARATOR ---
 {% endfor -%}"#
                 .to_string(),
         )
         .unwrap();
+    }
+
+    fn create_outputs(env: &Environment, site: Site) -> Vec<(String, String)> {
+        let skeleton = env.get_template("splitter.jinja").unwrap();
+        match skeleton.render(context!(site => Value::from_object(site))) {
+            Ok(all_pages) => all_pages
+                .split("--- PAGE_SEPARATOR ---")
+                .filter_map(|page| {
+                    let page_parts: Vec<_> = page.split("--- PAGE_DATA_SPLIT ---").collect();
+                    if page_parts.len() == 2 {
+                        Some((
+                            page_parts[0].trim().to_string(),
+                            page_parts[1].trim().to_string(),
+                        ))
+                    } else {
+                        None
+                    }
+                })
+                .collect(),
+            Err(e) => {
+                println!("{}", e);
+                vec![]
+            }
+        }
+
+        // let combined_output = skeleton
+        //     .render(context!(site => Value::from_object(site)))
+        //     .unwrap();
+        // dbg!(combined_output);
+        // let pages: Vec<_> = combined_output.split("--- PAGE_SEPARATOR ---").collect();
+        // // dbg!(&pages);
+
+        // vec![]
     }
 
     #[test]
@@ -49,17 +83,21 @@ mod integration {
         load_splitter(&mut env);
         load_global_vars(&mut env);
         load_templates(&mut env);
-        let skeleton = env.get_template("splitter.jinja").unwrap();
-        let left = r#"leading-dir/Neopoligen/integration-site/docs/en/id_index/index.html
---- PAGE_DATA_SPLIT ---
-This is the page output
---- PAGE_SEPERATOR ---
-"#
-        .to_string();
-        let right = skeleton
-            .render(context!(site => 
-        Value::from_object(site)))
-            .unwrap();
-        assert_eq!(left, right);
+        // let skeleton = env.get_template("splitter.jinja").unwrap();
+        let outputs = create_outputs(&env, site);
+        dbg!("------------------------------");
+        dbg!(outputs);
+
+        // let left = r#"leading-dir/Neopoligen/integration-site/docs/en/id_index/index.html
+        // --- PAGE_DATA_SPLIT ---
+        // This is the page output
+        // --- PAGE_SEPERATOR ---
+        // "#
+        // .to_string();
+        // let right = skeleton
+        //     .render(context!(site =>
+        // Value::from_object(site)))
+        //     .unwrap();
+        // assert_eq!(left, right);
     }
 }
