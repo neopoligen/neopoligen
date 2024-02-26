@@ -4,7 +4,7 @@ mod integration {
     use neopoligen_cli::config::Config;
     use neopoligen_cli::page::Page;
     use neopoligen_cli::site::Site;
-    // use pretty_assertions::assert_eq;
+    use pretty_assertions::assert_eq;
     // use std::path::PathBuf;
 
     fn load_global_vars(env: &mut Environment) {
@@ -23,7 +23,7 @@ mod integration {
             r#"{%- import "includes/macros.jinja" as macros -%}
 {%- include "global_vars" -%}
 {%- for page_id in site.page_ids() -%}
-{# site.page_href(page_id) #}
+{{ site.page_href(page_id) }}
 --- PAGE_DATA_SPLIT ---
 {# include site.template_for_page(page_id) #}
 --- PAGE_SEPERATOR ---
@@ -35,12 +35,6 @@ mod integration {
 
     #[test]
     fn single_page_test() {
-        let unsplit_content = r#"/en/_index/?integration-site-home-page
---- PAGE_DATA_SPLIT ---
-This is the page output
---- PAGE_SEPERATOR ---
-"#
-        .to_string();
         let config = Config::site1_config();
         let mut site = Site::new(config);
         let page = Page::s1_index();
@@ -50,13 +44,16 @@ This is the page output
         load_global_vars(&mut env);
         load_templates(&mut env);
         let skeleton = env.get_template("splitter.jinja").unwrap();
-
-        // let left = "This is the published post page".to_string();
+        let left = r#"/en/id_index/?integration-test-site
+--- PAGE_DATA_SPLIT ---
+This is the page output
+--- PAGE_SEPERATOR ---
+"#
+        .to_string();
         let right = skeleton
             .render(context!(site => 
         Value::from_object(site)))
             .unwrap();
-        dbg!(right);
-        // assert_eq!(left, right);
+        assert_eq!(left, right);
     }
 }

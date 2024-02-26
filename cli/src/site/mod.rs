@@ -8,6 +8,7 @@ use crate::page::Page;
 use crate::section::Section;
 use crate::section_category::SectionCategory;
 use crate::span::Span;
+use minijinja::Value;
 use serde::Serialize;
 use std::collections::BTreeMap;
 use std::fmt::Display;
@@ -22,13 +23,14 @@ pub struct Site {
 }
 
 impl Site {
-    pub fn page_href(&self, id: &str) -> Option<String> {
-        match self.pages.get(id) {
+    pub fn page_href(&self, args: &[Value]) -> Option<String> {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
             Some(_) => Some(format!(
                 "/{}/{}/?{}",
                 self.config.default_language,
                 id,
-                self.page_href_title(id).unwrap()
+                self.page_href_title(&id).unwrap()
             )),
             None => None,
         }

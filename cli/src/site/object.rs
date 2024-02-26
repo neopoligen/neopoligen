@@ -7,10 +7,11 @@ impl Object for Site {
         &self,
         _state: &minijinja::State,
         name: &str,
-        _args: &[Value],
+        args: &[Value],
     ) -> Result<Value, Error> {
         match name {
             "page_ids" => Ok(Value::from_serializable(&self.page_ids())),
+            "page_href" => Ok(Value::from_serializable(&self.page_href(args))),
             _ => Ok(Value::from("")),
         }
     }
