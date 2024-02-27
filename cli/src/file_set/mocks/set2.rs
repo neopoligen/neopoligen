@@ -20,7 +20,7 @@ impl FileSet {
 Dev Test Site 2 Home Page
 
 -- metadata
--- date: 2024-01-01 00:00:00
+-- date: 2024-02-01 00:00:00
 -- id: site2-home-page
 -- path: /
 "#
@@ -36,7 +36,7 @@ Dev Test Site 2 Home Page
 -- url: https://www.example.com/
 
 -- metadata
--- date: 2024-01-02 00:00:00
+-- date: 2024-02-02 00:00:00
 -- id: title-from-section-attribute
 "#
             .to_string(),
@@ -51,7 +51,7 @@ Dev Test Site 2 Home Page
 Title from block content example
 
 -- metadata
--- date: 2024-01-03 00:00:00
+-- date: 2024-02-03 00:00:00
 -- id: title-from-block-content
 "#
             .to_string(),
@@ -62,8 +62,52 @@ Title from block content example
         fs.pages.insert(
             PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/title-from-metadata-id.neo"),
             r#"-- metadata
--- date: 2024-01-03 00:00:00
+-- date: 2024-02-04 00:00:00
 -- id: no-title-just-id
+"#
+            .to_string(),
+        );
+
+
+                
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/metadata-override-title.neo"),
+            r#"-- title
+
+This Title Should Be Overridden By Metadata
+
+-- metadata
+-- title: Metadata Override Title
+-- date: 2024-02-05 00:00:00
+-- id: metadata-override-title
+"#
+            .to_string(),
+        );
+
+                
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/title-with-inline-span.neo"),
+            r#"-- title
+
+Inline <<em|Spans>> Should <<strong|Not>> Show UP
+
+-- metadata
+-- date: 2024-02-06 00:00:00
+-- id: title-with-inline-span
+"#
+            .to_string(),
+        );
+
+                
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/title-with-nested-inline-spans.neo"),
+            r#"-- title
+
+Nested <<em|<<strong|Inline Spans>>>> Should Not Show UP
+
+-- metadata
+-- date: 2024-02-06 00:00:00
+-- id: title-with-nested-inline-spans
 "#
             .to_string(),
         );

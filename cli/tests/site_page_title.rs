@@ -54,21 +54,25 @@ mod site_page_title {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // pub fn page_title_from_id() {
-    //     let site = Site::site2();
-    //     let left = Some("id_only_metadata".to_string());
-    //     let right = site.page_title("id_only_metadata");
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    pub fn title_in_metadata() {
+        let file_set = FileSet::set2();
+        let config = Config::site2_config();
+        let site = Site::new(&file_set, &config);
+        let left = Some("Metadata Override Title".to_string());
+        let right = site.page_title("metadata-override-title");
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // pub fn page_title_in_metadata() {
-    //     let site = Site::site2();
-    //     let left = Some("This is the override title from metadata".to_string());
-    //     let right = site.page_title("id_title_in_metadata");
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    pub fn title_with_inline_span() {
+        let file_set = FileSet::set2();
+        let config = Config::site2_config();
+        let site = Site::new(&file_set, &config);
+        let left = Some("Inline Spans Should Not Show UP".to_string());
+        let right = site.page_title("title-with-inline-span");
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // pub fn page_title_with_inline_span() {
