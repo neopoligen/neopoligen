@@ -9,7 +9,7 @@ pub fn basic_integration_solo() {
     let file_set = FileSet::set1();
     let config = Config::site1_config();
     let builder = Builder::new(file_set, &config);
-    dbg!(builder.file_to_output());
+    dbg!(builder.files_to_output());
     // let output_files = site.output_files();
     // dbg!(&output_files);
     // let _left = output_files.get(&PathBuf::from(

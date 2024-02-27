@@ -6,6 +6,7 @@ use crate::site::Site;
 use minijinja::context;
 use minijinja::Environment;
 use minijinja::Value;
+use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 pub struct Builder {
@@ -14,9 +15,10 @@ pub struct Builder {
 }
 
 impl Builder {
-    pub fn file_to_output(&self) -> Vec<(PathBuf, String)> {
+    pub fn files_to_output(&self) -> BTreeMap<PathBuf, String> {
         let mut env = Environment::new();
         let site = Site::new(&self.file_set, &self.config);
+        let mut outputs = BTreeMap::new();
 
         self.file_set
             .templates
@@ -43,19 +45,28 @@ impl Builder {
                      site => Value::from_object(site),
                 )) {
                     Ok(combined_pages) => {
-                        dbg!(combined_pages);
-                        vec![]
+                        combined_pages
+                            .split("--- PAGE_SEPARATOR ---")
+                            .for_each(|page| {
+                                let page_parts: Vec<_> =
+                                    page.split("--- PAGE_DATA_SPLIT ---").collect();
+                                if page_parts.len() == 2 {
+                                    outputs.insert(
+                                        PathBuf::from(page_parts[0].trim()),
+                                        page_parts[1].trim().to_string(),
+                                    );
+                                }
+                            });
                     }
                     Err(e) => {
                         println!("{}", e);
-                        vec![]
                     }
                 }
             }
             Err(e) => {
                 println!("{}", e);
-                vec![]
             }
-        }
+        };
+        outputs
     }
 }
