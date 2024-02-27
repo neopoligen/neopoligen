@@ -5,30 +5,34 @@ mod site_page_title {
     use pretty_assertions::assert_eq;
 
     #[test]
-    pub fn page_title_basic() {
+    pub fn basic() {
         let file_set = FileSet::set2();
         let config = Config::site2_config();
         let site = Site::new(&file_set, &config);
         let left = Some("Dev Test Site 2 Home Page".to_string());
-        let right = site.page_title("id-site2-home-page");
+        let right = site.page_title("site2-home-page");
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // pub fn page_title_for_missing_page() {
-    //     let site = Site::site2();
-    //     let left = Some("(missing page)".to_string());
-    //     let right = site.page_title("page_id_that_does_not_exist");
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    pub fn missing_page() {
+        let file_set = FileSet::set2();
+        let config = Config::site2_config();
+        let site = Site::new(&file_set, &config);
+        let left = Some("(missing page)".to_string());
+        let right = site.page_title("intentionally-missing-id");
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // pub fn page_title_from_content() {
-    //     let site = Site::site2();
-    //     let left = Some("This Is A Title From A Bookmark Attribute".to_string());
-    //     let right = site.page_title("id_title_from_content");
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    pub fn title_from_content() {
+        let file_set = FileSet::set2();
+        let config = Config::site2_config();
+        let site = Site::new(&file_set, &config);
+        let left = Some("This Is A Title From A Bookmark Attribute".to_string());
+        let right = site.page_title("title-from-content");
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // pub fn page_title_from_first_few_words() {
