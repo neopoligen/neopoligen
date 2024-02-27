@@ -104,11 +104,42 @@ Inline <<em|Spans>> Should <<strong|Not>> Show UP
 Nested <<em|<<strong|Inline Spans>>>> Should Not Show UP
 
 -- metadata
--- date: 2024-02-06 00:00:00
+-- date: 2024-02-07 00:00:00
 -- id: title-with-nested-inline-spans
 "#
             .to_string(),
         );
+
+                
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/page-type-in-metadata.neo"),
+            r#"-- title
+
+Page Type In Metadata
+
+-- metadata
+-- date: 2024-02-08 00:00:00
+-- id: page-type-in-metadata
+-- type: example
+"#
+            .to_string(),
+        );
+
+
+                
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/page-type-in-not-metadata.neo"),
+            r#"-- title
+
+Page Type In Metadata
+
+-- metadata
+-- date: 2024-02-09 00:00:00
+-- id: page-type-not-in-metadata
+"#
+            .to_string(),
+        );
+
 
 
         fs
