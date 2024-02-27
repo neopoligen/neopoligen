@@ -4,7 +4,7 @@ use std::collections::BTreeMap;
 impl FileSet {
     pub fn new() -> FileSet {
         FileSet {
-            content: BTreeMap::new(),
+            pages: BTreeMap::new(),
             templates: BTreeMap::new(),
         }
     }

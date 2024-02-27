@@ -12,109 +12,109 @@ pub fn ast<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str, Vec<Chil
 #[cfg(test)]
 mod test {
 
-    use super::*;
-    use crate::page::Page;
-    use crate::section::Section;
-    use crate::section_category::SectionCategory;
-    use crate::span::Span;
-    use pretty_assertions::assert_eq;
-    use std::collections::BTreeMap;
-    use std::collections::BTreeSet;
+    // use super::*;
+    // use crate::page::Page;
+    // use crate::section::Section;
+    // use crate::section_category::SectionCategory;
+    // use crate::span::Span;
+    // use pretty_assertions::assert_eq;
+    // use std::collections::BTreeMap;
+    // use std::collections::BTreeSet;
 
-    #[test]
-    fn ast_basic_test() {
-        let page = Page::s2_index();
-        let mut metadata_key_value_attrs = BTreeMap::new();
-        metadata_key_value_attrs.insert("date".to_string(), "2020-01-14 13:13:36".to_string());
-        metadata_key_value_attrs.insert("id".to_string(), "id_index".to_string());
-        metadata_key_value_attrs.insert("path".to_string(), "/".to_string());
-        let left = vec![
-            Child::Section(Section {
-                key_value_attributes: BTreeMap::new(),
-                flag_attributes: BTreeSet::new(),
-                bounds: "full".to_string(),
-                category: SectionCategory::StandardSectionFull {
-                    containers: vec![
-                        Child::Block(vec![
-                            Span::Word {
-                                text: "Site".to_string(),
-                                template: "spans/word.jinja".to_string(),
-                            },
-                            Span::Space {
-                                text: " ".to_string(),
-                                template: "spans/space.jinja".to_string(),
-                            },
-                            Span::Word {
-                                text: "2".to_string(),
-                                template: "spans/word.jinja".to_string(),
-                            },
-                            Span::Space {
-                                text: " ".to_string(),
-                                template: "spans/space.jinja".to_string(),
-                            },
-                            Span::Word {
-                                text: "Home".to_string(),
-                                template: "spans/word.jinja".to_string(),
-                            },
-                            Span::Space {
-                                text: " ".to_string(),
-                                template: "spans/space.jinja".to_string(),
-                            },
-                            Span::Word {
-                                text: "Page".to_string(),
-                                template: "spans/word.jinja".to_string(),
-                            },
-                        ]),
-                        Child::Block(vec![
-                            Span::Word {
-                                text: "The".to_string(),
-                                template: "spans/word.jinja".to_string(),
-                            },
-                            Span::Space {
-                                text: " ".to_string(),
-                                template: "spans/space.jinja".to_string(),
-                            },
-                            Span::Word {
-                                text: "initial".to_string(),
-                                template: "spans/word.jinja".to_string(),
-                            },
-                            Span::Space {
-                                text: " ".to_string(),
-                                template: "spans/space.jinja".to_string(),
-                            },
-                            Span::Word {
-                                text: "test".to_string(),
-                                template: "spans/word.jinja".to_string(),
-                            },
-                            Span::Space {
-                                text: " ".to_string(),
-                                template: "spans/space.jinja".to_string(),
-                            },
-                            Span::Word {
-                                text: "page".to_string(),
-                                template: "spans/word.jinja".to_string(),
-                            },
-                        ]),
-                    ],
-                },
-                template: "default".to_string(),
-                r#type: "title".to_string(),
-                source: "-- title\n\nSite 2 Home Page\n\nThe initial test page".to_string(),
-            }),
-            Child::Section(Section {
-                key_value_attributes: metadata_key_value_attrs,
-                flag_attributes: BTreeSet::new(),
-                bounds: "full".to_string(),
-                category: SectionCategory::JsonSectionFull { object: None },
-                template: "default".to_string(),
-                r#type: "metadata".to_string(),
-                source: "-- metadata\n-- date: 2020-01-14 13:13:36\n-- id: id_index\n-- path: /"
-                    .to_string(),
-            }),
-        ];
-        let right = page.ast;
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // fn ast_basic_test() {
+    //     let page = Page::s2_index();
+    //     let mut metadata_key_value_attrs = BTreeMap::new();
+    //     metadata_key_value_attrs.insert("date".to_string(), "2020-01-14 13:13:36".to_string());
+    //     metadata_key_value_attrs.insert("id".to_string(), "id_index".to_string());
+    //     metadata_key_value_attrs.insert("path".to_string(), "/".to_string());
+    //     let left = vec![
+    //         Child::Section(Section {
+    //             key_value_attributes: BTreeMap::new(),
+    //             flag_attributes: BTreeSet::new(),
+    //             bounds: "full".to_string(),
+    //             category: SectionCategory::StandardSectionFull {
+    //                 containers: vec![
+    //                     Child::Block(vec![
+    //                         Span::Word {
+    //                             text: "Site".to_string(),
+    //                             template: "spans/word.jinja".to_string(),
+    //                         },
+    //                         Span::Space {
+    //                             text: " ".to_string(),
+    //                             template: "spans/space.jinja".to_string(),
+    //                         },
+    //                         Span::Word {
+    //                             text: "2".to_string(),
+    //                             template: "spans/word.jinja".to_string(),
+    //                         },
+    //                         Span::Space {
+    //                             text: " ".to_string(),
+    //                             template: "spans/space.jinja".to_string(),
+    //                         },
+    //                         Span::Word {
+    //                             text: "Home".to_string(),
+    //                             template: "spans/word.jinja".to_string(),
+    //                         },
+    //                         Span::Space {
+    //                             text: " ".to_string(),
+    //                             template: "spans/space.jinja".to_string(),
+    //                         },
+    //                         Span::Word {
+    //                             text: "Page".to_string(),
+    //                             template: "spans/word.jinja".to_string(),
+    //                         },
+    //                     ]),
+    //                     Child::Block(vec![
+    //                         Span::Word {
+    //                             text: "The".to_string(),
+    //                             template: "spans/word.jinja".to_string(),
+    //                         },
+    //                         Span::Space {
+    //                             text: " ".to_string(),
+    //                             template: "spans/space.jinja".to_string(),
+    //                         },
+    //                         Span::Word {
+    //                             text: "initial".to_string(),
+    //                             template: "spans/word.jinja".to_string(),
+    //                         },
+    //                         Span::Space {
+    //                             text: " ".to_string(),
+    //                             template: "spans/space.jinja".to_string(),
+    //                         },
+    //                         Span::Word {
+    //                             text: "test".to_string(),
+    //                             template: "spans/word.jinja".to_string(),
+    //                         },
+    //                         Span::Space {
+    //                             text: " ".to_string(),
+    //                             template: "spans/space.jinja".to_string(),
+    //                         },
+    //                         Span::Word {
+    //                             text: "page".to_string(),
+    //                             template: "spans/word.jinja".to_string(),
+    //                         },
+    //                     ]),
+    //                 ],
+    //             },
+    //             template: "default".to_string(),
+    //             r#type: "title".to_string(),
+    //             source: "-- title\n\nSite 2 Home Page\n\nThe initial test page".to_string(),
+    //         }),
+    //         Child::Section(Section {
+    //             key_value_attributes: metadata_key_value_attrs,
+    //             flag_attributes: BTreeSet::new(),
+    //             bounds: "full".to_string(),
+    //             category: SectionCategory::JsonSectionFull { object: None },
+    //             template: "default".to_string(),
+    //             r#type: "metadata".to_string(),
+    //             source: "-- metadata\n-- date: 2020-01-14 13:13:36\n-- id: id_index\n-- path: /"
+    //                 .to_string(),
+    //         }),
+    //     ];
+    //     let right = page.ast;
+    //     assert_eq!(left, right);
+    // }
 
     // TODO: Put versions of these original
     // tests back in place

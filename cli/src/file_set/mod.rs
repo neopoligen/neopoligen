@@ -1,9 +1,10 @@
+pub mod mocks;
 pub mod new;
 
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
-use walkdir::{DirEntry, WalkDir};
+use walkdir::WalkDir;
 
 // This is used to abstract away the file system
 // and provide for more robust testing. The functions
@@ -11,7 +12,7 @@ use walkdir::{DirEntry, WalkDir};
 // manually for testing.
 
 pub struct FileSet {
-    pub content: BTreeMap<PathBuf, String>,
+    pub pages: BTreeMap<PathBuf, String>,
     pub templates: BTreeMap<String, String>,
 }
 
@@ -27,7 +28,7 @@ impl FileSet {
                 let path = entry.as_ref().unwrap().path().to_path_buf();
                 match fs::read_to_string(&path) {
                     Ok(content) => {
-                        self.content.insert(path, content);
+                        self.pages.insert(path, content);
                         ()
                     }
                     Err(e) => {

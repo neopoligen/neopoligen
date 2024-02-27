@@ -1,18 +1,36 @@
 use crate::ast::*;
+use crate::child::Child;
 use crate::config::Config;
 use crate::page::Page;
 use std::path::PathBuf;
 
 impl Page {
     pub fn new(source_path: PathBuf, source: String, config: &Config) -> Option<Page> {
-        if let Ok((_, ast)) = ast(source.trim_start(), config) {
-            Some(Page {
-                ast,
-                source,
-                source_path,
-            })
-        } else {
-            None
-        }
+        let Ok((_, ast)) = ast(source.trim_start(), config) else {
+            return None;
+        };
+        let Some(id) = ast.iter().find_map(|child| {
+            if let Child::Section(section) = child {
+                let section_type = &section.r#type;
+                if section_type == "metadata" {
+                    section
+                        .key_value_attributes
+                        .get("id")
+                        .map(|value| value.to_string())
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        }) else {
+            return None;
+        };
+        Some(Page {
+            ast,
+            id,
+            source,
+            source_path,
+        })
     }
 }
