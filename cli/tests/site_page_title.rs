@@ -30,17 +30,29 @@ mod site_page_title {
         let config = Config::site2_config();
         let site = Site::new(&file_set, &config);
         let left = Some("This Is A Title From A Bookmark Attribute".to_string());
-        let right = site.page_title("title-from-content");
+        let right = site.page_title("title-from-section-attribute");
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // pub fn page_title_from_first_few_words() {
-    //     let site = Site::site2();
-    //     let left = Some("This is a title from the".to_string());
-    //     let right = site.page_title("id_title_from_text");
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    pub fn first_few_words() {
+        let file_set = FileSet::set2();
+        let config = Config::site2_config();
+        let site = Site::new(&file_set, &config);
+        let left = Some("Title from block content example".to_string());
+        let right = site.page_title("title-from-block-content");
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    pub fn title_from_metadata_id() {
+        let file_set = FileSet::set2();
+        let config = Config::site2_config();
+        let site = Site::new(&file_set, &config);
+        let left = Some("no-title-just-id".to_string());
+        let right = site.page_title("no-title-just-id");
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // pub fn page_title_from_id() {
