@@ -62,6 +62,7 @@ impl Site {
         }
     }
 
+
     pub fn page_status(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {

@@ -5,8 +5,6 @@ impl FileSet {
     pub fn set2() -> FileSet {
         let mut fs = FileSet::new();
 
-
-
         fs.templates.insert(
             "pages/post/published.jinja".to_string(),
             r#"This is a stub page"#.to_string(),
