@@ -74,19 +74,13 @@ mod site_page_title {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // pub fn page_title_with_inline_span() {
-    //     let site = Site::site2();
-    //     let left = Some("Title With Inline Span".to_string());
-    //     let right = site.page_title("id_title_with_inline_span");
-    //     assert_eq!(left, right);
-    // }
-
-    // #[test]
-    // pub fn page_title_with_nested_spans() {
-    //     let site = Site::site2();
-    //     let left = Some("Nested Span Test".to_string());
-    //     let right = site.page_title("id_title_with_nested_spans");
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    pub fn title_with_nested_inline_span() {
+        let file_set = FileSet::set2();
+        let config = Config::site2_config();
+        let site = Site::new(&file_set, &config);
+        let left = Some("Nested Inline Spans Should Not Show UP".to_string());
+        let right = site.page_title("title-with-nested-inline-spans");
+        assert_eq!(left, right);
+    }
 }
