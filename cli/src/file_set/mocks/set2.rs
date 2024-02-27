@@ -154,6 +154,16 @@ Nested <<em|<<strong|Inline Spans>>>> Should Not Show UP
         );
 
 
+                
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/no-type-no-status.neo"),
+            r#"-- metadata
+-- date: 2024-02-12 00:00:00
+-- id: no-type-no-status
+"#
+            .to_string(),
+        );
+
         fs
     }
 }
