@@ -12,7 +12,8 @@ Dev Test Site 1 Home Page
 
 -- metadata
 -- date: 2024-02-26 18:48:19
--- id: 2cvtxydg
+-- id: id-site1-home-page 
+-- path: /
 "#
             .to_string(),
         );

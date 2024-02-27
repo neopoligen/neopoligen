@@ -6,7 +6,6 @@ use crate::site::Site;
 use minijinja::context;
 use minijinja::Environment;
 use minijinja::Value;
-use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 pub struct Builder {
@@ -28,12 +27,12 @@ impl Builder {
             "splitter.jinja".to_string(),
             r#"{#- import "includes/macros.jinja" as macros -#}
 {#- include "global_vars" -#}
-{#- for page_id in site.page_ids() -#}
-{# site.page_output_path(page_id) #}
+{%- for page_id in site.page_ids() -%}
+{{ site.page_output_path(page_id) }}
 --- PAGE_DATA_SPLIT ---
 {# include site.page_template(page_id) #}
 --- PAGE_SEPARATOR ---
-{# endfor -#}"#
+{% endfor -%}"#
                 .to_string(),
         )
         .unwrap();
@@ -43,7 +42,8 @@ impl Builder {
                 match splitter.render(context!(
                      site => Value::from_object(site),
                 )) {
-                    Ok(_) => {
+                    Ok(combined_pages) => {
+                        dbg!(combined_pages);
                         vec![]
                     }
                     Err(e) => {

@@ -12,6 +12,7 @@ impl Site {
             config: config.clone(),
             pages: BTreeMap::new(),
         };
+        sd.prep_cache();
         file_set.pages.iter().for_each(|f| {
             match Page::new(f.0.to_path_buf(), f.1.to_string(), &config) {
                 Some(page) => {
