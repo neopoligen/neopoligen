@@ -113,11 +113,7 @@ Nested <<em|<<strong|Inline Spans>>>> Should Not Show UP
                 
         fs.pages.insert(
             PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/page-type-in-metadata.neo"),
-            r#"-- title
-
-Page Type In Metadata
-
--- metadata
+            r#"-- metadata
 -- date: 2024-02-08 00:00:00
 -- id: page-type-in-metadata
 -- type: example
@@ -128,18 +124,34 @@ Page Type In Metadata
 
                 
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/page-type-in-not-metadata.neo"),
-            r#"-- title
-
-Page Type In Metadata
-
--- metadata
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/page-type-not-in-metadata.neo"),
+            r#"-- metadata
 -- date: 2024-02-09 00:00:00
 -- id: page-type-not-in-metadata
 "#
             .to_string(),
         );
 
+                
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/page-status-in-metadata.neo"),
+            r#"-- metadata
+-- date: 2024-02-10 00:00:00
+-- id: page-status-in-metadata
+-- status: example_status
+"#
+            .to_string(),
+        );
+
+                
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/page-status-not-in-metadata.neo"),
+            r#"-- metadata
+-- date: 2024-02-11 00:00:00
+-- id: page-status-not-in-metadata
+"#
+            .to_string(),
+        );
 
 
         fs
