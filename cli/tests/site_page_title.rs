@@ -1,14 +1,18 @@
 mod site_page_title {
-    // use neopoligen::site::Site;
-    // use pretty_assertions::assert_eq;
+    use neopoligen::config::Config;
+    use neopoligen::file_set::FileSet;
+    use neopoligen::site::Site;
+    use pretty_assertions::assert_eq;
 
-    // #[test]
-    // pub fn page_title_basic() {
-    //     let site = Site::site2();
-    //     let left = Some("Site 2 Home Page".to_string());
-    //     let right = site.page_title("id_index");
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    pub fn page_title_basic() {
+        let file_set = FileSet::set2();
+        let config = Config::site2_config();
+        let site = Site::new(&file_set, &config);
+        let left = Some("Dev Test Site 2 Home Page".to_string());
+        let right = site.page_title("id-site2-home-page");
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // pub fn page_title_for_missing_page() {
