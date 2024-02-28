@@ -9,12 +9,49 @@ impl Page {
         match ast(source.trim_start(), config) {
             Ok((remainder, ast)) => {
                 if remainder == "" {
-                    ParsedPage::InvalidPage {
-                        path: source_path.clone(),
-                        remainder: Some(remainder.to_string()),
-                        source: source.clone(),
-                        error: Some("Could not complete parsing".to_string()),
+                    match ast.iter().find_map(|child| {
+                        if let Child::Section(section) = child {
+                            let section_type = &section.r#type;
+                            if section_type == "metadata" {
+                                section
+                                    .key_value_attributes
+                                    .get("id")
+                                    .map(|value| value.to_string())
+                            } else {
+                                None
+                            }
+                        } else {
+                            None
+                        }
+                    }) {
+                        Some(_) => ParsedPage::Placeholder,
+                        None => ParsedPage::Placeholder,
                     }
+
+                    // let Some(id) = ast.iter().find_map(|child| {
+                    //     if let Child::Section(section) = child {
+                    //         let section_type = &section.r#type;
+                    //         if section_type == "metadata" {
+                    //             section
+                    //                 .key_value_attributes
+                    //                 .get("id")
+                    //                 .map(|value| value.to_string())
+                    //         } else {
+                    //             None
+                    //         }
+                    //     } else {
+                    //         None
+                    //     }
+                    // }) else {
+                    //     return None;
+                    // };
+
+                    // ParsedPage::InvalidPage {
+                    //     path: source_path.clone(),
+                    //     remainder: Some(remainder.to_string()),
+                    //     source: source.clone(),
+                    //     error: Some("Could not complete parsing".to_string()),
+                    // }
                 } else {
                     ParsedPage::InvalidPage {
                         path: source_path.clone(),
