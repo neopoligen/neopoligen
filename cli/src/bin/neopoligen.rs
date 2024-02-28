@@ -13,6 +13,7 @@ use nom::multi::many1;
 use nom::IResult;
 use serde::Deserialize;
 use std::fs;
+use std::path::PathBuf;
 
 #[derive(Deserialize)]
 pub struct EngineConfig {
@@ -35,10 +36,8 @@ fn main() {
                 site_root.push("Neopoligen");
                 site_root.push(engine_config.settings.active_site);
                 let config = Config::new(site_root);
-
                 // Testing (to move to a better location later)
                 test_templates(&config);
-
                 let mut file_set = FileSet::new();
                 file_set.load_content(&config.folders.content_root);
                 file_set.load_templates(&config.folders.theme_root);
@@ -49,7 +48,6 @@ fn main() {
                 println!("{}", e)
             }
         },
-
         Err(e) => {
             println!("{}", e)
         }
@@ -57,16 +55,47 @@ fn main() {
 }
 
 fn test_templates(config: &Config) {
-    let mut file_set = FileSet::new();
-    file_set.load_templates(&config.folders.theme_root);
     get_file_paths_for_extension(&config.folders.theme_tests_root, "txt")
         .iter()
         .for_each(|tf| {
             let test_setup = fs::read_to_string(tf).unwrap();
             match parse_test_file(&test_setup) {
                 Ok(parts) => {
-                    dbg!(parts);
-                    ()
+                    let mut test_page_id: String = "".to_string();
+                    let mut target_output: String = "".to_string();
+                    let mut file_set = FileSet::new();
+                    file_set.load_templates(&config.folders.theme_root);
+                    parts.1.iter().for_each(|d| {
+                        match d {
+                            TestSection::Template(name, content) => file_set
+                                .templates
+                                .insert(name.to_string(), content.to_string()),
+                            TestSection::Input(id, content) => {
+                                test_page_id = id.to_string();
+                                file_set
+                                    .pages
+                                    .insert(PathBuf::from("page-under-test"), content.to_string())
+                            }
+                            TestSection::Output(content) => {
+                                target_output = content.to_string();
+                                None
+                            }
+                            _ => None,
+                        };
+                    });
+                    let builder = Builder::new(file_set, &config);
+                    builder.files_to_output().iter().for_each(|o| {
+                        let path_parts: Vec<_> =
+                            o.0.components()
+                                .map(|p| p.as_os_str().to_string_lossy().to_string())
+                                .collect();
+                        if path_parts[path_parts.len() - 2].to_string() == test_page_id.to_string()
+                        {
+                            if o.1.to_string() != target_output.to_string() {
+                                println!("ERROR");
+                            }
+                        }
+                    });
                 }
                 Err(e) => println!("{}", e),
             }
@@ -147,5 +176,5 @@ fn test_output(source: &str) -> IResult<&str, TestSection> {
     let (source, _) = tag("### OUTPUT ###")(source)?;
     let (source, _) = multispace0(source)?;
     let (source, content) = rest(source)?;
-    Ok((source, TestSection::SupportPage(content.trim().to_string())))
+    Ok((source, TestSection::Output(content.trim().to_string())))
 }
