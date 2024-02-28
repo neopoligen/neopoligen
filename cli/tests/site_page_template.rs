@@ -61,20 +61,4 @@ mod site_page_template {
     }
 
 
-
-    
-
-
-
-
-    // #[test]
-    // pub fn page_type_not_in_metadata() {
-    //     let file_set = FileSet::set2();
-    //     let config = Config::site2_config();
-    //     let site = Site::new(&file_set, &config);
-    //     let left = Some("post".to_string());
-    //     let right = site.page_type(&[Value::from("page-type-not-in-metadata")]);
-    //     assert_eq!(left, right);
-    // }
-
 }

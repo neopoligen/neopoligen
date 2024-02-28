@@ -32,7 +32,7 @@ impl Builder {
 {%- for page_id in site.page_ids() -%}
 {{ site.page_output_path(page_id) }}
 --- PAGE_DATA_SPLIT ---
-{# include site.page_template(page_id) #}
+{% include site.page_template(page_id) %}
 --- PAGE_SEPARATOR ---
 {% endfor -%}"#
                 .to_string(),

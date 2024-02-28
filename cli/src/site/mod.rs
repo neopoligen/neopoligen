@@ -11,6 +11,7 @@ use minijinja::Value;
 use serde::Serialize;
 use std::collections::BTreeMap;
 use std::fmt::Display;
+use std::path::PathBuf;
 use std::sync::Mutex;
 
 #[derive(Debug, Serialize)]
@@ -52,15 +53,50 @@ impl Site {
 
     pub fn page_output_path(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
+
         match self.pages.get(&id) {
-            Some(_) => Some(format!(
-                "{}/{}/{}/index.html",
-                self.config.folders.output_root.display(),
-                self.config.default_language,
-                &id,
-            )),
+            Some(page) => match page.ast.iter().find_map(|child| {
+                if let Child::Section(section) = child {
+                    if &section.r#type == "metadata" {
+                        section.key_value_attributes.iter().find_map(|attr| {
+                            if attr.0 == "path" {
+                                Some(Some(attr.1.to_string()))
+                            } else {
+                                None
+                            }
+                        })
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            }) {
+                Some(override_path) => {
+                    let mut output_path = self.config.folders.output_root.clone();
+                    output_path.push(override_path.unwrap().strip_prefix("/").unwrap());
+                    output_path.push("index.html");
+                    Some(output_path.display().to_string())
+                }
+                None => Some(format!(
+                    "{}/{}/{}/index.html",
+                    self.config.folders.output_root.display(),
+                    self.config.default_language,
+                    &id,
+                )),
+            },
             None => None,
         }
+
+        // match self.pages.get(&id) {
+        //     Some(_) => Some(format!(
+        //         "{}/{}/{}/index.html",
+        //         self.config.folders.output_root.display(),
+        //         self.config.default_language,
+        //         &id,
+        //     )),
+        //     None => None,
+        // }
     }
 
     pub fn page_status(&self, args: &[Value]) -> Option<String> {
