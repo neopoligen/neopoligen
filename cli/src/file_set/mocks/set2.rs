@@ -156,13 +156,29 @@ Nested <<em|<<strong|Inline Spans>>>> Should Not Show UP
 
                 
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/no-type-no-status.neo"),
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/page-without-override-path.neo"),
             r#"-- metadata
 -- date: 2024-02-12 00:00:00
--- id: no-type-no-status
+-- id: page-without-override-path
 "#
             .to_string(),
         );
+
+                
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/url-escape-title-check.neo"),
+            r#"-- title
+
+URL Escape / Title Check
+
+-- metadata
+-- id: url-escape-title-check
+-- date: 2024-02-13 00:00:00
+
+"#
+            .to_string(),
+        );
+
 
         fs
     }
