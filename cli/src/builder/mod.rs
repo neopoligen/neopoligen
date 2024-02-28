@@ -7,6 +7,8 @@ use minijinja::context;
 use minijinja::Environment;
 use minijinja::Value;
 use std::collections::BTreeMap;
+use std::fs;
+use std::fs::create_dir_all;
 use std::path::PathBuf;
 
 pub struct Builder {
@@ -68,5 +70,14 @@ impl Builder {
             }
         };
         outputs
+    }
+
+    pub fn write_files(&self) {
+        self.files_to_output().iter().for_each(|f| {
+            let output_path = PathBuf::from(f.0);
+            let parent_dir = output_path.parent().unwrap();
+            let _ = create_dir_all(parent_dir);
+            let _ = fs::write(output_path, f.1);
+        });
     }
 }

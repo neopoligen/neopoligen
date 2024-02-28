@@ -30,7 +30,7 @@ fn main() {
                 file_set.load_content(&config.folders.content_root);
                 file_set.load_templates(&config.folders.theme_root);
                 let builder = Builder::new(file_set, &config);
-                dbg!(builder.files_to_output());
+                builder.write_files();
             }
             Err(e) => {
                 println!("{}", e)
