@@ -270,6 +270,26 @@ template it rolls back to the default
         );
 
 
+
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/basic-main-body-test.neo"),
+            r#"-- title
+
+Basic main_body Test
+
+-- p
+
+Test main_body output
+
+-- metadata
+-- id: basic-main-body-test
+-- date: 2024-02-19 00:00:00
+
+"#
+            .to_string(),
+        );
+
+
         fs
     }
 }

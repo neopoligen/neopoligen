@@ -51,9 +51,39 @@ impl Site {
         self.pages.iter().map(|page| page.0.to_string()).collect()
     }
 
+    pub fn page_main_body(&self, args: &[Value]) -> Value {
+        if let Some(page) = self.pages.get(&args[0].to_string()) {
+            Value::from_serializable(
+                &page
+                    .ast
+                    .clone()
+                    .into_iter()
+                    .filter_map(|child| {
+                        if let Child::Section(sec) = &child {
+                            if self.config.main_body_section_excludes.contains(&sec.r#type) {
+                                None
+                            } else {
+                                Some(child)
+                            }
+                        } else if let Child::List(sec) = &child {
+                            if self.config.main_body_section_excludes.contains(&sec.r#type) {
+                                None
+                            } else {
+                                Some(child)
+                            }
+                        } else {
+                            None
+                        }
+                    })
+                    .collect::<Vec<Child>>(),
+            )
+        } else {
+            Value::from_serializable::<Vec<Child>>(&vec![])
+        }
+    }
+
     pub fn page_output_path(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
-
         match self.pages.get(&id) {
             Some(page) => match page.ast.iter().find_map(|child| {
                 if let Child::Section(section) = child {

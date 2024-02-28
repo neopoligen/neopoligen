@@ -92,7 +92,9 @@ fn test_templates(config: &Config) {
                         if path_parts[path_parts.len() - 2].to_string() == test_page_id.to_string()
                         {
                             if o.1.to_string() != target_output.to_string() {
-                                println!("ERROR");
+                                println!("Template Error");
+                                println!("{}", o.1.to_string());
+                                println!("{}", target_output);
                             }
                         }
                     });
