@@ -30,10 +30,10 @@ impl Config {
         theme_root.push(&theme_name);
 
         let mut theme_configuration_root = theme_root.clone();
-        theme_configuration_root.push("configuration");
+        theme_configuration_root.push("_configuration");
 
         let mut theme_assets_root = theme_root.clone();
-        theme_assets_root.push("theme-assets");
+        theme_assets_root.push("_assets");
 
         let mut theme_sections_root = theme_root.clone();
         theme_sections_root.push("sections");
@@ -45,16 +45,16 @@ impl Config {
         theme_includes_root.push("includes");
 
         let mut theme_page_types_root = theme_root.clone();
-        theme_page_types_root.push("page_types");
+        theme_page_types_root.push("pages");
 
         let mut theme_spans_root = theme_root.clone();
         theme_spans_root.push("spans");
 
         let mut theme_tests_root = theme_root.clone();
-        theme_tests_root.push("tests");
+        theme_tests_root.push("_tests");
 
-        let mut theme_wrappers_root = theme_root.clone();
-        theme_wrappers_root.push("wrappers");
+        // let mut theme_wrappers_root = theme_root.clone();
+        // theme_wrappers_root.push("wrappers");
 
         let folders = ConfigFolders {
             configuration_root: configuration_root.clone(),
@@ -68,13 +68,13 @@ impl Config {
             theme_assets_root,
             theme_configuration_root: theme_configuration_root.clone(),
             theme_sections_root: theme_sections_root.clone(),
-            theme_helpers_root,
-            theme_includes_root,
-            theme_page_types_root,
+            // theme_helpers_root,
+            // theme_includes_root,
+            // theme_page_types_root,
             theme_spans_root,
             theme_tests_root,
             theme_root,
-            theme_wrappers_root,
+            // theme_wrappers_root,
         };
 
         // Section Categories

@@ -24,14 +24,14 @@ impl Config {
 
         let theme_sections_root = PathBuf::from(format!("{}/{}", theme_root.display(), "sections"));
 
-        let theme_helpers_root = PathBuf::from(format!("{}/{}", theme_root.display(), "helpers"));
-        let theme_includes_root = PathBuf::from(format!("{}/{}", theme_root.display(), "includes"));
-        let theme_page_types_root =
-            PathBuf::from(format!("{}/{}", theme_root.display(), "page_types"));
+        // let theme_helpers_root = PathBuf::from(format!("{}/{}", theme_root.display(), "helpers"));
+        // let theme_includes_root = PathBuf::from(format!("{}/{}", theme_root.display(), "includes"));
+        // let theme_page_types_root =
+        //     PathBuf::from(format!("{}/{}", theme_root.display(), "page_types"));
         let theme_spans_root = PathBuf::from(format!("{}/{}", theme_root.display(), "spans"));
         let theme_tests_root =
             PathBuf::from(format!("{}/{}/{}", theme_root.display(), "tests", "sites"));
-        let theme_wrappers_root = PathBuf::from(format!("{}/{}", theme_root.display(), "wrappers"));
+        // let theme_wrappers_root = PathBuf::from(format!("{}/{}", theme_root.display(), "wrappers"));
 
         let folders = ConfigFolders {
             configuration_root: configuration_root.clone(),
@@ -45,13 +45,13 @@ impl Config {
             theme_assets_root,
             theme_configuration_root: theme_configuration_root.clone(),
             theme_sections_root,
-            theme_helpers_root,
-            theme_includes_root,
-            theme_page_types_root,
+            // theme_helpers_root,
+            // theme_includes_root,
+            // theme_page_types_root,
             theme_spans_root,
             theme_tests_root,
             theme_root,
-            theme_wrappers_root,
+            // theme_wrappers_root,
         };
 
         let mut checklist = BTreeSet::new();
