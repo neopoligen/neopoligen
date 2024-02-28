@@ -75,7 +75,7 @@ fn build_site(config: &Config) {
 
 fn test_templates(config: &Config) {
     println!("Testing templates");
-    get_file_paths_for_extension(&config.folders.theme_tests_root, "txt")
+    get_file_paths_for_extension(&config.folders.theme_tests_root, "neotest")
         .iter()
         .for_each(|tf| {
             let test_setup = fs::read_to_string(tf).unwrap();

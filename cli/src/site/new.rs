@@ -11,18 +11,21 @@ impl Site {
             cache: Mutex::new(BTreeMap::new()),
             config: config.clone(),
             pages: BTreeMap::new(),
+            invalid_pages: BTreeMap::new(),
             templates: BTreeMap::new(),
         };
         sd.prep_cache();
-        file_set.pages.iter().for_each(|f| {
-            match Page::new(f.0.to_path_buf(), f.1.to_string(), &config) {
-                Some(page) => {
-                    sd.pages.insert(page.id.clone(), page);
-                    ()
-                }
-                None => (),
-            }
-        });
+
+        // file_set.pages.iter().for_each(|f| {
+        //     match Page::new(f.0.to_path_buf(), f.1.to_string(), &config) {
+        //         Some(page) => {
+        //             sd.pages.insert(page.id.clone(), page);
+        //             ()
+        //         }
+        //         None => (),
+        //     }
+        // });
+
         sd.templates = file_set.templates.clone();
         sd
     }

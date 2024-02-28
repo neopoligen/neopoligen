@@ -6,6 +6,16 @@ use crate::child::Child;
 use serde::Serialize;
 use std::path::PathBuf;
 
+pub enum ParsedPage {
+    ValidPage(Page),
+    InvalidPage {
+        path: PathBuf,
+        source: String,
+        remainder: Option<String>,
+        error: Option<String>,
+    },
+}
+
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct Page {

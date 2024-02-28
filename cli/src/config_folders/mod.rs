@@ -9,6 +9,7 @@ pub struct ConfigFolders {
     pub files_root: PathBuf,
     pub images_root: PathBuf,
     pub output_root: PathBuf,
+    pub parsing_errors_root: PathBuf,
     pub plugins_root: PathBuf,
     pub project_root: PathBuf,
     pub themes_root: PathBuf,

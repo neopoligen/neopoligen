@@ -16,6 +16,7 @@ impl Config {
         let images_root = PathBuf::from(format!("{}/{}", project_root.display(), "images"));
         let plugins_root = PathBuf::from(format!("{}/{}", configuration_root.display(), "plugins"));
         let output_root = PathBuf::from(format!("{}/{}", project_root.display(), "docs"));
+        let parsing_errors_root = PathBuf::from(format!("{}/_errors/{}", project_root.display(), "parsing"));
         let themes_root = PathBuf::from(format!("{}/{}", project_root.display(), "themes"));
         let theme_root = PathBuf::from(format!("{}/{}", themes_root.display(), theme_name));
         let theme_configuration_root =
@@ -40,6 +41,7 @@ impl Config {
             output_root,
             plugins_root,
             content_root,
+            parsing_errors_root,
             project_root,
             themes_root,
             theme_assets_root,

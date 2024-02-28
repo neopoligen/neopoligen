@@ -11,7 +11,7 @@ use minijinja::Value;
 use serde::Serialize;
 use std::collections::BTreeMap;
 use std::fmt::Display;
-// use std::path::PathBuf;
+use std::path::PathBuf;
 use std::sync::Mutex;
 
 #[derive(Debug, Serialize)]
@@ -20,6 +20,7 @@ pub struct Site {
     pub cache: Mutex<BTreeMap<String, BTreeMap<String, Option<String>>>>,
     pub config: Config,
     pub pages: BTreeMap<String, Page>,
+    pub invalid_pages: BTreeMap<PathBuf, String>,
     pub templates: BTreeMap<String, String>,
 }
 
