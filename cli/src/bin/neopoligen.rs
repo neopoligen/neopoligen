@@ -1,4 +1,5 @@
 use dirs::document_dir;
+use neopoligen::builder::Builder;
 use neopoligen::config::Config;
 use neopoligen::file_set::FileSet;
 use serde::Deserialize;
@@ -28,6 +29,8 @@ fn main() {
                 let mut file_set = FileSet::new();
                 file_set.load_content(&config.folders.content_root);
                 file_set.load_templates(&config.folders.theme_root);
+                let builder = Builder::new(file_set, &config);
+                dbg!(builder.files_to_output());
             }
             Err(e) => {
                 println!("{}", e)

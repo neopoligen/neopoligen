@@ -16,9 +16,10 @@ use std::sync::Mutex;
 #[derive(Debug, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct Site {
-    pub pages: BTreeMap<String, Page>,
     pub cache: Mutex<BTreeMap<String, BTreeMap<String, Option<String>>>>,
     pub config: Config,
+    pub pages: BTreeMap<String, Page>,
+    pub templates: BTreeMap<String, String>,
 }
 
 impl Site {
@@ -62,7 +63,6 @@ impl Site {
         }
     }
 
-
     pub fn page_status(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {
@@ -93,11 +93,23 @@ impl Site {
     pub fn page_template(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         if self.pages.contains_key(&id) {
-            Some(format!(
-                "pages/{}/{}.jinja",
-                self.page_type(args).unwrap(),
-                self.page_status(args).unwrap(),
-            ))
+            let template_searches = vec![
+                format!(
+                    "pages/{}/{}.jinja",
+                    self.page_type(args).unwrap(),
+                    self.page_status(args).unwrap(),
+                ),
+                format!("pages/{}/published.jinja", self.page_type(args).unwrap()),
+                format!("pages/post/{}.jinja", self.page_status(args).unwrap()),
+                format!("pages/post/published.jinja"),
+            ];
+            template_searches
+                .iter()
+                .find_map(|t| match self.templates.get(t) {
+                    Some(_) => Some(t),
+                    None => None,
+                })
+                .cloned()
         } else {
             None
         }

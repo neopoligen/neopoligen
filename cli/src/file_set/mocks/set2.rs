@@ -10,6 +10,20 @@ impl FileSet {
             r#"This is a stub page"#.to_string(),
         );
 
+        fs.templates.insert(
+            "pages/custom-template-type/published.jinja".to_string(),
+            r#"This is a stub page"#.to_string(),
+        );
+
+        fs.templates.insert(
+            "pages/post/custom-template-status.jinja".to_string(),
+            r#"This is a stub page"#.to_string(),
+        );
+
+        fs.templates.insert(
+            "pages/custom-template-type/custom-template-status.jinja".to_string(),
+            r#"This is a stub page"#.to_string(),
+        );
 
         fs.pages.insert(
             PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/_index.neo"),
@@ -25,7 +39,6 @@ Dev Test Site 2 Home Page
             .to_string(),
         );
 
-
         
         fs.pages.insert(
             PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/title-from-section-attribute.neo"),
@@ -39,7 +52,6 @@ Dev Test Site 2 Home Page
 "#
             .to_string(),
         );
-
 
         
         fs.pages.insert(
@@ -55,7 +67,6 @@ Title from block content example
             .to_string(),
         );
 
-        
 
         fs.pages.insert(
             PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/title-from-metadata-id.neo"),
@@ -65,7 +76,6 @@ Title from block content example
 "#
             .to_string(),
         );
-
 
                 
         fs.pages.insert(
@@ -121,7 +131,6 @@ Nested <<em|<<strong|Inline Spans>>>> Should Not Show UP
             .to_string(),
         );
 
-
                 
         fs.pages.insert(
             PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/page-type-not-in-metadata.neo"),
@@ -174,6 +183,87 @@ URL Escape / Title Check
 -- metadata
 -- id: url-escape-title-check
 -- date: 2024-02-13 00:00:00
+
+"#
+            .to_string(),
+        );
+
+                
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/default-template.neo"),
+            r#"-- title
+
+This has no type or status metadata so will show the default template
+
+-- metadata
+-- id: default-template
+-- date: 2024-02-14 00:00:00
+
+"#
+            .to_string(),
+        );
+
+
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/custom-template-type.neo"),
+            r#"-- title
+
+This is a custom template type that exists
+
+-- metadata
+-- id: custom-template-type
+-- date: 2024-02-15 00:00:00
+-- type: custom-template-type
+
+"#
+            .to_string(),
+        );
+
+
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/custom-template-status.neo"),
+            r#"-- title
+
+This is a custom template status that exists
+
+-- metadata
+-- id: custom-template-status
+-- date: 2024-02-16 00:00:00
+-- status: custom-template-status
+
+"#
+            .to_string(),
+        );
+
+
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/type-for-non-existent-template.neo"),
+            r#"-- title
+
+Confirm if a custom type doesn't have a 
+template it rolls back to the default
+
+-- metadata
+-- id: type-for-non-existent-template
+-- date: 2024-02-17 00:00:00
+-- type: type-for-non-existent-template
+
+"#
+            .to_string(),
+        );
+
+
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/status-for-non-existent-template.neo"),
+            r#"-- title
+
+Confirm if a custom stauts doesn't have a 
+template it rolls back to the default
+
+-- metadata
+-- id: status-for-non-existent-template
+-- date: 2024-02-18 00:00:00
+-- status: status-for-non-existent-template
 
 "#
             .to_string(),

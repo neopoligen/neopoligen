@@ -11,6 +11,7 @@ impl Site {
             cache: Mutex::new(BTreeMap::new()),
             config: config.clone(),
             pages: BTreeMap::new(),
+            templates: BTreeMap::new(),
         };
         sd.prep_cache();
         file_set.pages.iter().for_each(|f| {
@@ -22,6 +23,7 @@ impl Site {
                 None => (),
             }
         });
+        sd.templates = file_set.templates.clone();
         sd
     }
 }
