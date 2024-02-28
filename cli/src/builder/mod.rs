@@ -8,9 +8,11 @@ use minijinja::context;
 use minijinja::Environment;
 use minijinja::Value;
 use nom::branch::alt;
+use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::bytes::complete::take_until;
 use nom::character::complete::multispace0;
+use nom::combinator::rest;
 use nom::multi::many1;
 use nom::IResult;
 use std::collections::BTreeMap;
@@ -107,7 +109,10 @@ impl Builder {
 #[derive(Debug)]
 enum TestSection {
     Description(String),
-    Template(String),
+    Input(String, String),
+    Output(String),
+    SupportPage(String),
+    Template(String, String),
 }
 
 fn parse_test_file(source: &str) -> IResult<&str, Vec<TestSection>> {
@@ -116,7 +121,13 @@ fn parse_test_file(source: &str) -> IResult<&str, Vec<TestSection>> {
 }
 
 fn test_section(source: &str) -> IResult<&str, TestSection> {
-    let (source, string) = alt((test_desc, test_template))(source)?;
+    let (source, string) = alt((
+        test_desc,
+        test_template,
+        test_support_page,
+        test_input,
+        test_output,
+    ))(source)?;
     Ok((source, string))
 }
 
@@ -132,6 +143,42 @@ fn test_template(source: &str) -> IResult<&str, TestSection> {
     let (source, _) = multispace0(source)?;
     let (source, _) = tag("### TEMPLATE ###")(source)?;
     let (source, _) = multispace0(source)?;
+    let (source, name) = take_until("~~~")(source)?;
+    let (source, _) = tag("~~~")(source)?;
+    let (source, _) = multispace0(source)?;
+    let (source, template) = take_until("###")(source)?;
+    Ok((
+        source,
+        TestSection::Template(name.trim().to_string(), template.trim().to_string()),
+    ))
+}
+
+fn test_support_page(source: &str) -> IResult<&str, TestSection> {
+    let (source, _) = multispace0(source)?;
+    let (source, _) = tag("### SUPPORT_PAGE ###")(source)?;
+    let (source, _) = multispace0(source)?;
     let (source, desc) = take_until("###")(source)?;
-    Ok((source, TestSection::Template(desc.trim().to_string())))
+    Ok((source, TestSection::SupportPage(desc.trim().to_string())))
+}
+
+fn test_input(source: &str) -> IResult<&str, TestSection> {
+    let (source, _) = multispace0(source)?;
+    let (source, _) = tag("### INPUT ###")(source)?;
+    let (source, _) = multispace0(source)?;
+    let (source, content) = take_until("###")(source)?;
+    let (id_source, _) = take_until("-- id: ")(content)?;
+    let (id_source, _) = tag("-- id: ")(id_source)?;
+    let (_, id) = is_not(" \n")(id_source)?;
+    Ok((
+        source,
+        TestSection::Input(id.trim().to_string(), content.trim().to_string()),
+    ))
+}
+
+fn test_output(source: &str) -> IResult<&str, TestSection> {
+    let (source, _) = multispace0(source)?;
+    let (source, _) = tag("### OUTPUT ###")(source)?;
+    let (source, _) = multispace0(source)?;
+    let (source, content) = rest(source)?;
+    Ok((source, TestSection::SupportPage(content.trim().to_string())))
 }
