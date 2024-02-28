@@ -24,8 +24,18 @@ impl Page {
                             None
                         }
                     }) {
-                        Some(_) => ParsedPage::Placeholder,
-                        None => ParsedPage::Placeholder,
+                        Some(id) => ParsedPage::ValidPage(Page {
+                            ast,
+                            id,
+                            source,
+                            source_path,
+                        }),
+                        None => ParsedPage::InvalidPage {
+                            path: source_path.clone(),
+                            remainder: None,
+                            source: source.clone(),
+                            error: Some("Could not find id".to_string()),
+                        },
                     }
 
                     // let Some(id) = ast.iter().find_map(|child| {

@@ -7,7 +7,6 @@ use serde::Serialize;
 use std::path::PathBuf;
 
 pub enum ParsedPage {
-    Placeholder,
     ValidPage(Page),
     InvalidPage {
         path: PathBuf,
