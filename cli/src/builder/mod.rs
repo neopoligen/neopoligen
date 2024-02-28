@@ -2,10 +2,17 @@ pub mod new;
 
 use crate::config::Config;
 use crate::file_set::FileSet;
+use crate::helpers::get_file_paths_for_extension::get_file_paths_for_extension;
 use crate::site::Site;
 use minijinja::context;
 use minijinja::Environment;
 use minijinja::Value;
+use nom::branch::alt;
+use nom::bytes::complete::tag;
+use nom::bytes::complete::take_until;
+use nom::character::complete::multispace0;
+use nom::multi::many1;
+use nom::IResult;
 use std::collections::BTreeMap;
 use std::fs;
 use std::fs::create_dir_all;
@@ -72,6 +79,21 @@ impl Builder {
         outputs
     }
 
+    pub fn test_templates(&self) {
+        get_file_paths_for_extension(&self.config.folders.theme_tests_root, "txt")
+            .iter()
+            .for_each(|tf| {
+                let test_setup = fs::read_to_string(tf).unwrap();
+                match parse_test_file(&test_setup) {
+                    Ok(parts) => {
+                        dbg!(parts);
+                        ()
+                    }
+                    Err(e) => println!("{}", e),
+                }
+            });
+    }
+
     pub fn write_files(&self) {
         self.files_to_output().iter().for_each(|f| {
             let output_path = PathBuf::from(f.0);
@@ -80,4 +102,36 @@ impl Builder {
             let _ = fs::write(output_path, f.1);
         });
     }
+}
+
+#[derive(Debug)]
+enum TestSection {
+    Description(String),
+    Template(String),
+}
+
+fn parse_test_file(source: &str) -> IResult<&str, Vec<TestSection>> {
+    let (source, sections) = many1(test_section)(source)?;
+    Ok((source, sections))
+}
+
+fn test_section(source: &str) -> IResult<&str, TestSection> {
+    let (source, string) = alt((test_desc, test_template))(source)?;
+    Ok((source, string))
+}
+
+fn test_desc(source: &str) -> IResult<&str, TestSection> {
+    let (source, _) = multispace0(source)?;
+    let (source, _) = tag("### DESCRIPTION ###")(source)?;
+    let (source, _) = multispace0(source)?;
+    let (source, desc) = take_until("###")(source)?;
+    Ok((source, TestSection::Description(desc.trim().to_string())))
+}
+
+fn test_template(source: &str) -> IResult<&str, TestSection> {
+    let (source, _) = multispace0(source)?;
+    let (source, _) = tag("### TEMPLATE ###")(source)?;
+    let (source, _) = multispace0(source)?;
+    let (source, desc) = take_until("###")(source)?;
+    Ok((source, TestSection::Template(desc.trim().to_string())))
 }
