@@ -7,36 +7,76 @@ impl FileSet {
         fs.pages.insert(
             PathBuf::from("leading-dir/Neopoligen/parsing-tests/content/code-section-test.neo"),
             r#"-- title
+-- subtitle: An app for making websites
 
-Allow Flag Attributes In link Spans
+Neopoligen
+
+Neopoligen is a website builder.
+
+It comes with lots of features built in. It's also 
+very customizable. You can use it as-is or dig in 
+and customize it completely.
+
+
+-- aside
+
+NOTE: Neopoligen is a work in progress. There are rough
+edges, cryptic error messages, and bugs that have yet to 
+be found. If you've got a little experience playing with 
+early software you'll be fine. Otherwise, you'll probably 
+want to come back in March to see how things are shaping up.
+
 
 -- h2
 
-Overview
+How It Works
+
+Neopoligen sites are made from text files that look
+like this:
+
+-- pre/
+-- neo
+
+-- title
+-- subtitle: An app for making websites
+
+Neopoligen
+
+Neopoligen is a website builder.
+
+It comes with lots of features built in. It's also 
+very customizable. You can use it as-is or dig in 
+and customize it completely. 
+
+-- /pre
+
+Those files get combined with templates to build a
+static site that can be viewed locally and deployed
+anywhere that offers static site hosting.
 
 
--- todo
--- title: Details
-
-[] Make this not break the attributes in
-the output
-
--- code
-
-<<link|Lorem ipsum|https://www.example.com/|class: green|example_flag>>
 
 
+-- h2
 
+Sections And Spans
 
--- tags
+Files are made up of "Sections" and "Spans". 
+Sections are things like `-- title`` in the above
+example. Spans looks like this `<<span|some text>>``
+
+You can <<ilink: 2cgceffj|learn more about sections here>> 
+
+You can <<ilink: 2ch7uk0v|learn more about spans here>> 
+
 
 
 -- metadata
--- date: 2024-02-03 17:04:07
--- updated: 2024-02-03 17:04:07
--- id: code-section-test
--- status: scratch
-                        
+-- date: 2024-01-13 14:35:03
+-- id: 2auhjdnh
+-- path: /
+
+                                 
 "#
             .to_string(),
         );

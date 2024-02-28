@@ -75,8 +75,10 @@ impl Config {
 
         let mut raw = BTreeSet::new();
         raw.insert("code".to_string());
+        raw.insert("pre".to_string());
 
         let mut standard = BTreeSet::new();
+        standard.insert("aside".to_string());
         standard.insert("bookmark".to_string());
         standard.insert("div".to_string());
         standard.insert("h2".to_string());
@@ -117,7 +119,7 @@ impl Config {
         let key_value_spans: Vec<String> = vec!["class".to_string(), "ilink".to_string()];
 
         let standard_spans: Vec<String> =
-            vec!["strong".to_string(), "link".to_string(), "em".to_string()];
+            vec!["span".to_string(), "strong".to_string(), "link".to_string(), "em".to_string()];
 
         let main_body_section_excludes: Vec<String> = vec![
             "comment".to_string(),

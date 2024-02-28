@@ -168,6 +168,7 @@ impl Config {
             .to_string();
 
         let span_file_paths = get_file_paths_for_extension(&folders.theme_spans_root, "jinja");
+            // dbg!(&span_file_paths);
         let unsorted_standard_spans: Vec<String> = span_file_paths
             .iter()
             .filter_map(|path| {
