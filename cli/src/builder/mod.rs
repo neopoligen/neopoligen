@@ -73,8 +73,10 @@ impl Builder {
     }
 
     pub fn write_files(&self) {
+        println!("Writing files");
         self.files_to_output().iter().for_each(|f| {
             let output_path = PathBuf::from(f.0);
+            // println!("{}", &f.0.display());
             let parent_dir = output_path.parent().unwrap();
             let _ = create_dir_all(parent_dir);
             let _ = fs::write(output_path, f.1);

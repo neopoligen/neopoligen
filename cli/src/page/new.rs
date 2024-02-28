@@ -6,9 +6,22 @@ use std::path::PathBuf;
 
 impl Page {
     pub fn new(source_path: PathBuf, source: String, config: &Config) -> Option<Page> {
+        println!("Parsing: {}", source_path.display());
+
+        match ast(source.trim_start(), config) {
+            Ok((remainder, _ast)) => {
+                if remainder != "" {
+                    dbg!("failed to fully parse");
+                    dbg!(remainder);
+                }
+            }
+            Err(e) => println!("{}", e),
+        };
+
         let Ok((_, ast)) = ast(source.trim_start(), config) else {
             return None;
         };
+
         let Some(id) = ast.iter().find_map(|child| {
             if let Child::Section(section) = child {
                 let section_type = &section.r#type;
