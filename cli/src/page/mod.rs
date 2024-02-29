@@ -23,6 +23,7 @@ pub struct Page {
     pub ast: Vec<Child>,
     pub source: String,
     pub source_path: PathBuf,
+    pub publish: bool,
 }
 
 #[cfg(test)]

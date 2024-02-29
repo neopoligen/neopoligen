@@ -24,12 +24,25 @@ impl Page {
                             None
                         }
                     }) {
-                        Some(id) => ParsedPage::ValidPage(Page {
-                            ast,
-                            id,
-                            source,
-                            source_path,
-                        }),
+                        Some(id) => {
+                            let publish = if source_path
+                                .file_name()
+                                .unwrap()
+                                .to_string_lossy()
+                                .starts_with("_")
+                            {
+                                false
+                            } else {
+                                true
+                            };
+                            ParsedPage::ValidPage(Page {
+                                ast,
+                                id,
+                                source,
+                                source_path,
+                                publish,
+                            })
+                        }
                         None => ParsedPage::InvalidPage {
                             path: source_path.clone(),
                             remainder: None,
@@ -145,6 +158,7 @@ impl Page {
             id,
             source,
             source_path,
+            publish: true,
         })
     }
 }
