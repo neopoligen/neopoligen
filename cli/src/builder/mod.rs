@@ -62,24 +62,32 @@ impl Builder {
                     }
                     Err(e) => {
                         println!("SPLITTER ERROR 1 - {}", e);
-                        let mut env_redo = Environment::new();
+                        let mut redo_env = Environment::new();
                         self.file_set
                             .templates
                             .iter()
-                            .for_each(|t| env_redo.add_template_owned(t.0, t.1).unwrap());
-                        let site_redo = Site::new(&self.file_set, &self.config);
-                        site_redo.pages.iter().for_each(|page| {
-                            // let template_name =
-                            //     site_redo.page_template(&[Value::from(page.0.to_string())])
-
-                            let tmpl = env_redo.get_template(
-                                &site_redo
-                                    .page_template(&[Value::from(page.0.to_string())])
-                                    .unwrap(),
-                            );
-
-                            dbg!(tmpl);
-                            ()
+                            .for_each(|t| redo_env.add_template_owned(t.0, t.1).unwrap());
+                        let site_redo_wrapper = Site::new(&self.file_set, &self.config);
+                        site_redo_wrapper.pages.iter().for_each(|redo_page| {
+                            let redo_site = Site::new(&self.file_set, &self.config);
+                            let redo_template = redo_env
+                                .get_template(
+                                    &redo_site
+                                        .page_template(&[Value::from(redo_page.0.to_string())])
+                                        .unwrap(),
+                                )
+                                .unwrap();
+                            match redo_template.render(context!(
+                                 site => Value::from_object(redo_site),
+                            )) {
+                                Ok(_) => (),
+                                Err(e) => println!(
+                                    "PAGE: {}\nERROR: {}\n",
+                                    redo_page.1.source_path.display(),
+                                    e
+                                ),
+                            };
+                            // dbg!(redo_page.0);
                         });
                     }
                 }
