@@ -75,6 +75,7 @@ fn build_site(config: &Config) {
     let builder = Builder::new(file_set, &config);
     builder.write_files();
     builder.copy_files();
+    builder.copy_theme_assets();
 }
 
 fn test_templates(config: &Config) {
