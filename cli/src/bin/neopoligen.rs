@@ -24,6 +24,7 @@ use std::time::Duration;
 use tower_http::services::ServeDir;
 use tower_livereload::LiveReloadLayer;
 use tower_livereload::Reloader;
+use tracing::{event, instrument, Level};
 
 #[derive(Deserialize)]
 pub struct EngineConfig {
@@ -37,6 +38,11 @@ pub struct EngineConfigSettings {
 
 #[tokio::main]
 async fn main() {
+    let format = tracing_subscriber::fmt::format().pretty();
+    tracing_subscriber::fmt()
+        .with_ansi(false)
+        .event_format(format)
+        .init();
     let mut engine_config_file = document_dir().unwrap();
     engine_config_file.push("Neopoligen");
     engine_config_file.push("config.toml");

@@ -29,7 +29,7 @@ impl Builder {
 
         env.add_template_owned(
             "splitter.jinja".to_string(),
-            r#"{#- import "includes/macros.jinja" as macros -#}
+            r#"{%- import "includes/macros.jinja" as macros -%}
 {#- include "global_vars" -#}
 {%- for page_id in site.page_ids() -%}
 {{ site.page_output_path(page_id) }}
