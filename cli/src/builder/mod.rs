@@ -78,8 +78,10 @@ impl Builder {
                                 )
                                 .unwrap();
                             match redo_template.render(context!(
-                                 site => Value::from_object(redo_site),
+                                site => Value::from_object(redo_site),
+                                page_id => Value::from("2ck5rhdc")
                             )) {
+                                // Ok(out) => println!("{}", out),
                                 Ok(_) => (),
                                 Err(e) => println!(
                                     "PAGE: {}\nERROR: {}\n",
