@@ -30,7 +30,10 @@ impl Config {
         let theme_root = PathBuf::from(format!("{}/{}", themes_root.display(), theme_name));
         let theme_configuration_root =
             PathBuf::from(format!("{}/{}", theme_root.display(), "configuration"));
-        let theme_assets_root = PathBuf::from(format!("{}/{}", theme_root.display(), "assets"));
+        let theme_assets_input_root =
+            PathBuf::from(format!("{}/{}", theme_root.display(), "_assets"));
+        let theme_assets_output_root =
+            PathBuf::from(format!("{}/{}", output_root.display(), "theme"));
 
         let theme_sections_root = PathBuf::from(format!("{}/{}", theme_root.display(), "sections"));
 
@@ -54,7 +57,8 @@ impl Config {
             theme_errors_root,
             project_root,
             themes_root,
-            theme_assets_root,
+            theme_assets_input_root,
+            theme_assets_output_root,
             theme_configuration_root: theme_configuration_root.clone(),
             theme_sections_root,
             // theme_helpers_root,

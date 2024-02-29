@@ -34,8 +34,18 @@ impl Builder {
         let mut options = fs_extra::dir::CopyOptions::new();
         options.overwrite = true;
         options.content_only = true;
-        let in_dir = self.config.folders.theme_assets_root.display().to_string();
-        let site_output_root_dir = self.config.folders.output_root.display().to_string();
+        let in_dir = self
+            .config
+            .folders
+            .theme_assets_input_root
+            .display()
+            .to_string();
+        let site_output_root_dir = self
+            .config
+            .folders
+            .theme_assets_output_root
+            .display()
+            .to_string();
         match copy(in_dir, site_output_root_dir, &options) {
             Ok(_) => (),
             Err(e) => println!("{}", e),

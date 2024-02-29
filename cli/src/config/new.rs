@@ -42,8 +42,11 @@ impl Config {
         let mut theme_configuration_root = theme_root.clone();
         theme_configuration_root.push("_configuration");
 
-        let mut theme_assets_root = theme_root.clone();
-        theme_assets_root.push("_assets");
+        let mut theme_assets_input_root = theme_root.clone();
+        theme_assets_input_root.push("_assets");
+
+        let mut theme_assets_output_root = output_root.clone();
+        theme_assets_output_root.push("theme");
 
         let mut theme_sections_root = theme_root.clone();
         theme_sections_root.push("sections");
@@ -77,7 +80,8 @@ impl Config {
             theme_errors_root,
             project_root,
             themes_root,
-            theme_assets_root,
+            theme_assets_input_root,
+            theme_assets_output_root,
             theme_configuration_root: theme_configuration_root.clone(),
             theme_sections_root: theme_sections_root.clone(),
             // theme_helpers_root,
