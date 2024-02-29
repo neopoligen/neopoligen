@@ -61,12 +61,31 @@ impl Builder {
                             });
                     }
                     Err(e) => {
-                        println!("{}", e);
+                        println!("SPLITTER ERROR 1 - {}", e);
+                        let mut env_redo = Environment::new();
+                        self.file_set
+                            .templates
+                            .iter()
+                            .for_each(|t| env_redo.add_template_owned(t.0, t.1).unwrap());
+                        let site_redo = Site::new(&self.file_set, &self.config);
+                        site_redo.pages.iter().for_each(|page| {
+                            // let template_name =
+                            //     site_redo.page_template(&[Value::from(page.0.to_string())])
+
+                            let tmpl = env_redo.get_template(
+                                &site_redo
+                                    .page_template(&[Value::from(page.0.to_string())])
+                                    .unwrap(),
+                            );
+
+                            dbg!(tmpl);
+                            ()
+                        });
                     }
                 }
             }
             Err(e) => {
-                println!("{}", e);
+                println!("SPLITTER ERROR 2 - {}", e);
             }
         };
         outputs
