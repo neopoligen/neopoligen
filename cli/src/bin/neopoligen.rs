@@ -74,6 +74,7 @@ fn build_site(config: &Config) {
     // dbg!(&file_set);
     let builder = Builder::new(file_set, &config);
     builder.write_files();
+    builder.copy_files();
 }
 
 fn test_templates(config: &Config) {

@@ -3,6 +3,7 @@ pub mod new;
 use crate::config::Config;
 use crate::file_set::FileSet;
 use crate::site::Site;
+use fs_extra::dir::copy;
 use minijinja::context;
 use minijinja::Environment;
 use minijinja::Value;
@@ -17,6 +18,18 @@ pub struct Builder {
 }
 
 impl Builder {
+    pub fn copy_files(&self) {
+        let mut options = fs_extra::dir::CopyOptions::new();
+        options.overwrite = true;
+        options.content_only = true;
+        let extras_dir = self.config.folders.files_root.display().to_string();
+        let site_output_root_dir = self.config.folders.output_root.display().to_string();
+        match copy(extras_dir, site_output_root_dir, &options) {
+            Ok(_) => (),
+            Err(e) => println!("{}", e),
+        }
+    }
+
     pub fn files_to_output(&self) -> BTreeMap<PathBuf, String> {
         let mut env = Environment::new();
         let site = Site::new(&self.file_set, &self.config);
