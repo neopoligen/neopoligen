@@ -15,7 +15,7 @@ use std::time::Duration;
 use tower_http::services::ServeDir;
 use tower_livereload::LiveReloadLayer;
 use tower_livereload::Reloader;
-// use tracing::{event, instrument, Level};
+use tracing::{event, instrument, Level};
 
 #[derive(Deserialize)]
 pub struct EngineConfig {
@@ -28,9 +28,11 @@ pub struct EngineConfigSettings {
 }
 
 #[tokio::main]
+#[instrument]
 async fn main() {
-    let format = tracing_subscriber::fmt::format().pretty();
-    tracing_subscriber::fmt().event_format(format).init();
+    // let format = tracing_subscriber::fmt::format().pretty();
+    // tracing_subscriber::fmt().event_format(format).init();
+
     let mut engine_config_file = document_dir().unwrap();
     engine_config_file.push("Neopoligen");
     engine_config_file.push("config.toml");
@@ -41,6 +43,19 @@ async fn main() {
                 site_root.push("Neopoligen");
                 site_root.push(engine_config.settings.active_site);
                 let config = Config::new(site_root);
+                let mut log_file_path = config.folders.project_root.clone();
+                log_file_path.push("log.log");
+                let _ = fs::remove_file(&log_file_path);
+                let file_appender = tracing_appender::rolling::never(
+                    log_file_path.parent().unwrap(),
+                    log_file_path.file_name().unwrap(),
+                );
+                let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
+                tracing_subscriber::fmt()
+                    .with_ansi(false)
+                    .with_writer(non_blocking)
+                    .init();
+                event!(Level::INFO, r#"Processes started"#);
                 build_site(&config);
                 if true {
                     run_web_server(config).await;

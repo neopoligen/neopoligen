@@ -142,7 +142,6 @@ impl Site {
                 .ast
                 .iter()
                 .filter_map(|child| {
-                    dbg!(&child);
                     if let Child::Section(sec) = &child {
                         if sec.r#type == section_type {
                             Some(Value::from_serializable(child))
