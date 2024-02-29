@@ -13,9 +13,4 @@ pub fn parse(source: &str, config: &Config) -> Vec<Child> {
             vec![]
         }
     }
-    // if let Ok((_, ast)) = ast(source.trim_start(), config) {
-    //     ast
-    // } else {
-    //     vec![]
-    // }
 }
