@@ -78,57 +78,6 @@ fn build_site(config: &Config) {
     builder.copy_theme_assets();
 }
 
-fn test_templates(config: &Config) {
-    println!("Testing templates");
-    get_file_paths_for_extension(&config.folders.theme_tests_root, "neotest")
-        .iter()
-        .for_each(|tf| {
-            let test_setup = fs::read_to_string(tf).unwrap();
-            match parse_test_file(&test_setup) {
-                Ok(parts) => {
-                    let mut test_page_id: String = "".to_string();
-                    let mut target_output: String = "".to_string();
-                    let mut file_set = FileSet::new();
-                    file_set.load_templates(&config.folders.theme_root);
-                    parts.1.iter().for_each(|d| {
-                        match d {
-                            TestSection::Template(name, content) => file_set
-                                .templates
-                                .insert(name.to_string(), content.to_string()),
-                            TestSection::Input(id, content) => {
-                                test_page_id = id.to_string();
-                                file_set
-                                    .pages
-                                    .insert(PathBuf::from("page-under-test"), content.to_string())
-                            }
-                            TestSection::Output(content) => {
-                                target_output = content.to_string();
-                                None
-                            }
-                            _ => None,
-                        };
-                    });
-                    let builder = Builder::new(file_set, &config);
-                    builder.files_to_output().iter().for_each(|o| {
-                        let path_parts: Vec<_> =
-                            o.0.components()
-                                .map(|p| p.as_os_str().to_string_lossy().to_string())
-                                .collect();
-                        if path_parts[path_parts.len() - 2].to_string() == test_page_id.to_string()
-                        {
-                            if o.1.to_string() != target_output.to_string() {
-                                println!("Template Error");
-                                println!("{}", o.1.to_string());
-                                println!("{}", target_output);
-                            }
-                        }
-                    });
-                }
-                Err(e) => println!("{}", e),
-            }
-        });
-}
-
 async fn run_web_server(config: Config) {
     let livereload = LiveReloadLayer::new();
     let reloader = livereload.reloader();
@@ -208,6 +157,58 @@ enum TestSection {
     Output(String),
     SupportPage(String),
     Template(String, String),
+}
+
+fn test_templates(config: &Config) {
+    println!("Testing templates");
+    get_file_paths_for_extension(&config.folders.theme_tests_root, "neotest")
+        .iter()
+        .for_each(|tf| {
+            let test_setup = fs::read_to_string(tf).unwrap();
+            match parse_test_file(&test_setup) {
+                Ok(parts) => {
+                    let mut test_page_id: String = "".to_string();
+                    let mut target_output: String = "".to_string();
+                    let mut file_set = FileSet::new();
+                    file_set.load_templates(&config.folders.theme_root);
+                    parts.1.iter().for_each(|d| {
+                        match d {
+                            TestSection::Template(name, content) => file_set
+                                .templates
+                                .insert(name.to_string(), content.to_string()),
+                            TestSection::Input(id, content) => {
+                                test_page_id = id.to_string();
+                                file_set
+                                    .pages
+                                    .insert(PathBuf::from("page-under-test"), content.to_string())
+                            }
+                            TestSection::Output(content) => {
+                                target_output = content.to_string();
+                                None
+                            }
+                            _ => None,
+                        };
+                    });
+                    let builder = Builder::new(file_set, &config);
+                    builder.files_to_output().iter().for_each(|o| {
+                        let path_parts: Vec<_> =
+                            o.0.components()
+                                .map(|p| p.as_os_str().to_string_lossy().to_string())
+                                .collect();
+                        if path_parts[path_parts.len() - 2].to_string() == test_page_id.to_string()
+                        {
+                            if o.1.to_string() != target_output.to_string() {
+                                println!("Template Error");
+                                dbg!(&tf);
+                                println!("{}", o.1.to_string());
+                                println!("{}", target_output);
+                            }
+                        }
+                    });
+                }
+                Err(e) => println!("{}", e),
+            }
+        });
 }
 
 fn parse_test_file(source: &str) -> IResult<&str, Vec<TestSection>> {

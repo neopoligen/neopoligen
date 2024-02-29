@@ -16,6 +16,7 @@ pub struct ConfigFolders {
     pub theme_assets_root: PathBuf,
     pub theme_configuration_root: PathBuf,
     pub theme_sections_root: PathBuf,
+    pub theme_errors_root: PathBuf,
     // pub theme_helpers_root: PathBuf,
     //     pub theme_includes_root: PathBuf,
     //  pub theme_page_types_root: PathBuf,

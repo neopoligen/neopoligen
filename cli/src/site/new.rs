@@ -32,12 +32,10 @@ impl Site {
                     sd.pages.insert(page.id.clone(), page);
                     ()
                 }
-                ParsedPage::InvalidPage {
-                    path,
-                    source,
-                    remainder,
-                    error,
-                } => (),
+
+                // TODO: Output pages that have problems
+                // to a `_errors`` folder for review
+                ParsedPage::InvalidPage { .. } => (),
             }
         });
 

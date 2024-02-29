@@ -23,7 +23,16 @@ impl Config {
         let content_root = PathBuf::from(format!("{}/{}", project_root.display(), "content"));
         let themes_root = PathBuf::from(format!("{}/{}", project_root.display(), "themes"));
         let output_root = PathBuf::from(format!("{}/{}", project_root.display(), "docs"));
-        let parsing_errors_root = PathBuf::from(format!("{}/_errors/{}", project_root.display(), "parsing"));
+        let parsing_errors_root = PathBuf::from(format!(
+            "{}/_errors/{}",
+            project_root.display(),
+            "parsing-errors"
+        ));
+        let theme_errors_root = PathBuf::from(format!(
+            "{}/_errors/{}",
+            project_root.display(),
+            "theme-errors"
+        ));
 
         let theme_name = get_config_file_single_line(&configuration_root, "theme.txt").unwrap();
 
@@ -65,6 +74,7 @@ impl Config {
             plugins_root,
             content_root,
             parsing_errors_root,
+            theme_errors_root,
             project_root,
             themes_root,
             theme_assets_root,
@@ -170,7 +180,7 @@ impl Config {
             .to_string();
 
         let span_file_paths = get_file_paths_for_extension(&folders.theme_spans_root, "jinja");
-            // dbg!(&span_file_paths);
+        // dbg!(&span_file_paths);
         let unsorted_standard_spans: Vec<String> = span_file_paths
             .iter()
             .filter_map(|path| {
