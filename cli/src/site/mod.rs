@@ -136,8 +136,32 @@ impl Site {
 
     pub fn page_place_section(&self, args: &[Value]) -> Value {
         let id = args[0].to_string();
+        let section_type = args[1].to_string();
         match self.pages.get(&id) {
-            Some(page) => Value::from_serializable::<Vec<String>>(&vec![]),
+            Some(page) => page
+                .ast
+                .iter()
+                .filter_map(|child| {
+                    dbg!(&child);
+                    if let Child::Section(sec) = &child {
+                        if sec.r#type == section_type {
+                            Some(Value::from_serializable(child))
+                        } else {
+                            None
+                        }
+                    } else if let Child::List(sec) = &child {
+                        if sec.r#type == section_type {
+                            Some(Value::from_serializable(child))
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    }
+                })
+                .collect(),
+
+            // Value::from_serializable::<Vec<String>>(&vec![]),
             None => Value::from_serializable::<Vec<String>>(&vec![]),
         }
     }
