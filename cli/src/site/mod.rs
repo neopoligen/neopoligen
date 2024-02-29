@@ -134,6 +134,14 @@ impl Site {
         // }
     }
 
+    pub fn page_place_section(&self, args: &[Value]) -> Value {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
+            Some(page) => Value::from_serializable::<Vec<String>>(&vec![]),
+            None => Value::from_serializable::<Vec<String>>(&vec![]),
+        }
+    }
+
     pub fn page_status(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {

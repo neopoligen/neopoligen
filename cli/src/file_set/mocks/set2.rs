@@ -290,6 +290,22 @@ Test main_body output
         );
 
 
+
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/basic-place-section-test.neo"),
+            r#"-- title
+
+Basic Place Section Test
+
+-- metadata
+-- id: basic-place-section-test
+-- date: 2024-02-20 00:00:00
+
+"#
+            .to_string(),
+        );
+
+
         fs
     }
 }
