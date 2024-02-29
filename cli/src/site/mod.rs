@@ -13,6 +13,7 @@ use std::collections::BTreeMap;
 use std::fmt::Display;
 use std::path::PathBuf;
 use std::sync::Mutex;
+use tracing::{event, instrument, Level};
 
 #[derive(Debug, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
@@ -52,8 +53,11 @@ impl Site {
         self.pages.iter().map(|page| page.0.to_string()).collect()
     }
 
+    #[instrument(skip(self))]
     pub fn page_main_body(&self, args: &[Value]) -> Value {
+        // event!(Level::INFO, "running page_main_body");
         if let Some(page) = self.pages.get(&args[0].to_string()) {
+            event!(Level::INFO, "{}", page.source_path.display());
             Value::from_serializable(
                 &page
                     .ast
