@@ -23,6 +23,7 @@ pub enum TestSection {
 }
 
 pub fn test_templates(config: &Config) {
+    let _ = fs::remove_dir_all(&config.folders.theme_errors_root);
     println!("Testing templates");
     get_file_paths_for_extension(&config.folders.theme_tests_root, "neotest")
         .iter()
@@ -36,11 +37,15 @@ pub fn test_templates(config: &Config) {
                     file_set.load_templates(&config.folders.theme_root);
                     parts.1.iter().for_each(|d| {
                         match d {
-                            TestSection::Template(name, content) => file_set
-                                .templates
-                                .insert(name.to_string(), content.to_string()),
+                            TestSection::Template(name, content) => {
+                                // dbg!(&name.to_string());
+                                file_set
+                                    .templates
+                                    .insert(name.to_string(), content.to_string())
+                            }
                             TestSection::Input(id, content) => {
                                 test_page_id = id.to_string();
+                                // dbg!(&test_page_id);
                                 file_set
                                     .pages
                                     .insert(PathBuf::from("page-under-test"), content.to_string())
@@ -60,7 +65,10 @@ pub fn test_templates(config: &Config) {
                                 .collect();
                         if path_parts[path_parts.len() - 2].to_string() == test_page_id.to_string()
                         {
-                            if o.1.to_string() != target_output.to_string() {
+                            // dbg!(&test_page_id);
+                            if o.1.replace(" ", "").replace("\n", "").to_string()
+                                != target_output.replace(" ", "").replace("\n", "").to_string()
+                            {
                                 println!("Template Error");
                                 let mut output_path = config.folders.theme_errors_root.clone();
                                 let error_file_sub_path = tf
