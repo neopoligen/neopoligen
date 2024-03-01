@@ -39,10 +39,10 @@ pub enum CacheObject {
 
 impl Site {
     #[instrument(skip(self))]
-    pub fn get_cache(&self, name: String, key: String) -> Option<CacheObject> {
+    pub fn get_cache(&self, name: &str, key: &str) -> Option<CacheObject> {
         let binding = self.cache.lock().unwrap();
-        match binding.get(&name) {
-            Some(cache) => match cache.get(&key) {
+        match binding.get(name) {
+            Some(cache) => match cache.get(key) {
                 Some(obj) => Some(obj.clone()),
                 None => None,
             },
@@ -82,7 +82,7 @@ impl Site {
             .into_iter()
             .map(|f| f.try_iter().unwrap().into_iter().join("-"))
             .join("-");
-        match self.get_cache("menus".to_string(), menu_key.to_string()) {
+        match self.get_cache("menus", &menu_key) {
             Some(menu_cache) => {
                 if let CacheObject::Menu(menu) = menu_cache {
                     menu
@@ -489,12 +489,10 @@ impl Site {
 
     pub fn page_title(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
-        let mut cache = self.cache.lock().unwrap();
-        let page_titles = cache.get_mut("page_title").unwrap();
-        match page_titles.get(&id) {
-            Some(title_cache) => {
-                if let CacheObject::OptionString(title) = title_cache {
-                    title.clone()
+        match self.get_cache("page-titles", &id) {
+            Some(page_title_cache) => {
+                if let CacheObject::OptionString(page_title) = page_title_cache {
+                    page_title
                 } else {
                     None
                 }
@@ -518,7 +516,7 @@ impl Site {
                     }
                     None => Some("(missing page)".to_string()),
                 };
-                page_titles.insert(id.to_string(), CacheObject::OptionString(title.clone()));
+                self.set_cache("page-titles", id, CacheObject::OptionString(title.clone()));
                 title
             }
         }
@@ -556,7 +554,7 @@ impl Site {
         // everything unwraps directly. If something hasn't been
         // added yet it'll trigger an intended panic
         let mut c = self.cache.lock().unwrap();
-        c.insert("page_title".to_string(), BTreeMap::new());
+        c.insert("page-titles".to_string(), BTreeMap::new());
         c.insert("menus".to_string(), BTreeMap::new());
     }
 }
