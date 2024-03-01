@@ -75,50 +75,46 @@ impl Site {
 
     pub fn folder_menu_subfolder_finder(&self, pattern: &Vec<String>) -> Vec<FolderMenuItem> {
         let mut next_level_folders: BTreeSet<Vec<String>> = BTreeSet::new();
-
-        // self.pages.iter().for_each(|page| {
-        //     if page
-        //         .1
-        //         .folders()
-        //         .iter()
-        //         .take(pattern.len())
-        //         .eq(pattern.clone().iter())
-        //     {
-        //         if page.1.folders().len() == pattern.len() + 1 {
-        //             next_level_folders.insert(page.1.folders());
-        //         }
-        //     }
-        // });
-        // next_level_folders
-        //     .iter()
-        //     .filter_map(|pat| self.folder_menu_index_finder(pat.clone()))
-        //     .collect()
-
-        vec![]
+        self.pages.iter().for_each(|page| {
+            let page_folders = self.page_folders(&[Value::from(page.1.id.clone())]);
+            if page_folders
+                .iter()
+                .take(pattern.len())
+                .eq(pattern.clone().iter())
+            {
+                if page_folders.len() == pattern.len() + 1 {
+                    next_level_folders.insert(page_folders);
+                }
+            }
+        });
+        next_level_folders
+            .iter()
+            .filter_map(|pat| self.folder_menu_index_finder(pat.clone()))
+            .collect()
     }
 
     pub fn folder_menu_child_item_finder(&self, pattern: &Vec<String>) -> Vec<FolderMenuItem> {
-        // let mut full_pattern_with_file = pattern.clone();
-        // full_pattern_with_file.push("_index.neo".to_string());
-        // self.pages
-        //     .iter()
-        //     .filter_map(|page| {
-        //         if &page.1.folders() == pattern && page.1.path_parts() != full_pattern_with_file {
-        //             let fmi = FolderMenuItem {
-        //                 page_id: page.1.id().unwrap(),
-        //                 is_current_link: false,
-        //                 title: page.1.full_title(),
-        //                 href: page.1.href(),
-        //                 children: vec![],
-        //             };
-        //             Some(fmi)
-        //         } else {
-        //             None
-        //         }
-        //     })
-        //     .collect()
-
-        vec![]
+        let mut full_pattern_with_file = pattern.clone();
+        full_pattern_with_file.push("_title.neo".to_string());
+        self.pages
+            .iter()
+            .filter_map(|page| {
+                let page_folders = self.page_folders(&[Value::from(page.1.id.clone())]);
+                let path_parts = self.page_path_parts(&[Value::from(page.1.id.clone())]);
+                if &page_folders == pattern && path_parts != full_pattern_with_file {
+                    let fmi = FolderMenuItem {
+                        page_id: page.1.id.clone(),
+                        is_current_link: false,
+                        title: self.page_title(&page.1.id.clone()),
+                        href: self.page_href(&[Value::from(page.1.id.clone())]),
+                        children: vec![],
+                    };
+                    Some(fmi)
+                } else {
+                    None
+                }
+            })
+            .collect()
     }
 
     pub fn page_folders(&self, args: &[Value]) -> Vec<String> {
