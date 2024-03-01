@@ -20,7 +20,7 @@ use std::path::PathBuf;
 #[derive(Debug)]
 pub enum TestSection {
     Description(String),
-    Input(String, String),
+    Input(String, String, String),
     Output(String),
     SupportPage(String),
     Template(String, String),
@@ -47,12 +47,12 @@ pub fn test_templates(config: &Config) {
                                     .templates
                                     .insert(name.to_string(), content.to_string())
                             }
-                            TestSection::Input(id, content) => {
+                            TestSection::Input(path, id, content) => {
                                 test_page_id = id.to_string();
                                 // dbg!(&test_page_id);
                                 file_set
                                     .pages
-                                    .insert(PathBuf::from("page-under-test"), content.to_string())
+                                    .insert(PathBuf::from(path), content.to_string())
                             }
                             TestSection::Output(content) => {
                                 target_output = content.to_string();
@@ -130,6 +130,7 @@ pub fn test_template(source: &str) -> IResult<&str, TestSection> {
     let (source, _) = tag("CONTENT:")(source)?;
     let (source, _) = multispace0(source)?;
     let (source, template) = take_until("###")(source)?;
+
     Ok((
         source,
         TestSection::Template(name.trim().to_string(), template.trim().to_string()),
@@ -145,8 +146,14 @@ pub fn test_template(source: &str) -> IResult<&str, TestSection> {
 // }
 
 pub fn test_input(source: &str) -> IResult<&str, TestSection> {
-    let (source, _) = multispace0(source)?;
-    let (source, _) = tag("### INPUT ###")(source)?;
+    let (source, _) = tag("INPUT")(source)?;
+    let (source, _) = space0(source)?;
+    let (source, _) = line_ending(source)?;
+    let (source, _) = tag("PATH:")(source)?;
+    let (source, _) = space1(source)?;
+    let (source, path) = not_line_ending(source)?;
+    let (source, _) = line_ending(source)?;
+    let (source, _) = tag("CONTENT:")(source)?;
     let (source, _) = multispace0(source)?;
     let (source, content) = take_until("###")(source)?;
     let (id_source, _) = take_until("-- id: ")(content)?;
@@ -154,13 +161,19 @@ pub fn test_input(source: &str) -> IResult<&str, TestSection> {
     let (_, id) = is_not(" \n")(id_source)?;
     Ok((
         source,
-        TestSection::Input(id.trim().to_string(), content.trim().to_string()),
+        TestSection::Input(
+            path.trim().to_string(),
+            id.trim().to_string(),
+            content.trim().to_string(),
+        ),
     ))
 }
 
 pub fn test_output(source: &str) -> IResult<&str, TestSection> {
-    let (source, _) = multispace0(source)?;
-    let (source, _) = tag("### OUTPUT ###")(source)?;
+    let (source, _) = tag("OUTPUT")(source)?;
+    let (source, _) = space0(source)?;
+    let (source, _) = line_ending(source)?;
+    let (source, _) = tag("CONTENT:")(source)?;
     let (source, _) = multispace0(source)?;
     let (source, content) = rest(source)?;
     Ok((source, TestSection::Output(content.trim().to_string())))
