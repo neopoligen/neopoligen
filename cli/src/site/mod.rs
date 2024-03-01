@@ -9,6 +9,7 @@ use crate::page::Page;
 use crate::section::Section;
 use crate::section_category::SectionCategory;
 use crate::span::Span;
+use itertools::Itertools;
 use minijinja::Value;
 use serde::Serialize;
 use std::collections::BTreeMap;
@@ -21,11 +22,19 @@ use tracing::{event, instrument, Level};
 #[derive(Debug, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct Site {
-    pub cache: Mutex<BTreeMap<String, BTreeMap<String, Option<String>>>>,
+    pub cache: Mutex<BTreeMap<String, BTreeMap<String, CacheObject>>>,
     pub config: Config,
     pub pages: BTreeMap<String, Page>,
     pub invalid_pages: BTreeMap<PathBuf, String>,
     pub templates: BTreeMap<String, String>,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(tag = "type", rename_all = "lowercase")]
+pub enum CacheObject {
+    Menu(Vec<FolderMenuItem>),
+    Value(Value),
+    OptionString(Option<String>),
 }
 
 impl Site {
@@ -36,19 +45,55 @@ impl Site {
     }
 
     pub fn folder_menu(&self, args: &[Value]) -> Vec<FolderMenuItem> {
-        let r = args[1]
+        let items = self.folder_menu_builder(args);
+        items
+    }
+
+    pub fn folder_menu_builder(&self, args: &[Value]) -> Vec<FolderMenuItem> {
+        let mut binding = self.cache.lock().unwrap();
+        let menu_key = args[1]
             .try_iter()
             .unwrap()
-            .filter_map(|folder_vecs| {
-                let folder_pattern: Vec<String> = folder_vecs
+            .into_iter()
+            .map(|f| f.try_iter().unwrap().into_iter().join("-"))
+            .join("-");
+        // dbg!(&menu_key);
+
+        match binding.get("menus") {
+            Some(menus) => {
+                match menus.get(&menu_key) {
+                    Some(menu) => vec![],
+                    None => vec![], // let r = args[1]
+                                    //     .try_iter()
+                                    //     .unwrap()
+                                    //     .filter_map(|folder_vecs| {
+                                    //         let folder_pattern: Vec<String> = folder_vecs
+                                    //             .try_iter()
+                                    //             .unwrap()
+                                    //             .map(|f| f.to_string())
+                                    //             .collect();
+                                    //         self.folder_menu_index_finder(folder_pattern)
+                                    //     })
+                                    //     .collect();
+                                    // r
+                }
+            }
+            None => {
+                let r = args[1]
                     .try_iter()
                     .unwrap()
-                    .map(|f| f.to_string())
+                    .filter_map(|folder_vecs| {
+                        let folder_pattern: Vec<String> = folder_vecs
+                            .try_iter()
+                            .unwrap()
+                            .map(|f| f.to_string())
+                            .collect();
+                        self.folder_menu_index_finder(folder_pattern)
+                    })
                     .collect();
-                self.folder_menu_index_finder(folder_pattern)
-            })
-            .collect();
-        r
+                r
+            }
+        }
     }
 
     pub fn folder_menu_index_finder(&self, pattern: Vec<String>) -> Option<FolderMenuItem> {
@@ -123,7 +168,6 @@ impl Site {
     pub fn link_or_title(&self, args: &[Value]) -> Option<String> {
         let current_page_id = args[0].to_string();
         let target_page_id = args[1].to_string();
-
         if current_page_id == target_page_id {
             match self.pages.get(&target_page_id) {
                 Some(_) => Some(format!(
@@ -180,7 +224,7 @@ impl Site {
     }
 
     pub fn page_href_title(&self, id: &str) -> Option<String> {
-        match self.page_title(&[Value::from(id.clone())]) {
+        match self.page_title(&[Value::from(id)]) {
             Some(title) => Some(
                 urlencoding::encode(&title.to_lowercase().replace(" ", "-").to_string())
                     .into_owned(),
@@ -385,7 +429,13 @@ impl Site {
         let mut cache = self.cache.lock().unwrap();
         let page_titles = cache.get_mut("page_title").unwrap();
         match page_titles.get(&id) {
-            Some(title) => title.clone(),
+            Some(title_cache) => {
+                if let CacheObject::OptionString(title) = title_cache {
+                    title.clone()
+                } else {
+                    None
+                }
+            }
             None => {
                 let title = match self.pages.get(&id) {
                     Some(page) => {
@@ -405,7 +455,7 @@ impl Site {
                     }
                     None => Some("(missing page)".to_string()),
                 };
-                page_titles.insert(id.to_string(), title.clone());
+                page_titles.insert(id.to_string(), CacheObject::OptionString(title.clone()));
                 title
             }
         }
@@ -444,6 +494,7 @@ impl Site {
         // added yet it'll trigger an intended panic
         let mut c = self.cache.lock().unwrap();
         c.insert("page_title".to_string(), BTreeMap::new());
+        c.insert("menus".to_string(), BTreeMap::new());
     }
 }
 
