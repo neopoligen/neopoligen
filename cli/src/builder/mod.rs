@@ -67,7 +67,7 @@ impl Builder {
             r#"{%- import "includes/macros.jinja" as macros -%}
 {#- include "global_vars" -#}
 {%- for page_id in site.page_ids() -%}
-{{ site.log(page_id) }}
+{{- site.log({ "page_id": page_id, "source_path": site.page_source_path(page_id) }) -}}
 {{ site.page_output_path(page_id) }}
 --- PAGE_DATA_SPLIT ---
 {% include site.page_template(page_id) %}
@@ -145,11 +145,18 @@ impl Builder {
     pub fn write_files(&self) {
         println!("Writing files");
         self.files_to_output().iter().for_each(|f| {
-            let output_path = PathBuf::from(f.0);
-            // println!("{}", &f.0.display());
-            let parent_dir = output_path.parent().unwrap();
-            let _ = create_dir_all(parent_dir);
-            let _ = fs::write(output_path, f.1);
+            if f.0
+                .starts_with(self.config.folders.output_root.display().to_string())
+            {
+                let output_path = PathBuf::from(f.0);
+                dbg!(&output_path);
+                // println!("{}", &f.0.display());
+                let parent_dir = output_path.parent().unwrap();
+                //  let _ = create_dir_all(parent_dir);
+                // let _ = fs::write(output_path, f.1);
+            } else {
+                println!("ERROR: Tried to write outside of the output root");
+            }
         });
     }
 }

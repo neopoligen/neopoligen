@@ -27,12 +27,9 @@ pub struct Site {
 
 impl Site {
     #[instrument(skip(self))]
-    pub fn log_from_template(&self, args: &[Value]) {
-        event!(
-            Level::INFO,
-            "{}",
-            self.page_title(&args[0].to_string()).unwrap().to_string()
-        );
+    pub fn log_from_template(&self, args: &[Value]) -> String {
+        event!(Level::INFO, "{}", args[0].to_string());
+        "".to_string()
     }
 
     pub fn page_href(&self, args: &[Value]) -> Option<String> {

@@ -40,7 +40,8 @@ async fn main() {
                 site_root.push("Neopoligen");
                 site_root.push(engine_config.settings.active_site);
                 let config = Config::new(site_root);
-                let mut log_file_path = config.folders.project_root.clone();
+                let mut log_file_path = document_dir().unwrap();
+                log_file_path.push("Neopoligen");
                 log_file_path.push("log.log");
                 let _ = fs::remove_file(&log_file_path);
                 let file_appender = tracing_appender::rolling::never(
@@ -116,6 +117,7 @@ fn run_watcher(reloader: Reloader, config: Config) {
                             if !e.path.starts_with(config.clone().folders.output_root)
                                 && !e.path.starts_with(template_test_error_dir)
                             {
+                                dbg!(&e);
                                 let timestamp = std::time::SystemTime::now()
                                     .duration_since(std::time::SystemTime::UNIX_EPOCH)
                                     .unwrap()
