@@ -51,49 +51,50 @@ impl Site {
 
     pub fn folder_menu_builder(&self, args: &[Value]) -> Vec<FolderMenuItem> {
         let mut binding = self.cache.lock().unwrap();
+        let menus = binding.get("menus").unwrap();
         let menu_key = args[1]
             .try_iter()
             .unwrap()
             .into_iter()
             .map(|f| f.try_iter().unwrap().into_iter().join("-"))
             .join("-");
-        // dbg!(&menu_key);
-
-        match binding.get("menus") {
-            Some(menus) => {
-                match menus.get(&menu_key) {
-                    Some(menu) => vec![],
-                    None => vec![], // let r = args[1]
-                                    //     .try_iter()
-                                    //     .unwrap()
-                                    //     .filter_map(|folder_vecs| {
-                                    //         let folder_pattern: Vec<String> = folder_vecs
-                                    //             .try_iter()
-                                    //             .unwrap()
-                                    //             .map(|f| f.to_string())
-                                    //             .collect();
-                                    //         self.folder_menu_index_finder(folder_pattern)
-                                    //     })
-                                    //     .collect();
-                                    // r
+        match menus.get(&menu_key) {
+            Some(menu_cache) => {
+                if let CacheObject::Menu(menu) = menu_cache {
+                    menu.to_vec()
+                } else {
+                    vec![]
                 }
             }
-            None => {
-                let r = args[1]
-                    .try_iter()
-                    .unwrap()
-                    .filter_map(|folder_vecs| {
-                        let folder_pattern: Vec<String> = folder_vecs
-                            .try_iter()
-                            .unwrap()
-                            .map(|f| f.to_string())
-                            .collect();
-                        self.folder_menu_index_finder(folder_pattern)
-                    })
-                    .collect();
-                r
-            }
+            None => vec![], // let r = args[1]
+                            //     .try_iter()
+                            //     .unwrap()
+                            //     .filter_map(|folder_vecs| {
+                            //         let folder_pattern: Vec<String> = folder_vecs
+                            //             .try_iter()
+                            //             .unwrap()
+                            //             .map(|f| f.to_string())
+                            //             .collect();
+                            //         self.folder_menu_index_finder(folder_pattern)
+                            //     })
+                            //     .collect();
+                            // r
         }
+
+        // let r = args[1]
+        //     .try_iter()
+        //     .unwrap()
+        //     .filter_map(|folder_vecs| {
+        //         let folder_pattern: Vec<String> = folder_vecs
+        //             .try_iter()
+        //             .unwrap()
+        //             .map(|f| f.to_string())
+        //             .collect();
+        //         self.folder_menu_index_finder(folder_pattern)
+        //     })
+        //     .collect();
+        // r
+        // }
     }
 
     pub fn folder_menu_index_finder(&self, pattern: Vec<String>) -> Option<FolderMenuItem> {
