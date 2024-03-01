@@ -117,12 +117,27 @@ impl Site {
             .collect()
     }
 
+    pub fn link_or_title(&self, args: &[Value]) -> Option<String> {
+        let current_page_id = args[0].to_string();
+        let target_page_id = args[1].to_string();
+
+        match self.pages.get(&target_page_id) {
+            Some(target_page) => Some(format!(
+                r#"<a href="{}">{}</a>"#,
+                self.page_href(&[Value::from(target_page_id.clone())])
+                    .unwrap(),
+                self.page_title(&target_page_id.clone()).unwrap(),
+            )),
+            None => None,
+        }
+    }
+
     pub fn page_folders(&self, args: &[Value]) -> Vec<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => {
-                dbg!(&page.source_path);
-                dbg!(&self.config.folders.content_root.clone());
+                // dbg!(&page.source_path);
+                // dbg!(&self.config.folders.content_root.clone());
                 page.source_path
                     .strip_prefix(&self.config.folders.content_root.clone())
                     .unwrap()
@@ -247,8 +262,8 @@ impl Site {
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => {
-                dbg!(&page.source_path);
-                dbg!(&self.config.folders.content_root.clone());
+                // dbg!(&page.source_path);
+                // dbg!(&self.config.folders.content_root.clone());
                 page.source_path
                     .strip_prefix(&self.config.folders.content_root.clone())
                     .unwrap()

@@ -356,6 +356,38 @@ Check Page Folders
 
 
 
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/link-or-title-start.neo"),
+            r#"-- title
+
+Link Or Title Start
+
+-- metadata
+-- id: link-or-title-start
+-- date: 2024-02-24 00:00:00
+
+"#
+            .to_string(),
+        );
+
+
+
+
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/link-or-title-target.neo"),
+            r#"-- title
+
+Link Or Title Target
+
+-- metadata
+-- id: link-or-title-target
+-- date: 2024-02-25 00:00:00
+
+"#
+            .to_string(),
+        );
+
+
 
         
 
