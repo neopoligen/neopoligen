@@ -339,6 +339,23 @@ This checks path parts
 
 
 
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/page/folders/example/file.neo"),
+            r#"-- title
+
+Check Page Folders
+
+-- metadata
+-- id: page-folders-example
+-- date: 2024-02-23 00:00:00
+
+"#
+            .to_string(),
+        );
+
+
+
+
 
         
 

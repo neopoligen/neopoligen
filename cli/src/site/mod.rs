@@ -74,7 +74,8 @@ impl Site {
     }
 
     pub fn folder_menu_subfolder_finder(&self, pattern: &Vec<String>) -> Vec<FolderMenuItem> {
-        // let mut next_level_folders: BTreeSet<Vec<String>> = BTreeSet::new();
+        let mut next_level_folders: BTreeSet<Vec<String>> = BTreeSet::new();
+
         // self.pages.iter().for_each(|page| {
         //     if page
         //         .1
@@ -118,6 +119,25 @@ impl Site {
         //     .collect()
 
         vec![]
+    }
+
+    pub fn page_folders(&self, args: &[Value]) -> Vec<String> {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
+            Some(page) => {
+                dbg!(&page.source_path);
+                dbg!(&self.config.folders.content_root.clone());
+                page.source_path
+                    .strip_prefix(&self.config.folders.content_root.clone())
+                    .unwrap()
+                    .parent()
+                    .unwrap()
+                    .components()
+                    .map(|c| c.as_os_str().to_string_lossy().to_string().to_lowercase())
+                    .collect()
+            }
+            None => vec![],
+        }
     }
 
     pub fn page_href(&self, args: &[Value]) -> Option<String> {
