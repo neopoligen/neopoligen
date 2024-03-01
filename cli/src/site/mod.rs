@@ -29,7 +29,7 @@ pub struct Site {
     pub templates: BTreeMap<String, String>,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum CacheObject {
     Menu(Vec<FolderMenuItem>),
@@ -38,6 +38,31 @@ pub enum CacheObject {
 }
 
 impl Site {
+    #[instrument(skip(self))]
+    pub fn get_cache(&self, name: String, key: String) -> Option<CacheObject> {
+        let binding = self.cache.lock().unwrap();
+        match binding.get(&name) {
+            Some(cache) => match cache.get(&key) {
+                Some(obj) => Some(obj.clone()),
+                None => None,
+            },
+            None => None,
+        }
+    }
+
+    // TODO: Convert this from an Option into a Result for the return value
+    #[instrument(skip(self))]
+    pub fn set_cache(&self, name: &str, key: String, obj: CacheObject) -> Option<CacheObject> {
+        let mut binding = self.cache.lock().unwrap();
+        match binding.get_mut(name) {
+            Some(cache) => match cache.insert(key, obj) {
+                Some(_) => None,
+                None => None,
+            },
+            None => None,
+        }
+    }
+
     #[instrument(skip(self))]
     pub fn log_from_template(&self, args: &[Value]) -> String {
         event!(Level::INFO, "{}", args[0].to_string());
@@ -49,37 +74,67 @@ impl Site {
         items
     }
 
+    #[instrument(skip(self))]
     pub fn folder_menu_builder(&self, args: &[Value]) -> Vec<FolderMenuItem> {
-        let mut binding = self.cache.lock().unwrap();
-        let menus = binding.get("menus").unwrap();
         let menu_key = args[1]
             .try_iter()
             .unwrap()
             .into_iter()
             .map(|f| f.try_iter().unwrap().into_iter().join("-"))
             .join("-");
-        match menus.get(&menu_key) {
+        match self.get_cache("menus".to_string(), menu_key.to_string()) {
             Some(menu_cache) => {
                 if let CacheObject::Menu(menu) = menu_cache {
-                    menu.to_vec()
+                    menu
                 } else {
                     vec![]
                 }
             }
-            None => vec![], // let r = args[1]
-                            //     .try_iter()
-                            //     .unwrap()
-                            //     .filter_map(|folder_vecs| {
-                            //         let folder_pattern: Vec<String> = folder_vecs
-                            //             .try_iter()
-                            //             .unwrap()
-                            //             .map(|f| f.to_string())
-                            //             .collect();
-                            //         self.folder_menu_index_finder(folder_pattern)
-                            //     })
-                            //     .collect();
-                            // r
+            None => {
+                let r: Vec<FolderMenuItem> = args[1]
+                    .try_iter()
+                    .unwrap()
+                    .filter_map(|folder_vecs| {
+                        let folder_pattern: Vec<String> = folder_vecs
+                            .try_iter()
+                            .unwrap()
+                            .map(|f| f.to_string())
+                            .collect();
+                        self.folder_menu_index_finder(folder_pattern)
+                    })
+                    .collect();
+                self.set_cache("menus", menu_key, CacheObject::Menu(r.clone()));
+                r
+            }
         }
+
+        // event!(Level::INFO, "fn folder_menu_builder");
+        // let mut binding = self.cache.lock().unwrap();
+        // let menus = binding.get("menus").unwrap();
+        // match menus.get(&menu_key) {
+        //     Some(menu_cache) => {
+        //         if let CacheObject::Menu(menu) = menu_cache {
+        //             menu.to_vec()
+        //         } else {
+        //             vec![]
+        //         }
+        //     }
+        //     None => {
+        //         let r = args[1]
+        //             .try_iter()
+        //             .unwrap()
+        //             .filter_map(|folder_vecs| {
+        //                 let folder_pattern: Vec<String> = folder_vecs
+        //                     .try_iter()
+        //                     .unwrap()
+        //                     .map(|f| f.to_string())
+        //                     .collect();
+        //                 self.folder_menu_index_finder(folder_pattern)
+        //             })
+        //             .collect();
+        //         r
+        //     }
+        // }
 
         // let r = args[1]
         //     .try_iter()
@@ -97,10 +152,13 @@ impl Site {
         // }
     }
 
+    #[instrument(skip(self))]
     pub fn folder_menu_index_finder(&self, pattern: Vec<String>) -> Option<FolderMenuItem> {
+        event!(Level::INFO, "fn folder_menu_index_finder");
         let mut full_pattern_with_file = pattern.clone();
         full_pattern_with_file.push("_title.neo".to_string());
         self.pages.iter().find_map(|page| {
+            event!(Level::DEBUG, "{}", page.0);
             if full_pattern_with_file == self.page_path_parts(&[Value::from(page.1.id.clone())]) {
                 let mut fmi = FolderMenuItem {
                     page_id: page.1.id.clone(),
@@ -121,7 +179,9 @@ impl Site {
         })
     }
 
+    #[instrument(skip(self))]
     pub fn folder_menu_subfolder_finder(&self, pattern: &Vec<String>) -> Vec<FolderMenuItem> {
+        event!(Level::INFO, "fn folder_menu_subfolder_finder");
         let mut next_level_folders: BTreeSet<Vec<String>> = BTreeSet::new();
         self.pages.iter().for_each(|page| {
             let page_folders = self.page_folders(&[Value::from(page.1.id.clone())]);
@@ -141,7 +201,9 @@ impl Site {
             .collect()
     }
 
+    #[instrument(skip(self))]
     pub fn folder_menu_child_item_finder(&self, pattern: &Vec<String>) -> Vec<FolderMenuItem> {
+        event!(Level::INFO, "fn folder_menu_child_item_finder");
         let mut full_pattern_with_file = pattern.clone();
         full_pattern_with_file.push("_title.neo".to_string());
         self.pages
