@@ -54,23 +54,22 @@ impl Site {
         let mut full_pattern_with_file = pattern.clone();
         full_pattern_with_file.push("_title.neo".to_string());
         self.pages.iter().find_map(|page| {
-            None
-            //     if full_pattern_with_file == page.1.path_parts() {
-            //         let mut fmi = FolderMenuItem {
-            //             page_id: page.1.id().unwrap(),
-            //             is_current_link: false,
-            //             title: page.1.full_title(),
-            //             href: page.1.href(),
-            //             children: self.folder_menu_child_item_finder(&pattern),
-            //         };
-            //         // TODO: Get sub folders here
-            //         let mut next_folders: Vec<FolderMenuItem> =
-            //             self.folder_menu_subfolder_finder(&pattern);
-            //         fmi.children.append(&mut next_folders);
-            //         Some(fmi)
-            //     } else {
-            //         None
-            //     }
+            if full_pattern_with_file == self.page_path_parts(&[Value::from(page.1.id.clone())]) {
+                let mut fmi = FolderMenuItem {
+                    page_id: page.1.id.clone(),
+                    is_current_link: false,
+                    title: self.page_title(&page.1.id.clone()),
+                    href: self.page_href(&[Value::from(page.1.id.clone())]),
+                    children: self.folder_menu_child_item_finder(&pattern),
+                };
+                // TODO: Get sub folders here
+                let mut next_folders: Vec<FolderMenuItem> =
+                    self.folder_menu_subfolder_finder(&pattern);
+                fmi.children.append(&mut next_folders);
+                Some(fmi)
+            } else {
+                None
+            }
         })
     }
 
