@@ -321,6 +321,27 @@ This is a source path check
         );
 
 
+
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/path/parts/example/subfile.neo"),
+            r#"-- title
+
+This checks path parts
+
+-- metadata
+-- id: page-parts-example
+-- date: 2024-02-22 00:00:00
+
+"#
+            .to_string(),
+        );
+
+
+
+
+
+        
+
         fs
     }
 }

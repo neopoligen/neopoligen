@@ -51,28 +51,27 @@ impl Site {
     }
 
     pub fn folder_menu_index_finder(&self, pattern: Vec<String>) -> Option<FolderMenuItem> {
-        None
-
-        // let mut full_pattern_with_file = pattern.clone();
-        // full_pattern_with_file.push("_index.neo".to_string());
-        // self.pages.iter().find_map(|page| {
-        //     if full_pattern_with_file == page.1.path_parts() {
-        //         let mut fmi = FolderMenuItem {
-        //             page_id: page.1.id().unwrap(),
-        //             is_current_link: false,
-        //             title: page.1.full_title(),
-        //             href: page.1.href(),
-        //             children: self.folder_menu_child_item_finder(&pattern),
-        //         };
-        //         // TODO: Get sub folders here
-        //         let mut next_folders: Vec<FolderMenuItem> =
-        //             self.folder_menu_subfolder_finder(&pattern);
-        //         fmi.children.append(&mut next_folders);
-        //         Some(fmi)
-        //     } else {
-        //         None
-        //     }
-        // })
+        let mut full_pattern_with_file = pattern.clone();
+        full_pattern_with_file.push("_title.neo".to_string());
+        self.pages.iter().find_map(|page| {
+            None
+            //     if full_pattern_with_file == page.1.path_parts() {
+            //         let mut fmi = FolderMenuItem {
+            //             page_id: page.1.id().unwrap(),
+            //             is_current_link: false,
+            //             title: page.1.full_title(),
+            //             href: page.1.href(),
+            //             children: self.folder_menu_child_item_finder(&pattern),
+            //         };
+            //         // TODO: Get sub folders here
+            //         let mut next_folders: Vec<FolderMenuItem> =
+            //             self.folder_menu_subfolder_finder(&pattern);
+            //         fmi.children.append(&mut next_folders);
+            //         Some(fmi)
+            //     } else {
+            //         None
+            //     }
+        })
     }
 
     pub fn folder_menu_subfolder_finder(&self, pattern: &Vec<String>) -> Vec<FolderMenuItem> {
@@ -227,6 +226,23 @@ impl Site {
         //     )),
         //     None => None,
         // }
+    }
+
+    pub fn page_path_parts(&self, args: &[Value]) -> Vec<String> {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
+            Some(page) => {
+                dbg!(&page.source_path);
+                dbg!(&self.config.folders.content_root.clone());
+                page.source_path
+                    .strip_prefix(&self.config.folders.content_root.clone())
+                    .unwrap()
+                    .components()
+                    .map(|c| c.as_os_str().to_string_lossy().to_string().to_lowercase())
+                    .collect()
+            }
+            None => vec![],
+        }
     }
 
     pub fn page_place_section(&self, args: &[Value]) -> Value {
