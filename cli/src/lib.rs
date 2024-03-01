@@ -6,6 +6,7 @@ pub mod config;
 pub mod config_folders;
 pub mod config_section_categories;
 pub mod file_set;
+pub mod folder_menu_item;
 pub mod helpers;
 pub mod json_plugin;
 pub mod list;

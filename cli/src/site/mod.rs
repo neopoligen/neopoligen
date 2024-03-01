@@ -3,6 +3,7 @@ pub mod object;
 
 use crate::child::Child;
 use crate::config::Config;
+use crate::folder_menu_item::FolderMenuItem;
 use crate::page::Page;
 use crate::section::Section;
 use crate::section_category::SectionCategory;
@@ -10,6 +11,7 @@ use crate::span::Span;
 use minijinja::Value;
 use serde::Serialize;
 use std::collections::BTreeMap;
+use std::collections::BTreeSet;
 use std::fmt::Display;
 use std::path::PathBuf;
 use std::sync::Mutex;
@@ -30,6 +32,94 @@ impl Site {
     pub fn log_from_template(&self, args: &[Value]) -> String {
         event!(Level::INFO, "{}", args[0].to_string());
         "".to_string()
+    }
+
+    pub fn folder_menu(&self, args: &[Value]) -> Vec<FolderMenuItem> {
+        let r = args[1]
+            .try_iter()
+            .unwrap()
+            .filter_map(|folder_vecs| {
+                let folder_pattern: Vec<String> = folder_vecs
+                    .try_iter()
+                    .unwrap()
+                    .map(|f| f.to_string())
+                    .collect();
+                self.folder_menu_index_finder(folder_pattern)
+            })
+            .collect();
+        r
+    }
+
+    pub fn folder_menu_index_finder(&self, pattern: Vec<String>) -> Option<FolderMenuItem> {
+        None
+
+        // let mut full_pattern_with_file = pattern.clone();
+        // full_pattern_with_file.push("_index.neo".to_string());
+        // self.pages.iter().find_map(|page| {
+        //     if full_pattern_with_file == page.1.path_parts() {
+        //         let mut fmi = FolderMenuItem {
+        //             page_id: page.1.id().unwrap(),
+        //             is_current_link: false,
+        //             title: page.1.full_title(),
+        //             href: page.1.href(),
+        //             children: self.folder_menu_child_item_finder(&pattern),
+        //         };
+        //         // TODO: Get sub folders here
+        //         let mut next_folders: Vec<FolderMenuItem> =
+        //             self.folder_menu_subfolder_finder(&pattern);
+        //         fmi.children.append(&mut next_folders);
+        //         Some(fmi)
+        //     } else {
+        //         None
+        //     }
+        // })
+    }
+
+    pub fn folder_menu_subfolder_finder(&self, pattern: &Vec<String>) -> Vec<FolderMenuItem> {
+        // let mut next_level_folders: BTreeSet<Vec<String>> = BTreeSet::new();
+        // self.pages.iter().for_each(|page| {
+        //     if page
+        //         .1
+        //         .folders()
+        //         .iter()
+        //         .take(pattern.len())
+        //         .eq(pattern.clone().iter())
+        //     {
+        //         if page.1.folders().len() == pattern.len() + 1 {
+        //             next_level_folders.insert(page.1.folders());
+        //         }
+        //     }
+        // });
+        // next_level_folders
+        //     .iter()
+        //     .filter_map(|pat| self.folder_menu_index_finder(pat.clone()))
+        //     .collect()
+
+        vec![]
+    }
+
+    pub fn folder_menu_child_item_finder(&self, pattern: &Vec<String>) -> Vec<FolderMenuItem> {
+        // let mut full_pattern_with_file = pattern.clone();
+        // full_pattern_with_file.push("_index.neo".to_string());
+        // self.pages
+        //     .iter()
+        //     .filter_map(|page| {
+        //         if &page.1.folders() == pattern && page.1.path_parts() != full_pattern_with_file {
+        //             let fmi = FolderMenuItem {
+        //                 page_id: page.1.id().unwrap(),
+        //                 is_current_link: false,
+        //                 title: page.1.full_title(),
+        //                 href: page.1.href(),
+        //                 children: vec![],
+        //             };
+        //             Some(fmi)
+        //         } else {
+        //             None
+        //         }
+        //     })
+        //     .collect()
+
+        vec![]
     }
 
     pub fn page_href(&self, args: &[Value]) -> Option<String> {
