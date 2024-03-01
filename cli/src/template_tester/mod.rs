@@ -22,7 +22,7 @@ pub enum TestSection {
     Description(String),
     Input(String, String, String),
     Output(String),
-    SupportPage(String),
+    SupportPage(String, String, String),
     Template(String, String),
 }
 
@@ -49,7 +49,12 @@ pub fn test_templates(config: &Config) {
                             }
                             TestSection::Input(path, id, content) => {
                                 test_page_id = id.to_string();
-                                // dbg!(&test_page_id);
+                                file_set
+                                    .pages
+                                    .insert(PathBuf::from(path), content.to_string())
+                            }
+                            TestSection::SupportPage(path, id, content) => {
+                                test_page_id = id.to_string();
                                 file_set
                                     .pages
                                     .insert(PathBuf::from(path), content.to_string())
@@ -102,22 +107,21 @@ pub fn test_section(source: &str) -> IResult<&str, TestSection> {
     let (source, _) = tag("###\n")(source)?;
     let (source, _) = multispace0(source)?;
     let (source, string) = alt((
-        // test_desc,
+        test_desc,
         test_template,
-        //  test_support_page,
+        test_support_page,
         test_input,
         test_output,
     ))(source)?;
     Ok((source, string))
 }
 
-// pub fn test_desc(source: &str) -> IResult<&str, TestSection> {
-//     let (source, _) = multispace0(source)?;
-//     let (source, _) = tag("### DESCRIPTION ###")(source)?;
-//     let (source, _) = multispace0(source)?;
-//     let (source, desc) = take_until("###")(source)?;
-//     Ok((source, TestSection::Description(desc.trim().to_string())))
-// }
+pub fn test_desc(source: &str) -> IResult<&str, TestSection> {
+    let (source, _) = tag("DESCRIPTION")(source)?;
+    let (source, _) = multispace0(source)?;
+    let (source, desc) = take_until("###")(source)?;
+    Ok((source, TestSection::Description(desc.trim().to_string())))
+}
 
 pub fn test_template(source: &str) -> IResult<&str, TestSection> {
     let (source, _) = tag("TEMPLATE")(source)?;
@@ -130,23 +134,38 @@ pub fn test_template(source: &str) -> IResult<&str, TestSection> {
     let (source, _) = tag("CONTENT:")(source)?;
     let (source, _) = multispace0(source)?;
     let (source, template) = take_until("###")(source)?;
-
     Ok((
         source,
         TestSection::Template(name.trim().to_string(), template.trim().to_string()),
     ))
 }
 
-// pub fn test_support_page(source: &str) -> IResult<&str, TestSection> {
-//     let (source, _) = multispace0(source)?;
-//     let (source, _) = tag("### SUPPORT_PAGE ###")(source)?;
-//     let (source, _) = multispace0(source)?;
-//     let (source, desc) = take_until("###")(source)?;
-//     Ok((source, TestSection::SupportPage(desc.trim().to_string())))
-// }
-
 pub fn test_input(source: &str) -> IResult<&str, TestSection> {
     let (source, _) = tag("INPUT")(source)?;
+    let (source, _) = space0(source)?;
+    let (source, _) = line_ending(source)?;
+    let (source, _) = tag("PATH:")(source)?;
+    let (source, _) = space1(source)?;
+    let (source, path) = not_line_ending(source)?;
+    let (source, _) = line_ending(source)?;
+    let (source, _) = tag("CONTENT:")(source)?;
+    let (source, _) = multispace0(source)?;
+    let (source, content) = take_until("###")(source)?;
+    let (id_source, _) = take_until("-- id: ")(content)?;
+    let (id_source, _) = tag("-- id: ")(id_source)?;
+    let (_, id) = is_not(" \n")(id_source)?;
+    Ok((
+        source,
+        TestSection::Input(
+            path.trim().to_string(),
+            id.trim().to_string(),
+            content.trim().to_string(),
+        ),
+    ))
+}
+
+pub fn test_support_page(source: &str) -> IResult<&str, TestSection> {
+    let (source, _) = tag("SUPPORT_PAGE")(source)?;
     let (source, _) = space0(source)?;
     let (source, _) = line_ending(source)?;
     let (source, _) = tag("PATH:")(source)?;
