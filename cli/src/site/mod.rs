@@ -70,8 +70,16 @@ impl Site {
     }
 
     pub fn folder_menu(&self, args: &[Value]) -> Vec<FolderMenuItem> {
-        let items = self.folder_menu_builder(args);
+        let mut items = self.folder_menu_builder(args);
         items
+            .iter_mut()
+            .for_each(|item| self.folder_menu_set_open_close_folders(args, item));
+        items
+    }
+
+    pub fn folder_menu_set_open_close_folders(&self, args: &[Value], item: &mut FolderMenuItem) {
+        let page_folders = self.page_folders(args);
+        dbg!(page_folders);
     }
 
     #[instrument(skip(self))]
