@@ -6,7 +6,11 @@ use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::bytes::complete::take_until;
+use nom::character::complete::line_ending;
 use nom::character::complete::multispace0;
+use nom::character::complete::not_line_ending;
+use nom::character::complete::space0;
+use nom::character::complete::space1;
 use nom::combinator::rest;
 use nom::multi::many1;
 use nom::IResult;
@@ -94,30 +98,36 @@ pub fn parse_test_file(source: &str) -> IResult<&str, Vec<TestSection>> {
 }
 
 pub fn test_section(source: &str) -> IResult<&str, TestSection> {
+    let (source, _) = multispace0(source)?;
+    let (source, _) = tag("###\n")(source)?;
+    let (source, _) = multispace0(source)?;
     let (source, string) = alt((
-        test_desc,
+        // test_desc,
         test_template,
-        test_support_page,
+        //  test_support_page,
         test_input,
         test_output,
     ))(source)?;
     Ok((source, string))
 }
 
-pub fn test_desc(source: &str) -> IResult<&str, TestSection> {
-    let (source, _) = multispace0(source)?;
-    let (source, _) = tag("### DESCRIPTION ###")(source)?;
-    let (source, _) = multispace0(source)?;
-    let (source, desc) = take_until("###")(source)?;
-    Ok((source, TestSection::Description(desc.trim().to_string())))
-}
+// pub fn test_desc(source: &str) -> IResult<&str, TestSection> {
+//     let (source, _) = multispace0(source)?;
+//     let (source, _) = tag("### DESCRIPTION ###")(source)?;
+//     let (source, _) = multispace0(source)?;
+//     let (source, desc) = take_until("###")(source)?;
+//     Ok((source, TestSection::Description(desc.trim().to_string())))
+// }
 
 pub fn test_template(source: &str) -> IResult<&str, TestSection> {
-    let (source, _) = multispace0(source)?;
-    let (source, _) = tag("### TEMPLATE ###")(source)?;
-    let (source, _) = multispace0(source)?;
-    let (source, name) = take_until("~~~")(source)?;
-    let (source, _) = tag("~~~")(source)?;
+    let (source, _) = tag("TEMPLATE")(source)?;
+    let (source, _) = space0(source)?;
+    let (source, _) = line_ending(source)?;
+    let (source, _) = tag("PATH:")(source)?;
+    let (source, _) = space1(source)?;
+    let (source, name) = not_line_ending(source)?;
+    let (source, _) = line_ending(source)?;
+    let (source, _) = tag("CONTENT:")(source)?;
     let (source, _) = multispace0(source)?;
     let (source, template) = take_until("###")(source)?;
     Ok((
@@ -126,13 +136,13 @@ pub fn test_template(source: &str) -> IResult<&str, TestSection> {
     ))
 }
 
-pub fn test_support_page(source: &str) -> IResult<&str, TestSection> {
-    let (source, _) = multispace0(source)?;
-    let (source, _) = tag("### SUPPORT_PAGE ###")(source)?;
-    let (source, _) = multispace0(source)?;
-    let (source, desc) = take_until("###")(source)?;
-    Ok((source, TestSection::SupportPage(desc.trim().to_string())))
-}
+// pub fn test_support_page(source: &str) -> IResult<&str, TestSection> {
+//     let (source, _) = multispace0(source)?;
+//     let (source, _) = tag("### SUPPORT_PAGE ###")(source)?;
+//     let (source, _) = multispace0(source)?;
+//     let (source, desc) = take_until("###")(source)?;
+//     Ok((source, TestSection::SupportPage(desc.trim().to_string())))
+// }
 
 pub fn test_input(source: &str) -> IResult<&str, TestSection> {
     let (source, _) = multispace0(source)?;
