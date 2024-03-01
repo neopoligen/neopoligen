@@ -98,35 +98,40 @@ impl Builder {
                     }
                     Err(e) => {
                         println!("SPLITTER ERROR 1 - {}", e);
-                        let mut redo_env = Environment::new();
-                        self.file_set
-                            .templates
-                            .iter()
-                            .for_each(|t| redo_env.add_template_owned(t.0, t.1).unwrap());
-                        let site_redo_wrapper = Site::new(&self.file_set, &self.config);
-                        site_redo_wrapper.pages.iter().for_each(|redo_page| {
-                            let redo_site = Site::new(&self.file_set, &self.config);
-                            let redo_template = redo_env
-                                .get_template(
-                                    &redo_site
-                                        .page_template(&[Value::from(redo_page.0.to_string())])
-                                        .unwrap(),
-                                )
-                                .unwrap();
-                            match redo_template.render(context!(
-                                site => Value::from_object(redo_site),
-                                page_id => Value::from("2ck5rhdc")
-                            )) {
-                                // Ok(out) => println!("{}", out),
-                                Ok(_) => (),
-                                Err(e) => println!(
-                                    "PAGE: {}\nERROR: {}\n",
-                                    redo_page.1.source_path.display(),
-                                    e
-                                ),
-                            };
-                            // dbg!(redo_page.0);
-                        });
+                        // NOTE: Below is an attempt to find errors, but it's slow
+                        // and look like logging back in from the templates might
+                        // work just fine
+                        // {
+                        //     let mut redo_env = Environment::new();
+                        //     self.file_set
+                        //         .templates
+                        //         .iter()
+                        //         .for_each(|t| redo_env.add_template_owned(t.0, t.1).unwrap());
+                        //     let site_redo_wrapper = Site::new(&self.file_set, &self.config);
+                        //     site_redo_wrapper.pages.iter().for_each(|redo_page| {
+                        //         let redo_site = Site::new(&self.file_set, &self.config);
+                        //         let redo_template = redo_env
+                        //             .get_template(
+                        //                 &redo_site
+                        //                     .page_template(&[Value::from(redo_page.0.to_string())])
+                        //                     .unwrap(),
+                        //             )
+                        //             .unwrap();
+                        //         match redo_template.render(context!(
+                        //             site => Value::from_object(redo_site),
+                        //             page_id => Value::from("2ck5rhdc")
+                        //         )) {
+                        //             // Ok(out) => println!("{}", out),
+                        //             Ok(_) => (),
+                        //             Err(e) => println!(
+                        //                 "PAGE: {}\nERROR: {}\n",
+                        //                 redo_page.1.source_path.display(),
+                        //                 e
+                        //             ),
+                        //         };
+                        //         // dbg!(redo_page.0);
+                        //     });
+                        // }
                     }
                 }
             }

@@ -28,8 +28,11 @@ pub struct Site {
 impl Site {
     #[instrument(skip(self))]
     pub fn log_from_template(&self, args: &[Value]) {
-        let id = args[0].to_string();
-        event!(Level::INFO, id);
+        event!(
+            Level::INFO,
+            "{}",
+            self.page_title(&args[0].to_string()).unwrap().to_string()
+        );
     }
 
     pub fn page_href(&self, args: &[Value]) -> Option<String> {
@@ -128,7 +131,6 @@ impl Site {
             },
             None => None,
         }
-
         // match self.pages.get(&id) {
         //     Some(_) => Some(format!(
         //         "{}/{}/{}/index.html",
@@ -165,9 +167,16 @@ impl Site {
                     }
                 })
                 .collect(),
-
             // Value::from_serializable::<Vec<String>>(&vec![]),
             None => Value::from_serializable::<Vec<String>>(&vec![]),
+        }
+    }
+
+    pub fn page_source_path(&self, args: &[Value]) -> Option<String> {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
+            Some(page) => Some(page.source_path.display().to_string()),
+            None => None,
         }
     }
 

@@ -306,6 +306,21 @@ Basic Place Section Test
         );
 
 
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/source-path-check.neo"),
+            r#"-- title
+
+This is a source path check
+
+-- metadata
+-- id: source-path-check
+-- date: 2024-02-21 00:00:00
+
+"#
+            .to_string(),
+        );
+
+
         fs
     }
 }
