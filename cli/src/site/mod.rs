@@ -13,7 +13,7 @@ use std::collections::BTreeMap;
 use std::fmt::Display;
 use std::path::PathBuf;
 use std::sync::Mutex;
-// use tracing::{event, instrument, Level};
+use tracing::{event, instrument, Level};
 
 #[derive(Debug, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
@@ -26,6 +26,12 @@ pub struct Site {
 }
 
 impl Site {
+    #[instrument(skip(self))]
+    pub fn log_from_template(&self, args: &[Value]) {
+        let id = args[0].to_string();
+        event!(Level::INFO, id);
+    }
+
     pub fn page_href(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {

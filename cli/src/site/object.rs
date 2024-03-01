@@ -10,6 +10,7 @@ impl Object for Site {
         args: &[Value],
     ) -> Result<Value, Error> {
         match name {
+            "log" => Ok(Value::from_serializable(&self.log_from_template(args))),
             "page_href" => Ok(Value::from_serializable(&self.page_href(args))),
             "page_ids" => Ok(Value::from_serializable(&self.page_ids())),
             "page_main_body" => Ok(Value::from_serializable(&self.page_main_body(args))),

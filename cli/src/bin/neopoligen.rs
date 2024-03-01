@@ -30,9 +30,6 @@ pub struct EngineConfigSettings {
 #[tokio::main]
 #[instrument]
 async fn main() {
-    // let format = tracing_subscriber::fmt::format().pretty();
-    // tracing_subscriber::fmt().event_format(format).init();
-
     let mut engine_config_file = document_dir().unwrap();
     engine_config_file.push("Neopoligen");
     engine_config_file.push("config.toml");

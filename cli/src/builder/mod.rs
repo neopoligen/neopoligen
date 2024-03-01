@@ -67,6 +67,7 @@ impl Builder {
             r#"{%- import "includes/macros.jinja" as macros -%}
 {#- include "global_vars" -#}
 {%- for page_id in site.page_ids() -%}
+{{ site.log(page_id) }}
 {{ site.page_output_path(page_id) }}
 --- PAGE_DATA_SPLIT ---
 {% include site.page_template(page_id) %}
