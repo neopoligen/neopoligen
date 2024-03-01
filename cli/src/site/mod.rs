@@ -159,14 +159,16 @@ impl Site {
         full_pattern_with_file.push("_title.neo".to_string());
         self.pages.iter().find_map(|page| {
             event!(Level::DEBUG, "{}", page.0);
+            let page_args = [Value::from(page.1.id.clone())];
             if full_pattern_with_file == self.page_path_parts(&[Value::from(page.1.id.clone())]) {
                 let mut fmi = FolderMenuItem {
                     page_id: page.1.id.clone(),
-                    is_current_link: false,
+                    // is_current_link: false,
                     title: self.page_title(&[Value::from(page.1.id.clone())]),
                     href: self.page_href(&[Value::from(page.1.id.clone())]),
                     children: self.folder_menu_child_item_finder(&pattern),
-                    item_type: FolderMenuItemType::Directory,
+                    item_type: FolderMenuItemType::OpenDirectory,
+                    folder_path: self.page_folders(&page_args),
                 };
                 // TODO: Get sub folders here
                 let mut next_folders: Vec<FolderMenuItem> =
@@ -209,16 +211,18 @@ impl Site {
         self.pages
             .iter()
             .filter_map(|page| {
+                let page_args = [Value::from(page.1.id.clone())];
                 let page_folders = self.page_folders(&[Value::from(page.1.id.clone())]);
                 let path_parts = self.page_path_parts(&[Value::from(page.1.id.clone())]);
                 if &page_folders == pattern && path_parts != full_pattern_with_file {
                     let fmi = FolderMenuItem {
                         page_id: page.1.id.clone(),
-                        is_current_link: false,
+                        // is_current_link: false,
                         title: self.page_title(&[Value::from(page.1.id.clone())]),
                         href: self.page_href(&[Value::from(page.1.id.clone())]),
                         children: vec![],
                         item_type: FolderMenuItemType::File,
+                        folder_path: self.page_folders(&page_args),
                     };
                     Some(fmi)
                 } else {
