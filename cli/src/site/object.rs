@@ -11,6 +11,7 @@ impl Object for Site {
     ) -> Result<Value, Error> {
         match name {
             "log" => Ok(Value::from_serializable(&self.log_from_template(args))),
+            "folder_menu" => Ok(Value::from_serializable(&self.folder_menu(args))),
             "page_href" => Ok(Value::from_serializable(&self.page_href(args))),
             "page_ids" => Ok(Value::from_serializable(&self.page_ids())),
             "page_main_body" => Ok(Value::from_serializable(&self.page_main_body(args))),
