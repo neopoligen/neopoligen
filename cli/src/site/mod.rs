@@ -4,6 +4,7 @@ pub mod object;
 use crate::child::Child;
 use crate::config::Config;
 use crate::folder_menu_item::FolderMenuItem;
+use crate::folder_menu_item::FolderMenuItemType;
 use crate::page::Page;
 use crate::section::Section;
 use crate::section_category::SectionCategory;
@@ -58,9 +59,10 @@ impl Site {
                 let mut fmi = FolderMenuItem {
                     page_id: page.1.id.clone(),
                     is_current_link: false,
-                    title: self.page_title(&page.1.id.clone()),
+                    title: self.page_title(&[Value::from(page.1.id.clone())]),
                     href: self.page_href(&[Value::from(page.1.id.clone())]),
                     children: self.folder_menu_child_item_finder(&pattern),
+                    item_type: FolderMenuItemType::Directory,
                 };
                 // TODO: Get sub folders here
                 let mut next_folders: Vec<FolderMenuItem> =
@@ -105,9 +107,10 @@ impl Site {
                     let fmi = FolderMenuItem {
                         page_id: page.1.id.clone(),
                         is_current_link: false,
-                        title: self.page_title(&page.1.id.clone()),
+                        title: self.page_title(&[Value::from(page.1.id.clone())]),
                         href: self.page_href(&[Value::from(page.1.id.clone())]),
                         children: vec![],
+                        item_type: FolderMenuItemType::File,
                     };
                     Some(fmi)
                 } else {
@@ -125,7 +128,8 @@ impl Site {
             match self.pages.get(&target_page_id) {
                 Some(_) => Some(format!(
                     r#"{}"#,
-                    self.page_title(&target_page_id.clone()).unwrap(),
+                    self.page_title(&[Value::from(target_page_id.clone())])
+                        .unwrap(),
                 )),
                 None => None,
             }
@@ -135,7 +139,8 @@ impl Site {
                     r#"<a href="{}">{}</a>"#,
                     self.page_href(&[Value::from(target_page_id.clone())])
                         .unwrap(),
-                    self.page_title(&target_page_id.clone()).unwrap(),
+                    self.page_title(&[Value::from(target_page_id.clone())])
+                        .unwrap(),
                 )),
                 None => None,
             }
@@ -175,7 +180,7 @@ impl Site {
     }
 
     pub fn page_href_title(&self, id: &str) -> Option<String> {
-        match self.page_title(id) {
+        match self.page_title(&[Value::from(id.clone())]) {
             Some(title) => Some(
                 urlencoding::encode(&title.to_lowercase().replace(" ", "-").to_string())
                     .into_owned(),
@@ -375,13 +380,14 @@ impl Site {
         }
     }
 
-    pub fn page_title(&self, id: &str) -> Option<String> {
+    pub fn page_title(&self, args: &[Value]) -> Option<String> {
+        let id = args[0].to_string();
         let mut cache = self.cache.lock().unwrap();
         let page_titles = cache.get_mut("page_title").unwrap();
-        match page_titles.get(id) {
+        match page_titles.get(&id) {
             Some(title) => title.clone(),
             None => {
-                let title = match self.pages.get(id) {
+                let title = match self.pages.get(&id) {
                     Some(page) => {
                         if let Some(title) = page_title_from_metadata(&page.ast) {
                             Some(title)

@@ -9,4 +9,12 @@ pub struct FolderMenuItem {
     pub children: Vec<FolderMenuItem>,
     pub title: Option<String>,
     pub href: Option<String>,
+    pub item_type: FolderMenuItemType,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+// #[serde(tag = "type", rename_all = "lowercase")]
+pub enum FolderMenuItemType {
+    Directory,
+    File,
 }
