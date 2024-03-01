@@ -123,7 +123,7 @@ impl Site {
 
         if current_page_id == target_page_id {
             match self.pages.get(&target_page_id) {
-                Some(target_page) => Some(format!(
+                Some(_) => Some(format!(
                     r#"{}"#,
                     self.page_title(&target_page_id.clone()).unwrap(),
                 )),
@@ -131,7 +131,7 @@ impl Site {
             }
         } else {
             match self.pages.get(&target_page_id) {
-                Some(target_page) => Some(format!(
+                Some(_) => Some(format!(
                     r#"<a href="{}">{}</a>"#,
                     self.page_href(&[Value::from(target_page_id.clone())])
                         .unwrap(),
