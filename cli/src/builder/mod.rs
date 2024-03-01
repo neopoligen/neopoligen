@@ -149,11 +149,11 @@ impl Builder {
                 .starts_with(self.config.folders.output_root.display().to_string())
             {
                 let output_path = PathBuf::from(f.0);
-                dbg!(&output_path);
+                // dbg!(&output_path);
                 // println!("{}", &f.0.display());
                 let parent_dir = output_path.parent().unwrap();
-                //  let _ = create_dir_all(parent_dir);
-                // let _ = fs::write(output_path, f.1);
+                let _ = create_dir_all(parent_dir);
+                let _ = fs::write(output_path, f.1);
             } else {
                 println!("ERROR: Tried to write outside of the output root");
             }
