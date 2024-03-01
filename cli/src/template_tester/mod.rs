@@ -66,6 +66,10 @@ pub fn test_templates(config: &Config) {
                             _ => None,
                         };
                     });
+                    // let _ = file_set.pages.iter().for_each(|p| {
+                    //     dbg!(p);
+                    //     ()
+                    // });
                     let builder = Builder::new(file_set, &config);
                     builder.files_to_output().iter().for_each(|o| {
                         let path_parts: Vec<_> =
