@@ -1,6 +1,5 @@
 pub mod integration;
 pub mod parsing_basic;
-pub mod site_folder_menu_set_open_closed;
 pub mod site_link_or_titile;
 pub mod site_page_folders;
 pub mod site_page_href;

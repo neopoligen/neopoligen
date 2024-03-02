@@ -425,6 +425,20 @@ Test For Closed Menu Folder
             .to_string(),
         );
 
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/top-level-file.neo"),
+            r#"-- title
+
+Top Level File
+
+-- metadata
+-- date: 2000-01-27 00:00:00
+-- id: top-level-file
+
+"#
+            .to_string(),
+        );
+
         fs
     }
 }

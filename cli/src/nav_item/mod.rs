@@ -1,3 +1,5 @@
+pub mod builders;
+
 use serde::Deserialize;
 use serde::Serialize;
 
@@ -9,20 +11,20 @@ use serde::Serialize;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
-pub struct FolderMenuItem {
-    pub children: Vec<FolderMenuItem>,
-    pub href: Option<String>,
-    // pub is_current_link: bool,
-    pub item_type: FolderMenuItemType,
-    pub page_id: String,
-    pub title: Option<String>,
+pub struct NavItem {
+    pub children: Vec<NavItem>,
     pub folders: Vec<String>,
+    pub href: Option<String>,
+    pub is_current_page: bool,
+    pub item_type: NavItemType,
+    pub page_id: String,
     pub path_sort_string: String,
+    pub title: Option<String>,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 // #[serde(tag = "type", rename_all = "lowercase")]
-pub enum FolderMenuItemType {
+pub enum NavItemType {
     OpenDirectory,
     ClosedDirectory,
     File,

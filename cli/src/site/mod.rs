@@ -3,8 +3,9 @@ pub mod object;
 
 use crate::child::Child;
 use crate::config::Config;
-use crate::folder_menu_item::FolderMenuItem;
-use crate::folder_menu_item::FolderMenuItemType;
+use crate::nav_item::NavItem;
+use crate::nav_item::NavItemType;
+use crate::nav_tree::NavTree;
 use crate::page::Page;
 use crate::section::Section;
 use crate::section_category::SectionCategory;
@@ -32,7 +33,7 @@ pub struct Site {
 #[derive(Debug, Clone, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum CacheObject {
-    Menu(Vec<FolderMenuItem>),
+    Menu(Vec<NavItem>),
     Value(Value),
     OptionString(Option<String>),
 }
@@ -69,7 +70,7 @@ impl Site {
         "".to_string()
     }
 
-    pub fn folder_menu(&self, args: &[Value]) -> Vec<FolderMenuItem> {
+    pub fn folder_menu(&self, args: &[Value]) -> Vec<NavItem> {
         let mut items = self.folder_menu_builder(args);
         items
             .iter_mut()
@@ -77,8 +78,8 @@ impl Site {
         items
     }
 
-    pub fn folder_menu_set_open_closed_folders(&self, args: &[Value], item: &mut FolderMenuItem) {
-        if matches!(item.item_type, FolderMenuItemType::OpenDirectory) {
+    pub fn folder_menu_set_open_closed_folders(&self, args: &[Value], item: &mut NavItem) {
+        if matches!(item.item_type, NavItemType::OpenDirectory) {
             let page_folders = self.page_folders(args);
             if page_folders
                 .into_iter()
@@ -86,9 +87,9 @@ impl Site {
                 .collect::<Vec<String>>()
                 == item.folders
             {
-                item.item_type = FolderMenuItemType::OpenDirectory;
+                item.item_type = NavItemType::OpenDirectory;
             } else {
-                item.item_type = FolderMenuItemType::ClosedDirectory;
+                item.item_type = NavItemType::ClosedDirectory;
             }
         }
         item.children
@@ -105,15 +106,15 @@ impl Site {
         //     .iter()
         //     .all(|folder| page_folders.contains(folder))
         // {
-        //     item.item_type = FolderMenuItemType::OpenDirectory;
+        //     item.item_type = NavItemType::OpenDirectory;
         // } else {
         //     dbg!(&page_folders);
         //     dbg!(&item.folders);
-        //     item.item_type = FolderMenuItemType::ClosedDirectory;
+        //     item.item_type = NavItemType::ClosedDirectory;
         // }
     }
 
-    pub fn folder_menu_sort_by_path(&self, items: &mut Vec<FolderMenuItem>) {
+    pub fn folder_menu_sort_by_path(&self, items: &mut Vec<NavItem>) {
         items.sort_by_key(|k| k.path_sort_string.clone());
         items
             .iter_mut()
@@ -121,7 +122,7 @@ impl Site {
     }
 
     #[instrument(skip(self))]
-    pub fn folder_menu_builder(&self, args: &[Value]) -> Vec<FolderMenuItem> {
+    pub fn folder_menu_builder(&self, args: &[Value]) -> Vec<NavItem> {
         let menu_key = args[1]
             .try_iter()
             .unwrap()
@@ -137,7 +138,7 @@ impl Site {
                 }
             }
             None => {
-                let mut r: Vec<FolderMenuItem> = args[1]
+                let mut r: Vec<NavItem> = args[1]
                     .try_iter()
                     .unwrap()
                     .filter_map(|folder_vecs| {
@@ -201,21 +202,22 @@ impl Site {
     }
 
     #[instrument(skip(self))]
-    pub fn folder_menu_index_finder(&self, pattern: Vec<String>) -> Option<FolderMenuItem> {
+    pub fn folder_menu_index_finder(&self, pattern: Vec<String>) -> Option<NavItem> {
         event!(Level::INFO, "fn folder_menu_index_finder");
 
         // Get a page if the ID matches
         let id = pattern[0].to_string();
         if self.pages.contains_key(&id) {
             let page_args = [Value::from(id.clone())];
-            Some(FolderMenuItem {
+            Some(NavItem {
                 page_id: id.clone(),
                 title: self.page_title(&page_args),
                 href: self.page_href(&page_args),
                 children: self.folder_menu_child_item_finder(&pattern),
-                item_type: FolderMenuItemType::File,
+                item_type: NavItemType::File,
                 folders: self.page_folders(&page_args),
                 path_sort_string: self.page_path_parts(&page_args).join(""),
+                is_current_page: false,
             })
         } else {
             let mut full_pattern_with_file = pattern.clone();
@@ -225,18 +227,19 @@ impl Site {
                 let page_args = [Value::from(page.1.id.clone())];
                 if full_pattern_with_file == self.page_path_parts(&[Value::from(page.1.id.clone())])
                 {
-                    let mut fmi = FolderMenuItem {
+                    let mut fmi = NavItem {
                         page_id: page.1.id.clone(),
                         // is_current_link: false,
                         title: self.page_title(&[Value::from(page.1.id.clone())]),
                         href: self.page_href(&[Value::from(page.1.id.clone())]),
                         children: self.folder_menu_child_item_finder(&pattern),
-                        item_type: FolderMenuItemType::OpenDirectory,
+                        item_type: NavItemType::OpenDirectory,
                         folders: self.page_folders(&page_args),
                         path_sort_string: self.page_path_parts(&page_args).join(""),
+                        is_current_page: false,
                     };
                     // TODO: Get sub folders here
-                    let mut next_folders: Vec<FolderMenuItem> =
+                    let mut next_folders: Vec<NavItem> =
                         self.folder_menu_subfolder_finder(&pattern);
                     fmi.children.append(&mut next_folders);
                     Some(fmi)
@@ -248,7 +251,7 @@ impl Site {
     }
 
     #[instrument(skip(self))]
-    pub fn folder_menu_subfolder_finder(&self, pattern: &Vec<String>) -> Vec<FolderMenuItem> {
+    pub fn folder_menu_subfolder_finder(&self, pattern: &Vec<String>) -> Vec<NavItem> {
         event!(Level::INFO, "fn folder_menu_subfolder_finder");
         let mut next_level_folders: BTreeSet<Vec<String>> = BTreeSet::new();
         self.pages.iter().for_each(|page| {
@@ -270,7 +273,7 @@ impl Site {
     }
 
     #[instrument(skip(self))]
-    pub fn folder_menu_child_item_finder(&self, pattern: &Vec<String>) -> Vec<FolderMenuItem> {
+    pub fn folder_menu_child_item_finder(&self, pattern: &Vec<String>) -> Vec<NavItem> {
         event!(Level::INFO, "fn folder_menu_child_item_finder");
         let mut full_pattern_with_file = pattern.clone();
         full_pattern_with_file.push("_title.neo".to_string());
@@ -281,15 +284,16 @@ impl Site {
                 let page_folders = self.page_folders(&[Value::from(page.1.id.clone())]);
                 let path_parts = self.page_path_parts(&[Value::from(page.1.id.clone())]);
                 if &page_folders == pattern && path_parts != full_pattern_with_file {
-                    let fmi = FolderMenuItem {
+                    let fmi = NavItem {
                         page_id: page.1.id.clone(),
                         // is_current_link: false,
                         title: self.page_title(&[Value::from(page.1.id.clone())]),
                         href: self.page_href(&[Value::from(page.1.id.clone())]),
                         children: vec![],
-                        item_type: FolderMenuItemType::File,
+                        item_type: NavItemType::File,
                         folders: self.page_folders(&page_args),
                         path_sort_string: self.page_path_parts(&page_args).join(""),
+                        is_current_page: false,
                     };
                     Some(fmi)
                 } else {
@@ -323,6 +327,24 @@ impl Site {
                 None => None,
             }
         }
+    }
+
+    pub fn nav_from_files_and_folders(&self, args: &[Value]) -> NavTree {
+        let items = self.folder_menu(args);
+        NavTree { items }
+
+        // NavTree {
+        //     items: vec![NavItem {
+        //         children: vec![],
+        //         href: None,
+        //         folders: vec![],
+        //         is_current_page: false,
+        //         item_type: NavItemType::File,
+        //         page_id: "top-level-page".to_string(),
+        //         path_sort_string: "some-path".to_string(),
+        //         title: None,
+        //     }],
+        // }
     }
 
     pub fn page_folders(&self, args: &[Value]) -> Vec<String> {
