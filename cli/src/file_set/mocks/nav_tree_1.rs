@@ -62,6 +62,34 @@ Level 1a Content Bravo
         );
 
         fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/nav-tree-1-site/content/level-1a/sub-level-2a/_title.neo",
+            ),
+            r#"-- title
+
+Level 1a SubLevel 2a Index
+
+-- metadata
+-- id: level-1a-sub-level-2a-index
+"#
+            .to_string(),
+        );
+
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/nav-tree-1-site/content/level-1a/sub-level-2a/content-echo.neo",
+            ),
+            r#"-- title
+
+Level 1a SubLevel 2a Content Echo
+
+-- metadata
+-- id: level-1a-sub-level-2a-content-echo
+"#
+            .to_string(),
+        );
+
+        fs.pages.insert(
             PathBuf::from("leading-dir/Neopoligen/nav-tree-1-site/content/level-1b/_index.neo"),
             r#"-- title
 
@@ -97,34 +125,6 @@ Level 1b Content Delta
 
 -- metadata
 -- id: level-1b-content-delta
-"#
-            .to_string(),
-        );
-
-        fs.pages.insert(
-            PathBuf::from(
-                "leading-dir/Neopoligen/nav-tree-1-site/content/level-1a/sub-level-2a/_title.neo",
-            ),
-            r#"-- title
-
-Level 1a SubLevel 2a Index
-
--- metadata
--- id: level-1a-sub-level-2a-index
-"#
-            .to_string(),
-        );
-
-        fs.pages.insert(
-            PathBuf::from(
-                "leading-dir/Neopoligen/nav-tree-1-site/content/level-1a/sub-level-2a/content-echo.neo",
-            ),
-            r#"-- title
-
-Level 1a SubLevel 2a Content Echo
-
--- metadata
--- id: level-1a-sub-level-2a-content-echo
 "#
             .to_string(),
         );
