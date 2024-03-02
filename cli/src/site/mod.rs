@@ -203,31 +203,48 @@ impl Site {
     #[instrument(skip(self))]
     pub fn folder_menu_index_finder(&self, pattern: Vec<String>) -> Option<FolderMenuItem> {
         event!(Level::INFO, "fn folder_menu_index_finder");
-        let mut full_pattern_with_file = pattern.clone();
-        full_pattern_with_file.push("_title.neo".to_string());
-        self.pages.iter().find_map(|page| {
-            event!(Level::DEBUG, "{}", page.0);
-            let page_args = [Value::from(page.1.id.clone())];
-            if full_pattern_with_file == self.page_path_parts(&[Value::from(page.1.id.clone())]) {
-                let mut fmi = FolderMenuItem {
-                    page_id: page.1.id.clone(),
-                    // is_current_link: false,
-                    title: self.page_title(&[Value::from(page.1.id.clone())]),
-                    href: self.page_href(&[Value::from(page.1.id.clone())]),
-                    children: self.folder_menu_child_item_finder(&pattern),
-                    item_type: FolderMenuItemType::OpenDirectory,
-                    folders: self.page_folders(&page_args),
-                    path_sort_string: self.page_path_parts(&page_args).join(""),
-                };
-                // TODO: Get sub folders here
-                let mut next_folders: Vec<FolderMenuItem> =
-                    self.folder_menu_subfolder_finder(&pattern);
-                fmi.children.append(&mut next_folders);
-                Some(fmi)
-            } else {
-                None
-            }
-        })
+
+        // Get a page if the ID matches
+        let id = pattern[0].to_string();
+        if self.pages.contains_key(&id) {
+            let page_args = [Value::from(id.clone())];
+            Some(FolderMenuItem {
+                page_id: id.clone(),
+                title: self.page_title(&page_args),
+                href: self.page_href(&page_args),
+                children: self.folder_menu_child_item_finder(&pattern),
+                item_type: FolderMenuItemType::File,
+                folders: self.page_folders(&page_args),
+                path_sort_string: self.page_path_parts(&page_args).join(""),
+            })
+        } else {
+            let mut full_pattern_with_file = pattern.clone();
+            full_pattern_with_file.push("_title.neo".to_string());
+            self.pages.iter().find_map(|page| {
+                event!(Level::DEBUG, "{}", page.0);
+                let page_args = [Value::from(page.1.id.clone())];
+                if full_pattern_with_file == self.page_path_parts(&[Value::from(page.1.id.clone())])
+                {
+                    let mut fmi = FolderMenuItem {
+                        page_id: page.1.id.clone(),
+                        // is_current_link: false,
+                        title: self.page_title(&[Value::from(page.1.id.clone())]),
+                        href: self.page_href(&[Value::from(page.1.id.clone())]),
+                        children: self.folder_menu_child_item_finder(&pattern),
+                        item_type: FolderMenuItemType::OpenDirectory,
+                        folders: self.page_folders(&page_args),
+                        path_sort_string: self.page_path_parts(&page_args).join(""),
+                    };
+                    // TODO: Get sub folders here
+                    let mut next_folders: Vec<FolderMenuItem> =
+                        self.folder_menu_subfolder_finder(&pattern);
+                    fmi.children.append(&mut next_folders);
+                    Some(fmi)
+                } else {
+                    None
+                }
+            })
+        }
     }
 
     #[instrument(skip(self))]
@@ -330,15 +347,54 @@ impl Site {
     pub fn page_href(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {
-            Some(_) => Some(format!(
-                "/{}/{}/?{}",
-                self.config.default_language,
-                id,
-                self.page_href_title(&id).unwrap()
-            )),
+            Some(page) => {
+                if let Some(response) = page.ast.iter().find_map(|child| {
+                    if let Child::Section(section) = child {
+                        if &section.r#type == "metadata" {
+                            section.key_value_attributes.iter().find_map(|attr| {
+                                if attr.0 == "path" {
+                                    Some(Some(attr.1.to_string()))
+                                } else {
+                                    None
+                                }
+                            })
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    }
+                }) {
+                    response
+                } else {
+                    Some(format!(
+                        "/{}/{}/?{}",
+                        self.config.default_language,
+                        id,
+                        self.page_href_title(&id).unwrap()
+                    ))
+                }
+            }
             None => None,
         }
     }
+
+    // {
+    // Some(type_from_metadata) => type_from_metadata,
+    // None => Some("post".to_string()),
+    // },
+    // None => None,
+
+    // Some(_) => Some(format!(
+    //     "/{}/{}/?{}",
+    //     self.config.default_language,
+    //     id,
+    //     self.page_href_title(&id).unwrap()
+    // )),
+    // None => None,
+    // }
+
+    // }
 
     pub fn page_href_title(&self, id: &str) -> Option<String> {
         match self.page_title(&[Value::from(id)]) {

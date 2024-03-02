@@ -12,17 +12,18 @@ mod site_folder_menu_set_open_closed_folders {
         let file_set = FileSet::set2();
         let config = Config::site2_config();
         let site = Site::new(&file_set, &config);
-        let mut item = FolderMenuItem{
+        let mut item = FolderMenuItem {
             children: vec![],
             href: None,
             item_type: FolderMenuItemType::OpenDirectory,
             page_id: "local-menu-test-example-title-open-close".to_string(),
             title: Some("Test Folder Item".to_string()),
             folders: vec!["menu".to_string(), "folder".to_string(), "open".to_string()],
+            path_sort_string: "skipping-sort-for-this-test-a".to_string(),
         };
         site.folder_menu_set_open_closed_folders(
             &[Value::from("menu-folder-open-switch")],
-            &mut item
+            &mut item,
         );
         assert!(matches!(item.item_type, FolderMenuItemType::OpenDirectory));
     }
@@ -32,20 +33,26 @@ mod site_folder_menu_set_open_closed_folders {
         let file_set = FileSet::set2();
         let config = Config::site2_config();
         let site = Site::new(&file_set, &config);
-        let mut item = FolderMenuItem{
+        let mut item = FolderMenuItem {
             children: vec![],
             href: None,
             item_type: FolderMenuItemType::OpenDirectory,
             page_id: "local-menu-test-example-title-open-close".to_string(),
             title: Some("Test Folder Item".to_string()),
-            folders: vec!["non".to_string(), "matching".to_string(), "path".to_string()],
+            folders: vec![
+                "non".to_string(),
+                "matching".to_string(),
+                "path".to_string(),
+            ],
+            path_sort_string: "skipping-sort-for-this-test-b".to_string(),
         };
         site.folder_menu_set_open_closed_folders(
             &[Value::from("menu-folder-closed-switch")],
-            &mut item
+            &mut item,
         );
-        assert!(matches!(item.item_type, FolderMenuItemType::ClosedDirectory));
+        assert!(matches!(
+            item.item_type,
+            FolderMenuItemType::ClosedDirectory
+        ));
     }
-
-
 }
