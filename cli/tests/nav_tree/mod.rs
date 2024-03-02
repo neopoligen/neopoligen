@@ -19,9 +19,11 @@ pub fn load_files_and_folders() {
         is_current_page: false,
         item_type: NavItemType::NotCurrentFile,
         menu_title: Some("Level 1a Content Alfa".to_string()),
+        menu_title_link_or_text: Some("Level 1a Content Alfa".to_string()),
         page_id: "level-1a-content-alfa".to_string(),
         path_sort_string: "level-1acontent-alfa.neo".to_string(),
         title: Some("Level 1a Content Alfa".to_string()),
+        title_link_or_text: Some(r#"<a href="/en/level-1a-content-alfa/?level-1a-content-alfa">Level 1a Content Alfa</a>"#.to_string()),
     };
     let level_1a_sub_level_2a_content_bravo = NavItem {
         children: vec![],
@@ -33,9 +35,13 @@ pub fn load_files_and_folders() {
         is_current_page: false,
         item_type: NavItemType::NotCurrentFile,
         menu_title: Some("Level 1a SubLevel 2a Content Bravo".to_string()),
+        menu_title_link_or_text: Some("Level 1a SubLevel 2a Content Bravo".to_string()),
         page_id: "level-1a-sub-level-2a-content-bravo".to_string(),
         path_sort_string: "level-1asub-level-2acontent-bravo.neo".to_string(),
         title: Some("Level 1a SubLevel 2a Content Bravo".to_string()),
+        title_link_or_text: Some(
+            r#"<a href="">Level 1a SubLevel 2a Content Bravo</a>"#.to_string(),
+        ),
     };
     let level_1a_sub_level_2a_title = NavItem {
         children: vec![level_1a_sub_level_2a_content_bravo],
@@ -44,9 +50,11 @@ pub fn load_files_and_folders() {
         is_current_page: false,
         item_type: NavItemType::ClosedFolderTitle,
         menu_title: Some("Level 1a SubLevel 2a Title".to_string()),
+        menu_title_link_or_text: Some("Level 1a SubLevel 2a Title".to_string()),
         page_id: "level-1a-sub-level-2a-title".to_string(),
         path_sort_string: "level-1asub-level-2a_title.neo".to_string(),
         title: Some("Level 1a SubLevel 2a Title".to_string()),
+        title_link_or_text: Some(r#"<a href="">Level 1a SubLevel 2a Title</a>"#.to_string()),
     };
     let level_1b_content_charlie = NavItem {
         children: vec![],
@@ -55,9 +63,11 @@ pub fn load_files_and_folders() {
         is_current_page: false,
         item_type: NavItemType::NotCurrentFile,
         menu_title: Some("Level 1b Content Charlie".to_string()),
+        menu_title_link_or_text: Some("Level 1b Content Charlie".to_string()),
         page_id: "level-1b-content-charlie".to_string(),
         path_sort_string: "level-1bcontent-charlie.neo".to_string(),
         title: Some("Level 1b Content Charlie".to_string()),
+        title_link_or_text: Some(r#"<a href="">Level 1b Content Charlie</a>"#.to_string()),
     };
     let current_page_id = Value::from("top-level-page");
     let files_and_folders = Value::from_serializable::<Vec<Vec<String>>>(&vec![
@@ -74,9 +84,11 @@ pub fn load_files_and_folders() {
                 is_current_page: false,
                 item_type: NavItemType::NotCurrentFile,
                 menu_title: Some("Top Level Page".to_string()),
+                menu_title_link_or_text: Some("Top Level Page".to_string()),
                 page_id: "top-level-page".to_string(),
                 path_sort_string: "top-level-page.neo".to_string(),
                 title: Some("Top Level Page".to_string()),
+                title_link_or_text: Some(r#"<a href="">Top Level Page</a>"#.to_string()),
             },
             NavItem {
                 children: vec![level_1a_content_alfa, level_1a_sub_level_2a_title],
@@ -85,9 +97,11 @@ pub fn load_files_and_folders() {
                 is_current_page: false,
                 item_type: NavItemType::ClosedFolderTitle,
                 menu_title: Some("Level 1a Title".to_string()),
+                menu_title_link_or_text: Some("Level 1a Title".to_string()),
                 page_id: "level-1a-title".to_string(),
                 path_sort_string: "level-1a_title.neo".to_string(),
                 title: Some("Level 1a Title".to_string()),
+                title_link_or_text: Some(r#"<a href="">Level 1a Title</a>"#.to_string()),
             },
             NavItem {
                 children: vec![level_1b_content_charlie],
@@ -96,9 +110,11 @@ pub fn load_files_and_folders() {
                 is_current_page: false,
                 item_type: NavItemType::ClosedFolderIndex,
                 menu_title: Some("Level 1b Index".to_string()),
+                menu_title_link_or_text: Some("Level 1b Index".to_string()),
                 page_id: "level-1b-index".to_string(),
                 path_sort_string: "level-1b_index.neo".to_string(),
                 title: Some("Level 1b Index".to_string()),
+                title_link_or_text: Some(r#"<a href="">Level 1b Index</a>"#.to_string()),
             },
         ],
     };
@@ -124,9 +140,11 @@ pub fn set_current_file() {
             is_current_page: true,
             item_type: NavItemType::NotCurrentFile,
             menu_title: Some("Current File Target".to_string()),
+            menu_title_link_or_text: Some("Current File Target".to_string()),
             page_id: "current-file-target".to_string(),
             path_sort_string: "current-file-target.neo".to_string(),
             title: Some("Current File Target".to_string()),
+            title_link_or_text: Some("Current File Target".to_string()),
         }],
     };
 

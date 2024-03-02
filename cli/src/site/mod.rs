@@ -212,16 +212,17 @@ impl Site {
         if self.pages.contains_key(&id) {
             let page_args = [Value::from(id.clone())];
             Some(NavItem {
-                page_id: id.clone(),
-                href: self.page_href(&page_args),
                 children: self.folder_menu_child_item_finder(&pattern),
-                item_type: NavItemType::NotCurrentFile,
                 folders: self.page_folders(&page_args),
-                path_sort_string: self.page_path_parts(&page_args).join(""),
+                href: self.page_href(&page_args),
+                item_type: NavItemType::NotCurrentFile,
                 is_current_page: false,
-                title: self.page_title(&page_args),
                 menu_title: self.page_menu_title(&page_args),
-                // menu_title_link_or_text: self.page_title(&page_args),
+                menu_title_link_or_text: self.nav_link_title_link(&page_args),
+                page_id: id.clone(),
+                path_sort_string: self.page_path_parts(&page_args).join(""),
+                title: self.page_title(&page_args),
+                title_link_or_text: self.nav_link_title_link(&page_args),
             })
         } else {
             let mut full_pattern_with_title = pattern.clone();
@@ -235,16 +236,19 @@ impl Site {
                     == self.page_path_parts(&[Value::from(page.1.id.clone())])
                 {
                     let mut fmi = NavItem {
-                        page_id: page.1.id.clone(),
-                        // is_current_link: false,
-                        href: self.page_href(&[Value::from(page.1.id.clone())]),
                         children: self.folder_menu_child_item_finder(&pattern),
-                        item_type: NavItemType::ClosedFolderTitle,
                         folders: self.page_folders(&page_args),
-                        path_sort_string: self.page_path_parts(&page_args).join(""),
+                        href: self.page_href(&[Value::from(page.1.id.clone())]),
                         is_current_page: false,
-                        title: self.page_title(&[Value::from(page.1.id.clone())]),
+                        item_type: NavItemType::ClosedFolderTitle,
                         menu_title: self.page_menu_title(&[Value::from(page.1.id.clone())]),
+                        menu_title_link_or_text: self
+                            .nav_link_title_link(&[Value::from(page.1.id.clone())]),
+                        page_id: page.1.id.clone(),
+                        path_sort_string: self.page_path_parts(&page_args).join(""),
+                        title: self.page_title(&[Value::from(page.1.id.clone())]),
+                        title_link_or_text: self
+                            .nav_link_title_link(&[Value::from(page.1.id.clone())]),
                     };
                     // TODO: Get sub folders here
                     let mut next_folders: Vec<NavItem> =
@@ -255,16 +259,19 @@ impl Site {
                     == self.page_path_parts(&[Value::from(page.1.id.clone())])
                 {
                     let mut fmi = NavItem {
-                        page_id: page.1.id.clone(),
-                        // is_current_link: false,
-                        href: self.page_href(&[Value::from(page.1.id.clone())]),
                         children: self.folder_menu_child_item_finder(&pattern),
-                        item_type: NavItemType::ClosedFolderIndex,
                         folders: self.page_folders(&page_args),
-                        path_sort_string: self.page_path_parts(&page_args).join(""),
+                        href: self.page_href(&[Value::from(page.1.id.clone())]),
                         is_current_page: false,
-                        title: self.page_title(&[Value::from(page.1.id.clone())]),
+                        item_type: NavItemType::ClosedFolderIndex,
                         menu_title: self.page_menu_title(&[Value::from(page.1.id.clone())]),
+                        menu_title_link_or_text: self
+                            .nav_link_title_link(&[Value::from(page.1.id.clone())]),
+                        page_id: page.1.id.clone(),
+                        path_sort_string: self.page_path_parts(&page_args).join(""),
+                        title: self.page_title(&[Value::from(page.1.id.clone())]),
+                        title_link_or_text: self
+                            .nav_link_title_link(&[Value::from(page.1.id.clone())]),
                     };
                     // TODO: Get sub folders here
                     let mut next_folders: Vec<NavItem> =
@@ -276,6 +283,15 @@ impl Site {
                 }
             })
         }
+    }
+
+    // TODO: Set this up so it pulls actual link text
+    pub fn nav_link_title_link(&self, args: &[Value]) -> Option<String> {
+        Some(format!(
+            r#"<a href="{}">{}</a>"#,
+            self.page_href(args).unwrap(),
+            self.page_title(args).unwrap()
+        ))
     }
 
     #[instrument(skip(self))]
@@ -318,17 +334,19 @@ impl Site {
                     && path_parts != full_pattern_with_index
                 {
                     let fmi = NavItem {
-                        page_id: page.1.id.clone(),
-                        // is_current_link: false,
-                        href: self.page_href(&[Value::from(page.1.id.clone())]),
                         children: vec![],
-                        item_type: NavItemType::NotCurrentFile,
                         folders: self.page_folders(&page_args),
+                        href: self.page_href(&[Value::from(page.1.id.clone())]),
+                        item_type: NavItemType::NotCurrentFile,
+                        page_id: page.1.id.clone(),
+                        menu_title: self.page_menu_title(&[Value::from(page.1.id.clone())]),
+                        menu_title_link_or_text: self
+                            .nav_link_title_link(&[Value::from(page.1.id.clone())]),
                         path_sort_string: self.page_path_parts(&page_args).join(""),
                         is_current_page: false,
                         title: self.page_title(&[Value::from(page.1.id.clone())]),
-                        menu_title: self.page_menu_title(&[Value::from(page.1.id.clone())]),
-                        // menu_title_link_or_text: self.page_title(&[Value::from(page.1.id.clone())]),
+                        title_link_or_text: self
+                            .nav_link_title_link(&[Value::from(page.1.id.clone())]),
                     };
                     Some(fmi)
                 } else {
@@ -338,6 +356,7 @@ impl Site {
             .collect()
     }
 
+    // TODO: Deprecate this in favor of nav_link_title_link
     pub fn link_or_title(&self, args: &[Value]) -> Option<String> {
         let current_page_id = args[0].to_string();
         let target_page_id = args[1].to_string();

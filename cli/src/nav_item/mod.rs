@@ -19,7 +19,7 @@ pub struct NavItem {
     pub is_current_page: bool,
     pub item_type: NavItemType,
     pub menu_title: Option<String>,
-    // pub menu_title_link_or_text: Option<String>,
+    pub menu_title_link_or_text: Option<String>,
     pub page_id: String,
     pub path_sort_string: String,
     // pub prev_next_title: Option<String>,
@@ -27,7 +27,7 @@ pub struct NavItem {
     // pub short_title: Option<String>,
     // pub short_title_link_or_text: Option<String>,
     pub title: Option<String>,
-    // pub title_link_or_text: Option<String>,
+    pub title_link_or_text: Option<String>,
     // pub prev_item: BTreeMap<String, Option<String>>,
     // pub next_item: BTreeMap<String, Option<String>>,
 }
