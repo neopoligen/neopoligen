@@ -92,6 +92,10 @@ impl Site {
             }
         }
 
+        item.children
+            .iter_mut()
+            .for_each(|i| self.folder_menu_set_open_closed_folders(args, i))
+
         // item.folders.iter().enumerate().for_each(|(index, folder)| {
         //     dbg!("asdf");
         //     ()
