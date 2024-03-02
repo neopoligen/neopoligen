@@ -97,21 +97,14 @@ pub fn load_files_and_folders() {
                 children: vec![],
                 href: Some("/en/top-level-page/?top-level-page".to_string()),
                 folders: vec![],
-                is_current_page: false,
+                is_current_page: true,
                 item_type: NavItemType::NotCurrentFile,
                 menu_title: Some("Top Level Page".to_string()),
-                menu_title_link_or_text: Some(format!(
-                    r#"<a href="{}">{}</a>"#,
-                    "/en/top-level-page/?top-level-page".to_string(),
-                    "Top Level Page".to_string()
-                )),
+                menu_title_link_or_text: Some(format!(r#"{}"#, "Top Level Page".to_string())),
                 page_id: "top-level-page".to_string(),
                 path_sort_string: "top-level-page.neo".to_string(),
                 title: Some("Top Level Page".to_string()),
-                title_link_or_text: Some(
-                    r#"<a href="/en/top-level-page/?top-level-page">Top Level Page</a>"#
-                        .to_string(),
-                ),
+                title_link_or_text: Some(r#"Top Level Page"#.to_string()),
             },
             NavItem {
                 children: vec![level_1a_content_alfa, level_1a_sub_level_2a_title],
@@ -160,32 +153,35 @@ pub fn load_files_and_folders() {
     assert_eq!(left, right);
 }
 
-#[test]
-pub fn set_current_file() {
-    let file_set = FileSet::nav_tree_2();
-    let config = Config::nav_tree_2();
-    let site = Site::new(&file_set, &config);
-    let current_page_id = Value::from("current-file-target");
-    let files_and_folders = Value::from_serializable::<Vec<Vec<String>>>(&vec![vec![
-        "current-file-target".to_string(),
-    ]]);
-    let left = NavTree {
-        items: vec![NavItem {
-            children: vec![],
-            href: Some("/en/current-file-target/?current-file-target".to_string()),
-            folders: vec![],
-            is_current_page: true,
-            item_type: NavItemType::NotCurrentFile,
-            menu_title: Some("Current File Target".to_string()),
-            menu_title_link_or_text: Some("Current File Target".to_string()),
-            page_id: "current-file-target".to_string(),
-            path_sort_string: "current-file-target.neo".to_string(),
-            title: Some("Current File Target".to_string()),
-            title_link_or_text: Some(format!(r#"{}"#, "Current File Target".to_string())),
-        }],
-    };
-
-    let mut right = site.nav_from_files_and_folders(&[current_page_id, files_and_folders]);
-    site.set_current_file_for_nav_links(&"current-file-target".to_string(), &mut right);
-    assert_eq!(left, right);
-}
+// DEPRECTED: This is already tested in the main call to
+// .nav_from_files_and_folders(). Delete this is if hasn't
+// been restored by May 2024.
+//
+// #[test]
+// pub fn set_current_file() {
+//     let file_set = FileSet::nav_tree_2();
+//     let config = Config::nav_tree_2();
+//     let site = Site::new(&file_set, &config);
+//     let current_page_id = Value::from("current-file-target");
+//     let files_and_folders = Value::from_serializable::<Vec<Vec<String>>>(&vec![vec![
+//         "current-file-target".to_string(),
+//     ]]);
+//     let left = NavTree {
+//         items: vec![NavItem {
+//             children: vec![],
+//             href: Some("/en/current-file-target/?current-file-target".to_string()),
+//             folders: vec![],
+//             is_current_page: true,
+//             item_type: NavItemType::NotCurrentFile,
+//             menu_title: Some("Current File Target".to_string()),
+//             menu_title_link_or_text: Some("Current File Target".to_string()),
+//             page_id: "current-file-target".to_string(),
+//             path_sort_string: "current-file-target.neo".to_string(),
+//             title: Some("Current File Target".to_string()),
+//             title_link_or_text: Some(format!(r#"{}"#, "Current File Target".to_string())),
+//         }],
+//     };
+//     let mut right = site.nav_from_files_and_folders(&[current_page_id, files_and_folders]);
+//     site.set_current_file_for_nav_links(&"current-file-target".to_string(), &mut right);
+//     assert_eq!(left, right);
+// }

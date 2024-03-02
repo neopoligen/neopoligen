@@ -384,8 +384,15 @@ impl Site {
     }
 
     pub fn nav_from_files_and_folders(&self, args: &[Value]) -> NavTree {
-        let items = self.folder_menu(args);
-        NavTree { items }
+        // let mut items = self.folder_menu(args);
+
+        let mut nav_links = NavTree {
+            items: self.folder_menu(args),
+        };
+
+        self.set_current_file_for_nav_links(&args[0].to_string(), &mut nav_links);
+
+        nav_links
 
         // NavTree {
         //     items: vec![NavItem {
