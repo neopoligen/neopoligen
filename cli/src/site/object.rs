@@ -13,6 +13,9 @@ impl Object for Site {
             "log" => Ok(Value::from_serializable(&self.log_from_template(args))),
             "folder_menu" => Ok(Value::from_serializable(&self.folder_menu(args))),
             "link_or_title" => Ok(Value::from_serializable(&self.link_or_title(args))),
+            "nav_from_files_and_folders" => Ok(Value::from_serializable(
+                &self.nav_from_files_and_folders(args),
+            )),
             "page_href" => Ok(Value::from_serializable(&self.page_href(args))),
             "page_ids" => Ok(Value::from_serializable(&self.page_ids())),
             "page_main_body" => Ok(Value::from_serializable(&self.page_main_body(args))),
