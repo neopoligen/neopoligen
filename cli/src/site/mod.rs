@@ -214,13 +214,15 @@ impl Site {
             let page_args = [Value::from(id.clone())];
             Some(NavItem {
                 page_id: id.clone(),
-                title: self.page_title(&page_args),
                 href: self.page_href(&page_args),
                 children: self.folder_menu_child_item_finder(&pattern),
                 item_type: NavItemType::NotCurrentFile,
                 folders: self.page_folders(&page_args),
                 path_sort_string: self.page_path_parts(&page_args).join(""),
                 is_current_page: false,
+                title: self.page_title(&page_args),
+                menu_title: self.page_title(&page_args),
+                // menu_title_link_or_text: self.page_title(&page_args),
             })
         } else {
             let mut full_pattern_with_title = pattern.clone();
@@ -236,13 +238,14 @@ impl Site {
                     let mut fmi = NavItem {
                         page_id: page.1.id.clone(),
                         // is_current_link: false,
-                        title: self.page_title(&[Value::from(page.1.id.clone())]),
                         href: self.page_href(&[Value::from(page.1.id.clone())]),
                         children: self.folder_menu_child_item_finder(&pattern),
                         item_type: NavItemType::ClosedFolderTitle,
                         folders: self.page_folders(&page_args),
                         path_sort_string: self.page_path_parts(&page_args).join(""),
                         is_current_page: false,
+                        title: self.page_title(&[Value::from(page.1.id.clone())]),
+                        menu_title: self.page_title(&[Value::from(page.1.id.clone())]),
                     };
                     // TODO: Get sub folders here
                     let mut next_folders: Vec<NavItem> =
@@ -255,13 +258,14 @@ impl Site {
                     let mut fmi = NavItem {
                         page_id: page.1.id.clone(),
                         // is_current_link: false,
-                        title: self.page_title(&[Value::from(page.1.id.clone())]),
                         href: self.page_href(&[Value::from(page.1.id.clone())]),
                         children: self.folder_menu_child_item_finder(&pattern),
                         item_type: NavItemType::ClosedFolderIndex,
                         folders: self.page_folders(&page_args),
                         path_sort_string: self.page_path_parts(&page_args).join(""),
                         is_current_page: false,
+                        title: self.page_title(&[Value::from(page.1.id.clone())]),
+                        menu_title: self.page_title(&[Value::from(page.1.id.clone())]),
                     };
                     // TODO: Get sub folders here
                     let mut next_folders: Vec<NavItem> =
@@ -317,13 +321,15 @@ impl Site {
                     let fmi = NavItem {
                         page_id: page.1.id.clone(),
                         // is_current_link: false,
-                        title: self.page_title(&[Value::from(page.1.id.clone())]),
                         href: self.page_href(&[Value::from(page.1.id.clone())]),
                         children: vec![],
                         item_type: NavItemType::NotCurrentFile,
                         folders: self.page_folders(&page_args),
                         path_sort_string: self.page_path_parts(&page_args).join(""),
                         is_current_page: false,
+                        title: self.page_title(&[Value::from(page.1.id.clone())]),
+                        menu_title: self.page_title(&[Value::from(page.1.id.clone())]),
+                        // menu_title_link_or_text: self.page_title(&[Value::from(page.1.id.clone())]),
                     };
                     Some(fmi)
                 } else {
@@ -647,6 +653,12 @@ impl Site {
         } else {
             None
         }
+    }
+
+    // NOTE: This is a stub that just calls .page_title()
+    // until the actual functionality is built
+    pub fn page_menu_title(&self, args: &[Value]) -> Option<String> {
+        self.page_title(args)
     }
 
     pub fn page_title(&self, args: &[Value]) -> Option<String> {

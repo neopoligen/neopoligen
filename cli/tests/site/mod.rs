@@ -6,6 +6,7 @@ pub mod site_page_href;
 pub mod site_page_href_title;
 pub mod site_page_ids;
 pub mod site_page_main_body;
+pub mod site_page_menu_title;
 pub mod site_page_output_path;
 pub mod site_page_path_parts;
 pub mod site_page_place_section;
