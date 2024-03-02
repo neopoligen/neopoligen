@@ -2,7 +2,6 @@ use crate::section_attribute::SectionAttribute;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
-use nom::character::complete::line_ending;
 use nom::combinator::eof;
 use nom::combinator::not;
 use nom::IResult;
