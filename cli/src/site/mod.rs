@@ -91,7 +91,6 @@ impl Site {
                 item.item_type = FolderMenuItemType::ClosedDirectory;
             }
         }
-
         item.children
             .iter_mut()
             .for_each(|i| self.folder_menu_set_open_closed_folders(args, i))
