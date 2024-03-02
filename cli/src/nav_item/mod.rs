@@ -1,5 +1,3 @@
-pub mod builders;
-
 use serde::Deserialize;
 use serde::Serialize;
 
@@ -29,6 +27,4 @@ pub enum NavItemType {
     ClosedFolderTitle,
     CurrentFile,
     NotCurrentFile,
-    OpenFolderIndex,
-    OpenFolderTitle,
 }
