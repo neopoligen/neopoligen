@@ -759,7 +759,9 @@ impl Site {
 
     pub fn set_current_file_for_nav_link_for_item(&self, id: &String, item: &mut NavItem) {
         if item.page_id == id.to_string() {
-            item.is_current_page = true
+            item.is_current_page = true;
+            item.title_link_or_text = item.title.clone();
+            item.menu_title_link_or_text = item.menu_title.clone();
         }
         item.children
             .iter_mut()
