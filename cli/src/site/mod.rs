@@ -78,18 +78,36 @@ impl Site {
     }
 
     pub fn folder_menu_set_open_closed_folders(&self, args: &[Value], item: &mut FolderMenuItem) {
-        let page_folders = self.page_folders(args);
-        dbg!(&page_folders);
-        dbg!(&item.folders);
-        if item
-            .folders
-            .iter()
-            .all(|folder| page_folders.contains(folder))
-        {
-            item.item_type = FolderMenuItemType::OpenDirectory;
-        } else {
-            item.item_type = FolderMenuItemType::ClosedDirectory;
+        if matches!(item.item_type, FolderMenuItemType::OpenDirectory) {
+            let page_folders = self.page_folders(args);
+            if page_folders
+                .into_iter()
+                .take(item.folders.len())
+                .collect::<Vec<String>>()
+                == item.folders
+            {
+                item.item_type = FolderMenuItemType::OpenDirectory;
+            } else {
+                item.item_type = FolderMenuItemType::ClosedDirectory;
+            }
         }
+
+        // item.folders.iter().enumerate().for_each(|(index, folder)| {
+        //     dbg!("asdf");
+        //     ()
+        // });
+
+        // if item
+        //     .folders
+        //     .iter()
+        //     .all(|folder| page_folders.contains(folder))
+        // {
+        //     item.item_type = FolderMenuItemType::OpenDirectory;
+        // } else {
+        //     dbg!(&page_folders);
+        //     dbg!(&item.folders);
+        //     item.item_type = FolderMenuItemType::ClosedDirectory;
+        // }
     }
 
     #[instrument(skip(self))]
