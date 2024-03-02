@@ -32,7 +32,7 @@ impl FileSet {
 Dev Test Site 2 Home Page
 
 -- metadata
--- date: 2024-02-01 00:00:00
+-- date: 2000-01-01 00:00:00
 -- id: site2-home-page
 -- path: /
 "#
@@ -47,7 +47,7 @@ Dev Test Site 2 Home Page
 -- url: https://www.example.com/
 
 -- metadata
--- date: 2024-02-02 00:00:00
+-- date: 2000-01-02 00:00:00
 -- id: title-from-section-attribute
 "#
             .to_string(),
@@ -61,7 +61,7 @@ Dev Test Site 2 Home Page
 Title from block content example
 
 -- metadata
--- date: 2024-02-03 00:00:00
+-- date: 2000-01-03 00:00:00
 -- id: title-from-block-content
 "#
             .to_string(),
@@ -71,7 +71,7 @@ Title from block content example
         fs.pages.insert(
             PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/title-from-metadata-id.neo"),
             r#"-- metadata
--- date: 2024-02-04 00:00:00
+-- date: 2000-01-04 00:00:00
 -- id: no-title-just-id
 "#
             .to_string(),
@@ -86,7 +86,7 @@ This Title Should Be Overridden By Metadata
 
 -- metadata
 -- title: Metadata Override Title
--- date: 2024-02-05 00:00:00
+-- date: 2000-01-05 00:00:00
 -- id: metadata-override-title
 "#
             .to_string(),
@@ -100,7 +100,7 @@ This Title Should Be Overridden By Metadata
 Inline <<em|Spans>> Should <<strong|Not>> Show UP
 
 -- metadata
--- date: 2024-02-06 00:00:00
+-- date: 2000-01-06 00:00:00
 -- id: title-with-inline-span
 "#
             .to_string(),
@@ -114,7 +114,7 @@ Inline <<em|Spans>> Should <<strong|Not>> Show UP
 Nested <<em|<<strong|Inline Spans>>>> Should Not Show UP
 
 -- metadata
--- date: 2024-02-07 00:00:00
+-- date: 2000-01-07 00:00:00
 -- id: title-with-nested-inline-spans
 "#
             .to_string(),
@@ -124,7 +124,7 @@ Nested <<em|<<strong|Inline Spans>>>> Should Not Show UP
         fs.pages.insert(
             PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/page-type-in-metadata.neo"),
             r#"-- metadata
--- date: 2024-02-08 00:00:00
+-- date: 2000-01-08 00:00:00
 -- id: page-type-in-metadata
 -- type: example
 "#
@@ -135,7 +135,7 @@ Nested <<em|<<strong|Inline Spans>>>> Should Not Show UP
         fs.pages.insert(
             PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/page-type-not-in-metadata.neo"),
             r#"-- metadata
--- date: 2024-02-09 00:00:00
+-- date: 2000-01-09 00:00:00
 -- id: page-type-not-in-metadata
 "#
             .to_string(),
@@ -145,7 +145,7 @@ Nested <<em|<<strong|Inline Spans>>>> Should Not Show UP
         fs.pages.insert(
             PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/page-status-in-metadata.neo"),
             r#"-- metadata
--- date: 2024-02-10 00:00:00
+-- date: 2000-01-10 00:00:00
 -- id: page-status-in-metadata
 -- status: example_status
 "#
@@ -156,7 +156,7 @@ Nested <<em|<<strong|Inline Spans>>>> Should Not Show UP
         fs.pages.insert(
             PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/page-status-not-in-metadata.neo"),
             r#"-- metadata
--- date: 2024-02-11 00:00:00
+-- date: 2000-01-11 00:00:00
 -- id: page-status-not-in-metadata
 "#
             .to_string(),
@@ -167,7 +167,7 @@ Nested <<em|<<strong|Inline Spans>>>> Should Not Show UP
         fs.pages.insert(
             PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/page-without-override-path.neo"),
             r#"-- metadata
--- date: 2024-02-12 00:00:00
+-- date: 2000-01-12 00:00:00
 -- id: page-without-override-path
 "#
             .to_string(),
@@ -182,7 +182,7 @@ URL Escape / Title Check
 
 -- metadata
 -- id: url-escape-title-check
--- date: 2024-02-13 00:00:00
+-- date: 2000-01-13 00:00:00
 
 "#
             .to_string(),
@@ -197,7 +197,7 @@ This has no type or status metadata so will show the default template
 
 -- metadata
 -- id: default-template
--- date: 2024-02-14 00:00:00
+-- date: 2000-01-14 00:00:00
 
 "#
             .to_string(),
@@ -212,7 +212,7 @@ This is a custom template type that exists
 
 -- metadata
 -- id: custom-template-type
--- date: 2024-02-15 00:00:00
+-- date: 2000-01-15 00:00:00
 -- type: custom-template-type
 
 "#
@@ -228,7 +228,7 @@ This is a custom template status that exists
 
 -- metadata
 -- id: custom-template-status
--- date: 2024-02-16 00:00:00
+-- date: 2000-01-16 00:00:00
 -- status: custom-template-status
 
 "#
@@ -245,7 +245,7 @@ template it rolls back to the default
 
 -- metadata
 -- id: type-for-non-existent-template
--- date: 2024-02-17 00:00:00
+-- date: 2000-01-17 00:00:00
 -- type: type-for-non-existent-template
 
 "#
@@ -262,7 +262,7 @@ template it rolls back to the default
 
 -- metadata
 -- id: status-for-non-existent-template
--- date: 2024-02-18 00:00:00
+-- date: 2000-01-18 00:00:00
 -- status: status-for-non-existent-template
 
 "#
@@ -283,7 +283,7 @@ Test main_body output
 
 -- metadata
 -- id: basic-main-body-test
--- date: 2024-02-19 00:00:00
+-- date: 2000-01-19 00:00:00
 
 "#
             .to_string(),
@@ -299,7 +299,7 @@ Basic Place Section Test
 
 -- metadata
 -- id: basic-place-section-test
--- date: 2024-02-20 00:00:00
+-- date: 2000-01-20 00:00:00
 
 "#
             .to_string(),
@@ -314,7 +314,7 @@ This is a source path check
 
 -- metadata
 -- id: source-path-check
--- date: 2024-02-21 00:00:00
+-- date: 2000-01-21 00:00:00
 
 "#
             .to_string(),
@@ -330,7 +330,7 @@ This checks path parts
 
 -- metadata
 -- id: page-parts-example
--- date: 2024-02-22 00:00:00
+-- date: 2000-01-22 00:00:00
 
 "#
             .to_string(),
@@ -347,7 +347,7 @@ Check Page Folders
 
 -- metadata
 -- id: page-folders-example
--- date: 2024-02-23 00:00:00
+-- date: 2000-01-23 00:00:00
 
 "#
             .to_string(),
@@ -364,7 +364,7 @@ Link Or Title Start
 
 -- metadata
 -- id: link-or-title-start
--- date: 2024-02-24 00:00:00
+-- date: 2000-01-24 00:00:00
 
 "#
             .to_string(),
@@ -381,7 +381,7 @@ Link Or Title Target
 
 -- metadata
 -- id: link-or-title-target
--- date: 2024-02-25 00:00:00
+-- date: 2000-01-25 00:00:00
 
 "#
             .to_string(),
@@ -389,6 +389,23 @@ Link Or Title Target
 
 
 
+
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/menu/folder/open/switch.neo"),
+            r#"-- title
+
+Test For Open Menu Folder
+
+-- metadata
+-- id: menu-folder-open-switch
+-- date: 2000-01-25 00:00:00
+
+"#
+            .to_string(),
+        );
+
+
+        
         
 
         fs
