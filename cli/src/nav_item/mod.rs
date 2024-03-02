@@ -27,7 +27,8 @@ pub struct NavItem {
 pub enum NavItemType {
     ClosedFolderIndex,
     ClosedFolderTitle,
-    File,
+    CurrentFile,
+    NotCurrentFile,
     OpenFolderIndex,
     OpenFolderTitle,
 }
