@@ -11,6 +11,7 @@ use std::collections::BTreeMap;
 use std::fs;
 use std::fs::create_dir_all;
 use std::path::PathBuf;
+use tracing::{event, instrument, Level};
 
 pub struct Builder {
     file_set: FileSet,
@@ -142,9 +143,12 @@ impl Builder {
         outputs
     }
 
+    #[instrument(skip(self))]
     pub fn write_files(&self) {
+        event!(Level::INFO, "fn write_files");
         println!("Writing files");
         self.files_to_output().iter().for_each(|f| {
+            // println!("{}", f.0.clone().display());
             if f.0
                 .starts_with(self.config.folders.output_root.display().to_string())
             {

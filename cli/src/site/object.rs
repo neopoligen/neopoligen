@@ -20,6 +20,7 @@ impl Object for Site {
             "page_place_section" => Ok(Value::from_serializable(&self.page_place_section(args))),
             "page_source_path" => Ok(Value::from_serializable(&self.page_source_path(args))),
             "page_template" => Ok(Value::from_serializable(&self.page_template(args))),
+            "page_title" => Ok(Value::from_serializable(&self.page_title(args))),
             _ => Ok(Value::from("")),
         }
     }

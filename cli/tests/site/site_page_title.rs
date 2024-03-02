@@ -3,6 +3,7 @@ mod site_page_title {
     use neopoligen::file_set::FileSet;
     use neopoligen::site::Site;
     use pretty_assertions::assert_eq;
+    use minijinja::Value;
 
     #[test]
     pub fn basic() {
@@ -10,7 +11,7 @@ mod site_page_title {
         let config = Config::site2_config();
         let site = Site::new(&file_set, &config);
         let left = Some("Dev Test Site 2 Home Page".to_string());
-        let right = site.page_title("site2-home-page");
+        let right = site.page_title(&[Value::from("site2-home-page")]);
         assert_eq!(left, right);
     }
 
@@ -20,7 +21,7 @@ mod site_page_title {
         let config = Config::site2_config();
         let site = Site::new(&file_set, &config);
         let left = Some("(missing page)".to_string());
-        let right = site.page_title("intentionally-missing-id");
+        let right = site.page_title(&[Value::from("intentionally-missing-id")]);
         assert_eq!(left, right);
     }
 
@@ -30,7 +31,7 @@ mod site_page_title {
         let config = Config::site2_config();
         let site = Site::new(&file_set, &config);
         let left = Some("This Is A Title From A Bookmark Attribute".to_string());
-        let right = site.page_title("title-from-section-attribute");
+        let right = site.page_title(&[Value::from("title-from-section-attribute")]);
         assert_eq!(left, right);
     }
 
@@ -40,7 +41,7 @@ mod site_page_title {
         let config = Config::site2_config();
         let site = Site::new(&file_set, &config);
         let left = Some("Title from block content example".to_string());
-        let right = site.page_title("title-from-block-content");
+        let right = site.page_title(&[Value::from("title-from-block-content")]);
         assert_eq!(left, right);
     }
 
@@ -50,7 +51,7 @@ mod site_page_title {
         let config = Config::site2_config();
         let site = Site::new(&file_set, &config);
         let left = Some("no-title-just-id".to_string());
-        let right = site.page_title("no-title-just-id");
+        let right = site.page_title(&[Value::from("no-title-just-id")]);
         assert_eq!(left, right);
     }
 
@@ -60,7 +61,7 @@ mod site_page_title {
         let config = Config::site2_config();
         let site = Site::new(&file_set, &config);
         let left = Some("Metadata Override Title".to_string());
-        let right = site.page_title("metadata-override-title");
+        let right = site.page_title(&[Value::from("metadata-override-title")]);
         assert_eq!(left, right);
     }
 
@@ -70,7 +71,7 @@ mod site_page_title {
         let config = Config::site2_config();
         let site = Site::new(&file_set, &config);
         let left = Some("Inline Spans Should Not Show UP".to_string());
-        let right = site.page_title("title-with-inline-span");
+        let right = site.page_title(&[Value::from("title-with-inline-span")]);
         assert_eq!(left, right);
     }
 
@@ -80,7 +81,7 @@ mod site_page_title {
         let config = Config::site2_config();
         let site = Site::new(&file_set, &config);
         let left = Some("Nested Inline Spans Should Not Show UP".to_string());
-        let right = site.page_title("title-with-nested-inline-spans");
+        let right = site.page_title(&[Value::from("title-with-nested-inline-spans")]);
         assert_eq!(left, right);
     }
 }
