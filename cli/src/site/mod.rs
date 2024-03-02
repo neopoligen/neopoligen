@@ -207,7 +207,6 @@ impl Site {
     #[instrument(skip(self))]
     pub fn folder_menu_index_finder(&self, pattern: Vec<String>) -> Option<NavItem> {
         event!(Level::INFO, "fn folder_menu_index_finder");
-
         // Get a page if the ID matches
         let id = pattern[0].to_string();
         if self.pages.contains_key(&id) {
@@ -730,6 +729,22 @@ impl Site {
         let mut c = self.cache.lock().unwrap();
         c.insert("page-titles".to_string(), BTreeMap::new());
         c.insert("menus".to_string(), BTreeMap::new());
+    }
+
+    pub fn set_current_file_for_nav_links(&self, id: &String, nav_links: &mut NavTree) {
+        nav_links
+            .items
+            .iter_mut()
+            .for_each(|item| self.set_current_file_for_nav_link_for_item(id, item))
+    }
+
+    pub fn set_current_file_for_nav_link_for_item(&self, id: &String, item: &mut NavItem) {
+        if item.page_id == id.to_string() {
+            item.is_current_page = true
+        }
+        item.children
+            .iter_mut()
+            .for_each(|i| self.set_current_file_for_nav_link_for_item(id, i));
     }
 
     pub fn show(&self, args: &[Value]) -> Option<String> {

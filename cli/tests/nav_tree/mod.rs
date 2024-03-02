@@ -121,7 +121,7 @@ pub fn set_current_file() {
             children: vec![],
             href: Some("/en/current-file-target/?current-file-target".to_string()),
             folders: vec![],
-            is_current_page: false,
+            is_current_page: true,
             item_type: NavItemType::NotCurrentFile,
             menu_title: Some("Current File Target".to_string()),
             page_id: "current-file-target".to_string(),
@@ -130,6 +130,7 @@ pub fn set_current_file() {
         }],
     };
 
-    let right = site.nav_from_files_and_folders(&[current_page_id, files_and_folders]);
+    let mut right = site.nav_from_files_and_folders(&[current_page_id, files_and_folders]);
+    site.set_current_file_for_nav_links(&"current-file-target".to_string(), &mut right);
     assert_eq!(left, right);
 }
