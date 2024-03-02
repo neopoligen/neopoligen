@@ -25,7 +25,9 @@ pub struct NavItem {
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 // #[serde(tag = "type", rename_all = "lowercase")]
 pub enum NavItemType {
-    OpenFolderTitle,
+    ClosedFolderIndex,
     ClosedFolderTitle,
     File,
+    OpenFolderIndex,
+    OpenFolderTitle,
 }

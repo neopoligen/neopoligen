@@ -13,79 +13,108 @@ pub fn load_files_and_folders() {
     let file_set = FileSet::nav_tree_1();
     let config = Config::nav_tree_1();
     let site = Site::new(&file_set, &config);
+    let top_level_page = NavItem {
+        children: vec![],
+        href: Some("/en/top-level-page/?top-level-page".to_string()),
+        folders: vec![],
+        is_current_page: false,
+        item_type: NavItemType::File,
+        page_id: "top-level-page".to_string(),
+        path_sort_string: "top-level-page.neo".to_string(),
+        title: Some("Top Level Page".to_string()),
+    };
+
+    let level_1a_content_alfa = NavItem {
+        children: vec![],
+        href: Some("/en/level-1a-content-alfa/?level-1a-content-alfa".to_string()),
+        folders: vec!["level-1a".to_string()],
+        is_current_page: false,
+        item_type: NavItemType::File,
+        page_id: "level-1a-content-alfa".to_string(),
+        path_sort_string: "level-1acontent-alfa.neo".to_string(),
+        title: Some("Level 1a Content Alfa".to_string()),
+    };
+
+    let level_1a_sub_level_2a_content_bravo = NavItem {
+        children: vec![],
+        href: Some(
+            "/en/level-1a-sub-level-2a-content-bravo/?level-1a-sublevel-2a-content-bravo"
+                .to_string(),
+        ),
+        folders: vec!["level-1a".to_string(), "sub-level-2a".to_string()],
+        is_current_page: false,
+        item_type: NavItemType::File,
+        page_id: "level-1a-sub-level-2a-content-bravo".to_string(),
+        path_sort_string: "level-1asub-level-2acontent-bravo.neo".to_string(),
+        title: Some("Level 1a SubLevel 2a Content Bravo".to_string()),
+    };
+
     let current_page_id = Value::from("top-level-page");
     let files_and_folders = Value::from_serializable::<Vec<Vec<String>>>(&vec![
         vec!["top-level-page".to_string()],
         vec!["level-1a".to_string()],
+        vec!["level-1b".to_string()],
     ]);
     let left = NavTree {
         items: vec![
-            NavItem {
-                children: vec![],
-                href: Some("/en/top-level-page/?top-level-page".to_string()),
-                folders: vec![],
-                is_current_page: false,
-                item_type: NavItemType::File,
-                page_id: "top-level-page".to_string(),
-                path_sort_string: "top-level-page.neo".to_string(),
-                title: Some("Top Level Page".to_string()),
-            },
+            top_level_page,
             NavItem {
                 children: vec![
+                    level_1a_content_alfa,
                     NavItem {
-                        children: vec![],
-                        href: Some("/en/level-1a-content-alfa/?level-1a-content-alfa".to_string()),
-                        folders: vec!["level-1a".to_string()],
-                        is_current_page: false,
-                        item_type: NavItemType::File,
-                        page_id: "level-1a-content-alfa".to_string(),
-                        path_sort_string: "level-1acontent-alfa.neo".to_string(),
-                        title: Some("Level 1a Content Alfa".to_string()),
-                    },
-                    NavItem {
-                        children: vec![],
+                        children: vec![level_1a_sub_level_2a_content_bravo],
                         href: Some(
-                            "/en/level-1a-content-bravo/?level-1a-content-bravo".to_string(),
-                        ),
-                        folders: vec!["level-1a".to_string()],
-                        is_current_page: false,
-                        item_type: NavItemType::File,
-                        page_id: "level-1a-content-bravo".to_string(),
-                        path_sort_string: "level-1acontent-bravo.neo".to_string(),
-                        title: Some("Level 1a Content Bravo".to_string()),
-                    },
-                    NavItem {
-                        children: vec![NavItem {
-                            children: vec![],
-                            href: Some(
-                                "/en/level-1a-sub-level-2a-content-echo/?level-1a-sublevel-2a-content-echo".to_string(),
-                            ),
-                            folders: vec!["level-1a".to_string(), "sub-level-2a".to_string()],
-                            is_current_page: false,
-                            item_type: NavItemType::File,
-                            page_id: "level-1a-sub-level-2a-content-echo".to_string(),
-                            path_sort_string: "level-1asub-level-2acontent-echo.neo".to_string(),
-                            title: Some("Level 1a SubLevel 2a Content Echo".to_string()),
-                        }],
-                        href: Some(
-                            "/en/level-1a-sub-level-2a-index/?level-1a-sublevel-2a-index"
+                            "/en/level-1a-sub-level-2a-title/?level-1a-sublevel-2a-title"
                                 .to_string(),
                         ),
                         folders: vec!["level-1a".to_string(), "sub-level-2a".to_string()],
                         is_current_page: false,
                         item_type: NavItemType::ClosedFolderTitle,
-                        page_id: "level-1a-sub-level-2a-index".to_string(),
+                        page_id: "level-1a-sub-level-2a-title".to_string(),
                         path_sort_string: "level-1asub-level-2a_title.neo".to_string(),
-                        title: Some("Level 1a SubLevel 2a Index".to_string()),
+                        title: Some("Level 1a SubLevel 2a Title".to_string()),
                     },
                 ],
-                href: Some("/en/level-1a-index/?level-1a-index".to_string()),
+                href: Some("/en/level-1a-title/?level-1a-title".to_string()),
                 folders: vec!["level-1a".to_string()],
                 is_current_page: false,
                 item_type: NavItemType::ClosedFolderTitle,
-                page_id: "level-1a-index".to_string(),
+                page_id: "level-1a-title".to_string(),
                 path_sort_string: "level-1a_title.neo".to_string(),
-                title: Some("Level 1a Index".to_string()),
+                title: Some("Level 1a Title".to_string()),
+            },
+            NavItem {
+                children: vec![
+                    NavItem {
+                        children: vec![],
+                        href: Some("/en/level-1b-index/?level-1b-index".to_string()),
+                        folders: vec!["level-1b".to_string()],
+                        is_current_page: false,
+                        item_type: NavItemType::File,
+                        page_id: "level-1b-index".to_string(),
+                        path_sort_string: "level-1b_index.neo".to_string(),
+                        title: Some("Level 1b Index".to_string()),
+                    },
+                    NavItem {
+                        children: vec![],
+                        href: Some(
+                            "/en/level-1b-content-charlie/?level-1b-content-charlie".to_string(),
+                        ),
+                        folders: vec!["level-1b".to_string()],
+                        is_current_page: false,
+                        item_type: NavItemType::File,
+                        page_id: "level-1b-content-charlie".to_string(),
+                        path_sort_string: "level-1bcontent-charlie.neo".to_string(),
+                        title: Some("Level 1b Content Charlie".to_string()),
+                    },
+                ],
+                href: Some("/en/level-1b-index/?level-1b-index".to_string()),
+                folders: vec!["level-1b".to_string()],
+                is_current_page: false,
+                item_type: NavItemType::OpenFolderIndex,
+                page_id: "level-1b-index".to_string(),
+                path_sort_string: "level-1b_index.neo".to_string(),
+                title: Some("Level 1b Index".to_string()),
             },
         ],
     };

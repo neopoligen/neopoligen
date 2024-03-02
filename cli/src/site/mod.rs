@@ -220,12 +220,15 @@ impl Site {
                 is_current_page: false,
             })
         } else {
-            let mut full_pattern_with_file = pattern.clone();
-            full_pattern_with_file.push("_title.neo".to_string());
+            let mut full_pattern_with_title = pattern.clone();
+            full_pattern_with_title.push("_title.neo".to_string());
+            let mut full_pattern_with_index = pattern.clone();
+            full_pattern_with_index.push("_index.neo".to_string());
             self.pages.iter().find_map(|page| {
                 event!(Level::DEBUG, "{}", page.0);
                 let page_args = [Value::from(page.1.id.clone())];
-                if full_pattern_with_file == self.page_path_parts(&[Value::from(page.1.id.clone())])
+                if full_pattern_with_title
+                    == self.page_path_parts(&[Value::from(page.1.id.clone())])
                 {
                     let mut fmi = NavItem {
                         page_id: page.1.id.clone(),
@@ -234,6 +237,25 @@ impl Site {
                         href: self.page_href(&[Value::from(page.1.id.clone())]),
                         children: self.folder_menu_child_item_finder(&pattern),
                         item_type: NavItemType::OpenFolderTitle,
+                        folders: self.page_folders(&page_args),
+                        path_sort_string: self.page_path_parts(&page_args).join(""),
+                        is_current_page: false,
+                    };
+                    // TODO: Get sub folders here
+                    let mut next_folders: Vec<NavItem> =
+                        self.folder_menu_subfolder_finder(&pattern);
+                    fmi.children.append(&mut next_folders);
+                    Some(fmi)
+                } else if full_pattern_with_index
+                    == self.page_path_parts(&[Value::from(page.1.id.clone())])
+                {
+                    let mut fmi = NavItem {
+                        page_id: page.1.id.clone(),
+                        // is_current_link: false,
+                        title: self.page_title(&[Value::from(page.1.id.clone())]),
+                        href: self.page_href(&[Value::from(page.1.id.clone())]),
+                        children: self.folder_menu_child_item_finder(&pattern),
+                        item_type: NavItemType::OpenFolderIndex,
                         folders: self.page_folders(&page_args),
                         path_sort_string: self.page_path_parts(&page_args).join(""),
                         is_current_page: false,

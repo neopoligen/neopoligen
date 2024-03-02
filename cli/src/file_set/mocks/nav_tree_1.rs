@@ -25,10 +25,10 @@ Top Level Page
             PathBuf::from("leading-dir/Neopoligen/nav-tree-1-site/content/level-1a/_title.neo"),
             r#"-- title
 
-Level 1a Index
+Level 1a Title
 
 -- metadata
--- id: level-1a-index
+-- id: level-1a-title
 "#
             .to_string(),
         );
@@ -49,42 +49,28 @@ Level 1a Content Alfa
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/nav-tree-1-site/content/level-1a/content-bravo.neo",
-            ),
-            r#"-- title
-
-Level 1a Content Bravo
-
--- metadata
--- id: level-1a-content-bravo
-"#
-            .to_string(),
-        );
-
-        fs.pages.insert(
-            PathBuf::from(
                 "leading-dir/Neopoligen/nav-tree-1-site/content/level-1a/sub-level-2a/_title.neo",
             ),
             r#"-- title
 
-Level 1a SubLevel 2a Index
+Level 1a SubLevel 2a Title
 
 -- metadata
--- id: level-1a-sub-level-2a-index
+-- id: level-1a-sub-level-2a-title
 "#
             .to_string(),
         );
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/nav-tree-1-site/content/level-1a/sub-level-2a/content-echo.neo",
+                "leading-dir/Neopoligen/nav-tree-1-site/content/level-1a/sub-level-2a/content-bravo.neo",
             ),
             r#"-- title
 
-Level 1a SubLevel 2a Content Echo
+Level 1a SubLevel 2a Content Bravo
 
 -- metadata
--- id: level-1a-sub-level-2a-content-echo
+-- id: level-1a-sub-level-2a-content-bravo
 "#
             .to_string(),
         );
@@ -93,10 +79,10 @@ Level 1a SubLevel 2a Content Echo
             PathBuf::from("leading-dir/Neopoligen/nav-tree-1-site/content/level-1b/_index.neo"),
             r#"-- title
 
-Level 1b Title
+Level 1b Index
 
 -- metadata
--- id: level-1b-title
+-- id: level-1b-index
 "#
             .to_string(),
         );
@@ -107,24 +93,10 @@ Level 1b Title
             ),
             r#"-- title
 
-Level 1b Content Charlie 
+Level 1b Content Charlie
 
 -- metadata
 -- id: level-1b-content-charlie
-"#
-            .to_string(),
-        );
-
-        fs.pages.insert(
-            PathBuf::from(
-                "leading-dir/Neopoligen/nav-tree-1-site/content/level-1b/content-delta.neo",
-            ),
-            r#"-- title
-
-Level 1b Content Delta 
-
--- metadata
--- id: level-1b-content-delta
 "#
             .to_string(),
         );
