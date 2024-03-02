@@ -17,6 +17,7 @@ pub struct FolderMenuItem {
     pub page_id: String,
     pub title: Option<String>,
     pub folders: Vec<String>,
+    pub path_sort_string: String,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]

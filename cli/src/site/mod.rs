@@ -113,6 +113,13 @@ impl Site {
         // }
     }
 
+    pub fn folder_menu_sort_by_path(&self, items: &mut Vec<FolderMenuItem>) {
+        items.sort_by_key(|k| k.path_sort_string.clone());
+        items
+            .iter_mut()
+            .for_each(|item| self.folder_menu_sort_by_path(&mut item.children));
+    }
+
     #[instrument(skip(self))]
     pub fn folder_menu_builder(&self, args: &[Value]) -> Vec<FolderMenuItem> {
         let menu_key = args[1]
@@ -130,7 +137,7 @@ impl Site {
                 }
             }
             None => {
-                let r: Vec<FolderMenuItem> = args[1]
+                let mut r: Vec<FolderMenuItem> = args[1]
                     .try_iter()
                     .unwrap()
                     .filter_map(|folder_vecs| {
@@ -142,6 +149,8 @@ impl Site {
                         self.folder_menu_index_finder(folder_pattern)
                     })
                     .collect();
+                r.iter_mut()
+                    .for_each(|item| self.folder_menu_sort_by_path(&mut item.children));
                 self.set_cache("menus", menu_key, CacheObject::Menu(r.clone()));
                 r
             }
@@ -208,6 +217,7 @@ impl Site {
                     children: self.folder_menu_child_item_finder(&pattern),
                     item_type: FolderMenuItemType::OpenDirectory,
                     folders: self.page_folders(&page_args),
+                    path_sort_string: self.page_path_parts(&page_args).join(""),
                 };
                 // TODO: Get sub folders here
                 let mut next_folders: Vec<FolderMenuItem> =
@@ -262,6 +272,7 @@ impl Site {
                         children: vec![],
                         item_type: FolderMenuItemType::File,
                         folders: self.page_folders(&page_args),
+                        path_sort_string: self.page_path_parts(&page_args).join(""),
                     };
                     Some(fmi)
                 } else {
