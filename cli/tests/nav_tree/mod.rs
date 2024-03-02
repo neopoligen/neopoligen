@@ -107,56 +107,29 @@ pub fn load_files_and_folders() {
     assert_eq!(left, right);
 }
 
-// These are the origial folders ones that should be checked to
-// see what needs to be pulled in
-
 #[test]
-#[ignore]
-pub fn folder_menu_open() {
-    let file_set = FileSet::set2();
-    let config = Config::site2_config();
+pub fn set_current_file() {
+    let file_set = FileSet::nav_tree_2();
+    let config = Config::nav_tree_2();
     let site = Site::new(&file_set, &config);
-    let mut item = NavItem {
-        children: vec![],
-        href: None,
-        item_type: NavItemType::OpenedFolderTitle,
-        page_id: "local-menu-test-example-title-open-close".to_string(),
-        folders: vec!["menu".to_string(), "folder".to_string(), "open".to_string()],
-        path_sort_string: "skipping-sort-for-this-test-a".to_string(),
-        is_current_page: false,
-        title: Some("Test Folder Item".to_string()),
-        menu_title: Some("Test Folder Item".to_string()),
-        // menu_title_link_or_text: Some("Test Folder Item".to_string()),
+    let current_page_id = Value::from("current-file-target");
+    let files_and_folders = Value::from_serializable::<Vec<Vec<String>>>(&vec![vec![
+        "current-file-target".to_string(),
+    ]]);
+    let left = NavTree {
+        items: vec![NavItem {
+            children: vec![],
+            href: Some("/en/current-file-target/?current-file-target".to_string()),
+            folders: vec![],
+            is_current_page: false,
+            item_type: NavItemType::NotCurrentFile,
+            menu_title: Some("Current File Target".to_string()),
+            page_id: "current-file-target".to_string(),
+            path_sort_string: "current-file-target.neo".to_string(),
+            title: Some("Current File Target".to_string()),
+        }],
     };
-    site.folder_menu_set_open_closed_folders(&[Value::from("menu-folder-open-switch")], &mut item);
-    assert!(matches!(item.item_type, NavItemType::OpenedFolderTitle));
-}
 
-#[test]
-#[ignore]
-pub fn folder_menu_closed() {
-    let file_set = FileSet::set2();
-    let config = Config::site2_config();
-    let site = Site::new(&file_set, &config);
-    let mut item = NavItem {
-        children: vec![],
-        href: None,
-        item_type: NavItemType::OpenedFolderTitle,
-        page_id: "local-menu-test-example-title-open-close".to_string(),
-        folders: vec![
-            "non".to_string(),
-            "matching".to_string(),
-            "path".to_string(),
-        ],
-        path_sort_string: "skipping-sort-for-this-test-b".to_string(),
-        is_current_page: false,
-        title: Some("Test Folder Item".to_string()),
-        menu_title: Some("Test Folder Item".to_string()),
-        // menu_title_link_or_text: Some("Test Folder Item".to_string()),
-    };
-    site.folder_menu_set_open_closed_folders(
-        &[Value::from("menu-folder-closed-switch")],
-        &mut item,
-    );
-    assert!(matches!(item.item_type, NavItemType::ClosedFolderTitle));
+    let right = site.nav_from_files_and_folders(&[current_page_id, files_and_folders]);
+    assert_eq!(left, right);
 }
