@@ -236,7 +236,7 @@ impl Site {
                         title: self.page_title(&[Value::from(page.1.id.clone())]),
                         href: self.page_href(&[Value::from(page.1.id.clone())]),
                         children: self.folder_menu_child_item_finder(&pattern),
-                        item_type: NavItemType::OpenFolderTitle,
+                        item_type: NavItemType::ClosedFolderTitle,
                         folders: self.page_folders(&page_args),
                         path_sort_string: self.page_path_parts(&page_args).join(""),
                         is_current_page: false,
@@ -255,7 +255,7 @@ impl Site {
                         title: self.page_title(&[Value::from(page.1.id.clone())]),
                         href: self.page_href(&[Value::from(page.1.id.clone())]),
                         children: self.folder_menu_child_item_finder(&pattern),
-                        item_type: NavItemType::OpenFolderIndex,
+                        item_type: NavItemType::ClosedFolderIndex,
                         folders: self.page_folders(&page_args),
                         path_sort_string: self.page_path_parts(&page_args).join(""),
                         is_current_page: false,
@@ -297,15 +297,20 @@ impl Site {
     #[instrument(skip(self))]
     pub fn folder_menu_child_item_finder(&self, pattern: &Vec<String>) -> Vec<NavItem> {
         event!(Level::INFO, "fn folder_menu_child_item_finder");
-        let mut full_pattern_with_file = pattern.clone();
-        full_pattern_with_file.push("_title.neo".to_string());
+        let mut full_pattern_with_title = pattern.clone();
+        full_pattern_with_title.push("_title.neo".to_string());
+        let mut full_pattern_with_index = pattern.clone();
+        full_pattern_with_index.push("_index.neo".to_string());
         self.pages
             .iter()
             .filter_map(|page| {
                 let page_args = [Value::from(page.1.id.clone())];
                 let page_folders = self.page_folders(&[Value::from(page.1.id.clone())]);
                 let path_parts = self.page_path_parts(&[Value::from(page.1.id.clone())]);
-                if &page_folders == pattern && path_parts != full_pattern_with_file {
+                if &page_folders == pattern
+                    && path_parts != full_pattern_with_title
+                    && path_parts != full_pattern_with_index
+                {
                     let fmi = NavItem {
                         page_id: page.1.id.clone(),
                         // is_current_link: false,
