@@ -769,6 +769,7 @@ impl Site {
             item.is_current_page = true;
             item.title_link_or_text = item.title.clone();
             item.menu_title_link_or_text = item.menu_title.clone();
+            item.item_type = NavItemType::CurrentFile;
         }
         item.children
             .iter_mut()

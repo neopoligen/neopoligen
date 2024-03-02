@@ -98,7 +98,7 @@ pub fn load_files_and_folders() {
                 href: Some("/en/top-level-page/?top-level-page".to_string()),
                 folders: vec![],
                 is_current_page: true,
-                item_type: NavItemType::NotCurrentFile,
+                item_type: NavItemType::CurrentFile,
                 menu_title: Some("Top Level Page".to_string()),
                 menu_title_link_or_text: Some(format!(r#"{}"#, "Top Level Page".to_string())),
                 page_id: "top-level-page".to_string(),
