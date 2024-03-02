@@ -221,7 +221,7 @@ impl Site {
                 path_sort_string: self.page_path_parts(&page_args).join(""),
                 is_current_page: false,
                 title: self.page_title(&page_args),
-                menu_title: self.page_title(&page_args),
+                menu_title: self.page_menu_title(&page_args),
                 // menu_title_link_or_text: self.page_title(&page_args),
             })
         } else {
@@ -245,7 +245,7 @@ impl Site {
                         path_sort_string: self.page_path_parts(&page_args).join(""),
                         is_current_page: false,
                         title: self.page_title(&[Value::from(page.1.id.clone())]),
-                        menu_title: self.page_title(&[Value::from(page.1.id.clone())]),
+                        menu_title: self.page_menu_title(&[Value::from(page.1.id.clone())]),
                     };
                     // TODO: Get sub folders here
                     let mut next_folders: Vec<NavItem> =
@@ -265,7 +265,7 @@ impl Site {
                         path_sort_string: self.page_path_parts(&page_args).join(""),
                         is_current_page: false,
                         title: self.page_title(&[Value::from(page.1.id.clone())]),
-                        menu_title: self.page_title(&[Value::from(page.1.id.clone())]),
+                        menu_title: self.page_menu_title(&[Value::from(page.1.id.clone())]),
                     };
                     // TODO: Get sub folders here
                     let mut next_folders: Vec<NavItem> =
@@ -328,7 +328,7 @@ impl Site {
                         path_sort_string: self.page_path_parts(&page_args).join(""),
                         is_current_page: false,
                         title: self.page_title(&[Value::from(page.1.id.clone())]),
-                        menu_title: self.page_title(&[Value::from(page.1.id.clone())]),
+                        menu_title: self.page_menu_title(&[Value::from(page.1.id.clone())]),
                         // menu_title_link_or_text: self.page_title(&[Value::from(page.1.id.clone())]),
                     };
                     Some(fmi)

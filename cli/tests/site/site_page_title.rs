@@ -1,9 +1,9 @@
 mod site_page_title {
+    use minijinja::Value;
     use neopoligen::config::Config;
     use neopoligen::file_set::FileSet;
     use neopoligen::site::Site;
     use pretty_assertions::assert_eq;
-    use minijinja::Value;
 
     #[test]
     pub fn basic() {
