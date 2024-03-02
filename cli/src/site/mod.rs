@@ -79,7 +79,7 @@ impl Site {
     }
 
     pub fn folder_menu_set_open_closed_folders(&self, args: &[Value], item: &mut NavItem) {
-        if matches!(item.item_type, NavItemType::OpenDirectory) {
+        if matches!(item.item_type, NavItemType::OpenFolderTitle) {
             let page_folders = self.page_folders(args);
             if page_folders
                 .into_iter()
@@ -87,9 +87,9 @@ impl Site {
                 .collect::<Vec<String>>()
                 == item.folders
             {
-                item.item_type = NavItemType::OpenDirectory;
+                item.item_type = NavItemType::OpenFolderTitle;
             } else {
-                item.item_type = NavItemType::ClosedDirectory;
+                item.item_type = NavItemType::ClosedFolderTitle;
             }
         }
         item.children
@@ -106,11 +106,11 @@ impl Site {
         //     .iter()
         //     .all(|folder| page_folders.contains(folder))
         // {
-        //     item.item_type = NavItemType::OpenDirectory;
+        //     item.item_type = NavItemType::OpenFolderTitle;
         // } else {
         //     dbg!(&page_folders);
         //     dbg!(&item.folders);
-        //     item.item_type = NavItemType::ClosedDirectory;
+        //     item.item_type = NavItemType::ClosedFolderTitle;
         // }
     }
 
@@ -233,7 +233,7 @@ impl Site {
                         title: self.page_title(&[Value::from(page.1.id.clone())]),
                         href: self.page_href(&[Value::from(page.1.id.clone())]),
                         children: self.folder_menu_child_item_finder(&pattern),
-                        item_type: NavItemType::OpenDirectory,
+                        item_type: NavItemType::OpenFolderTitle,
                         folders: self.page_folders(&page_args),
                         path_sort_string: self.page_path_parts(&page_args).join(""),
                         is_current_page: false,

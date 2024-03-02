@@ -73,7 +73,7 @@ pub fn load_files_and_folders() {
                         ),
                         folders: vec!["level-1a".to_string(), "sub-level-2a".to_string()],
                         is_current_page: false,
-                        item_type: NavItemType::ClosedDirectory,
+                        item_type: NavItemType::ClosedFolderTitle,
                         page_id: "level-1a-sub-level-2a-index".to_string(),
                         path_sort_string: "level-1asub-level-2a_title.neo".to_string(),
                         title: Some("Level 1a SubLevel 2a Index".to_string()),
@@ -82,7 +82,7 @@ pub fn load_files_and_folders() {
                 href: Some("/en/level-1a-index/?level-1a-index".to_string()),
                 folders: vec!["level-1a".to_string()],
                 is_current_page: false,
-                item_type: NavItemType::ClosedDirectory,
+                item_type: NavItemType::ClosedFolderTitle,
                 page_id: "level-1a-index".to_string(),
                 path_sort_string: "level-1a_title.neo".to_string(),
                 title: Some("Level 1a Index".to_string()),
@@ -105,7 +105,7 @@ pub fn folder_menu_open() {
     let mut item = NavItem {
         children: vec![],
         href: None,
-        item_type: NavItemType::OpenDirectory,
+        item_type: NavItemType::OpenFolderTitle,
         page_id: "local-menu-test-example-title-open-close".to_string(),
         title: Some("Test Folder Item".to_string()),
         folders: vec!["menu".to_string(), "folder".to_string(), "open".to_string()],
@@ -113,7 +113,7 @@ pub fn folder_menu_open() {
         is_current_page: false,
     };
     site.folder_menu_set_open_closed_folders(&[Value::from("menu-folder-open-switch")], &mut item);
-    assert!(matches!(item.item_type, NavItemType::OpenDirectory));
+    assert!(matches!(item.item_type, NavItemType::OpenFolderTitle));
 }
 
 #[test]
@@ -125,7 +125,7 @@ pub fn folder_menu_closed() {
     let mut item = NavItem {
         children: vec![],
         href: None,
-        item_type: NavItemType::OpenDirectory,
+        item_type: NavItemType::OpenFolderTitle,
         page_id: "local-menu-test-example-title-open-close".to_string(),
         title: Some("Test Folder Item".to_string()),
         folders: vec![
@@ -140,5 +140,5 @@ pub fn folder_menu_closed() {
         &[Value::from("menu-folder-closed-switch")],
         &mut item,
     );
-    assert!(matches!(item.item_type, NavItemType::ClosedDirectory));
+    assert!(matches!(item.item_type, NavItemType::ClosedFolderTitle));
 }

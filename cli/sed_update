@@ -1,5 +1,5 @@
 #!/bin/bash
 
-find ./src -type f -name "*.rs" -print0 \
+find ./tests -type f -name "*.rs" -print0 \
 | xargs -0 sed -i "" \
-"s@mock_basic_config@site1_config@g"
+"s@ClosedDirectory@ClosedFolderTitle@g"
