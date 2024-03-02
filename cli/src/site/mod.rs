@@ -73,13 +73,23 @@ impl Site {
         let mut items = self.folder_menu_builder(args);
         items
             .iter_mut()
-            .for_each(|item| self.folder_menu_set_open_close_folders(args, item));
+            .for_each(|item| self.folder_menu_set_open_closed_folders(args, item));
         items
     }
 
-    pub fn folder_menu_set_open_close_folders(&self, args: &[Value], item: &mut FolderMenuItem) {
+    pub fn folder_menu_set_open_closed_folders(&self, args: &[Value], item: &mut FolderMenuItem) {
         let page_folders = self.page_folders(args);
-        dbg!(page_folders);
+        dbg!(&page_folders);
+        dbg!(&item.folders);
+        if item
+            .folders
+            .iter()
+            .all(|folder| page_folders.contains(folder))
+        {
+            item.item_type = FolderMenuItemType::OpenDirectory;
+        } else {
+            item.item_type = FolderMenuItemType::ClosedDirectory;
+        }
     }
 
     #[instrument(skip(self))]
@@ -176,7 +186,7 @@ impl Site {
                     href: self.page_href(&[Value::from(page.1.id.clone())]),
                     children: self.folder_menu_child_item_finder(&pattern),
                     item_type: FolderMenuItemType::OpenDirectory,
-                    folder_path: self.page_folders(&page_args),
+                    folders: self.page_folders(&page_args),
                 };
                 // TODO: Get sub folders here
                 let mut next_folders: Vec<FolderMenuItem> =
@@ -230,7 +240,7 @@ impl Site {
                         href: self.page_href(&[Value::from(page.1.id.clone())]),
                         children: vec![],
                         item_type: FolderMenuItemType::File,
-                        folder_path: self.page_folders(&page_args),
+                        folders: self.page_folders(&page_args),
                     };
                     Some(fmi)
                 } else {

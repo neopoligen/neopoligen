@@ -397,15 +397,32 @@ Link Or Title Target
 Test For Open Menu Folder
 
 -- metadata
+-- date: 2000-01-26 00:00:00
 -- id: menu-folder-open-switch
--- date: 2000-01-25 00:00:00
 
 "#
             .to_string(),
         );
 
 
-        
+
+
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/menu/folder/closed/switch.neo"),
+            r#"-- title
+
+Test For Closed Menu Folder
+
+-- metadata
+-- date: 2000-01-26 00:00:00
+-- id: menu-folder-closed-switch
+
+"#
+            .to_string(),
+        );
+
+
+         
         
 
         fs
