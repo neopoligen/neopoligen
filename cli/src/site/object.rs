@@ -24,6 +24,7 @@ impl Object for Site {
             "page_source_path" => Ok(Value::from_serializable(&self.page_source_path(args))),
             "page_template" => Ok(Value::from_serializable(&self.page_template(args))),
             "page_title" => Ok(Value::from_serializable(&self.page_title(args))),
+            "show" => Ok(Value::from_serializable(&self.show(args))),
             _ => Ok(Value::from("")),
         }
     }

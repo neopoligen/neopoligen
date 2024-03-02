@@ -18,6 +18,9 @@ use std::collections::BTreeSet;
 use std::fmt::Display;
 use std::path::PathBuf;
 use std::sync::Mutex;
+use syntect::html::{ClassStyle, ClassedHTMLGenerator};
+use syntect::parsing::SyntaxSet;
+use syntect::util::LinesWithEndings;
 use tracing::{event, instrument, Level};
 
 #[derive(Debug, Serialize)]
@@ -715,6 +718,30 @@ impl Site {
         let mut c = self.cache.lock().unwrap();
         c.insert("page-titles".to_string(), BTreeMap::new());
         c.insert("menus".to_string(), BTreeMap::new());
+    }
+
+    pub fn show(&self, args: &[Value]) -> Option<String> {
+        let content = serde_json::to_string_pretty(
+            &serde_json::from_str::<serde_json::Value>(&args[0].to_string()).unwrap(),
+        );
+        let code_type = "json";
+        let syntax_set = SyntaxSet::load_defaults_newlines();
+        let syntax = syntax_set.find_syntax_by_token(code_type).unwrap();
+        let mut html_generator =
+            ClassedHTMLGenerator::new_with_class_style(syntax, &syntax_set, ClassStyle::Spaced);
+        for line in LinesWithEndings::from(&content.unwrap()) {
+            let _ = html_generator.parse_html_for_line_which_includes_newline(line);
+        }
+        let initial_html = html_generator.finalize();
+        let output_html: Vec<_> = initial_html
+            .lines()
+            .map(|line| format!(r#"<span class="linenumber">{}</span>"#, line))
+            .collect();
+
+        Some(format!(
+            r#"<pre class="template_data_object"><code>{}</code></pre>"#,
+            output_html.join("\n")
+        ))
     }
 }
 
