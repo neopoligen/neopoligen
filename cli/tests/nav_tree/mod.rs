@@ -112,7 +112,7 @@ pub fn folder_menu_open() {
     let mut item = NavItem {
         children: vec![],
         href: None,
-        item_type: NavItemType::OpenFolderTitle,
+        item_type: NavItemType::OpenedFolderTitle,
         page_id: "local-menu-test-example-title-open-close".to_string(),
         title: Some("Test Folder Item".to_string()),
         folders: vec!["menu".to_string(), "folder".to_string(), "open".to_string()],
@@ -120,7 +120,7 @@ pub fn folder_menu_open() {
         is_current_page: false,
     };
     site.folder_menu_set_open_closed_folders(&[Value::from("menu-folder-open-switch")], &mut item);
-    assert!(matches!(item.item_type, NavItemType::OpenFolderTitle));
+    assert!(matches!(item.item_type, NavItemType::OpenedFolderTitle));
 }
 
 #[test]
@@ -132,7 +132,7 @@ pub fn folder_menu_closed() {
     let mut item = NavItem {
         children: vec![],
         href: None,
-        item_type: NavItemType::OpenFolderTitle,
+        item_type: NavItemType::OpenedFolderTitle,
         page_id: "local-menu-test-example-title-open-close".to_string(),
         title: Some("Test Folder Item".to_string()),
         folders: vec![

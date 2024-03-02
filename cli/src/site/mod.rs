@@ -82,7 +82,7 @@ impl Site {
     }
 
     pub fn folder_menu_set_open_closed_folders(&self, args: &[Value], item: &mut NavItem) {
-        if matches!(item.item_type, NavItemType::OpenFolderTitle) {
+        if matches!(item.item_type, NavItemType::ClosedFolderTitle) {
             let page_folders = self.page_folders(args);
             if page_folders
                 .into_iter()
@@ -90,7 +90,7 @@ impl Site {
                 .collect::<Vec<String>>()
                 == item.folders
             {
-                item.item_type = NavItemType::OpenFolderTitle;
+                item.item_type = NavItemType::OpenedFolderTitle;
             } else {
                 item.item_type = NavItemType::ClosedFolderTitle;
             }

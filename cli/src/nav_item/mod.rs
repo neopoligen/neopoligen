@@ -27,4 +27,6 @@ pub enum NavItemType {
     ClosedFolderTitle,
     CurrentFile,
     NotCurrentFile,
+    OpenedFolderIndex,
+    OpenedFolderTitle,
 }
