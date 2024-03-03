@@ -95,8 +95,11 @@ pub fn load_files_and_folders() {
         vec!["level-1b".to_string()],
     ]);
     let left = NavTree {
-        prev_link: None,
-        next_link: None,
+        // NOTE: The previous/next stuff is not implemented for
+        // these tests
+        prev_item: None,
+        next_item: None,
+        prev_next_order: vec![],
         items: vec![
             NavItem {
                 children: vec![],

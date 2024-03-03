@@ -23,6 +23,6 @@ pub fn prev_next_basic() {
         "/en/content-alfa/?content-alfa".to_string(),
         "Content Alfa".to_string()
     );
-    let right = nav_links.prev_link.unwrap().title_link_or_text.unwrap();
+    let right = nav_links.prev_item.unwrap().title_link_or_text.unwrap();
     assert_eq!(left, right);
 }

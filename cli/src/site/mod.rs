@@ -5,6 +5,7 @@ use crate::child::Child;
 use crate::config::Config;
 use crate::nav_item::NavItem;
 use crate::nav_item::NavItemType;
+use crate::nav_tree::NavPrevNextItem;
 use crate::nav_tree::NavTree;
 use crate::page::Page;
 use crate::section::Section;
@@ -400,9 +401,34 @@ impl Site {
     pub fn nav_from_files_and_folders(&self, args: &[Value]) -> NavTree {
         let mut nav_links = NavTree {
             items: self.folder_menu(args),
+            prev_item: None,
+            next_item: None,
+            prev_next_order: vec![],
         };
         self.set_current_file_for_nav_links(&args[0].to_string(), &mut nav_links);
         nav_links
+    }
+
+    pub fn nav_from_files_and_folders_dev(&self, args: &[Value]) -> NavTree {
+        let mut nav_links = NavTree {
+            items: self.folder_menu(args),
+            prev_item: None,
+            next_item: None,
+            prev_next_order: vec![],
+        };
+        self.set_current_file_for_nav_links(&args[0].to_string(), &mut nav_links);
+        self.find_prev_next_nav_links(&args[0].to_string(), &mut nav_links);
+        nav_links
+    }
+
+    pub fn find_prev_next_nav_links(&self, _id: &String, links: &mut NavTree) {
+        links.prev_item = Some(NavPrevNextItem {
+            title_link_or_text: Some(format!(
+                r#"<a href="{}">{}</a>"#,
+                "/en/content-alfa/?content-alfa", "Content Alfa"
+            )),
+        });
+        dbg!("here");
     }
 
     pub fn page_folders(&self, args: &[Value]) -> Vec<String> {
