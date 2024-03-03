@@ -1,3 +1,4 @@
+pub mod nav_prev_next1;
 pub mod nav_tree_1;
 pub mod nav_tree_2;
 pub mod parsing_tests;
