@@ -10,6 +10,15 @@ use std::collections::BTreeSet;
 use tracing::{event, instrument, Level};
 
 impl Site {
+
+    pub fn find_prev_next_nav_links(&self, _id: &String, links: &mut NavTree) {
+        links.next_item = Some(NavPrevNextItem {
+            page_id: "content-bravo".to_string(),
+            title_link_or_text: None,
+        });
+        dbg!("here");
+    }
+
     pub fn folder_menu(&self, args: &[Value]) -> Vec<NavItem> {
         let mut items = self.folder_menu_builder(args);
         items
@@ -18,9 +27,7 @@ impl Site {
         items
     }
 
-    #[instrument(skip(self))]
     pub fn folder_menu_builder(&self, args: &[Value]) -> Vec<NavItem> {
-        event!(Level::INFO, "{}", args[0].to_string());
         let menu_key = args[1]
             .try_iter()
             .unwrap()
@@ -134,28 +141,6 @@ impl Site {
                     None
                 }
             })
-            .collect()
-    }
-
-    #[instrument(skip(self))]
-    pub fn folder_menu_subfolder_finder(&self, pattern: &Vec<String>) -> Vec<NavItem> {
-        event!(Level::INFO, "fn folder_menu_subfolder_finder");
-        let mut next_level_folders: BTreeSet<Vec<String>> = BTreeSet::new();
-        self.pages.iter().for_each(|page| {
-            let page_folders = self.page_folders(&[Value::from(page.1.id.clone())]);
-            if page_folders
-                .iter()
-                .take(pattern.len())
-                .eq(pattern.clone().iter())
-            {
-                if page_folders.len() == pattern.len() + 1 {
-                    next_level_folders.insert(page_folders);
-                }
-            }
-        });
-        next_level_folders
-            .iter()
-            .filter_map(|pat| self.folder_menu_index_finder(pat.clone()))
             .collect()
     }
 
@@ -298,12 +283,26 @@ impl Site {
             .for_each(|item| self.folder_menu_sort_by_path(&mut item.children));
     }
 
-    pub fn find_prev_next_nav_links(&self, _id: &String, links: &mut NavTree) {
-        links.next_item = Some(NavPrevNextItem {
-            page_id: "content-bravo".to_string(),
-            title_link_or_text: None,
+    #[instrument(skip(self))]
+    pub fn folder_menu_subfolder_finder(&self, pattern: &Vec<String>) -> Vec<NavItem> {
+        event!(Level::INFO, "fn folder_menu_subfolder_finder");
+        let mut next_level_folders: BTreeSet<Vec<String>> = BTreeSet::new();
+        self.pages.iter().for_each(|page| {
+            let page_folders = self.page_folders(&[Value::from(page.1.id.clone())]);
+            if page_folders
+                .iter()
+                .take(pattern.len())
+                .eq(pattern.clone().iter())
+            {
+                if page_folders.len() == pattern.len() + 1 {
+                    next_level_folders.insert(page_folders);
+                }
+            }
         });
-        dbg!("here");
+        next_level_folders
+            .iter()
+            .filter_map(|pat| self.folder_menu_index_finder(pat.clone()))
+            .collect()
     }
 
     pub fn nav_from_files_and_folders_dev(&self, args: &[Value]) -> NavTree {
@@ -360,4 +359,6 @@ impl Site {
             .iter_mut()
             .for_each(|i| self.set_current_file_for_nav_link_for_item(id, i));
     }
+
+
 }
