@@ -7,6 +7,8 @@ use neopoligen::nav_tree::NavTree;
 use neopoligen::site::Site;
 use pretty_assertions::assert_eq;
 
+// TODO: Add test for ActiveFolderIndex
+
 #[test]
 pub fn load_files_and_folders() {
     let file_set = FileSet::nav_tree_1();

@@ -95,6 +95,21 @@ impl Site {
                 item.item_type = NavItemType::ClosedFolderTitle;
             }
         }
+
+        if matches!(item.item_type, NavItemType::ClosedFolderIndex) {
+            let page_folders = self.page_folders(args);
+            if page_folders
+                .into_iter()
+                .take(item.folders.len())
+                .collect::<Vec<String>>()
+                == item.folders
+            {
+                item.item_type = NavItemType::OpenedFolderIndex;
+            } else {
+                item.item_type = NavItemType::ClosedFolderIndex;
+            }
+        }
+
         item.children
             .iter_mut()
             .for_each(|i| self.folder_menu_set_open_closed_folders(args, i))
@@ -356,7 +371,6 @@ impl Site {
             .collect()
     }
 
-    // TODO: Deprecate this in favor of nav_link_title_link
     pub fn link_or_title(&self, args: &[Value]) -> Option<String> {
         let current_page_id = args[0].to_string();
         let target_page_id = args[1].to_string();
@@ -384,28 +398,11 @@ impl Site {
     }
 
     pub fn nav_from_files_and_folders(&self, args: &[Value]) -> NavTree {
-        // let mut items = self.folder_menu(args);
-
         let mut nav_links = NavTree {
             items: self.folder_menu(args),
         };
-
         self.set_current_file_for_nav_links(&args[0].to_string(), &mut nav_links);
-
         nav_links
-
-        // NavTree {
-        //     items: vec![NavItem {
-        //         children: vec![],
-        //         href: None,
-        //         folders: vec![],
-        //         is_current_page: false,
-        //         item_type: NavItemType::File,
-        //         page_id: "top-level-page".to_string(),
-        //         path_sort_string: "some-path".to_string(),
-        //         title: None,
-        //     }],
-        // }
     }
 
     pub fn page_folders(&self, args: &[Value]) -> Vec<String> {
@@ -769,8 +766,8 @@ impl Site {
             item.is_current_page = true;
             item.title_link_or_text = item.title.clone();
             item.menu_title_link_or_text = item.menu_title.clone();
-            if matches!(item.item_type, NavItemType::ClosedFolderIndex) {
-                item.item_type = NavItemType::OpenedFolderIndex;
+            if matches!(item.item_type, NavItemType::OpenedFolderIndex) {
+                item.item_type = NavItemType::ActiveFolderIndex;
             } else {
                 item.item_type = NavItemType::CurrentFile;
             }
