@@ -422,11 +422,9 @@ impl Site {
     }
 
     pub fn find_prev_next_nav_links(&self, _id: &String, links: &mut NavTree) {
-        links.prev_item = Some(NavPrevNextItem {
-            title_link_or_text: Some(format!(
-                r#"<a href="{}">{}</a>"#,
-                "/en/content-alfa/?content-alfa", "Content Alfa"
-            )),
+        links.next_item = Some(NavPrevNextItem {
+            page_id: "content-bravo".to_string(),
+            title_link_or_text: None,
         });
         dbg!("here");
     }

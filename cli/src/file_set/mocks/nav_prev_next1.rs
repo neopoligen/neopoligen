@@ -10,13 +10,13 @@ impl FileSet {
         );
 
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/nav-prev_next1-site/content/level-1a/_title.neo"),
+            PathBuf::from("leading-dir/Neopoligen/nav-prev_next1-site/content/level-1a/_index.neo"),
             r#"-- title
 
-Level 1a Title
+Level 1a Index 
 
 -- metadata
--- id: level-1a-title
+-- id: level-1a-index
 "#
             .to_string(),
         );

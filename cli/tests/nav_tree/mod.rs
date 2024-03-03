@@ -6,7 +6,7 @@ use neopoligen::nav_item::NavItemType;
 use neopoligen::nav_tree::NavTree;
 use neopoligen::site::Site;
 use pretty_assertions::assert_eq;
-use std::collections::BTreeMap;
+// use std::collections::BTreeMap;
 
 // TODO: Add test for ActiveFolderIndex
 
