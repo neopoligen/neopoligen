@@ -1,6 +1,6 @@
 use crate::nav_item::NavItem;
 use crate::nav_item::NavItemType;
-use crate::nav_tree::NavPrevNextItem;
+use crate::nav_prev_next_item::NavPrevNextItem;
 use crate::nav_tree::NavTree;
 use crate::site::CacheObject;
 use crate::site::Site;
@@ -10,7 +10,6 @@ use std::collections::BTreeSet;
 use tracing::{event, instrument, Level};
 
 impl Site {
-
     pub fn find_prev_next_nav_links(&self, _id: &String, links: &mut NavTree) {
         links.next_item = Some(NavPrevNextItem {
             page_id: "content-bravo".to_string(),
@@ -359,6 +358,4 @@ impl Site {
             .iter_mut()
             .for_each(|i| self.set_current_file_for_nav_link_for_item(id, i));
     }
-
-
 }

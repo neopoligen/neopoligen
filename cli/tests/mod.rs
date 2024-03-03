@@ -1,3 +1,2 @@
-pub mod nav_prev_next;
-pub mod nav_tree;
+pub mod nav_items;
 pub mod site;

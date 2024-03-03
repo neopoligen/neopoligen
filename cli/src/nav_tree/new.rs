@@ -1,3 +1,5 @@
+// DEPRECATED: Move to NavItems;
+//
 use crate::nav_tree::NavTree;
 use minijinja::Value;
 

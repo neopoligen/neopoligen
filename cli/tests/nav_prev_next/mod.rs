@@ -1,3 +1,5 @@
+//TODO: MOVE UNDER nav_items
+//
 use minijinja::Value;
 use neopoligen::config::Config;
 use neopoligen::file_set::FileSet;
@@ -6,8 +8,6 @@ use neopoligen::file_set::FileSet;
 // use neopoligen::nav_tree::NavTree;
 use neopoligen::site::Site;
 use pretty_assertions::assert_eq;
-
-// TODO: Add test for ActiveFolderIndex
 
 #[test]
 pub fn next_item_basic() {

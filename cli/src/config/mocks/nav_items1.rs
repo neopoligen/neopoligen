@@ -4,9 +4,9 @@ use std::collections::BTreeSet;
 use std::path::PathBuf;
 
 impl Config {
-    pub fn nav_tree_1() -> Config {
-        let project_root = PathBuf::from("leading-dir/Neopoligen/nav-tree-1-site");
-        let theme_name = String::from("nav-tree-1-theme");
+    pub fn nav_items1() -> Config {
+        let project_root = PathBuf::from("leading-dir/Neopoligen/nav-items1-site");
+        let theme_name = String::from("nav-items1-theme");
         let configuration_root =
             PathBuf::from(format!("{}/{}", project_root.display(), "configuration"));
         let content_root = PathBuf::from(format!("{}/{}", project_root.display(), "content"));
