@@ -7,14 +7,17 @@ use neopoligen::nav_tree::NavTree;
 use neopoligen::site::Site;
 use pretty_assertions::assert_eq;
 
+#[test]
+pub fn basic_load_test() {}
+
 // TODO: Add test for ActiveFolderIndex
 
 // DEPRECATED: Move this test to point to
 // NavItems
 #[test]
 pub fn deprecated_load_files_and_folders() {
-    let file_set = FileSet::nav_items1();
-    let config = Config::nav_items1();
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
     let level_1a_content_alfa = NavItem {
         children: vec![],
