@@ -102,7 +102,7 @@ impl Site {
             }
             None => {
                 let mut nav_items = NavItems::new_from_files_and_folders(&self, &args[1]);
-                self.set_cache(menu_key, CacheObject::NavItems((nav_items.clone())));
+                self.set_cache(menu_key, CacheObject::NavItems(nav_items.clone()));
                 nav_items.set_current_page(&args[0]);
                 nav_items
             }

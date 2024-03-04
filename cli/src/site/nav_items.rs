@@ -2,9 +2,9 @@ use crate::nav_item::NavItem;
 use crate::nav_item::NavItemType;
 use crate::nav_prev_next_item::NavPrevNextItem;
 use crate::nav_tree::NavTree;
-use crate::site::CacheObject;
+// use crate::site::CacheObject;
 use crate::site::Site;
-use itertools::Itertools;
+// use itertools::Itertools;
 use minijinja::Value;
 use std::collections::BTreeSet;
 use tracing::{event, instrument, Level};
@@ -32,7 +32,7 @@ impl Site {
 
     ///////////////////////////////////////////////////////////////
     // MOVED
-    pub fn folder_menu_builder(&self, args: &[Value]) -> Vec<NavItem> {
+    pub fn folder_menu_builder(&self, _args: &[Value]) -> Vec<NavItem> {
         vec![]
 
         // let menu_key = args[1]
