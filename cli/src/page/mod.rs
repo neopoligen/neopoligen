@@ -24,6 +24,8 @@ pub struct Page {
     pub source: String,
     pub source_path: PathBuf,
     pub publish: bool,
+    // these items are generated on creation
+    pub title: Option<String>,
 }
 
 #[cfg(test)]

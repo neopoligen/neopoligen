@@ -13,6 +13,7 @@ use serde::Serialize;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct NavItem {
+    pub breadcrumbs: Vec<NavItem>,
     pub children: Vec<NavItem>,
     pub folders: Vec<String>,
     pub href: Option<String>,

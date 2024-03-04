@@ -59,6 +59,7 @@ fn folder_menu_child_item_finder(site: &Site, pattern: &Vec<String>) -> Vec<NavI
                 && path_parts != full_pattern_with_index
             {
                 let fmi = NavItem {
+                    breadcrumbs: vec![],
                     children: vec![],
                     folders: site.page_folders(&page_args),
                     href: site.page_href(&[Value::from(page.1.id.clone())]),
@@ -87,6 +88,7 @@ fn folder_menu_index_finder(site: &Site, pattern: Vec<String>) -> Option<NavItem
     if site.pages.contains_key(&id) {
         let page_args = [Value::from(id.clone())];
         Some(NavItem {
+            breadcrumbs: vec![],
             children: folder_menu_child_item_finder(site, &pattern),
             folders: site.page_folders(&page_args),
             href: site.page_href(&page_args),
@@ -108,6 +110,7 @@ fn folder_menu_index_finder(site: &Site, pattern: Vec<String>) -> Option<NavItem
             let page_args = [Value::from(page.1.id.clone())];
             if full_pattern_with_title == site.page_path_parts(&[Value::from(page.1.id.clone())]) {
                 let mut fmi = NavItem {
+                    breadcrumbs: vec![],
                     children: folder_menu_child_item_finder(site, &pattern),
                     folders: site.page_folders(&page_args),
                     href: site.page_href(&[Value::from(page.1.id.clone())]),
@@ -128,6 +131,7 @@ fn folder_menu_index_finder(site: &Site, pattern: Vec<String>) -> Option<NavItem
                 == site.page_path_parts(&[Value::from(page.1.id.clone())])
             {
                 let mut fmi = NavItem {
+                    breadcrumbs: vec![],
                     children: folder_menu_child_item_finder(site, &pattern),
                     folders: site.page_folders(&page_args),
                     href: site.page_href(&[Value::from(page.1.id.clone())]),
