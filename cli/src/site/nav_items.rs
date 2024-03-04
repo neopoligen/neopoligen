@@ -15,7 +15,7 @@ impl Site {
             page_id: "content-bravo".to_string(),
             title_link_or_text: None,
         });
-        dbg!("here");
+        // dbg!("here");
     }
 
     pub fn folder_menu(&self, args: &[Value]) -> Vec<NavItem> {

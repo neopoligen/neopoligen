@@ -10,13 +10,13 @@ impl FileSet {
         );
 
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/nav-items1-site/content/current-file-target.neo"),
+            PathBuf::from("leading-dir/Neopoligen/nav-items1-site/content/folder1/_index.neo"),
             r#"-- title
 
-Current File Target
+Folder1 Index
 
 -- metadata
--- id:  current-file-target
+-- id: folder1-index 
 "#
             .to_string(),
         );

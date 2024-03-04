@@ -447,7 +447,9 @@ impl Site {
         // added yet it'll trigger an intended panic
         let mut c = self.cache.lock().unwrap();
         c.insert("page-titles".to_string(), BTreeMap::new());
+        // TODO: DEPRECATE menus and move to nav_items
         c.insert("menus".to_string(), BTreeMap::new());
+        c.insert("nav_items".to_string(), BTreeMap::new());
     }
 
     pub fn show(&self, args: &[Value]) -> Option<String> {
