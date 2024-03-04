@@ -26,14 +26,12 @@ impl NavItems {
             prev_next_items,
             prev_item: None,
             next_item: None,
+            open_folders: vec![],
         };
         nav_items.sort_by_source_path();
         nav_items
     }
 
-    // NOTE: This does not sort the top tree since
-    // that would change the order that was called
-    // explicitly
     pub fn sort_by_source_path(&mut self) {
         self.tree
             .iter_mut()
@@ -198,3 +196,50 @@ fn load_prev_next(tree: &Vec<NavItem>) -> Vec<NavPrevNextItem> {
     prev_next_flattener(tree, &mut prev_next_vec);
     prev_next_vec
 }
+
+//     fn folder_menu_set_open_closed_folders(&self, args: &[Value], item: &mut NavItem) {
+//         if matches!(item.item_type, NavItemType::ClosedFolderTitle) {
+//             let page_folders = self.page_folders(args);
+//             if page_folders
+//                 .into_iter()
+//                 .take(item.folders.len())
+//                 .collect::<Vec<String>>()
+//                 == item.folders
+//             {
+//                 item.item_type = NavItemType::OpenedFolderTitle;
+//             } else {
+//                 item.item_type = NavItemType::ClosedFolderTitle;
+//             }
+//         }
+//         if matches!(item.item_type, NavItemType::ClosedFolderIndex) {
+//             let page_folders = self.page_folders(args);
+//             if page_folders
+//                 .into_iter()
+//                 .take(item.folders.len())
+//                 .collect::<Vec<String>>()
+//                 == item.folders
+//             {
+//                 item.item_type = NavItemType::OpenedFolderIndex;
+//             } else {
+//                 item.item_type = NavItemType::ClosedFolderIndex;
+//             }
+//         }
+//         item.children
+//             .iter_mut()
+//             .for_each(|i| self.folder_menu_set_open_closed_folders(args, i))
+//         // item.folders.iter().enumerate().for_each(|(index, folder)| {
+//         //     dbg!("asdf");
+//         //     ()
+//         // });
+//         // if item
+//         //     .folders
+//         //     .iter()
+//         //     .all(|folder| page_folders.contains(folder))
+//         // {
+//         //     item.item_type = NavItemType::OpenFolderTitle;
+//         // } else {
+//         //     dbg!(&page_folders);
+//         //     dbg!(&item.folders);
+//         //     item.item_type = NavItemType::ClosedFolderTitle;
+//         // }
+//     }

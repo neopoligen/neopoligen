@@ -235,7 +235,7 @@ impl Site {
     }
 
     //////////////////////////////////////////////////////////////////
-    // TODO as function
+    // MOVING
     pub fn folder_menu_set_open_closed_folders(&self, args: &[Value], item: &mut NavItem) {
         if matches!(item.item_type, NavItemType::ClosedFolderTitle) {
             let page_folders = self.page_folders(args);

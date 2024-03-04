@@ -94,7 +94,7 @@ pub fn get_prev_item_that_does_not_exist() {
 }
 
 #[test]
-pub fn set_current_page() {
+pub fn set_current_file() {
     let file_set = FileSet::nav_items1();
     let config = Config::nav_items1();
     let site = Site::new(&file_set, &config);
@@ -125,3 +125,69 @@ pub fn check_not_current_file() {
         NavItemType::NotCurrentFile
     );
 }
+
+#[test]
+pub fn set_top_level_current_file() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![
+        vec!["top-level-page"],
+        vec!["level-1a"],
+        vec!["level-1b"],
+    ]);
+    let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
+    nav_items.set_current_page(Value::from("top-level-page"));
+    assert_eq!(nav_items.tree[0].item_type, NavItemType::CurrentFile);
+}
+
+#[test]
+pub fn check_active_folder_index() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1b"]]);
+    let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
+    nav_items.set_current_page(Value::from("level-1b-index"));
+    assert_eq!(nav_items.tree[0].item_type, NavItemType::ActiveFolderIndex);
+}
+
+#[test]
+pub fn check_closed_folder_index() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1b"]]);
+    let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
+    nav_items.set_current_page(Value::from("content-charlie"));
+    assert_eq!(nav_items.tree[0].item_type, NavItemType::ClosedFolderIndex);
+}
+
+#[test]
+pub fn check_closed_folder_title() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns =
+        Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"], vec!["level-1b"]]);
+    let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
+    nav_items.set_current_page(Value::from("content-charlie"));
+    assert_eq!(nav_items.tree[0].item_type, NavItemType::ClosedFolderTitle);
+}
+
+#[test]
+pub fn solo_check_opened_folder_title() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns =
+        Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"], vec!["level-1b"]]);
+    let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
+    nav_items.set_current_page(Value::from("content-alfa"));
+    let left = NavItemType::OpenedFolderTitle;
+    let right = nav_items.tree[0].item_type.clone();
+    assert_eq!(left, right);
+}
+
+//     OpenedFolderIndex,
+//     OpenedFolderTitle,
