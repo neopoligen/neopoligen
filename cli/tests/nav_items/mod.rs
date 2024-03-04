@@ -189,5 +189,16 @@ pub fn solo_check_opened_folder_title() {
     assert_eq!(left, right);
 }
 
-//     OpenedFolderIndex,
-//     OpenedFolderTitle,
+#[test]
+pub fn solo_check_opened_folder_index() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns =
+        Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"], vec!["level-1b"]]);
+    let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
+    nav_items.set_current_page(Value::from("content-charlie"));
+    let left = NavItemType::OpenedFolderIndex;
+    let right = nav_items.tree[1].item_type.clone();
+    assert_eq!(left, right);
+}

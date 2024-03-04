@@ -70,6 +70,16 @@ fn update_open_folders(item: &mut NavItem, folders: &Vec<String>) {
             item.item_type = NavItemType::OpenedFolderTitle
         }
     }
+    if item.item_type == NavItemType::ClosedFolderIndex {
+        let check_path: Vec<String> = folders
+            .iter()
+            .take(item.folders.len())
+            .map(|f| f.to_string())
+            .collect();
+        if item.folders == check_path {
+            item.item_type = NavItemType::OpenedFolderIndex
+        }
+    }
     item.children
         .iter_mut()
         .for_each(|child| update_open_folders(child, folders));
