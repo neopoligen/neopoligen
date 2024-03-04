@@ -56,7 +56,7 @@ Level 1a Content Alfa
 Level 1a SubLevel 2a Title
 
 -- metadata
--- id: level-1a-sub-level-2a-title
+-- id: aabb0040
 "#
             .to_string(),
         );
@@ -70,7 +70,7 @@ Level 1a SubLevel 2a Title
 Level 1a SubLevel 2a Content Bravo
 
 -- metadata
--- id: content-bravo
+-- id: aabb0050 
 "#
             .to_string(),
         );
@@ -82,7 +82,7 @@ Level 1a SubLevel 2a Content Bravo
 Level 1b Index
 
 -- metadata
--- id: level-1b-index
+-- id: aabb0060
 "#
             .to_string(),
         );
@@ -96,7 +96,7 @@ Level 1b Index
 Level 1b Content Charlie
 
 -- metadata
--- id: content-charlie
+-- id: aabb0070
 "#
             .to_string(),
         );
