@@ -24,28 +24,13 @@ impl Page {
                             None
                         }
                     }) {
-                        Some(id) => {
-                            //TODO: Remove this flag being set
-                            // by the file name. a
-                            let publish = if source_path
-                                .file_name()
-                                .unwrap()
-                                .to_string_lossy()
-                                .starts_with("_")
-                            {
-                                false
-                            } else {
-                                true
-                            };
-                            Some(Page {
-                                ast,
-                                id,
-                                source,
-                                source_path,
-                                publish,
-                                title: Some("asdf".to_string()),
-                            })
-                        }
+                        Some(id) => Some(Page {
+                            ast,
+                            id,
+                            source,
+                            source_path,
+                            title: Some("Home Page".to_string()),
+                        }),
                         None => None,
                     }
                 } else {

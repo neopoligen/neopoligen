@@ -11,7 +11,6 @@ pub struct Page {
     pub ast: Vec<Child>,
     pub source: String,
     pub source_path: PathBuf,
-    pub publish: bool,
     // these items are generated on creation
     pub title: Option<String>,
 }
