@@ -21,6 +21,34 @@ Folder1 Index
             .to_string(),
         );
 
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/nav-items1-site/content/folder1/content-alfa.neo",
+            ),
+            r#"-- title
+
+Content Alfa
+
+-- metadata
+-- id: content-alfa
+"#
+            .to_string(),
+        );
+
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/nav-items1-site/content/folder1/content-bravo.neo",
+            ),
+            r#"-- title
+
+Content Bravo 
+
+-- metadata
+-- id: content-bravo
+"#
+            .to_string(),
+        );
+
         fs
     }
 }

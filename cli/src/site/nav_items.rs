@@ -10,6 +10,8 @@ use std::collections::BTreeSet;
 use tracing::{event, instrument, Level};
 
 impl Site {
+    ///////////////////////////////////////////////////////////////
+    // SKIP
     pub fn find_prev_next_nav_links(&self, _id: &String, links: &mut NavTree) {
         links.next_item = Some(NavPrevNextItem {
             page_id: "content-bravo".to_string(),
@@ -18,6 +20,8 @@ impl Site {
         // dbg!("here");
     }
 
+    ///////////////////////////////////////////////////////////////
+    // SKIP
     pub fn folder_menu(&self, args: &[Value]) -> Vec<NavItem> {
         let mut items = self.folder_menu_builder(args);
         items
@@ -26,6 +30,8 @@ impl Site {
         items
     }
 
+    ///////////////////////////////////////////////////////////////
+    // MOVED
     pub fn folder_menu_builder(&self, args: &[Value]) -> Vec<NavItem> {
         let menu_key = args[1]
             .try_iter()
@@ -103,6 +109,8 @@ impl Site {
         // }
     }
 
+    ///////////////////////////////////////////////////////////////
+    // MOVED
     #[instrument(skip(self))]
     pub fn folder_menu_child_item_finder(&self, pattern: &Vec<String>) -> Vec<NavItem> {
         event!(Level::INFO, "fn folder_menu_child_item_finder");
@@ -143,6 +151,8 @@ impl Site {
             .collect()
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+    // MOVED
     #[instrument(skip(self))]
     pub fn folder_menu_index_finder(&self, pattern: Vec<String>) -> Option<NavItem> {
         event!(Level::INFO, "fn folder_menu_index_finder");
@@ -224,6 +234,8 @@ impl Site {
         }
     }
 
+    //////////////////////////////////////////////////////////////////
+    // TODO as function
     pub fn folder_menu_set_open_closed_folders(&self, args: &[Value], item: &mut NavItem) {
         if matches!(item.item_type, NavItemType::ClosedFolderTitle) {
             let page_folders = self.page_folders(args);
@@ -238,7 +250,6 @@ impl Site {
                 item.item_type = NavItemType::ClosedFolderTitle;
             }
         }
-
         if matches!(item.item_type, NavItemType::ClosedFolderIndex) {
             let page_folders = self.page_folders(args);
             if page_folders
@@ -252,16 +263,13 @@ impl Site {
                 item.item_type = NavItemType::ClosedFolderIndex;
             }
         }
-
         item.children
             .iter_mut()
             .for_each(|i| self.folder_menu_set_open_closed_folders(args, i))
-
         // item.folders.iter().enumerate().for_each(|(index, folder)| {
         //     dbg!("asdf");
         //     ()
         // });
-
         // if item
         //     .folders
         //     .iter()
@@ -275,6 +283,8 @@ impl Site {
         // }
     }
 
+    ///////////////////////////////////////////////////////////
+    // TODO: Move over as dynamic function
     pub fn folder_menu_sort_by_path(&self, items: &mut Vec<NavItem>) {
         items.sort_by_key(|k| k.path_sort_string.clone());
         items
@@ -282,6 +292,8 @@ impl Site {
             .for_each(|item| self.folder_menu_sort_by_path(&mut item.children));
     }
 
+    ////////////////////////////////////////////////////////////////
+    // MOVED
     #[instrument(skip(self))]
     pub fn folder_menu_subfolder_finder(&self, pattern: &Vec<String>) -> Vec<NavItem> {
         event!(Level::INFO, "fn folder_menu_subfolder_finder");
@@ -304,6 +316,8 @@ impl Site {
             .collect()
     }
 
+    /////////////////////////////////////////////////////////////////////
+    // SKIP
     pub fn nav_from_files_and_folders_dev(&self, args: &[Value]) -> NavTree {
         let mut nav_links = NavTree {
             items: self.folder_menu(args),
@@ -316,6 +330,8 @@ impl Site {
         nav_links
     }
 
+    /////////////////////////////////////////////////////////////////////
+    // SKIP
     pub fn nav_from_files_and_folders(&self, args: &[Value]) -> NavTree {
         let mut nav_links = NavTree {
             items: self.folder_menu(args),
@@ -327,7 +343,8 @@ impl Site {
         nav_links
     }
 
-    // TODO: Set this up so it pulls actual link text
+    /////////////////////////////////////////////////////////////////////
+    // TODO: Move this back into the main site mod.rs
     pub fn nav_link_title_link(&self, args: &[Value]) -> Option<String> {
         Some(format!(
             r#"<a href="{}">{}</a>"#,
@@ -336,6 +353,8 @@ impl Site {
         ))
     }
 
+    /////////////////////////////////////////////////////////////////////
+    // TODO: Make dynamic function
     pub fn set_current_file_for_nav_links(&self, id: &String, nav_links: &mut NavTree) {
         nav_links
             .items
@@ -343,6 +362,8 @@ impl Site {
             .for_each(|item| self.set_current_file_for_nav_link_for_item(id, item))
     }
 
+    /////////////////////////////////////////////////////////////////////
+    // TODO: Make dynamic function
     pub fn set_current_file_for_nav_link_for_item(&self, id: &String, item: &mut NavItem) {
         if item.page_id == id.to_string() {
             item.is_current_page = true;

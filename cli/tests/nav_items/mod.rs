@@ -15,7 +15,15 @@ pub fn basic_load_test() {
     let site = Site::new(&file_set, &config);
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["folder1"]]);
     let nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
-    dbg!(nav_items);
+    assert_eq!("folder1-index".to_string(), nav_items.tree[0].page_id);
+    assert_eq!(
+        "content-alfa".to_string(),
+        nav_items.tree[0].children[0].page_id
+    );
+    assert_eq!(
+        "content-bravo".to_string(),
+        nav_items.tree[0].children[1].page_id
+    );
 }
 
 // TODO: Add test for ActiveFolderIndex
