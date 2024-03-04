@@ -68,7 +68,6 @@ fn folder_menu_child_item_finder(site: &Site, pattern: &Vec<String>) -> Vec<NavI
                     menu_title_link_or_text: site
                         .nav_link_title_link(&[Value::from(page.1.id.clone())]),
                     path_sort_string: site.page_path_parts(&page_args).join(""),
-                    is_current_page: false,
                     title: site.page_title(&[Value::from(page.1.id.clone())]),
                     title_link_or_text: site.nav_link_title_link(&[Value::from(page.1.id.clone())]),
                 };
@@ -92,7 +91,6 @@ fn folder_menu_index_finder(site: &Site, pattern: Vec<String>) -> Option<NavItem
             folders: site.page_folders(&page_args),
             href: site.page_href(&page_args),
             item_type: NavItemType::NotCurrentFile,
-            is_current_page: false,
             menu_title: site.page_menu_title(&page_args),
             menu_title_link_or_text: site.nav_link_title_link(&page_args),
             page_id: id.clone(),
@@ -113,7 +111,6 @@ fn folder_menu_index_finder(site: &Site, pattern: Vec<String>) -> Option<NavItem
                     children: folder_menu_child_item_finder(site, &pattern),
                     folders: site.page_folders(&page_args),
                     href: site.page_href(&[Value::from(page.1.id.clone())]),
-                    is_current_page: false,
                     item_type: NavItemType::ClosedFolderTitle,
                     menu_title: site.page_menu_title(&[Value::from(page.1.id.clone())]),
                     menu_title_link_or_text: site
@@ -134,7 +131,6 @@ fn folder_menu_index_finder(site: &Site, pattern: Vec<String>) -> Option<NavItem
                     children: folder_menu_child_item_finder(site, &pattern),
                     folders: site.page_folders(&page_args),
                     href: site.page_href(&[Value::from(page.1.id.clone())]),
-                    is_current_page: false,
                     item_type: NavItemType::ClosedFolderIndex,
                     menu_title: site.page_menu_title(&[Value::from(page.1.id.clone())]),
                     menu_title_link_or_text: site

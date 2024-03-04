@@ -16,8 +16,6 @@ pub struct NavItem {
     pub children: Vec<NavItem>,
     pub folders: Vec<String>,
     pub href: Option<String>,
-    // DEPRECATED: Remove is_current_page and use item_type instead
-    pub is_current_page: bool,
     pub item_type: NavItemType,
     pub menu_title: Option<String>,
     pub menu_title_link_or_text: Option<String>,
