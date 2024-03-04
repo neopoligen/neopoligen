@@ -20,8 +20,13 @@ impl NavItems {
                 folder_menu_index_finder(site, pattern)
             })
             .collect();
-        let prev_next: Vec<NavPrevNextItem> = load_prev_next(&tree);
-        NavItems { tree, prev_next }
+        let prev_next_items: Vec<NavPrevNextItem> = load_prev_next(&tree);
+        NavItems {
+            tree,
+            prev_next_items,
+            prev_item: None,
+            next_item: None,
+        }
     }
 }
 
