@@ -108,7 +108,7 @@ pub fn check_not_current_file() {
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![
-        vec!["aabb0001"],
+        vec!["aabb0010"],
         vec!["level-1a"],
         vec!["level-1b"],
     ]);
@@ -127,12 +127,12 @@ pub fn set_top_level_current_file() {
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![
-        vec!["aabb0001"],
+        vec!["aabb0010"],
         vec!["level-1a"],
         vec!["level-1b"],
     ]);
     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
-    nav_items.set_current_page(&Value::from("aabb0001"));
+    nav_items.set_current_page(&Value::from("aabb0010"));
     assert_eq!(nav_items.tree[0].item_type, NavItemType::CurrentFile);
 }
 
@@ -173,14 +173,14 @@ pub fn check_closed_folder_title() {
 }
 
 #[test]
-pub fn solo_check_opened_folder_title() {
+pub fn check_opened_folder_title() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
     let patterns =
         Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"], vec!["level-1b"]]);
     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
-    nav_items.set_current_page(&Value::from("content-alfa"));
+    nav_items.set_current_page(&Value::from("aabb0030"));
     let left = NavItemType::OpenedFolderTitle;
     let right = nav_items.tree[0].item_type.clone();
     assert_eq!(left, right);
@@ -206,13 +206,13 @@ pub fn prev_next_skips_title_folders() {
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![
-        vec!["aabb0001"],
+        vec!["aabb0010"],
         vec!["level-1a"],
         vec!["level-1b"],
     ]);
     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
-    nav_items.set_current_page(&Value::from("aabb0001"));
-    let left = String::from("content-alfa");
+    nav_items.set_current_page(&Value::from("aabb0010"));
+    let left = String::from("aabb0030");
     let right = nav_items.prev_next_items[1].page_id.clone();
     assert_eq!(left, right);
 }
@@ -223,13 +223,13 @@ pub fn get_parent_folders() {
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![
-        vec!["aabb0001"],
+        vec!["aabb0010"],
         vec!["level-1a"],
         vec!["level-1b"],
     ]);
     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
-    nav_items.set_current_page(&Value::from("aabb0001"));
-    let left = String::from("content-alfa");
+    nav_items.set_current_page(&Value::from("aabb0010"));
+    let left = String::from("aabb0030");
     let right = nav_items.prev_next_items[1].page_id.clone();
     assert_eq!(left, right);
 }

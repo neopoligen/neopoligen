@@ -16,7 +16,7 @@ impl FileSet {
 Top Level Page
 
 -- metadata
--- id: aabb0001
+-- id: aabb0010
 "#
             .to_string(),
         );
@@ -28,7 +28,7 @@ Top Level Page
 Level 1a Title
 
 -- metadata
--- id: level-1a-title
+-- id: aabb0020
 "#
             .to_string(),
         );
@@ -42,7 +42,7 @@ Level 1a Title
 Level 1a Content Alfa
 
 -- metadata
--- id: content-alfa
+-- id: aabb0030
 "#
             .to_string(),
         );
