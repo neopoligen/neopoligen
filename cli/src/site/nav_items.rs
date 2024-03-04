@@ -33,39 +33,42 @@ impl Site {
     ///////////////////////////////////////////////////////////////
     // MOVED
     pub fn folder_menu_builder(&self, args: &[Value]) -> Vec<NavItem> {
-        let menu_key = args[1]
-            .try_iter()
-            .unwrap()
-            .into_iter()
-            .map(|f| f.try_iter().unwrap().into_iter().join("-"))
-            .join("-");
-        match self.get_cache("menus", &menu_key) {
-            Some(menu_cache) => {
-                if let CacheObject::Menu(menu) = menu_cache {
-                    menu
-                } else {
-                    vec![]
-                }
-            }
-            None => {
-                let mut r: Vec<NavItem> = args[1]
-                    .try_iter()
-                    .unwrap()
-                    .filter_map(|folder_vecs| {
-                        let folder_pattern: Vec<String> = folder_vecs
-                            .try_iter()
-                            .unwrap()
-                            .map(|f| f.to_string())
-                            .collect();
-                        self.folder_menu_index_finder(folder_pattern)
-                    })
-                    .collect();
-                r.iter_mut()
-                    .for_each(|item| self.folder_menu_sort_by_path(&mut item.children));
-                self.set_cache("menus", menu_key, CacheObject::Menu(r.clone()));
-                r
-            }
-        }
+        vec![]
+
+        // let menu_key = args[1]
+        //     .try_iter()
+        //     .unwrap()
+        //     .into_iter()
+        //     .map(|f| f.try_iter().unwrap().into_iter().join("-"))
+        //     .join("-");
+        // match self.get_cache("menus", &menu_key) {
+        //     Some(menu_cache) => {
+        //         if let CacheObject::Menu(menu) = menu_cache {
+        //             menu
+        //         } else {
+        //             vec![]
+        //         }
+        //     }
+        //     None => {
+        //         let mut r: Vec<NavItem> = args[1]
+        //             .try_iter()
+        //             .unwrap()
+        //             .filter_map(|folder_vecs| {
+        //                 let folder_pattern: Vec<String> = folder_vecs
+        //                     .try_iter()
+        //                     .unwrap()
+        //                     .map(|f| f.to_string())
+        //                     .collect();
+        //                 self.folder_menu_index_finder(folder_pattern)
+        //             })
+        //             .collect();
+        //         r.iter_mut()
+        //             .for_each(|item| self.folder_menu_sort_by_path(&mut item.children));
+        //         self.set_cache("menus", menu_key, CacheObject::Menu(r.clone()));
+        //         r
+        //     }
+        // }
+
         // event!(Level::INFO, "fn folder_menu_builder");
         // let mut binding = self.cache.lock().unwrap();
         // let menus = binding.get("menus").unwrap();

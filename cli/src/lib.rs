@@ -1,6 +1,7 @@
 pub mod ast;
 pub mod block;
 pub mod builder;
+pub mod cache_object;
 pub mod child;
 pub mod config;
 pub mod config_folders;
