@@ -92,7 +92,8 @@ impl Site {
         );
         match self.get_cache(&menu_key) {
             Some(response) => {
-                if let CacheObject::NavItems(nav_items) = response {
+                if let CacheObject::NavItems(mut nav_items) = response {
+                    nav_items.set_current_page(&args[0]);
                     nav_items
                 } else {
                     let mut nav_items = NavItems::new_from_files_and_folders(&self, &args[1]);
