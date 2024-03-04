@@ -2,4 +2,4 @@
 
 find ./src -type f -name "*.rs" -print0 \
 | xargs -0 sed -i "" \
-"s@site1_config@set1@g"
+"s@dev-test-site-2@set2-test-site@g"

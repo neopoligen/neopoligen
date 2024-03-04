@@ -13,4 +13,3 @@ fn title_from_title_section() {
     let right = site.pages.get("aabb0011").unwrap().title.clone();
     assert_eq!(left, right);
 }
-

@@ -5,7 +5,7 @@ use std::path::PathBuf;
 
 impl Config {
     pub fn set1() -> Config {
-        let project_root = PathBuf::from("leading-dir/Neopoligen/integration-site");
+        let project_root = PathBuf::from("leading-dir/Neopoligen/set1-test-site");
         let theme_name = String::from("integration-theme");
 
         let configuration_root =
