@@ -27,8 +27,6 @@ pub struct NavItem {
     // pub short_title_link_or_text: Option<String>,
     pub title: Option<String>,
     pub title_link_or_text: Option<String>,
-    // pub prev_item: BTreeMap<String, Option<String>>,
-    // pub next_item: BTreeMap<String, Option<String>>,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
