@@ -16,7 +16,7 @@ impl FileSet {
 Top Level Page
 
 -- metadata
--- id: top-level-page
+-- id: aabb0001
 "#
             .to_string(),
         );
