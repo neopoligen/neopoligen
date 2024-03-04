@@ -39,7 +39,7 @@ pub fn basic_load_test() {
 }
 
 #[test]
-pub fn set_current_page() {
+pub fn get_next_item_that_exists() {
     let file_set = FileSet::nav_items1();
     let config = Config::nav_items1();
     let site = Site::new(&file_set, &config);
@@ -48,6 +48,19 @@ pub fn set_current_page() {
     nav_items.set_current_page(Value::from("content-alfa"));
     let left = "content-bravo".to_string();
     let right = nav_items.next_item.unwrap().page_id;
+    assert_eq!(left, right);
+}
+
+#[test]
+pub fn get_prev_item_that_exists() {
+    let file_set = FileSet::nav_items1();
+    let config = Config::nav_items1();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["folder1"]]);
+    let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
+    nav_items.set_current_page(Value::from("content-alfa"));
+    let left = "folder1-index".to_string();
+    let right = nav_items.prev_item.unwrap().page_id;
     assert_eq!(left, right);
 }
 

@@ -20,6 +20,7 @@ impl NavItems {
         let page_id = page_id.to_string();
         // self.next_item = Some(self.prev_next_items[2].clone());
         self.next_item = get_next_item(&page_id, &self.prev_next_items);
+        self.prev_item = get_prev_item(&page_id, &self.prev_next_items);
     }
 }
 
@@ -35,6 +36,19 @@ impl NavItems {
 //         None => None,
 //     }
 // }
+
+fn get_prev_item(key: &String, items: &Vec<NavPrevNextItem>) -> Option<NavPrevNextItem> {
+    match items.iter().position(|test_item| &test_item.page_id == key) {
+        Some(index) => {
+            if index > 0 {
+                Some(items.get(index - 1).unwrap().clone())
+            } else {
+                None
+            }
+        }
+        None => None,
+    }
+}
 
 fn get_next_item(key: &String, items: &Vec<NavPrevNextItem>) -> Option<NavPrevNextItem> {
     match items.iter().position(|test_item| &test_item.page_id == key) {
