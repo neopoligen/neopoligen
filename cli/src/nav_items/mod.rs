@@ -1,6 +1,7 @@
 pub mod new_from_files_and_folders;
 
 use crate::nav_item::NavItem;
+use crate::nav_item::NavItemType;
 use crate::nav_prev_next_item::NavPrevNextItem;
 use minijinja::Value;
 use serde::Deserialize;
@@ -18,24 +19,13 @@ pub struct NavItems {
 impl NavItems {
     pub fn set_current_page(&mut self, page_id: Value) {
         let page_id = page_id.to_string();
-        // self.next_item = Some(self.prev_next_items[2].clone());
+        self.tree
+            .iter_mut()
+            .for_each(|item| set_current_file(&page_id, item));
         self.next_item = get_next_item(&page_id, &self.prev_next_items);
         self.prev_item = get_prev_item(&page_id, &self.prev_next_items);
     }
 }
-
-// fn set_prev_item<'a>(key: String, items: &'a Vec<String>) -> Option<&'a String> {
-//     match items.iter().position(|item| item == &key) {
-//         Some(index) => {
-//             if index > 0 {
-//                 items.get(index - 1)
-//             } else {
-//                 None
-//             }
-//         }
-//         None => None,
-//     }
-// }
 
 fn get_prev_item(key: &String, items: &Vec<NavPrevNextItem>) -> Option<NavPrevNextItem> {
     match items.iter().position(|test_item| &test_item.page_id == key) {
@@ -58,4 +48,20 @@ fn get_next_item(key: &String, items: &Vec<NavPrevNextItem>) -> Option<NavPrevNe
         },
         None => None,
     }
+}
+
+fn set_current_file(id: &String, item: &mut NavItem) {
+    if item.page_id == id.to_string() {
+        item.is_current_page = true;
+        item.title_link_or_text = item.title.clone();
+        item.menu_title_link_or_text = item.menu_title.clone();
+        if matches!(item.item_type, NavItemType::OpenedFolderIndex) {
+            item.item_type = NavItemType::ActiveFolderIndex;
+        } else {
+            item.item_type = NavItemType::CurrentFile;
+        }
+    }
+    item.children
+        .iter_mut()
+        .for_each(|i| set_current_file(id, i));
 }
