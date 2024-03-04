@@ -79,7 +79,7 @@
 //     // #[ignore]
 //     fn list_item_integration() {
 //         let source = "- juliette foxtrot\n\n- whiskey\n\n-- p";
-//         let config = Config::site1_config();
+//         let config = Config::set1();
 //         let left = Ok((
 //             "- whiskey\n\n-- p",
 //             Child::Block(vec![

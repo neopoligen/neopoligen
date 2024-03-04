@@ -8,7 +8,7 @@ mod site_page_path_parts {
     #[test]
     pub fn basic_path_parts() {
         let file_set = FileSet::set2();
-        let config = Config::site2_config();
+        let config = Config::set2();
         let site = Site::new(&file_set, &config);
         let left = vec!["page", "folders", "example"];
         let right = site.page_folders(&[Value::from("page-folders-example")]);
@@ -18,7 +18,7 @@ mod site_page_path_parts {
     #[test]
     pub fn check_top_level_page_has_no_folders() {
         let file_set = FileSet::set2();
-        let config = Config::site2_config();
+        let config = Config::set2();
         let site = Site::new(&file_set, &config);
         let left: Vec<String> = vec![];
         let right = site.page_folders(&[Value::from("top-level-file")]);

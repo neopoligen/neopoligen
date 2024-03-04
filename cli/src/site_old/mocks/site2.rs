@@ -4,7 +4,7 @@ use crate::site::Site;
 
 impl Site {
     pub fn site2() -> Site {
-        let config = Config::site2_config();
+        let config = Config::set2();
         let mut site = Site::new(config);
         site.pages.insert("id_index".to_string(), Page::s2_index());
         site.pages

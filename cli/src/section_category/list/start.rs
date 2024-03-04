@@ -86,7 +86,7 @@ mod test {
         let r#type = "notes";
         let key_value_attributes = BTreeMap::new();
         let flag_attributes = BTreeSet::new();
-        let config = Config::site1_config();
+        let config = Config::set1();
         let left = Ok((
             "-- p\n\n",
             Child::List(List {

@@ -4,7 +4,7 @@ use std::collections::BTreeSet;
 use std::path::PathBuf;
 
 impl Config {
-    pub fn site2_config() -> Config {
+    pub fn set2() -> Config {
         let project_root = PathBuf::from("leading-dir/Neopoligen/dev-test-site-2");
         let theme_name = String::from("dev-theme2");
 

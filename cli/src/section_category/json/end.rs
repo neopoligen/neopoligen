@@ -63,7 +63,7 @@ mod test {
         let r#type = "metadata";
         let key_value_attributes =  BTreeMap::new();
         let flag_attributes = BTreeSet::new();
-        let config = Config::site1_config();
+        let config = Config::set1();
         let initial_source = "-- /metadata\n\npapa mike\n\n-- div";
         let left = Ok((
             "-- div",

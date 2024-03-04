@@ -14,7 +14,7 @@ mod site_page_place_section {
     #[test]
     pub fn basic_place_section() {
         let file_set = FileSet::set2();
-        let config = Config::site2_config();
+        let config = Config::set2();
         let site = Site::new(&file_set, &config);
         let response: Vec<Child> = vec![Child::Section(Section {
             key_value_attributes: BTreeMap::new(),

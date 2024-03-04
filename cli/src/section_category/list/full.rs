@@ -82,7 +82,7 @@ mod test {
     //     let source = "- whiskey juliette\n\n- romeo\nvictor\n\n-- p\n\n";
     //     let r#type = "notes";
     //     let attributes: Vec<SectionAttribute> = vec![];
-    //     let config = Config::site1_config();
+    //     let config = Config::set1();
     //     let left = Ok((
     //         "-- p\n\n",
     //         Child::List(List {

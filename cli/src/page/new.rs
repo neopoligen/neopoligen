@@ -25,6 +25,8 @@ impl Page {
                         }
                     }) {
                         Some(id) => {
+                            //TODO: Remove this flag being set
+                            // by the file name. a
                             let publish = if source_path
                                 .file_name()
                                 .unwrap()
@@ -41,7 +43,7 @@ impl Page {
                                 source,
                                 source_path,
                                 publish,
-                                title: None,
+                                title: Some("asdf".to_string()),
                             })
                         }
                         None => None,

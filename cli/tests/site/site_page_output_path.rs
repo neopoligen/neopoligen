@@ -8,7 +8,7 @@ mod site_page_output_path {
     #[test]
     pub fn path_for_page_without_override_path() {
         let file_set = FileSet::set2();
-        let config = Config::site2_config();
+        let config = Config::set2();
         let site = Site::new(&file_set, &config);
         let left = Some(
             "leading-dir/Neopoligen/dev-test-site-2/docs/en/page-without-override-path/index.html"
@@ -21,7 +21,7 @@ mod site_page_output_path {
     #[test]
     pub fn home_page_override_path() {
         let file_set = FileSet::set2();
-        let config = Config::site2_config();
+        let config = Config::set2();
         let site = Site::new(&file_set, &config);
         let left = Some("leading-dir/Neopoligen/dev-test-site-2/docs/index.html".to_string());
         let right = site.page_output_path(&[Value::from("site2-home-page")]);
