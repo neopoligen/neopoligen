@@ -23,6 +23,21 @@ Home Page
             .to_string(),
         );
 
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/nav-tree-1-site/content/title-from-title-section.neo",
+            ),
+            r#"-- title
+
+Title From Title Section
+
+-- metadata
+-- id: aabb0020
+"#
+            .to_string(),
+        );
+
         fs
     }
 }

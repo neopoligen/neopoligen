@@ -494,6 +494,7 @@ impl Site {
     }
 }
 
+// MOVED
 fn filter_section(sec: &Section) -> Option<String> {
     let SectionCategory::StandardSectionFull { containers } = &sec.category else {
         return None;
@@ -509,6 +510,7 @@ fn filter_section(sec: &Section) -> Option<String> {
     Some(spans)
 }
 
+// MOVED
 fn get_span_words(span: &Span) -> Vec<String> {
     match span {
         Span::Word { text, .. } => {
