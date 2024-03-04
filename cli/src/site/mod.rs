@@ -557,6 +557,7 @@ fn page_title_from_first_few_words(ast: &Vec<Child>) -> Option<String> {
     })
 }
 
+// MOVED
 fn page_title_from_metadata(ast: &Vec<Child>) -> Option<String> {
     ast.iter().find_map(|child| {
         if let Child::Section(section) = child {

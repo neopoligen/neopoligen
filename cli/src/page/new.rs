@@ -52,10 +52,15 @@ impl Page {
 }
 
 fn title(ast: &Vec<Child>) -> Option<String> {
-    title_from_title_section(ast)
+    if let Some(title) = title_from_metadata(ast) {
+        Some(title)
+    } else if let Some(title) = title_from_title_section(ast) {
+        Some(title)
+    } else {
+        None
+    }
     // Some("Home Page".to_string())
     // page_title_fr
-
     //                 if let Some(title) = page_title_from_metadata(&page.ast) {
     //                     Some(title)
     //                 } else if let Some(title) = page_title_from_title_section(&page.ast) {
@@ -103,6 +108,26 @@ fn title(ast: &Vec<Child>) -> Option<String> {
     //         title
     //     }
     // }
+}
+
+fn title_from_metadata(ast: &Vec<Child>) -> Option<String> {
+    ast.iter().find_map(|child| {
+        if let Child::Section(section) = child {
+            if &section.r#type == "metadata" {
+                section.key_value_attributes.iter().find_map(|attr| {
+                    if attr.0 == "title" {
+                        Some(Some(attr.1.to_string()))
+                    } else {
+                        None
+                    }
+                })
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    })?
 }
 
 fn filter_section(sec: &Section) -> Option<String> {

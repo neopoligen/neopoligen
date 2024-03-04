@@ -38,6 +38,20 @@ Title From Title Section
             .to_string(),
         );
 
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/nav-tree-1-site/content/title-from-metadata.neo"),
+            r#"-- title
+
+This Title Is Overwritten By Metadata
+
+-- metadata
+-- id: aabb0030
+-- title: Title From Metadata 
+"#
+            .to_string(),
+        );
+
         fs
     }
 }
