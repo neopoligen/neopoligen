@@ -44,12 +44,11 @@ fn title_from_first_few_words() {
 }
 
 #[test]
-#[ignore]
 fn title_from_id_as_fallback() {
     let file_set = FileSet::set1();
     let config = Config::set1();
     let site = Site::new(&file_set, &config);
-    let left = Some("".to_string());
-    let right = site.pages.get("aabb0040").unwrap().title.clone();
+    let left = Some("aabb0060".to_string());
+    let right = site.pages.get("aabb0060").unwrap().title.clone();
     assert_eq!(left, right);
 }

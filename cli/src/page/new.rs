@@ -28,7 +28,7 @@ impl Page {
                         }
                     }) {
                         Some(id) => {
-                            let title = title(&ast);
+                            let title = title(&id, &ast);
                             Some(Page {
                                 ast,
                                 id,
@@ -51,7 +51,37 @@ impl Page {
     }
 }
 
-fn title(ast: &Vec<Child>) -> Option<String> {
+fn filter_section(sec: &Section) -> Option<String> {
+    let SectionCategory::StandardSectionFull { containers } = &sec.category else {
+        return None;
+    };
+    let first = containers.first()?;
+    let Child::Block(thing) = first else {
+        return None;
+    };
+    let spans = thing
+        .iter()
+        .flat_map(|span| get_span_words(&span))
+        .collect::<String>();
+    Some(spans)
+}
+
+fn get_span_words(span: &Span) -> Vec<String> {
+    match span {
+        Span::Word { text, .. } => {
+            vec![text.to_string()]
+        }
+        Span::Space { .. } => vec![" ".to_string()],
+        Span::StandardSpan { spans, .. } => spans
+            .iter()
+            .map(|span| get_span_words(&span))
+            .collect::<Vec<Vec<String>>>()
+            .concat(),
+        _ => vec!["".to_string()],
+    }
+}
+
+fn title(id: &String, ast: &Vec<Child>) -> Option<String> {
     if let Some(title) = title_from_metadata(ast) {
         Some(title)
     } else if let Some(title) = title_from_title_section(ast) {
@@ -61,49 +91,8 @@ fn title(ast: &Vec<Child>) -> Option<String> {
     } else if let Some(title) = title_from_first_few_words(ast) {
         Some(title)
     } else {
-        None
+        Some(id.clone())
     }
-    //                 } else if let Some(title) = page_title_from_first_few_words(&page.ast) {
-    //                     Some(title)
-    //                 } else if let Some(title) = page_title_from_id(&page.ast) {
-    //                     Some(title)
-    //                 } else {
-    //                     Some("no title".to_string())
-    //                 }
-
-    // let id = args[0].to_string();
-    // let cache_id = format!("page-titles-{}", id);
-    // match self.get_cache(&cache_id) {
-    //     Some(page_title_cache) => {
-    //         if let CacheObject::OptionString(page_title) = page_title_cache {
-    //             page_title
-    //         } else {
-    //             None
-    //         }
-    //     }
-    //     None => {
-    //         let title = match self.pages.get(&id) {
-    //             Some(page) => {
-    //                 if let Some(title) = page_title_from_metadata(&page.ast) {
-    //                     Some(title)
-    //                 } else if let Some(title) = page_title_from_title_section(&page.ast) {
-    //                     Some(title)
-    //                 } else if let Some(title) = page_title_from_any_section(&page.ast) {
-    //                     Some(title)
-    //                 } else if let Some(title) = page_title_from_first_few_words(&page.ast) {
-    //                     Some(title)
-    //                 } else if let Some(title) = page_title_from_id(&page.ast) {
-    //                     Some(title)
-    //                 } else {
-    //                     Some("no title".to_string())
-    //                 }
-    //             }
-    //             None => Some("(missing page)".to_string()),
-    //         };
-    //         self.set_cache(cache_id, CacheObject::OptionString(title.clone()));
-    //         title
-    //     }
-    // }
 }
 
 fn title_from_any_section(ast: &Vec<Child>) -> Option<String> {
@@ -155,36 +144,6 @@ fn title_from_metadata(ast: &Vec<Child>) -> Option<String> {
             None
         }
     })?
-}
-
-fn filter_section(sec: &Section) -> Option<String> {
-    let SectionCategory::StandardSectionFull { containers } = &sec.category else {
-        return None;
-    };
-    let first = containers.first()?;
-    let Child::Block(thing) = first else {
-        return None;
-    };
-    let spans = thing
-        .iter()
-        .flat_map(|span| get_span_words(&span))
-        .collect::<String>();
-    Some(spans)
-}
-
-fn get_span_words(span: &Span) -> Vec<String> {
-    match span {
-        Span::Word { text, .. } => {
-            vec![text.to_string()]
-        }
-        Span::Space { .. } => vec![" ".to_string()],
-        Span::StandardSpan { spans, .. } => spans
-            .iter()
-            .map(|span| get_span_words(&span))
-            .collect::<Vec<Vec<String>>>()
-            .concat(),
-        _ => vec!["".to_string()],
-    }
 }
 
 fn title_from_title_section(ast: &Vec<Child>) -> Option<String> {

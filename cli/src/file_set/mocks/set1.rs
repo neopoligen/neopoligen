@@ -81,6 +81,17 @@ Title from the first few words of a section
             .to_string(),
         );
 
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/nav-tree-1-site/content/title-from-id-as-fallback.neo",
+            ),
+            r#"-- metadata
+-- id: aabb0060
+"#
+            .to_string(),
+        );
+
         fs
     }
 }
