@@ -526,6 +526,7 @@ fn get_span_words(span: &Span) -> Vec<String> {
     }
 }
 
+// MOVED
 fn page_title_from_any_section(ast: &Vec<Child>) -> Option<String> {
     ast.iter().find_map(|child| match child {
         Child::Section(sec) => match sec.key_value_attributes.get("title") {

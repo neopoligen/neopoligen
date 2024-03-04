@@ -52,6 +52,20 @@ This Title Is Overwritten By Metadata
             .to_string(),
         );
 
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/nav-tree-1-site/content/title-from-any-section.neo",
+            ),
+            r#"-- p
+-- title: Title From Any Section
+
+-- metadata
+-- id: aabb0040
+"#
+            .to_string(),
+        );
+
         fs
     }
 }

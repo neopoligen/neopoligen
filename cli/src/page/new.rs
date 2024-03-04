@@ -56,14 +56,11 @@ fn title(ast: &Vec<Child>) -> Option<String> {
         Some(title)
     } else if let Some(title) = title_from_title_section(ast) {
         Some(title)
+    } else if let Some(title) = title_from_any_section(ast) {
+        Some(title)
     } else {
         None
     }
-    // Some("Home Page".to_string())
-    // page_title_fr
-    //                 if let Some(title) = page_title_from_metadata(&page.ast) {
-    //                     Some(title)
-    //                 } else if let Some(title) = page_title_from_title_section(&page.ast) {
     //                     Some(title)
     //                 } else if let Some(title) = page_title_from_any_section(&page.ast) {
     //                     Some(title)
@@ -108,6 +105,16 @@ fn title(ast: &Vec<Child>) -> Option<String> {
     //         title
     //     }
     // }
+}
+
+fn title_from_any_section(ast: &Vec<Child>) -> Option<String> {
+    ast.iter().find_map(|child| match child {
+        Child::Section(sec) => match sec.key_value_attributes.get("title") {
+            Some(title) => Some(title.to_string()),
+            None => None,
+        },
+        _ => None,
+    })
 }
 
 fn title_from_metadata(ast: &Vec<Child>) -> Option<String> {
