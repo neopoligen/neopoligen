@@ -537,6 +537,7 @@ fn page_title_from_any_section(ast: &Vec<Child>) -> Option<String> {
     })
 }
 
+// MOVED
 fn page_title_from_first_few_words(ast: &Vec<Child>) -> Option<String> {
     ast.iter().find_map(|child| match child {
         Child::Section(sec) => {

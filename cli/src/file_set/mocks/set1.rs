@@ -66,6 +66,21 @@ This Title Is Overwritten By Metadata
             .to_string(),
         );
 
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/nav-tree-1-site/content/title-from-first-few-words.neo",
+            ),
+            r#"-- p
+
+Title from the first few words of a section
+
+-- metadata
+-- id: aabb0050
+"#
+            .to_string(),
+        );
+
         fs
     }
 }

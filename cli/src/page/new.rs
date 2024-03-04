@@ -58,12 +58,11 @@ fn title(ast: &Vec<Child>) -> Option<String> {
         Some(title)
     } else if let Some(title) = title_from_any_section(ast) {
         Some(title)
+    } else if let Some(title) = title_from_first_few_words(ast) {
+        Some(title)
     } else {
         None
     }
-    //                     Some(title)
-    //                 } else if let Some(title) = page_title_from_any_section(&page.ast) {
-    //                     Some(title)
     //                 } else if let Some(title) = page_title_from_first_few_words(&page.ast) {
     //                     Some(title)
     //                 } else if let Some(title) = page_title_from_id(&page.ast) {
@@ -113,6 +112,27 @@ fn title_from_any_section(ast: &Vec<Child>) -> Option<String> {
             Some(title) => Some(title.to_string()),
             None => None,
         },
+        _ => None,
+    })
+}
+
+fn title_from_first_few_words(ast: &Vec<Child>) -> Option<String> {
+    ast.iter().find_map(|child| match child {
+        Child::Section(sec) => {
+            let SectionCategory::StandardSectionFull { containers } = &sec.category else {
+                return None;
+            };
+            let first = containers.first()?;
+            let Child::Block(thing) = first else {
+                return None;
+            };
+            let spans = thing
+                .iter()
+                .flat_map(|span| get_span_words(&span))
+                .take(11)
+                .collect::<String>();
+            Some(spans)
+        }
         _ => None,
     })
 }
