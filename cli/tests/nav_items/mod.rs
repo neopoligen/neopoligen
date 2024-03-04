@@ -1,15 +1,10 @@
 use minijinja::Value;
 use neopoligen::config::Config;
 use neopoligen::file_set::FileSet;
-// use neopoligen::nav_item::NavItem;
 use neopoligen::nav_item::NavItemType;
 use neopoligen::nav_items::NavItems;
-// use neopoligen::nav_tree::NavTree;
 use neopoligen::site::Site;
 use pretty_assertions::assert_eq;
-
-// TODO: Test the different types of menu folder item
-// types
 
 #[test]
 pub fn basic_load_test() {
