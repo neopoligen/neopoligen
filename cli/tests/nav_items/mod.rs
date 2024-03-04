@@ -159,7 +159,7 @@ pub fn check_closed_folder_index() {
     let site = Site::new(&file_set, &config);
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1b"]]);
     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
-    nav_items.set_current_page(Value::from("content-charlie"));
+    nav_items.set_current_page(Value::from("content-alfa"));
     assert_eq!(nav_items.tree[0].item_type, NavItemType::ClosedFolderIndex);
 }
 

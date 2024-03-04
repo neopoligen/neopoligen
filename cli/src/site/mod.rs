@@ -56,7 +56,6 @@ impl Site {
         }
     }
 
-    // TODO: Convert this from an Option into a Result for the return value
     #[instrument(skip(self))]
     pub fn set_cache(&self, name: &str, key: String, obj: CacheObject) -> Option<CacheObject> {
         let mut binding = self.cache.lock().unwrap();
