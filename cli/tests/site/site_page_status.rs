@@ -9,7 +9,7 @@ mod site_page_status {
     #[test]
     pub fn page_status_in_metadata() {
         let file_set = FileSet::set2();
-        let config = Config::site2_config();
+        let config = Config::set2();
         let site = Site::new(&file_set, &config);
         let left = Some("example_status".to_string());
         let right = site.page_status(&[Value::from("page-status-in-metadata")]);
@@ -19,7 +19,7 @@ mod site_page_status {
     #[test]
     pub fn page_status_not_in_metadata() {
         let file_set = FileSet::set2();
-        let config = Config::site2_config();
+        let config = Config::set2();
         let site = Site::new(&file_set, &config);
         let left = Some("published".to_string());
         let right = site.page_status(&[Value::from("page-status-not-in-metadata")]);

@@ -1,6 +1,6 @@
 use crate::config::Config;
 use crate::file_set::FileSet;
-use crate::page::{Page, ParsedPage};
+use crate::page::Page;
 use crate::site::Site;
 use std::collections::BTreeMap;
 use std::sync::Mutex;
@@ -14,31 +14,15 @@ impl Site {
             invalid_pages: BTreeMap::new(),
             templates: BTreeMap::new(),
         };
-        sd.prep_cache();
-
-        // file_set.pages.iter().for_each(|f| {
-        //     match Page::new(f.0.to_path_buf(), f.1.to_string(), &config) {
-        //         Some(page) => {
-        //             sd.pages.insert(page.id.clone(), page);
-        //             ()
-        //         }
-        //         None => (),
-        //     }
-        // });
-
         file_set.pages.iter().for_each(|f| {
-            match Page::parse_page(f.0.to_path_buf(), f.1.to_string(), &config) {
-                ParsedPage::ValidPage(page) => {
+            match Page::new(f.0.to_path_buf(), f.1.to_string(), &config) {
+                Some(page) => {
                     sd.pages.insert(page.id.clone(), page);
                     ()
                 }
-
-                // TODO: Output pages that have problems
-                // to a `_errors`` folder for review
-                ParsedPage::InvalidPage { .. } => (),
+                None => (),
             }
         });
-
         sd.templates = file_set.templates.clone();
         sd
     }

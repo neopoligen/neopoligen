@@ -111,7 +111,7 @@ mod test {
     // #[ignore]
     fn basic_link() {
         let source = "<<link|bravo|example.com>>";
-        let config = Config::site1_config();
+        let config = Config::set1();
         let mut flag_attributes = BTreeSet::new();
         flag_attributes.insert("example.com".to_string());
         let left = Ok((
@@ -135,7 +135,7 @@ mod test {
     // #[ignore]
     fn multiple_attributes() {
         let source = "<<link|Sierra|id: bravo|hidden>>";
-        let config = Config::site1_config();
+        let config = Config::set1();
         let mut key_value_attributes = BTreeMap::new();
         key_value_attributes.insert("id".to_string(), "bravo".to_string());
         let mut flag_attributes = BTreeSet::new();

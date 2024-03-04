@@ -56,7 +56,7 @@ mod test {
         let key_value_attributes = BTreeMap::new();
         let flag_attributes = BTreeSet::new();
         let r#type = "code";
-        let config = Config::site1_config();
+        let config = Config::set1();
         let initial_source = "-- code\n\nbravo hotel\n\n-- /code";
         let left = Ok((
             "-- /code",

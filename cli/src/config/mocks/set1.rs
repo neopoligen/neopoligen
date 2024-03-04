@@ -4,14 +4,14 @@ use std::collections::BTreeSet;
 use std::path::PathBuf;
 
 impl Config {
-    pub fn site2_config() -> Config {
-        let project_root = PathBuf::from("leading-dir/Neopoligen/dev-test-site-2");
-        let theme_name = String::from("dev-theme2");
+    pub fn set1() -> Config {
+        let project_root = PathBuf::from("leading-dir/Neopoligen/set1-test-site");
+        let theme_name = String::from("integration-theme");
 
         let configuration_root =
             PathBuf::from(format!("{}/{}", project_root.display(), "configuration"));
 
-        let content_root = PathBuf::from(format!("{}/{}", project_root.display(), "content"));
+        let content_root = PathBuf::from(format!("{}/{}", project_root.display(), "pages"));
         let files_root = PathBuf::from(format!("{}/{}", project_root.display(), "extras"));
         let images_root = PathBuf::from(format!("{}/{}", project_root.display(), "images"));
         let plugins_root = PathBuf::from(format!("{}/{}", configuration_root.display(), "plugins"));

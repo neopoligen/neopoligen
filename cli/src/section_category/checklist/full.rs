@@ -97,7 +97,7 @@ mod test {
     //     let source = "[x] delta hotel\n\n[] sierra\necho\n\n-- p\n\n";
     //     let r#type = "todo";
     //     let attributes: Vec<SectionAttribute> = vec![];
-    //     let config = Config::site1_config();
+    //     let config = Config::set1();
     //     let left = Ok((
     //         "-- p\n\n",
     //         Child::List(List {

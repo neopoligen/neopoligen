@@ -11,7 +11,6 @@ impl Object for Site {
     ) -> Result<Value, Error> {
         match name {
             "log" => Ok(Value::from_serializable(&self.log_from_template(args))),
-            "folder_menu" => Ok(Value::from_serializable(&self.folder_menu(args))),
             "link_or_title" => Ok(Value::from_serializable(&self.link_or_title(args))),
             "nav_from_files_and_folders" => Ok(Value::from_serializable(
                 &self.nav_from_files_and_folders(args),

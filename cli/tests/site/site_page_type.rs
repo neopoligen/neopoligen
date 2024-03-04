@@ -9,7 +9,7 @@ mod site_page_type {
     #[test]
     pub fn page_type_in_metadata() {
         let file_set = FileSet::set2();
-        let config = Config::site2_config();
+        let config = Config::set2();
         let site = Site::new(&file_set, &config);
         let left = Some("example".to_string());
         let right = site.page_type(&[Value::from("page-type-in-metadata")]);
@@ -19,7 +19,7 @@ mod site_page_type {
     #[test]
     pub fn page_type_not_in_metadata() {
         let file_set = FileSet::set2();
-        let config = Config::site2_config();
+        let config = Config::set2();
         let site = Site::new(&file_set, &config);
         let left = Some("post".to_string());
         let right = site.page_type(&[Value::from("page-type-not-in-metadata")]);

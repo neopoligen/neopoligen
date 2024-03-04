@@ -5,7 +5,7 @@ use std::path::PathBuf;
 
 impl Config {
     pub fn nav_items2() -> Config {
-        let project_root = PathBuf::from("leading-dir/Neopoligen/nav-items2-site");
+        let project_root = PathBuf::from("leading-dir/Neopoligen/nav-items2-test-site");
         let theme_name = String::from("nav-items2-theme");
         let configuration_root =
             PathBuf::from(format!("{}/{}", project_root.display(), "configuration"));

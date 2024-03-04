@@ -8,7 +8,7 @@ mod site_page_path_parts {
     #[test]
     pub fn basic_path_parts() {
         let file_set = FileSet::set2();
-        let config = Config::site2_config();
+        let config = Config::set2();
         let site = Site::new(&file_set, &config);
         let left = vec!["path", "parts", "example", "subfile.neo"];
         let right = site.page_path_parts(&[Value::from("page-parts-example")]);

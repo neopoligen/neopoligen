@@ -3,6 +3,7 @@ use crate::config::Config;
 use crate::file_set::FileSet;
 use crate::helpers::get_file_paths_for_extension::get_file_paths_for_extension;
 use nom::branch::alt;
+use nom::bytes::complete::is_a;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::bytes::complete::take_until;
@@ -87,10 +88,10 @@ pub fn test_templates(config: &Config) {
                                 let error_file_sub_path = tf
                                     .strip_prefix(config.folders.theme_tests_root.clone())
                                     .unwrap();
-                                output_path.push(error_file_sub_path.with_extension("txt"));
+                                output_path.push(error_file_sub_path.with_extension("html"));
                                 let _ = fs::create_dir_all(output_path.parent().unwrap());
                                 let theme_error_content =
-                                    format!("EXPECTED:\n\n{}\n\n\nGOT:\n\n{}", target_output, o.1);
+                                    format!("<!DOCTYPE html><html><body><h2>EXPECTED</h2>\n\n\n{}\n\n\n<h2>GOT</h2>\n\n\n{}\n\n\n<!-- spacer --></body></html>", target_output, o.1);
                                 let _ = fs::write(output_path, theme_error_content);
                             }
                         }
@@ -107,8 +108,7 @@ pub fn parse_test_file(source: &str) -> IResult<&str, Vec<TestSection>> {
 }
 
 pub fn test_section(source: &str) -> IResult<&str, TestSection> {
-    let (source, _) = multispace0(source)?;
-    let (source, _) = tag("###\n")(source)?;
+    let (source, _) = test_spacer_line(source)?;
     let (source, _) = multispace0(source)?;
     let (source, string) = alt((
         test_desc,
@@ -120,9 +120,17 @@ pub fn test_section(source: &str) -> IResult<&str, TestSection> {
     Ok((source, string))
 }
 
+pub fn test_spacer_line(source: &str) -> IResult<&str, &str> {
+    let (source, _) = multispace0(source)?;
+    let (source, _) = tag("##")(source)?;
+    let (source, _) = is_a("#")(source)?;
+    let (source, _) = line_ending(source)?;
+    Ok((source, ""))
+}
+
 pub fn test_desc(source: &str) -> IResult<&str, TestSection> {
     let (source, _) = tag("DESCRIPTION")(source)?;
-    let (source, _) = multispace0(source)?;
+    let (source, _) = test_spacer_line(source)?;
     let (source, desc) = take_until("###")(source)?;
     Ok((source, TestSection::Description(desc.trim().to_string())))
 }
@@ -135,8 +143,7 @@ pub fn test_template(source: &str) -> IResult<&str, TestSection> {
     let (source, _) = space1(source)?;
     let (source, name) = not_line_ending(source)?;
     let (source, _) = line_ending(source)?;
-    let (source, _) = tag("CONTENT:")(source)?;
-    let (source, _) = multispace0(source)?;
+    let (source, _) = test_spacer_line(source)?;
     let (source, template) = take_until("###")(source)?;
     Ok((
         source,
@@ -152,8 +159,7 @@ pub fn test_input(source: &str) -> IResult<&str, TestSection> {
     let (source, _) = space1(source)?;
     let (source, path) = not_line_ending(source)?;
     let (source, _) = line_ending(source)?;
-    let (source, _) = tag("CONTENT:")(source)?;
-    let (source, _) = multispace0(source)?;
+    let (source, _) = test_spacer_line(source)?;
     let (source, content) = take_until("###")(source)?;
     let (id_source, _) = take_until("-- id: ")(content)?;
     let (id_source, _) = tag("-- id: ")(id_source)?;
@@ -176,8 +182,7 @@ pub fn test_support_page(source: &str) -> IResult<&str, TestSection> {
     let (source, _) = space1(source)?;
     let (source, path) = not_line_ending(source)?;
     let (source, _) = line_ending(source)?;
-    let (source, _) = tag("CONTENT:")(source)?;
-    let (source, _) = multispace0(source)?;
+    let (source, _) = test_spacer_line(source)?;
     let (source, content) = take_until("###")(source)?;
     let (id_source, _) = take_until("-- id: ")(content)?;
     let (id_source, _) = tag("-- id: ")(id_source)?;
@@ -193,11 +198,10 @@ pub fn test_support_page(source: &str) -> IResult<&str, TestSection> {
 }
 
 pub fn test_output(source: &str) -> IResult<&str, TestSection> {
-    let (source, _) = tag("OUTPUT")(source)?;
+    let (source, _) = tag("EXPECTED_OUTPUT")(source)?;
     let (source, _) = space0(source)?;
     let (source, _) = line_ending(source)?;
-    let (source, _) = tag("CONTENT:")(source)?;
-    let (source, _) = multispace0(source)?;
+    let (source, _) = test_spacer_line(source)?;
     let (source, content) = rest(source)?;
     Ok((source, TestSection::Output(content.trim().to_string())))
 }

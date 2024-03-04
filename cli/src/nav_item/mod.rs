@@ -13,10 +13,10 @@ use serde::Serialize;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct NavItem {
+    pub breadcrumbs: Vec<NavItem>,
     pub children: Vec<NavItem>,
     pub folders: Vec<String>,
     pub href: Option<String>,
-    pub is_current_page: bool,
     pub item_type: NavItemType,
     pub menu_title: Option<String>,
     pub menu_title_link_or_text: Option<String>,
@@ -28,12 +28,9 @@ pub struct NavItem {
     // pub short_title_link_or_text: Option<String>,
     pub title: Option<String>,
     pub title_link_or_text: Option<String>,
-    // pub prev_item: BTreeMap<String, Option<String>>,
-    // pub next_item: BTreeMap<String, Option<String>>,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-// #[serde(tag = "type", rename_all = "lowercase")]
 pub enum NavItemType {
     ActiveFolderIndex,
     ClosedFolderIndex,

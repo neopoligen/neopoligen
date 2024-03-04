@@ -88,7 +88,7 @@ mod test {
     #[ignore]
     fn json_plugin_section_full_no_params() {
         let source = "\n\n-- hr";
-        let config = Config::site1_config();
+        let config = Config::set1();
         let r#type = "random-color-circle";
         let attributes = vec![];
         let left = Ok((
@@ -110,7 +110,7 @@ mod test {
     #[ignore]
     fn json_plugin_section_full_with_params() {
         let source = "\n\n-- hr";
-        let config = Config::site1_config();
+        let config = Config::set1();
         let r#type = "random-color-circle";
         let attributes = vec![
             SectionAttribute::KeyValue {

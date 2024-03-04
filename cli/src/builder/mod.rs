@@ -57,12 +57,10 @@ impl Builder {
         let mut env = Environment::new();
         let site = Site::new(&self.file_set, &self.config);
         let mut outputs = BTreeMap::new();
-
         self.file_set
             .templates
             .iter()
             .for_each(|t| env.add_template_owned(t.0, t.1).unwrap());
-
         env.add_template_owned(
             "splitter.jinja".to_string(),
             r#"{%- import "includes/macros.jinja" as macros -%}
@@ -77,7 +75,6 @@ impl Builder {
                 .to_string(),
         )
         .unwrap();
-
         match env.get_template("splitter.jinja") {
             Ok(splitter) => {
                 match splitter.render(context!(

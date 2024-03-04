@@ -1,6 +1,7 @@
 pub mod ast;
 pub mod block;
 pub mod builder;
+pub mod cache_object;
 pub mod child;
 pub mod config;
 pub mod config_folders;
@@ -12,8 +13,6 @@ pub mod list;
 pub mod list_item;
 pub mod nav_item;
 pub mod nav_items;
-pub mod nav_prev_next_item;
-pub mod nav_tree;
 pub mod page;
 pub mod section;
 pub mod section_attribute;

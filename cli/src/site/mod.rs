@@ -1,22 +1,18 @@
-pub mod nav_items;
 pub mod new;
 pub mod object;
 
+use crate::cache_object::CacheObject;
 use crate::child::Child;
 use crate::config::Config;
-use crate::nav_item::NavItem;
-// use crate::nav_item::NavItemType;
-// use crate::nav_tree::NavPrevNextItem;
-// use crate::nav_tree::NavTree;
+use crate::nav_items::NavItems;
 use crate::page::Page;
 use crate::section::Section;
 use crate::section_category::SectionCategory;
 use crate::span::Span;
-// use itertools::Itertools;
+use itertools::Itertools;
 use minijinja::Value;
 use serde::Serialize;
 use std::collections::BTreeMap;
-// use std::collections::BTreeSet;
 use std::fmt::Display;
 use std::path::PathBuf;
 use std::sync::Mutex;
@@ -28,45 +24,27 @@ use tracing::{event, instrument, Level};
 #[derive(Debug, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct Site {
-    pub cache: Mutex<BTreeMap<String, BTreeMap<String, CacheObject>>>,
+    pub cache: Mutex<BTreeMap<String, CacheObject>>,
     pub config: Config,
     pub pages: BTreeMap<String, Page>,
     pub invalid_pages: BTreeMap<PathBuf, String>,
     pub templates: BTreeMap<String, String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
-#[serde(tag = "type", rename_all = "lowercase")]
-pub enum CacheObject {
-    Menu(Vec<NavItem>),
-    Value(Value),
-    OptionString(Option<String>),
-}
-
 impl Site {
     #[instrument(skip(self))]
-    pub fn get_cache(&self, name: &str, key: &str) -> Option<CacheObject> {
+    pub fn get_cache(&self, key: &str) -> Option<CacheObject> {
         let binding = self.cache.lock().unwrap();
-        match binding.get(name) {
-            Some(cache) => match cache.get(key) {
-                Some(obj) => Some(obj.clone()),
-                None => None,
-            },
+        match binding.get(key) {
+            Some(obj) => Some(obj.clone()),
             None => None,
         }
     }
 
-    // TODO: Convert this from an Option into a Result for the return value
     #[instrument(skip(self))]
-    pub fn set_cache(&self, name: &str, key: String, obj: CacheObject) -> Option<CacheObject> {
+    pub fn set_cache(&self, key: String, obj: CacheObject) -> Option<CacheObject> {
         let mut binding = self.cache.lock().unwrap();
-        match binding.get_mut(name) {
-            Some(cache) => match cache.insert(key, obj) {
-                Some(_) => None,
-                None => None,
-            },
-            None => None,
-        }
+        binding.insert(key, obj)
     }
 
     #[instrument(skip(self))]
@@ -99,6 +77,44 @@ impl Site {
                 None => None,
             }
         }
+    }
+
+    pub fn nav_from_files_and_folders(&self, args: &[Value]) -> NavItems {
+        let menu_key = format!(
+            "nav-links-{}",
+            args[1]
+                .try_iter()
+                .unwrap()
+                .into_iter()
+                .map(|f| f.try_iter().unwrap().into_iter().join("-"))
+                .join("-")
+        );
+        match self.get_cache(&menu_key) {
+            Some(response) => {
+                if let CacheObject::NavItems(mut nav_items) = response {
+                    nav_items.set_current_page(&args[0]);
+                    nav_items
+                } else {
+                    let mut nav_items = NavItems::new_from_files_and_folders(&self, &args[1]);
+                    nav_items.set_current_page(&args[0]);
+                    nav_items
+                }
+            }
+            None => {
+                let mut nav_items = NavItems::new_from_files_and_folders(&self, &args[1]);
+                self.set_cache(menu_key, CacheObject::NavItems(nav_items.clone()));
+                nav_items.set_current_page(&args[0]);
+                nav_items
+            }
+        }
+    }
+
+    pub fn nav_link_title_link(&self, args: &[Value]) -> Option<String> {
+        Some(format!(
+            r#"<a href="{}">{}</a>"#,
+            self.page_href(args).unwrap(),
+            self.page_title(args).unwrap()
+        ))
     }
 
     pub fn page_folders(&self, args: &[Value]) -> Vec<String> {
@@ -381,37 +397,43 @@ impl Site {
 
     pub fn page_title(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
-        match self.get_cache("page-titles", &id) {
-            Some(page_title_cache) => {
-                if let CacheObject::OptionString(page_title) = page_title_cache {
-                    page_title
-                } else {
-                    None
-                }
-            }
-            None => {
-                let title = match self.pages.get(&id) {
-                    Some(page) => {
-                        if let Some(title) = page_title_from_metadata(&page.ast) {
-                            Some(title)
-                        } else if let Some(title) = page_title_from_title_section(&page.ast) {
-                            Some(title)
-                        } else if let Some(title) = page_title_from_any_section(&page.ast) {
-                            Some(title)
-                        } else if let Some(title) = page_title_from_first_few_words(&page.ast) {
-                            Some(title)
-                        } else if let Some(title) = page_title_from_id(&page.ast) {
-                            Some(title)
-                        } else {
-                            Some("no title".to_string())
-                        }
-                    }
-                    None => Some("(missing page)".to_string()),
-                };
-                self.set_cache("page-titles", id, CacheObject::OptionString(title.clone()));
-                title
-            }
+        match self.pages.get(&id) {
+            Some(page) => Some(page.title.clone().unwrap()),
+            None => None,
         }
+
+        // let cache_id = format!("page-titles-{}", id);
+        // match self.get_cache(&cache_id) {
+        //     Some(page_title_cache) => {
+        //         if let CacheObject::OptionString(page_title) = page_title_cache {
+        //             page_title
+        //         } else {
+        //             None
+        //         }
+        //     }
+        //     None => {
+        //         let title = match self.pages.get(&id) {
+        //             Some(page) => {
+        //                 if let Some(title) = page_title_from_metadata(&page.ast) {
+        //                     Some(title)
+        //                 } else if let Some(title) = page_title_from_title_section(&page.ast) {
+        //                     Some(title)
+        //                 } else if let Some(title) = page_title_from_any_section(&page.ast) {
+        //                     Some(title)
+        //                 } else if let Some(title) = page_title_from_first_few_words(&page.ast) {
+        //                     Some(title)
+        //                 } else if let Some(title) = page_title_from_id(&page.ast) {
+        //                     Some(title)
+        //                 } else {
+        //                     Some("no title".to_string())
+        //                 }
+        //             }
+        //             None => Some("(missing page)".to_string()),
+        //         };
+        //         self.set_cache(cache_id, CacheObject::OptionString(title.clone()));
+        //         title
+        //     }
+        // }
     }
 
     pub fn page_type(&self, args: &[Value]) -> Option<String> {
@@ -441,14 +463,16 @@ impl Site {
         }
     }
 
-    fn prep_cache(&self) {
-        // NOTE: everything relies on the cache being set up. So,
-        // everything unwraps directly. If something hasn't been
-        // added yet it'll trigger an intended panic
-        let mut c = self.cache.lock().unwrap();
-        c.insert("page-titles".to_string(), BTreeMap::new());
-        c.insert("menus".to_string(), BTreeMap::new());
-    }
+    // fn prep_cache(&self) {
+    //     // NOTE: everything relies on the cache being set up. So,
+    //     // everything unwraps directly. If something hasn't been
+    //     // added yet it'll trigger an intended panic
+    //     let mut c = self.cache.lock().unwrap();
+    //     c.insert("page-titles".to_string(), BTreeMap::new());
+    //     // TODO: DEPRECATE menus and move to nav_items
+    //     c.insert("menus".to_string(), BTreeMap::new());
+    //     c.insert("nav_items".to_string(), BTreeMap::new());
+    // }
 
     pub fn show(&self, args: &[Value]) -> Option<String> {
         let content = serde_json::to_string_pretty(
@@ -475,6 +499,7 @@ impl Site {
     }
 }
 
+// MOVED
 fn filter_section(sec: &Section) -> Option<String> {
     let SectionCategory::StandardSectionFull { containers } = &sec.category else {
         return None;
@@ -490,6 +515,7 @@ fn filter_section(sec: &Section) -> Option<String> {
     Some(spans)
 }
 
+// MOVED
 fn get_span_words(span: &Span) -> Vec<String> {
     match span {
         Span::Word { text, .. } => {
@@ -503,90 +529,6 @@ fn get_span_words(span: &Span) -> Vec<String> {
             .concat(),
         _ => vec!["".to_string()],
     }
-}
-
-fn page_title_from_any_section(ast: &Vec<Child>) -> Option<String> {
-    ast.iter().find_map(|child| match child {
-        Child::Section(sec) => match sec.key_value_attributes.get("title") {
-            Some(title) => Some(title.to_string()),
-            None => None,
-        },
-        _ => None,
-    })
-}
-
-fn page_title_from_first_few_words(ast: &Vec<Child>) -> Option<String> {
-    ast.iter().find_map(|child| match child {
-        Child::Section(sec) => {
-            let SectionCategory::StandardSectionFull { containers } = &sec.category else {
-                return None;
-            };
-            let first = containers.first()?;
-            let Child::Block(thing) = first else {
-                return None;
-            };
-            let spans = thing
-                .iter()
-                .flat_map(|span| get_span_words(&span))
-                .take(11)
-                .collect::<String>();
-            Some(spans)
-        }
-        _ => None,
-    })
-}
-
-fn page_title_from_metadata(ast: &Vec<Child>) -> Option<String> {
-    ast.iter().find_map(|child| {
-        if let Child::Section(section) = child {
-            if &section.r#type == "metadata" {
-                section.key_value_attributes.iter().find_map(|attr| {
-                    if attr.0 == "title" {
-                        Some(Some(attr.1.to_string()))
-                    } else {
-                        None
-                    }
-                })
-            } else {
-                None
-            }
-        } else {
-            None
-        }
-    })?
-}
-
-fn page_title_from_id(ast: &Vec<Child>) -> Option<String> {
-    ast.iter().find_map(|child| {
-        if let Child::Section(section) = child {
-            if &section.r#type == "metadata" {
-                section.key_value_attributes.iter().find_map(|attr| {
-                    if attr.0 == "id" {
-                        Some(Some(attr.1.to_string()))
-                    } else {
-                        None
-                    }
-                })
-            } else {
-                None
-            }
-        } else {
-            None
-        }
-    })?
-}
-
-fn page_title_from_title_section(ast: &Vec<Child>) -> Option<String> {
-    ast.iter().find_map(|child| match child {
-        Child::Section(sec) => {
-            if sec.r#type == String::from("title") {
-                filter_section(sec)
-            } else {
-                None
-            }
-        }
-        _ => None,
-    })
 }
 
 impl Display for Site {

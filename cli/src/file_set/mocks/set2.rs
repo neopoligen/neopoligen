@@ -26,7 +26,7 @@ impl FileSet {
         );
 
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/_index.neo"),
+            PathBuf::from("leading-dir/Neopoligen/set2-test-site/content/_index.neo"),
             r#"-- title
 
 Dev Test Site 2 Home Page
@@ -41,7 +41,7 @@ Dev Test Site 2 Home Page
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/title-from-section-attribute.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/title-from-section-attribute.neo",
             ),
             r#"-- bookmark
 -- title: This Is A Title From A Bookmark Attribute
@@ -56,7 +56,7 @@ Dev Test Site 2 Home Page
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/title-from-block-content.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/title-from-block-content.neo",
             ),
             r#"-- p
 
@@ -71,7 +71,7 @@ Title from block content example
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/title-from-metadata-id.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/title-from-metadata-id.neo",
             ),
             r#"-- metadata
 -- date: 2000-01-04 00:00:00
@@ -82,7 +82,7 @@ Title from block content example
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/metadata-override-title.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/metadata-override-title.neo",
             ),
             r#"-- title
 
@@ -98,7 +98,7 @@ This Title Should Be Overridden By Metadata
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/title-with-inline-span.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/title-with-inline-span.neo",
             ),
             r#"-- title
 
@@ -113,7 +113,7 @@ Inline <<em|Spans>> Should <<strong|Not>> Show UP
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/title-with-nested-inline-spans.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/title-with-nested-inline-spans.neo",
             ),
             r#"-- title
 
@@ -128,7 +128,7 @@ Nested <<em|<<strong|Inline Spans>>>> Should Not Show UP
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/page-type-in-metadata.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/page-type-in-metadata.neo",
             ),
             r#"-- metadata
 -- date: 2000-01-08 00:00:00
@@ -140,7 +140,7 @@ Nested <<em|<<strong|Inline Spans>>>> Should Not Show UP
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/page-type-not-in-metadata.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/page-type-not-in-metadata.neo",
             ),
             r#"-- metadata
 -- date: 2000-01-09 00:00:00
@@ -151,7 +151,7 @@ Nested <<em|<<strong|Inline Spans>>>> Should Not Show UP
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/page-status-in-metadata.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/page-status-in-metadata.neo",
             ),
             r#"-- metadata
 -- date: 2000-01-10 00:00:00
@@ -163,7 +163,7 @@ Nested <<em|<<strong|Inline Spans>>>> Should Not Show UP
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/page-status-not-in-metadata.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/page-status-not-in-metadata.neo",
             ),
             r#"-- metadata
 -- date: 2000-01-11 00:00:00
@@ -174,7 +174,7 @@ Nested <<em|<<strong|Inline Spans>>>> Should Not Show UP
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/page-without-override-path.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/page-without-override-path.neo",
             ),
             r#"-- metadata
 -- date: 2000-01-12 00:00:00
@@ -185,7 +185,7 @@ Nested <<em|<<strong|Inline Spans>>>> Should Not Show UP
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/url-escape-title-check.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/url-escape-title-check.neo",
             ),
             r#"-- title
 
@@ -200,7 +200,7 @@ URL Escape / Title Check
         );
 
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/default-template.neo"),
+            PathBuf::from("leading-dir/Neopoligen/set2-test-site/content/default-template.neo"),
             r#"-- title
 
 This has no type or status metadata so will show the default template
@@ -215,7 +215,7 @@ This has no type or status metadata so will show the default template
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/custom-template-type.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/custom-template-type.neo",
             ),
             r#"-- title
 
@@ -232,7 +232,7 @@ This is a custom template type that exists
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/custom-template-status.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/custom-template-status.neo",
             ),
             r#"-- title
 
@@ -249,7 +249,7 @@ This is a custom template status that exists
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/type-for-non-existent-template.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/type-for-non-existent-template.neo",
             ),
             r#"-- title
 
@@ -266,7 +266,7 @@ template it rolls back to the default
         );
 
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/status-for-non-existent-template.neo"),
+            PathBuf::from("leading-dir/Neopoligen/set2-test-site/content/status-for-non-existent-template.neo"),
             r#"-- title
 
 Confirm if a custom stauts doesn't have a 
@@ -283,7 +283,7 @@ template it rolls back to the default
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/basic-main-body-test.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/basic-main-body-test.neo",
             ),
             r#"-- title
 
@@ -303,7 +303,7 @@ Test main_body output
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/basic-place-section-test.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/basic-place-section-test.neo",
             ),
             r#"-- title
 
@@ -318,7 +318,7 @@ Basic Place Section Test
         );
 
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/source-path-check.neo"),
+            PathBuf::from("leading-dir/Neopoligen/set2-test-site/content/source-path-check.neo"),
             r#"-- title
 
 This is a source path check
@@ -333,7 +333,7 @@ This is a source path check
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/path/parts/example/subfile.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/path/parts/example/subfile.neo",
             ),
             r#"-- title
 
@@ -349,7 +349,7 @@ This checks path parts
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/page/folders/example/file.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/page/folders/example/file.neo",
             ),
             r#"-- title
 
@@ -364,7 +364,7 @@ Check Page Folders
         );
 
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/link-or-title-start.neo"),
+            PathBuf::from("leading-dir/Neopoligen/set2-test-site/content/link-or-title-start.neo"),
             r#"-- title
 
 Link Or Title Start
@@ -379,7 +379,7 @@ Link Or Title Start
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/link-or-title-target.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/link-or-title-target.neo",
             ),
             r#"-- title
 
@@ -395,7 +395,7 @@ Link Or Title Target
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/menu/folder/open/switch.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/menu/folder/open/switch.neo",
             ),
             r#"-- title
 
@@ -411,7 +411,7 @@ Test For Open Menu Folder
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/dev-test-site-2/content/menu/folder/closed/switch.neo",
+                "leading-dir/Neopoligen/set2-test-site/content/menu/folder/closed/switch.neo",
             ),
             r#"-- title
 
@@ -426,7 +426,7 @@ Test For Closed Menu Folder
         );
 
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/dev-test-site-2/content/top-level-file.neo"),
+            PathBuf::from("leading-dir/Neopoligen/set2-test-site/content/top-level-file.neo"),
             r#"-- title
 
 Top Level File
