@@ -172,7 +172,9 @@ pub fn check_closed_folder_title() {
         Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"], vec!["level-1b"]]);
     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
     nav_items.set_current_page(Value::from("content-charlie"));
-    assert_eq!(nav_items.tree[0].item_type, NavItemType::ClosedFolderTitle);
+    let left = NavItemType::ClosedFolderTitle;
+    let right = nav_items.tree[0].item_type.clone();
+    assert_eq!(left, right);
 }
 
 #[test]
