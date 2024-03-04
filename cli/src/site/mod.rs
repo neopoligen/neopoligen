@@ -81,19 +81,32 @@ impl Site {
     }
 
     pub fn nav_from_files_and_folders(&self, args: &[Value]) -> NavItems {
-        let menu_key = args[1]
-            .try_iter()
-            .unwrap()
-            .into_iter()
-            .map(|f| f.try_iter().unwrap().into_iter().join("-"))
-            .join("-");
-        // match self.get_cache("nav_links", &menu_key) {
-        //     Some(_) => (),
-        //     None => (),
-        // }
-        let mut nav_items = NavItems::new_from_files_and_folders(&self, &args[1]);
-        nav_items.set_current_page(&args[0]);
-        nav_items
+        let menu_key = format!(
+            "nav-links-{}",
+            args[1]
+                .try_iter()
+                .unwrap()
+                .into_iter()
+                .map(|f| f.try_iter().unwrap().into_iter().join("-"))
+                .join("-")
+        );
+        match self.get_cache(&menu_key) {
+            Some(response) => {
+                if let CacheObject::NavItems(nav_items) = response {
+                    nav_items
+                } else {
+                    let mut nav_items = NavItems::new_from_files_and_folders(&self, &args[1]);
+                    nav_items.set_current_page(&args[0]);
+                    nav_items
+                }
+            }
+            None => {
+                let mut nav_items = NavItems::new_from_files_and_folders(&self, &args[1]);
+                self.set_cache(menu_key, CacheObject::NavItems((nav_items.clone())));
+                nav_items.set_current_page(&args[0]);
+                nav_items
+            }
+        }
     }
 
     pub fn page_folders(&self, args: &[Value]) -> Vec<String> {
