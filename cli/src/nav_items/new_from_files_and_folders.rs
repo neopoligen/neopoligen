@@ -156,10 +156,14 @@ fn folder_menu_index_finder(site: &Site, pattern: Vec<String>) -> Option<NavItem
 
 fn prev_next_flattener(items: &Vec<NavItem>, dest: &mut Vec<NavPrevNextItem>) {
     items.iter().for_each(|item| {
-        dest.push(NavPrevNextItem {
-            page_id: item.page_id.clone(),
-            title_link_or_text: item.title_link_or_text.clone(),
-        });
+        if !matches![item.item_type, NavItemType::OpenedFolderTitle]
+            && !matches![item.item_type, NavItemType::ClosedFolderTitle]
+        {
+            dest.push(NavPrevNextItem {
+                page_id: item.page_id.clone(),
+                title_link_or_text: item.title_link_or_text.clone(),
+            });
+        }
         prev_next_flattener(&item.children, dest);
     });
 }

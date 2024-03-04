@@ -199,3 +199,20 @@ pub fn solo_check_opened_folder_index() {
     let right = nav_items.tree[1].item_type.clone();
     assert_eq!(left, right);
 }
+
+#[test]
+pub fn prev_next_skips_title_folders() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![
+        vec!["top-level-page"],
+        vec!["level-1a"],
+        vec!["level-1b"],
+    ]);
+    let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
+    nav_items.set_current_page(&Value::from("top-level-page"));
+    let left = String::from("content-alfa");
+    let right = nav_items.prev_next_items[1].page_id.clone();
+    assert_eq!(left, right);
+}
