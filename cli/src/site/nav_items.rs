@@ -354,7 +354,7 @@ impl Site {
     }
 
     /////////////////////////////////////////////////////////////////////
-    // TODO: Make dynamic function
+    // MOVED
     pub fn set_current_file_for_nav_links(&self, id: &String, nav_links: &mut NavTree) {
         nav_links
             .items
@@ -363,7 +363,7 @@ impl Site {
     }
 
     /////////////////////////////////////////////////////////////////////
-    // TODO: Make dynamic function
+    // MOVED
     pub fn set_current_file_for_nav_link_for_item(&self, id: &String, item: &mut NavItem) {
         if item.page_id == id.to_string() {
             item.is_current_page = true;
