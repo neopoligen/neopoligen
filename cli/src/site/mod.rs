@@ -1,4 +1,3 @@
-pub mod nav_items;
 pub mod new;
 pub mod object;
 
@@ -108,6 +107,14 @@ impl Site {
                 nav_items
             }
         }
+    }
+
+    pub fn nav_link_title_link(&self, args: &[Value]) -> Option<String> {
+        Some(format!(
+            r#"<a href="{}">{}</a>"#,
+            self.page_href(args).unwrap(),
+            self.page_title(args).unwrap()
+        ))
     }
 
     pub fn page_folders(&self, args: &[Value]) -> Vec<String> {

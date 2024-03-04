@@ -1,7 +1,7 @@
+use crate::nav_item::NavItem;
 use crate::nav_item::NavItemType;
 use crate::nav_items::NavItems;
 use crate::site::Site;
-use crate::{nav_item::NavItem, nav_prev_next_item::NavPrevNextItem};
 use minijinja::Value;
 use std::collections::BTreeSet;
 use tracing::{event, instrument, Level};
@@ -22,7 +22,7 @@ impl NavItems {
             .collect();
         tree.iter_mut()
             .for_each(|item| do_sort_by_source_path(&mut item.children));
-        let prev_next_items: Vec<NavPrevNextItem> = load_prev_next(&tree);
+        let prev_next_items: Vec<NavItem> = load_prev_next(&tree);
         let nav_items = NavItems {
             tree,
             prev_next_items,
@@ -154,15 +154,16 @@ fn folder_menu_index_finder(site: &Site, pattern: Vec<String>) -> Option<NavItem
     }
 }
 
-fn prev_next_flattener(items: &Vec<NavItem>, dest: &mut Vec<NavPrevNextItem>) {
+fn prev_next_flattener(items: &Vec<NavItem>, dest: &mut Vec<NavItem>) {
     items.iter().for_each(|item| {
         if !matches![item.item_type, NavItemType::OpenedFolderTitle]
             && !matches![item.item_type, NavItemType::ClosedFolderTitle]
         {
-            dest.push(NavPrevNextItem {
-                page_id: item.page_id.clone(),
-                title_link_or_text: item.title_link_or_text.clone(),
-            });
+            let mut prev_next_item = item.clone();
+            // Children are removed from prev_next items to avoid
+            // exploding trees with unused values
+            prev_next_item.children = vec![];
+            dest.push(prev_next_item);
         }
         prev_next_flattener(&item.children, dest);
     });
@@ -190,8 +191,8 @@ fn folder_menu_subfolder_finder(site: &Site, pattern: &Vec<String>) -> Vec<NavIt
         .collect()
 }
 
-fn load_prev_next(tree: &Vec<NavItem>) -> Vec<NavPrevNextItem> {
-    let mut prev_next_vec: Vec<NavPrevNextItem> = vec![];
+fn load_prev_next(tree: &Vec<NavItem>) -> Vec<NavItem> {
+    let mut prev_next_vec: Vec<NavItem> = vec![];
     prev_next_flattener(tree, &mut prev_next_vec);
     prev_next_vec
 }

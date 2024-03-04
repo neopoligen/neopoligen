@@ -2,7 +2,6 @@ pub mod new_from_files_and_folders;
 
 use crate::nav_item::NavItem;
 use crate::nav_item::NavItemType;
-use crate::nav_prev_next_item::NavPrevNextItem;
 use minijinja::Value;
 use serde::Deserialize;
 use serde::Serialize;
@@ -11,9 +10,9 @@ use serde::Serialize;
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct NavItems {
     pub tree: Vec<NavItem>,
-    pub prev_next_items: Vec<NavPrevNextItem>,
-    pub next_item: Option<NavPrevNextItem>,
-    pub prev_item: Option<NavPrevNextItem>,
+    pub prev_next_items: Vec<NavItem>,
+    pub next_item: Option<NavItem>,
+    pub prev_item: Option<NavItem>,
     pub open_folders: Vec<String>,
 }
 
@@ -61,11 +60,12 @@ fn update_open_folders(item: &mut NavItem, folders: &Vec<String>) {
         .for_each(|child| update_open_folders(child, folders));
 }
 
-fn get_prev_item(key: &String, items: &Vec<NavPrevNextItem>) -> Option<NavPrevNextItem> {
+fn get_prev_item(key: &String, items: &Vec<NavItem>) -> Option<NavItem> {
     match items.iter().position(|test_item| &test_item.page_id == key) {
         Some(index) => {
             if index > 0 {
-                Some(items.get(index - 1).unwrap().clone())
+                let prev_next_item = items.get(index - 1).unwrap().clone();
+                Some(prev_next_item)
             } else {
                 None
             }
@@ -74,7 +74,7 @@ fn get_prev_item(key: &String, items: &Vec<NavPrevNextItem>) -> Option<NavPrevNe
     }
 }
 
-fn get_next_item(key: &String, items: &Vec<NavPrevNextItem>) -> Option<NavPrevNextItem> {
+fn get_next_item(key: &String, items: &Vec<NavItem>) -> Option<NavItem> {
     match items.iter().position(|test_item| &test_item.page_id == key) {
         Some(index) => match items.get(index + 1) {
             Some(item) => Some(item.clone()),

@@ -13,8 +13,6 @@ pub mod list;
 pub mod list_item;
 pub mod nav_item;
 pub mod nav_items;
-pub mod nav_prev_next_item;
-pub mod nav_tree;
 pub mod page;
 pub mod section;
 pub mod section_attribute;
