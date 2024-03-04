@@ -8,7 +8,7 @@ use tracing::{event, instrument, Level};
 
 impl NavItems {
     pub fn new_from_files_and_folders(site: &Site, pattern_sets: &Value) -> NavItems {
-        let tree: Vec<NavItem> = pattern_sets
+        let mut tree: Vec<NavItem> = pattern_sets
             .try_iter()
             .unwrap()
             .filter_map(|pattern_set| {
@@ -20,22 +20,17 @@ impl NavItems {
                 folder_menu_index_finder(site, pattern)
             })
             .collect();
+        tree.iter_mut()
+            .for_each(|item| do_sort_by_source_path(&mut item.children));
         let prev_next_items: Vec<NavPrevNextItem> = load_prev_next(&tree);
-        let mut nav_items = NavItems {
+        let nav_items = NavItems {
             tree,
             prev_next_items,
             prev_item: None,
             next_item: None,
             open_folders: vec![],
         };
-        nav_items.sort_by_source_path();
         nav_items
-    }
-
-    pub fn sort_by_source_path(&mut self) {
-        self.tree
-            .iter_mut()
-            .for_each(|item| do_sort_by_source_path(&mut item.children));
     }
 }
 
