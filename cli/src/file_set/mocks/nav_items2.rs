@@ -10,7 +10,7 @@ impl FileSet {
         );
 
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/nav-items2-site/content/top-level-page.neo"),
+            PathBuf::from("leading-dir/Neopoligen/nav-items2-test-site/content/top-level-page.neo"),
             r#"-- title
 
 Top Level Page
@@ -22,7 +22,7 @@ Top Level Page
         );
 
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/nav-items2-site/content/level-1a/_title.neo"),
+            PathBuf::from("leading-dir/Neopoligen/nav-items2-test-site/content/level-1a/_title.neo"),
             r#"-- title
 
 Level 1a Title
@@ -35,7 +35,7 @@ Level 1a Title
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/nav-items2-site/content/level-1a/content-alfa.neo",
+                "leading-dir/Neopoligen/nav-items2-test-site/content/level-1a/content-alfa.neo",
             ),
             r#"-- title
 
@@ -49,7 +49,7 @@ Level 1a Content Alfa
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/nav-items2-site/content/level-1a/sub-level-2a/_title.neo",
+                "leading-dir/Neopoligen/nav-items2-test-site/content/level-1a/sub-level-2a/_title.neo",
             ),
             r#"-- title
 
@@ -63,7 +63,7 @@ Level 1a SubLevel 2a Title
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/nav-items2-site/content/level-1a/sub-level-2a/content-bravo.neo",
+                "leading-dir/Neopoligen/nav-items2-test-site/content/level-1a/sub-level-2a/content-bravo.neo",
             ),
             r#"-- title
 
@@ -76,7 +76,7 @@ Level 1a SubLevel 2a Content Bravo
         );
 
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/nav-items2-site/content/level-1b/_index.neo"),
+            PathBuf::from("leading-dir/Neopoligen/nav-items2-test-site/content/level-1b/_index.neo"),
             r#"-- title
 
 Level 1b Index
@@ -89,7 +89,7 @@ Level 1b Index
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/nav-items2-site/content/level-1b/content-charlie.neo",
+                "leading-dir/Neopoligen/nav-items2-test-site/content/level-1b/content-charlie.neo",
             ),
             r#"-- title
 

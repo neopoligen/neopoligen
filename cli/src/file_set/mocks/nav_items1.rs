@@ -10,7 +10,7 @@ impl FileSet {
         );
 
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/nav-items1-site/content/folder1/_index.neo"),
+            PathBuf::from("leading-dir/Neopoligen/nav-items1-test-site/content/folder1/_index.neo"),
             r#"-- title
 
 Folder1 Index
@@ -23,7 +23,7 @@ Folder1 Index
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/nav-items1-site/content/folder1/content-alfa.neo",
+                "leading-dir/Neopoligen/nav-items1-test-site/content/folder1/content-alfa.neo",
             ),
             r#"-- title
 
@@ -37,7 +37,7 @@ Content Alfa
 
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/nav-items1-site/content/folder1/content-bravo.neo",
+                "leading-dir/Neopoligen/nav-items1-test-site/content/folder1/content-bravo.neo",
             ),
             r#"-- title
 
