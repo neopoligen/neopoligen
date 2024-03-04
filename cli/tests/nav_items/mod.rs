@@ -8,6 +8,9 @@ use neopoligen::nav_tree::NavTree;
 use neopoligen::site::Site;
 use pretty_assertions::assert_eq;
 
+// TODO: Test the different types of menu folder item
+// types
+
 #[test]
 pub fn basic_load_test() {
     let file_set = FileSet::nav_items1();
@@ -52,6 +55,19 @@ pub fn get_next_item_that_exists() {
 }
 
 #[test]
+pub fn get_next_item_that_does_not_exist() {
+    let file_set = FileSet::nav_items1();
+    let config = Config::nav_items1();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["folder1"]]);
+    let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
+    nav_items.set_current_page(Value::from("content-bravo"));
+    let left = None;
+    let right = nav_items.next_item;
+    assert_eq!(left, right);
+}
+
+#[test]
 pub fn get_prev_item_that_exists() {
     let file_set = FileSet::nav_items1();
     let config = Config::nav_items1();
@@ -64,4 +80,15 @@ pub fn get_prev_item_that_exists() {
     assert_eq!(left, right);
 }
 
-// TODO: Add test for ActiveFolderIndex
+#[test]
+pub fn get_prev_item_that_does_not_exist() {
+    let file_set = FileSet::nav_items1();
+    let config = Config::nav_items1();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["folder1"]]);
+    let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
+    nav_items.set_current_page(Value::from("folder1-index"));
+    let left = None;
+    let right = nav_items.prev_item;
+    assert_eq!(left, right);
+}
