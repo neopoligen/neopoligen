@@ -17,9 +17,6 @@ impl Object for Site {
             "nav_from_files_and_folders" => Ok(Value::from_serializable(
                 &self.nav_from_files_and_folders(args),
             )),
-            "nav_from_files_and_folders_dev" => Ok(Value::from_serializable(
-                &self.nav_from_files_and_folders_dev(args),
-            )),
             "page_href" => Ok(Value::from_serializable(&self.page_href(args))),
             "page_ids" => Ok(Value::from_serializable(&self.page_ids())),
             "page_main_body" => Ok(Value::from_serializable(&self.page_main_body(args))),

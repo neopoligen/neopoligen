@@ -330,18 +330,18 @@ impl Site {
     //    nav_links
     //}
 
-    /////////////////////////////////////////////////////////////////////
-    // SKIP
-    pub fn nav_from_files_and_folders(&self, args: &[Value]) -> NavTree {
-        let mut nav_links = NavTree {
-            items: self.folder_menu(args),
-            prev_item: None,
-            next_item: None,
-            prev_next_order: vec![],
-        };
-        self.set_current_file_for_nav_links(&args[0].to_string(), &mut nav_links);
-        nav_links
-    }
+    ///////////////////////////////////////////////////////////////////////
+    //// SKIP
+    //pub fn nav_from_files_and_folders(&self, args: &[Value]) -> NavTree {
+    //    let mut nav_links = NavTree {
+    //        items: self.folder_menu(args),
+    //        prev_item: None,
+    //        next_item: None,
+    //        prev_next_order: vec![],
+    //    };
+    //    self.set_current_file_for_nav_links(&args[0].to_string(), &mut nav_links);
+    //    nav_links
+    //}
 
     /////////////////////////////////////////////////////////////////////
     // TODO: Move this back into the main site mod.rs

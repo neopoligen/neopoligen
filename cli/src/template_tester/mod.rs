@@ -91,7 +91,7 @@ pub fn test_templates(config: &Config) {
                                 output_path.push(error_file_sub_path.with_extension("html"));
                                 let _ = fs::create_dir_all(output_path.parent().unwrap());
                                 let theme_error_content =
-                                    format!("<!DOCTYPE html><html><body><h2>EXPECTED</h2>\n\n\n{}\n\n\n<h2>GOT</h2>\n\n\n{}\n\n\n</body></html>", target_output, o.1);
+                                    format!("<!DOCTYPE html><html><body><h2>EXPECTED</h2>\n\n\n{}\n\n\n<h2>GOT</h2>\n\n\n{}\n\n\n<!-- spacer --></body></html>", target_output, o.1);
                                 let _ = fs::write(output_path, theme_error_content);
                             }
                         }

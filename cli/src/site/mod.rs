@@ -101,7 +101,7 @@ impl Site {
         }
     }
 
-    pub fn nav_from_files_and_folders_dev(&self, args: &[Value]) -> NavItems {
+    pub fn nav_from_files_and_folders(&self, args: &[Value]) -> NavItems {
         let mut nav_items = NavItems::new_from_files_and_folders(&self, &args[1]);
         nav_items.set_current_page(&args[0]);
         nav_items
