@@ -21,13 +21,31 @@ impl NavItems {
             })
             .collect();
         let prev_next_items: Vec<NavPrevNextItem> = load_prev_next(&tree);
-        NavItems {
+        let mut nav_items = NavItems {
             tree,
             prev_next_items,
             prev_item: None,
             next_item: None,
-        }
+        };
+        nav_items.sort_by_source_path();
+        nav_items
     }
+
+    // NOTE: This does not sort the top tree since
+    // that would change the order that was called
+    // explicitly
+    pub fn sort_by_source_path(&mut self) {
+        self.tree
+            .iter_mut()
+            .for_each(|item| do_sort_by_source_path(&mut item.children));
+    }
+}
+
+fn do_sort_by_source_path(items: &mut Vec<NavItem>) {
+    items.sort_by_key(|k| k.path_sort_string.clone());
+    items
+        .iter_mut()
+        .for_each(|item| do_sort_by_source_path(&mut item.children));
 }
 
 #[instrument(skip(site))]

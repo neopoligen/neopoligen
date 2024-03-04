@@ -1,10 +1,10 @@
 use minijinja::Value;
 use neopoligen::config::Config;
 use neopoligen::file_set::FileSet;
-use neopoligen::nav_item::NavItem;
+// use neopoligen::nav_item::NavItem;
 use neopoligen::nav_item::NavItemType;
 use neopoligen::nav_items::NavItems;
-use neopoligen::nav_tree::NavTree;
+// use neopoligen::nav_tree::NavTree;
 use neopoligen::site::Site;
 use pretty_assertions::assert_eq;
 
@@ -101,5 +101,27 @@ pub fn set_current_page() {
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["folder1"]]);
     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
     nav_items.set_current_page(Value::from("content-alfa"));
-    assert_eq!(nav_items.tree[0].children[0].is_current_page, true);
+    assert_eq!(
+        nav_items.tree[0].children[0].item_type,
+        NavItemType::CurrentFile
+    );
+}
+
+#[test]
+pub fn check_not_current_file() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![
+        vec!["top-level-page"],
+        vec!["level-1a"],
+        vec!["level-1b"],
+    ]);
+    let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
+    nav_items.set_current_page(Value::from("content-alfa"));
+    assert_eq!(nav_items.tree[0].item_type, NavItemType::NotCurrentFile);
+    assert_eq!(
+        nav_items.tree[2].children[0].item_type,
+        NavItemType::NotCurrentFile
+    );
 }
