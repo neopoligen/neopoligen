@@ -57,7 +57,6 @@ impl Builder {
         let mut env = Environment::new();
         let site = Site::new(&self.file_set, &self.config);
         let mut outputs = BTreeMap::new();
-
         self.file_set
             .templates
             .iter()

@@ -18,7 +18,7 @@ pub struct NavItems {
 }
 
 impl NavItems {
-    pub fn set_current_page(&mut self, page_id: Value) {
+    pub fn set_current_page(&mut self, page_id: &Value) {
         let page_id = page_id.to_string();
         if let Some(folders) = self
             .tree
@@ -27,36 +27,12 @@ impl NavItems {
         {
             self.open_folders = folders;
         }
-
         self.tree
             .iter_mut()
             .for_each(|item| update_open_folders(item, &self.open_folders));
         self.next_item = get_next_item(&page_id, &self.prev_next_items);
         self.prev_item = get_prev_item(&page_id, &self.prev_next_items);
     }
-
-    // pub fn set_open_folders(&mut self) {
-    //     let active_folder_path = self.active_folder_path();
-    //     self.tree
-    //         .iter_mut()
-    //         .for_each(|item| update_open_folders(item, &active_folder_path));
-    // }
-
-    // fn active_folder_path(&self) -> Vec<String> {
-    //     match self.tree.iter().find_map(|item| {
-    //         dbg!(&item);
-    //         if matches![item.item_type, NavItemType::CurrentFile]
-    //             || matches![item.item_type, NavItemType::ActiveFolderIndex]
-    //         {
-    //             Some(item.folders.clone())
-    //         } else {
-    //             None
-    //         }
-    //     }) {
-    //         Some(folders) => folders,
-    //         None => vec![],
-    //     }
-    // }
 }
 
 fn update_open_folders(item: &mut NavItem, folders: &Vec<String>) {

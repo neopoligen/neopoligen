@@ -13,8 +13,12 @@ impl Object for Site {
             "log" => Ok(Value::from_serializable(&self.log_from_template(args))),
             "folder_menu" => Ok(Value::from_serializable(&self.folder_menu(args))),
             "link_or_title" => Ok(Value::from_serializable(&self.link_or_title(args))),
+            // DEPCREATE this one when the _dev one is working
             "nav_from_files_and_folders" => Ok(Value::from_serializable(
                 &self.nav_from_files_and_folders(args),
+            )),
+            "nav_from_files_and_folders_dev" => Ok(Value::from_serializable(
+                &self.nav_from_files_and_folders_dev(args),
             )),
             "page_href" => Ok(Value::from_serializable(&self.page_href(args))),
             "page_ids" => Ok(Value::from_serializable(&self.page_ids())),

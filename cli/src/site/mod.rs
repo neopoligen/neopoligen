@@ -5,6 +5,7 @@ pub mod object;
 use crate::child::Child;
 use crate::config::Config;
 use crate::nav_item::NavItem;
+use crate::nav_items::NavItems;
 // use crate::nav_item::NavItemType;
 // use crate::nav_tree::NavPrevNextItem;
 // use crate::nav_tree::NavTree;
@@ -98,6 +99,12 @@ impl Site {
                 None => None,
             }
         }
+    }
+
+    pub fn nav_from_files_and_folders_dev(&self, args: &[Value]) -> NavItems {
+        let mut nav_items = NavItems::new_from_files_and_folders(&self, &args[1]);
+        nav_items.set_current_page(&args[0]);
+        nav_items
     }
 
     pub fn page_folders(&self, args: &[Value]) -> Vec<String> {
