@@ -1,5 +1,5 @@
-use crate::nav_item::NavItem;
 use crate::nav_items::NavItems;
+use crate::{nav_item::NavItem, nav_prev_next_item::NavPrevNextItem};
 // use crate::page::Page;
 use crate::nav_item::NavItemType;
 use crate::site::Site;
@@ -21,12 +21,28 @@ impl NavItems {
                 NavItems::folder_menu_index_finder(site, pattern)
             })
             .collect();
-        NavItems {
-            tree,
-            prev_next_order: vec![],
-        }
+        let prev_next: Vec<NavPrevNextItem> = load_prev_next(&tree);
+        NavItems { tree, prev_next }
     }
+}
 
+fn load_prev_next(tree: &Vec<NavItem>) -> Vec<NavPrevNextItem> {
+    let mut prev_next_vec: Vec<NavPrevNextItem> = vec![];
+    prev_next_flattener(tree, &mut prev_next_vec);
+    prev_next_vec
+}
+
+fn prev_next_flattener(items: &Vec<NavItem>, dest: &mut Vec<NavPrevNextItem>) {
+    items.iter().for_each(|item| {
+        dest.push(NavPrevNextItem {
+            page_id: item.page_id.clone(),
+            title_link_or_text: item.title_link_or_text.clone(),
+        });
+        prev_next_flattener(&item.children, dest);
+    });
+}
+
+impl NavItems {
     #[instrument]
     pub fn folder_menu_index_finder(site: &Site, pattern: Vec<String>) -> Option<NavItem> {
         event!(Level::INFO, "fn folder_menu_index_finder");

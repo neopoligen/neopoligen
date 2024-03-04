@@ -9,5 +9,5 @@ use serde::Serialize;
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct NavItems {
     pub tree: Vec<NavItem>,
-    pub prev_next_order: Vec<NavPrevNextItem>,
+    pub prev_next: Vec<NavPrevNextItem>,
 }

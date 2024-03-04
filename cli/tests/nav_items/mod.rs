@@ -24,6 +24,9 @@ pub fn basic_load_test() {
         "content-bravo".to_string(),
         nav_items.tree[0].children[1].page_id
     );
+    assert_eq!("folder1-index".to_string(), nav_items.prev_next[0].page_id);
+    assert_eq!("content-alfa".to_string(), nav_items.prev_next[1].page_id);
+    assert_eq!("content-bravo".to_string(), nav_items.prev_next[2].page_id);
 }
 
 // TODO: Add test for ActiveFolderIndex
