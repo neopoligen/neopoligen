@@ -34,12 +34,12 @@ fn folder_menu_index_finder(
     pattern: Vec<String>,
 ) -> Option<CollectionItem> {
     let id = pattern[0].to_string();
-    if pages.contains_key(&id) {
+    if let Some(page) = pages.get(&id) {
         Some(CollectionItem {
             ancestors: vec![],
             base_type: CollectionItemBaseType::Page,
             children: vec![],
-            folders: vec![],
+            folders: page.folders.clone(),
             id: id.clone(),
             status: CollectionItemStatus::ToBeDetermined,
         })
