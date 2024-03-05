@@ -52,3 +52,13 @@ fn title_from_id_as_fallback() {
     let right = site.pages.get("aabb0060").unwrap().title.clone();
     assert_eq!(left, right);
 }
+
+#[test]
+fn href_basic() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = Some("/en/aabb0020/?title-from-title-section".to_string());
+    let right = site.pages.get("aabb0020").unwrap().href.clone();
+    assert_eq!(left, right);
+}

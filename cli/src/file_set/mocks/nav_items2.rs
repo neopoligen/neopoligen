@@ -22,7 +22,9 @@ Top Level Page
         );
 
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/nav-items2-test-site/content/level-1a/_title.neo"),
+            PathBuf::from(
+                "leading-dir/Neopoligen/nav-items2-test-site/content/level-1a/_title.neo",
+            ),
             r#"-- title
 
 Level 1a Title
@@ -76,7 +78,9 @@ Level 1a SubLevel 2a Content Bravo
         );
 
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/nav-items2-test-site/content/level-1b/_index.neo"),
+            PathBuf::from(
+                "leading-dir/Neopoligen/nav-items2-test-site/content/level-1b/_index.neo",
+            ),
             r#"-- title
 
 Level 1b Index

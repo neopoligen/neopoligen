@@ -12,5 +12,7 @@ pub struct Page {
     pub source: String,
     pub source_path: PathBuf,
     // these items are generated on creation
+    pub href: Option<String>,
+    pub html_link: Option<String>,
     pub title: Option<String>,
 }

@@ -29,8 +29,12 @@ impl Page {
                     }) {
                         Some(id) => {
                             let title = title(&id, &ast);
+                            let href = href(&id, &ast, &title, &config.default_language);
+                            let html_link = None;
                             Some(Page {
                                 ast,
+                                href,
+                                html_link,
                                 id,
                                 source,
                                 source_path,
@@ -157,4 +161,47 @@ fn title_from_title_section(ast: &Vec<Child>) -> Option<String> {
         }
         _ => None,
     })
+}
+
+fn href(
+    id: &String,
+    ast: &Vec<Child>,
+    title: &Option<String>,
+    default_language: &String,
+) -> Option<String> {
+    if let Some(response) = ast.iter().find_map(|child| {
+        if let Child::Section(section) = child {
+            if &section.r#type == "metadata" {
+                section.key_value_attributes.iter().find_map(|attr| {
+                    if attr.0 == "path" {
+                        Some(Some(attr.1.to_string()))
+                    } else {
+                        None
+                    }
+                })
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    }) {
+        response
+    } else {
+        Some(format!(
+            "/{}/{}/?{}",
+            default_language.clone(),
+            id,
+            urlencoding::encode(
+                &title
+                    .as_ref()
+                    .unwrap()
+                    .clone()
+                    .to_lowercase()
+                    .replace(" ", "-")
+                    .to_string()
+            )
+            .into_owned(),
+        ))
+    }
 }
