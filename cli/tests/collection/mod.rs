@@ -91,6 +91,22 @@ pub fn load_title_folder_parent_folders() {
 }
 
 #[test]
+pub fn load_index_folder_parent_folders() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![
+        vec!["aabb0010"],
+        vec!["level-1a"],
+        vec!["level-1b"],
+    ]);
+    let collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
+    let left = &vec!["level-1b".to_string()];
+    let right = &collection.tree[2].children[0].folders;
+    assert_eq!(left, right);
+}
+
+#[test]
 pub fn load_title_folder() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
@@ -184,12 +200,15 @@ pub fn mark_title_folder_closed() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
-    let patterns =
-        Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"], vec!["level-1b"]]);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![
+        vec!["aabb0010"],
+        vec!["level-1a"],
+        vec!["level-1b"],
+    ]);
     let mut collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
-    collection.set_active_item(&"aabb0070".to_string());
+    collection.set_active_item(&"aabb0010".to_string());
     let left = &CollectionItemStatus::TitleFolderClosed;
-    let right = &collection.tree[0].status;
+    let right = &collection.tree[1].status;
     assert_eq!(left, right);
 }
 
