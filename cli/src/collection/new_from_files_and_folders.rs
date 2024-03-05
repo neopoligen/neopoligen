@@ -45,7 +45,11 @@ fn folder_menu_index_finder(
         // full_pattern_with_index.push("_index.neo".to_string());
         pages.iter().find_map(|page| {
             if full_pattern_with_title == page.1.path_parts {
-                None
+                Some(CollectionItem {
+                    page_id: page.0.clone(),
+                    base_type: CollectionItemType::TitleFolder,
+                    children: vec![],
+                })
             //         let mut fmi = NavItem {
             //             children: folder_menu_child_item_finder(
             //                 site,

@@ -24,7 +24,7 @@ pub fn load_a_title_folder() {
     let site = Site::new(&file_set, &config);
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"]]);
     let collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
-    let left = &"aabb0010".to_string();
+    let left = &"aabb0020".to_string();
     let right = &collection.items[0].page_id;
     assert_eq!(left, right);
 }
