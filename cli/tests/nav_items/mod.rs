@@ -229,6 +229,18 @@ pub fn check_parent_ids() {
     assert_eq!(left, right);
 }
 
+#[test]
+pub fn check_parent_ids_second_level() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"]]);
+    let nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
+    let left = vec!["aabb0020".to_string(), "aabb0040".to_string()];
+    let right = nav_items.tree[0].children[1].children[0].parent_ids.clone();
+    assert_eq!(left, right);
+}
+
 // #[test]
 // pub fn get_breadcrumbs() {
 //     let file_set = FileSet::nav_items2();

@@ -142,7 +142,7 @@ fn folder_menu_index_finder(
                 };
                 // TODO: Get sub folders here
                 let mut next_folders: Vec<NavItem> =
-                    folder_menu_subfolder_finder(site, &pattern, parent_ids.clone());
+                    folder_menu_subfolder_finder(site, &pattern, next_parent_ids.clone());
                 fmi.children.append(&mut next_folders);
                 Some(fmi)
             } else if full_pattern_with_index
