@@ -13,7 +13,6 @@ use serde::Serialize;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct NavItem {
-    pub breadcrumbs: Vec<NavItem>,
     pub children: Vec<NavItem>,
     pub folders: Vec<String>,
     pub href: Option<String>,
@@ -21,6 +20,7 @@ pub struct NavItem {
     pub menu_title: Option<String>,
     pub menu_title_link_or_text: Option<String>,
     pub page_id: String,
+    pub parent_ids: Vec<String>,
     pub path_sort_string: String,
     // pub prev_next_title: Option<String>,
     // pub prev_next_title_link_or_text: Option<String>,
@@ -32,11 +32,12 @@ pub struct NavItem {
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub enum NavItemType {
-    ActiveFolderIndex,
-    ClosedFolderIndex,
-    ClosedFolderTitle,
-    CurrentFile,
-    NotCurrentFile,
-    OpenedFolderIndex,
-    OpenedFolderTitle,
+    IndexFolderActive,
+    IndexFolderClosed,
+    IndexFolderOpened,
+    FileCurrent,
+    FileNotCurrent,
+    TitleFolderActive,
+    TitleFolderClosed,
+    TitleFolderOpened,
 }

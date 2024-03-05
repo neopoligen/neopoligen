@@ -3,12 +3,13 @@ pub mod object;
 
 use crate::cache_object::CacheObject;
 use crate::child::Child;
+use crate::collection::Collection;
 use crate::config::Config;
 use crate::nav_items::NavItems;
 use crate::page::Page;
-use crate::section::Section;
-use crate::section_category::SectionCategory;
-use crate::span::Span;
+// use crate::section::Section;
+// use crate::section_category::SectionCategory;
+// use crate::span::Span;
 use itertools::Itertools;
 use minijinja::Value;
 use serde::Serialize;
@@ -32,6 +33,10 @@ pub struct Site {
 }
 
 impl Site {
+    pub fn collection_from_files_and_folders(&self, args: &[Value]) -> Collection {
+        Collection::new_from_files_and_folders(&self.pages, args)
+    }
+
     #[instrument(skip(self))]
     pub fn get_cache(&self, key: &str) -> Option<CacheObject> {
         let binding = self.cache.lock().unwrap();
@@ -188,12 +193,21 @@ impl Site {
 
     // }
 
+    // TODO: Forward to page
     pub fn page_href_title(&self, id: &str) -> Option<String> {
         match self.page_title(&[Value::from(id)]) {
             Some(title) => Some(
                 urlencoding::encode(&title.to_lowercase().replace(" ", "-").to_string())
                     .into_owned(),
             ),
+            None => None,
+        }
+    }
+
+    pub fn page_html_link(&self, args: &[Value]) -> Option<String> {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
+            Some(page) => page.html_link.clone(),
             None => None,
         }
     }
@@ -499,37 +513,37 @@ impl Site {
     }
 }
 
-// MOVED
-fn filter_section(sec: &Section) -> Option<String> {
-    let SectionCategory::StandardSectionFull { containers } = &sec.category else {
-        return None;
-    };
-    let first = containers.first()?;
-    let Child::Block(thing) = first else {
-        return None;
-    };
-    let spans = thing
-        .iter()
-        .flat_map(|span| get_span_words(&span))
-        .collect::<String>();
-    Some(spans)
-}
+// // MOVED
+// fn filter_section(sec: &Section) -> Option<String> {
+//     let SectionCategory::StandardSectionFull { containers } = &sec.category else {
+//         return None;
+//     };
+//     let first = containers.first()?;
+//     let Child::Block(thing) = first else {
+//         return None;
+//     };
+//     let spans = thing
+//         .iter()
+//         .flat_map(|span| get_span_words(&span))
+//         .collect::<String>();
+//     Some(spans)
+// }
 
-// MOVED
-fn get_span_words(span: &Span) -> Vec<String> {
-    match span {
-        Span::Word { text, .. } => {
-            vec![text.to_string()]
-        }
-        Span::Space { .. } => vec![" ".to_string()],
-        Span::StandardSpan { spans, .. } => spans
-            .iter()
-            .map(|span| get_span_words(&span))
-            .collect::<Vec<Vec<String>>>()
-            .concat(),
-        _ => vec!["".to_string()],
-    }
-}
+// // MOVED
+// fn get_span_words(span: &Span) -> Vec<String> {
+//     match span {
+//         Span::Word { text, .. } => {
+//             vec![text.to_string()]
+//         }
+//         Span::Space { .. } => vec![" ".to_string()],
+//         Span::StandardSpan { spans, .. } => spans
+//             .iter()
+//             .map(|span| get_span_words(&span))
+//             .collect::<Vec<Vec<String>>>()
+//             .concat(),
+//         _ => vec!["".to_string()],
+//     }
+// }
 
 impl Display for Site {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

@@ -11,7 +11,7 @@ impl Config {
         let configuration_root =
             PathBuf::from(format!("{}/{}", project_root.display(), "configuration"));
 
-        let content_root = PathBuf::from(format!("{}/{}", project_root.display(), "pages"));
+        let content_root = PathBuf::from(format!("{}/{}", project_root.display(), "content"));
         let files_root = PathBuf::from(format!("{}/{}", project_root.display(), "extras"));
         let images_root = PathBuf::from(format!("{}/{}", project_root.display(), "images"));
         let plugins_root = PathBuf::from(format!("{}/{}", configuration_root.display(), "plugins"));

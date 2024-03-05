@@ -11,13 +11,13 @@ impl FileSet {
 
         /////////////////////////////////////////////////////////////////////////
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/nav-tree-1-site/content/home-page.neo"),
+            PathBuf::from("leading-dir/Neopoligen/set1-test-site/content/home-page.neo"),
             r#"-- title
 
 Home Page
 
 -- metadata
--- id: aabb0010
+-- id: ttss0010
 -- path: /
 "#
             .to_string(),
@@ -26,27 +26,27 @@ Home Page
         /////////////////////////////////////////////////////////////////////////
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/nav-tree-1-site/content/title-from-title-section.neo",
+                "leading-dir/Neopoligen/set1-test-site/content/title-from-title-section.neo",
             ),
             r#"-- title
 
 Title From Title Section
 
 -- metadata
--- id: aabb0020
+-- id: ttss0020
 "#
             .to_string(),
         );
 
         /////////////////////////////////////////////////////////////////////////
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/nav-tree-1-site/content/title-from-metadata.neo"),
+            PathBuf::from("leading-dir/Neopoligen/set1-test-site/content/title-from-metadata.neo"),
             r#"-- title
 
 This Title Is Overwritten By Metadata
 
 -- metadata
--- id: aabb0030
+-- id: ttss0030
 -- title: Title From Metadata 
 "#
             .to_string(),
@@ -55,13 +55,13 @@ This Title Is Overwritten By Metadata
         /////////////////////////////////////////////////////////////////////////
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/nav-tree-1-site/content/title-from-any-section.neo",
+                "leading-dir/Neopoligen/set1-test-site/content/title-from-any-section.neo",
             ),
             r#"-- p
 -- title: Title From Any Section
 
 -- metadata
--- id: aabb0040
+-- id: ttss0040
 "#
             .to_string(),
         );
@@ -69,14 +69,14 @@ This Title Is Overwritten By Metadata
         /////////////////////////////////////////////////////////////////////////
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/nav-tree-1-site/content/title-from-first-few-words.neo",
+                "leading-dir/Neopoligen/set1-test-site/content/title-from-first-few-words.neo",
             ),
             r#"-- p
 
 Title from the first few words of a section
 
 -- metadata
--- id: aabb0050
+-- id: ttss0050
 "#
             .to_string(),
         );
@@ -84,10 +84,10 @@ Title from the first few words of a section
         /////////////////////////////////////////////////////////////////////////
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/nav-tree-1-site/content/title-from-id-as-fallback.neo",
+                "leading-dir/Neopoligen/set1-test-site/content/title-from-id-as-fallback.neo",
             ),
             r#"-- metadata
--- id: aabb0060
+-- id: ttss0060
 "#
             .to_string(),
         );

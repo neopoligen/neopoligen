@@ -7,10 +7,13 @@ use std::path::PathBuf;
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct Page {
-    pub id: String,
     pub ast: Vec<Child>,
+    pub folders: Vec<String>,
+    pub href: Option<String>,
+    pub html_link: Option<String>,
+    pub id: String,
+    pub path_parts: Vec<String>,
     pub source: String,
     pub source_path: PathBuf,
-    // these items are generated on creation
     pub title: Option<String>,
 }
