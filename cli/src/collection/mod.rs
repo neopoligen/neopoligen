@@ -19,7 +19,7 @@ pub struct CollectionItem {
     pub ancestors: Vec<String>,
     pub base_type: CollectionItemBaseType,
     pub children: Vec<CollectionItem>,
-    pub page_id: String,
+    pub id: String,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -55,7 +55,7 @@ impl Collection {
 }
 
 fn mark_active_page(item: &mut CollectionItem, id: &String) {
-    if &item.page_id == id {
+    if &item.id == id {
         item.active_type = CollectionItemStatus::PageActive;
     } else {
         item.children
@@ -65,7 +65,7 @@ fn mark_active_page(item: &mut CollectionItem, id: &String) {
 }
 
 fn mark_inactive_page(item: &mut CollectionItem, id: &String) {
-    if item.base_type == CollectionItemBaseType::Page && &item.page_id != id {
+    if item.base_type == CollectionItemBaseType::Page && &item.id != id {
         item.active_type = CollectionItemStatus::PageInactive;
     }
     item.children

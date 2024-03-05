@@ -40,7 +40,7 @@ fn folder_menu_index_finder(
             ancestors: vec![],
             base_type: CollectionItemBaseType::Page,
             children: vec![],
-            page_id: id.clone(),
+            id: id.clone(),
         })
     } else {
         let mut full_pattern_with_title = pattern.clone();
@@ -58,7 +58,7 @@ fn folder_menu_index_finder(
                     ancestors: vec![],
                     base_type: CollectionItemBaseType::TitleFolder,
                     children,
-                    page_id: page.0.clone(),
+                    id: page.0.clone(),
                 })
             } else if full_pattern_with_index == page.1.path_parts {
                 let mut children = folder_menu_child_item_finder(pages, &pattern);
@@ -70,7 +70,7 @@ fn folder_menu_index_finder(
                     ancestors: vec![],
                     base_type: CollectionItemBaseType::IndexFolder,
                     children,
-                    page_id: page.0.clone(),
+                    id: page.0.clone(),
                 })
 
             //         let mut fmi = NavItem {
@@ -150,7 +150,7 @@ fn folder_menu_child_item_finder(
                     ancestors: vec![],
                     base_type: CollectionItemBaseType::Page,
                     children: vec![],
-                    page_id: page.0.clone(),
+                    id: page.0.clone(),
                 })
             } else {
                 None
