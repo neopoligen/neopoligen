@@ -15,7 +15,7 @@ pub struct Collection {
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct CollectionItem {
-    pub active_type: CollectionItemStatus,
+    pub status: CollectionItemStatus,
     pub ancestors: Vec<String>,
     pub base_type: CollectionItemBaseType,
     pub children: Vec<CollectionItem>,
@@ -63,11 +63,11 @@ impl Collection {
 fn mark_active_page(item: &mut CollectionItem, id: &String) {
     if &item.id == id {
         if item.base_type == CollectionItemBaseType::Page {
-            item.active_type = CollectionItemStatus::PageActive;
+            item.status = CollectionItemStatus::PageActive;
         } else if item.base_type == CollectionItemBaseType::IndexFolder {
-            item.active_type = CollectionItemStatus::IndexFolderActive;
+            item.status = CollectionItemStatus::IndexFolderActive;
         } else if item.base_type == CollectionItemBaseType::TitleFolder {
-            item.active_type = CollectionItemStatus::TitleFolderActive;
+            item.status = CollectionItemStatus::TitleFolderActive;
         }
     } else {
         item.children
@@ -78,7 +78,7 @@ fn mark_active_page(item: &mut CollectionItem, id: &String) {
 
 fn mark_inactive_page(item: &mut CollectionItem, id: &String) {
     if item.base_type == CollectionItemBaseType::Page && &item.id != id {
-        item.active_type = CollectionItemStatus::PageInactive;
+        item.status = CollectionItemStatus::PageInactive;
     }
     item.children
         .iter_mut()

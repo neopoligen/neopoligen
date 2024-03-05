@@ -62,7 +62,7 @@ pub fn mark_page_active() {
     let mut collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
     collection.set_active_item(&"aabb0050".to_string());
     let left = &CollectionItemStatus::PageActive;
-    let right = &collection.tree[0].children[1].children[0].active_type;
+    let right = &collection.tree[0].children[1].children[0].status;
     assert_eq!(left, right);
 }
 
@@ -75,7 +75,7 @@ pub fn mark_page_inactive() {
     let mut collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
     collection.set_active_item(&"aabb0050".to_string());
     let left = &CollectionItemStatus::PageInactive;
-    let right = &collection.tree[0].children[0].active_type;
+    let right = &collection.tree[0].children[0].status;
     assert_eq!(left, right);
 }
 
@@ -88,7 +88,7 @@ pub fn mark_index_folder_active() {
     let mut collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
     collection.set_active_item(&"aabb0060".to_string());
     let left = &CollectionItemStatus::IndexFolderActive;
-    let right = &collection.tree[0].active_type;
+    let right = &collection.tree[0].status;
     assert_eq!(left, right);
 }
 
@@ -101,7 +101,7 @@ pub fn mark_title_folder_active() {
     let mut collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
     collection.set_active_item(&"aabb0020".to_string());
     let left = &CollectionItemStatus::TitleFolderActive;
-    let right = &collection.tree[0].active_type;
+    let right = &collection.tree[0].status;
     assert_eq!(left, right);
 }
 
