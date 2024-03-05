@@ -21,7 +21,7 @@ impl Collection {
                     .unwrap()
                     .map(|pattern_part| pattern_part.to_string())
                     .collect();
-                folder_menu_index_finder(pages, pattern)
+                folder_menu_index_finder(pages, pattern, vec![])
             })
             .collect();
         let c = Collection {
@@ -35,11 +35,12 @@ impl Collection {
 fn folder_menu_index_finder(
     pages: &BTreeMap<String, Page>,
     pattern: Vec<String>,
+    ancestors: Vec<String>,
 ) -> Option<CollectionItem> {
     let id = pattern[0].to_string();
     if let Some(page) = pages.get(&id) {
         Some(CollectionItem {
-            ancestors: vec![],
+            ancestors: ancestors.clone(),
             base_type: CollectionItemBaseType::Page,
             children: vec![],
             folders: page.folders.clone(),
@@ -53,12 +54,15 @@ fn folder_menu_index_finder(
         full_pattern_with_index.push("_index.neo".to_string());
         pages.iter().find_map(|page| {
             if full_pattern_with_title == page.1.path_parts {
-                let mut children = folder_menu_child_item_finder(pages, &pattern);
+                let mut updated_ancestors = ancestors.clone();
+                updated_ancestors.push(page.0.clone());
+                let mut children =
+                    folder_menu_child_item_finder(pages, &pattern, updated_ancestors.clone());
                 let mut next_folders: Vec<CollectionItem> =
-                    folder_menu_subfolder_finder(pages, &pattern);
+                    folder_menu_subfolder_finder(pages, &pattern, updated_ancestors);
                 children.append(&mut next_folders);
                 Some(CollectionItem {
-                    ancestors: vec![],
+                    ancestors: ancestors.clone(),
                     base_type: CollectionItemBaseType::TitleFolder,
                     children,
                     folders: page.1.folders.clone(),
@@ -66,19 +70,21 @@ fn folder_menu_index_finder(
                     status: CollectionItemStatus::ToBeDetermined,
                 })
             } else if full_pattern_with_index == page.1.path_parts {
-                let mut children = folder_menu_child_item_finder(pages, &pattern);
+                let mut updated_ancestors = ancestors.clone();
+                updated_ancestors.push(page.0.clone());
+                let mut children =
+                    folder_menu_child_item_finder(pages, &pattern, updated_ancestors.clone());
                 let mut next_folders: Vec<CollectionItem> =
-                    folder_menu_subfolder_finder(pages, &pattern);
+                    folder_menu_subfolder_finder(pages, &pattern, updated_ancestors);
                 children.append(&mut next_folders);
                 Some(CollectionItem {
-                    ancestors: vec![],
+                    ancestors: ancestors.clone(),
                     base_type: CollectionItemBaseType::IndexFolder,
                     children,
                     folders: page.1.folders.clone(),
                     id: page.0.clone(),
                     status: CollectionItemStatus::ToBeDetermined,
                 })
-
             //         let mut fmi = NavItem {
             //             children: folder_menu_child_item_finder(
             //                 site,
@@ -137,6 +143,7 @@ fn folder_menu_index_finder(
 fn folder_menu_child_item_finder(
     pages: &BTreeMap<String, Page>,
     pattern: &Vec<String>,
+    ancestors: Vec<String>,
 ) -> Vec<CollectionItem> {
     let mut full_pattern_with_title = pattern.clone();
     full_pattern_with_title.push("_title.neo".to_string());
@@ -152,7 +159,7 @@ fn folder_menu_child_item_finder(
                 && path_parts != full_pattern_with_index
             {
                 Some(CollectionItem {
-                    ancestors: vec![],
+                    ancestors: ancestors.clone(),
                     base_type: CollectionItemBaseType::Page,
                     children: vec![],
                     folders: page.1.folders.clone(),
@@ -169,6 +176,7 @@ fn folder_menu_child_item_finder(
 fn folder_menu_subfolder_finder(
     pages: &BTreeMap<String, Page>,
     pattern: &Vec<String>,
+    ancestors: Vec<String>,
 ) -> Vec<CollectionItem> {
     let mut next_level_folders: BTreeSet<Vec<String>> = BTreeSet::new();
     pages.iter().for_each(|page| {
@@ -185,6 +193,6 @@ fn folder_menu_subfolder_finder(
     });
     next_level_folders
         .iter()
-        .filter_map(|pat| folder_menu_index_finder(pages, pat.clone()))
+        .filter_map(|pat| folder_menu_index_finder(pages, pat.clone(), ancestors.clone()))
         .collect()
 }

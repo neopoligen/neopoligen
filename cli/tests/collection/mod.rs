@@ -313,6 +313,48 @@ pub fn mark_index_folder_closed_when_no_folders_are_opened() {
     assert_eq!(left, right);
 }
 
+#[test]
+pub fn ancestors() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![
+        vec!["aabb0010"],
+        vec!["level-1a"],
+        vec!["level-1b"],
+    ]);
+    let collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
+
+    assert_eq!(Vec::<String>::from([]), collection.tree[0].ancestors);
+
+    assert_eq!(Vec::<String>::from([]), collection.tree[1].ancestors);
+
+    assert_eq!(
+        Vec::<String>::from(["aabb0020".to_string()]),
+        collection.tree[1].children[0].ancestors
+    );
+
+    // assert_eq!(
+    //     collection.tree[1].children[1].base_type,
+    //     CollectionItemBaseType::TitleFolder
+    // );
+
+    // assert_eq!(
+    //     collection.tree[1].children[1].children[0].base_type,
+    //     CollectionItemBaseType::Page
+    // );
+
+    // assert_eq!(
+    //     collection.tree[2].base_type,
+    //     CollectionItemBaseType::IndexFolder
+    // );
+
+    // assert_eq!(
+    //     collection.tree[2].children[0].base_type,
+    //     CollectionItemBaseType::Page
+    // );
+}
+
 // #[test]
 // pub fn get_next_item_that_exists() {
 //     let file_set = FileSet::nav_items1();
