@@ -47,17 +47,14 @@ impl Site {
                         Err(_e) => None,
                     })
                     .collect::<Vec<_>>();
-                dbg!(&patterns);
-                ()
+                Collection::new_from_files_and_folders(&self.pages, patterns)
+                //dbg!(&patterns);
+                //()
             }
-            Err(_e) => (),
-        };
-
+            Err(_e) => Collection::empty(),
+        }
         // let patterns: Vec<Vec<String>> = args[1].try_iter().unwrap().map();
-
         // Collection::new_from_files_and_folders(&self.pages, args)
-
-        Collection::empty()
     }
 
     #[instrument(skip(self))]

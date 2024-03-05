@@ -8,7 +8,7 @@ use std::collections::BTreeMap;
 use std::collections::BTreeSet;
 
 impl Collection {
-    pub fn new_from_files_and_folders_dev(
+    pub fn new_from_files_and_folders(
         pages: &BTreeMap<String, Page>,
         patterns: Vec<Vec<String>>,
     ) -> Collection {
@@ -29,7 +29,7 @@ impl Collection {
         c
     }
 
-    pub fn new_from_files_and_folders(
+    pub fn new_from_files_and_folders_old(
         pages: &BTreeMap<String, Page>,
         args: &[Value],
     ) -> Collection {
