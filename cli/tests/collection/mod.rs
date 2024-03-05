@@ -1,5 +1,5 @@
 use minijinja::Value;
-use neopoligen::collection::{Collection, CollectionActiveItemType, CollectionItemBaseType};
+use neopoligen::collection::{Collection, CollectionItemBaseType, CollectionItemStatus};
 use neopoligen::config::Config;
 use neopoligen::file_set::FileSet;
 use neopoligen::site::Site;
@@ -61,7 +61,7 @@ pub fn set_active_item() {
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"]]);
     let mut collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
     collection.set_active_item(&"aabb0050".to_string());
-    let left = &CollectionActiveItemType::PageActive;
+    let left = &CollectionItemStatus::PageActive;
     let right = &collection.tree[0].children[1].children[0].active_type;
     assert_eq!(left, right);
 }
@@ -74,7 +74,7 @@ pub fn mark_not_current_pages() {
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"]]);
     let mut collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
     collection.set_active_item(&"aabb0050".to_string());
-    let left = &CollectionActiveItemType::PageInactive;
+    let left = &CollectionItemStatus::PageInactive;
     let right = &collection.tree[0].children[0].active_type;
     assert_eq!(left, right);
 }

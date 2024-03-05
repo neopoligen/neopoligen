@@ -15,7 +15,7 @@ pub struct Collection {
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct CollectionItem {
-    pub active_type: CollectionActiveItemType,
+    pub active_type: CollectionItemStatus,
     pub ancestors: Vec<String>,
     pub base_type: CollectionItemBaseType,
     pub children: Vec<CollectionItem>,
@@ -30,7 +30,7 @@ pub enum CollectionItemBaseType {
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub enum CollectionActiveItemType {
+pub enum CollectionItemStatus {
     NotYetActivated,
     PageActive,
     PageInactive,
@@ -47,28 +47,28 @@ impl Collection {
     pub fn set_active_item(&mut self, id: &String) {
         self.tree
             .iter_mut()
-            .for_each(|item| mark_current_page(item, id));
+            .for_each(|item| mark_active_page(item, id));
         self.tree
             .iter_mut()
-            .for_each(|item| mark_not_current_page(item, id));
+            .for_each(|item| mark_inactive_page(item, id));
     }
 }
 
-fn mark_current_page(item: &mut CollectionItem, id: &String) {
+fn mark_active_page(item: &mut CollectionItem, id: &String) {
     if &item.page_id == id {
-        item.active_type = CollectionActiveItemType::PageActive;
+        item.active_type = CollectionItemStatus::PageActive;
     } else {
         item.children
             .iter_mut()
-            .for_each(|child| mark_current_page(child, id))
+            .for_each(|child| mark_active_page(child, id))
     }
 }
 
-fn mark_not_current_page(item: &mut CollectionItem, id: &String) {
+fn mark_inactive_page(item: &mut CollectionItem, id: &String) {
     if item.base_type == CollectionItemBaseType::Page && &item.page_id != id {
-        item.active_type = CollectionActiveItemType::PageInactive;
+        item.active_type = CollectionItemStatus::PageInactive;
     }
     item.children
         .iter_mut()
-        .for_each(|child| mark_not_current_page(child, id))
+        .for_each(|child| mark_inactive_page(child, id))
 }
