@@ -188,12 +188,21 @@ impl Site {
 
     // }
 
+    // TODO: Forward to page
     pub fn page_href_title(&self, id: &str) -> Option<String> {
         match self.page_title(&[Value::from(id)]) {
             Some(title) => Some(
                 urlencoding::encode(&title.to_lowercase().replace(" ", "-").to_string())
                     .into_owned(),
             ),
+            None => None,
+        }
+    }
+
+    pub fn page_html_link(&self, args: &[Value]) -> Option<String> {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
+            Some(page) => page.html_link.clone(),
             None => None,
         }
     }
