@@ -15,29 +15,18 @@ pub fn load_a_page_directly() {
     let left = &"aabb0010".to_string();
     let right = &collection.items[0].page_id;
     assert_eq!(left, right);
+}
 
-    // let nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
-    // assert_eq!("folder1-index".to_string(), nav_items.tree[0].page_id);
-    // assert_eq!(
-    //     "content-alfa".to_string(),
-    //     nav_items.tree[0].children[0].page_id
-    // );
-    // assert_eq!(
-    //     "content-bravo".to_string(),
-    //     nav_items.tree[0].children[1].page_id
-    // );
-    // assert_eq!(
-    //     "folder1-index".to_string(),
-    //     nav_items.prev_next_items[0].page_id
-    // );
-    // assert_eq!(
-    //     "content-alfa".to_string(),
-    //     nav_items.prev_next_items[1].page_id
-    // );
-    // assert_eq!(
-    //     "content-bravo".to_string(),
-    //     nav_items.prev_next_items[2].page_id
-    // );
+#[test]
+pub fn load_a_title_folder() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"]]);
+    let collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
+    let left = &"aabb0010".to_string();
+    let right = &collection.items[0].page_id;
+    assert_eq!(left, right);
 }
 
 // #[test]

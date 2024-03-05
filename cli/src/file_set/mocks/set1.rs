@@ -11,7 +11,7 @@ impl FileSet {
 
         /////////////////////////////////////////////////////////////////////////
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/nav-tree-1-site/content/home-page.neo"),
+            PathBuf::from("leading-dir/Neopoligen/set1-test-site/content/home-page.neo"),
             r#"-- title
 
 Home Page
@@ -26,7 +26,7 @@ Home Page
         /////////////////////////////////////////////////////////////////////////
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/nav-tree-1-site/content/title-from-title-section.neo",
+                "leading-dir/Neopoligen/set1-test-site/content/title-from-title-section.neo",
             ),
             r#"-- title
 
@@ -40,7 +40,7 @@ Title From Title Section
 
         /////////////////////////////////////////////////////////////////////////
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/nav-tree-1-site/content/title-from-metadata.neo"),
+            PathBuf::from("leading-dir/Neopoligen/set1-test-site/content/title-from-metadata.neo"),
             r#"-- title
 
 This Title Is Overwritten By Metadata
@@ -55,7 +55,7 @@ This Title Is Overwritten By Metadata
         /////////////////////////////////////////////////////////////////////////
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/nav-tree-1-site/content/title-from-any-section.neo",
+                "leading-dir/Neopoligen/set1-test-site/content/title-from-any-section.neo",
             ),
             r#"-- p
 -- title: Title From Any Section
@@ -69,7 +69,7 @@ This Title Is Overwritten By Metadata
         /////////////////////////////////////////////////////////////////////////
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/nav-tree-1-site/content/title-from-first-few-words.neo",
+                "leading-dir/Neopoligen/set1-test-site/content/title-from-first-few-words.neo",
             ),
             r#"-- p
 
@@ -84,7 +84,7 @@ Title from the first few words of a section
         /////////////////////////////////////////////////////////////////////////
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/nav-tree-1-site/content/title-from-id-as-fallback.neo",
+                "leading-dir/Neopoligen/set1-test-site/content/title-from-id-as-fallback.neo",
             ),
             r#"-- metadata
 -- id: ttss0060
