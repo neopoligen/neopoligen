@@ -1,10 +1,10 @@
 pub mod new_from_files_and_folders;
 
-use crate::page::Page;
-use minijinja::Value;
+// use crate::page::Page;
+// use minijinja::Value;
 use serde::Deserialize;
 use serde::Serialize;
-use std::collections::BTreeMap;
+// use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
@@ -36,12 +36,12 @@ pub enum CollectionItemStatus {
     PageInactive,
 }
 
-pub fn get_nav_links_from_files_and_folders(
-    _pages: &BTreeMap<String, Page>,
-    _patterns: &[Value],
-) -> Vec<CollectionItem> {
-    vec![]
-}
+// pub fn get_nav_links_from_files_and_folders(
+//     _pages: &BTreeMap<String, Page>,
+//     _patterns: &[Value],
+// ) -> Vec<CollectionItem> {
+//     vec![]
+// }
 
 impl Collection {
     pub fn set_active_item(&mut self, id: &String) {
