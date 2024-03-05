@@ -6,7 +6,7 @@ use neopoligen::site::Site;
 use pretty_assertions::assert_eq;
 
 #[test]
-pub fn load_a_page_directly() {
+pub fn load_page() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
@@ -18,7 +18,7 @@ pub fn load_a_page_directly() {
 }
 
 #[test]
-pub fn load_a_title_folder() {
+pub fn load_title_folder() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
@@ -30,7 +30,7 @@ pub fn load_a_title_folder() {
 }
 
 #[test]
-pub fn load_an_index_folder() {
+pub fn load_index_folder() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
@@ -54,7 +54,7 @@ pub fn load_collection_children() {
 }
 
 #[test]
-pub fn mark_actitve_page() {
+pub fn mark_page_active() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
@@ -67,7 +67,7 @@ pub fn mark_actitve_page() {
 }
 
 #[test]
-pub fn mark_inactive_pages() {
+pub fn mark_page_inactive() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
@@ -80,7 +80,7 @@ pub fn mark_inactive_pages() {
 }
 
 #[test]
-pub fn mark_active_index_folder() {
+pub fn mark_index_folder_active() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
@@ -88,6 +88,19 @@ pub fn mark_active_index_folder() {
     let mut collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
     collection.set_active_item(&"aabb0060".to_string());
     let left = &CollectionItemStatus::IndexFolderActive;
+    let right = &collection.tree[0].active_type;
+    assert_eq!(left, right);
+}
+
+#[test]
+pub fn mark_title_folder_active() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"]]);
+    let mut collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
+    collection.set_active_item(&"aabb0020".to_string());
+    let left = &CollectionItemStatus::TitleFolderActive;
     let right = &collection.tree[0].active_type;
     assert_eq!(left, right);
 }

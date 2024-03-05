@@ -37,7 +37,7 @@ pub enum CollectionItemStatus {
     IndexFolderActive,
     // IndexFolderClosed,
     // IndexFolderOpened,
-    // TitleFolderActive,
+    TitleFolderActive,
     // TitleFolderClosed,
     // TitleFolderOpened
 }
@@ -66,6 +66,8 @@ fn mark_active_page(item: &mut CollectionItem, id: &String) {
             item.active_type = CollectionItemStatus::PageActive;
         } else if item.base_type == CollectionItemBaseType::IndexFolder {
             item.active_type = CollectionItemStatus::IndexFolderActive;
+        } else if item.base_type == CollectionItemBaseType::TitleFolder {
+            item.active_type = CollectionItemStatus::TitleFolderActive;
         }
     } else {
         item.children
