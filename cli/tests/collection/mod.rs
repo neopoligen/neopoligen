@@ -6,6 +6,55 @@ use neopoligen::site::Site;
 use pretty_assertions::assert_eq;
 
 #[test]
+pub fn item_reference() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![
+        vec!["aabb0010"],
+        vec!["level-1a"],
+        vec!["level-1b"],
+    ]);
+    let collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
+    assert_eq!(&collection.tree[0].id, &"aabb0010".to_string());
+    assert_eq!(&collection.tree[1].id, &"aabb0020".to_string());
+    assert_eq!(&collection.tree[1].children[0].id, &"aabb0030".to_string());
+    assert_eq!(&collection.tree[1].children[1].id, &"aabb0040".to_string());
+    assert_eq!(
+        &collection.tree[1].children[1].children[0].id,
+        &"aabb0050".to_string()
+    );
+    assert_eq!(&collection.tree[2].id, &"aabb0060".to_string());
+    assert_eq!(&collection.tree[2].children[0].id, &"aabb0070".to_string());
+
+    assert_eq!(collection.tree[0].base_type, CollectionItemBaseType::Page);
+    assert_eq!(
+        collection.tree[1].base_type,
+        CollectionItemBaseType::TitleFolder
+    );
+    assert_eq!(
+        collection.tree[1].children[0].base_type,
+        CollectionItemBaseType::Page
+    );
+    assert_eq!(
+        collection.tree[1].children[1].base_type,
+        CollectionItemBaseType::TitleFolder
+    );
+    assert_eq!(
+        collection.tree[1].children[1].children[0].base_type,
+        CollectionItemBaseType::Page
+    );
+    assert_eq!(
+        collection.tree[2].base_type,
+        CollectionItemBaseType::IndexFolder
+    );
+    assert_eq!(
+        collection.tree[2].children[0].base_type,
+        CollectionItemBaseType::Page
+    );
+}
+
+#[test]
 pub fn load_page() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
