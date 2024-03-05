@@ -42,14 +42,14 @@ pub fn load_an_index_folder() {
 }
 
 #[test]
-pub fn load_collection_childrent() {
+pub fn load_collection_children() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"]]);
     let collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
-    let left = &CollectionItemType::File;
-    let right = &collection.items[0].children[0].base_type;
+    let left = &"aabb0050".to_string();
+    let right = &collection.items[0].children[1].children[0].page_id;
     assert_eq!(left, right);
 }
 

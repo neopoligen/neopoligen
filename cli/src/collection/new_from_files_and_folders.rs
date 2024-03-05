@@ -4,6 +4,7 @@ use crate::collection::CollectionItemType;
 use crate::page::Page;
 use minijinja::Value;
 use std::collections::BTreeMap;
+use std::collections::BTreeSet;
 
 impl Collection {
     pub fn new_from_files_and_folders(
@@ -46,6 +47,9 @@ fn folder_menu_index_finder(
         pages.iter().find_map(|page| {
             if full_pattern_with_title == page.1.path_parts {
                 let mut children = folder_menu_child_item_finder(pages, &pattern);
+                let mut next_folders: Vec<CollectionItem> =
+                    folder_menu_subfolder_finder(pages, &pattern);
+                children.append(&mut next_folders);
                 Some(CollectionItem {
                     page_id: page.0.clone(),
                     base_type: CollectionItemType::TitleFolder,
@@ -53,6 +57,9 @@ fn folder_menu_index_finder(
                 })
             } else if full_pattern_with_index == page.1.path_parts {
                 let mut children = folder_menu_child_item_finder(pages, &pattern);
+                let mut next_folders: Vec<CollectionItem> =
+                    folder_menu_subfolder_finder(pages, &pattern);
+                children.append(&mut next_folders);
                 Some(CollectionItem {
                     page_id: page.0.clone(),
                     base_type: CollectionItemType::IndexFolder,
@@ -140,5 +147,28 @@ fn folder_menu_child_item_finder(
                 None
             }
         })
+        .collect()
+}
+
+fn folder_menu_subfolder_finder(
+    pages: &BTreeMap<String, Page>,
+    pattern: &Vec<String>,
+) -> Vec<CollectionItem> {
+    let mut next_level_folders: BTreeSet<Vec<String>> = BTreeSet::new();
+    pages.iter().for_each(|page| {
+        let page_folders = page.1.folders.clone();
+        if page_folders
+            .iter()
+            .take(pattern.len())
+            .eq(pattern.clone().iter())
+        {
+            if page_folders.len() == pattern.len() + 1 {
+                next_level_folders.insert(page_folders);
+            }
+        }
+    });
+    next_level_folders
+        .iter()
+        .filter_map(|pat| folder_menu_index_finder(pages, pat.clone()))
         .collect()
 }
