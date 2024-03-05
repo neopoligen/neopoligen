@@ -241,15 +241,15 @@ pub fn check_parent_ids_second_level() {
     assert_eq!(left, right);
 }
 
-// #[test]
-// pub fn get_breadcrumbs() {
-//     let file_set = FileSet::nav_items2();
-//     let config = Config::nav_items2();
-//     let site = Site::new(&file_set, &config);
-//     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"]]);
-//     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
-//     nav_items.set_current_page(&Value::from("aabb0050"));
-//     let left = String::from("aabb0020");
-//     let right = nav_items.current_breadcrumbs[0].page_id.clone();
-//     assert_eq!(left, right);
-// }
+#[test]
+pub fn current_breadcrumbs() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"]]);
+    let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
+    nav_items.set_current_page(&Value::from("aabb0050"));
+    let left = vec!["aabb0020".to_string(), "aabb0040".to_string()];
+    let right = nav_items.current_item.unwrap().parent_ids.clone();
+    assert_eq!(left, right);
+}

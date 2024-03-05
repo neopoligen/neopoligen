@@ -29,7 +29,7 @@ impl NavItems {
             prev_item: None,
             next_item: None,
             open_folders: vec![],
-            current_breadcrumbs: vec![],
+            current_item: None,
         };
         nav_items
     }

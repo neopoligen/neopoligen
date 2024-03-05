@@ -14,25 +14,25 @@ pub struct NavItems {
     pub next_item: Option<NavItem>,
     pub prev_item: Option<NavItem>,
     pub open_folders: Vec<String>,
-    pub current_breadcrumbs: Vec<NavItem>,
+    pub current_item: Option<NavItem>,
 }
 
 impl NavItems {
     pub fn set_current_page(&mut self, page_id: &Value) {
         let page_id = page_id.to_string();
-        if let Some(folders) = self
+        if let Some(current_item) = self
             .tree
             .iter_mut()
             .find_map(|item| set_current_file(&page_id, item))
         {
-            self.open_folders = folders;
+            self.open_folders = current_item.folders.clone();
+            self.current_item = Some(current_item);
         }
         self.tree
             .iter_mut()
             .for_each(|item| update_open_folders(item, &self.open_folders));
         self.next_item = get_next_item(&page_id, &self.prev_next_items);
         self.prev_item = get_prev_item(&page_id, &self.prev_next_items);
-        //self.set_current_breadcrumbs();
     }
 
     // pub fn set_current_breadcrumbs(&mut self) {
@@ -102,7 +102,7 @@ fn get_next_item(key: &String, items: &Vec<NavItem>) -> Option<NavItem> {
     }
 }
 
-fn set_current_file(id: &String, item: &mut NavItem) -> Option<Vec<String>> {
+fn set_current_file(id: &String, item: &mut NavItem) -> Option<NavItem> {
     if item.page_id == id.to_string() {
         item.title_link_or_text = item.title.clone();
         item.menu_title_link_or_text = item.menu_title.clone();
@@ -111,7 +111,7 @@ fn set_current_file(id: &String, item: &mut NavItem) -> Option<Vec<String>> {
         } else {
             item.item_type = NavItemType::CurrentFile;
         }
-        Some(item.folders.clone())
+        Some(item.clone())
     } else {
         item.children
             .iter_mut()
