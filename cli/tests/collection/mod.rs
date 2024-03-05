@@ -346,15 +346,10 @@ pub fn ancestors() {
 
     assert_eq!(Vec::<String>::from([]), collection.tree[2].ancestors);
 
-    // assert_eq!(
-    //     collection.tree[2].base_type,
-    //     CollectionItemBaseType::IndexFolder
-    // );
-
-    // assert_eq!(
-    //     collection.tree[2].children[0].base_type,
-    //     CollectionItemBaseType::Page
-    // );
+    assert_eq!(
+        Vec::<String>::from(["aabb0060".to_string()]),
+        collection.tree[2].children[0].ancestors
+    );
 }
 
 // #[test]
