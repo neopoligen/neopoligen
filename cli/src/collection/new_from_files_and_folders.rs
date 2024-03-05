@@ -12,7 +12,7 @@ impl Collection {
         pages: &BTreeMap<String, Page>,
         args: &[Value],
     ) -> Collection {
-        let items: Vec<CollectionItem> = args[0]
+        let tree: Vec<CollectionItem> = args[0]
             .try_iter()
             .unwrap()
             .filter_map(|pattern_set| {
@@ -24,7 +24,7 @@ impl Collection {
                 folder_menu_index_finder(pages, pattern)
             })
             .collect();
-        let c = Collection { items };
+        let c = Collection { tree };
         c
     }
 }

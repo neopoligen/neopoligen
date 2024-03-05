@@ -5,12 +5,11 @@ use minijinja::Value;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::BTreeMap;
-use std::marker;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct Collection {
-    pub items: Vec<CollectionItem>,
+    pub tree: Vec<CollectionItem>,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -45,7 +44,7 @@ pub fn get_nav_links_from_files_and_folders(
 
 impl Collection {
     pub fn set_current_page(&mut self, id: &String) {
-        self.items
+        self.tree
             .iter_mut()
             .for_each(|item| mark_current_page(item, id));
     }

@@ -15,7 +15,7 @@ pub fn load_a_page_directly() {
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["aabb0010"]]);
     let collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
     let left = &"aabb0010".to_string();
-    let right = &collection.items[0].page_id;
+    let right = &collection.tree[0].page_id;
     assert_eq!(left, right);
 }
 
@@ -27,7 +27,7 @@ pub fn load_a_title_folder() {
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"]]);
     let collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
     let left = &CollectionBaseItemType::TitleFolder;
-    let right = &collection.items[0].base_type;
+    let right = &collection.tree[0].base_type;
     assert_eq!(left, right);
 }
 
@@ -39,7 +39,7 @@ pub fn load_an_index_folder() {
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1b"]]);
     let collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
     let left = &CollectionBaseItemType::IndexFolder;
-    let right = &collection.items[0].base_type;
+    let right = &collection.tree[0].base_type;
     assert_eq!(left, right);
 }
 
@@ -51,7 +51,7 @@ pub fn load_collection_children() {
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"]]);
     let collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
     let left = &"aabb0050".to_string();
-    let right = &collection.items[0].children[1].children[0].page_id;
+    let right = &collection.tree[0].children[1].children[0].page_id;
     assert_eq!(left, right);
 }
 
@@ -64,7 +64,7 @@ pub fn set_current_page() {
     let mut collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
     collection.set_current_page(&"aabb0050".to_string());
     let left = &CollectionActiveItemType::PageCurrent;
-    let right = &collection.items[0].children[1].children[0].active_type;
+    let right = &collection.tree[0].children[1].children[0].active_type;
     assert_eq!(left, right);
 }
 
