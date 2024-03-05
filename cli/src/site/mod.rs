@@ -6,9 +6,9 @@ use crate::child::Child;
 use crate::config::Config;
 use crate::nav_items::NavItems;
 use crate::page::Page;
-use crate::section::Section;
-use crate::section_category::SectionCategory;
-use crate::span::Span;
+// use crate::section::Section;
+// use crate::section_category::SectionCategory;
+// use crate::span::Span;
 use itertools::Itertools;
 use minijinja::Value;
 use serde::Serialize;
@@ -499,37 +499,37 @@ impl Site {
     }
 }
 
-// MOVED
-fn filter_section(sec: &Section) -> Option<String> {
-    let SectionCategory::StandardSectionFull { containers } = &sec.category else {
-        return None;
-    };
-    let first = containers.first()?;
-    let Child::Block(thing) = first else {
-        return None;
-    };
-    let spans = thing
-        .iter()
-        .flat_map(|span| get_span_words(&span))
-        .collect::<String>();
-    Some(spans)
-}
+// // MOVED
+// fn filter_section(sec: &Section) -> Option<String> {
+//     let SectionCategory::StandardSectionFull { containers } = &sec.category else {
+//         return None;
+//     };
+//     let first = containers.first()?;
+//     let Child::Block(thing) = first else {
+//         return None;
+//     };
+//     let spans = thing
+//         .iter()
+//         .flat_map(|span| get_span_words(&span))
+//         .collect::<String>();
+//     Some(spans)
+// }
 
-// MOVED
-fn get_span_words(span: &Span) -> Vec<String> {
-    match span {
-        Span::Word { text, .. } => {
-            vec![text.to_string()]
-        }
-        Span::Space { .. } => vec![" ".to_string()],
-        Span::StandardSpan { spans, .. } => spans
-            .iter()
-            .map(|span| get_span_words(&span))
-            .collect::<Vec<Vec<String>>>()
-            .concat(),
-        _ => vec!["".to_string()],
-    }
-}
+// // MOVED
+// fn get_span_words(span: &Span) -> Vec<String> {
+//     match span {
+//         Span::Word { text, .. } => {
+//             vec![text.to_string()]
+//         }
+//         Span::Space { .. } => vec![" ".to_string()],
+//         Span::StandardSpan { spans, .. } => spans
+//             .iter()
+//             .map(|span| get_span_words(&span))
+//             .collect::<Vec<Vec<String>>>()
+//             .concat(),
+//         _ => vec!["".to_string()],
+//     }
+// }
 
 impl Display for Site {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

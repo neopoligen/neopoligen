@@ -14,6 +14,7 @@ pub struct NavItems {
     pub next_item: Option<NavItem>,
     pub prev_item: Option<NavItem>,
     pub open_folders: Vec<String>,
+    pub current_breadcrumbs: Vec<NavItem>,
 }
 
 impl NavItems {
@@ -31,7 +32,24 @@ impl NavItems {
             .for_each(|item| update_open_folders(item, &self.open_folders));
         self.next_item = get_next_item(&page_id, &self.prev_next_items);
         self.prev_item = get_prev_item(&page_id, &self.prev_next_items);
+        //self.set_current_breadcrumbs();
     }
+
+    // pub fn set_current_breadcrumbs(&mut self) {
+    //     let _: Vec<_> = self
+    //         .open_folders
+    //         .iter()
+    //         .filter_map(|f| {
+    //             self.prev_next_items.iter().find_map(|check| {
+    //                 dbg!(&f);
+    //                 dbg!(&check.page_id);
+    //                 None::<String>
+    //             })
+    //         })
+    //         .collect();
+    //     self.current_breadcrumbs
+    //         .push(self.prev_next_items[0].clone());
+    // }
 }
 
 fn update_open_folders(item: &mut NavItem, folders: &Vec<String>) {

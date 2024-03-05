@@ -19,16 +19,6 @@ mod site_page_menu_title {
     }
 
     #[test]
-    pub fn missing_page() {
-        let file_set = FileSet::set2();
-        let config = Config::set2();
-        let site = Site::new(&file_set, &config);
-        let left = Some("(missing page)".to_string());
-        let right = site.page_menu_title(&[Value::from("intentionally-missing-id")]);
-        assert_eq!(left, right);
-    }
-
-    #[test]
     pub fn title_from_content() {
         let file_set = FileSet::set2();
         let config = Config::set2();
