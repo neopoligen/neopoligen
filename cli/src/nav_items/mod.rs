@@ -34,22 +34,6 @@ impl NavItems {
         self.next_item = get_next_item(&page_id, &self.prev_next_items);
         self.prev_item = get_prev_item(&page_id, &self.prev_next_items);
     }
-
-    // pub fn set_current_breadcrumbs(&mut self) {
-    //     let _: Vec<_> = self
-    //         .open_folders
-    //         .iter()
-    //         .filter_map(|f| {
-    //             self.prev_next_items.iter().find_map(|check| {
-    //                 dbg!(&f);
-    //                 dbg!(&check.page_id);
-    //                 None::<String>
-    //             })
-    //         })
-    //         .collect();
-    //     self.current_breadcrumbs
-    //         .push(self.prev_next_items[0].clone());
-    // }
 }
 
 fn update_open_folders(item: &mut NavItem, folders: &Vec<String>) {
@@ -108,6 +92,8 @@ fn set_current_file(id: &String, item: &mut NavItem) -> Option<NavItem> {
         item.menu_title_link_or_text = item.menu_title.clone();
         if matches!(item.item_type, NavItemType::IndexFolderClosed) {
             item.item_type = NavItemType::IndexFolderActive;
+        } else if matches!(item.item_type, NavItemType::TitleFolderClosed) {
+            item.item_type = NavItemType::TitleFolderActive;
         } else {
             item.item_type = NavItemType::FileCurrent;
         }

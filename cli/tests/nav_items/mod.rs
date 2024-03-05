@@ -103,7 +103,7 @@ pub fn set_current_file() {
 }
 
 #[test]
-pub fn check_not_current_file() {
+pub fn file_not_current() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
@@ -137,7 +137,7 @@ pub fn set_top_level_current_file() {
 }
 
 #[test]
-pub fn check_active_folder_index() {
+pub fn index_folder_active() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
@@ -148,7 +148,7 @@ pub fn check_active_folder_index() {
 }
 
 #[test]
-pub fn check_closed_folder_index() {
+pub fn index_folder_closed() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
@@ -159,7 +159,7 @@ pub fn check_closed_folder_index() {
 }
 
 #[test]
-pub fn check_closed_folder_title() {
+pub fn title_folder_closed() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
@@ -173,7 +173,7 @@ pub fn check_closed_folder_title() {
 }
 
 #[test]
-pub fn check_opened_folder_title() {
+pub fn title_folder_opened() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
@@ -187,7 +187,21 @@ pub fn check_opened_folder_title() {
 }
 
 #[test]
-pub fn check_opened_folder_index() {
+pub fn title_folder_active() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns =
+        Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"], vec!["level-1b"]]);
+    let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
+    nav_items.set_current_page(&Value::from("aabb0020"));
+    let left = NavItemType::TitleFolderActive;
+    let right = nav_items.tree[0].item_type.clone();
+    assert_eq!(left, right);
+}
+
+#[test]
+pub fn index_folder_opened() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
