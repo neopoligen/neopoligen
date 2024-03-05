@@ -11,6 +11,7 @@ pub mod helpers;
 pub mod json_plugin;
 pub mod list;
 pub mod list_item;
+pub mod nav_id;
 pub mod nav_item;
 pub mod nav_items;
 pub mod page;

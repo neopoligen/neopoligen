@@ -1,6 +1,7 @@
 use minijinja::Value;
 use neopoligen::config::Config;
 use neopoligen::file_set::FileSet;
+use neopoligen::nav_id::{NavId, NavIdBaseType};
 use neopoligen::nav_item::NavItemType;
 use neopoligen::nav_items::NavItems;
 use neopoligen::site::Site;
@@ -265,5 +266,32 @@ pub fn current_breadcrumbs() {
     nav_items.set_current_page(&Value::from("aabb0050"));
     let left = vec!["aabb0020".to_string(), "aabb0040".to_string()];
     let right = nav_items.current_item.unwrap().parent_ids.clone();
+    assert_eq!(left, right);
+}
+
+#[test]
+pub fn nav_tree_ids_from() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"]]);
+    let nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
+    let left = vec![
+        NavId {
+            page_id: "aabb0030".to_string(),
+            base_type: NavIdBaseType::File,
+            children: vec![],
+        },
+        NavId {
+            page_id: "aabb0040".to_string(),
+            base_type: NavIdBaseType::File,
+            children: vec![NavId {
+                page_id: "aabb0050".to_string(),
+                base_type: NavIdBaseType::File,
+                children: vec![],
+            }],
+        },
+    ];
+    let right = nav_items.tree_items_from(&[Value::from("aabb0020".to_string())]);
     assert_eq!(left, right);
 }

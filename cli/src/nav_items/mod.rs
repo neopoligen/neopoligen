@@ -1,5 +1,7 @@
 pub mod new_from_files_and_folders;
 
+use crate::nav_id::NavId;
+use crate::nav_id::NavIdBaseType;
 use crate::nav_item::NavItem;
 use crate::nav_item::NavItemType;
 use minijinja::Value;
@@ -33,6 +35,38 @@ impl NavItems {
             .for_each(|item| update_open_folders(item, &self.open_folders));
         self.next_item = get_next_item(&page_id, &self.prev_next_items);
         self.prev_item = get_prev_item(&page_id, &self.prev_next_items);
+    }
+
+    pub fn tree_items_from(&self, args: &[Value]) -> Vec<NavId> {
+        let page_id = args[0].to_string();
+        match self
+            .tree
+            .iter()
+            .find_map(|item| is_tree_sub_root(item, &page_id))
+        {
+            Some(sub_root) => sub_root
+                .children
+                .iter()
+                .map(|child| get_nav_id(child))
+                .collect(),
+            None => vec![],
+        }
+    }
+}
+
+fn get_nav_id(item: &NavItem) -> NavId {
+    NavId {
+        page_id: item.page_id.clone(),
+        base_type: NavIdBaseType::File,
+        children: item.children.iter().map(|c2| get_nav_id(c2)).collect(),
+    }
+}
+
+fn is_tree_sub_root(item: &NavItem, page_id: &String) -> Option<NavItem> {
+    if &item.page_id == page_id {
+        Some(item.clone())
+    } else {
+        None
     }
 }
 
