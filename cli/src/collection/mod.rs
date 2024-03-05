@@ -34,6 +34,12 @@ pub enum CollectionItemStatus {
     NotYetActivated,
     PageActive,
     PageInactive,
+    IndexFolderActive,
+    // IndexFolderClosed,
+    // IndexFolderOpened,
+    // TitleFolderActive,
+    // TitleFolderClosed,
+    // TitleFolderOpened
 }
 
 // pub fn get_nav_links_from_files_and_folders(
@@ -56,7 +62,11 @@ impl Collection {
 
 fn mark_active_page(item: &mut CollectionItem, id: &String) {
     if &item.id == id {
-        item.active_type = CollectionItemStatus::PageActive;
+        if item.base_type == CollectionItemBaseType::Page {
+            item.active_type = CollectionItemStatus::PageActive;
+        } else if item.base_type == CollectionItemBaseType::IndexFolder {
+            item.active_type = CollectionItemStatus::IndexFolderActive;
+        }
     } else {
         item.children
             .iter_mut()

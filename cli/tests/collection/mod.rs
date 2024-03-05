@@ -54,7 +54,7 @@ pub fn load_collection_children() {
 }
 
 #[test]
-pub fn set_active_item() {
+pub fn mark_actitve_page() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
@@ -67,7 +67,7 @@ pub fn set_active_item() {
 }
 
 #[test]
-pub fn mark_not_current_pages() {
+pub fn mark_inactive_pages() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
@@ -76,6 +76,19 @@ pub fn mark_not_current_pages() {
     collection.set_active_item(&"aabb0050".to_string());
     let left = &CollectionItemStatus::PageInactive;
     let right = &collection.tree[0].children[0].active_type;
+    assert_eq!(left, right);
+}
+
+#[test]
+pub fn mark_active_index_folder() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1b"]]);
+    let mut collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
+    collection.set_active_item(&"aabb0060".to_string());
+    let left = &CollectionItemStatus::IndexFolderActive;
+    let right = &collection.tree[0].active_type;
     assert_eq!(left, right);
 }
 
