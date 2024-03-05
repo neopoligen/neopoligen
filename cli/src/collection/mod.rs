@@ -37,8 +37,8 @@ pub enum CollectionItemStatus {
     PageActive,
     PageInactive,
     IndexFolderActive,
-    // IndexFolderClosed,
-    // IndexFolderOpened,
+    IndexFolderClosed,
+    IndexFolderOpened,
     TitleFolderActive,
     TitleFolderClosed,
     TitleFolderOpened,
@@ -112,6 +112,22 @@ fn mark_folder_opened_closed(item: &mut CollectionItem, id: &String, active_fold
                 item.status = CollectionItemStatus::TitleFolderOpened;
             } else {
                 item.status = CollectionItemStatus::TitleFolderClosed;
+            }
+        } else if item.base_type == CollectionItemBaseType::IndexFolder {
+            let folder_count = std::cmp::min(item.folders.len(), active_folders.len());
+            if &item
+                .folders
+                .iter()
+                .take(folder_count)
+                .collect::<Vec<&String>>()
+                == &active_folders
+                    .iter()
+                    .take(folder_count)
+                    .collect::<Vec<&String>>()
+            {
+                item.status = CollectionItemStatus::IndexFolderOpened;
+            } else {
+                item.status = CollectionItemStatus::IndexFolderClosed;
             }
         }
     }
