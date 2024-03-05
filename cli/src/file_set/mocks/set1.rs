@@ -46,7 +46,7 @@ Title From Title Section
 This Title Is Overwritten By Metadata
 
 -- metadata
--- id: aabb0030
+-- id: ttss0030
 -- title: Title From Metadata 
 "#
             .to_string(),
@@ -61,7 +61,7 @@ This Title Is Overwritten By Metadata
 -- title: Title From Any Section
 
 -- metadata
--- id: aabb0040
+-- id: ttss0040
 "#
             .to_string(),
         );
@@ -76,7 +76,7 @@ This Title Is Overwritten By Metadata
 Title from the first few words of a section
 
 -- metadata
--- id: aabb0050
+-- id: ttss0050
 "#
             .to_string(),
         );
@@ -87,7 +87,7 @@ Title from the first few words of a section
                 "leading-dir/Neopoligen/nav-tree-1-site/content/title-from-id-as-fallback.neo",
             ),
             r#"-- metadata
--- id: aabb0060
+-- id: ttss0060
 "#
             .to_string(),
         );
