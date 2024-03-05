@@ -5,8 +5,6 @@ use neopoligen::file_set::FileSet;
 use neopoligen::site::Site;
 use pretty_assertions::assert_eq;
 
-// TODO: Test lower level folder call
-
 #[test]
 pub fn load_a_page_directly() {
     let file_set = FileSet::nav_items2();
@@ -65,6 +63,19 @@ pub fn set_current_page() {
     collection.set_current_page(&"aabb0050".to_string());
     let left = &CollectionActiveItemType::PageCurrent;
     let right = &collection.tree[0].children[1].children[0].active_type;
+    assert_eq!(left, right);
+}
+
+#[test]
+pub fn mark_not_current_pages() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"]]);
+    let mut collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
+    collection.set_current_page(&"aabb0050".to_string());
+    let left = &CollectionActiveItemType::PageNotCurrent;
+    let right = &collection.tree[0].children[0].active_type;
     assert_eq!(left, right);
 }
 

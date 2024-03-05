@@ -33,6 +33,7 @@ pub enum CollectionBaseItemType {
 pub enum CollectionActiveItemType {
     NotYetActivated,
     PageCurrent,
+    PageNotCurrent,
 }
 
 pub fn get_nav_links_from_files_and_folders(
@@ -47,6 +48,9 @@ impl Collection {
         self.tree
             .iter_mut()
             .for_each(|item| mark_current_page(item, id));
+        self.tree
+            .iter_mut()
+            .for_each(|item| mark_not_current_page(item, id));
     }
 }
 
@@ -58,4 +62,13 @@ fn mark_current_page(item: &mut CollectionItem, id: &String) {
             .iter_mut()
             .for_each(|child| mark_current_page(child, id))
     }
+}
+
+fn mark_not_current_page(item: &mut CollectionItem, id: &String) {
+    if item.base_type == CollectionBaseItemType::Page && &item.page_id != id {
+        item.active_type = CollectionActiveItemType::PageNotCurrent;
+    }
+    item.children
+        .iter_mut()
+        .for_each(|child| mark_not_current_page(child, id))
 }
