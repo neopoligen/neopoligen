@@ -212,7 +212,6 @@ pub fn active_folders() {
 }
 
 #[test]
-#[ignore]
 pub fn mark_title_folder_closed() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
@@ -223,7 +222,7 @@ pub fn mark_title_folder_closed() {
         vec!["level-1b"],
     ]);
     let mut collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
-    collection.set_active_item(&"aabb0010".to_string());
+    collection.set_active_item(&"aabb0070".to_string());
     let left = &CollectionItemStatus::TitleFolderClosed;
     let right = &collection.tree[1].status;
     assert_eq!(left, right);

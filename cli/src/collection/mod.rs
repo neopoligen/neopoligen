@@ -55,7 +55,7 @@ impl Collection {
             .for_each(|item| mark_inactive_page(item, id));
         self.tree
             .iter_mut()
-            .for_each(|item| mark_folder_opened_closed(item, id));
+            .for_each(|item| mark_folder_opened_closed(item, id, &self.active_folders));
     }
 
     pub fn set_active_folders(&mut self, id: &String) {
@@ -95,13 +95,18 @@ fn mark_active_page(item: &mut CollectionItem, id: &String) {
     }
 }
 
-fn mark_folder_opened_closed(item: &mut CollectionItem, id: &String) {
-    if item.base_type == CollectionItemBaseType::Page && &item.id != id {
-        item.status = CollectionItemStatus::PageInactive;
+fn mark_folder_opened_closed(item: &mut CollectionItem, id: &String, active_folders: &Vec<String>) {
+    if item.status == CollectionItemStatus::ToBeDetermined {
+        if item.base_type == CollectionItemBaseType::TitleFolder {
+            item.status = CollectionItemStatus::TitleFolderClosed;
+            // dbg!(&item);
+            // dbg!(active_folders);
+        }
     }
+
     item.children
         .iter_mut()
-        .for_each(|child| mark_inactive_page(child, id))
+        .for_each(|child| mark_folder_opened_closed(child, id, active_folders))
 }
 
 fn mark_inactive_page(item: &mut CollectionItem, id: &String) {
