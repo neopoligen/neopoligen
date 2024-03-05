@@ -32,8 +32,10 @@ impl Page {
                             let href = href(&id, &ast, &title, &config.default_language);
                             let html_link = html_link(&href, &title);
                             let path_parts = path_parts(&source_path, config);
+                            let folders = folders(&source_path, config);
                             Some(Page {
                                 ast,
+                                folders,
                                 href,
                                 html_link,
                                 id,
@@ -206,6 +208,17 @@ fn href(
             .into_owned(),
         ))
     }
+}
+
+fn folders(source_path: &PathBuf, config: &Config) -> Vec<String> {
+    source_path
+        .strip_prefix(config.folders.content_root.clone())
+        .unwrap()
+        .parent()
+        .unwrap()
+        .components()
+        .map(|c| c.as_os_str().to_string_lossy().to_string().to_lowercase())
+        .collect()
 }
 
 fn html_link(href: &Option<String>, title: &Option<String>) -> Option<String> {

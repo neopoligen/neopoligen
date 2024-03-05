@@ -45,16 +45,18 @@ fn folder_menu_index_finder(
         full_pattern_with_index.push("_index.neo".to_string());
         pages.iter().find_map(|page| {
             if full_pattern_with_title == page.1.path_parts {
+                let mut children = folder_menu_child_item_finder(pages, &pattern);
                 Some(CollectionItem {
                     page_id: page.0.clone(),
                     base_type: CollectionItemType::TitleFolder,
-                    children: vec![],
+                    children,
                 })
             } else if full_pattern_with_index == page.1.path_parts {
+                let mut children = folder_menu_child_item_finder(pages, &pattern);
                 Some(CollectionItem {
                     page_id: page.0.clone(),
                     base_type: CollectionItemType::IndexFolder,
-                    children: vec![],
+                    children,
                 })
 
             //         let mut fmi = NavItem {
@@ -110,4 +112,33 @@ fn folder_menu_index_finder(
             }
         })
     }
+}
+
+fn folder_menu_child_item_finder(
+    pages: &BTreeMap<String, Page>,
+    pattern: &Vec<String>,
+) -> Vec<CollectionItem> {
+    let mut full_pattern_with_title = pattern.clone();
+    full_pattern_with_title.push("_title.neo".to_string());
+    let mut full_pattern_with_index = pattern.clone();
+    full_pattern_with_index.push("_index.neo".to_string());
+    pages
+        .iter()
+        .filter_map(|page| {
+            let page_folders = page.1.folders.clone();
+            let path_parts = page.1.path_parts.clone();
+            if &page_folders == pattern
+                && path_parts != full_pattern_with_title
+                && path_parts != full_pattern_with_index
+            {
+                Some(CollectionItem {
+                    page_id: page.0.clone(),
+                    base_type: CollectionItemType::File,
+                    children: vec![],
+                })
+            } else {
+                None
+            }
+        })
+        .collect()
 }
