@@ -1,11 +1,8 @@
 pub mod empty;
 pub mod new_from_files_and_folders;
 
-// use crate::page::Page;
-// use minijinja::Value;
 use serde::Deserialize;
 use serde::Serialize;
-// use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]

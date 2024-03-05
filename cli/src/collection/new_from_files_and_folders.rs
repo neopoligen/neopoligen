@@ -3,7 +3,6 @@ use crate::collection::CollectionItem;
 use crate::collection::CollectionItemBaseType;
 use crate::collection::CollectionItemStatus;
 use crate::page::Page;
-use minijinja::Value;
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
 
@@ -14,36 +13,7 @@ impl Collection {
     ) -> Collection {
         let tree: Vec<CollectionItem> = patterns
             .iter()
-            .filter_map(|pattern| {
-                //let pattern: Vec<String> = pattern_set
-                //   .iter()
-                //  .map(|pattern_part| pattern_part.to_string())
-                // .collect();
-                folder_menu_index_finder(pages, pattern.to_vec(), vec![])
-            })
-            .collect();
-        let c = Collection {
-            active_folders: vec![],
-            tree,
-        };
-        c
-    }
-
-    pub fn new_from_files_and_folders_old(
-        pages: &BTreeMap<String, Page>,
-        args: &[Value],
-    ) -> Collection {
-        let tree: Vec<CollectionItem> = args[0]
-            .try_iter()
-            .unwrap()
-            .filter_map(|pattern_set| {
-                let pattern: Vec<String> = pattern_set
-                    .try_iter()
-                    .unwrap()
-                    .map(|pattern_part| pattern_part.to_string())
-                    .collect();
-                folder_menu_index_finder(pages, pattern, vec![])
-            })
+            .filter_map(|pattern| folder_menu_index_finder(pages, pattern.to_vec(), vec![]))
             .collect();
         let c = Collection {
             active_folders: vec![],
@@ -106,54 +76,6 @@ fn folder_menu_index_finder(
                     id: page.0.clone(),
                     status: CollectionItemStatus::ToBeDetermined,
                 })
-            //         let mut fmi = NavItem {
-            //             children: folder_menu_child_item_finder(
-            //                 site,
-            //                 &pattern,
-            //                 next_parent_ids.clone(),
-            //             ),
-            //             folders: site.page_folders(&page_args),
-            //             href: site.page_href(&[Value::from(page.1.id.clone())]),
-            //             item_type: NavItemBaseType::TitleFolderClosed,
-            //             menu_title: site.page_menu_title(&[Value::from(page.1.id.clone())]),
-            //             menu_title_link_or_text: site
-            //                 .nav_link_title_link(&[Value::from(page.1.id.clone())]),
-            //             page_id: page.1.id.clone(),
-            //             path_sort_string: site.page_path_parts(&page_args).join(""),
-            //             parent_ids: parent_ids.clone(),
-            //             title: site.page_title(&[Value::from(page.1.id.clone())]),
-            //             title_link_or_text: site.nav_link_title_link(&[Value::from(page.1.id.clone())]),
-            //         };
-            //         // TODO: Get sub folders here
-            //         let mut next_folders: Vec<NavItem> =
-            //             folder_menu_subfolder_finder(site, &pattern, next_parent_ids.clone());
-            //         fmi.children.append(&mut next_folders);
-            //         Some(fmi)
-            //     } else if full_pattern_with_index
-            //         == site.page_path_parts(&[Value::from(page.1.id.clone())])
-            //     {
-            //         let mut fmi = NavItem {
-            //             children: folder_menu_child_item_finder(
-            //                 site,
-            //                 &pattern,
-            //                 next_parent_ids.clone(),
-            //             ),
-            //             folders: site.page_folders(&page_args),
-            //             href: site.page_href(&[Value::from(page.1.id.clone())]),
-            //             item_type: NavItemBaseType::IndexFolderClosed,
-            //             menu_title: site.page_menu_title(&[Value::from(page.1.id.clone())]),
-            //             menu_title_link_or_text: site
-            //                 .nav_link_title_link(&[Value::from(page.1.id.clone())]),
-            //             page_id: page.1.id.clone(),
-            //             path_sort_string: site.page_path_parts(&page_args).join(""),
-            //             parent_ids: vec![],
-            //             title: site.page_title(&[Value::from(page.1.id.clone())]),
-            //             title_link_or_text: site.nav_link_title_link(&[Value::from(page.1.id.clone())]),
-            //         };
-            //         let mut next_folders: Vec<NavItem> =
-            //             folder_menu_subfolder_finder(site, &pattern, next_parent_ids.clone());
-            //         fmi.children.append(&mut next_folders);
-            //         Some(fmi)
             } else {
                 None
             }

@@ -7,9 +7,6 @@ use crate::collection::Collection;
 use crate::config::Config;
 use crate::nav_items::NavItems;
 use crate::page::Page;
-// use crate::section::Section;
-// use crate::section_category::SectionCategory;
-// use crate::span::Span;
 use itertools::Itertools;
 use minijinja::Value;
 use serde::Serialize;
@@ -34,7 +31,7 @@ pub struct Site {
 
 impl Site {
     pub fn collection_from_files_and_folders(&self, args: &[Value]) -> Collection {
-        let _id = args[0].to_string();
+        let id = args[0].to_string();
         match args[1].try_iter() {
             Ok(value_patterns) => {
                 let patterns = value_patterns
@@ -47,14 +44,12 @@ impl Site {
                         Err(_e) => None,
                     })
                     .collect::<Vec<_>>();
-                Collection::new_from_files_and_folders(&self.pages, patterns)
-                //dbg!(&patterns);
-                //()
+                let mut c = Collection::new_from_files_and_folders(&self.pages, patterns);
+                c.set_active_item(&id);
+                c
             }
             Err(_e) => Collection::empty(),
         }
-        // let patterns: Vec<Vec<String>> = args[1].try_iter().unwrap().map();
-        // Collection::new_from_files_and_folders(&self.pages, args)
     }
 
     #[instrument(skip(self))]
