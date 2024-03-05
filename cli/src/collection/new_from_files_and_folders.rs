@@ -36,7 +36,7 @@ fn folder_menu_index_finder(
     let id = pattern[0].to_string();
     if pages.contains_key(&id) {
         Some(CollectionItem {
-            status: CollectionItemStatus::NotYetActivated,
+            status: CollectionItemStatus::ToBeDetermined,
             ancestors: vec![],
             base_type: CollectionItemBaseType::Page,
             children: vec![],
@@ -54,7 +54,7 @@ fn folder_menu_index_finder(
                     folder_menu_subfolder_finder(pages, &pattern);
                 children.append(&mut next_folders);
                 Some(CollectionItem {
-                    status: CollectionItemStatus::NotYetActivated,
+                    status: CollectionItemStatus::ToBeDetermined,
                     ancestors: vec![],
                     base_type: CollectionItemBaseType::TitleFolder,
                     children,
@@ -66,7 +66,7 @@ fn folder_menu_index_finder(
                     folder_menu_subfolder_finder(pages, &pattern);
                 children.append(&mut next_folders);
                 Some(CollectionItem {
-                    status: CollectionItemStatus::NotYetActivated,
+                    status: CollectionItemStatus::ToBeDetermined,
                     ancestors: vec![],
                     base_type: CollectionItemBaseType::IndexFolder,
                     children,
@@ -146,7 +146,7 @@ fn folder_menu_child_item_finder(
                 && path_parts != full_pattern_with_index
             {
                 Some(CollectionItem {
-                    status: CollectionItemStatus::NotYetActivated,
+                    status: CollectionItemStatus::ToBeDetermined,
                     ancestors: vec![],
                     base_type: CollectionItemBaseType::Page,
                     children: vec![],

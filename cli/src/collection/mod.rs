@@ -31,7 +31,7 @@ pub enum CollectionItemBaseType {
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub enum CollectionItemStatus {
-    NotYetActivated,
+    ToBeDetermined,
     PageActive,
     PageInactive,
     IndexFolderActive,
