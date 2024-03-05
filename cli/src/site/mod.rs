@@ -3,6 +3,7 @@ pub mod object;
 
 use crate::cache_object::CacheObject;
 use crate::child::Child;
+use crate::collection::Collection;
 use crate::config::Config;
 use crate::nav_items::NavItems;
 use crate::page::Page;
@@ -32,6 +33,10 @@ pub struct Site {
 }
 
 impl Site {
+    pub fn collection_from_files_and_folders(&self, args: &[Value]) -> Collection {
+        Collection::new_from_files_and_folders(&self.pages, args)
+    }
+
     #[instrument(skip(self))]
     pub fn get_cache(&self, key: &str) -> Option<CacheObject> {
         let binding = self.cache.lock().unwrap();

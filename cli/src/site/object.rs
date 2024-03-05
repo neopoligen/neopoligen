@@ -10,6 +10,9 @@ impl Object for Site {
         args: &[Value],
     ) -> Result<Value, Error> {
         match name {
+            "collection_from_files_and_folders" => Ok(Value::from_serializable(
+                &self.collection_from_files_and_folders(args),
+            )),
             "log" => Ok(Value::from_serializable(&self.log_from_template(args))),
             "link_or_title" => Ok(Value::from_serializable(&self.link_or_title(args))),
             "nav_from_files_and_folders" => Ok(Value::from_serializable(
