@@ -19,6 +19,7 @@ pub struct CollectionItem {
     pub ancestors: Vec<String>,
     pub base_type: CollectionItemBaseType,
     pub children: Vec<CollectionItem>,
+    pub folders: Vec<String>,
     pub id: String,
 }
 
@@ -38,7 +39,7 @@ pub enum CollectionItemStatus {
     // IndexFolderClosed,
     // IndexFolderOpened,
     TitleFolderActive,
-    // TitleFolderClosed,
+    TitleFolderClosed,
     // TitleFolderOpened
 }
 
@@ -57,6 +58,9 @@ impl Collection {
         self.tree
             .iter_mut()
             .for_each(|item| mark_inactive_page(item, id));
+        self.tree
+            .iter_mut()
+            .for_each(|item| mark_folder_opened_closed(item, id));
     }
 }
 
@@ -74,6 +78,15 @@ fn mark_active_page(item: &mut CollectionItem, id: &String) {
             .iter_mut()
             .for_each(|child| mark_active_page(child, id))
     }
+}
+
+fn mark_folder_opened_closed(item: &mut CollectionItem, id: &String) {
+    if item.base_type == CollectionItemBaseType::Page && &item.id != id {
+        item.status = CollectionItemStatus::PageInactive;
+    }
+    item.children
+        .iter_mut()
+        .for_each(|child| mark_inactive_page(child, id))
 }
 
 fn mark_inactive_page(item: &mut CollectionItem, id: &String) {

@@ -36,11 +36,12 @@ fn folder_menu_index_finder(
     let id = pattern[0].to_string();
     if pages.contains_key(&id) {
         Some(CollectionItem {
-            status: CollectionItemStatus::ToBeDetermined,
             ancestors: vec![],
             base_type: CollectionItemBaseType::Page,
             children: vec![],
+            folders: vec![],
             id: id.clone(),
+            status: CollectionItemStatus::ToBeDetermined,
         })
     } else {
         let mut full_pattern_with_title = pattern.clone();
@@ -54,11 +55,12 @@ fn folder_menu_index_finder(
                     folder_menu_subfolder_finder(pages, &pattern);
                 children.append(&mut next_folders);
                 Some(CollectionItem {
-                    status: CollectionItemStatus::ToBeDetermined,
                     ancestors: vec![],
                     base_type: CollectionItemBaseType::TitleFolder,
                     children,
+                    folders: page.1.folders.clone(),
                     id: page.0.clone(),
+                    status: CollectionItemStatus::ToBeDetermined,
                 })
             } else if full_pattern_with_index == page.1.path_parts {
                 let mut children = folder_menu_child_item_finder(pages, &pattern);
@@ -66,11 +68,12 @@ fn folder_menu_index_finder(
                     folder_menu_subfolder_finder(pages, &pattern);
                 children.append(&mut next_folders);
                 Some(CollectionItem {
-                    status: CollectionItemStatus::ToBeDetermined,
                     ancestors: vec![],
                     base_type: CollectionItemBaseType::IndexFolder,
                     children,
+                    folders: page.1.folders.clone(),
                     id: page.0.clone(),
+                    status: CollectionItemStatus::ToBeDetermined,
                 })
 
             //         let mut fmi = NavItem {
@@ -146,11 +149,12 @@ fn folder_menu_child_item_finder(
                 && path_parts != full_pattern_with_index
             {
                 Some(CollectionItem {
-                    status: CollectionItemStatus::ToBeDetermined,
                     ancestors: vec![],
                     base_type: CollectionItemBaseType::Page,
                     children: vec![],
+                    folders: page.1.folders.clone(),
                     id: page.0.clone(),
+                    status: CollectionItemStatus::ToBeDetermined,
                 })
             } else {
                 None
