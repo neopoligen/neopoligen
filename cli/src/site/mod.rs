@@ -34,7 +34,30 @@ pub struct Site {
 
 impl Site {
     pub fn collection_from_files_and_folders(&self, args: &[Value]) -> Collection {
-        Collection::new_from_files_and_folders(&self.pages, args)
+        let _id = args[0].to_string();
+        match args[1].try_iter() {
+            Ok(value_patterns) => {
+                let patterns = value_patterns
+                    .filter_map(|value_pattern| match value_pattern.try_iter() {
+                        Ok(parts) => Some(
+                            parts
+                                .filter_map(|p| Some(p.to_string()))
+                                .collect::<Vec<String>>(),
+                        ),
+                        Err(_e) => None,
+                    })
+                    .collect::<Vec<_>>();
+                dbg!(&patterns);
+                ()
+            }
+            Err(_e) => (),
+        };
+
+        // let patterns: Vec<Vec<String>> = args[1].try_iter().unwrap().map();
+
+        // Collection::new_from_files_and_folders(&self.pages, args)
+
+        Collection::empty()
     }
 
     #[instrument(skip(self))]
