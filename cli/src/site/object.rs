@@ -13,11 +13,11 @@ impl Object for Site {
             "collection_from_files_and_folders" => Ok(Value::from_serializable(
                 &self.collection_from_files_and_folders(args),
             )),
-            "log" => Ok(Value::from_serializable(&self.log_from_template(args))),
-            "link_or_title" => Ok(Value::from_serializable(&self.link_or_title(args))),
             "nav_from_files_and_folders" => Ok(Value::from_serializable(
                 &self.nav_from_files_and_folders(args),
             )),
+            "log" => Ok(Value::from_serializable(&self.log_from_template(args))),
+            "link_or_title" => Ok(Value::from_serializable(&self.link_or_title(args))),
             "page_href" => Ok(Value::from_serializable(&self.page_href(args))),
             "page_html_link" => Ok(Value::from_serializable(&self.page_html_link(args))),
             "page_ids" => Ok(Value::from_serializable(&self.page_ids())),
