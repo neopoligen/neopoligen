@@ -41,8 +41,8 @@ fn folder_menu_index_finder(
     } else {
         let mut full_pattern_with_title = pattern.clone();
         full_pattern_with_title.push("_title.neo".to_string());
-        // let mut full_pattern_with_index = pattern.clone();
-        // full_pattern_with_index.push("_index.neo".to_string());
+        let mut full_pattern_with_index = pattern.clone();
+        full_pattern_with_index.push("_index.neo".to_string());
         pages.iter().find_map(|page| {
             if full_pattern_with_title == page.1.path_parts {
                 Some(CollectionItem {
@@ -50,6 +50,13 @@ fn folder_menu_index_finder(
                     base_type: CollectionItemType::TitleFolder,
                     children: vec![],
                 })
+            } else if full_pattern_with_index == page.1.path_parts {
+                Some(CollectionItem {
+                    page_id: page.0.clone(),
+                    base_type: CollectionItemType::IndexFolder,
+                    children: vec![],
+                })
+
             //         let mut fmi = NavItem {
             //             children: folder_menu_child_item_finder(
             //                 site,

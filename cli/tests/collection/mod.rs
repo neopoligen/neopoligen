@@ -1,5 +1,5 @@
 use minijinja::Value;
-use neopoligen::collection::Collection;
+use neopoligen::collection::{Collection, CollectionItemType};
 use neopoligen::config::Config;
 use neopoligen::file_set::FileSet;
 use neopoligen::site::Site;
@@ -24,8 +24,20 @@ pub fn load_a_title_folder() {
     let site = Site::new(&file_set, &config);
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"]]);
     let collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
-    let left = &"aabb0020".to_string();
-    let right = &collection.items[0].page_id;
+    let left = &CollectionItemType::TitleFolder;
+    let right = &collection.items[0].base_type;
+    assert_eq!(left, right);
+}
+
+#[test]
+pub fn load_an_index_folder() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1b"]]);
+    let collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
+    let left = &CollectionItemType::IndexFolder;
+    let right = &collection.items[0].base_type;
     assert_eq!(left, right);
 }
 
