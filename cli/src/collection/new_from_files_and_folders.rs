@@ -8,6 +8,27 @@ use std::collections::BTreeMap;
 use std::collections::BTreeSet;
 
 impl Collection {
+    pub fn new_from_files_and_folders_dev(
+        pages: &BTreeMap<String, Page>,
+        patterns: Vec<Vec<String>>,
+    ) -> Collection {
+        let tree: Vec<CollectionItem> = patterns
+            .iter()
+            .filter_map(|pattern| {
+                //let pattern: Vec<String> = pattern_set
+                //   .iter()
+                //  .map(|pattern_part| pattern_part.to_string())
+                // .collect();
+                folder_menu_index_finder(pages, pattern.to_vec(), vec![])
+            })
+            .collect();
+        let c = Collection {
+            active_folders: vec![],
+            tree,
+        };
+        c
+    }
+
     pub fn new_from_files_and_folders(
         pages: &BTreeMap<String, Page>,
         args: &[Value],
