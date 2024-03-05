@@ -67,7 +67,7 @@ fn folder_menu_child_item_finder(
                     children: vec![],
                     folders: site.page_folders(&page_args),
                     href: site.page_href(&[Value::from(page.1.id.clone())]),
-                    item_type: NavItemType::NotCurrentFile,
+                    item_type: NavItemType::FileNotCurrent,
                     menu_title: site.page_menu_title(&[Value::from(page.1.id.clone())]),
                     menu_title_link_or_text: site
                         .nav_link_title_link(&[Value::from(page.1.id.clone())]),
@@ -102,7 +102,7 @@ fn folder_menu_index_finder(
             children: folder_menu_child_item_finder(site, &pattern, next_parent_ids),
             folders: site.page_folders(&page_args),
             href: site.page_href(&page_args),
-            item_type: NavItemType::NotCurrentFile,
+            item_type: NavItemType::FileNotCurrent,
             menu_title: site.page_menu_title(&page_args),
             menu_title_link_or_text: site.nav_link_title_link(&page_args),
             page_id: id.clone(),
@@ -130,7 +130,7 @@ fn folder_menu_index_finder(
                     ),
                     folders: site.page_folders(&page_args),
                     href: site.page_href(&[Value::from(page.1.id.clone())]),
-                    item_type: NavItemType::ClosedFolderTitle,
+                    item_type: NavItemType::TitleFolderClosed,
                     menu_title: site.page_menu_title(&[Value::from(page.1.id.clone())]),
                     menu_title_link_or_text: site
                         .nav_link_title_link(&[Value::from(page.1.id.clone())]),
@@ -156,7 +156,7 @@ fn folder_menu_index_finder(
                     ),
                     folders: site.page_folders(&page_args),
                     href: site.page_href(&[Value::from(page.1.id.clone())]),
-                    item_type: NavItemType::ClosedFolderIndex,
+                    item_type: NavItemType::IndexFolderClosed,
                     menu_title: site.page_menu_title(&[Value::from(page.1.id.clone())]),
                     menu_title_link_or_text: site
                         .nav_link_title_link(&[Value::from(page.1.id.clone())]),
@@ -211,8 +211,8 @@ fn load_prev_next(tree: &Vec<NavItem>) -> Vec<NavItem> {
 
 fn prev_next_flattener(items: &Vec<NavItem>, dest: &mut Vec<NavItem>) {
     items.iter().for_each(|item| {
-        if !matches![item.item_type, NavItemType::OpenedFolderTitle]
-            && !matches![item.item_type, NavItemType::ClosedFolderTitle]
+        if !matches![item.item_type, NavItemType::TitleFolderOpened]
+            && !matches![item.item_type, NavItemType::TitleFolderClosed]
         {
             let mut prev_next_item = item.clone();
             // Children are removed from prev_next items to avoid
@@ -225,7 +225,7 @@ fn prev_next_flattener(items: &Vec<NavItem>, dest: &mut Vec<NavItem>) {
 }
 
 //     fn folder_menu_set_open_closed_folders(&self, args: &[Value], item: &mut NavItem) {
-//         if matches!(item.item_type, NavItemType::ClosedFolderTitle) {
+//         if matches!(item.item_type, NavItemType::TitleFolderClosed) {
 //             let page_folders = self.page_folders(args);
 //             if page_folders
 //                 .into_iter()
@@ -233,12 +233,12 @@ fn prev_next_flattener(items: &Vec<NavItem>, dest: &mut Vec<NavItem>) {
 //                 .collect::<Vec<String>>()
 //                 == item.folders
 //             {
-//                 item.item_type = NavItemType::OpenedFolderTitle;
+//                 item.item_type = NavItemType::TitleFolderOpened;
 //             } else {
-//                 item.item_type = NavItemType::ClosedFolderTitle;
+//                 item.item_type = NavItemType::TitleFolderClosed;
 //             }
 //         }
-//         if matches!(item.item_type, NavItemType::ClosedFolderIndex) {
+//         if matches!(item.item_type, NavItemType::IndexFolderClosed) {
 //             let page_folders = self.page_folders(args);
 //             if page_folders
 //                 .into_iter()
@@ -246,9 +246,9 @@ fn prev_next_flattener(items: &Vec<NavItem>, dest: &mut Vec<NavItem>) {
 //                 .collect::<Vec<String>>()
 //                 == item.folders
 //             {
-//                 item.item_type = NavItemType::OpenedFolderIndex;
+//                 item.item_type = NavItemType::IndexFolderOpened;
 //             } else {
-//                 item.item_type = NavItemType::ClosedFolderIndex;
+//                 item.item_type = NavItemType::IndexFolderClosed;
 //             }
 //         }
 //         item.children
@@ -267,6 +267,6 @@ fn prev_next_flattener(items: &Vec<NavItem>, dest: &mut Vec<NavItem>) {
 //         // } else {
 //         //     dbg!(&page_folders);
 //         //     dbg!(&item.folders);
-//         //     item.item_type = NavItemType::ClosedFolderTitle;
+//         //     item.item_type = NavItemType::TitleFolderClosed;
 //         // }
 //     }

@@ -32,11 +32,11 @@ pub struct NavItem {
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub enum NavItemType {
-    ActiveFolderIndex,
-    ClosedFolderIndex,
-    ClosedFolderTitle,
-    CurrentFile,
-    NotCurrentFile,
-    OpenedFolderIndex,
-    OpenedFolderTitle,
+    IndexFolderActive,
+    IndexFolderClosed,
+    TitleFolderClosed,
+    FileCurrent,
+    FileNotCurrent,
+    IndexFolderOpened,
+    TitleFolderOpened,
 }

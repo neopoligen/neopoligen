@@ -98,7 +98,7 @@ pub fn set_current_file() {
     nav_items.set_current_page(&Value::from("content-alfa"));
     assert_eq!(
         nav_items.tree[0].children[0].item_type,
-        NavItemType::CurrentFile
+        NavItemType::FileCurrent
     );
 }
 
@@ -114,10 +114,10 @@ pub fn check_not_current_file() {
     ]);
     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
     nav_items.set_current_page(&Value::from("content-alfa"));
-    assert_eq!(nav_items.tree[0].item_type, NavItemType::NotCurrentFile);
+    assert_eq!(nav_items.tree[0].item_type, NavItemType::FileNotCurrent);
     assert_eq!(
         nav_items.tree[2].children[0].item_type,
-        NavItemType::NotCurrentFile
+        NavItemType::FileNotCurrent
     );
 }
 
@@ -133,7 +133,7 @@ pub fn set_top_level_current_file() {
     ]);
     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
     nav_items.set_current_page(&Value::from("aabb0010"));
-    assert_eq!(nav_items.tree[0].item_type, NavItemType::CurrentFile);
+    assert_eq!(nav_items.tree[0].item_type, NavItemType::FileCurrent);
 }
 
 #[test]
@@ -144,7 +144,7 @@ pub fn check_active_folder_index() {
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1b"]]);
     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
     nav_items.set_current_page(&Value::from("aabb0060"));
-    assert_eq!(nav_items.tree[0].item_type, NavItemType::ActiveFolderIndex);
+    assert_eq!(nav_items.tree[0].item_type, NavItemType::IndexFolderActive);
 }
 
 #[test]
@@ -155,7 +155,7 @@ pub fn check_closed_folder_index() {
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1b"]]);
     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
     nav_items.set_current_page(&Value::from("content-alfa"));
-    assert_eq!(nav_items.tree[0].item_type, NavItemType::ClosedFolderIndex);
+    assert_eq!(nav_items.tree[0].item_type, NavItemType::IndexFolderClosed);
 }
 
 #[test]
@@ -167,7 +167,7 @@ pub fn check_closed_folder_title() {
         Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"], vec!["level-1b"]]);
     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
     nav_items.set_current_page(&Value::from("content-charlie"));
-    let left = NavItemType::ClosedFolderTitle;
+    let left = NavItemType::TitleFolderClosed;
     let right = nav_items.tree[0].item_type.clone();
     assert_eq!(left, right);
 }
@@ -181,7 +181,7 @@ pub fn check_opened_folder_title() {
         Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"], vec!["level-1b"]]);
     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
     nav_items.set_current_page(&Value::from("aabb0030"));
-    let left = NavItemType::OpenedFolderTitle;
+    let left = NavItemType::TitleFolderOpened;
     let right = nav_items.tree[0].item_type.clone();
     assert_eq!(left, right);
 }
@@ -195,7 +195,7 @@ pub fn check_opened_folder_index() {
         Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"], vec!["level-1b"]]);
     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
     nav_items.set_current_page(&Value::from("aabb0070"));
-    let left = NavItemType::OpenedFolderIndex;
+    let left = NavItemType::IndexFolderOpened;
     let right = nav_items.tree[1].item_type.clone();
     assert_eq!(left, right);
 }

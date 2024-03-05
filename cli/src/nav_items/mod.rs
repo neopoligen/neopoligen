@@ -53,24 +53,24 @@ impl NavItems {
 }
 
 fn update_open_folders(item: &mut NavItem, folders: &Vec<String>) {
-    if item.item_type == NavItemType::ClosedFolderTitle {
+    if item.item_type == NavItemType::TitleFolderClosed {
         let check_path: Vec<String> = folders
             .iter()
             .take(item.folders.len())
             .map(|f| f.to_string())
             .collect();
         if item.folders == check_path {
-            item.item_type = NavItemType::OpenedFolderTitle
+            item.item_type = NavItemType::TitleFolderOpened
         }
     }
-    if item.item_type == NavItemType::ClosedFolderIndex {
+    if item.item_type == NavItemType::IndexFolderClosed {
         let check_path: Vec<String> = folders
             .iter()
             .take(item.folders.len())
             .map(|f| f.to_string())
             .collect();
         if item.folders == check_path {
-            item.item_type = NavItemType::OpenedFolderIndex
+            item.item_type = NavItemType::IndexFolderOpened
         }
     }
     item.children
@@ -106,10 +106,10 @@ fn set_current_file(id: &String, item: &mut NavItem) -> Option<NavItem> {
     if item.page_id == id.to_string() {
         item.title_link_or_text = item.title.clone();
         item.menu_title_link_or_text = item.menu_title.clone();
-        if matches!(item.item_type, NavItemType::ClosedFolderIndex) {
-            item.item_type = NavItemType::ActiveFolderIndex;
+        if matches!(item.item_type, NavItemType::IndexFolderClosed) {
+            item.item_type = NavItemType::IndexFolderActive;
         } else {
-            item.item_type = NavItemType::CurrentFile;
+            item.item_type = NavItemType::FileCurrent;
         }
         Some(item.clone())
     } else {
