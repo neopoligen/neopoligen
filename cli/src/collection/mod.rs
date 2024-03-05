@@ -97,9 +97,11 @@ fn mark_active_page(item: &mut CollectionItem, id: &String) {
 
 fn mark_folder_opened_closed(item: &mut CollectionItem, id: &String, active_folders: &Vec<String>) {
     if item.status == CollectionItemStatus::ToBeDetermined {
+        let folder_count = std::cmp::min(item.folders.len(), active_folders.len());
         if item.base_type == CollectionItemBaseType::TitleFolder {
-            let folder_count = std::cmp::min(item.folders.len(), active_folders.len());
-            if &item
+            if folder_count == 0 {
+                item.status = CollectionItemStatus::TitleFolderClosed;
+            } else if &item
                 .folders
                 .iter()
                 .take(folder_count)
@@ -114,8 +116,9 @@ fn mark_folder_opened_closed(item: &mut CollectionItem, id: &String, active_fold
                 item.status = CollectionItemStatus::TitleFolderClosed;
             }
         } else if item.base_type == CollectionItemBaseType::IndexFolder {
-            let folder_count = std::cmp::min(item.folders.len(), active_folders.len());
-            if &item
+            if folder_count == 0 {
+                item.status = CollectionItemStatus::IndexFolderClosed;
+            } else if &item
                 .folders
                 .iter()
                 .take(folder_count)
