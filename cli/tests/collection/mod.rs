@@ -195,6 +195,23 @@ pub fn mark_title_folder_active() {
 }
 
 #[test]
+pub fn active_folders() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![
+        vec!["aabb0010"],
+        vec!["level-1a"],
+        vec!["level-1b"],
+    ]);
+    let mut collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
+    collection.set_active_item(&"aabb0050".to_string());
+    let left = &vec!["level-1a".to_string(), "sub-level-2a".to_string()];
+    let right = &collection.active_folders;
+    assert_eq!(left, right);
+}
+
+#[test]
 #[ignore]
 pub fn mark_title_folder_closed() {
     let file_set = FileSet::nav_items2();

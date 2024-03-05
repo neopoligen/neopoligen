@@ -10,6 +10,7 @@ use serde::Serialize;
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct Collection {
     pub tree: Vec<CollectionItem>,
+    pub active_folders: Vec<String>,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -43,24 +44,38 @@ pub enum CollectionItemStatus {
     // TitleFolderOpened
 }
 
-// pub fn get_nav_links_from_files_and_folders(
-//     _pages: &BTreeMap<String, Page>,
-//     _patterns: &[Value],
-// ) -> Vec<CollectionItem> {
-//     vec![]
-// }
-
 impl Collection {
     pub fn set_active_item(&mut self, id: &String) {
         self.tree
             .iter_mut()
             .for_each(|item| mark_active_page(item, id));
+        self.set_active_folders(id);
         self.tree
             .iter_mut()
             .for_each(|item| mark_inactive_page(item, id));
         self.tree
             .iter_mut()
             .for_each(|item| mark_folder_opened_closed(item, id));
+    }
+
+    pub fn set_active_folders(&mut self, id: &String) {
+        if let Some(folders) = self
+            .tree
+            .iter()
+            .find_map(|item| find_active_folders(item, id))
+        {
+            self.active_folders = folders
+        }
+    }
+}
+
+fn find_active_folders(item: &CollectionItem, id: &String) -> Option<Vec<String>> {
+    if &item.id == id {
+        Some(item.folders.clone())
+    } else {
+        item.children
+            .iter()
+            .find_map(|child| find_active_folders(child, id))
     }
 }
 

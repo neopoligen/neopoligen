@@ -24,7 +24,10 @@ impl Collection {
                 folder_menu_index_finder(pages, pattern)
             })
             .collect();
-        let c = Collection { tree };
+        let c = Collection {
+            active_folders: vec![],
+            tree,
+        };
         c
     }
 }
