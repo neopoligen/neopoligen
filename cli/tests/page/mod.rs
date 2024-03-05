@@ -62,3 +62,16 @@ fn href_basic() {
     let right = site.pages.get("ttss0020").unwrap().href.clone();
     assert_eq!(left, right);
 }
+
+#[test]
+fn html_link() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = Some(
+        r#"<a href="/en/ttss0020/?title-from-title-section">Title From Title Section</a>"#
+            .to_string(),
+    );
+    let right = site.pages.get("ttss0020").unwrap().html_link.clone();
+    assert_eq!(left, right);
+}

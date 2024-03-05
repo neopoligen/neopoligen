@@ -30,7 +30,7 @@ impl Page {
                         Some(id) => {
                             let title = title(&id, &ast);
                             let href = href(&id, &ast, &title, &config.default_language);
-                            let html_link = None;
+                            let html_link = html_link(&href, &title);
                             Some(Page {
                                 ast,
                                 href,
@@ -204,4 +204,12 @@ fn href(
             .into_owned(),
         ))
     }
+}
+
+fn html_link(href: &Option<String>, title: &Option<String>) -> Option<String> {
+    Some(format!(
+        r#"<a href="{}">{}</a>"#,
+        href.as_ref().unwrap().clone(),
+        title.as_ref().unwrap().clone()
+    ))
 }
