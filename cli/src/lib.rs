@@ -3,6 +3,7 @@ pub mod block;
 pub mod builder;
 pub mod cache_object;
 pub mod child;
+pub mod collection;
 pub mod config;
 pub mod config_folders;
 pub mod config_section_categories;
