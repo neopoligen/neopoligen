@@ -228,6 +228,23 @@ pub fn mark_title_folder_closed() {
     assert_eq!(left, right);
 }
 
+#[test]
+pub fn mark_title_folder_opened() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![
+        vec!["aabb0010"],
+        vec!["level-1a"],
+        vec!["level-1b"],
+    ]);
+    let mut collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
+    collection.set_active_item(&"aabb0050".to_string());
+    let left = &CollectionItemStatus::TitleFolderOpened;
+    let right = &collection.tree[1].status;
+    assert_eq!(left, right);
+}
+
 // #[test]
 // pub fn get_next_item_that_exists() {
 //     let file_set = FileSet::nav_items1();

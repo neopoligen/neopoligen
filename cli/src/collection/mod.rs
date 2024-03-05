@@ -41,7 +41,7 @@ pub enum CollectionItemStatus {
     // IndexFolderOpened,
     TitleFolderActive,
     TitleFolderClosed,
-    // TitleFolderOpened
+    TitleFolderOpened,
 }
 
 impl Collection {
@@ -98,12 +98,23 @@ fn mark_active_page(item: &mut CollectionItem, id: &String) {
 fn mark_folder_opened_closed(item: &mut CollectionItem, id: &String, active_folders: &Vec<String>) {
     if item.status == CollectionItemStatus::ToBeDetermined {
         if item.base_type == CollectionItemBaseType::TitleFolder {
-            item.status = CollectionItemStatus::TitleFolderClosed;
-            // dbg!(&item);
-            // dbg!(active_folders);
+            let folder_count = std::cmp::min(item.folders.len(), active_folders.len());
+            if &item
+                .folders
+                .iter()
+                .take(folder_count)
+                .collect::<Vec<&String>>()
+                == &active_folders
+                    .iter()
+                    .take(folder_count)
+                    .collect::<Vec<&String>>()
+            {
+                item.status = CollectionItemStatus::TitleFolderOpened;
+            } else {
+                item.status = CollectionItemStatus::TitleFolderClosed;
+            }
         }
     }
-
     item.children
         .iter_mut()
         .for_each(|child| mark_folder_opened_closed(child, id, active_folders))
