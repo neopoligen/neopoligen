@@ -334,15 +334,17 @@ pub fn ancestors() {
         collection.tree[1].children[0].ancestors
     );
 
-    // assert_eq!(
-    //     collection.tree[1].children[1].base_type,
-    //     CollectionItemBaseType::TitleFolder
-    // );
+    assert_eq!(
+        Vec::<String>::from(["aabb0020".to_string()]),
+        collection.tree[1].children[1].ancestors
+    );
 
-    // assert_eq!(
-    //     collection.tree[1].children[1].children[0].base_type,
-    //     CollectionItemBaseType::Page
-    // );
+    assert_eq!(
+        Vec::<String>::from(["aabb0020".to_string(), "aabb0040".to_string()]),
+        collection.tree[1].children[1].children[0].ancestors
+    );
+
+    assert_eq!(Vec::<String>::from([]), collection.tree[2].ancestors);
 
     // assert_eq!(
     //     collection.tree[2].base_type,
