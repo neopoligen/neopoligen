@@ -17,7 +17,7 @@ impl FileSet {
 Home Page
 
 -- metadata
--- id: aabb0010
+-- id: ttss0010
 -- path: /
 "#
             .to_string(),
@@ -33,7 +33,7 @@ Home Page
 Title From Title Section
 
 -- metadata
--- id: aabb0020
+-- id: ttss0020
 "#
             .to_string(),
         );
