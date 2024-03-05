@@ -1,6 +1,7 @@
 use crate::collection::Collection;
+use crate::collection::CollectionActiveItemType;
+use crate::collection::CollectionBaseItemType;
 use crate::collection::CollectionItem;
-use crate::collection::CollectionItemType;
 use crate::page::Page;
 use minijinja::Value;
 use std::collections::BTreeMap;
@@ -35,9 +36,11 @@ fn folder_menu_index_finder(
     let id = pattern[0].to_string();
     if pages.contains_key(&id) {
         Some(CollectionItem {
-            page_id: id.clone(),
-            base_type: CollectionItemType::File,
+            active_type: CollectionActiveItemType::NotYetActivated,
+            ancestors: vec![],
+            base_type: CollectionBaseItemType::Page,
             children: vec![],
+            page_id: id.clone(),
         })
     } else {
         let mut full_pattern_with_title = pattern.clone();
@@ -51,9 +54,11 @@ fn folder_menu_index_finder(
                     folder_menu_subfolder_finder(pages, &pattern);
                 children.append(&mut next_folders);
                 Some(CollectionItem {
-                    page_id: page.0.clone(),
-                    base_type: CollectionItemType::TitleFolder,
+                    active_type: CollectionActiveItemType::NotYetActivated,
+                    ancestors: vec![],
+                    base_type: CollectionBaseItemType::TitleFolder,
                     children,
+                    page_id: page.0.clone(),
                 })
             } else if full_pattern_with_index == page.1.path_parts {
                 let mut children = folder_menu_child_item_finder(pages, &pattern);
@@ -61,9 +66,11 @@ fn folder_menu_index_finder(
                     folder_menu_subfolder_finder(pages, &pattern);
                 children.append(&mut next_folders);
                 Some(CollectionItem {
-                    page_id: page.0.clone(),
-                    base_type: CollectionItemType::IndexFolder,
+                    active_type: CollectionActiveItemType::NotYetActivated,
+                    ancestors: vec![],
+                    base_type: CollectionBaseItemType::IndexFolder,
                     children,
+                    page_id: page.0.clone(),
                 })
 
             //         let mut fmi = NavItem {
@@ -74,7 +81,7 @@ fn folder_menu_index_finder(
             //             ),
             //             folders: site.page_folders(&page_args),
             //             href: site.page_href(&[Value::from(page.1.id.clone())]),
-            //             item_type: NavItemType::TitleFolderClosed,
+            //             item_type: NavBaseItemType::TitleFolderClosed,
             //             menu_title: site.page_menu_title(&[Value::from(page.1.id.clone())]),
             //             menu_title_link_or_text: site
             //                 .nav_link_title_link(&[Value::from(page.1.id.clone())]),
@@ -100,7 +107,7 @@ fn folder_menu_index_finder(
             //             ),
             //             folders: site.page_folders(&page_args),
             //             href: site.page_href(&[Value::from(page.1.id.clone())]),
-            //             item_type: NavItemType::IndexFolderClosed,
+            //             item_type: NavBaseItemType::IndexFolderClosed,
             //             menu_title: site.page_menu_title(&[Value::from(page.1.id.clone())]),
             //             menu_title_link_or_text: site
             //                 .nav_link_title_link(&[Value::from(page.1.id.clone())]),
@@ -139,9 +146,11 @@ fn folder_menu_child_item_finder(
                 && path_parts != full_pattern_with_index
             {
                 Some(CollectionItem {
-                    page_id: page.0.clone(),
-                    base_type: CollectionItemType::File,
+                    active_type: CollectionActiveItemType::NotYetActivated,
+                    ancestors: vec![],
+                    base_type: CollectionBaseItemType::Page,
                     children: vec![],
+                    page_id: page.0.clone(),
                 })
             } else {
                 None

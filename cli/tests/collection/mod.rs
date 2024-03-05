@@ -1,5 +1,5 @@
 use minijinja::Value;
-use neopoligen::collection::{Collection, CollectionItemType};
+use neopoligen::collection::{Collection, CollectionActiveItemType, CollectionBaseItemType};
 use neopoligen::config::Config;
 use neopoligen::file_set::FileSet;
 use neopoligen::site::Site;
@@ -26,7 +26,7 @@ pub fn load_a_title_folder() {
     let site = Site::new(&file_set, &config);
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"]]);
     let collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
-    let left = &CollectionItemType::TitleFolder;
+    let left = &CollectionBaseItemType::TitleFolder;
     let right = &collection.items[0].base_type;
     assert_eq!(left, right);
 }
@@ -38,7 +38,7 @@ pub fn load_an_index_folder() {
     let site = Site::new(&file_set, &config);
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1b"]]);
     let collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
-    let left = &CollectionItemType::IndexFolder;
+    let left = &CollectionBaseItemType::IndexFolder;
     let right = &collection.items[0].base_type;
     assert_eq!(left, right);
 }
@@ -52,6 +52,19 @@ pub fn load_collection_children() {
     let collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
     let left = &"aabb0050".to_string();
     let right = &collection.items[0].children[1].children[0].page_id;
+    assert_eq!(left, right);
+}
+
+#[test]
+pub fn set_current_page() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"]]);
+    let mut collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
+    collection.set_current_page(&"aabb0050".to_string());
+    let left = &CollectionActiveItemType::PageCurrent;
+    let right = &collection.items[0].children[1].children[0].active_type;
     assert_eq!(left, right);
 }
 
@@ -108,20 +121,6 @@ pub fn load_collection_children() {
 // }
 
 // #[test]
-// pub fn set_current_file() {
-//     let file_set = FileSet::nav_items1();
-//     let config = Config::nav_items1();
-//     let site = Site::new(&file_set, &config);
-//     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["folder1"]]);
-//     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
-//     nav_items.set_current_page(&Value::from("content-alfa"));
-//     assert_eq!(
-//         nav_items.tree[0].children[0].item_type,
-//         NavItemType::FileCurrent
-//     );
-// }
-
-// #[test]
 // pub fn file_not_current() {
 //     let file_set = FileSet::nav_items2();
 //     let config = Config::nav_items2();
@@ -133,10 +132,10 @@ pub fn load_collection_children() {
 //     ]);
 //     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
 //     nav_items.set_current_page(&Value::from("content-alfa"));
-//     assert_eq!(nav_items.tree[0].item_type, NavItemType::FileNotCurrent);
+//     assert_eq!(nav_items.tree[0].item_type, NavBaseItemType::FileNotCurrent);
 //     assert_eq!(
 //         nav_items.tree[2].children[0].item_type,
-//         NavItemType::FileNotCurrent
+//         NavBaseItemType::FileNotCurrent
 //     );
 // }
 
@@ -152,7 +151,7 @@ pub fn load_collection_children() {
 //     ]);
 //     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
 //     nav_items.set_current_page(&Value::from("aabb0010"));
-//     assert_eq!(nav_items.tree[0].item_type, NavItemType::FileCurrent);
+//     assert_eq!(nav_items.tree[0].item_type, NavBaseItemType::FileCurrent);
 // }
 
 // #[test]
@@ -163,7 +162,7 @@ pub fn load_collection_children() {
 //     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1b"]]);
 //     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
 //     nav_items.set_current_page(&Value::from("aabb0060"));
-//     assert_eq!(nav_items.tree[0].item_type, NavItemType::IndexFolderActive);
+//     assert_eq!(nav_items.tree[0].item_type, NavBaseItemType::IndexFolderActive);
 // }
 
 // #[test]
@@ -174,7 +173,7 @@ pub fn load_collection_children() {
 //     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1b"]]);
 //     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
 //     nav_items.set_current_page(&Value::from("content-alfa"));
-//     assert_eq!(nav_items.tree[0].item_type, NavItemType::IndexFolderClosed);
+//     assert_eq!(nav_items.tree[0].item_type, NavBaseItemType::IndexFolderClosed);
 // }
 
 // #[test]
@@ -186,7 +185,7 @@ pub fn load_collection_children() {
 //         Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"], vec!["level-1b"]]);
 //     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
 //     nav_items.set_current_page(&Value::from("content-charlie"));
-//     let left = NavItemType::TitleFolderClosed;
+//     let left = NavBaseItemType::TitleFolderClosed;
 //     let right = nav_items.tree[0].item_type.clone();
 //     assert_eq!(left, right);
 // }
@@ -200,7 +199,7 @@ pub fn load_collection_children() {
 //         Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"], vec!["level-1b"]]);
 //     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
 //     nav_items.set_current_page(&Value::from("aabb0030"));
-//     let left = NavItemType::TitleFolderOpened;
+//     let left = NavBaseItemType::TitleFolderOpened;
 //     let right = nav_items.tree[0].item_type.clone();
 //     assert_eq!(left, right);
 // }
@@ -214,7 +213,7 @@ pub fn load_collection_children() {
 //         Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"], vec!["level-1b"]]);
 //     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
 //     nav_items.set_current_page(&Value::from("aabb0020"));
-//     let left = NavItemType::TitleFolderActive;
+//     let left = NavBaseItemType::TitleFolderActive;
 //     let right = nav_items.tree[0].item_type.clone();
 //     assert_eq!(left, right);
 // }
@@ -228,7 +227,7 @@ pub fn load_collection_children() {
 //         Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"], vec!["level-1b"]]);
 //     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
 //     nav_items.set_current_page(&Value::from("aabb0070"));
-//     let left = NavItemType::IndexFolderOpened;
+//     let left = NavBaseItemType::IndexFolderOpened;
 //     let right = nav_items.tree[1].item_type.clone();
 //     assert_eq!(left, right);
 // }
