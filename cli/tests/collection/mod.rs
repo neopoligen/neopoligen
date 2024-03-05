@@ -1,5 +1,5 @@
 use minijinja::Value;
-use neopoligen::collection::{Collection, CollectionActiveItemType, CollectionBaseItemType};
+use neopoligen::collection::{Collection, CollectionActiveItemType, CollectionItemBaseType};
 use neopoligen::config::Config;
 use neopoligen::file_set::FileSet;
 use neopoligen::site::Site;
@@ -24,7 +24,7 @@ pub fn load_a_title_folder() {
     let site = Site::new(&file_set, &config);
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"]]);
     let collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
-    let left = &CollectionBaseItemType::TitleFolder;
+    let left = &CollectionItemBaseType::TitleFolder;
     let right = &collection.tree[0].base_type;
     assert_eq!(left, right);
 }
@@ -36,7 +36,7 @@ pub fn load_an_index_folder() {
     let site = Site::new(&file_set, &config);
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1b"]]);
     let collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
-    let left = &CollectionBaseItemType::IndexFolder;
+    let left = &CollectionItemBaseType::IndexFolder;
     let right = &collection.tree[0].base_type;
     assert_eq!(left, right);
 }
@@ -54,14 +54,14 @@ pub fn load_collection_children() {
 }
 
 #[test]
-pub fn set_current_page() {
+pub fn set_active_item() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"]]);
     let mut collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
-    collection.set_current_page(&"aabb0050".to_string());
-    let left = &CollectionActiveItemType::PageCurrent;
+    collection.set_active_item(&"aabb0050".to_string());
+    let left = &CollectionActiveItemType::PageActive;
     let right = &collection.tree[0].children[1].children[0].active_type;
     assert_eq!(left, right);
 }
@@ -73,8 +73,8 @@ pub fn mark_not_current_pages() {
     let site = Site::new(&file_set, &config);
     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"]]);
     let mut collection = Collection::new_from_files_and_folders(&site.pages, &[patterns]);
-    collection.set_current_page(&"aabb0050".to_string());
-    let left = &CollectionActiveItemType::PageNotCurrent;
+    collection.set_active_item(&"aabb0050".to_string());
+    let left = &CollectionActiveItemType::PageInactive;
     let right = &collection.tree[0].children[0].active_type;
     assert_eq!(left, right);
 }
@@ -143,10 +143,10 @@ pub fn mark_not_current_pages() {
 //     ]);
 //     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
 //     nav_items.set_current_page(&Value::from("content-alfa"));
-//     assert_eq!(nav_items.tree[0].item_type, NavBaseItemType::FileNotCurrent);
+//     assert_eq!(nav_items.tree[0].item_type, NavItemBaseType::FileNotCurrent);
 //     assert_eq!(
 //         nav_items.tree[2].children[0].item_type,
-//         NavBaseItemType::FileNotCurrent
+//         NavItemBaseType::FileNotCurrent
 //     );
 // }
 
@@ -162,7 +162,7 @@ pub fn mark_not_current_pages() {
 //     ]);
 //     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
 //     nav_items.set_current_page(&Value::from("aabb0010"));
-//     assert_eq!(nav_items.tree[0].item_type, NavBaseItemType::FileCurrent);
+//     assert_eq!(nav_items.tree[0].item_type, NavItemBaseType::FileCurrent);
 // }
 
 // #[test]
@@ -173,7 +173,7 @@ pub fn mark_not_current_pages() {
 //     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1b"]]);
 //     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
 //     nav_items.set_current_page(&Value::from("aabb0060"));
-//     assert_eq!(nav_items.tree[0].item_type, NavBaseItemType::IndexFolderActive);
+//     assert_eq!(nav_items.tree[0].item_type, NavItemBaseType::IndexFolderActive);
 // }
 
 // #[test]
@@ -184,7 +184,7 @@ pub fn mark_not_current_pages() {
 //     let patterns = Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1b"]]);
 //     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
 //     nav_items.set_current_page(&Value::from("content-alfa"));
-//     assert_eq!(nav_items.tree[0].item_type, NavBaseItemType::IndexFolderClosed);
+//     assert_eq!(nav_items.tree[0].item_type, NavItemBaseType::IndexFolderClosed);
 // }
 
 // #[test]
@@ -196,7 +196,7 @@ pub fn mark_not_current_pages() {
 //         Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"], vec!["level-1b"]]);
 //     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
 //     nav_items.set_current_page(&Value::from("content-charlie"));
-//     let left = NavBaseItemType::TitleFolderClosed;
+//     let left = NavItemBaseType::TitleFolderClosed;
 //     let right = nav_items.tree[0].item_type.clone();
 //     assert_eq!(left, right);
 // }
@@ -210,7 +210,7 @@ pub fn mark_not_current_pages() {
 //         Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"], vec!["level-1b"]]);
 //     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
 //     nav_items.set_current_page(&Value::from("aabb0030"));
-//     let left = NavBaseItemType::TitleFolderOpened;
+//     let left = NavItemBaseType::TitleFolderOpened;
 //     let right = nav_items.tree[0].item_type.clone();
 //     assert_eq!(left, right);
 // }
@@ -224,7 +224,7 @@ pub fn mark_not_current_pages() {
 //         Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"], vec!["level-1b"]]);
 //     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
 //     nav_items.set_current_page(&Value::from("aabb0020"));
-//     let left = NavBaseItemType::TitleFolderActive;
+//     let left = NavItemBaseType::TitleFolderActive;
 //     let right = nav_items.tree[0].item_type.clone();
 //     assert_eq!(left, right);
 // }
@@ -238,7 +238,7 @@ pub fn mark_not_current_pages() {
 //         Value::from_serializable::<Vec<Vec<&str>>>(&vec![vec!["level-1a"], vec!["level-1b"]]);
 //     let mut nav_items = NavItems::new_from_files_and_folders(&site, &patterns);
 //     nav_items.set_current_page(&Value::from("aabb0070"));
-//     let left = NavBaseItemType::IndexFolderOpened;
+//     let left = NavItemBaseType::IndexFolderOpened;
 //     let right = nav_items.tree[1].item_type.clone();
 //     assert_eq!(left, right);
 // }

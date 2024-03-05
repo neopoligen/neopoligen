@@ -17,13 +17,13 @@ pub struct Collection {
 pub struct CollectionItem {
     pub active_type: CollectionActiveItemType,
     pub ancestors: Vec<String>,
-    pub base_type: CollectionBaseItemType,
+    pub base_type: CollectionItemBaseType,
     pub children: Vec<CollectionItem>,
     pub page_id: String,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub enum CollectionBaseItemType {
+pub enum CollectionItemBaseType {
     Page,
     IndexFolder,
     TitleFolder,
@@ -32,8 +32,8 @@ pub enum CollectionBaseItemType {
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub enum CollectionActiveItemType {
     NotYetActivated,
-    PageCurrent,
-    PageNotCurrent,
+    PageActive,
+    PageInactive,
 }
 
 pub fn get_nav_links_from_files_and_folders(
@@ -44,7 +44,7 @@ pub fn get_nav_links_from_files_and_folders(
 }
 
 impl Collection {
-    pub fn set_current_page(&mut self, id: &String) {
+    pub fn set_active_item(&mut self, id: &String) {
         self.tree
             .iter_mut()
             .for_each(|item| mark_current_page(item, id));
@@ -56,7 +56,7 @@ impl Collection {
 
 fn mark_current_page(item: &mut CollectionItem, id: &String) {
     if &item.page_id == id {
-        item.active_type = CollectionActiveItemType::PageCurrent;
+        item.active_type = CollectionActiveItemType::PageActive;
     } else {
         item.children
             .iter_mut()
@@ -65,8 +65,8 @@ fn mark_current_page(item: &mut CollectionItem, id: &String) {
 }
 
 fn mark_not_current_page(item: &mut CollectionItem, id: &String) {
-    if item.base_type == CollectionBaseItemType::Page && &item.page_id != id {
-        item.active_type = CollectionActiveItemType::PageNotCurrent;
+    if item.base_type == CollectionItemBaseType::Page && &item.page_id != id {
+        item.active_type = CollectionActiveItemType::PageInactive;
     }
     item.children
         .iter_mut()
