@@ -410,3 +410,20 @@ pub fn default_sort_by_source_path() {
     assert_eq!(&"aabb0130".to_string(), &collection.tree[0].children[1].id);
     assert_eq!(&"aabb0110".to_string(), &collection.tree[0].children[2].id);
 }
+
+#[test]
+pub fn active_ancestors() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = vec![
+        vec!["aabb0010".to_string()],
+        vec!["level-1a".to_string()],
+        vec!["level-1b".to_string()],
+    ];
+    let mut collection = Collection::new_from_files_and_folders(&site.pages, patterns);
+    collection.set_active_item(&"aabb0090".to_string());
+    let left = &vec!["aabb0060".to_string(), "aabb0080".to_string()];
+    let right = &collection.active_ancestors;
+    assert_eq!(left, right);
+}

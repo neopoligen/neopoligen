@@ -9,6 +9,7 @@ use serde::Serialize;
 pub struct Collection {
     pub tree: Vec<CollectionItem>,
     pub active_folders: Vec<String>,
+    pub active_ancestors: Vec<String>,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -49,6 +50,7 @@ impl Collection {
             .iter_mut()
             .for_each(|item| mark_active_page(item, id));
         self.set_active_folders(id);
+        self.set_active_ancestors(id);
         self.tree
             .iter_mut()
             .for_each(|item| mark_inactive_page(item, id));
@@ -66,6 +68,16 @@ impl Collection {
             self.active_folders = folders
         }
     }
+
+    pub fn set_active_ancestors(&mut self, id: &String) {
+        if let Some(ancestors) = self
+            .tree
+            .iter()
+            .find_map(|item| find_active_ancestors(item, id))
+        {
+            self.active_ancestors = ancestors
+        }
+    }
 }
 
 fn find_active_folders(item: &CollectionItem, id: &String) -> Option<Vec<String>> {
@@ -75,6 +87,16 @@ fn find_active_folders(item: &CollectionItem, id: &String) -> Option<Vec<String>
         item.children
             .iter()
             .find_map(|child| find_active_folders(child, id))
+    }
+}
+
+fn find_active_ancestors(item: &CollectionItem, id: &String) -> Option<Vec<String>> {
+    if &item.id == id {
+        Some(item.ancestors.clone())
+    } else {
+        item.children
+            .iter()
+            .find_map(|child| find_active_ancestors(child, id))
     }
 }
 

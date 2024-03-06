@@ -214,9 +214,7 @@ This has no type or status metadata so will show the default template
         );
 
         fs.pages.insert(
-            PathBuf::from(
-                "leading-dir/Neopoligen/set2-test-site/content/custom-template-type.neo",
-            ),
+            PathBuf::from("leading-dir/Neopoligen/set2-test-site/content/custom-template-type.neo"),
             r#"-- title
 
 This is a custom template type that exists
@@ -282,9 +280,7 @@ template it rolls back to the default
         );
 
         fs.pages.insert(
-            PathBuf::from(
-                "leading-dir/Neopoligen/set2-test-site/content/basic-main-body-test.neo",
-            ),
+            PathBuf::from("leading-dir/Neopoligen/set2-test-site/content/basic-main-body-test.neo"),
             r#"-- title
 
 Basic main_body Test
@@ -378,9 +374,7 @@ Link Or Title Start
         );
 
         fs.pages.insert(
-            PathBuf::from(
-                "leading-dir/Neopoligen/set2-test-site/content/link-or-title-target.neo",
-            ),
+            PathBuf::from("leading-dir/Neopoligen/set2-test-site/content/link-or-title-target.neo"),
             r#"-- title
 
 Link Or Title Target
