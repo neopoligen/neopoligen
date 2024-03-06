@@ -161,10 +161,8 @@ fn folder_menu_subfolder_finder(
 
 fn load_prev_next(items: &Vec<CollectionItem>, dest: &mut Vec<CollectionItem>) {
     items.iter().for_each(|item| {
-        if !matches![item.base_type, CollectionItemBaseType::IndexFolder]
-            && !matches![item.base_type, CollectionItemBaseType::TitleFolder]
-        {
-            let mut prev_next_item = item.clone();
+        if !matches![item.base_type, CollectionItemBaseType::TitleFolder] {
+            let prev_next_item = item.clone();
             dest.push(prev_next_item);
         }
         load_prev_next(&item.children, dest);

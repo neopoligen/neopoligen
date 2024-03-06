@@ -462,7 +462,6 @@ pub fn load_prev_next_items() {
 }
 
 #[test]
-#[ignore]
 pub fn previous_item() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
@@ -476,5 +475,56 @@ pub fn previous_item() {
     collection.set_active_item(&"aabb0030".to_string());
     let left = &"aabb0010".to_string();
     let right = &collection.prev_item.unwrap().id;
+    assert_eq!(left, right);
+}
+
+#[test]
+pub fn next_item() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = vec![
+        vec!["aabb0010".to_string()],
+        vec!["level-1a".to_string()],
+        vec!["level-1b".to_string()],
+    ];
+    let mut collection = Collection::new_from_files_and_folders(&site.pages, patterns);
+    collection.set_active_item(&"aabb0030".to_string());
+    let left = &"aabb0050".to_string();
+    let right = &collection.next_item.unwrap().id;
+    assert_eq!(left, right);
+}
+
+#[test]
+pub fn last_item() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = vec![
+        vec!["aabb0010".to_string()],
+        vec!["level-1a".to_string()],
+        vec!["level-1b".to_string()],
+    ];
+    let mut collection = Collection::new_from_files_and_folders(&site.pages, patterns);
+    collection.set_active_item(&"aabb0090".to_string());
+    let left = None;
+    let right = collection.next_item;
+    assert_eq!(left, right);
+}
+
+#[test]
+pub fn first_item() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = vec![
+        vec!["aabb0010".to_string()],
+        vec!["level-1a".to_string()],
+        vec!["level-1b".to_string()],
+    ];
+    let mut collection = Collection::new_from_files_and_folders(&site.pages, patterns);
+    collection.set_active_item(&"aabb0010".to_string());
+    let left = None;
+    let right = collection.prev_item;
     assert_eq!(left, right);
 }

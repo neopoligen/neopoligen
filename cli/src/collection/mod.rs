@@ -67,6 +67,8 @@ impl Collection {
         self.tree
             .iter_mut()
             .for_each(|item| mark_folder_opened_closed(item, id, &self.active_folders));
+        self.prev_item = set_prev_item(&self.prev_next_list, &id);
+        self.next_item = set_next_item(&self.prev_next_list, &id);
     }
 
     pub fn set_active_folders(&mut self, id: &String) {
@@ -190,5 +192,29 @@ fn find_subtree(item: &CollectionItem, id: &String) -> Option<Vec<CollectionItem
         item.children
             .iter()
             .find_map(|child| find_subtree(child, id))
+    }
+}
+
+fn set_prev_item(items: &Vec<CollectionItem>, id: &String) -> Option<CollectionItem> {
+    match items.iter().position(|test_item| &test_item.id == id) {
+        Some(index) => {
+            if index > 0 {
+                let prev_next_item = items.get(index - 1).unwrap().clone();
+                Some(prev_next_item)
+            } else {
+                None
+            }
+        }
+        None => None,
+    }
+}
+
+fn set_next_item(items: &Vec<CollectionItem>, id: &String) -> Option<CollectionItem> {
+    match items.iter().position(|test_item| &test_item.id == id) {
+        Some(index) => match items.get(index + 1) {
+            Some(item) => Some(item.clone()),
+            None => None,
+        },
+        None => None,
     }
 }
