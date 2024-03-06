@@ -6,10 +6,11 @@ use std::collections::BTreeSet;
 impl Collection {
     pub fn new_from_tags(pages: &BTreeMap<String, Page>, tags: Vec<String>) -> Collection {
         let tag_set = BTreeSet::from_iter(tags.clone());
-        let mut tree: Vec<CollectionItem> = pages
+        let tree: Vec<CollectionItem> = pages
             .iter()
             .filter_map(|page| check_page_for_tags(page.1, &tag_set))
             .collect();
+        // TODO: Add default sort by datetime
         // tree.iter_mut()
         //     .for_each(|item| sort_by_source_path(&mut item.children));
         let mut prev_next_list = vec![];
