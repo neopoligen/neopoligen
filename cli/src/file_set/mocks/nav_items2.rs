@@ -105,6 +105,34 @@ Level 1b Content Charlie
             .to_string(),
         );
 
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/nav-items2-test-site/content/level-1b/sub-level-2b/_index.neo",
+            ),
+            r#"-- title
+
+Level 1b SubLevel 2b Index 
+
+-- metadata
+-- id: aabb0080
+"#
+            .to_string(),
+        );
+
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/nav-items2-test-site/content/level-1b/sub-level-2b/under-index-level-2-content.neo",
+            ),
+            r#"-- title
+
+Content Under Section Index Level
+
+-- metadata
+-- id: aabb0090
+"#
+            .to_string(),
+        );
+
         fs
     }
 }

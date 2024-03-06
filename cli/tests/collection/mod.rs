@@ -50,6 +50,14 @@ pub fn item_reference() {
         collection.tree[2].children[0].base_type,
         CollectionItemBaseType::Page
     );
+    assert_eq!(
+        collection.tree[2].children[1].base_type,
+        CollectionItemBaseType::IndexFolder
+    );
+    assert_eq!(
+        collection.tree[2].children[1].children[0].base_type,
+        CollectionItemBaseType::Page
+    );
 }
 
 #[test]
