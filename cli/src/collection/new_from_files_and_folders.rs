@@ -18,6 +18,7 @@ impl Collection {
         tree.iter_mut()
             .for_each(|item| sort_by_source_path(&mut item.children));
         let c = Collection {
+            active_ancestors: vec![],
             active_folders: vec![],
             tree,
         };
