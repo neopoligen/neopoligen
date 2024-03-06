@@ -87,6 +87,26 @@ fn path_parts() {
 }
 
 #[test]
+fn load_default_type() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = &Some("post".to_string());
+    let right = &site.pages.get("ttss0070").unwrap().r#type;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn load_custom_type() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = &Some("custom-page-type".to_string());
+    let right = &site.pages.get("ttss0090").unwrap().r#type;
+    assert_eq!(left, right);
+}
+
+#[test]
 fn load_tags() {
     let file_set = FileSet::set1();
     let config = Config::set1();

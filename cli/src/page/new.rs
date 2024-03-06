@@ -33,7 +33,8 @@ impl Page {
                             let html_link = html_link(&href, &title);
                             let path_parts = path_parts(&source_path, config);
                             let folders = folders(&source_path, config);
-                            let tags = tags(&id, &folders, &ast);
+                            let r#type = r#type(&ast);
+                            let tags = tags(&id, &folders, &ast, &r#type.clone());
                             Some(Page {
                                 ast,
                                 folders,
@@ -45,6 +46,7 @@ impl Page {
                                 source_path,
                                 tags,
                                 title,
+                                r#type: r#type,
                             })
                         }
                         None => None,
@@ -241,11 +243,15 @@ fn path_parts(source_path: &PathBuf, config: &Config) -> Vec<String> {
         .collect()
 }
 
-fn tags(id: &String, folders: &Vec<String>, ast: &Vec<Child>) -> Vec<String> {
+fn tags(
+    id: &String,
+    folders: &Vec<String>,
+    ast: &Vec<Child>,
+    r#type: &Option<String>,
+) -> Vec<String> {
     let mut tags = vec![id.to_string()];
     let mut folders_for_tags = folders.clone();
     tags.append(&mut folders_for_tags);
-
     ast.iter().for_each(|child| {
         if let Child::Section(section) = child {
             if &section.r#type == "tags" {
@@ -277,7 +283,37 @@ fn tags(id: &String, folders: &Vec<String>, ast: &Vec<Child>) -> Vec<String> {
         None => "published".to_string(),
     };
 
-    let r#type = match ast.iter().find_map(|child| {
+    // let r#type = match ast.iter().find_map(|child| {
+    //     if let Child::Section(section) = child {
+    //         if &section.r#type == "metadata" {
+    //             section.key_value_attributes.iter().find_map(|attr| {
+    //                 if attr.0 == "type" {
+    //                     Some(attr.1.to_string())
+    //                 } else {
+    //                     None
+    //                 }
+    //             })
+    //         } else {
+    //             None
+    //         }
+    //     } else {
+    //         None
+    //     }
+    // }) {
+    //     Some(status) => status,
+    //     None => "post".to_string(),
+    // };
+
+    if let Some(type_to_add) = r#type.clone() {
+        tags.push(type_to_add);
+    }
+
+    tags.push(status);
+    tags
+}
+
+fn r#type(ast: &Vec<Child>) -> Option<String> {
+    match ast.iter().find_map(|child| {
         if let Child::Section(section) = child {
             if &section.r#type == "metadata" {
                 section.key_value_attributes.iter().find_map(|attr| {
@@ -294,12 +330,7 @@ fn tags(id: &String, folders: &Vec<String>, ast: &Vec<Child>) -> Vec<String> {
             None
         }
     }) {
-        Some(status) => status,
-        None => "post".to_string(),
-    };
-
-    tags.push(r#type);
-    tags.push(status);
-
-    tags
+        Some(status) => Some(status),
+        None => Some("post".to_string()),
+    }
 }
