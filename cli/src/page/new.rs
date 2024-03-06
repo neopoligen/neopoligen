@@ -283,27 +283,6 @@ fn tags(
         None => "published".to_string(),
     };
 
-    // let r#type = match ast.iter().find_map(|child| {
-    //     if let Child::Section(section) = child {
-    //         if &section.r#type == "metadata" {
-    //             section.key_value_attributes.iter().find_map(|attr| {
-    //                 if attr.0 == "type" {
-    //                     Some(attr.1.to_string())
-    //                 } else {
-    //                     None
-    //                 }
-    //             })
-    //         } else {
-    //             None
-    //         }
-    //     } else {
-    //         None
-    //     }
-    // }) {
-    //     Some(status) => status,
-    //     None => "post".to_string(),
-    // };
-
     if let Some(type_to_add) = r#type.clone() {
         tags.push(type_to_add);
     }
