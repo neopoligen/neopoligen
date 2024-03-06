@@ -35,13 +35,7 @@ pub fn get_collection_subtree() {
     let sub_tree_request_id = Value::from("aabb0020".to_string());
     let original_tree = Value::from_serializable(&site_collection);
     let sub_tree = site.get_subtree(&[sub_tree_request_id, original_tree]);
-    dbg!(sub_tree);
-
-    // let left = Some(format!(r#"Lorem Ipsum"#));
-    // let right = site.ilink(&[
-    //     Value::from("ttss0010"),
-    //     Value::from("ttss0010"),
-    //     Value::from("Lorem Ipsum"),
-    // ]);
-    // assert_eq!(left, right);
+    let left = &"aabb0030".to_string();
+    let right = &sub_tree[0].id;
+    assert_eq!(left, right);
 }
