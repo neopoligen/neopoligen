@@ -229,3 +229,10 @@ fn load_prev_next(items: &Vec<CollectionItem>, dest: &mut Vec<CollectionItem>) {
         load_prev_next(&item.children, dest);
     });
 }
+
+fn sort_by_source_path(items: &mut Vec<CollectionItem>) {
+    items.sort_by_key(|k| k.sort_source_path.clone());
+    items
+        .iter_mut()
+        .for_each(|item| sort_by_source_path(&mut item.children));
+}
