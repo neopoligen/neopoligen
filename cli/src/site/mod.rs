@@ -5,9 +5,7 @@ use crate::cache_object::CacheObject;
 use crate::child::Child;
 use crate::collection::Collection;
 use crate::config::Config;
-use crate::nav_items::NavItems;
 use crate::page::Page;
-use itertools::Itertools;
 use minijinja::Value;
 use serde::Serialize;
 use std::collections::BTreeMap;
@@ -99,59 +97,26 @@ impl Site {
         }
     }
 
-    pub fn nav_from_files_and_folders(&self, args: &[Value]) -> NavItems {
-        let menu_key = format!(
-            "nav-links-{}",
-            args[1]
-                .try_iter()
-                .unwrap()
-                .into_iter()
-                .map(|f| f.try_iter().unwrap().into_iter().join("-"))
-                .join("-")
-        );
-        match self.get_cache(&menu_key) {
-            Some(response) => {
-                if let CacheObject::NavItems(mut nav_items) = response {
-                    nav_items.set_current_page(&args[0]);
-                    nav_items
-                } else {
-                    let mut nav_items = NavItems::new_from_files_and_folders(&self, &args[1]);
-                    nav_items.set_current_page(&args[0]);
-                    nav_items
-                }
-            }
-            None => {
-                let mut nav_items = NavItems::new_from_files_and_folders(&self, &args[1]);
-                self.set_cache(menu_key, CacheObject::NavItems(nav_items.clone()));
-                nav_items.set_current_page(&args[0]);
-                nav_items
-            }
-        }
-    }
-
-    pub fn nav_link_title_link(&self, args: &[Value]) -> Option<String> {
-        Some(format!(
-            r#"<a href="{}">{}</a>"#,
-            self.page_href(args).unwrap(),
-            self.page_title(args).unwrap()
-        ))
-    }
+    // pub fn nav_link_title_link(&self, args: &[Value]) -> Option<String> {
+    //     Some(format!(
+    //         r#"<a href="{}">{}</a>"#,
+    //         self.page_href(args).unwrap(),
+    //         self.page_title(args).unwrap()
+    //     ))
+    // }
 
     pub fn page_folders(&self, args: &[Value]) -> Vec<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {
-            Some(page) => {
-                // dbg!(&page.source_path);
-                // dbg!(&self.config.folders.content_root.clone());
-                page.source_path
-                    .strip_prefix(&self.config.folders.content_root.clone())
-                    .unwrap()
-                    .parent()
-                    .unwrap()
-                    .components()
-                    .map(|c| c.as_os_str().to_string_lossy().to_string().to_lowercase())
-                    .collect()
-            }
+            Some(page) => page
+                .source_path
+                .strip_prefix(&self.config.folders.content_root.clone())
+                .unwrap()
+                .parent()
+                .unwrap()
+                .components()
+                .map(|c| c.as_os_str().to_string_lossy().to_string().to_lowercase())
+                .collect(),
             None => vec![],
         }
     }
@@ -190,23 +155,6 @@ impl Site {
             None => None,
         }
     }
-
-    // {
-    // Some(type_from_metadata) => type_from_metadata,
-    // None => Some("post".to_string()),
-    // },
-    // None => None,
-
-    // Some(_) => Some(format!(
-    //     "/{}/{}/?{}",
-    //     self.config.default_language,
-    //     id,
-    //     self.page_href_title(&id).unwrap()
-    // )),
-    // None => None,
-    // }
-
-    // }
 
     // TODO: Forward to page
     pub fn page_href_title(&self, id: &str) -> Option<String> {
