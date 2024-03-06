@@ -36,6 +36,8 @@ impl Page {
                             let r#type = r#type(&ast);
                             let status = status(&ast);
                             let tags = tags(&id, &folders, &ast, r#type.clone(), status.clone());
+                            let tags_dev =
+                                tags_dev(&id, &folders, &ast, r#type.clone(), status.clone());
                             Some(Page {
                                 ast,
                                 folders,
@@ -47,6 +49,7 @@ impl Page {
                                 source_path,
                                 status,
                                 tags,
+                                tags_dev,
                                 title,
                                 r#type,
                             })
@@ -266,6 +269,36 @@ fn status(ast: &Vec<Child>) -> Option<String> {
         Some(s) => Some(s),
         None => Some("published".to_string()),
     }
+}
+
+fn tags_dev(
+    id: &String,
+    folders: &Vec<String>,
+    ast: &Vec<Child>,
+    r#type: Option<String>,
+    status: Option<String>,
+) -> BTreeSet<String> {
+    let mut tags = BTreeSet::new();
+    tags.insert(id.to_string());
+    folders.iter().for_each(|folder| {
+        tags.insert(folder.to_string());
+    });
+    ast.iter().for_each(|child| {
+        if let Child::Section(section) = child {
+            if &section.r#type == "tags" {
+                section.flag_attributes.iter().for_each(|attr| {
+                    tags.insert(attr.to_string());
+                });
+            }
+        }
+    });
+    if let Some(type_to_add) = r#type {
+        tags.insert(type_to_add);
+    }
+    if let Some(status_to_add) = status {
+        tags.insert(status_to_add);
+    }
+    tags
 }
 
 fn tags(

@@ -2,6 +2,7 @@ use neopoligen::config::Config;
 use neopoligen::file_set::FileSet;
 use neopoligen::site::Site;
 use pretty_assertions::assert_eq;
+use std::collections::BTreeSet;
 
 #[test]
 fn title_from_title_section() {
@@ -131,13 +132,12 @@ fn load_tags() {
     let file_set = FileSet::set1();
     let config = Config::set1();
     let site = Site::new(&file_set, &config);
-    let left = vec![
-        "ttss0070".to_string(),
-        "tag-from-folder".to_string(),
-        "tag-from-tags-section".to_string(),
-        "post".to_string(),
-        "published".to_string(),
-    ];
-    let right = site.pages.get("ttss0070").unwrap().tags.clone();
-    assert_eq!(left, right);
+    let mut left_dev = BTreeSet::new();
+    left_dev.insert("ttss0070".to_string());
+    left_dev.insert("tag-from-folder".to_string());
+    left_dev.insert("tag-from-tags-section".to_string());
+    left_dev.insert("post".to_string());
+    left_dev.insert("published".to_string());
+    let right_dev = site.pages.get("ttss0070").unwrap().tags_dev.clone();
+    assert_eq!(left_dev, right_dev);
 }
