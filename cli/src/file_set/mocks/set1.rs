@@ -132,6 +132,28 @@ Title from the first few words of a section
             .to_string(),
         );
 
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/set1-test-site/content/defatul-type-status-and-template-not-in-folder.neo",
+            ),
+            r#"-- metadata
+-- id: ttss0100
+"#
+            .to_string(),
+        );
+
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/set1-test-site/content/type-from-first-folder/test.neo",
+            ),
+            r#"-- metadata
+-- id: ttss0110
+"#
+            .to_string(),
+        );
+
         fs
     }
 }
