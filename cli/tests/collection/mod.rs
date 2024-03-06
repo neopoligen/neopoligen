@@ -528,3 +528,12 @@ pub fn first_item() {
     let right = collection.prev_item;
     assert_eq!(left, right);
 }
+
+#[test]
+pub fn new_from_tags() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let tags = vec!["tag1".to_string()];
+    let mut collection = Collection::new_from_tags(&site.pages, tags);
+}

@@ -1,5 +1,6 @@
 pub mod empty;
 pub mod new_from_files_and_folders;
+pub mod new_from_tags;
 
 use serde::Deserialize;
 use serde::Serialize;
