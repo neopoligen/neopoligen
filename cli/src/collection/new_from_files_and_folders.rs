@@ -1,7 +1,4 @@
-use crate::collection::Collection;
-use crate::collection::CollectionItem;
-use crate::collection::CollectionItemBaseType;
-use crate::collection::CollectionItemStatus;
+use crate::collection::*;
 use crate::page::Page;
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
@@ -157,14 +154,4 @@ fn folder_menu_subfolder_finder(
         .iter()
         .filter_map(|pat| folder_menu_index_finder(pages, pat.clone(), ancestors.clone()))
         .collect()
-}
-
-fn load_prev_next(items: &Vec<CollectionItem>, dest: &mut Vec<CollectionItem>) {
-    items.iter().for_each(|item| {
-        if !matches![item.base_type, CollectionItemBaseType::TitleFolder] {
-            let prev_next_item = item.clone();
-            dest.push(prev_next_item);
-        }
-        load_prev_next(&item.children, dest);
-    });
 }

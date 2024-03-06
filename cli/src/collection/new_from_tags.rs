@@ -27,13 +27,3 @@ impl Collection {
         c
     }
 }
-
-fn load_prev_next(items: &Vec<CollectionItem>, dest: &mut Vec<CollectionItem>) {
-    items.iter().for_each(|item| {
-        if !matches![item.base_type, CollectionItemBaseType::TitleFolder] {
-            let prev_next_item = item.clone();
-            dest.push(prev_next_item);
-        }
-        load_prev_next(&item.children, dest);
-    });
-}
