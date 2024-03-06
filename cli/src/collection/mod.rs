@@ -46,13 +46,7 @@ pub enum CollectionItemStatus {
 
 impl Collection {
     pub fn get_subtree(&self, id: &String) -> Vec<CollectionItem> {
-        match self.tree.iter().find_map(|item| {
-            if &item.id == id {
-                Some(item.children.clone())
-            } else {
-                None
-            }
-        }) {
+        match self.tree.iter().find_map(|item| find_subtree(item, id)) {
             Some(items) => items,
             None => vec![],
         }
@@ -184,4 +178,14 @@ fn mark_inactive_page(item: &mut CollectionItem, id: &String) {
     item.children
         .iter_mut()
         .for_each(|child| mark_inactive_page(child, id))
+}
+
+fn find_subtree(item: &CollectionItem, id: &String) -> Option<Vec<CollectionItem>> {
+    if &item.id == id {
+        Some(item.children.clone())
+    } else {
+        item.children
+            .iter()
+            .find_map(|child| find_subtree(child, id))
+    }
 }
