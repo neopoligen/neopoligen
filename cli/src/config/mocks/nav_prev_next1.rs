@@ -75,6 +75,7 @@ impl Config {
 
         let mut comment = BTreeSet::new();
         comment.insert("comment".to_string());
+        comment.insert("tags".to_string());
 
         let detail = BTreeSet::new();
 
