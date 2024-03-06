@@ -427,3 +427,21 @@ pub fn active_ancestors() {
     let right = &collection.active_ancestors;
     assert_eq!(left, right);
 }
+
+#[test]
+pub fn get_subtree() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = vec![
+        vec!["aabb0010".to_string()],
+        vec!["level-1a".to_string()],
+        vec!["level-1b".to_string()],
+    ];
+    let mut collection = Collection::new_from_files_and_folders(&site.pages, patterns);
+    collection.set_active_item(&"aabb0090".to_string());
+    let sub_tree = collection.get_subtree(&"aabb0020".to_string());
+    let left = &"aabb0030".to_string();
+    let right = &sub_tree[0].id;
+    assert_eq!(left, right);
+}

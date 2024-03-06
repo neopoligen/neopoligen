@@ -3,11 +3,12 @@ pub mod object;
 
 use crate::cache_object::CacheObject;
 use crate::child::Child;
-use crate::collection::Collection;
+use crate::collection::{Collection, CollectionItem};
 use crate::config::Config;
 use crate::page::Page;
 use minijinja::Value;
 use serde::Serialize;
+use serde_json::json;
 use std::collections::BTreeMap;
 use std::fmt::Display;
 use std::path::PathBuf;
@@ -57,6 +58,12 @@ impl Site {
             Some(obj) => Some(obj.clone()),
             None => None,
         }
+    }
+
+    pub fn get_subtree(&self, args: &[Value]) -> Vec<CollectionItem> {
+        let original_json = json!(args[1]);
+        let original_collection: Collection = serde_json::from_value(original_json).unwrap();
+        original_collection.get_subtree(&args[0].to_string())
     }
 
     pub fn ilink(&self, args: &[Value]) -> Option<String> {
