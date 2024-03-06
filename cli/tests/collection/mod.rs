@@ -398,3 +398,15 @@ pub fn prevent_too_many_index_folders() {
         collection.tree[2].children[1].status
     );
 }
+
+#[test]
+pub fn default_sort_by_source_path() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = vec![vec!["default-sort-test".to_string()]];
+    let collection = Collection::new_from_files_and_folders(&site.pages, patterns);
+    assert_eq!(&"aabb0120".to_string(), &collection.tree[0].children[0].id);
+    assert_eq!(&"aabb0130".to_string(), &collection.tree[0].children[1].id);
+    assert_eq!(&"aabb0110".to_string(), &collection.tree[0].children[2].id);
+}
