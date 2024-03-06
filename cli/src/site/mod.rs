@@ -360,6 +360,7 @@ impl Site {
         }
     }
 
+    // TODO: Switch this to call from the page directly
     pub fn page_status(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {
@@ -459,6 +460,7 @@ impl Site {
         // }
     }
 
+    // TODO: Switch this to call from the page directly
     pub fn page_type(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {
