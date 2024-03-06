@@ -20,6 +20,7 @@ pub struct CollectionItem {
     pub children: Vec<CollectionItem>,
     pub folders: Vec<String>,
     pub id: String,
+    pub sort_source_path: String,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]

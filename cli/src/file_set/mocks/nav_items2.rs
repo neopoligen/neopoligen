@@ -133,6 +133,56 @@ Content Under Section Index Level
             .to_string(),
         );
 
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/nav-items2-test-site/content/default-sort-test/_index.neo",
+            ),
+            r#"-- title
+
+Default Sort Test
+
+-- metadata
+-- id: aabb0100
+"#
+            .to_string(),
+        );
+
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/nav-items2-test-site/content/default-sort-test/delta-file.neo"),
+            r#"-- title
+
+Default Sort Delta File
+
+-- metadata
+-- id: aabb0110
+"#
+            .to_string(),
+        );
+
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/nav-items2-test-site/content/default-sort-test/alfa-file.neo"),
+            r#"-- title
+
+Default Sort Alfa File
+
+-- metadata
+-- id: aabb0120
+"#
+            .to_string(),
+        );
+
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/nav-items2-test-site/content/default-sort-test/charlie-title-folder/_title.neo"),
+            r#"-- title
+
+Default Sort Charlie Title Folder
+
+-- metadata
+-- id: aabb0130
+"#
+            .to_string(),
+        );
+
         fs
     }
 }

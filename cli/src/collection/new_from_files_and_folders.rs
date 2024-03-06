@@ -11,16 +11,25 @@ impl Collection {
         pages: &BTreeMap<String, Page>,
         patterns: Vec<Vec<String>>,
     ) -> Collection {
-        let tree: Vec<CollectionItem> = patterns
+        let mut tree: Vec<CollectionItem> = patterns
             .iter()
             .filter_map(|pattern| folder_menu_index_finder(pages, pattern.to_vec(), vec![]))
             .collect();
+        tree.iter_mut()
+            .for_each(|item| sort_by_source_path(&mut item.children));
         let c = Collection {
             active_folders: vec![],
             tree,
         };
         c
     }
+}
+
+fn sort_by_source_path(items: &mut Vec<CollectionItem>) {
+    items.sort_by_key(|k| k.sort_source_path.clone());
+    items
+        .iter_mut()
+        .for_each(|item| sort_by_source_path(&mut item.children));
 }
 
 fn folder_menu_index_finder(
@@ -36,6 +45,7 @@ fn folder_menu_index_finder(
             children: vec![],
             folders: page.folders.clone(),
             id: id.clone(),
+            sort_source_path: page.path_parts.join(""),
             status: CollectionItemStatus::ToBeDetermined,
         })
     } else {
@@ -58,6 +68,7 @@ fn folder_menu_index_finder(
                     children,
                     folders: page.1.folders.clone(),
                     id: page.0.clone(),
+                    sort_source_path: page.1.path_parts.join(""),
                     status: CollectionItemStatus::ToBeDetermined,
                 })
             } else if full_pattern_with_index == page.1.path_parts {
@@ -74,6 +85,7 @@ fn folder_menu_index_finder(
                     children,
                     folders: page.1.folders.clone(),
                     id: page.0.clone(),
+                    sort_source_path: page.1.path_parts.join(""),
                     status: CollectionItemStatus::ToBeDetermined,
                 })
             } else {
@@ -107,6 +119,7 @@ fn folder_menu_child_item_finder(
                     children: vec![],
                     folders: page.1.folders.clone(),
                     id: page.0.clone(),
+                    sort_source_path: page.1.path_parts.join(""),
                     status: CollectionItemStatus::ToBeDetermined,
                 })
             } else {
