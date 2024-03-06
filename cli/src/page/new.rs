@@ -33,6 +33,10 @@ impl Page {
                             let html_link = html_link(&href, &title);
                             let path_parts = path_parts(&source_path, config);
                             let folders = folders(&source_path, config);
+                            let r#type = r#type(&ast);
+                            let status = status(&ast);
+                            // let tags = tags(&id, &folders, &ast, r#type.clone(), status.clone());
+                            let tags = tags(&id, &folders, &ast, r#type.clone(), status.clone());
                             Some(Page {
                                 ast,
                                 folders,
@@ -42,7 +46,10 @@ impl Page {
                                 path_parts,
                                 source,
                                 source_path,
+                                status,
+                                tags,
                                 title,
+                                r#type,
                             })
                         }
                         None => None,
@@ -237,4 +244,108 @@ fn path_parts(source_path: &PathBuf, config: &Config) -> Vec<String> {
         .components()
         .map(|c| c.as_os_str().to_string_lossy().to_string().to_lowercase())
         .collect()
+}
+
+fn status(ast: &Vec<Child>) -> Option<String> {
+    match ast.iter().find_map(|child| {
+        if let Child::Section(section) = child {
+            if &section.r#type == "metadata" {
+                section.key_value_attributes.iter().find_map(|attr| {
+                    if attr.0 == "status" {
+                        Some(attr.1.to_string())
+                    } else {
+                        None
+                    }
+                })
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    }) {
+        Some(s) => Some(s),
+        None => Some("published".to_string()),
+    }
+}
+
+fn tags(
+    id: &String,
+    folders: &Vec<String>,
+    ast: &Vec<Child>,
+    r#type: Option<String>,
+    status: Option<String>,
+) -> BTreeSet<String> {
+    let mut tags = BTreeSet::new();
+    tags.insert(id.to_string());
+    folders.iter().for_each(|folder| {
+        tags.insert(folder.to_string());
+    });
+    ast.iter().for_each(|child| {
+        if let Child::Section(section) = child {
+            if &section.r#type == "tags" {
+                section.flag_attributes.iter().for_each(|attr| {
+                    tags.insert(attr.to_string());
+                });
+            }
+        }
+    });
+    if let Some(type_to_add) = r#type {
+        tags.insert(type_to_add);
+    }
+    if let Some(status_to_add) = status {
+        tags.insert(status_to_add);
+    }
+    tags
+}
+
+// fn tags(
+//     id: &String,
+//     folders: &Vec<String>,
+//     ast: &Vec<Child>,
+//     r#type: Option<String>,
+//     status: Option<String>,
+// ) -> Vec<String> {
+//     let mut tags = vec![id.to_string()];
+//     let mut folders_for_tags = folders.clone();
+//     tags.append(&mut folders_for_tags);
+//     ast.iter().for_each(|child| {
+//         if let Child::Section(section) = child {
+//             if &section.r#type == "tags" {
+//                 section.flag_attributes.iter().for_each(|attr| {
+//                     tags.push(attr.to_string());
+//                 });
+//             }
+//         }
+//     });
+//     if let Some(type_to_add) = r#type {
+//         tags.push(type_to_add);
+//     }
+//     if let Some(status_to_add) = status {
+//         tags.push(status_to_add);
+//     }
+//     tags
+// }
+
+fn r#type(ast: &Vec<Child>) -> Option<String> {
+    match ast.iter().find_map(|child| {
+        if let Child::Section(section) = child {
+            if &section.r#type == "metadata" {
+                section.key_value_attributes.iter().find_map(|attr| {
+                    if attr.0 == "type" {
+                        Some(attr.1.to_string())
+                    } else {
+                        None
+                    }
+                })
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    }) {
+        Some(t) => Some(t),
+        None => Some("post".to_string()),
+    }
 }

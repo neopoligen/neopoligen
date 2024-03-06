@@ -92,6 +92,46 @@ Title from the first few words of a section
             .to_string(),
         );
 
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/set1-test-site/content/tag-from-folder/tag-check-default-type-and-status.neo",
+            ),
+            r#"-- tags
+-- tag-from-tags-section
+
+-- metadata
+-- id: ttss0070
+"#
+            .to_string(),
+        );
+
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/set1-test-site/content/tag-from-folder/tag-from-custom-type-and-status.neo",
+            ),
+            r#"-- metadata
+-- id: ttss0080
+-- type: tag-from-type
+-- status: tag-from-status
+"#
+            .to_string(),
+        );
+
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/set1-test-site/content/custom-type-and-status.neo",
+            ),
+            r#"-- metadata
+-- id: ttss0090
+-- type: custom-page-type
+-- status: custom-page-status 
+"#
+            .to_string(),
+        );
+
         fs
     }
 }

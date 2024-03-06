@@ -2,6 +2,7 @@ use neopoligen::config::Config;
 use neopoligen::file_set::FileSet;
 use neopoligen::site::Site;
 use pretty_assertions::assert_eq;
+use std::collections::BTreeSet;
 
 #[test]
 fn title_from_title_section() {
@@ -83,5 +84,60 @@ fn path_parts() {
     let site = Site::new(&file_set, &config);
     let left = vec!["title-from-title-section.neo".to_string()];
     let right = site.pages.get("ttss0020").unwrap().path_parts.clone();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn load_default_type() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = &Some("post".to_string());
+    let right = &site.pages.get("ttss0070").unwrap().r#type;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn load_custom_type() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = &Some("custom-page-type".to_string());
+    let right = &site.pages.get("ttss0090").unwrap().r#type;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn load_default_status() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = &Some("published".to_string());
+    let right = &site.pages.get("ttss0070").unwrap().status;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn load_custom_status() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = &Some("custom-page-status".to_string());
+    let right = &site.pages.get("ttss0090").unwrap().status;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn load_tags() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let mut left = BTreeSet::new();
+    left.insert("ttss0070".to_string());
+    left.insert("tag-from-folder".to_string());
+    left.insert("tag-from-tags-section".to_string());
+    left.insert("post".to_string());
+    left.insert("published".to_string());
+    let right = site.pages.get("ttss0070").unwrap().tags.clone();
     assert_eq!(left, right);
 }

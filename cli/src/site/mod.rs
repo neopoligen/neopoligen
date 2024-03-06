@@ -10,6 +10,7 @@ use minijinja::Value;
 use serde::Serialize;
 use serde_json::json;
 use std::collections::BTreeMap;
+// use std::collections::BTreeSet;
 use std::fmt::Display;
 use std::path::PathBuf;
 use std::sync::Mutex;
@@ -47,7 +48,26 @@ impl Site {
                 c.set_active_item(&id);
                 c
             }
-            Err(_e) => Collection::empty(),
+            Err(e) => {
+                println!("{}", e);
+                Collection::empty()
+            }
+        }
+    }
+
+    pub fn collection_from_tags(&self, args: &[Value]) -> Collection {
+        let id = args[0].to_string();
+        match args[1].try_iter() {
+            Ok(tags) => {
+                let tag_set = tags.map(|t| t.to_string()).collect::<Vec<String>>();
+                let mut c = Collection::new_from_tags(&self.pages, tag_set);
+                c.set_active_item(&id);
+                c
+            }
+            Err(e) => {
+                println!("{}", e);
+                Collection::empty()
+            }
         }
     }
 
@@ -344,6 +364,14 @@ impl Site {
         }
     }
 
+    pub fn page_source(&self, args: &[Value]) -> Option<String> {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
+            Some(page) => Some(page.source.clone()),
+            None => None,
+        }
+    }
+
     pub fn page_source_path(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {
@@ -352,6 +380,7 @@ impl Site {
         }
     }
 
+    // TODO: Switch this to call from the page directly
     pub fn page_status(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {
@@ -451,6 +480,7 @@ impl Site {
         // }
     }
 
+    // TODO: Switch this to call from the page directly
     pub fn page_type(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {

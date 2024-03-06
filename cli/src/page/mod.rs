@@ -2,6 +2,7 @@ pub mod new;
 
 use crate::child::Child;
 use serde::Serialize;
+use std::collections::BTreeSet;
 use std::path::PathBuf;
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
@@ -15,5 +16,8 @@ pub struct Page {
     pub path_parts: Vec<String>,
     pub source: String,
     pub source_path: PathBuf,
+    pub status: Option<String>,
+    pub tags: BTreeSet<String>,
     pub title: Option<String>,
+    pub r#type: Option<String>,
 }

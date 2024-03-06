@@ -1,7 +1,4 @@
-use crate::collection::Collection;
-use crate::collection::CollectionItem;
-use crate::collection::CollectionItemBaseType;
-use crate::collection::CollectionItemStatus;
+use crate::collection::*;
 use crate::page::Page;
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
@@ -17,20 +14,18 @@ impl Collection {
             .collect();
         tree.iter_mut()
             .for_each(|item| sort_by_source_path(&mut item.children));
+        let mut prev_next_list = vec![];
+        load_prev_next(&tree, &mut prev_next_list);
         let c = Collection {
             active_ancestors: vec![],
             active_folders: vec![],
+            next_item: None,
+            prev_item: None,
+            prev_next_list,
             tree,
         };
         c
     }
-}
-
-fn sort_by_source_path(items: &mut Vec<CollectionItem>) {
-    items.sort_by_key(|k| k.sort_source_path.clone());
-    items
-        .iter_mut()
-        .for_each(|item| sort_by_source_path(&mut item.children));
 }
 
 fn folder_menu_index_finder(

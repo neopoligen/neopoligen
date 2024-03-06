@@ -1,10 +1,12 @@
+// DEPRECATED: Move these tests under the
+// page and just forward the site over to it
+
 mod site_page_status {
+    use minijinja::Value;
     use neopoligen::config::Config;
     use neopoligen::file_set::FileSet;
     use neopoligen::site::Site;
     use pretty_assertions::assert_eq;
-    use minijinja::Value;
-
 
     #[test]
     pub fn page_status_in_metadata() {
@@ -25,5 +27,4 @@ mod site_page_status {
         let right = site.page_status(&[Value::from("page-status-not-in-metadata")]);
         assert_eq!(left, right);
     }
-
 }

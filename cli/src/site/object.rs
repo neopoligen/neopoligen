@@ -13,6 +13,9 @@ impl Object for Site {
             "collection_from_files_and_folders" => Ok(Value::from_serializable(
                 &self.collection_from_files_and_folders(args),
             )),
+            "collection_from_tags" => {
+                Ok(Value::from_serializable(&self.collection_from_tags(args)))
+            }
             "get_subtree" => Ok(Value::from_serializable(&self.get_subtree(args))),
             "ilink" => Ok(Value::from_serializable(&self.ilink(args))),
             "log" => Ok(Value::from_serializable(&self.log_from_template(args))),
@@ -24,6 +27,7 @@ impl Object for Site {
             "page_menu_title" => Ok(Value::from_serializable(&self.page_menu_title(args))),
             "page_output_path" => Ok(Value::from_serializable(&self.page_output_path(args))),
             "page_place_section" => Ok(Value::from_serializable(&self.page_place_section(args))),
+            "page_source" => Ok(Value::from_serializable(&self.page_source(args))),
             "page_source_path" => Ok(Value::from_serializable(&self.page_source_path(args))),
             "page_template" => Ok(Value::from_serializable(&self.page_template(args))),
             "page_title" => Ok(Value::from_serializable(&self.page_title(args))),

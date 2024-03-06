@@ -1,3 +1,5 @@
+// DEPRECATED: Move these tests under the
+// page and just forward the site over to it
 mod site_page_type {
     use minijinja::Value;
     use neopoligen::config::Config;
