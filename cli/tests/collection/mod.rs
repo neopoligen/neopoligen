@@ -540,3 +540,15 @@ pub fn new_from_tags() {
     let right = collection.tree.len();
     assert_eq!(left, right);
 }
+
+#[test]
+pub fn verify_tags_prev_next() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let tags = vec!["level-1a".to_string()]; // Using tag from folder
+    let collection = Collection::new_from_tags(&site.pages, tags);
+    let left = 4;
+    let right = collection.prev_next_list.len();
+    assert_eq!(left, right);
+}
