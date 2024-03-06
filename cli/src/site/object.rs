@@ -13,6 +13,7 @@ impl Object for Site {
             "collection_from_files_and_folders" => Ok(Value::from_serializable(
                 &self.collection_from_files_and_folders(args),
             )),
+            "ilink" => Ok(Value::from_serializable(&self.ilink(args))),
             "log" => Ok(Value::from_serializable(&self.log_from_template(args))),
             "link_or_title" => Ok(Value::from_serializable(&self.link_or_title(args))),
             "page_href" => Ok(Value::from_serializable(&self.page_href(args))),
