@@ -132,12 +132,12 @@ fn load_tags() {
     let file_set = FileSet::set1();
     let config = Config::set1();
     let site = Site::new(&file_set, &config);
-    let mut left_dev = BTreeSet::new();
-    left_dev.insert("ttss0070".to_string());
-    left_dev.insert("tag-from-folder".to_string());
-    left_dev.insert("tag-from-tags-section".to_string());
-    left_dev.insert("post".to_string());
-    left_dev.insert("published".to_string());
-    let right_dev = site.pages.get("ttss0070").unwrap().tags_dev.clone();
-    assert_eq!(left_dev, right_dev);
+    let mut left = BTreeSet::new();
+    left.insert("ttss0070".to_string());
+    left.insert("tag-from-folder".to_string());
+    left.insert("tag-from-tags-section".to_string());
+    left.insert("post".to_string());
+    left.insert("published".to_string());
+    let right = site.pages.get("ttss0070").unwrap().tags.clone();
+    assert_eq!(left, right);
 }

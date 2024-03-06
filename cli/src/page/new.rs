@@ -35,9 +35,8 @@ impl Page {
                             let folders = folders(&source_path, config);
                             let r#type = r#type(&ast);
                             let status = status(&ast);
+                            // let tags = tags(&id, &folders, &ast, r#type.clone(), status.clone());
                             let tags = tags(&id, &folders, &ast, r#type.clone(), status.clone());
-                            let tags_dev =
-                                tags_dev(&id, &folders, &ast, r#type.clone(), status.clone());
                             Some(Page {
                                 ast,
                                 folders,
@@ -49,7 +48,6 @@ impl Page {
                                 source_path,
                                 status,
                                 tags,
-                                tags_dev,
                                 title,
                                 r#type,
                             })
@@ -271,7 +269,7 @@ fn status(ast: &Vec<Child>) -> Option<String> {
     }
 }
 
-fn tags_dev(
+fn tags(
     id: &String,
     folders: &Vec<String>,
     ast: &Vec<Child>,
@@ -301,33 +299,33 @@ fn tags_dev(
     tags
 }
 
-fn tags(
-    id: &String,
-    folders: &Vec<String>,
-    ast: &Vec<Child>,
-    r#type: Option<String>,
-    status: Option<String>,
-) -> Vec<String> {
-    let mut tags = vec![id.to_string()];
-    let mut folders_for_tags = folders.clone();
-    tags.append(&mut folders_for_tags);
-    ast.iter().for_each(|child| {
-        if let Child::Section(section) = child {
-            if &section.r#type == "tags" {
-                section.flag_attributes.iter().for_each(|attr| {
-                    tags.push(attr.to_string());
-                });
-            }
-        }
-    });
-    if let Some(type_to_add) = r#type {
-        tags.push(type_to_add);
-    }
-    if let Some(status_to_add) = status {
-        tags.push(status_to_add);
-    }
-    tags
-}
+// fn tags(
+//     id: &String,
+//     folders: &Vec<String>,
+//     ast: &Vec<Child>,
+//     r#type: Option<String>,
+//     status: Option<String>,
+// ) -> Vec<String> {
+//     let mut tags = vec![id.to_string()];
+//     let mut folders_for_tags = folders.clone();
+//     tags.append(&mut folders_for_tags);
+//     ast.iter().for_each(|child| {
+//         if let Child::Section(section) = child {
+//             if &section.r#type == "tags" {
+//                 section.flag_attributes.iter().for_each(|attr| {
+//                     tags.push(attr.to_string());
+//                 });
+//             }
+//         }
+//     });
+//     if let Some(type_to_add) = r#type {
+//         tags.push(type_to_add);
+//     }
+//     if let Some(status_to_add) = status {
+//         tags.push(status_to_add);
+//     }
+//     tags
+// }
 
 fn r#type(ast: &Vec<Child>) -> Option<String> {
     match ast.iter().find_map(|child| {
