@@ -344,6 +344,14 @@ impl Site {
         }
     }
 
+    pub fn page_source(&self, args: &[Value]) -> Option<String> {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
+            Some(page) => Some(page.source.clone()),
+            None => None,
+        }
+    }
+
     pub fn page_source_path(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {
