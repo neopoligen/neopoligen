@@ -67,11 +67,28 @@ impl Site {
             Some(text)
         } else {
             match self.pages.get(&target_id) {
-                Some(page) => page.html_link.clone(),
+                Some(page) => Some(format!(
+                    r#"<a href="{}">{}</a>"#,
+                    page.href.clone().unwrap(),
+                    text
+                )),
                 None => None,
             }
         }
     }
+
+    // pub fn tlink(&self, args: &[Value]) -> Option<String> {
+    //     let current_id = args[0].to_string();
+    //     let target_id = args[1].to_string();
+    //     if current_id == target_id {
+    //         Some(text)
+    //     } else {
+    //         match self.pages.get(&target_id) {
+    //             Some(page) => page.html_link.clone(),
+    //             None => None,
+    //         }
+    //     }
+    // }
 
     #[instrument(skip(self))]
     pub fn set_cache(&self, key: String, obj: CacheObject) -> Option<CacheObject> {

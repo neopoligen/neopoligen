@@ -25,12 +25,12 @@ pub fn template_ilink_to_another_page() {
     let site = Site::new(&file_set, &config);
     let left = Some(format!(
         r#"<a href="{}">{}</a>"#,
-        "/en/ttss0020/?title-from-title-section", "Title From Title Section"
+        "/en/ttss0020/?title-from-title-section", "Lorem Ipsum"
     ));
     let right = site.ilink(&[
         Value::from("ttss0010"),
         Value::from("ttss0020"),
-        Value::from("Link to page"),
+        Value::from("Lorem Ipsum"),
     ]);
     assert_eq!(left, right);
 }
