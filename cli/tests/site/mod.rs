@@ -15,3 +15,4 @@ pub mod site_page_status;
 pub mod site_page_template;
 pub mod site_page_title;
 pub mod site_page_type;
+pub mod template_ilink;

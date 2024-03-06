@@ -1,10 +1,9 @@
 mod site_page_type {
+    use minijinja::Value;
     use neopoligen::config::Config;
     use neopoligen::file_set::FileSet;
     use neopoligen::site::Site;
     use pretty_assertions::assert_eq;
-    use minijinja::Value;
-
 
     #[test]
     pub fn page_type_in_metadata() {
@@ -25,5 +24,4 @@ mod site_page_type {
         let right = site.page_type(&[Value::from("page-type-not-in-metadata")]);
         assert_eq!(left, right);
     }
-
 }

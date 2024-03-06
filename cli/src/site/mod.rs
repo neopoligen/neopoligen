@@ -59,6 +59,25 @@ impl Site {
         }
     }
 
+    pub fn ilink(&self, args: &[Value]) -> Option<String> {
+        let current_id = args[0].to_string();
+        let target_id = args[1].to_string();
+        let text = args[2].to_string();
+
+        if current_id == target_id {
+            Some(text)
+        } else {
+            None
+        }
+
+        // match self.pages.get(&id) {
+        //     Some(page) => Some(format!(rpage
+        //         .source_path
+        //     None => vec![],
+        // }
+        // None
+    }
+
     #[instrument(skip(self))]
     pub fn set_cache(&self, key: String, obj: CacheObject) -> Option<CacheObject> {
         let mut binding = self.cache.lock().unwrap();
