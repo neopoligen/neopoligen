@@ -63,19 +63,14 @@ impl Site {
         let current_id = args[0].to_string();
         let target_id = args[1].to_string();
         let text = args[2].to_string();
-
         if current_id == target_id {
             Some(text)
         } else {
-            None
+            match self.pages.get(&target_id) {
+                Some(page) => page.html_link.clone(),
+                None => None,
+            }
         }
-
-        // match self.pages.get(&id) {
-        //     Some(page) => Some(format!(rpage
-        //         .source_path
-        //     None => vec![],
-        // }
-        // None
     }
 
     #[instrument(skip(self))]
