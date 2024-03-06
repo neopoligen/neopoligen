@@ -107,6 +107,26 @@ fn load_custom_type() {
 }
 
 #[test]
+fn load_default_status() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = &Some("published".to_string());
+    let right = &site.pages.get("ttss0070").unwrap().status;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn load_custom_status() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = &Some("custom-page-status".to_string());
+    let right = &site.pages.get("ttss0090").unwrap().status;
+    assert_eq!(left, right);
+}
+
+#[test]
 fn load_tags() {
     let file_set = FileSet::set1();
     let config = Config::set1();

@@ -34,7 +34,8 @@ impl Page {
                             let path_parts = path_parts(&source_path, config);
                             let folders = folders(&source_path, config);
                             let r#type = r#type(&ast);
-                            let tags = tags(&id, &folders, &ast, &r#type.clone());
+                            let status = status(&ast);
+                            let tags = tags(&id, &folders, &ast, r#type.clone(), status.clone());
                             Some(Page {
                                 ast,
                                 folders,
@@ -44,9 +45,10 @@ impl Page {
                                 path_parts,
                                 source,
                                 source_path,
+                                status,
                                 tags,
                                 title,
-                                r#type: r#type,
+                                r#type,
                             })
                         }
                         None => None,
@@ -243,26 +245,8 @@ fn path_parts(source_path: &PathBuf, config: &Config) -> Vec<String> {
         .collect()
 }
 
-fn tags(
-    id: &String,
-    folders: &Vec<String>,
-    ast: &Vec<Child>,
-    r#type: &Option<String>,
-) -> Vec<String> {
-    let mut tags = vec![id.to_string()];
-    let mut folders_for_tags = folders.clone();
-    tags.append(&mut folders_for_tags);
-    ast.iter().for_each(|child| {
-        if let Child::Section(section) = child {
-            if &section.r#type == "tags" {
-                section.flag_attributes.iter().for_each(|attr| {
-                    tags.push(attr.to_string());
-                });
-            }
-        }
-    });
-
-    let status = match ast.iter().find_map(|child| {
+fn status(ast: &Vec<Child>) -> Option<String> {
+    match ast.iter().find_map(|child| {
         if let Child::Section(section) = child {
             if &section.r#type == "metadata" {
                 section.key_value_attributes.iter().find_map(|attr| {
@@ -279,15 +263,36 @@ fn tags(
             None
         }
     }) {
-        Some(status) => status,
-        None => "published".to_string(),
-    };
+        Some(s) => Some(s),
+        None => Some("published".to_string()),
+    }
+}
 
-    if let Some(type_to_add) = r#type.clone() {
+fn tags(
+    id: &String,
+    folders: &Vec<String>,
+    ast: &Vec<Child>,
+    r#type: Option<String>,
+    status: Option<String>,
+) -> Vec<String> {
+    let mut tags = vec![id.to_string()];
+    let mut folders_for_tags = folders.clone();
+    tags.append(&mut folders_for_tags);
+    ast.iter().for_each(|child| {
+        if let Child::Section(section) = child {
+            if &section.r#type == "tags" {
+                section.flag_attributes.iter().for_each(|attr| {
+                    tags.push(attr.to_string());
+                });
+            }
+        }
+    });
+    if let Some(type_to_add) = r#type {
         tags.push(type_to_add);
     }
-
-    tags.push(status);
+    if let Some(status_to_add) = status {
+        tags.push(status_to_add);
+    }
     tags
 }
 
@@ -309,7 +314,7 @@ fn r#type(ast: &Vec<Child>) -> Option<String> {
             None
         }
     }) {
-        Some(status) => Some(status),
+        Some(t) => Some(t),
         None => Some("post".to_string()),
     }
 }
