@@ -1,7 +1,6 @@
 pub mod empty;
 pub mod new_from_files_and_folders;
 
-use minijinja::Value;
 use serde::Deserialize;
 use serde::Serialize;
 
@@ -43,18 +42,6 @@ pub enum CollectionItemStatus {
     TitleFolderActive,
     TitleFolderClosed,
     TitleFolderOpened,
-}
-
-impl TryFrom<Value> for Collection {
-    type Error = &'static str;
-    fn try_from(v: Value) -> Result<Collection, &'static str> {
-        // dbg!(&v);
-        Ok(Collection {
-            tree: vec![],
-            active_ancestors: vec![],
-            active_folders: vec![],
-        })
-    }
 }
 
 impl Collection {

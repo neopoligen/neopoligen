@@ -7,7 +7,7 @@ use crate::collection::{Collection, CollectionItem};
 use crate::config::Config;
 use crate::page::Page;
 use minijinja::Value;
-use serde::{Deserializer, Serialize};
+use serde::Serialize;
 use serde_json::json;
 use std::collections::BTreeMap;
 use std::fmt::Display;
