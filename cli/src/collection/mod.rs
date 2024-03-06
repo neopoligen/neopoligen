@@ -97,7 +97,9 @@ fn mark_folder_opened_closed(item: &mut CollectionItem, id: &String, active_fold
     if item.status == CollectionItemStatus::ToBeDetermined {
         let folder_count = std::cmp::min(item.folders.len(), active_folders.len());
         if item.base_type == CollectionItemBaseType::TitleFolder {
-            if folder_count == 0 {
+            if active_folders.len() == 0 {
+                item.status = CollectionItemStatus::TitleFolderClosed;
+            } else if item.folders.len() > active_folders.len() {
                 item.status = CollectionItemStatus::TitleFolderClosed;
             } else if &item
                 .folders
@@ -114,7 +116,9 @@ fn mark_folder_opened_closed(item: &mut CollectionItem, id: &String, active_fold
                 item.status = CollectionItemStatus::TitleFolderClosed;
             }
         } else if item.base_type == CollectionItemBaseType::IndexFolder {
-            if folder_count == 0 {
+            if active_folders.len() == 0 {
+                item.status = CollectionItemStatus::IndexFolderClosed;
+            } else if item.folders.len() > active_folders.len() {
                 item.status = CollectionItemStatus::IndexFolderClosed;
             } else if &item
                 .folders

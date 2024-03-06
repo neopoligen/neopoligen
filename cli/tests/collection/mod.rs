@@ -50,6 +50,14 @@ pub fn item_reference() {
         collection.tree[2].children[0].base_type,
         CollectionItemBaseType::Page
     );
+    assert_eq!(
+        collection.tree[2].children[1].base_type,
+        CollectionItemBaseType::IndexFolder
+    );
+    assert_eq!(
+        collection.tree[2].children[1].children[0].base_type,
+        CollectionItemBaseType::Page
+    );
 }
 
 #[test]
@@ -340,5 +348,53 @@ pub fn ancestors() {
     assert_eq!(
         Vec::<String>::from(["aabb0060".to_string()]),
         collection.tree[2].children[0].ancestors
+    );
+}
+
+#[test]
+pub fn prevent_too_many_title_folders() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = vec![
+        vec!["aabb0010".to_string()],
+        vec!["level-1a".to_string()],
+        vec!["level-1b".to_string()],
+    ];
+    let mut collection = Collection::new_from_files_and_folders(&site.pages, patterns);
+    collection.set_active_item(&"aabb0030".to_string());
+    assert_eq!(
+        CollectionItemStatus::TitleFolderOpened,
+        collection.tree[1].status
+    );
+    assert_eq!(
+        CollectionItemStatus::PageActive,
+        collection.tree[1].children[0].status
+    );
+    assert_eq!(
+        CollectionItemStatus::TitleFolderClosed,
+        collection.tree[1].children[1].status
+    );
+}
+
+#[test]
+pub fn prevent_too_many_index_folders() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = vec![
+        vec!["aabb0010".to_string()],
+        vec!["level-1a".to_string()],
+        vec!["level-1b".to_string()],
+    ];
+    let mut collection = Collection::new_from_files_and_folders(&site.pages, patterns);
+    collection.set_active_item(&"aabb0060".to_string());
+    assert_eq!(
+        CollectionItemStatus::IndexFolderActive,
+        collection.tree[2].status
+    );
+    assert_eq!(
+        CollectionItemStatus::IndexFolderClosed,
+        collection.tree[2].children[1].status
     );
 }
