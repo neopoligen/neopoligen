@@ -3,7 +3,7 @@ pub mod object;
 
 use crate::cache_object::CacheObject;
 use crate::child::Child;
-use crate::collection::Collection;
+use crate::collection::{Collection, CollectionItem};
 use crate::config::Config;
 use crate::page::Page;
 use minijinja::Value;
@@ -56,6 +56,14 @@ impl Site {
         match binding.get(key) {
             Some(obj) => Some(obj.clone()),
             None => None,
+        }
+    }
+
+    pub fn get_subtree(&self, args: &[Value]) -> Vec<CollectionItem> {
+        let target_id = args[0].to_string();
+        match Collection::try_from(args[1].clone()) {
+            Ok(_) => vec![],
+            Err(_) => vec![],
         }
     }
 
