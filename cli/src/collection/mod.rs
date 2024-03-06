@@ -56,6 +56,26 @@ impl Collection {
         }
     }
 
+    pub fn set_active_ancestors(&mut self, id: &String) {
+        if let Some(ancestors) = self
+            .tree
+            .iter()
+            .find_map(|item| find_active_ancestors(item, id))
+        {
+            self.active_ancestors = ancestors
+        }
+    }
+
+    pub fn set_active_folders(&mut self, id: &String) {
+        if let Some(folders) = self
+            .tree
+            .iter()
+            .find_map(|item| find_active_folders(item, id))
+        {
+            self.active_folders = folders
+        }
+    }
+
     pub fn set_active_item(&mut self, id: &String) {
         self.tree
             .iter_mut()
@@ -71,25 +91,15 @@ impl Collection {
         self.prev_item = set_prev_item(&self.prev_next_list, &id);
         self.next_item = set_next_item(&self.prev_next_list, &id);
     }
+}
 
-    pub fn set_active_folders(&mut self, id: &String) {
-        if let Some(folders) = self
-            .tree
+fn find_active_ancestors(item: &CollectionItem, id: &String) -> Option<Vec<String>> {
+    if &item.id == id {
+        Some(item.ancestors.clone())
+    } else {
+        item.children
             .iter()
-            .find_map(|item| find_active_folders(item, id))
-        {
-            self.active_folders = folders
-        }
-    }
-
-    pub fn set_active_ancestors(&mut self, id: &String) {
-        if let Some(ancestors) = self
-            .tree
-            .iter()
-            .find_map(|item| find_active_ancestors(item, id))
-        {
-            self.active_ancestors = ancestors
-        }
+            .find_map(|child| find_active_ancestors(child, id))
     }
 }
 
@@ -103,14 +113,24 @@ fn find_active_folders(item: &CollectionItem, id: &String) -> Option<Vec<String>
     }
 }
 
-fn find_active_ancestors(item: &CollectionItem, id: &String) -> Option<Vec<String>> {
+fn find_subtree(item: &CollectionItem, id: &String) -> Option<Vec<CollectionItem>> {
     if &item.id == id {
-        Some(item.ancestors.clone())
+        Some(item.children.clone())
     } else {
         item.children
             .iter()
-            .find_map(|child| find_active_ancestors(child, id))
+            .find_map(|child| find_subtree(child, id))
     }
+}
+
+fn load_prev_next(items: &Vec<CollectionItem>, dest: &mut Vec<CollectionItem>) {
+    items.iter().for_each(|item| {
+        if !matches![item.base_type, CollectionItemBaseType::TitleFolder] {
+            let prev_next_item = item.clone();
+            dest.push(prev_next_item);
+        }
+        load_prev_next(&item.children, dest);
+    });
 }
 
 fn mark_active_page(item: &mut CollectionItem, id: &String) {
@@ -186,16 +206,6 @@ fn mark_inactive_page(item: &mut CollectionItem, id: &String) {
         .for_each(|child| mark_inactive_page(child, id))
 }
 
-fn find_subtree(item: &CollectionItem, id: &String) -> Option<Vec<CollectionItem>> {
-    if &item.id == id {
-        Some(item.children.clone())
-    } else {
-        item.children
-            .iter()
-            .find_map(|child| find_subtree(child, id))
-    }
-}
-
 fn set_prev_item(items: &Vec<CollectionItem>, id: &String) -> Option<CollectionItem> {
     match items.iter().position(|test_item| &test_item.id == id) {
         Some(index) => {
@@ -218,16 +228,6 @@ fn set_next_item(items: &Vec<CollectionItem>, id: &String) -> Option<CollectionI
         },
         None => None,
     }
-}
-
-fn load_prev_next(items: &Vec<CollectionItem>, dest: &mut Vec<CollectionItem>) {
-    items.iter().for_each(|item| {
-        if !matches![item.base_type, CollectionItemBaseType::TitleFolder] {
-            let prev_next_item = item.clone();
-            dest.push(prev_next_item);
-        }
-        load_prev_next(&item.children, dest);
-    });
 }
 
 fn sort_by_source_path(items: &mut Vec<CollectionItem>) {
