@@ -484,27 +484,30 @@ impl Site {
     pub fn page_type(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {
-            Some(page) => match page.ast.iter().find_map(|child| {
-                if let Child::Section(section) = child {
-                    if &section.r#type == "metadata" {
-                        section.key_value_attributes.iter().find_map(|attr| {
-                            if attr.0 == "type" {
-                                Some(Some(attr.1.to_string()))
-                            } else {
-                                None
-                            }
-                        })
-                    } else {
-                        None
-                    }
-                } else {
-                    None
-                }
-            }) {
-                Some(type_from_metadata) => type_from_metadata,
-                None => Some("post".to_string()),
-            },
+            Some(page) => page.r#type.clone(),
             None => None,
+            // Some(page) => match page.ast.iter().find_map(|child| {
+            //     if let Child::Section(section) = child {
+            //         if &section.r#type == "metadata" {
+            //             section.key_value_attributes.iter().find_map(|attr| {
+            //                 if attr.0 == "type" {
+            //                     Some(Some(attr.1.to_string()))
+            //                 } else {
+            //                     None
+            //                 }
+            //             })
+            //         } else {
+            //             None
+            //         }
+            //     } else {
+            //         None
+            //     }
+            // }) {
+            //     Some(type_from_metadata) => type_from_metadata,
+            //     None => Some("post".to_string()),
+            // },
+            // None => None,
+            // }
         }
     }
 
