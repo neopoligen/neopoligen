@@ -445,3 +445,36 @@ pub fn get_subtree() {
     let right = &sub_tree[0].id;
     assert_eq!(left, right);
 }
+
+#[test]
+pub fn load_prev_next_items() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = vec![
+        vec!["aabb0010".to_string()],
+        vec!["level-1a".to_string()],
+        vec!["level-1b".to_string()],
+    ];
+    let collection = Collection::new_from_files_and_folders(&site.pages, patterns);
+    assert_eq!(&"aabb0010".to_string(), &collection.prev_next_list[0].id);
+    assert_eq!(&"aabb0030".to_string(), &collection.prev_next_list[1].id);
+}
+
+#[test]
+#[ignore]
+pub fn previous_item() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = vec![
+        vec!["aabb0010".to_string()],
+        vec!["level-1a".to_string()],
+        vec!["level-1b".to_string()],
+    ];
+    let mut collection = Collection::new_from_files_and_folders(&site.pages, patterns);
+    collection.set_active_item(&"aabb0030".to_string());
+    let left = &"aabb0010".to_string();
+    let right = &collection.prev_item.unwrap().id;
+    assert_eq!(left, right);
+}

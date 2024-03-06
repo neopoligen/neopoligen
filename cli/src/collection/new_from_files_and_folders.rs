@@ -17,9 +17,14 @@ impl Collection {
             .collect();
         tree.iter_mut()
             .for_each(|item| sort_by_source_path(&mut item.children));
+        let mut prev_next_list = vec![];
+        load_prev_next(&tree, &mut prev_next_list);
         let c = Collection {
             active_ancestors: vec![],
             active_folders: vec![],
+            next_item: None,
+            prev_item: None,
+            prev_next_list,
             tree,
         };
         c
@@ -152,4 +157,16 @@ fn folder_menu_subfolder_finder(
         .iter()
         .filter_map(|pat| folder_menu_index_finder(pages, pat.clone(), ancestors.clone()))
         .collect()
+}
+
+fn load_prev_next(items: &Vec<CollectionItem>, dest: &mut Vec<CollectionItem>) {
+    items.iter().for_each(|item| {
+        if !matches![item.base_type, CollectionItemBaseType::IndexFolder]
+            && !matches![item.base_type, CollectionItemBaseType::TitleFolder]
+        {
+            let mut prev_next_item = item.clone();
+            dest.push(prev_next_item);
+        }
+        load_prev_next(&item.children, dest);
+    });
 }

@@ -10,6 +10,9 @@ pub struct Collection {
     pub tree: Vec<CollectionItem>,
     pub active_folders: Vec<String>,
     pub active_ancestors: Vec<String>,
+    pub next_item: Option<CollectionItem>,
+    pub prev_item: Option<CollectionItem>,
+    pub prev_next_list: Vec<CollectionItem>,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
