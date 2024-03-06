@@ -48,6 +48,7 @@ pub enum CollectionItemStatus {
 impl TryFrom<Value> for Collection {
     type Error = &'static str;
     fn try_from(v: Value) -> Result<Collection, &'static str> {
+        // dbg!(&v);
         Ok(Collection {
             tree: vec![],
             active_ancestors: vec![],
@@ -57,6 +58,19 @@ impl TryFrom<Value> for Collection {
 }
 
 impl Collection {
+    pub fn get_subtree(&self, id: &String) -> Vec<CollectionItem> {
+        match self.tree.iter().find_map(|item| {
+            if &item.id == id {
+                Some(item.children.clone())
+            } else {
+                None
+            }
+        }) {
+            Some(items) => items,
+            None => vec![],
+        }
+    }
+
     pub fn set_active_item(&mut self, id: &String) {
         self.tree
             .iter_mut()
