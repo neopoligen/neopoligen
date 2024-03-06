@@ -85,3 +85,19 @@ fn path_parts() {
     let right = site.pages.get("ttss0020").unwrap().path_parts.clone();
     assert_eq!(left, right);
 }
+
+#[test]
+fn load_tags() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = vec![
+        "ttss0070".to_string(),
+        "tag-from-folder".to_string(),
+        "tag-from-tags-section".to_string(),
+        "post".to_string(),
+        "published".to_string(),
+    ];
+    let right = site.pages.get("ttss0070").unwrap().tags.clone();
+    assert_eq!(left, right);
+}

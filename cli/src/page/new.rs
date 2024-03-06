@@ -33,6 +33,7 @@ impl Page {
                             let html_link = html_link(&href, &title);
                             let path_parts = path_parts(&source_path, config);
                             let folders = folders(&source_path, config);
+                            let tags = tags(&id, &folders, &ast);
                             Some(Page {
                                 ast,
                                 folders,
@@ -42,6 +43,7 @@ impl Page {
                                 path_parts,
                                 source,
                                 source_path,
+                                tags,
                                 title,
                             })
                         }
@@ -237,4 +239,67 @@ fn path_parts(source_path: &PathBuf, config: &Config) -> Vec<String> {
         .components()
         .map(|c| c.as_os_str().to_string_lossy().to_string().to_lowercase())
         .collect()
+}
+
+fn tags(id: &String, folders: &Vec<String>, ast: &Vec<Child>) -> Vec<String> {
+    let mut tags = vec![id.to_string()];
+    let mut folders_for_tags = folders.clone();
+    tags.append(&mut folders_for_tags);
+
+    ast.iter().for_each(|child| {
+        if let Child::Section(section) = child {
+            if &section.r#type == "tags" {
+                section.flag_attributes.iter().for_each(|attr| {
+                    tags.push(attr.to_string());
+                });
+            }
+        }
+    });
+
+    let status = match ast.iter().find_map(|child| {
+        if let Child::Section(section) = child {
+            if &section.r#type == "metadata" {
+                section.key_value_attributes.iter().find_map(|attr| {
+                    if attr.0 == "status" {
+                        Some(attr.1.to_string())
+                    } else {
+                        None
+                    }
+                })
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    }) {
+        Some(status) => status,
+        None => "published".to_string(),
+    };
+
+    let r#type = match ast.iter().find_map(|child| {
+        if let Child::Section(section) = child {
+            if &section.r#type == "metadata" {
+                section.key_value_attributes.iter().find_map(|attr| {
+                    if attr.0 == "type" {
+                        Some(attr.1.to_string())
+                    } else {
+                        None
+                    }
+                })
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    }) {
+        Some(status) => status,
+        None => "post".to_string(),
+    };
+
+    tags.push(r#type);
+    tags.push(status);
+
+    tags
 }

@@ -15,5 +15,6 @@ pub struct Page {
     pub path_parts: Vec<String>,
     pub source: String,
     pub source_path: PathBuf,
+    pub tags: Vec<String>,
     pub title: Option<String>,
 }
