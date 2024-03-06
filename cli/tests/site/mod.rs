@@ -11,7 +11,6 @@ pub mod site_page_output_path;
 pub mod site_page_path_parts;
 pub mod site_page_place_section;
 pub mod site_page_source_path;
-pub mod site_page_status;
 pub mod site_page_template;
 pub mod site_page_title;
 pub mod template_ilink;

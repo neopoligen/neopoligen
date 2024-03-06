@@ -380,34 +380,6 @@ impl Site {
         }
     }
 
-    // TODO: Switch this to call from the page directly
-    pub fn page_status(&self, args: &[Value]) -> Option<String> {
-        let id = args[0].to_string();
-        match self.pages.get(&id) {
-            Some(page) => match page.ast.iter().find_map(|child| {
-                if let Child::Section(section) = child {
-                    if &section.r#type == "metadata" {
-                        section.key_value_attributes.iter().find_map(|attr| {
-                            if attr.0 == "status" {
-                                Some(Some(attr.1.to_string()))
-                            } else {
-                                None
-                            }
-                        })
-                    } else {
-                        None
-                    }
-                } else {
-                    None
-                }
-            }) {
-                Some(type_from_metadata) => type_from_metadata,
-                None => Some("published".to_string()),
-            },
-            None => None,
-        }
-    }
-
     pub fn page_template(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         if self.pages.contains_key(&id) {
@@ -437,6 +409,14 @@ impl Site {
     // until the actual functionality is built
     pub fn page_menu_title(&self, args: &[Value]) -> Option<String> {
         self.page_title(args)
+    }
+
+    pub fn page_status(&self, args: &[Value]) -> Option<String> {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
+            Some(page) => page.status.clone(),
+            None => None,
+        }
     }
 
     pub fn page_title(&self, args: &[Value]) -> Option<String> {
@@ -480,34 +460,11 @@ impl Site {
         // }
     }
 
-    // TODO: Switch this to call from the page directly
     pub fn page_type(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => page.r#type.clone(),
             None => None,
-            // Some(page) => match page.ast.iter().find_map(|child| {
-            //     if let Child::Section(section) = child {
-            //         if &section.r#type == "metadata" {
-            //             section.key_value_attributes.iter().find_map(|attr| {
-            //                 if attr.0 == "type" {
-            //                     Some(Some(attr.1.to_string()))
-            //                 } else {
-            //                     None
-            //                 }
-            //             })
-            //         } else {
-            //             None
-            //         }
-            //     } else {
-            //         None
-            //     }
-            // }) {
-            //     Some(type_from_metadata) => type_from_metadata,
-            //     None => Some("post".to_string()),
-            // },
-            // None => None,
-            // }
         }
     }
 
