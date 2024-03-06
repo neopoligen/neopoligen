@@ -352,8 +352,7 @@ pub fn ancestors() {
 }
 
 #[test]
-// #[ignore]
-pub fn prevent_too_many_open_folders() {
+pub fn prevent_too_many_title_folders() {
     let file_set = FileSet::nav_items2();
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
@@ -372,9 +371,30 @@ pub fn prevent_too_many_open_folders() {
         CollectionItemStatus::PageActive,
         collection.tree[1].children[0].status
     );
-
     assert_eq!(
         CollectionItemStatus::TitleFolderClosed,
         collection.tree[1].children[1].status
+    );
+}
+
+#[test]
+pub fn prevent_too_many_index_folders() {
+    let file_set = FileSet::nav_items2();
+    let config = Config::nav_items2();
+    let site = Site::new(&file_set, &config);
+    let patterns = vec![
+        vec!["aabb0010".to_string()],
+        vec!["level-1a".to_string()],
+        vec!["level-1b".to_string()],
+    ];
+    let mut collection = Collection::new_from_files_and_folders(&site.pages, patterns);
+    collection.set_active_item(&"aabb0060".to_string());
+    assert_eq!(
+        CollectionItemStatus::IndexFolderActive,
+        collection.tree[2].status
+    );
+    assert_eq!(
+        CollectionItemStatus::IndexFolderClosed,
+        collection.tree[2].children[1].status
     );
 }
