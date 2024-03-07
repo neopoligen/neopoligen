@@ -11,10 +11,8 @@ pub mod site_page_output_path;
 pub mod site_page_path_parts;
 pub mod site_page_place_section;
 pub mod site_page_source_path;
-pub mod site_page_status;
 pub mod site_page_template;
 pub mod site_page_title;
-pub mod site_page_type;
 pub mod template_ilink;
 
 use minijinja::Value;
@@ -37,5 +35,56 @@ pub fn get_collection_subtree() {
     let sub_tree = site.get_subtree(&[sub_tree_request_id, original_tree]);
     let left = &"aabb0030".to_string();
     let right = &sub_tree[0].id;
+    assert_eq!(left, right);
+}
+
+#[test]
+pub fn load_images_from_file_set() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = &"/images/root-level-image.png".to_string();
+    let right = &site.images[0].raw_href;
+    assert_eq!(left, right);
+}
+
+#[test]
+#[ignore]
+pub fn image_path_from_name_with_extension_in_top_dir() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = &"/images/root-level-image.png".to_string();
+    let right = &site
+        .image(&[Value::from("root-level-image.png".to_string())])
+        .unwrap()
+        .raw_href;
+    assert_eq!(left, right);
+}
+
+#[test]
+pub fn image_path_from_name_with_extension_in_sub_dir() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = &"/images/sub-folder/sub-folder-image.png".to_string();
+    let right = &site
+        .image(&[Value::from("sub-folder-image.png".to_string())])
+        .unwrap()
+        .raw_href;
+    assert_eq!(left, right);
+}
+
+#[test]
+#[ignore]
+pub fn image_path_from_name_without_extension_in_sub_dir() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = &"/images/sub-folder/sub-folder-image.png".to_string();
+    let right = &site
+        .image(&[Value::from("sub-folder-image".to_string())])
+        .unwrap()
+        .raw_href;
     assert_eq!(left, right);
 }

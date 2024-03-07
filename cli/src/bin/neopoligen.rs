@@ -77,7 +77,7 @@ fn build_site(config: &Config) {
     let mut file_set = FileSet::new();
     file_set.load_content(&config.folders.content_root);
     file_set.load_templates(&config.folders.theme_root);
-    // dbg!(&file_set);
+    file_set.load_images(&config.folders.images_root);
     let builder = Builder::new(file_set, &config);
     builder.write_files();
     builder.copy_files();

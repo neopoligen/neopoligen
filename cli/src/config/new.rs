@@ -23,16 +23,10 @@ impl Config {
         let content_root = PathBuf::from(format!("{}/{}", project_root.display(), "content"));
         let themes_root = PathBuf::from(format!("{}/{}", project_root.display(), "themes"));
         let output_root = PathBuf::from(format!("{}/{}", project_root.display(), "docs"));
-        let parsing_errors_root = PathBuf::from(format!(
-            "{}/_errors/{}",
-            project_root.display(),
-            "parsing-errors"
-        ));
-        let theme_errors_root = PathBuf::from(format!(
-            "{}/_errors/{}",
-            project_root.display(),
-            "theme-errors"
-        ));
+        let status_root = PathBuf::from(format!("{}/{}", project_root.display(), "_status"));
+        let parsing_errors_root =
+            PathBuf::from(format!("{}/parsing-errors", status_root.display(),));
+        let theme_errors_root = PathBuf::from(format!("{}/theme-errors", status_root.display(),));
 
         let theme_name = get_config_file_single_line(&configuration_root, "theme.txt").unwrap();
 

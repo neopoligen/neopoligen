@@ -90,6 +90,8 @@ impl Config {
 
         let mut raw = BTreeSet::new();
         raw.insert("code".to_string());
+        raw.insert("css".to_string());
+        raw.insert("script".to_string());
 
         let mut standard = BTreeSet::new();
         standard.insert("bookmark".to_string());

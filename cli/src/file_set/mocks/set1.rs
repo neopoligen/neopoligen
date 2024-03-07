@@ -9,6 +9,14 @@ impl FileSet {
             "Templates are not used for these tests".to_string(),
         );
 
+        fs.images.push(PathBuf::from(
+            "leading-dir/Neopoligen/set1-test-site/images/root-level-image.png",
+        ));
+
+        fs.images.push(PathBuf::from(
+            "leading-dir/Neopoligen/set1-test-site/images/sub-folder/sub-folder-image.png",
+        ));
+
         /////////////////////////////////////////////////////////////////////////
         fs.pages.insert(
             PathBuf::from("leading-dir/Neopoligen/set1-test-site/content/home-page.neo"),
@@ -128,6 +136,41 @@ Title from the first few words of a section
 -- id: ttss0090
 -- type: custom-page-type
 -- status: custom-page-status 
+"#
+            .to_string(),
+        );
+
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/set1-test-site/content/defatul-type-status-and-template-not-in-folder.neo",
+            ),
+            r#"-- metadata
+-- id: ttss0100
+"#
+            .to_string(),
+        );
+
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/set1-test-site/content/type-from-first-folder/test.neo",
+            ),
+            r#"-- metadata
+-- id: ttss0110
+"#
+            .to_string(),
+        );
+
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/set1-test-site/content/css-for-head.neo"),
+            r#"-- css
+
+body { color: goldenrod; }
+
+-- metadata
+-- id: ttss0120
 "#
             .to_string(),
         );

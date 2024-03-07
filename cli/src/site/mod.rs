@@ -5,12 +5,12 @@ use crate::cache_object::CacheObject;
 use crate::child::Child;
 use crate::collection::{Collection, CollectionItem};
 use crate::config::Config;
+use crate::image::Image;
 use crate::page::Page;
 use minijinja::Value;
 use serde::Serialize;
 use serde_json::json;
 use std::collections::BTreeMap;
-// use std::collections::BTreeSet;
 use std::fmt::Display;
 use std::path::PathBuf;
 use std::sync::Mutex;
@@ -27,6 +27,7 @@ pub struct Site {
     pub pages: BTreeMap<String, Page>,
     pub invalid_pages: BTreeMap<PathBuf, String>,
     pub templates: BTreeMap<String, String>,
+    pub images: Vec<Image>,
 }
 
 impl Site {
@@ -71,6 +72,14 @@ impl Site {
         }
     }
 
+    pub fn page_css_for_head(&self, args: &[Value]) -> Vec<String> {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
+            Some(page) => page.css_for_head.clone(),
+            None => vec![],
+        }
+    }
+
     #[instrument(skip(self))]
     pub fn get_cache(&self, key: &str) -> Option<CacheObject> {
         let binding = self.cache.lock().unwrap();
@@ -102,6 +111,47 @@ impl Site {
                 None => None,
             }
         }
+    }
+
+    pub fn image(&self, args: &[Value]) -> Option<Image> {
+        let target_name = args[0].to_string();
+        self.images.iter().find_map(|image| {
+            if &target_name == &image.file_stem {
+                Some(image.clone())
+            } else if &target_name == &image.file_name {
+                Some(image.clone())
+            } else {
+                None
+            }
+        })
+
+        // self.images.iter().find_map(|image| {
+        //     if let (Some(file_name), Some(file_stem)) = (image.file_name(), image.file_stem()) {
+        //         if target_name == file_stem.to_string_lossy().to_string() {
+        //             Some(format!(
+        //                 "/{}",
+        //                 image
+        //                     .strip_prefix(self.config.folders.project_root.clone())
+        //                     .unwrap()
+        //                     .to_string_lossy()
+        //                     .to_string(),
+        //             ))
+        //         } else if target_name == file_name.to_string_lossy().to_string() {
+        //             Some(format!(
+        //                 "/{}",
+        //                 image
+        //                     .strip_prefix(self.config.folders.project_root.clone())
+        //                     .unwrap()
+        //                     .to_string_lossy()
+        //                     .to_string(),
+        //             ))
+        //         } else {
+        //             None
+        //         }
+        //     } else {
+        //         None
+        //     }
+        // })
     }
 
     // pub fn tlink(&self, args: &[Value]) -> Option<String> {
@@ -380,34 +430,6 @@ impl Site {
         }
     }
 
-    // TODO: Switch this to call from the page directly
-    pub fn page_status(&self, args: &[Value]) -> Option<String> {
-        let id = args[0].to_string();
-        match self.pages.get(&id) {
-            Some(page) => match page.ast.iter().find_map(|child| {
-                if let Child::Section(section) = child {
-                    if &section.r#type == "metadata" {
-                        section.key_value_attributes.iter().find_map(|attr| {
-                            if attr.0 == "status" {
-                                Some(Some(attr.1.to_string()))
-                            } else {
-                                None
-                            }
-                        })
-                    } else {
-                        None
-                    }
-                } else {
-                    None
-                }
-            }) {
-                Some(type_from_metadata) => type_from_metadata,
-                None => Some("published".to_string()),
-            },
-            None => None,
-        }
-    }
-
     pub fn page_template(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         if self.pages.contains_key(&id) {
@@ -437,6 +459,14 @@ impl Site {
     // until the actual functionality is built
     pub fn page_menu_title(&self, args: &[Value]) -> Option<String> {
         self.page_title(args)
+    }
+
+    pub fn page_status(&self, args: &[Value]) -> Option<String> {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
+            Some(page) => page.status.clone(),
+            None => None,
+        }
     }
 
     pub fn page_title(&self, args: &[Value]) -> Option<String> {
@@ -480,30 +510,10 @@ impl Site {
         // }
     }
 
-    // TODO: Switch this to call from the page directly
     pub fn page_type(&self, args: &[Value]) -> Option<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {
-            Some(page) => match page.ast.iter().find_map(|child| {
-                if let Child::Section(section) = child {
-                    if &section.r#type == "metadata" {
-                        section.key_value_attributes.iter().find_map(|attr| {
-                            if attr.0 == "type" {
-                                Some(Some(attr.1.to_string()))
-                            } else {
-                                None
-                            }
-                        })
-                    } else {
-                        None
-                    }
-                } else {
-                    None
-                }
-            }) {
-                Some(type_from_metadata) => type_from_metadata,
-                None => Some("post".to_string()),
-            },
+            Some(page) => page.r#type.clone(),
             None => None,
         }
     }

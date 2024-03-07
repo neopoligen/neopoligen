@@ -4,6 +4,7 @@ pub mod new;
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
+use walkdir::DirEntry;
 use walkdir::WalkDir;
 
 // This is used to abstract away the file system
@@ -15,6 +16,7 @@ use walkdir::WalkDir;
 pub struct FileSet {
     pub pages: BTreeMap<PathBuf, String>,
     pub templates: BTreeMap<String, String>,
+    pub images: Vec<PathBuf>,
 }
 
 impl FileSet {
@@ -40,6 +42,13 @@ impl FileSet {
             });
     }
 
+    pub fn load_images(&mut self, dir: &PathBuf) {
+        let walker = WalkDir::new(dir).into_iter();
+        for entry in walker.filter_entry(|e| !is_hidden(e)) {
+            self.images.push(entry.unwrap().path().to_path_buf());
+        }
+    }
+
     pub fn load_templates(&mut self, dir: &PathBuf) {
         WalkDir::new(dir)
             .into_iter()
@@ -63,4 +72,12 @@ impl FileSet {
                 }
             });
     }
+}
+
+fn is_hidden(entry: &DirEntry) -> bool {
+    entry
+        .file_name()
+        .to_str()
+        .map(|s| s.starts_with("."))
+        .unwrap_or(false)
 }

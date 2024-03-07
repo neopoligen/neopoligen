@@ -33,12 +33,13 @@ impl Page {
                             let html_link = html_link(&href, &title);
                             let path_parts = path_parts(&source_path, config);
                             let folders = folders(&source_path, config);
-                            let r#type = r#type(&ast);
+                            let r#type = r#type(&ast, &folders);
                             let status = status(&ast);
-                            // let tags = tags(&id, &folders, &ast, r#type.clone(), status.clone());
                             let tags = tags(&id, &folders, &ast, r#type.clone(), status.clone());
+                            let css_for_head = css_for_head(&ast);
                             Some(Page {
                                 ast,
+                                css_for_head,
                                 folders,
                                 href,
                                 html_link,
@@ -64,6 +65,26 @@ impl Page {
             }
         }
     }
+}
+
+fn css_for_head(ast: &Vec<Child>) -> Vec<String> {
+    ast.iter()
+        .filter_map(|child| {
+            if let Child::Section(section) = child {
+                if &section.r#type == "css" {
+                    match &section.category {
+                        SectionCategory::PreformattedSectionFull { text } => text.clone(),
+                        SectionCategory::PreformattedSectionStart { text } => text.clone(),
+                        _ => None,
+                    }
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        })
+        .collect()
 }
 
 fn filter_section(sec: &Section) -> Option<String> {
@@ -299,35 +320,7 @@ fn tags(
     tags
 }
 
-// fn tags(
-//     id: &String,
-//     folders: &Vec<String>,
-//     ast: &Vec<Child>,
-//     r#type: Option<String>,
-//     status: Option<String>,
-// ) -> Vec<String> {
-//     let mut tags = vec![id.to_string()];
-//     let mut folders_for_tags = folders.clone();
-//     tags.append(&mut folders_for_tags);
-//     ast.iter().for_each(|child| {
-//         if let Child::Section(section) = child {
-//             if &section.r#type == "tags" {
-//                 section.flag_attributes.iter().for_each(|attr| {
-//                     tags.push(attr.to_string());
-//                 });
-//             }
-//         }
-//     });
-//     if let Some(type_to_add) = r#type {
-//         tags.push(type_to_add);
-//     }
-//     if let Some(status_to_add) = status {
-//         tags.push(status_to_add);
-//     }
-//     tags
-// }
-
-fn r#type(ast: &Vec<Child>) -> Option<String> {
+fn r#type(ast: &Vec<Child>, folders: &Vec<String>) -> Option<String> {
     match ast.iter().find_map(|child| {
         if let Child::Section(section) = child {
             if &section.r#type == "metadata" {
@@ -346,6 +339,12 @@ fn r#type(ast: &Vec<Child>) -> Option<String> {
         }
     }) {
         Some(t) => Some(t),
-        None => Some("post".to_string()),
+        None => {
+            if folders.len() > 0 {
+                Some(folders[0].clone())
+            } else {
+                Some("post".to_string())
+            }
+        }
     }
 }

@@ -6,6 +6,7 @@ use crate::site::Site;
 use fs_extra::dir::copy;
 use minijinja::context;
 use minijinja::Environment;
+use minijinja::Syntax;
 use minijinja::Value;
 use std::collections::BTreeMap;
 use std::fs;
@@ -55,6 +56,17 @@ impl Builder {
 
     pub fn files_to_output(&self) -> BTreeMap<PathBuf, String> {
         let mut env = Environment::new();
+
+        env.set_syntax(Syntax {
+            block_start: "[!".into(),
+            block_end: "!]".into(),
+            variable_start: "[@".into(),
+            variable_end: "@]".into(),
+            comment_start: "[#".into(),
+            comment_end: "#]".into(),
+        })
+        .unwrap();
+
         let site = Site::new(&self.file_set, &self.config);
         let mut outputs = BTreeMap::new();
         self.file_set
@@ -63,15 +75,15 @@ impl Builder {
             .for_each(|t| env.add_template_owned(t.0, t.1).unwrap());
         env.add_template_owned(
             "splitter.jinja".to_string(),
-            r#"{%- import "includes/macros.jinja" as macros -%}
-{#- include "global_vars" -#}
-{%- for page_id in site.page_ids() -%}
-{{- site.log({ "page_id": page_id, "source_path": site.page_source_path(page_id) }) -}}
-{{ site.page_output_path(page_id) }}
+            r#"[! import "includes/macros.jinja" as macros !]
+[# include "global_vars" #]
+[! for page_id in site.page_ids() !]
+[@ site.log({ "page_id": page_id, "source_path": site.page_source_path(page_id) }) @]
+[@ site.page_output_path(page_id) @]
 --- PAGE_DATA_SPLIT ---
-{% include site.page_template(page_id) %}
+[! include site.page_template(page_id) !]
 --- PAGE_SEPARATOR ---
-{% endfor -%}"#
+[! endfor !]"#
                 .to_string(),
         )
         .unwrap();
