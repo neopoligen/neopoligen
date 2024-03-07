@@ -7,7 +7,6 @@ use crate::collection::{Collection, CollectionItem};
 use crate::config::Config;
 use crate::image::Image;
 use crate::page::Page;
-use crate::span::tag_word::tag_word;
 use minijinja::Value;
 use serde::Serialize;
 use serde_json::json;
@@ -70,6 +69,14 @@ impl Site {
                 println!("{}", e);
                 Collection::empty()
             }
+        }
+    }
+
+    pub fn page_css_for_head(&self, args: &[Value]) -> Vec<String> {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
+            Some(page) => page.css_for_head.clone(),
+            None => vec![],
         }
     }
 
