@@ -162,6 +162,21 @@ Title from the first few words of a section
             .to_string(),
         );
 
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/set1-test-site/content/css-for-head.neo"),
+            r#"-- css
+
+body {
+    color: goldenrod;
+}
+
+-- metadata
+-- id: ttss0110
+"#
+            .to_string(),
+        );
+
         fs
     }
 }

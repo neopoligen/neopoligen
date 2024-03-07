@@ -150,3 +150,11 @@ fn load_tags() {
     let right = site.pages.get("ttss0070").unwrap().tags.clone();
     assert_eq!(left, right);
 }
+
+#[test]
+fn css_for_head() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    // assert_eq!(1, 2);
+}
