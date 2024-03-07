@@ -72,10 +72,10 @@ impl Site {
         }
     }
 
-    pub fn page_css_for_head(&self, args: &[Value]) -> Vec<String> {
+    pub fn page_stylesheets(&self, args: &[Value]) -> Vec<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {
-            Some(page) => page.css_for_head.clone(),
+            Some(page) => page.stylesheets.clone(),
             None => vec![],
         }
     }

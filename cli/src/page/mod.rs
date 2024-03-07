@@ -17,8 +17,8 @@ pub struct Page {
     pub source: String,
     pub source_path: PathBuf,
     pub status: Option<String>,
+    pub stylesheets: Vec<String>,
     pub tags: BTreeSet<String>,
     pub title: Option<String>,
     pub r#type: Option<String>,
-    pub css_for_head: Vec<String>,
 }
