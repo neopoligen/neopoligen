@@ -68,6 +68,17 @@ impl Page {
 }
 
 fn css_for_head(ast: &Vec<Child>) -> Vec<String> {
+    ast.iter().find_map(|child| {
+        if let Child::Section(section) = child {
+            if &section.r#type == "css" {
+                None::<String>
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    });
     vec![]
 }
 

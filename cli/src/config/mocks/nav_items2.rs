@@ -91,14 +91,14 @@ impl Config {
         let mut raw = BTreeSet::new();
         raw.insert("code".to_string());
 
+        raw.insert("script".to_string());
+
         let mut standard = BTreeSet::new();
         standard.insert("bookmark".to_string());
         standard.insert("div".to_string());
         standard.insert("p".to_string());
         standard.insert("title".to_string());
         standard.insert("tldr".to_string());
-        standard.insert("css".to_string());
-        standard.insert("script".to_string());
 
         let mut table = BTreeSet::new();
         table.insert("table".to_string());

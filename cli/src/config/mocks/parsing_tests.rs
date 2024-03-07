@@ -93,6 +93,8 @@ impl Config {
         let mut raw = BTreeSet::new();
         raw.insert("code".to_string());
         raw.insert("pre".to_string());
+        raw.insert("css".to_string());
+        raw.insert("script".to_string());
 
         let mut standard = BTreeSet::new();
         standard.insert("aside".to_string());
@@ -102,8 +104,6 @@ impl Config {
         standard.insert("p".to_string());
         standard.insert("title".to_string());
         standard.insert("tldr".to_string());
-        standard.insert("css".to_string());
-        standard.insert("script".to_string());
 
         let mut table = BTreeSet::new();
         table.insert("table".to_string());
