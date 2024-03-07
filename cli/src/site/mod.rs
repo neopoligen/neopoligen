@@ -28,8 +28,7 @@ pub struct Site {
     pub pages: BTreeMap<String, Page>,
     pub invalid_pages: BTreeMap<PathBuf, String>,
     pub templates: BTreeMap<String, String>,
-    pub images: Vec<PathBuf>,
-    pub images_dev: Vec<Image>,
+    pub images: Vec<Image>,
 }
 
 impl Site {
@@ -107,35 +106,45 @@ impl Site {
         }
     }
 
-    pub fn image_path_raw(&self, args: &[Value]) -> Option<String> {
+    pub fn image(&self, args: &[Value]) -> Option<Image> {
         let target_name = args[0].to_string();
         self.images.iter().find_map(|image| {
-            if let (Some(file_name), Some(file_stem)) = (image.file_name(), image.file_stem()) {
-                if target_name == file_stem.to_string_lossy().to_string() {
-                    Some(format!(
-                        "/{}",
-                        image
-                            .strip_prefix(self.config.folders.project_root.clone())
-                            .unwrap()
-                            .to_string_lossy()
-                            .to_string(),
-                    ))
-                } else if target_name == file_name.to_string_lossy().to_string() {
-                    Some(format!(
-                        "/{}",
-                        image
-                            .strip_prefix(self.config.folders.project_root.clone())
-                            .unwrap()
-                            .to_string_lossy()
-                            .to_string(),
-                    ))
-                } else {
-                    None
-                }
+            if &target_name == &image.file_stem {
+                Some(image.clone())
+            } else if &target_name == &image.file_name {
+                Some(image.clone())
             } else {
                 None
             }
         })
+
+        // self.images.iter().find_map(|image| {
+        //     if let (Some(file_name), Some(file_stem)) = (image.file_name(), image.file_stem()) {
+        //         if target_name == file_stem.to_string_lossy().to_string() {
+        //             Some(format!(
+        //                 "/{}",
+        //                 image
+        //                     .strip_prefix(self.config.folders.project_root.clone())
+        //                     .unwrap()
+        //                     .to_string_lossy()
+        //                     .to_string(),
+        //             ))
+        //         } else if target_name == file_name.to_string_lossy().to_string() {
+        //             Some(format!(
+        //                 "/{}",
+        //                 image
+        //                     .strip_prefix(self.config.folders.project_root.clone())
+        //                     .unwrap()
+        //                     .to_string_lossy()
+        //                     .to_string(),
+        //             ))
+        //         } else {
+        //             None
+        //         }
+        //     } else {
+        //         None
+        //     }
+        // })
     }
 
     // pub fn tlink(&self, args: &[Value]) -> Option<String> {

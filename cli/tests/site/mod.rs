@@ -18,10 +18,8 @@ pub mod template_ilink;
 use minijinja::Value;
 use neopoligen::config::Config;
 use neopoligen::file_set::FileSet;
-use neopoligen::image::Image;
 use neopoligen::site::Site;
 use pretty_assertions::assert_eq;
-use std::path::PathBuf;
 
 #[test]
 pub fn get_collection_subtree() {
@@ -45,13 +43,8 @@ pub fn load_images_from_file_set() {
     let file_set = FileSet::set1();
     let config = Config::set1();
     let site = Site::new(&file_set, &config);
-    let left = &Image {
-        raw_href: "/images/root-level-image.png".to_string(),
-        source_path: PathBuf::from(
-            "leading-dir/Neopoligen/set1-test-site/images/root-level-image.png",
-        ),
-    };
-    let right = &site.images_dev[0];
+    let left = &"/images/root-level-image.png".to_string();
+    let right = &site.images[0].raw_href;
     assert_eq!(left, right);
 }
 
@@ -61,20 +54,25 @@ pub fn image_path_from_name_with_extension_in_top_dir() {
     let file_set = FileSet::set1();
     let config = Config::set1();
     let site = Site::new(&file_set, &config);
-    // lef left = Redo with Image
-    // let right = site.image_path_raw(&[Value::from("root-level-image.png".to_string())]);
-    // assert_eq!(left, right);
+    let left = &"/images/root-level-image.png".to_string();
+    let right = &site
+        .image(&[Value::from("root-level-image.png".to_string())])
+        .unwrap()
+        .raw_href;
+    assert_eq!(left, right);
 }
 
 #[test]
-#[ignore]
 pub fn image_path_from_name_with_extension_in_sub_dir() {
     let file_set = FileSet::set1();
     let config = Config::set1();
     let site = Site::new(&file_set, &config);
-    // lef left = Redo with Image
-    // let right = site.image_path_raw(&[Value::from("sub-folder-image.png".to_string())]);
-    // assert_eq!(left, right);
+    let left = &"/images/sub-folder/sub-folder-image.png".to_string();
+    let right = &site
+        .image(&[Value::from("sub-folder-image.png".to_string())])
+        .unwrap()
+        .raw_href;
+    assert_eq!(left, right);
 }
 
 #[test]
@@ -83,7 +81,10 @@ pub fn image_path_from_name_without_extension_in_sub_dir() {
     let file_set = FileSet::set1();
     let config = Config::set1();
     let site = Site::new(&file_set, &config);
-    // lef left = Redo with Image
-    // let right = site.image_path_raw(&[Value::from("sub-folder-image".to_string())]);
-    // assert_eq!(left, right);
+    let left = &"/images/sub-folder/sub-folder-image.png".to_string();
+    let right = &site
+        .image(&[Value::from("sub-folder-image".to_string())])
+        .unwrap()
+        .raw_href;
+    assert_eq!(left, right);
 }

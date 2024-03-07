@@ -13,6 +13,16 @@ impl Site {
             .images
             .iter()
             .map(|image_source_path| Image {
+                file_stem: image_source_path
+                    .file_stem()
+                    .unwrap()
+                    .to_string_lossy()
+                    .to_string(),
+                file_name: image_source_path
+                    .file_name()
+                    .unwrap()
+                    .to_string_lossy()
+                    .to_string(),
                 raw_href: format!(
                     "/{}",
                     image_source_path
@@ -30,8 +40,7 @@ impl Site {
             pages: BTreeMap::new(),
             invalid_pages: BTreeMap::new(),
             templates: BTreeMap::new(),
-            images: file_set.images.clone(),
-            images_dev: images,
+            images: images,
         };
         file_set.pages.iter().for_each(|f| {
             match Page::new(f.0.to_path_buf(), f.1.to_string(), &config) {
