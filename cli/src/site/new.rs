@@ -40,7 +40,7 @@ impl Site {
             pages: BTreeMap::new(),
             invalid_pages: BTreeMap::new(),
             templates: BTreeMap::new(),
-            images: images,
+            images,
         };
         file_set.pages.iter().for_each(|f| {
             match Page::new(f.0.to_path_buf(), f.1.to_string(), &config) {
