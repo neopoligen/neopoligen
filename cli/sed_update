@@ -1,5 +1,4 @@
 #!/bin/bash
 
-find ./src -type f -name "*.rs" -print0 \
-| xargs -0 sed -i "" \
-"s@OpenedFolderTitle@TitleFolderOpened@g"
+find ./src -type f -name "*.rs" -print0 | xargs -0 \
+sed -i "" "s|{{-|[@|g;s|{{|[@|g;s|-}}|@]|g;s|}}|@]|g;s|{%-|[!|g;s|{%|[!|g;s|-%}|!]|g;s|%}|!]|g;s|{#-|[#|g;s|{#|[#|g;s|-#}|#]|g;s|#}|#]|g"
