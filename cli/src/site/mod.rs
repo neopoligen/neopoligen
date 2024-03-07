@@ -5,13 +5,13 @@ use crate::cache_object::CacheObject;
 use crate::child::Child;
 use crate::collection::{Collection, CollectionItem};
 use crate::config::Config;
+use crate::image::Image;
 use crate::page::Page;
 use crate::span::tag_word::tag_word;
 use minijinja::Value;
 use serde::Serialize;
 use serde_json::json;
 use std::collections::BTreeMap;
-// use std::collections::BTreeSet;
 use std::fmt::Display;
 use std::path::PathBuf;
 use std::sync::Mutex;
@@ -29,6 +29,7 @@ pub struct Site {
     pub invalid_pages: BTreeMap<PathBuf, String>,
     pub templates: BTreeMap<String, String>,
     pub images: Vec<PathBuf>,
+    pub images_dev: Vec<Image>,
 }
 
 impl Site {
