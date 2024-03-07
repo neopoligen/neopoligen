@@ -68,18 +68,23 @@ impl Page {
 }
 
 fn css_for_head(ast: &Vec<Child>) -> Vec<String> {
-    ast.iter().find_map(|child| {
-        if let Child::Section(section) = child {
-            if &section.r#type == "css" {
-                None::<String>
+    ast.iter()
+        .filter_map(|child| {
+            if let Child::Section(section) = child {
+                if &section.r#type == "css" {
+                    match &section.category {
+                        SectionCategory::PreformattedSectionFull { text } => text.clone(),
+                        SectionCategory::PreformattedSectionStart { text } => text.clone(),
+                        _ => None,
+                    }
+                } else {
+                    None
+                }
             } else {
                 None
             }
-        } else {
-            None
-        }
-    });
-    vec![]
+        })
+        .collect()
 }
 
 fn filter_section(sec: &Section) -> Option<String> {
