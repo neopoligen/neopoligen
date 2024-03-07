@@ -36,10 +36,10 @@ impl Page {
                             let r#type = r#type(&ast, &folders);
                             let status = status(&ast);
                             let tags = tags(&id, &folders, &ast, r#type.clone(), status.clone());
-                            let css_for_head = css_for_head(&ast);
+                            let stylesheets = stylesheets(&ast);
                             Some(Page {
                                 ast,
-                                css_for_head,
+                                stylesheets,
                                 folders,
                                 href,
                                 html_link,
@@ -67,7 +67,7 @@ impl Page {
     }
 }
 
-fn css_for_head(ast: &Vec<Child>) -> Vec<String> {
+fn stylesheets(ast: &Vec<Child>) -> Vec<String> {
     ast.iter()
         .filter_map(|child| {
             if let Child::Section(section) = child {
