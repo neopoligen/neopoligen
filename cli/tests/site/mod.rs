@@ -57,3 +57,13 @@ pub fn image_path_from_name_with_extension_in_sub_dir() {
     let right = site.image_path_raw(&[Value::from("sub-folder-image.png".to_string())]);
     assert_eq!(left, right);
 }
+
+#[test]
+pub fn image_path_from_name_without_extension_in_sub_dir() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = Some("/images/sub-folder/sub-folder-image.png".to_string());
+    let right = site.image_path_raw(&[Value::from("sub-folder-image".to_string())]);
+    assert_eq!(left, right);
+}
