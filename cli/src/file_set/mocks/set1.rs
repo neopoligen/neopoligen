@@ -9,6 +9,14 @@ impl FileSet {
             "Templates are not used for these tests".to_string(),
         );
 
+        fs.images.push(PathBuf::from(
+            "leading-dir/Neopoligen/set1-test-site/images/root-level-image.png",
+        ));
+
+        fs.images.push(PathBuf::from(
+            "leading-dir/Neopoligen/set1-test-site/images/sub-folder/sub-folder-image.png",
+        ));
+
         /////////////////////////////////////////////////////////////////////////
         fs.pages.insert(
             PathBuf::from("leading-dir/Neopoligen/set1-test-site/content/home-page.neo"),

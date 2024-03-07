@@ -18,6 +18,7 @@ impl Object for Site {
             }
             "get_subtree" => Ok(Value::from_serializable(&self.get_subtree(args))),
             "ilink" => Ok(Value::from_serializable(&self.ilink(args))),
+            "image_path_raw" => Ok(Value::from_serializable(&self.image_path_raw(args))),
             "log" => Ok(Value::from_serializable(&self.log_from_template(args))),
             "link_or_title" => Ok(Value::from_serializable(&self.link_or_title(args))),
             "page_href" => Ok(Value::from_serializable(&self.page_href(args))),

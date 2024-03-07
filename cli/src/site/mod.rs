@@ -6,6 +6,7 @@ use crate::child::Child;
 use crate::collection::{Collection, CollectionItem};
 use crate::config::Config;
 use crate::page::Page;
+use crate::span::tag_word::tag_word;
 use minijinja::Value;
 use serde::Serialize;
 use serde_json::json;
@@ -27,6 +28,7 @@ pub struct Site {
     pub pages: BTreeMap<String, Page>,
     pub invalid_pages: BTreeMap<PathBuf, String>,
     pub templates: BTreeMap<String, String>,
+    pub images: Vec<PathBuf>,
 }
 
 impl Site {
@@ -102,6 +104,28 @@ impl Site {
                 None => None,
             }
         }
+    }
+
+    pub fn image_path_raw(&self, args: &[Value]) -> Option<String> {
+        let target_name = args[0].to_string();
+        self.images.iter().find_map(|image| {
+            if let Some(file_name) = image.file_name() {
+                if target_name == file_name.to_string_lossy().to_string() {
+                    Some(format!(
+                        "/{}",
+                        image
+                            .strip_prefix(self.config.folders.project_root.clone())
+                            .unwrap()
+                            .to_string_lossy()
+                            .to_string(),
+                    ))
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        })
     }
 
     // pub fn tlink(&self, args: &[Value]) -> Option<String> {

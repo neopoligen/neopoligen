@@ -15,6 +15,7 @@ use walkdir::WalkDir;
 pub struct FileSet {
     pub pages: BTreeMap<PathBuf, String>,
     pub templates: BTreeMap<String, String>,
+    pub images: Vec<PathBuf>,
 }
 
 impl FileSet {
