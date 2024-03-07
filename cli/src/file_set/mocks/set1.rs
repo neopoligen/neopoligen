@@ -167,12 +167,10 @@ Title from the first few words of a section
             PathBuf::from("leading-dir/Neopoligen/set1-test-site/content/css-for-head.neo"),
             r#"-- css
 
-body {
-    color: goldenrod;
-}
+body { color: goldenrod; }
 
 -- metadata
--- id: ttss0110
+-- id: ttss0120
 "#
             .to_string(),
         );

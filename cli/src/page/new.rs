@@ -36,8 +36,10 @@ impl Page {
                             let r#type = r#type(&ast, &folders);
                             let status = status(&ast);
                             let tags = tags(&id, &folders, &ast, r#type.clone(), status.clone());
+                            let css_for_head = css_for_head(&ast);
                             Some(Page {
                                 ast,
+                                css_for_head,
                                 folders,
                                 href,
                                 html_link,
@@ -63,6 +65,10 @@ impl Page {
             }
         }
     }
+}
+
+fn css_for_head(ast: &Vec<Child>) -> Vec<String> {
+    vec![]
 }
 
 fn filter_section(sec: &Section) -> Option<String> {

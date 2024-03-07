@@ -156,5 +156,7 @@ fn css_for_head() {
     let file_set = FileSet::set1();
     let config = Config::set1();
     let site = Site::new(&file_set, &config);
-    // assert_eq!(1, 2);
+    let left: &Vec<String> = &vec![r#"body { color: goldenrod; }"#.to_string()];
+    let right = &site.pages.get("ttss0120").unwrap().css_for_head;
+    assert_eq!(left, right);
 }

@@ -20,4 +20,5 @@ pub struct Page {
     pub tags: BTreeSet<String>,
     pub title: Option<String>,
     pub r#type: Option<String>,
+    pub css_for_head: Vec<String>,
 }
