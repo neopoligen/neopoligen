@@ -4,7 +4,6 @@ use crate::image::Image;
 use crate::page::Page;
 use crate::site::Site;
 use std::collections::BTreeMap;
-use std::path::PathBuf;
 use std::sync::Mutex;
 
 impl Site {
