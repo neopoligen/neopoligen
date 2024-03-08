@@ -152,7 +152,7 @@ fn load_tags() {
 }
 
 #[test]
-fn stylesheets_for_head() {
+fn stylesheets() {
     let file_set = FileSet::set1();
     let config = Config::set1();
     let site = Site::new(&file_set, &config);
@@ -161,12 +161,12 @@ fn stylesheets_for_head() {
     assert_eq!(left, right);
 }
 
-// #[test]
-// fn scripts_for_head() {
-//     let file_set = FileSet::set1();
-//     let config = Config::set1();
-//     let site = Site::new(&file_set, &config);
-//     let left: &Vec<String> = &vec![r#"console.log("ping")"#.to_string()];
-//     let right = &site.pages.get("ttss0130").unwrap().scripts;
-//     assert_eq!(left, right);
-// }
+#[test]
+fn scripts() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left: &Vec<String> = &vec![r#"console.log("ping")"#.to_string()];
+    let right = &site.pages.get("ttss0130").unwrap().scripts;
+    assert_eq!(left, right);
+}
