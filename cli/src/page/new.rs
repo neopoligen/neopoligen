@@ -38,9 +38,11 @@ impl Page {
                             let tags = tags(&id, &folders, &ast, r#type.clone(), status.clone());
                             let scripts = scripts(&ast);
                             let stylesheets = stylesheets(&ast);
+                            let head = head(&ast);
                             Some(Page {
                                 ast,
                                 folders,
+                                head,
                                 href,
                                 html_link,
                                 id,
@@ -67,6 +69,26 @@ impl Page {
             }
         }
     }
+}
+
+fn head(ast: &Vec<Child>) -> Vec<String> {
+    ast.iter()
+        .filter_map(|child| {
+            if let Child::Section(section) = child {
+                if &section.r#type == "head" {
+                    match &section.category {
+                        SectionCategory::PreformattedSectionFull { text } => text.clone(),
+                        SectionCategory::PreformattedSectionStart { text } => text.clone(),
+                        _ => None,
+                    }
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        })
+        .collect()
 }
 
 fn scripts(ast: &Vec<Child>) -> Vec<String> {

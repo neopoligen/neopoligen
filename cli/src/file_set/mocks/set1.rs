@@ -188,6 +188,19 @@ console.log("ping")
             .to_string(),
         );
 
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/set1-test-site/content/head-test.neo"),
+            r#"-- head
+
+<!-- content for head -->
+
+-- metadata
+-- id: ttss0140
+"#
+            .to_string(),
+        );
+
         fs
     }
 }
