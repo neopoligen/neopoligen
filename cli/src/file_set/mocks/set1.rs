@@ -164,13 +164,26 @@ Title from the first few words of a section
 
         /////////////////////////////////////////////////////////////////////////
         fs.pages.insert(
-            PathBuf::from("leading-dir/Neopoligen/set1-test-site/content/css-for-head.neo"),
+            PathBuf::from("leading-dir/Neopoligen/set1-test-site/content/stylesheets-test.neo"),
             r#"-- css
 
 body { color: goldenrod; }
 
 -- metadata
 -- id: ttss0120
+"#
+            .to_string(),
+        );
+
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/set1-test-site/content/scripts-test.neo"),
+            r#"-- script
+
+console.log("ping")
+
+-- metadata
+-- id: ttss0130
 "#
             .to_string(),
         );

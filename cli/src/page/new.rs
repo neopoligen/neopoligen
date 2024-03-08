@@ -36,18 +36,20 @@ impl Page {
                             let r#type = r#type(&ast, &folders);
                             let status = status(&ast);
                             let tags = tags(&id, &folders, &ast, r#type.clone(), status.clone());
+                            let scripts = scripts(&ast);
                             let stylesheets = stylesheets(&ast);
                             Some(Page {
                                 ast,
-                                stylesheets,
                                 folders,
                                 href,
                                 html_link,
                                 id,
                                 path_parts,
+                                scripts,
                                 source,
                                 source_path,
                                 status,
+                                stylesheets,
                                 tags,
                                 title,
                                 r#type,
@@ -65,6 +67,26 @@ impl Page {
             }
         }
     }
+}
+
+fn scripts(ast: &Vec<Child>) -> Vec<String> {
+    ast.iter()
+        .filter_map(|child| {
+            if let Child::Section(section) = child {
+                if &section.r#type == "script" {
+                    match &section.category {
+                        SectionCategory::PreformattedSectionFull { text } => text.clone(),
+                        SectionCategory::PreformattedSectionStart { text } => text.clone(),
+                        _ => None,
+                    }
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        })
+        .collect()
 }
 
 fn stylesheets(ast: &Vec<Child>) -> Vec<String> {
