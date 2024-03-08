@@ -207,8 +207,13 @@ fn title_from_first_few_words(ast: &Vec<Child>) -> Option<String> {
                     .take(24)
                     .map(|s| s.to_string())
                     .collect::<String>()
+                    .trim()
                     .replace("  ", " ");
-                title.push_str("...");
+                if title.ends_with(".") {
+                    title.push_str("..");
+                } else {
+                    title.push_str("...");
+                }
                 Some(title)
             } else {
                 Some(spans.join("").replace("  ", " "))

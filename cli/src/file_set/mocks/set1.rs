@@ -77,7 +77,7 @@ This Title Is Overwritten By Metadata
         /////////////////////////////////////////////////////////////////////////
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/set1-test-site/content/title-from-first-few-words.neo",
+                "leading-dir/Neopoligen/set1-test-site/content/title-from-first-few-words-with-elipses.neo",
             ),
             r#"-- p
 
@@ -87,6 +87,36 @@ IN THE TITLE
 
 -- metadata
 -- id: ttss0050
+"#
+            .to_string(),
+        );
+
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/set1-test-site/content/title-from-first-few-words-that-does-not-get-truncated.neo",
+            ),
+            r#"-- p
+
+First words short title
+
+-- metadata
+-- id: ttss0051
+"#
+            .to_string(),
+        );
+
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/set1-test-site/content/title-first-few-words-dont-add-extra-dot.neo",
+            ),
+            r#"-- p
+
+First few words. There should only be three dots here not four. AND THESE WORDS SHOULD NOT SHOW UP
+
+-- metadata
+-- id: ttss0052
 "#
             .to_string(),
         );
