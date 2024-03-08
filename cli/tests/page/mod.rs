@@ -39,7 +39,7 @@ fn title_from_first_few_words() {
     let file_set = FileSet::set1();
     let config = Config::set1();
     let site = Site::new(&file_set, &config);
-    let left = Some("Title from the first few words".to_string());
+    let left = Some("Title from the first few words of a section lorem ipsum verde...".to_string());
     let right = site.pages.get("ttss0050").unwrap().title.clone();
     assert_eq!(left, right);
 }

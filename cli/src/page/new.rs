@@ -195,12 +195,24 @@ fn title_from_first_few_words(ast: &Vec<Child>) -> Option<String> {
             let Child::Block(thing) = first else {
                 return None;
             };
+
             let spans = thing
                 .iter()
                 .flat_map(|span| get_span_words(&span))
-                .take(11)
-                .collect::<String>();
-            Some(spans)
+                .collect::<Vec<String>>();
+
+            if spans.len() > 28 {
+                let mut title = spans
+                    .iter()
+                    .take(24)
+                    .map(|s| s.to_string())
+                    .collect::<String>()
+                    .replace("  ", " ");
+                title.push_str("...");
+                Some(title)
+            } else {
+                Some(spans.join("").replace("  ", " "))
+            }
         }
         _ => None,
     })

@@ -81,7 +81,9 @@ This Title Is Overwritten By Metadata
             ),
             r#"-- p
 
-Title from the first few words of a section
+Title from the first few words of a section 
+lorem ipsum verde AND THESE WORDS ARE NOT 
+IN THE TITLE
 
 -- metadata
 -- id: ttss0050
