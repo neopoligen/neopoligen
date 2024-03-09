@@ -18,6 +18,7 @@ pub fn preformatted_section_full<'a>(
     flag_attributes: BTreeSet<String>,
     config: &'a Config,
     initial_source: &str,
+    template: String,
 ) -> IResult<&'a str, Child> {
     if config.section_categories.raw.contains(&r#type.to_string()) {
         let (source, text) = take_until("\n--")(source)?;
@@ -29,7 +30,7 @@ pub fn preformatted_section_full<'a>(
             category: SectionCategory::PreformattedSectionFull {
                 text: Some(text.trim().to_string()),
             },
-            template: "default".to_string(),
+            template,
             r#type: r#type.to_string(),
             source: initial_source
                 .replace(source, "")
@@ -79,6 +80,7 @@ mod test {
             flag_attributes.clone(),
             &config,
             initial_source,
+            "default".to_string(),
         );
         assert_eq!(left, right);
     }

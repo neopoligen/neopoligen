@@ -92,7 +92,6 @@ pub fn section_full<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str,
         Some(t) => t.to_string(),
         None => "default".to_string(),
     };
-
     let (source, sec) = alt((
         |src| {
             comment_section_full(
@@ -133,6 +132,7 @@ pub fn section_full<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str,
                 flag_attributes.clone(),
                 config,
                 initial_source,
+                template.clone(),
             )
         },
         |src| {
@@ -185,6 +185,10 @@ pub fn section_start<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str
             flag_attributes.insert(a.to_string());
         });
     // end attributes
+    let template = match key_value_attributes.get("template") {
+        Some(t) => t.to_string(),
+        None => "default".to_string(),
+    };
     let (source, sec) = alt((
         |src| {
             comment_section_start(
@@ -214,6 +218,7 @@ pub fn section_start<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str
                 flag_attributes.clone(),
                 config,
                 initial_source,
+                template.clone(),
             )
         },
         |src| {
@@ -274,6 +279,10 @@ pub fn section_end<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str, 
             flag_attributes.insert(a.to_string());
         });
     // end attributes
+    let template = match key_value_attributes.get("template") {
+        Some(t) => t.to_string(),
+        None => "default".to_string(),
+    };
     let (source, sec) = alt((
         |src| {
             comment_section_end(
@@ -303,6 +312,7 @@ pub fn section_end<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str, 
                 flag_attributes.clone(),
                 config,
                 initial_source,
+                template.clone(),
             )
         },
         |src| {
