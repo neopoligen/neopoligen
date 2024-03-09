@@ -80,6 +80,12 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
+    pub fn error_from_template(&self, args: &[Value]) -> String {
+        event!(Level::ERROR, "{}", args[0].to_string());
+        "".to_string()
+    }
+
     pub fn page_head(&self, args: &[Value]) -> Vec<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {
