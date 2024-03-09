@@ -1,4 +1,3 @@
-pub mod integration;
 pub mod parsing_basic;
 pub mod site_link_or_titile;
 pub mod site_page_folders;
@@ -77,7 +76,7 @@ pub fn image_path_from_name_with_extension_in_sub_dir() {
 
 #[test]
 #[ignore]
-pub fn image_path_from_name_without_extension_in_sub_dir() {
+pub fn solo_template_section() {
     let file_set = FileSet::set1();
     let config = Config::set1();
     let site = Site::new(&file_set, &config);

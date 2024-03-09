@@ -101,6 +101,7 @@ impl Config {
         standard.insert("p".to_string());
         standard.insert("title".to_string());
         standard.insert("tldr".to_string());
+        standard.insert("template".to_string());
 
         let mut table = BTreeSet::new();
         table.insert("table".to_string());

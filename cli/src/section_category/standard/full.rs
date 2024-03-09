@@ -23,6 +23,10 @@ pub fn standard_section_full<'a>(
     config: &'a Config,
     initial_source: &str,
 ) -> IResult<&'a str, Child> {
+    // if &r#type.to_string() == &"template".to_string() {
+    //     println!("{}", &r#type.to_string());
+    // }
+
     if config
         .section_categories
         .standard

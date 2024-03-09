@@ -233,6 +233,21 @@ console.log("ping")
             .to_string(),
         );
 
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/set1-test-site/content/template-section-test.neo",
+            ),
+            r#"-- template
+
+This is a template section test
+
+-- metadata
+-- id: ttss0150
+"#
+            .to_string(),
+        );
+
         fs
     }
 }
