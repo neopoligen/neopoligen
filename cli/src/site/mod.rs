@@ -72,6 +72,14 @@ impl Site {
         }
     }
 
+    pub fn does_template_exist(&self, args: &[Value]) -> String {
+        let path = args[0].to_string();
+        match self.templates.get(&path) {
+            Some(_) => "yes".to_string(),
+            None => "no".to_string(),
+        }
+    }
+
     pub fn page_head(&self, args: &[Value]) -> Vec<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {

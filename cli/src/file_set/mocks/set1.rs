@@ -9,6 +9,11 @@ impl FileSet {
             "Templates are not used for these tests".to_string(),
         );
 
+        fs.templates.insert(
+            "custom/template/path.jinja".to_string(),
+            "This is to check template paths to see if they exist".to_string(),
+        );
+
         fs.images.push(PathBuf::from(
             "leading-dir/Neopoligen/set1-test-site/images/root-level-image.png",
         ));

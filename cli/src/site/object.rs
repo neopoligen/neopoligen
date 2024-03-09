@@ -16,6 +16,7 @@ impl Object for Site {
             "collection_from_tags" => {
                 Ok(Value::from_serializable(&self.collection_from_tags(args)))
             }
+            "does_template_exist" => Ok(Value::from_serializable(&self.does_template_exist(args))),
             "get_subtree" => Ok(Value::from_serializable(&self.get_subtree(args))),
             "ilink" => Ok(Value::from_serializable(&self.ilink(args))),
             "image" => Ok(Value::from_serializable(&self.image(args))),
