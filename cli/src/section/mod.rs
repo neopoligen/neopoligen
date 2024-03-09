@@ -88,10 +88,12 @@ pub fn section_full<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str,
         .for_each(|a| {
             flag_attributes.insert(a.to_string());
         });
-    // end attributes
+    let template = match key_value_attributes.get("template") {
+        Some(t) => t.to_string(),
+        None => "default".to_string(),
+    };
 
     let (source, sec) = alt((
-        // TODO: Remove all &attributes in favor of &key_value_attributes and &flag_attributes
         |src| {
             comment_section_full(
                 src,
@@ -120,6 +122,7 @@ pub fn section_full<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str,
                 flag_attributes.clone(),
                 config,
                 initial_source,
+                template.clone(),
             )
         },
         |src| {
@@ -331,6 +334,30 @@ mod test {
     use super::*;
     use crate::span::Span;
     use pretty_assertions::assert_eq;
+
+    #[test]
+    // #[ignore]
+    fn define_the_template_name() {
+        let source = "-- title\n-- template: target_template\n\n-- p";
+        let config = Config::set1();
+        let mut key_value_attributes = BTreeMap::new();
+
+        key_value_attributes.insert("template".to_string(), "target_template".to_string());
+        let left = Ok((
+            "-- p",
+            Child::Section(Section {
+                key_value_attributes,
+                flag_attributes: BTreeSet::new(),
+                bounds: "full".to_string(),
+                category: SectionCategory::StandardSectionFull { containers: vec![] },
+                template: "target_template".to_string(),
+                r#type: "title".to_string(),
+                source: "-- title\n-- template: target_template".to_string(),
+            }),
+        ));
+        let right = section(source, &config);
+        assert_eq!(left, right);
+    }
 
     #[test]
     // #[ignore]
