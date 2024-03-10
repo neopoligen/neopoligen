@@ -72,6 +72,28 @@ impl Site {
         }
     }
 
+    pub fn does_template_exist(&self, args: &[Value]) -> String {
+        let path = args[0].to_string();
+        match self.templates.get(&path) {
+            Some(_) => "yes".to_string(),
+            None => "no".to_string(),
+        }
+    }
+
+    #[instrument(skip(self))]
+    pub fn error_from_template(&self, args: &[Value]) -> String {
+        event!(Level::ERROR, "{}", args[0].to_string());
+        "".to_string()
+    }
+
+    pub fn page_head(&self, args: &[Value]) -> Vec<String> {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
+            Some(page) => page.head.clone(),
+            None => vec![],
+        }
+    }
+
     pub fn page_scripts(&self, args: &[Value]) -> Vec<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {

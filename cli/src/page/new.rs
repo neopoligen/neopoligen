@@ -38,9 +38,11 @@ impl Page {
                             let tags = tags(&id, &folders, &ast, r#type.clone(), status.clone());
                             let scripts = scripts(&ast);
                             let stylesheets = stylesheets(&ast);
+                            let head = head(&ast);
                             Some(Page {
                                 ast,
                                 folders,
+                                head,
                                 href,
                                 html_link,
                                 id,
@@ -67,6 +69,26 @@ impl Page {
             }
         }
     }
+}
+
+fn head(ast: &Vec<Child>) -> Vec<String> {
+    ast.iter()
+        .filter_map(|child| {
+            if let Child::Section(section) = child {
+                if &section.r#type == "head" {
+                    match &section.category {
+                        SectionCategory::PreformattedSectionFull { text } => text.clone(),
+                        SectionCategory::PreformattedSectionStart { text } => text.clone(),
+                        _ => None,
+                    }
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        })
+        .collect()
 }
 
 fn scripts(ast: &Vec<Child>) -> Vec<String> {
@@ -173,12 +195,29 @@ fn title_from_first_few_words(ast: &Vec<Child>) -> Option<String> {
             let Child::Block(thing) = first else {
                 return None;
             };
+
             let spans = thing
                 .iter()
                 .flat_map(|span| get_span_words(&span))
-                .take(11)
-                .collect::<String>();
-            Some(spans)
+                .collect::<Vec<String>>();
+
+            if spans.len() > 28 {
+                let mut title = spans
+                    .iter()
+                    .take(24)
+                    .map(|s| s.to_string())
+                    .collect::<String>()
+                    .trim()
+                    .replace("  ", " ");
+                if title.ends_with(".") {
+                    title.push_str("..");
+                } else {
+                    title.push_str("...");
+                }
+                Some(title)
+            } else {
+                Some(spans.join("").replace("  ", " "))
+            }
         }
         _ => None,
     })

@@ -10,6 +10,7 @@ use std::path::PathBuf;
 pub struct Page {
     pub ast: Vec<Child>,
     pub folders: Vec<String>,
+    pub head: Vec<String>,
     pub href: Option<String>,
     pub html_link: Option<String>,
     pub id: String,

@@ -110,6 +110,7 @@ impl Config {
                     .unwrap()
                     .to_string_lossy()
                     .to_string();
+                // dbg!(&thing);
                 match category_data.trim() {
                     "checklist" => checklist.insert(thing),
                     "comment" => comment.insert(thing),

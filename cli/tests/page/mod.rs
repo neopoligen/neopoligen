@@ -35,12 +35,33 @@ fn title_from_any_section() {
 }
 
 #[test]
-fn title_from_first_few_words() {
+fn title_from_first_few_words_with_elipses() {
     let file_set = FileSet::set1();
     let config = Config::set1();
     let site = Site::new(&file_set, &config);
-    let left = Some("Title from the first few words".to_string());
+    let left = Some("Title from the first few words of a section lorem ipsum verde...".to_string());
     let right = site.pages.get("ttss0050").unwrap().title.clone();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn title_from_first_few_words_that_does_not_get_truncated() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = Some("First words short title".to_string());
+    let right = site.pages.get("ttss0051").unwrap().title.clone();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn title_from_first_few_words_do_not_add_etra_dot_if_break_is_at_a_period() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left =
+        Some("First few words. There should only be three dots here not four...".to_string());
+    let right = site.pages.get("ttss0052").unwrap().title.clone();
     assert_eq!(left, right);
 }
 
@@ -169,4 +190,25 @@ fn scripts() {
     let left: &Vec<String> = &vec![r#"console.log("ping")"#.to_string()];
     let right = &site.pages.get("ttss0130").unwrap().scripts;
     assert_eq!(left, right);
+}
+
+#[test]
+fn head() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left: &Vec<String> = &vec![r#"<!-- content for head -->"#.to_string()];
+    let right = &site.pages.get("ttss0140").unwrap().head;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn template_test() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    dbg!(&site.pages.get("ttss0150").unwrap());
+    // let left: &Vec<String> = &vec![r#"<!-- content for head -->"#.to_string()];
+    // let right = &site.pages.get("ttss0150").unwrap().head;
+    // assert_eq!(left, right);
 }

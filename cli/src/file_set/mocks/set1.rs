@@ -9,6 +9,11 @@ impl FileSet {
             "Templates are not used for these tests".to_string(),
         );
 
+        fs.templates.insert(
+            "custom/template/path.jinja".to_string(),
+            "This is to check template paths to see if they exist".to_string(),
+        );
+
         fs.images.push(PathBuf::from(
             "leading-dir/Neopoligen/set1-test-site/images/root-level-image.png",
         ));
@@ -77,14 +82,46 @@ This Title Is Overwritten By Metadata
         /////////////////////////////////////////////////////////////////////////
         fs.pages.insert(
             PathBuf::from(
-                "leading-dir/Neopoligen/set1-test-site/content/title-from-first-few-words.neo",
+                "leading-dir/Neopoligen/set1-test-site/content/title-from-first-few-words-with-elipses.neo",
             ),
             r#"-- p
 
-Title from the first few words of a section
+Title from the first few words of a section 
+lorem ipsum verde AND THESE WORDS ARE NOT 
+IN THE TITLE
 
 -- metadata
 -- id: ttss0050
+"#
+            .to_string(),
+        );
+
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/set1-test-site/content/title-from-first-few-words-that-does-not-get-truncated.neo",
+            ),
+            r#"-- p
+
+First words short title
+
+-- metadata
+-- id: ttss0051
+"#
+            .to_string(),
+        );
+
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/set1-test-site/content/title-first-few-words-dont-add-extra-dot.neo",
+            ),
+            r#"-- p
+
+First few words. There should only be three dots here not four. AND THESE WORDS SHOULD NOT SHOW UP
+
+-- metadata
+-- id: ttss0052
 "#
             .to_string(),
         );
@@ -184,6 +221,34 @@ console.log("ping")
 
 -- metadata
 -- id: ttss0130
+"#
+            .to_string(),
+        );
+
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/set1-test-site/content/head-test.neo"),
+            r#"-- head
+
+<!-- content for head -->
+
+-- metadata
+-- id: ttss0140
+"#
+            .to_string(),
+        );
+
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/set1-test-site/content/template-section-test.neo",
+            ),
+            r#"-- template
+
+This is a template section test
+
+-- metadata
+-- id: ttss0150
 "#
             .to_string(),
         );

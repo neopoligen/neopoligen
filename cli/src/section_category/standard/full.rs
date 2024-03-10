@@ -22,7 +22,12 @@ pub fn standard_section_full<'a>(
     flag_attributes: BTreeSet<String>,
     config: &'a Config,
     initial_source: &str,
+    template: String,
 ) -> IResult<&'a str, Child> {
+    // if &r#type.to_string() == &"template".to_string() {
+    //     println!("{}", &r#type.to_string());
+    // }
+
     if config
         .section_categories
         .standard
@@ -36,7 +41,7 @@ pub fn standard_section_full<'a>(
             flag_attributes,
             bounds: "full".to_string(),
             category: SectionCategory::StandardSectionFull { containers },
-            template: "default".to_string(),
+            template,
             r#type: r#type.to_string(),
             source: initial_source
                 .replace(source, "")
@@ -84,6 +89,7 @@ mod test {
             flag_attributes,
             &config,
             initial_source,
+            "default".to_string(),
         );
         assert_eq!(left, right);
     }
@@ -131,6 +137,7 @@ mod test {
             flag_attributes,
             &config,
             initial_source,
+            "default".to_string(),
         );
         assert_eq!(left, right);
     }
@@ -186,6 +193,7 @@ mod test {
             flag_attributes,
             &config,
             initial_source,
+            "default".to_string(),
         );
         assert_eq!(left, right);
     }
@@ -266,6 +274,7 @@ mod test {
             flag_attributes,
             &config,
             initial_source,
+            "default".to_string(),
         );
         assert_eq!(left, right);
     }
