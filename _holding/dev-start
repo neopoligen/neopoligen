@@ -1,0 +1,16 @@
+#!/bin/bash
+
+watchexec \
+  -w _content \
+  -w _templates/blocks\
+  -w _templates/helpers\
+  -w _templates/includes\
+  -w _templates/macros\
+  -w _templates/pages \
+  -w _templates/spans\
+  -w neo-config.json\
+  -w neopoligen/src \
+  --workdir neopoligen\
+  cargo test\
+  -- --nocapture\
+  --quiet && cargo run

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+watchexec\
+  -w neopoligen/src\
+  --workdir neopoligen\
+  cargo test\
+  -- --nocapture\
+  --quiet
