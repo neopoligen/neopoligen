@@ -32,47 +32,84 @@ pub struct EngineConfigSettings {
 #[instrument]
 async fn main() {
     match get_engine_config_file() {
-        Ok(toml) => println!("asdf"),
-        Err(e) => println!("asdfsadf"),
-    }
+        Ok(toml) => match toml::from_str::<EngineConfig>(&toml) {
+            Ok(engine_config) => {
+                let mut site_root = document_dir().unwrap();
+                site_root.push("Neopoligen");
+                site_root.push(engine_config.settings.active_site);
 
-    // match fs::read_to_string(&engine_config_file) {
-    //     Ok(engine_config_string) => match toml::from_str::<EngineConfig>(&engine_config_string) {
-    //         Ok(engine_config) => {
-    //             let mut site_root = document_dir().unwrap();
-    //             site_root.push("Neopoligen");
-    //             site_root.push(engine_config.settings.active_site);
-    //             let config = Config::new(site_root);
-    //             let mut log_file_path = document_dir().unwrap();
-    //             log_file_path.push("Neopoligen");
-    //             log_file_path.push("log.log");
-    //             let _ = fs::remove_file(&log_file_path);
-    //             let file_appender = tracing_appender::rolling::never(
-    //                 log_file_path.parent().unwrap(),
-    //                 log_file_path.file_name().unwrap(),
-    //             );
-    //             let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
-    //             let format = tracing_subscriber::fmt::format().pretty();
-    //             tracing_subscriber::fmt()
-    //                 .event_format(format)
-    //                 .with_ansi(false)
-    //                 .with_writer(non_blocking)
-    //                 .init();
-    //             event!(Level::INFO, r#"Processes started"#);
-    //             build_site(&config);
-    //             if true {
-    //                 run_web_server(config).await;
-    //             }
-    //         }
-    //         Err(e) => {
-    //             println!("{}", e)
-    //         }
-    //     },
-    //     Err(e) => {
-    //         println!("{}", e)
-    //     }
-    // }
+                dbg!(site_root);
+
+                // let config = Config::new(site_root);
+                // let mut log_file_path = document_dir().unwrap();
+                // log_file_path.push("Neopoligen");
+                // log_file_path.push("log.log");
+                // let _ = fs::remove_file(&log_file_path);
+                // let file_appender = tracing_appender::rolling::never(
+                //     log_file_path.parent().unwrap(),
+                //     log_file_path.file_name().unwrap(),
+                // );
+                // let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
+                // let format = tracing_subscriber::fmt::format().pretty();
+                // tracing_subscriber::fmt()
+                //     .event_format(format)
+                //     .with_ansi(false)
+                //     .with_writer(non_blocking)
+                //     .init();
+                // event!(Level::INFO, r#"Processes started"#);
+
+                // build_site(&config);
+                // if true {
+                //     run_web_server(config).await;
+                // }
+            }
+            Err(e) => {
+                println!("{}", e)
+            }
+        },
+        Err(e) => {
+            println!("{}", e)
+        }
+    }
 }
+
+// match fs::read_to_string(&engine_config_file) {
+//     Ok(engine_config_string) => match toml::from_str::<EngineConfig>(&engine_config_string) {
+//         Ok(engine_config) => {
+//             let mut site_root = document_dir().unwrap();
+//             site_root.push("Neopoligen");
+//             site_root.push(engine_config.settings.active_site);
+//             let config = Config::new(site_root);
+//             let mut log_file_path = document_dir().unwrap();
+//             log_file_path.push("Neopoligen");
+//             log_file_path.push("log.log");
+//             let _ = fs::remove_file(&log_file_path);
+//             let file_appender = tracing_appender::rolling::never(
+//                 log_file_path.parent().unwrap(),
+//                 log_file_path.file_name().unwrap(),
+//             );
+//             let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
+//             let format = tracing_subscriber::fmt::format().pretty();
+//             tracing_subscriber::fmt()
+//                 .event_format(format)
+//                 .with_ansi(false)
+//                 .with_writer(non_blocking)
+//                 .init();
+//             event!(Level::INFO, r#"Processes started"#);
+//             build_site(&config);
+//             if true {
+//                 run_web_server(config).await;
+//             }
+//         }
+//         Err(e) => {
+//             println!("{}", e)
+//         }
+//     },
+//     Err(e) => {
+//         println!("{}", e)
+//     }
+//
+// }
 
 fn build_site(config: &Config) {
     println!("Starting build run");
@@ -87,23 +124,37 @@ fn build_site(config: &Config) {
     builder.copy_theme_assets();
 }
 
-fn get_engine_config_file() -> Result<String, &'static str> {
+fn get_engine_config_file() -> Result<String, String> {
     let mut engine_config_path = config_local_dir().unwrap();
     engine_config_path.push("Neopoligen");
     match engine_config_path.try_exists() {
         Ok(check) => {
             if check == false {
-                match fs::create_dir(engine_config_path) {
+                match fs::create_dir(&engine_config_path) {
                     Ok(_) => (),
-                    Err(e) => return Err("Could not make Neopoligen config dir"),
+                    Err(e) => return Err(format!("{}", e)),
                 }
             }
         }
-        Err(e) => return Err("Could not verify Neopoilgen config dir"),
+        Err(e) => return Err(format!("{}", e)),
     }
-
-    Ok("some data".to_string())
-    // engine_config_file.push("config.toml");
+    engine_config_path.push("config.toml");
+    match engine_config_path.try_exists() {
+        Ok(check) => {
+            if check == false {
+                let default_config = "[settings]\nactive_site = \"example-site\"";
+                match fs::write(&engine_config_path, default_config) {
+                    Ok(_) => (),
+                    Err(e) => return Err(format!("{}", e)),
+                }
+            }
+        }
+        Err(e) => return Err(format!("{}", e)),
+    }
+    match fs::read_to_string(&engine_config_path) {
+        Ok(toml) => Ok(toml),
+        Err(e) => Err(format!("{}", e)),
+    }
 }
 
 async fn run_web_server(config: Config) {

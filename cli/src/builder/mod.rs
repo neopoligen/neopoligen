@@ -156,20 +156,22 @@ impl Builder {
     pub fn write_files(&self) {
         event!(Level::INFO, "fn write_files");
         println!("Writing files");
-        self.files_to_output().iter().for_each(|f| {
-            // println!("{}", f.0.clone().display());
-            if f.0
-                .starts_with(self.config.folders.output_root.display().to_string())
-            {
-                let output_path = PathBuf::from(f.0);
-                // dbg!(&output_path);
-                // println!("{}", &f.0.display());
-                let parent_dir = output_path.parent().unwrap();
-                let _ = create_dir_all(parent_dir);
-                let _ = fs::write(output_path, f.1);
-            } else {
-                println!("ERROR: Tried to write outside of the output root");
-            }
-        });
+        dbg!(&self.config);
+
+        // self.files_to_output().iter().for_each(|f| {
+        //     // println!("{}", f.0.clone().display());
+        //     if f.0
+        //         .starts_with(self.config.folders.output_root.display().to_string())
+        //     {
+        //         let output_path = PathBuf::from(f.0);
+        //         // dbg!(&output_path);
+        //         // println!("{}", &f.0.display());
+        //         let parent_dir = output_path.parent().unwrap();
+        //         let _ = create_dir_all(parent_dir);
+        //         let _ = fs::write(output_path, f.1);
+        //     } else {
+        //         println!("ERROR: Tried to write outside of the output root");
+        //     }
+        // });
     }
 }
