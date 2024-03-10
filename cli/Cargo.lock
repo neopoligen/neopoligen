@@ -903,7 +903,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "neopoligen"
+name = "neopoligengine"
 version = "0.0.1"
 dependencies = [
  "Inflector",

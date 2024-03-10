@@ -37,7 +37,7 @@ fn main() {
                 // restarts it doesn't kill the neopoligen_cli sidecar
                 // process
                 let s = System::new_all();
-                for process in s.processes_by_exact_name("neopoligen_cli") {
+                for process in s.processes_by_exact_name("neopoligengine") {
                     kill(
                         Pid::from_raw(process.pid().as_u32().try_into().unwrap()),
                         Signal::SIGTERM,
@@ -45,8 +45,8 @@ fn main() {
                     .unwrap();
                 }
 
-                let (mut rx, mut _child) = Command::new_sidecar("neopoligen_cli")
-                    .expect("failed to setup `neopoligen_cli` sidecar")
+                let (mut rx, mut _child) = Command::new_sidecar("neopoligengine")
+                    .expect("failed to setup `neopoligengine` sidecar")
                     .spawn()
                     .expect("Failed to spawn packaged node");
 

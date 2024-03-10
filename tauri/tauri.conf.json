@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "neopoligen",
-    "version": "0.0.0"
+    "version": "0.1.0"
   },
   "tauri": {
     "allowlist": {
@@ -19,9 +19,9 @@
         "sidecar": true,
         "scope": [
           { 
-            "name": "../cli/target/release/neopoligen_cli", 
+            "name": "../cli/target/release/neopoligengine", 
             "sidecard": true,
-            "cmd": "neopoligen_cli"
+            "cmd": "neopoligengine"
           }
         ]
       }
@@ -29,7 +29,7 @@
     "bundle": {
       "active": true,
       "externalBin": [
-        "../cli/target/release/neopoligen_cli"
+        "../cli/target/release/neopoligengine"
       ],
       "targets": "all",
       "identifier": "com.tauri.dev",
