@@ -65,8 +65,6 @@ async fn main() {
                 match set_up_site_if_necessary(&site_root) {
                     Ok(_) => {
                         let config = Config::new(site_root);
-                        dbg!(&config);
-
                         build_site(&config);
                         if true {
                             run_web_server(config).await;
@@ -177,6 +175,14 @@ fn set_up_site_if_necessary(site_root: &PathBuf) -> Result<String, String> {
             if check == false {
                 match fs::create_dir(&path) {
                     Ok(_) => {
+                        let project_dirs =
+                            vec!["configuration", "content", "files", "images", "themes"];
+                        project_dirs.iter().for_each(|d| {
+                            let mut pdp = path.clone();
+                            pdp.push(d);
+                            let _ = fs::create_dir(pdp);
+                        });
+
                         for rel_file_path in ExampleSite::iter() {
                             let mut output_path = path.clone();
                             output_path.push(rel_file_path.as_ref());
@@ -185,11 +191,15 @@ fn set_up_site_if_necessary(site_root: &PathBuf) -> Result<String, String> {
                                 Ok(status) => {
                                     if status == false {
                                         match fs::create_dir(output_dir) {
-                                            Ok(_) => event!(
-                                                Level::INFO,
-                                                r#"Created dir: {}"#,
-                                                output_dir.display()
-                                            ),
+                                            Ok(_) =>
+                                            // event!(
+                                            // Level::INFO,
+                                            // r#"Created dir: {}"#,
+                                            // output_dir.display()
+                                            // );
+                                            {
+                                                ()
+                                            }
                                             Err(e) => return Err(format!("{}", e)),
                                         }
                                     }

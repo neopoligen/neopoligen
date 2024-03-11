@@ -1,0 +1,56 @@
+[#- type: standard -#]
+[!- import "includes/macros.jinja" as macros -!]
+
+<a href="[@- span.content.flag_attributes[0] -@]" 
+[#- NOTE: This doesn't use the default span_attributes so the 
+url doesn't get pulled in as an attribute -#]
+[!- for attribute in span.content.key_value_attributes -!]
+[@- ' ' -@]
+[@- attribute -@]="[@- span.content.key_value_attributes[attribute] -@]"
+[!- endfor -!]
+[!- for flag in span.content.flag_attributes -!]
+[!- if loop.first != true -!]
+[@- ' ' -@]
+[@- flag -@]
+[!- endif -!]
+[!- endfor -!]>
+[!- for span in span.content.spans -!]
+[@- macros.output_spans(page_id, span, extra) -@]
+[!- endfor -!]
+</a>
+
+
+~~~~~~~~~~
+
+-- title
+
+Span: link
+
+-- subtitle
+
+The Link Span
+
+This is for basic links
+
+-- p
+
+Basic Example: <<link|Lorem ipsum|https://www.example.com/>>
+
+
+-- p
+
+Attribute Example: <<link|Lorem ipsum|https://www.example.com/|class: green>>
+
+
+-- todo
+
+[] Fix so you can do this (see <<tlink|2bsjrpd5>>):
+
+-- code
+
+<<link|Lorem ipsum|https://www.example.com/|class: green|some_flag>>
+
+-- metadata
+-- date: 2024-02-03 03:13:57
+-- id: 2bsiloon
+-- status: published
