@@ -319,6 +319,9 @@ fn html_link(href: &Option<String>, title: &Option<String>) -> Option<String> {
 }
 
 fn path_parts(source_path: &PathBuf, config: &Config) -> Vec<String> {
+    dbg!(&source_path);
+    dbg!(&config.folders.content_root);
+
     source_path
         .clone()
         .strip_prefix(config.folders.content_root.clone())

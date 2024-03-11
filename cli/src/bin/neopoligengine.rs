@@ -11,8 +11,8 @@ use notify_debouncer_mini::DebouncedEventKind;
 use rust_embed::RustEmbed;
 use serde::Deserialize;
 use std::fs;
-use std::fs::OpenOptions;
-use std::io::Write;
+// use std::fs::OpenOptions;
+// use std::io::Write;
 use std::path::Path;
 use std::path::PathBuf;
 use std::time::Duration;
@@ -38,40 +38,40 @@ pub struct EngineConfigSettings {
 #[tokio::main]
 #[instrument]
 async fn main() {
-    event!(Level::INFO, r#"Lanucing neopoligengine"#);
+    let mut log_file_path = document_dir().unwrap();
+    log_file_path.push("Neopoligen");
+    log_file_path.push("log.log");
+    let _ = fs::remove_file(&log_file_path);
+    let file_appender = tracing_appender::rolling::never(
+        log_file_path.parent().unwrap(),
+        log_file_path.file_name().unwrap(),
+    );
+    let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
+    let format = tracing_subscriber::fmt::format().pretty();
+    tracing_subscriber::fmt()
+        .event_format(format)
+        .with_ansi(false)
+        .with_writer(non_blocking)
+        .init();
+    event!(Level::INFO, r#"Launching neopoligengine"#);
     match get_engine_config_file() {
         Ok(toml) => match toml::from_str::<EngineConfig>(&toml) {
             Ok(engine_config) => {
+                let active_site = engine_config.settings.active_site;
+                event!(Level::INFO, r#"Active site: {}"#, &active_site);
                 let mut site_root = document_dir().unwrap();
                 site_root.push("Neopoligen");
-                site_root.push(engine_config.settings.active_site);
+                site_root.push(active_site);
                 match set_up_site_if_necessary(&site_root) {
-                    Ok(_) => {}
+                    Ok(_) => {
+                        let config = Config::new(site_root);
+                        dbg!(&config);
 
-                    // dbg!(site_root);
-
-                    // let config = Config::new(site_root);
-                    // let mut log_file_path = document_dir().unwrap();
-                    // log_file_path.push("Neopoligen");
-                    // log_file_path.push("log.log");
-                    // let _ = fs::remove_file(&log_file_path);
-                    // let file_appender = tracing_appender::rolling::never(
-                    //     log_file_path.parent().unwrap(),
-                    //     log_file_path.file_name().unwrap(),
-                    // );
-                    // let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
-                    // let format = tracing_subscriber::fmt::format().pretty();
-                    // tracing_subscriber::fmt()
-                    //     .event_format(format)
-                    //     .with_ansi(false)
-                    //     .with_writer(non_blocking)
-                    //     .init();
-                    // event!(Level::INFO, r#"Processes started"#);
-
-                    // build_site(&config);
-                    // if true {
-                    //     run_web_server(config).await;
-                    // }
+                        build_site(&config);
+                        if true {
+                            run_web_server(config).await;
+                        }
+                    }
                     Err(e) => println!("{}", e),
                 };
             }
@@ -172,7 +172,6 @@ fn get_engine_config_file() -> Result<String, String> {
 #[instrument]
 fn set_up_site_if_necessary(site_root: &PathBuf) -> Result<String, String> {
     let path = PathBuf::from(site_root);
-
     match path.try_exists() {
         Ok(check) => {
             if check == false {
@@ -201,7 +200,6 @@ fn set_up_site_if_necessary(site_root: &PathBuf) -> Result<String, String> {
                             let _ = fs::write(output_path, output_data.data);
                         }
                     }
-
                     Err(e) => return Err(format!("{}", e)),
                 }
                 println!("Site doesnt' exist. making it");
