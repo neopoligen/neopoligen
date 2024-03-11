@@ -14,7 +14,6 @@ listen('neo_message', (event) => {
 document.addEventListener('DOMContentLoaded', () => {
   const el = document.querySelector('#launchButton')
   el.addEventListener('click', () => {
-  //  const { invoke } = window.__TAURI__.tauri
     invoke('open_browser', {}).then((response) => {})
   })
    update_site_list()
@@ -23,6 +22,13 @@ document.addEventListener('DOMContentLoaded', () => {
 function update_site_list() {
   const list_el = document.querySelector("#siteList")
   invoke('get_site_list', {}).then((response) => {
-    console.log(response)
+    let data = JSON.parse(response)
+    data.sites.forEach((site) => {
+      let site_button = document.createElement("button")
+      site_button.innerHTML = site.key
+      let site_li = document.createElement("li")
+      site_li.appendChild(site_button)
+      list_el.appendChild(site_li)
+    })
   })
 }

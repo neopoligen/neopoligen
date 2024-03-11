@@ -20,6 +20,7 @@ use dirs::{self, document_dir};
 use nix::sys::signal::{kill, Signal};
 use nix::unistd::Pid;
 use serde::Serialize;
+use serde_json;
 use std::fs::{self, DirEntry};
 use std::io;
 use std::path::PathBuf;
@@ -100,10 +101,10 @@ fn get_site_list(_app_handle: tauri::AppHandle) -> String {
                     })
                     .collect(),
             };
-            dbg!(site_list);
-            "{}".to_string()
+            serde_json::to_string(&site_list).unwrap()
         }
-        Err(_e) => "{}".to_string(),
+        Err(_e) => r#"{ "status": "error", "msg": "Could not get neopoligen dir", "sites": [] }"#
+            .to_string(),
     }
 }
 
