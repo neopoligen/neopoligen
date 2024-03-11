@@ -16,8 +16,13 @@
 // use tower_livereload::LiveReloadLayer;
 // use tower_livereload::Reloader;
 
+use dirs::{self, document_dir};
 use nix::sys::signal::{kill, Signal};
 use nix::unistd::Pid;
+use serde::Serialize;
+use std::fs::{self, DirEntry};
+use std::io;
+use std::path::PathBuf;
 use sysinfo::System;
 use tauri::{
     api::process::{Command, CommandEvent},
@@ -44,12 +49,10 @@ fn main() {
                     )
                     .unwrap();
                 }
-
                 let (mut rx, mut _child) = Command::new_sidecar("neopoligengine")
                     .expect("failed to setup `neopoligengine` sidecar")
                     .spawn()
                     .expect("Failed to spawn packaged node");
-
                 // let mut i = 0;
                 while let Some(event) = rx.recv().await {
                     if let CommandEvent::Stdout(line) = event {
@@ -60,10 +63,10 @@ fn main() {
                     }
                 }
             });
-
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![open_browser])
+        .invoke_handler(tauri::generate_handler![get_site_list])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
@@ -71,6 +74,64 @@ fn main() {
 #[tauri::command]
 fn open_browser(app_handle: tauri::AppHandle) {
     open(&app_handle.shell_scope(), "http://localhost:1989/", None).unwrap();
+}
+
+#[derive(Debug, Serialize)]
+pub struct Site {
+    key: String,
+}
+
+#[derive(Debug, Serialize)]
+pub struct SiteList {
+    sites: Vec<Site>,
+}
+
+#[tauri::command]
+fn get_site_list(_app_handle: tauri::AppHandle) -> String {
+    let mut neopoligen_path = PathBuf::from(document_dir().unwrap());
+    neopoligen_path.push("Neopoligen");
+    match get_dirs_in_dir(&neopoligen_path) {
+        Ok(dirs) => {
+            let site_list = SiteList {
+                sites: dirs
+                    .iter()
+                    .map(|s| Site {
+                        key: s.file_name().unwrap().to_string_lossy().to_string(),
+                    })
+                    .collect(),
+            };
+            dbg!(site_list);
+            "{}".to_string()
+        }
+        Err(_e) => "{}".to_string(),
+    }
+}
+
+fn get_dirs_in_dir(dir: &PathBuf) -> io::Result<Vec<PathBuf>> {
+    Result::from_iter(
+        fs::read_dir(dir)?
+            .map(|entry| {
+                let entry = entry?;
+                Ok(entry)
+            })
+            .filter_map(|entry: Result<DirEntry, io::Error>| {
+                let path = entry.unwrap().path();
+                if path.is_dir() {
+                    match path.file_name() {
+                        Some(file_name) => {
+                            if file_name.to_string_lossy().starts_with(".") {
+                                None
+                            } else {
+                                Some(Ok(path))
+                            }
+                        }
+                        None => None,
+                    }
+                } else {
+                    None
+                }
+            }),
+    )
 }
 
 // fn main() {
