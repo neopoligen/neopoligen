@@ -172,40 +172,40 @@ fn get_engine_config_file() -> Result<String, String> {
 #[instrument]
 fn set_up_site_if_necessary(site_root: &PathBuf) -> Result<String, String> {
     let path = PathBuf::from(site_root);
-    for rel_file_path in ExampleSite::iter() {
-        let mut output_path = path.clone();
-        output_path.push(rel_file_path.as_ref());
-        let output_dir = output_path.parent().unwrap();
-        match output_dir.try_exists() {
-            Ok(status) => {
-                if status == false {
-                    match fs::create_dir(output_dir) {
-                        Ok(_) => event!(Level::INFO, r#"Created dir: {}"#, output_dir.display()),
-                        Err(e) => return Err(format!("{}", e)),
-                    }
-                }
-            }
-            Err(e) => return Err(format!("{}", e)),
-        }
-        let output_data = ExampleSite::get(&rel_file_path).unwrap();
-        let _ = fs::write(output_path, output_data.data);
-    }
 
     match path.try_exists() {
         Ok(check) => {
             if check == false {
-                match fs::create_dir(path) {
-                    Ok(_) => println!("Made example site directory"),
+                match fs::create_dir(&path) {
+                    Ok(_) => {
+                        for rel_file_path in ExampleSite::iter() {
+                            let mut output_path = path.clone();
+                            output_path.push(rel_file_path.as_ref());
+                            let output_dir = output_path.parent().unwrap();
+                            match output_dir.try_exists() {
+                                Ok(status) => {
+                                    if status == false {
+                                        match fs::create_dir(output_dir) {
+                                            Ok(_) => event!(
+                                                Level::INFO,
+                                                r#"Created dir: {}"#,
+                                                output_dir.display()
+                                            ),
+                                            Err(e) => return Err(format!("{}", e)),
+                                        }
+                                    }
+                                }
+                                Err(e) => return Err(format!("{}", e)),
+                            }
+                            let output_data = ExampleSite::get(&rel_file_path).unwrap();
+                            let _ = fs::write(output_path, output_data.data);
+                        }
+                    }
+
                     Err(e) => return Err(format!("{}", e)),
                 }
                 println!("Site doesnt' exist. making it");
                 Ok("TODO".to_string())
-
-                // let default_config = "[settings]\nactive_site = \"example-site\"";
-                // match fs::write(&engine_config_path, default_config) {
-                //     Ok(_) => (),
-                //     Err(e) => return Err(format!("{}", e)),
-                // }
             } else {
                 Ok("Site already exists".to_string())
             }
