@@ -1,0 +1,9 @@
+[#- type: standard -#]
+[!- from "helpers/output_payload.jinja" import output_spans -!]
+[!- from "helpers/span_attributes.jinja" import span_attributes -!]
+
+<wbr [@- span_attributes(span.content) -@]>
+[!- for span in span.content.spans -!]
+[@- output_spans(page, site, span, extra) -@]
+[!- endfor -!]
+</wbr>
