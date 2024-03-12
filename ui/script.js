@@ -139,7 +139,12 @@ function update_home_page() {
 }
 
 function log(msg) {
-    text_output.innerHTML = text_output.innerHTML + msg + "\n"
+  const output_el = document.querySelector("#text_output")
+  if (output_el) {
+    text_output.innerHTML = output_el.innerHTML + msg + "\n"
+  } else {
+    console.log(msg)
+  }
 }
 
 // deprecated: TODO: remove
@@ -154,11 +159,13 @@ function connect_launch_browbutton() {
 }
 
 listen('neo_message', (event) => {
-  const text_output = document.getElementById("text_output")
-  if (event.payload.trim() === "CMD: CLEAR") {
-    text_output.innerHTML = ""
-  } else {
-    text_output.innerHTML = text_output.innerHTML + event.payload + "\n"
+  const output_el = document.querySelector("#text_output")
+  if (output_el) {
+    if (event.payload.trim() === "CMD: CLEAR") {
+      output_el.innerHTML = ""
+    } else {
+      output_el.innerHTML = output_el.innerHTML + event.payload + "\n"
+    }
   }
 })
 
