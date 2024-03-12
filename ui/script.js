@@ -38,7 +38,7 @@ function update_home_page() {
     })
 
     add_listener("click", "#finderButton", (event) => {
-      invoke('open_browser', {}).then((response) => {})
+      invoke('open_finder', { site: state.active_site}).then((response) => {})
     })
 
     set_html("#current_site", `Current Site: ${state.active_site}`)

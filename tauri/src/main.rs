@@ -70,7 +70,8 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             get_state,
             set_active_site,
-            open_browser
+            open_browser,
+            open_finder
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -82,8 +83,12 @@ fn open_browser(app_handle: tauri::AppHandle) {
 }
 
 #[tauri::command]
-fn open_finder(app_handle: tauri::AppHandle, site: String) {
-    open(&app_handle.shell_scope(), "http://localhost:1989/", None).unwrap();
+fn open_finder(site: String) {
+    dbg!("opening in finder");
+    Command::new("open")
+        .args([format!("/Users/alan/Documents/Neopoligen/{}", site)])
+        .spawn()
+        .unwrap();
 }
 
 #[derive(Debug, Serialize, Deserialize)]
