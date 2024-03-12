@@ -6,10 +6,27 @@ function add_listener(listener, selector, func) {
     el.addEventListener(listener, func)
 }
 
+function add_link_listeners() {
+  const els = document.querySelectorAll(".link") 
+  els.forEach((el) => {
+    el.addEventListener("click", open_link)
+  })
+}
+
+function open_link(event) {
+  invoke('open_link', { url: event.target.dataset.href }).then((raw) => {})
+}
+
+
 function set_html(selector, html) {
     const el = document.querySelector(selector)
     el.innerHTML = html
 }
+
+function update_debug_page() {
+  add_link_listeners()
+}
+
 
 function update_home_page() {
 

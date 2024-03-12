@@ -152,7 +152,7 @@ fn get_engine_config_file() -> Result<String, String> {
     match engine_config_path.try_exists() {
         Ok(check) => {
             if check == false {
-                let default_config = "[settings]\nactive_site = \"example-site\"";
+                let default_config = "[settings]\nactive_site = \"Example Site\"";
                 match fs::write(&engine_config_path, default_config) {
                     Ok(_) => (),
                     Err(e) => return Err(format!("{}", e)),

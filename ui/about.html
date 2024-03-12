@@ -8,7 +8,7 @@
     <script src="script.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
-        update_home_page()
+        // update_home_page()
       })
     </script>
   </head>
@@ -19,19 +19,12 @@
         <div class="tagline">Websites For Everyone</div>
         <div class="nav_links">
           <div><a href="getting-started.html">Getting Started</a></div>
-          <div>Status</div>
+          <div><a href="index.html">Status</a></div>
           <div><a href="sites.html">Sites</a></div>
-          <div><a href="about.html">About</a></div>
+          <div>About</div>
           <div><a href="debug.html">Debugging</a></div>
         </div>
       </div>
-      <h2 id="current_site"></h2>
-      <ul class="buttons">
-        <li><button id="browser_button">Preview in browser</button></li>
-        <li id="vscode_li"><button id="vscode_button">Edit in Visual Studio Code</button><span id="vscode_msg"></span></li>
-        <li><button id="finder_button">Open the site folder in the Finder</button></li>
-      </ul>
-      <div><textarea id="text_output" cols="70" rows="27"></textarea></div>
     </div>
   </body>
 </html>

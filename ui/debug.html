@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="_assets/styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neopoligen</title>
+    <script src="script.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        update_debug_page()
+      })
+    </script>
+  </head>
+  <body>
+    <div class="wrapper flow">
+      <div class="title-group">
+        <h1>Neopoligen</h1>
+        <div class="tagline">Websites For Everyone</div>
+        <div class="nav_links">
+          <div><a href="getting-started.html">Getting Started</a></div>
+          <div><a href="index.html">Status</a></div>
+          <div><a href="sites.html">Sites</a></div>
+          <div><a href="about.html">About</a></div>
+          <div>Debugging</div>
+        </div>
+      </div>
+      <h2>Debugging Controls</h2>
+
+      <p>Neopoligen is <span class="link" data-href="https://en.wikipedia.org/wiki/Free_and_open-source_software">
+        Free, Open-Source Software</span>. That means
+        anyone can download their own copy of the app's code to play with or even make their
+        own version of the app. This page is for features to help support that.</p>
+
+      <h4>Source Code Repository</h4>
+      <p>The source code for Neopoligen is <span class="link" data-href="https://github.com/neopoligen/neopoligen">available here</span></p>
+
+      <h4>Delete Neopoligen Config File</h4>
+      <p>This button deletes Neopoligen's main config file. 
+        Clicking it and then restarting the app will sets the 'Active Site' to
+      the 'Example Site' and will rebuild it if it doesn't already exist.
+        <button id="delete-engine-config">Delete Neopoligen Config</button>
+      </p>
+    </div>
+  </body>
+</html>
+
+

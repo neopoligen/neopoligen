@@ -61,6 +61,11 @@ img {
   display: block;
 }
 
+.nav_links {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .tagline {
   padding-bottom: var(--padding-3);
 }
@@ -78,42 +83,44 @@ h1, h2, h3 {
     color: var(--color-2);
     text-wrap: balance;
   }
-  
-  h1 {
-    font-size: var(--size-6);
-    margin-top: 1rem;
-  }
-  
-  h2 {
-    font-size: var(--size-5);
-    --flow-space: 1.3em;
-  }
-  
-  h3 {
-    font-size: var(--size-4);
-    --flow-space: 1.0em;
-  }
-  
-  a {
-    color: var(--color-3);
-  }
-  
-  a:hover, a:focus {
-    color: var(--color-4);
-  }
-  
-  ::marker {
-    color: var(--color-1);
-  }
-  
-  .wrapper {
-    width: min(100vw - 3rem, 58ch);
-    margin-inline: auto;
-  }
-  
-  .flow > :where(:not(:first-child)) {
-    margin-top: var(--flow-space, 1em);
-  }
-  
-  
-  
+
+h1 {
+font-size: var(--size-6);
+margin-top: 1rem;
+}
+
+h2 {
+font-size: var(--size-5);
+--flow-space: 1.3em;
+}
+
+h3 {
+font-size: var(--size-4);
+--flow-space: 1.0em;
+}
+
+
+
+a, .link {
+color: var(--color-3);
+}
+
+a:hover, a:focus, .link:hover {
+color: var(--color-4);
+}
+
+::marker {
+color: var(--color-1);
+}
+
+.wrapper {
+width: min(100vw - 3rem, 58ch);
+margin-inline: auto;
+}
+
+.flow > :where(:not(:first-child)) {
+margin-top: var(--flow-space, 1em);
+}
+
+
+
