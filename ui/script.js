@@ -1,6 +1,7 @@
 const { emit, listen } = window.__TAURI__.event
 const { invoke } = window.__TAURI__.tauri
 
+
 function init_page() {
   add_link_listeners()
   add_button_listeners()
@@ -26,11 +27,17 @@ function add_button_listeners() {
   })
 }
 
-
 function handle_button_click(event) {
   if (event.target.dataset.command) {
-    invoke(event.target.dataset.command, {} ).then((raw) => {})
+    window[event.target.dataset.command](event)
   }
+}
+
+function edit_in_vscode(event) {
+  invoke('edit_in_vscode', {}).then((raw) => {
+    const json = JSON.parse(raw)
+    console.log(json)
+  })
 }
 
 
@@ -38,6 +45,9 @@ function open_link(event) {
   invoke('open_link', { url: event.target.dataset.href }).then((raw) => {})
 }
 
+function open_neo_folder() {
+  invoke('open_neo_folder', {}).then((raw) => {})
+}
 
 function set_html(selector, html) {
     const el = document.querySelector(selector)

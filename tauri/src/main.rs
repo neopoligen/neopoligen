@@ -123,11 +123,11 @@ fn open_neo_folder() -> String {
 }
 
 #[tauri::command]
-fn edit_in_vscode(site: String) -> String {
+fn edit_in_vscode() -> String {
     dbg!("opening in vscode");
     let mut site_folder = document_dir().unwrap();
     site_folder.push("Neopoligen");
-    site_folder.push(site.clone());
+    // site_folder.push(site.clone());
     let status = Command::new("open")
         .args([
             "-a",
