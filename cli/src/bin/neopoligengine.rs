@@ -11,7 +11,7 @@ use notify_debouncer_mini::DebouncedEventKind;
 use rust_embed::RustEmbed;
 use serde::Deserialize;
 use std::fs;
-// use std::fs::OpenOptions;
+use std::fs::OpenOptions;
 // use std::io::Write;
 use std::path::Path;
 use std::path::PathBuf;
@@ -182,7 +182,6 @@ fn set_up_site_if_necessary(site_root: &PathBuf) -> Result<String, String> {
                             pdp.push(d);
                             let _ = fs::create_dir(pdp);
                         });
-
                         for rel_file_path in ExampleSite::iter() {
                             let mut output_path = path.clone();
                             output_path.push(rel_file_path.as_ref());

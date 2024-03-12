@@ -26,9 +26,17 @@ function update_site_list() {
     data.sites.forEach((site) => {
       let site_button = document.createElement("button")
       site_button.innerHTML = site.key
+      site_button.dataset.site_key = site.key
+      site_button.addEventListener("click", set_active_site)
       let site_li = document.createElement("li")
       site_li.appendChild(site_button)
       list_el.appendChild(site_li)
     })
+  })
+}
+
+function set_active_site(event) {
+  invoke('set_active_site', {site_key: event.target.dataset.site_key} ).then((response) => {
+    console.log("set_actitve_site")
   })
 }

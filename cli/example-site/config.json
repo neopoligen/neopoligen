@@ -1,0 +1,6 @@
+{
+  "defaultLanguage": "en",
+  "domain": "example.com",
+  "inputDateFormats": ["%Y-%m-%d"],
+  "theme": "example-site"
+}

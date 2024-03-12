@@ -16,7 +16,7 @@
 // use tower_livereload::LiveReloadLayer;
 // use tower_livereload::Reloader;
 
-use dirs::{self, document_dir};
+use dirs::{self, config_local_dir, document_dir};
 use nix::sys::signal::{kill, Signal};
 use nix::unistd::Pid;
 use serde::Serialize;
@@ -66,8 +66,11 @@ fn main() {
             });
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![open_browser])
-        .invoke_handler(tauri::generate_handler![get_site_list])
+        .invoke_handler(tauri::generate_handler![
+            get_site_list,
+            set_active_site,
+            open_browser
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
@@ -122,8 +125,16 @@ fn get_dirs_in_dir(dir: &PathBuf) -> io::Result<Vec<PathBuf>> {
                         Some(file_name) => {
                             if file_name.to_string_lossy().starts_with(".") {
                                 None
+                            } else if file_name.to_string_lossy().starts_with("_") {
+                                None
                             } else {
-                                Some(Ok(path))
+                                let mut check_config_path = path.clone();
+                                check_config_path.push("config.json");
+                                if check_config_path.exists() {
+                                    Some(Ok(path))
+                                } else {
+                                    None
+                                }
                             }
                         }
                         None => None,
@@ -133,6 +144,17 @@ fn get_dirs_in_dir(dir: &PathBuf) -> io::Result<Vec<PathBuf>> {
                 }
             }),
     )
+}
+
+#[tauri::command(rename_all = "snake_case")]
+fn set_active_site(site_key: String) {
+    dbg!(&site_key);
+    let updated_config = format!("[settings]\nactive_site = \"{}\"", site_key);
+    let mut config_file_path = config_local_dir().unwrap();
+    config_file_path.push("Neopoligen");
+    config_file_path.push("config.toml");
+    dbg!(&config_file_path);
+    let _ = fs::write(config_file_path, updated_config);
 }
 
 // fn main() {
