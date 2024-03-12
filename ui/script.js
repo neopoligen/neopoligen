@@ -1,18 +1,53 @@
 const { emit, listen } = window.__TAURI__.event
 const { invoke } = window.__TAURI__.tauri
 
+function add_listener_to_selector(listener, selector, func) {
+    const el = document.querySelector(selector)
+    el.addEventListener(listener, func)
+}
+
 function update_home_page() {
+
   log("Welcome to the beta version of the Neopoligen website builder")
-  invoke('get_state', {}).then((state) => {
+  invoke('get_state', {}).then((state_string) => {
+    const state = JSON.parse(state_string)
+
+    add_listener_to_selector("click", "#launchBrowserButton", (event) => {
+      invoke('open_browser', {}).then((response) => {})
+    })
+
+
+    // const browser_button_el = document.querySelector('#launchBrowserButton')
+    // browser_button_el.innerHTML = `Open ${state.active_site} in browser`
+    // browesr_button_el.addEventListener('click', () => {
+    //   invoke('open_browser', {}).then((response) => {})
+    // })
+
+    // const finder_button_el = document.querySelector('#launchFinderButton')
+    // finder_button_el.innerHTML = `Open ${state.active_site} in Finder`
+    // finder_button_el.addEventListener('click', () => {
+    //   invoke('open_finder', { "site": state.active_site }).then((response) => {})
+    // })
+
+
     console.log(state)
-    log("Updating home page")
+    log(``)
+    log(`Current site: ${state.active_site}`)
+    log(``)
+    log(`- Click the 'Launch Browser' button to preview your site`)
+    log(``)
+    log(`- Click 'Sites' to change to a different site or make a new one`)
+    log(``)
+    log(`- Click 'About' to change learn more about Neopoligen`)
   })
+
 }
 
 function log(msg) {
     text_output.innerHTML = text_output.innerHTML + msg + "\n"
 }
 
+// deprecated: TODO: remove
 function get_status(data) {
   invoke('get_status', {}).then((response) => {
       data = JSON.parse(response)
@@ -20,11 +55,7 @@ function get_status(data) {
   }).await
 }
 
-function connect_launch_button() {
-  const el = document.querySelector('#launchButton')
-  el.addEventListener('click', () => {
-    invoke('open_browser', {}).then((response) => {})
-  })
+function connect_launch_browbutton() {
 }
 
 listen('neo_message', (event) => {

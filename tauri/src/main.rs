@@ -81,6 +81,11 @@ fn open_browser(app_handle: tauri::AppHandle) {
     open(&app_handle.shell_scope(), "http://localhost:1989/", None).unwrap();
 }
 
+#[tauri::command]
+fn open_finder(app_handle: tauri::AppHandle, site: String) {
+    open(&app_handle.shell_scope(), "http://localhost:1989/", None).unwrap();
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Site {
     key: String,
