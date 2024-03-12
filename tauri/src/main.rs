@@ -87,11 +87,11 @@ fn delete_neopoligen_config() -> String {
     dbg!("Deleting Neopoligen Config");
     let mut path = config_local_dir().unwrap();
     path.push("Neopoligen");
-    path.push("config.toml");
+    path.push("config.json");
     if path.exists() {
         let _ = fs::remove_file(path);
     }
-    r#"{ "status": { "type": "todo" } }"#.to_string()
+    serde_json::to_string(&StatusPayload::Status(CurrentStatus::Ok)).unwrap()
 }
 
 #[tauri::command]

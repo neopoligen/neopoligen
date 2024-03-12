@@ -27,6 +27,11 @@ function add_button_listeners() {
   })
 }
 
+function delete_neopoligen_config() {
+  console.log("delete_neopoligen_config")
+  invoke('delete_neopoligen_config', {}).then((raw) => {})
+}
+
 function handle_button_click(event) {
   if (event.target.dataset.command) {
     window[event.target.dataset.command](event)
@@ -37,9 +42,16 @@ function edit_in_vscode(event) {
   invoke('edit_in_vscode', {}).then((raw) => {
     const json = JSON.parse(raw)
     console.log(json)
+    console.log(event.target.parentElement)
+    if (json.status.type !== "ok") {
+      set_html(
+        "#edit_in_vscode_button_wrapper", 
+        `Could not open Visual Studio Code. This usually means it's not
+installed properly. Try installing it again then restart Neopoligen to
+see if that fixes the issue`)
+    }
   })
 }
-
 
 function open_link(event) {
   invoke('open_link', { url: event.target.dataset.href }).then((raw) => {})
