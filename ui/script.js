@@ -1,6 +1,11 @@
 const { emit, listen } = window.__TAURI__.event
 const { invoke } = window.__TAURI__.tauri
 
+function init_page() {
+  add_link_listeners()
+  add_button_listeners()
+}
+
 function add_listener(listener, selector, func) {
     const el = document.querySelector(selector)
     el.addEventListener(listener, func)
@@ -12,6 +17,22 @@ function add_link_listeners() {
     el.addEventListener("click", open_link)
   })
 }
+
+function add_button_listeners() {
+  const els = document.querySelectorAll("button") 
+  els.forEach((el) => {
+    console.log(el)
+    el.addEventListener("click", handle_button_click)
+  })
+}
+
+
+function handle_button_click(event) {
+  if (event.target.dataset.command) {
+    invoke(event.target.dataset.command, {} ).then((raw) => {})
+  }
+}
+
 
 function open_link(event) {
   invoke('open_link', { url: event.target.dataset.href }).then((raw) => {})
@@ -36,19 +57,9 @@ function update_home_page() {
   log("Welcome to the beta version of the Neopoligen")
   log(`Verison: ${state.app_version}`)
   log("")
-
-  log("Neopoligen is a website builder. It uses files you write on")
-  log("your computer to build a website you can see by clicking the")
-  log("'Open in browser' button above. The site is only accessible")
-  log("on your computer to start with. You can change and edit it")
-  log("as much as you want. Once you've got it the way you want it")
-  log("you can send it to a free service to make it available for")
-  log("the world to see. Click 'Getting Started' for more details.")
-
+  log("- Check out the 'Getting Started' link above if you're new to the app")
   log("")
-  log("Next:")
-  log("")
-  log("- Use the buttons above to edit and preview your site")
+  log("- Use the 'Preview' and 'Edit' buttons above to work with your site")
 
     add_listener("click", "#browser_button", (event) => {
       invoke('open_browser', {}).then((raw) => {})
@@ -92,11 +103,14 @@ function update_home_page() {
 
     console.log(state)
     log(``)
-    log(`- Click 'Sites' to change to a different site or make a new one`)
+    log(`- Use the 'Sites' link to change to a different site or make a new one`)
     log(``)
     log(`- Click 'About' to change learn more about Neopoligen`)
     log(``)
     log(`- Debugging status messages will display here as you make changes to your site`)
+    log(``)
+    log(`- Note that Neopoligen doesn't have automatic updates yet. `)
+
   })
 
 }

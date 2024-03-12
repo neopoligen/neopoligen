@@ -13,6 +13,7 @@
   --padding-2: 0.4rem;
   --padding-3: 0.7rem;
   --padding-4: 1rem;
+  --radius-4: 0.4rem;
   --regular: 'Atkinson-Hyperlegible', sans-serif;
   /* TODO: put in proper font for heavy here */
   --heavy: 'Atkinson-Hyperlegible', sans-serif;
@@ -66,6 +67,14 @@ img {
   gap: 0.5rem;
 }
 
+.neo_source {
+  border: var(--border-1);
+  border-radius: var(--radius-4);
+  color: var(--color-2);
+  margin: var(--padding-4);
+  padding: var(--padding-4);
+}
+
 .tagline {
   padding-bottom: var(--padding-3);
 }
@@ -103,10 +112,12 @@ font-size: var(--size-4);
 
 a, .link {
 color: var(--color-3);
+  text-decoration: underline;
 }
 
 a:hover, a:focus, .link:hover {
 color: var(--color-4);
+  text-decoration: underline;
 }
 
 ::marker {

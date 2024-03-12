@@ -8,12 +8,12 @@
     <script src="script.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
-        // update_home_page()
+        init_page()
       })
     </script>
   </head>
   <body>
-    <div class="wrapper">
+    <div class="wrapper flow">
       <div class="title-group">
         <h1>Neopoligen</h1>
         <div class="tagline">Websites For Everyone</div>
@@ -25,6 +25,50 @@
           <div><a href="debug.html">Debugging</a></div>
         </div>
       </div>
+      <div>
+        <h2>Getting Started With Neopoligen</h2>
+        <p>An app for building websites</p>
+      </div>
+
+      <p>
+        Neopoligen is a website builder. Its goal is to make 
+        it as easy as possible for anyone to make a website for free. It
+        works with files you write on your computer that look like this:
+      </p>
+
+
+      <pre class="neo_source">-- title
+-- subtitle: An app for building websites
+
+Getting Started With Neopoligen
+
+Neopoligen is a website builder designed 
+with the goal of making it as easy as 
+possible for anyone to make their own 
+website for free. It uses files you 
+write on your computer that look like 
+this:</pre>
+
+      <p>When the app is running, you can see a preview version of your 
+        site directly on your computer at this address:</p>
+
+      <p><span class="link" data-href="http://localhost:1989/">localhost:1989</span></p>
+
+      <p>Once you've got it the way you want it, you can send it to a free service to 
+        make it available for world to see. See <span class="link" data-href="https://www.neopoligen.com/documentation">
+          the documentation</span> for details on how to do that.</p>
+
+      <h3>Content Files</h3>
+
+      <p>Neopoligen keeps all the files that make up your site directly on 
+      your computer. They're in a 'Neopoligen' folder under your main 'Documents' 
+      folder. The app can make multiple sites so each one gets its own folder. When
+      you first install the app, it makes a new site in the 'Example Site' folder
+      which you can see here:</p>  
+
+      <p><button data-command="open_neo_folder">Open Neopoligen Folder</button></p>
+
     </div>
+
   </body>
 </html>

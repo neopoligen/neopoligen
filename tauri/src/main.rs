@@ -71,6 +71,7 @@ fn main() {
             edit_in_vscode,
             get_state,
             open_browser,
+            open_neo_folder,
             open_finder,
             open_link,
             set_active_site,
@@ -96,6 +97,15 @@ fn open_finder(site: String) {
         .args([format!("/Users/alan/Documents/Neopoligen/{}", site)])
         .spawn()
         .unwrap();
+}
+
+#[tauri::command]
+fn open_neo_folder() -> String {
+    Command::new("open")
+        .args([format!("/Users/alan/Documents/Neopoligen/")])
+        .spawn()
+        .unwrap();
+    r#"{ "status": { "type": "todo" } }"#.to_string()
 }
 
 #[tauri::command]
