@@ -26,14 +26,9 @@ use tracing::{event, instrument, Level};
 struct ExampleSite;
 
 #[derive(Deserialize)]
-pub struct EngineConfig {
+pub struct NeoConfig {
     active_site: Option<String>,
 }
-
-// #[derive(Deserialize)]
-// pub struct EngineConfigSettings {
-//     active_site: String,
-// }
 
 #[tokio::main]
 #[instrument]
@@ -55,7 +50,7 @@ async fn main() {
         .init();
     event!(Level::INFO, r#"Launching neopoligengine"#);
     match get_engine_config_file() {
-        Ok(toml) => match serde_json::from_str::<EngineConfig>(&toml) {
+        Ok(toml) => match serde_json::from_str::<NeoConfig>(&toml) {
             Ok(engine_config) => {
                 let active_site = engine_config.active_site.unwrap();
                 event!(Level::INFO, r#"Active site: {}"#, &active_site);
