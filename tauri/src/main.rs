@@ -101,11 +101,14 @@ fn open_finder(site: String) {
 #[tauri::command]
 fn edit_in_vscode(site: String) -> String {
     dbg!("opening in vscode");
+    let mut site_folder = document_dir().unwrap();
+    site_folder.push("Neopoligen");
+    site_folder.push(site.clone());
     let status = Command::new("open")
         .args([
             "-a",
-            "Visual Studio Codex",
-            format!("/Users/alan/Documents/Neopoligen/{}", site).as_str(),
+            "Visual Studio Code",
+            &site_folder.display().to_string(),
         ])
         .status()
         .expect("failed to run open");
@@ -119,18 +122,6 @@ fn edit_in_vscode(site: String) -> String {
         }
         None => r#"{ "status": { "type": "error", "msg": "Could not open VS Code" } }"#.to_string(),
     }
-
-    // r#"{ "status": { "type": "ok" } }"#.to_string()
-
-    // {
-    //     // Ok(x) => r#"{ "status": { "type": "ok", "x": {}} }"#.to_string(),
-    //     Ok(x) => x.try_into().try_into,
-    //     Err(_e) => {
-    //         r#"{ "status": { "type": "error", "msg": "Could not open VS Code" } }"#.to_string()
-    //     }
-    // }
-
-    //
 }
 
 #[derive(Debug, Serialize, Deserialize)]
