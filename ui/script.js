@@ -1,23 +1,31 @@
 const { emit, listen } = window.__TAURI__.event
 const { invoke } = window.__TAURI__.tauri
 
+function log(msg) {
+    text_output.innerHTML = text_output.innerHTML + msg + "\n"
+}
+
+async function get_status() {
+  invoke('get_status', {}).then((response) => JSON.parse(response))
+}
+
+function connect_launch_button() {
+  const el = document.querySelector('#launchButton')
+  el.addEventListener('click', () => {
+    invoke('open_browser', {}).then((response) => {})
+  })
+}
+
 listen('neo_message', (event) => {
   const text_output = document.getElementById("text_output")
   if (event.payload.trim() === "CMD: CLEAR") {
     text_output.innerHTML = ""
   } else {
-    text_output.innerHTML = text_output.innerHTML + event.payload
+    text_output.innerHTML = text_output.innerHTML + event.payload + "\n"
   }
 })
 
 
-document.addEventListener('DOMContentLoaded', () => {
-  const el = document.querySelector('#launchButton')
-  el.addEventListener('click', () => {
-    invoke('open_browser', {}).then((response) => {})
-  })
-   update_site_list()
-})
 
 function update_site_list() {
   const list_el = document.querySelector("#siteList")

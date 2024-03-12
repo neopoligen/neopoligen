@@ -6,23 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Neopoligen</title>
     <script src="script.js"></script>
-    <script>
+<script>
 document.addEventListener('DOMContentLoaded', () => {
-  log("Welcome to the beta version of the Neopoligen website builder")
-  const status = get_status()
-  log(JSON.stringify(status))
-   connect_launch_button()
+   update_site_list()
 })
     </script>
   </head>
+
   <body>
     <div class="wrapper">
       <div class="title-group">
       <h1>Neopoligen</h1>
-      <div>Status - <a href="sites.html">Sites</a></div>
+      <div><a href="index.html">Status</a> - Sites</div>
       </div>
-      <div><button id="launchButton">Launch Browser</button></div>
-      <div><textarea id="text_output" cols="70" rows="27"></textarea></div>
+
+      <h3>Active Site</h3>
+      <div id="active_site"></div>
+      <h3>Other Sites</h3>
+      <ul id="siteList"></ul>
+      <h3>Create A New Site</h3>
+      <div>Name</div>
+      <input type="text" size="40" /><button id="createSiteButton">Create Site</button>
     </div>
   </body>
 </html>

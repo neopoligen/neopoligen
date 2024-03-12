@@ -49,11 +49,12 @@
         "fullscreen": false,
         "resizable": true,
         "title": "neopoligen",
-        "width": 400,
-        "height": 300,
-        "x": 0,
+        "width": 800,
+        "height": 1400,
+        "x": 30,
         "y": 30
       }
     ]
   }
 }
+

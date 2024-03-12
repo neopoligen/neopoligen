@@ -19,6 +19,7 @@
 use dirs::{self, config_local_dir, document_dir};
 use nix::sys::signal::{kill, Signal};
 use nix::unistd::Pid;
+use serde::Deserialize;
 use serde::Serialize;
 use serde_json;
 use std::fs::{self, DirEntry};
@@ -67,7 +68,7 @@ fn main() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            get_site_list,
+            get_status,
             set_active_site,
             open_browser
         ])
@@ -80,18 +81,36 @@ fn open_browser(app_handle: tauri::AppHandle) {
     open(&app_handle.shell_scope(), "http://localhost:1989/", None).unwrap();
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Site {
     key: String,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct SiteList {
     sites: Vec<Site>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct EngineConfig {
+    active_site: String,
+    sites: SiteList,
+}
+
+fn get_active_site() -> String {
+    let mut config_file_path = config_local_dir().unwrap();
+    config_file_path.push("Neopoligen");
+    config_file_path.push("config.json");
+    if let Ok(json_string) = fs::read_to_string(config_file_path) {
+        let data: EngineConfig = serde_json::from_str(&json_string).unwrap();
+        dbg!(&data);
+    }
+
+    "example-site".to_string()
+}
+
 #[tauri::command]
-fn get_site_list(_app_handle: tauri::AppHandle) -> String {
+fn get_status(_app_handle: tauri::AppHandle) -> String {
     let mut neopoligen_path = PathBuf::from(document_dir().unwrap());
     neopoligen_path.push("Neopoligen");
     match get_dirs_in_dir(&neopoligen_path) {

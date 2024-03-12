@@ -1,14 +1,16 @@
 @font-face {
     font-family: 'Atkinson-Hyperlegible';
     src: url('_assets/fonts/Atkinson-Hyperlegible-Regular-102.ttf') format('opentype');
-  }
+}
   
   :root {
+    --border-1: 1px solid var(--color-1);
     /* TODO: pick actual colors */
     --color-0: black;
     --color-1: #ccc;
     --color-2: #666;
     --color-3: #333;
+    --padding-4: 1rem;
     --regular: 'Atkinson-Hyperlegible', sans-serif;
     /* TODO: put in proper font for heavy here */
     --heavy: 'Atkinson-Hyperlegible', sans-serif;
@@ -32,9 +34,7 @@
     }
   }
   
-  *, 
-  *::before, 
-  *::after {
+  *, *::before, *::after {
     box-sizing: border-box;
   }
   
@@ -42,6 +42,12 @@
     margin: 0;
   }
   
+.title-group {
+  border-bottom: var(--border-1);
+  margin-bottom: var(--padding-4);
+}
+
+
   html {
     color-scheme: light dark;
   }
@@ -54,7 +60,7 @@
   body {
     background-color: var(--color-0);
     color: var(--color-1);
-    font-size: var(--size-3);
+    font-size: var(--size-2);
     font-family: var(--regular);
     line-height: 1.5; 
   }
@@ -67,7 +73,7 @@
   
   h1 {
     font-size: var(--size-6);
-    margin-top: 1em;
+    margin-top: 1rem;
   }
   
   h2 {
