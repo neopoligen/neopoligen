@@ -68,11 +68,12 @@ fn main() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            edit_in_vscode,
             get_state,
-            set_active_site,
             open_browser,
             open_finder,
-            edit_in_vscode,
+            open_link,
+            set_active_site,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -81,6 +82,11 @@ fn main() {
 #[tauri::command]
 fn open_browser(app_handle: tauri::AppHandle) {
     open(&app_handle.shell_scope(), "http://localhost:1989/", None).unwrap();
+}
+
+#[tauri::command]
+fn open_link(app_handle: tauri::AppHandle, url: String) {
+    open(&app_handle.shell_scope(), &url, None).unwrap();
 }
 
 #[tauri::command]

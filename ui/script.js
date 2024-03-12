@@ -50,10 +50,11 @@ function update_home_page() {
           set_html("#vscode_msg", "");
         } else {
           set_html("#vscode_li", `Error: Could not launch Visual Studio Code<br/>This usually means it's not installed.<br/>
-You can get it from here: <a id="vs_code_link">Visual Studio Code</a>
-<br/>
-(You'll need to restart Neopoligen once you've installed it)
-`)
+            You can get it from here: <a id="vscode_link">Visual Studio Code</a><br/>
+            (You'll need to restart Neopoligen once you've installed it)`)
+          add_listener("click", "#vscode_link", () => {
+            invoke('open_link', { url: 'https://code.visualstudio.com/'}).then((raw) => {})
+          })
         }
       })
     })
