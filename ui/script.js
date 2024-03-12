@@ -1,12 +1,23 @@
 const { emit, listen } = window.__TAURI__.event
 const { invoke } = window.__TAURI__.tauri
 
+function update_home_page() {
+  log("Welcome to the beta version of the Neopoligen website builder")
+  invoke('get_state', {}).then((state) => {
+    console.log(state)
+    log("Updating home page")
+  })
+}
+
 function log(msg) {
     text_output.innerHTML = text_output.innerHTML + msg + "\n"
 }
 
-async function get_status() {
-  invoke('get_status', {}).then((response) => JSON.parse(response))
+function get_status(data) {
+  invoke('get_status', {}).then((response) => {
+      data = JSON.parse(response)
+    console.log(data)
+  }).await
 }
 
 function connect_launch_button() {

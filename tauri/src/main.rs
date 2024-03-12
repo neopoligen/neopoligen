@@ -68,7 +68,7 @@ fn main() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            get_status,
+            get_state,
             set_active_site,
             open_browser
         ])
@@ -86,48 +86,74 @@ pub struct Site {
     key: String,
 }
 
+// Deprecated: Remove this
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SiteList {
     sites: Vec<Site>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct EngineConfig {
-    active_site: String,
-    sites: SiteList,
+pub struct State {
+    active_site: Option<String>,
+    sites: Vec<Site>,
+    status: Option<CurrentStatus>,
 }
 
-fn get_active_site() -> String {
-    let mut config_file_path = config_local_dir().unwrap();
-    config_file_path.push("Neopoligen");
-    config_file_path.push("config.json");
-    if let Ok(json_string) = fs::read_to_string(config_file_path) {
-        let data: EngineConfig = serde_json::from_str(&json_string).unwrap();
-        dbg!(&data);
-    }
-
-    "example-site".to_string()
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(tag = "type", rename_all = "lowercase")]
+pub enum CurrentStatus {
+    Ok,
 }
+
+// fn get_active_site() -> String {
+//     let mut config_file_path = config_local_dir().unwrap();
+//     config_file_path.push("Neopoligen");
+//     config_file_path.push("config.json");
+//     if let Ok(json_string) = fs::read_to_string(config_file_path) {
+//         let data: EngineConfig = serde_json::from_str(&json_string).unwrap();
+//         dbg!(&data);
+//     }
+//     "example-site".to_string()
+// }
 
 #[tauri::command]
-fn get_status(_app_handle: tauri::AppHandle) -> String {
-    let mut neopoligen_path = PathBuf::from(document_dir().unwrap());
-    neopoligen_path.push("Neopoligen");
-    match get_dirs_in_dir(&neopoligen_path) {
-        Ok(dirs) => {
-            let site_list = SiteList {
-                sites: dirs
-                    .iter()
-                    .map(|s| Site {
-                        key: s.file_name().unwrap().to_string_lossy().to_string(),
-                    })
-                    .collect(),
-            };
-            serde_json::to_string(&site_list).unwrap()
+fn get_state() -> String {
+    if let Some(mut engine_config_file) = config_local_dir() {
+        engine_config_file.push("Neopoligen");
+        engine_config_file.push("config.json");
+        if let Ok(json_string) = fs::read_to_string(engine_config_file) {
+            if let Ok(mut status) = serde_json::from_str::<State>(&json_string) {
+                status.status = Some(CurrentStatus::Ok);
+                serde_json::to_string(&status).unwrap()
+            } else {
+                r#"{ status: "could not parse engine config file" }"#.to_string()
+            }
+        } else {
+            r#"{ status: "could not read engine config file" }"#.to_string()
         }
-        Err(_e) => r#"{ "status": "error", "msg": "Could not get neopoligen dir", "sites": [] }"#
-            .to_string(),
+    } else {
+        r#"{ status: "could not get local engine config dir" }"#.to_string()
     }
+
+    // engine_config_file.push("Neopoligen");
+
+    // let mut neopoligen_path = PathBuf::from(document_dir().unwrap());
+    // neopoligen_path.push("Neopoligen");
+    // match get_dirs_in_dir(&neopoligen_path) {
+    //     Ok(dirs) => {
+    //         let site_list = SiteList {
+    //             sites: dirs
+    //                 .iter()
+    //                 .map(|s| Site {
+    //                     key: s.file_name().unwrap().to_string_lossy().to_string(),
+    //                 })
+    //                 .collect(),
+    //         };
+    //         serde_json::to_string(&site_list).unwrap()
+    //     }
+    //     Err(_e) => r#"{ "status": "error", "msg": "Could not get neopoligen dir", "sites": [] }"#
+    //         .to_string(),
+    // }
 }
 
 fn get_dirs_in_dir(dir: &PathBuf) -> io::Result<Vec<PathBuf>> {
