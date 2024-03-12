@@ -1,0 +1,29 @@
+[package]
+name = "neopoligen"
+version = "0.0.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+tauri-build = { version = "1.5", features = [] }
+
+[dependencies]
+#axum = "0.7.4"
+dirs = "5.0.1"
+nix = { version = "0.27.1", features = ["signal"] }
+# minijinja = { version = "1.0.12", features = ["loader", "custom_syntax"] }
+#notify = "6.1.1"
+#notify-debouncer-mini = "0.4.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sysinfo = "0.30.5"
+tauri = { version = "1.5", features = [ "shell-sidecar", "shell-open"] }
+tokio = { version = "1.35.1", features = ["rt-multi-thread", "macros"] }
+#tower-http = { version = "0.5.1", features = ["fs"] }
+#tower-livereload = "0.9.1"
+
+[features]
+# this feature is used for production builds or when `devPath` points to the filesystem
+# DO NOT REMOVE!!
+custom-protocol = ["tauri/custom-protocol"]

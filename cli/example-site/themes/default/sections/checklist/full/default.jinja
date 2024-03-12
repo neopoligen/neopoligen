@@ -1,0 +1,62 @@
+[!- import "includes/macros.jinja" as macros -!]
+
+<section [@- section_attributes(page_id, {"section": section, "classes": "checklist_section section_category_checklist flow" } ) -@]>
+
+    [!- if section.key_value_attributes.forward -!]
+        <div class="forward flow">
+            [@- section.key_value_attributes.forward -@]
+        </div>
+    [!- endif -!]
+
+    [!- if section.key_value_attributes.title or section.key_value_attributes.subtitle -!]
+    <div class="checklist_heading_group">
+    [!- endif -!]
+        [!- if section.key_value_attributes.title -!]
+        <h2>
+            [@- section.key_value_attributes.title -@]
+        </h2>
+        [!- endif -!]
+        [!- if section.key_value_attributes.subtitle -!]
+        <div>
+            [@- section.key_value_attributes.subtitle -@]
+        </div>
+        [!- endif -!]
+    [!- if section.key_value_attributes.title or section.key_value_attributes.subtitle -!]
+    </div>
+    [!- endif -!]
+
+    [!- if section.key_value_attributes.preface -!]
+        <div class="preface flow">
+            [@- section.key_value_attributes.preface -@]
+        </div>
+    [!- endif -!]
+
+    <ul class="flow">
+        [!- for item in section.items -!]
+        <li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled
+                [!- if item.content.status != none -!]
+                [@- " " -@]
+                checked
+                [!- endif -!]
+                />
+            </div>
+            <div class="flow">
+                [!- for container in item.content.containers -!]
+                <p>
+                    [@- output_payload(page_id, container, extras) -@]
+                </p>
+                [!- endfor -!]
+            </div>
+        </li>
+        [!- endfor -!]
+    </ul>
+
+    [!- if section.key_value_attributes.afterword -!]
+        <div class="afterword flow">
+            [@- section.key_value_attributes.afterword -@]
+        </div>
+    [!- endif -!]
+
+</section>

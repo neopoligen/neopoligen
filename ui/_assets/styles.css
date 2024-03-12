@@ -1,0 +1,126 @@
+@font-face {
+    font-family: 'Atkinson-Hyperlegible';
+    src: url('_assets/fonts/Atkinson-Hyperlegible-Regular-102.ttf') format('opentype');
+}
+  
+:root {
+  --border-1: 1px solid var(--color-1);
+  /* TODO: pick actual colors */
+  --color-0: black;
+  --color-1: #ccc;
+  --color-2: #666;
+  --color-3: #333;
+  --padding-2: 0.4rem;
+  --padding-3: 0.7rem;
+  --padding-4: 1rem;
+  --regular: 'Atkinson-Hyperlegible', sans-serif;
+  /* TODO: put in proper font for heavy here */
+  --heavy: 'Atkinson-Hyperlegible', sans-serif;
+  --size-1: clamp(0.78rem, calc(0.77rem + 0.03vw), 0.80rem);
+  --size-2: clamp(0.94rem, calc(0.92rem + 0.11vw), 1.00rem);
+  --size-3: clamp(1.13rem, calc(1.08rem + 0.22vw), 1.25rem);
+  --size-4: clamp(1.35rem, calc(1.28rem + 0.37vw), 1.56rem);
+  --size-5: clamp(1.62rem, calc(1.50rem + 0.58vw), 1.95rem);
+  --size-6: clamp(1.94rem, calc(1.77rem + 0.87vw), 2.44rem);
+  --size-7: clamp(2.33rem, calc(2.08rem + 1.25vw), 3.05rem);
+  --size-8: clamp(2.80rem, calc(2.45rem + 1.77vw), 3.82rem);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --text: hsl(340, 26%, 7%);
+    --background: hsl(345, 25%, 97%);
+    --primary: hsl(103, 26%, 24%);
+    --secondary: hsl(342, 25%, 87%);
+    --accent: hsl(224, 26%, 47%);
+  }
+}
+  
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+  
+* {
+  margin: 0;
+}
+  
+body {
+    background-color: var(--color-0);
+    color: var(--color-1);
+    font-size: var(--size-2);
+    font-family: var(--regular);
+    line-height: 1.5; 
+}
+
+html {
+  color-scheme: light dark;
+}
+  
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.nav_links {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tagline {
+  padding-bottom: var(--padding-3);
+}
+
+.title-group {
+  border-bottom: var(--border-1);
+  margin-bottom: var(--padding-4);
+}
+
+  
+
+
+h1, h2, h3 {
+    line-height: 1.1;
+    color: var(--color-2);
+    text-wrap: balance;
+  }
+
+h1 {
+font-size: var(--size-6);
+margin-top: 1rem;
+}
+
+h2 {
+font-size: var(--size-5);
+--flow-space: 1.3em;
+}
+
+h3 {
+font-size: var(--size-4);
+--flow-space: 1.0em;
+}
+
+
+
+a, .link {
+color: var(--color-3);
+}
+
+a:hover, a:focus, .link:hover {
+color: var(--color-4);
+}
+
+::marker {
+color: var(--color-1);
+}
+
+.wrapper {
+width: min(100vw - 3rem, 58ch);
+margin-inline: auto;
+}
+
+.flow > :where(:not(:first-child)) {
+margin-top: var(--flow-space, 1em);
+}
+
+
+

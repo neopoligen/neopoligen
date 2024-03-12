@@ -156,6 +156,8 @@ impl Builder {
     pub fn write_files(&self) {
         event!(Level::INFO, "fn write_files");
         println!("Writing files");
+        dbg!(&self.config);
+
         self.files_to_output().iter().for_each(|f| {
             // println!("{}", f.0.clone().display());
             if f.0

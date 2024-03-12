@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd neopoligen
+cargo tauri dev

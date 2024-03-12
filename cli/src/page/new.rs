@@ -6,6 +6,7 @@ use crate::section::Section;
 use crate::section_category::SectionCategory;
 use crate::span::Span;
 use std::path::PathBuf;
+use tracing::{event, instrument, Level};
 
 impl Page {
     pub fn new(source_path: PathBuf, source: String, config: &Config) -> Option<Page> {
@@ -195,12 +196,10 @@ fn title_from_first_few_words(ast: &Vec<Child>) -> Option<String> {
             let Child::Block(thing) = first else {
                 return None;
             };
-
             let spans = thing
                 .iter()
                 .flat_map(|span| get_span_words(&span))
                 .collect::<Vec<String>>();
-
             if spans.len() > 28 {
                 let mut title = spans
                     .iter()
@@ -318,7 +317,9 @@ fn html_link(href: &Option<String>, title: &Option<String>) -> Option<String> {
     ))
 }
 
+#[instrument]
 fn path_parts(source_path: &PathBuf, config: &Config) -> Vec<String> {
+    event!(Level::INFO, r#"path_part"#);
     source_path
         .clone()
         .strip_prefix(config.folders.content_root.clone())

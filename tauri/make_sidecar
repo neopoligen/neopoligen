@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd cli\
+  && cargo build --release\
+  && cd target/release\
+  && mv neopoligengine neopoligengine-aarch64-apple-darwin
+
+
+
