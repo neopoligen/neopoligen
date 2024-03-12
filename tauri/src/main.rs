@@ -24,6 +24,7 @@ use serde::Serialize;
 use serde_json;
 use std::fs::{self, DirEntry};
 use std::io;
+use std::path::Path;
 use std::path::PathBuf;
 use sysinfo::System;
 use tauri::{
@@ -68,6 +69,7 @@ fn main() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            delete_neopoligen_config,
             edit_in_vscode,
             get_state,
             open_browser,
@@ -78,6 +80,18 @@ fn main() {
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+#[tauri::command]
+fn delete_neopoligen_config() -> String {
+    dbg!("Deleting Neopoligen Config");
+    let mut path = config_local_dir().unwrap();
+    path.push("Neopoligen");
+    path.push("config.toml");
+    if path.exists() {
+        let _ = fs::remove_file(path);
+    }
+    r#"{ "status": { "type": "todo" } }"#.to_string()
 }
 
 #[tauri::command]
@@ -147,16 +161,29 @@ pub struct SiteList {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct State {
-    active_site: Option<String>,
+    config: NeoConfig,
     sites: Vec<Site>,
     status: Option<CurrentStatus>,
     app_version: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(tag = "type", rename_all = "lowercase")]
+pub struct NeoConfig {
+    active_site: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum StatusPayload {
+    Status(CurrentStatus),
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(tag = "code", rename_all = "lowercase")]
 pub enum CurrentStatus {
     Ok,
+    Todo { msg: String },
+    Error { msg: String },
 }
 
 // fn get_active_site() -> String {
@@ -176,18 +203,25 @@ fn get_state() -> String {
         engine_config_file.push("Neopoligen");
         engine_config_file.push("config.json");
         if let Ok(json_string) = fs::read_to_string(engine_config_file) {
-            if let Ok(mut state) = serde_json::from_str::<State>(&json_string) {
-                state.status = Some(CurrentStatus::Ok);
-                state.app_version = Some("0.1.0".to_string());
+            if let Ok(config) = serde_json::from_str::<NeoConfig>(&json_string) {
+                let state = State {
+                    config,
+                    status: Some(CurrentStatus::Ok),
+                    app_version: Some("0.1.0".to_string()),
+                    sites: vec![],
+                };
                 serde_json::to_string(&state).unwrap()
             } else {
-                r#"{ status: "could not parse engine config file" }"#.to_string()
+                serde_json::to_string(&StatusPayload::Status(CurrentStatus::Error {
+                    msg: "Could not parse config JSON".to_string(),
+                }))
+                .unwrap()
             }
         } else {
-            r#"{ status: "could not read engine config file" }"#.to_string()
+            serde_json::to_string(&CurrentStatus::Ok).unwrap()
         }
     } else {
-        r#"{ status: "could not get local engine config dir" }"#.to_string()
+        serde_json::to_string(&CurrentStatus::Ok).unwrap()
     }
 
     // engine_config_file.push("Neopoligen");

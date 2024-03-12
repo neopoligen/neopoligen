@@ -55,18 +55,55 @@ this:</pre>
       <p><span class="link" data-href="http://localhost:1989/">localhost:1989</span></p>
 
       <p>Once you've got it the way you want it, you can send it to a free service to 
-        make it available for world to see. See <span class="link" data-href="https://www.neopoligen.com/documentation">
+        make it available for world to see. See <span class="link" data-href="https://www.neopoligen.com/en/2dbdvgya/">
           the documentation</span> for details on how to do that.</p>
 
       <h3>Content Files</h3>
 
-      <p>Neopoligen keeps all the files that make up your site directly on 
-      your computer. They're in a 'Neopoligen' folder under your main 'Documents' 
+      <p>Neopoligen keeps your original content files directly on your computer. 
+        They're in a &quot;Neopoligen&quot; folder under your main 'Documents' 
       folder. The app can make multiple sites so each one gets its own folder. When
       you first install the app, it makes a new site in the 'Example Site' folder
       which you can see here:</p>  
 
       <p><button data-command="open_neo_folder">Open Neopoligen Folder</button></p>
+
+      <p>The initial contents of a site folder are:</p>
+      
+      <ul class="flow">
+        <li>config.json file - Contains some basic details about the site. 
+          (Details on the configuration can be found in the 
+          <span class="link" data-href="https://www.neopoligen.com/en/2dbb3bkx/">documentation</span>)
+        </li>
+        <li>configuration folder - This also holds some configuration items, but it's going away.
+          Everything is moving into the config.json file
+        </li>
+        <li>content folder - This is where all the main content files that make 
+          up your site go. The files all end with a <code>.neo</code> extension
+          (if you can see those in your finder) which is the type of file
+          that Neopoligen uses. 
+        </li>
+        <li>docs folder - This is where the files that make up the actual website
+          are output when Neopoligen builds them. You don't need to mess with it, but 
+          feel free to poke around to see what the output is. 
+        </li>
+        <li>images folder - For any images you want to include on your site. You can 
+          organize images however you want inside this folder and then include
+          them in on a page using just the name of the file. More details:
+          <span class="link" data-href="https://www.neopoligen.com/en/2dbboz0b/">images folder documentation</span>)
+        </li>
+        <li>themes folder - Neopoligen works by combining your content files with a
+          theme to build the site. This is where they are stored. 
+        </li>
+      </ul>
+
+      <h3>Editing Files</h3>
+      <p>Making content for Neopoligen sites is done by writing files 
+        in a format called Neopolitan. 
+
+
+
+
 
     </div>
 

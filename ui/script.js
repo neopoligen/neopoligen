@@ -53,6 +53,7 @@ function update_home_page() {
 
   invoke('get_state', {}).then((state_string) => {
     const state = JSON.parse(state_string)
+    console.log(state)
 
   log("Welcome to the beta version of the Neopoligen")
   log(`Verison: ${state.app_version}`)
