@@ -102,6 +102,7 @@ pub struct State {
     active_site: Option<String>,
     sites: Vec<Site>,
     status: Option<CurrentStatus>,
+    app_version: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -127,9 +128,10 @@ fn get_state() -> String {
         engine_config_file.push("Neopoligen");
         engine_config_file.push("config.json");
         if let Ok(json_string) = fs::read_to_string(engine_config_file) {
-            if let Ok(mut status) = serde_json::from_str::<State>(&json_string) {
-                status.status = Some(CurrentStatus::Ok);
-                serde_json::to_string(&status).unwrap()
+            if let Ok(mut state) = serde_json::from_str::<State>(&json_string) {
+                state.status = Some(CurrentStatus::Ok);
+                state.app_version = Some("0.1.0".to_string());
+                serde_json::to_string(&state).unwrap()
             } else {
                 r#"{ status: "could not parse engine config file" }"#.to_string()
             }
