@@ -33,16 +33,32 @@ function update_home_page() {
   log("")
   log("- Use the buttons above to edit and preview your site")
 
-    add_listener("click", "#browserButton", (event) => {
-      invoke('open_browser', {}).then((response) => {})
+    add_listener("click", "#browser_button", (event) => {
+      invoke('open_browser', {}).then((raw) => {})
     })
 
-    add_listener("click", "#finderButton", (event) => {
-      invoke('open_finder', { site: state.active_site}).then((response) => {})
+    add_listener("click", "#finder_button", (event) => {
+      invoke('open_finder', { site: state.active_site}).then((raw) => {})
+    })
+
+    add_listener("click", "#vscode_button", (event) => {
+      set_html("#vscode_msg", "Launching");
+      invoke('edit_in_vscode', { site: state.active_site}).then((raw) => {
+        const resp= JSON.parse(raw)
+        console.log(resp)
+        if (resp.status.type === "ok") {
+          set_html("#vscode_msg", "");
+        } else {
+          set_html("#vscode_li", `Error: Could not launch Visual Studio Code<br/>This usually means it's not installed.<br/>
+You can get it from here: <a id="vs_code_link">Visual Studio Code</a>
+<br/>
+(You'll need to restart Neopoligen once you've installed it)
+`)
+        }
+      })
     })
 
     set_html("#current_site", `Current Site: ${state.active_site}`)
-
 
     // const browser_button_el = document.querySelector('#launchBrowserButton')
     // browser_button_el.innerHTML = `Open ${state.active_site} in browser`
@@ -55,7 +71,6 @@ function update_home_page() {
     // finder_button_el.addEventListener('click', () => {
     //   invoke('open_finder', { "site": state.active_site }).then((response) => {})
     // })
-
 
     console.log(state)
     log(``)

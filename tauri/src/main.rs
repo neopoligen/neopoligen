@@ -71,7 +71,8 @@ fn main() {
             get_state,
             set_active_site,
             open_browser,
-            open_finder
+            open_finder,
+            edit_in_vscode,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -89,6 +90,41 @@ fn open_finder(site: String) {
         .args([format!("/Users/alan/Documents/Neopoligen/{}", site)])
         .spawn()
         .unwrap();
+}
+
+#[tauri::command]
+fn edit_in_vscode(site: String) -> String {
+    dbg!("opening in vscode");
+    let status = Command::new("open")
+        .args([
+            "-a",
+            "Visual Studio Codex",
+            format!("/Users/alan/Documents/Neopoligen/{}", site).as_str(),
+        ])
+        .status()
+        .expect("failed to run open");
+    match status.code() {
+        Some(code) => {
+            if code == 0 {
+                r#"{ "status": { "type": "ok", "x": {}} }"#.to_string()
+            } else {
+                r#"{ "status": { "type": "error", "msg": "Could not open VS Code" } }"#.to_string()
+            }
+        }
+        None => r#"{ "status": { "type": "error", "msg": "Could not open VS Code" } }"#.to_string(),
+    }
+
+    // r#"{ "status": { "type": "ok" } }"#.to_string()
+
+    // {
+    //     // Ok(x) => r#"{ "status": { "type": "ok", "x": {}} }"#.to_string(),
+    //     Ok(x) => x.try_into().try_into,
+    //     Err(_e) => {
+    //         r#"{ "status": { "type": "error", "msg": "Could not open VS Code" } }"#.to_string()
+    //     }
+    // }
+
+    //
 }
 
 #[derive(Debug, Serialize, Deserialize)]
