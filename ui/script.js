@@ -128,14 +128,9 @@ function update_home_page() {
 
     console.log(state)
     log(``)
-    log(`- Use the 'Sites' link to change to a different site or make a new one`)
-    log(``)
-    log(`- Click 'About' to change learn more about Neopoligen`)
-    log(``)
     log(`- Debugging status messages will display here as you make changes to your site`)
     log(``)
-    log(`- Note that Neopoligen doesn't have automatic updates yet. `)
-
+    log(`- Note that Neopoligen doesn't have automatic updates yet. Get the link in the Debbing page to check the version`)
   })
 
 }
