@@ -28,4 +28,14 @@
     </div>
     [!- endif -!]
 
+    [!- if section.key_value_attributes.by -!]
+    <div class="attribibution">
+    -- [@ section.key_value_attributes.by -@]
+    [!- if section.key_value_attributes.source -!]
+    [@- ' ' -@]
+    ([@ section.key_value_attributes.source -@])
+    [!- endif -!]
+    </div>
+    [!- endif -!]
+
     [!- include "section-parts/afterword.jinja" -!]

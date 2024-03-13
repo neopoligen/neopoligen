@@ -404,6 +404,12 @@ pre {
   padding: var(--padding-3);
 }
 
+.quote_section {
+  border: var(--border-1);
+  border-radius: var(--radius-3);
+  padding: var(--padding-3);
+}
+
 .red {
   color: red;
 }
@@ -513,5 +519,6 @@ ul {
 .warning_section h2 {
   font-size: var(--size-3);
 }
+
 
 

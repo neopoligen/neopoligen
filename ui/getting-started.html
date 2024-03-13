@@ -67,7 +67,7 @@ this:</pre>
       <p><span class="link" data-href="http://localhost:1989/">localhost:1989</span></p>
 
       <p>Once you've got it the way you want it, you can send it to a free service to 
-        make it available for world to see. See <span class="link" data-href="https://www.neopoligen.com/en/2dbdvgya/">
+        make it available for world to see. See <span class="link" data-href="https://www.neopoligen.com/en/documentation/">
           the documentation</span> for details on how to do that.</p>
 
       <h3>Content Files</h3>
@@ -85,7 +85,7 @@ this:</pre>
       <ul class="flow">
         <li>config.json file - Contains some basic details about the site. 
           (Details on the configuration can be found in the 
-          <span class="link" data-href="https://www.neopoligen.com/en/2dbb3bkx/">documentation</span>)
+          <span class="link" data-href="https://www.neopoligen.com/en/documentation/">documentation</span>)
         </li>
         <li>configuration folder - This also holds some configuration items, but it's going away.
           Everything is moving into the config.json file
@@ -101,8 +101,8 @@ this:</pre>
         </li>
         <li>images folder - For any images you want to include on your site. You can 
           organize images however you want inside this folder and then include
-          them in on a page using just the name of the file. More details:
-          <span class="link" data-href="https://www.neopoligen.com/en/2dbboz0b/">images folder documentation</span>)
+          them in on a page using just the name of the file. More details in
+    <span class="link" data-href="https://www.neopoligen.com/en/documentation/">the documentation</span>)
         </li>
         <li>themes folder - Neopoligen works by combining your content files with a
           theme to build the site. This is where they are stored. 
@@ -197,14 +197,114 @@ Neopoligen Example Site</pre>
 
       <p>When you save the page you'll see green text show up in the browser.</p>
 
+      <p>Adding a <em>-- class</em> attribute to a section tells it to change its
+        formatting based of what are called <em>Stylesheets</em>. If you look in the
+        folder:
+      </p>
+
+      <p><em>Example-Site / themes / example-site / _assets</em></p>
+
+      <p>You'll see a file called</p>
+
+      <p><em>styles.css</em></p>
+
+      <p>If you click on <em>styles.css</em>in the sidebar of Visual Studio Code to open it 
+        and scroll down some you'll see this snippet which is what does the color change:</p>
+
+      <pre class="neo_source">.green {
+  color: green;
+}</pre>
+
+      <p>The full name for the way styles work is called Cascading Style Sheets (or, CSS 
+        for short). You can do <em>a lot</em> with them. If you're interested, you can
+        get started learning more about them here: 
+        <span class="link" data-href="https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/CSS_basics">
+          CSS basics</span></p>
+
+      <h3>Custom Section Attributes</h3>
+
+      <p>Attributes can be used for more than just changing the style of a 
+        section. They can also be used to send content to the templates for formatting. For example:
+        add a <em>-- quote</em> section above the <em>-- metadata</em> section with something like:
+      </p>
 
 
+      <pre class="neo_source">-- quote 
+
+Hello, World!
+</pre>
+
+      <p>When you save the file in Visual Studio Code it'll show up
+        in the browser. In this case, the template that renders 
+        quote sections in the theme has already applied a style that
+        added the border to the quote. Now let's add some more
+        formatted content with a <em>-- by</em> attribute like this:</p>
 
 
+      <pre class="neo_source">-- quote 
+-- by: Alan
+
+Hello, World!
+</pre>
+
+      <p>When you save the file you'll see a new attribution show
+        up under the quote. We can also add a <em>-- source</em>
+        like:
+      </p>
+
+      <pre class="neo_source">-- quote 
+-- by: Alan
+-- source: The Internet
+
+Hello, World!
+</pre>
+
+      <p>If you want to see how the template the theme is using to 
+        output the quote it's in:</p>
+
+      <p><em>Example-Site / themes / example-site / sections / quote / full / default.jinja </em></p>
+
+      <p>There's more details on template and themes in the 
+          <span class="link" data-href="https://www.neopoligen.com/en/documentation/">documentation</span> 
+        if you'd like to experiment modifying one or making your own.</p>
+        
+
+    <h3>Spans</h3>
+
+      <p>The last thing to know about to get started is <em>Spans</em>. They're used for 
+        formatting content inside a section. For example, change the <em>Hello, world</em>
+        in your quote to this:</p>
+
+      <pre class="neo_source">Hello, &lt;&lt;strong|world&gt;&gt;</pre>
+
+      <p>When you save the file the world &quot;world&quot; changes to bold on the 
+        page</p>
+
+      <p>You can add styles to spans as well. Try this:</pe>
+
+      <pre class="neo_source">Hello, &lt;&lt;strong|world|class: green&gt;&gt;</pre>
+
+      <p>Spans are also how linking is done. There's a <em>ilink</em> (for internal
+        link) span that uses an ID to link between pages. For example, the
+        <em>second-page.neo</em> file has an id of <em>2dwyp9ty</em>. You can use
+        that to make a link to it from the <em>home-page.neo</em> file with:</p>
 
 
+      <pre class="neo_source">&lt;&lt;ilink: 2dwyp9ty|Link To Second Page&gt;&gt;</pre>
 
+      <h3>Next Steps</h3>
 
+      <p>That's the basics. Like anything new, the ideas will take a some getting
+      used to but I've tried to reduce the amount of gymnastics you'll need to 
+        do to get started as much as possible. Check out 
+        <span class="link" data-href="https://www.neopoligen.com/en/documentation/">the documentation</span>
+        and especially
+        <span class="link" data-href="https://www.neopoligen.com/en/cookbook/">the cookbook</span>. 
+        I'll be adding lots more details there.
+      </p> 
+
+      <p>For now, I hope this app brings you the same joy I've had from making things on the web</p>
+      <p>- alan</p>
 
     </div>
 

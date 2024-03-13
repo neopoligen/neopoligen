@@ -207,7 +207,7 @@ fn get_state() -> String {
                 let state = State {
                     config,
                     status: Some(CurrentStatus::Ok),
-                    app_version: Some("0.1.0".to_string()),
+                    app_version: Some("0.0.1".to_string()),
                     sites: vec![],
                 };
                 serde_json::to_string(&state).unwrap()
