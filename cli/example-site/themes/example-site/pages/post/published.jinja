@@ -7,13 +7,9 @@
 <body>
   [!- include "includes/header.jinja" -!]
   <main>
-    [!- include "includes/sidebar.jinja" -!]
     <article class="flow">
-      [!- include "includes/breadcrumbs.jinja" -!]
       [@- macros.place_section(page_id, "title") -@]
       [@- macros.main_body(page_id) -@]
-      [!- include "includes/prev-next.jinja" -!]
-      [!- include "includes/neo-source.jinja" -!]
     </article>
   </main>
   [!- include "includes/footer.jinja" -!]

@@ -7,6 +7,7 @@ function init_page() {
   add_button_listeners()
 }
 
+
 function add_listener(listener, selector, func) {
     const el = document.querySelector(selector)
     el.addEventListener(listener, func)
@@ -53,9 +54,14 @@ see if that fixes the issue`)
   })
 }
 
+function open_browser(event) {
+  invoke('open_browser', {}).then((raw) => {})
+}
+
 function open_link(event) {
   invoke('open_link', { url: event.target.dataset.href }).then((raw) => {})
 }
+
 
 function open_neo_folder() {
   invoke('open_neo_folder', {}).then((raw) => {})
@@ -157,7 +163,6 @@ function get_status(data) {
 
 function connect_launch_browbutton() {
 }
-
 listen('neo_message', (event) => {
   const output_el = document.querySelector("#text_output")
   if (output_el) {

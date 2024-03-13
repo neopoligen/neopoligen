@@ -243,6 +243,14 @@ impl Site {
     //     ))
     // }
 
+    pub fn page_ast(&self, args: &[Value]) -> Option<String> {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
+            Some(page) => Some(serde_json::to_string::<Vec<Child>>(&page.ast).unwrap()),
+            None => None,
+        }
+    }
+
     pub fn page_folders(&self, args: &[Value]) -> Vec<String> {
         let id = args[0].to_string();
         match self.pages.get(&id) {

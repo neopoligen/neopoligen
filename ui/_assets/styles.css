@@ -16,6 +16,7 @@
   --padding-2: 0.4rem;
   --padding-3: 0.7rem;
   --padding-4: 1rem;
+  --radius-1: 0.1rem;
   --radius-4: 0.4rem;
   --regular: 'Atkinson-Hyperlegible', sans-serif;
   /* TODO: put in proper font for heavy here */
@@ -54,6 +55,13 @@ body {
     font-size: var(--size-2);
     font-family: var(--regular);
     line-height: 1.5; 
+}
+
+code {
+  font-size: var(--size-1);
+  background-color: #222;
+  border-radius: var(--radius-1);
+  padding: 0.1rem;
 }
 
 .headsup {
@@ -142,6 +150,7 @@ margin-inline: auto;
 .flow > :where(:not(:first-child)) {
 margin-top: var(--flow-space, 1em);
 }
+
 
 
 

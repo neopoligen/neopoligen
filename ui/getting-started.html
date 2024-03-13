@@ -138,8 +138,73 @@ looks like.
 
       <p>When the app opens you'll see your Neopoligen folder and the 
       individual site folder it contains. If you just installed Neopoligen
-        you'll see the &quot;Example-Site&quot; folder.
+        you'll see the &quot;Example-Site&quot; folder. Click <code>Example-Site</code> in the sidebar to expand that folder
+        then click <code>content</code> to expand it where you'll see <code>home-page.neo</code> and <code>second-page.neo</code>.
+        Finally, click the <code>home-page.neo</code> file to open it. 
       </p>
+
+      <p>If you haven't already done so, open your browser to the site
+        preview</p>
+
+      <div id="open_browser_button_wrapper"><button data-command="open_browser">Preview Site In Browser</button></div>
+
+      <p>You'll see the same content in the file on the web page. Now, try
+        changing the "Neopoligen Example Site" to say something else and saving the file. When you do, 
+      you'll see the page in the browser update with the changes as well.</p>
+
+      <h3>Sections</h3>
+
+      <p>Neopoligen files are based of <em>Sections</em>. Each one starts with two dashes (i.e. &quot;--&quot;)
+        followed by the type of section and each one belong to a <em>Category</em> of section types
+        that helps determine it's behaviour.
+
+      </p>
+
+      <p>The two sections we've seen so far are 
+        <code>-- title</code> and <code>-- metadata</code>. The <em>title</em> section is part of
+        the <em>Standard</em> category which generally outputs directly to the page. The <em>metadata</em>
+        section is part of a category called <em>JSON</em>. Sections in the JSON category 
+        don't show anything by default. They can be made to by applying a template, but
+        we're not outputting anything for <em>metadata</em>. It's merely a way to pass
+        the Date and the ID that Neopoligen uses for making links in the page.</p> 
+
+      <h3>Section Attributes</h3>
+
+      <p>The way that we're passing the Date and ID is with <em>Section Attributes</em> which
+        are lines directly after the start of a section that also start with two dashes. The
+        <em>metadata</em> section on the Example-Site home-page.neo example looks like this:
+      </p>
+
+      <pre class="neo_source">-- metadata
+-- date: 2024-03-11
+-- id: 2dwmgthu
+-- path: /</pre>
+
+      <p>The <em>-- metadata</em> line starts the section and the <em>-- date</em>, <em>-- id</em>, and <em>-- path</em> 
+        lines are all attributes. (If you're wondering, the <em>-- path</em> attribute that has the <em>/</em> after
+        it is what's used to identify the home page of the site. More details on that in the documentation.)</p>
+
+      <p>The example theme doesn't do anything visible with those
+        attributes but we can use the <em>-- title</em> section to see something change.
+        Add a line with <code>-- class: green</code> underneath the <em>-- title</em> line so it
+        looks like this:
+      </p>
+
+      <pre class="neo_source">-- title
+-- class: green
+
+Neopoligen Example Site</pre>
+
+      <p>When you save the page you'll see green text show up in the browser.</p>
+
+
+
+
+
+
+
+
+
 
     </div>
 
