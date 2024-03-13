@@ -58,6 +58,10 @@ function open_browser(event) {
   invoke('open_browser', {}).then((raw) => {})
 }
 
+function open_finder(event) {
+  invoke('open_finder', {}).then((raw) => {})
+}
+
 function open_link(event) {
   invoke('open_link', { url: event.target.dataset.href }).then((raw) => {})
 }
@@ -90,33 +94,25 @@ function update_home_page() {
   log("")
   log("- Use the 'Preview' and 'Edit' buttons above to work with your site")
 
-    add_listener("click", "#browser_button", (event) => {
-      invoke('open_browser', {}).then((raw) => {})
-    })
+    // add_listener("click", "#vscode_button", (event) => {
+    //   set_html("#vscode_msg", "Launching");
+    //   invoke('edit_in_vscode', { site: state.active_site}).then((raw) => {
+    //     const resp= JSON.parse(raw)
+    //     console.log(resp)
+    //     if (resp.status.type === "ok") {
+    //       set_html("#vscode_msg", "");
+    //     } else {
+    //       set_html("#vscode_li", `Error: Could not launch Visual Studio Code<br/>This usually means it's not installed.<br/>
+    //         You can get it from here: <a id="vscode_link">Visual Studio Code</a><br/>
+    //         (You'll need to restart Neopoligen once you've installed it)`)
+    //       add_listener("click", "#vscode_link", () => {
+    //         invoke('open_link', { url: 'https://code.visualstudio.com/'}).then((raw) => {})
+    //       })
+    //     }
+    //   })
+    // })
 
-    add_listener("click", "#finder_button", (event) => {
-      invoke('open_finder', { site: state.active_site}).then((raw) => {})
-    })
-
-    add_listener("click", "#vscode_button", (event) => {
-      set_html("#vscode_msg", "Launching");
-      invoke('edit_in_vscode', { site: state.active_site}).then((raw) => {
-        const resp= JSON.parse(raw)
-        console.log(resp)
-        if (resp.status.type === "ok") {
-          set_html("#vscode_msg", "");
-        } else {
-          set_html("#vscode_li", `Error: Could not launch Visual Studio Code<br/>This usually means it's not installed.<br/>
-            You can get it from here: <a id="vscode_link">Visual Studio Code</a><br/>
-            (You'll need to restart Neopoligen once you've installed it)`)
-          add_listener("click", "#vscode_link", () => {
-            invoke('open_link', { url: 'https://code.visualstudio.com/'}).then((raw) => {})
-          })
-        }
-      })
-    })
-
-    set_html("#current_site", `Current Site: ${state.active_site}`)
+    // set_html("#current_site", `Current Site: ${state.active_site}`)
 
     // const browser_button_el = document.querySelector('#launchBrowserButton')
     // browser_button_el.innerHTML = `Open ${state.active_site} in browser`

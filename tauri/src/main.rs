@@ -105,10 +105,10 @@ fn open_link(app_handle: tauri::AppHandle, url: String) {
 }
 
 #[tauri::command]
-fn open_finder(site: String) {
+fn open_finder() {
     dbg!("opening in finder");
     Command::new("open")
-        .args([format!("/Users/alan/Documents/Neopoligen/{}", site)])
+        .args([format!("/Users/alan/Documents/Neopoligen/")])
         .spawn()
         .unwrap();
 }
