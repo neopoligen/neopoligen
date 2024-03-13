@@ -9,10 +9,14 @@
   --border-3: 1px solid var(--color-3);
   --border-4: 1px solid var(--color-4);
   /* TODO: pick actual colors */
-  --color-0: black;
+  --color-0: #321405;
+  --color-3: #e98c8c;
   --color-2: #666;
-  --color-3: #333;
-  --color-4: #ccc;
+  --color-4: #f59999;
+  --color-4: #d2d1b8;
+  --color-4: #dbdacc;
+  --color-5: #efadad;
+  --color-5: #fb91b4;
   --padding-2: 0.4rem;
   --padding-3: 0.7rem;
   --padding-4: 1rem;
@@ -49,15 +53,27 @@
   margin: 0;
 }
   
+a, .link {
+color: var(--color-5);
+  text-decoration: underline;
+}
+
+a:hover, a:focus, .link:hover {
+color: var(--color-5);
+  text-decoration: underline;
+}
+
+
 body {
     background-color: var(--color-0);
-    color: var(--color-1);
+    color: var(--color-4);
     font-size: var(--size-2);
     font-family: var(--regular);
     line-height: 1.5; 
 }
 
 code {
+  color: var(--color-4);
   font-size: var(--size-1);
   background-color: #222;
   border-radius: var(--radius-1);
@@ -86,9 +102,9 @@ img {
 }
 
 .neo_source {
-  border: var(--border-4);
+  border: var(--border-3);
   border-radius: var(--radius-4);
-  color: var(--color-2);
+  color: var(--color-4);
   margin: var(--padding-4);
   padding: var(--padding-4);
 }
@@ -107,7 +123,7 @@ img {
 
 h1, h2, h3 {
     line-height: 1.1;
-    color: var(--color-2);
+    color: var(--color-4);
     text-wrap: balance;
   }
 
@@ -124,18 +140,6 @@ font-size: var(--size-5);
 h3 {
 font-size: var(--size-4);
 --flow-space: 1.0em;
-}
-
-
-
-a, .link {
-color: var(--color-3);
-  text-decoration: underline;
-}
-
-a:hover, a:focus, .link:hover {
-color: var(--color-4);
-  text-decoration: underline;
 }
 
 ::marker {
