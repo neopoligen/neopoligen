@@ -24,7 +24,7 @@ use serde::Serialize;
 use serde_json;
 use std::fs::{self, DirEntry};
 use std::io;
-use std::path::Path;
+// use std::path::Path;
 use std::path::PathBuf;
 use sysinfo::System;
 use tauri::{
@@ -204,11 +204,28 @@ fn get_state() -> String {
         engine_config_file.push("config.json");
         if let Ok(json_string) = fs::read_to_string(engine_config_file) {
             if let Ok(config) = serde_json::from_str::<NeoConfig>(&json_string) {
+                let mut neopoligen_path = PathBuf::from(document_dir().unwrap());
+                neopoligen_path.push("Neopoligen");
+
+                let sites = match get_dirs_in_dir(&neopoligen_path) {
+                    Ok(dirs) => dirs
+                        .iter()
+                        .map(|s| {
+                            let site_key = s.file_name().unwrap().to_string_lossy().to_string();
+                            Site { key: site_key }
+                        })
+                        .collect::<Vec<Site>>(),
+                    Err(_e) => {
+                        println!("Error gettings sites");
+                        vec![]
+                    }
+                };
+
                 let state = State {
                     config,
                     status: Some(CurrentStatus::Ok),
                     app_version: Some("0.0.1".to_string()),
-                    sites: vec![],
+                    sites,
                 };
                 serde_json::to_string(&state).unwrap()
             } else {
@@ -226,23 +243,7 @@ fn get_state() -> String {
 
     // engine_config_file.push("Neopoligen");
 
-    // let mut neopoligen_path = PathBuf::from(document_dir().unwrap());
-    // neopoligen_path.push("Neopoligen");
-    // match get_dirs_in_dir(&neopoligen_path) {
-    //     Ok(dirs) => {
-    //         let site_list = SiteList {
-    //             sites: dirs
-    //                 .iter()
-    //                 .map(|s| Site {
-    //                     key: s.file_name().unwrap().to_string_lossy().to_string(),
-    //                 })
-    //                 .collect(),
-    //         };
-    //         serde_json::to_string(&site_list).unwrap()
-    //     }
-    //     Err(_e) => r#"{ "status": "error", "msg": "Could not get neopoligen dir", "sites": [] }"#
-    //         .to_string(),
-    // }
+    //
 }
 
 fn get_dirs_in_dir(dir: &PathBuf) -> io::Result<Vec<PathBuf>> {

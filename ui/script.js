@@ -66,6 +66,9 @@ function open_link(event) {
   invoke('open_link', { url: event.target.dataset.href }).then((raw) => {})
 }
 
+function make_active(event) {
+  console.log("make active")
+}
 
 function open_neo_folder() {
   invoke('open_neo_folder', {}).then((raw) => {})
@@ -73,13 +76,39 @@ function open_neo_folder() {
 
 function set_html(selector, html) {
     const el = document.querySelector(selector)
-    el.innerHTML = html
+    if (el) {
+      el.innerHTML = html
+    }
 }
 
 function update_debug_page() {
   add_link_listeners()
 }
 
+function update_site_page() {
+  invoke('get_state', {}).then((state_string) => {
+    let ul = document.querySelector("#site_list")
+    const state = JSON.parse(state_string)
+    state.sites.forEach((site) => {
+      const li = document.createElement("li")
+      const span = document.createElement("span")
+      li.innerHTML = `${site.key} - `
+      if (site.key === state.config.active_site) {
+        span.innerHTML = "active"
+        li.appendChild(span)
+      } else {
+        span.dataset.command = "make_active"
+        span.classList.add("link")
+        span.innerHTML = "make active"
+        span.addEventListener("click", make_active)
+        li.appendChild(span)
+      }
+      ul.appendChild(li)
+    })
+    console.log(state)
+  })
+  console.log("updating site page")
+}
 
 function update_home_page() {
 
@@ -93,6 +122,8 @@ function update_home_page() {
   log("- Check out the 'Getting Started' link above if you're new to the app")
   log("")
   log("- Use the 'Preview' and 'Edit' buttons above to work with your site")
+  
+  set_html("#active_site", `Active Site: ${state.config.active_site}`)
 
     // add_listener("click", "#vscode_button", (event) => {
     //   set_html("#vscode_msg", "Launching");
@@ -112,7 +143,6 @@ function update_home_page() {
     //   })
     // })
 
-    // set_html("#current_site", `Current Site: ${state.active_site}`)
 
     // const browser_button_el = document.querySelector('#launchBrowserButton')
     // browser_button_el.innerHTML = `Open ${state.active_site} in browser`

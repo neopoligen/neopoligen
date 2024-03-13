@@ -8,13 +8,13 @@
     <script src="script.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-   // update_site_list()
+   update_site_page()
 })
     </script>
   </head>
 
   <body>
-    <div class="wrapper">
+    <div class="wrapper flow">
       <div class="title-group">
         <h1>Neopoligen</h1>
         <div class="tagline">Websites For Everyone</div>
@@ -22,18 +22,21 @@ document.addEventListener('DOMContentLoaded', () => {
           <div><a href="getting-started.html">Getting Started</a></div>
           <div><a href="index.html">Status</a></div>
           <div>Sites</div>
-          <div><a href="about.html">About</a></div>
           <div><a href="debug.html">Debugging</a></div>
         </div>
       </div>
 
-      <h3>Active Site</h3>
-      <div id="active_site"></div>
-      <h3>Other Sites</h3>
-      <ul id="siteList"></ul>
+      <h3>Site List</h3>
+      <div id="site_list_message">
+      <ul id="site_list"></ul>
+      </div>
+
+
+      <!--
       <h3>Create A New Site</h3>
       <div>Name</div>
       <input type="text" size="40" /><button id="createSiteButton">Create Site</button>
+-->
     </div>
   </body>
 </html>
