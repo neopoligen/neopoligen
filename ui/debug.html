@@ -8,6 +8,7 @@
     <script src="script.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
+        init_page()
         update_debug_page()
       })
     </script>
@@ -20,9 +21,8 @@
         <div class="nav_links">
           <div><a href="getting-started.html">Getting Started</a></div>
           <div><a href="index.html">Status</a></div>
-          <div><a href="sites.html">Sites</a></div>
-          <div><a href="about.html">About</a></div>
           <div>Debugging</div>
+          <div><span class="link" data-href="https://www.neopoligen.com/">neopoligen.com</span></div>
         </div>
       </div>
       <h2>Debugging Controls</h2>
@@ -41,8 +41,18 @@
       the 'Example Site' and will rebuild it if it doesn't already exist. 
         It should not affect any of your sites, but it's always best to make
         sure they are backed up first. 
-        <button id="delete-engine-config">Delete Neopoligen Config</button>
+        <button data-command="delete_neopoligen_config">Delete Neopoligen Config</button>
       </p>
+
+      <h3>Check Version Number</h3>
+      <p>Neopoligen doesn't yet automatically check for updates. You're running
+      version <span id="neo-version">0.0.1</span>. You can check the latest
+        available version here:</p>
+
+      <p><span class="link" data-href="https://github.com/neopoligen/neopoligen/blob/main/version.json">
+        https://github.com/neopoligen/neopoligen/blob/main/version.json
+      </span></p>
+
     </div>
   </body>
 </html>

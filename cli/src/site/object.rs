@@ -23,6 +23,7 @@ impl Object for Site {
             "image" => Ok(Value::from_serializable(&self.image(args))),
             "log" => Ok(Value::from_serializable(&self.log_from_template(args))),
             "link_or_title" => Ok(Value::from_serializable(&self.link_or_title(args))),
+            "page_ast" => Ok(Value::from_serializable(&self.page_ast(args))),
             "page_head" => Ok(Value::from_serializable(&self.page_head(args))),
             "page_href" => Ok(Value::from_serializable(&self.page_href(args))),
             "page_html_link" => Ok(Value::from_serializable(&self.page_html_link(args))),

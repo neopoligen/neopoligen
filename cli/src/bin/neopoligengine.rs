@@ -26,13 +26,8 @@ use tracing::{event, instrument, Level};
 struct ExampleSite;
 
 #[derive(Deserialize)]
-pub struct EngineConfig {
-    settings: EngineConfigSettings,
-}
-
-#[derive(Deserialize)]
-pub struct EngineConfigSettings {
-    active_site: String,
+pub struct NeoConfig {
+    active_site: Option<String>,
 }
 
 #[tokio::main]
@@ -55,9 +50,9 @@ async fn main() {
         .init();
     event!(Level::INFO, r#"Launching neopoligengine"#);
     match get_engine_config_file() {
-        Ok(toml) => match toml::from_str::<EngineConfig>(&toml) {
+        Ok(toml) => match serde_json::from_str::<NeoConfig>(&toml) {
             Ok(engine_config) => {
-                let active_site = engine_config.settings.active_site;
+                let active_site = engine_config.active_site.unwrap();
                 event!(Level::INFO, r#"Active site: {}"#, &active_site);
                 let mut site_root = document_dir().unwrap();
                 site_root.push("Neopoligen");
@@ -148,11 +143,11 @@ fn get_engine_config_file() -> Result<String, String> {
         }
         Err(e) => return Err(format!("{}", e)),
     }
-    engine_config_path.push("config.toml");
+    engine_config_path.push("config.json");
     match engine_config_path.try_exists() {
         Ok(check) => {
             if check == false {
-                let default_config = "[settings]\nactive_site = \"Example Site\"";
+                let default_config = r#"{ "active_site": "Example-Site" }"#;
                 match fs::write(&engine_config_path, default_config) {
                     Ok(_) => (),
                     Err(e) => return Err(format!("{}", e)),
@@ -162,7 +157,7 @@ fn get_engine_config_file() -> Result<String, String> {
         Err(e) => return Err(format!("{}", e)),
     }
     match fs::read_to_string(&engine_config_path) {
-        Ok(toml) => Ok(toml),
+        Ok(json) => Ok(json),
         Err(e) => Err(format!("{}", e)),
     }
 }

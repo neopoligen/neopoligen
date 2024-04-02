@@ -24,6 +24,7 @@ use serde::Serialize;
 use serde_json;
 use std::fs::{self, DirEntry};
 use std::io;
+// use std::path::Path;
 use std::path::PathBuf;
 use sysinfo::System;
 use tauri::{
@@ -37,7 +38,7 @@ fn main() {
     builder
         .setup(|app| {
             let window = app.get_window("main").unwrap();
-            window.open_devtools();
+            // window.open_devtools();
             tauri::async_runtime::spawn(async move {
                 // kill the cli if it's already running on mac.
                 // this is needed because when the `cargo tauri dev``
@@ -68,15 +69,29 @@ fn main() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            delete_neopoligen_config,
             edit_in_vscode,
             get_state,
             open_browser,
+            open_neo_folder,
             open_finder,
             open_link,
             set_active_site,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+#[tauri::command]
+fn delete_neopoligen_config() -> String {
+    dbg!("Deleting Neopoligen Config");
+    let mut path = config_local_dir().unwrap();
+    path.push("Neopoligen");
+    path.push("config.json");
+    if path.exists() {
+        let _ = fs::remove_file(path);
+    }
+    serde_json::to_string(&StatusPayload::Status(CurrentStatus::Ok)).unwrap()
 }
 
 #[tauri::command]
@@ -90,20 +105,29 @@ fn open_link(app_handle: tauri::AppHandle, url: String) {
 }
 
 #[tauri::command]
-fn open_finder(site: String) {
+fn open_finder() {
     dbg!("opening in finder");
     Command::new("open")
-        .args([format!("/Users/alan/Documents/Neopoligen/{}", site)])
+        .args([format!("/Users/alan/Documents/Neopoligen/")])
         .spawn()
         .unwrap();
 }
 
 #[tauri::command]
-fn edit_in_vscode(site: String) -> String {
+fn open_neo_folder() -> String {
+    Command::new("open")
+        .args([format!("/Users/alan/Documents/Neopoligen/")])
+        .spawn()
+        .unwrap();
+    r#"{ "status": { "type": "todo" } }"#.to_string()
+}
+
+#[tauri::command]
+fn edit_in_vscode() -> String {
     dbg!("opening in vscode");
     let mut site_folder = document_dir().unwrap();
     site_folder.push("Neopoligen");
-    site_folder.push(site.clone());
+    // site_folder.push(site.clone());
     let status = Command::new("open")
         .args([
             "-a",
@@ -137,16 +161,29 @@ pub struct SiteList {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct State {
-    active_site: Option<String>,
+    config: NeoConfig,
     sites: Vec<Site>,
     status: Option<CurrentStatus>,
     app_version: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(tag = "type", rename_all = "lowercase")]
+pub struct NeoConfig {
+    active_site: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum StatusPayload {
+    Status(CurrentStatus),
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(tag = "code", rename_all = "lowercase")]
 pub enum CurrentStatus {
     Ok,
+    Todo { msg: String },
+    Error { msg: String },
 }
 
 // fn get_active_site() -> String {
@@ -166,39 +203,47 @@ fn get_state() -> String {
         engine_config_file.push("Neopoligen");
         engine_config_file.push("config.json");
         if let Ok(json_string) = fs::read_to_string(engine_config_file) {
-            if let Ok(mut state) = serde_json::from_str::<State>(&json_string) {
-                state.status = Some(CurrentStatus::Ok);
-                state.app_version = Some("0.1.0".to_string());
+            if let Ok(config) = serde_json::from_str::<NeoConfig>(&json_string) {
+                let mut neopoligen_path = PathBuf::from(document_dir().unwrap());
+                neopoligen_path.push("Neopoligen");
+
+                let sites = match get_dirs_in_dir(&neopoligen_path) {
+                    Ok(dirs) => dirs
+                        .iter()
+                        .map(|s| {
+                            let site_key = s.file_name().unwrap().to_string_lossy().to_string();
+                            Site { key: site_key }
+                        })
+                        .collect::<Vec<Site>>(),
+                    Err(_e) => {
+                        println!("Error gettings sites");
+                        vec![]
+                    }
+                };
+
+                let state = State {
+                    config,
+                    status: Some(CurrentStatus::Ok),
+                    app_version: Some("0.0.1".to_string()),
+                    sites,
+                };
                 serde_json::to_string(&state).unwrap()
             } else {
-                r#"{ status: "could not parse engine config file" }"#.to_string()
+                serde_json::to_string(&StatusPayload::Status(CurrentStatus::Error {
+                    msg: "Could not parse config JSON".to_string(),
+                }))
+                .unwrap()
             }
         } else {
-            r#"{ status: "could not read engine config file" }"#.to_string()
+            serde_json::to_string(&CurrentStatus::Ok).unwrap()
         }
     } else {
-        r#"{ status: "could not get local engine config dir" }"#.to_string()
+        serde_json::to_string(&CurrentStatus::Ok).unwrap()
     }
 
     // engine_config_file.push("Neopoligen");
 
-    // let mut neopoligen_path = PathBuf::from(document_dir().unwrap());
-    // neopoligen_path.push("Neopoligen");
-    // match get_dirs_in_dir(&neopoligen_path) {
-    //     Ok(dirs) => {
-    //         let site_list = SiteList {
-    //             sites: dirs
-    //                 .iter()
-    //                 .map(|s| Site {
-    //                     key: s.file_name().unwrap().to_string_lossy().to_string(),
-    //                 })
-    //                 .collect(),
-    //         };
-    //         serde_json::to_string(&site_list).unwrap()
-    //     }
-    //     Err(_e) => r#"{ "status": "error", "msg": "Could not get neopoligen dir", "sites": [] }"#
-    //         .to_string(),
-    // }
+    //
 }
 
 fn get_dirs_in_dir(dir: &PathBuf) -> io::Result<Vec<PathBuf>> {

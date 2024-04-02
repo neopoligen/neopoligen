@@ -56,14 +56,39 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn collection_from_tags(&self, args: &[Value]) -> Collection {
         let id = args[0].to_string();
         match args[1].try_iter() {
             Ok(tags) => {
                 let tag_set = tags.map(|t| t.to_string()).collect::<Vec<String>>();
-                let mut c = Collection::new_from_tags(&self.pages, tag_set);
-                c.set_active_item(&id);
-                c
+                let tag_key = tag_set.join("");
+                event!(Level::INFO, "tag_key: {}", tag_key);
+                match self.get_cache(&tag_key) {
+                    Some(c_obj) => {
+                        match c_obj {
+                            CacheObject::Collection(mut c) => {
+                                event!(Level::INFO, "cache_hit: {}", tag_key);
+                                c.set_active_item(&id);
+                                c
+                            },
+                            _ => {
+                                event!(Level::INFO, "cache_miss: {}", tag_key);
+                                let mut c = Collection::new_from_tags(&self.pages, tag_set);
+                                c.set_active_item(&id);
+                                self.set_cache(tag_key, CacheObject::Collection(c.clone()));
+                                c
+                            }
+                        }
+                    }, 
+                    None => {
+                        event!(Level::INFO, "cache_miss: {}", tag_key);
+                        let mut c = Collection::new_from_tags(&self.pages, tag_set);
+                        c.set_active_item(&id);
+                        self.set_cache(tag_key, CacheObject::Collection(c.clone()));
+                        c
+                    }
+                }
             }
             Err(e) => {
                 println!("{}", e);
@@ -71,6 +96,7 @@ impl Site {
             }
         }
     }
+
 
     pub fn does_template_exist(&self, args: &[Value]) -> String {
         let path = args[0].to_string();
@@ -242,6 +268,14 @@ impl Site {
     //         self.page_title(args).unwrap()
     //     ))
     // }
+
+    pub fn page_ast(&self, args: &[Value]) -> Option<String> {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
+            Some(page) => Some(serde_json::to_string::<Vec<Child>>(&page.ast).unwrap()),
+            None => None,
+        }
+    }
 
     pub fn page_folders(&self, args: &[Value]) -> Vec<String> {
         let id = args[0].to_string();

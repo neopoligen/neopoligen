@@ -1,6 +1,13 @@
 const { emit, listen } = window.__TAURI__.event
 const { invoke } = window.__TAURI__.tauri
 
+
+function init_page() {
+  add_link_listeners()
+  add_button_listeners()
+}
+
+
 function add_listener(listener, selector, func) {
     const el = document.querySelector(selector)
     el.addEventListener(listener, func)
@@ -13,70 +20,129 @@ function add_link_listeners() {
   })
 }
 
+function add_button_listeners() {
+  const els = document.querySelectorAll("button") 
+  els.forEach((el) => {
+    console.log(el)
+    el.addEventListener("click", handle_button_click)
+  })
+}
+
+function delete_neopoligen_config() {
+  console.log("delete_neopoligen_config")
+  invoke('delete_neopoligen_config', {}).then((raw) => {})
+}
+
+function handle_button_click(event) {
+  if (event.target.dataset.command) {
+    window[event.target.dataset.command](event)
+  }
+}
+
+function edit_in_vscode(event) {
+  invoke('edit_in_vscode', {}).then((raw) => {
+    const json = JSON.parse(raw)
+    console.log(json)
+    console.log(event.target.parentElement)
+    if (json.status.type !== "ok") {
+      set_html(
+        "#edit_in_vscode_button_wrapper", 
+        `Could not open Visual Studio Code. This usually means it's not
+installed properly. Try installing it again then restart Neopoligen to
+see if that fixes the issue`)
+    }
+  })
+}
+
+function open_browser(event) {
+  invoke('open_browser', {}).then((raw) => {})
+}
+
+function open_finder(event) {
+  invoke('open_finder', {}).then((raw) => {})
+}
+
 function open_link(event) {
   invoke('open_link', { url: event.target.dataset.href }).then((raw) => {})
 }
 
+function make_active(event) {
+  console.log("make active")
+}
+
+function open_neo_folder() {
+  invoke('open_neo_folder', {}).then((raw) => {})
+}
 
 function set_html(selector, html) {
     const el = document.querySelector(selector)
-    el.innerHTML = html
+    if (el) {
+      el.innerHTML = html
+    }
 }
 
 function update_debug_page() {
   add_link_listeners()
 }
 
+function update_site_page() {
+  invoke('get_state', {}).then((state_string) => {
+    let ul = document.querySelector("#site_list")
+    const state = JSON.parse(state_string)
+    state.sites.forEach((site) => {
+      const li = document.createElement("li")
+      const span = document.createElement("span")
+      li.innerHTML = `${site.key} - `
+      if (site.key === state.config.active_site) {
+        span.innerHTML = "active"
+        li.appendChild(span)
+      } else {
+        span.dataset.command = "make_active"
+        span.classList.add("link")
+        span.innerHTML = "make active"
+        span.addEventListener("click", make_active)
+        li.appendChild(span)
+      }
+      ul.appendChild(li)
+    })
+    console.log(state)
+  })
+  console.log("updating the site page")
+}
 
 function update_home_page() {
 
   invoke('get_state', {}).then((state_string) => {
     const state = JSON.parse(state_string)
+    console.log(state)
 
   log("Welcome to the beta version of the Neopoligen")
   log(`Verison: ${state.app_version}`)
   log("")
-
-  log("Neopoligen is a website builder. It uses files you write on")
-  log("your computer to build a website you can see by clicking the")
-  log("'Open in browser' button above. The site is only accessible")
-  log("on your computer to start with. You can change and edit it")
-  log("as much as you want. Once you've got it the way you want it")
-  log("you can send it to a free service to make it available for")
-  log("the world to see. Click 'Getting Started' for more details.")
-
+  log("- Check out the 'Getting Started' link above if you're new to the app")
   log("")
-  log("Next:")
-  log("")
-  log("- Use the buttons above to edit and preview your site")
+  log("- Use the 'Preview' and 'Edit' buttons above to work with your site")
+  
+  set_html("#active_site", `Active Site: ${state.config.active_site}`)
 
-    add_listener("click", "#browser_button", (event) => {
-      invoke('open_browser', {}).then((raw) => {})
-    })
+    // add_listener("click", "#vscode_button", (event) => {
+    //   set_html("#vscode_msg", "Launching");
+    //   invoke('edit_in_vscode', { site: state.active_site}).then((raw) => {
+    //     const resp= JSON.parse(raw)
+    //     console.log(resp)
+    //     if (resp.status.type === "ok") {
+    //       set_html("#vscode_msg", "");
+    //     } else {
+    //       set_html("#vscode_li", `Error: Could not launch Visual Studio Code<br/>This usually means it's not installed.<br/>
+    //         You can get it from here: <a id="vscode_link">Visual Studio Code</a><br/>
+    //         (You'll need to restart Neopoligen once you've installed it)`)
+    //       add_listener("click", "#vscode_link", () => {
+    //         invoke('open_link', { url: 'https://code.visualstudio.com/'}).then((raw) => {})
+    //       })
+    //     }
+    //   })
+    // })
 
-    add_listener("click", "#finder_button", (event) => {
-      invoke('open_finder', { site: state.active_site}).then((raw) => {})
-    })
-
-    add_listener("click", "#vscode_button", (event) => {
-      set_html("#vscode_msg", "Launching");
-      invoke('edit_in_vscode', { site: state.active_site}).then((raw) => {
-        const resp= JSON.parse(raw)
-        console.log(resp)
-        if (resp.status.type === "ok") {
-          set_html("#vscode_msg", "");
-        } else {
-          set_html("#vscode_li", `Error: Could not launch Visual Studio Code<br/>This usually means it's not installed.<br/>
-            You can get it from here: <a id="vscode_link">Visual Studio Code</a><br/>
-            (You'll need to restart Neopoligen once you've installed it)`)
-          add_listener("click", "#vscode_link", () => {
-            invoke('open_link', { url: 'https://code.visualstudio.com/'}).then((raw) => {})
-          })
-        }
-      })
-    })
-
-    set_html("#current_site", `Current Site: ${state.active_site}`)
 
     // const browser_button_el = document.querySelector('#launchBrowserButton')
     // browser_button_el.innerHTML = `Open ${state.active_site} in browser`
@@ -92,17 +158,20 @@ function update_home_page() {
 
     console.log(state)
     log(``)
-    log(`- Click 'Sites' to change to a different site or make a new one`)
-    log(``)
-    log(`- Click 'About' to change learn more about Neopoligen`)
-    log(``)
     log(`- Debugging status messages will display here as you make changes to your site`)
+    log(``)
+    log(`- Note that Neopoligen doesn't have automatic updates yet. Get the link in the Debbing page to check the version`)
   })
 
 }
 
 function log(msg) {
-    text_output.innerHTML = text_output.innerHTML + msg + "\n"
+  const output_el = document.querySelector("#text_output")
+  if (output_el) {
+    text_output.innerHTML = output_el.innerHTML + msg + "\n"
+  } else {
+    console.log(msg)
+  }
 }
 
 // deprecated: TODO: remove
@@ -115,13 +184,14 @@ function get_status(data) {
 
 function connect_launch_browbutton() {
 }
-
 listen('neo_message', (event) => {
-  const text_output = document.getElementById("text_output")
-  if (event.payload.trim() === "CMD: CLEAR") {
-    text_output.innerHTML = ""
-  } else {
-    text_output.innerHTML = text_output.innerHTML + event.payload + "\n"
+  const output_el = document.querySelector("#text_output")
+  if (output_el) {
+    if (event.payload.trim() === "CMD: CLEAR") {
+      output_el.innerHTML = ""
+    } else {
+      output_el.innerHTML = output_el.innerHTML + event.payload + "\n"
+    }
   }
 })
 

@@ -5,14 +5,25 @@
   
 :root {
   --border-1: 1px solid var(--color-1);
+  --border-2: 1px solid var(--color-2);
+  --border-3: 1px solid var(--color-3);
+  --border-4: 1px solid var(--color-4);
   /* TODO: pick actual colors */
-  --color-0: black;
-  --color-1: #ccc;
+  --color-0: #321405;
+  --color-3: #e98c8c;
   --color-2: #666;
-  --color-3: #333;
-  --padding-2: 0.4rem;
+  --color-4: #f59999;
+  --color-4: #d2d1b8;
+  --color-4: #dbdacc;
+  --color-5: #efadad;
+  --color-5: #fb91b4;
+  --padding-1: 0.3rem;
+  --padding-2: 0.5rem;
   --padding-3: 0.7rem;
-  --padding-4: 1rem;
+  --padding-4: 1.0rem;
+  --padding-5: 1.5rem;
+  --radius-1: 0.1rem;
+  --radius-4: 0.4rem;
   --regular: 'Atkinson-Hyperlegible', sans-serif;
   /* TODO: put in proper font for heavy here */
   --heavy: 'Atkinson-Hyperlegible', sans-serif;
@@ -44,12 +55,61 @@
   margin: 0;
 }
   
+a, .link {
+color: var(--color-5);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+a:hover, a:focus, .link:hover {
+color: var(--color-5);
+  text-decoration: underline;
+}
+
 body {
     background-color: var(--color-0);
-    color: var(--color-1);
+    color: var(--color-4);
     font-size: var(--size-2);
     font-family: var(--regular);
     line-height: 1.5; 
+}
+
+code {
+  color: var(--color-4);
+  font-size: var(--size-1);
+  background-color: #222;
+  border-radius: var(--radius-1);
+  padding: 0.1rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.1;
+  color: var(--color-4);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--size-7);
+  margin-top: 1rem;
+}
+
+h2 {
+  font-size: var(--size-6);
+  --flow-space: 1.3em;
+  padding-top: var(--padding-4);
+}
+
+h3 {
+  font-size: var(--size-5);
+  --flow-space: 1.0em;
+}
+
+
+.headsup {
+  border: var(--border-4);
+  border-radius: var(--radius-4);
+  margin: var(--padding-4);
+  padding: var(--padding-4);
 }
 
 html {
@@ -61,9 +121,21 @@ img {
   display: block;
 }
 
+::marker {
+color: var(--color-1);
+}
+
 .nav_links {
   display: flex;
   gap: 0.5rem;
+}
+
+.neo_source {
+  border: var(--border-3);
+  border-radius: var(--radius-4);
+  color: var(--color-4);
+  margin: var(--padding-4);
+  padding: var(--padding-4);
 }
 
 .tagline {
@@ -71,46 +143,8 @@ img {
 }
 
 .title-group {
-  border-bottom: var(--border-1);
+  border-bottom: var(--border-4);
   margin-bottom: var(--padding-4);
-}
-
-  
-
-
-h1, h2, h3 {
-    line-height: 1.1;
-    color: var(--color-2);
-    text-wrap: balance;
-  }
-
-h1 {
-font-size: var(--size-6);
-margin-top: 1rem;
-}
-
-h2 {
-font-size: var(--size-5);
---flow-space: 1.3em;
-}
-
-h3 {
-font-size: var(--size-4);
---flow-space: 1.0em;
-}
-
-
-
-a, .link {
-color: var(--color-3);
-}
-
-a:hover, a:focus, .link:hover {
-color: var(--color-4);
-}
-
-::marker {
-color: var(--color-1);
 }
 
 .wrapper {
@@ -121,6 +155,7 @@ margin-inline: auto;
 .flow > :where(:not(:first-child)) {
 margin-top: var(--flow-space, 1em);
 }
+
 
 
 

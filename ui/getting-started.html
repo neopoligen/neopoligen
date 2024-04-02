@@ -8,23 +8,304 @@
     <script src="script.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
-        // update_home_page()
+        init_page()
       })
     </script>
   </head>
   <body>
-    <div class="wrapper">
+    <div class="wrapper flow">
       <div class="title-group">
         <h1>Neopoligen</h1>
         <div class="tagline">Websites For Everyone</div>
         <div class="nav_links">
           <div>Getting Started</div>
           <div><a href="index.html">Status</a></div>
-          <div><a href="sites.html">Sites</a></div>
-          <div><a href="about.html">About</a></div>
           <div><a href="debug.html">Debugging</a></div>
+          <div><span class="link" data-href="https://www.neopoligen.com/">neopoligen.com</span></div>
         </div>
       </div>
+
+      <h4 class="headsup">NOTE: This is the first version of Neopoligen. It's
+        still very much &quot;beta&quot; software. The basics are in place, but
+        there are missing features, cryptic error messages, and bugs of
+        both the known and unknown variety. 
+        <br>
+        <br>
+        If you like tinkering with things to figure them out you'll be fine
+        (and <span class="link" data-href="https://www.neopoligen.com/en/2dbggzaf/">I'd love your feedback</span>).
+        Otherwise, I'd hold off trying it for now.
+      </h4>
+
+      <div>
+        <h2>Introduction</h2>
+      </div>
+
+      <p>
+        Neopoligen is a website builder. Its goal is to make 
+        it as easy as possible for anyone to make a website for free. It
+        works with files you write on your computer that look like this:
+      </p>
+
+
+      <pre class="neo_source">-- title
+-- subtitle: An app for building websites
+
+Getting Started With Neopoligen
+
+Neopoligen is a website builder designed 
+with the goal of making it as easy as 
+possible for anyone to make their own 
+website for free. It uses files you 
+write on your computer that look like 
+this:</pre>
+
+      <p>When the app is running, you can see a preview version of your 
+        site directly on your computer at this address:</p>
+
+      <p><span class="link" data-href="http://localhost:1989/">localhost:1989</span></p>
+
+      <p>Once you've got it the way you want it, you can send it to a free service to 
+        make it available for world to see. See <span class="link" data-href="https://www.neopoligen.com/en/documentation/">
+          the documentation</span> for details on how to do that.</p>
+
+      <h3>Content Files</h3>
+
+      <p>Neopoligen keeps your original content files directly on your computer. 
+        They're in a &quot;Neopoligen&quot; folder under your main 'Documents' 
+      folder. The app can make multiple sites so each one gets its own folder. When
+      you first install the app, it makes a new site in the 'Example Site' folder
+      which you can see here:</p>  
+
+      <p><button data-command="open_neo_folder">Open Neopoligen Folder</button></p>
+
+      <p>The initial contents of a site folder are:</p>
+      
+      <ul class="flow">
+        <li>config.json file - Contains some basic details about the site. 
+          (Details on the configuration can be found in the 
+          <span class="link" data-href="https://www.neopoligen.com/en/documentation/">documentation</span>)
+        </li>
+        <li>configuration folder - This also holds some configuration items, but it's going away.
+          Everything is moving into the config.json file
+        </li>
+        <li>content folder - This is where all the main content files that make 
+          up your site go. The files all end with a <code>.neo</code> extension
+          (if you can see those in your finder) which is the type of file
+          that Neopoligen uses. 
+        </li>
+        <li>docs folder - This is where the files that make up the actual website
+          are output when Neopoligen builds them. You don't need to mess with it, but 
+          feel free to poke around to see what the output is. 
+        </li>
+        <li>images folder - For any images you want to include on your site. You can 
+          organize images however you want inside this folder and then include
+          them in on a page using just the name of the file. More details in
+    <span class="link" data-href="https://www.neopoligen.com/en/documentation/">the documentation</span>)
+        </li>
+        <li>themes folder - Neopoligen works by combining your content files with a
+          theme to build the site. This is where they are stored. 
+        </li>
+      </ul>
+
+      <h3>Editing Files</h3>
+      <p>Making content for Neopoligen sites is done by writing files
+        in the &quot;content&quot; folder for a site that look like this:</p>
+
+      <pre class="neo_source">-- title
+
+An Example File
+
+This is an example of what a content file 
+looks like.
+
+
+-- metadata
+-- date: 2024-03-12
+-- id: 2dbhvmfw</pre>
+
+      <p>Eventually, Neopoligen will have an editor build into it. 
+        For now, you'll need to use another app. I recommend 
+        Visual Studio Code which you can <span class="link" data-href="https://code.visualstudio.com/">
+          download here</span>. It's a free app that's primarily 
+        used by programmers, but it works great for Neopoligen 
+        too. Once you have it downloaded and installed, click this
+        to open your Neopoligen folder in the app:
+      </p>
+
+      <div id="edit_in_vscode_button_wrapper"><button data-command="edit_in_vscode">Edit Site In Visual Studio Code</button></div>
+
+      <p>When the app opens you'll see your Neopoligen folder and the 
+      individual site folder it contains. If you just installed Neopoligen
+        you'll see the &quot;Example-Site&quot; folder. Click <code>Example-Site</code> in the sidebar to expand that folder
+        then click <code>content</code> to expand it where you'll see <code>home-page.neo</code> and <code>second-page.neo</code>.
+        Finally, click the <code>home-page.neo</code> file to open it. 
+      </p>
+
+      <p>If you haven't already done so, open your browser to the site
+        preview</p>
+
+      <div id="open_browser_button_wrapper"><button data-command="open_browser">Preview Site In Browser</button></div>
+
+      <p>You'll see the same content in the file on the web page. Now, try
+        changing the "Neopoligen Example Site" to say something else and saving the file. When you do, 
+      you'll see the page in the browser update with the changes as well.</p>
+
+      <h3>Sections</h3>
+
+      <p>Neopoligen files are based of <em>Sections</em>. Each one starts with two dashes (i.e. &quot;--&quot;)
+        followed by the type of section and each one belong to a <em>Category</em> of section types
+        that helps determine it's behavior.
+
+      </p>
+
+      <p>The two sections we've seen so far are 
+        <code>-- title</code> and <code>-- metadata</code>. The <em>title</em> section is part of
+        the <em>Standard</em> category which generally outputs directly to the page. The <em>metadata</em>
+        section is part of a category called <em>JSON</em>. Sections in the JSON category 
+        don't show anything by default. They can be made to by applying a template, but
+        we're not outputting anything for <em>metadata</em>. It's merely a way to pass
+        the Date and the ID that Neopoligen uses for making links in the page.</p> 
+
+      <h3>Section Attributes</h3>
+
+      <p>The way that we're passing the Date and ID is with <em>Section Attributes</em> which
+        are lines directly after the start of a section that also start with two dashes. The
+        <em>metadata</em> section on the Example-Site home-page.neo example looks like this:
+      </p>
+
+      <pre class="neo_source">-- metadata
+-- date: 2024-03-11
+-- id: 2dwmgthu
+-- path: /</pre>
+
+      <p>The <em>-- metadata</em> line starts the section and the <em>-- date</em>, <em>-- id</em>, and <em>-- path</em> 
+        lines are all attributes. (If you're wondering, the <em>-- path</em> attribute that has the <em>/</em> after
+        it is what's used to identify the home page of the site. More details on that in the documentation.)</p>
+
+      <p>The example theme doesn't do anything visible with those
+        attributes but we can use the <em>-- title</em> section to see something change.
+        Add a line with <code>-- class: green</code> underneath the <em>-- title</em> line so it
+        looks like this:
+      </p>
+
+      <pre class="neo_source">-- title
+-- class: green
+
+Neopoligen Example Site</pre>
+
+      <p>When you save the page you'll see green text show up in the browser.</p>
+
+      <p>Adding a <em>-- class</em> attribute to a section tells it to change its
+        formatting based of what are called <em>Stylesheets</em>. If you look in the
+        folder:
+      </p>
+
+      <p><em>Example-Site / themes / example-site / _assets</em></p>
+
+      <p>You'll see a file called</p>
+
+      <p><em>styles.css</em></p>
+
+      <p>If you click on <em>styles.css</em>in the sidebar of Visual Studio Code to open it 
+        and scroll down some you'll see this snippet which is what does the color change:</p>
+
+      <pre class="neo_source">.green {
+  color: green;
+}</pre>
+
+      <p>The full name for the way styles work is called Cascading Style Sheets (or, CSS 
+        for short). You can do <em>a lot</em> with them. If you're interested, you can
+        get started learning more about them here: 
+        <span class="link" data-href="https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/CSS_basics">
+          CSS basics</span></p>
+
+      <h3>Custom Section Attributes</h3>
+
+      <p>Attributes can be used for more than just changing the style of a 
+        section. They can also be used to send content to the templates for formatting. For example:
+        add a <em>-- quote</em> section above the <em>-- metadata</em> section with something like:
+      </p>
+
+
+      <pre class="neo_source">-- quote 
+
+Hello, World!
+</pre>
+
+      <p>When you save the file in Visual Studio Code it'll show up
+        in the browser. In this case, the template that renders 
+        quote sections in the theme has already applied a style that
+        added the border to the quote. Now let's add some more
+        formatted content with a <em>-- by</em> attribute like this:</p>
+
+
+      <pre class="neo_source">-- quote 
+-- by: Alan
+
+Hello, World!
+</pre>
+
+      <p>When you save the file you'll see a new attribution show
+        up under the quote. We can also add a <em>-- source</em>
+        like:
+      </p>
+
+      <pre class="neo_source">-- quote 
+-- by: Alan
+-- source: The Internet
+
+Hello, World!
+</pre>
+
+      <p>If you want to see how the template the theme is using to 
+        output the quote it's in:</p>
+
+      <p><em>Example-Site / themes / example-site / sections / quote / full / default.jinja </em></p>
+
+      <p>There's more details on template and themes in the 
+          <span class="link" data-href="https://www.neopoligen.com/en/documentation/">documentation</span> 
+        if you'd like to experiment modifying one or making your own.</p>
+        
+
+    <h3>Spans</h3>
+
+      <p>The last thing to know about to get started is <em>Spans</em>. They're used for 
+        formatting content inside a section. For example, change the <em>Hello, world</em>
+        in your quote to this:</p>
+
+      <pre class="neo_source">Hello, &lt;&lt;strong|world&gt;&gt;</pre>
+
+      <p>When you save the file the world &quot;world&quot; changes to bold on the 
+        page</p>
+
+      <p>You can add styles to spans as well. Try this:</p>
+
+      <pre class="neo_source">Hello, &lt;&lt;strong|world|class: green&gt;&gt;</pre>
+
+      <p>Spans are also how linking is done. There's a <em>ilink</em> (for internal
+        link) span that uses an ID to link between pages. For example, the
+        <em>second-page.neo</em> file has an id of <em>2dwyp9ty</em>. You can use
+        that to make a link to it from the <em>home-page.neo</em> file with:</p>
+
+
+      <pre class="neo_source">&lt;&lt;ilink: 2dwyp9ty|Link To Second Page&gt;&gt;</pre>
+
+      <h3>Next Steps</h3>
+
+      <p>That's the basics. Like anything new, the ideas will take a some getting
+      used to but I've tried to reduce the amount of gymnastics you'll need to 
+        do to get started as much as possible. Check out 
+        <span class="link" data-href="https://www.neopoligen.com/en/documentation/">the documentation</span>
+        and especially
+        <span class="link" data-href="https://www.neopoligen.com/en/cookbook/">the cookbook</span>. 
+        I'll be adding lots more details there.
+      </p> 
+
+      <p>For now, I hope this app brings you the same joy I've had from making things on the web.</p>
+      <p>- alan</p>
+
     </div>
+
   </body>
 </html>
+

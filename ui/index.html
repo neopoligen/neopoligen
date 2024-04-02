@@ -8,6 +8,7 @@
     <script src="script.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
+        init_page()
         update_home_page()
       })
     </script>
@@ -20,16 +21,22 @@
         <div class="nav_links">
           <div><a href="getting-started.html">Getting Started</a></div>
           <div>Status</div>
+          <!--
           <div><a href="sites.html">Sites</a></div>
-          <div><a href="about.html">About</a></div>
+-->
           <div><a href="debug.html">Debugging</a></div>
+          <div><span class="link" data-href="https://www.neopoligen.com/">neopoligen.com</span></div>
+          <!--
+          <div><span class="link" data-href="https://www.neopoligen.com/en/documentation/">Documentation</span></div>
+          <div><span class="link" data-href="https://www.neopoligen.com/en/cookbook/">Cookbook</span></div>
+-->
         </div>
       </div>
-      <h2 id="current_site"></h2>
+      <h3 id="active_site"></h3>
       <ul class="buttons">
-        <li><button id="browser_button">Preview in browser</button></li>
-        <li id="vscode_li"><button id="vscode_button">Edit in Visual Studio Code</button><span id="vscode_msg"></span></li>
-        <li><button id="finder_button">Open the site folder in the Finder</button></li>
+        <li><button data-command="open_browser">Preview in browser</button></li>
+        <li><button data-command="edit_in_vscode">Edit in Visual Studio Code</button><span id="vscode_msg"></span></li>
+        <li><button data-command="open_finder">Open the Neopoligen folder</button></li>
       </ul>
       <div><textarea id="text_output" cols="70" rows="27"></textarea></div>
     </div>

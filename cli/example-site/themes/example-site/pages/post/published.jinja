@@ -1,0 +1,17 @@
+[!- import "includes/macros.jinja" as macros -!]
+[!- include "includes/globals.jinja" -!]
+
+<!DOCTYPE html>
+<html lang="en">
+<head>[!- include "includes/head.jinja" -!]</head>
+<body>
+  [!- include "includes/header.jinja" -!]
+  <main>
+    <article class="flow">
+      [@- macros.place_section(page_id, "title") -@]
+      [@- macros.main_body(page_id) -@]
+    </article>
+  </main>
+  [!- include "includes/footer.jinja" -!]
+</body>
+</html>
