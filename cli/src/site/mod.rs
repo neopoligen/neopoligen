@@ -68,25 +68,24 @@ impl Site {
                     Some(c_obj) => {
                         match c_obj {
                             CacheObject::Collection(mut c) => {
-                            c.set_active_item(&id);
-                        c
+                                event!(Level::INFO, "cache_hit: {}", tag_key);
+                                c.set_active_item(&id);
+                                c
                             },
-                                _ => {
-
-                        let mut c = Collection::new_from_tags(&self.pages, tag_set);
-                        c.set_active_item(&id);
-                        c
+                            _ => {
+                                event!(Level::INFO, "cache_miss: {}", tag_key);
+                                let mut c = Collection::new_from_tags(&self.pages, tag_set);
+                                c.set_active_item(&id);
+                                self.set_cache(tag_key, CacheObject::Collection(c.clone()));
+                                c
                             }
                         }
-                        // c.set_active_item(&id);
-                        // c
-                        // let mut c = Collection::new_from_tags(&self.pages, tag_set);
-                        // c.set_active_item(&id);
-                        // c
                     }, 
                     None => {
+                        event!(Level::INFO, "cache_miss: {}", tag_key);
                         let mut c = Collection::new_from_tags(&self.pages, tag_set);
                         c.set_active_item(&id);
+                        self.set_cache(tag_key, CacheObject::Collection(c.clone()));
                         c
                     }
                 }
@@ -97,7 +96,6 @@ impl Site {
             }
         }
     }
-
 
 
     pub fn does_template_exist(&self, args: &[Value]) -> String {
