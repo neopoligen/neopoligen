@@ -68,7 +68,7 @@ impl Site {
                     Some(c_obj) => {
                         match c_obj {
                             CacheObject::Collection(mut c) => {
-                            c.set_active_item(&id);
+                        c.set_active_item(&id);
                         c
                             },
                                 _ => {

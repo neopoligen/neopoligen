@@ -7,5 +7,9 @@ export APPLE_TEAM_ID=`security find-generic-password -w -a alan -s alan--neopoli
 export APPLE_API_ISSUER=`security find-generic-password -w -a alan -s alan--neopoligen-tauri--APPLE_API_ISSUER`
 export APPLE_API_KEY=`security find-generic-password -w -a alan -s alan--neopoligen-tauri--APPLE_API_KEY`
 export APPLE_API_KEY_PATH=`security find-generic-password -w -a alan -s alan--neopoligen-tauri--APPLE_API_KEY_PATH`
+export APPLE_CERTIFICATE=`cat /Users/alan/.ssh/Certificates.txt`
+export APPLE_CERTIFICATE_PASSWORD=`security find-generic-password -w -a alan -s alan--neopoligen-tauri--APPLE_CERTIFICATE_PASSWORD`
+
 cargo tauri build
+
 

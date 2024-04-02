@@ -38,7 +38,7 @@ fn main() {
     builder
         .setup(|app| {
             let window = app.get_window("main").unwrap();
-            window.open_devtools();
+            // window.open_devtools();
             tauri::async_runtime::spawn(async move {
                 // kill the cli if it's already running on mac.
                 // this is needed because when the `cargo tauri dev``

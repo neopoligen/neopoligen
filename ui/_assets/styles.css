@@ -17,9 +17,11 @@
   --color-4: #dbdacc;
   --color-5: #efadad;
   --color-5: #fb91b4;
-  --padding-2: 0.4rem;
+  --padding-1: 0.3rem;
+  --padding-2: 0.5rem;
   --padding-3: 0.7rem;
-  --padding-4: 1rem;
+  --padding-4: 1.0rem;
+  --padding-5: 1.5rem;
   --radius-1: 0.1rem;
   --radius-4: 0.4rem;
   --regular: 'Atkinson-Hyperlegible', sans-serif;
@@ -64,7 +66,6 @@ color: var(--color-5);
   text-decoration: underline;
 }
 
-
 body {
     background-color: var(--color-0);
     color: var(--color-4);
@@ -81,6 +82,29 @@ code {
   padding: 0.1rem;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.1;
+  color: var(--color-4);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--size-7);
+  margin-top: 1rem;
+}
+
+h2 {
+  font-size: var(--size-6);
+  --flow-space: 1.3em;
+  padding-top: var(--padding-4);
+}
+
+h3 {
+  font-size: var(--size-5);
+  --flow-space: 1.0em;
+}
+
+
 .headsup {
   border: var(--border-4);
   border-radius: var(--radius-4);
@@ -95,6 +119,10 @@ html {
 img {
   max-width: 100%;
   display: block;
+}
+
+::marker {
+color: var(--color-1);
 }
 
 .nav_links {
@@ -117,34 +145,6 @@ img {
 .title-group {
   border-bottom: var(--border-4);
   margin-bottom: var(--padding-4);
-}
-
-  
-
-
-h1, h2, h3 {
-    line-height: 1.1;
-    color: var(--color-4);
-    text-wrap: balance;
-  }
-
-h1 {
-font-size: var(--size-6);
-margin-top: 1rem;
-}
-
-h2 {
-font-size: var(--size-5);
---flow-space: 1.3em;
-}
-
-h3 {
-font-size: var(--size-4);
---flow-space: 1.0em;
-}
-
-::marker {
-color: var(--color-1);
 }
 
 .wrapper {

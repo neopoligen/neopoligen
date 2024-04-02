@@ -107,7 +107,7 @@ function update_site_page() {
     })
     console.log(state)
   })
-  console.log("updating site page")
+  console.log("updating the site page")
 }
 
 function update_home_page() {

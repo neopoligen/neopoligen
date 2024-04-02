@@ -7,7 +7,7 @@
     "withGlobalTauri": true
   },
   "package": {
-    "productName": "neopoligen",
+    "productName": "Neopoligen",
     "version": "0.0.1"
   },
   "tauri": {
@@ -48,9 +48,9 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "neopoligen",
+        "title": "Neopoligen",
         "width": 800,
-        "height": 1400,
+        "height": 900,
         "x": 30,
         "y": 30
       }
