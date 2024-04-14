@@ -1,0 +1,22 @@
+-- title
+
+Neopoliten Tauri App Readme
+
+-- h2
+
+Dev 
+
+Go up a directory and run:
+
+cargo tauri dev
+
+-- h2
+
+Building
+
+Go up a directory and run:
+
+cargo tauri dev
+
+
+
