@@ -65,22 +65,20 @@ impl Site {
                 let tag_key = tag_set.join("");
                 event!(Level::INFO, "tag_key: {}", tag_key);
                 match self.get_cache(&tag_key) {
-                    Some(c_obj) => {
-                        match c_obj {
-                            CacheObject::Collection(mut c) => {
-                                event!(Level::INFO, "cache_hit: {}", tag_key);
-                                c.set_active_item(&id);
-                                c
-                            },
-                            _ => {
-                                event!(Level::INFO, "cache_miss: {}", tag_key);
-                                let mut c = Collection::new_from_tags(&self.pages, tag_set);
-                                c.set_active_item(&id);
-                                self.set_cache(tag_key, CacheObject::Collection(c.clone()));
-                                c
-                            }
+                    Some(c_obj) => match c_obj {
+                        CacheObject::Collection(mut c) => {
+                            event!(Level::INFO, "cache_hit: {}", tag_key);
+                            c.set_active_item(&id);
+                            c
                         }
-                    }, 
+                        _ => {
+                            event!(Level::INFO, "cache_miss: {}", tag_key);
+                            let mut c = Collection::new_from_tags(&self.pages, tag_set);
+                            c.set_active_item(&id);
+                            self.set_cache(tag_key, CacheObject::Collection(c.clone()));
+                            c
+                        }
+                    },
                     None => {
                         event!(Level::INFO, "cache_miss: {}", tag_key);
                         let mut c = Collection::new_from_tags(&self.pages, tag_set);
@@ -97,7 +95,6 @@ impl Site {
         }
     }
 
-
     pub fn does_template_exist(&self, args: &[Value]) -> String {
         let path = args[0].to_string();
         match self.templates.get(&path) {
@@ -110,6 +107,24 @@ impl Site {
     pub fn error_from_template(&self, args: &[Value]) -> String {
         event!(Level::ERROR, "{}", args[0].to_string());
         "".to_string()
+    }
+
+    pub fn highlight_code(&self, args: &[Value]) -> String {
+        let code = args[0].to_string();
+        let lang = args[1].to_string();
+        let syntax_set = SyntaxSet::load_defaults_newlines();
+        let syntax = syntax_set.find_syntax_by_token(&lang).unwrap();
+        let mut html_generator =
+            ClassedHTMLGenerator::new_with_class_style(syntax, &syntax_set, ClassStyle::Spaced);
+        for line in LinesWithEndings::from(code.trim()) {
+            let _ = html_generator.parse_html_for_line_which_includes_newline(line);
+        }
+        let initial_html = html_generator.finalize();
+        let output_html: Vec<_> = initial_html
+            .lines()
+            .map(|line| format!(r#"<span class="numberedLine">{}</span>"#, line))
+            .collect();
+        format!("{}", output_html.join("\n"))
     }
 
     pub fn page_head(&self, args: &[Value]) -> Vec<String> {
@@ -273,6 +288,14 @@ impl Site {
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => Some(serde_json::to_string::<Vec<Child>>(&page.ast).unwrap()),
+            None => None,
+        }
+    }
+
+    pub fn page_ast_pretty(&self, args: &[Value]) -> Option<String> {
+        let id = args[0].to_string();
+        match self.pages.get(&id) {
+            Some(page) => Some(serde_json::to_string_pretty::<Vec<Child>>(&page.ast).unwrap()),
             None => None,
         }
     }
