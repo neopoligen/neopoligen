@@ -1,6 +1,6 @@
-use neopoligen::config::Config;
-use neopoligen::file_set::FileSet;
-use neopoligen::site::Site;
+use neopoligengine::config::Config;
+use neopoligengine::file_set::FileSet;
+use neopoligengine::site::Site;
 use pretty_assertions::assert_eq;
 use std::collections::BTreeSet;
 
@@ -187,8 +187,19 @@ fn scripts() {
     let file_set = FileSet::set1();
     let config = Config::set1();
     let site = Site::new(&file_set, &config);
-    let left: &Vec<String> = &vec![r#"console.log("ping")"#.to_string()];
+    let left: &Vec<String> = &vec![r#"<script>console.log("ping")</script>"#.to_string()];
     let right = &site.pages.get("ttss0130").unwrap().scripts;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn solo_scripts_module() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left: &Vec<String> =
+        &vec![r#"<script type="module">console.log("module")</script>"#.to_string()];
+    let right = &site.pages.get("ttss0160").unwrap().scripts;
     assert_eq!(left, right);
 }
 

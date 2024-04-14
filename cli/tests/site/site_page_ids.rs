@@ -1,7 +1,7 @@
 mod site_page_ids {
-    use neopoligen::config::Config;
-    use neopoligen::file_set::FileSet;
-    use neopoligen::site::Site;
+    use neopoligengine::config::Config;
+    use neopoligengine::file_set::FileSet;
+    use neopoligengine::site::Site;
 
     #[test]
     pub fn basic() {

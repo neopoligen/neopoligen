@@ -1,7 +1,7 @@
-use neopoligen::collection::{Collection, CollectionItemBaseType, CollectionItemStatus};
-use neopoligen::config::Config;
-use neopoligen::file_set::FileSet;
-use neopoligen::site::Site;
+use neopoligengine::collection::{Collection, CollectionItemBaseType, CollectionItemStatus};
+use neopoligengine::config::Config;
+use neopoligengine::file_set::FileSet;
+use neopoligengine::site::Site;
 use pretty_assertions::assert_eq;
 
 #[test]

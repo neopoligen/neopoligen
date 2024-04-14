@@ -1,12 +1,12 @@
 mod site_page_place_section {
     use minijinja::Value;
-    use neopoligen::child::Child;
-    use neopoligen::config::Config;
-    use neopoligen::file_set::FileSet;
-    use neopoligen::section::Section;
-    use neopoligen::section_category::SectionCategory;
-    use neopoligen::site::Site;
-    use neopoligen::span::Span;
+    use neopoligengine::child::Child;
+    use neopoligengine::config::Config;
+    use neopoligengine::file_set::FileSet;
+    use neopoligengine::section::Section;
+    use neopoligengine::section_category::SectionCategory;
+    use neopoligengine::site::Site;
+    use neopoligengine::span::Span;
     use pretty_assertions::assert_eq;
     use std::collections::BTreeMap;
     use std::collections::BTreeSet;
