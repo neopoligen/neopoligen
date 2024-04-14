@@ -98,8 +98,58 @@ fn scripts(ast: &Vec<Child>) -> Vec<String> {
             if let Child::Section(section) = child {
                 if &section.r#type == "script" {
                     match &section.category {
-                        SectionCategory::PreformattedSectionFull { text } => text.clone(),
-                        SectionCategory::PreformattedSectionStart { text } => text.clone(),
+                        SectionCategory::PreformattedSectionFull { text } => {
+                            let attrs = &section
+                                .key_value_attributes
+                                .iter()
+                                .map(|(k, v)| format!(r#" {}="{}""#, k, v))
+                                .collect::<Vec<String>>()
+                                .join("");
+                            Some(format!(
+                                "<script{}>{}</script>",
+                                attrs,
+                                text.clone().unwrap()
+                            ))
+                        }
+                        SectionCategory::PreformattedSectionStart { text } => {
+                            let attrs = &section
+                                .key_value_attributes
+                                .iter()
+                                .map(|(k, v)| format!(r#" {}="{}""#, k, v))
+                                .collect::<Vec<String>>()
+                                .join("");
+                            Some(format!(
+                                "<script{}>{}</script>",
+                                attrs,
+                                text.clone().unwrap()
+                            ))
+                        }
+                        _ => None,
+                    }
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        })
+        .collect()
+}
+
+fn scripts_old(ast: &Vec<Child>) -> Vec<String> {
+    ast.iter()
+        .filter_map(|child| {
+            if let Child::Section(section) = child {
+                if &section.r#type == "script" {
+                    match &section.category {
+                        SectionCategory::PreformattedSectionFull { text } => {
+                            dbg!(&child);
+                            Some(format!("<script>{}</script>", text.clone().unwrap()))
+                        }
+                        SectionCategory::PreformattedSectionStart { text } => {
+                            dbg!(&child);
+                            Some(format!("<script>{}</script>", text.clone().unwrap()))
+                        }
                         _ => None,
                     }
                 } else {

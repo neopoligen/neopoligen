@@ -253,6 +253,20 @@ This is a template section test
             .to_string(),
         );
 
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/set1-test-site/content/script-with-attrs.neo"),
+            r#"-- script
+-- type: module
+
+console.log("module")
+
+-- metadata
+-- id: ttss0160
+"#
+            .to_string(),
+        );
+
         fs
     }
 }
