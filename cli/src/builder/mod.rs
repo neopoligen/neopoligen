@@ -2,7 +2,9 @@ pub mod new;
 
 use crate::config::Config;
 use crate::file_set::FileSet;
+use crate::neo_config::NeoEnv;
 use crate::site::Site;
+use dirs::config_local_dir;
 use fs_extra::dir::copy;
 use minijinja::context;
 use minijinja::Environment;
@@ -18,6 +20,7 @@ use tracing::{event, instrument, Level};
 pub struct Builder {
     file_set: FileSet,
     config: Config,
+    neo_env: NeoEnv,
 }
 
 impl Builder {
@@ -32,7 +35,7 @@ impl Builder {
             Ok(_) => (),
             Err(e) => println!("{}", e),
         }
-                event!(Level::INFO, "||{:?}||", now.elapsed());
+        event!(Level::INFO, "||{:?}||", now.elapsed());
     }
 
     pub fn copy_theme_assets(&self) {
@@ -161,6 +164,20 @@ impl Builder {
     // }
 
     #[instrument(skip(self))]
+    pub fn write_changed_files(&self) {
+        let mut page_hash_cache_path = config_local_dir().unwrap();
+        page_hash_cache_path.push("Neopoligen");
+        page_hash_cache_path.push("page-hash-cache.json");
+        if !file_exists(&page_hash_cache_path) {
+            event!(
+                Level::INFO,
+                "Making new page hash cache at: {}",
+                page_hash_cache_path.display()
+            );
+        }
+    }
+
+    #[instrument(skip(self))]
     pub fn write_files(&self) {
         event!(Level::INFO, "fn write_files");
         println!("Writing files");
@@ -180,5 +197,18 @@ impl Builder {
                 println!("ERROR: Tried to write outside of the output root");
             }
         });
+    }
+}
+
+fn file_exists(path: &PathBuf) -> bool {
+    match path.try_exists() {
+        Ok(exists) => {
+            if exists == true {
+                true
+            } else {
+                false
+            }
+        }
+        Err(_) => false,
     }
 }

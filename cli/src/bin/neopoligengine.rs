@@ -4,6 +4,7 @@ use neopoligengine::builder::Builder;
 use neopoligengine::config::Config;
 use neopoligengine::file_set::FileSet;
 use neopoligengine::neo_config::NeoConfig;
+use neopoligengine::neo_config::NeoEnv;
 use neopoligengine::template_tester::*;
 use notify_debouncer_mini::new_debouncer;
 use notify_debouncer_mini::notify::RecursiveMode;
@@ -46,7 +47,10 @@ async fn main() {
     match get_engine_config_file() {
         Ok(toml) => match serde_json::from_str::<NeoConfig>(&toml) {
             Ok(engine_config) => {
-                let active_site = engine_config.clone().active_site.unwrap();
+                // TODO set up for dev/prod/test switch here
+                // based off env var
+                let neo_env = engine_config.clone().prod;
+                let active_site = neo_env.active_site.clone().unwrap();
                 event!(Level::INFO, r#"Active site: {}"#, &active_site);
                 let mut site_root = document_dir().unwrap();
                 site_root.push("Neopoligen");
@@ -55,10 +59,10 @@ async fn main() {
                     Ok(_) => {
                         let config = Config::new(site_root);
                         let now = Instant::now();
-                        build_site(&config, &engine_config);
+                        build_site(&config, &neo_env);
                         event!(Level::INFO, "SITEBUILDTIME: {:?}", now.elapsed());
                         if true {
-                            run_web_server(config, engine_config).await;
+                            run_web_server(config, neo_env).await;
                         }
                     }
                     Err(e) => println!("{}", e),
@@ -112,16 +116,16 @@ async fn main() {
 //
 // }
 
-fn build_site(config: &Config, engine_config: &NeoConfig) {
+fn build_site(config: &Config, neo_env: &NeoEnv) {
     println!("Starting build run");
-    test_templates(&config, engine_config.clone());
+    test_templates(&config, neo_env.clone());
     let mut file_set = FileSet::new();
     file_set.load_content(&config.folders.content_root);
     file_set.load_templates(&config.folders.theme_root);
     file_set.load_images(&config.folders.images_root);
-    let builder = Builder::new(file_set, &config, &engine_config);
-    // TODO Move this somewhere it needs to be
-    builder.write_files();
+    let builder = Builder::new(file_set, &config, &neo_env);
+    builder.write_changed_files();
+    builder.write_files(); // TODO: Rename to write_all_files
     builder.copy_files();
     builder.copy_theme_assets();
 }
@@ -213,14 +217,14 @@ fn set_up_site_if_necessary(site_root: &PathBuf) -> Result<String, String> {
     }
 }
 
-async fn run_web_server(config: Config, engine_config: NeoConfig) {
+async fn run_web_server(config: Config, neo_env: NeoEnv) {
     let livereload = LiveReloadLayer::new();
     let reloader = livereload.reloader();
     let app = Router::new()
         .nest_service("/", ServeDir::new(&config.folders.output_root))
         .layer(livereload);
     tokio::spawn(async move {
-        run_watcher(reloader, config.clone(), engine_config);
+        run_watcher(reloader, config.clone(), neo_env);
     });
     println!("Starting web server");
     if let Ok(listener) = tokio::net::TcpListener::bind("localhost:1989").await {
@@ -230,7 +234,7 @@ async fn run_web_server(config: Config, engine_config: NeoConfig) {
     }
 }
 
-fn run_watcher(reloader: Reloader, config: Config, engine_config: NeoConfig) {
+fn run_watcher(reloader: Reloader, config: Config, neo_env: NeoEnv) {
     println!("Starting watcher");
     let watch_path = config.folders.project_root.clone();
     let mut debouncer = new_debouncer(
@@ -253,7 +257,7 @@ fn run_watcher(reloader: Reloader, config: Config, engine_config: NeoConfig) {
                                     .as_secs();
                                 println!("CMD: CLEAR");
                                 println!("Caught new change at {}", timestamp);
-                                build_site(&config, &engine_config);
+                                build_site(&config, &neo_env);
                                 println!("Sending reload signal");
                                 reloader.reload();
                             }

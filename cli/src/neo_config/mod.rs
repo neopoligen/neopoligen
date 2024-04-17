@@ -1,8 +1,12 @@
 use serde::Deserialize;
-use std::path::PathBuf;
 
 #[derive(Deserialize, Clone)]
 pub struct NeoConfig {
+    pub dev: NeoEnv,
+    pub prod: NeoEnv,
+}
+
+#[derive(Deserialize, Clone)]
+pub struct NeoEnv {
     pub active_site: Option<String>,
-    pub page_cache_path: Option<PathBuf>,
 }
