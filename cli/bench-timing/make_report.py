@@ -20,6 +20,7 @@ def runit(pattern):
                     data[func] = []
                 data[func].append({ "unit": unit, "value": value})
     make_times(data)
+    make_report(data)
 
 def make_times(data):
     units = {
@@ -33,8 +34,27 @@ def make_times(data):
             #    units[sample['unit']] = 0
             sample['raw'] = float(sample['value']) 
             sample['adjusted'] = sample['raw'] * units[sample['unit']]
-    pprint(data)
+    #pprint(data)
     # pprint(units)
+
+def make_report(data):
+    stuff = {}
+    for key in data:
+        if key not in stuff:
+            stuff[key] = {
+                "min": 100000000000000000000,
+                "max": 0,
+            }
+        for value in data[key]:
+            if stuff[key]["min"] > value["adjusted"]:
+                stuff[key]["min"] = value["adjusted"]
+            if stuff[key]["max"] < value["adjusted"]:
+                stuff[key]["max"] = value["adjusted"]
+
+    for key in data:
+        print(f"{key} - {stuff[key]['min']} - {stuff[key]['max']}")
+
+
 
 
 if __name__ == "__main__":
