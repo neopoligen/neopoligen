@@ -107,7 +107,6 @@ impl Site {
     #[instrument(skip(self))]
     pub fn does_template_exist(&self, args: &[Value]) -> String {
         let now = Instant::now();
-        let elapsed = now.elapsed();
         let path = args[0].to_string();
         let response = match self.templates.get(&path) {
             Some(_) => "yes".to_string(),
@@ -661,7 +660,7 @@ impl Site {
     // until the actual functionality is built
     #[instrument(skip(self))]
     pub fn page_menu_title(&self, args: &[Value]) -> Option<String> {
-        let now = Instant::now();
+        // let now = Instant::now();
         self.page_title(args)
     }
 

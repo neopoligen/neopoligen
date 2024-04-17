@@ -154,12 +154,8 @@ impl Builder {
     #[instrument(skip(self))]
     pub fn get_changed_files(&self) {
         let now = Instant::now();
-        let cache_path = PathBuf::from("/Users/alan/Desktop/neo-cache.txt");
-        let json_string = if file_exists(cache_path) {
-            "{}".to_string()
-        } else {
-            "{}".to_string()
-        };
+
+        // TODO: Implement page cache stuff here
 
         event!(Level::INFO, "||{:?}||", now.elapsed());
     }
@@ -184,18 +180,5 @@ impl Builder {
                 println!("ERROR: Tried to write outside of the output root");
             }
         });
-    }
-}
-
-fn file_exists(path: PathBuf) -> bool {
-    match path.try_exists() {
-        Ok(exists) => {
-            if exists == true {
-                true
-            } else {
-                false
-            }
-        }
-        Err(_) => false,
     }
 }

@@ -29,6 +29,7 @@ struct ExampleSite;
 #[derive(Deserialize, Clone)]
 pub struct NeoConfig {
     active_site: Option<String>,
+    page_cache_path: Option<PathBuf>,
 }
 
 #[tokio::main]
