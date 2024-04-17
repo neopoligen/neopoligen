@@ -16,6 +16,7 @@ use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
 use std::time::Duration;
+use std::time::Instant;
 use tower_http::services::ServeDir;
 use tower_livereload::LiveReloadLayer;
 use tower_livereload::Reloader;
@@ -60,7 +61,10 @@ async fn main() {
                 match set_up_site_if_necessary(&site_root) {
                     Ok(_) => {
                         let config = Config::new(site_root);
+
+                        let now = Instant::now();
                         build_site(&config);
+                        event!(Level::INFO, "SITEBUILDTIME: {:?}", now.elapsed());
                         if true {
                             run_web_server(config).await;
                         }
