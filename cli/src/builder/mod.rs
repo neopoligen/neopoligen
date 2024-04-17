@@ -12,6 +12,7 @@ use std::collections::BTreeMap;
 use std::fs;
 use std::fs::create_dir_all;
 use std::path::PathBuf;
+use std::time::Instant;
 use tracing::{event, instrument, Level};
 
 pub struct Builder {
@@ -56,7 +57,6 @@ impl Builder {
 
     pub fn files_to_output(&self) -> BTreeMap<PathBuf, String> {
         let mut env = Environment::new();
-
         env.set_syntax(Syntax {
             block_start: "[!".into(),
             block_end: "!]".into(),
@@ -66,7 +66,6 @@ impl Builder {
             comment_end: "#]".into(),
         })
         .unwrap();
-
         let site = Site::new(&self.file_set, &self.config);
         let mut outputs = BTreeMap::new();
         self.file_set
@@ -153,11 +152,23 @@ impl Builder {
     }
 
     #[instrument(skip(self))]
+    pub fn get_changed_files(&self) {
+        let now = Instant::now();
+        let cache_path = PathBuf::from("/Users/alan/Desktop/neo-cache.txt");
+        let json_string = if file_exists(cache_path) {
+            "{}".to_string()
+        } else {
+            "{}".to_string()
+        };
+
+        event!(Level::INFO, "||{:?}||", now.elapsed());
+    }
+
+    #[instrument(skip(self))]
     pub fn write_files(&self) {
         event!(Level::INFO, "fn write_files");
         println!("Writing files");
-        dbg!(&self.config);
-
+        // dbg!(&self.config);
         self.files_to_output().iter().for_each(|f| {
             // println!("{}", f.0.clone().display());
             if f.0
@@ -173,5 +184,18 @@ impl Builder {
                 println!("ERROR: Tried to write outside of the output root");
             }
         });
+    }
+}
+
+fn file_exists(path: PathBuf) -> bool {
+    match path.try_exists() {
+        Ok(exists) => {
+            if exists == true {
+                true
+            } else {
+                false
+            }
+        }
+        Err(_) => false,
     }
 }

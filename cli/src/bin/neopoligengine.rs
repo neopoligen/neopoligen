@@ -26,7 +26,7 @@ use tracing::{event, instrument, Level};
 #[folder = "example-site"]
 struct ExampleSite;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 pub struct NeoConfig {
     active_site: Option<String>,
 }
@@ -43,7 +43,7 @@ async fn main() {
         log_file_path.file_name().unwrap(),
     );
     let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
-    let format = tracing_subscriber::fmt::format().pretty();
+    // let format = tracing_subscriber::fmt::format().pretty();
     tracing_subscriber::fmt()
         //.event_format(format)
         .with_ansi(false)
@@ -53,7 +53,7 @@ async fn main() {
     match get_engine_config_file() {
         Ok(toml) => match serde_json::from_str::<NeoConfig>(&toml) {
             Ok(engine_config) => {
-                let active_site = engine_config.active_site.unwrap();
+                let active_site = engine_config.clone().active_site.unwrap();
                 event!(Level::INFO, r#"Active site: {}"#, &active_site);
                 let mut site_root = document_dir().unwrap();
                 site_root.push("Neopoligen");
@@ -61,12 +61,11 @@ async fn main() {
                 match set_up_site_if_necessary(&site_root) {
                     Ok(_) => {
                         let config = Config::new(site_root);
-
                         let now = Instant::now();
-                        build_site(&config);
+                        build_site(&config, &engine_config);
                         event!(Level::INFO, "SITEBUILDTIME: {:?}", now.elapsed());
                         if true {
-                            run_web_server(config).await;
+                            run_web_server(config, engine_config).await;
                         }
                     }
                     Err(e) => println!("{}", e),
@@ -120,7 +119,7 @@ async fn main() {
 //
 // }
 
-fn build_site(config: &Config) {
+fn build_site(config: &Config, engine_config: &NeoConfig) {
     println!("Starting build run");
     test_templates(&config);
     let mut file_set = FileSet::new();
@@ -128,6 +127,8 @@ fn build_site(config: &Config) {
     file_set.load_templates(&config.folders.theme_root);
     file_set.load_images(&config.folders.images_root);
     let builder = Builder::new(file_set, &config);
+    // TODO Move this somewhere it needs to be
+    builder.get_changed_files();
     builder.write_files();
     builder.copy_files();
     builder.copy_theme_assets();
@@ -220,14 +221,14 @@ fn set_up_site_if_necessary(site_root: &PathBuf) -> Result<String, String> {
     }
 }
 
-async fn run_web_server(config: Config) {
+async fn run_web_server(config: Config, engine_config: NeoConfig) {
     let livereload = LiveReloadLayer::new();
     let reloader = livereload.reloader();
     let app = Router::new()
         .nest_service("/", ServeDir::new(&config.folders.output_root))
         .layer(livereload);
     tokio::spawn(async move {
-        run_watcher(reloader, config.clone());
+        run_watcher(reloader, config.clone(), engine_config);
     });
     println!("Starting web server");
     if let Ok(listener) = tokio::net::TcpListener::bind("localhost:1989").await {
@@ -237,7 +238,7 @@ async fn run_web_server(config: Config) {
     }
 }
 
-fn run_watcher(reloader: Reloader, config: Config) {
+fn run_watcher(reloader: Reloader, config: Config, engine_config: NeoConfig) {
     println!("Starting watcher");
     let watch_path = config.folders.project_root.clone();
     let mut debouncer = new_debouncer(
@@ -260,7 +261,7 @@ fn run_watcher(reloader: Reloader, config: Config) {
                                     .as_secs();
                                 println!("CMD: CLEAR");
                                 println!("Caught new change at {}", timestamp);
-                                build_site(&config);
+                                build_site(&config, &engine_config);
                                 println!("Sending reload signal");
                                 reloader.reload();
                             }

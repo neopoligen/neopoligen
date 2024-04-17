@@ -56,6 +56,5 @@ def make_report(data):
 
 
 
-
 if __name__ == "__main__":
     runit(re.compile(r'(INFO)\s[^:]+:(.*?)\{.*?\|\|([\d.]+)(.*)\|\|'))
