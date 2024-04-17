@@ -22,6 +22,7 @@ pub struct Builder {
 
 impl Builder {
     pub fn copy_files(&self) {
+        let now = Instant::now();
         let mut options = fs_extra::dir::CopyOptions::new();
         options.overwrite = true;
         options.content_only = true;
@@ -31,6 +32,7 @@ impl Builder {
             Ok(_) => (),
             Err(e) => println!("{}", e),
         }
+                event!(Level::INFO, "||{:?}||", now.elapsed());
     }
 
     pub fn copy_theme_assets(&self) {
@@ -151,14 +153,12 @@ impl Builder {
         outputs
     }
 
-    #[instrument(skip(self))]
-    pub fn get_changed_files(&self) {
-        let now = Instant::now();
-
-        // TODO: Implement page cache stuff here
-
-        event!(Level::INFO, "||{:?}||", now.elapsed());
-    }
+    // #[instrument(skip(self))]
+    // pub fn get_changed_files(&self) {
+    //     let now = Instant::now();
+    //     // TODO: Implement page cache stuff here
+    //     event!(Level::INFO, "||{:?}||", now.elapsed());
+    // }
 
     #[instrument(skip(self))]
     pub fn write_files(&self) {

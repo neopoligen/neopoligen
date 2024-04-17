@@ -3,16 +3,14 @@ use dirs::{config_local_dir, document_dir};
 use neopoligengine::builder::Builder;
 use neopoligengine::config::Config;
 use neopoligengine::file_set::FileSet;
+use neopoligengine::neo_config::NeoConfig;
 use neopoligengine::template_tester::*;
 use notify_debouncer_mini::new_debouncer;
 use notify_debouncer_mini::notify::RecursiveMode;
 use notify_debouncer_mini::DebounceEventResult;
 use notify_debouncer_mini::DebouncedEventKind;
 use rust_embed::RustEmbed;
-use serde::Deserialize;
 use std::fs;
-// use std::fs::OpenOptions;
-// use std::io::Write;
 use std::path::Path;
 use std::path::PathBuf;
 use std::time::Duration;
@@ -25,12 +23,6 @@ use tracing::{event, instrument, Level};
 #[derive(RustEmbed)]
 #[folder = "example-site"]
 struct ExampleSite;
-
-#[derive(Deserialize, Clone)]
-pub struct NeoConfig {
-    active_site: Option<String>,
-    page_cache_path: Option<PathBuf>,
-}
 
 #[tokio::main]
 #[instrument]
@@ -122,14 +114,13 @@ async fn main() {
 
 fn build_site(config: &Config, engine_config: &NeoConfig) {
     println!("Starting build run");
-    test_templates(&config);
+    test_templates(&config, engine_config.clone());
     let mut file_set = FileSet::new();
     file_set.load_content(&config.folders.content_root);
     file_set.load_templates(&config.folders.theme_root);
     file_set.load_images(&config.folders.images_root);
-    let builder = Builder::new(file_set, &config);
+    let builder = Builder::new(file_set, &config, &engine_config);
     // TODO Move this somewhere it needs to be
-    builder.get_changed_files();
     builder.write_files();
     builder.copy_files();
     builder.copy_theme_assets();
