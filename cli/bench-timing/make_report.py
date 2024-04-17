@@ -19,8 +19,22 @@ def runit(pattern):
                 if func not in data:
                     data[func] = []
                 data[func].append({ "unit": unit, "value": value})
-    pprint(data)
+    make_times(data)
 
+def make_times(data):
+    units = {
+            'ns': 1,
+            'µs': 1000,
+            'ms': 1000000
+        }
+    for key in data:
+        for sample in data[key]:
+            #if sample['unit'] not in units:
+            #    units[sample['unit']] = 0
+            sample['raw'] = float(sample['value']) 
+            sample['adjusted'] = sample['raw'] * units[sample['unit']]
+    pprint(data)
+    # pprint(units)
 
 
 if __name__ == "__main__":
