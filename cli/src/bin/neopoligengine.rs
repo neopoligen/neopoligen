@@ -44,7 +44,7 @@ async fn main() {
     let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
     let format = tracing_subscriber::fmt::format().pretty();
     tracing_subscriber::fmt()
-        .event_format(format)
+        //.event_format(format)
         .with_ansi(false)
         .with_writer(non_blocking)
         .init();

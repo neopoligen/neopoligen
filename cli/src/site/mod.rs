@@ -14,6 +14,7 @@ use std::collections::BTreeMap;
 use std::fmt::Display;
 use std::path::PathBuf;
 use std::sync::Mutex;
+use std::time::Instant;
 use syntect::html::{ClassStyle, ClassedHTMLGenerator};
 use syntect::parsing::SyntaxSet;
 use syntect::util::LinesWithEndings;
@@ -31,7 +32,9 @@ pub struct Site {
 }
 
 impl Site {
+    #[instrument(skip(self))]
     pub fn collection_from_files_and_folders(&self, args: &[Value]) -> Collection {
+        let now = Instant::now();
         let id = args[0].to_string();
         match args[1].try_iter() {
             Ok(value_patterns) => {
@@ -58,21 +61,22 @@ impl Site {
 
     #[instrument(skip(self))]
     pub fn collection_from_tags(&self, args: &[Value]) -> Collection {
+        let now = Instant::now();
         let id = args[0].to_string();
         match args[1].try_iter() {
             Ok(tags) => {
                 let tag_set = tags.map(|t| t.to_string()).collect::<Vec<String>>();
                 let tag_key = tag_set.join("");
-                event!(Level::INFO, "tag_key: {}", tag_key);
+                // event!(Level::INFO, "tag_key: {}", tag_key);
                 match self.get_cache(&tag_key) {
                     Some(c_obj) => match c_obj {
                         CacheObject::Collection(mut c) => {
-                            event!(Level::INFO, "cache_hit: {}", tag_key);
+                            // event!(Level::INFO, "cache_hit: {}", tag_key);
                             c.set_active_item(&id);
                             c
                         }
                         _ => {
-                            event!(Level::INFO, "cache_miss: {}", tag_key);
+                            // event!(Level::INFO, "cache_miss: {}", tag_key);
                             let mut c = Collection::new_from_tags(&self.pages, tag_set);
                             c.set_active_item(&id);
                             self.set_cache(tag_key, CacheObject::Collection(c.clone()));
@@ -80,7 +84,7 @@ impl Site {
                         }
                     },
                     None => {
-                        event!(Level::INFO, "cache_miss: {}", tag_key);
+                        // event!(Level::INFO, "cache_miss: {}", tag_key);
                         let mut c = Collection::new_from_tags(&self.pages, tag_set);
                         c.set_active_item(&id);
                         self.set_cache(tag_key, CacheObject::Collection(c.clone()));
@@ -95,7 +99,12 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn does_template_exist(&self, args: &[Value]) -> String {
+        let now = Instant::now();
+        let now = Instant::now();
+        let elapsed = now.elapsed();
+        event!(Level::INFO, "||does_template_exist||{:?}||", elapsed);
         let path = args[0].to_string();
         match self.templates.get(&path) {
             Some(_) => "yes".to_string(),
@@ -105,11 +114,14 @@ impl Site {
 
     #[instrument(skip(self))]
     pub fn error_from_template(&self, args: &[Value]) -> String {
-        event!(Level::ERROR, "{}", args[0].to_string());
+        let now = Instant::now();
+        // event!(Level::ERROR, "{}", args[0].to_string());
         "".to_string()
     }
 
+    #[instrument(skip(self))]
     pub fn highlight_code(&self, args: &[Value]) -> String {
+        let now = Instant::now();
         let code = args[0].to_string();
         let lang = args[1].to_string();
         let syntax_set = SyntaxSet::load_defaults_newlines();
@@ -127,7 +139,9 @@ impl Site {
         format!("{}", output_html.join("\n"))
     }
 
+    #[instrument(skip(self))]
     pub fn page_head(&self, args: &[Value]) -> Vec<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => page.head.clone(),
@@ -135,7 +149,9 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn page_scripts(&self, args: &[Value]) -> Vec<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => page.scripts.clone(),
@@ -143,7 +159,9 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn page_stylesheets(&self, args: &[Value]) -> Vec<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => page.stylesheets.clone(),
@@ -153,6 +171,7 @@ impl Site {
 
     #[instrument(skip(self))]
     pub fn get_cache(&self, key: &str) -> Option<CacheObject> {
+        let now = Instant::now();
         let binding = self.cache.lock().unwrap();
         match binding.get(key) {
             Some(obj) => Some(obj.clone()),
@@ -160,13 +179,17 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn get_subtree(&self, args: &[Value]) -> Vec<CollectionItem> {
+        let now = Instant::now();
         let original_json = json!(args[1]);
         let original_collection: Collection = serde_json::from_value(original_json).unwrap();
         original_collection.get_subtree(&args[0].to_string())
     }
 
+    #[instrument(skip(self))]
     pub fn ilink(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let current_id = args[0].to_string();
         let target_id = args[1].to_string();
         let text = args[2].to_string();
@@ -184,7 +207,9 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn image(&self, args: &[Value]) -> Option<Image> {
+        let now = Instant::now();
         let target_name = args[0].to_string();
         self.images.iter().find_map(|image| {
             if &target_name == &image.file_stem {
@@ -240,17 +265,21 @@ impl Site {
 
     #[instrument(skip(self))]
     pub fn set_cache(&self, key: String, obj: CacheObject) -> Option<CacheObject> {
+        let now = Instant::now();
         let mut binding = self.cache.lock().unwrap();
         binding.insert(key, obj)
     }
 
     #[instrument(skip(self))]
     pub fn log_from_template(&self, args: &[Value]) -> String {
-        event!(Level::INFO, "{}", args[0].to_string());
+        let now = Instant::now();
+        // event!(Level::INFO, "{}", args[0].to_string());
         "".to_string()
     }
 
+    #[instrument(skip(self))]
     pub fn link_or_title(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let current_page_id = args[0].to_string();
         let target_page_id = args[1].to_string();
         if current_page_id == target_page_id {
@@ -284,7 +313,9 @@ impl Site {
     //     ))
     // }
 
+    #[instrument(skip(self))]
     pub fn page_ast(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => Some(serde_json::to_string::<Vec<Child>>(&page.ast).unwrap()),
@@ -292,7 +323,9 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn page_ast_pretty(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => Some(serde_json::to_string_pretty::<Vec<Child>>(&page.ast).unwrap()),
@@ -300,7 +333,9 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn page_folders(&self, args: &[Value]) -> Vec<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => page
@@ -316,7 +351,9 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn page_href(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => {
@@ -352,7 +389,9 @@ impl Site {
     }
 
     // TODO: Forward to page
+    #[instrument(skip(self))]
     pub fn page_href_title(&self, id: &str) -> Option<String> {
+        let now = Instant::now();
         match self.page_title(&[Value::from(id)]) {
             Some(title) => Some(
                 urlencoding::encode(&title.to_lowercase().replace(" ", "-").to_string())
@@ -362,7 +401,9 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn page_html_link(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => page.html_link.clone(),
@@ -370,12 +411,15 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn page_ids(&self) -> Vec<String> {
+        let now = Instant::now();
         self.pages.iter().map(|page| page.0.to_string()).collect()
     }
 
-    // #[instrument(skip(self))]
+    #[instrument(skip(self))]
     pub fn page_main_body(&self, args: &[Value]) -> Value {
+        let now = Instant::now();
         // event!(Level::INFO, "running page_main_body");
         if let Some(page) = self.pages.get(&args[0].to_string()) {
             // event!(Level::INFO, "{}", page.source_path.display());
@@ -408,7 +452,9 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn page_output_path(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => match page.ast.iter().find_map(|child| {
@@ -454,7 +500,9 @@ impl Site {
         // }
     }
 
+    #[instrument(skip(self))]
     pub fn page_path_parts(&self, args: &[Value]) -> Vec<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => {
@@ -471,7 +519,9 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn page_place_section(&self, args: &[Value]) -> Value {
+        let now = Instant::now();
         let id = args[0].to_string();
         let section_type = args[1].to_string();
         match self.pages.get(&id) {
@@ -501,7 +551,9 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn page_source(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => Some(page.source.clone()),
@@ -509,7 +561,9 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn page_source_path(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => Some(page.source_path.display().to_string()),
@@ -517,7 +571,9 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn page_template(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         if self.pages.contains_key(&id) {
             let template_searches = vec![
@@ -544,11 +600,15 @@ impl Site {
 
     // NOTE: This is a stub that just calls .page_title()
     // until the actual functionality is built
+    #[instrument(skip(self))]
     pub fn page_menu_title(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         self.page_title(args)
     }
 
+    #[instrument(skip(self))]
     pub fn page_status(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => page.status.clone(),
@@ -556,7 +616,9 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn page_title(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => Some(page.title.clone().unwrap()),
@@ -597,7 +659,9 @@ impl Site {
         // }
     }
 
+    #[instrument(skip(self))]
     pub fn page_type(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => page.r#type.clone(),
@@ -616,7 +680,9 @@ impl Site {
     //     c.insert("nav_items".to_string(), BTreeMap::new());
     // }
 
+    #[instrument(skip(self))]
     pub fn show(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let content = serde_json::to_string_pretty(
             &serde_json::from_str::<serde_json::Value>(&args[0].to_string()).unwrap(),
         );
@@ -633,7 +699,6 @@ impl Site {
             .lines()
             .map(|line| format!(r#"<span class="linenumber">{}</span>"#, line))
             .collect();
-
         Some(format!(
             r#"<pre class="template_data_object"><code>{}</code></pre>"#,
             output_html.join("\n")
