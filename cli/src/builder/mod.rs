@@ -35,7 +35,7 @@ impl Builder {
             Ok(_) => (),
             Err(e) => println!("{}", e),
         }
-        event!(Level::INFO, "||{:?}||", now.elapsed());
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
     }
 
     pub fn copy_theme_assets(&self) {
@@ -160,17 +160,21 @@ impl Builder {
     // pub fn get_changed_files(&self) {
     //     let now = Instant::now();
     //     // TODO: Implement page cache stuff here
-    //     event!(Level::INFO, "||{:?}||", now.elapsed());
+    //     event!(Level::DEBUG, "||{:?}||", now.elapsed());
     // }
 
     #[instrument(skip(self))]
     pub fn write_changed_files(&self) {
         let mut page_hash_cache_path = config_local_dir().unwrap();
         page_hash_cache_path.push("Neopoligen");
-        page_hash_cache_path.push("page-hash-cache.json");
+        page_hash_cache_path.push("page-hash-caches");
+        page_hash_cache_path.push(format!(
+            "{}.json",
+            &self.neo_env.active_site.clone().unwrap()
+        ));
         if !file_exists(&page_hash_cache_path) {
             event!(
-                Level::INFO,
+                Level::DEBUG,
                 "Making new page hash cache at: {}",
                 page_hash_cache_path.display()
             );
@@ -179,7 +183,7 @@ impl Builder {
 
     #[instrument(skip(self))]
     pub fn write_files(&self) {
-        event!(Level::INFO, "fn write_files");
+        event!(Level::DEBUG, "fn write_files");
         println!("Writing files");
         // dbg!(&self.config);
         self.files_to_output().iter().for_each(|f| {

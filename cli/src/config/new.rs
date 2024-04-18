@@ -137,38 +137,39 @@ impl Config {
 
         let mut json_plugins: BTreeMap<String, String> = BTreeMap::new();
         let mut text_plugins: BTreeMap<String, String> = BTreeMap::new();
-        get_folders_in_folder(&folders.plugins_root)
-            .iter()
-            .for_each(|p| {
-                let plugin_name = p.file_name().unwrap();
-                let mut type_file = p.clone();
-                type_file.push("type.txt");
-                let type_contents = fs::read_to_string(type_file);
-                let plugin_type = type_contents.unwrap().as_str().trim().to_string();
-                let mut sections_file = p.clone();
-                sections_file.push("sections.txt");
-                let sections_contents = fs::read_to_string(sections_file);
-                let section_lines: Vec<String> = sections_contents
-                    .unwrap()
-                    .as_str()
-                    .trim()
-                    .lines()
-                    .map(|line| line.trim().to_string())
-                    .collect();
-                if !section_lines.is_empty() {
-                    if plugin_type == *"json" {
-                        section_lines.iter().for_each(|ln| {
-                            json_plugins
-                                .insert(ln.to_string(), plugin_name.to_string_lossy().to_string());
-                        })
-                    } else if plugin_type == *"text" {
-                        section_lines.iter().for_each(|ln| {
-                            text_plugins
-                                .insert(ln.to_string(), plugin_name.to_string_lossy().to_string());
-                        })
-                    }
-                };
-            });
+
+        // get_folders_in_folder(&folders.plugins_root)
+        //     .iter()
+        //     .for_each(|p| {
+        //         let plugin_name = p.file_name().unwrap();
+        //         let mut type_file = p.clone();
+        //         type_file.push("type.txt");
+        //         let type_contents = fs::read_to_string(type_file);
+        //         let plugin_type = type_contents.unwrap().as_str().trim().to_string();
+        //         let mut sections_file = p.clone();
+        //         sections_file.push("sections.txt");
+        //         let sections_contents = fs::read_to_string(sections_file);
+        //         let section_lines: Vec<String> = sections_contents
+        //             .unwrap()
+        //             .as_str()
+        //             .trim()
+        //             .lines()
+        //             .map(|line| line.trim().to_string())
+        //             .collect();
+        //         if !section_lines.is_empty() {
+        //             if plugin_type == *"json" {
+        //                 section_lines.iter().for_each(|ln| {
+        //                     json_plugins
+        //                         .insert(ln.to_string(), plugin_name.to_string_lossy().to_string());
+        //                 })
+        //             } else if plugin_type == *"text" {
+        //                 section_lines.iter().for_each(|ln| {
+        //                     text_plugins
+        //                         .insert(ln.to_string(), plugin_name.to_string_lossy().to_string());
+        //                 })
+        //             }
+        //         };
+        //     });
 
         let now = Local::now();
         let time_zone_offset = now.offset();

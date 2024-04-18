@@ -20,6 +20,9 @@ use tower_http::services::ServeDir;
 use tower_livereload::LiveReloadLayer;
 use tower_livereload::Reloader;
 use tracing::{event, instrument, Level};
+use tracing_subscriber::filter;
+use tracing_subscriber::fmt;
+use tracing_subscriber::prelude::*;
 
 #[derive(RustEmbed)]
 #[folder = "example-site"]
@@ -30,28 +33,36 @@ struct ExampleSite;
 async fn main() {
     let mut log_file_path = document_dir().unwrap();
     log_file_path.push("Neopoligen");
+    let log_dir = log_file_path.clone();
     log_file_path.push("log.log");
     let _ = fs::remove_file(&log_file_path);
-    let file_appender = tracing_appender::rolling::never(
-        log_file_path.parent().unwrap(),
-        log_file_path.file_name().unwrap(),
-    );
-    let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
-    // let format = tracing_subscriber::fmt::format().pretty();
-    tracing_subscriber::fmt()
-        //.event_format(format)
+
+    let file_appender = tracing_appender::rolling::never(log_dir, log_file_path);
+    let (file_writer, _guard) = tracing_appender::non_blocking(file_appender);
+    let file_layer = fmt::Layer::default()
+        .with_writer(file_writer)
+        .with_ansi(false);
+
+    let stdout_layer = fmt::Layer::default()
+        .with_writer(std::io::stdout)
         .with_ansi(false)
-        .with_writer(non_blocking)
-        .init();
+        .with_filter(filter::LevelFilter::INFO);
+
+    let subscriber = tracing_subscriber::Registry::default()
+        .with(file_layer)
+        .with(stdout_layer);
+
+    tracing::subscriber::set_global_default(subscriber).expect("unable to set global subscriber");
+
     event!(Level::INFO, r#"Launching neopoligengine"#);
     match get_engine_config_file() {
-        Ok(toml) => match serde_json::from_str::<NeoConfig>(&toml) {
+        Ok(json) => match serde_json::from_str::<NeoConfig>(&json) {
             Ok(engine_config) => {
                 // TODO set up for dev/prod/test switch here
                 // based off env var
                 let neo_env = engine_config.clone().prod;
                 let active_site = neo_env.active_site.clone().unwrap();
-                event!(Level::INFO, r#"Active site: {}"#, &active_site);
+                event!(Level::DEBUG, r#"Active site: {}"#, &active_site);
                 let mut site_root = document_dir().unwrap();
                 site_root.push("Neopoligen");
                 site_root.push(active_site);
@@ -60,20 +71,22 @@ async fn main() {
                         let config = Config::new(site_root);
                         let now = Instant::now();
                         build_site(&config, &neo_env);
-                        event!(Level::INFO, "SITEBUILDTIME: {:?}", now.elapsed());
+                        event!(Level::DEBUG, "SITEBUILDTIME: {:?}", now.elapsed());
                         if true {
                             run_web_server(config, neo_env).await;
                         }
                     }
-                    Err(e) => println!("{}", e),
+                    Err(e) => {
+                        event!(Level::ERROR, "Problem with config file: {:?}", e);
+                    }
                 };
             }
             Err(e) => {
-                println!("{}", e)
+                event!(Level::ERROR, "Problem with config file: {:?}", e);
             }
         },
         Err(e) => {
-            println!("{}", e)
+            event!(Level::ERROR, "Problem with config file: {:?}", e);
         }
     }
 }
@@ -100,7 +113,7 @@ async fn main() {
 //                 .with_ansi(false)
 //                 .with_writer(non_blocking)
 //                 .init();
-//             event!(Level::INFO, r#"Processes started"#);
+//             event!(Level::DEBUG, r#"Processes started"#);
 //             build_site(&config);
 //             if true {
 //                 run_web_server(config).await;
@@ -116,8 +129,9 @@ async fn main() {
 //
 // }
 
+#[instrument(skip(config, neo_env))]
 fn build_site(config: &Config, neo_env: &NeoEnv) {
-    println!("Starting build run");
+    event!(Level::INFO, r#"Building site"#);
     test_templates(&config, neo_env.clone());
     let mut file_set = FileSet::new();
     file_set.load_content(&config.folders.content_root);
@@ -130,6 +144,7 @@ fn build_site(config: &Config, neo_env: &NeoEnv) {
     builder.copy_theme_assets();
 }
 
+#[instrument]
 fn get_engine_config_file() -> Result<String, String> {
     let mut engine_config_path = config_local_dir().unwrap();
     engine_config_path.push("Neopoligen");
@@ -138,11 +153,11 @@ fn get_engine_config_file() -> Result<String, String> {
             if check == false {
                 match fs::create_dir(&engine_config_path) {
                     Ok(_) => (),
-                    Err(e) => return Err(format!("{}", e)),
+                    Err(e) => return Err(format!("-----{}", e)),
                 }
             }
         }
-        Err(e) => return Err(format!("{}", e)),
+        Err(e) => return Err(format!("------{}", e)),
     }
     engine_config_path.push("config.json");
     match engine_config_path.try_exists() {
@@ -151,15 +166,15 @@ fn get_engine_config_file() -> Result<String, String> {
                 let default_config = r#"{ "active_site": "Example-Site" }"#;
                 match fs::write(&engine_config_path, default_config) {
                     Ok(_) => (),
-                    Err(e) => return Err(format!("{}", e)),
+                    Err(e) => return Err(format!("-------{}", e)),
                 }
             }
         }
-        Err(e) => return Err(format!("{}", e)),
+        Err(e) => return Err(format!("--------{}", e)),
     }
     match fs::read_to_string(&engine_config_path) {
         Ok(json) => Ok(json),
-        Err(e) => Err(format!("{}", e)),
+        Err(e) => Err(format!("---------{}", e)),
     }
 }
 
@@ -188,24 +203,30 @@ fn set_up_site_if_necessary(site_root: &PathBuf) -> Result<String, String> {
                                         match fs::create_dir(output_dir) {
                                             Ok(_) =>
                                             // event!(
-                                            // Level::INFO,
+                                            // Level::DEBUG,
                                             // r#"Created dir: {}"#,
                                             // output_dir.display()
                                             // );
                                             {
                                                 ()
                                             }
-                                            Err(e) => return Err(format!("{}", e)),
+                                            Err(e) => {
+                                                return Err(format!("-{}", e));
+                                            }
                                         }
                                     }
                                 }
-                                Err(e) => return Err(format!("{}", e)),
+                                Err(e) => {
+                                    return Err(format!("--{}", e));
+                                }
                             }
                             let output_data = ExampleSite::get(&rel_file_path).unwrap();
                             let _ = fs::write(output_path, output_data.data);
                         }
                     }
-                    Err(e) => return Err(format!("{}", e)),
+                    Err(e) => {
+                        return Err(format!("---{}", e));
+                    }
                 }
                 println!("Site doesnt' exist. making it");
                 Ok("TODO".to_string())
@@ -213,7 +234,9 @@ fn set_up_site_if_necessary(site_root: &PathBuf) -> Result<String, String> {
                 Ok("Site already exists".to_string())
             }
         }
-        Err(e) => return Err(format!("{}", e)),
+        Err(e) => {
+            return Err(format!("{}", e));
+        }
     }
 }
 

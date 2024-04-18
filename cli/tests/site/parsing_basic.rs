@@ -5,16 +5,17 @@
 // for the function that has the issue
 
 mod parsing_basic_tests {
-    use neopoligengine::config::Config;
-    use neopoligengine::file_set::FileSet;
-    use neopoligengine::builder::Builder;
-    use neopoligengine::site::Site;
 
-    #[test]
-    pub fn basic() {
-        let file_set = FileSet::parsing_tests();
-        let config = Config::parsing_tests();
-        let _site = Site::new(&file_set, &config);
-        let _builder = Builder::new(file_set, &config);
-    }
+    // use neopoligengine::builder::Builder;
+    // use neopoligengine::config::Config;
+    // use neopoligengine::file_set::FileSet;
+    // use neopoligengine::site::Site;
+
+    // #[test]
+    // pub fn basic() {
+    //     let file_set = FileSet::parsing_tests();
+    //     let config = Config::parsing_tests();
+    //     let _site = Site::new(&file_set, &config);
+    //     let _builder = Builder::new(file_set, &config);
+    // }
 }

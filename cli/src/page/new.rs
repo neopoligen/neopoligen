@@ -369,7 +369,7 @@ fn html_link(href: &Option<String>, title: &Option<String>) -> Option<String> {
 
 #[instrument]
 fn path_parts(source_path: &PathBuf, config: &Config) -> Vec<String> {
-    event!(Level::INFO, r#"path_part"#);
+    event!(Level::DEBUG, r#"path_part"#);
     source_path
         .clone()
         .strip_prefix(config.folders.content_root.clone())
