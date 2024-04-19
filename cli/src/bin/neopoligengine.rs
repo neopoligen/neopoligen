@@ -60,7 +60,7 @@ async fn main() {
             Ok(engine_config) => {
                 // TODO set up for dev/prod/test switch here
                 // based off env var
-                let neo_env = engine_config.clone().prod;
+                let neo_env = engine_config.clone().dev;
                 let active_site = neo_env.active_site.clone().unwrap();
                 event!(Level::DEBUG, r#"Active site: {}"#, &active_site);
                 let mut site_root = document_dir().unwrap();
@@ -132,7 +132,6 @@ async fn main() {
 #[instrument(skip(config, neo_env))]
 fn build_site(config: &Config, neo_env: &NeoEnv) {
     event!(Level::INFO, r#"Building site"#);
-    let _ = empty_dir(&config.folders.output_root);
     test_templates(&config, neo_env.clone());
     let mut file_set = FileSet::new();
     file_set.load_content(&config.folders.content_root);
@@ -141,7 +140,8 @@ fn build_site(config: &Config, neo_env: &NeoEnv) {
     let builder = Builder::new(file_set, &config, &neo_env);
     builder.write_changed_files(); // TODO: finishing dev for write_changed_files
     builder.write_files(); // TODO: Rename to write_all_files
-    builder.copy_files();
+                           // builder.copy_files(); // deprecated in favor of .copy_asset_folders()
+    builder.copy_asset_folders();
     builder.copy_theme_assets();
 }
 
@@ -311,17 +311,4 @@ fn run_watcher(reloader: Reloader, config: Config, neo_env: NeoEnv) {
     // TODO: Figure out how to keep this open without the
     // loop since clippy says that wastes cpu
     loop {}
-}
-
-fn empty_dir(dir: &PathBuf) -> std::io::Result<()> {
-    for entry in dir.read_dir()? {
-        let entry = entry?;
-        let path = entry.path();
-        if path.is_dir() {
-            fs::remove_dir_all(path)?;
-        } else {
-            fs::remove_file(path)?;
-        }
-    }
-    Ok(())
 }
