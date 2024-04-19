@@ -500,7 +500,7 @@ impl Site {
     }
 
     #[instrument(skip(self))]
-    pub fn page_output_path(&self, args: &[Value]) -> Option<String> {
+    pub fn page_build_path(&self, args: &[Value]) -> Option<String> {
         let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
@@ -523,30 +523,21 @@ impl Site {
                 }
             }) {
                 Some(override_path) => {
-                    let mut output_path = self.config.folders.output_root.clone();
-                    output_path.push(override_path.unwrap().strip_prefix("/").unwrap());
-                    output_path.push("index.html");
+                    let mut build_path = self.config.folders.build_root.clone();
+                    build_path.push(override_path.unwrap().strip_prefix("/").unwrap());
+                    build_path.push("index.html");
                     event!(Level::DEBUG, "||{:?}||", now.elapsed());
-                    Some(output_path.display().to_string())
+                    Some(build_path.display().to_string())
                 }
                 None => Some(format!(
                     "{}/{}/{}/index.html",
-                    self.config.folders.output_root.display(),
+                    self.config.folders.build_root.display(),
                     self.config.default_language,
                     &id,
                 )),
             },
             None => None,
         }
-        // match self.pages.get(&id) {
-        //     Some(_) => Some(format!(
-        //         "{}/{}/{}/index.html",
-        //         self.config.folders.output_root.display(),
-        //         self.config.default_language,
-        //         &id,
-        //     )),
-        //     None => None,
-        // }
     }
 
     #[instrument(skip(self))]

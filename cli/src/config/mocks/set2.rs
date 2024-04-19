@@ -11,11 +11,7 @@ impl Config {
             PathBuf::from(format!("{}/{}", project_root.display(), "configuration"));
 
         let content_root = PathBuf::from(format!("{}/{}", project_root.display(), "content"));
-        let build_root = PathBuf::from(format!(
-            "{}/{}",
-            project_root.display(),
-            "NOT_USED_IN_TESTS"
-        ));
+        let build_root = PathBuf::from(format!("{}/{}", project_root.display(), "_building"));
         let files_root = PathBuf::from(format!("{}/{}", project_root.display(), "extras"));
         let images_root = PathBuf::from(format!("{}/{}", project_root.display(), "images"));
         let plugins_root = PathBuf::from(format!("{}/{}", configuration_root.display(), "plugins"));
