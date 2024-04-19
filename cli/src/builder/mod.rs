@@ -24,14 +24,33 @@ pub struct Builder {
 }
 
 impl Builder {
+    pub fn copy_asset_folders(&self) {
+        let now = Instant::now();
+        let asset_folders = vec!["files", "images", "mp3s", "scripts"];
+        let mut options = fs_extra::dir::CopyOptions::new();
+        options.overwrite = true;
+        options.content_only = true;
+        asset_folders.iter().for_each(|folder| {
+            let mut source_folder = self.config.folders.project_root.clone();
+            source_folder.push(folder);
+            let mut dest_folder = self.config.folders.build_root.clone();
+            dest_folder.push(folder);
+            match copy(source_folder, dest_folder, &options) {
+                Ok(_) => (),
+                Err(e) => println!("{}", e),
+            }
+        });
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
+    }
+
     pub fn copy_files(&self) {
         let now = Instant::now();
         let mut options = fs_extra::dir::CopyOptions::new();
         options.overwrite = true;
         options.content_only = true;
-        let extras_dir = self.config.folders.files_root.display().to_string();
-        let site_output_root_dir = self.config.folders.output_root.display().to_string();
-        match copy(extras_dir, site_output_root_dir, &options) {
+        let files_dir = self.config.folders.files_root.display().to_string();
+        let site_build_root_dir = self.config.folders.build_root.display().to_string();
+        match copy(files_dir, site_build_root_dir, &options) {
             Ok(_) => (),
             Err(e) => println!("{}", e),
         }

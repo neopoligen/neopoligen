@@ -4,9 +4,9 @@ use std::path::PathBuf;
 #[derive(Debug, PartialEq, Serialize, Clone)]
 #[serde(rename_all = "lowercase", tag = "type")]
 pub struct ConfigFolders {
+    pub build_root: PathBuf,
     pub configuration_root: PathBuf,
     pub content_root: PathBuf,
-    pub build_root: PathBuf,
     pub files_root: PathBuf,
     pub images_root: PathBuf,
     pub output_root: PathBuf,

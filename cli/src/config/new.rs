@@ -65,8 +65,8 @@ impl Config {
         // theme_wrappers_root.push("wrappers");
 
         let folders = ConfigFolders {
-            configuration_root: configuration_root.clone(),
             build_root,
+            configuration_root: configuration_root.clone(),
             files_root,
             images_root,
             output_root,
