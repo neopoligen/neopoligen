@@ -54,13 +54,24 @@ async fn main() {
 
     tracing::subscriber::set_global_default(subscriber).expect("unable to set global subscriber");
 
+    let neo_env_var = match std::env::var("NEOENV") {
+        Ok(val) => val,
+        Err(_) => "prod".to_string(),
+    };
+
     event!(Level::INFO, r#"Launching neopoligengine"#);
     match get_engine_config_file() {
         Ok(json) => match serde_json::from_str::<NeoConfig>(&json) {
             Ok(engine_config) => {
                 // TODO set up for dev/prod/test switch here
                 // based off env var
-                let neo_env = engine_config.clone().dev;
+
+                let neo_env = match neo_env_var.as_str() {
+                    "prod" => engine_config.clone().prod,
+                    "dev" => engine_config.clone().dev,
+                    _ => engine_config.clone().dev,
+                };
+
                 let active_site = neo_env.active_site.clone().unwrap();
                 event!(Level::DEBUG, r#"Active site: {}"#, &active_site);
                 let mut site_root = document_dir().unwrap();
