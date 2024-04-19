@@ -60,7 +60,7 @@ async fn main() {
             Ok(engine_config) => {
                 // TODO set up for dev/prod/test switch here
                 // based off env var
-                let neo_env = engine_config.clone().dev;
+                let neo_env = engine_config.clone().prod;
                 let active_site = neo_env.active_site.clone().unwrap();
                 event!(Level::DEBUG, r#"Active site: {}"#, &active_site);
                 let mut site_root = document_dir().unwrap();

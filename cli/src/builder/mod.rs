@@ -166,6 +166,9 @@ impl Builder {
 
     #[instrument(skip(self))]
     pub fn move_files_in_place(&self) {
+        if self.config.folders.output_root.exists() {
+            let _ = fs::remove_dir_all(&self.config.folders.output_root);
+        }
         let _ = fs::rename(
             &self.config.folders.build_root,
             &self.config.folders.output_root,
