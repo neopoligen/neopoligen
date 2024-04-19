@@ -13,6 +13,7 @@ pub mod image;
 pub mod json_plugin;
 pub mod list;
 pub mod list_item;
+pub mod mp3;
 pub mod nav_id;
 pub mod nav_item;
 pub mod nav_items;
