@@ -71,13 +71,13 @@ impl Builder {
             .theme_assets_input_root
             .display()
             .to_string();
-        let site_output_root_dir = self
+        let site_build_root_dir = self
             .config
             .folders
-            .theme_assets_output_root
+            .theme_assets_build_root
             .display()
             .to_string();
-        match copy(in_dir, site_output_root_dir, &options) {
+        match copy(in_dir, site_build_root_dir, &options) {
             Ok(_) => (),
             Err(e) => println!("{}", e),
         }

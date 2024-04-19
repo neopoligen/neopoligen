@@ -274,8 +274,9 @@ fn run_watcher(reloader: Reloader, config: Config, neo_env: NeoEnv) {
                             let mut template_test_error_dir =
                                 config.clone().folders.theme_tests_root;
                             template_test_error_dir.push("_errors");
-                            if !e.path.starts_with(config.clone().folders.output_root)
+                            if !e.path.starts_with(&config.folders.output_root)
                                 && !e.path.starts_with(template_test_error_dir)
+                                && !e.path.starts_with(&config.folders.build_root)
                             {
                                 dbg!(&e);
                                 let timestamp = std::time::SystemTime::now()
