@@ -164,6 +164,14 @@ impl Builder {
         outputs
     }
 
+    #[instrument(skip(self))]
+    pub fn move_files_in_place(&self) {
+        let _ = fs::rename(
+            &self.config.folders.build_root,
+            &self.config.folders.output_root,
+        );
+    }
+
     // #[instrument(skip(self))]
     // pub fn get_changed_files(&self) {
     //     let now = Instant::now();

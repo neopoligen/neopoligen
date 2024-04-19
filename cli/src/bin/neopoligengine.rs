@@ -142,10 +142,9 @@ fn build_site(config: &Config, neo_env: &NeoEnv) {
     let builder = Builder::new(file_set, &config, &neo_env);
     builder.write_changed_files(); // TODO: finishing dev for write_changed_files
     builder.write_files(); // TODO: Rename to write_all_files
-
-    //
     builder.copy_asset_folders();
     builder.copy_theme_assets();
+    builder.move_files_in_place();
 }
 
 #[instrument]
