@@ -46,21 +46,6 @@ impl Builder {
         event!(Level::DEBUG, "||{:?}||", now.elapsed());
     }
 
-    // deprecated for copy_asset_folders() - remove this when that's done
-    // pub fn copy_files(&self) {
-    //     let now = Instant::now();
-    //     let mut options = fs_extra::dir::CopyOptions::new();
-    //     options.overwrite = true;
-    //     options.content_only = true;
-    //     let files_dir = self.config.folders.files_root.display().to_string();
-    //     let site_build_root_dir = self.config.folders.build_root.display().to_string();
-    //     match copy(files_dir, site_build_root_dir, &options) {
-    //         Ok(_) => (),
-    //         Err(e) => println!("{}", e),
-    //     }
-    //     event!(Level::DEBUG, "||{:?}||", now.elapsed());
-    // }
-
     pub fn copy_theme_assets(&self) {
         let mut options = fs_extra::dir::CopyOptions::new();
         options.overwrite = true;
