@@ -1,0 +1,52 @@
+[!- import "includes/macros.jinja" as macros -!]
+
+<section [@- section_attributes(page_id, { "section": section, "classes": section.type ~ "_section flow" } ) -@]>
+
+
+    [!- if section.key_value_attributes.forward -!]
+        <div class="forward">
+            [@- section.key_value_attributes.forward -@]
+        </div>
+    [!- endif -!]
+
+    [!- for content in section.category.content.containers -!]
+        [!- if loop.first -!]
+            <div class="[@- section.type -@]_heading_group">[@- '' -@]
+                <[@- section.type -@]>
+                    [@- output_payload(page_id, content, extras) -@]
+                </[@- section.type -@]>
+                [!- if section.key_value_attributes.subtitle -!]
+                    <div class="heading_subtitle">
+                        [@- section.key_value_attributes.subtitle -@]
+                    </div>
+                [!- endif -!]
+            </div>
+        [!- endif -!]
+    [!- endfor -!]
+
+
+    [!- if section.key_value_attributes.preface -!]
+        <div class="preface">
+            [@- section.key_value_attributes.preface -@]
+        </div>
+    [!- endif -!]
+
+    [!- if section.category.content.containers[1] -!]
+    <div class="content flow">
+    [!- endif -!]
+
+        [!- for content in section.category.content.containers -!]
+            [!- if not loop.first -!]
+                <p>[@- output_payload(page_id, content, extras) -@]</p>
+            [!- endif -!]
+        [!- endfor -!]
+
+    [!- if section.category.content.containers[1] -!]
+    </div>
+    [!- endif -!]
+
+    [!- if section.key_value_attributes.afterword -!]
+        <div class="afterword">
+            [@- section.key_value_attributes.afterword -@]
+        </div>
+    [!- endif -!]
