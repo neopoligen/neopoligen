@@ -2,6 +2,7 @@ use crate::builder::Builder;
 use crate::config::Config;
 use crate::file_set::FileSet;
 use crate::helpers::get_file_paths_for_extension::get_file_paths_for_extension;
+use crate::neo_config::NeoEnv;
 use nom::branch::alt;
 use nom::bytes::complete::is_a;
 use nom::bytes::complete::is_not;
@@ -17,6 +18,7 @@ use nom::multi::many1;
 use nom::IResult;
 use std::fs;
 use std::path::PathBuf;
+use tracing::{event, instrument, Level};
 
 #[derive(Debug)]
 pub enum TestSection {
@@ -27,9 +29,10 @@ pub enum TestSection {
     Template(String, String),
 }
 
-pub fn test_templates(config: &Config) {
+#[instrument(skip(config, neo_env))]
+pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     let _ = fs::remove_dir_all(&config.folders.theme_errors_root);
-    println!("Testing templates");
+    event!(Level::INFO, "{}", "Testing Tempaltes");
     get_file_paths_for_extension(&config.folders.theme_tests_root, "neotest")
         .iter()
         .for_each(|tf| {
@@ -71,7 +74,7 @@ pub fn test_templates(config: &Config) {
                     //     dbg!(p);
                     //     ()
                     // });
-                    let builder = Builder::new(file_set, &config);
+                    let builder = Builder::new(file_set, &config, &neo_env);
                     builder.files_to_output().iter().for_each(|o| {
                         let path_parts: Vec<_> =
                             o.0.components()

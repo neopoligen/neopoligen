@@ -3,77 +3,90 @@ use dirs::{config_local_dir, document_dir};
 use neopoligengine::builder::Builder;
 use neopoligengine::config::Config;
 use neopoligengine::file_set::FileSet;
+use neopoligengine::neo_config::NeoConfig;
+use neopoligengine::neo_config::NeoEnv;
 use neopoligengine::template_tester::*;
 use notify_debouncer_mini::new_debouncer;
 use notify_debouncer_mini::notify::RecursiveMode;
 use notify_debouncer_mini::DebounceEventResult;
 use notify_debouncer_mini::DebouncedEventKind;
 use rust_embed::RustEmbed;
-use serde::Deserialize;
 use std::fs;
-// use std::fs::OpenOptions;
-// use std::io::Write;
 use std::path::Path;
 use std::path::PathBuf;
 use std::time::Duration;
+use std::time::Instant;
 use tower_http::services::ServeDir;
 use tower_livereload::LiveReloadLayer;
 use tower_livereload::Reloader;
 use tracing::{event, instrument, Level};
+use tracing_subscriber::filter;
+use tracing_subscriber::fmt;
+use tracing_subscriber::prelude::*;
 
 #[derive(RustEmbed)]
 #[folder = "example-site"]
 struct ExampleSite;
-
-#[derive(Deserialize)]
-pub struct NeoConfig {
-    active_site: Option<String>,
-}
 
 #[tokio::main]
 #[instrument]
 async fn main() {
     let mut log_file_path = document_dir().unwrap();
     log_file_path.push("Neopoligen");
+    let log_dir = log_file_path.clone();
     log_file_path.push("log.log");
     let _ = fs::remove_file(&log_file_path);
-    let file_appender = tracing_appender::rolling::never(
-        log_file_path.parent().unwrap(),
-        log_file_path.file_name().unwrap(),
-    );
-    let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
-    let format = tracing_subscriber::fmt::format().pretty();
-    tracing_subscriber::fmt()
-        .event_format(format)
+
+    let file_appender = tracing_appender::rolling::never(log_dir, log_file_path);
+    let (file_writer, _guard) = tracing_appender::non_blocking(file_appender);
+    let file_layer = fmt::Layer::default()
+        .with_writer(file_writer)
+        .with_ansi(false);
+
+    let stdout_layer = fmt::Layer::default()
+        .with_writer(std::io::stdout)
         .with_ansi(false)
-        .with_writer(non_blocking)
-        .init();
+        .with_filter(filter::LevelFilter::INFO);
+
+    let subscriber = tracing_subscriber::Registry::default()
+        .with(file_layer)
+        .with(stdout_layer);
+
+    tracing::subscriber::set_global_default(subscriber).expect("unable to set global subscriber");
+
     event!(Level::INFO, r#"Launching neopoligengine"#);
     match get_engine_config_file() {
-        Ok(toml) => match serde_json::from_str::<NeoConfig>(&toml) {
+        Ok(json) => match serde_json::from_str::<NeoConfig>(&json) {
             Ok(engine_config) => {
-                let active_site = engine_config.active_site.unwrap();
-                event!(Level::INFO, r#"Active site: {}"#, &active_site);
+                // TODO set up for dev/prod/test switch here
+                // based off env var
+                let neo_env = engine_config.clone().prod;
+                let active_site = neo_env.active_site.clone().unwrap();
+                event!(Level::DEBUG, r#"Active site: {}"#, &active_site);
                 let mut site_root = document_dir().unwrap();
                 site_root.push("Neopoligen");
                 site_root.push(active_site);
                 match set_up_site_if_necessary(&site_root) {
                     Ok(_) => {
                         let config = Config::new(site_root);
-                        build_site(&config);
+                        let now = Instant::now();
+                        build_site(&config, &neo_env);
+                        event!(Level::DEBUG, "SITEBUILDTIME: {:?}", now.elapsed());
                         if true {
-                            run_web_server(config).await;
+                            run_web_server(config, neo_env).await;
                         }
                     }
-                    Err(e) => println!("{}", e),
+                    Err(e) => {
+                        event!(Level::ERROR, "Problem with config file: {:?}", e);
+                    }
                 };
             }
             Err(e) => {
-                println!("{}", e)
+                event!(Level::ERROR, "Problem with config file: {:?}", e);
             }
         },
         Err(e) => {
-            println!("{}", e)
+            event!(Level::ERROR, "Problem with config file: {:?}", e);
         }
     }
 }
@@ -100,7 +113,7 @@ async fn main() {
 //                 .with_ansi(false)
 //                 .with_writer(non_blocking)
 //                 .init();
-//             event!(Level::INFO, r#"Processes started"#);
+//             event!(Level::DEBUG, r#"Processes started"#);
 //             build_site(&config);
 //             if true {
 //                 run_web_server(config).await;
@@ -116,19 +129,25 @@ async fn main() {
 //
 // }
 
-fn build_site(config: &Config) {
-    println!("Starting build run");
-    test_templates(&config);
+#[instrument(skip(config, neo_env))]
+fn build_site(config: &Config, neo_env: &NeoEnv) {
+    event!(Level::INFO, r#"Building site"#);
+    let _ = verify_dir(&config.folders.build_root);
+    let _ = empty_dir(&config.folders.build_root);
+    test_templates(&config, neo_env.clone());
     let mut file_set = FileSet::new();
     file_set.load_content(&config.folders.content_root);
     file_set.load_templates(&config.folders.theme_root);
     file_set.load_images(&config.folders.images_root);
-    let builder = Builder::new(file_set, &config);
-    builder.write_files();
-    builder.copy_files();
+    let builder = Builder::new(file_set, &config, &neo_env);
+    builder.write_changed_files(); // TODO: finishing dev for write_changed_files
+    builder.write_files(); // TODO: Rename to write_all_files
+    builder.copy_asset_folders();
     builder.copy_theme_assets();
+    builder.move_files_in_place();
 }
 
+#[instrument]
 fn get_engine_config_file() -> Result<String, String> {
     let mut engine_config_path = config_local_dir().unwrap();
     engine_config_path.push("Neopoligen");
@@ -137,11 +156,11 @@ fn get_engine_config_file() -> Result<String, String> {
             if check == false {
                 match fs::create_dir(&engine_config_path) {
                     Ok(_) => (),
-                    Err(e) => return Err(format!("{}", e)),
+                    Err(e) => return Err(format!("-----{}", e)),
                 }
             }
         }
-        Err(e) => return Err(format!("{}", e)),
+        Err(e) => return Err(format!("------{}", e)),
     }
     engine_config_path.push("config.json");
     match engine_config_path.try_exists() {
@@ -150,15 +169,15 @@ fn get_engine_config_file() -> Result<String, String> {
                 let default_config = r#"{ "active_site": "Example-Site" }"#;
                 match fs::write(&engine_config_path, default_config) {
                     Ok(_) => (),
-                    Err(e) => return Err(format!("{}", e)),
+                    Err(e) => return Err(format!("-------{}", e)),
                 }
             }
         }
-        Err(e) => return Err(format!("{}", e)),
+        Err(e) => return Err(format!("--------{}", e)),
     }
     match fs::read_to_string(&engine_config_path) {
         Ok(json) => Ok(json),
-        Err(e) => Err(format!("{}", e)),
+        Err(e) => Err(format!("---------{}", e)),
     }
 }
 
@@ -187,24 +206,30 @@ fn set_up_site_if_necessary(site_root: &PathBuf) -> Result<String, String> {
                                         match fs::create_dir(output_dir) {
                                             Ok(_) =>
                                             // event!(
-                                            // Level::INFO,
+                                            // Level::DEBUG,
                                             // r#"Created dir: {}"#,
                                             // output_dir.display()
                                             // );
                                             {
                                                 ()
                                             }
-                                            Err(e) => return Err(format!("{}", e)),
+                                            Err(e) => {
+                                                return Err(format!("-{}", e));
+                                            }
                                         }
                                     }
                                 }
-                                Err(e) => return Err(format!("{}", e)),
+                                Err(e) => {
+                                    return Err(format!("--{}", e));
+                                }
                             }
                             let output_data = ExampleSite::get(&rel_file_path).unwrap();
                             let _ = fs::write(output_path, output_data.data);
                         }
                     }
-                    Err(e) => return Err(format!("{}", e)),
+                    Err(e) => {
+                        return Err(format!("---{}", e));
+                    }
                 }
                 println!("Site doesnt' exist. making it");
                 Ok("TODO".to_string())
@@ -212,18 +237,20 @@ fn set_up_site_if_necessary(site_root: &PathBuf) -> Result<String, String> {
                 Ok("Site already exists".to_string())
             }
         }
-        Err(e) => return Err(format!("{}", e)),
+        Err(e) => {
+            return Err(format!("{}", e));
+        }
     }
 }
 
-async fn run_web_server(config: Config) {
+async fn run_web_server(config: Config, neo_env: NeoEnv) {
     let livereload = LiveReloadLayer::new();
     let reloader = livereload.reloader();
     let app = Router::new()
         .nest_service("/", ServeDir::new(&config.folders.output_root))
         .layer(livereload);
     tokio::spawn(async move {
-        run_watcher(reloader, config.clone());
+        run_watcher(reloader, config.clone(), neo_env);
     });
     println!("Starting web server");
     if let Ok(listener) = tokio::net::TcpListener::bind("localhost:1989").await {
@@ -233,7 +260,7 @@ async fn run_web_server(config: Config) {
     }
 }
 
-fn run_watcher(reloader: Reloader, config: Config) {
+fn run_watcher(reloader: Reloader, config: Config, neo_env: NeoEnv) {
     println!("Starting watcher");
     let watch_path = config.folders.project_root.clone();
     let mut debouncer = new_debouncer(
@@ -246,8 +273,9 @@ fn run_watcher(reloader: Reloader, config: Config) {
                             let mut template_test_error_dir =
                                 config.clone().folders.theme_tests_root;
                             template_test_error_dir.push("_errors");
-                            if !e.path.starts_with(config.clone().folders.output_root)
+                            if !e.path.starts_with(&config.folders.output_root)
                                 && !e.path.starts_with(template_test_error_dir)
+                                && !e.path.starts_with(&config.folders.build_root)
                             {
                                 dbg!(&e);
                                 let timestamp = std::time::SystemTime::now()
@@ -256,7 +284,7 @@ fn run_watcher(reloader: Reloader, config: Config) {
                                     .as_secs();
                                 println!("CMD: CLEAR");
                                 println!("Caught new change at {}", timestamp);
-                                build_site(&config);
+                                build_site(&config, &neo_env);
                                 println!("Sending reload signal");
                                 reloader.reload();
                             }
@@ -286,4 +314,25 @@ fn run_watcher(reloader: Reloader, config: Config) {
     // TODO: Figure out how to keep this open without the
     // loop since clippy says that wastes cpu
     loop {}
+}
+
+fn verify_dir(dir: &PathBuf) -> std::io::Result<()> {
+    if dir.exists() {
+        Ok(())
+    } else {
+        fs::create_dir_all(dir)
+    }
+}
+
+fn empty_dir(dir: &PathBuf) -> std::io::Result<()> {
+    for entry in dir.read_dir()? {
+        let entry = entry?;
+        let path = entry.path();
+        if path.is_dir() {
+            fs::remove_dir_all(path)?;
+        } else {
+            fs::remove_file(path)?;
+        }
+    }
+    Ok(())
 }

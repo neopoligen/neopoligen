@@ -2,7 +2,9 @@ pub mod new;
 
 use crate::config::Config;
 use crate::file_set::FileSet;
+use crate::neo_config::NeoEnv;
 use crate::site::Site;
+use dirs::config_local_dir;
 use fs_extra::dir::copy;
 use minijinja::context;
 use minijinja::Environment;
@@ -12,24 +14,36 @@ use std::collections::BTreeMap;
 use std::fs;
 use std::fs::create_dir_all;
 use std::path::PathBuf;
+use std::time::Instant;
 use tracing::{event, instrument, Level};
 
 pub struct Builder {
     file_set: FileSet,
     config: Config,
+    neo_env: NeoEnv,
 }
 
 impl Builder {
-    pub fn copy_files(&self) {
+    pub fn copy_asset_folders(&self) {
+        let now = Instant::now();
+        let asset_folders = vec!["files", "images", "mp3s", "scripts"];
         let mut options = fs_extra::dir::CopyOptions::new();
         options.overwrite = true;
-        options.content_only = true;
-        let extras_dir = self.config.folders.files_root.display().to_string();
-        let site_output_root_dir = self.config.folders.output_root.display().to_string();
-        match copy(extras_dir, site_output_root_dir, &options) {
-            Ok(_) => (),
-            Err(e) => println!("{}", e),
-        }
+        // options.content_only = true;
+        asset_folders.iter().for_each(|folder| {
+            event!(Level::INFO, "Copying: {}", &folder);
+            let mut source_folder = self.config.folders.project_root.clone();
+            source_folder.push(folder);
+            //let mut dest_folder = self.config.folders.build_root.clone();
+            //dest_folder.push(folder);
+            //let _ = verify_dir(&PathBuf::from(&dest_folder));
+            let _ = verify_dir(&self.config.folders.build_root);
+            match copy(source_folder, &self.config.folders.build_root, &options) {
+                Ok(_) => (),
+                Err(e) => println!("{}", e),
+            }
+        });
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
     }
 
     pub fn copy_theme_assets(&self) {
@@ -42,13 +56,13 @@ impl Builder {
             .theme_assets_input_root
             .display()
             .to_string();
-        let site_output_root_dir = self
+        let site_build_root_dir = self
             .config
             .folders
-            .theme_assets_output_root
+            .theme_assets_build_root
             .display()
             .to_string();
-        match copy(in_dir, site_output_root_dir, &options) {
+        match copy(in_dir, site_build_root_dir, &options) {
             Ok(_) => (),
             Err(e) => println!("{}", e),
         }
@@ -56,7 +70,6 @@ impl Builder {
 
     pub fn files_to_output(&self) -> BTreeMap<PathBuf, String> {
         let mut env = Environment::new();
-
         env.set_syntax(Syntax {
             block_start: "[!".into(),
             block_end: "!]".into(),
@@ -66,7 +79,6 @@ impl Builder {
             comment_end: "#]".into(),
         })
         .unwrap();
-
         let site = Site::new(&self.file_set, &self.config);
         let mut outputs = BTreeMap::new();
         self.file_set
@@ -79,7 +91,7 @@ impl Builder {
 [# include "global_vars" #]
 [! for page_id in site.page_ids() !]
 [@ site.log({ "page_id": page_id, "source_path": site.page_source_path(page_id) }) @]
-[@ site.page_output_path(page_id) @]
+[@ site.page_build_path(page_id) @]
 --- PAGE_DATA_SPLIT ---
 [! include site.page_template(page_id) !]
 --- PAGE_SEPARATOR ---
@@ -153,25 +165,83 @@ impl Builder {
     }
 
     #[instrument(skip(self))]
-    pub fn write_files(&self) {
-        event!(Level::INFO, "fn write_files");
-        println!("Writing files");
-        dbg!(&self.config);
+    pub fn move_files_in_place(&self) {
+        if self.config.folders.output_root.exists() {
+            let _ = fs::remove_dir_all(&self.config.folders.output_root);
+        }
+        let _ = fs::rename(
+            &self.config.folders.build_root,
+            &self.config.folders.output_root,
+        );
+    }
 
+    // #[instrument(skip(self))]
+    // pub fn get_changed_files(&self) {
+    //     let now = Instant::now();
+    //     // TODO: Implement page cache stuff here
+    //     event!(Level::DEBUG, "||{:?}||", now.elapsed());
+    // }
+
+    #[instrument(skip(self))]
+    pub fn write_changed_files(&self) {
+        let mut page_hash_cache_path = config_local_dir().unwrap();
+        page_hash_cache_path.push("Neopoligen");
+        page_hash_cache_path.push("page-hash-caches");
+        page_hash_cache_path.push(format!(
+            "{}.json",
+            &self.neo_env.active_site.clone().unwrap()
+        ));
+        if !file_exists(&page_hash_cache_path) {
+            event!(
+                Level::DEBUG,
+                "Making new page hash cache at: {}",
+                page_hash_cache_path.display()
+            );
+        }
+    }
+
+    #[instrument(skip(self))]
+    pub fn write_files(&self) {
+        event!(Level::DEBUG, "fn write_files");
+        println!("Writing files");
+        // dbg!(&self.config);
         self.files_to_output().iter().for_each(|f| {
             // println!("{}", f.0.clone().display());
             if f.0
-                .starts_with(self.config.folders.output_root.display().to_string())
+                .starts_with(self.config.folders.build_root.display().to_string())
             {
-                let output_path = PathBuf::from(f.0);
+                let build_path = PathBuf::from(f.0);
                 // dbg!(&output_path);
                 // println!("{}", &f.0.display());
-                let parent_dir = output_path.parent().unwrap();
+                let parent_dir = build_path.parent().unwrap();
                 let _ = create_dir_all(parent_dir);
-                let _ = fs::write(output_path, f.1);
+                let _ = fs::write(build_path, f.1);
             } else {
                 println!("ERROR: Tried to write outside of the output root");
             }
         });
+    }
+}
+
+// TODO: if you ever have to mess with this, change it to use
+// a Result return type
+fn file_exists(path: &PathBuf) -> bool {
+    match path.try_exists() {
+        Ok(exists) => {
+            if exists == true {
+                true
+            } else {
+                false
+            }
+        }
+        Err(_) => false,
+    }
+}
+
+fn verify_dir(dir: &PathBuf) -> std::io::Result<()> {
+    if dir.exists() {
+        Ok(())
+    } else {
+        fs::create_dir_all(dir)
     }
 }

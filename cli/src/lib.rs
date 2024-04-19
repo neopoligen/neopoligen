@@ -16,6 +16,7 @@ pub mod list_item;
 pub mod nav_id;
 pub mod nav_item;
 pub mod nav_items;
+pub mod neo_config;
 pub mod page;
 pub mod section;
 pub mod section_attribute;

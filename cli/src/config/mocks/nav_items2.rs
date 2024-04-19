@@ -1,5 +1,4 @@
 use crate::config::*;
-use std::collections::BTreeMap;
 use std::collections::BTreeSet;
 use std::path::PathBuf;
 
@@ -10,6 +9,8 @@ impl Config {
         let configuration_root =
             PathBuf::from(format!("{}/{}", project_root.display(), "configuration"));
         let content_root = PathBuf::from(format!("{}/{}", project_root.display(), "content"));
+        let build_root =
+            PathBuf::from(format!("{}/{}", project_root.display(), "NOT_USED_IN_TEST"));
         let files_root =
             PathBuf::from(format!("{}/{}", project_root.display(), "NOT_USED_IN_TEST"));
         let images_root =
@@ -37,7 +38,7 @@ impl Config {
             PathBuf::from(format!("{}/{}", theme_root.display(), "NOT_USED_IN_TEST"));
         let theme_assets_input_root =
             PathBuf::from(format!("{}/{}", theme_root.display(), "NOT_USED_IN_TEST"));
-        let theme_assets_output_root =
+        let theme_assets_build_root =
             PathBuf::from(format!("{}/{}", output_root.display(), "NOT_USED_IN_TEST"));
         let theme_sections_root =
             PathBuf::from(format!("{}/{}", theme_root.display(), "NOT_USED_IN_TEST"));
@@ -51,6 +52,7 @@ impl Config {
         ));
 
         let folders = ConfigFolders {
+            build_root,
             configuration_root: configuration_root.clone(),
             files_root,
             images_root,
@@ -62,7 +64,7 @@ impl Config {
             project_root,
             themes_root,
             theme_assets_input_root,
-            theme_assets_output_root,
+            theme_assets_build_root,
             theme_configuration_root: theme_configuration_root.clone(),
             theme_sections_root,
             theme_spans_root,

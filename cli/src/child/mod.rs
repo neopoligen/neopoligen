@@ -3,7 +3,6 @@ use crate::config::Config;
 use crate::json_plugin::JsonPlugin;
 use crate::list::list;
 use crate::list::List;
-use crate::section::Section;
 use crate::section::*;
 use crate::span::*;
 use crate::text_plugin::TextPlugin;

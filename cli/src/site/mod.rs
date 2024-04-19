@@ -14,6 +14,7 @@ use std::collections::BTreeMap;
 use std::fmt::Display;
 use std::path::PathBuf;
 use std::sync::Mutex;
+use std::time::Instant;
 use syntect::html::{ClassStyle, ClassedHTMLGenerator};
 use syntect::parsing::SyntaxSet;
 use syntect::util::LinesWithEndings;
@@ -31,22 +32,26 @@ pub struct Site {
 }
 
 impl Site {
+    #[instrument(skip(self))]
     pub fn collection_from_files_and_folders(&self, args: &[Value]) -> Collection {
+        let now = Instant::now();
         let id = args[0].to_string();
         match args[1].try_iter() {
             Ok(value_patterns) => {
                 let patterns = value_patterns
                     .filter_map(|value_pattern| match value_pattern.try_iter() {
-                        Ok(parts) => Some(
-                            parts
+                        Ok(parts) => Some({
+                            let response = parts
                                 .filter_map(|p| Some(p.to_string()))
-                                .collect::<Vec<String>>(),
-                        ),
+                                .collect::<Vec<String>>();
+                            response
+                        }),
                         Err(_e) => None,
                     })
                     .collect::<Vec<_>>();
                 let mut c = Collection::new_from_files_and_folders(&self.pages, patterns);
                 c.set_active_item(&id);
+                event!(Level::DEBUG, "||{:?}||", now.elapsed());
                 c
             }
             Err(e) => {
@@ -58,32 +63,36 @@ impl Site {
 
     #[instrument(skip(self))]
     pub fn collection_from_tags(&self, args: &[Value]) -> Collection {
+        let now = Instant::now();
         let id = args[0].to_string();
         match args[1].try_iter() {
             Ok(tags) => {
                 let tag_set = tags.map(|t| t.to_string()).collect::<Vec<String>>();
                 let tag_key = tag_set.join("");
-                event!(Level::INFO, "tag_key: {}", tag_key);
+                // event!(Level::DEBUG, "tag_key: {}", tag_key);
                 match self.get_cache(&tag_key) {
                     Some(c_obj) => match c_obj {
                         CacheObject::Collection(mut c) => {
-                            event!(Level::INFO, "cache_hit: {}", tag_key);
+                            // event!(Level::DEBUG, "cache_hit: {}", tag_key);
                             c.set_active_item(&id);
+                            event!(Level::DEBUG, "||{:?}||", now.elapsed());
                             c
                         }
                         _ => {
-                            event!(Level::INFO, "cache_miss: {}", tag_key);
+                            // event!(Level::DEBUG, "cache_miss: {}", tag_key);
                             let mut c = Collection::new_from_tags(&self.pages, tag_set);
                             c.set_active_item(&id);
                             self.set_cache(tag_key, CacheObject::Collection(c.clone()));
+                            event!(Level::DEBUG, "||{:?}||", now.elapsed());
                             c
                         }
                     },
                     None => {
-                        event!(Level::INFO, "cache_miss: {}", tag_key);
+                        // event!(Level::DEBUG, "cache_miss: {}", tag_key);
                         let mut c = Collection::new_from_tags(&self.pages, tag_set);
                         c.set_active_item(&id);
                         self.set_cache(tag_key, CacheObject::Collection(c.clone()));
+                        event!(Level::DEBUG, "||{:?}||", now.elapsed());
                         c
                     }
                 }
@@ -95,21 +104,28 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn does_template_exist(&self, args: &[Value]) -> String {
+        let now = Instant::now();
         let path = args[0].to_string();
-        match self.templates.get(&path) {
+        let response = match self.templates.get(&path) {
             Some(_) => "yes".to_string(),
             None => "no".to_string(),
-        }
+        };
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
+        response
     }
 
     #[instrument(skip(self))]
     pub fn error_from_template(&self, args: &[Value]) -> String {
-        event!(Level::ERROR, "{}", args[0].to_string());
+        let now = Instant::now();
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
         "".to_string()
     }
 
+    #[instrument(skip(self))]
     pub fn highlight_code(&self, args: &[Value]) -> String {
+        let now = Instant::now();
         let code = args[0].to_string();
         let lang = args[1].to_string();
         let syntax_set = SyntaxSet::load_defaults_newlines();
@@ -124,74 +140,104 @@ impl Site {
             .lines()
             .map(|line| format!(r#"<span class="numberedLine">{}</span>"#, line))
             .collect();
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
         format!("{}", output_html.join("\n"))
     }
 
+    #[instrument(skip(self))]
     pub fn page_head(&self, args: &[Value]) -> Vec<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
-        match self.pages.get(&id) {
+        let response = match self.pages.get(&id) {
             Some(page) => page.head.clone(),
             None => vec![],
-        }
+        };
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
+        response
     }
 
+    #[instrument(skip(self))]
     pub fn page_scripts(&self, args: &[Value]) -> Vec<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
-        match self.pages.get(&id) {
+        let response = match self.pages.get(&id) {
             Some(page) => page.scripts.clone(),
             None => vec![],
-        }
+        };
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
+        response
     }
 
+    #[instrument(skip(self))]
     pub fn page_stylesheets(&self, args: &[Value]) -> Vec<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
-        match self.pages.get(&id) {
+        let response = match self.pages.get(&id) {
             Some(page) => page.stylesheets.clone(),
             None => vec![],
-        }
+        };
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
+        response
     }
 
     #[instrument(skip(self))]
     pub fn get_cache(&self, key: &str) -> Option<CacheObject> {
+        let now = Instant::now();
         let binding = self.cache.lock().unwrap();
-        match binding.get(key) {
+        let response = match binding.get(key) {
             Some(obj) => Some(obj.clone()),
             None => None,
-        }
+        };
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
+        response
     }
 
+    #[instrument(skip(self))]
     pub fn get_subtree(&self, args: &[Value]) -> Vec<CollectionItem> {
+        let now = Instant::now();
         let original_json = json!(args[1]);
         let original_collection: Collection = serde_json::from_value(original_json).unwrap();
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
         original_collection.get_subtree(&args[0].to_string())
     }
 
+    #[instrument(skip(self))]
     pub fn ilink(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let current_id = args[0].to_string();
         let target_id = args[1].to_string();
         let text = args[2].to_string();
         if current_id == target_id {
+            event!(Level::DEBUG, "||{:?}||", now.elapsed());
             Some(text)
         } else {
             match self.pages.get(&target_id) {
-                Some(page) => Some(format!(
-                    r#"<a href="{}">{}</a>"#,
-                    page.href.clone().unwrap(),
-                    text
-                )),
+                Some(page) => {
+                    event!(Level::DEBUG, "||{:?}||", now.elapsed());
+                    Some(format!(
+                        r#"<a href="{}">{}</a>"#,
+                        page.href.clone().unwrap(),
+                        text
+                    ))
+                }
                 None => None,
             }
         }
     }
 
+    #[instrument(skip(self))]
     pub fn image(&self, args: &[Value]) -> Option<Image> {
+        let now = Instant::now();
         let target_name = args[0].to_string();
         self.images.iter().find_map(|image| {
             if &target_name == &image.file_stem {
+                event!(Level::DEBUG, "||{:?}||", now.elapsed());
                 Some(image.clone())
             } else if &target_name == &image.file_name {
+                event!(Level::DEBUG, "||{:?}||", now.elapsed());
                 Some(image.clone())
             } else {
+                event!(Level::DEBUG, "||{:?}||", now.elapsed());
                 None
             }
         })
@@ -240,37 +286,48 @@ impl Site {
 
     #[instrument(skip(self))]
     pub fn set_cache(&self, key: String, obj: CacheObject) -> Option<CacheObject> {
+        let now = Instant::now();
         let mut binding = self.cache.lock().unwrap();
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
         binding.insert(key, obj)
     }
 
     #[instrument(skip(self))]
     pub fn log_from_template(&self, args: &[Value]) -> String {
-        event!(Level::INFO, "{}", args[0].to_string());
+        let now = Instant::now();
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
         "".to_string()
     }
 
+    #[instrument(skip(self))]
     pub fn link_or_title(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let current_page_id = args[0].to_string();
         let target_page_id = args[1].to_string();
         if current_page_id == target_page_id {
             match self.pages.get(&target_page_id) {
-                Some(_) => Some(format!(
-                    r#"{}"#,
-                    self.page_title(&[Value::from(target_page_id.clone())])
-                        .unwrap(),
-                )),
+                Some(_) => {
+                    event!(Level::DEBUG, "||{:?}||", now.elapsed());
+                    Some(format!(
+                        r#"{}"#,
+                        self.page_title(&[Value::from(target_page_id.clone())])
+                            .unwrap(),
+                    ))
+                }
                 None => None,
             }
         } else {
             match self.pages.get(&target_page_id) {
-                Some(_) => Some(format!(
-                    r#"<a href="{}">{}</a>"#,
-                    self.page_href(&[Value::from(target_page_id.clone())])
-                        .unwrap(),
-                    self.page_title(&[Value::from(target_page_id.clone())])
-                        .unwrap(),
-                )),
+                Some(_) => {
+                    event!(Level::DEBUG, "||{:?}||", now.elapsed());
+                    Some(format!(
+                        r#"<a href="{}">{}</a>"#,
+                        self.page_href(&[Value::from(target_page_id.clone())])
+                            .unwrap(),
+                        self.page_title(&[Value::from(target_page_id.clone())])
+                            .unwrap(),
+                    ))
+                }
                 None => None,
             }
         }
@@ -284,39 +341,55 @@ impl Site {
     //     ))
     // }
 
+    #[instrument(skip(self))]
     pub fn page_ast(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
-            Some(page) => Some(serde_json::to_string::<Vec<Child>>(&page.ast).unwrap()),
+            Some(page) => {
+                event!(Level::DEBUG, "||{:?}||", now.elapsed());
+                Some(serde_json::to_string::<Vec<Child>>(&page.ast).unwrap())
+            }
             None => None,
         }
     }
 
+    #[instrument(skip(self))]
     pub fn page_ast_pretty(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
-            Some(page) => Some(serde_json::to_string_pretty::<Vec<Child>>(&page.ast).unwrap()),
+            Some(page) => {
+                event!(Level::DEBUG, "||{:?}||", now.elapsed());
+                Some(serde_json::to_string_pretty::<Vec<Child>>(&page.ast).unwrap())
+            }
             None => None,
         }
     }
 
+    #[instrument(skip(self))]
     pub fn page_folders(&self, args: &[Value]) -> Vec<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
-            Some(page) => page
-                .source_path
-                .strip_prefix(&self.config.folders.content_root.clone())
-                .unwrap()
-                .parent()
-                .unwrap()
-                .components()
-                .map(|c| c.as_os_str().to_string_lossy().to_string().to_lowercase())
-                .collect(),
+            Some(page) => {
+                event!(Level::DEBUG, "||{:?}||", now.elapsed());
+                page.source_path
+                    .strip_prefix(&self.config.folders.content_root.clone())
+                    .unwrap()
+                    .parent()
+                    .unwrap()
+                    .components()
+                    .map(|c| c.as_os_str().to_string_lossy().to_string().to_lowercase())
+                    .collect()
+            }
             None => vec![],
         }
     }
 
+    #[instrument(skip(self))]
     pub fn page_href(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => {
@@ -325,6 +398,7 @@ impl Site {
                         if &section.r#type == "metadata" {
                             section.key_value_attributes.iter().find_map(|attr| {
                                 if attr.0 == "path" {
+                                    event!(Level::DEBUG, "||{:?}||", now.elapsed());
                                     Some(Some(attr.1.to_string()))
                                 } else {
                                     None
@@ -339,6 +413,7 @@ impl Site {
                 }) {
                     response
                 } else {
+                    event!(Level::DEBUG, "||{:?}||", now.elapsed());
                     Some(format!(
                         "/{}/{}/?{}",
                         self.config.default_language,
@@ -352,34 +427,47 @@ impl Site {
     }
 
     // TODO: Forward to page
+    #[instrument(skip(self))]
     pub fn page_href_title(&self, id: &str) -> Option<String> {
+        let now = Instant::now();
         match self.page_title(&[Value::from(id)]) {
-            Some(title) => Some(
-                urlencoding::encode(&title.to_lowercase().replace(" ", "-").to_string())
-                    .into_owned(),
-            ),
+            Some(title) => {
+                event!(Level::DEBUG, "||{:?}||", now.elapsed());
+                Some(
+                    urlencoding::encode(&title.to_lowercase().replace(" ", "-").to_string())
+                        .into_owned(),
+                )
+            }
             None => None,
         }
     }
 
+    #[instrument(skip(self))]
     pub fn page_html_link(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
-        match self.pages.get(&id) {
+        let response = match self.pages.get(&id) {
             Some(page) => page.html_link.clone(),
             None => None,
-        }
+        };
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
+        response
     }
 
+    #[instrument(skip(self))]
     pub fn page_ids(&self) -> Vec<String> {
+        let now = Instant::now();
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
         self.pages.iter().map(|page| page.0.to_string()).collect()
     }
 
-    // #[instrument(skip(self))]
+    #[instrument(skip(self))]
     pub fn page_main_body(&self, args: &[Value]) -> Value {
-        // event!(Level::INFO, "running page_main_body");
+        let now = Instant::now();
+        // event!(Level::DEBUG, "running page_main_body");
         if let Some(page) = self.pages.get(&args[0].to_string()) {
-            // event!(Level::INFO, "{}", page.source_path.display());
-            Value::from_serializable(
+            // event!(Level::DEBUG, "{}", page.source_path.display());
+            let response = Value::from_serializable(
                 &page
                     .ast
                     .clone()
@@ -402,13 +490,18 @@ impl Site {
                         }
                     })
                     .collect::<Vec<Child>>(),
-            )
+            );
+            event!(Level::DEBUG, "||{:?}||", now.elapsed());
+            response
         } else {
+            event!(Level::DEBUG, "||{:?}||", now.elapsed());
             Value::from_serializable::<Vec<Child>>(&vec![])
         }
     }
 
-    pub fn page_output_path(&self, args: &[Value]) -> Option<String> {
+    #[instrument(skip(self))]
+    pub fn page_build_path(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => match page.ast.iter().find_map(|child| {
@@ -416,6 +509,7 @@ impl Site {
                     if &section.r#type == "metadata" {
                         section.key_value_attributes.iter().find_map(|attr| {
                             if attr.0 == "path" {
+                                event!(Level::DEBUG, "||{:?}||", now.elapsed());
                                 Some(Some(attr.1.to_string()))
                             } else {
                                 None
@@ -429,49 +523,48 @@ impl Site {
                 }
             }) {
                 Some(override_path) => {
-                    let mut output_path = self.config.folders.output_root.clone();
-                    output_path.push(override_path.unwrap().strip_prefix("/").unwrap());
-                    output_path.push("index.html");
-                    Some(output_path.display().to_string())
+                    let mut build_path = self.config.folders.build_root.clone();
+                    build_path.push(override_path.unwrap().strip_prefix("/").unwrap());
+                    build_path.push("index.html");
+                    event!(Level::DEBUG, "||{:?}||", now.elapsed());
+                    Some(build_path.display().to_string())
                 }
                 None => Some(format!(
                     "{}/{}/{}/index.html",
-                    self.config.folders.output_root.display(),
+                    self.config.folders.build_root.display(),
                     self.config.default_language,
                     &id,
                 )),
             },
             None => None,
         }
-        // match self.pages.get(&id) {
-        //     Some(_) => Some(format!(
-        //         "{}/{}/{}/index.html",
-        //         self.config.folders.output_root.display(),
-        //         self.config.default_language,
-        //         &id,
-        //     )),
-        //     None => None,
-        // }
     }
 
+    #[instrument(skip(self))]
     pub fn page_path_parts(&self, args: &[Value]) -> Vec<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         match self.pages.get(&id) {
             Some(page) => {
                 // dbg!(&page.source_path);
                 // dbg!(&self.config.folders.content_root.clone());
-                page.source_path
+                let response = page
+                    .source_path
                     .strip_prefix(&self.config.folders.content_root.clone())
                     .unwrap()
                     .components()
                     .map(|c| c.as_os_str().to_string_lossy().to_string().to_lowercase())
-                    .collect()
+                    .collect();
+                event!(Level::DEBUG, "||{:?}||", now.elapsed());
+                response
             }
             None => vec![],
         }
     }
 
+    #[instrument(skip(self))]
     pub fn page_place_section(&self, args: &[Value]) -> Value {
+        let now = Instant::now();
         let id = args[0].to_string();
         let section_type = args[1].to_string();
         match self.pages.get(&id) {
@@ -487,6 +580,7 @@ impl Site {
                         }
                     } else if let Child::List(sec) = &child {
                         if sec.r#type == section_type {
+                            event!(Level::DEBUG, "||{:?}||", now.elapsed());
                             Some(Value::from_serializable(child))
                         } else {
                             None
@@ -501,23 +595,33 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn page_source(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
-        match self.pages.get(&id) {
+        let response = match self.pages.get(&id) {
             Some(page) => Some(page.source.clone()),
             None => None,
-        }
+        };
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
+        response
     }
 
+    #[instrument(skip(self))]
     pub fn page_source_path(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
-        match self.pages.get(&id) {
+        let response = match self.pages.get(&id) {
             Some(page) => Some(page.source_path.display().to_string()),
             None => None,
-        }
+        };
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
+        response
     }
 
+    #[instrument(skip(self))]
     pub fn page_template(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
         if self.pages.contains_key(&id) {
             let template_searches = vec![
@@ -530,6 +634,7 @@ impl Site {
                 format!("pages/post/{}.jinja", self.page_status(args).unwrap()),
                 format!("pages/post/published.jinja"),
             ];
+            event!(Level::DEBUG, "||{:?}||", now.elapsed());
             template_searches
                 .iter()
                 .find_map(|t| match self.templates.get(t) {
@@ -544,24 +649,34 @@ impl Site {
 
     // NOTE: This is a stub that just calls .page_title()
     // until the actual functionality is built
+    #[instrument(skip(self))]
     pub fn page_menu_title(&self, args: &[Value]) -> Option<String> {
+        // let now = Instant::now();
         self.page_title(args)
     }
 
+    #[instrument(skip(self))]
     pub fn page_status(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
-        match self.pages.get(&id) {
+        let response = match self.pages.get(&id) {
             Some(page) => page.status.clone(),
             None => None,
-        }
+        };
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
+        response
     }
 
+    #[instrument(skip(self))]
     pub fn page_title(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
-        match self.pages.get(&id) {
+        let response = match self.pages.get(&id) {
             Some(page) => Some(page.title.clone().unwrap()),
             None => None,
-        }
+        };
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
+        response
 
         // let cache_id = format!("page-titles-{}", id);
         // match self.get_cache(&cache_id) {
@@ -597,12 +712,16 @@ impl Site {
         // }
     }
 
+    #[instrument(skip(self))]
     pub fn page_type(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let id = args[0].to_string();
-        match self.pages.get(&id) {
+        let response = match self.pages.get(&id) {
             Some(page) => page.r#type.clone(),
             None => None,
-        }
+        };
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
+        response
     }
 
     // fn prep_cache(&self) {
@@ -616,7 +735,9 @@ impl Site {
     //     c.insert("nav_items".to_string(), BTreeMap::new());
     // }
 
+    #[instrument(skip(self))]
     pub fn show(&self, args: &[Value]) -> Option<String> {
+        let now = Instant::now();
         let content = serde_json::to_string_pretty(
             &serde_json::from_str::<serde_json::Value>(&args[0].to_string()).unwrap(),
         );
@@ -633,7 +754,7 @@ impl Site {
             .lines()
             .map(|line| format!(r#"<span class="linenumber">{}</span>"#, line))
             .collect();
-
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
         Some(format!(
             r#"<pre class="template_data_object"><code>{}</code></pre>"#,
             output_html.join("\n")

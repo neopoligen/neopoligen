@@ -1,11 +1,9 @@
 use crate::ast::*;
-use crate::child::Child;
 use crate::config::Config;
 use crate::page::*;
 use crate::section::Section;
 use crate::section_category::SectionCategory;
 use crate::span::Span;
-use std::path::PathBuf;
 use tracing::{event, instrument, Level};
 
 impl Page {
@@ -136,6 +134,7 @@ fn scripts(ast: &Vec<Child>) -> Vec<String> {
         .collect()
 }
 
+/*
 fn scripts_old(ast: &Vec<Child>) -> Vec<String> {
     ast.iter()
         .filter_map(|child| {
@@ -161,6 +160,7 @@ fn scripts_old(ast: &Vec<Child>) -> Vec<String> {
         })
         .collect()
 }
+*/
 
 fn stylesheets(ast: &Vec<Child>) -> Vec<String> {
     ast.iter()
@@ -369,7 +369,7 @@ fn html_link(href: &Option<String>, title: &Option<String>) -> Option<String> {
 
 #[instrument]
 fn path_parts(source_path: &PathBuf, config: &Config) -> Vec<String> {
-    event!(Level::INFO, r#"path_part"#);
+    event!(Level::DEBUG, r#"path_part"#);
     source_path
         .clone()
         .strip_prefix(config.folders.content_root.clone())
