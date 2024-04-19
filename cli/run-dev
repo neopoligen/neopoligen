@@ -2,4 +2,4 @@
 
 rm -rf ~/Documents/Neopoligen/_dev-site
 export NEOENV=dev 
-cargo build --release && ./target/release/neopoligengine
+cargo run

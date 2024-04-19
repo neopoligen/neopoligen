@@ -65,15 +65,14 @@ async fn main() {
             Ok(engine_config) => {
                 // TODO set up for dev/prod/test switch here
                 // based off env var
-
                 let neo_env = match neo_env_var.as_str() {
                     "prod" => engine_config.clone().prod,
                     "dev" => engine_config.clone().dev,
                     _ => engine_config.clone().dev,
                 };
-
                 let active_site = neo_env.active_site.clone().unwrap();
                 event!(Level::DEBUG, r#"Active site: {}"#, &active_site);
+
                 let mut site_root = document_dir().unwrap();
                 site_root.push("Neopoligen");
                 site_root.push(active_site);
@@ -84,22 +83,37 @@ async fn main() {
                         build_site(&config, &neo_env);
                         event!(Level::DEBUG, "SITEBUILDTIME: {:?}", now.elapsed());
                         if true {
+                            // TODO Set a flag so this can be toggled on/off in the config
                             run_web_server(config, neo_env).await;
                         }
                     }
                     Err(e) => {
-                        event!(Level::ERROR, "Problem with config file: {:?}", e);
+                        event!(
+                            Level::ERROR,
+                            "Problem with set_up_site_if_necessary: {:?}",
+                            e
+                        );
                     }
                 };
             }
             Err(e) => {
-                event!(Level::ERROR, "Problem with config file: {:?}", e);
+                event!(
+                    Level::ERROR,
+                    "Problem with config file (bravo message): {:?}",
+                    e
+                );
             }
         },
         Err(e) => {
-            event!(Level::ERROR, "Problem with config file: {:?}", e);
+            event!(
+                Level::ERROR,
+                "Problem with config file (chralie message): {:?}",
+                e
+            );
         }
     }
+
+    //
 }
 
 // match fs::read_to_string(&engine_config_file) {
@@ -196,9 +210,10 @@ fn get_engine_config_file() -> Result<String, String> {
     }
 }
 
-#[instrument]
+#[instrument(skip(site_root))]
 fn set_up_site_if_necessary(site_root: &PathBuf) -> Result<String, String> {
     let path = PathBuf::from(site_root);
+    event!(Level::INFO, "Set Up Site Path: {}", &path.display());
     match path.try_exists() {
         Ok(check) => {
             if check == false {
@@ -218,7 +233,7 @@ fn set_up_site_if_necessary(site_root: &PathBuf) -> Result<String, String> {
                             match output_dir.try_exists() {
                                 Ok(status) => {
                                     if status == false {
-                                        match fs::create_dir(output_dir) {
+                                        match fs::create_dir_all(output_dir) {
                                             Ok(_) =>
                                             // event!(
                                             // Level::DEBUG,
@@ -246,7 +261,7 @@ fn set_up_site_if_necessary(site_root: &PathBuf) -> Result<String, String> {
                         return Err(format!("---{}", e));
                     }
                 }
-                println!("Site doesnt' exist. making it");
+                event!(Level::INFO, "Site doesn't exist. Making it...");
                 Ok("TODO".to_string())
             } else {
                 Ok("Site already exists".to_string())
