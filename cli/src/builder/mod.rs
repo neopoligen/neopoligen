@@ -29,13 +29,16 @@ impl Builder {
         let asset_folders = vec!["files", "images", "mp3s", "scripts"];
         let mut options = fs_extra::dir::CopyOptions::new();
         options.overwrite = true;
-        options.content_only = true;
+        // options.content_only = true;
         asset_folders.iter().for_each(|folder| {
+            event!(Level::INFO, "Copying: {}", &folder);
             let mut source_folder = self.config.folders.project_root.clone();
             source_folder.push(folder);
-            let mut dest_folder = self.config.folders.build_root.clone();
-            dest_folder.push(folder);
-            match copy(source_folder, dest_folder, &options) {
+            //let mut dest_folder = self.config.folders.build_root.clone();
+            //dest_folder.push(folder);
+            //let _ = verify_dir(&PathBuf::from(&dest_folder));
+            let _ = verify_dir(&self.config.folders.build_root);
+            match copy(source_folder, &self.config.folders.build_root, &options) {
                 Ok(_) => (),
                 Err(e) => println!("{}", e),
             }
@@ -43,19 +46,20 @@ impl Builder {
         event!(Level::DEBUG, "||{:?}||", now.elapsed());
     }
 
-    pub fn copy_files(&self) {
-        let now = Instant::now();
-        let mut options = fs_extra::dir::CopyOptions::new();
-        options.overwrite = true;
-        options.content_only = true;
-        let files_dir = self.config.folders.files_root.display().to_string();
-        let site_build_root_dir = self.config.folders.build_root.display().to_string();
-        match copy(files_dir, site_build_root_dir, &options) {
-            Ok(_) => (),
-            Err(e) => println!("{}", e),
-        }
-        event!(Level::DEBUG, "||{:?}||", now.elapsed());
-    }
+    // deprecated for copy_asset_folders() - remove this when that's done
+    // pub fn copy_files(&self) {
+    //     let now = Instant::now();
+    //     let mut options = fs_extra::dir::CopyOptions::new();
+    //     options.overwrite = true;
+    //     options.content_only = true;
+    //     let files_dir = self.config.folders.files_root.display().to_string();
+    //     let site_build_root_dir = self.config.folders.build_root.display().to_string();
+    //     match copy(files_dir, site_build_root_dir, &options) {
+    //         Ok(_) => (),
+    //         Err(e) => println!("{}", e),
+    //     }
+    //     event!(Level::DEBUG, "||{:?}||", now.elapsed());
+    // }
 
     pub fn copy_theme_assets(&self) {
         let mut options = fs_extra::dir::CopyOptions::new();
@@ -223,6 +227,8 @@ impl Builder {
     }
 }
 
+// TODO: if you ever have to mess with this, change it to use
+// a Result return type
 fn file_exists(path: &PathBuf) -> bool {
     match path.try_exists() {
         Ok(exists) => {
@@ -233,5 +239,13 @@ fn file_exists(path: &PathBuf) -> bool {
             }
         }
         Err(_) => false,
+    }
+}
+
+fn verify_dir(dir: &PathBuf) -> std::io::Result<()> {
+    if dir.exists() {
+        Ok(())
+    } else {
+        fs::create_dir_all(dir)
     }
 }
