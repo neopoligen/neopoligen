@@ -142,7 +142,11 @@ async fn main() {
 
 #[instrument(skip(config, neo_env))]
 fn build_site(config: &Config, neo_env: &NeoEnv) {
-    event!(Level::INFO, r#"Building site"#);
+    event!(
+        Level::INFO,
+        "Building site: {}",
+        neo_env.active_site.as_ref().unwrap()
+    );
     let _ = verify_dir(&config.folders.build_root);
     let _ = empty_dir(&config.folders.build_root);
     test_templates(&config, neo_env.clone());
