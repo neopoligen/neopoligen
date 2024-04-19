@@ -24,6 +24,7 @@ impl Config {
         let themes_root = PathBuf::from(format!("{}/{}", project_root.display(), "themes"));
         let output_root = PathBuf::from(format!("{}/{}", project_root.display(), "docs"));
         let status_root = PathBuf::from(format!("{}/{}", project_root.display(), "_status"));
+        let build_root = PathBuf::from(format!("{}/{}", project_root.display(), "_building"));
         let parsing_errors_root =
             PathBuf::from(format!("{}/parsing-errors", status_root.display(),));
         let theme_errors_root = PathBuf::from(format!("{}/theme-errors", status_root.display(),));
@@ -65,6 +66,7 @@ impl Config {
 
         let folders = ConfigFolders {
             configuration_root: configuration_root.clone(),
+            build_root,
             files_root,
             images_root,
             output_root,
@@ -135,8 +137,8 @@ impl Config {
         let json_plugin_sections = BTreeSet::new();
         let text_plugin_sections = BTreeSet::new();
 
-        let mut json_plugins: BTreeMap<String, String> = BTreeMap::new();
-        let mut text_plugins: BTreeMap<String, String> = BTreeMap::new();
+        let json_plugins: BTreeMap<String, String> = BTreeMap::new();
+        let text_plugins: BTreeMap<String, String> = BTreeMap::new();
 
         // get_folders_in_folder(&folders.plugins_root)
         //     .iter()

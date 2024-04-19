@@ -18,6 +18,7 @@ use nom::multi::many1;
 use nom::IResult;
 use std::fs;
 use std::path::PathBuf;
+use tracing::{event, instrument, Level};
 
 #[derive(Debug)]
 pub enum TestSection {
@@ -28,9 +29,10 @@ pub enum TestSection {
     Template(String, String),
 }
 
+#[instrument(skip(config, neo_env))]
 pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     let _ = fs::remove_dir_all(&config.folders.theme_errors_root);
-    println!("Testing templates");
+    event!(Level::INFO, "{}", "Testing Tempaltes");
     get_file_paths_for_extension(&config.folders.theme_tests_root, "neotest")
         .iter()
         .for_each(|tf| {

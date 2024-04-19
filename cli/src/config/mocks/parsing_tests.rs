@@ -12,6 +12,11 @@ impl Config {
 
         let content_root = PathBuf::from(format!("{}/{}", project_root.display(), "content"));
         let files_root = PathBuf::from(format!("{}/{}", project_root.display(), "extras"));
+        let build_root = PathBuf::from(format!(
+            "{}/{}",
+            project_root.display(),
+            "NOT_USED_IN_TESTS"
+        ));
         let images_root = PathBuf::from(format!("{}/{}", project_root.display(), "images"));
         let plugins_root = PathBuf::from(format!("{}/{}", configuration_root.display(), "plugins"));
         let output_root = PathBuf::from(format!("{}/{}", project_root.display(), "docs"));
@@ -46,6 +51,7 @@ impl Config {
         // let theme_wrappers_root = PathBuf::from(format!("{}/{}", theme_root.display(), "wrappers"));
 
         let folders = ConfigFolders {
+            build_root,
             configuration_root: configuration_root.clone(),
             files_root,
             images_root,

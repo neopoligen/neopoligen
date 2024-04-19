@@ -9,6 +9,8 @@ impl Config {
         let configuration_root =
             PathBuf::from(format!("{}/{}", project_root.display(), "configuration"));
         let content_root = PathBuf::from(format!("{}/{}", project_root.display(), "content"));
+        let build_root =
+            PathBuf::from(format!("{}/{}", project_root.display(), "NOT_USED_IN_TEST"));
         let files_root =
             PathBuf::from(format!("{}/{}", project_root.display(), "NOT_USED_IN_TEST"));
         let images_root =
@@ -50,6 +52,7 @@ impl Config {
         ));
 
         let folders = ConfigFolders {
+            build_root,
             configuration_root: configuration_root.clone(),
             files_root,
             images_root,
