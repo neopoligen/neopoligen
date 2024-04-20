@@ -24,6 +24,5 @@ PATH: index.neo
 EXPECTED_OUTPUT
 ##################################################################################
 
-<section class="mp3_section flow">
-  this is where the mp3 goes
-</section>
+/mp3s/welcome.mp3
+

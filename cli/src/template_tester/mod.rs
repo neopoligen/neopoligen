@@ -82,11 +82,15 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
                                 .collect();
                         if path_parts[path_parts.len() - 2].to_string() == test_page_id.to_string()
                         {
+                            let trimmed_input = 
+                                o.1.replace(" ", "").replace("\n", "").to_string();
+                            let trimmed_target = 
+                                target_output.replace(" ", "").replace("\n", "").to_string();
                             // dbg!(&test_page_id);
-                            if o.1.replace(" ", "").replace("\n", "").to_string()
-                                != target_output.replace(" ", "").replace("\n", "").to_string()
-                            {
+                            if trimmed_input != trimmed_target {
                                 println!("Template Error");
+                                dbg!(trimmed_input);
+                                dbg!(trimmed_target);
                                 let mut output_path = config.folders.theme_errors_root.clone();
                                 let error_file_sub_path = tf
                                     .strip_prefix(config.folders.theme_tests_root.clone())

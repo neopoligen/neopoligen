@@ -6,6 +6,7 @@ use crate::child::Child;
 use crate::collection::{Collection, CollectionItem};
 use crate::config::Config;
 use crate::image::Image;
+use crate::mp3::Mp3;
 use crate::page::Page;
 use minijinja::Value;
 use serde::Serialize;
@@ -266,6 +267,32 @@ impl Site {
         //             None
         //         }
         //     } else {
+        //         None
+        //     }
+        // })
+    }
+
+    #[instrument(skip(self))]
+    pub fn mp3(&self, args: &[Value]) -> Option<Mp3> {
+        let tmp_mp3 = Mp3 {
+            raw_href: "asdf".to_string(),
+            source_path: PathBuf::from("asdf".to_string()),
+            file_stem: "welcome".to_string(),
+            file_name: "welcome.mp3".to_string(),
+        };
+        Some(tmp_mp3)
+
+        // let now = Instant::now();
+        // let target_name = args[0].to_string();
+        // self.images.iter().find_map(|image| {
+        //     if &target_name == &image.file_stem {
+        //         event!(Level::DEBUG, "||{:?}||", now.elapsed());
+        //         Some(image.clone())
+        //     } else if &target_name == &image.file_name {
+        //         event!(Level::DEBUG, "||{:?}||", now.elapsed());
+        //         Some(image.clone())
+        //     } else {
+        //         event!(Level::DEBUG, "||{:?}||", now.elapsed());
         //         None
         //     }
         // })

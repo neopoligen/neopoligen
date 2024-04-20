@@ -8,8 +8,8 @@ Testing
 
 The main thing to use is:
 
-start-dev-test-build
+start-dev-test-run
 
 it clears things out of the `_dev-site`` dir
 then sets the NEOENV=dev so the process
-builds and runs everything
+runs everything
