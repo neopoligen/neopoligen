@@ -275,7 +275,7 @@ impl Site {
     #[instrument(skip(self))]
     pub fn mp3(&self, args: &[Value]) -> Option<Mp3> {
         let tmp_mp3 = Mp3 {
-            raw_href: "asdf".to_string(),
+            raw_href: "/mp3s/welcome.mp3".to_string(),
             source_path: PathBuf::from("asdf".to_string()),
             file_stem: "welcome".to_string(),
             file_name: "welcome.mp3".to_string(),
