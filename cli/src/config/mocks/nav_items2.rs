@@ -22,16 +22,19 @@ impl Config {
             "NOT_USED_IN_TEST"
         ));
         let output_root = PathBuf::from(format!("{}/{}", project_root.display(), "docs"));
-        let parsing_errors_root = PathBuf::from(format!(
-            "{}/_errors/{}",
-            project_root.display(),
-            "NOT_USED_IN_TEST"
-        ));
-        let theme_errors_root = PathBuf::from(format!(
-            "{}/_errors/{}",
-            project_root.display(),
-            "NOT_USED_IN_TEST"
-        ));
+        let status_root = PathBuf::from(format!("{}/{}", project_root.display(), "docs"));
+
+        // let parsing_errors_root = PathBuf::from(format!(
+        //     "{}/_errors/{}",
+        //     project_root.display(),
+        //     "NOT_USED_IN_TEST"
+        // ));
+        // let theme_errors_root = PathBuf::from(format!(
+        //     "{}/_errors/{}",
+        //     project_root.display(),
+        //     "NOT_USED_IN_TEST"
+        // ));
+
         let themes_root =
             PathBuf::from(format!("{}/{}", project_root.display(), "NOT_USED_IN_TEST"));
         let theme_root = PathBuf::from(format!("{}/{}", themes_root.display(), theme_name));
@@ -61,9 +64,8 @@ impl Config {
             output_root,
             plugins_root,
             content_root,
-            parsing_errors_root,
-            theme_errors_root,
             project_root,
+            status_root,
             themes_root,
             theme_assets_input_root,
             theme_assets_build_root,

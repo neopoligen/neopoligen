@@ -4,6 +4,7 @@ use crate::config::Config;
 use crate::file_set::FileSet;
 use crate::neo_config::NeoEnv;
 use crate::site::Site;
+use crate::template_error::TemplateError;
 use dirs::config_local_dir;
 use fs_extra::dir::copy;
 use minijinja::context;
@@ -21,6 +22,7 @@ pub struct Builder {
     file_set: FileSet,
     config: Config,
     neo_env: NeoEnv,
+    pub template_errors: Vec<TemplateError>,
 }
 
 impl Builder {
