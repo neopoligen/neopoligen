@@ -1,4 +1,5 @@
 #!/bin/bash
 
-cargo test -- --nocapture\
-  && cargo run
+rm -rf ~/Documents/Neopoligen/_dev-site
+export NEOENV=dev 
+cargo test -- --nocapture && cargo run
