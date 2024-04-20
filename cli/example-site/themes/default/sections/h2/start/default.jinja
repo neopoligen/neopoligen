@@ -1,52 +1,31 @@
 [!- import "includes/macros.jinja" as macros -!]
 
-<section [@- section_attributes(page_id, { "section": section, "classes": section.type ~ "_section flow" } ) -@]>
+<section [@- section_attributes(page_id, {"section": section, "classes": "h2_section standard_category_section flow" } ) -@]>
+    [!- include "section-parts/forward.jinja" -!]
 
-
-    [!- if section.key_value_attributes.forward -!]
-        <div class="forward">
-            [@- section.key_value_attributes.forward -@]
-        </div>
-    [!- endif -!]
-
-    [!- for content in section.category.content.containers -!]
-        [!- if loop.first -!]
-            <div class="[@- section.type -@]_heading_group">[@- '' -@]
-                <[@- section.type -@]>
-                    [@- output_payload(page_id, content, extras) -@]
-                </[@- section.type -@]>
-                [!- if section.key_value_attributes.subtitle -!]
-                    <div class="heading_subtitle">
-                        [@- section.key_value_attributes.subtitle -@]
-                    </div>
-                [!- endif -!]
+    [!- if section.key_value_attributes.title or section.key_value_attributes.subtitle -!]
+    <div class="heading_group">
+        [!- if section.key_value_attributes.title -!]
+            <h2>
+                [@- section.key_value_attributes.title -@]
+            </h2>
+        [!- endif -!]
+        [!- if section.key_value_attributes.subtitle -!]
+            <div class="subtitle">
+                [@- section.key_value_attributes.subtitle -@]
             </div>
         [!- endif -!]
-    [!- endfor -!]
-
-
-    [!- if section.key_value_attributes.preface -!]
-        <div class="preface">
-            [@- section.key_value_attributes.preface -@]
-        </div>
-    [!- endif -!]
-
-    [!- if section.category.content.containers[1] -!]
-    <div class="content flow">
-    [!- endif -!]
-
-        [!- for content in section.category.content.containers -!]
-            [!- if not loop.first -!]
-                <p>[@- output_payload(page_id, content, extras) -@]</p>
-            [!- endif -!]
-        [!- endfor -!]
-
-    [!- if section.category.content.containers[1] -!]
     </div>
     [!- endif -!]
 
-    [!- if section.key_value_attributes.afterword -!]
-        <div class="afterword">
-            [@- section.key_value_attributes.afterword -@]
-        </div>
+    [!- include "section-parts/preface.jinja" -!]
+
+    [!- if section.category.content.containers[0] -!]
+    <div class="content flow">
+        [!- for content in section.category.content.containers -!]
+            <p>[@- output_payload(page_id, content, extras) -@]</p>
+        [!- endfor -!]
+    </div>
     [!- endif -!]
+
+    [!- include "section-parts/afterword.jinja" -!]

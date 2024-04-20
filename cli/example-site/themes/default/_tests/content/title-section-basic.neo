@@ -1,0 +1,13 @@
+-- title
+
+This is a test of the title
+
+-- expected-output
+
+<section>
+THIS IS THE STUFF
+</section>
+
+-- metadata
+-- id: title-section-basic
+-- type: theme-test
