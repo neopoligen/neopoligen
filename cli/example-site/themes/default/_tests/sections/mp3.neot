@@ -31,5 +31,9 @@ EXPECTED_OUTPUT
 ##################################################################################
 
 <section class="mp3_section standard_category_section flow">
-/mp3s/welcome.mp3
+    <figure>
+        <figcaption>
+            <audio controls src="/mp3s/welcome.mp3"></audio>
+        </figcaption>
+    </figure>
 </section>
