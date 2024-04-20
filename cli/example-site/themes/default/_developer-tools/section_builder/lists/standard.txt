@@ -20,6 +20,7 @@ image
 include
 iref
 link
+mp3
 note
 p
 quote

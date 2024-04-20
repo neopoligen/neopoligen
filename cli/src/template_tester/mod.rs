@@ -31,9 +31,9 @@ pub enum TestSection {
 
 #[instrument(skip(config, neo_env))]
 pub fn test_templates(config: &Config, neo_env: NeoEnv) {
-    let _ = fs::remove_dir_all(&config.folders.theme_errors_root);
     event!(Level::INFO, "{}", "Testing Tempaltes");
-    get_file_paths_for_extension(&config.folders.theme_tests_root, "neotest")
+    let _ = fs::remove_dir_all(&config.folders.theme_errors_root);
+    get_file_paths_for_extension(&config.folders.theme_tests_root, "neot")
         .iter()
         .for_each(|tf| {
             let test_setup = fs::read_to_string(tf).unwrap();
@@ -49,13 +49,13 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
                                 // dbg!(&name.to_string());
                                 file_set
                                     .templates
-                                    .insert(name.to_string(), content.to_string())
+                                    .insert( name.to_string(), content.to_string())
                             }
                             TestSection::Input(path, id, content) => {
                                 test_page_id = id.to_string();
                                 file_set
                                     .pages
-                                    .insert(PathBuf::from(path), content.to_string())
+                                    .insert(PathBuf::from(format!("{}/{}", &config.folders.content_root.display().to_string(), path)), content.to_string())
                             }
                             TestSection::SupportPage(path, id, content) => {
                                 test_page_id = id.to_string();
