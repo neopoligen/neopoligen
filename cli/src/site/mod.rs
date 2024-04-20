@@ -30,6 +30,7 @@ pub struct Site {
     pub invalid_pages: BTreeMap<PathBuf, String>,
     pub templates: BTreeMap<String, String>,
     pub images: Vec<Image>,
+    pub mp3s: Vec<Mp3>,
 }
 
 impl Site {
@@ -280,7 +281,23 @@ impl Site {
             file_stem: "welcome".to_string(),
             file_name: "welcome.mp3".to_string(),
         };
-        Some(tmp_mp3)
+
+        let now = Instant::now();
+        let target_name = args[0].to_string();
+        self.mp3s.iter().find_map(|mp3| {
+            if &target_name == &mp3.file_stem {
+                event!(Level::DEBUG, "||{:?}||", now.elapsed());
+                //Some(mp3.clone())
+                Some(tmp_mp3.clone())
+            } else if &target_name == &mp3.file_name {
+                event!(Level::DEBUG, "||{:?}||", now.elapsed());
+                // Some(mp3.clone())
+                Some(tmp_mp3.clone())
+            } else {
+                event!(Level::DEBUG, "||{:?}||", now.elapsed());
+                None
+            }
+        })
 
         // let now = Instant::now();
         // let target_name = args[0].to_string();

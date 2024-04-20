@@ -1,6 +1,7 @@
 use crate::config::Config;
 use crate::file_set::FileSet;
 use crate::image::Image;
+use crate::mp3::Mp3;
 use crate::page::Page;
 use crate::site::Site;
 use std::collections::BTreeMap;
@@ -40,6 +41,12 @@ impl Site {
             invalid_pages: BTreeMap::new(),
             templates: BTreeMap::new(),
             images,
+            mp3s: vec![Mp3 {
+                raw_href: "/mp3s/welcome.mp3".to_string(),
+                source_path: std::path::PathBuf::from("asdf".to_string()),
+                file_stem: "welcome".to_string(),
+                file_name: "welcome.mp3".to_string(),
+            }],
         };
         file_set.pages.iter().for_each(|f| {
             match Page::new(f.0.to_path_buf(), f.1.to_string(), &config) {
