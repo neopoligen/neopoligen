@@ -17,6 +17,7 @@ pub struct FileSet {
     pub pages: BTreeMap<PathBuf, String>,
     pub templates: BTreeMap<String, String>,
     pub images: Vec<PathBuf>,
+    pub mp3s: Vec<PathBuf>,
 }
 
 impl FileSet {
@@ -46,6 +47,13 @@ impl FileSet {
         let walker = WalkDir::new(dir).into_iter();
         for entry in walker.filter_entry(|e| !is_hidden(e)) {
             self.images.push(entry.unwrap().path().to_path_buf());
+        }
+    }
+
+    pub fn load_mp3s(&mut self, dir: &PathBuf) {
+        let walker = WalkDir::new(dir).into_iter();
+        for entry in walker.filter_entry(|e| !is_hidden(e)) {
+            self.mp3s.push(entry.unwrap().path().to_path_buf());
         }
     }
 

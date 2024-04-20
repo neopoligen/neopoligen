@@ -7,6 +7,7 @@ impl FileSet {
             pages: BTreeMap::new(),
             templates: BTreeMap::new(),
             images: vec![],
+            mp3s: vec![],
         }
     }
 }

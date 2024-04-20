@@ -15,6 +15,7 @@ impl Config {
             PathBuf::from(format!("{}/{}", project_root.display(), "NOT_USED_IN_TEST"));
         let images_root =
             PathBuf::from(format!("{}/{}", project_root.display(), "NOT_USED_IN_TEST"));
+        let mp3s_root = PathBuf::from(format!("{}/{}", project_root.display(), "NOT_USED_IN_TEST"));
         let plugins_root = PathBuf::from(format!(
             "{}/{}",
             configuration_root.display(),
@@ -56,6 +57,7 @@ impl Config {
             configuration_root: configuration_root.clone(),
             files_root,
             images_root,
+            mp3s_root,
             output_root,
             plugins_root,
             content_root,

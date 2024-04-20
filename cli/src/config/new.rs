@@ -19,6 +19,7 @@ impl Config {
             get_config_file_single_line(&configuration_root, "default-language.txt").unwrap();
         let files_root = PathBuf::from(format!("{}/{}", project_root.display(), "files"));
         let images_root = PathBuf::from(format!("{}/{}", project_root.display(), "images"));
+        let mp3s_root = PathBuf::from(format!("{}/{}", project_root.display(), "mp3s"));
         let plugins_root = PathBuf::from(format!("{}/{}", project_root.display(), "plugins"));
         let content_root = PathBuf::from(format!("{}/{}", project_root.display(), "content"));
         let themes_root = PathBuf::from(format!("{}/{}", project_root.display(), "themes"));
@@ -69,6 +70,7 @@ impl Config {
             configuration_root: configuration_root.clone(),
             files_root,
             images_root,
+            mp3s_root,
             output_root,
             plugins_root,
             content_root,
