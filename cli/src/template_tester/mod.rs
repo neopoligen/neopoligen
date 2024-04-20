@@ -27,6 +27,7 @@ pub enum TestSection {
     Output(String),
     SupportPage(String, String, String),
     Template(String, String),
+    Mp3(String),
 }
 
 #[instrument(skip(config, neo_env))]
@@ -65,6 +66,12 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
                             }
                             TestSection::Output(content) => {
                                 target_output = content.to_string();
+                                None
+                            }
+                            TestSection::Mp3(path) => {
+                                file_set
+                                    .mp3s
+                                    .push(PathBuf::from(format!("{}/{}", &config.folders.mp3s_root.display(), path)) );
                                 None
                             }
                             _ => None,
@@ -119,6 +126,7 @@ pub fn test_section(source: &str) -> IResult<&str, TestSection> {
     let (source, _) = multispace0(source)?;
     let (source, string) = alt((
         test_desc,
+        test_mp3,
         test_template,
         test_support_page,
         test_input,
@@ -179,6 +187,18 @@ pub fn test_input(source: &str) -> IResult<&str, TestSection> {
             content.trim().to_string(),
         ),
     ))
+}
+
+pub fn test_mp3(source: &str) -> IResult<&str, TestSection> {
+    let (source, _) = tag("MP3")(source)?;
+    let (source, _) = space0(source)?;
+    let (source, _) = line_ending(source)?;
+    let (source, _) = tag("PATH:")(source)?;
+    let (source, _) = space1(source)?;
+    let (source, path) = not_line_ending(source)?;
+    let (source, _) = line_ending(source)?;
+    let (source, _) = test_spacer_line(source)?;
+    Ok((source, TestSection::Mp3(path.trim().to_string())))
 }
 
 pub fn test_support_page(source: &str) -> IResult<&str, TestSection> {

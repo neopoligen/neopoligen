@@ -249,7 +249,6 @@ impl Site {
     pub fn mp3(&self, args: &[Value]) -> Option<Mp3> {
         let now = Instant::now();
         let target_name = args[0].to_string();
-        dbg!(&target_name);
         self.mp3s.iter().find_map(|mp3| {
             if &target_name == &mp3.file_stem {
                 event!(Level::DEBUG, "||{:?}||", now.elapsed());
