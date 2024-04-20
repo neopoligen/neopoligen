@@ -166,9 +166,9 @@ fn build_site(config: &Config, neo_env: &NeoEnv) {
     test_templates(&config, neo_env.clone());
     let mut file_set = FileSet::new();
     file_set.load_content(&config.folders.content_root);
-    file_set.load_templates(&config.folders.theme_root);
     file_set.load_images(&config.folders.images_root);
     file_set.load_mp3s(&config.folders.mp3s_root);
+    file_set.load_templates(&config.folders.theme_root);
     let builder = Builder::new(file_set, &config, &neo_env);
     builder.write_changed_files(); // TODO: finishing dev for write_changed_files
     builder.write_files(); // TODO: Rename to write_all_files

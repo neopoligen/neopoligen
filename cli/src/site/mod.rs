@@ -131,7 +131,9 @@ impl Site {
         let code = args[0].to_string();
         let lang = args[1].to_string();
         let syntax_set = SyntaxSet::load_defaults_newlines();
-        let syntax = syntax_set.find_syntax_by_token(&lang).unwrap();
+        let syntax = syntax_set
+            .find_syntax_by_token(&lang)
+            .unwrap_or_else(|| syntax_set.find_syntax_plain_text());
         let mut html_generator =
             ClassedHTMLGenerator::new_with_class_style(syntax, &syntax_set, ClassStyle::Spaced);
         for line in LinesWithEndings::from(code.trim()) {
