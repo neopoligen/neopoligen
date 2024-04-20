@@ -6,6 +6,7 @@ use crate::child::Child;
 use crate::collection::{Collection, CollectionItem};
 use crate::config::Config;
 use crate::image::Image;
+use crate::mp3::Mp3;
 use crate::page::Page;
 use minijinja::Value;
 use serde::Serialize;
@@ -29,6 +30,7 @@ pub struct Site {
     pub invalid_pages: BTreeMap<PathBuf, String>,
     pub templates: BTreeMap<String, String>,
     pub images: Vec<Image>,
+    pub mp3s: Vec<Mp3>,
 }
 
 impl Site {
@@ -129,7 +131,9 @@ impl Site {
         let code = args[0].to_string();
         let lang = args[1].to_string();
         let syntax_set = SyntaxSet::load_defaults_newlines();
-        let syntax = syntax_set.find_syntax_by_token(&lang).unwrap();
+        let syntax = syntax_set
+            .find_syntax_by_token(&lang)
+            .unwrap_or_else(|| syntax_set.find_syntax_plain_text());
         let mut html_generator =
             ClassedHTMLGenerator::new_with_class_style(syntax, &syntax_set, ClassStyle::Spaced);
         for line in LinesWithEndings::from(code.trim()) {
@@ -241,34 +245,24 @@ impl Site {
                 None
             }
         })
+    }
 
-        // self.images.iter().find_map(|image| {
-        //     if let (Some(file_name), Some(file_stem)) = (image.file_name(), image.file_stem()) {
-        //         if target_name == file_stem.to_string_lossy().to_string() {
-        //             Some(format!(
-        //                 "/{}",
-        //                 image
-        //                     .strip_prefix(self.config.folders.project_root.clone())
-        //                     .unwrap()
-        //                     .to_string_lossy()
-        //                     .to_string(),
-        //             ))
-        //         } else if target_name == file_name.to_string_lossy().to_string() {
-        //             Some(format!(
-        //                 "/{}",
-        //                 image
-        //                     .strip_prefix(self.config.folders.project_root.clone())
-        //                     .unwrap()
-        //                     .to_string_lossy()
-        //                     .to_string(),
-        //             ))
-        //         } else {
-        //             None
-        //         }
-        //     } else {
-        //         None
-        //     }
-        // })
+    #[instrument(skip(self))]
+    pub fn mp3(&self, args: &[Value]) -> Option<Mp3> {
+        let now = Instant::now();
+        let target_name = args[0].to_string();
+        self.mp3s.iter().find_map(|mp3| {
+            if &target_name == &mp3.file_stem {
+                event!(Level::DEBUG, "||{:?}||", now.elapsed());
+                Some(mp3.clone())
+            } else if &target_name == &mp3.file_name {
+                event!(Level::DEBUG, "||{:?}||", now.elapsed());
+                Some(mp3.clone())
+            } else {
+                event!(Level::DEBUG, "||{:?}||", now.elapsed());
+                None
+            }
+        })
     }
 
     // pub fn tlink(&self, args: &[Value]) -> Option<String> {

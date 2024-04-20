@@ -24,6 +24,7 @@ impl Object for Site {
             "image" => Ok(Value::from_serializable(&self.image(args))),
             "log" => Ok(Value::from_serializable(&self.log_from_template(args))),
             "link_or_title" => Ok(Value::from_serializable(&self.link_or_title(args))),
+            "mp3" => Ok(Value::from_serializable(&self.mp3(args))),
             "page_ast" => Ok(Value::from_serializable(&self.page_ast(args))),
             "page_ast_pretty" => Ok(Value::from_serializable(&self.page_ast_pretty(args))),
             "page_build_path" => Ok(Value::from_serializable(&self.page_build_path(args))),
