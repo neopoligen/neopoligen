@@ -1,0 +1,15 @@
+-- title
+
+README
+
+-- h2
+
+Testing 
+
+The main thing to use is:
+
+start-dev-test-build
+
+it clears things out of the `_dev-site`` dir
+then sets the NEOENV=dev so the process
+builds and runs everything
