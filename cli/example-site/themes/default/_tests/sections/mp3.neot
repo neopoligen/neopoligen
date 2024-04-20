@@ -13,7 +13,7 @@ PATH: index.neo
 ##################################################################################
 
 -- mp3
--- welcome-mp3
+-- welcome
 
 -- metadata
 -- id: file-under-test

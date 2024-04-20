@@ -243,76 +243,25 @@ impl Site {
                 None
             }
         })
-
-        // self.images.iter().find_map(|image| {
-        //     if let (Some(file_name), Some(file_stem)) = (image.file_name(), image.file_stem()) {
-        //         if target_name == file_stem.to_string_lossy().to_string() {
-        //             Some(format!(
-        //                 "/{}",
-        //                 image
-        //                     .strip_prefix(self.config.folders.project_root.clone())
-        //                     .unwrap()
-        //                     .to_string_lossy()
-        //                     .to_string(),
-        //             ))
-        //         } else if target_name == file_name.to_string_lossy().to_string() {
-        //             Some(format!(
-        //                 "/{}",
-        //                 image
-        //                     .strip_prefix(self.config.folders.project_root.clone())
-        //                     .unwrap()
-        //                     .to_string_lossy()
-        //                     .to_string(),
-        //             ))
-        //         } else {
-        //             None
-        //         }
-        //     } else {
-        //         None
-        //     }
-        // })
     }
 
     #[instrument(skip(self))]
     pub fn mp3(&self, args: &[Value]) -> Option<Mp3> {
-        let tmp_mp3 = Mp3 {
-            raw_href: "/mp3s/welcome.mp3".to_string(),
-            source_path: PathBuf::from("asdf".to_string()),
-            file_stem: "welcome".to_string(),
-            file_name: "welcome.mp3".to_string(),
-        };
-
         let now = Instant::now();
         let target_name = args[0].to_string();
+        dbg!(&target_name);
         self.mp3s.iter().find_map(|mp3| {
             if &target_name == &mp3.file_stem {
                 event!(Level::DEBUG, "||{:?}||", now.elapsed());
-                //Some(mp3.clone())
-                Some(tmp_mp3.clone())
+                Some(mp3.clone())
             } else if &target_name == &mp3.file_name {
                 event!(Level::DEBUG, "||{:?}||", now.elapsed());
-                // Some(mp3.clone())
-                Some(tmp_mp3.clone())
+                Some(mp3.clone())
             } else {
                 event!(Level::DEBUG, "||{:?}||", now.elapsed());
                 None
             }
         })
-
-        // let now = Instant::now();
-        // let target_name = args[0].to_string();
-        // self.images.iter().find_map(|image| {
-        //     if &target_name == &image.file_stem {
-        //         event!(Level::DEBUG, "||{:?}||", now.elapsed());
-        //         Some(image.clone())
-        //     } else if &target_name == &image.file_name {
-        //         event!(Level::DEBUG, "||{:?}||", now.elapsed());
-        //         Some(image.clone())
-        //     } else {
-        //         event!(Level::DEBUG, "||{:?}||", now.elapsed());
-        //         None
-        //     }
-        // })
     }
 
     // pub fn tlink(&self, args: &[Value]) -> Option<String> {
