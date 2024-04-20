@@ -5,7 +5,7 @@ use neopoligengine::config::Config;
 use neopoligengine::file_set::FileSet;
 use neopoligengine::neo_config::NeoConfig;
 use neopoligengine::neo_config::NeoEnv;
-use neopoligengine::template_tester::*;
+use neopoligengine::template_tester::test_templates;
 use notify_debouncer_mini::new_debouncer;
 use notify_debouncer_mini::notify::RecursiveMode;
 use notify_debouncer_mini::DebounceEventResult;
