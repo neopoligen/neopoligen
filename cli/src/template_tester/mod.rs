@@ -60,7 +60,7 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     env.add_template_owned(
         "template_error_status",
         r#"
-<div>Template Errors: {{ template_error_count }} out of {{ test_page_count }}</div>
+<div>Ran {{ test_page_count }} Template Tests. Found {{ template_error_count }} Errors</div>
 {% for error in template_errors %}
 <h3>{{ error.id }}</h3>
 <div>Expected</div>
