@@ -40,14 +40,14 @@ function delete_neopoligen_config() {
 function get_active_site() {
   invoke('get_active_site', {}).then((raw) => {
     const el = document.querySelector('.active_site')
-    el.innerHTML = `Active Site: ${JSON.parse(raw).payload}`
+    el.innerHTML = `${JSON.parse(raw).payload}`
   })
 }
 
 function get_template_error_status() {
   invoke('get_template_error_status', {}).then((raw) => {
     const el = document.querySelector('.templateErrorStatus')
-    el.innerHTML = "AAAAAAAAAAAAAAAAAAAAAAA"
+    el.innerHTML = raw 
   })
 }
 
@@ -208,8 +208,10 @@ listen('neo_message', (event) => {
   if (output_el) {
     if (event.payload.trim() === "CMD: CLEAR") {
       output_el.innerHTML = ""
+      get_template_error_status()
     } else {
       output_el.innerHTML = output_el.innerHTML + event.payload + "\n"
+      get_template_error_status()
     }
   }
 })

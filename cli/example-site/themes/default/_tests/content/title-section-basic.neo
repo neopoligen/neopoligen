@@ -4,9 +4,13 @@ This is a test of the title
 
 -- expected-output
 
-<section>
-THIS IS THE STUFF
+<section class="title_section flow">x
+    <div class="title_heading_group">
+        <h1>This is a test of the title</h1>
+    </div>
 </section>
+
+
 
 -- metadata
 -- id: title-section-basic

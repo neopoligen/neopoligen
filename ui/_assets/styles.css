@@ -157,5 +157,11 @@ margin-top: var(--flow-space, 1em);
 }
 
 
+.templateErrorStatus  {
+  font-size: 0.76rem;
+}
 
-
+.templateErrorStatus pre {
+  white-space: pre-wrap; 
+  overflow-wrap: break-word;
+}

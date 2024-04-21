@@ -122,8 +122,16 @@ fn get_active_site() -> String {
 
 #[tauri::command]
 fn get_template_error_status() -> String {
-    let response = r#"{ "payload": "something" }"#.to_string();
-    response
+    let mut status_file_path = document_dir().unwrap();
+    status_file_path.push("Neopoligen");
+    status_file_path.push(active_site());
+    status_file_path.push("status");
+    status_file_path.push("template_errors.htm");
+    dbg!(&status_file_path);
+    match fs::read_to_string(status_file_path) {
+        Ok(html) => html,
+        Err(e) => format!("{}", e),
+    }
 }
 
 fn load_config_file(path: PathBuf) -> Result<EngineConfig, String> {
