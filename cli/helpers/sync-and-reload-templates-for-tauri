@@ -1,0 +1,4 @@
+#!/bin/bash
+
+rsync -av example-site/themes/ ~/Documents/Neopoligen/neopoligen-dev-site/themes/ 
+echo `date` > ~/Documents/Neopoligen/neopoligen-dev-site/content/reload-trigger.txt
