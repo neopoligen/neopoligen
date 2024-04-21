@@ -1,6 +1,6 @@
 {
   "build": {
-    "beforeDevCommand": "tauri/make_sidecar",
+    "beforeDevCommand": "tauri/helpers/run-before-dev",
     "beforeBuildCommand": "tauri/make_sidecar",
     "devPath": "../ui",
     "distDir": "../ui",

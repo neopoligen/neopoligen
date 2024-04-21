@@ -1,0 +1,4 @@
+#!/bin/bash
+
+rm -rf ~/Documents/Neopoligen/_dev-site
+export NEOENV=dev 

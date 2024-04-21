@@ -3,6 +3,8 @@ use crate::config::Config;
 use crate::file_set::FileSet;
 use crate::neo_config::NeoEnv;
 use crate::template_error::TemplateError;
+use minijinja::{context, Environment, Value};
+use std::fs;
 use std::path::PathBuf;
 use tracing::{event, instrument, Level};
 
@@ -41,12 +43,41 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
         let body_parts: Vec<&str> = output.1.split("### EXPECTED_OUTPUT ###").collect();
         if body_parts.len() == 2 {
             if body_parts[0] != body_parts[1] {
+                let parent_dir = output.0.parent().unwrap();
+                let id = parent_dir.file_stem().unwrap().to_string_lossy();
                 builder.template_errors.push(TemplateError {
-                    id: "asdf".to_string(),
-                    expected: body_parts[0].to_string(),
-                    got: body_parts[1].to_string(),
+                    id: id.to_string(),
+                    expected: body_parts[1].to_string(),
+                    got: body_parts[0].to_string(),
                 });
             }
         }
     });
+
+    let mut env = Environment::new();
+    env.add_template_owned(
+        "template_error_status",
+        r#"
+<div>Template Errors: {{ template_error_count }}</div>
+{% for error in template_errors %}
+<h3>{{ error.id }}</h3>
+<div>Expected</div>
+<pre>{% autoescape true %}{{ error.expected }}{% endautoescape %}</pre>
+<div>Got</div>
+<pre>{% autoescape true %}{{ error.got }}{% endautoescape %}</pre>
+{% endfor %}"#
+            .to_string(),
+    )
+    .unwrap();
+    let skeleton = env.get_template("template_error_status").unwrap();
+    let output = skeleton
+        .render(context!(
+            template_error_count => &builder.template_errors.len(),
+            template_errors => Value::from_serializable(&builder.template_errors)
+        ))
+        .unwrap();
+    let mut output_path = config.folders.status_root.clone();
+    let _ = fs::create_dir_all(&output_path);
+    output_path.push("template_errors.htm");
+    let _ = fs::write(output_path, output);
 }
