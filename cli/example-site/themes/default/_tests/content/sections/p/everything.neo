@@ -1,0 +1,33 @@
+-- p
+-- forward: This is a forward
+-- title: This is a title
+-- subtitle: This is a subtitle
+-- preface: This is the preface
+-- afterword: This is the afterword
+
+The quick brown fox
+
+Jumps over the
+lazy dog
+
+-- expected-output
+
+<section class="p_section standard_category_section flow">
+    <div class="forward flow">This is a forward</div>
+    <div class="heading_group">
+        <h2>This is a title</h2>
+        <div class="subtitle">This is a subtitle</div>
+    </div>
+    <div class="preface flow">This is the preface</div>
+    <div class="content flow">
+        <p>The quick brown fox</p>
+        <p>Jumps over the lazy dog</p>
+    </div>
+    <div class="afterword flow">This is the afterword</div>
+</section>
+
+
+-- metadata
+-- id: 2foe9pso
+-- type: template-test
+

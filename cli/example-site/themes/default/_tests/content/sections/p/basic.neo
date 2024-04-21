@@ -1,0 +1,21 @@
+-- p
+
+This is a paragraph
+
+And another one
+with a couple lines
+
+-- expected-output
+
+<section class="p_section standard_category_section flow">
+    <div class="content flow">
+        <p>This is a paragraph</p>
+        <p>And another one with a couple lines</p>
+    </div>
+</section>
+
+-- metadata
+-- id: section-p-basic
+-- type: template-test
+
+

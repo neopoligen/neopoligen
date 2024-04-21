@@ -291,7 +291,14 @@ one nav_menu can but put on a page -#]
 [@- ' ' -@][!- endif -!]
 [@- payload.section.key_value_attributes.class -@]"[!- endif -!]
 [!- for key in payload.section.key_value_attributes -!]
-[!- if key != "class" and key not in section_attribute_excludes -!][@- ' ' -@]
+[!- if key != "class" and key != "afterword" 
+and key != "comment" 
+and key != "export" 
+and key != "forward" 
+and key != "preface" 
+and key != "subtitle" 
+and key != "title"
+-!][@- ' ' -@]
 [@- key -@]="[@- payload.section.key_value_attributes[key] -@]"
 [!- endif -!][!- endfor -!]
 [!- endmacro -!]
