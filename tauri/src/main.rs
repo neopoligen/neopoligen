@@ -127,7 +127,6 @@ fn get_template_error_status() -> String {
     status_file_path.push(active_site());
     status_file_path.push("status");
     status_file_path.push("template_errors.htm");
-    dbg!(&status_file_path);
     match fs::read_to_string(status_file_path) {
         Ok(html) => html,
         Err(e) => format!("{}", e),
