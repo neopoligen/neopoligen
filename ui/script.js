@@ -5,7 +5,11 @@ const { invoke } = window.__TAURI__.tauri
 function init_page() {
   add_link_listeners()
   add_button_listeners()
+  get_template_error_status()
+  get_active_site()
 }
+
+
 
 
 function add_listener(listener, selector, func) {
@@ -31,6 +35,20 @@ function add_button_listeners() {
 function delete_neopoligen_config() {
   console.log("delete_neopoligen_config")
   invoke('delete_neopoligen_config', {}).then((raw) => {})
+}
+
+function get_active_site() {
+  invoke('get_active_site', {}).then((raw) => {
+    const el = document.querySelector('.active_site')
+    el.innerHTML = `Active Site: ${JSON.parse(raw).payload}`
+  })
+}
+
+function get_template_error_status() {
+  invoke('get_template_error_status', {}).then((raw) => {
+    const el = document.querySelector('.templateErrorStatus')
+    el.innerHTML = "AAAAAAAAAAAAAAAAAAAAAAA"
+  })
 }
 
 function handle_button_click(event) {
@@ -123,7 +141,7 @@ function update_home_page() {
   log("")
   log("- Use the 'Preview' and 'Edit' buttons above to work with your site")
   
-  set_html("#active_site", `Active Site: ${state.config.active_site}`)
+  // set_html("#active_site", `Active Site: ${state.config.active_site}`)
 
     // add_listener("click", "#vscode_button", (event) => {
     //   set_html("#vscode_msg", "Launching");
@@ -182,8 +200,9 @@ function get_status(data) {
   }).await
 }
 
-function connect_launch_browbutton() {
-}
+function connect_launch_browbutton() {}
+
+
 listen('neo_message', (event) => {
   const output_el = document.querySelector("#text_output")
   if (output_el) {
