@@ -37,7 +37,7 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     file_set.load_images(&test_config.folders.images_root);
     file_set.load_mp3s(&test_config.folders.mp3s_root);
     file_set.load_templates(&test_config.folders.theme_root);
-    let mut builder = Builder::new(file_set, &test_config, &neo_env);
+    let mut builder = Builder::new(file_set.clone(), &test_config, &neo_env);
 
     builder.files_to_output().iter().for_each(|output| {
         let body_parts: Vec<&str> = output.1.split("### EXPECTED_OUTPUT ###").collect();
@@ -45,7 +45,6 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
             let compare_start = body_parts[0].replace("\n", "").replace(" ", "");
             let compare_end = body_parts[1].replace("\n", "").replace(" ", "");
             if compare_start != compare_end {
-                //if body_parts[0] != body_parts[1] {
                 let parent_dir = output.0.parent().unwrap();
                 let id = parent_dir.file_stem().unwrap().to_string_lossy();
                 builder.template_errors.push(TemplateError {
@@ -61,7 +60,7 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     env.add_template_owned(
         "template_error_status",
         r#"
-<div>Template Errors: {{ template_error_count }}</div>
+<div>Template Errors: {{ template_error_count }} out of {{ test_page_count }}</div>
 {% for error in template_errors %}
 <h3>{{ error.id }}</h3>
 <div>Expected</div>
@@ -75,6 +74,7 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     let skeleton = env.get_template("template_error_status").unwrap();
     let output = skeleton
         .render(context!(
+            test_page_count => &file_set.pages.len(),
             template_error_count => &builder.template_errors.len(),
             template_errors => Value::from_serializable(&builder.template_errors)
         ))

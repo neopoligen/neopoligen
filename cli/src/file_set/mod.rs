@@ -12,7 +12,7 @@ use walkdir::WalkDir;
 // load up via the file system or things can be added
 // manually for testing.
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct FileSet {
     pub pages: BTreeMap<PathBuf, String>,
     pub templates: BTreeMap<String, String>,

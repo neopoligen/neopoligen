@@ -22,11 +22,10 @@ use nix::unistd::Pid;
 use serde::Deserialize;
 use serde::Serialize;
 use serde_json;
-use serde_json::Value;
+use std::env;
 use std::fs::{self, DirEntry};
 use std::io;
 use std::path::PathBuf;
-use std::{env, hint};
 use sysinfo::System;
 use tauri::{
     api::process::{Command, CommandEvent},
@@ -129,7 +128,7 @@ fn get_template_error_status() -> String {
     status_file_path.push("template_errors.htm");
     match fs::read_to_string(status_file_path) {
         Ok(html) => html,
-        Err(e) => format!("{}", e),
+        Err(_) => format!("---"),
     }
 }
 
