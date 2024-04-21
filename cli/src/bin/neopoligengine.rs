@@ -1,5 +1,5 @@
 use axum::Router;
-use dirs::{config_local_dir, document_dir};
+use dirs::document_dir;
 use neopoligengine::builder::Builder;
 use neopoligengine::config::Config;
 use neopoligengine::file_set::FileSet;
@@ -179,7 +179,7 @@ fn build_site(config: &Config, neo_env: &NeoEnv) {
 
 #[instrument]
 fn get_engine_config_file() -> Result<String, String> {
-    let mut engine_config_path = config_local_dir().unwrap();
+    let mut engine_config_path = document_dir().unwrap();
     engine_config_path.push("Neopoligen");
     match engine_config_path.try_exists() {
         Ok(check) => {

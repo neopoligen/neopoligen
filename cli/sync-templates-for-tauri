@@ -1,0 +1,3 @@
+#!/bin/bash
+
+watchexec -e neo rsync -av example-site/themes/ ~/Documents/Neopoligen/neopoligen-dev-site/themes/
