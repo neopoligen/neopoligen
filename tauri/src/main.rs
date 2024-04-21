@@ -98,13 +98,12 @@ fn main() {
         .expect("error while running tauri application");
 }
 
-#[tauri::command]
-fn get_active_site() -> String {
+fn active_site() -> String {
     let mut engine_config_path = document_dir().unwrap();
     engine_config_path.push("Neopoligen");
     engine_config_path.push("config.json");
     let config = load_config_file(engine_config_path).unwrap();
-    let active_site = match env::var("NEOENV") {
+    match env::var("NEOENV") {
         Ok(current_env) => {
             if current_env == "dev" {
                 config.dev.active_site
@@ -113,8 +112,12 @@ fn get_active_site() -> String {
             }
         }
         Err(_) => config.prod.active_site,
-    };
-    format!(r#"{{ "payload": "{}" }}"#, active_site)
+    }
+}
+
+#[tauri::command]
+fn get_active_site() -> String {
+    format!(r#"{{ "payload": "{}" }}"#, active_site())
 }
 
 #[tauri::command]
