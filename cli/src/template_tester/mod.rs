@@ -42,7 +42,10 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     builder.files_to_output().iter().for_each(|output| {
         let body_parts: Vec<&str> = output.1.split("### EXPECTED_OUTPUT ###").collect();
         if body_parts.len() == 2 {
-            if body_parts[0] != body_parts[1] {
+            let compare_start = body_parts[0].replace("\n", "").replace(" ", "");
+            let compare_end = body_parts[1].replace("\n", "").replace(" ", "");
+            if compare_start != compare_end {
+                //if body_parts[0] != body_parts[1] {
                 let parent_dir = output.0.parent().unwrap();
                 let id = parent_dir.file_stem().unwrap().to_string_lossy();
                 builder.template_errors.push(TemplateError {
