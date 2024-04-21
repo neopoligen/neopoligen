@@ -24,11 +24,11 @@ impl Config {
         let content_root = PathBuf::from(format!("{}/{}", project_root.display(), "content"));
         let themes_root = PathBuf::from(format!("{}/{}", project_root.display(), "themes"));
         let output_root = PathBuf::from(format!("{}/{}", project_root.display(), "docs"));
-        let status_root = PathBuf::from(format!("{}/{}", project_root.display(), "_status"));
+        let status_root = PathBuf::from(format!("{}/{}", project_root.display(), "status"));
         let build_root = PathBuf::from(format!("{}/{}", project_root.display(), "_building"));
-        let parsing_errors_root =
-            PathBuf::from(format!("{}/parsing-errors", status_root.display(),));
-        let theme_errors_root = PathBuf::from(format!("{}/theme-errors", status_root.display(),));
+        // let parsing_errors_root =
+        //  PathBuf::from(format!("{}/parsing-errors", status_root.display(),));
+        // let theme_errors_root = PathBuf::from(format!("{}/theme-errors", status_root.display(),));
 
         let theme_name = get_config_file_single_line(&configuration_root, "theme.txt").unwrap();
 
@@ -74,8 +74,9 @@ impl Config {
             output_root,
             plugins_root,
             content_root,
-            parsing_errors_root,
-            theme_errors_root,
+            // parsing_errors_root,
+            // theme_errors_root,
+            status_root,
             project_root,
             themes_root,
             theme_assets_input_root,

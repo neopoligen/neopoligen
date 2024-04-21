@@ -9,6 +9,7 @@ impl Builder {
             file_set,
             config: config.clone(),
             neo_env: neo_env.clone(),
+            template_errors: vec![],
         }
     }
 }

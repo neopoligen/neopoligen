@@ -1,4 +1,5 @@
 -- title
+-- class: green
 
 Neopoligen Example Site
 
@@ -12,6 +13,9 @@ for more.
 
 -- image
 -- example-fish
+-- alt: this is some alt text
+-- alt: this is longer alt text
+
 
 
 -- mp3

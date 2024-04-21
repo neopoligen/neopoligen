@@ -21,16 +21,19 @@ impl Config {
         let mp3s_root = PathBuf::from(format!("{}/{}", project_root.display(), "mp3s"));
         let plugins_root = PathBuf::from(format!("{}/{}", configuration_root.display(), "plugins"));
         let output_root = PathBuf::from(format!("{}/{}", project_root.display(), "docs"));
-        let parsing_errors_root = PathBuf::from(format!(
-            "{}/_errors/{}",
-            project_root.display(),
-            "parsing-errors"
-        ));
-        let theme_errors_root = PathBuf::from(format!(
-            "{}/_errors/{}",
-            project_root.display(),
-            "theme-errors"
-        ));
+        let status_root = PathBuf::from(format!("{}/{}", project_root.display(), "docs"));
+
+        // let parsing_errors_root = PathBuf::from(format!(
+        //     "{}/_errors/{}",
+        //     project_root.display(),
+        //     "parsing-errors"
+        // ));
+        // let theme_errors_root = PathBuf::from(format!(
+        //     "{}/_errors/{}",
+        //     project_root.display(),
+        //     "theme-errors"
+        // ));
+
         let themes_root = PathBuf::from(format!("{}/{}", project_root.display(), "themes"));
         let theme_root = PathBuf::from(format!("{}/{}", themes_root.display(), theme_name));
         let theme_configuration_root =
@@ -60,9 +63,8 @@ impl Config {
             output_root,
             plugins_root,
             content_root,
-            parsing_errors_root,
-            theme_errors_root,
             project_root,
+            status_root,
             themes_root,
             theme_assets_input_root,
             theme_assets_build_root,

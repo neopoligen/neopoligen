@@ -22,9 +22,9 @@ use nix::unistd::Pid;
 use serde::Deserialize;
 use serde::Serialize;
 use serde_json;
+use std::env;
 use std::fs::{self, DirEntry};
 use std::io;
-// use std::path::Path;
 use std::path::PathBuf;
 use sysinfo::System;
 use tauri::{
@@ -33,6 +33,18 @@ use tauri::{
     Manager,
 };
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct EngineConfig {
+    dev: EngineEnv,
+    prod: EngineEnv,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct EngineEnv {
+    active_site: String,
+    port: u16,
+}
+
 fn main() {
     let builder = tauri::Builder::default();
     builder
@@ -40,9 +52,10 @@ fn main() {
             let window = app.get_window("main").unwrap();
             // window.open_devtools();
             tauri::async_runtime::spawn(async move {
-                // kill the cli if it's already running on mac.
+                // the process_by_example_name stuff below
+                // kills the cli if it's already running on mac.
                 // this is needed because when the `cargo tauri dev``
-                // restarts it doesn't kill the neopoligen_cli sidecar
+                // restarts, it doesn't kill the neopoligen_cli sidecar
                 // process
                 let s = System::new_all();
                 for process in s.processes_by_exact_name("neopoligengine") {
@@ -71,7 +84,9 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             delete_neopoligen_config,
             edit_in_vscode,
+            get_active_site,
             get_state,
+            get_template_error_status,
             open_browser,
             open_neo_folder,
             open_finder,
@@ -80,6 +95,58 @@ fn main() {
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+fn active_site() -> String {
+    let mut engine_config_path = document_dir().unwrap();
+    engine_config_path.push("Neopoligen");
+    engine_config_path.push("config.json");
+    let config = load_config_file(engine_config_path).unwrap();
+    match env::var("NEOENV") {
+        Ok(current_env) => {
+            if current_env == "dev" {
+                config.dev.active_site
+            } else {
+                config.prod.active_site
+            }
+        }
+        Err(_) => config.prod.active_site,
+    }
+}
+
+#[tauri::command]
+fn get_active_site() -> String {
+    format!(r#"{{ "payload": "{}" }}"#, active_site())
+}
+
+#[tauri::command]
+fn get_template_error_status() -> String {
+    let mut status_file_path = document_dir().unwrap();
+    status_file_path.push("Neopoligen");
+    status_file_path.push(active_site());
+    status_file_path.push("status");
+    status_file_path.push("template_errors.htm");
+    match fs::read_to_string(status_file_path) {
+        Ok(html) => html,
+        Err(_) => format!("---"),
+    }
+}
+
+fn load_config_file(path: PathBuf) -> Result<EngineConfig, String> {
+    match path.try_exists() {
+        Ok(exists) => {
+            if exists == true {
+                let text = fs::read_to_string(&path).unwrap();
+                match serde_json::from_str::<EngineConfig>(text.as_str()) {
+                    Ok(data) => Ok(data),
+                    Err(_) => Err(format!("Could not parse JSON file: {}", &path.display())),
+                }
+            } else {
+                Err(format!("Could not read JSON file: {}", &path.display()))
+            }
+        }
+        Err(_) => Err(format!("Could not read JSON file: {}", &path.display())),
+    }
 }
 
 #[tauri::command]
@@ -206,7 +273,6 @@ fn get_state() -> String {
             if let Ok(config) = serde_json::from_str::<NeoConfig>(&json_string) {
                 let mut neopoligen_path = PathBuf::from(document_dir().unwrap());
                 neopoligen_path.push("Neopoligen");
-
                 let sites = match get_dirs_in_dir(&neopoligen_path) {
                     Ok(dirs) => dirs
                         .iter()
@@ -220,7 +286,6 @@ fn get_state() -> String {
                         vec![]
                     }
                 };
-
                 let state = State {
                     config,
                     status: Some(CurrentStatus::Ok),
@@ -240,10 +305,6 @@ fn get_state() -> String {
     } else {
         serde_json::to_string(&CurrentStatus::Ok).unwrap()
     }
-
-    // engine_config_file.push("Neopoligen");
-
-    //
 }
 
 fn get_dirs_in_dir(dir: &PathBuf) -> io::Result<Vec<PathBuf>> {
