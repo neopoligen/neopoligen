@@ -44,6 +44,7 @@ impl Object for Site {
             "page_type" => Ok(Value::from_serializable(&self.page_type(args))),
             "page_title" => Ok(Value::from_serializable(&self.page_title(args))),
             "show" => Ok(Value::from_serializable(&self.show(args))),
+
             _ => Ok(Value::from("")),
         }
     }
