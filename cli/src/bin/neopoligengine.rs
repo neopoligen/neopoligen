@@ -112,47 +112,7 @@ async fn main() {
             );
         }
     }
-
-    //
 }
-
-// match fs::read_to_string(&engine_config_file) {
-//     Ok(engine_config_string) => match toml::from_str::<EngineConfig>(&engine_config_string) {
-//         Ok(engine_config) => {
-//             let mut site_root = document_dir().unwrap();
-//             site_root.push("Neopoligen");
-//             site_root.push(engine_config.settings.active_site);
-//             let config = Config::new(site_root);
-//             let mut log_file_path = document_dir().unwrap();
-//             log_file_path.push("Neopoligen");
-//             log_file_path.push("log.log");
-//             let _ = fs::remove_file(&log_file_path);
-//             let file_appender = tracing_appender::rolling::never(
-//                 log_file_path.parent().unwrap(),
-//                 log_file_path.file_name().unwrap(),
-//             );
-//             let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
-//             let format = tracing_subscriber::fmt::format().pretty();
-//             tracing_subscriber::fmt()
-//                 .event_format(format)
-//                 .with_ansi(false)
-//                 .with_writer(non_blocking)
-//                 .init();
-//             event!(Level::DEBUG, r#"Processes started"#);
-//             build_site(&config);
-//             if true {
-//                 run_web_server(config).await;
-//             }
-//         }
-//         Err(e) => {
-//             println!("{}", e)
-//         }
-//     },
-//     Err(e) => {
-//         println!("{}", e)
-//     }
-//
-// }
 
 #[instrument(skip(config, neo_env))]
 fn build_site(config: &Config, neo_env: &NeoEnv) {
