@@ -259,3 +259,13 @@ fn base_template_from_first_folder() {
     let right = &site.pages.get("ttss0190").unwrap().base_template;
     assert_eq!(left, right);
 }
+
+#[test]
+fn base_template_from_metadata_override() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = &Some("metadata-based-template".to_string());
+    let right = &site.pages.get("ttss0200").unwrap().base_template;
+    assert_eq!(left, right);
+}

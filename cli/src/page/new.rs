@@ -78,13 +78,26 @@ fn base_template(ast: &Vec<Child>, folders: &Vec<String>) -> Option<String> {
     match ast.iter().find_map(|child| match child {
         Child::Section(section) => {
             if &section.r#type == "metadata" {
-                section.key_value_attributes.iter().find_map(|attr| {
-                    if attr.0 == "type" {
+                // look for template override first
+
+                match section.key_value_attributes.iter().find_map(|attr| {
+                    if attr.0 == "template" {
                         Some(attr.1.to_string())
                     } else {
                         None
                     }
-                })
+                }) {
+                    Some(v) => Some(v),
+                    None => section.key_value_attributes.iter().find_map(|attr| {
+                        if attr.0 == "type" {
+                            Some(attr.1.to_string())
+                        } else {
+                            None
+                        }
+                    }),
+                }
+
+                //
             } else {
                 None
             }

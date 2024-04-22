@@ -313,7 +313,23 @@ if there is one
         );
 
         /////////////////////////////////////////////////////////////////////////
-        /// Final return of the file set
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/set1-test-site/content/sub-folder/the-file.neo"),
+            r#"-- title
+
+Get metadata override template
+
+-- metadata
+-- id: ttss0200
+-- type: should-not-be-template
+-- template: metadata-based-template
+"#
+            .to_string(),
+        );
+
+        /////////////////////////////////////////////////////////////////////////
+        // Final return of the file set
+
         fs
     }
 }
