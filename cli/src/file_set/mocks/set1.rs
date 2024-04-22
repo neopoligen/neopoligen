@@ -297,6 +297,22 @@ Base template defaults to post
         );
 
         /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/set1-test-site/content/folder-based-template/the-file.neo",
+            ),
+            r#"-- title
+
+Get the template from the first folder
+if there is one
+
+-- metadata
+-- id: ttss0190
+"#
+            .to_string(),
+        );
+
+        /////////////////////////////////////////////////////////////////////////
         /// Final return of the file set
         fs
     }

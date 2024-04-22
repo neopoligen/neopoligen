@@ -39,7 +39,7 @@ impl Page {
                             let stylesheets = stylesheets(&ast);
                             let head = head(&ast);
                             let output_file_path = output_file_path(&id, &ast, config);
-                            let base_template = base_template(&ast);
+                            let base_template = base_template(&ast, &folders);
                             Some(Page {
                                 ast,
                                 base_template,
@@ -74,7 +74,7 @@ impl Page {
     }
 }
 
-fn base_template(ast: &Vec<Child>) -> Option<String> {
+fn base_template(ast: &Vec<Child>, folders: &Vec<String>) -> Option<String> {
     match ast.iter().find_map(|child| match child {
         Child::Section(section) => {
             if &section.r#type == "metadata" {
@@ -92,7 +92,13 @@ fn base_template(ast: &Vec<Child>) -> Option<String> {
         _ => None,
     }) {
         Some(v) => Some(v),
-        None => Some("post".to_string()),
+        None => {
+            if folders.len() > 0 {
+                Some(folders[0].clone())
+            } else {
+                Some("post".to_string())
+            }
+        }
     }
 
     // if let Child::Section(section) = child {
