@@ -12,7 +12,9 @@ body {
   <header>Testing: [@ page_id @]</header>
   <main>
     <article class="flow">
-
+    [! for section in site.pages[page_id].ast !]
+      [! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !]
+    [! endfor !]
     </article>
   </main>
 </body>
