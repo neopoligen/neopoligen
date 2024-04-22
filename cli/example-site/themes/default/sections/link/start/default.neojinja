@@ -1,11 +1,38 @@
-<section>
-<h2>link</h2>
-
+<section class="link_default_section standard_section flow">
 [! if section.content.category.content.containers[0] !]
-    <div class="content flow">
+    [! if section.content.key_value_attributes.forward !]
+    <div class="forward_subsection flow">
+        [@ section.content.key_value_attributes.forward @]
+    </div>
+    [! endif !]
+
+    [! if section.content.key_value_attributes.title or section.content.key_value_attributes.subtitle !]
+    <div class="heading_subsection">
+        [! if section.content.key_value_attributes.title !]
+        <h2 class="title_subsection">[@ section.content.key_value_attributes.title @]</h2>
+        [! endif !]
+        [! if section.content.key_value_attributes.subtitle !]
+        <div class="subtitle_subsection">This is a subtitle</div>
+        [! endif !]
+    </div>
+    [! endif !]
+
+    [! if section.content.key_value_attributes.preface !]
+    <div class="preface_subsection flow">
+        [@ section.content.key_value_attributes.preface @]
+    </div>
+    [! endif !]
+
+    <div class="content_subsection flow">
         [! for content in section.content.category.content.containers !]
             <p>[@- output_payload(content) -@]</p>
         [! endfor !]
     </div>
-[! endif !]
 
+    [! if section.content.key_value_attributes.afterword !]
+    <div class="afterword_subsection flow">
+        [@ section.content.key_value_attributes.afterword @]
+    </div>
+    [! endif !]
+
+[! endif !]
