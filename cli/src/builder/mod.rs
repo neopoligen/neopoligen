@@ -188,6 +188,13 @@ impl Builder {
             .for_each(|t| env.add_template_owned(t.0, t.1).unwrap());
         site.pages.iter().for_each(|p| {
             let page = p.1;
+            dbg!("----------------------");
+            dbg!(format!(
+                "{:?} - {:?} - {:?}",
+                &page.id.clone(),
+                &page.base_template.clone(),
+                &page.status.clone()
+            ));
             let template_searches = vec![
                 format!(
                     "pages/{}/{}.neojinja",
@@ -210,14 +217,18 @@ impl Builder {
                     })
             {
                 if let Ok(tmpl) = env.get_template(template_name) {
-                    if let Ok(output) = tmpl.render(context!(
+                    match tmpl.render(context!(
                          site => site_obj,
                         page_id => page.id
                     )) {
-                        self.outputs.insert(
-                            PathBuf::from(&page.output_file_path.clone().unwrap()),
-                            output,
-                        );
+                        Ok(output) => {
+                            self.outputs.insert(
+                                PathBuf::from(&page.output_file_path.clone().unwrap()),
+                                output,
+                            );
+                            ()
+                        }
+                        Err(e) => event!(Level::ERROR, "Error: {}", e),
                     }
                 } else {
                     event!(Level::ERROR, "Could not get template: {}", template_name);
