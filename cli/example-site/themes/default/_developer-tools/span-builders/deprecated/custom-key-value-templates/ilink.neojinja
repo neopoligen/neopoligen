@@ -1,5 +1,5 @@
 [#- type: key-value -#]
-[!- import "includes/macros.neojinja" as macros -!]
+[!- import "includes/theme-macros.neojinja" as theme -!]
 
 <a href="[@- site.page_href(span.content.value) -@]" 
 [!- for attribute in span.content.key_value_attributes -!]

@@ -1,5 +1,5 @@
 [#- type: standard -#]
-[!- import "includes/macros.neojinja" as macros -!]
+[!- import "includes/theme-macros.neojinja" as theme -!]
 
 [#- NOTE: This doesn't use the default span_attributes so the 
 url doesn't get pulled in as an attribute -#]

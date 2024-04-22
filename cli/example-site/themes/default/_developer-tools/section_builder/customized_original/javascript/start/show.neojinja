@@ -1,4 +1,4 @@
-[!- import "includes/macros.neojinja" as macros -!]
+[!- import "includes/theme-macros.neojinja" as theme -!]
 
 <section [@- section_attributes(page_id, {"section": section, "classes": "javascript_default_section raw_section flow" } ) -@]>
     [!- include "section-parts/forward.neojinja" -!]

@@ -1,4 +1,4 @@
 [#- type: standard -#]
-[!- import "includes/macros.neojinja" as macros -!]
+[!- import "includes/theme-macros.neojinja" as theme -!]
 
 <audio [@- macros.span_attributes(span.content) -@]></audio>
