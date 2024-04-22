@@ -1,6 +1,6 @@
 [!- import "includes/macros.jinja" as macros -!]
 
-<section [@- section_attributes(page_id, {"section": section, "classes": "html_code_example_section code_example flow" } ) -@]>
+<section [@- section_attributes(page_id, {"section": section, "classes": "html_show_section raw_section flow" } ) -@]>
 
     [!- include "section-parts/forward.jinja" -!]
 
@@ -34,3 +34,8 @@
     </div>
 
     [!- include "section-parts/afterword.jinja" -!]
+
+[#- NOTE: this section close is intentional because there's
+not really a case for spanning other sections so the `full``
+version forwards here directly unlike most other sections -#]
+</section>

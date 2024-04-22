@@ -1,6 +1,6 @@
 [!- import "includes/macros.jinja" as macros -!]
 
-<section [@- section_attributes(page_id, {"section": section, "classes": "todo_section section_category_checklist flow" } ) -@]>
+<section [@- section_attributes(page_id, {"section": section, "classes": "todo_default_section checklist_section flow" } ) -@]>
 
     [!- if section.key_value_attributes.forward -!]
         <div class="forward flow">

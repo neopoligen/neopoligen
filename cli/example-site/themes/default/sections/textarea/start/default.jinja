@@ -1,6 +1,6 @@
 [!- import "includes/macros.jinja" as macros -!]
 
-<section [@- section_attributes(page_id, {"section": section, "classes": "textarea_section section_category_raw flow" } ) -@]>
+<section [@- section_attributes(page_id, {"section": section, "classes": "textarea_default_section raw_section flow" } ) -@]>
 
     [!- if section.key_value_attributes.forward -!]
         <div class="forward flow">
@@ -44,3 +44,8 @@
             [@- section.key_value_attributes.afterword -@]
         </div>
     [!- endif -!]
+    
+[#- NOTE: this section close is intentional because there's
+not really a case for spanning other sections so the `full``
+version forwards here directly unlike most other sections -#]
+</section>

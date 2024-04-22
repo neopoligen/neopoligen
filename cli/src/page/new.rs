@@ -90,6 +90,9 @@ fn head(ast: &Vec<Child>) -> Vec<String> {
         .collect()
 }
 
+// TODO: Deprecate this. The scripts should be returned via
+// the AST so things like filtering the attributes can
+// be done on the front end.
 fn scripts(ast: &Vec<Child>) -> Vec<String> {
     ast.iter()
         .filter_map(|child| {

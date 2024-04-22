@@ -6,9 +6,10 @@
 # setting the values in the `section_attributes``
 # in the includes/macros.jinja file
 
-afterword
-comment
-export
-forward
-preface
-subtitle
+# afterword
+# comment
+# export
+# forward
+# preface
+# subtitle
+# template

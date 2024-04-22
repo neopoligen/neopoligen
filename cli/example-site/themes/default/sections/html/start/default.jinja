@@ -1,12 +1,8 @@
 [!- import "includes/macros.jinja" as macros -!]
 
-<section [@- section_attributes(page_id, {"section": section, "classes": "html_section flow" } ) -@]>
+<section [@- section_attributes(page_id, {"section": section, "classes": "html_default_section flow" } ) -@]>
 
-    [!- if section.key_value_attributes.forward -!]
-        <div class="forward flow">
-            [@- section.key_value_attributes.forward -@]
-        </div>
-    [!- endif -!]
+    [!- include "section-parts/forward.jinja" -!]
 
     [!- if section.key_value_attributes.title or section.key_value_attributes.subtitle -!]
     <div class="html_heading_group">
@@ -25,11 +21,7 @@
     </div>
     [!- endif -!]
 
-    [!- if section.key_value_attributes.preface -!]
-        <div class="preface flow">
-            [@- section.key_value_attributes.preface -@]
-        </div>
-    [!- endif -!]
+    [!- include "section-parts/preface.jinja" -!]
 
     <div class="content flow">
         [!- autoescape false -!]
@@ -37,9 +29,9 @@
         [!- endautoescape -!]
     </div>
 
-    [!- if section.key_value_attributes.afterword -!]
-        <div class="afterword flow">
-            [@- section.key_value_attributes.afterword -@]
-        </div>
-    [!- endif -!]
+    [!- include "section-parts/afterword.jinja" -!]
 
+[#- NOTE: this section close is intentional because there's
+not really a case for spanning other sections so the `full``
+version forwards here directly unlike most other sections -#]
+</section>

@@ -1,7 +1,6 @@
 [!- import "includes/macros.jinja" as macros -!]
 
-<section [@- section_attributes(page_id, {"section": section, "classes": section.type ~ "_section flow" } ) -@]>
-
+<section [@- section_attributes(page_id, {"section": section, "classes": "image_default_section standard_section flow" } ) -@]>
 
     [!- if section.key_value_attributes.forward -!]
         <div class="forward">

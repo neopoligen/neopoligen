@@ -1,0 +1,33 @@
+[!- import "includes/macros.jinja" as macros -!]
+
+<section [@- section_attributes(page_id, {"section": section, "classes": "head_show_section raw_section flow" } ) -@]>
+
+    [!- include "section-parts/forward.jinja" -!]
+
+    <div class="heading_group">
+        <h3>
+        [!- if section.key_value_attributes.title -!]
+            [@- section.key_value_attributes.title -@]
+        [!- else -!]
+            &lt;head&gt;
+        [!- endif -!]
+        </h3>
+        [!- if section.key_value_attributes.subtitle -!]
+        <div class="subtitle">
+            [@- section.key_value_attributes.subtitle -@]
+        </div>
+        [!- endif -!]
+    </div>
+
+    [!- include "section-parts/preface.jinja" -!]
+
+    <pre><code>
+        [@- site.highlight_code(section.category.content.text, "html") -@]
+    </code></pre>
+
+    [!- include "section-parts/afterword.jinja" -!]
+
+[#- NOTE: this section close is intentional because there's
+not really a case for spanning other sections so the `full``
+version forwards here directly unlike most other sections -#]
+</section>
