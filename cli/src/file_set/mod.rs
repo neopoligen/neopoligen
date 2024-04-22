@@ -68,7 +68,7 @@ impl FileSet {
             WalkDir::new(dir)
                 .into_iter()
                 .filter(|entry| match entry.as_ref().unwrap().path().extension() {
-                    Some(ext) => ext.to_str().unwrap() == "jinja",
+                    Some(ext) => ext.to_str().unwrap() == "neojinja",
                     None => false,
                 })
                 .for_each(|entry| {
