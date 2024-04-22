@@ -181,7 +181,7 @@ impl Builder {
         })
         .unwrap();
         let site = Site::new(&self.file_set, &self.config);
-        let site_obj = Value::from_object(site.clone());
+        let site_obj = Value::from_serializable(&site.clone());
         self.file_set
             .templates
             .iter()

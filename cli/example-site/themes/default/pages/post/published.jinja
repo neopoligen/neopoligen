@@ -1,17 +1,24 @@
-[!- import "includes/macros.jinja" as macros -!]
-[!- include "includes/globals.jinja" -!]
+[!- include "includes/theme-variables.jinja" -!]
+[!- import "includes/theme-macros.jinja" as theme -!]
 
 <!DOCTYPE html>
 <html lang="en">
-<head>[!- include "includes/head.jinja" -!]</head>
+<head>
+<style>
+body {
+  background-color: black;
+  color: #678;
+}
+</style>
+</head>
 <body>
-  [!- include "includes/header.jinja" -!]
+  <header>Testing: [@ page_id @]</header>
   <main>
     <article class="flow">
-      [@- macros.place_section(page_id, "title") -@]
-      [@- macros.main_body(page_id) -@]
+      [! for section in site.pages[page_id].ast !]
+        [@ theme.render_section(section) @]
+      [! endfor !]
     </article>
   </main>
-  [!- include "includes/footer.jinja" -!]
 </body>
 </html>

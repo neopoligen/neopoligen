@@ -1,0 +1,9 @@
+
+
+[!- macro render_section(section) -!]
+<div>Section</div>
+<pre><code>
+[!- include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".jinja" -!]
+[@ section @]
+</code></pre>
+[!- endmacro -!]
