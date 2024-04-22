@@ -1,5 +1,5 @@
 {# type: standard #}
-{%- import "includes/theme-macros.neojinja" as theme -%}
+{%- import "includes/macros.neojinja" as macros -%}
 
 <bdi {{- macros.span_attributes(page_id, span.content) -}}>
 {% for span in span.content.spans %}
