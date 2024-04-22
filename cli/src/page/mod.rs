@@ -14,6 +14,7 @@ pub struct Page {
     pub href: Option<String>,
     pub html_link: Option<String>,
     pub id: String,
+    pub output_file_path: Option<String>,
     pub path_parts: Vec<String>,
     pub scripts: Vec<String>,
     pub source: String,

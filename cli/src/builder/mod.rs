@@ -70,6 +70,7 @@ impl Builder {
         }
     }
 
+    // Deprecated in favor of generate_files method
     pub fn files_to_output(&self) -> BTreeMap<PathBuf, String> {
         let mut env = Environment::new();
         env.set_syntax(Syntax {
@@ -167,6 +168,28 @@ impl Builder {
     }
 
     #[instrument(skip(self))]
+    pub fn generate_files(&self) {
+        let mut env = Environment::new();
+        let site = Site::new(&self.file_set, &self.config);
+        let mut outputs: BTreeMap<PathBuf, String> = BTreeMap::new();
+        self.file_set
+            .templates
+            .iter()
+            .for_each(|t| env.add_template_owned(t.0, t.1).unwrap());
+        site.pages.iter().for_each(|p| {
+            let page = p.1;
+            outputs.insert(
+                PathBuf::from(&page.output_file_path.clone().unwrap()),
+                "asdf".to_string(),
+            );
+            dbg!(&page);
+            ()
+        });
+
+        dbg!(outputs);
+    }
+
+    #[instrument(skip(self))]
     pub fn move_files_in_place(&self) {
         if self.config.folders.output_root.exists() {
             let _ = fs::remove_dir_all(&self.config.folders.output_root);
@@ -184,6 +207,7 @@ impl Builder {
     //     event!(Level::DEBUG, "||{:?}||", now.elapsed());
     // }
 
+    // Deprecated in favor of generate_files method
     #[instrument(skip(self))]
     pub fn write_changed_files(&self) {
         let mut page_hash_cache_path = config_local_dir().unwrap();
@@ -202,6 +226,7 @@ impl Builder {
         }
     }
 
+    // Deprecated in favor of generate_files method
     #[instrument(skip(self))]
     pub fn write_files(&self) {
         event!(Level::DEBUG, "fn write_files");

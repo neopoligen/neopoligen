@@ -38,6 +38,7 @@ impl Page {
                             let scripts = scripts(&ast);
                             let stylesheets = stylesheets(&ast);
                             let head = head(&ast);
+                            let output_file_path = output_file_path(&id, &ast, config);
                             Some(Page {
                                 ast,
                                 folders,
@@ -45,6 +46,7 @@ impl Page {
                                 href,
                                 html_link,
                                 id,
+                                output_file_path,
                                 path_parts,
                                 scripts,
                                 source,
@@ -212,6 +214,41 @@ fn get_span_words(span: &Span) -> Vec<String> {
             .collect::<Vec<Vec<String>>>()
             .concat(),
         _ => vec!["".to_string()],
+    }
+}
+
+fn output_file_path(id: &String, ast: &Vec<Child>, config: &Config) -> Option<String> {
+    match ast.iter().find_map(|child| {
+        if let Child::Section(section) = child {
+            if &section.r#type == "metadata" {
+                section.key_value_attributes.iter().find_map(|attr| {
+                    if attr.0 == "path" {
+                        // event!(Level::DEBUG, "||{:?}||", now.elapsed());
+                        Some(Some(attr.1.to_string()))
+                    } else {
+                        None
+                    }
+                })
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    }) {
+        Some(override_path) => {
+            let mut build_path = config.folders.build_root.clone();
+            build_path.push(override_path.unwrap().strip_prefix("/").unwrap());
+            build_path.push("index.html");
+            //event!(Level::DEBUG, "||{:?}||", now.elapsed());
+            Some(build_path.display().to_string())
+        }
+        None => Some(format!(
+            "{}/{}/{}/index.html",
+            config.folders.build_root.display(),
+            config.default_language,
+            &id,
+        )),
     }
 }
 

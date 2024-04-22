@@ -493,6 +493,8 @@ impl Site {
         }
     }
 
+    // Deprecated, should be able to pull directly from the
+    // page in the generate_files() approach
     #[instrument(skip(self))]
     pub fn page_build_path(&self, args: &[Value]) -> Option<String> {
         let now = Instant::now();
@@ -589,6 +591,8 @@ impl Site {
         }
     }
 
+    // Deprecated - should be able to use the page directly, I think
+    // in the .generate_files() approach
     #[instrument(skip(self))]
     pub fn page_source(&self, args: &[Value]) -> Option<String> {
         let now = Instant::now();

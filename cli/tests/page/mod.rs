@@ -99,6 +99,19 @@ fn html_link() {
 }
 
 #[test]
+fn relative_output_path_from_id() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = Some(
+        "leading-dir/Neopoligen/set1-test-site/NOT_USED_IN_TESTS/en/ttss0020/index.html"
+            .to_string(),
+    );
+    let right = site.pages.get("ttss0020").unwrap().output_file_path.clone();
+    assert_eq!(left, right);
+}
+
+#[test]
 fn path_parts() {
     let file_set = FileSet::set1();
     let config = Config::set1();
@@ -172,6 +185,7 @@ fn load_tags() {
     assert_eq!(left, right);
 }
 
+// deprecated
 #[test]
 fn stylesheets() {
     let file_set = FileSet::set1();
@@ -182,6 +196,7 @@ fn stylesheets() {
     assert_eq!(left, right);
 }
 
+// deprecated
 #[test]
 fn scripts() {
     let file_set = FileSet::set1();
@@ -192,6 +207,7 @@ fn scripts() {
     assert_eq!(left, right);
 }
 
+// deprecated
 #[test]
 fn solo_scripts_module() {
     let file_set = FileSet::set1();
@@ -203,6 +219,7 @@ fn solo_scripts_module() {
     assert_eq!(left, right);
 }
 
+// deprecated
 #[test]
 fn head() {
     let file_set = FileSet::set1();
@@ -218,7 +235,7 @@ fn template_test() {
     let file_set = FileSet::set1();
     let config = Config::set1();
     let site = Site::new(&file_set, &config);
-    dbg!(&site.pages.get("ttss0150").unwrap());
+    //dbg!(&site.pages.get("ttss0150").unwrap());
     // let left: &Vec<String> = &vec![r#"<!-- content for head -->"#.to_string()];
     // let right = &site.pages.get("ttss0150").unwrap().head;
     // assert_eq!(left, right);
