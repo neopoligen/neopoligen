@@ -1,9 +1,6 @@
 [!- import "includes/theme-macros.neojinja" as theme -!]
 
 
-[@- macros.place("title") -@]
-
-[@- macros.place_section(page_id, "title") -@]
-[@- macros.main_body(page_id) -@]
-
-
+[! for section in site.pages[page_id].ast !]
+    [! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !]
+[! endfor !]

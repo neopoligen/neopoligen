@@ -5,7 +5,7 @@ use neopoligengine::config::Config;
 use neopoligengine::file_set::FileSet;
 use neopoligengine::neo_config::NeoConfig;
 use neopoligengine::neo_config::NeoEnv;
-// use neopoligengine::template_tester::test_templates;
+use neopoligengine::template_tester::test_templates;
 use notify_debouncer_mini::new_debouncer;
 use notify_debouncer_mini::notify::RecursiveMode;
 use notify_debouncer_mini::DebounceEventResult;
@@ -123,8 +123,7 @@ fn build_site(config: &Config, neo_env: &NeoEnv) {
     );
     let _ = verify_dir(&config.folders.build_root);
     let _ = empty_dir(&config.folders.build_root);
-    //test_templates(&config, neo_env.clone());
-
+    test_templates(&config, neo_env.clone());
     event!(Level::INFO, "Loading Content");
     let mut file_set = FileSet::new();
     file_set.load_content(&config.folders.content_root);
