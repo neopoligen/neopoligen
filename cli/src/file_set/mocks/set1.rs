@@ -5,12 +5,12 @@ impl FileSet {
     pub fn set1() -> FileSet {
         let mut fs = FileSet::new();
         fs.templates.insert(
-            "pages/post/published.jinja".to_string(),
+            "pages/post/published.neojinja".to_string(),
             "Templates are not used for these tests".to_string(),
         );
 
         fs.templates.insert(
-            "custom/template/path.jinja".to_string(),
+            "custom/template/path.neojinja".to_string(),
             "This is to check template paths to see if they exist".to_string(),
         );
 

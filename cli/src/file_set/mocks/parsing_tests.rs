@@ -82,7 +82,7 @@ You can <<ilink: 2ch7uk0v|learn more about spans here>>
         );
 
         fs.templates.insert(
-            "pages/post/published.jinja".to_string(),
+            "pages/post/published.neojinja".to_string(),
             r#"This is a stub page"#.to_string(),
         );
 

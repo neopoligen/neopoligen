@@ -29,7 +29,7 @@ fn copy_customized_files() {
 
     get_files_in_dir_matching_extensions_recursively(
         &input_dir, 
-        vec!["jinja"]
+        vec!["neojinja"]
     ).iter().for_each(|in_path| {
         let mut out_path = output_dir.clone();
         out_path.push(in_path.strip_prefix(&input_dir).unwrap());
@@ -60,7 +60,7 @@ fn make_section_dirs(bounds: Vec<&str>, _config_dir: PathBuf, files: Vec<PathBuf
         lines.iter().for_each(|line| {
             bounds.iter().for_each(|bound| {
                 let out_path =
-                    PathBuf::from(format!("../../sections/{}/{}/default.jinja", line, bound));
+                    PathBuf::from(format!("../../sections/{}/{}/default.neojinja", line, bound));
                 // dbg!(&out_path);
                 if let Some(parent_dir) = out_path.parent() {
                     match fs::create_dir_all(parent_dir) {
@@ -81,12 +81,12 @@ fn make_stubs(bounds: Vec<&str>, _config_dir: PathBuf, files: Vec<PathBuf>) {
         section_types.iter().for_each(|section_type| {
             bounds.iter().for_each(|bound| {
                 let input_path = PathBuf::from(format!(
-                    "default/{}/{}.jinja",
+                    "default/{}/{}.neojinja",
                     section_category.to_str().unwrap(),
                     bound
                 ));
                 let output_path = PathBuf::from(format!(
-                    "../../sections/{}/{}/default.jinja",
+                    "../../sections/{}/{}/default.neojinja",
                     section_type, bound
                 ));
                 let input_data = fs::read_to_string(&input_path).unwrap();

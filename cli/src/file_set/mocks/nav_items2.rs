@@ -5,7 +5,7 @@ impl FileSet {
     pub fn nav_items2() -> FileSet {
         let mut fs = FileSet::new();
         fs.templates.insert(
-            "pages/post/published.jinja".to_string(),
+            "pages/post/published.neojinja".to_string(),
             "Templates are not used in this test set".to_string(),
         );
 

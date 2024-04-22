@@ -6,22 +6,22 @@ impl FileSet {
         let mut fs = FileSet::new();
 
         fs.templates.insert(
-            "pages/post/published.jinja".to_string(),
+            "pages/post/published.neojinja".to_string(),
             r#"This is a stub page"#.to_string(),
         );
 
         fs.templates.insert(
-            "pages/custom-template-type/published.jinja".to_string(),
+            "pages/custom-template-type/published.neojinja".to_string(),
             r#"This is a stub page"#.to_string(),
         );
 
         fs.templates.insert(
-            "pages/post/custom-template-status.jinja".to_string(),
+            "pages/post/custom-template-status.neojinja".to_string(),
             r#"This is a stub page"#.to_string(),
         );
 
         fs.templates.insert(
-            "pages/custom-template-type/custom-template-status.jinja".to_string(),
+            "pages/custom-template-type/custom-template-status.neojinja".to_string(),
             r#"This is a stub page"#.to_string(),
         );
 
