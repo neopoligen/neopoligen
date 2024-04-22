@@ -57,10 +57,10 @@ mod site_page_place_section {
             source: "-- title\n\nBasic Place Section Test".to_string(),
         })];
 
-        let left = Value::from_serializable::<Vec<Child>>(&response);
+        let left = Value::from_serialize::<Vec<Child>>(response);
         let right = site.page_place_section(&[
-            Value::from("basic-place-section-test"), 
-            Value::from("title")
+            Value::from("basic-place-section-test"),
+            Value::from("title"),
         ]);
         assert_eq!(left, right);
     }

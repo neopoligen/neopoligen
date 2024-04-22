@@ -17,7 +17,7 @@ mod link_or_title {
         let right = site.link_or_title(&[
             Value::from("link-or-title-start"),
             Value::from("link-or-title-target"),
-            Value::from_serializable::<Vec<&str>>(&vec![]),
+            Value::from_serialize::<Vec<&str>>(vec![]),
         ]);
         assert_eq!(left, right);
     }
@@ -31,7 +31,7 @@ mod link_or_title {
         let right = site.link_or_title(&[
             Value::from("link-or-title-start"),
             Value::from("link-or-title-start"),
-            Value::from_serializable::<Vec<&str>>(&vec![]),
+            Value::from_serialize::<Vec<&str>>(vec![]),
         ]);
         assert_eq!(left, right);
     }

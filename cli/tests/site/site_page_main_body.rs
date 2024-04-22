@@ -49,7 +49,7 @@ mod site_page_main_body {
             source: "-- p\n\nTest main_body output".to_string(),
         })];
 
-        let left = Value::from_serializable::<Vec<Child>>(&response);
+        let left = Value::from_serialize::<Vec<Child>>(response);
         let right = site.page_main_body(&[Value::from("basic-main-body-test")]);
         assert_eq!(left, right);
     }

@@ -26,11 +26,10 @@ pub fn get_collection_subtree() {
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
     let id = Value::from("aabb0010".to_string());
-    let patterns =
-        Value::from_serializable::<Vec<Vec<String>>>(&vec![vec!["level-1a".to_string()]]);
+    let patterns = Value::from_serialize::<Vec<Vec<String>>>(vec![vec!["level-1a".to_string()]]);
     let site_collection = site.collection_from_files_and_folders(&[id, patterns]);
     let sub_tree_request_id = Value::from("aabb0020".to_string());
-    let original_tree = Value::from_serializable(&site_collection);
+    let original_tree = Value::from_serialize(&site_collection);
     let sub_tree = site.get_subtree(&[sub_tree_request_id, original_tree]);
     let left = &"aabb0030".to_string();
     let right = &sub_tree[0].id;

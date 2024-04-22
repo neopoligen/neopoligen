@@ -82,7 +82,7 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
         .render(context!(
             test_page_count => &file_set.pages.len(),
             template_error_count => &builder.template_errors.len(),
-            template_errors => Value::from_serializable(&builder.template_errors)
+            template_errors => Value::from_serialize(&builder.template_errors)
         ))
         .unwrap();
     let mut output_path = config.folders.status_root.clone();
