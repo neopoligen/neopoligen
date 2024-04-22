@@ -1,20 +1,3 @@
-
-
-
-
-[#############################################################################]
-[# DEPRECATED: Remove this #]
-[! macro render_section(section) !]
-<div>Section</div>
-<pre><code>
-[! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !]
-[@ section @]
-</code></pre>
-[! endmacro !]
-
-
-
-
 [#############################################################################]
 [! macro main_body(page) !]
 <h1>Main Body</h1>
