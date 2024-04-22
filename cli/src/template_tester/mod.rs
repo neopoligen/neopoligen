@@ -48,7 +48,7 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
             if compare_start != compare_end {
                 event!(
                     Level::WARN,
-                    "Error in template test: {}",
+                    "Found mis-aligned template for: {}",
                     &output.0.display()
                 );
                 let parent_dir = output.0.parent().unwrap();

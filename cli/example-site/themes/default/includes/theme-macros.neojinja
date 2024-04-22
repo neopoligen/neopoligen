@@ -1,32 +1,32 @@
 [#############################################################################]
 [! macro main_body(page) !]
-<h1>Main Body</h1>
 [! for section in page.ast !]
-    [@ section.content.type @]-[@ section.content.bounds @]-[@ section.content.template @]
-    [# [! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !] #]
-    [@ output_payload(section) @]
+    [# [@ section.content.type @]-[@ section.content.bounds @]-[@ section.content.template @]
+    [! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !] #]
+    [@ output_payload(section) -@]
 [! endfor !]
 [! endmacro !]
 
 [#############################################################################]
 [! macro output_payload(section) !]
-[! if section.type == "section" !]
-SECTION HERE 
-[@ output_section(section) @]
+[! if section.type == "section" or section.type == "list" !]
+[@ output_section(section) -@]
 [! elif section.type == "block" !]
 [! for block_content in section.content !]
-BLOCK HERE 
-[# [@ output_spans(page_id, block_content, extras) @] #]
+[@ output_spans(block_content) -@]
 [! endfor !]
-LIST HERE 
-[! elif section.type == "list" !]
-[# [@- output_list(page_id, section.content, extras) -@] #]
 [! endif !]
 [! endmacro !]
 
 
 [#############################################################################]
 [! macro output_section(section) !]
-OUPTPUTTIN- 
 [! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !]
+[! endmacro !]
+
+[#############################################################################]
+[! macro output_spans(span) !]
+[! if span.content.template !]
+[! include span.content.template !]
+[! endif !]
 [! endmacro !]
