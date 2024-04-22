@@ -178,6 +178,32 @@ impl Builder {
             .for_each(|t| env.add_template_owned(t.0, t.1).unwrap());
         site.pages.iter().for_each(|p| {
             let page = p.1;
+
+            let template_searches = vec![
+                format!(
+                    "pages/{}/{}.jinja",
+                    &page.base_template.clone().unwrap(),
+                    &page.status.clone().unwrap(),
+                ),
+                format!(
+                    "pages/{}/published.jinja",
+                    &page.base_template.clone().unwrap()
+                ),
+                format!("pages/post/{}.jinja", &page.status.clone().unwrap()),
+                format!("pages/post/published.jinja"),
+            ];
+
+            if let Some(tmpl) =
+                template_searches
+                    .iter()
+                    .find_map(|t| match &site.templates.get(t) {
+                        Some(_) => Some(t),
+                        None => None,
+                    })
+            {
+                dbg!(tmpl);
+            }
+
             outputs.insert(
                 PathBuf::from(&page.output_file_path.clone().unwrap()),
                 "asdf".to_string(),
