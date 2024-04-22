@@ -3,7 +3,7 @@
 [!- macro render_section(section) -!]
 <div>Section</div>
 <pre><code>
-[!- include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".jinja" -!]
+[!- include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" -!]
 [@ section @]
 </code></pre>
 [!- endmacro -!]

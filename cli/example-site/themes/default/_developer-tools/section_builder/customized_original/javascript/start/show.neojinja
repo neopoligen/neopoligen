@@ -1,7 +1,7 @@
-[!- import "includes/macros.jinja" as macros -!]
+[!- import "includes/macros.neojinja" as macros -!]
 
 <section [@- section_attributes(page_id, {"section": section, "classes": "javascript_default_section raw_section flow" } ) -@]>
-    [!- include "section-parts/forward.jinja" -!]
+    [!- include "section-parts/forward.neojinja" -!]
 
     <div class="heading_group">
         <h3>
@@ -18,7 +18,7 @@
         [!- endif -!]
     </div>
 
-    [!- include "section-parts/preface.jinja" -!]
+    [!- include "section-parts/preface.neojinja" -!]
 
     <pre><code>
         [!- autoescape false -!]
@@ -26,7 +26,7 @@
         [!- endautoescape -!]
     </code></pre>
 
-    [!- include "section-parts/afterword.jinja" -!]
+    [!- include "section-parts/afterword.neojinja" -!]
 
 [#- NOTE: this section close is intentional because there's
 not really a case for spanning other sections so the `full``

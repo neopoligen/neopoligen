@@ -1,4 +1,4 @@
-[!- import "includes/macros.jinja" as macros -!]
+[!- import "includes/macros.neojinja" as macros -!]
 <div class="sidebar">
 <h4>Details</h4>
 [@- macros.nav_menu(menu) -@]

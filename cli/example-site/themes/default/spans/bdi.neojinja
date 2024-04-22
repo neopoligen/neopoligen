@@ -1,8 +1,8 @@
-[#- type: standard -#]
-[!- import "includes/macros.jinja" as macros -!]
+{# type: standard #}
+{%- import "includes/macros.neojinja" as macros -%}
 
-<bdi [@- macros.span_attributes(page_id, span.content) -@]>
-[!- for span in span.content.spans -!]
-[@- macros.output_spans(page_id, span, {}) -@]
-[!- endfor -!]
+<bdi {{- macros.span_attributes(page_id, span.content) -}}>
+{% for span in span.content.spans %}
+{{- macros.output_spans(page_id, span, {}) -}}
+{% endfor %}
 </bdi>

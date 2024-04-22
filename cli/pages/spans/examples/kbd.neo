@@ -1,0 +1,25 @@
+-- title
+
+Span: kbd 
+
+-- subtitle
+
+The Keyboard Input Span
+
+-- p
+
+Basic Example: 
+
+<<kbd|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<kbd|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03 02:53:47
+-- id: 2bqpkqmg
+-- status: published
+

@@ -1,2 +1,2 @@
-[!- import "includes/macros.jinja" as macros -!]
+[!- import "includes/macros.neojinja" as macros -!]
 [@- macros.prev_next(menu) -@]

@@ -1,2 +1,2 @@
-[!- include "sections/footnote/start/default.jinja" -!]
+[!- include "sections/footnote/start/default.neojinja" -!]
 </section>

@@ -1,2 +1,2 @@
-[!- include "sections/image/start/default.jinja" -!]
+[!- include "sections/image/start/default.neojinja" -!]
 </section>

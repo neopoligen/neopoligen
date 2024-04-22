@@ -1,0 +1,25 @@
+-- title
+
+Span: strong 
+
+-- subtitle
+
+The Strong Importance Span
+
+-- p
+
+Basic Example: 
+
+<<strong|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<strong|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03 02:53:47
+-- id: 2bqpozfl
+-- status: published
+

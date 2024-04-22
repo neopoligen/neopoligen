@@ -5,7 +5,7 @@
 </div>
 
 <script>
-console.log("NOTE: includes/tools/show_object_payload.jinja might throw an error if the word 'none' is in the text") 
+console.log("NOTE: includes/tools/show_object_payload.neojinja might throw an error if the word 'none' is in the text") 
 document.addEventListener("DOMContentLoaded", () => {
     const el = document.querySelector("#page_ast_code")
     const initial_code = el.innerHTML

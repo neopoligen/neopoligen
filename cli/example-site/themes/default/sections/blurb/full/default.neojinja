@@ -1,2 +1,2 @@
-[!- include "sections/blurb/start/default.jinja" -!]
+[!- include "sections/blurb/start/default.neojinja" -!]
 </section>

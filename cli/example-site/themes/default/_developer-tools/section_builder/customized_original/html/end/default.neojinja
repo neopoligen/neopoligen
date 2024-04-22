@@ -1,1 +1,1 @@
-[!- include "sections/p/full/default.jinja" -!]
+[!- include "sections/p/full/default.neojinja" -!]

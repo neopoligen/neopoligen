@@ -1,4 +1,4 @@
-[!- import "includes/macros.jinja" as macros -!]
+[!- import "includes/macros.neojinja" as macros -!]
 <section class="debugging">
 <h3>Debugging</h3>
 <ul>

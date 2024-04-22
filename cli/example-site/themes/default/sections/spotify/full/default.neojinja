@@ -1,2 +1,2 @@
-[!- include "sections/spotify/start/default.jinja" -!]
+[!- include "sections/spotify/start/default.neojinja" -!]
 </section>

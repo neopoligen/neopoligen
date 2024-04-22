@@ -200,7 +200,7 @@ one nav_menu can but put on a page -#]
 
 [#############################################################################]
 [!- macro output_list(page_id, section, extra = {}) -!]
-[!- include "sections/" + section.type + "/" + section.bounds + "/" + section.template + ".jinja" -!]
+[!- include "sections/" + section.type + "/" + section.bounds + "/" + section.template + ".neojinja" -!]
 [!- endmacro -!]
 
 
@@ -220,7 +220,7 @@ one nav_menu can but put on a page -#]
 
 [#############################################################################]
 [!- macro output_section(page_id, section, extra = {}) -!]
-[!- set requested_template = "sections/" + section.type + "/" + section.bounds + "/" + section.template + ".jinja" -!]
+[!- set requested_template = "sections/" + section.type + "/" + section.bounds + "/" + section.template + ".neojinja" -!]
 [!- if site.does_template_exist(requested_template) == "yes" -!]
 [!- include requested_template -!]
 [!- else -!]

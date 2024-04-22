@@ -1,8 +1,8 @@
-[!- import "includes/macros.jinja" as macros -!]
+[!- import "includes/macros.neojinja" as macros -!]
 
 <section [@- section_attributes(page_id, {"section": section, "classes": "SECTIONTYPE_default_section standard_section flow" } ) -@]>
     
-    [!- include "section-parts/forward.jinja" -!]
+    [!- include "section-parts/forward.neojinja" -!]
 
     [!- if section.key_value_attributes.title or section.key_value_attributes.subtitle -!]
     <div class="heading_group">
@@ -19,7 +19,7 @@
     </div>
     [!- endif -!]
 
-    [!- include "section-parts/preface.jinja" -!]
+    [!- include "section-parts/preface.neojinja" -!]
 
     [!- if section.category.content.containers[0] -!]
     <div class="content flow">
@@ -29,4 +29,4 @@
     </div>
     [!- endif -!]
 
-    [!- include "section-parts/afterword.jinja" -!]
+    [!- include "section-parts/afterword.neojinja" -!]

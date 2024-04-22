@@ -1,4 +1,4 @@
-[!- import "includes/macros.jinja" as macros -!]
+[!- import "includes/macros.neojinja" as macros -!]
 
 
 [@- macros.place("title") -@]

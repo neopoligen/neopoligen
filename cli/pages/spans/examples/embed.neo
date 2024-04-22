@@ -1,0 +1,25 @@
+-- title
+
+Span: embed 
+
+-- subtitle
+
+The Embed External Content Span
+
+-- p
+
+Basic Example: 
+
+<<embed|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<embed|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03 02:53:47
+-- id: 2bqpinq8
+-- status: published
+

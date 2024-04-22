@@ -1,0 +1,25 @@
+-- title
+
+Span: sup 
+
+-- subtitle
+
+The Superscript Span
+
+-- p
+
+Basic Example: 
+
+<<sup|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<sup|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03 02:53:47
+-- id: 2bqppepu
+-- status: published
+

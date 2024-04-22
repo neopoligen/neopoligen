@@ -1,2 +1,2 @@
-[!- include "sections/youtube/start/default.jinja" -!]
+[!- include "sections/youtube/start/default.neojinja" -!]
 </section>

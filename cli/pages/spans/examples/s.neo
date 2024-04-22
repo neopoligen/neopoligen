@@ -1,0 +1,25 @@
+-- title
+
+Span: s 
+
+-- subtitle
+
+The Strikethrough Span
+
+-- p
+
+Basic Example: 
+
+<<s|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<s|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03 02:53:47
+-- id: 2bqpnlnq
+-- status: published
+

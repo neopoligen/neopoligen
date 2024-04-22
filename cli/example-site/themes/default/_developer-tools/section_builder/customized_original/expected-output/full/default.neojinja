@@ -1,1 +1,1 @@
-[!- include "sections/expected-output/start/default.jinja" -!]
+[!- include "sections/expected-output/start/default.neojinja" -!]

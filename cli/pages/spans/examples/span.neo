@@ -1,0 +1,25 @@
+-- title
+
+Span: span 
+
+-- subtitle
+
+The Content Span Span
+
+-- p
+
+Basic Example: 
+
+<<span|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<span|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03 02:53:47
+-- id: 2bqpoiv3
+-- status: published
+

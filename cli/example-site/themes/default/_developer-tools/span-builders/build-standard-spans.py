@@ -78,7 +78,7 @@ spans = [
 
 
 jinja_template = """{# type: standard #}
-{%- import "includes/macros.jinja" as macros -%}
+{%- import "includes/macros.neojinja" as macros -%}
 
 <SPANKEY {{- macros.span_attributes(page_id, span.content) -}}>
 {% for span in span.content.spans %}
@@ -115,7 +115,7 @@ Attribute Example:
 """
 
 for span in spans:
-    jinja_path = f"{theme_directory}/{span[0]}.jinja"
+    jinja_path = f"{theme_directory}/{span[0]}.neojinja"
     jinja_text = jinja_template.replace("SPANKEY", span[0])
     with open(jinja_path, "w") as _out:
         _out.write(jinja_text)

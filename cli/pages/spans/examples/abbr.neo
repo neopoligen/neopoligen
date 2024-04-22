@@ -1,0 +1,25 @@
+-- title
+
+Span: abbr 
+
+-- subtitle
+
+The Abbreviation Span
+
+-- p
+
+Basic Example: 
+
+<<abbr|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<abbr|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03 02:53:47
+-- id: 2bqpxumq
+-- status: published
+
