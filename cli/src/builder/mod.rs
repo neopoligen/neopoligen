@@ -91,13 +91,7 @@ impl Builder {
             .for_each(|t| env.add_template_owned(t.0, t.1).unwrap());
         site.pages.iter().for_each(|p| {
             let page = p.1;
-            dbg!("----------------------");
-            dbg!(format!(
-                "{:?} - {:?} - {:?}",
-                &page.id.clone(),
-                &page.base_template.clone(),
-                &page.status.clone()
-            ));
+            dbg!(page.id.clone());
             let template_searches = vec![
                 format!(
                     "pages/{}/{}.neojinja",
@@ -163,7 +157,11 @@ impl Builder {
                 let _ = create_dir_all(parent_dir);
                 let _ = fs::write(build_path, output.1);
             } else {
-                println!("ERROR: Tried to write outside of the output root");
+                event!(
+                    Level::ERROR,
+                    "Tried to write outside the site root: {}",
+                    output.0.display()
+                );
             }
             event!(Level::INFO, "Writing: {}", output.0.display());
         });
