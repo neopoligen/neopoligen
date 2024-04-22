@@ -1,6 +1,9 @@
 [!- import "includes/theme-macros.neojinja" as theme -!]
 
-<section class="canvas_default_section standard_section flow [@ theme.section_extra_classes(section) @]">
+<section 
+    [@ theme.section_id(section) @]
+    class="canvas_default_section standard_section flow [@ theme.section_extra_classes(section) @]"
+>
 [! if section.content.category.content.containers[0] !]
     [! if section.content.key_value_attributes.forward !]
     <div class="forward_subsection flow">

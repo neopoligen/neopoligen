@@ -42,3 +42,9 @@
 [! endmacro !]
 
 
+[#############################################################################]
+[! macro section_id(section) !]
+[! if section.content.key_value_attributes.id !]
+id="[@ section.content.key_value_attributes.id @]"
+[! endif !]
+[! endmacro !]

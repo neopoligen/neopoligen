@@ -16,7 +16,10 @@ lazy dog
 
 -- expected-output
 
-<section class="p_default_section standard_section flow green strong">
+<section 
+    id="this_is_an_id"
+    class="p_default_section standard_section flow green strong"
+    >
     <div class="forward_subsection flow">This is a forward</div>
     <div class="heading_subsection">
         <h2 class="title_subsection">This is a title</h2>
