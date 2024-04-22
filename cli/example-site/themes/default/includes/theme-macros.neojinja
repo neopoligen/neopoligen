@@ -1,9 +1,29 @@
 
 
+
+[###################################################################]
 [!- macro render_section(section) -!]
 <div>Section</div>
 <pre><code>
 [!- include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" -!]
 [@ section @]
 </code></pre>
+[!- endmacro -!]
+
+
+
+[###################################################################]
+[!- macro main_body(page) -!]
+<h1>Main Body</h1>
+[! for section in page.ast !]
+    [@ section.content.type @]-[@ section.content.bounds @]-[@ section.content.template @]
+
+[! endfor !]
+[@ page @]
+
+[#
+[! for section in page.ast !]
+    [! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !]
+[! endfor !]
+#]
 [!- endmacro -!]

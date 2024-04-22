@@ -62,31 +62,31 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
         }
     });
 
-    // let mut env = Environment::new();
-    // env.add_template_owned(
-    //     "template_error_status",
-    //     r#"
-    // <div>Ran {{ test_page_count }} Template Tests. Found {{ template_error_count }} Errors</div>
-    // {% for error in template_errors %}
-    // <h3>{{ error.id }}</h3>
-    // <div>Expected</div>
-    // <pre>{% autoescape true %}{{ error.expected }}{% endautoescape %}</pre>
-    // <div>Got</div>
-    // <pre>{% autoescape true %}{{ error.got }}{% endautoescape %}</pre>
-    // {% endfor %}"#
-    //         .to_string(),
-    // )
-    // .unwrap();
-    // let skeleton = env.get_template("template_error_status").unwrap();
-    // let output = skeleton
-    //     .render(context!(
-    //         test_page_count => &file_set.pages.len(),
-    //         template_error_count => &builder.template_errors.len(),
-    //         template_errors => Value::from_serializable(&builder.template_errors)
-    //     ))
-    //     .unwrap();
-    // let mut output_path = config.folders.status_root.clone();
-    // let _ = fs::create_dir_all(&output_path);
-    // output_path.push("template_errors.htm");
-    // let _ = fs::write(output_path, output);
+    let mut env = Environment::new();
+    env.add_template_owned(
+        "template_error_status",
+        r#"
+    <div>Ran {{ test_page_count }} Template Tests. Found {{ template_error_count }} Errors</div>
+    {% for error in template_errors %}
+    <h3>{{ error.id }}</h3>
+    <div>Expected</div>
+    <pre>{% autoescape true %}{{ error.expected }}{% endautoescape %}</pre>
+    <div>Got</div>
+    <pre>{% autoescape true %}{{ error.got }}{% endautoescape %}</pre>
+    {% endfor %}"#
+            .to_string(),
+    )
+    .unwrap();
+    let skeleton = env.get_template("template_error_status").unwrap();
+    let output = skeleton
+        .render(context!(
+            test_page_count => &file_set.pages.len(),
+            template_error_count => &builder.template_errors.len(),
+            template_errors => Value::from_serializable(&builder.template_errors)
+        ))
+        .unwrap();
+    let mut output_path = config.folders.status_root.clone();
+    let _ = fs::create_dir_all(&output_path);
+    output_path.push("template_errors.htm");
+    let _ = fs::write(output_path, output);
 }

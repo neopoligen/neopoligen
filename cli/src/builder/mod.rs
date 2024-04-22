@@ -5,7 +5,7 @@ use crate::file_set::FileSet;
 use crate::neo_config::NeoEnv;
 use crate::site::Site;
 use crate::template_error::TemplateError;
-use dirs::config_local_dir;
+//use dirs::config_local_dir;
 use fs_extra::dir::copy;
 use minijinja::context;
 use minijinja::Environment;
@@ -21,6 +21,7 @@ use tracing::{event, instrument, Level};
 pub struct Builder {
     file_set: FileSet,
     config: Config,
+    #[allow(dead_code)]
     neo_env: NeoEnv,
     pub template_errors: Vec<TemplateError>,
     pub outputs: BTreeMap<PathBuf, String>,
@@ -168,20 +169,20 @@ impl Builder {
     }
 }
 
-// TODO: if you ever have to mess with this, change it to use
-// a Result return type
-fn file_exists(path: &PathBuf) -> bool {
-    match path.try_exists() {
-        Ok(exists) => {
-            if exists == true {
-                true
-            } else {
-                false
-            }
-        }
-        Err(_) => false,
-    }
-}
+// // TODO: if you ever have to mess with this, change it to use
+// // a Result return type
+// fn file_exists(path: &PathBuf) -> bool {
+//     match path.try_exists() {
+//         Ok(exists) => {
+//             if exists == true {
+//                 true
+//             } else {
+//                 false
+//             }
+//         }
+//         Err(_) => false,
+//     }
+// }
 
 fn verify_dir(dir: &PathBuf) -> std::io::Result<()> {
     if dir.exists() {

@@ -7,7 +7,7 @@ impl Object for Site {
         &self,
         _state: &minijinja::State,
         name: &str,
-        args: &[Value],
+        _args: &[Value],
     ) -> Result<Value, Error> {
         match name {
             // "collection_from_files_and_folders" => Ok(Value::from_serializable(
