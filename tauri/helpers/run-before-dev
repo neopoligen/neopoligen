@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -rf ~/Documents/Neopoligen/_dev-site
+rm -rf ~/Documents/Neopoligen/neopoligen-dev-site
 export NEOENV=dev 
 
 cd cli\

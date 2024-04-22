@@ -13,3 +13,13 @@ start-dev-test-run
 it clears things out of the `_dev-site`` dir
 then sets the NEOENV=dev so the process
 runs everything
+
+-- h2
+
+Making example-site templates
+
+Use the `sync-templates-for-tauri`` so you can
+work with templates in the example-site
+directory while the `cargo tauri dev`` is running.
+It syncs files to where tauri sees them 
+to provide the reports

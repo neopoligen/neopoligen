@@ -99,6 +99,19 @@ fn html_link() {
 }
 
 #[test]
+fn relative_output_path_from_id() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = Some(
+        "leading-dir/Neopoligen/set1-test-site/NOT_USED_IN_TESTS/en/ttss0020/index.html"
+            .to_string(),
+    );
+    let right = site.pages.get("ttss0020").unwrap().output_file_path.clone();
+    assert_eq!(left, right);
+}
+
+#[test]
 fn path_parts() {
     let file_set = FileSet::set1();
     let config = Config::set1();
@@ -172,6 +185,7 @@ fn load_tags() {
     assert_eq!(left, right);
 }
 
+// deprecated
 #[test]
 fn stylesheets() {
     let file_set = FileSet::set1();
@@ -182,6 +196,7 @@ fn stylesheets() {
     assert_eq!(left, right);
 }
 
+// deprecated
 #[test]
 fn scripts() {
     let file_set = FileSet::set1();
@@ -192,6 +207,7 @@ fn scripts() {
     assert_eq!(left, right);
 }
 
+// deprecated
 #[test]
 fn solo_scripts_module() {
     let file_set = FileSet::set1();
@@ -203,6 +219,7 @@ fn solo_scripts_module() {
     assert_eq!(left, right);
 }
 
+// deprecated
 #[test]
 fn head() {
     let file_set = FileSet::set1();
@@ -214,12 +231,41 @@ fn head() {
 }
 
 #[test]
-fn template_test() {
+fn base_template_from_type() {
     let file_set = FileSet::set1();
     let config = Config::set1();
     let site = Site::new(&file_set, &config);
-    dbg!(&site.pages.get("ttss0150").unwrap());
-    // let left: &Vec<String> = &vec![r#"<!-- content for head -->"#.to_string()];
-    // let right = &site.pages.get("ttss0150").unwrap().head;
-    // assert_eq!(left, right);
+    let left = &Some("example".to_string());
+    let right = &site.pages.get("ttss0170").unwrap().base_template;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn base_template_default_post_if_no_folder() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = &Some("post".to_string());
+    let right = &site.pages.get("ttss0180").unwrap().base_template;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn base_template_from_first_folder() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = &Some("folder-based-template".to_string());
+    let right = &site.pages.get("ttss0190").unwrap().base_template;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn base_template_from_metadata_override() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = &Some("metadata-based-template".to_string());
+    let right = &site.pages.get("ttss0200").unwrap().base_template;
+    assert_eq!(left, right);
 }

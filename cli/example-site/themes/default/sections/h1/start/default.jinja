@@ -1,6 +1,7 @@
 [!- import "includes/macros.jinja" as macros -!]
 
-<section [@- section_attributes(page_id, {"section": section, "classes": "h1_section standard_category_section flow" } ) -@]>
+<section [@- section_attributes(page_id, {"section": section, "classes": "h1_default_section standard_section flow" } ) -@]>
+    
     [!- include "section-parts/forward.jinja" -!]
 
     [!- if section.key_value_attributes.title or section.key_value_attributes.subtitle -!]

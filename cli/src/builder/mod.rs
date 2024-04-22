@@ -23,6 +23,7 @@ pub struct Builder {
     config: Config,
     neo_env: NeoEnv,
     pub template_errors: Vec<TemplateError>,
+    pub outputs: BTreeMap<PathBuf, String>,
 }
 
 impl Builder {
@@ -70,6 +71,7 @@ impl Builder {
         }
     }
 
+    // Deprecated in favor of generate_files method
     pub fn files_to_output(&self) -> BTreeMap<PathBuf, String> {
         let mut env = Environment::new();
         env.set_syntax(Syntax {
@@ -167,6 +169,64 @@ impl Builder {
     }
 
     #[instrument(skip(self))]
+    pub fn generate_files(&mut self) {
+        let mut env = Environment::new();
+        env.set_syntax(Syntax {
+            block_start: "[!".into(),
+            block_end: "!]".into(),
+            variable_start: "[@".into(),
+            variable_end: "@]".into(),
+            comment_start: "[#".into(),
+            comment_end: "#]".into(),
+        })
+        .unwrap();
+        let site = Site::new(&self.file_set, &self.config);
+        let site_obj = Value::from_object(site.clone());
+        self.file_set
+            .templates
+            .iter()
+            .for_each(|t| env.add_template_owned(t.0, t.1).unwrap());
+        site.pages.iter().for_each(|p| {
+            let page = p.1;
+            let template_searches = vec![
+                format!(
+                    "pages/{}/{}.jinja",
+                    &page.base_template.clone().unwrap(),
+                    &page.status.clone().unwrap(),
+                ),
+                format!(
+                    "pages/{}/published.jinja",
+                    &page.base_template.clone().unwrap()
+                ),
+                format!("pages/post/{}.jinja", &page.status.clone().unwrap()),
+                format!("pages/post/published.jinja"),
+            ];
+            if let Some(template_name) =
+                template_searches
+                    .iter()
+                    .find_map(|t| match &site.templates.get(t) {
+                        Some(_) => Some(t),
+                        None => None,
+                    })
+            {
+                if let Ok(tmpl) = env.get_template(template_name) {
+                    if let Ok(output) = tmpl.render(context!(
+                         site => site_obj,
+                        page_id => page.id
+                    )) {
+                        self.outputs.insert(
+                            PathBuf::from(&page.output_file_path.clone().unwrap()),
+                            output,
+                        );
+                    }
+                } else {
+                    event!(Level::ERROR, "Could not get template: {}", template_name);
+                }
+            }
+        });
+    }
+
+    #[instrument(skip(self))]
     pub fn move_files_in_place(&self) {
         if self.config.folders.output_root.exists() {
             let _ = fs::remove_dir_all(&self.config.folders.output_root);
@@ -183,7 +243,27 @@ impl Builder {
     //     // TODO: Implement page cache stuff here
     //     event!(Level::DEBUG, "||{:?}||", now.elapsed());
     // }
+    //
 
+    #[instrument(skip(self))]
+    pub fn output_files(&self) {
+        self.outputs.iter().for_each(|output| {
+            if output
+                .0
+                .starts_with(self.config.folders.build_root.display().to_string())
+            {
+                let build_path = PathBuf::from(output.0);
+                let parent_dir = build_path.parent().unwrap();
+                let _ = create_dir_all(parent_dir);
+                let _ = fs::write(build_path, output.1);
+            } else {
+                println!("ERROR: Tried to write outside of the output root");
+            }
+            event!(Level::INFO, "Writing: {}", output.0.display());
+        });
+    }
+
+    // Deprecated in favor of generate_files method
     #[instrument(skip(self))]
     pub fn write_changed_files(&self) {
         let mut page_hash_cache_path = config_local_dir().unwrap();
@@ -202,6 +282,7 @@ impl Builder {
         }
     }
 
+    // Deprecated in favor of generate_files method
     #[instrument(skip(self))]
     pub fn write_files(&self) {
         event!(Level::DEBUG, "fn write_files");

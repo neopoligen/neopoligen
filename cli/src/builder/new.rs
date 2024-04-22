@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use crate::builder::Builder;
 use crate::config::Config;
 use crate::file_set::FileSet;
@@ -10,6 +12,7 @@ impl Builder {
             config: config.clone(),
             neo_env: neo_env.clone(),
             template_errors: vec![],
+            outputs: BTreeMap::new(),
         }
     }
 }

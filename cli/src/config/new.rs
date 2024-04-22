@@ -25,7 +25,7 @@ impl Config {
         let themes_root = PathBuf::from(format!("{}/{}", project_root.display(), "themes"));
         let output_root = PathBuf::from(format!("{}/{}", project_root.display(), "docs"));
         let status_root = PathBuf::from(format!("{}/{}", project_root.display(), "status"));
-        let build_root = PathBuf::from(format!("{}/{}", project_root.display(), "_building"));
+        let build_root = PathBuf::from(format!("{}/{}", project_root.display(), ".building"));
         // let parsing_errors_root =
         //  PathBuf::from(format!("{}/parsing-errors", status_root.display(),));
         // let theme_errors_root = PathBuf::from(format!("{}/theme-errors", status_root.display(),));

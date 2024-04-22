@@ -1,6 +1,7 @@
 [!- import "includes/macros.jinja" as macros -!]
 
-<section [@- section_attributes(page_id, {"section": section, "classes": "quote_section standard_category_section flow" } ) -@]>
+<section [@- section_attributes(page_id, {"section": section, "classes": "quote_default_section standard_section flow" } ) -@]>
+    
     [!- include "section-parts/forward.jinja" -!]
 
     [!- if section.key_value_attributes.title or section.key_value_attributes.subtitle -!]
@@ -25,16 +26,6 @@
         [!- for content in section.category.content.containers -!]
             <p>[@- output_payload(page_id, content, extras) -@]</p>
         [!- endfor -!]
-    </div>
-    [!- endif -!]
-
-    [!- if section.key_value_attributes.by -!]
-    <div class="attribibution">
-    -- [@ section.key_value_attributes.by -@]
-    [!- if section.key_value_attributes.source -!]
-    [@- ' ' -@]
-    ([@ section.key_value_attributes.source -@])
-    [!- endif -!]
     </div>
     [!- endif -!]
 

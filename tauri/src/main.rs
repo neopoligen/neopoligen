@@ -42,7 +42,6 @@ pub struct EngineConfig {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct EngineEnv {
     active_site: String,
-    port: u16,
 }
 
 fn main() {

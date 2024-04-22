@@ -1,0 +1,3 @@
+#!/bin/bash
+
+watchexec -e neo,jinja ./helpers/sync-and-reload-templates-for-tauri

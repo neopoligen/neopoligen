@@ -1,5 +1,5 @@
 use axum::Router;
-use dirs::{config_local_dir, document_dir};
+use dirs::document_dir;
 use neopoligengine::builder::Builder;
 use neopoligengine::config::Config;
 use neopoligengine::file_set::FileSet;
@@ -169,9 +169,11 @@ fn build_site(config: &Config, neo_env: &NeoEnv) {
     file_set.load_images(&config.folders.images_root);
     file_set.load_mp3s(&config.folders.mp3s_root);
     file_set.load_templates(&config.folders.theme_root);
-    let builder = Builder::new(file_set, &config, &neo_env);
-    builder.write_changed_files(); // TODO: finishing dev for write_changed_files
-    builder.write_files(); // TODO: Rename to write_all_files
+    let mut builder = Builder::new(file_set, &config, &neo_env);
+    builder.generate_files();
+    builder.output_files();
+    //builder.write_changed_files(); // TODO: finishing dev for write_changed_files
+    //builder.write_files(); // TODO: Rename to write_all_files
     builder.copy_asset_folders();
     builder.copy_theme_assets();
     builder.move_files_in_place();
@@ -179,7 +181,7 @@ fn build_site(config: &Config, neo_env: &NeoEnv) {
 
 #[instrument]
 fn get_engine_config_file() -> Result<String, String> {
-    let mut engine_config_path = config_local_dir().unwrap();
+    let mut engine_config_path = document_dir().unwrap();
     engine_config_path.push("Neopoligen");
     match engine_config_path.try_exists() {
         Ok(check) => {

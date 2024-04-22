@@ -1,10 +1,15 @@
 # Define which section attributes should 
 # be excluded from being output inside
 # `-- SECTION_NAME`` output tags
+#
+# NOTE: This is deprecated in favor of just
+# setting the values in the `section_attributes``
+# in the includes/macros.jinja file
 
-afterword
-comment
-export
-forward
-preface
-subtitle
+# afterword
+# comment
+# export
+# forward
+# preface
+# subtitle
+# template
