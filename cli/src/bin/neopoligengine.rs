@@ -82,7 +82,7 @@ async fn main() {
                         let now = Instant::now();
                         build_site(&config, &neo_env);
                         event!(Level::DEBUG, "SITEBUILDTIME: {:?}", now.elapsed());
-                        if false {
+                        if true {
                             // TODO Set a flag so this can be toggled on/off in the config
                             run_web_server(config, neo_env).await;
                         }
@@ -169,14 +169,14 @@ fn build_site(config: &Config, neo_env: &NeoEnv) {
     file_set.load_images(&config.folders.images_root);
     file_set.load_mp3s(&config.folders.mp3s_root);
     file_set.load_templates(&config.folders.theme_root);
-    let builder = Builder::new(file_set, &config, &neo_env);
+    let mut builder = Builder::new(file_set, &config, &neo_env);
     builder.generate_files();
-
+    builder.output_files();
     //builder.write_changed_files(); // TODO: finishing dev for write_changed_files
     //builder.write_files(); // TODO: Rename to write_all_files
-    //builder.copy_asset_folders();
-    //builder.copy_theme_assets();
-    //builder.move_files_in_place();
+    builder.copy_asset_folders();
+    builder.copy_theme_assets();
+    builder.move_files_in_place();
 }
 
 #[instrument]

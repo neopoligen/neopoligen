@@ -5,7 +5,7 @@ use crate::mp3::Mp3;
 use crate::page::Page;
 use crate::site::Site;
 use std::collections::BTreeMap;
-use std::sync::Mutex;
+// use std::sync::Mutex;
 
 impl Site {
     pub fn new(file_set: &FileSet, config: &Config) -> Site {

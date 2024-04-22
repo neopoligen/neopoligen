@@ -23,6 +23,7 @@ pub struct Builder {
     config: Config,
     neo_env: NeoEnv,
     pub template_errors: Vec<TemplateError>,
+    pub outputs: BTreeMap<PathBuf, String>,
 }
 
 impl Builder {
@@ -168,7 +169,7 @@ impl Builder {
     }
 
     #[instrument(skip(self))]
-    pub fn generate_files(&self) {
+    pub fn generate_files(&mut self) {
         let mut env = Environment::new();
         env.set_syntax(Syntax {
             block_start: "[!".into(),
@@ -181,7 +182,6 @@ impl Builder {
         .unwrap();
         let site = Site::new(&self.file_set, &self.config);
         let site_obj = Value::from_object(site.clone());
-        let mut outputs: BTreeMap<PathBuf, String> = BTreeMap::new();
         self.file_set
             .templates
             .iter()
@@ -214,7 +214,7 @@ impl Builder {
                          site => site_obj,
                         page_id => page.id
                     )) {
-                        outputs.insert(
+                        self.outputs.insert(
                             PathBuf::from(&page.output_file_path.clone().unwrap()),
                             output,
                         );
@@ -223,11 +223,7 @@ impl Builder {
                     event!(Level::ERROR, "Could not get template: {}", template_name);
                 }
             }
-            //dbg!(&page);
-            //()
         });
-
-        dbg!(outputs);
     }
 
     #[instrument(skip(self))]
@@ -247,6 +243,25 @@ impl Builder {
     //     // TODO: Implement page cache stuff here
     //     event!(Level::DEBUG, "||{:?}||", now.elapsed());
     // }
+    //
+
+    #[instrument(skip(self))]
+    pub fn output_files(&self) {
+        self.outputs.iter().for_each(|output| {
+            if output
+                .0
+                .starts_with(self.config.folders.build_root.display().to_string())
+            {
+                let build_path = PathBuf::from(output.0);
+                let parent_dir = build_path.parent().unwrap();
+                let _ = create_dir_all(parent_dir);
+                let _ = fs::write(build_path, output.1);
+            } else {
+                println!("ERROR: Tried to write outside of the output root");
+            }
+            event!(Level::INFO, "Writing: {}", output.0.display());
+        });
+    }
 
     // Deprecated in favor of generate_files method
     #[instrument(skip(self))]
