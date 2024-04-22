@@ -158,17 +158,20 @@ async fn main() {
 fn build_site(config: &Config, neo_env: &NeoEnv) {
     event!(
         Level::INFO,
-        "Building site: {}",
+        "Starting Build Run: {}",
         neo_env.active_site.as_ref().unwrap()
     );
     let _ = verify_dir(&config.folders.build_root);
     let _ = empty_dir(&config.folders.build_root);
-    test_templates(&config, neo_env.clone());
+    //test_templates(&config, neo_env.clone());
+
+    event!(Level::INFO, "Loading Content");
     let mut file_set = FileSet::new();
     file_set.load_content(&config.folders.content_root);
     file_set.load_images(&config.folders.images_root);
     file_set.load_mp3s(&config.folders.mp3s_root);
     file_set.load_templates(&config.folders.theme_root);
+    event!(Level::INFO, "Building Site");
     let mut builder = Builder::new(file_set, &config, &neo_env);
     builder.generate_files();
     builder.output_files();
