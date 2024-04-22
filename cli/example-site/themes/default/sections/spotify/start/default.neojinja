@@ -1,10 +1,13 @@
-<section class="spotify_default_section standard_section flow">
+[!- import "includes/theme-macros.neojinja" as theme -!]
+
+<section class="spotify_default_section standard_section flow [@ theme.section_extra_classes(section) @]">
 [! if section.content.category.content.containers[0] !]
     [! if section.content.key_value_attributes.forward !]
     <div class="forward_subsection flow">
         [@ section.content.key_value_attributes.forward @]
     </div>
     [! endif !]
+
 
     [! if section.content.key_value_attributes.title or section.content.key_value_attributes.subtitle !]
     <div class="heading_subsection">

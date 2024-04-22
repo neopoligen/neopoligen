@@ -7,8 +7,11 @@ And this is a second paragraph with it
 -- expected-output
 
 <section class="title_default_section standard_section flow">
-    <div class="title_heading_group">
-        <h1>This is a test of the title</h1>
+    <div class="heading_subsection">
+        <h1 class="title_subsection">This is a test of the title</h1>
+    </div>
+    <div class="content_subsection flow">
+        <p>And this is a second paragraph with it</p>
     </div>
 </section>
 

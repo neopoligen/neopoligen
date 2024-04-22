@@ -7,6 +7,7 @@
 [! endfor !]
 [! endmacro !]
 
+
 [#############################################################################]
 [! macro output_payload(section) !]
 [! if section.type == "section" or section.type == "list" !]
@@ -24,9 +25,20 @@
 [! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !]
 [! endmacro !]
 
+
 [#############################################################################]
 [! macro output_spans(span) !]
 [! if span.content.template !]
 [! include span.content.template !]
 [! endif !]
 [! endmacro !]
+
+
+[#############################################################################]
+[! macro section_extra_classes(section) !]
+[! if section.content.key_value_attributes.class !]
+[@ section.content.key_value_attributes.class @]
+[! endif !]
+[! endmacro !]
+
+

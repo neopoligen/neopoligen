@@ -4,6 +4,10 @@
 -- subtitle: This is a subtitle
 -- preface: This is the preface
 -- afterword: This is the afterword
+-- class: green strong
+-- id: this_is_an_id
+-- data-whatever: this is some arbitrary data
+-- data-whatever: that crosses multiple lines
 
 The quick brown fox
 
@@ -12,7 +16,7 @@ lazy dog
 
 -- expected-output
 
-<section class="p_default_section standard_section flow">
+<section class="p_default_section standard_section flow green strong">
     <div class="forward_subsection flow">This is a forward</div>
     <div class="heading_subsection">
         <h2 class="title_subsection">This is a title</h2>
