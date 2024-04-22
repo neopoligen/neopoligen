@@ -84,15 +84,17 @@ impl Builder {
             comment_end: "#]".into(),
         })
         .unwrap();
+        env.set_trim_blocks(true);
+        env.set_lstrip_blocks(true);
         let site = Site::new(&self.file_set, &self.config);
-        let site_obj = Value::from_serializable(&site.clone());
+        let site_obj = Value::from_serialize(&site.clone());
         self.file_set
             .templates
             .iter()
             .for_each(|t| env.add_template_owned(t.0, t.1).unwrap());
         site.pages.iter().for_each(|p| {
             let page = p.1;
-            dbg!(page.id.clone());
+            // dbg!(page.id.clone());
             let template_searches = vec![
                 format!(
                     "pages/{}/{}.neojinja",
