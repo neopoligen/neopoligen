@@ -6,7 +6,7 @@ use nom::combinator::not;
 pub fn single_newline(source: &str) -> IResult<&str, Span> {
     let (source, result) = line_ending(source)?;
     not(line_ending)(source)?;
-    Ok((source, Span::Space{ text: result.to_string(), template: "spans/space.jinja".to_string()}))
+    Ok((source, Span::Space{ text: result.to_string(), template: "spans/space.neojinja".to_string()}))
 }
 
 #[cfg(test)]
@@ -19,7 +19,7 @@ mod test {
     #[test]
     fn one_newline_only() {
         let source = "\n";
-        let left = Span::Space { text: "\n".to_string(), template: "spans/space.jinja".to_string() };
+        let left = Span::Space { text: "\n".to_string(), template: "spans/space.neojinja".to_string() };
         let right = single_newline(source).unwrap().1;
         assert_eq!(left, right);
     }

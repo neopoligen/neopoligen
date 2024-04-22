@@ -38,61 +38,61 @@ mod test {
     //                     Child::Block(vec![
     //                         Span::Word {
     //                             text: "Site".to_string(),
-    //                             template: "spans/word.jinja".to_string(),
+    //                             template: "spans/word.neojinja".to_string(),
     //                         },
     //                         Span::Space {
     //                             text: " ".to_string(),
-    //                             template: "spans/space.jinja".to_string(),
+    //                             template: "spans/space.neojinja".to_string(),
     //                         },
     //                         Span::Word {
     //                             text: "2".to_string(),
-    //                             template: "spans/word.jinja".to_string(),
+    //                             template: "spans/word.neojinja".to_string(),
     //                         },
     //                         Span::Space {
     //                             text: " ".to_string(),
-    //                             template: "spans/space.jinja".to_string(),
+    //                             template: "spans/space.neojinja".to_string(),
     //                         },
     //                         Span::Word {
     //                             text: "Home".to_string(),
-    //                             template: "spans/word.jinja".to_string(),
+    //                             template: "spans/word.neojinja".to_string(),
     //                         },
     //                         Span::Space {
     //                             text: " ".to_string(),
-    //                             template: "spans/space.jinja".to_string(),
+    //                             template: "spans/space.neojinja".to_string(),
     //                         },
     //                         Span::Word {
     //                             text: "Page".to_string(),
-    //                             template: "spans/word.jinja".to_string(),
+    //                             template: "spans/word.neojinja".to_string(),
     //                         },
     //                     ]),
     //                     Child::Block(vec![
     //                         Span::Word {
     //                             text: "The".to_string(),
-    //                             template: "spans/word.jinja".to_string(),
+    //                             template: "spans/word.neojinja".to_string(),
     //                         },
     //                         Span::Space {
     //                             text: " ".to_string(),
-    //                             template: "spans/space.jinja".to_string(),
+    //                             template: "spans/space.neojinja".to_string(),
     //                         },
     //                         Span::Word {
     //                             text: "initial".to_string(),
-    //                             template: "spans/word.jinja".to_string(),
+    //                             template: "spans/word.neojinja".to_string(),
     //                         },
     //                         Span::Space {
     //                             text: " ".to_string(),
-    //                             template: "spans/space.jinja".to_string(),
+    //                             template: "spans/space.neojinja".to_string(),
     //                         },
     //                         Span::Word {
     //                             text: "test".to_string(),
-    //                             template: "spans/word.jinja".to_string(),
+    //                             template: "spans/word.neojinja".to_string(),
     //                         },
     //                         Span::Space {
     //                             text: " ".to_string(),
-    //                             template: "spans/space.jinja".to_string(),
+    //                             template: "spans/space.neojinja".to_string(),
     //                         },
     //                         Span::Word {
     //                             text: "page".to_string(),
-    //                             template: "spans/word.jinja".to_string(),
+    //                             template: "spans/word.neojinja".to_string(),
     //                         },
     //                     ]),
     //                 ],
@@ -146,15 +146,15 @@ mod test {
     //                     containers: vec![Child::Block(vec![
     //                         Span::Word {
     //                             text: "alfa".to_string(),
-    //                             template: "spans/word.jinja".to_string(),
+    //                             template: "spans/word.neojinja".to_string(),
     //                         },
     //                         Span::Space {
     //                             text: " ".to_string(),
-    //                             template: "spans/space.jinja".to_string(),
+    //                             template: "spans/space.neojinja".to_string(),
     //                         },
     //                         Span::Word {
     //                             text: "bravo".to_string(),
-    //                             template: "spans/word.jinja".to_string(),
+    //                             template: "spans/word.neojinja".to_string(),
     //                         },
     //                     ])],
     //                 },
@@ -214,7 +214,7 @@ mod test {
     //                 category: SectionCategory::PreformattedSectionEnd {
     //                     containers: vec![Child::Block(vec![Span::Word {
     //                         text: "Yankee".to_string(),
-    //                         template: "spans/word.jinja".to_string(),
+    //                         template: "spans/word.neojinja".to_string(),
     //                     }])],
     //                 },
     //                 template: "default".to_string(),
@@ -243,15 +243,15 @@ mod test {
     //                         containers: vec![Child::Block(vec![
     //                             Span::Word {
     //                                 text: "Charlie".to_string(),
-    //                                 template: "spans/word.jinja".to_string(),
+    //                                 template: "spans/word.neojinja".to_string(),
     //                             },
     //                             Span::Space {
     //                                 text: " ".to_string(),
-    //                                 template: "spans/space.jinja".to_string(),
+    //                                 template: "spans/space.neojinja".to_string(),
     //                             },
     //                             Span::Word {
     //                                 text: "Bravo".to_string(),
-    //                                 template: "spans/word.jinja".to_string(),
+    //                                 template: "spans/word.neojinja".to_string(),
     //                             },
     //                         ])],
     //                     },

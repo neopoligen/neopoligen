@@ -94,6 +94,6 @@ pub fn image_path_from_name_with_extension_in_sub_dir() {
 //     let config = Config::set1();
 //     let site = Site::new(&file_set, &config);
 //     let left = &"yes".to_string();
-//     let right = &site.does_template_exist(&[Value::from("custom/template/path.jinja".to_string())]);
+//     let right = &site.does_template_exist(&[Value::from("custom/template/path.neojinja".to_string())]);
 //     assert_eq!(left, right);
 // }

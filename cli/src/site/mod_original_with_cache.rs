@@ -624,13 +624,13 @@ impl Site {
         if self.pages.contains_key(&id) {
             let template_searches = vec![
                 format!(
-                    "pages/{}/{}.jinja",
+                    "pages/{}/{}.neojinja",
                     self.page_type(args).unwrap(),
                     self.page_status(args).unwrap(),
                 ),
-                format!("pages/{}/published.jinja", self.page_type(args).unwrap()),
-                format!("pages/post/{}.jinja", self.page_status(args).unwrap()),
-                format!("pages/post/published.jinja"),
+                format!("pages/{}/published.neojinja", self.page_type(args).unwrap()),
+                format!("pages/post/{}.neojinja", self.page_status(args).unwrap()),
+                format!("pages/post/published.neojinja"),
             ];
             event!(Level::DEBUG, "||{:?}||", now.elapsed());
             template_searches

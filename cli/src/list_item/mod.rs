@@ -85,15 +85,15 @@
 //             Child::Block(vec![
 //                 Span::Word {
 //                     text: "juliette".to_string(),
-//                     template: "spans/word.jinja".to_string()
+//                     template: "spans/word.neojinja".to_string()
 //                 },
 //                 Span::Space {
 //                     text: " ".to_string(),
-//                     template: "spans/space.jinja".to_string()
+//                     template: "spans/space.neojinja".to_string()
 //                 },
 //                 Span::Word {
 //                     text: "foxtrot".to_string(),
-//                     template: "spans/word.jinja".to_string()
+//                     template: "spans/word.neojinja".to_string()
 //                 }
 //             ]),
 //         ));

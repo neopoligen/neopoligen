@@ -94,7 +94,7 @@ impl Site {
         let id = args[0].to_string();
         if self.pages.contains_key(&id) {
             Some(format!(
-                "pages/{}/{}.jinja",
+                "pages/{}/{}.neojinja",
                 self.page_type(args).unwrap(),
                 self.page_status(args).unwrap(),
             ))

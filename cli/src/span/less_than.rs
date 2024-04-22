@@ -12,7 +12,7 @@ pub fn less_than(source: &str) -> IResult<&str, Span> {
         source,
         Span::LessThan {
             text: result.to_string(),
-            template: "spans/less_than.jinja".to_string(),
+            template: "spans/less_than.neojinja".to_string(),
         },
     ))
 }
@@ -32,7 +32,7 @@ mod test {
             "",
             Span::LessThan {
                 text: "<".to_string(),
-                template: "spans/less_than.jinja".to_string(),
+                template: "spans/less_than.neojinja".to_string(),
             },
         ));
         let right = less_than(source);
@@ -47,7 +47,7 @@ mod test {
             "delta",
             Span::LessThan {
                 text: "<".to_string(),
-                template: "spans/less_than.jinja".to_string(),
+                template: "spans/less_than.neojinja".to_string(),
             },
         ));
         let right = less_than(source);

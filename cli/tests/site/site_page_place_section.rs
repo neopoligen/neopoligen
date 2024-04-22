@@ -24,31 +24,31 @@ mod site_page_place_section {
                 containers: vec![Child::Block(vec![
                     Span::Word {
                         text: "Basic".to_string(),
-                        template: "spans/word.jinja".to_string(),
+                        template: "spans/word.neojinja".to_string(),
                     },
                     Span::Space {
                         text: " ".to_string(),
-                        template: "spans/space.jinja".to_string(),
+                        template: "spans/space.neojinja".to_string(),
                     },
                     Span::Word {
                         text: "Place".to_string(),
-                        template: "spans/word.jinja".to_string(),
+                        template: "spans/word.neojinja".to_string(),
                     },
                     Span::Space {
                         text: " ".to_string(),
-                        template: "spans/space.jinja".to_string(),
+                        template: "spans/space.neojinja".to_string(),
                     },
                     Span::Word {
                         text: "Section".to_string(),
-                        template: "spans/word.jinja".to_string(),
+                        template: "spans/word.neojinja".to_string(),
                     },
                     Span::Space {
                         text: " ".to_string(),
-                        template: "spans/space.jinja".to_string(),
+                        template: "spans/space.neojinja".to_string(),
                     },
                     Span::Word {
                         text: "Test".to_string(),
-                        template: "spans/word.jinja".to_string(),
+                        template: "spans/word.neojinja".to_string(),
                     },
                 ])],
             },

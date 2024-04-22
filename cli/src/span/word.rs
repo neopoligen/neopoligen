@@ -4,7 +4,7 @@ use nom::bytes::complete::is_not;
 
 pub fn word(source: &str) -> IResult<&str, Span> {
     let (source, content) = is_not(" \n\t|<>")(source)?;
-    Ok((source, Span::Word{text: content.to_string(), template: "spans/word.jinja".to_string()}))
+    Ok((source, Span::Word{text: content.to_string(), template: "spans/word.neojinja".to_string()}))
 }
 
 #[cfg(test)]
@@ -15,7 +15,7 @@ mod test {
     #[test]
     fn basic_word() {
         let source = "delta ";
-        let left = Ok((" ", Span::Word{text: "delta".to_string(), template: "spans/word.jinja".to_string()}));
+        let left = Ok((" ", Span::Word{text: "delta".to_string(), template: "spans/word.neojinja".to_string()}));
         let right = word(source);
         assert_eq!(left, right);
     }
@@ -23,7 +23,7 @@ mod test {
     #[test]
     fn dash_word() {
         let source = "- ";
-        let left = Ok((" ",  Span::Word{text: "-".to_string(), template: "spans/word.jinja".to_string()}));
+        let left = Ok((" ",  Span::Word{text: "-".to_string(), template: "spans/word.neojinja".to_string()}));
         let right = word(source);
         assert_eq!(left, right);
     }

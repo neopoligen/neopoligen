@@ -20,7 +20,7 @@ mod test {
     #[test]
     fn single_word_isolated() {
         let source = "alfa";
-        let left = Span::Word{text: "alfa".to_string(), template: "spans/word.jinja".to_string()};
+        let left = Span::Word{text: "alfa".to_string(), template: "spans/word.neojinja".to_string()};
         let right = tag_span(source).unwrap().1;
         assert_eq!(left, right);
     }
@@ -28,7 +28,7 @@ mod test {
     #[test]
     fn single_space() {
         let source = " ";
-        let left = Span::Space { text: " ".to_string(), template: "spans/space.jinja".to_string() };
+        let left = Span::Space { text: " ".to_string(), template: "spans/space.neojinja".to_string() };
         let right = tag_span(source).unwrap().1;
         assert_eq!(left, right);
     }

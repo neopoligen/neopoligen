@@ -12,7 +12,7 @@ pub fn template_ilink_to_other_page() {
 
     file_set
         .templates
-        .insert("pages/post/published.jinja".to_string(), "HERE".to_string());
+        .insert("pages/post/published.neojinja".to_string(), "HERE".to_string());
 
     file_set.pages.insert(
         PathBuf::from("leading-dir/Neopoligen/inline-test-site/content/test-file.neo"),
