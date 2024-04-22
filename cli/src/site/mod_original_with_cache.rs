@@ -1,7 +1,7 @@
 pub mod new;
 pub mod object;
 
-// use crate::cache_object::CacheObject;
+use crate::cache_object::CacheObject;
 use crate::child::Child;
 use crate::collection::{Collection, CollectionItem};
 use crate::config::Config;
@@ -14,17 +14,17 @@ use serde_json::json;
 use std::collections::BTreeMap;
 use std::fmt::Display;
 use std::path::PathBuf;
-// use std::sync::Mutex;
+use std::sync::Mutex;
 use std::time::Instant;
 use syntect::html::{ClassStyle, ClassedHTMLGenerator};
 use syntect::parsing::SyntaxSet;
 use syntect::util::LinesWithEndings;
 use tracing::{event, instrument, Level};
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct Site {
-    // pub cache: Mutex<BTreeMap<String, CacheObject>>,
+    pub cache: Mutex<BTreeMap<String, CacheObject>>,
     pub config: Config,
     pub pages: BTreeMap<String, Page>,
     pub invalid_pages: BTreeMap<PathBuf, String>,
@@ -63,48 +63,48 @@ impl Site {
         }
     }
 
-    // #[instrument(skip(self))]
-    // pub fn collection_from_tags(&self, args: &[Value]) -> Collection {
-    //     let now = Instant::now();
-    //     let id = args[0].to_string();
-    //     match args[1].try_iter() {
-    //         Ok(tags) => {
-    //             let tag_set = tags.map(|t| t.to_string()).collect::<Vec<String>>();
-    //             let tag_key = tag_set.join("");
-    //             // event!(Level::DEBUG, "tag_key: {}", tag_key);
-    //             match self.get_cache(&tag_key) {
-    //                 Some(c_obj) => match c_obj {
-    //                     CacheObject::Collection(mut c) => {
-    //                         // event!(Level::DEBUG, "cache_hit: {}", tag_key);
-    //                         c.set_active_item(&id);
-    //                         event!(Level::DEBUG, "||{:?}||", now.elapsed());
-    //                         c
-    //                     }
-    //                     _ => {
-    //                         // event!(Level::DEBUG, "cache_miss: {}", tag_key);
-    //                         let mut c = Collection::new_from_tags(&self.pages, tag_set);
-    //                         c.set_active_item(&id);
-    //                         self.set_cache(tag_key, CacheObject::Collection(c.clone()));
-    //                         event!(Level::DEBUG, "||{:?}||", now.elapsed());
-    //                         c
-    //                     }
-    //                 },
-    //                 None => {
-    //                     // event!(Level::DEBUG, "cache_miss: {}", tag_key);
-    //                     let mut c = Collection::new_from_tags(&self.pages, tag_set);
-    //                     c.set_active_item(&id);
-    //                     self.set_cache(tag_key, CacheObject::Collection(c.clone()));
-    //                     event!(Level::DEBUG, "||{:?}||", now.elapsed());
-    //                     c
-    //                 }
-    //             }
-    //         }
-    //         Err(e) => {
-    //             println!("{}", e);
-    //             Collection::empty()
-    //         }
-    //     }
-    // }
+    #[instrument(skip(self))]
+    pub fn collection_from_tags(&self, args: &[Value]) -> Collection {
+        let now = Instant::now();
+        let id = args[0].to_string();
+        match args[1].try_iter() {
+            Ok(tags) => {
+                let tag_set = tags.map(|t| t.to_string()).collect::<Vec<String>>();
+                let tag_key = tag_set.join("");
+                // event!(Level::DEBUG, "tag_key: {}", tag_key);
+                match self.get_cache(&tag_key) {
+                    Some(c_obj) => match c_obj {
+                        CacheObject::Collection(mut c) => {
+                            // event!(Level::DEBUG, "cache_hit: {}", tag_key);
+                            c.set_active_item(&id);
+                            event!(Level::DEBUG, "||{:?}||", now.elapsed());
+                            c
+                        }
+                        _ => {
+                            // event!(Level::DEBUG, "cache_miss: {}", tag_key);
+                            let mut c = Collection::new_from_tags(&self.pages, tag_set);
+                            c.set_active_item(&id);
+                            self.set_cache(tag_key, CacheObject::Collection(c.clone()));
+                            event!(Level::DEBUG, "||{:?}||", now.elapsed());
+                            c
+                        }
+                    },
+                    None => {
+                        // event!(Level::DEBUG, "cache_miss: {}", tag_key);
+                        let mut c = Collection::new_from_tags(&self.pages, tag_set);
+                        c.set_active_item(&id);
+                        self.set_cache(tag_key, CacheObject::Collection(c.clone()));
+                        event!(Level::DEBUG, "||{:?}||", now.elapsed());
+                        c
+                    }
+                }
+            }
+            Err(e) => {
+                println!("{}", e);
+                Collection::empty()
+            }
+        }
+    }
 
     #[instrument(skip(self))]
     pub fn does_template_exist(&self, args: &[Value]) -> String {
@@ -184,17 +184,17 @@ impl Site {
         response
     }
 
-    // #[instrument(skip(self))]
-    // pub fn get_cache(&self, key: &str) -> Option<CacheObject> {
-    //     let now = Instant::now();
-    //     let binding = self.cache.lock().unwrap();
-    //     let response = match binding.get(key) {
-    //         Some(obj) => Some(obj.clone()),
-    //         None => None,
-    //     };
-    //     event!(Level::DEBUG, "||{:?}||", now.elapsed());
-    //     response
-    // }
+    #[instrument(skip(self))]
+    pub fn get_cache(&self, key: &str) -> Option<CacheObject> {
+        let now = Instant::now();
+        let binding = self.cache.lock().unwrap();
+        let response = match binding.get(key) {
+            Some(obj) => Some(obj.clone()),
+            None => None,
+        };
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
+        response
+    }
 
     #[instrument(skip(self))]
     pub fn get_subtree(&self, args: &[Value]) -> Vec<CollectionItem> {
@@ -278,13 +278,13 @@ impl Site {
     //     }
     // }
 
-    // #[instrument(skip(self))]
-    // pub fn set_cache(&self, key: String, obj: CacheObject) -> Option<CacheObject> {
-    //     let now = Instant::now();
-    //     let mut binding = self.cache.lock().unwrap();
-    //     event!(Level::DEBUG, "||{:?}||", now.elapsed());
-    //     binding.insert(key, obj)
-    // }
+    #[instrument(skip(self))]
+    pub fn set_cache(&self, key: String, obj: CacheObject) -> Option<CacheObject> {
+        let now = Instant::now();
+        let mut binding = self.cache.lock().unwrap();
+        event!(Level::DEBUG, "||{:?}||", now.elapsed());
+        binding.insert(key, obj)
+    }
 
     #[instrument(skip(self))]
     pub fn log_from_template(&self, args: &[Value]) -> String {

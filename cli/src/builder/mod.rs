@@ -170,7 +170,17 @@ impl Builder {
     #[instrument(skip(self))]
     pub fn generate_files(&self) {
         let mut env = Environment::new();
+        env.set_syntax(Syntax {
+            block_start: "[!".into(),
+            block_end: "!]".into(),
+            variable_start: "[@".into(),
+            variable_end: "@]".into(),
+            comment_start: "[#".into(),
+            comment_end: "#]".into(),
+        })
+        .unwrap();
         let site = Site::new(&self.file_set, &self.config);
+        let site_obj = Value::from_object(site.clone());
         let mut outputs: BTreeMap<PathBuf, String> = BTreeMap::new();
         self.file_set
             .templates
@@ -178,7 +188,6 @@ impl Builder {
             .for_each(|t| env.add_template_owned(t.0, t.1).unwrap());
         site.pages.iter().for_each(|p| {
             let page = p.1;
-
             let template_searches = vec![
                 format!(
                     "pages/{}/{}.jinja",
@@ -192,8 +201,7 @@ impl Builder {
                 format!("pages/post/{}.jinja", &page.status.clone().unwrap()),
                 format!("pages/post/published.jinja"),
             ];
-
-            if let Some(tmpl) =
+            if let Some(template_name) =
                 template_searches
                     .iter()
                     .find_map(|t| match &site.templates.get(t) {
@@ -201,13 +209,20 @@ impl Builder {
                         None => None,
                     })
             {
-                dbg!(tmpl);
+                if let Ok(tmpl) = env.get_template(template_name) {
+                    if let Ok(output) = tmpl.render(context!(
+                         site => site_obj,
+                        page_id => page.id
+                    )) {
+                        outputs.insert(
+                            PathBuf::from(&page.output_file_path.clone().unwrap()),
+                            output,
+                        );
+                    }
+                } else {
+                    event!(Level::ERROR, "Could not get template: {}", template_name);
+                }
             }
-
-            outputs.insert(
-                PathBuf::from(&page.output_file_path.clone().unwrap()),
-                "asdf".to_string(),
-            );
             //dbg!(&page);
             //()
         });

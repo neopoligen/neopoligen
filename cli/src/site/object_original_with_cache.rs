@@ -10,12 +10,12 @@ impl Object for Site {
         args: &[Value],
     ) -> Result<Value, Error> {
         match name {
-            // "collection_from_files_and_folders" => Ok(Value::from_serializable(
-            //     &self.collection_from_files_and_folders(args),
-            // )),
-            // "collection_from_tags" => {
-            //     Ok(Value::from_serializable(&self.collection_from_tags(args)))
-            // }
+            "collection_from_files_and_folders" => Ok(Value::from_serializable(
+                &self.collection_from_files_and_folders(args),
+            )),
+            "collection_from_tags" => {
+                Ok(Value::from_serializable(&self.collection_from_tags(args)))
+            }
             "does_template_exist" => Ok(Value::from_serializable(&self.does_template_exist(args))),
             "error" => Ok(Value::from_serializable(&self.error_from_template(args))),
             "get_subtree" => Ok(Value::from_serializable(&self.get_subtree(args))),

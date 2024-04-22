@@ -60,7 +60,7 @@ impl Site {
             })
             .collect();
         let mut sd = Site {
-            // cache: Mutex::new(BTreeMap::new()),
+            cache: Mutex::new(BTreeMap::new()),
             config: config.clone(),
             pages: BTreeMap::new(),
             invalid_pages: BTreeMap::new(),
