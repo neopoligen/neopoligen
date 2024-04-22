@@ -1,3 +1,5 @@
+[!- import "includes/theme-macros.neojinja" as theme -!]
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,9 +14,7 @@ body {
   <header>Testing: [@ page_id @]</header>
   <main>
     <article class="flow">
-    [! for section in site.pages[page_id].ast !]
-      [! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !]
-    [! endfor !]
+      [@ theme.main_body(site.pages[page_id]) @]
     </article>
   </main>
 </body>

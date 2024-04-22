@@ -1,29 +1,49 @@
 
 
 
-[###################################################################]
-[!- macro render_section(section) -!]
+
+[#############################################################################]
+[# DEPRECATED: Remove this #]
+[! macro render_section(section) !]
 <div>Section</div>
 <pre><code>
-[!- include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" -!]
+[! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !]
 [@ section @]
 </code></pre>
-[!- endmacro -!]
+[! endmacro !]
 
 
 
-[###################################################################]
-[!- macro main_body(page) -!]
+
+[#############################################################################]
+[! macro main_body(page) !]
 <h1>Main Body</h1>
 [! for section in page.ast !]
     [@ section.content.type @]-[@ section.content.bounds @]-[@ section.content.template @]
-
+    [# [! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !] #]
+    [@ output_payload(section) @]
 [! endfor !]
-[@ page @]
+[! endmacro !]
 
-[#
-[! for section in page.ast !]
-    [! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !]
+[#############################################################################]
+[! macro output_payload(section) !]
+[! if section.type == "section" !]
+SECTION HERE 
+[@ output_section(section) @]
+[! elif section.type == "block" !]
+[! for block_content in section.content !]
+BLOCK HERE 
+[# [@ output_spans(page_id, block_content, extras) @] #]
 [! endfor !]
-#]
-[!- endmacro -!]
+LIST HERE 
+[! elif section.type == "list" !]
+[# [@- output_list(page_id, section.content, extras) -@] #]
+[! endif !]
+[! endmacro !]
+
+
+[#############################################################################]
+[! macro output_section(section) !]
+OUPTPUTTIN- 
+[! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !]
+[! endmacro !]

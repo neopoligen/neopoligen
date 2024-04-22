@@ -1,2 +1,11 @@
 <section>
-[@ section @]
+<h2>note</h2>
+
+[! if section.content.category.content.containers[0] !]
+    <div class="content flow">
+        [! for content in section.content.category.content.containers !]
+            <p>---</p>
+        [! endfor !]
+    </div>
+[! endif !]
+
