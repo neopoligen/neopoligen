@@ -1,1 +1,19 @@
-this is here
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+body {
+  background-color: black;
+  color: #678;
+}
+</style>
+</head>
+<body>
+  <header>Testing: [@ page_id @]</header>
+  <main>
+    <article class="flow"></article>
+  </main>
+</body>
+</html>
+
+
