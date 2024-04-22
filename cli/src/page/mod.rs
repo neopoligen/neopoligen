@@ -9,6 +9,7 @@ use std::path::PathBuf;
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct Page {
     pub ast: Vec<Child>,
+    pub base_template: Option<String>,
     pub folders: Vec<String>,
     pub head: Vec<String>,
     pub href: Option<String>,

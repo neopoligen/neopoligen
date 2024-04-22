@@ -231,12 +231,21 @@ fn head() {
 }
 
 #[test]
-fn template_test() {
+fn base_template_from_type() {
     let file_set = FileSet::set1();
     let config = Config::set1();
     let site = Site::new(&file_set, &config);
-    //dbg!(&site.pages.get("ttss0150").unwrap());
-    // let left: &Vec<String> = &vec![r#"<!-- content for head -->"#.to_string()];
-    // let right = &site.pages.get("ttss0150").unwrap().head;
-    // assert_eq!(left, right);
+    let left = &Some("example".to_string());
+    let right = &site.pages.get("ttss0170").unwrap().base_template;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn base_template_default_post() {
+    let file_set = FileSet::set1();
+    let config = Config::set1();
+    let site = Site::new(&file_set, &config);
+    let left = &Some("post".to_string());
+    let right = &site.pages.get("ttss0180").unwrap().base_template;
+    assert_eq!(left, right);
 }

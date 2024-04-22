@@ -267,6 +267,37 @@ console.log("module")
             .to_string(),
         );
 
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from("leading-dir/Neopoligen/set1-test-site/content/type-to-template.neo"),
+            r#"-- title
+
+Testing type to template
+
+-- metadata
+-- id: ttss0170
+-- type: example
+"#
+            .to_string(),
+        );
+
+        /////////////////////////////////////////////////////////////////////////
+        fs.pages.insert(
+            PathBuf::from(
+                "leading-dir/Neopoligen/set1-test-site/content/base-template-default-post.neo",
+            ),
+            r#"-- title
+
+Base template defaults to post
+
+-- metadata
+-- id: ttss0180
+"#
+            .to_string(),
+        );
+
+        /////////////////////////////////////////////////////////////////////////
+        /// Final return of the file set
         fs
     }
 }
