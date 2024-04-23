@@ -25,6 +25,7 @@ pub struct Builder {
     neo_env: NeoEnv,
     pub template_errors: Vec<TemplateError>,
     pub outputs: BTreeMap<PathBuf, String>,
+    pub build_time: Option<String>,
 }
 
 impl Builder {
@@ -74,6 +75,8 @@ impl Builder {
 
     #[instrument(skip(self))]
     pub fn generate_files(&mut self) {
+        let timestamp = chrono::prelude::Local::now();
+        self.build_time = Some(timestamp.to_rfc2822());
         let mut env = Environment::new();
         env.set_syntax(Syntax {
             block_start: "[!".into(),

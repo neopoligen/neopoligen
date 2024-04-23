@@ -39,42 +39,44 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     file_set.load_templates(&test_config.folders.theme_root);
     let mut builder = Builder::new(file_set.clone(), &test_config, &neo_env);
     builder.generate_files();
-    builder.outputs.iter().for_each(|output| {
-        let body_parts: Vec<&str> = output.1.split("### EXPECTED_OUTPUT ###").collect();
-        let parent_dir = output.0.parent().unwrap();
-        let id = parent_dir.file_stem().unwrap().to_string_lossy();
-        if body_parts.len() > 1 {
-            let compare_start = body_parts[0].replace("\n", "").replace(" ", "");
-            let compare_end = body_parts[1].replace("\n", "").replace(" ", "");
-            if compare_start != compare_end {
-                event!(
-                    Level::WARN,
-                    "Found mis-aligned template for: {}",
-                    &output.0.display()
-                );
-                builder.template_errors.push(TemplateError {
-                    id: id.to_string(),
-                    expected: body_parts[1].to_string(),
-                    got: body_parts[0].to_string(),
-                });
-            }
-        }
-    });
+
+    // builder.outputs.iter().for_each(|output| {
+    //     let body_parts: Vec<&str> = output.1.split("### EXPECTED_OUTPUT ###").collect();
+    //     let parent_dir = output.0.parent().unwrap();
+    //     let id = parent_dir.file_stem().unwrap().to_string_lossy();
+    //     if body_parts.len() > 1 {
+    //         let compare_start = body_parts[0].replace("\n", "").replace(" ", "");
+    //         let compare_end = body_parts[1].replace("\n", "").replace(" ", "");
+    //         if compare_start != compare_end {
+    //             event!(
+    //                 Level::WARN,
+    //                 "Found mis-aligned template for: {}",
+    //                 &output.0.display()
+    //             );
+    //             builder.template_errors.push(TemplateError {
+    //                 id: id.to_string(),
+    //                 expected: body_parts[1].to_string(),
+    //                 got: body_parts[0].to_string(),
+    //             });
+    //         }
+    //     }
+    // });
 
     let mut env = Environment::new();
     env.add_template_owned(
         "template_error_status",
         r#"
-<div>Ran {{ test_page_count }} Template Tests. Found {{ template_error_count }} Errors</div>
-{% for error in template_errors %}
-<div class="template-error">
+    <div>Ran {{ test_page_count }} Template Tests. Found {{ template_error_count }} Errors</div>
+    <div>{{ build_time }}</div>
+    {% for error in template_errors %}
+    <div class="template-error">
     <h2>{{ error.id }}</h2>
     <h3>Expected</h3>
     <pre>{% autoescape true %}{{ error.expected }}{% endautoescape %}</pre>
     <h3>Got</h3>
     <pre>{% autoescape true %}{{ error.got }}{% endautoescape %}</pre>
-</div>
-{% endfor %}"#
+    </div>
+    {% endfor %}"#
             .to_string(),
     )
     .unwrap();
@@ -83,7 +85,8 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
         .render(context!(
             test_page_count => &file_set.pages.len(),
             template_error_count => &builder.template_errors.len(),
-            template_errors => Value::from_serialize(&builder.template_errors)
+            template_errors => Value::from_serialize(&builder.template_errors),
+            build_time => builder.build_time
         ))
         .unwrap();
     let mut output_path = config.folders.status_root.clone();

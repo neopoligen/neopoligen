@@ -13,6 +13,7 @@ impl Builder {
             neo_env: neo_env.clone(),
             template_errors: vec![],
             outputs: BTreeMap::new(),
+            build_time: None,
         }
     }
 }
