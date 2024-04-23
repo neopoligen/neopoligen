@@ -1,7 +1,3 @@
 [!- import "includes/theme-macros.neojinja" as theme -!]
 
-[#
-[@ theme.main_body(site.pages[page_id]) @]
-#]
-
-[@ theme.main_body_v2(site, page_id) @]
+[@ theme.main_body(site, page_id) @]
