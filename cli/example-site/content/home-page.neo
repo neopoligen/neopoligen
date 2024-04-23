@@ -1,38 +1,19 @@
 -- title
 
-Welcome To Neopoligen
+Welcome To The Neopoligen Cookbook
 
-This is a starter site. It's designed as a fully
-featured launch pad. It comes with the following
-features built 
+This site is an example of some things
+you can do with Neopoligen. It's a great place
+to learn by looking under the hood to see how thing
+works.
 
-You can use it out-of-the-box
-to make your site. You can also use it as a starting
-point for customization a theme (or making your own
-from scratch)
+-- code
 
-Check out the documentation and cookbook on the 
-<<link|main site|https://www.neopoligen.com/>>
-for more. 
+This is a raw section
 
+-- page-source
 
--- image
--- example-fish
--- alt: this is some alt text
--- alt: this is longer alt text
-
-
--- mp3
--- welcome
-
-This is the things
-
--- list
-
-- This is 
-
-- a list example
-
+this is some stuff
 
 
 

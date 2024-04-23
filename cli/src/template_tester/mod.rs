@@ -39,7 +39,6 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     file_set.load_templates(&test_config.folders.theme_root);
     let mut builder = Builder::new(file_set.clone(), &test_config, &neo_env);
     builder.generate_files();
-
     builder.outputs.iter().for_each(|output| {
         let body_parts: Vec<&str> = output.1.split("### EXPECTED_OUTPUT ###").collect();
         let parent_dir = output.0.parent().unwrap();
@@ -66,14 +65,16 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     env.add_template_owned(
         "template_error_status",
         r#"
-    <div>Ran {{ test_page_count }} Template Tests. Found {{ template_error_count }} Errors</div>
-    {% for error in template_errors %}
-    <h3>{{ error.id }}</h3>
-    <h4>Expected</h4>
+<div>Ran {{ test_page_count }} Template Tests. Found {{ template_error_count }} Errors</div>
+{% for error in template_errors %}
+<div class="template-error">
+    <h2>{{ error.id }}</h2>
+    <h3>Expected</h3>
     <pre>{% autoescape true %}{{ error.expected }}{% endautoescape %}</pre>
-    <h4>Got</h4>
+    <h3>Got</h3>
     <pre>{% autoescape true %}{{ error.got }}{% endautoescape %}</pre>
-    {% endfor %}"#
+</div>
+{% endfor %}"#
             .to_string(),
     )
     .unwrap();

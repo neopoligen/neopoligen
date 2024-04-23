@@ -39,13 +39,27 @@ async fn main() {
 
     let file_appender = tracing_appender::rolling::never(log_dir, log_file_path);
     let (file_writer, _guard) = tracing_appender::non_blocking(file_appender);
+    let file_layer_format = tracing_subscriber::fmt::format().json();
     let file_layer = fmt::Layer::default()
+        .event_format(file_layer_format)
         .with_writer(file_writer)
-        .with_ansi(false);
+        .json();
+
+    let stdout_format = tracing_subscriber::fmt::format()
+        .without_time()
+        .with_target(false)
+        .with_thread_ids(false)
+        .with_thread_names(false)
+        .with_ansi(false)
+        //
+        .with_line_number(false)
+        .with_file(false);
+    //
+    //.pretty();
 
     let stdout_layer = fmt::Layer::default()
+        .event_format(stdout_format)
         .with_writer(std::io::stdout)
-        .with_ansi(false)
         .with_filter(filter::LevelFilter::INFO);
 
     let subscriber = tracing_subscriber::Registry::default()
@@ -178,7 +192,12 @@ fn get_engine_config_file() -> Result<String, String> {
 #[instrument(skip(site_root))]
 fn set_up_site_if_necessary(site_root: &PathBuf) -> Result<String, String> {
     let path = PathBuf::from(site_root);
-    event!(Level::INFO, "Set Up Site Path: {}", &path.display());
+    event!(
+        Level::INFO,
+        "Set Up Site Path {}",
+        //&path.display().to_string()
+        "asdf"
+    );
     match path.try_exists() {
         Ok(check) => {
             if check == false {

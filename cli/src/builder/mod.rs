@@ -94,6 +94,7 @@ impl Builder {
             .for_each(|t| env.add_template_owned(t.0, t.1).unwrap());
         site.pages.iter().for_each(|p| {
             let page = p.1;
+            // event!(Level::INFO, "Processing: {}", page.source_path.display());
             // dbg!(page.id.clone());
             let template_searches = vec![
                 format!(
@@ -128,7 +129,9 @@ impl Builder {
                             );
                             ()
                         }
-                        Err(e) => event!(Level::ERROR, "Error: {}", e),
+                        Err(e) => {
+                            event!(Level::ERROR, "File: {}, {}", page.source_path.display(), e)
+                        }
                     }
                 } else {
                     event!(Level::ERROR, "Could not get template: {}", template_name);

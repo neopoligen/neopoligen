@@ -1,1 +1,4 @@
-RAW SECTION
+<section 
+[@ theme.section_attrs(section, ["textarea_default_section", "raw_section", "flow"]) -@]
+>
+
