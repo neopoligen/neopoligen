@@ -8,6 +8,9 @@
 
 <<tlink|link-target-alfa|class: green>>
 
+<<tlink|link-target-alfa|hidden>>
+
+
 -- expected-output
 
 <a href="/en/link-target-alfa/?link-target-alfa-page">Link Target Alfa Page</a>
@@ -16,11 +19,12 @@ No Link Available
 
 tlink Test Page
 
+<a href="/en/link-target-alfa/?link-target-alfa-page"
+    class="green">Link Target Alfa Page</a>
 
-<a 
-    href="/en/link-target-alfa/?link-target-alfa-page"
-    class="green"
-    >Link Target Alfa Page</a>
+<a href="/en/link-target-alfa/?link-target-alfa-page" hidden>
+    Link Target Alfa Page
+</a>
 
 
 -- list
@@ -40,8 +44,8 @@ target page is returned
 - If the target ID isn't found then a message shows
 up saying that
 
+- Both attributes and flags can be passed in. 
 
- 
 
 
 
