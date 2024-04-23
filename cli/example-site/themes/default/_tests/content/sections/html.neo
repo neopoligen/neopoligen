@@ -32,24 +32,32 @@ outputting it
 
 -- expected-output
 
-<section class="html_show_section raw_section flow ">
+<section 
+ class="html_show_section raw_section flow ">
+
+
     <div class="heading_subsection">
         <h3 class="title_subsection">
             HTML
         </h3>
     </div>
+
      <div class="content_subsection flow">
-        <pre><code>
-&lt;div&gt;Ping&lt;&#x2f;div&gt;
-        </pre></code>
+<pre class="numberedLines"><code>
+<span class="numberedLine"><span class="text html basic"><span class="meta tag block any html"><span class="punctuation definition tag begin html">&lt;</span><span class="entity name tag block any html">div</span><span class="punctuation definition tag end html">&gt;</span></span>Ping<span class="meta tag block any html"><span class="punctuation definition tag begin html">&lt;/</span><span class="entity name tag block any html">div</span><span class="punctuation definition tag end html">&gt;</span></span></span></span>
+</code></pre>
     </div>   
+
     <div class="heading_subsection secondary_heading_subsection">
         <h3 class="title_subsection">Output</h3>
     </div>
+
     <div class="content_subsection flow">
-        <div>Ping</div>
+<div>Ping</div>
     </div>
+
 </section>
+
 
 
 
