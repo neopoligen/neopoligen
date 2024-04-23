@@ -10,7 +10,43 @@ code without a language
 
 -- expected-output
 
-this is some code
+<section class="code_default_section raw_section flow ">
+    <div class="heading_subsection">
+        <h3 class="title_subsection">
+            Code
+        </h3>
+    </div>
+    <div class="content_subsection flow">
+        <pre class="numberedLines"><code>
+        <span class="numberedLine"><span class="text plain">code without a language</span></span>
+        </code></pre>
+    </div>
+</section>
+
+
+-- start-template-test
+
+Example with a language
+
+-- code
+-- python
+
+print("Hello, world")
+
+-- expected-output
+
+<section class="code_default_section raw_section flow ">
+    <div class="heading_subsection">
+        <h3 class="title_subsection">
+python
+        </h3>
+    </div>
+    <div class="content_subsection flow">
+        <pre class="numberedLines"><code>
+            <span class="numberedLine"><span class="source python"><span class="meta function-call python"><span class="meta qualified-name python"><span class="support function builtin python">print</span></span><span class="punctuation section arguments begin python">(</span><span class="meta function-call arguments python"><span class="meta string python"><span class="string quoted double python"><span class="punctuation definition string begin python">&quot;</span></span></span><span class="meta string python"><span class="string quoted double python">Hello, world<span class="punctuation definition string end python">&quot;</span></span></span></span><span class="punctuation section arguments end python">)</span></span></span></span>
+        </code></pre>
+    </div>
+</section>
 
 
 -- metadata

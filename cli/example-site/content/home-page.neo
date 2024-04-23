@@ -8,8 +8,12 @@ to learn by looking under the hood to see how thing
 works.
 
 -- code
+-- rust
 
-this is some code
+fn main() {
+    println!("Hello, code!");
+}
+
 
 -- html
 -- template: show
@@ -17,8 +21,18 @@ this is some code
 <div>PING IT</div>
 
 
+-- list
+-- title: Stuff to add
+
+- This is a list
+of things
+
+etc, etc, etc...
+
+- and another item
+
+
 -- metadata
--- date: 2024-03-11
 -- id: 2dwmgthu
 -- path: /
 

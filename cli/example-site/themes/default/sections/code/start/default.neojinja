@@ -5,16 +5,33 @@
 
     [! include "subsections/forward.neojinja" !]
 
-    [! include "subsections/heading_basic.neojinja" !]
+    <div class="heading_subsection">
+        <h3 class="title_subsection">
+        [! if section.content.key_value_attributes.title !]
+            [@ section.content.key_value_attributes.title @]
+        [! else !]
+            [! if section.content.flag_attributes[0] !]
+                [@ section.content.flag_attributes[0] @]
+            [! else !]
+                Code
+            [! endif !]
+        [! endif !]
+        </h3>
+        [! if section.content.key_value_attributes.subtitle !]
+        <div class="subtitle_subsection">This is a subtitle</div>
+        [! endif !]
+    </div>
 
     [! include "subsections/preface.neojinja" !]
 
     <div class="content_subsection flow">
-        <pre>
-            [! autoescape false !]
-            [@ section.content.category.content.text @]
-            [! endautoescape !]
-        </pre>
+        [! autoescape false !]
+        [! if section.content.flag_attributes[0] !]
+        [@ highlight_code(section.content.category.content.text, section.content.flag_attributes[0]) @]
+        [! else !]
+        [@ highlight_code(section.content.category.content.text, "txt") @]
+        [! endif !]
+        [! endautoescape !]
     </div>
 
     [! include "subsections/afterword.neojinja" !]

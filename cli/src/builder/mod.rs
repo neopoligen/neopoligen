@@ -204,9 +204,7 @@ fn highlight_code(code: String, lang: String) -> String {
         .map(|line| format!(r#"<span class="numberedLine">{}</span>"#, line))
         .collect();
     format!(
-        r#"<pre class="numberedLines"><code>{}{}{}</code></pre>"#,
-        "\n".to_string(),
-        output_html.join("\n"),
-        "\n".to_string(),
+        r#"<pre class="numberedLines"><code>{}</code></pre>"#,
+        output_html.join("\n")
     )
 }
