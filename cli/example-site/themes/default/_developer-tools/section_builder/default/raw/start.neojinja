@@ -1,6 +1,6 @@
 [!- import "includes/theme-macros.neojinja" as theme -!]
 <section 
-[@ theme.section_attrs(section, ["SECTIONTYPE_default_section", "raw_section", "flow"]) -@]
+[@ theme.section_attrs(site, page_id, section, ["SECTIONTYPE_default_section", "raw_section", "flow"]) -@]
 >
 
     [! include "subsections/forward.neojinja" !]

@@ -1,7 +1,8 @@
 [!- import "includes/theme-macros.neojinja" as theme -!]
 
 <section 
-[@ theme.section_attrs(section, ["page_source_default_section", "standard_section", "flow"]) -@]
+[@ theme.section_attrs(site, page_id, section, ["page_source_default_section", "standard_section", "flow"]) -@]
 >
+
 
 This is the page source
