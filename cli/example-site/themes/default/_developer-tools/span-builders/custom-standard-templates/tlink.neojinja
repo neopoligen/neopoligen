@@ -1,7 +1,6 @@
 [#- type: standard -#]
 [!- import "includes/theme-macros.neojinja" as theme -!]
 
-
 [! if page_id == span.content.spans[0].content.text !]
 [@ theme.page_title(site, page_id, span.content.spans[0].content.text) @]
 [! else !]
@@ -23,70 +22,7 @@
 [! endif !]
 
 
-[# [@ span.content.spans[0].content.text @] 
-
-<a href=" [@- site.href_for_page(span.content.spans[0].content.text) -@] "
-[!- for attribute in span.content.key_value_attributes -!]
-[@- ' ' -@]
-[@- attribute -@]="[@- span.content.key_value_attributes[attribute] -@]"
-[!- endfor -!]
-[!- for flag in span.content.flag_attributes -!]
-[!- if loop.first != true -!]
-[@- ' ' -@]
-[@- flag -@]
-[!- endif -!]
-[!- endfor -!]>
-[@- site.title_for_page(span.content.spans[0].content.text) -@]
-</a>
-#]
-
-[#
-[@- macros.link_or_title(
-    current_page = page_id, 
-    target_page = span.content.spans[0].content.text
-) -@]
-
-
-<a href="[@- site.href_for_page(span.content.spans[0].content.text) -@]"
-[!- for attribute in span.content.key_value_attributes -!]
-[@- ' ' -@]
-[@- attribute -@]="[@- span.content.key_value_attributes[attribute] -@]"
-[!- endfor -!]
-[!- for flag in span.content.flag_attributes -!]
-[!- if loop.first != true -!]
-[@- ' ' -@]
-[@- flag -@]
-[!- endif -!]
-[!- endfor -!]>
-[@- site.title_for_page(span.content.spans[0].content.text) -@]
-</a>
-#]
-
 ~~~~~~~~~~
-
--- title
-
-Span: tlink
-
--- subtitle
-
-Title Link Span
-
-This span takes an ID and automatically 
-creates a link to the page using
-its full title for the text
-
--- p
-
-Basic Example:
-
-<<tlink|2brmmqau>>
-
-Attribute Example:
-
-<<tlink|2brmmqau|class: green>>
-
-
 
 
 -- metadata
