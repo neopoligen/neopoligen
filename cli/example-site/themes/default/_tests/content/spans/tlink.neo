@@ -6,6 +6,7 @@
 
 <<tlink|link-that-points-to-self>>
 
+<<tlink|link-target-alfa|class: green>>
 
 -- expected-output
 
@@ -14,6 +15,35 @@
 No Link Available
 
 tlink Test Page
+
+
+<a 
+    href="/en/link-target-alfa/?link-target-alfa-page"
+    class="green"
+    >Link Target Alfa Page</a>
+
+
+-- list
+-- title: Details
+
+- `tlink`` stands for "Title Link"
+
+- It works by checking the current page_id with a target
+page id
+
+- If the IDs are the same, just the title of the page
+is returned. 
+
+- If the IDs are different, a link pointing to the 
+target page is returned
+
+- If the target ID isn't found then a message shows
+up saying that
+
+
+ 
+
+
 
 -- metadata
 -- id: link-that-points-to-self
