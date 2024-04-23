@@ -14,7 +14,7 @@ a section block
 -- expected-output
 
 <section class="html_default_section raw_section flow ">
-    <div class="content flow">
+    <div class="content_subsection flow">
         <div>Ping</div>
     </div>
 </section>
