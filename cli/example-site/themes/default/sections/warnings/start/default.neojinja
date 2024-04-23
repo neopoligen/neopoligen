@@ -1,0 +1,12 @@
+<section>
+    <ul class="flow">
+        [!- for item in section.content.items -!]
+        <li class="list_item flow">
+            [!- for container in item.content.containers -!]
+            <p>
+                [@- output_payload(container) -@]
+            </p>
+            [!- endfor -!]
+        </li>
+        [!- endfor -!]
+    </ul>

@@ -1,0 +1,51 @@
+[!- import "includes/theme-macros.neojinja" as theme -!]
+
+<section [@- section_attributes(page_id, {"section": section, "classes": "SECTIONTYPE_default_section raw_section flow" } ) -@]>
+
+    [!- if section.key_value_attributes.forward -!]
+        <div class="forward flow">
+            [@- section.key_value_attributes.forward -@]
+        </div>
+    [!- endif -!]
+
+    [!- if section.key_value_attributes.title or section.key_value_attributes.subtitle -!]
+    <div class="SECTIONTYPE_heading_group">
+    [!- endif -!]
+        [!- if section.key_value_attributes.title -!]
+        <h2>
+            [@- section.key_value_attributes.title -@]
+        </h2>
+        [!- endif -!]
+        [!- if section.key_value_attributes.subtitle -!]
+        <div>
+            [@- section.key_value_attributes.subtitle -@]
+        </div>
+        [!- endif -!]
+    [!- if section.key_value_attributes.title or section.key_value_attributes.subtitle -!]
+    </div>
+    [!- endif -!]
+
+    [!- if section.key_value_attributes.preface -!]
+        <div class="preface flow">
+            [@- section.key_value_attributes.preface -@]
+        </div>
+    [!- endif -!]
+
+    <div class="content">
+        <pre><code>
+        [!- autoescape true -!]
+        [@- section.category.content.text -@]
+        [!- endautoescape -!]
+        </code></pre>
+    </div>
+
+    [!- if section.key_value_attributes.afterword -!]
+        <div class="afterword flow">
+            [@- section.key_value_attributes.afterword -@]
+        </div>
+    [!- endif -!]
+    
+[#- NOTE: this section close is intentional because there's
+not really a case for spanning other sections so the `full``
+version forwards here directly unlike most other sections -#]
+</section>

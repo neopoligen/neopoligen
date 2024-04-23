@@ -1,0 +1,25 @@
+-- title
+
+Span: samp 
+
+-- subtitle
+
+The Sample Output Span
+
+-- p
+
+Basic Example: 
+
+<<samp|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<samp|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03 02:53:47
+-- id: 2bqpnpva
+-- status: published
+

@@ -70,7 +70,13 @@ fn main() {
                     .expect("Failed to spawn packaged node");
                 // let mut i = 0;
                 while let Some(event) = rx.recv().await {
-                    if let CommandEvent::Stdout(line) = event {
+                    if let CommandEvent::Stdout(line) = event.clone() {
+                        print!("{}", line);
+                        window
+                            .emit("neo_message", Some(format!("{}", line)))
+                            .expect("failed to emit event");
+                    }
+                    if let CommandEvent::Stderr(line) = event.clone() {
                         print!("{}", line);
                         window
                             .emit("neo_message", Some(format!("{}", line)))

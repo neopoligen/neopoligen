@@ -9,7 +9,7 @@ pub fn pipe_by_itself_in_code(source: &str) -> IResult<&str, Span> {
         Span::PipeByItselfInCode {
             text:
             result.to_string(),
-            template: "spans/pipe_by_itself_in_code.jinja".to_string(),
+            template: "spans/pipe_by_itself_in_code.neojinja".to_string(),
         },
     ))
 }
@@ -29,7 +29,7 @@ mod test {
             "",
             Span::PipeByItselfInCode {
                 text: r#"`|``"#.to_string(),
-                template: "spans/pipe_by_itself_in_code.jinja".to_string(),
+                template: "spans/pipe_by_itself_in_code.neojinja".to_string(),
             },
         ));
         let right = pipe_by_itself_in_code(source);

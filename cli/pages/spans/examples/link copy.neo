@@ -1,0 +1,32 @@
+-- title
+
+Span: link
+
+-- subtitle
+
+The Link Span
+
+This is for basic links
+
+-- p
+
+Basic Example: <<link|Lorem ipsum|https://www.example.com/>>
+
+
+-- p
+
+Attribute Example: <<link|Lorem ipsum|https://www.example.com/|class: green>>
+
+
+-- todo
+
+[] Fix so you can do this (see <<tlink|2bsjrpd5>>):
+
+-- code
+
+<<link|Lorem ipsum|https://www.example.com/|class: green|some_flag>>
+
+-- metadata
+-- date: 2024-02-03 03:13:57
+-- id: 2bsiloon
+-- status: published

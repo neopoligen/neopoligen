@@ -1,0 +1,13 @@
+[#- type: standard -#]
+[!- import "includes/theme-macros.neojinja" as theme -!]
+<object [@- macros.span_attributes(span.content) -@]></object>
+
+
+~~~~~~~~~~
+
+
+-- metadata
+-- date: 2024-02-03 03:13:57
+-- id: 2brkg9qc
+-- status: published
+

@@ -26,11 +26,10 @@ pub fn get_collection_subtree() {
     let config = Config::nav_items2();
     let site = Site::new(&file_set, &config);
     let id = Value::from("aabb0010".to_string());
-    let patterns =
-        Value::from_serializable::<Vec<Vec<String>>>(&vec![vec!["level-1a".to_string()]]);
+    let patterns = Value::from_serialize::<Vec<Vec<String>>>(vec![vec!["level-1a".to_string()]]);
     let site_collection = site.collection_from_files_and_folders(&[id, patterns]);
     let sub_tree_request_id = Value::from("aabb0020".to_string());
-    let original_tree = Value::from_serializable(&site_collection);
+    let original_tree = Value::from_serialize(&site_collection);
     let sub_tree = site.get_subtree(&[sub_tree_request_id, original_tree]);
     let left = &"aabb0030".to_string();
     let right = &sub_tree[0].id;
@@ -74,24 +73,26 @@ pub fn image_path_from_name_with_extension_in_sub_dir() {
     assert_eq!(left, right);
 }
 
-#[test]
-pub fn does_template_exists_no() {
-    let file_set = FileSet::set1();
-    let config = Config::set1();
-    let site = Site::new(&file_set, &config);
-    let left = &"no".to_string();
-    let right = &site.does_template_exist(&[Value::from(
-        "path/to/template/that/does/not/exist.jinaj".to_string(),
-    )]);
-    assert_eq!(left, right);
-}
+// // Deprecated
+// #[test]
+// pub fn does_template_exists_no() {
+//     let file_set = FileSet::set1();
+//     let config = Config::set1();
+//     let site = Site::new(&file_set, &config);
+//     let left = &"no".to_string();
+//     let right = &site.does_template_exist(&[Value::from(
+//         "path/to/template/that/does/not/exist.jinaj".to_string(),
+//     )]);
+//     assert_eq!(left, right);
+// }
 
-#[test]
-pub fn does_template_exists_yes() {
-    let file_set = FileSet::set1();
-    let config = Config::set1();
-    let site = Site::new(&file_set, &config);
-    let left = &"yes".to_string();
-    let right = &site.does_template_exist(&[Value::from("custom/template/path.jinja".to_string())]);
-    assert_eq!(left, right);
-}
+// // Deprecated
+// #[test]
+// pub fn does_template_exists_yes() {
+//     let file_set = FileSet::set1();
+//     let config = Config::set1();
+//     let site = Site::new(&file_set, &config);
+//     let left = &"yes".to_string();
+//     let right = &site.does_template_exist(&[Value::from("custom/template/path.neojinja".to_string())]);
+//     assert_eq!(left, right);
+// }

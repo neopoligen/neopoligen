@@ -1,0 +1,111 @@
+[#############################################################################]
+[! macro main_body(page) !]
+[! for section in page.ast !]
+    [# [@ section.content.type @]-[@ section.content.bounds @]-[@ section.content.template @]
+    [! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !] #]
+    [@ output_payload(section) -@]
+[! endfor !]
+[! endmacro !]
+
+
+[! macro main_body_v2(site, page_id) !]
+[! for section in site.pages[page_id].ast !]
+    [@ output_payload_v2(site, page_id, section) -@]
+[! endfor !]
+[! endmacro !]
+
+
+[#############################################################################]
+[! macro output_payload(section) !]
+[! if section.type == "section" or section.type == "list" !]
+[@ output_section(section) -@]
+[! elif section.type == "block" !]
+[! for block_content in section.content !]
+[@ output_spans(block_content) -@]
+[! endfor !]
+[! endif !]
+[! endmacro !]
+
+
+[! macro output_payload_v2(site, page_id, section) !]
+[! if section.type == "section" or section.type == "list" !]
+[@ output_section_v2(site, page_id, section) -@]
+[! elif section.type == "block" !]
+[! for block_content in section.content !]
+[@ output_spans_v2(site, page_id, block_content) -@]
+[! endfor !]
+[! endif !]
+[! endmacro !]
+
+
+[#############################################################################]
+[! macro output_section(section) !]
+[! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !]
+[! endmacro !]
+
+
+[! macro output_section_v2(site, page_id, section) !]
+[! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !]
+[! endmacro !]
+
+
+
+[#############################################################################]
+[! macro output_spans(span) !]
+[! if span.content.template !]
+[! include span.content.template !]
+[! endif !]
+[! endmacro !]
+
+[! macro output_spans_v2(site, page_id, span) !]
+[! if span.content.template !]
+[! include span.content.template !]
+[! endif !]
+[! endmacro !]
+
+
+
+[#############################################################################]
+[! macro page_href(site, page_id, target_page_id) !]
+[@- site.pages[target_page_id].href -@]
+[! endmacro !]
+
+[#############################################################################]
+[! macro page_title(site, page_id, target_page_id) -!]
+[@ site.pages[target_page_id].title -@]
+[! endmacro !]
+
+
+[#############################################################################]
+[! macro section_attrs(section, extra_classes) !]
+[@ section_id(section) @][@ ' ' -@]
+class="
+[!- for extra_class in extra_classes !]
+[@- extra_class -@][@ ' ' @]
+[! endfor !]
+[@- section_attr_classes(section) -@]
+"
+[!- for key in section.content.key_value_attributes !]
+[! if key != "afterword" and key != "class" and key != "forward" 
+and key != "id" and key != "preface" and key != "subtitle" and key != "title"
+-!]
+[@ ' ' @][@ key @]="[@ section.content.key_value_attributes[key] @]"
+[!- endif !]
+[! endfor !]
+[! endmacro !]
+
+
+[#############################################################################]
+[! macro section_attr_classes(section) !]
+[! if section.content.key_value_attributes.class !]
+[@ section.content.key_value_attributes.class @]
+[! endif !]
+[! endmacro !]
+
+
+[#############################################################################]
+[! macro section_id(section) !]
+[! if section.content.key_value_attributes.id !]
+id="[@ section.content.key_value_attributes.id @]"
+[! endif !]
+[! endmacro !]

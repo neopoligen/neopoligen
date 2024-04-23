@@ -1,0 +1,25 @@
+-- title
+
+Span: data 
+
+-- subtitle
+
+The Data Span
+
+-- p
+
+Basic Example: 
+
+<<data|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<data|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03 02:53:47
+-- id: 2bqpgsdh
+-- status: published
+

@@ -10,7 +10,7 @@ pub fn greater_than(source: &str) -> IResult<&str, Span> {
         source,
         Span::GreaterThan {
             text: result.to_string(),
-            template: "spans/less_than.jinja".to_string(),
+            template: "spans/less_than.neojinja".to_string(),
         },
     ))
 }
@@ -31,7 +31,7 @@ mod test {
             "",
             Span::GreaterThan {
                 text: ">".to_string(),
-                template: "spans/less_than.jinja".to_string(),
+                template: "spans/less_than.neojinja".to_string(),
             },
         ));
         let right = greater_than(source);

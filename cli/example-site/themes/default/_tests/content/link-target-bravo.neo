@@ -1,0 +1,12 @@
+-- naked
+
+this is just a link target
+
+-- expected-output
+
+this is just a link target
+
+-- metadata
+-- id: link-target-bravo
+-- type: template-test
+

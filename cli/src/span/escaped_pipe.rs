@@ -9,7 +9,7 @@ pub fn escaped_pipe(source: &str) -> IResult<&str, Span> {
         Span::EscapedPipe {
             text:
             result.to_string(),
-            template: "spans/escaped_pipe.jinja".to_string(),
+            template: "spans/escaped_pipe.neojinja".to_string(),
         },
     ))
 }
@@ -29,7 +29,7 @@ mod test {
             "",
             Span::EscapedPipe {
                 text: r"\|".to_string(),
-                template: "spans/escaped_pipe.jinja".to_string(),
+                template: "spans/escaped_pipe.neojinja".to_string(),
             },
         ));
         let right = escaped_pipe(source);

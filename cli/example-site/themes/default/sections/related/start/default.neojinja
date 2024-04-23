@@ -1,0 +1,14 @@
+[!- import "includes/theme-macros.neojinja" as theme -!]
+
+<section 
+    [@ theme.section_attrs(section, ["related_default_section", "standard_section", "flow"]) -@]
+>
+    [! include "subsections/forward.neojinja" !]
+
+    [! include "subsections/heading_basic.neojinja" !]
+
+    [! include "subsections/preface.neojinja" !]
+
+    [! include "subsections/content_index0.neojinja" !]
+
+    [! include "subsections/afterword.neojinja" !]

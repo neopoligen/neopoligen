@@ -461,7 +461,7 @@ impl Site {
         // event!(Level::DEBUG, "running page_main_body");
         if let Some(page) = self.pages.get(&args[0].to_string()) {
             // event!(Level::DEBUG, "{}", page.source_path.display());
-            let response = Value::from_serializable(
+            let response = Value::from_serialize(
                 &page
                     .ast
                     .clone()
@@ -489,7 +489,7 @@ impl Site {
             response
         } else {
             event!(Level::DEBUG, "||{:?}||", now.elapsed());
-            Value::from_serializable::<Vec<Child>>(&vec![])
+            Value::from_serialize::<Vec<Child>>(vec![])
         }
     }
 
@@ -570,14 +570,14 @@ impl Site {
                 .filter_map(|child| {
                     if let Child::Section(sec) = &child {
                         if sec.r#type == section_type {
-                            Some(Value::from_serializable(child))
+                            Some(Value::from_serialize(child))
                         } else {
                             None
                         }
                     } else if let Child::List(sec) = &child {
                         if sec.r#type == section_type {
                             event!(Level::DEBUG, "||{:?}||", now.elapsed());
-                            Some(Value::from_serializable(child))
+                            Some(Value::from_serialize(child))
                         } else {
                             None
                         }
@@ -586,8 +586,8 @@ impl Site {
                     }
                 })
                 .collect(),
-            // Value::from_serializable::<Vec<String>>(&vec![]),
-            None => Value::from_serializable::<Vec<String>>(&vec![]),
+            // Value::from_serialize::<Vec<String>>(&vec![]),
+            None => Value::from_serialize::<Vec<String>>(vec![]),
         }
     }
 
@@ -624,13 +624,13 @@ impl Site {
         if self.pages.contains_key(&id) {
             let template_searches = vec![
                 format!(
-                    "pages/{}/{}.jinja",
+                    "pages/{}/{}.neojinja",
                     self.page_type(args).unwrap(),
                     self.page_status(args).unwrap(),
                 ),
-                format!("pages/{}/published.jinja", self.page_type(args).unwrap()),
-                format!("pages/post/{}.jinja", self.page_status(args).unwrap()),
-                format!("pages/post/published.jinja"),
+                format!("pages/{}/published.neojinja", self.page_type(args).unwrap()),
+                format!("pages/post/{}.neojinja", self.page_status(args).unwrap()),
+                format!("pages/post/published.neojinja"),
             ];
             event!(Level::DEBUG, "||{:?}||", now.elapsed());
             template_searches

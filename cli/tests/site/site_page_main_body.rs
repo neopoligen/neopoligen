@@ -24,23 +24,23 @@ mod site_page_main_body {
                 containers: vec![Child::Block(vec![
                     Span::Word {
                         text: "Test".to_string(),
-                        template: "spans/word.jinja".to_string(),
+                        template: "spans/word.neojinja".to_string(),
                     },
                     Span::Space {
                         text: " ".to_string(),
-                        template: "spans/space.jinja".to_string(),
+                        template: "spans/space.neojinja".to_string(),
                     },
                     Span::Word {
                         text: "main_body".to_string(),
-                        template: "spans/word.jinja".to_string(),
+                        template: "spans/word.neojinja".to_string(),
                     },
                     Span::Space {
                         text: " ".to_string(),
-                        template: "spans/space.jinja".to_string(),
+                        template: "spans/space.neojinja".to_string(),
                     },
                     Span::Word {
                         text: "output".to_string(),
-                        template: "spans/word.jinja".to_string(),
+                        template: "spans/word.neojinja".to_string(),
                     },
                 ])],
             },
@@ -49,7 +49,7 @@ mod site_page_main_body {
             source: "-- p\n\nTest main_body output".to_string(),
         })];
 
-        let left = Value::from_serializable::<Vec<Child>>(&response);
+        let left = Value::from_serialize::<Vec<Child>>(response);
         let right = site.page_main_body(&[Value::from("basic-main-body-test")]);
         assert_eq!(left, right);
     }

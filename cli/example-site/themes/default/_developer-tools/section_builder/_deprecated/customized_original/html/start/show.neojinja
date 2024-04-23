@@ -1,0 +1,41 @@
+[!- import "includes/theme-macros.neojinja" as theme -!]
+
+<section [@- section_attributes(page_id, {"section": section, "classes": "html_show_section raw_section flow" } ) -@]>
+
+    [!- include "section-parts/forward.neojinja" -!]
+
+    <div class="heading_group">
+        <h3>
+        [!- if section.key_value_attributes.title -!]
+            [@- section.key_value_attributes.title -@]
+        [!- else -!]
+            HTML Source
+        [!- endif -!]
+        </h3>
+        [!- if section.key_value_attributes.subtitle -!]
+        <div class="subtitle">
+            [@- section.key_value_attributes.subtitle -@]
+        </div>
+        [!- endif -!]
+    </div>
+
+    [!- include "section-parts/preface.neojinja" -!]
+
+    <pre><code>
+        [!- autoescape true -!]
+            [@- section.category.content.text|trim -@]
+        [!- endautoescape -!]
+    </code></pre>
+
+    <div class="output_header">Output</div>
+    
+    <div class="content">
+        [!- autoescape false -!][@- section.category.content.text -@][!- endautoescape -!]
+    </div>
+
+    [!- include "section-parts/afterword.neojinja" -!]
+
+[#- NOTE: this section close is intentional because there's
+not really a case for spanning other sections so the `full``
+version forwards here directly unlike most other sections -#]
+</section>

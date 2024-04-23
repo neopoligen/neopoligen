@@ -47,7 +47,7 @@ pub fn inline_key_value_span_no_attributes<'a>(
             key_value_attributes: BTreeMap::new(),
             flag_attributes: BTreeSet::new(),
             span_type: span_type.to_string(),
-            template: format!("spans/{}.jinja", span_type),
+            template: format!("spans/{}.neojinja", span_type),
             value: value.to_string(),
         },
     ))
@@ -69,11 +69,11 @@ mod test {
                 span_type: "class".to_string(),
                 spans: vec![Span::Word {
                     text: "Lima".to_string(),
-                    template: "spans/word.jinja".to_string(),
+                    template: "spans/word.neojinja".to_string(),
                 }],
                 key_value_attributes: BTreeMap::new(),
                 flag_attributes: BTreeSet::new(),
-                template: "spans/class.jinja".to_string(),
+                template: "spans/class.neojinja".to_string(),
                 value: "x".to_string(),
             },
         ));

@@ -1,0 +1,25 @@
+-- title
+
+Span: sub 
+
+-- subtitle
+
+The Subscript Span
+
+-- p
+
+Basic Example: 
+
+<<sub|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<sub|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03 02:53:47
+-- id: 2bqpoojf
+-- status: published
+

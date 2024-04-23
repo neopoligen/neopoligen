@@ -65,7 +65,7 @@ pub fn inline_standard_span_with_attributes<'a>(
             key_value_attributes,
             flag_attributes,
             span_type: span_type.to_string(),
-            template: format!("spans/{}.jinja", span_type)
+            template: format!("spans/{}.neojinja", span_type)
         },
     ))
 }
@@ -120,11 +120,11 @@ mod test {
                 span_type: "link".to_string(),
                 spans: vec![Span::Word {
                     text: "bravo".to_string(),
-                    template: "spans/word.jinja".to_string(),
+                    template: "spans/word.neojinja".to_string(),
                 }],
                 key_value_attributes: BTreeMap::new(),
                 flag_attributes,
-                template: "spans/link.jinja".to_string(),
+                template: "spans/link.neojinja".to_string(),
             },
         ));
         let right = inline_standard_span_with_attributes(source, &config);
@@ -146,11 +146,11 @@ mod test {
                 span_type: "link".to_string(),
                 spans: vec![Span::Word {
                     text: "Sierra".to_string(),
-                    template: "spans/word.jinja".to_string(),
+                    template: "spans/word.neojinja".to_string(),
                 }],
                 key_value_attributes,
                 flag_attributes,
-                template: "spans/link.jinja".to_string(),
+                template: "spans/link.neojinja".to_string(),
             },
         ));
         let right = inline_standard_span_with_attributes(source, &config);

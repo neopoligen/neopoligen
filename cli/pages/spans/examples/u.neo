@@ -1,0 +1,25 @@
+-- title
+
+Span: u 
+
+-- subtitle
+
+The Unarticulated Annotation (Underline) Span
+
+-- p
+
+Basic Example: 
+
+<<u|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<u|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03 02:53:47
+-- id: 2bqpqgqa
+-- status: published
+

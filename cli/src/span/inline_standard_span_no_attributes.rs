@@ -42,7 +42,7 @@ pub fn inline_standard_span_no_attributes<'a>(source: &'a str, config: &'a Confi
             key_value_attributes: BTreeMap::new(),
             flag_attributes: BTreeSet::new(),
             span_type: span_type.to_string(),
-            template: format!("spans/{}.jinja", span_type),
+            template: format!("spans/{}.neojinja", span_type),
         },
     ))
 }
@@ -63,11 +63,11 @@ mod test {
                 span_type: "strong".to_string(),
                 spans: vec![Span::Word {
                     text: "Hotel".to_string(),
-                    template: "spans/word.jinja".to_string(),
+                    template: "spans/word.neojinja".to_string(),
                 }],
                 key_value_attributes: BTreeMap::new(),
                 flag_attributes: BTreeSet::new(),
-                template: "spans/strong.jinja".to_string(),
+                template: "spans/strong.neojinja".to_string(),
             },
         ));
         let right = inline_standard_span_no_attributes(source, &config);

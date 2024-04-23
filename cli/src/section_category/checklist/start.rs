@@ -106,15 +106,15 @@ mod test {
     //                     containers: vec![Child::Block(vec![
     //                         Span::Word {
     //                             text: "delta".to_string(),
-    //                             template: "spans/word.jinja".to_string(),
+    //                             template: "spans/word.neojinja".to_string(),
     //                         },
     //                         Span::Space {
     //                             text: " ".to_string(),
-    //                             template: "spans/space.jinja".to_string(),
+    //                             template: "spans/space.neojinja".to_string(),
     //                         },
     //                         Span::Word {
     //                             text: "hotel".to_string(),
-    //                             template: "spans/word.jinja".to_string(),
+    //                             template: "spans/word.neojinja".to_string(),
     //                         },
     //                     ])],
     //                 },
@@ -123,15 +123,15 @@ mod test {
     //                     containers: vec![Child::Block(vec![
     //                         Span::Word {
     //                             text: "sierra".to_string(),
-    //                             template: "spans/word.jinja".to_string(),
+    //                             template: "spans/word.neojinja".to_string(),
     //                         },
     //                         Span::Space {
     //                             text: "\n".to_string(),
-    //                             template: "spans/space.jinja".to_string(),
+    //                             template: "spans/space.neojinja".to_string(),
     //                         },
     //                         Span::Word {
     //                             text: "echo".to_string(),
-    //                             template: "spans/word.jinja".to_string(),
+    //                             template: "spans/word.neojinja".to_string(),
     //                         },
     //                     ])],
     //                 },

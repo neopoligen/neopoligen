@@ -1,0 +1,26 @@
+-- title
+
+Span: audio
+
+-- subtitle
+
+The Audio Element
+
+-- p
+
+TODO: audio|#|controls|src: /extras/mp3s/hydrate.mp3
+
+
+
+-- note
+
+Right now there has to be something between the
+two pipes in the span (i.e. where the
+"#" is). TODO: made an update so the "#"
+isn't required
+
+
+-- metadata
+-- date: 2024-02-03 03:13:57
+-- id: 2bqguqyt
+-- status: published
