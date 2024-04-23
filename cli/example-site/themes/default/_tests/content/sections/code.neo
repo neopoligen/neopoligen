@@ -2,6 +2,16 @@
 
 code Section Template Tests
 
+-- start-template-test
+
+-- code
+
+This is some code
+
+-- expected-output
+
+this is the output
+
 
 -- metadata
 -- id: Code-Section-Template-Test

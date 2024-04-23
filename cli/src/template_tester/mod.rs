@@ -40,27 +40,32 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     let mut builder = Builder::new(file_set.clone(), &test_config, &neo_env);
     builder.generate_files();
 
-    // builder.outputs.iter().for_each(|output| {
-    //     let body_parts: Vec<&str> = output.1.split("### EXPECTED_OUTPUT ###").collect();
-    //     let parent_dir = output.0.parent().unwrap();
-    //     let id = parent_dir.file_stem().unwrap().to_string_lossy();
-    //     if body_parts.len() > 1 {
-    //         let compare_start = body_parts[0].replace("\n", "").replace(" ", "");
-    //         let compare_end = body_parts[1].replace("\n", "").replace(" ", "");
-    //         if compare_start != compare_end {
-    //             event!(
-    //                 Level::WARN,
-    //                 "Found mis-aligned template for: {}",
-    //                 &output.0.display()
-    //             );
-    //             builder.template_errors.push(TemplateError {
-    //                 id: id.to_string(),
-    //                 expected: body_parts[1].to_string(),
-    //                 got: body_parts[0].to_string(),
-    //             });
-    //         }
-    //     }
-    // });
+    builder.outputs.iter().for_each(|output| {
+        let tests: Vec<&str> = output.1.split("<h2>START TEMPLATE TEST</h2>").collect();
+        if tests.len() > 1 {
+            tests.iter().for_each(|t| {
+                let body_parts: Vec<&str> = t.split("<div>~~~~~~~~~~</div>").collect();
+                let parent_dir = output.0.parent().unwrap();
+                let id = parent_dir.file_stem().unwrap().to_string_lossy();
+                if body_parts.len() > 1 {
+                    let compare_start = body_parts[0].replace("\n", "").replace(" ", "");
+                    let compare_end = body_parts[1].replace("\n", "").replace(" ", "");
+                    if compare_start != compare_end {
+                        event!(
+                            Level::WARN,
+                            "Found mis-aligned template for: {}",
+                            &output.0.display()
+                        );
+                        builder.template_errors.push(TemplateError {
+                            id: id.to_string(),
+                            expected: body_parts[1].to_string(),
+                            got: body_parts[0].to_string(),
+                        });
+                    }
+                }
+            })
+        }
+    });
 
     let mut env = Environment::new();
     env.add_template_owned(
