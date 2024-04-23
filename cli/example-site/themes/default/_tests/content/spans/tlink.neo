@@ -2,11 +2,13 @@
 
 <<tlink|link-target-alfa>>
 
+<<tlink|invalid-page-id>>
 
 -- expected-output
 
 <a href="/en/link-target-alfa/?link-target-alfa-page">Link Target Alfa Page</a>
 
+No Link Available
 
 -- metadata
 -- id: link-target-page
