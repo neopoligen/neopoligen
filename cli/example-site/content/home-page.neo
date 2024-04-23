@@ -11,6 +11,12 @@ works.
 
 this is some code
 
+-- html
+-- template: show
+
+<div>PING IT</div>
+
+
 -- metadata
 -- date: 2024-03-11
 -- id: 2dwmgthu

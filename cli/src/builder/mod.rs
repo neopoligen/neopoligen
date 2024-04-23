@@ -5,12 +5,12 @@ use crate::file_set::FileSet;
 use crate::neo_config::NeoEnv;
 use crate::site::Site;
 use crate::template_error::TemplateError;
-//use dirs::config_local_dir;
 use fs_extra::dir::copy;
 use minijinja::context;
 use minijinja::Environment;
 use minijinja::Syntax;
 use minijinja::Value;
+use minijinja::{Error, ErrorKind};
 use std::collections::BTreeMap;
 use std::fs;
 use std::fs::create_dir_all;
@@ -78,6 +78,7 @@ impl Builder {
         let timestamp = chrono::prelude::Local::now();
         self.build_time = Some(timestamp.to_rfc2822());
         let mut env = Environment::new();
+        env.add_function("highlight_code", highlight_code);
         env.set_syntax(Syntax {
             block_start: "[!".into(),
             block_end: "!]".into(),
@@ -198,4 +199,8 @@ fn verify_dir(dir: &PathBuf) -> std::io::Result<()> {
     } else {
         fs::create_dir_all(dir)
     }
+}
+
+fn highlight_code(source: String, lang: String) -> Result<String, Error> {
+    Ok("this is where highlighted code will go".to_string())
 }

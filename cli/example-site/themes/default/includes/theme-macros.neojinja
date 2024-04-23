@@ -56,7 +56,7 @@ class="
 [!- for key in section.content.key_value_attributes !]
 [! if key != "afterword" and key != "class" and key != "forward" 
 and key != "id" and key != "preface" and key != "subtitle" and key != "title"
-and key != "alt"
+and key != "alt" and key != "template"
 -!]
 [@ ' ' @][@ key @]="[@ section.content.key_value_attributes[key] @]"
 [!- endif !]
