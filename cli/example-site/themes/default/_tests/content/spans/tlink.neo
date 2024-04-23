@@ -4,13 +4,19 @@
 
 <<tlink|invalid-page-id>>
 
+<<tlink|link-that-points-to-self>>
+
+
 -- expected-output
 
 <a href="/en/link-target-alfa/?link-target-alfa-page">Link Target Alfa Page</a>
 
 No Link Available
 
+tlink Test Page
+
 -- metadata
--- id: link-target-page
+-- id: link-that-points-to-self
 -- type: template-test
+-- title: tlink Test Page
 

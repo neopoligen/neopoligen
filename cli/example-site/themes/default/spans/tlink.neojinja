@@ -3,9 +3,7 @@
 
 
 [! if page_id == span.content.spans[0].content.text !]
-JUST TITLE: 
 [@ theme.page_title(site, page_id, span.content.spans[0].content.text) @]
-
 [! else !]
     [! if site.pages[span.content.spans[0].content.text] !]
         <a href="[@ theme.page_href(site, page_id, span.content.spans[0].content.text) @]">
