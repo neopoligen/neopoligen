@@ -18,7 +18,7 @@
         [! endif !]
         </h3>
         [! if section.content.key_value_attributes.subtitle !]
-        <div class="subtitle_subsection">This is a subtitle</div>
+            <div class="subtitle_subsection">[@ section.content.key_value_attributes.subtitle @]</div>
         [! endif !]
     </div>
 

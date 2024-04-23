@@ -4,11 +4,19 @@
 <head>
 <link rel="stylesheet" href="/theme/styles.css" />
 <link rel="stylesheet" href="/theme/highlighting/code-solarized-light.css" />
+[! include "includes/css-for-head.neojinja" !]
 </head>
 <body>
+
+
+
     <main>
         <article class="flow">
+
+
         [! block body !][! endblock !]
+
+
         </article>
     </main>
 </body>

@@ -32,6 +32,15 @@ etc, etc, etc...
 - and another item
 
 
+-- css
+
+body {
+    color: goldenrod;
+}
+
+
+
+
 -- metadata
 -- id: 2dwmgthu
 -- path: /
