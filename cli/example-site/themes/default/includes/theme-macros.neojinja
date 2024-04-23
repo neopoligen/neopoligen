@@ -35,7 +35,26 @@
 
 
 [#############################################################################]
-[! macro section_extra_classes(section) !]
+[! macro section_attrs(section, extra_classes) !]
+[@ section_id(section) @]
+class="
+[! for extra_class in extra_classes !]
+[@ extra_class @]
+[! endfor !]
+[@ section_attr_classes(section) @]
+"
+[! for key in section.content.key_value_attributes !]
+[! if key != "afterword" and key != "class" and key != "forward" 
+and key != "id" and key != "preface" and key != "subtitle" and key != "title"
+!]
+[@ ' ' @][@ key @]="[@ section.content.key_value_attributes[key] @]"
+[! endif !]
+[! endfor !]
+[! endmacro !]
+
+
+[#############################################################################]
+[! macro section_attr_classes(section) !]
 [! if section.content.key_value_attributes.class !]
 [@ section.content.key_value_attributes.class @]
 [! endif !]

@@ -6,19 +6,21 @@
 -- afterword: This is the afterword
 -- class: green strong
 -- id: this_is_an_id
--- data-whatever: this is some arbitrary data
--- data-whatever: that crosses multiple lines
+-- data-whatever: this is a
+-- data-whatever: multiple line attr
 
 The quick brown fox
 
 Jumps over the
 lazy dog
 
+
 -- expected-output
 
 <section 
     id="this_is_an_id"
     class="p_default_section standard_section flow green strong"
+    data-whatever="this is a multiple line attr"
     >
     <div class="forward_subsection flow">This is a forward</div>
     <div class="heading_subsection">
@@ -32,7 +34,6 @@ lazy dog
     </div>
     <div class="afterword_subsection flow">This is the afterword</div>
 </section>
-
 
 -- metadata
 -- id: p-default-everything

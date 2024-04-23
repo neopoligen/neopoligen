@@ -69,9 +69,9 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     <div>Ran {{ test_page_count }} Template Tests. Found {{ template_error_count }} Errors</div>
     {% for error in template_errors %}
     <h3>{{ error.id }}</h3>
-    <div>Expected</div>
+    <h4>Expected</h4>
     <pre>{% autoescape true %}{{ error.expected }}{% endautoescape %}</pre>
-    <div>Got</div>
+    <h4>Got</h4>
     <pre>{% autoescape true %}{{ error.got }}{% endautoescape %}</pre>
     {% endfor %}"#
             .to_string(),

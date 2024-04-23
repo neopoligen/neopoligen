@@ -1,44 +1,14 @@
 [!- import "includes/theme-macros.neojinja" as theme -!]
 
 <section 
-    [@ theme.section_id(section) @]
-    class="quote_default_section standard_section flow [@ theme.section_extra_classes(section) @]"
+    [@ theme.section_attrs(section, ["quote_default_section", "standard_section", "flow"]) -@]
 >
-[! if section.content.category.content.containers[0] !]
-    [! if section.content.key_value_attributes.forward !]
-    <div class="forward_subsection flow">
-        [@ section.content.key_value_attributes.forward @]
-    </div>
-    [! endif !]
+    [! include "subsections/forward.neojinja" !]
 
+    [! include "subsections/heading_basic.neojinja" !]
 
-    [! if section.content.key_value_attributes.title or section.content.key_value_attributes.subtitle !]
-    <div class="heading_subsection">
-        [! if section.content.key_value_attributes.title !]
-        <h2 class="title_subsection">[@ section.content.key_value_attributes.title @]</h2>
-        [! endif !]
-        [! if section.content.key_value_attributes.subtitle !]
-        <div class="subtitle_subsection">This is a subtitle</div>
-        [! endif !]
-    </div>
-    [! endif !]
+    [! include "subsections/preface.neojinja" !]
 
-    [! if section.content.key_value_attributes.preface !]
-    <div class="preface_subsection flow">
-        [@ section.content.key_value_attributes.preface @]
-    </div>
-    [! endif !]
+    [! include "subsections/content_index0.neojinja" !]
 
-    <div class="content_subsection flow">
-        [! for content in section.content.category.content.containers !]
-            <p>[@- output_payload(content) -@]</p>
-        [! endfor !]
-    </div>
-
-    [! if section.content.key_value_attributes.afterword !]
-    <div class="afterword_subsection flow">
-        [@ section.content.key_value_attributes.afterword @]
-    </div>
-    [! endif !]
-
-[! endif !]
+    [! include "subsections/afterword.neojinja" !]
