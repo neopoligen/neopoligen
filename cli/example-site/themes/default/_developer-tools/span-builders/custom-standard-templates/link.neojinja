@@ -13,7 +13,7 @@
 [!- endif -!]
 [!- endfor -!]>
 [!- for span in span.content.spans -!]
-[@- theme.output_spans(span) -@]
+[@- theme.output_spans(site, page_id, span) -@]
 [!- endfor -!]
 </a>
 

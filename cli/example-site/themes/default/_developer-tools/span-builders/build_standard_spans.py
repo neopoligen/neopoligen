@@ -81,9 +81,9 @@ spans = [
 jinja_template = """{# type: standard #}
 {%- import "includes/theme-macros.neojinja" as theme -%}
 
-<SPANKEY {{- macros.span_attributes(page_id, span.content) -}}>
+<SPANKEY>
 {% for span in span.content.spans %}
-{{- macros.output_spans(page_id, span, {}) -}}
+{{- theme.output_spans(site, page_id, span) -}}
 {% endfor %}
 </SPANKEY>
 """

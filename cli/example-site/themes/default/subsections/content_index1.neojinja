@@ -4,7 +4,7 @@
 [! endif !]
     [! for content in section.content.category.content.containers !]
         [! if not loop.first !]
-            <p>[@ output_payload(content) @]</p>
+            <p>[@ output_payload(site, page_id, content) @]</p>
         [! endif !]
     [! endfor !]
 [! if section.content.category.content.containers[1] !]

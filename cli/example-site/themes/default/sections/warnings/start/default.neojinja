@@ -4,7 +4,7 @@
         <li class="list_item flow">
             [!- for container in item.content.containers -!]
             <p>
-                [@- output_payload(container) -@]
+                [@- output_payload(site, page_id, container) -@]
             </p>
             [!- endfor -!]
         </li>

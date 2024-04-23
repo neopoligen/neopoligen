@@ -2,7 +2,7 @@
 [! if section.content.category.content.containers[0] !]
 <div class="content_subsection flow">
     [! for content in section.content.category.content.containers !]
-        <p>[@- output_payload(content) -@]</p>
+        <p>[@- output_payload(site, page_id, content) -@]</p>
     [! endfor !]
 </div>
 [! endif !]
