@@ -181,21 +181,6 @@ impl Builder {
     }
 }
 
-// // TODO: if you ever have to mess with this, change it to use
-// // a Result return type
-// fn file_exists(path: &PathBuf) -> bool {
-//     match path.try_exists() {
-//         Ok(exists) => {
-//             if exists == true {
-//                 true
-//             } else {
-//                 false
-//             }
-//         }
-//         Err(_) => false,
-//     }
-// }
-
 fn verify_dir(dir: &PathBuf) -> std::io::Result<()> {
     if dir.exists() {
         Ok(())
