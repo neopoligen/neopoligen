@@ -1,20 +1,41 @@
+-- title
+
+link Span Template Test
+
+-- start-template-test
+
 -- naked
 
 <<link|example link|http://www.example.com>>
-
-<<link|example link|http://www.example.com|class: green>>
-
-<<link|example link|http://www.example.com|class: blue|id: e_link>>
-
 
 -- expected-output
 
 <a href="http://www.example.com">example link</a>
 
+
+
+-- start-template-test
+
+-- naked 
+
+<<link|example link|http://www.example.com|class: green>>
+
+-- expected-output
+
 <a href="http://www.example.com" class="green">example link</a>
+
+
+
+-- start-template-test
+
+-- naked 
+
+<<link|example link|http://www.example.com|class: blue|id: e_link>>
+
+-- expected-output
 
 <a href="http://www.example.com" class="blue" id="e_link">example link</a>
 
+
 -- metadata
--- id: link-span-tests
--- type: template-test
+-- id: 2fvf695i
