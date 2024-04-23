@@ -51,11 +51,8 @@ async fn main() {
         .with_thread_ids(false)
         .with_thread_names(false)
         .with_ansi(false)
-        //
         .with_line_number(false)
         .with_file(false);
-    //
-    //.pretty();
 
     let stdout_layer = fmt::Layer::default()
         .event_format(stdout_format)
