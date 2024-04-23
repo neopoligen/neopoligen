@@ -54,3 +54,21 @@ main > :last-child{
 }
 
 
+.numberedLines {
+  counter-reset: lineNumber;
+}
+
+.numberedLine {
+  counter-increment: lineNumber;
+}
+
+.numberedLine:before {
+    display: inline-block;
+    color: goldenrod;
+    content: counter(lineNumber);
+    padding-right: 0.7rem;
+    text-align: right;
+    width: 2rem;
+}
+
+

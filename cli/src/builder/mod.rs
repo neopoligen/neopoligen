@@ -16,6 +16,9 @@ use std::fs;
 use std::fs::create_dir_all;
 use std::path::PathBuf;
 use std::time::Instant;
+use syntect::html::{ClassStyle, ClassedHTMLGenerator};
+use syntect::parsing::SyntaxSet;
+use syntect::util::LinesWithEndings;
 use tracing::{event, instrument, Level};
 
 pub struct Builder {
@@ -201,6 +204,25 @@ fn verify_dir(dir: &PathBuf) -> std::io::Result<()> {
     }
 }
 
-fn highlight_code(source: String, lang: String) -> Result<String, Error> {
-    Ok("this is where highlighted code will go".to_string())
+fn highlight_code(code: String, lang: String) -> String {
+    let syntax_set = SyntaxSet::load_defaults_newlines();
+    let syntax = syntax_set
+        .find_syntax_by_token(&lang)
+        .unwrap_or_else(|| syntax_set.find_syntax_plain_text());
+    let mut html_generator =
+        ClassedHTMLGenerator::new_with_class_style(syntax, &syntax_set, ClassStyle::Spaced);
+    for line in LinesWithEndings::from(code.trim()) {
+        let _ = html_generator.parse_html_for_line_which_includes_newline(line);
+    }
+    let initial_html = html_generator.finalize();
+    let output_html: Vec<_> = initial_html
+        .lines()
+        .map(|line| format!(r#"<span class="numberedLine">{}</span>"#, line))
+        .collect();
+    format!(
+        r#"<pre class="numberedLines"><code>{}{}{}</code></pre>"#,
+        "\n".to_string(),
+        output_html.join("\n"),
+        "\n".to_string(),
+    )
 }

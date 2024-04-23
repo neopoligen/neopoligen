@@ -19,11 +19,9 @@
     </div>
 
      <div class="content_subsection flow">
-        <pre><code>
-        [! autoescape true !]
-        [@ section.content.category.content.text @]
+        [! autoescape false !]
+        [@ highlight_code(section.content.category.content.text, "html") @]
         [! endautoescape !]
-        </pre></code>
     </div>   
 
     <div class="heading_subsection secondary_heading_subsection">

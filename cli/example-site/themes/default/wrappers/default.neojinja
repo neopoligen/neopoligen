@@ -3,6 +3,7 @@
 <meta charset="UTF-8" />
 <head>
 <link rel="stylesheet" href="/theme/styles.css" />
+<link rel="stylesheet" href="/theme/highlighting/code-solarized-light.css" />
 </head>
 <body>
     <main>
