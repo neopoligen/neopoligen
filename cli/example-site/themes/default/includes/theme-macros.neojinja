@@ -8,6 +8,15 @@
 [! endmacro !]
 
 
+[! macro main_body_v2(page) !]
+[! for section in page.ast !]
+    [# [@ section.content.type @]-[@ section.content.bounds @]-[@ section.content.template @]
+    [! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !] #]
+    [@ output_payload(section) -@]
+[! endfor !]
+[! endmacro !]
+
+
 [#############################################################################]
 [! macro output_payload(section) !]
 [! if section.type == "section" or section.type == "list" !]

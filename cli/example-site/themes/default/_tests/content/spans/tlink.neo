@@ -1,0 +1,13 @@
+-- naked
+
+<<tlink|test-home-page>>
+
+
+-- expected-output
+
+<a href="">Link Target Page</a>
+
+-- metadata
+-- id: link-target-page
+-- type: template-test
+

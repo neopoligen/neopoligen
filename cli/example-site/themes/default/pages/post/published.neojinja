@@ -2,25 +2,5 @@
 [!- import "includes/theme-macros.neojinja" as theme -!]
 
 [! block body !]
-
 [@ theme.main_body(site.pages[page_id]) @]
-
 [! endblock !]
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<style>
-body {
-  background-color: black;
-  color: #678;
-}
-</style>
-</head>
-<body>
-  <header>Testing: [@ page_id @]</header>
-
-</body>
-</html>
-
-
