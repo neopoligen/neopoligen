@@ -1,4 +1,20 @@
+[!- import "includes/theme-macros.neojinja" as theme -!]
 <section 
 [@ theme.section_attrs(section, ["textarea_default_section", "raw_section", "flow"]) -@]
 >
 
+    [! include "subsections/forward.neojinja" !]
+
+    [! include "subsections/heading_basic.neojinja" !]
+
+    [! include "subsections/preface.neojinja" !]
+
+    <div class="content_subsection flow">
+        <pre><code>
+            [! autoescape false !]
+            [@ section.content.category.content.text @]
+            [! endautoescape !]
+        </code></pre>
+    </div>
+
+    [! include "subsections/afterword.neojinja" !]
