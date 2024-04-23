@@ -1,0 +1,70 @@
+-- title
+
+Default "raw" Section Type Test
+
+
+-- start-template-test
+
+-- pre
+
+This is preformatted text
+
+to test raw
+
+
+-- expected-output
+
+<section 
+    class="pre_default_section raw_section flow ">
+    <div class="content_subsection flow">
+        <pre>
+This is preformatted text
+
+to test raw
+        </pre>
+    </div>
+</section>
+ 
+
+-- start-template-test
+
+-- pre
+-- title: This is a title
+-- subtitle: This is a subtitle
+-- forward: This is a forward
+-- preface: This is a preface
+-- afterword: This is an afterword
+-- class: green blue
+-- id: example_id
+-- data-ping: one ping
+-- data-ping: on two lines
+
+
+This is preformatted text 
+with a standard set of attributes
+
+
+-- expected-output
+
+<section 
+    id="example_id"
+    class="pre_default_section raw_section flow green blue" 
+    data-ping="one ping on two lines">
+    <div class="forward_subsection flow">This is a forward</div>
+    <div class="heading_subsection">
+        <h2 class="title_subsection">This is a title</h2>
+        <div class="subtitle_subsection">This is a subtitle</div>
+    </div>
+    <div class="preface_subsection flow">This is a preface</div>
+    <div class="content_subsection flow">
+        <pre>
+This is preformatted text 
+with a standard set of attributes
+        </pre>
+    </div>
+    <div class="afterword_subsection flow">This is an afterword</div>
+</section>
+ 
+
+-- metadata
+-- id: 2fvb3jfn

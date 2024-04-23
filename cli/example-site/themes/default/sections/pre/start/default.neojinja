@@ -10,11 +10,11 @@
     [! include "subsections/preface.neojinja" !]
 
     <div class="content_subsection flow">
-        <pre><code>
+        <pre>
             [! autoescape false !]
             [@ section.content.category.content.text @]
             [! endautoescape !]
-        </code></pre>
+        </pre>
     </div>
 
     [! include "subsections/afterword.neojinja" !]
