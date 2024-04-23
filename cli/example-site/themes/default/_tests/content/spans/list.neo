@@ -1,0 +1,20 @@
+-- naked
+
+<<link|example link|http://www.example.com>>
+
+<<link|example link|http://www.example.com|class: green>>
+
+<<link|example link|http://www.example.com|class: blue|id: e_link>>
+
+
+-- expected-output
+
+<a href="http://www.example.com">example link</a>
+
+<a href="http://www.example.com" class="green">example link</a>
+
+<a href="http://www.example.com" class="blue" id="e_link">example link</a>
+
+-- metadata
+-- id: link-span-tests
+-- type: template-test

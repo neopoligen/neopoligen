@@ -1,0 +1,16 @@
+-- title
+
+naked Section
+
+Parses and outputs the content from
+the content files without wrapping
+it in any other HTML. 
+
+-- naked
+
+<<link|example link|https://www.example.com/>>
+
+
+-- metadata
+-- id: 2ftp2qgu
+
