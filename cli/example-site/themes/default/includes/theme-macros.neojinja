@@ -8,11 +8,9 @@
 [! endmacro !]
 
 
-[! macro main_body_v2(page) !]
-[! for section in page.ast !]
-    [# [@ section.content.type @]-[@ section.content.bounds @]-[@ section.content.template @]
-    [! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !] #]
-    [@ output_payload(section) -@]
+[! macro main_body_v2(site, page_id) !]
+[! for section in site.pages[page_id].ast !]
+    [@ output_payload_v2(site, page_id, section) -@]
 [! endfor !]
 [! endmacro !]
 
@@ -29,10 +27,27 @@
 [! endmacro !]
 
 
+[! macro output_payload_v2(site, page_id, section) !]
+[! if section.type == "section" or section.type == "list" !]
+[@ output_section_v2(site, page_id, section) -@]
+[! elif section.type == "block" !]
+[! for block_content in section.content !]
+[@ output_spans_v2(site, page_id, block_content) -@]
+[! endfor !]
+[! endif !]
+[! endmacro !]
+
+
 [#############################################################################]
 [! macro output_section(section) !]
 [! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !]
 [! endmacro !]
+
+
+[! macro output_section_v2(site, page_id, section) !]
+[! include "sections/" + section.content.type + "/" + section.content.bounds + "/" + section.content.template + ".neojinja" !]
+[! endmacro !]
+
 
 
 [#############################################################################]
@@ -40,6 +55,24 @@
 [! if span.content.template !]
 [! include span.content.template !]
 [! endif !]
+[! endmacro !]
+
+[! macro output_spans_v2(site, page_id, span) !]
+[! if span.content.template !]
+[! include span.content.template !]
+[! endif !]
+[! endmacro !]
+
+
+
+[#############################################################################]
+[! macro page_href(site, page_id, target_page_id) !]
+[@- site.pages[target_page_id].href -@]
+[! endmacro !]
+
+[#############################################################################]
+[! macro page_title(site, page_id, target_page_id) -!]
+[@ site.pages[target_page_id].title -@]
 [! endmacro !]
 
 

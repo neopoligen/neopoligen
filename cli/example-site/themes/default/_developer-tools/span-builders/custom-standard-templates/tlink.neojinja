@@ -1,12 +1,23 @@
 [#- type: standard -#]
 [!- import "includes/theme-macros.neojinja" as theme -!]
 
-[#- NOTE: This doesn't use the default span_attributes so the 
-url doesn't get pulled in as an attribute -#]
 
-AAAA
+[! if page_id == span.content.spans[0].content.text !]
+JUST TITLE: 
+[@ theme.page_title(site, page_id, span.content.spans[0].content.text) @]
+[! else !]
+<a href="[@ theme.page_href(site, page_id, span.content.spans[0].content.text) @]">
+[@- theme.page_title(site, page_id, span.content.spans[0].content.text) -@]
+</a>
+[! endif !]
 
-<a href="[# [@- site.href_for_page(span.content.spans[0].content.text) -@] #]"
+[#
+[@ theme.link_or_title(site, page_id, span.content.spans[0].content.text) @]
+#]
+
+[# [@ span.content.spans[0].content.text @] 
+
+<a href=" [@- site.href_for_page(span.content.spans[0].content.text) -@] "
 [!- for attribute in span.content.key_value_attributes -!]
 [@- ' ' -@]
 [@- attribute -@]="[@- span.content.key_value_attributes[attribute] -@]"
@@ -17,8 +28,9 @@ AAAA
 [@- flag -@]
 [!- endif -!]
 [!- endfor -!]>
-[# [@- site.title_for_page(span.content.spans[0].content.text) -@] #]
+[@- site.title_for_page(span.content.spans[0].content.text) -@]
 </a>
+#]
 
 [#
 [@- macros.link_or_title(

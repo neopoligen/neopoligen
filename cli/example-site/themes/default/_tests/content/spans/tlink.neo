@@ -1,11 +1,12 @@
 -- naked
 
-<<tlink|test-home-page>>
+<<tlink|link-target-alfa>>
 
 
 -- expected-output
 
-<a href="">Link Target Page</a>
+<a href="/en/link-target-alfa/?link-target-alfa-page">Link Target Alfa Page</a>
+
 
 -- metadata
 -- id: link-target-page

@@ -42,6 +42,8 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
 
     builder.outputs.iter().for_each(|output| {
         let body_parts: Vec<&str> = output.1.split("### EXPECTED_OUTPUT ###").collect();
+        let parent_dir = output.0.parent().unwrap();
+        let id = parent_dir.file_stem().unwrap().to_string_lossy();
         if body_parts.len() > 1 {
             let compare_start = body_parts[0].replace("\n", "").replace(" ", "");
             let compare_end = body_parts[1].replace("\n", "").replace(" ", "");
@@ -51,8 +53,6 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
                     "Found mis-aligned template for: {}",
                     &output.0.display()
                 );
-                let parent_dir = output.0.parent().unwrap();
-                let id = parent_dir.file_stem().unwrap().to_string_lossy();
                 builder.template_errors.push(TemplateError {
                     id: id.to_string(),
                     expected: body_parts[1].to_string(),

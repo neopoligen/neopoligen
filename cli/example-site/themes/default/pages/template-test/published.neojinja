@@ -4,4 +4,4 @@
 [@ theme.main_body(site.pages[page_id]) @]
 #]
 
-[@ theme.main_body_v2(site.pages[page_id]) @]
+[@ theme.main_body_v2(site, page_id) @]
