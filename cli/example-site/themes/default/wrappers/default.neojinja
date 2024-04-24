@@ -29,6 +29,9 @@
 </head>
 <body>
     <main>
+        <div class="sidebar">
+            This is the sidebar
+        </div>
         <article class="flow">
         [! block body !][! endblock !]
         </article>

@@ -24,13 +24,13 @@ body {
   font-family: 'Inter';
 }
 
+.flow > :where(:not(:first-child)) {
+  margin-top: var(--flow-space, 1rem);
+}
+
 img {
   max-width: 100%;
   display: block;
-}
-
-.flow > :where(:not(:first-child)) {
-  margin-top: var(--flow-space, 1rem);
 }
 
 main {
@@ -44,15 +44,15 @@ main {
 }
 
 main > :first-child {
-  flex-basis: 180px;
+  flex-basis: 80px;
   flex-grow: 1;
+  outline: 1px solid blue;
 }
 
 main > :last-child{
   flex-basis: 500px;
   flex-grow: 9999;
 }
-
 
 .numberedLines {
   counter-reset: lineNumber;
