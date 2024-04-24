@@ -41,7 +41,7 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     builder.generate_files();
 
     builder.outputs.iter().for_each(|output| {
-        let tests: Vec<&str> = output.1.split("<h2>START TEMPLATE TEST</h2>").collect();
+        let tests: Vec<&str> = output.1.split(r#"<h3>START TEMPLATE TEST</h3>"#).collect();
         if tests.len() > 1 {
             tests.iter().for_each(|t| {
                 let body_parts: Vec<&str> = t.split("<div>~~~~~~~~~~</div>").collect();

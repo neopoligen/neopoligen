@@ -1,0 +1,36 @@
+[!- extends "wrappers/default.neojinja" -!]
+[!- import "includes/theme-macros.neojinja" as theme -!]
+
+[! block body !]
+[@ theme.main_body(site, page_id) @]
+
+<section class="neo_template_macros_default_section raw_section flow">
+<div class="heading_subsection">
+    <h2 class="title_subsection">Targeting the currne page outputs the title for the page</h2>
+</div>
+<div class="content_subsection flow">
+    <pre>theme.link_or_title(site, page_id, "2fz5gcz6")</pre>
+    <h3>START TEMPLATE TEST</h3>
+    [@ theme.link_or_title(site, page_id, "2fz5gcz6") @]
+    <div>~~~~~~~~~~</div>
+    <span>Template Macros</span>
+    <div>~~~~~~~~~~</div>
+</div>
+</section>
+
+
+<section class="neo_template_macros_default_section raw_section flow">
+<div class="heading_subsection">
+    <h2 class="title_subsection">Targeting another page produces a link</h2>
+</div>
+<div class="content_subsection flow">
+    <pre>theme.link_or_title(site, page_id, "2dwmgthu")</pre>
+    <h3>START TEMPLATE TEST</h3>
+    [@ theme.link_or_title(site, page_id, "2dwmgthu") @]
+    <div>~~~~~~~~~~</div>
+    <span>Template Macros</span>
+    <div>~~~~~~~~~~</div>
+</div>
+</section>
+
+[! endblock !]

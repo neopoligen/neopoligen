@@ -1,19 +1,15 @@
 -- title
 
-macro Template Tests
+Template Macros
 
+-- note
 
--- start-template-test
-
--- macro-tests
-
--- expected-output
-
-<section class="macro_tests_section raw_section flow ">
- 
-</section>
+This test is built totally in the 
+`pages/neo-template-macros-example/default.neojinja`` 
+file
 
 
 -- metadata
--- id: 2fyz3qjv
+-- id: 2fz5gcz6
+-- template: neo-template-macros-example
 

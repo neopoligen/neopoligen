@@ -9,11 +9,23 @@
 
 
 [#############################################################################]
-[! macro link_or_title(site, current_page_id, target_page_id, attrs = {}) !]
+[# TODO: Handle if the page doesn't exist #]
+[! macro link_or_title(site, current_page_id, target_page_id, attrs={}) !]
 [! if current_page_id == target_page_id !]
-<span>[@ site.pages[target_page_id].title @]</span>
+<span>
+    [! if attrs.title !]
+        [@ attrs.title @]
+    [! else !]
+        [@ site.pages[target_page_id].title @]
+    [! endif !]
+</span>
 [! else !]
-<a href="[@ site.pages[target_page_id].href @]">[@ site.pages[target_page_id].title @]</a>
+<a href="[@ site.pages[target_page_id].href @]">
+    [! if attrs.title !]
+        [@ attrs.title @]
+    [! else !]
+        [@ site.pages[target_page_id].title @]
+    [! endif !]</a>
 [! endif !]
 [! endmacro !]
 
