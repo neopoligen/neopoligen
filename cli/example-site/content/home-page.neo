@@ -33,12 +33,11 @@ etc, etc, etc...
 
 
 -- css
+-- template: show
 
 body {
     color: goldenrod;
 }
-
-
 
 
 -- metadata

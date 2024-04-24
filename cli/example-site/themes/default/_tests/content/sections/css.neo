@@ -2,7 +2,29 @@
 
 css Section Template Test
 
+-- start-template-test
 
+-- css
+-- template: show
+
+body {
+    color: goldenrod;
+}
+
+-- expected-output
+
+<section class="css_show_section raw_section flow ">
+    <div class="heading_subsection">
+        <h3 class="title_subsection">
+            CSS
+        </h3>
+    </div>
+    <div class="content_subsection flow">
+<pre class="numberedLines"><code><span class="numberedLine"><span class="source css"><span class="meta selector css"><span class="entity name tag css">body</span> </span><span class="meta property-list css"><span class="punctuation section property-list css">{</span></span>
+<span class="numberedLine">    <span class="meta property-name css"><span class="support type property-name css">color</span></span><span class="punctuation separator key-value css">:</span><span class="meta property-value css"> </span><span class="meta property-value css"><span class="support constant color w3c-extended-color-keywords css">goldenrod</span></span><span class="punctuation terminator rule css">;</span></span>
+<span class="numberedLine"></span><span class="punctuation section property-list css">}</span></span></span></code></pre>
+    </div>   
+</section>
 
 -- metadata
 -- id: 2fw1ipkm
