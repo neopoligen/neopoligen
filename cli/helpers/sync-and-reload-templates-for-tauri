@@ -1,5 +1,4 @@
 #!/bin/bash
 
-sleep 0.2
-rsync -av example-site/ ~/Documents/Neopoligen/neopoligen-dev-site/ 
-echo `date` > ~/Documents/Neopoligen/neopoligen-dev-site/content/_dev-reload-trigger.txt
+rsync -av example-site/ ~/Documents/Neopoligen/cookbook/ 
+echo `date` > ~/Documents/Neopoligen/cookbook/content/_dev-reload-trigger.txt
