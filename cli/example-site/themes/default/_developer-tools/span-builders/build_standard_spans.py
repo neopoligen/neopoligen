@@ -32,7 +32,7 @@ from pathlib import Path
 
 
 theme_directory = "../../spans"
-pages_directory = "../../../../../pages/spans/examples"
+pages_directory = "../../../../../example-site/content/spans"
 custom_directory = "custom-standard-templates"
 internal_directory = "internal-spans"
 
@@ -109,9 +109,7 @@ Attribute Example:
 
 
 -- metadata
--- date: 2024-02-03 02:53:47
 -- id: KSUID
--- status: published
 
 """
 

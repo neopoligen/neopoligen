@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////
-// alans-yagni-js
+// yagni-js
 
 function addListenerTo(parent, event, func) {
   const target = getEl(parent)
