@@ -17,6 +17,53 @@
 
 
 [#############################################################################]
+[! macro main_body_with_examples(site, page_id) !]
+[! with 
+    capture_example = "off", 
+    example_source = "",
+    example_content = ""
+!]
+[! for section in site.pages[page_id].ast !]
+    [! if section.content.type == "end-example" !]
+    <section 
+[@ section_attrs(site, page_id, section, ["example_macro_section", "raw_section", "flow"]) -@]
+>
+    <div class="heading_subsection">
+        <h3 class="title_subsection">Source</h3>
+    </div>
+    <div class="content_subsection flow">
+        [! autoescape true !]
+        <pre><code>[@ example_source @]</pre></code>
+        [! endautoescape !]
+    </div>
+    <div class="heading_subsection secondary_heading_subsection">
+        <h3 class="title_subsection">Output</h3>
+    </div>
+    <div class="content_subsection flow">
+        [@ example_content @]
+    </div>
+</section>
+    [! set capture_example = "off" !]
+    [! else !]
+        [! if capture_example == "on" !]
+            [! set example_source = example_source + section.content.source + "\n\n\n" !]
+            [! set example_content = example_content + output_payload(site, page_id, section) !]
+        [! elif section.content.type == "start-example" !]
+            [! set capture_example = "on" !]
+            [! set example_source = "" !]
+            [! set example_content = "" !]
+        [! else !]
+        [@ output_payload(site, page_id, section) -@]
+        [! endif !]
+    [! endif !]
+[! endfor !]
+[! endwith !]
+[! endmacro !]
+
+
+
+
+[#############################################################################]
 [! macro output_payload(site, page_id, section) !]
 [! if section.type == "section" or section.type == "list" !]
 [@ output_section(site, page_id, section) -@]

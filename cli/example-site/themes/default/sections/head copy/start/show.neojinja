@@ -1,6 +1,6 @@
 [!- import "includes/theme-macros.neojinja" as theme -!]
 <section 
-[@ theme.section_attrs(site, page_id, section, ["html_show_section", "raw_section", "flow"]) -@]
+[@ theme.section_attrs(site, page_id, section, ["head_show_section", "raw_section", "flow"]) -@]
 >
 
     [! include "subsections/forward.neojinja" !]
@@ -10,7 +10,7 @@
         [! if section.content.key_value_attributes.title !]
             [@ section.content.key_value_attributes.title @]
         [! else !]
-            HTML
+            &lt;head&gt;
         [! endif !]
         </h3>
         [! if section.content.key_value_attributes.subtitle !]
@@ -25,15 +25,5 @@
         [@ highlight_code(section.content.category.content.text, "html") @]
         [! endautoescape !]
     </div>   
-
-    <div class="heading_subsection secondary_heading_subsection">
-        <h3 class="title_subsection">Output</h3>
-    </div>
-
-    <div class="content_subsection flow">
-        [! autoescape false !]
-        [@ section.content.category.content.text @]
-        [! endautoescape !]
-    </div>
 
     [! include "subsections/afterword.neojinja" !]

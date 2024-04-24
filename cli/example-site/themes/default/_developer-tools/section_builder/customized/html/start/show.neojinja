@@ -20,7 +20,7 @@
 
     [! include "subsections/preface.neojinja" !]
 
-     <div class="content_subsection flow">
+    <div class="content_subsection flow">
         [! autoescape false !]
         [@ highlight_code(section.content.category.content.text, "html") @]
         [! endautoescape !]

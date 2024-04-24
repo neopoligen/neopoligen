@@ -2,8 +2,5 @@
 [!- import "includes/theme-macros.neojinja" as theme -!]
 
 [! block body !]
-[@ theme.main_body(site, page_id) @]
-
-<h2>Content File</h2>
-[@ theme.content_file(site, page_id) @]
+[@ theme.main_body_with_examples(site, page_id) @]
 [! endblock !]
