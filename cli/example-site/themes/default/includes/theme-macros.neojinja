@@ -11,33 +11,44 @@
 [#############################################################################]
 [# TODO: Handle if the page doesn't exist #]
 [! macro link_or_title(site, current_page_id, target_page_id, attrs={}) !]
-[! if current_page_id == target_page_id !]
-<span
-[! for key in attrs !]
-    [! if key != "title" !]
-    [@ key @]="[@ attrs[key] @]"
-    [! endif !]
-[! endfor !]
->
-    [! if attrs.title !]
-        [@ attrs.title @]
+[! if site.pages[target_page_id] !]
+
+    [! if current_page_id == target_page_id !]
+    <span
+    [! for key in attrs !]
+        [! if key != "title" !]
+        [@ key @]="[@ attrs[key] @]"
+        [! endif !]
+    [! endfor !]
+    >
+        [! if attrs.title !]
+            [@ attrs.title @]
+        [! else !]
+            [@ site.pages[target_page_id].title @]
+        [! endif !]
+    </span>
     [! else !]
-        [@ site.pages[target_page_id].title @]
+    <a href="[@ site.pages[target_page_id].href @]"
+    [! for key in attrs !]
+        [! if key != "title" !]
+        [@ key @]="[@ attrs[key] @]"
+        [! endif !]
+    [! endfor !]
+    >
+        [! if attrs.title !]
+            [@ attrs.title @]
+        [! else !]
+            [@ site.pages[target_page_id].title @]
+        [! endif !]</a>
     [! endif !]
-</span>
 [! else !]
-<a href="[@ site.pages[target_page_id].href @]"
-[! for key in attrs !]
-    [! if key != "title" !]
-    [@ key @]="[@ attrs[key] @]"
-    [! endif !]
-[! endfor !]
->
-    [! if attrs.title !]
-        [@ attrs.title @]
-    [! else !]
-        [@ site.pages[target_page_id].title @]
-    [! endif !]</a>
+    <span
+    [! for key in attrs !]
+        [! if key != "title" !]
+        [@ key @]="[@ attrs[key] @]"
+        [! endif !]
+    [! endfor !]
+    >[ missing link ]</span>
 [! endif !]
 [! endmacro !]
 

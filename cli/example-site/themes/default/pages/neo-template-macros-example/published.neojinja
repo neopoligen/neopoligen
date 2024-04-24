@@ -74,6 +74,18 @@
 </section>
 
 
-
+<section class="neo_template_macros_default_section raw_section flow">
+<div class="heading_subsection">
+    <h2 class="title_subsection">Targeting a page that doesn't exist shows a missing link message</h2>
+</div>
+<div class="content_subsection flow">
+    <pre>theme.link_or_title(site, page_id, "invalid-id")</pre>
+    <h3>START TEMPLATE TEST</h3>
+    [@ theme.link_or_title(site, page_id, "invalid-id") @]
+    <div>~~~~~~~~~~</div>
+    <span>[ missing link ]</span>
+    <div>~~~~~~~~~~</div>
+</div>
+</section>
 
 [! endblock !]
