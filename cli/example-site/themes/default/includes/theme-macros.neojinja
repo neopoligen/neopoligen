@@ -9,6 +9,17 @@
 
 
 [#############################################################################]
+[! macro link_or_title(site, current_page_id, target_page_id, attrs = {}) !]
+[! if current_page_id == target_page_id !]
+<span>[@ site.pages[target_page_id].title @]</span>
+[! else !]
+<a href="[@ site.pages[target_page_id].href @]">[@ site.pages[target_page_id].title @]</a>
+[! endif !]
+[! endmacro !]
+
+
+
+[#############################################################################]
 [! macro main_body(site, page_id) !]
 [! for section in site.pages[page_id].ast !]
     [@ output_payload(site, page_id, section) -@]
