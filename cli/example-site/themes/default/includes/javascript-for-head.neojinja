@@ -1,0 +1,9 @@
+[! for section in site.pages[page_id].ast !]
+    [! if section.content.type == "javascript" !]
+        <script>
+        [! autoescape false !]
+        [@ section.content.category.content.text -@]
+        [! endautoescape !]
+        </script>
+    [! endif !]
+[! endfor !]

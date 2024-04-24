@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="/theme/styles.css" />
 <link rel="stylesheet" href="/theme/highlighting/code-solarized-light.css" />
 [! include "includes/css-for-head.neojinja" !]
+[! include "includes/javascript-for-head.neojinja" !]
 </head>
 <body>
 

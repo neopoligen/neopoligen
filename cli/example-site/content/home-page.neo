@@ -39,6 +39,11 @@ body {
     color: goldenrod;
 }
 
+-- javascript
+-- template: show
+
+console.log("ping");
+
 
 -- metadata
 -- id: 2dwmgthu
