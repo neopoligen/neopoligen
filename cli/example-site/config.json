@@ -1,6 +1,6 @@
 {
   "defaultLanguage": "en",
-  "domain": "example.com",
+  "domain": "localhost:1993",
   "inputDateFormats": ["%Y-%m-%d"],
   "theme": "default"
 }
