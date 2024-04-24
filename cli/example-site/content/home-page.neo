@@ -42,7 +42,8 @@ body {
 -- javascript
 -- template: show
 
-console.log("ping");
+logMsg("this is one ping only");
+
 
 
 -- metadata

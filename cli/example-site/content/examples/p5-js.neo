@@ -1,0 +1,31 @@
+-- title
+
+Using p5.js
+
+
+-- head
+
+<script src="/scripts/p5/p5.min-1-9-2.js"></script>
+
+
+-- html
+
+<div id="p5Wrapper"></div>
+
+
+-- javascript
+
+function setup() {
+  var canvas = createCanvas(300, 100);
+  canvas.parent('p5Wrapper');
+}
+
+function draw() {
+  background(220);
+  ellipse(50,50,80,80);
+}
+
+
+-- metadata
+-- id: 2fwpuxie
+-- template: example

@@ -33,10 +33,6 @@ function addToFront(parent, tag, attrs = {}) {
   }
 }
 
-function logError(msg) {
-  console.error(`${Date.now()} - ERROR: ${msg}`)
-}
-
 function getEl(target) {
   if (typeof target === 'string') {
     const el = document.querySelector(target)
@@ -85,6 +81,10 @@ function getValue(selector) {
   } else {
     return undefined
   }
+}
+
+function logError(msg) {
+  console.error(`${Date.now()} - ERROR: ${msg}`)
 }
 
 function logMsg(msg) {

@@ -1,4 +1,14 @@
 [#############################################################################]
+[! macro content_file(site, page_id) !]
+<pre>
+[! autoescape true !]
+[@ site.pages[page_id].source @]
+[! endautoescape !]
+</pre>
+[! endmacro !]
+
+
+[#############################################################################]
 [! macro main_body(site, page_id) !]
 [! for section in site.pages[page_id].ast !]
     [@ output_payload(site, page_id, section) -@]
