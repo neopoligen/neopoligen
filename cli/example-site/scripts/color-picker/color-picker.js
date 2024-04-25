@@ -138,6 +138,10 @@ let state = {
   },
 }
 
+function activeMode() {
+  return state.active.mode
+}
+
 function addStyle(key, value) {
   appendInnerText(
     `.stylesheet`,
@@ -198,7 +202,7 @@ function addStylesheet() {
     })
   })
 
-  primaries().forEach((color) => {
+  primaryColors().forEach((color) => {
     addStyle(
       `.color-${color}`,
       `color: var(--color-${color}-${state.active.mode});`
@@ -302,23 +306,23 @@ function buildSliders() {
 }
 
 function collectionCoords() {
-    const refChecks = []
-    const response = []
-    state.collections.forEach((collection) => {
-      collection.forEach((coords) => {
-        const refCheck = `${coords[0]}-${coords[1]}`
-        if (!refChecks.includes(refCheck)) {
-          refChecks.push(refCheck)
-          response.push([coords[0], coords[1]])
-        }
-      })
+  const refChecks = []
+  const response = []
+  state.collections.forEach((collection) => {
+    collection.forEach((coords) => {
+      const refCheck = `${coords[0]}-${coords[1]}`
+      if (!refChecks.includes(refCheck)) {
+        refChecks.push(refCheck)
+        response.push([coords[0], coords[1]])
+      }
     })
-    return response 
-  }
+  })
+  return response
+}
 
 function collections() {
-    return state.collections
-  }
+  return state.collections
+}
 
 function cString(c) {
   return Math.floor(c * 10)
@@ -357,8 +361,20 @@ function lValues() {
   return tmp
 }
 
+function modes() {
+  const tmp = []
+  for (let mode in state.modes) {
+    tmp.push(mode)
+  }
+  return tmp
+}
+
 function primaries() {
   return state.primaries
+}
+
+function primaryColors() {
+  return [primaries()[0].key, primaries()[1].key]
 }
 
 function throttle(func, timeFrame) {
@@ -372,9 +388,158 @@ function throttle(func, timeFrame) {
   }
 }
 
+function updateProp(key, value) {
+  document.documentElement.style.setProperty(
+    key,
+    value.replaceAll('\n', ' ').replaceAll(/\s\s+/g, ' ')
+  )
+}
+
+function updateProps() {
+  updateProp(`--background-base`, `var(--background-base-${state.active.mode})`)
+  updateProp(`--border-alfa`, `1px solid var(--color-alfa)`)
+  updateProp(`--padding-alfa`, `1.1rem`)
+  updateProp(`--padding-bravo`, `0.7rem`)
+  updateProp('--size-1', '2.986rem')
+  updateProp('--size-2', '2.488rem')
+  updateProp('--size-3', '2.074rem')
+  updateProp('--size-4', '1.728rem')
+  updateProp('--size-5', '1.44rem')
+  updateProp('--size-6', '1.2rem')
+  updateProp('--size-7', '1rem')
+  updateProp('--size-8', '0.833rem')
+  updateProp('--size-9', '0.694rem')
+  updateProp('--size-10', '0.579rem')
+
+  modes().forEach((mode) => {
+    updateProp(`--l-base-${activeMode()}`, `${state.modes[activeMode()].l}%`)
+    updateProp(`--c-base-${activeMode()}`, `${state.modes[activeMode()].c}`)
+    updateProp(`--h-base-${activeMode()}`, `${state.modes[activeMode()].h}`)
+  })
+
+  modes().forEach((mode) => {
+    lValues().forEach((l, lIndex) => {
+      const newValue = `${
+        (state.modes[state.active.mode].l + l) % state.base.l.max
+      }%`
+      logMsg(`--l${l}-${mode} - ${newValue}`)
+      updateProp(`--l${l}-${mode}`, `${newValue}`)
+    })
+    cValues().forEach((c, cIndex) => {
+      const newValue = (state.modes[state.active.mode].c + c) % state.base.c.max
+      updateProp(`--c${cString(c)}-${mode}`, `${newValue}`)
+    })
+    hValues().forEach((h, hIndex) => {
+      const newValue = `${
+        (state.modes[state.active.mode].h + h) % state.base.h.max
+      }`
+      updateProp(`--h${h}-${mode}`, `${newValue}`)
+    })
+  })
+
+  modes().forEach((mode) => {
+    lValues().forEach((l, lIndex) => {
+      cValues().forEach((c, cIndex) => {
+        hValues().forEach((h, hIndex) => {
+          // logMsg(`--color-${l}-${cString(c)}-${h}-${mode} - oklch(var(--l${l}-${mode}) var(--c${cString(c)}-${mode}) var(--h${h}-${mode}))`)
+          updateProp(
+            `--color-${l}-${cString(c)}-${h}-${mode}`,
+            `oklch(var(--l${l}-${mode}) var(--c${cString(
+              c
+            )}-${mode}) var(--h${h}-${mode}))`
+          )
+        })
+      })
+    })
+  })
+
+  modes().forEach((mode) => {
+    primaryColors().forEach((color) => {
+      updateProp(
+        `--color-${color}-${mode}`,
+        `oklch(
+            var(--l${state.modes[mode].colors[color].l}-${mode}) 
+            var(--c${cString(state.modes[mode].colors[color].c)}-${mode}) 
+            var(--h${state.modes[mode].colors[color].h}-${mode}) 
+          )`
+      )
+    })
+  })
+
+  modes().forEach((mode) => {
+    updateProp(
+      `--background-base-${mode}`,
+      `oklch(var(--l-base-${mode}) var(--c-base-${mode}) var(--h-base-${mode}))`
+    )
+  })
+
+  primaryColors().forEach((color) => {
+    updateProp(`--color-${color}`, `var(--color-${color}-${state.active.mode})`)
+  })
+
+  /*
+    primaries().forEach((primary, primaryIndex) => {
+      primary.secondaries.forEach((color) => {
+        collections().forEach((collection) => {
+          collection.forEach((coords) => {
+            const key = `${color}Rect-${coords[0]}-${coords[1]}`
+            updateProp(`--${key}`, `oklch(40% 0.2 240)`)
+          })
+        })
+      })
+    })
+    */
+
+  primaries().forEach((primary) => {
+    lValues().forEach((l, lIndex) => {
+      cValues().forEach((c, cIndex) => {
+        hValues().forEach((h, hIndex) => {
+          const key = `${primary.secondaries.join('')}Rect-${l}-${cString(
+            c
+          )}-${h}`
+          updateProp(
+            `--${key}`,
+            `var(--color-${l}-${cString(c)}-${h}-${activeMode()})`
+          )
+        })
+      })
+    })
+  })
+
+  lValues().forEach((l) => {
+    cValues().forEach((c) => {
+      hValues().forEach((h) => {
+        const baseKey = `${l}-${cString(c)}-${h}`
+        const modeKey = `${l}-${cString(c)}-${h}-${activeMode()}`
+        updateProp(`--color-${baseKey}`, `var(--color-${modeKey})`)
+        updateProp(`--primaryRect-${baseKey}`, `var(--primaryRect-${modeKey})`)
+      })
+    })
+  })
+
+  lValues().forEach((l) => {
+    cValues().forEach((c) => {
+      hValues().forEach((h) => {
+        modes().forEach((mode) => {
+          const modeKey = `${l}-${cString(c)}-${h}-${mode}`
+          logMsg(`--primaryRect-${modeKey}`, `var(--color-${modeKey})`)
+          updateProp(`--primaryRect-${modeKey}`, `var(--color-${modeKey})`)
+        })
+      })
+    })
+  })
+
+  primaries().forEach((primary) => {
+    collectionCoords().forEach((coords) => {
+      const key = `secondaryRect-${primary.key}-${coords[0]}-${coords[1]}`
+      updateProp(`--${key}`, `green`)
+    })
+  })
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   addStylesheet()
+  updateProps()
 
-  
   //buildSliders()
 })
