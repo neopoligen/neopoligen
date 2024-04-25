@@ -1,0 +1,26 @@
+-- title
+
+ilink
+
+The `ilink`` is used to link arbitrary text to a 
+specific page on the site by it's id. (it stands
+for "internal link")
+
+-- start-template-test
+
+Basic Test
+
+-- naked
+
+<<ilink|this is a link|2fvdjqd5>>
+
+-- expected-output
+
+<a href="/en/2fvdjqd5/?link-target-page">this is a link</a>
+
+
+
+-- metadata
+-- date: 2024-04-25
+-- id: 2fzulrf4
+

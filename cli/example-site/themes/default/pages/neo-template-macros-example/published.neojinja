@@ -6,86 +6,104 @@
 
 
 <section class="neo_template_macros_default_section raw_section flow">
-<div class="heading_subsection">
-    <h2 class="title_subsection">Targeting another page produces a link</h2>
-</div>
-<div class="content_subsection flow">
-    <pre>theme.link_or_title(site, page_id, "2dwmgthu")</pre>
-    <h3>START TEMPLATE TEST</h3>
-    [@ theme.link_or_title(site, page_id, "2dwmgthu") @]
-    <div>~~~~~~~~~~</div>
-    <a href="/">
-        Welcome To The Neopoligen Cookbook 
-    </a>
-    <div>~~~~~~~~~~</div>
-</div>
+    <div class="heading_subsection">
+        <h2 class="title_subsection">theme.link_or_title()</h2>
+    </div>
+
+    <div class="example_subsection">
+        <div class="heading_subsection secondary_heading_subsection">
+            <h3 class="title_subsection">Targeting another page returns a link</h3>
+            <div class="subtitle_subsection">theme.link_or_title(site, page_id, "2dwmgthu")</div>
+        </div>
+        <div class="content_subsection flow">
+            <div class="start-template-test-header"></div>
+            [@ theme.link_or_title(site, page_id, "2dwmgthu") @]
+            <div class="expected-output-split"></div>
+            <a href="/" class="page-link">Welcome To The Neopoligen Cookbook</a>
+            <div class="expected-output-split"></div>
+        </div>
+    </div>
+
+    <div class="example_subsection">
+        <div class="heading_subsection secondary_heading_subsection">
+            <h3 class="title_subsection">Targeting the current page outputs the title for the page</h3>
+            <div class="subtitle_subsection">theme.link_or_title(site, page_id, "2fz5gcz6")</div>
+        </div>
+        <div class="content_subsection flow">
+            <pre></pre>
+            <div class="start-template-test-header"></div>
+            [@ theme.link_or_title(site, page_id, "2fz5gcz6") @]
+            <div class="expected-output-split"></div>
+            <span class="page-title">Template Macro Examples</span>
+            <div class="expected-output-split"></div>
+        </div>
+    </div>
+
+    <div class="example_subsection">
+        <div class="heading_subsection secondary_heading_subsection">
+            <h3 class="title_subsection">Alternate titles can be used</h3>
+            <div class="subtitle_subsection">theme.link_or_title(site, page_id, "2dwmgthu", { "title": "Home Page" })</div>
+        </div>
+        <div class="content_subsection flow">
+            <div class="start-template-test-header"></div>
+            [@ theme.link_or_title(site, page_id, "2dwmgthu", { "title": "Home Page" }) @]
+            <div class="expected-output-split"></div>
+            <a href="/" class="page-link">Home Page</a>
+            <div class="expected-output-split"></div>
+        </div>
+    </div>
+
+    <div class="example_subsection">
+        <div class="heading_subsection secondary_heading_subsection">
+            <h3 class="title_subsection">Other arguments are passed directly which can be used to set a class, etc...</h3>
+            <div class="subtitle_subsection">theme.link_or_title(site, page_id, "2dwmgthu", { "class": "testGreen" })</div>
+        </div>
+        <div class="content_subsection flow">
+            <div class="start-template-test-header"></div>
+            [@ theme.link_or_title(site, page_id, "2dwmgthu", { "class": "testGreen" }) @]
+            <div class="expected-output-split"></div>
+            <a href="/" class="page-link testGreen">Welcome To The Neopoligen Cookbook</a>
+            <div class="expected-output-split"></div>
+        </div>
+    </div>
+
+    <div class="example_subsection">
+        <div class="heading_subsection secondary_heading_subsection">
+            <h3 class="title_subsection">Targeting a page that doesn't exist shows a missing link message</h3>
+            <div class="subtitle_subsection">theme.link_or_title(site, page_id, "invalid-id")</div>
+        </div>
+        <div class="content_subsection flow">
+            <div class="start-template-test-header"></div>
+            [@ theme.link_or_title(site, page_id, "invalid-id") @]
+            <div class="expected-output-split"></div>
+            <span class="missing-page-link">[ missing link ]</span>
+            <div class="expected-output-split"></div>
+        </div>
+    </div>
+
 </section>
 
 
 <section class="neo_template_macros_default_section raw_section flow">
-<div class="heading_subsection">
-    <h2 class="title_subsection">Targeting the currne page outputs the title for the page</h2>
-</div>
-<div class="content_subsection flow">
-    <pre>theme.link_or_title(site, page_id, "2fz5gcz6")</pre>
-    <h3>START TEMPLATE TEST</h3>
-    [@ theme.link_or_title(site, page_id, "2fz5gcz6") @]
-    <div>~~~~~~~~~~</div>
-    <span>Template Macros</span>
-    <div>~~~~~~~~~~</div>
-</div>
+    <div class="heading_subsection">
+        <h2 class="title_subsection"></h2>
+    </div>
+
+    <div class="example_subsection">
+        <div class="heading_subsection secondary_heading_subsection">
+            <h3 class="title_subsection"></h3>
+            <div class="subtitle_subsection"></div>
+        </div>
+        <div class="content_subsection flow">
+            <div class="start-template-test-header"></div>
+            
+            <div class="expected-output-split"></div>
+            
+            <div class="expected-output-split"></div>
+        </div>
+    </div>
+
 </section>
 
-
-
-
-<section class="neo_template_macros_default_section raw_section flow">
-<div class="heading_subsection">
-    <h2 class="title_subsection">Alternate titles can be used</h2>
-</div>
-<div class="content_subsection flow">
-    <pre>theme.link_or_title(site, page_id, "2dwmgthu", { "title": "Home Page" })</pre>
-    <h3>START TEMPLATE TEST</h3>
-    [@ theme.link_or_title(site, page_id, "2dwmgthu", { "title": "Home Page" }) @]
-    <div>~~~~~~~~~~</div>
-    <a href="/">
-        Home Page
-    </a>
-    <div>~~~~~~~~~~</div>
-</div>
-</section>
-
-
-
-<section class="neo_template_macros_default_section raw_section flow">
-<div class="heading_subsection">
-    <h2 class="title_subsection">Other arguments are passed directly which can be used to set a class, etc...</h2>
-</div>
-<div class="content_subsection flow">
-    <pre>theme.link_or_title(site, page_id, "2dwmgthu", { "class": "testGreen" })</pre>
-    <h3>START TEMPLATE TEST</h3>
-    [@ theme.link_or_title(site, page_id, "2dwmgthu", { "class": "testGreen" }) @]
-    <div>~~~~~~~~~~</div>
-    <a href="/" class="testGreen">
-        Welcome To The Neopoligen Cookbook 
-    </a>
-    <div>~~~~~~~~~~</div>
-</div>
-</section>
-
-
-<section class="neo_template_macros_default_section raw_section flow">
-<div class="heading_subsection">
-    <h2 class="title_subsection">Targeting a page that doesn't exist shows a missing link message</h2>
-</div>
-<div class="content_subsection flow">
-    <pre>theme.link_or_title(site, page_id, "invalid-id")</pre>
-    <h3>START TEMPLATE TEST</h3>
-    [@ theme.link_or_title(site, page_id, "invalid-id") @]
-    <div>~~~~~~~~~~</div>
-    <span>[ missing link ]</span>
-    <div>~~~~~~~~~~</div>
-</div>
-</section>
 
 [! endblock !]

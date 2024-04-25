@@ -14,23 +14,32 @@
 [! if site.pages[target_page_id] !]
 
     [! if current_page_id == target_page_id !]
-    <span
-    [! for key in attrs !]
-        [! if key != "title" !]
-        [@ key @]="[@ attrs[key] @]"
-        [! endif !]
-    [! endfor !]
-    >
-        [! if attrs.title !]
-            [@ attrs.title @]
-        [! else !]
-            [@ site.pages[target_page_id].title @]
-        [! endif !]
-    </span>
+        <span
+        class="page-title
+        "
+        [! for key in attrs !]
+            [! if key != "title" !]
+            [@ key @]="[@ attrs[key] @]"
+            [! endif !]
+        [! endfor !]
+        >
+            [! if attrs.title !]
+                [@ attrs.title @]
+            [! else !]
+                [@ site.pages[target_page_id].title @]
+            [! endif !]
+        </span>
     [! else !]
     <a href="[@ site.pages[target_page_id].href @]"
+    class="page-link
+        [! for key in attrs !]
+            [! if key == "class" !]
+            [@ attrs[key] @]
+            [! endif !]
+        [! endfor !]
+    "
     [! for key in attrs !]
-        [! if key != "title" !]
+        [! if key != "title" and key != "class" !]
         [@ key @]="[@ attrs[key] @]"
         [! endif !]
     [! endfor !]
@@ -43,6 +52,7 @@
     [! endif !]
 [! else !]
     <span
+    class="missing-page-link"
     [! for key in attrs !]
         [! if key != "title" !]
         [@ key @]="[@ attrs[key] @]"

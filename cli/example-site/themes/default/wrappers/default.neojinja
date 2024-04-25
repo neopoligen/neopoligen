@@ -31,7 +31,12 @@
 [@ get_collection(site, page_id, [["examples", "!2fwpuxie"], ["spans"]]) @]
     <main>
         <div class="sidebar">
-            [@ theme.link_or_title(site, page_id, "2dwmgthu", { "title": "Home Page" }) @]
+            <ul>
+                <li>[@ theme.link_or_title(site, page_id, "2dwmgthu", { "title": "Home Page" }) @]</li>
+                <li>[@ theme.link_or_title(site, page_id, "2fzpd1cm", { "title": "Spans" }) @]</li>
+                <li>[@ theme.link_or_title(site, page_id, "2fz5gcz6") @]</li>
+            </ul>
+            
         </div>
         <article class="flow">
         [! block body !][! endblock !]
