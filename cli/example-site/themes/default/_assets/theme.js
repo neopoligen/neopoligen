@@ -8,6 +8,13 @@ function addListenerTo(parent, event, func) {
   }
 }
 
+function appendInnerText(parent, text) {
+  const target = getEl(parent)
+  if (target) {
+    target.innerText = target.innerText + text
+  } 
+}
+
 function addTo(parent, tag, attrs = {}) {
   const target = getEl(parent)
   if (target) {

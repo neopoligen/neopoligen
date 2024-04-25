@@ -18,14 +18,19 @@
 <meta name="msapplication-config" content="/theme/favicons/browserconfig.xml">
 <meta name="theme-color" content="#000000">
 
+[# NOTE: Keep theme.js about head-for-head.neojinja 
+so other scripts can use it #]
+<script src="/theme/theme.js"></script>
+
 [! include "includes/head-for-head.neojinja" !]
 
 <link rel="stylesheet" href="/theme/styles.css" />
 <link rel="stylesheet" href="/theme/highlighting/code-solarized-light.css" />
 [! include "includes/css-for-head.neojinja" !]
 
-<script src="/theme/theme.js"></script>
+
 [! include "includes/javascript-for-head.neojinja" !]
+
 </head>
 <body>
 [@ get_collection(site, page_id, [["examples", "!2fwpuxie"], ["spans"]]) @]
