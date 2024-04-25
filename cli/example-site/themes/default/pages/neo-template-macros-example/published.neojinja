@@ -7,7 +7,7 @@
 
 <section class="neo_template_macros_default_section raw_section flow">
     <div class="heading_subsection">
-        <h2 class="title_subsection">theme.link_or_title()</h2>
+        <h2 class="title_subsection">theme.link_or_title(site, page_id, target_page_id, attrs={})</h2>
     </div>
 
     <div class="example_subsection">
@@ -80,9 +80,49 @@
             <div class="expected-output-split"></div>
         </div>
     </div>
+</section>
+
+
+<section class="neo_template_macros_default_section raw_section flow">
+    <div class="heading_subsection">
+        <h2 class="title_subsection">theme.page_href(site, page_id, target_page_id)</h2>
+    </div>
+
+    <div class="example_subsection">
+        <div class="heading_subsection secondary_heading_subsection">
+            <h3 class="title_subsection">Return the page href for the target_page_id</h3>
+            <div class="subtitle_subsection">theme.page_href(site, page_id, "2fz5gcz6")</div>
+        </div>
+        <div class="content_subsection flow">
+            <div class="start-template-test-header"></div>
+            [@ theme.page_href(site, page_id, "2fz5gcz6") @]
+            <div class="expected-output-split"></div>
+            /en/2fz5gcz6/?template-macro-examples
+            <div class="expected-output-split"></div>
+        </div>
+    </div>
+
+    <div class="example_subsection">
+        <div class="heading_subsection secondary_heading_subsection">
+            <h3 class="title_subsection">Return an Empty String if there's no page with the requested ID</h3>
+            <div class="subtitle_subsection">theme.page_href(site, page_id, "invalid-id")</div>
+        </div>
+        <div class="content_subsection flow">
+            <div class="start-template-test-header"></div>
+            [@ theme.page_href(site, page_id, "invalid-id") @]
+            <div class="expected-output-split"></div>
+            <div class="expected-output-split"></div>
+        </div>
+    </div>
 
 </section>
 
+
+[! endblock !]
+
+
+
+[# Copy/Paste Template For New Section #]
 
 <section class="neo_template_macros_default_section raw_section flow">
     <div class="heading_subsection">
@@ -104,6 +144,3 @@
     </div>
 
 </section>
-
-
-[! endblock !]
