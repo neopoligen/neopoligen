@@ -88,14 +88,6 @@ body {
   overflow-wrap: break-word;
 }
 
-code {
-  color: var(--color-4);
-  font-size: var(--size-1);
-  background-color: #222;
-  border-radius: var(--radius-1);
-  padding: 0.1rem;
-}
-
 .flow > :where(:not(:first-child)) {
   margin-top: var(--flow-space, 1em);
   }

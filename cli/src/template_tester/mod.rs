@@ -6,6 +6,9 @@ use crate::template_error::TemplateError;
 use minijinja::{context, Environment, Value};
 use std::fs;
 use std::path::PathBuf;
+use syntect::html::{ClassStyle, ClassedHTMLGenerator};
+use syntect::parsing::SyntaxSet;
+use syntect::util::LinesWithEndings;
 use tracing::{event, instrument, Level};
 
 #[instrument(skip(config, neo_env))]
@@ -96,6 +99,7 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     });
 
     let mut env = Environment::new();
+    env.add_function("highlight_code", highlight_code);
     env.add_template_owned(
         "template_error_status",
         r#"
@@ -120,9 +124,9 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
                 <h4>File</h4>
                 <div class="test-file-path">{{ error.source_path }}</div>
                 <h4>Expected</h4>
-                <pre>{% autoescape true %}{{ error.expected }}{% endautoescape %}</pre>
+                {{ highlight_code(error.expected, "html") }}
                 <h4>Got</h4>
-                <pre>{% autoescape true %}{{ error.got }}{% endautoescape %}</pre>
+                {{ highlight_code(error.got, "html") }}
             </div>
         {% endfor %}
         </div>
@@ -147,4 +151,18 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     let _ = fs::create_dir_all(&output_path);
     output_path.push("template_errors.htm");
     let _ = fs::write(output_path, output);
+}
+
+fn highlight_code(code: &str, lang: &str) -> String {
+    let syntax_set = SyntaxSet::load_defaults_newlines();
+    let syntax = syntax_set
+        .find_syntax_by_token(&lang)
+        .unwrap_or_else(|| syntax_set.find_syntax_plain_text());
+    let mut html_generator =
+        ClassedHTMLGenerator::new_with_class_style(syntax, &syntax_set, ClassStyle::Spaced);
+    for line in LinesWithEndings::from(code) {
+        let _ = html_generator.parse_html_for_line_which_includes_newline(line);
+    }
+    let output_html = html_generator.finalize();
+    format!(r#"<pre><code>{}</code></pre>"#, output_html)
 }
