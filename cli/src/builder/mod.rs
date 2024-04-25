@@ -222,7 +222,8 @@ fn get_collection(site: &Value, page_id: &Value, filters_raw: &Value) -> Value {
                     let mut reject: Vec<String> = vec![];
                     items.for_each(|item| {
                         if item.to_string().starts_with("!") {
-                            reject.push(item.to_string());
+                            let string_to_add = item.to_string();
+                            reject.push(string_to_add.strip_prefix("!").unwrap().to_string());
                         } else {
                             accept.push(item.to_string());
                         }
@@ -234,7 +235,7 @@ fn get_collection(site: &Value, page_id: &Value, filters_raw: &Value) -> Value {
         }
         Err(e) => event!(Level::ERROR, "{}", e),
     }
-    dbg!(&filters);
+    // dbg!(&filters);
 
     let mut ids: BTreeSet<String> = BTreeSet::new();
     match site.get_attr("pages") {
@@ -246,15 +247,43 @@ fn get_collection(site: &Value, page_id: &Value, filters_raw: &Value) -> Value {
                             let mut add_page = false;
                             match page.get_attr("tags") {
                                 Ok(tags) => {
-                                    dbg!(tags);
-                                    ()
+                                    let tags2 = tags.clone();
+
+                                    // do the first loop to add
+                                    match tags.try_iter() {
+                                        Ok(tags_iter) => {
+                                            tags_iter.for_each(|tag| {
+                                                filters.iter().for_each(|filter| {
+                                                    if filter.0.contains(&tag.to_string()) {
+                                                        add_page = true;
+                                                    }
+                                                    ()
+                                                });
+                                            });
+                                        }
+                                        Err(e) => event!(Level::ERROR, "{}", e),
+                                    };
+
+                                    // loop again to remove because order matters
+                                    match tags2.try_iter() {
+                                        Ok(tags_iter) => {
+                                            tags_iter.for_each(|tag| {
+                                                filters.iter().for_each(|filter| {
+                                                    if filter.1.contains(&tag.to_string()) {
+                                                        add_page = false;
+                                                    }
+                                                    ()
+                                                });
+                                            });
+                                        }
+                                        Err(e) => event!(Level::ERROR, "{}", e),
+                                    };
                                 }
                                 Err(e) => event!(Level::ERROR, "{}", e),
                             }
 
                             if add_page {
                                 ids.insert(id.to_string());
-                                ()
                             }
                         }
                         Err(e) => event!(Level::ERROR, "{}", e),
