@@ -10,18 +10,12 @@
 
 [#############################################################################]
 [# TODO: Handle if the page doesn't exist #]
-[! macro link_or_title(site, current_page_id, target_page_id, attrs={}) !]
+[! macro link_or_title(site, page_id, target_page_id, attrs={}) !]
 [! if site.pages[target_page_id] !]
 
-    [! if current_page_id == target_page_id !]
+    [! if page_id == target_page_id !]
         <span
-        class="page-title
-        "
-        [! for key in attrs !]
-            [! if key != "title" !]
-            [@ key @]="[@ attrs[key] @]"
-            [! endif !]
-        [! endfor !]
+            [@ link_or_title_span_attrs(site, current_page_id, "page-title", attrs) @]
         >
             [! if attrs.title !]
                 [@ attrs.title @]
@@ -31,18 +25,7 @@
         </span>
     [! else !]
     <a href="[@ site.pages[target_page_id].href @]"
-    class="page-link
-        [! for key in attrs !]
-            [! if key == "class" !]
-            [@ attrs[key] @]
-            [! endif !]
-        [! endfor !]
-    "
-    [! for key in attrs !]
-        [! if key != "title" and key != "class" !]
-        [@ key @]="[@ attrs[key] @]"
-        [! endif !]
-    [! endfor !]
+        [@ link_or_title_span_attrs(site, current_page_id, "page-link", attrs) @]
     >
         [! if attrs.title !]
             [@ attrs.title @]
@@ -52,16 +35,28 @@
     [! endif !]
 [! else !]
     <span
-    class="missing-page-link"
-    [! for key in attrs !]
-        [! if key != "title" !]
-        [@ key @]="[@ attrs[key] @]"
-        [! endif !]
-    [! endfor !]
+        [@ link_or_title_span_attrs(site, current_page_id, "missing-page-link", attrs) @]
     >[ missing link ]</span>
 [! endif !]
 [! endmacro !]
 
+
+[#############################################################################]
+[! macro link_or_title_span_attrs(site, page_id, base_class, attrs) !]
+[@ ' ' @]
+class="
+[@ base_class @]
+[! for key in attrs !]
+    [! if key == "class" !][@ ' ' @][@ attrs[key] @][! endif !]
+[! endfor !]
+"
+[! for key in attrs !]
+    [@ ' ' @]
+    [! if key != "title" and key != "class" !]
+    [@ key @]="[@ attrs[key] @]"
+    [! endif !]
+[! endfor !]
+[! endmacro !]
 
 
 [#############################################################################]
@@ -115,8 +110,6 @@
 [! endfor !]
 [! endwith !]
 [! endmacro !]
-
-
 
 
 [#############################################################################]
@@ -191,3 +184,4 @@ and key != "alt" and key != "template"
 id="[@ section.content.key_value_attributes.id @]"
 [! endif !]
 [! endmacro !]
+
