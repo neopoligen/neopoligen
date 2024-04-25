@@ -4,6 +4,7 @@ use crate::file_set::FileSet;
 use crate::neo_config::NeoEnv;
 use crate::template_error::TemplateError;
 use minijinja::{context, Environment, Value};
+use regex::Regex;
 use std::fs;
 use std::path::PathBuf;
 use syntect::html::{ClassStyle, ClassedHTMLGenerator};
@@ -154,15 +155,43 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
 }
 
 fn highlight_code(code: &str, lang: &str) -> String {
+    let formatted_html = simple_format_html(code);
     let syntax_set = SyntaxSet::load_defaults_newlines();
     let syntax = syntax_set
         .find_syntax_by_token(&lang)
         .unwrap_or_else(|| syntax_set.find_syntax_plain_text());
     let mut html_generator =
         ClassedHTMLGenerator::new_with_class_style(syntax, &syntax_set, ClassStyle::Spaced);
-    for line in LinesWithEndings::from(code) {
+    for line in LinesWithEndings::from(&formatted_html) {
         let _ = html_generator.parse_html_for_line_which_includes_newline(line);
     }
     let output_html = html_generator.finalize();
     format!(r#"<pre><code>{}</code></pre>"#, output_html)
+}
+
+fn simple_format_html(code: &str) -> String {
+    let mut re = Regex::new(r"\n").unwrap();
+    let output = re.replace_all(code, " ");
+    re = Regex::new(r" \s+").unwrap();
+    let output = re.replace_all(&output, " ");
+    re = Regex::new(r"\s+<").unwrap();
+    let output = re.replace_all(&output, "<");
+    re = Regex::new(r">\s+").unwrap();
+    let output = re.replace_all(&output, ">");
+    let parts: Vec<&str> = output.split("<").collect();
+    let mut assembler: Vec<String> = vec![];
+    let mut level = 0i8;
+    parts.iter().skip(1).for_each(|part| {
+        if part.starts_with("/") {
+            level -= 2;
+        }
+        for _ in 0..level {
+            assembler.push(" ".to_string());
+        }
+        assembler.push(format!("<{}\n", part));
+        if !part.starts_with("/") {
+            level += 2;
+        }
+    });
+    assembler.join("").to_string()
 }
