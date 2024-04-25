@@ -35,6 +35,7 @@
                 <li>[@ theme.link_or_title(site, page_id, "2dwmgthu", { "title": "Home Page" }) @]</li>
                 <li>[@ theme.link_or_title(site, page_id, "2fzpd1cm", { "title": "Spans" }) @]</li>
                 <li>[@ theme.link_or_title(site, page_id, "2fz5gcz6") @]</li>
+                <li>[@ theme.link_or_title(site, page_id, "2fbyip5v") @]</li>
             </ul>
             
         </div>
