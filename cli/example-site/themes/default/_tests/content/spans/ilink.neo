@@ -6,9 +6,9 @@ The `ilink`` is used to link arbitrary text to a
 specific page on the site by it's id. (it stands
 for "internal link")
 
--- skip-template-test
+-- start-template-test
 
-Basic Test
+Basic test to a page that exists
 
 -- naked
 
@@ -16,7 +16,26 @@ Basic Test
 
 -- expected-output
 
-<a href="/en/2fvdjqd5/?link-target-page">this is a link</a>
+<a href="/en/2fvdjqd5/?link-target-page" class="page-link">
+    this is a link
+</a>
+
+
+-- start-template-test
+
+ilink with extra class and id attributes
+
+-- naked
+
+<<ilink|this is a link|2fvdjqd5|class: green|id: some_id>>
+
+-- expected-output
+
+<a href="/en/2fvdjqd5/?link-target-page" 
+    class="page-link green" id="some_id">
+    this is a link
+</a>
+
 
 
 
