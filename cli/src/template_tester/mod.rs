@@ -70,53 +70,17 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
                                     "Found mis-aligned template for: {}",
                                     &output.source_path.display()
                                 );
-
-                                // let parent_dir = output.0.parent().unwrap();
-                                // let id = parent_dir
-                                //     .file_stem()
-                                //     .unwrap()
-                                //     .to_string_lossy()
-                                //     .to_string();
                                 builder.template_errors.push(TemplateError {
                                     description,
                                     expected,
                                     got,
-                                    // id,
                                     source_path: output.source_path.display().to_string(),
                                 });
                             }
                         }
                     }
-                    //dbg!(initial_split[1]);
                 }
             })
-            //
-
-            //    if initial_split.len() > 1 {
-            //        let t = initial_split[1];
-            //        let body_parts: Vec<&str> = t
-            //            .split(r#"<div class="expected-output-split"></div>"#)
-            //            .collect();
-            //        let parent_dir = output.0.parent().unwrap();
-            //        let id = parent_dir.file_stem().unwrap().to_string_lossy();
-            //        if body_parts.len() > 1 {
-            //            let compare_start = body_parts[0].replace("\n", "").replace(" ", "");
-            //            let compare_end = body_parts[1].replace("\n", "").replace(" ", "");
-            //            if compare_start != compare_end {
-            //                event!(
-            //                    Level::WARN,
-            //                    "Found mis-aligned template for: {}",
-            //                    &output.0.display()
-            //                );
-            //                builder.template_errors.push(TemplateError {
-            //                    id: id.to_string(),
-            //                    expected: body_parts[1].to_string(),
-            //                    got: body_parts[0].to_string(),
-            //                });
-            //            }
-            //        }
-            //        //})
-            //    }
         }
     });
 
