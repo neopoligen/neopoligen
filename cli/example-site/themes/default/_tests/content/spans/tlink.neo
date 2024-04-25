@@ -33,12 +33,12 @@ Basic Test
 <a href="/en/2fvdjqd5/?link-target-page">
     <span class="page-title">
         Link Target Page
-    </span>
+    </span>s
 </a>
 
 
 
--- skip-template-test
+-- start-template-test
 
 Output "[missing]" if the requested
 page ID doesn't exist
@@ -51,9 +51,10 @@ page ID doesn't exist
 
 <span class="missing-page-link">
     <span class="missing-page-title">
-        [missing]
+        [missing]-ddd
     </span>
 </span>
+
 
 
 

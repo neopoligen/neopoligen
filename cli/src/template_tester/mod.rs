@@ -45,7 +45,8 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
             .content
             .split(r#"<div class="skip-template-test-header">"#)
             .collect();
-        builder.skipped_template_tests += skipped_tests.len() - 1;
+        builder.template_tests_skipped += skipped_tests.len() - 1;
+        builder.template_tests_found += skipped_tests.len() - 1;
     });
 
     builder.outputs_dev.iter().for_each(|output| {
@@ -53,22 +54,24 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
             .content
             .split(r#"<div class="start-template-test-header">"#)
             .collect();
+        builder.template_tests_run += tests.len() - 1;
+        builder.template_tests_found += tests.len() - 1;
         if tests.len() > 1 {
             tests.iter().skip(1).for_each(|base| {
                 let initial_split: Vec<&str> = base
-                    .split("</div><!-- /start-tempalte-test-header -->")
+                    .split("</div><!-- /start-template-test-header -->")
                     .collect();
-                if initial_split.len() == 2 {
+                if initial_split.len() > 1 {
                     let description = initial_split[0].trim().to_string();
                     let expected_parts: Vec<&str> = initial_split[1]
                         .split(r#"<div class="expected-output">"#)
                         .collect();
-                    if expected_parts.len() == 2 {
+                    if expected_parts.len() > 1 {
                         let expected = expected_parts[0].trim().to_string();
                         let got_parts: Vec<&str> = expected_parts[1]
                             .split(r#"</div><!-- /expected-output -->"#)
                             .collect();
-                        if got_parts.len() == 2 {
+                        if got_parts.len() > 1 {
                             let got = got_parts[0].trim().to_string();
                             let compare_expected = expected.replace("\n", "").replace(" ", "");
                             let compare_got = got.replace("\n", "").replace(" ", "");
@@ -78,7 +81,7 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
                                     "Found mis-aligned template for: {}",
                                     &output.source_path.display()
                                 );
-                                builder.template_errors.push(TemplateError {
+                                builder.template_tests_errors.push(TemplateError {
                                     description,
                                     expected,
                                     got,
@@ -96,32 +99,40 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     env.add_template_owned(
         "template_error_status",
         r#"
-    <div>Found: {{ test_page_count }} Template Tests Files</div>
-    <div>Found: {{ template_error_count }} Errors</div>
-    <div>Skipped: {{ skipped_template_tests }} Tests</div>
+    <h2>Build</h2>
     <div>{{ build_time }}</div>
-    {% for error in template_errors %}
+    <h2>Template Tests</h2>
+    <div>Found: {{ template_tests_found }}</div>
+    <div>Skipped: {{ template_tests_skipped }}</div>
+    <div>Ran: {{ template_tests_run }}</div>
+    <div>Error Count: {{ template_tests_error_count }}</div>
+    <div class="template_errors flow">
+    {% for error in template_tests_errors %}
         <div class="template-error">
-        <h2>{{ error.source_path }}</h2>
-        <h3>Description</h3>
+        <h3>{{ error.source_path }}</h3>
+        <h4>Description</h4>
         {{ error.description }}
-        <h3>Expected</h3>
+        <h4>Expected</h4>
         <pre>{% autoescape true %}{{ error.expected }}{% endautoescape %}</pre>
-        <h3>Got</h3>
+        <h4>Got</h4>
         <pre>{% autoescape true %}{{ error.got }}{% endautoescape %}</pre>
         </div>
-    {% endfor %}"#
-            .to_string(),
+    {% endfor %}
+    </div>
+    "#
+        .to_string(),
     )
     .unwrap();
     let skeleton = env.get_template("template_error_status").unwrap();
     let output = skeleton
         .render(context!(
             test_page_count => &file_set.pages.len(),
-            template_error_count => &builder.template_errors.len(),
-            template_errors => Value::from_serialize(&builder.template_errors),
             build_time => builder.build_time,
-            skipped_template_tests => builder.skipped_template_tests,
+            template_tests_errors => Value::from_serialize(&builder.template_tests_errors),
+            template_tests_error_count => &builder.template_tests_errors.len(),
+            template_tests_found => builder.template_tests_found,
+            template_tests_run => builder.template_tests_run,
+            template_tests_skipped => builder.template_tests_skipped,
         ))
         .unwrap();
     let mut output_path = config.folders.status_root.clone();

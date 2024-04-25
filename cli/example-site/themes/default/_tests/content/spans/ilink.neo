@@ -6,7 +6,7 @@ The `ilink`` is used to link arbitrary text to a
 specific page on the site by it's id. (it stands
 for "internal link")
 
--- start-template-test
+-- skip-template-test
 
 Basic Test
 

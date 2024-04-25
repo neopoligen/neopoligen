@@ -29,8 +29,10 @@ pub struct Builder {
     neo_env: NeoEnv,
     pub outputs: BTreeMap<PathBuf, String>,
     pub outputs_dev: Vec<Output>,
-    pub template_errors: Vec<TemplateError>,
-    pub skipped_template_tests: usize,
+    pub template_tests_errors: Vec<TemplateError>,
+    pub template_tests_found: usize,
+    pub template_tests_run: usize,
+    pub template_tests_skipped: usize,
 }
 
 pub struct Output {

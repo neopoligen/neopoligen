@@ -10,4 +10,4 @@ tests
 [! for content in section.content.category.content.containers !]
     <p>[@- theme.output_payload(site, page_id, content) -@]</p>
 [! endfor !]
-</div><!-- /start-tempalte-test-header -->
+</div><!-- /start-template-test-header -->
