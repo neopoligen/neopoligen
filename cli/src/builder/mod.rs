@@ -28,7 +28,14 @@ pub struct Builder {
     neo_env: NeoEnv,
     pub template_errors: Vec<TemplateError>,
     pub outputs: BTreeMap<PathBuf, String>,
+    pub outputs_dev: Vec<Output>,
     pub build_time: Option<String>,
+}
+
+pub struct Output {
+    pub content: String,
+    pub source_path: PathBuf,
+    pub output_path: PathBuf,
 }
 
 impl Builder {
@@ -133,8 +140,13 @@ impl Builder {
                         Ok(output) => {
                             self.outputs.insert(
                                 PathBuf::from(&page.output_file_path.clone().unwrap()),
-                                output,
+                                output.clone(),
                             );
+                            self.outputs_dev.push(Output {
+                                content: output,
+                                source_path: page.source_path.clone(),
+                                output_path: PathBuf::from(&page.output_file_path.clone().unwrap()),
+                            });
                             ()
                         }
                         Err(e) => {
