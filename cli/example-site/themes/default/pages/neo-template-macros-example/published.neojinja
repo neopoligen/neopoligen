@@ -134,18 +134,14 @@ or make them not run (producing false positivies)
     </div>
 
     <div class="example_subsection">
-        <div class="heading_subsection secondary_heading_subsection">
-            <h3 class="title_subsection">Return the title for a page</h3>
-            <div class="subtitle_subsection">theme.page_title(site, page_id, "2fz5gcz6")</div>
-        </div>
         <div class="content_subsection flow">
             <div class="start-template-test-header">
-                <div class="template-test-description"></div>
-                <div></div>
-            [@ theme.page_title(site, page_id, "2fz5gcz6") @]
+                <div class="template-test-description">Return the title for a page</div>
+                <div>theme.page_title(site, page_id, "2fz5gcz6")</div>
             </div><!-- /start-template-test-header -->
+            [@ theme.page_title(site, page_id, "2fz5gcz6") @]
             <div class="expected-output">
-            <span class="missing-page">Template Macro Examples</span>
+            <span class="page-title">Template Macro Examples</span>
             </div><!-- /expected-output -->
         </div>
     </div>

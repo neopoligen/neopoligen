@@ -150,7 +150,7 @@ class="
 [! if site.pages[target_page_id] !]
     <span class="page-title">[@ site.pages[target_page_id].title -@]</span>
 [! else !]
-    <span class="missing-error">[missing]</span>
+    <span class="missing-page">[missing-page]</span>
 [! endif !]
 [! endmacro !]
 
