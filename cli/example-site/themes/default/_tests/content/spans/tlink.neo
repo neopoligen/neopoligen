@@ -38,7 +38,7 @@ Basic Test
 
 
 
--- start-template-test
+-- skip-template-test
 
 Output "[missing]" if the requested
 page ID doesn't exist
@@ -57,7 +57,7 @@ page ID doesn't exist
 
 
 
--- start-template-test
+-- skip-template-test
 
 Link to the ID for this page which
 outputs the title instead of a link
@@ -72,7 +72,7 @@ tlink Span Template Tests
 
 
 
--- start-template-test
+-- skip-template-test
 
 Add an attribute
 
@@ -105,6 +105,4 @@ Add a flag
 
 -- metadata
 -- id: 2fvfxsjw
-
-
 

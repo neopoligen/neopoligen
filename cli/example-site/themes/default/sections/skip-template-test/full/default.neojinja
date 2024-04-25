@@ -1,1 +1,1 @@
-[!- include "sections/start-template-test/start/default.neojinja" -!]
+[!- include "sections/skip-template-test/start/default.neojinja" -!]
