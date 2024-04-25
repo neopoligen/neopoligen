@@ -14,18 +14,18 @@ use walkdir::WalkDir;
 // the first launch
 
 fn main() {
+    let output_dir = PathBuf::from("../../sections");
     let bounds = vec!["full", "start", "end"];
     let config_dir = PathBuf::from("lists");
     let files = get_files_in_a_single_dir(config_dir.clone());
     make_section_dirs(bounds.clone(), config_dir.clone(), files.clone());
     make_stubs(bounds.clone(), config_dir.clone(), files.clone());
     make_category_txt_files(bounds.clone(), config_dir.clone(), files.clone());
-    copy_customized_files();
+    copy_customized_files(&output_dir);
 }
 
-fn copy_customized_files() {
+fn copy_customized_files(output_dir: &PathBuf) {
     let input_dir = PathBuf::from("customized");
-    let output_dir = PathBuf::from("../../sections");
 
     get_files_in_dir_matching_extensions_recursively(
         &input_dir, 
@@ -156,5 +156,18 @@ fn make_parent_dir_for_file(file_path: &PathBuf) -> Result<String, String> {
       },
       None => Err("Could not make directory".to_string())
     }
-  }
+}
+  
+fn empty_dir(dir: &PathBuf) -> std::io::Result<()> {
+    for entry in dir.read_dir()? {
+        let entry = entry?;
+        let path = entry.path();
+        if path.is_dir() {
+        fs::remove_dir_all(path)?;
+        } else {
+        fs::remove_file(path)?;
+        }
+    };
+    Ok(())
+}
   

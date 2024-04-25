@@ -20,8 +20,6 @@ up saying that
 - Both attributes and flags can be passed in. 
 
 
-
-
 -- start-template-test
 
 Basic Test
@@ -40,10 +38,9 @@ Basic Test
 
 
 
-
 -- start-template-test
 
-Output "No Link Available" if the requested
+Output "[missing]" if the requested
 page ID doesn't exist
 
 -- naked
@@ -52,7 +49,11 @@ page ID doesn't exist
 
 -- expected-output
 
-No Link Available
+<span class="missing-page-link">
+    <span class="missing-page-title">
+        [missing]
+    </span>
+</span>
 
 
 
@@ -86,7 +87,7 @@ Add an attribute
 
 
 
--- start-template-test
+-- skip-template-test
 
 Add a flag
 
