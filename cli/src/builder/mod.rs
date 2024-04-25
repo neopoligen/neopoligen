@@ -177,7 +177,7 @@ impl Builder {
                     output.0.display()
                 );
             }
-            event!(Level::INFO, "Writing: {}", output.0.display());
+            event!(Level::DEBUG, "Writing: {}", output.0.display());
         });
     }
 }
