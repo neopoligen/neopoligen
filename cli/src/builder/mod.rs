@@ -11,6 +11,7 @@ use minijinja::Environment;
 use minijinja::Syntax;
 use minijinja::Value;
 use std::collections::BTreeMap;
+use std::collections::BTreeSet;
 use std::fs;
 use std::fs::create_dir_all;
 use std::path::PathBuf;
@@ -81,6 +82,7 @@ impl Builder {
         self.build_time = Some(timestamp.to_rfc2822());
         let mut env = Environment::new();
         env.add_function("highlight_code", highlight_code);
+        env.add_function("get_collection", get_collection);
         env.set_syntax(Syntax {
             block_start: "[!".into(),
             block_end: "!]".into(),
@@ -207,4 +209,63 @@ fn highlight_code(code: String, lang: String) -> String {
         r#"<pre class="numberedLines"><code>{}</code></pre>"#,
         output_html.join("\n")
     )
+}
+
+#[instrument(skip(site))]
+fn get_collection(site: &Value, page_id: &Value, filters_raw: &Value) -> Value {
+    let mut filters: Vec<(Vec<String>, Vec<String>)> = vec![];
+    match filters_raw.try_iter() {
+        Ok(filters_iter) => {
+            filters_iter.for_each(|filter| match filter.try_iter() {
+                Ok(items) => {
+                    let mut accept: Vec<String> = vec![];
+                    let mut reject: Vec<String> = vec![];
+                    items.for_each(|item| {
+                        if item.to_string().starts_with("!") {
+                            reject.push(item.to_string());
+                        } else {
+                            accept.push(item.to_string());
+                        }
+                    });
+                    filters.push((accept, reject));
+                }
+                Err(e) => event!(Level::ERROR, "{}", e),
+            });
+        }
+        Err(e) => event!(Level::ERROR, "{}", e),
+    }
+    dbg!(&filters);
+
+    let mut ids: BTreeSet<String> = BTreeSet::new();
+    match site.get_attr("pages") {
+        Ok(pages) => {
+            match pages.try_iter() {
+                Ok(pages_iter) => pages_iter.for_each(|id| {
+                    match pages.get_attr(id.as_str().expect("got str")) {
+                        Ok(page) => {
+                            let mut add_page = false;
+                            match page.get_attr("tags") {
+                                Ok(tags) => {
+                                    dbg!(tags);
+                                    ()
+                                }
+                                Err(e) => event!(Level::ERROR, "{}", e),
+                            }
+
+                            if add_page {
+                                ids.insert(id.to_string());
+                                ()
+                            }
+                        }
+                        Err(e) => event!(Level::ERROR, "{}", e),
+                    };
+                }),
+                Err(e) => event!(Level::ERROR, "{}", e),
+            };
+        }
+        Err(e) => {
+            event!(Level::ERROR, "{}", e);
+        }
+    };
+    Value::from_iter(ids.into_iter())
 }

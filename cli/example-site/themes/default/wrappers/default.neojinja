@@ -28,9 +28,10 @@
 [! include "includes/javascript-for-head.neojinja" !]
 </head>
 <body>
+[@ get_collection(site, page_id, [["examples"]]) @]
     <main>
         <div class="sidebar">
-            This is the sidebar
+            [@ theme.link_or_title(site, page_id, "2dwmgthu", { "title": "Home Page" }) @]
         </div>
         <article class="flow">
         [! block body !][! endblock !]
