@@ -51,13 +51,41 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
                     .split("</div><!-- /start-tempalte-test-header -->")
                     .collect();
                 if initial_split.len() == 2 {
-                    let description = initial_split[0];
+                    let description = initial_split[0].trim().to_string();
                     let expected_parts: Vec<&str> = initial_split[1]
                         .split(r#"<div class="expected-output">"#)
                         .collect();
                     if expected_parts.len() == 2 {
-                        let expected = expected_parts[0];
-                        dbg!(&expected_parts);
+                        let expected = expected_parts[0].trim().to_string();
+                        let got_parts: Vec<&str> = expected_parts[1]
+                            .split(r#"</div><!-- /expected-output -->"#)
+                            .collect();
+                        if got_parts.len() == 2 {
+                            let got = got_parts[0].trim().to_string();
+                            let compare_expected = expected.replace("\n", "").replace(" ", "");
+                            let compare_got = got.replace("\n", "").replace(" ", "");
+
+                            if compare_expected != compare_got {
+                                event!(
+                                    Level::WARN,
+                                    "Found mis-aligned template for: {}",
+                                    &output.0.display()
+                                );
+
+                                let parent_dir = output.0.parent().unwrap();
+                                let id = parent_dir
+                                    .file_stem()
+                                    .unwrap()
+                                    .to_string_lossy()
+                                    .to_string();
+                                builder.template_errors.push(TemplateError {
+                                    id,
+                                    description,
+                                    expected,
+                                    got,
+                                });
+                            }
+                        }
                     }
                     //dbg!(initial_split[1]);
                 }
@@ -99,13 +127,15 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     <div>Ran {{ test_page_count }} Template Tests. Found {{ template_error_count }} Errors</div>
     <div>{{ build_time }}</div>
     {% for error in template_errors %}
-    <div class="template-error">
-    <h2>{{ error.id }}</h2>
-    <h3>Expected</h3>
-    <pre>{% autoescape true %}{{ error.expected }}{% endautoescape %}</pre>
-    <h3>Got</h3>
-    <pre>{% autoescape true %}{{ error.got }}{% endautoescape %}</pre>
-    </div>
+        <div class="template-error">
+        <h2>{{ error.id }}</h2>
+        <h3>Description</h3>
+        {{ error.description }}
+        <h3>Expected</h3>
+        <pre>{% autoescape true %}{{ error.expected }}{% endautoescape %}</pre>
+        <h3>Got</h3>
+        <pre>{% autoescape true %}{{ error.got }}{% endautoescape %}</pre>
+        </div>
     {% endfor %}"#
             .to_string(),
     )
