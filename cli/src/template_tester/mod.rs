@@ -43,32 +43,52 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     builder.outputs.iter().for_each(|output| {
         let tests: Vec<&str> = output
             .1
-            .split(r#"<div class="start-template-test-header"></div>"#)
+            .split(r#"<div class="start-template-test-header">"#)
             .collect();
         if tests.len() > 1 {
-            tests.iter().for_each(|t| {
-                let body_parts: Vec<&str> = t
-                    .split(r#"<div class="expected-output-split"></div>"#)
+            tests.iter().skip(1).for_each(|base| {
+                let initial_split: Vec<&str> = base
+                    .split("</div><!-- /start-tempalte-test-header -->")
                     .collect();
-                let parent_dir = output.0.parent().unwrap();
-                let id = parent_dir.file_stem().unwrap().to_string_lossy();
-                if body_parts.len() > 1 {
-                    let compare_start = body_parts[0].replace("\n", "").replace(" ", "");
-                    let compare_end = body_parts[1].replace("\n", "").replace(" ", "");
-                    if compare_start != compare_end {
-                        event!(
-                            Level::WARN,
-                            "Found mis-aligned template for: {}",
-                            &output.0.display()
-                        );
-                        builder.template_errors.push(TemplateError {
-                            id: id.to_string(),
-                            expected: body_parts[1].to_string(),
-                            got: body_parts[0].to_string(),
-                        });
+                if initial_split.len() == 2 {
+                    let description = initial_split[0];
+                    let expected_parts: Vec<&str> = initial_split[1]
+                        .split(r#"<div class="expected-output">"#)
+                        .collect();
+                    if expected_parts.len() == 2 {
+                        let expected = expected_parts[0];
+                        dbg!(&expected_parts);
                     }
+                    //dbg!(initial_split[1]);
                 }
             })
+            //
+
+            //    if initial_split.len() > 1 {
+            //        let t = initial_split[1];
+            //        let body_parts: Vec<&str> = t
+            //            .split(r#"<div class="expected-output-split"></div>"#)
+            //            .collect();
+            //        let parent_dir = output.0.parent().unwrap();
+            //        let id = parent_dir.file_stem().unwrap().to_string_lossy();
+            //        if body_parts.len() > 1 {
+            //            let compare_start = body_parts[0].replace("\n", "").replace(" ", "");
+            //            let compare_end = body_parts[1].replace("\n", "").replace(" ", "");
+            //            if compare_start != compare_end {
+            //                event!(
+            //                    Level::WARN,
+            //                    "Found mis-aligned template for: {}",
+            //                    &output.0.display()
+            //                );
+            //                builder.template_errors.push(TemplateError {
+            //                    id: id.to_string(),
+            //                    expected: body_parts[1].to_string(),
+            //                    got: body_parts[0].to_string(),
+            //                });
+            //            }
+            //        }
+            //        //})
+            //    }
         }
     });
 

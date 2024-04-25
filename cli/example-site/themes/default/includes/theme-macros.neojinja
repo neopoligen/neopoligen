@@ -148,7 +148,9 @@ class="
 [#############################################################################]
 [! macro page_title(site, page_id, target_page_id) -!]
 [! if site.pages[target_page_id] !]
-    [@ site.pages[target_page_id].title -@]
+    <span class="page-title">[@ site.pages[target_page_id].title -@]</span>
+[! else !]
+    <span class="missing-page-title">[missing]</span>
 [! endif !]
 [! endmacro !]
 

@@ -118,6 +118,43 @@
 </section>
 
 
+<section class="neo_template_macros_default_section raw_section flow">
+    <div class="heading_subsection">
+        <h2 class="title_subsection">theme.page_title(site, page_id, target_page_id)</h2>
+    </div>
+
+    <div class="example_subsection">
+        <div class="heading_subsection secondary_heading_subsection">
+            <h3 class="title_subsection">Return the title for a page</h3>
+            <div class="subtitle_subsection">theme.page_title(site, page_id, "2fz5gcz6")</div>
+        </div>
+        <div class="content_subsection flow">
+            <div class="start-template-test-header"></div>
+            [@ theme.page_title(site, page_id, "2fz5gcz6") @]
+            <div class="expected-output-split"></div>
+            Template Macro Examples
+            <div class="expected-output-split"></div>
+        </div>
+    </div>
+
+
+    <div class="example_subsection">
+        <div class="heading_subsection secondary_heading_subsection">
+            <h3 class="title_subsection">Return &quot;[missing]&quot; if there's no page at the requested ID</h3>
+            <div class="subtitle_subsection">theme.page_title(site, page_id, "invalid-id")</div>
+        </div>
+        <div class="content_subsection flow">
+            <div class="start-template-test-header"></div>
+            [@ theme.page_title(site, page_id, "invalid-id") @]
+            <div class="expected-output-split"></div>
+            <span class="missing-page-title">[missing]</span>
+            <div class="expected-output-split"></div>
+        </div>
+    </div>
+
+</section>
+
+
 [! endblock !]
 
 

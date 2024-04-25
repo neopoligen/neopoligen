@@ -32,7 +32,11 @@ Basic Test
 
 -- expected-output
 
-<a href="/en/2fvdjqd5/?link-target-page">Link Target Page</a>
+<a href="/en/2fvdjqd5/?link-target-page">
+    <span class="page-title">
+        Link Target Page
+    </span>
+</a>
 
 
 
