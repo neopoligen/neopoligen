@@ -30,7 +30,7 @@ Basic Test
 
 -- expected-output
 
-<a href="/en/2fvdjqd5/?link-target-page">
+<a href="/en/2fvdjqd5/?link-target-page" class="page-link">
     <span class="page-title">
         Link Target Page
     </span>
@@ -38,7 +38,7 @@ Basic Test
 
 
 
--- skip-template-test
+-- start-template-test
 
 Output "[missing]" if the requested
 page ID doesn't exist
@@ -49,16 +49,15 @@ page ID doesn't exist
 
 -- expected-output
 
-<span class="missing-page-link">
-    <span class="missing-page-title">
-        [missing]-ddd
-    </span>
+
+<span class="missing-page">
+        [missing-page]
 </span>
 
 
 
 
--- skip-template-test
+-- start-template-test
 
 Link to the ID for this page which
 outputs the title instead of a link
@@ -69,11 +68,11 @@ outputs the title instead of a link
 
 -- expected-output
 
-tlink Span Template Tests
+<span class="page-title">tlink Span Template Tests</span>
 
 
 
--- skip-template-test
+-- start-template-test
 
 Add an attribute
 
@@ -83,8 +82,9 @@ Add an attribute
 
 -- expected-output
 
-<a href="/en/2fvdjqd5/?link-target-page"
-    class="green">Link Target Page</a>
+<a href="/en/2fvdjqd5/?link-target-page" class="page-link green">
+    <span class="page-title">Link Target Page</span>
+</a>
 
 
 

@@ -6,9 +6,15 @@
 [! else !]
     [! if site.pages[span.content.spans[0].content.text] !]
         <a href="[@ theme.page_href(site, page_id, span.content.spans[0].content.text) @]"
+        class="page-link
+        [@ span.content.key_value_attributes['class'] @]
+        "
+
         [!- for attribute in span.content.key_value_attributes -!]
         [@- ' ' -@]
+        [! if attribute != 'class' !]
         [@- attribute -@]="[@- span.content.key_value_attributes[attribute] -@]"
+        [! endif !]
         [!- endfor -!]
         [!- for flag in span.content.flag_attributes -!]
         [@- ' ' -@][@- flag -@]
@@ -17,7 +23,7 @@
         [@- theme.page_title(site, page_id, span.content.spans[0].content.text) -@]
         </a>
     [! else !]
-        No Link Available
+        <span class="missing-page">[missing-page]</span>
     [! endif !]
 [! endif !]
 
