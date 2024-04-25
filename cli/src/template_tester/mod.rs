@@ -99,26 +99,34 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     env.add_template_owned(
         "template_error_status",
         r#"
-    <h2>Build</h2>
-    <div>{{ build_time }}</div>
-    <h2>Template Tests</h2>
-    <div>Found: {{ template_tests_found }}</div>
-    <div>Skipped: {{ template_tests_skipped }}</div>
-    <div>Ran: {{ template_tests_run }}</div>
-    <div>Error Count: {{ template_tests_error_count }}</div>
-    <div class="template_errors flow">
-    {% for error in template_tests_errors %}
-        <div class="template-error">
-        <h3>{{ error.source_path }}</h3>
-        <h4>Description</h4>
-        {{ error.description }}
-        <h4>Expected</h4>
-        <pre>{% autoescape true %}{{ error.expected }}{% endautoescape %}</pre>
-        <h4>Got</h4>
-        <pre>{% autoescape true %}{{ error.got }}{% endautoescape %}</pre>
-        </div>
-    {% endfor %}
+    <div>
+        <h2>Build</h2>
+        <div>{{ build_time }}</div>
     </div>
+    <div>
+    <h2>Template Tests</h2>
+        <div>Found: {{ template_tests_found }}</div>
+        <div>Skipped: {{ template_tests_skipped }}</div>
+        <div>Ran: {{ template_tests_run }}</div>
+        <div>Error Count: {{ template_tests_error_count }}</div>
+    </div>
+    {% if template_tests_error_count != 0 %}
+        <div class="template_errors flow">
+        <h2>Errors</h2>
+        {% for error in template_tests_errors %}
+            <div class="template-error">
+                <h4>Description</h4>
+                {{ error.description }}
+                <h4>File</h4>
+                <div class="test-file-path">{{ error.source_path }}</div>
+                <h4>Expected</h4>
+                <pre>{% autoescape true %}{{ error.expected }}{% endautoescape %}</pre>
+                <h4>Got</h4>
+                <pre>{% autoescape true %}{{ error.got }}{% endautoescape %}</pre>
+            </div>
+        {% endfor %}
+        </div>
+    {% endif %}
     "#
         .to_string(),
     )

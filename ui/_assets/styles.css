@@ -8,6 +8,7 @@
   --border-2: 1px solid var(--color-2);
   --border-3: 1px solid var(--color-3);
   --border-4: 1px solid var(--color-4);
+  --border-alfa: 1px solid var(--color-1);
   /* TODO: pick actual colors */
   --color-0: #321405;
   --color-3: #e98c8c;
@@ -55,6 +56,10 @@
   margin: 0;
 }
   
+::marker {
+  color: var(--color-1);
+}
+
 a, .link {
 color: var(--color-5);
   text-decoration: underline;
@@ -74,6 +79,15 @@ body {
     line-height: 1.5; 
 }
 
+.buildStatus  {
+  font-size: 0.76rem;
+}
+
+.buildStatus pre {
+  white-space: pre-wrap; 
+  overflow-wrap: break-word;
+}
+
 code {
   color: var(--color-4);
   font-size: var(--size-1);
@@ -82,6 +96,10 @@ code {
   padding: 0.1rem;
 }
 
+.flow > :where(:not(:first-child)) {
+  margin-top: var(--flow-space, 1em);
+  }
+  
 h1, h2, h3, h4, h5, h6 {
   line-height: 1.1;
   color: var(--color-4);
@@ -104,7 +122,6 @@ h3 {
   --flow-space: 1.0em;
 }
 
-
 .headsup {
   border: var(--border-4);
   border-radius: var(--radius-4);
@@ -119,10 +136,6 @@ html {
 img {
   max-width: 100%;
   display: block;
-}
-
-::marker {
-color: var(--color-1);
 }
 
 .nav_links {
@@ -142,6 +155,16 @@ color: var(--color-1);
   padding-bottom: var(--padding-3);
 }
 
+.template-error {
+  border-left: 1px solid #333;
+  padding-left: 1rem; 
+  margin-bottom: 3rem;
+}
+
+.template-error h4 {
+  margin-top: 1.8rem;
+}
+
 .title-group {
   border-bottom: var(--border-4);
   margin-bottom: var(--padding-4);
@@ -150,18 +173,4 @@ color: var(--color-1);
 .wrapper {
 width: min(100vw - 3rem, 58ch);
 margin-inline: auto;
-}
-
-.flow > :where(:not(:first-child)) {
-margin-top: var(--flow-space, 1em);
-}
-
-
-.templateErrorStatus  {
-  font-size: 0.76rem;
-}
-
-.templateErrorStatus pre {
-  white-space: pre-wrap; 
-  overflow-wrap: break-word;
 }
