@@ -15,6 +15,7 @@ impl Builder {
             outputs: BTreeMap::new(), // Deprecated. move to outputs_dev
             outputs_dev: vec![],
             build_time: None,
+            skipped_template_tests: 0,
         }
     }
 }

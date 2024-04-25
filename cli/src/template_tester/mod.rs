@@ -41,6 +41,14 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     builder.generate_files();
 
     builder.outputs_dev.iter().for_each(|output| {
+        let skipped_tests: Vec<&str> = output
+            .content
+            .split(r#"<div class="skip-template-test-header">"#)
+            .collect();
+        builder.skipped_template_tests += skipped_tests.len() - 1;
+    });
+
+    builder.outputs_dev.iter().for_each(|output| {
         let tests: Vec<&str> = output
             .content
             .split(r#"<div class="start-template-test-header">"#)
@@ -88,7 +96,9 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     env.add_template_owned(
         "template_error_status",
         r#"
-    <div>Ran {{ test_page_count }} Template Tests. Found {{ template_error_count }} Errors</div>
+    <div>Found: {{ test_page_count }} Template Tests Files</div>
+    <div>Found: {{ template_error_count }} Errors</div>
+    <div>Skipped: {{ skipped_template_tests }} Tests</div>
     <div>{{ build_time }}</div>
     {% for error in template_errors %}
         <div class="template-error">
@@ -110,7 +120,8 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
             test_page_count => &file_set.pages.len(),
             template_error_count => &builder.template_errors.len(),
             template_errors => Value::from_serialize(&builder.template_errors),
-            build_time => builder.build_time
+            build_time => builder.build_time,
+            skipped_template_tests => builder.skipped_template_tests,
         ))
         .unwrap();
     let mut output_path = config.folders.status_root.clone();

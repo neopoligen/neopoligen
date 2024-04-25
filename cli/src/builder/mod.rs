@@ -22,20 +22,21 @@ use syntect::util::LinesWithEndings;
 use tracing::{event, instrument, Level};
 
 pub struct Builder {
-    file_set: FileSet,
+    pub build_time: Option<String>,
     config: Config,
+    file_set: FileSet,
     #[allow(dead_code)]
     neo_env: NeoEnv,
-    pub template_errors: Vec<TemplateError>,
     pub outputs: BTreeMap<PathBuf, String>,
     pub outputs_dev: Vec<Output>,
-    pub build_time: Option<String>,
+    pub template_errors: Vec<TemplateError>,
+    pub skipped_template_tests: usize,
 }
 
 pub struct Output {
     pub content: String,
-    pub source_path: PathBuf,
     pub output_path: PathBuf,
+    pub source_path: PathBuf,
 }
 
 impl Builder {
