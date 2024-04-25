@@ -111,8 +111,8 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
     <div>
     <h2>Template Tests</h2>
         <div>Found: {{ template_tests_found }}</div>
-        <div>Skipped: {{ template_tests_skipped }}</div>
         <div>Ran: {{ template_tests_run }}</div>
+        <div>Skipped: {{ template_tests_skipped }}</div>
         <div>Error Count: {{ template_tests_error_count }}</div>
     </div>
     {% if template_tests_error_count != 0 %}

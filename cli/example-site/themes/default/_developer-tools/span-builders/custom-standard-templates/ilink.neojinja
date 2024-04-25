@@ -7,7 +7,6 @@
 class="page-link
 [@ span.content.key_value_attributes.class -@]
 "
-
 [!- for attribute in span.content.key_value_attributes -!]
 [@- ' ' -@]
 [! if attribute != 'class' !]
@@ -27,8 +26,11 @@ class="page-link
 
 
 [! else !]
-TODO: 
-missing page
+<span class="missing-link">
+[!- for span in span.content.spans -!]
+[@- theme.output_spans(site, page_id, span) -@]
+[!- endfor -!]
+</span>
 [! endif !]
 
 

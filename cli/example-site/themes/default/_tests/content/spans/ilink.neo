@@ -37,6 +37,21 @@ ilink with extra class and id attributes
 </a>
 
 
+-- start-template-test
+
+ilink to invalid page returns text wrapped in
+a span with a missing-link class
+
+-- naked
+
+<<ilink|this is a link|invalid-id>>
+
+-- expected-output
+
+<span class="missing-link">
+    this is a link
+</span>
+
 
 
 -- metadata
