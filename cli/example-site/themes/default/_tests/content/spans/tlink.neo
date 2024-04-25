@@ -88,7 +88,7 @@ Add an attribute
 
 
 
--- skip-template-test
+-- start-template-test
 
 Add a flag
 
@@ -98,8 +98,8 @@ Add a flag
 
 -- expected-output
 
-<a href="/en/2fvdjqd5/?link-target-page" hidden>
-    Link Target Page
+<a href="/en/2fvdjqd5/?link-target-page" class="page-link" hidden>
+    <span class="page-title">Link Target Page</span>
 </a>
 
 
