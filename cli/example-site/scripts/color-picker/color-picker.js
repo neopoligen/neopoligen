@@ -272,17 +272,13 @@ function buildPrimaryButtons() {
     lValues().forEach((l, lIndex) => {
       cValues().forEach((c, cIndex) => {
         addSvgTo(el, 'rect', {
-          /*
-          attrs: [
-            ['x', lIndex * 10],
-            ['y', cIndex * 10],
-            ['width', 10],
-            ['height', 10],
-          ],
-          classes: ['primaryRect', `primaryRect-${l}-${cString(c)}-${h}`],
-          data: [['h', h]],
-          listeners: [['click', handlePrimaryButtonClick]],
-          */
+            x: lIndex * 10,
+            y: cIndex * 10,
+            width: 10,
+            height: 10,
+            classes: ['primaryRect', `primaryRect-${l}-${cString(c)}-${h}`],
+            data: [['h', h]],
+            listeners: [['click', handlePrimaryButtonClick]],
         })
       })
     })
@@ -477,7 +473,6 @@ function updateProps() {
     lValues().forEach((l, lIndex) => {
       cValues().forEach((c, cIndex) => {
         hValues().forEach((h, hIndex) => {
-          // logMsg(`--color-${l}-${cString(c)}-${h}-${mode} - oklch(var(--l${l}-${mode}) var(--c${cString(c)}-${mode}) var(--h${h}-${mode}))`)
           updateProp(
             `--color-${l}-${cString(c)}-${h}-${mode}`,
             `oklch(var(--l${l}-${mode}) var(--c${cString(
