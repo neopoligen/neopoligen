@@ -1,9 +1,14 @@
 [!- extends "wrappers/default.neojinja" -!]
 [!- import "includes/theme-macros.neojinja" as theme -!]
 
+[# 
+WARNING: This page is used for testing as well as 
+documentation. If you mess with it, it might break tests
+or make them not run (producing false positivies) 
+#]
+
 [! block body !]
 [@ theme.main_body(site, page_id) @]
-
 
 <section class="neo_template_macros_default_section raw_section flow">
     <div class="heading_subsection">
@@ -11,73 +16,80 @@
     </div>
 
     <div class="example_subsection">
-        <div class="heading_subsection secondary_heading_subsection">
-            <h3 class="title_subsection">Targeting another page returns a link</h3>
-            <div class="subtitle_subsection">theme.link_or_title(site, page_id, "2dwmgthu")</div>
-        </div>
         <div class="content_subsection flow">
-            <div class="start-template-test-header"></div>
+            <div class="start-template-test-header">
+                <div class="template-test-description">Targeting another page returns a link</div>
+                <div>theme.link_or_title(site, page_id, "2dwmgthu")</div>
+            </div><!-- /start-template-test-header -->
             [@ theme.link_or_title(site, page_id, "2dwmgthu") @]
-            <div class="expected-output-split"></div>
-            <a href="/" class="page-link">Welcome To The Neopoligen Cookbook</a>
-            <div class="expected-output-split"></div>
+            <div class="expected-output">
+                <a href="/" class="page-link">
+                    <span class="page-title">
+                        Welcome To The Neopoligen Cookbook
+                    </span>
+                </a>
+            </div><!-- /expected-output -->
         </div>
     </div>
 
     <div class="example_subsection">
-        <div class="heading_subsection secondary_heading_subsection">
-            <h3 class="title_subsection">Targeting the current page outputs the title for the page</h3>
-            <div class="subtitle_subsection">theme.link_or_title(site, page_id, "2fz5gcz6")</div>
-        </div>
         <div class="content_subsection flow">
             <pre></pre>
-            <div class="start-template-test-header"></div>
+            <div class="start-template-test-header">
+                <div class="template-test-description">Targeting the current page outputs the title for the page</div>
+                <div>theme.link_or_title(site, page_id, "2fz5gcz6")</div>
+            </div><!-- /start-template-test-header -->
             [@ theme.link_or_title(site, page_id, "2fz5gcz6") @]
-            <div class="expected-output-split"></div>
-            <span class="page-title">Template Macro Examples</span>
-            <div class="expected-output-split"></div>
+            <div class="expected-output">
+                <span class="page-title">Template Macro Examples</span>
+            </div><!-- /expected-output -->
         </div>
     </div>
 
     <div class="example_subsection">
-        <div class="heading_subsection secondary_heading_subsection">
-            <h3 class="title_subsection">Alternate titles can be used</h3>
-            <div class="subtitle_subsection">theme.link_or_title(site, page_id, "2dwmgthu", { "title": "Home Page" })</div>
-        </div>
         <div class="content_subsection flow">
-            <div class="start-template-test-header"></div>
+            <div class="start-template-test-header">
+            <div class="template-test-description">Alternate titles can be used</div>
+            <div>theme.link_or_title(site, page_id, "2dwmgthu", { "title": "Home Page" })</div>
+            </div><!-- /start-template-test-header -->
             [@ theme.link_or_title(site, page_id, "2dwmgthu", { "title": "Home Page" }) @]
-            <div class="expected-output-split"></div>
-            <a href="/" class="page-link">Home Page</a>
-            <div class="expected-output-split"></div>
+            <div class="expected-output">
+                <a href="/" class="page-link">
+                    <span class="page-title">
+                        Home Page
+                    </span>
+                </a>
+            </div><!-- /expected-output -->
         </div>
     </div>
 
     <div class="example_subsection">
-        <div class="heading_subsection secondary_heading_subsection">
-            <h3 class="title_subsection">Other arguments are passed directly which can be used to set a class, etc...</h3>
-            <div class="subtitle_subsection">theme.link_or_title(site, page_id, "2dwmgthu", { "class": "testGreen" })</div>
-        </div>
         <div class="content_subsection flow">
-            <div class="start-template-test-header"></div>
+            <div class="start-template-test-header">
+                <div class="template-test-description">Other arguments are passed directly which can be used to set a class, etc...</div>
+                <div>theme.link_or_title(site, page_id, "2dwmgthu", { "class": "testGreen" })</div>
+            </div><!-- /start-template-test-header -->
             [@ theme.link_or_title(site, page_id, "2dwmgthu", { "class": "testGreen" }) @]
-            <div class="expected-output-split"></div>
-            <a href="/" class="page-link testGreen">Welcome To The Neopoligen Cookbook</a>
-            <div class="expected-output-split"></div>
+            <div class="expected-output">
+                <a href="/" class="page-link testGreen">
+                    <span class="page-title">
+                        Welcome To The Neopoligen Cookbook
+                    </span>
+                </a>
+            </div><!-- /expected-output -->
         </div>
     </div>
 
     <div class="example_subsection">
-        <div class="heading_subsection secondary_heading_subsection">
-            <h3 class="title_subsection">Targeting a page that doesn't exist shows a missing link message</h3>
-            <div class="subtitle_subsection">theme.link_or_title(site, page_id, "invalid-id")</div>
-        </div>
         <div class="content_subsection flow">
-            <div class="start-template-test-header"></div>
+            <div class="start-template-test-header">
+                <div class="template-test-description">Targeting a page that doesn't exist shows a missing link message</div>
+                <div>theme.link_or_title(site, page_id, "invalid-id")</div>
+            </div><!-- /start-template-test-header -->
             [@ theme.link_or_title(site, page_id, "invalid-id") @]
-            <div class="expected-output-split"></div>
-            <span class="missing-page-link">[ missing link ]</span>
-            <div class="expected-output-split"></div>
+            <div class="expected-output">
+                <span class="missing-page">[missing-page]</span>
+            </div><!-- /expected-output -->
         </div>
     </div>
 </section>
@@ -89,29 +101,27 @@
     </div>
 
     <div class="example_subsection">
-        <div class="heading_subsection secondary_heading_subsection">
-            <h3 class="title_subsection">Return the page href for the target_page_id</h3>
-            <div class="subtitle_subsection">theme.page_href(site, page_id, "2fz5gcz6")</div>
-        </div>
         <div class="content_subsection flow">
-            <div class="start-template-test-header"></div>
+            <div class="start-template-test-header">
+                <div class="template-test-description">Return the page href for the target_page_id</div>
+                <div>theme.page_href(site, page_id, "2fz5gcz6")</div>
+            </div><!-- /start-template-test-header -->
             [@ theme.page_href(site, page_id, "2fz5gcz6") @]
-            <div class="expected-output-split"></div>
+            <div class="expected-output">
             /en/2fz5gcz6/?template-macro-examples
-            <div class="expected-output-split"></div>
+            </div><!-- /expected-output -->
         </div>
     </div>
 
     <div class="example_subsection">
-        <div class="heading_subsection secondary_heading_subsection">
-            <h3 class="title_subsection">Return an Empty String if there's no page with the requested ID</h3>
-            <div class="subtitle_subsection">theme.page_href(site, page_id, "invalid-id")</div>
-        </div>
         <div class="content_subsection flow">
-            <div class="start-template-test-header"></div>
+            <div class="start-template-test-header">
+                <div class="template-test-description">Return an Empty String if there's no page with the requested ID</div>
+                <div>theme.page_href(site, page_id, "invalid-id")</div>
+            </div><!-- /start-template-test-header -->
             [@ theme.page_href(site, page_id, "invalid-id") @]
-            <div class="expected-output-split"></div>
-            <div class="expected-output-split"></div>
+            <div class="expected-output">
+            </div><!-- /expected-output -->
         </div>
     </div>
 
@@ -129,26 +139,28 @@
             <div class="subtitle_subsection">theme.page_title(site, page_id, "2fz5gcz6")</div>
         </div>
         <div class="content_subsection flow">
-            <div class="start-template-test-header"></div>
+            <div class="start-template-test-header">
+                <div class="template-test-description"></div>
+                <div></div>
             [@ theme.page_title(site, page_id, "2fz5gcz6") @]
-            <div class="expected-output-split"></div>
-            Template Macro Examples
-            <div class="expected-output-split"></div>
+            </div><!-- /start-template-test-header -->
+            <div class="expected-output">
+            <span class="missing-page">Template Macro Examples</span>
+            </div><!-- /expected-output -->
         </div>
     </div>
 
 
     <div class="example_subsection">
-        <div class="heading_subsection secondary_heading_subsection">
-            <h3 class="title_subsection">Return &quot;[missing]&quot; if there's no page at the requested ID</h3>
-            <div class="subtitle_subsection">theme.page_title(site, page_id, "invalid-id")</div>
-        </div>
         <div class="content_subsection flow">
-            <div class="start-template-test-header"></div>
+            <div class="start-template-test-header">
+                <div class="template-test-description">Return &quot;[missing]&quot; if there's no page at the requested ID</div>
+                <div>theme.page_title(site, page_id, "invalid-id")</div>
+            </div><!-- /start-template-test-header -->
             [@ theme.page_title(site, page_id, "invalid-id") @]
-            <div class="expected-output-split"></div>
-            <span class="missing-page-title">[missing]</span>
-            <div class="expected-output-split"></div>
+            <div class="expected-output">
+            <span class="missing-page">[missing-page]</span>
+            </div><!-- /expected-output -->
         </div>
     </div>
 
@@ -172,11 +184,15 @@
             <div class="subtitle_subsection"></div>
         </div>
         <div class="content_subsection flow">
-            <div class="start-template-test-header"></div>
+            <div class="start-template-test-header">
+                <div class="template-test-description"></div>
+                <div></div>
+            </div><!-- /start-template-test-header -->
+
+            <div class="expected-output">
             
-            <div class="expected-output-split"></div>
-            
-            <div class="expected-output-split"></div>
+            </div><!-- /start-template-test-header -->
+            <div class="expected-output">
         </div>
     </div>
 

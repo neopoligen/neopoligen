@@ -27,15 +27,15 @@
         [@ link_or_title_span_attrs(site, current_page_id, "page-link", attrs) @]
     >
         [! if attrs.title !]
-            [@ attrs.title @]
+            <span class="page-title">[@ attrs.title @]</span>
         [! else !]
-            [@ site.pages[target_page_id].title @]
+            <span class="page-title">[@ site.pages[target_page_id].title @]</span>
         [! endif !]</a>
     [! endif !]
 [! else !]
     <span
-        [@ link_or_title_span_attrs(site, current_page_id, "missing-page-link", attrs) @]
-    >[ missing link ]</span>
+        [@ link_or_title_span_attrs(site, current_page_id, "missing-page", attrs) @]
+    >[missing-page]</span>
 [! endif !]
 [! endmacro !]
 

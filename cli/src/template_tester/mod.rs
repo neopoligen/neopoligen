@@ -71,12 +71,12 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
                         .split(r#"<div class="expected-output">"#)
                         .collect();
                     if expected_parts.len() > 1 {
-                        let expected = expected_parts[0].trim().to_string();
+                        let got = expected_parts[0].trim().to_string();
                         let got_parts: Vec<&str> = expected_parts[1]
                             .split(r#"</div><!-- /expected-output -->"#)
                             .collect();
                         if got_parts.len() > 1 {
-                            let got = got_parts[0].trim().to_string();
+                            let expected = got_parts[0].trim().to_string();
                             let compare_expected = expected.replace("\n", "").replace(" ", "");
                             let compare_got = got.replace("\n", "").replace(" ", "");
                             if compare_expected != compare_got {
@@ -122,12 +122,12 @@ pub fn test_templates(config: &Config, neo_env: NeoEnv) {
             <div class="template-error">
                 <h4>Description</h4>
                 {{ error.description }}
-                <h4>File</h4>
-                <div class="test-file-path">{{ error.source_path }}</div>
                 <h4>Expected</h4>
                 {{ highlight_code(error.expected, "html") }}
                 <h4>Got</h4>
                 {{ highlight_code(error.got, "html") }}
+                <h4 class="template-test-file">File</h4>
+                <div class="test-file-path">{{ error.source_path }}</div>
             </div>
         {% endfor %}
         </div>
@@ -181,6 +181,7 @@ fn simple_format_html(code: &str) -> String {
     let parts: Vec<&str> = output.split("<").collect();
     let mut assembler: Vec<String> = vec![];
     let mut level = 0i8;
+    assembler.push(parts[0].to_string());
     parts.iter().skip(1).for_each(|part| {
         if part.starts_with("/") {
             level -= 2;

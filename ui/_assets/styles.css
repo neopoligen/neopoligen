@@ -148,7 +148,8 @@ img {
 }
 
 .template-error {
-  border-left: 1px solid #333;
+  border: 1px solid #ccc;
+  border-radius: 0.7rem;
   padding-left: 1rem; 
   margin-bottom: 3rem;
 }
@@ -156,6 +157,12 @@ img {
 .template-error h4 {
   margin-top: 1.8rem;
 }
+
+.template-test-file {
+  border-top: 1px solid #ccc;
+  padding-block: 0.7rem;
+}
+
 
 .title-group {
   border-bottom: var(--border-4);
