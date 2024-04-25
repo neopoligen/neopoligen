@@ -11,6 +11,7 @@ Color Picker
 
 <div class="picker">
     <div class="sliders"></div>
+    <div class="primaryButtons"></div>
 </div>
 
 

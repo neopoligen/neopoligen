@@ -261,6 +261,34 @@ function addStylesheet() {
   })
 }
 
+function buildPrimaryButtons() {
+  hValues().forEach((h, hIndex) => {
+    const el = addSvgTo('.primaryButtons', 'svg', {
+      classes: ['primaryButton'],
+      width: 50,
+      height: 50,
+      data: [['h', hIndex]],
+    })
+    lValues().forEach((l, lIndex) => {
+      cValues().forEach((c, cIndex) => {
+        addSvgTo(el, 'rect', {
+          /*
+          attrs: [
+            ['x', lIndex * 10],
+            ['y', cIndex * 10],
+            ['width', 10],
+            ['height', 10],
+          ],
+          classes: ['primaryRect', `primaryRect-${l}-${cString(c)}-${h}`],
+          data: [['h', h]],
+          listeners: [['click', handlePrimaryButtonClick]],
+          */
+        })
+      })
+    })
+  })
+}
+
 function buildSlider(config) {
   const label = addTo('.sliders', 'label', {
     innerHTML: `<span>${config.label}</span>`,
@@ -334,6 +362,14 @@ function cValues() {
     tmp.push(c)
   }
   return tmp
+}
+
+function handlePrimaryButtonClick(event) {
+  state.active.h = parseInt(event.target.dataset.h, 10)
+  logMsg(`Switched to primary hue: ${state.active.h}`)
+  // TODO: updateState()
+  // TODO: updateChips()
+  // TODO: updateProps()
 }
 
 const handleSliderChange = throttle((event) => {
@@ -540,6 +576,7 @@ function updateProps() {
 document.addEventListener('DOMContentLoaded', () => {
   addStylesheet()
   updateProps()
+  buildPrimaryButtons()
 
   //buildSliders()
 })

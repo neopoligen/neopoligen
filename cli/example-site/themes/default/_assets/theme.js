@@ -15,6 +15,16 @@ function appendInnerText(parent, text) {
   } 
 }
 
+function addSvgTo(parent, tag, attrs = {}) {
+  const target = getEl(parent)
+  if (target) {
+    const el = document.createElementNS("http://www.w3.org/2000/svg", tag)
+    updateSvgAttrs(attrs, el)
+    target.appendChild(el)
+    return el
+  }
+}
+
 function addTo(parent, tag, attrs = {}) {
   const target = getEl(parent)
   if (target) {
@@ -125,5 +135,26 @@ function updateAttrs(attrs, el) {
   }
   for (let index in attrs.listeners) {
     el.addEventListener(attrs.listeners[index][0], attrs.listeners[index][1])
+  }
+}
+
+function updateSvgAttrs(attrs, el) {
+  const nonAttrs = ['classes', 'data', 'listeners', 'styles']
+  for (let key in attrs) {
+    if (!nonAttrs.includes(key)) {
+      el.setAttribute(key, attrs[key])
+    }
+  }
+  for (let index in attrs.classes) {
+    el.classList.add(attrs.classes[index])
+  }
+  for (let index in attrs.data) {
+    el.dataset[attrs.data[index][0]] = attrs.data[index][1]
+  }
+  for (let index in attrs.listeners) {
+    el.addEventListener(attrs.listeners[index][0], attrs.listeners[index][1])
+  }
+  for (let index in attrs.styles) {
+    el.style[attrs.data[index][0]] = attrs.data[index][1]
   }
 }
