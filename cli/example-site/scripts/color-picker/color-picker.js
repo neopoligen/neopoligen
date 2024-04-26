@@ -705,6 +705,24 @@ function sendStylesheet(msg) {
   } ${
     (state.modes.light.h + state.modes.light.colors.alfa.h + state.modes.light.colors.alfa.collectionShift) % 360
   });
+
+
+  --color-delta: oklch(${
+    (state.modes.light.l + state.modes.light.colors.alfa.l + 
+      (
+      state.collections[state.modes.light.colors.alfa.collectionIndex][1][0] * state.base.l.interval
+      )
+    ) % 100
+  }% ${
+    (((state.modes.light.c * 10) + state.modes.light.colors.alfa.c +
+    (
+      state.collections[state.modes.light.colors.alfa.collectionIndex][1][1] * (state.base.c.interval * 10)
+    )
+  ) % 5) /10
+  } ${
+    (state.modes.light.h + state.modes.light.colors.alfa.h + state.modes.light.colors.alfa.collectionShift) % 360
+  });
+
 }
 
 body { 
@@ -1033,7 +1051,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildTertiaryButtons()
   buildSliders()
   buildModeButtons()
-  updateProps()
   updateState()
+  updateProps()
   addListenerTo('.preview-launcher', 'click', openWindow)
 })
