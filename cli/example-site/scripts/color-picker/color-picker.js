@@ -215,7 +215,7 @@ function addStylesheet() {
         `.chip-${lIndex}-${cIndex}`,
         `color: oklch(var(--l${l}-${state.active.mode}) var(--c${cString(c)}-${
           state.active.mode
-        }) var(--h${state.active.h}-${state.active.mode}));`
+        }) var(--h-active-${state.active.mode}));`
       )
     })
   })
@@ -403,6 +403,7 @@ function buildSlider(config) {
     step: config.step,
     data: [['key', config.key]],
     listeners: [['input', handleSliderChange]],
+    value: config.value,
   })
 }
 
@@ -415,6 +416,7 @@ function buildSliders() {
     min: 0,
     max: state.base.l.max,
     step: state.base.l.step,
+    value: state.modes.light.l,
   })
 
   buildSlider({
@@ -423,6 +425,7 @@ function buildSliders() {
     min: 0,
     max: state.base.c.max,
     step: state.base.c.step,
+    value: state.modes.light.c,
   })
 
   buildSlider({
@@ -431,6 +434,7 @@ function buildSliders() {
     min: 0,
     max: state.base.h.max,
     step: state.base.h.step,
+    value: state.modes.light.h,
   })
 }
 
@@ -465,26 +469,37 @@ function cValues() {
   return tmp
 }
 
+function debounce(callback, wait) {
+  let timeoutId = null;
+  return (...args) => {
+    window.clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(() => {
+      callback.apply(null, args);
+    }, wait);
+  };
+}
+
 function handleModeClick(event) {
-  // TODO: updateState()
+  updateState()
+  updateChips()
+  updateProps()
 }
 
 function handlePrimaryButtonClick(event) {
   state.active.h = parseInt(event.target.dataset.h, 10)
   logMsg(`Switched to primary hue: ${state.active.h}`)
-  // TODO: updateState()
-  // TODO: updateChips()
-  // TODO: updateProps()
+  updateState()
+  updateChips()
+  updateProps()
 }
 
 const handleSliderChange = throttle((event) => {
   const key = event.target.dataset.key
   const value = parseFloat(event.target.value)
   logMsg(value)
-  //TODO update(`.${key}Value`, { innerHTML: value })
   updateState()
   updateProps()
-}, 30)
+}, 50)
 
 function hValues() {
   const tmp = []
@@ -546,6 +561,7 @@ function updateProp(key, value) {
   )
 }
 
+
 function updateProps() {
   updateProp(`--background-base`, `var(--background-base-${state.active.mode})`)
   updateProp(`--border-alfa`, `1px solid var(--color-alfa)`)
@@ -584,8 +600,13 @@ function updateProps() {
         (state.modes[state.active.mode].h + h) % state.base.h.max
       }`
       updateProp(`--h${h}-${mode}`, `${newValue}`)
+      if (h === state.active.h) {
+        updateProp(`--h-active-${mode}`, `${newValue}`)
+      }
     })
   })
+
+
 
   modes().forEach((mode) => {
     lValues().forEach((l, lIndex) => {
@@ -683,6 +704,14 @@ function updateProps() {
       updateProp(`--${key}`, `green`)
     })
   })
+
+  // update chip- text colors
+  lValues().forEach((l, lIndex) => {
+    cValues().forEach((c, cIndex) => {
+      updateProp(`--chip-${lIndex}-${cIndex}`, `blue`)
+    })
+  })
+
 }
 
 function updateState() {
@@ -691,9 +720,9 @@ function updateState() {
   state.modes[mode].l = getFloat('.lSlider')
   state.modes[mode].c = getFloat('.cSlider')
   state.modes[mode].h = getFloat('.hSlider')
-  //updateEl('.currentState', {
-  //innerHTML: JSON.stringify(state, null, 2),
-  //})
+  updateEl('.currentState', {
+    innerHTML: JSON.stringify(state, null, 2),
+  })
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -706,4 +735,5 @@ document.addEventListener('DOMContentLoaded', () => {
   buildSecondaryChips()
   buildSliders()
   buildModeButtons()
+  updateState()
 })

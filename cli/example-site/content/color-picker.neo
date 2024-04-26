@@ -2,6 +2,11 @@
 
 Color Picker
 
+-- css
+
+.currentState {
+    font-size: 0.4rem;
+}
 
 -- head
 
@@ -10,6 +15,7 @@ Color Picker
 -- html
 
 <div class="picker">
+    <pre class="currentState"></pre>
     <div class="modes"></div>
     <div class="sliders"></div>
     <div class="primaryButtons"></div>
