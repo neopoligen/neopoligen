@@ -8,6 +8,11 @@ Color Picker
     font-size: 0.6rem;
 }
 
+.secondaryButtons {
+    display: flex;
+    flex-wrap: wrap;
+}
+
 -- head
 
 <script src="/scripts/color-picker/color-picker.js"></script>
@@ -20,9 +25,9 @@ Color Picker
     <div class="sliders"></div>
     <div class="primaryButtons"></div>
     <div class="chips"></div>
-    <div class="charliedeltaButtons"></div>
+    <div class="charliedeltaButtons secondaryButtons"></div>
     <div class="charliedeltaChips"></div>
-    <div class="echofoxtrotButtons"></div>
+    <div class="echofoxtrotButtons secondaryButtons"></div>
     <div class="echofoxtrotChips"></div>
 </div>
 

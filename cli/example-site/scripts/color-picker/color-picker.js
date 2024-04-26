@@ -137,12 +137,12 @@ let state = {
     h: 0,
     colors: {
       alfa: {
-        secondaryH: 180
+        secondaryH: 180,
       },
       bravo: {
-        secondaryH: 60
-      }
-    }
+        secondaryH: 60,
+      },
+    },
   },
 }
 
@@ -366,13 +366,10 @@ function buildSecondaryButtons() {
         <div class="secondaryButtonHeader secondaryButtonHeader-${primary.key}-${h}">---</div>
         <div class="secondaryButtonHolder secondaryButtonHolder-${primary.key}-${h}"></div>
         <div class="secondaryButtonFooter secondaryButtonFooter-${primary.key}-${h}">---</div>
-        `
+        `,
       })
       let btn = addSvgTo(`.secondaryButtonHolder-${primary.key}-${h}`, 'svg', {
-        classes: [
-          `secondaryButton`,
-          `secondaryButton-${primary.key}-${h}`,
-        ],
+        classes: [`secondaryButton`, `secondaryButton-${primary.key}-${h}`],
         width: 30,
         height: 30,
       })
@@ -540,9 +537,9 @@ function handlePrimaryButtonClick(event) {
 
 function handleSecondaryButtonClick(event) {
   console.log(event.target.dataset)
-  state.active.colors[
-    event.target.dataset.primary
-  ].secondaryH = parseInt(event.target.dataset.secondaryH)
+  state.active.colors[event.target.dataset.primary].secondaryH = parseInt(
+    event.target.dataset.secondaryH
+  )
   updateState()
   updateProps()
 }
@@ -560,11 +557,11 @@ function handleTertiaryButtonClick(event) {
   state.modes[event.target.dataset.mode].colors[
     event.target.dataset.primary
   ].collectionIndex = parseInt(event.target.dataset.collectionIndex, 10)
-  
+
   state.modes[event.target.dataset.mode].colors[
     event.target.dataset.primary
-  ].collectionShift = state.active.colors[event.target.dataset.primary].secondaryH
-  
+  ].collectionShift =
+    state.active.colors[event.target.dataset.primary].secondaryH
 
   // console.log(event.target.dataset)
   // logMsg(
@@ -777,28 +774,30 @@ function updateProps() {
     })
   })
 
-    // highlight the current secondary set for each primary
-    primaryColors().forEach((primary) => {
-      hValues().forEach((h) => {
-        const target = `.secondaryButton-${primary}-${h}`
-        const targetHeader = `.secondaryButtonHeader-${primary}-${h}`
-        const targetFooter = `.secondaryButtonFooter-${primary}-${h}`
-        if (state.active.colors[primary].secondaryH === h) {
-          updateEl(targetFooter, { innerHTML: "visible" })
-        } else {
-          updateEl(targetFooter, { innerHTML: "" })
-        }
-        if (state.modes[state.active.mode].colors[primary].collectionShift === h) {
-          updateEl(targetHeader, { innerHTML: "current" })
-        } else {
-          updateEl(targetHeader, { innerHTML: "" })
-        }
-      })
+  // highlight the current secondary set for each primary
+  primaryColors().forEach((primary) => {
+    hValues().forEach((h) => {
+      const target = `.secondaryButton-${primary}-${h}`
+      const targetHeader = `.secondaryButtonHeader-${primary}-${h}`
+      const targetFooter = `.secondaryButtonFooter-${primary}-${h}`
+      if (state.active.colors[primary].secondaryH === h) {
+        updateEl(targetFooter, { innerHTML: 'visible' })
+      } else {
+        updateEl(targetFooter, { innerHTML: '' })
+      }
+      if (
+        state.modes[state.active.mode].colors[primary].collectionShift === h
+      ) {
+        updateEl(targetHeader, { innerHTML: 'current' })
+      } else {
+        updateEl(targetHeader, { innerHTML: '' })
+      }
     })
+  })
 
   primaries().forEach((primary, primaryIndex) => {
     hValues().forEach((h) => {
-    // primary.secondaries.forEach((color) => {
+      // primary.secondaries.forEach((color) => {
       collections().forEach((collection) => {
         collection.forEach((coords) => {
           const key = `secondaryRect-coords-${primary.key}-${coords[0]}-${coords[1]}-${h}`
@@ -822,9 +821,6 @@ function updateProps() {
       })
     })
   })
-
-
-
 
   // Tertiary Chip Rectangles
   primaries().forEach((primary) => {
@@ -861,8 +857,9 @@ function updateProps() {
       const target = `.tertiaryChip-index-${primary}-${collectionIndex}`
       if (
         state.modes[state.active.mode].colors[primary].collectionIndex ===
-        collectionIndex
-        && state.active.colors[primary].secondaryH === state.modes[state.active.mode].colors[primary].collectionShift
+          collectionIndex &&
+        state.active.colors[primary].secondaryH ===
+          state.modes[state.active.mode].colors[primary].collectionShift
       ) {
         removeClassFrom(target, 'inactiveTertiary')
         addClassTo(target, 'activeTertiary')
