@@ -291,6 +291,24 @@ function buildChips() {
   updateChips()
 }
 
+function buildModeButtons() {
+  modes().forEach((mode) => {
+    const label = addTo('.modes', 'label', {
+      innerHTML: `<span>${mode}</span>`,
+    })
+    addTo(label, 'input', {
+      type: 'radio',
+      name: 'mode',
+      checked: mode === 'light' ? true : false,
+      value: mode,
+      listeners: [['input', handleModeClick]],
+      classes: [
+        `mode-${mode}`
+      ],
+    })
+  })
+}
+
 function buildPrimaryButtons() {
   hValues().forEach((h, hIndex) => {
     const el = addSvgTo('.primaryButtons', 'svg', {
@@ -449,6 +467,10 @@ function cValues() {
   return tmp
 }
 
+function handleModeClick(event) {
+  // TODO: updateState()
+}
+
 function handlePrimaryButtonClick(event) {
   state.active.h = parseInt(event.target.dataset.h, 10)
   logMsg(`Switched to primary hue: ${state.active.h}`)
@@ -461,9 +483,9 @@ const handleSliderChange = throttle((event) => {
   const key = event.target.dataset.key
   const value = parseFloat(event.target.value)
   logMsg(value)
-  //update(`.${key}Value`, { innerHTML: value })
-  //updateState()
-  //updateProps()
+  //TODO update(`.${key}Value`, { innerHTML: value })
+  //TODO updateState()
+  //TODO updateProps()
 }, 30)
 
 function hValues() {
@@ -675,6 +697,6 @@ document.addEventListener('DOMContentLoaded', () => {
   buildChips()
   buildSecondaryButtons()
   buildSecondaryChips()
-  // should be ready: buildSliders()
-  //buildModeButtons()
+  buildSliders()
+  buildModeButtons()
 })

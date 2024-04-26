@@ -10,6 +10,7 @@ Color Picker
 -- html
 
 <div class="picker">
+    <div class="modes"></div>
     <div class="sliders"></div>
     <div class="primaryButtons"></div>
     <div class="chips"></div>
