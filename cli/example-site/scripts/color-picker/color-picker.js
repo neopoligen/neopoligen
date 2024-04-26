@@ -261,6 +261,36 @@ function addStylesheet() {
   })
 }
 
+function buildChipRows() {
+  lValues().forEach((l, lIndex) => {
+    addTo('.chips', 'div', {
+      classes: ['chipRow', `chipRow-${lIndex}`],
+    })
+  })
+}
+
+function buildChips() {
+  lValues().forEach((l, lIndex) => {
+    cValues().forEach((c, cIndex) => {
+      addTo(`.chipRow-${lIndex}`, 'div', {
+        innerHTML: `
+  <div class="chip chip-${lIndex}-${cIndex}">
+  <div class="chipSwatch"></div>
+  <div class="chipDetails">
+    <div class="chipTitle">#</div>
+    <div class="chipText">${state.sampleText}</div>
+    <div class="chipButtons">
+      <div class="chipButtonAlfa">alfa</div>
+      <div class="chipButtonBravo">bravo</div>
+    </div>
+  </div>
+  </div>`,
+      })
+    })
+  })
+  updateChips()
+}
+
 function buildPrimaryButtons() {
   hValues().forEach((h, hIndex) => {
     const el = addSvgTo('.primaryButtons', 'svg', {
@@ -272,18 +302,52 @@ function buildPrimaryButtons() {
     lValues().forEach((l, lIndex) => {
       cValues().forEach((c, cIndex) => {
         addSvgTo(el, 'rect', {
-            x: lIndex * 10,
-            y: cIndex * 10,
-            width: 10,
-            height: 10,
-            classes: ['primaryRect', `primaryRect-${l}-${cString(c)}-${h}`],
-            data: [['h', h]],
-            listeners: [['click', handlePrimaryButtonClick]],
+          x: lIndex * 10,
+          y: cIndex * 10,
+          width: 10,
+          height: 10,
+          classes: ['primaryRect', `primaryRect-${l}-${cString(c)}-${h}`],
+          data: [['h', h]],
+          listeners: [['click', handlePrimaryButtonClick]],
         })
       })
     })
   })
 }
+
+
+function buildSecondaryButtons() {
+    primaries().forEach((primary) => {
+      const key = primary.secondaries.join('')
+      hValues().forEach((h, hIndex) => {
+        let button = addSvgTo(`.${key}Buttons`, 'svg', {
+          classes: [`secondaryButton`], 
+          width: 45, 
+          height: 45
+        })
+        /*
+        for (let lIndex = 1; lIndex < 4; lIndex++) {
+          for (let cIndex = 1; cIndex < 4; cIndex++) {
+            addSvgToEl('rect', button, {
+              classes: [`secondaryRect`, `${key}Rect-${lValues()[lIndex]}-${cString(cValues()[cIndex])}-${h}`], 
+              attrs: [
+                ['x', (lIndex - 1) * 15], 
+                ['y', (cIndex - 1) * 15],
+                ['width', 15],
+                ['height', 15]
+              ],
+              data: [
+                ['key', key],
+                ['h', hIndex]
+              ]
+            })
+          }
+        }
+        */
+      })
+    })
+  }
+  
 
 function buildSlider(config) {
   const label = addTo('.sliders', 'label', {
@@ -419,6 +483,16 @@ function throttle(func, timeFrame) {
     }
   }
 }
+
+function updateChips() {
+    lValues().forEach((l, lIndex) => {
+      cValues().forEach((c, cIndex) => {
+        updateEl(`.chip-${lIndex}-${cIndex} .chipTitle`, {
+          innerHTML: `#${l}-${cString(c)}-${state.active.h}`
+        })
+      })
+    })
+  }
 
 function updateProp(key, value) {
   document.documentElement.style.setProperty(
@@ -572,6 +646,10 @@ document.addEventListener('DOMContentLoaded', () => {
   addStylesheet()
   updateProps()
   buildPrimaryButtons()
-
-  //buildSliders()
+  buildChipRows()
+  buildChips()
+  buildSecondaryButtons()
+  //buildSecondaryChips()
+  // should be ready: buildSliders()
+  //buildModeButtons()
 })

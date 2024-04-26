@@ -12,6 +12,9 @@ Color Picker
 <div class="picker">
     <div class="sliders"></div>
     <div class="primaryButtons"></div>
+    <div class="chips"></div>
+    <div class="charliedeltaButtons"></div>
+    <div class="echofoxtrotButtons"></div>
 </div>
 
 
