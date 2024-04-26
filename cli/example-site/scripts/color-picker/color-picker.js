@@ -176,8 +176,14 @@ function addStylesheet() {
   addStyle(`.charlieDeltaButton`, `padding: var(--padding-alfa);`)
   addStyle(`.echoFoxtrotButton`, `padding: var(--padding-alfa);`)
   addStyle(`.pickerWrapper`, `display: grid; grid-template-columns: 4rem 1fr;`)
-  addStyle(`.primaryButton`, `margin: var(--padding-alfa); border: 1px solid black;`)
-  addStyle(`.secondaryButton`, `margin: var(--padding-alfa); border: 1px solid black;`)
+  addStyle(
+    `.primaryButton`,
+    `margin: var(--padding-alfa); border: 1px solid black;`
+  )
+  addStyle(
+    `.secondaryButton`,
+    `margin: var(--padding-alfa); border: 1px solid black;`
+  )
   addStyle(`.tertiaryChip`, `border: 1px solid black; margin: 0.1rem;`)
   // addStyle(`.tertiaryRect`, `border: 1px solid blue; fill: goldenrod;`)
   addStyle(`.sideSwatch`, `min-width: 0.4rem;`)
@@ -224,28 +230,30 @@ function addStylesheet() {
   })
 
   primaries().forEach((primary, primaryIndex) => {
-    primary.secondaries.forEach((color) => {
-      collections().forEach((collection) => {
-        collection.forEach((coords) => {
-          const key = `secondaryRect-${color}Rect-${coords[0]}-${coords[1]}`
+    collections().forEach((collection) => {
+      collection.forEach((coords) => {
+        hValues().forEach((h, hIndex) => {
+          const key = `secondaryRect-coords-${primary.key}-${coords[0]}-${coords[1]}-${h}`
+          logMsg(key)
           addStyle(`.${key}`, `fill: var(--${key})`)
         })
       })
     })
   })
 
-  primaries().forEach((primary) => {
-    lValues().forEach((l, lIndex) => {
-      cValues().forEach((c, cIndex) => {
-        hValues().forEach((h, hIndex) => {
-          const key = `secondaryRect-${primary.secondaries.join('')}Rect-${l}-${cString(
-            c
-          )}-${h}`
-          addStyle(`.${key}`, `fill: var(--${key})`)
-        })
-      })
-    })
-  })
+  // i think this is depcreated
+  // primaries().forEach((primary) => {
+  //   lValues().forEach((l, lIndex) => {
+  //     cValues().forEach((c, cIndex) => {
+  //       hValues().forEach((h, hIndex) => {
+  //         const key = `secondaryRect-${primary.secondaries.join(
+  //           ''
+  //         )}Rect-${l}-${cString(c)}-${h}`
+  //         addStyle(`.${key}`, `fill: var(--${key})`)
+  //       })
+  //     })
+  //   })
+  // })
 
   lValues().forEach((l, lIndex) => {
     cValues().forEach((c, cIndex) => {
@@ -262,8 +270,6 @@ function addStylesheet() {
       addStyle(`.${key}`, `fill: var(--${key})`)
     })
   })
-
-
 }
 
 function buildChipRows() {
@@ -324,7 +330,7 @@ function buildPrimaryButtons() {
       lValues().forEach((l, lIndex) => {
         addSvgTo(el, 'rect', {
           x: lIndex * 10,
-          y: 40 - (cIndex * 10),
+          y: 40 - cIndex * 10,
           width: 10,
           height: 10,
           classes: ['primaryRect', `primaryRect-${l}-${cString(c)}-${h}`],
@@ -345,28 +351,53 @@ function buildSecondaryButtons() {
         width: 30,
         height: 30,
       })
-      for (let lIndex = 1; lIndex < 4; lIndex++) {
-        for (let cIndex = 1; cIndex < 4; cIndex++) {
+      for (let coord1 = -1; coord1 <= 1; coord1++) {
+        for (let coord2 = -1; coord2 <= 1; coord2++) {
           addSvgTo(btn, 'rect', {
             classes: [
-              `secondaryRect-${key}Rect-${lValues()[lIndex]}-${cString(
-                cValues()[cIndex]
-              )}-${h}`,
+              `secondaryRect-coords-${primary.key}-${coord1}-${coord2}-${h}`,
             ],
-            x: (lIndex - 1) * 10,
-            y: 20 - (cIndex - 1) * 10,
+            x: (coord1 + 1) * 10,
+            y: (coord2 + 1) * 10,
             width: 10,
             height: 10,
+            //styles: [['fill', 'yellow']],
             data: [
               ['primary', primary.key],
               ['h', hIndex],
             ],
-            listeners: [
-              ['click', handleSecondaryButtonClick]
-            ]
+            listeners: [['click', handleSecondaryButtonClick]],
           })
         }
       }
+
+      // for (let lIndex = 1; lIndex < 4; lIndex++) {
+      //   for (let cIndex = 1; cIndex < 4; cIndex++) {
+      //     addSvgTo(btn, 'rect', {
+      //       classes: [
+
+      //         // `secondaryRect-${key}Rect-${lValues()[lIndex]}-${cString(
+      //         //   cValues()[cIndex]
+      //         // )}-${h}`,
+
+      //         `secondaryRect-coords-${key}Rect-${lValues()[lIndex]}-${cString(
+      //           cValues()[cIndex]
+      //         )}-${h}`,
+      //       ],
+      //       x: (lIndex - 1) * 10,
+      //       y: 20 - (cIndex - 1) * 10,
+      //       width: 10,
+      //       height: 10,
+      //       data: [
+      //         ['primary', primary.key],
+      //         ['h', hIndex],
+      //       ],
+      //       listeners: [
+      //         ['click', handleSecondaryButtonClick]
+      //       ]
+      //     })
+      //   }
+      // }
     })
   })
 }
@@ -379,7 +410,7 @@ function buildTertiaryButtons() {
       const el = addSvgTo(`.${mainKey}Chips`, 'svg', {
         classes: [
           'tertiaryChip',
-          `tertiaryChip-index-${primary.key}-${collectionIndex}`
+          `tertiaryChip-index-${primary.key}-${collectionIndex}`,
         ],
         width: 20,
         height: 40,
@@ -398,11 +429,9 @@ function buildTertiaryButtons() {
           data: [
             ['mode', state.active.mode],
             ['primary', primary.key],
-            ['collectionIndex',  collectionIndex]
+            ['collectionIndex', collectionIndex],
           ],
-          listeners: [
-            ['click', handleTertiaryButtonClick]
-          ]
+          listeners: [['click', handleTertiaryButtonClick]],
         })
       })
     })
@@ -489,13 +518,13 @@ function cValues() {
 }
 
 function debounce(callback, wait) {
-  let timeoutId = null;
+  let timeoutId = null
   return (...args) => {
-    window.clearTimeout(timeoutId);
+    window.clearTimeout(timeoutId)
     timeoutId = window.setTimeout(() => {
-      callback.apply(null, args);
-    }, wait);
-  };
+      callback.apply(null, args)
+    }, wait)
+  }
 }
 
 function handleModeClick(event) {
@@ -514,8 +543,9 @@ function handlePrimaryButtonClick(event) {
 
 function handleSecondaryButtonClick(event) {
   console.log(event.target.dataset)
-  state.modes[state.active.mode].colors[event.target.dataset.primary].collectionShift = 
-  parseInt(event.target.dataset.h) * state.base.h.interval
+  state.modes[state.active.mode].colors[
+    event.target.dataset.primary
+  ].collectionShift = parseInt(event.target.dataset.h) * state.base.h.interval
   updateProps()
 }
 
@@ -529,9 +559,14 @@ const handleSliderChange = throttle((event) => {
 
 function handleTertiaryButtonClick(event) {
   // console.log(event.target.dataset)
-  state.modes[event.target.dataset.mode].colors[event.target.dataset.primary].collectionIndex = parseInt(event.target.dataset.collectionIndex, 10)
+  state.modes[event.target.dataset.mode].colors[
+    event.target.dataset.primary
+  ].collectionIndex = parseInt(event.target.dataset.collectionIndex, 10)
   // console.log(state.modes['light'].colors['alfa'])
-  logMsg(state.modes[event.target.dataset.mode].colors[event.target.dataset.primary].collectionIndex)
+  logMsg(
+    state.modes[event.target.dataset.mode].colors[event.target.dataset.primary]
+      .collectionIndex
+  )
   updateState()
   updateProps()
 }
@@ -692,6 +727,9 @@ function updateProps() {
     })
     */
 
+  // I think this can be removed in favor of addressing
+  // the chips via coords
+  /*
   primaries().forEach((primary) => {
     lValues().forEach((l, lIndex) => {
       cValues().forEach((c, cIndex) => {
@@ -699,15 +737,19 @@ function updateProps() {
           const key = `secondaryRect-${primary.secondaries.join('')}Rect-${l}-${cString(
             c
           )}-${h}`
-          // logMsg(key)
+          //let h2 = state.modes[state.active.mode].colors[primary.key].collectionShift
+          //let l2 = ((state.modes[state.active.mode].colors[primary.key].l + 100) + (20 * coords[0])) % 100
+          // let c2 = ((state.modes[state.active.mode].colors[primary.key].c + 5) + coords[1]) % 5
+
+          //let h2 = (h + state.modes[state.active.mode].colors[primary.key].collectionIndex) % 5
           updateProp(
             `--${key}`,
-            `var(--color-${l}-${cString(c)}-${h}-${activeMode()})`
+            `var(--color-${l}-${cString(c)}-${180}-${activeMode()})`
           )
         })
       })
     })
-  })
+  })*/
 
   lValues().forEach((l) => {
     cValues().forEach((c) => {
@@ -731,13 +773,46 @@ function updateProps() {
     })
   })
 
+  primaries().forEach((primary, primaryIndex) => {
+    hValues().forEach((h) => {
+    // primary.secondaries.forEach((color) => {
+      collections().forEach((collection) => {
+        collection.forEach((coords) => {
+          const key = `secondaryRect-coords-${primary.key}-${coords[0]}-${coords[1]}-${h}`
+          let h2 =
+            state.modes[state.active.mode].colors[primary.key].collectionShift
+          let l2 =
+            (state.modes[state.active.mode].colors[primary.key].l +
+              100 +
+              20 * coords[0]) %
+            100
+          let c2 =
+            (state.modes[state.active.mode].colors[primary.key].c +
+              5 +
+              coords[1]) %
+            5
+          updateProp(
+            `--${key}`,
+            `var(--color-${l2}-${c2}-${h}-${state.active.mode})`
+          )
+        })
+      })
+    })
+  })
+
   // Secondary Chip Rectangles
   primaries().forEach((primary) => {
     collectionCoords().forEach((coords) => {
       const key = `tertiaryRect-${primary.key}-${coords[0]}-${coords[1]}`
       let h = state.modes[state.active.mode].colors[primary.key].collectionShift
-      let l = ((state.modes[state.active.mode].colors[primary.key].l + 100) + (20 * coords[0])) % 100
-      let c = ((state.modes[state.active.mode].colors[primary.key].c + 5) + coords[1]) % 5
+      let l =
+        (state.modes[state.active.mode].colors[primary.key].l +
+          100 +
+          20 * coords[0]) %
+        100
+      let c =
+        (state.modes[state.active.mode].colors[primary.key].c + 5 + coords[1]) %
+        5
       // logMsg(l)
       // logMsg(c)
       // logMsg(h)
@@ -758,7 +833,10 @@ function updateProps() {
   primaryColors().forEach((primary) => {
     collections().forEach((collection, collectionIndex) => {
       const target = `.tertiaryChip-index-${primary}-${collectionIndex}`
-      if (state.modes[state.active.mode].colors[primary].collectionIndex === collectionIndex) {
+      if (
+        state.modes[state.active.mode].colors[primary].collectionIndex ===
+        collectionIndex
+      ) {
         addClassTo(target, 'activeSecondary')
       } else {
         removeClassFrom(target, 'activeSecondary')
