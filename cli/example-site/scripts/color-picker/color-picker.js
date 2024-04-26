@@ -96,14 +96,14 @@ let state = {
         alfa: {
           l: 20,
           c: 2,
-          h: 0,
+          h: 120,
           collectionShift: 180,
           collectionIndex: 7,
         },
         bravo: {
           l: 0,
           c: 2,
-          h: 0,
+          h: 240,
           collectionShift: 60,
           collectionIndex: 10,
         },
@@ -335,7 +335,14 @@ function buildModeButtons() {
 
 function buildPrimaryButtons() {
   hValues().forEach((h, hIndex) => {
-    const el = addSvgTo('.primaryButtons', 'svg', {
+    const buttonWrapper = addTo('.primaryButtons', 'div', {
+      innerHTML: `<div class="primaryButtonWrapper primaryButtonWrapper-${h}">
+        <div class="primaryButtonHeader-${h}"></div>
+        <div class="primaryButtonHolder-${h}"></div>
+        <div class="primaryButtonFooter-${h}"></div>
+      </div>`,
+    })
+    const el = addSvgTo(`.primaryButtonHolder-${h}`, 'svg', {
       classes: ['primaryButton'],
       width: 50,
       height: 50,
@@ -715,6 +722,24 @@ function updateProps() {
     updateProp(`--color-${color}`, `var(--color-${color}-${state.active.mode})`)
   })
 
+
+  hValues().forEach((h) => {
+    let footerPayload = ""
+    if (state.modes[state.active.mode].colors.alfa.h === h) {
+      footerPayload += "a "
+    }
+    if (state.modes[state.active.mode].colors.bravo.h === h) {
+      footerPayload += "b "
+    }
+    if (state.active.h === h) {
+      footerPayload += "^ "
+    } 
+    updateEl(`.primaryButtonFooter-${h}`, {
+      innerHTML: footerPayload
+    })
+  })
+
+
   /*
     primaries().forEach((primary, primaryIndex) => {
       primary.secondaries.forEach((color) => {
@@ -783,14 +808,14 @@ function updateProps() {
       if (state.active.colors[primary].secondaryH === h) {
         updateEl(targetFooter, { innerHTML: 'visible' })
       } else {
-        updateEl(targetFooter, { innerHTML: '' })
+        updateEl(targetFooter, { innerHTML: '-' })
       }
       if (
         state.modes[state.active.mode].colors[primary].collectionShift === h
       ) {
         updateEl(targetHeader, { innerHTML: 'current' })
       } else {
-        updateEl(targetHeader, { innerHTML: '' })
+        updateEl(targetHeader, { innerHTML: '-' })
       }
     })
   })
@@ -835,11 +860,6 @@ function updateProps() {
       let c =
         (state.modes[state.active.mode].colors[primary.key].c + 5 + coords[1]) %
         5
-      // logMsg(l)
-      // logMsg(c)
-      // logMsg(h)
-      // logMsg(key)
-      // updateProp(`--${key}`, `green`)
       updateProp(`--${key}`, `var(--color-${l}-${c}-${h}-${state.active.mode})`)
     })
   })

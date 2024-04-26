@@ -8,6 +8,11 @@ Color Picker
     font-size: 0.6rem;
 }
 
+.primaryButtons {
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .secondaryButtons {
     display: flex;
     flex-wrap: wrap;
