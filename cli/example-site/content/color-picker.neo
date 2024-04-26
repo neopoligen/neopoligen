@@ -18,6 +18,10 @@ Color Picker
     flex-wrap: wrap;
 }
 
+body {
+    color: var(--color-alfa);
+}
+
 -- head
 
 <script src="/scripts/color-picker/color-picker.js"></script>

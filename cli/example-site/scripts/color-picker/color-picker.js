@@ -89,9 +89,9 @@ let state = {
   ],
   modes: {
     light: {
-      l: 70,
-      c: 0.1,
-      h: 247,
+      l: 84.128,
+      c: 0.0435,
+      h: 80.616,
       colors: {
         alfa: {
           l: 20,
@@ -236,7 +236,7 @@ function addStylesheet() {
   lValues().forEach((l, lIndex) => {
     cValues().forEach((c, cIndex) => {
       addStyle(
-        `.chip-${lIndex}-${cIndex}`,
+        `.chip-${l}-${cIndex}`,
         `color: oklch(var(--l${l}-${state.active.mode}) var(--c${cString(c)}-${
           state.active.mode
         }) var(--h-active-${state.active.mode}));`
@@ -288,32 +288,57 @@ function addStylesheet() {
 }
 
 function buildChipRows() {
-  lValues().forEach((l, lIndex) => {
+  for (let cIndex = 4; cIndex >= 0; cIndex--) {
     addTo('.chips', 'div', {
-      classes: ['chipRow', `chipRow-${lIndex}`],
+      classes: ['chipRow', `chipRow-${cIndex}`],
     })
-  })
+  }
 }
 
 function buildChips() {
+
+//   for (let cIndex = 0; cIndex < 5; cIndex++) {
+//     for (let lIndex = 0; lIndex < 5; lIndex++) {
+//       addTo(`.chipRow-${cIndex}`, 'div', {
+//         innerHTML: `<div class="chip chip-${lIndex}-${cIndex}">
+//         ${lIndex * state.base.l.interval} - ${cIndex}
+//         </div>
+//         `,
+//       })
+//     }
+//   }
+
   lValues().forEach((l, lIndex) => {
-    cValues().forEach((c, cIndex) => {
-      addTo(`.chipRow-${lIndex}`, 'div', {
+  cValues().forEach((c, cIndex) => {
+
+      addTo(`.chipRow-${cIndex}`, 'div', {
         innerHTML: `
-  <div class="chip chip-${cIndex}-${4 - lIndex}">
-  <div class="chipSwatch"></div>
+  <div class="chip chip-${l}-${cIndex}">
+  <div class="x-chipSwatch"></div>
   <div class="chipDetails">
     <div class="chipTitle">#</div>
     <div class="chipText">${state.sampleText}</div>
-    <div class="chipButtons">
-      <div class="chipButtonAlfa">alfa</div>
-      <div class="chipButtonBravo">bravo</div>
-    </div>
+    <div class="chipButtons-${l}-${cIndex}"></div>
   </div>
   </div>`,
       })
+
     })
   })
+
+  // primaryColors().forEach((color) => {
+  //   addTo(`.chipButtons-${l}-${cIndex}`, 'button', {
+  //     classes: [`chipButton-${color}-${l}-${cIndex}`],
+  //     innerHTML: color,
+  //     data: [
+  //       ['color', color],
+  //       ['l', l],
+  //       ['cIndex', cIndex],
+  //     ],
+  //     listeners: [['click', handleColorButtonClick]],
+  //   })
+  // })
+
   updateChips()
 }
 
@@ -528,6 +553,18 @@ function debounce(callback, wait) {
   }
 }
 
+function handleColorButtonClick(event) {
+  console.log(event.target.dataset)
+  state.modes[state.active.mode].colors[event.target.dataset.color].l =
+    parseInt(event.target.dataset.l, 10)
+  state.modes[state.active.mode].colors[event.target.dataset.color].c =
+    parseInt(event.target.dataset.cIndex, 10)
+  state.modes[state.active.mode].colors[event.target.dataset.color].h =
+    state.active.h
+  updateState()
+  updateProps()
+}
+
 function handleModeClick(event) {
   updateState()
   updateChips()
@@ -625,7 +662,7 @@ function throttle(func, timeFrame) {
 function updateChips() {
   cValues().forEach((c, cIndex) => {
     lValues().forEach((l, lIndex) => {
-      updateEl(`.chip-${lIndex}-${cIndex} .chipTitle`, {
+      updateEl(`.chip-${l}-${cIndex} .chipTitle`, {
         innerHTML: `#${l}-${cString(c)}-${state.active.h}`,
       })
     })
@@ -722,23 +759,21 @@ function updateProps() {
     updateProp(`--color-${color}`, `var(--color-${color}-${state.active.mode})`)
   })
 
-
   hValues().forEach((h) => {
-    let footerPayload = ""
+    let footerPayload = ''
     if (state.modes[state.active.mode].colors.alfa.h === h) {
-      footerPayload += "a "
+      footerPayload += 'a '
     }
     if (state.modes[state.active.mode].colors.bravo.h === h) {
-      footerPayload += "b "
+      footerPayload += 'b '
     }
     if (state.active.h === h) {
-      footerPayload += "^ "
-    } 
+      footerPayload += '^ '
+    }
     updateEl(`.primaryButtonFooter-${h}`, {
-      innerHTML: footerPayload
+      innerHTML: footerPayload,
     })
   })
-
 
   /*
     primaries().forEach((primary, primaryIndex) => {
@@ -865,11 +900,11 @@ function updateProps() {
   })
 
   // update chip- text colors
-  lValues().forEach((l, lIndex) => {
-    cValues().forEach((c, cIndex) => {
-      updateProp(`--chip-${lIndex}-${cIndex}`, `blue`)
-    })
-  })
+  // lValues().forEach((l, lIndex) => {
+  //   cValues().forEach((c, cIndex) => {
+  //     updateProp(`--chip-${l}-${cIndex}`, `blue`)
+  //   })
+  // })
 
   // highlight the current secondary set for each primary
   primaryColors().forEach((primary) => {
