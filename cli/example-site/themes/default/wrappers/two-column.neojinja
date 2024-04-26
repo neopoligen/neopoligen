@@ -34,7 +34,7 @@ so other scripts can use it #]
 </head>
 <body>
 [@ get_collection(site, page_id, [["examples", "!2fwpuxie"], ["spans"]]) @]
-    <main>
+    <main class="two-column">
         <div class="sidebar">
             <ul>
                 <li>[@ theme.link_or_title(site, page_id, "2dwmgthu", { "title": "Home Page" }) @]</li>

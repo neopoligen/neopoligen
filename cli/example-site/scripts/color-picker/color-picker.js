@@ -274,7 +274,7 @@ function buildChips() {
     cValues().forEach((c, cIndex) => {
       addTo(`.chipRow-${lIndex}`, 'div', {
         innerHTML: `
-  <div class="chip chip-${lIndex}-${cIndex}">
+  <div class="chip chip-${cIndex}-${4 - lIndex}">
   <div class="chipSwatch"></div>
   <div class="chipDetails">
     <div class="chipTitle">#</div>
@@ -302,9 +302,7 @@ function buildModeButtons() {
       checked: mode === 'light' ? true : false,
       value: mode,
       listeners: [['input', handleModeClick]],
-      classes: [
-        `mode-${mode}`
-      ],
+      classes: [`mode-${mode}`],
     })
   })
 }
@@ -317,11 +315,11 @@ function buildPrimaryButtons() {
       height: 50,
       data: [['h', hIndex]],
     })
-    lValues().forEach((l, lIndex) => {
-      cValues().forEach((c, cIndex) => {
+    cValues().forEach((c, cIndex) => {
+      lValues().forEach((l, lIndex) => {
         addSvgTo(el, 'rect', {
           x: lIndex * 10,
-          y: cIndex * 10,
+          y: 40 - (cIndex * 10),
           width: 10,
           height: 10,
           classes: ['primaryRect', `primaryRect-${l}-${cString(c)}-${h}`],
@@ -484,8 +482,8 @@ const handleSliderChange = throttle((event) => {
   const value = parseFloat(event.target.value)
   logMsg(value)
   //TODO update(`.${key}Value`, { innerHTML: value })
-  //TODO updateState()
-  //TODO updateProps()
+  updateState()
+  updateProps()
 }, 30)
 
 function hValues() {
@@ -532,8 +530,8 @@ function throttle(func, timeFrame) {
 }
 
 function updateChips() {
-  lValues().forEach((l, lIndex) => {
-    cValues().forEach((c, cIndex) => {
+  cValues().forEach((c, cIndex) => {
+    lValues().forEach((l, lIndex) => {
       updateEl(`.chip-${lIndex}-${cIndex} .chipTitle`, {
         innerHTML: `#${l}-${cString(c)}-${state.active.h}`,
       })
@@ -575,7 +573,6 @@ function updateProps() {
       const newValue = `${
         (state.modes[state.active.mode].l + l) % state.base.l.max
       }%`
-      logMsg(`--l${l}-${mode} - ${newValue}`)
       updateProp(`--l${l}-${mode}`, `${newValue}`)
     })
     cValues().forEach((c, cIndex) => {
@@ -674,7 +671,6 @@ function updateProps() {
       hValues().forEach((h) => {
         modes().forEach((mode) => {
           const modeKey = `${l}-${cString(c)}-${h}-${mode}`
-          logMsg(`--primaryRect-${modeKey}`, `var(--color-${modeKey})`)
           updateProp(`--primaryRect-${modeKey}`, `var(--color-${modeKey})`)
         })
       })
@@ -687,6 +683,17 @@ function updateProps() {
       updateProp(`--${key}`, `green`)
     })
   })
+}
+
+function updateState() {
+  const mode = getValue('input[name=mode]:checked')
+  state.active.mode = mode
+  state.modes[mode].l = getFloat('.lSlider')
+  state.modes[mode].c = getFloat('.cSlider')
+  state.modes[mode].h = getFloat('.hSlider')
+  //updateEl('.currentState', {
+  //innerHTML: JSON.stringify(state, null, 2),
+  //})
 }
 
 document.addEventListener('DOMContentLoaded', () => {

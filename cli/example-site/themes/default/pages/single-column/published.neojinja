@@ -2,5 +2,5 @@
 [!- import "includes/theme-macros.neojinja" as theme -!]
 
 [! block body !]
-[@ theme.main_body_with_examples(site, page_id) @]
+[@ theme.main_body(site, page_id) @]
 [! endblock !]
