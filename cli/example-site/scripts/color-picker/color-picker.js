@@ -672,9 +672,34 @@ function primaryColors() {
 function sendStylesheet(msg) {
   if (childWindow && childWindow.name === childWindowName) {
     let styles = `
+:root {
+  --color-background: oklch(${state.modes.light.l}% ${state.modes.light.c} ${state.modes.light.h});
+  --color-alfa: oklch(${
+    (state.modes.light.l + state.modes.light.colors.alfa.l) % 100
+  }% ${
+    (((state.modes.light.c * 10) + state.modes.light.colors.alfa.c) % 5) /10
+  } ${
+    (state.modes.light.h + state.modes.light.colors.alfa.h) % 360
+  });
+  --color-bravo: oklch(${
+    (state.modes.light.l + state.modes.light.colors.bravo.l) % 100
+  }% ${
+    (((state.modes.light.c * 10) + state.modes.light.colors.bravo.c) % 5) /10
+  } ${
+    (state.modes.light.h + state.modes.light.colors.bravo.h) % 360
+  });
+}
+
+body { 
+  background-color: var(--color-background);
+  color: var(--color-bravo); 
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-alfa);
+}
     
-    body { color: goldenrod; }
-    
+
     `
     childWindow.postMessage(styles)
   } else {
@@ -958,6 +983,9 @@ function updateProps() {
       }
     })
   })
+
+  sendStylesheet()
+
 }
 
 function updateState() {
