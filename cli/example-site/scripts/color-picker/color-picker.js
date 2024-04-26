@@ -227,7 +227,7 @@ function addStylesheet() {
     primary.secondaries.forEach((color) => {
       collections().forEach((collection) => {
         collection.forEach((coords) => {
-          const key = `secondary-${color}Rect-${coords[0]}-${coords[1]}`
+          const key = `secondaryRect-${color}Rect-${coords[0]}-${coords[1]}`
           addStyle(`.${key}`, `fill: var(--${key})`)
         })
       })
@@ -238,7 +238,7 @@ function addStylesheet() {
     lValues().forEach((l, lIndex) => {
       cValues().forEach((c, cIndex) => {
         hValues().forEach((h, hIndex) => {
-          const key = `secondary-${primary.secondaries.join('')}Rect-${l}-${cString(
+          const key = `secondaryRect-${primary.secondaries.join('')}Rect-${l}-${cString(
             c
           )}-${h}`
           addStyle(`.${key}`, `fill: var(--${key})`)
@@ -349,7 +349,7 @@ function buildSecondaryButtons() {
         for (let cIndex = 1; cIndex < 4; cIndex++) {
           addSvgTo(btn, 'rect', {
             classes: [
-              `secondary-${key}Rect-${lValues()[lIndex]}-${cString(
+              `secondaryRect-${key}Rect-${lValues()[lIndex]}-${cString(
                 cValues()[cIndex]
               )}-${h}`,
             ],
@@ -696,7 +696,7 @@ function updateProps() {
     lValues().forEach((l, lIndex) => {
       cValues().forEach((c, cIndex) => {
         hValues().forEach((h, hIndex) => {
-          const key = `secondary-${primary.secondaries.join('')}Rect-${l}-${cString(
+          const key = `secondaryRect-${primary.secondaries.join('')}Rect-${l}-${cString(
             c
           )}-${h}`
           // logMsg(key)
