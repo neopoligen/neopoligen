@@ -226,12 +226,14 @@ function addStylesheet() {
     })
   })
 
+  /*
   primaryColors().forEach((color) => {
     addStyle(
       `.color-${color}`,
       `color: var(--color-${color}-${state.active.mode});`
     )
   })
+  */
 
   lValues().forEach((l, lIndex) => {
     cValues().forEach((c, cIndex) => {
@@ -296,21 +298,19 @@ function buildChipRows() {
 }
 
 function buildChips() {
-
-//   for (let cIndex = 0; cIndex < 5; cIndex++) {
-//     for (let lIndex = 0; lIndex < 5; lIndex++) {
-//       addTo(`.chipRow-${cIndex}`, 'div', {
-//         innerHTML: `<div class="chip chip-${lIndex}-${cIndex}">
-//         ${lIndex * state.base.l.interval} - ${cIndex}
-//         </div>
-//         `,
-//       })
-//     }
-//   }
+  //   for (let cIndex = 0; cIndex < 5; cIndex++) {
+  //     for (let lIndex = 0; lIndex < 5; lIndex++) {
+  //       addTo(`.chipRow-${cIndex}`, 'div', {
+  //         innerHTML: `<div class="chip chip-${lIndex}-${cIndex}">
+  //         ${lIndex * state.base.l.interval} - ${cIndex}
+  //         </div>
+  //         `,
+  //       })
+  //     }
+  //   }
 
   lValues().forEach((l, lIndex) => {
-  cValues().forEach((c, cIndex) => {
-
+    cValues().forEach((c, cIndex) => {
       addTo(`.chipRow-${cIndex}`, 'div', {
         innerHTML: `
   <div class="chip chip-${l}-${cIndex}">
@@ -323,21 +323,20 @@ function buildChips() {
   </div>`,
       })
 
+      primaryColors().forEach((color) => {
+        addTo(`.chipButtons-${l}-${cIndex}`, 'button', {
+          classes: [`chipButton-${color}-${l}-${cIndex}`],
+          innerHTML: color,
+          data: [
+            ['color', color],
+            ['l', l],
+            ['cIndex', cIndex],
+          ],
+          listeners: [['click', handleColorButtonClick]],
+        })
+      })
     })
   })
-
-  // primaryColors().forEach((color) => {
-  //   addTo(`.chipButtons-${l}-${cIndex}`, 'button', {
-  //     classes: [`chipButton-${color}-${l}-${cIndex}`],
-  //     innerHTML: color,
-  //     data: [
-  //       ['color', color],
-  //       ['l', l],
-  //       ['cIndex', cIndex],
-  //     ],
-  //     listeners: [['click', handleColorButtonClick]],
-  //   })
-  // })
 
   updateChips()
 }

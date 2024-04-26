@@ -18,10 +18,6 @@ Color Picker
     flex-wrap: wrap;
 }
 
-body {
-    color: var(--color-alfa);
-}
-
 -- head
 
 <script src="/scripts/color-picker/color-picker.js"></script>
@@ -29,6 +25,7 @@ body {
 -- html
 
 <div class="picker">
+    <button class="preview-launcher">Launch Preview Window</button>
     <pre class="currentState"></pre>
     <div class="modes"></div>
     <div class="sliders"></div>
