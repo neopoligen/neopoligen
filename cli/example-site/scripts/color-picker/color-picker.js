@@ -97,7 +97,7 @@ let state = {
           l: 20,
           c: 2,
           h: 0,
-          collectionShift: 0,
+          collectionShift: 180,
           collectionIndex: 7,
         },
         bravo: {
@@ -178,7 +178,7 @@ function addStylesheet() {
   addStyle(`.pickerWrapper`, `display: grid; grid-template-columns: 4rem 1fr;`)
   addStyle(`.primaryButton`, `margin: var(--padding-alfa); border: 1px solid black;`)
   addStyle(`.secondaryButton`, `margin: var(--padding-alfa); border: 1px solid black;`)
-  addStyle(`.secondaryChip`, `border: 1px solid blue;`)
+  addStyle(`.secondaryChip`, `border: 1px solid black; margin: 0.1rem;`)
   // addStyle(`.secondaryRect`, `border: 1px solid blue; fill: goldenrod;`)
   addStyle(`.sideSwatch`, `min-width: 0.4rem;`)
   addStyle(`.sidebar`, `display: flex;`)
@@ -702,10 +702,19 @@ function updateProps() {
     })
   })
 
+  // Secondary Chip Rectangles
   primaries().forEach((primary) => {
     collectionCoords().forEach((coords) => {
       const key = `secondaryRect-${primary.key}-${coords[0]}-${coords[1]}`
-      updateProp(`--${key}`, `green`)
+      let h = state.modes[state.active.mode].colors[primary.key].collectionShift
+      let l = ((state.modes[state.active.mode].colors[primary.key].l + 100) + (20 * coords[0])) % 100
+      let c = ((state.modes[state.active.mode].colors[primary.key].c + 5) + coords[1]) % 5
+      logMsg(l)
+      logMsg(c)
+      logMsg(h)
+      logMsg(key)
+      // updateProp(`--${key}`, `green`)
+      updateProp(`--${key}`, `var(--color-${l}-${c}-${h}-${state.active.mode})`)
     })
   })
 
