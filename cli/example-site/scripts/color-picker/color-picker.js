@@ -178,8 +178,8 @@ function addStylesheet() {
   addStyle(`.pickerWrapper`, `display: grid; grid-template-columns: 4rem 1fr;`)
   addStyle(`.primaryButton`, `margin: var(--padding-alfa); border: 1px solid black;`)
   addStyle(`.secondaryButton`, `margin: var(--padding-alfa); border: 1px solid black;`)
-  addStyle(`.secondaryChip`, `border: 1px solid black; margin: 0.1rem;`)
-  // addStyle(`.secondaryRect`, `border: 1px solid blue; fill: goldenrod;`)
+  addStyle(`.tertiaryChip`, `border: 1px solid black; margin: 0.1rem;`)
+  // addStyle(`.tertiaryRect`, `border: 1px solid blue; fill: goldenrod;`)
   addStyle(`.sideSwatch`, `min-width: 0.4rem;`)
   addStyle(`.sidebar`, `display: flex;`)
   addStyle(`.sliders`, `display: grid;`)
@@ -258,7 +258,7 @@ function addStylesheet() {
 
   primaries().forEach((primary) => {
     collectionCoords().forEach((coords) => {
-      const key = `secondaryRect-${primary.key}-${coords[0]}-${coords[1]}`
+      const key = `tertiaryRect-${primary.key}-${coords[0]}-${coords[1]}`
       addStyle(`.${key}`, `fill: var(--${key})`)
     })
   })
@@ -349,7 +349,6 @@ function buildSecondaryButtons() {
         for (let cIndex = 1; cIndex < 4; cIndex++) {
           addSvgTo(btn, 'rect', {
             classes: [
-              `secondaryRect`,
               `${key}Rect-${lValues()[lIndex]}-${cString(
                 cValues()[cIndex]
               )}-${h}`,
@@ -370,14 +369,14 @@ function buildSecondaryButtons() {
 }
 
 // TODO: Rename Secondary there to Tertiary
-function buildSecondaryChips() {
+function buildTertiaryButtons() {
   primaries().forEach((primary) => {
     collections().forEach((collection, collectionIndex) => {
       const mainKey = primary.secondaries.join('')
       const el = addSvgTo(`.${mainKey}Chips`, 'svg', {
         classes: [
-          'secondaryChip',
-          `secondaryChip-index-${primary.key}-${collectionIndex}`
+          'tertiaryChip',
+          `tertiaryChip-index-${primary.key}-${collectionIndex}`
         ],
         width: 20,
         height: 40,
@@ -386,8 +385,8 @@ function buildSecondaryChips() {
         const key = primary.key
         addSvgTo(el, 'rect', {
           classes: [
-            'secondaryRect',
-            `secondaryRect-${key}-${coords[0]}-${coords[1]}`,
+            'tertiaryRect',
+            `tertiaryRect-${key}-${coords[0]}-${coords[1]}`,
           ],
           x: 0,
           y: coordsIndex * 20,
@@ -725,7 +724,7 @@ function updateProps() {
   // Secondary Chip Rectangles
   primaries().forEach((primary) => {
     collectionCoords().forEach((coords) => {
-      const key = `secondaryRect-${primary.key}-${coords[0]}-${coords[1]}`
+      const key = `tertiaryRect-${primary.key}-${coords[0]}-${coords[1]}`
       let h = state.modes[state.active.mode].colors[primary.key].collectionShift
       let l = ((state.modes[state.active.mode].colors[primary.key].l + 100) + (20 * coords[0])) % 100
       let c = ((state.modes[state.active.mode].colors[primary.key].c + 5) + coords[1]) % 5
@@ -748,7 +747,7 @@ function updateProps() {
   // highlight the current secondary set for each primary
   primaryColors().forEach((primary) => {
     collections().forEach((collection, collectionIndex) => {
-      const target = `.secondaryChip-index-${primary}-${collectionIndex}`
+      const target = `.tertiaryChip-index-${primary}-${collectionIndex}`
       if (state.modes[state.active.mode].colors[primary].collectionIndex === collectionIndex) {
         addClassTo(target, 'activeSecondary')
       } else {
@@ -775,7 +774,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildChipRows()
   buildChips()
   buildSecondaryButtons()
-  buildSecondaryChips()
+  buildTertiaryButtons()
   buildSliders()
   buildModeButtons()
   updateProps()
