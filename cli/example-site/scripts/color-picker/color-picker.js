@@ -135,6 +135,14 @@ let state = {
   active: {
     mode: 'light',
     h: 0,
+    colors: {
+      alfa: {
+        secondaryH: 0
+      },
+      bravo: {
+        secondaryH: 0
+      }
+    }
   },
 }
 
@@ -364,40 +372,12 @@ function buildSecondaryButtons() {
             //styles: [['fill', 'yellow']],
             data: [
               ['primary', primary.key],
-              ['h', hIndex],
+              ['secondaryH', hIndex * state.base.h.interval],
             ],
             listeners: [['click', handleSecondaryButtonClick]],
           })
         }
       }
-
-      // for (let lIndex = 1; lIndex < 4; lIndex++) {
-      //   for (let cIndex = 1; cIndex < 4; cIndex++) {
-      //     addSvgTo(btn, 'rect', {
-      //       classes: [
-
-      //         // `secondaryRect-${key}Rect-${lValues()[lIndex]}-${cString(
-      //         //   cValues()[cIndex]
-      //         // )}-${h}`,
-
-      //         `secondaryRect-coords-${key}Rect-${lValues()[lIndex]}-${cString(
-      //           cValues()[cIndex]
-      //         )}-${h}`,
-      //       ],
-      //       x: (lIndex - 1) * 10,
-      //       y: 20 - (cIndex - 1) * 10,
-      //       width: 10,
-      //       height: 10,
-      //       data: [
-      //         ['primary', primary.key],
-      //         ['h', hIndex],
-      //       ],
-      //       listeners: [
-      //         ['click', handleSecondaryButtonClick]
-      //       ]
-      //     })
-      //   }
-      // }
     })
   })
 }
@@ -543,9 +523,10 @@ function handlePrimaryButtonClick(event) {
 
 function handleSecondaryButtonClick(event) {
   console.log(event.target.dataset)
-  state.modes[state.active.mode].colors[
+  state.active.colors[
     event.target.dataset.primary
-  ].collectionShift = parseInt(event.target.dataset.h) * state.base.h.interval
+  ].secondaryH = parseInt(event.target.dataset.secondaryH)
+  updateState()
   updateProps()
 }
 
@@ -804,7 +785,7 @@ function updateProps() {
   primaries().forEach((primary) => {
     collectionCoords().forEach((coords) => {
       const key = `tertiaryRect-${primary.key}-${coords[0]}-${coords[1]}`
-      let h = state.modes[state.active.mode].colors[primary.key].collectionShift
+      let h = state.active.colors[primary.key].secondaryH
       let l =
         (state.modes[state.active.mode].colors[primary.key].l +
           100 +
