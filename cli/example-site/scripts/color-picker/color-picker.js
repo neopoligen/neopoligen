@@ -258,9 +258,11 @@ function addStylesheet() {
   primaries().forEach((primary) => {
     collectionCoords().forEach((coords) => {
       const key = `secondaryRect-${primary.key}-${coords[0]}-${coords[1]}`
-      // addStyle(`.${key}`, `fill: var(--${key})`)
+      addStyle(`.${key}`, `fill: var(--${key})`)
     })
   })
+
+
 }
 
 function buildChipRows() {
@@ -498,7 +500,7 @@ function handlePrimaryButtonClick(event) {
 const handleSliderChange = throttle((event) => {
   const key = event.target.dataset.key
   const value = parseFloat(event.target.value)
-  logMsg(value)
+  //logMsg(value)
   updateState()
   updateProps()
 }, 50)
@@ -668,7 +670,7 @@ function updateProps() {
           const key = `${primary.secondaries.join('')}Rect-${l}-${cString(
             c
           )}-${h}`
-          logMsg(key)
+          // logMsg(key)
           updateProp(
             `--${key}`,
             `var(--color-${l}-${cString(c)}-${h}-${activeMode()})`
