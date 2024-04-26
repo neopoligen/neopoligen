@@ -97,14 +97,14 @@ let state = {
           l: 20,
           c: 2,
           h: 0,
-          collectionShift: 0,
+          collectionShift: 180,
           collectionIndex: 7,
         },
         bravo: {
-          l: 60,
-          c: 1,
+          l: 0,
+          c: 2,
           h: 0,
-          collectionShift: 0,
+          collectionShift: 60,
           collectionIndex: 10,
         },
       },
@@ -137,10 +137,10 @@ let state = {
     h: 0,
     colors: {
       alfa: {
-        secondaryH: 0
+        secondaryH: 180
       },
       bravo: {
-        secondaryH: 0
+        secondaryH: 60
       }
     }
   },
@@ -198,7 +198,8 @@ function addStylesheet() {
   addStyle(`.sidebar`, `display: flex;`)
   addStyle(`.sliders`, `display: grid;`)
   addStyle(`.sliders label input`, `margin: var(--padding-bravo);`)
-  addStyle(`.activeSecondary`, `margin-bottom: 10px;`)
+  addStyle(`.activeSecondary`, `margin-bottom: 12px;`)
+  addStyle(`.inactiveSecondary`, `margin-top: 12px;`)
 
   lValues().forEach((l, lIndex) => {
     cValues().forEach((c, cIndex) => {
@@ -242,7 +243,7 @@ function addStylesheet() {
       collection.forEach((coords) => {
         hValues().forEach((h, hIndex) => {
           const key = `secondaryRect-coords-${primary.key}-${coords[0]}-${coords[1]}-${h}`
-          logMsg(key)
+          // logMsg(key)
           addStyle(`.${key}`, `fill: var(--${key})`)
         })
       })
@@ -543,11 +544,17 @@ function handleTertiaryButtonClick(event) {
   state.modes[event.target.dataset.mode].colors[
     event.target.dataset.primary
   ].collectionIndex = parseInt(event.target.dataset.collectionIndex, 10)
-  // console.log(state.modes['light'].colors['alfa'])
-  logMsg(
-    state.modes[event.target.dataset.mode].colors[event.target.dataset.primary]
-      .collectionIndex
-  )
+  
+  state.modes[event.target.dataset.mode].colors[
+    event.target.dataset.primary
+  ].collectionShift = state.active.colors[event.target.dataset.primary].secondaryH
+  
+
+  console.log(event.target.dataset)
+  // logMsg(
+  //   state.modes[event.target.dataset.mode].colors[event.target.dataset.primary]
+  //     .collectionIndex
+  // )
   updateState()
   updateProps()
 }
@@ -819,9 +826,11 @@ function updateProps() {
         collectionIndex
         && state.active.colors[primary].secondaryH === state.modes[state.active.mode].colors[primary].collectionShift
       ) {
+        removeClassFrom(target, 'inactiveSecondary')
         addClassTo(target, 'activeSecondary')
       } else {
         removeClassFrom(target, 'activeSecondary')
+        addClassTo(target, 'inactiveSecondary')
       }
     })
   })
