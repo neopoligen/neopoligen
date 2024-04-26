@@ -176,7 +176,7 @@ function addStylesheet() {
   addStyle(`.charlieDeltaButton`, `padding: var(--padding-alfa);`)
   addStyle(`.echoFoxtrotButton`, `padding: var(--padding-alfa);`)
   addStyle(`.pickerWrapper`, `display: grid; grid-template-columns: 4rem 1fr;`)
-  addStyle(`.primaryButton`, `margin: var(--padding-alfa);`)
+  addStyle(`.primaryButton`, `margin: var(--padding-alfa); border: 1px solid black;`)
   addStyle(`.secondaryButton`, `margin: var(--padding-alfa); border: 1px solid black;`)
   addStyle(`.secondaryChip`, `border: 1px solid blue;`)
   // addStyle(`.secondaryRect`, `border: 1px solid blue; fill: goldenrod;`)
@@ -339,8 +339,8 @@ function buildSecondaryButtons() {
     hValues().forEach((h, hIndex) => {
       let btn = addSvgTo(`.${key}Buttons`, 'svg', {
         classes: [`secondaryButton`],
-        width: 50,
-        height: 50,
+        width: 30,
+        height: 30,
       })
       for (let lIndex = 1; lIndex < 4; lIndex++) {
         for (let cIndex = 1; cIndex < 4; cIndex++) {
@@ -351,10 +351,8 @@ function buildSecondaryButtons() {
                 cValues()[cIndex]
               )}-${h}`,
             ],
-            x: lIndex * 10,
-            y: cIndex * 10,
-            // x: (lIndex - 1) * 10,
-            // y: (cIndex - 1) * 10,
+            x: (lIndex - 1) * 10,
+            y: 20 - (cIndex - 1) * 10,
             width: 10,
             height: 10,
             data: [
