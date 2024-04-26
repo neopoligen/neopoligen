@@ -723,6 +723,45 @@ function sendStylesheet(msg) {
     (state.modes.light.h + state.modes.light.colors.alfa.h + state.modes.light.colors.alfa.collectionShift) % 360
   });
 
+
+
+  --color-echo: oklch(${
+    (state.modes.light.l + state.modes.light.colors.bravo.l + 
+      (
+      state.collections[state.modes.light.colors.bravo.collectionIndex][0][0] * state.base.l.interval
+      )
+    ) % 100
+  }% ${
+    (((state.modes.light.c * 10) + state.modes.light.colors.bravo.c +
+    (
+      state.collections[state.modes.light.colors.bravo.collectionIndex][0][1] * (state.base.c.interval * 10)
+    )
+  ) % 5) /10
+  } ${
+    (state.modes.light.h + state.modes.light.colors.bravo.h + state.modes.light.colors.bravo.collectionShift) % 360
+  });
+
+
+  --color-foxtrot: oklch(${
+    (state.modes.light.l + state.modes.light.colors.bravo.l + 
+      (
+      state.collections[state.modes.light.colors.bravo.collectionIndex][1][0] * state.base.l.interval
+      )
+    ) % 100
+  }% ${
+    (((state.modes.light.c * 10) + state.modes.light.colors.bravo.c +
+    (
+      state.collections[state.modes.light.colors.bravo.collectionIndex][1][1] * (state.base.c.interval * 10)
+    )
+  ) % 5) /10
+  } ${
+    (state.modes.light.h + state.modes.light.colors.bravo.h + state.modes.light.colors.bravo.collectionShift) % 360
+  });
+
+
+
+
+
 }
 
 body { 
