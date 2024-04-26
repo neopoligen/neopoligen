@@ -369,6 +369,7 @@ function buildSecondaryButtons() {
   })
 }
 
+// TODO: Rename Secondary there to Tertiary
 function buildSecondaryChips() {
   primaries().forEach((primary) => {
     collections().forEach((collection, collectionIndex) => {
@@ -392,6 +393,14 @@ function buildSecondaryChips() {
           y: coordsIndex * 20,
           width: 20,
           height: 20,
+          data: [
+            ['mode', state.active.mode],
+            ['primary', primary.key],
+            ['collectionIndex',  collectionIndex]
+          ],
+          listeners: [
+            ['click', handleTertiaryButtonClick]
+          ]
         })
       })
     })
@@ -508,6 +517,15 @@ const handleSliderChange = throttle((event) => {
   updateState()
   updateProps()
 }, 50)
+
+function handleTertiaryButtonClick(event) {
+  // console.log(event.target.dataset)
+  state.modes[event.target.dataset.mode].colors[event.target.dataset.primary].collectionIndex = parseInt(event.target.dataset.collectionIndex, 10)
+  // console.log(state.modes['light'].colors['alfa'])
+  logMsg(state.modes[event.target.dataset.mode].colors[event.target.dataset.primary].collectionIndex)
+  updateState()
+  updateProps()
+}
 
 function hValues() {
   const tmp = []
@@ -727,15 +745,15 @@ function updateProps() {
     })
   })
 
-
   // highlight the current secondary set for each primary
   primaryColors().forEach((primary) => {
     collections().forEach((collection, collectionIndex) => {
       const target = `.secondaryChip-index-${primary}-${collectionIndex}`
       if (state.modes[state.active.mode].colors[primary].collectionIndex === collectionIndex) {
         addClassTo(target, 'activeSecondary')
+      } else {
+        removeClassFrom(target, 'activeSecondary')
       }
-      
     })
   })
 }
