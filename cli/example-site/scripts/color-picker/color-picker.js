@@ -227,7 +227,7 @@ function addStylesheet() {
     primary.secondaries.forEach((color) => {
       collections().forEach((collection) => {
         collection.forEach((coords) => {
-          const key = `${color}Rect-${coords[0]}-${coords[1]}`
+          const key = `secondary-${color}Rect-${coords[0]}-${coords[1]}`
           addStyle(`.${key}`, `fill: var(--${key})`)
         })
       })
@@ -238,7 +238,7 @@ function addStylesheet() {
     lValues().forEach((l, lIndex) => {
       cValues().forEach((c, cIndex) => {
         hValues().forEach((h, hIndex) => {
-          const key = `${primary.secondaries.join('')}Rect-${l}-${cString(
+          const key = `secondary-${primary.secondaries.join('')}Rect-${l}-${cString(
             c
           )}-${h}`
           addStyle(`.${key}`, `fill: var(--${key})`)
@@ -349,7 +349,7 @@ function buildSecondaryButtons() {
         for (let cIndex = 1; cIndex < 4; cIndex++) {
           addSvgTo(btn, 'rect', {
             classes: [
-              `${key}Rect-${lValues()[lIndex]}-${cString(
+              `secondary-${key}Rect-${lValues()[lIndex]}-${cString(
                 cValues()[cIndex]
               )}-${h}`,
             ],
@@ -358,9 +358,12 @@ function buildSecondaryButtons() {
             width: 10,
             height: 10,
             data: [
-              ['key', key],
+              ['primary', primary.key],
               ['h', hIndex],
             ],
+            listeners: [
+              ['click', handleSecondaryButtonClick]
+            ]
           })
         }
       }
@@ -506,6 +509,13 @@ function handlePrimaryButtonClick(event) {
   logMsg(`Switched to primary hue: ${state.active.h}`)
   updateState()
   updateChips()
+  updateProps()
+}
+
+function handleSecondaryButtonClick(event) {
+  console.log(event.target.dataset)
+  state.modes[state.active.mode].colors[event.target.dataset.primary].collectionShift = 
+  parseInt(event.target.dataset.h) * state.base.h.interval
   updateProps()
 }
 
@@ -686,7 +696,7 @@ function updateProps() {
     lValues().forEach((l, lIndex) => {
       cValues().forEach((c, cIndex) => {
         hValues().forEach((h, hIndex) => {
-          const key = `${primary.secondaries.join('')}Rect-${l}-${cString(
+          const key = `secondary-${primary.secondaries.join('')}Rect-${l}-${cString(
             c
           )}-${h}`
           // logMsg(key)
