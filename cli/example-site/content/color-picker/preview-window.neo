@@ -4,8 +4,43 @@ Color Picker Preview Window
 
 This is some text
 
+-- html
+
+<pre class="currentStyle"></pre>
+
+
+-- javascript
+
+let currentStyleData = ""
+let styleEl
+
+function updateStyles() {
+    styleEl.innerHTML = currentStyleData
+    updateEl(`.currentStyle`, {
+        innerHTML: currentStyleData
+    })
+}
+
+window.addEventListener("message", (event) => {
+  if (event.isTrusted === true && event.origin === window.location.origin) {
+    if (styleEl) {
+        currentStyleData = event.data
+        updateStyles()
+    }
+  }
+})
+
+document.addEventListener("DOMContentLoaded", () => {
+    styleEl = addTo(document.head, 'style')
+})
+
+
+
+
+
 -- metadata
 -- date: 2024-04-26
 -- id: 2fehqqas
+-- template: single-column
 
 

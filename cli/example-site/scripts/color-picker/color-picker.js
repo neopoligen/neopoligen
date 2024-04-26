@@ -146,6 +146,10 @@ let state = {
   },
 }
 
+let childWindow; 
+const childWindowName = "previewWindow"
+
+
 function activeMode() {
   return state.active.mode
 }
@@ -623,6 +627,10 @@ function hValues() {
   return tmp
 }
 
+function launchPreviewWindow() {
+  logMsg("launch")
+}
+
 function lValues() {
   const tmp = []
   for (let l = 0; l < state.base.l.max; l += state.base.l.interval) {
@@ -639,12 +647,39 @@ function modes() {
   return tmp
 }
 
+function openWindow() {
+  const params = `scrollbars=no,resizable=yes,status=no,location=no,toolbar=no,menubar=no`;
+  if (childWindow && childWindow.name === childWindowName) {
+    //sendStylesheet("Connection Already Established")
+  } else {
+    childWindow = window.open("/en/2fehqqas/", childWindowName, params)
+    childWindow.addEventListener('load', () => {
+      sendStylesheet()
+    })
+  }
+  childWindow.focus()
+}
+
+
 function primaries() {
   return state.primaries
 }
 
 function primaryColors() {
   return [primaries()[0].key, primaries()[1].key]
+}
+
+function sendStylesheet(msg) {
+  if (childWindow && childWindow.name === childWindowName) {
+    let styles = `
+    
+    body { color: goldenrod; }
+    
+    `
+    childWindow.postMessage(styles)
+  } else {
+    console.log("Window is not available")
+  }
 }
 
 function throttle(func, timeFrame) {
@@ -947,4 +982,5 @@ document.addEventListener('DOMContentLoaded', () => {
   buildModeButtons()
   updateProps()
   updateState()
+  addListenerTo('.preview-launcher', 'click', openWindow)
 })

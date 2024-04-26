@@ -26,7 +26,6 @@ Color Picker
 
 <div class="picker">
     <button class="preview-launcher">Launch Preview Window</button>
-    <pre class="currentState"></pre>
     <div class="modes"></div>
     <div class="sliders"></div>
     <div class="primaryButtons"></div>
@@ -35,6 +34,7 @@ Color Picker
     <div class="charliedeltaChips"></div>
     <div class="echofoxtrotButtons secondaryButtons"></div>
     <div class="echofoxtrotChips"></div>
+    <pre class="currentState"></pre>
 </div>
 
 
