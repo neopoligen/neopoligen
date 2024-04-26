@@ -97,15 +97,15 @@ let state = {
           l: 20,
           c: 2,
           h: 0,
-          collectionShift: 180,
+          collectionShift: 0,
           collectionIndex: 7,
         },
         bravo: {
           l: 60,
           c: 1,
           h: 0,
-          collectionShift: 60,
-          collectionIndex: 0,
+          collectionShift: 0,
+          collectionIndex: 10,
         },
       },
     },
@@ -817,6 +817,7 @@ function updateProps() {
       if (
         state.modes[state.active.mode].colors[primary].collectionIndex ===
         collectionIndex
+        && state.active.colors[primary].secondaryH === state.modes[state.active.mode].colors[primary].collectionShift
       ) {
         addClassTo(target, 'activeSecondary')
       } else {
