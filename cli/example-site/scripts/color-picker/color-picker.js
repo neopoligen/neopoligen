@@ -315,39 +315,64 @@ function buildPrimaryButtons() {
   })
 }
 
-
 function buildSecondaryButtons() {
-    primaries().forEach((primary) => {
-      const key = primary.secondaries.join('')
-      hValues().forEach((h, hIndex) => {
-        let button = addSvgTo(`.${key}Buttons`, 'svg', {
-          classes: [`secondaryButton`], 
-          width: 45, 
-          height: 45
-        })
-        /*
-        for (let lIndex = 1; lIndex < 4; lIndex++) {
-          for (let cIndex = 1; cIndex < 4; cIndex++) {
-            addSvgToEl('rect', button, {
-              classes: [`secondaryRect`, `${key}Rect-${lValues()[lIndex]}-${cString(cValues()[cIndex])}-${h}`], 
-              attrs: [
-                ['x', (lIndex - 1) * 15], 
-                ['y', (cIndex - 1) * 15],
-                ['width', 15],
-                ['height', 15]
-              ],
-              data: [
-                ['key', key],
-                ['h', hIndex]
-              ]
-            })
-          }
+  primaries().forEach((primary) => {
+    const key = primary.secondaries.join('')
+    hValues().forEach((h, hIndex) => {
+      let button = addSvgTo(`.${key}Buttons`, 'svg', {
+        classes: [`secondaryButton`],
+        width: 45,
+        height: 45,
+      })
+      for (let lIndex = 1; lIndex < 4; lIndex++) {
+        for (let cIndex = 1; cIndex < 4; cIndex++) {
+          addSvgTo(button, 'rect', {
+            classes: [
+              `secondaryRect`,
+              `${key}Rect-${lValues()[lIndex]}-${cString(
+                cValues()[cIndex]
+              )}-${h}`,
+            ],
+            x: (lIndex - 1) * 15,
+            y: (cIndex - 1) * 15,
+            width: 15,
+            height: 15,
+            data: [
+              ['key', key],
+              ['h', hIndex],
+            ],
+          })
         }
-        */
+      }
+    })
+  })
+}
+
+function buildSecondaryChips() {
+  primaries().forEach((primary) => {
+    collections().forEach((collection, collectionIndex) => {
+      const mainKey = primary.secondaries.join('')
+      const el = addSvgTo(`.${mainKey}Chips`, 'svg', {
+        classes: ['secondaryChip'],
+        width: 20,
+        height: 40,
+      })
+      collection.forEach((coords, coordsIndex) => {
+        const key = primary.key
+        addSvgTo(el, 'rect', {
+          classes: [
+            'secondaryRect',
+            `secondaryRect-${key}-${coords[0]}-${coords[1]}`,
+          ],
+          x: 0,
+          y: coordsIndex * 20,
+          width: 20,
+          height: 20,
+        })
       })
     })
-  }
-  
+  })
+}
 
 function buildSlider(config) {
   const label = addTo('.sliders', 'label', {
@@ -485,14 +510,14 @@ function throttle(func, timeFrame) {
 }
 
 function updateChips() {
-    lValues().forEach((l, lIndex) => {
-      cValues().forEach((c, cIndex) => {
-        updateEl(`.chip-${lIndex}-${cIndex} .chipTitle`, {
-          innerHTML: `#${l}-${cString(c)}-${state.active.h}`
-        })
+  lValues().forEach((l, lIndex) => {
+    cValues().forEach((c, cIndex) => {
+      updateEl(`.chip-${lIndex}-${cIndex} .chipTitle`, {
+        innerHTML: `#${l}-${cString(c)}-${state.active.h}`,
       })
     })
-  }
+  })
+}
 
 function updateProp(key, value) {
   document.documentElement.style.setProperty(
@@ -649,7 +674,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildChipRows()
   buildChips()
   buildSecondaryButtons()
-  //buildSecondaryChips()
+  buildSecondaryChips()
   // should be ready: buildSliders()
   //buildModeButtons()
 })

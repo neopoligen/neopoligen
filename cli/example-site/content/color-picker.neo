@@ -14,7 +14,9 @@ Color Picker
     <div class="primaryButtons"></div>
     <div class="chips"></div>
     <div class="charliedeltaButtons"></div>
+    <div class="charliedeltaChips"></div>
     <div class="echofoxtrotButtons"></div>
+    <div class="echofoxtrotChips"></div>
 </div>
 
 
