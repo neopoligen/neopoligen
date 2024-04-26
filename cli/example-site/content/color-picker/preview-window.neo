@@ -4,6 +4,28 @@ Color Picker Preview Window
 
 This is some text
 
+-- p
+-- class: color-charlie
+
+This is some charlie color text
+
+-- p
+-- class: color-delta
+
+This is some delta color text
+
+-- p
+-- class: color-echo
+
+This is some echo color text
+
+-- p
+-- class: color-foxtrot
+
+This is some foxtrot color text
+
+
+
 -- html
 
 <pre class="currentStyle"></pre>

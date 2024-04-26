@@ -101,9 +101,9 @@ let state = {
           collectionIndex: 7,
         },
         bravo: {
-          l: 0,
-          c: 2,
-          h: 240,
+          l: 20,
+          c: 4,
+          h: 0,
           collectionShift: 60,
           collectionIndex: 10,
         },
@@ -688,6 +688,23 @@ function sendStylesheet(msg) {
   } ${
     (state.modes.light.h + state.modes.light.colors.bravo.h) % 360
   });
+
+
+  --color-charlie: oklch(${
+    (state.modes.light.l + state.modes.light.colors.alfa.l + 
+      (
+      state.collections[state.modes.light.colors.alfa.collectionIndex][0][0] * state.base.l.interval
+      )
+    ) % 100
+  }% ${
+    (((state.modes.light.c * 10) + state.modes.light.colors.alfa.c +
+    (
+      state.collections[state.modes.light.colors.alfa.collectionIndex][0][1] * (state.base.c.interval * 10)
+    )
+  ) % 5) /10
+  } ${
+    (state.modes.light.h + state.modes.light.colors.alfa.h + state.modes.light.colors.alfa.collectionShift) % 360
+  });
 }
 
 body { 
@@ -698,9 +715,17 @@ body {
 h1, h2, h3, h4, h5, h6 {
   color: var(--color-alfa);
 }
-    
 
     `
+
+    state.colors.forEach((color) => {
+      styles += `.color-${color} { color: var(--color-${color}); }\n`
+      for (let alpha = 10; alpha <= 90; alpha = alpha + 10) {
+        styles += `.color-${color}-${alpha} { color: var(--color-${color}-${alpha}); }\n`
+      }
+    })
+
+
     childWindow.postMessage(styles)
   } else {
     console.log("Window is not available")
