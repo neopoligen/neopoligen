@@ -198,9 +198,12 @@ function addStylesheet() {
   addStyle(`.sidebar`, `display: flex;`)
   addStyle(`.sliders`, `display: grid;`)
   addStyle(`.sliders label input`, `margin: var(--padding-bravo);`)
-  addStyle(`.activeSecondary`, `border: 5px solid white;`)
-  addStyle(`.inactiveSecondary`, `border: 5px solid black;`)
-  addStyle(`.currentSecondary`, `border: 5px solid green;`)
+
+  addStyle(`.activeSecondary::after`, `content: 'active';`)
+  addStyle(`.inactiveSecondary::before`, `content: '-';`)
+  addStyle(`.inactiveSecondary::after`, `content: '-';`)
+  addStyle(`.currentSecondary::before`, `content: 'current';`)
+
   addStyle(`.activeTertiary`, `margin-bottom: 12px;`)
   addStyle(`.inactiveTertiary`, `margin-top: 12px;`)
 
@@ -358,7 +361,14 @@ function buildSecondaryButtons() {
   primaries().forEach((primary) => {
     const key = primary.secondaries.join('')
     hValues().forEach((h, hIndex) => {
-      let btn = addSvgTo(`.${key}Buttons`, 'svg', {
+      let buttonWrapper = addTo(`.${key}Buttons`, 'div', {
+        innerHTML: `
+        <div class="secondaryButtonHeader secondaryButtonHeader-${primary.key}-${h}">---</div>
+        <div class="secondaryButtonHolder secondaryButtonHolder-${primary.key}-${h}"></div>
+        <div class="secondaryButtonFooter secondaryButtonFooter-${primary.key}-${h}">---</div>
+        `
+      })
+      let btn = addSvgTo(`.secondaryButtonHolder-${primary.key}-${h}`, 'svg', {
         classes: [
           `secondaryButton`,
           `secondaryButton-${primary.key}-${h}`,
@@ -771,15 +781,17 @@ function updateProps() {
     primaryColors().forEach((primary) => {
       hValues().forEach((h) => {
         const target = `.secondaryButton-${primary}-${h}`
+        const targetHeader = `.secondaryButtonHeader-${primary}-${h}`
+        const targetFooter = `.secondaryButtonFooter-${primary}-${h}`
         if (state.active.colors[primary].secondaryH === h) {
-          addClassTo(target, 'activeSecondary')
+          updateEl(targetFooter, { innerHTML: "visible" })
         } else {
-          removeClassFrom(target, 'activeSecondary')
+          updateEl(targetFooter, { innerHTML: "" })
         }
         if (state.modes[state.active.mode].colors[primary].collectionShift === h) {
-          addClassTo(target, 'currentSecondary')
+          updateEl(targetHeader, { innerHTML: "current" })
         } else {
-          removeClassFrom(target, 'currentSecondary')
+          updateEl(targetHeader, { innerHTML: "" })
         }
       })
     })
