@@ -184,6 +184,7 @@ function addStylesheet() {
   addStyle(`.sidebar`, `display: flex;`)
   addStyle(`.sliders`, `display: grid;`)
   addStyle(`.sliders label input`, `margin: var(--padding-bravo);`)
+  addStyle(`.activeSecondary`, `margin-bottom: 10px;`)
 
   lValues().forEach((l, lIndex) => {
     cValues().forEach((c, cIndex) => {
@@ -373,7 +374,10 @@ function buildSecondaryChips() {
     collections().forEach((collection, collectionIndex) => {
       const mainKey = primary.secondaries.join('')
       const el = addSvgTo(`.${mainKey}Chips`, 'svg', {
-        classes: ['secondaryChip'],
+        classes: [
+          'secondaryChip',
+          `secondaryChip-index-${primary.key}-${collectionIndex}`
+        ],
         width: 20,
         height: 40,
       })
@@ -609,8 +613,6 @@ function updateProps() {
     })
   })
 
-
-
   modes().forEach((mode) => {
     lValues().forEach((l, lIndex) => {
       cValues().forEach((c, cIndex) => {
@@ -709,10 +711,10 @@ function updateProps() {
       let h = state.modes[state.active.mode].colors[primary.key].collectionShift
       let l = ((state.modes[state.active.mode].colors[primary.key].l + 100) + (20 * coords[0])) % 100
       let c = ((state.modes[state.active.mode].colors[primary.key].c + 5) + coords[1]) % 5
-      logMsg(l)
-      logMsg(c)
-      logMsg(h)
-      logMsg(key)
+      // logMsg(l)
+      // logMsg(c)
+      // logMsg(h)
+      // logMsg(key)
       // updateProp(`--${key}`, `green`)
       updateProp(`--${key}`, `var(--color-${l}-${c}-${h}-${state.active.mode})`)
     })
@@ -725,6 +727,17 @@ function updateProps() {
     })
   })
 
+
+  // highlight the current secondary set for each primary
+  primaryColors().forEach((primary) => {
+    collections().forEach((collection, collectionIndex) => {
+      const target = `.secondaryChip-index-${primary}-${collectionIndex}`
+      if (state.modes[state.active.mode].colors[primary].collectionIndex === collectionIndex) {
+        addClassTo(target, 'activeSecondary')
+      }
+      
+    })
+  })
 }
 
 function updateState() {
@@ -740,7 +753,6 @@ function updateState() {
 
 document.addEventListener('DOMContentLoaded', () => {
   addStylesheet()
-  updateProps()
   buildPrimaryButtons()
   buildChipRows()
   buildChips()
@@ -748,5 +760,6 @@ document.addEventListener('DOMContentLoaded', () => {
   buildSecondaryChips()
   buildSliders()
   buildModeButtons()
+  updateProps()
   updateState()
 })

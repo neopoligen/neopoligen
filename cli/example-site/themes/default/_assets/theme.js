@@ -4,6 +4,16 @@
 // TODO: Rename 'parent' to 'target'
 // and internal 'target' to 'el'
 
+
+function addClassTo(target, className) {
+  const el = getEl(target)
+  if (el) {
+    el.classList.add(className)
+    return el
+  }
+}
+
+
 function addListenerTo(target, event, func) {
   const el = getEl(target)
   if (el) {
@@ -12,12 +22,6 @@ function addListenerTo(target, event, func) {
   }
 }
 
-function appendInnerText(target, text) {
-  const el = getEl(target)
-  if (el) {
-    el.innerText = el.innerText + text
-  }
-}
 
 function addSvgTo(parent, tag, attrs = {}) {
   const target = getEl(parent)
@@ -51,6 +55,13 @@ function addToFront(parent, tag, attrs = {}) {
       target.appendChild(el)
     }
     return el
+  }
+}
+
+function appendInnerText(target, text) {
+  const el = getEl(target)
+  if (el) {
+    el.innerText = el.innerText + text
   }
 }
 
@@ -110,6 +121,14 @@ function logError(msg) {
 
 function logMsg(msg) {
   console.log(`${Date.now()} - INFO: ${msg}`)
+}
+
+function removeClassFrom(target, className) {
+  const el = getEl(target)
+  if (el) {
+    el.classList.remove(className)
+    return el
+  }
 }
 
 function setStorage(key, value) {
