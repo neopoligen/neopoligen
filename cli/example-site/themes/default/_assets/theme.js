@@ -1,25 +1,29 @@
 ////////////////////////////////////////////////////////////
 // yagni-js
 
-function addListenerTo(parent, event, func) {
-  const target = getEl(parent)
-  if (target) {
-    target.addEventListener(event, func)
+// TODO: Rename 'parent' to 'target'
+// and internal 'target' to 'el'
+
+function addListenerTo(target, event, func) {
+  const el = getEl(target)
+  if (el) {
+    el.addEventListener(event, func)
+    return el
   }
 }
 
-function appendInnerText(parent, text) {
-  const target = getEl(parent)
-  if (target) {
-    target.innerText = target.innerText + text
-  } 
+function appendInnerText(target, text) {
+  const el = getEl(target)
+  if (el) {
+    el.innerText = el.innerText + text
+  }
 }
 
 function addSvgTo(parent, tag, attrs = {}) {
   const target = getEl(parent)
   if (target) {
-    const el = document.createElementNS("http://www.w3.org/2000/svg", tag)
-    updateSvgAttrs(attrs, el)
+    const el = document.createElementNS('http://www.w3.org/2000/svg', tag)
+    updateSvgAttrs(el, attrs)
     target.appendChild(el)
     return el
   }
@@ -29,7 +33,7 @@ function addTo(parent, tag, attrs = {}) {
   const target = getEl(parent)
   if (target) {
     const el = document.createElement(tag)
-    updateAttrs(attrs, el)
+    updateAttrs(el, attrs)
     target.appendChild(el)
     return el
   }
@@ -39,7 +43,7 @@ function addToFront(parent, tag, attrs = {}) {
   const target = getEl(parent)
   if (target) {
     const el = document.createElement(tag)
-    updateAttrs(attrs, el)
+    updateAttrs(el, attrs)
     if (target.hasChildNodes()) {
       const first_child = target.firstChild
       target.insertBefore(el, first_child)
@@ -115,46 +119,54 @@ function setStorage(key, value) {
 function updateEl(target, attrs = {}) {
   const el = getEl(target)
   if (el) {
-    updateAttrs(attrs, el)
+    updateAttrs(el,attrs)
   }
   return el
 }
 
-function updateAttrs(attrs, el) {
-  const nonAttrs = ['classes', 'data', 'listeners']
-  for (let key in attrs) {
-    if (!nonAttrs.includes(key)) {
-      el[key] = attrs[key]
+function updateAttrs(target, attrs) {
+  const el = getEl(target)
+  if (el) {
+    const nonAttrs = ['classes', 'data', 'listeners']
+    for (let key in attrs) {
+      if (!nonAttrs.includes(key)) {
+        el[key] = attrs[key]
+      }
     }
-  }
-  for (let index in attrs.classes) {
-    el.classList.add(attrs.classes[index])
-  }
-  for (let index in attrs.data) {
-    el.dataset[attrs.data[index][0]] = attrs.data[index][1]
-  }
-  for (let index in attrs.listeners) {
-    el.addEventListener(attrs.listeners[index][0], attrs.listeners[index][1])
+    for (let index in attrs.classes) {
+      el.classList.add(attrs.classes[index])
+    }
+    for (let index in attrs.data) {
+      el.dataset[attrs.data[index][0]] = attrs.data[index][1]
+    }
+    for (let index in attrs.listeners) {
+      el.addEventListener(attrs.listeners[index][0], attrs.listeners[index][1])
+    }
+    return el
   }
 }
 
-function updateSvgAttrs(attrs, el) {
-  const nonAttrs = ['classes', 'data', 'listeners', 'styles']
-  for (let key in attrs) {
-    if (!nonAttrs.includes(key)) {
-      el.setAttribute(key, attrs[key])
+function updateSvgAttrs(target, attrs) {
+  const el = getEl(target)
+  if (el) {
+    const nonAttrs = ['classes', 'data', 'listeners', 'styles']
+    for (let key in attrs) {
+      if (!nonAttrs.includes(key)) {
+        el.setAttribute(key, attrs[key])
+      }
     }
-  }
-  for (let index in attrs.classes) {
-    el.classList.add(attrs.classes[index])
-  }
-  for (let index in attrs.data) {
-    el.dataset[attrs.data[index][0]] = attrs.data[index][1]
-  }
-  for (let index in attrs.listeners) {
-    el.addEventListener(attrs.listeners[index][0], attrs.listeners[index][1])
-  }
-  for (let index in attrs.styles) {
-    el.style[attrs.data[index][0]] = attrs.data[index][1]
+    for (let index in attrs.classes) {
+      el.classList.add(attrs.classes[index])
+    }
+    for (let index in attrs.data) {
+      el.dataset[attrs.data[index][0]] = attrs.data[index][1]
+    }
+    for (let index in attrs.listeners) {
+      el.addEventListener(attrs.listeners[index][0], attrs.listeners[index][1])
+    }
+    for (let index in attrs.styles) {
+      el.style[attrs.styles[index][0]] = attrs.styles[index][1]
+    }
+    return el
   }
 }

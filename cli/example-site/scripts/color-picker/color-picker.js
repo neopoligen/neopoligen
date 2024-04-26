@@ -177,7 +177,9 @@ function addStylesheet() {
   addStyle(`.echoFoxtrotButton`, `padding: var(--padding-alfa);`)
   addStyle(`.pickerWrapper`, `display: grid; grid-template-columns: 4rem 1fr;`)
   addStyle(`.primaryButton`, `margin: var(--padding-alfa);`)
-  addStyle(`.secondaryButton`, `padding: var(--padding-alfa);`)
+  addStyle(`.secondaryButton`, `margin: var(--padding-alfa); border: 1px solid black;`)
+  addStyle(`.secondaryChip`, `border: 1px solid blue;`)
+  // addStyle(`.secondaryRect`, `border: 1px solid blue; fill: goldenrod;`)
   addStyle(`.sideSwatch`, `min-width: 0.4rem;`)
   addStyle(`.sidebar`, `display: flex;`)
   addStyle(`.sliders`, `display: grid;`)
@@ -256,7 +258,7 @@ function addStylesheet() {
   primaries().forEach((primary) => {
     collectionCoords().forEach((coords) => {
       const key = `secondaryRect-${primary.key}-${coords[0]}-${coords[1]}`
-      addStyle(`.${key}`, `fill: var(--${key})`)
+      // addStyle(`.${key}`, `fill: var(--${key})`)
     })
   })
 }
@@ -335,24 +337,26 @@ function buildSecondaryButtons() {
   primaries().forEach((primary) => {
     const key = primary.secondaries.join('')
     hValues().forEach((h, hIndex) => {
-      let button = addSvgTo(`.${key}Buttons`, 'svg', {
+      let btn = addSvgTo(`.${key}Buttons`, 'svg', {
         classes: [`secondaryButton`],
-        width: 45,
-        height: 45,
+        width: 50,
+        height: 50,
       })
       for (let lIndex = 1; lIndex < 4; lIndex++) {
         for (let cIndex = 1; cIndex < 4; cIndex++) {
-          addSvgTo(button, 'rect', {
+          addSvgTo(btn, 'rect', {
             classes: [
               `secondaryRect`,
               `${key}Rect-${lValues()[lIndex]}-${cString(
                 cValues()[cIndex]
               )}-${h}`,
             ],
-            x: (lIndex - 1) * 15,
-            y: (cIndex - 1) * 15,
-            width: 15,
-            height: 15,
+            x: lIndex * 10,
+            y: cIndex * 10,
+            // x: (lIndex - 1) * 10,
+            // y: (cIndex - 1) * 10,
+            width: 10,
+            height: 10,
             data: [
               ['key', key],
               ['h', hIndex],
@@ -561,7 +565,6 @@ function updateProp(key, value) {
   )
 }
 
-
 function updateProps() {
   updateProp(`--background-base`, `var(--background-base-${state.active.mode})`)
   updateProp(`--border-alfa`, `1px solid var(--color-alfa)`)
@@ -667,6 +670,7 @@ function updateProps() {
           const key = `${primary.secondaries.join('')}Rect-${l}-${cString(
             c
           )}-${h}`
+          logMsg(key)
           updateProp(
             `--${key}`,
             `var(--color-${l}-${cString(c)}-${h}-${activeMode()})`
