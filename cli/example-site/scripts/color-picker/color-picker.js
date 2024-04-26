@@ -198,8 +198,11 @@ function addStylesheet() {
   addStyle(`.sidebar`, `display: flex;`)
   addStyle(`.sliders`, `display: grid;`)
   addStyle(`.sliders label input`, `margin: var(--padding-bravo);`)
-  addStyle(`.activeSecondary`, `margin-bottom: 12px;`)
-  addStyle(`.inactiveSecondary`, `margin-top: 12px;`)
+  addStyle(`.activeSecondary`, `border: 5px solid white;`)
+  addStyle(`.inactiveSecondary`, `border: 5px solid black;`)
+  addStyle(`.currentSecondary`, `border: 5px solid green;`)
+  addStyle(`.activeTertiary`, `margin-bottom: 12px;`)
+  addStyle(`.inactiveTertiary`, `margin-top: 12px;`)
 
   lValues().forEach((l, lIndex) => {
     cValues().forEach((c, cIndex) => {
@@ -356,7 +359,10 @@ function buildSecondaryButtons() {
     const key = primary.secondaries.join('')
     hValues().forEach((h, hIndex) => {
       let btn = addSvgTo(`.${key}Buttons`, 'svg', {
-        classes: [`secondaryButton`],
+        classes: [
+          `secondaryButton`,
+          `secondaryButton-${primary.key}-${h}`,
+        ],
         width: 30,
         height: 30,
       })
@@ -550,7 +556,7 @@ function handleTertiaryButtonClick(event) {
   ].collectionShift = state.active.colors[event.target.dataset.primary].secondaryH
   
 
-  console.log(event.target.dataset)
+  // console.log(event.target.dataset)
   // logMsg(
   //   state.modes[event.target.dataset.mode].colors[event.target.dataset.primary]
   //     .collectionIndex
@@ -761,6 +767,23 @@ function updateProps() {
     })
   })
 
+    // highlight the current secondary set for each primary
+    primaryColors().forEach((primary) => {
+      hValues().forEach((h) => {
+        const target = `.secondaryButton-${primary}-${h}`
+        if (state.active.colors[primary].secondaryH === h) {
+          addClassTo(target, 'activeSecondary')
+        } else {
+          removeClassFrom(target, 'activeSecondary')
+        }
+        if (state.modes[state.active.mode].colors[primary].collectionShift === h) {
+          addClassTo(target, 'currentSecondary')
+        } else {
+          removeClassFrom(target, 'currentSecondary')
+        }
+      })
+    })
+
   primaries().forEach((primary, primaryIndex) => {
     hValues().forEach((h) => {
     // primary.secondaries.forEach((color) => {
@@ -788,7 +811,10 @@ function updateProps() {
     })
   })
 
-  // Secondary Chip Rectangles
+
+
+
+  // Tertiary Chip Rectangles
   primaries().forEach((primary) => {
     collectionCoords().forEach((coords) => {
       const key = `tertiaryRect-${primary.key}-${coords[0]}-${coords[1]}`
@@ -826,11 +852,11 @@ function updateProps() {
         collectionIndex
         && state.active.colors[primary].secondaryH === state.modes[state.active.mode].colors[primary].collectionShift
       ) {
-        removeClassFrom(target, 'inactiveSecondary')
-        addClassTo(target, 'activeSecondary')
+        removeClassFrom(target, 'inactiveTertiary')
+        addClassTo(target, 'activeTertiary')
       } else {
-        removeClassFrom(target, 'activeSecondary')
-        addClassTo(target, 'inactiveSecondary')
+        removeClassFrom(target, 'activeTertiary')
+        addClassTo(target, 'inactiveTertiary')
       }
     })
   })
