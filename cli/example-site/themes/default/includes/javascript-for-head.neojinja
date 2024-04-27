@@ -1,6 +1,11 @@
+[# TODO: Add attributes here for type #]
 [! for section in site.pages[page_id].ast !]
     [! if section.content.type == "javascript" !]
-        <script>
+        <script
+        [! if section.content.key_value_attributes['type'] !]
+        type="[@ section.content.key_value_attributes['type'] @]"
+        [! endif !]
+        >
         [! autoescape false !]
         [@ section.content.category.content.text -@]
         [! endautoescape !]

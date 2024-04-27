@@ -28,15 +28,14 @@ so other scripts can use it #]
 <link rel="stylesheet" href="/theme/highlighting/code-solarized-light.css" />
 [! include "includes/css-for-head.neojinja" !]
 
-
 [! include "includes/javascript-for-head.neojinja" !]
 
 </head>
 <body>
-    <header>
+    <header class="wrapper">
 [@ theme.link_or_title(site, page_id, "2dwmgthu", { "title": "Home Page" }) @]
     </header>
-    <main class="single-column">
+    <main class="wrapper">
         <article class="flow">
         [! block body !][! endblock !]
         </article>

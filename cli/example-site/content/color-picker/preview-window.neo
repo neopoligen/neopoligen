@@ -2,7 +2,45 @@
 
 Color Picker Preview Window
 
-This is some text
+Welcome to the Neopoligen Color Picker Preview Window!
+
+The purpose of this page is to show what colors from the
+picker looks like in real use. It's a lot easier to see 
+how things will look when the colors aren't surrounded
+by all the other options like they are in the picker
+itself. 
+
+Six colors are defined with each palette in addition
+to the base color that's used for the background. To
+keep things generic, the colors are given names: alfa,
+bravo, charlie, delta, echo, and foxtrot. There
+are also black and white styles. All of the colors and
+the black and white styles
+
+
+-- html
+
+
+<tab-group>
+  <div role='tablist'>
+    <button role='tab' aria-selected='true'>Tab 1</button>
+    <button role='tab'>Tab 2</button>
+    <button role='tab'>Tab 3</button>
+  </div>
+
+  <div role='tabpanel'>
+    Shut the hatch before the waves push it in
+  </div>
+  <div role='tabpanel' hidden>
+    Take the winding path to reach the lake
+  </div>
+  <div role='tabpanel' hidden>
+    Write at once or you may forget it
+  </div>
+</tab-group>
+
+
+
 
 -- p
 -- class: color-charlie
@@ -55,6 +93,75 @@ window.addEventListener("message", (event) => {
 document.addEventListener("DOMContentLoaded", () => {
     styleEl = addTo(document.head, 'style')
 })
+
+
+
+-- javascript
+-- type: module
+
+class TabGroup extends HTMLElement {
+  get tabs() {
+    return [...this.querySelectorAll('[role=tab]')];
+  }
+
+  get panels() {
+    return [...this.querySelectorAll('[role=tabpanel]')];
+  }
+
+  get selected() {
+    return this.querySelector('[role=tab][aria-selected=true]');
+  }
+
+  set selected(element) {
+    this.selected?.setAttribute('aria-selected', 'false');
+    element?.setAttribute('aria-selected', 'true');
+    element?.focus();
+    this.updateSelection();
+  }
+
+  connectedCallback() {
+    this.generateIds();
+    this.updateSelection();
+    this.setupEvents();
+  }
+
+  generateIds() {
+    const prefix = Math.floor(Date.now()).toString(36);
+    this.tabs.forEach((tab, index) => {
+      const panel = this.panels[index];
+      tab.id ||= `${prefix}-tab-${index}`;
+      panel.id ||= `${prefix}-panel-${index}`;
+      tab.setAttribute('aria-controls', panel.id);
+      panel.setAttribute('aria-labelledby', tab.id);
+    });
+  }
+
+  updateSelection() {
+    this.tabs.forEach((tab, index) => {
+      const panel = this.panels[index];
+      const isSelected = tab.getAttribute('aria-selected') === 'true';
+      tab.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+      tab.setAttribute('tabindex', isSelected ? '0' : '-1');
+      panel.setAttribute('tabindex', isSelected ? '0' : '-1');
+      panel.hidden = !isSelected;
+    });
+  }
+
+  setupEvents() {
+    this.tabs.forEach((tab) => {
+      tab.addEventListener('click', () => this.selected = tab);
+      tab.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+          this.selected = tab.previousElementSibling ?? this.tabs.at(-1);
+        } else if (e.key === 'ArrowRight') {
+          this.selected = tab.nextElementSibling ?? this.tabs.at(0);
+        }
+      });
+    });
+  }
+}
+
+customElements.define('tab-group', TabGroup);
 
 
 

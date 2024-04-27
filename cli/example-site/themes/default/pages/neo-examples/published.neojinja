@@ -1,4 +1,4 @@
-[!- extends "wrappers/single-column.neojinja" -!]
+[!- extends "wrappers/one-column.neojinja" -!]
 [!- import "includes/theme-macros.neojinja" as theme -!]
 
 [! block body !]

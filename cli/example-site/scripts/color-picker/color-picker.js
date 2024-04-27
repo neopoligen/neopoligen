@@ -89,14 +89,14 @@ let state = {
   ],
   modes: {
     light: {
-      l: 84.128,
-      c: 0.0435,
-      h: 80.616,
+      l: 81.476,
+      c: 0.04839,
+      h: 76.757,
       colors: {
         alfa: {
-          l: 20,
-          c: 2,
-          h: 120,
+          l: 40,
+          c: 4,
+          h: 0,
           collectionShift: 180,
           collectionIndex: 7,
         },
@@ -669,7 +669,8 @@ function primaryColors() {
 
 function sendStylesheet(msg) {
   if (childWindow && childWindow.name === childWindowName) {
-    let styles = `
+    let styles = `    
+
 :root {
   --color-background: oklch(${state.modes.light.l}% ${state.modes.light.c} ${state.modes.light.h});
   --color-alfa: oklch(${
@@ -752,18 +753,102 @@ function sendStylesheet(msg) {
   });
 
 
+  --size-1: 2.986rem;
+  --size-2: 2.488rem;
+  --size-3: 2.074rem;
+  --size-4: 1.728rem;
+  --size-5: 1.44rem;
+  --size-6: 1.2rem;
+  --size-7: 1rem;
+  --size-8: 0.833rem;
+  --size-9: 0.694rem;
+  --size-10: 0.579rem;
 
+}
 
+*, 
+*::before, 
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+a {
+  color: var(--color-charlie);
+}
+
+a:hover, a:focus {
+  color: var(--color-bravo);
 }
 
 body { 
   background-color: var(--color-background);
   color: var(--color-bravo); 
+  font-size: 16px;
+  line-height: 1.5; 
+}
+
+.flow > :where(:not(:first-child)) {
+  margin-top: var(--flow-space, 1em);
 }
 
 h1, h2, h3, h4, h5, h6 {
   color: var(--color-alfa);
+  line-height: 1.1;
+  text-wrap: balance;
+  font-weight: 900;
 }
+
+h1 { 
+  font-size: var(--size-1);
+  margin-top: 1em; 
+}
+
+h2 { 
+  font-size: var(--size-2); 
+  --flow-space: 1.3em;
+
+}
+
+h3 { 
+  font-size: var(--size-3); 
+  --flow-space: 1.0em;
+
+}
+
+h4 { 
+  font-size: var(--size-4); 
+}
+
+h5 { 
+  font-size: var(--size-5); 
+}
+
+h6 { 
+  font-size: var(--size-6); 
+}
+
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+::marker {
+  color: var(--color-bravo);
+}
+
+.wrapper {
+  width: min(100vw - 3rem, 58ch);
+  margin-inline: auto;
+}
+
+
+
+
 
     `
 
