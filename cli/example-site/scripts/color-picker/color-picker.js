@@ -149,7 +149,6 @@ let state = {
 let childWindow; 
 const childWindowName = "previewWindow"
 
-
 function activeMode() {
   return state.active.mode
 }
@@ -610,7 +609,7 @@ function handleTertiaryButtonClick(event) {
   ].collectionShift =
     state.active.colors[event.target.dataset.primary].secondaryH
 
-  // console.log(event.target.dataset)
+  console.log(event.target.dataset)
   // logMsg(
   //   state.modes[event.target.dataset.mode].colors[event.target.dataset.primary]
   //     .collectionIndex
@@ -660,7 +659,6 @@ function openWindow() {
   childWindow.focus()
 }
 
-
 function primaries() {
   return state.primaries
 }
@@ -689,7 +687,6 @@ function sendStylesheet(msg) {
     (state.modes.light.h + state.modes.light.colors.bravo.h) % 360
   });
 
-
   --color-charlie: oklch(${
     (state.modes.light.l + state.modes.light.colors.alfa.l + 
       (
@@ -705,7 +702,6 @@ function sendStylesheet(msg) {
   } ${
     (state.modes.light.h + state.modes.light.colors.alfa.h + state.modes.light.colors.alfa.collectionShift) % 360
   });
-
 
   --color-delta: oklch(${
     (state.modes.light.l + state.modes.light.colors.alfa.l + 
@@ -723,8 +719,6 @@ function sendStylesheet(msg) {
     (state.modes.light.h + state.modes.light.colors.alfa.h + state.modes.light.colors.alfa.collectionShift) % 360
   });
 
-
-
   --color-echo: oklch(${
     (state.modes.light.l + state.modes.light.colors.bravo.l + 
       (
@@ -741,7 +735,6 @@ function sendStylesheet(msg) {
     (state.modes.light.h + state.modes.light.colors.bravo.h + state.modes.light.colors.bravo.collectionShift) % 360
   });
 
-
   --color-foxtrot: oklch(${
     (state.modes.light.l + state.modes.light.colors.bravo.l + 
       (
@@ -757,7 +750,6 @@ function sendStylesheet(msg) {
   } ${
     (state.modes.light.h + state.modes.light.colors.bravo.h + state.modes.light.colors.bravo.collectionShift) % 360
   });
-
 
 
 
@@ -1003,7 +995,7 @@ function updateProps() {
         collection.forEach((coords) => {
           const key = `secondaryRect-coords-${primary.key}-${coords[0]}-${coords[1]}-${h}`
           let h2 =
-            state.modes[state.active.mode].colors[primary.key].collectionShift
+            (state.modes[state.active.mode].colors[primary.key].h + h) % 360
           let l2 =
             (state.modes[state.active.mode].colors[primary.key].l +
               100 +
@@ -1016,7 +1008,7 @@ function updateProps() {
             5
           updateProp(
             `--${key}`,
-            `var(--color-${l2}-${c2}-${h}-${state.active.mode})`
+            `var(--color-${l2}-${c2}-${h2}-${state.active.mode})`
           )
         })
       })
@@ -1027,7 +1019,7 @@ function updateProps() {
   primaries().forEach((primary) => {
     collectionCoords().forEach((coords) => {
       const key = `tertiaryRect-${primary.key}-${coords[0]}-${coords[1]}`
-      let h = state.active.colors[primary.key].secondaryH
+      let h = (state.active.colors[primary.key].secondaryH + state.modes[state.active.mode].colors[primary.key].h) % 360
       let l =
         (state.modes[state.active.mode].colors[primary.key].l +
           100 +
