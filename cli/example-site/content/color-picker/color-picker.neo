@@ -34,6 +34,7 @@ Color Picker
     <div class="charliedeltaChips"></div>
     <div class="echofoxtrotButtons secondaryButtons"></div>
     <div class="echofoxtrotChips"></div>
+    <pre class="currentCSS">Loading CSS...</pre>
     <pre class="currentState"></pre>
 </div>
 

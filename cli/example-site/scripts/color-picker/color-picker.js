@@ -149,6 +149,8 @@ let state = {
 let childWindow; 
 const childWindowName = "previewWindow"
 
+let activeStyles = {}
+
 function activeMode() {
   return state.active.mode
 }
@@ -290,6 +292,121 @@ function addStylesheet() {
       addStyle(`.${key}`, `fill: var(--${key})`)
     })
   })
+}
+
+function baseCSS() {
+  return `
+*, 
+*::before, 
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+a {
+  color: var(--color-charlie);
+}
+
+a:hover, a:focus {
+  color: var(--color-bravo);
+}
+
+body { 
+  background-color: var(--color-background);
+  color: var(--color-bravo); 
+  font-size: 16px;
+  line-height: 1.5; 
+}
+
+.flow > :where(:not(:first-child)) {
+  margin-top: var(--flow-space, 1em);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-alfa);
+  line-height: 1.1;
+  text-wrap: balance;
+  font-weight: 900;
+}
+
+h1 { 
+  font-size: var(--size-1);
+  margin-top: 1em; 
+}
+
+h2 { 
+  font-size: var(--size-2); 
+  --flow-space: 1.3em;
+}
+
+h3 { 
+  font-size: var(--size-3); 
+  --flow-space: 1.0em;
+
+}
+
+h4 { 
+  font-size: var(--size-4); 
+}
+
+h5 { 
+  font-size: var(--size-5); 
+}
+
+h6 { 
+  font-size: var(--size-6); 
+}
+
+.heading_level_section h2,
+.heading_level_section h3,
+.heading_level_section h4,
+.heading_level_section h5,
+.heading_level_section h6 {
+  border-bottom: var(--border-black-60);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+::marker {
+  color: var(--color-bravo);
+}
+
+.wrapper {
+  width: min(100vw - 3rem, 58ch);
+  margin-inline: auto;
+}`.trim()
+
+}
+
+function baseFont() {
+  return `
+@font-face {
+  font-family: 'Inter';
+  src: url('/theme/fonts/Inter-VariableFont_slnt,wght.ttf') format('opentype');
+}`.trim()
+
+}
+
+function baseProps(){
+  let response = ``
+
+  response += prop(`--color-black`, `rgb(0 0 0)`)
+  for (let alpha = 10; alpha <= 90; alpha = alpha + 10) {
+    response += prop(`--color-black-${alpha}`, `rgb(0 0 0 / ${alpha}%)`)
+  }
+
+  response += prop(`--color-white`, `rgb(255 255 255)`)
+  for (let alpha = 10; alpha <= 90; alpha = alpha + 10) {
+    response += prop(`--color-white-${alpha}`, `rgb(255 255 255 / ${alpha}%)`)
+  }
+
+  return response.trim()
 }
 
 function buildChipRows() {
@@ -630,6 +747,13 @@ function launchPreviewWindow() {
   logMsg("launch")
 }
 
+function lightModeProps() {
+  let response = ``
+
+
+  return response
+}
+
 function lValues() {
   const tmp = []
   for (let l = 0; l < state.base.l.max; l += state.base.l.interval) {
@@ -667,12 +791,20 @@ function primaryColors() {
   return [primaries()[0].key, primaries()[1].key]
 }
 
+function prop(key, value) {
+  return `${key}: ${value};\n`
+}
+
 function sendStylesheet(msg) {
   if (childWindow && childWindow.name === childWindowName) {
-    let styles = `    
+
+
+    let xstyles = `    
 
 :root {
+  ${base_props}
   --color-background: oklch(${state.modes.light.l}% ${state.modes.light.c} ${state.modes.light.h});
+
   --color-alfa: oklch(${
     (state.modes.light.l + state.modes.light.colors.alfa.l) % 100
   }% ${
@@ -766,104 +898,38 @@ function sendStylesheet(msg) {
 
 }
 
-*, 
-*::before, 
-*::after {
-  box-sizing: border-box;
-}
-
-* {
-  margin: 0;
-}
-
-a {
-  color: var(--color-charlie);
-}
-
-a:hover, a:focus {
-  color: var(--color-bravo);
-}
-
-body { 
-  background-color: var(--color-background);
-  color: var(--color-bravo); 
-  font-size: 16px;
-  line-height: 1.5; 
-}
-
-.flow > :where(:not(:first-child)) {
-  margin-top: var(--flow-space, 1em);
-}
-
-h1, h2, h3, h4, h5, h6 {
-  color: var(--color-alfa);
-  line-height: 1.1;
-  text-wrap: balance;
-  font-weight: 900;
-}
-
-h1 { 
-  font-size: var(--size-1);
-  margin-top: 1em; 
-}
-
-h2 { 
-  font-size: var(--size-2); 
-  --flow-space: 1.3em;
-}
-
-h3 { 
-  font-size: var(--size-3); 
-  --flow-space: 1.0em;
-
-}
-
-h4 { 
-  font-size: var(--size-4); 
-}
-
-h5 { 
-  font-size: var(--size-5); 
-}
-
-h6 { 
-  font-size: var(--size-6); 
-}
-
-
-img {
-  max-width: 100%;
-  display: block;
-}
-
-::marker {
-  color: var(--color-bravo);
-}
-
-.wrapper {
-  width: min(100vw - 3rem, 58ch);
-  margin-inline: auto;
-}
-
-
-
-
 
     `
 
+
+    /*
     state.colors.forEach((color) => {
       styles += `.color-${color} { color: var(--color-${color}); }\n`
       for (let alpha = 10; alpha <= 90; alpha = alpha + 10) {
         styles += `.color-${color}-${alpha} { color: var(--color-${color}-${alpha}); }\n`
       }
     })
+    */
 
 
-    childWindow.postMessage(styles)
+    childWindow.postMessage(stylePayload())
+
   } else {
     console.log("Window is not available")
   }
 }
+
+function stylePayload() {
+  let payload = `
+${baseFont()}
+:root {
+${baseProps()}
+}
+${baseCSS()}
+  `
+  return payload
+}
+
 
 function throttle(func, timeFrame) {
   var lastTime = 0
@@ -1140,6 +1206,10 @@ function updateProps() {
         addClassTo(target, 'inactiveTertiary')
       }
     })
+  })
+
+  updateEl(`.currentCSS`, {
+    innerHTML: stylePayload()
   })
 
   sendStylesheet()
