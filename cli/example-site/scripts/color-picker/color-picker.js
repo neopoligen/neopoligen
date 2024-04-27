@@ -365,7 +365,7 @@ h6 {
 .heading_level_section h4,
 .heading_level_section h5,
 .heading_level_section h6 {
-  border-bottom: var(--border-charlie-60);
+  border-bottom: var(--border-charlie);
 }
 
 img {
@@ -821,6 +821,7 @@ function lightModeProps() {
       360
     })`
   )
+  response += prop(`--border-charlie`, `1px solid var(--color-charlie)`)
 
   // delta
   response += prop(
@@ -845,6 +846,7 @@ function lightModeProps() {
       360
     })`
   )
+  response += prop(`--border-delta`, `1px solid var(--color-delta)`)
 
   // echo
   response += prop(
@@ -873,6 +875,7 @@ function lightModeProps() {
       360
     })`
   )
+  response += prop(`--border-echo`, `1px solid var(--color-echo)`)
 
   // foxtrot
   response += prop(
@@ -901,6 +904,7 @@ function lightModeProps() {
       360
     })`
   )
+  response += prop(`--border-foxtrot`, `1px solid var(--color-foxtrot)`)
 
   for (let alpha = 5; alpha <= 95; alpha = alpha + 5) {
     response += prop(
@@ -1135,6 +1139,26 @@ function propsCSS() {
     })
   }
 
+  response += style(`.bg-background`, `background-color: var(--color-background);`)
+  colors().forEach((color) => {
+    response += style(`.bg-${color}`, `background-color: var(--color-${color});`)
+  })
+
+
+  for (let alpha = 5; alpha <= 95; alpha = alpha + 5) {
+    response += style(
+      `.bg-background-${alpha}`,
+      `background-color: var(--color-background-${alpha});`
+    )
+    colors().forEach((color) => {
+      response += style(
+        `.bg-${color}-${alpha}`,
+        `background-color: var(--color-${color}-${alpha});`
+      )
+    })
+  }
+
+
   return response
 }
 
@@ -1144,26 +1168,6 @@ function style(key, value) {
 
 function sendStylesheet(msg) {
   if (childWindow && childWindow.name === childWindowName) {
-    let xstyles = `    
-
-:root {
-  
-
-
-}
-
-
-    `
-
-    /*
-    state.colors.forEach((color) => {
-      styles += `.color-${color} { color: var(--color-${color}); }\n`
-      for (let alpha = 10; alpha <= 90; alpha = alpha + 10) {
-        styles += `.color-${color}-${alpha} { color: var(--color-${color}-${alpha}); }\n`
-      }
-    })
-    */
-
     childWindow.postMessage(stylePayload())
   } else {
     console.log('Window is not available')

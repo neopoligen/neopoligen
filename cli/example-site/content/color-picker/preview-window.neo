@@ -27,13 +27,41 @@ Examples
 
 <tab-group>
   <div role='tablist'>
-    <button role='tab' aria-selected='true'>Tab 1</button>
-    <button role='tab'>Tab 2</button>
-    <button role='tab'>Tab 3</button>
+    <button role='tab' aria-selected='true'>1</button>
+    <button role='tab'>2</button>
+    <button role='tab'>3</button>
   </div>
 
   <div role='tabpanel'>
-    Shut the hatch before the waves push it in
+    <p>Base colors</p>
+    <div class="swatch-row">
+        <div>
+            <div class="color-alfa">alfa</div>
+            <div class="swatch-square bg-alfa"></div>
+        </div>
+        <div>
+            <div class="color-bravo">bravo</div>
+            <div class="swatch-square bg-bravo"></div>
+        </div>
+        <div>
+            <div class="color-charlie">charlie</div>
+            <div class="swatch-square bg-charlie"></div>
+        </div>
+        <div>
+            <div class="color-delta">delta</div>
+            <div class="swatch-square bg-delta"></div>
+        </div>
+        <div>
+            <div class="color-echo">echo</div>
+            <div class="swatch-square bg-echo"></div>
+        </div>
+        <div>
+            <div class="color-foxtrot">foxtrot</div>
+            <div class="swatch-square bg-foxtrot"></div>
+        </div>
+    </div>
+
+
   </div>
   <div role='tabpanel' hidden>
     Take the winding path to reach the lake
@@ -44,29 +72,18 @@ Examples
 </tab-group>
 
 
+-- css
 
+.swatch-row {
+    display: flex;
+    flex-wrap: flex;
+    gap: 20px;
+}
 
-
--- p
--- class: color-charlie
-
-This is some charlie color text
-
--- p
--- class: color-delta
-
-This is some delta color text
-
--- p
--- class: color-echo
-
-This is some echo color text
-
--- p
--- class: color-foxtrot
-
-This is some foxtrot color text
-
+.swatch-square {
+    width: 60px;
+    height: 60px; 
+}
 
 
 -- html
