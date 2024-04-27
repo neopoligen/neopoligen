@@ -146,8 +146,8 @@ let state = {
   },
 }
 
-let childWindow; 
-const childWindowName = "previewWindow"
+let childWindow
+const childWindowName = 'previewWindow'
 
 let activeStyles = {}
 
@@ -295,7 +295,7 @@ function addStylesheet() {
 }
 
 function baseCSS() {
-  return `
+  let payload = `
 *, 
 *::before, 
 *::after {
@@ -381,7 +381,6 @@ img {
   width: min(100vw - 3rem, 58ch);
   margin-inline: auto;
 }`.trim()
-
 }
 
 function baseFont() {
@@ -390,20 +389,38 @@ function baseFont() {
   font-family: 'Inter';
   src: url('/theme/fonts/Inter-VariableFont_slnt,wght.ttf') format('opentype');
 }`.trim()
-
 }
 
-function baseProps(){
+function baseProps() {
   let response = ``
 
-  response += prop(`--color-black`, `rgb(0 0 0)`)
-  for (let alpha = 10; alpha <= 90; alpha = alpha + 10) {
-    response += prop(`--color-black-${alpha}`, `rgb(0 0 0 / ${alpha}%)`)
-  }
+  response += prop(`--size-1`, `2.986rem`)
+  response += prop(`--size-2`, `2.488rem`)
+  response += prop(`--size-3`, `2.074rem`)
+  response += prop(`--size-4`, `1.728rem`)
+  response += prop(`--size-5`, `1.44rem`)
+  response += prop(`--size-6`, `1.2rem`)
+  response += prop(`--size-7`, `1rem`)
+  response += prop(`--size-8`, `0.833rem`)
+  response += prop(`--size-9`, `0.694rem`)
+  response += prop(`--size-10`, `0.579rem`)
 
+  response += prop(`--color-black`, `rgb(0 0 0)`)
+  response += prop(`--border-black`, `1px solid var(--color-black)`)
   response += prop(`--color-white`, `rgb(255 255 255)`)
-  for (let alpha = 10; alpha <= 90; alpha = alpha + 10) {
+  response += prop(`--border-white`, `1px solid var(--color-white)`)
+
+  for (let alpha = 5; alpha <= 95; alpha = alpha + 5) {
+    response += prop(`--color-black-${alpha}`, `rgb(0 0 0 / ${alpha}%)`)
+    response += prop(
+      `--border-black-${alpha}`,
+      `1px solid var(--color-black-${alpha})`
+    )
     response += prop(`--color-white-${alpha}`, `rgb(255 255 255 / ${alpha}%)`)
+    response += prop(
+      `--border-white-${alpha}`,
+      `1px solid var(--color-white-${alpha})`
+    )
   }
 
   return response.trim()
@@ -744,14 +761,86 @@ function hValues() {
 }
 
 function launchPreviewWindow() {
-  logMsg("launch")
+  logMsg('launch')
 }
 
 function lightModeProps() {
   let response = ``
 
+  // background
+  response += prop(
+    `--color-background`,
+    `oklch(${state.modes.light.l}% ${state.modes.light.c} ${state.modes.light.h})`
+  )
+  response += prop(`--border-background`, `1px solid var(--color-background)`)
 
-  return response
+  // alfa
+  response += prop(
+    `--color-alfa`,
+    `oklch(${(state.modes.light.l + state.modes.light.colors.alfa.l) % 100}% ${
+      ((state.modes.light.c * 10 + state.modes.light.colors.alfa.c) % 5) / 10
+    } ${(state.modes.light.h + state.modes.light.colors.alfa.h) % 360})`
+  )
+  response += prop(`--border-alpha`, `1px solid var(--color-alpha)`)
+
+  // bravo
+  response += prop(
+    `--color-bravo`,
+    `oklch(${(state.modes.light.l + state.modes.light.colors.bravo.l) % 100}% ${
+      ((state.modes.light.c * 10 + state.modes.light.colors.bravo.c) % 5) / 10
+    } ${(state.modes.light.h + state.modes.light.colors.bravo.h) % 360})`
+  )
+  response += prop(`--border-bravo`, `1px solid var(--color-bravo)`)
+
+  // charlie
+  response += prop(
+    `--color-charlie`,
+    `oklch(${
+      (state.modes.light.l +
+        state.modes.light.colors.alfa.l +
+        state.collections[state.modes.light.colors.alfa.collectionIndex][0][0] *
+          state.base.l.interval) %
+      100
+    }% ${
+      ((state.modes.light.c * 10 +
+        state.modes.light.colors.alfa.c +
+        state.collections[state.modes.light.colors.alfa.collectionIndex][0][1] *
+          (state.base.c.interval * 10)) %
+        5) /
+      10
+    } ${
+      (state.modes.light.h +
+        state.modes.light.colors.alfa.h +
+        state.modes.light.colors.alfa.collectionShift) %
+      360
+    })`
+  )
+
+  // delta
+
+  // echo
+
+  // foxtrot
+
+  for (let alpha = 5; alpha <= 95; alpha = alpha + 5) {
+    response += prop(
+      `--color-background-${alpha}`,
+      `oklch(${state.modes.light.l}% ${state.modes.light.c} ${state.modes.light.h} / ${alpha}%)`
+    )
+
+    response += prop(
+      `--color-alfa-${alpha}`,
+      `oklch(${
+        (state.modes.light.l + state.modes.light.colors.alfa.l) % 100
+      }% ${
+        ((state.modes.light.c * 10 + state.modes.light.colors.alfa.c) % 5) / 10
+      } ${
+        (state.modes.light.h + state.modes.light.colors.alfa.h) % 360
+      } / ${alpha})`
+    )
+  }
+
+  return response.trim()
 }
 
 function lValues() {
@@ -771,11 +860,11 @@ function modes() {
 }
 
 function openWindow() {
-  const params = `scrollbars=no,resizable=yes,status=no,location=no,toolbar=no,menubar=no`;
+  const params = `scrollbars=no,resizable=yes,status=no,location=no,toolbar=no,menubar=no`
   if (childWindow && childWindow.name === childWindowName) {
     //sendStylesheet("Connection Already Established")
   } else {
-    childWindow = window.open("/en/2fehqqas/", childWindowName, params)
+    childWindow = window.open('/en/2fehqqas/', childWindowName, params)
     childWindow.addEventListener('load', () => {
       sendStylesheet()
     })
@@ -792,115 +881,99 @@ function primaryColors() {
 }
 
 function prop(key, value) {
-  return `${key}: ${value};\n`
+  return `  ${key}: ${value};\n`
 }
+
+
+function propsCSS() {
+  let response = ``
+
+  return response
+}
+
+function style(key, value) {
+  return `${key} { ${value} }\n`
+}
+
 
 function sendStylesheet(msg) {
   if (childWindow && childWindow.name === childWindowName) {
-
-
     let xstyles = `    
 
 :root {
-  ${base_props}
-  --color-background: oklch(${state.modes.light.l}% ${state.modes.light.c} ${state.modes.light.h});
+  
 
-  --color-alfa: oklch(${
-    (state.modes.light.l + state.modes.light.colors.alfa.l) % 100
-  }% ${
-    (((state.modes.light.c * 10) + state.modes.light.colors.alfa.c) % 5) /10
-  } ${
-    (state.modes.light.h + state.modes.light.colors.alfa.h) % 360
-  });
-  --color-bravo: oklch(${
-    (state.modes.light.l + state.modes.light.colors.bravo.l) % 100
-  }% ${
-    (((state.modes.light.c * 10) + state.modes.light.colors.bravo.c) % 5) /10
-  } ${
-    (state.modes.light.h + state.modes.light.colors.bravo.h) % 360
-  });
-
-  --color-charlie: oklch(${
-    (state.modes.light.l + state.modes.light.colors.alfa.l + 
-      (
-      state.collections[state.modes.light.colors.alfa.collectionIndex][0][0] * state.base.l.interval
-      )
-    ) % 100
-  }% ${
-    (((state.modes.light.c * 10) + state.modes.light.colors.alfa.c +
-    (
-      state.collections[state.modes.light.colors.alfa.collectionIndex][0][1] * (state.base.c.interval * 10)
-    )
-  ) % 5) /10
-  } ${
-    (state.modes.light.h + state.modes.light.colors.alfa.h + state.modes.light.colors.alfa.collectionShift) % 360
-  });
 
   --color-delta: oklch(${
-    (state.modes.light.l + state.modes.light.colors.alfa.l + 
-      (
-      state.collections[state.modes.light.colors.alfa.collectionIndex][1][0] * state.base.l.interval
-      )
-    ) % 100
+    (state.modes.light.l +
+      state.modes.light.colors.alfa.l +
+      state.collections[state.modes.light.colors.alfa.collectionIndex][1][0] *
+        state.base.l.interval) %
+    100
   }% ${
-    (((state.modes.light.c * 10) + state.modes.light.colors.alfa.c +
-    (
-      state.collections[state.modes.light.colors.alfa.collectionIndex][1][1] * (state.base.c.interval * 10)
-    )
-  ) % 5) /10
-  } ${
-    (state.modes.light.h + state.modes.light.colors.alfa.h + state.modes.light.colors.alfa.collectionShift) % 360
-  });
+      ((state.modes.light.c * 10 +
+        state.modes.light.colors.alfa.c +
+        state.collections[state.modes.light.colors.alfa.collectionIndex][1][1] *
+          (state.base.c.interval * 10)) %
+        5) /
+      10
+    } ${
+      (state.modes.light.h +
+        state.modes.light.colors.alfa.h +
+        state.modes.light.colors.alfa.collectionShift) %
+      360
+    });
 
   --color-echo: oklch(${
-    (state.modes.light.l + state.modes.light.colors.bravo.l + 
-      (
-      state.collections[state.modes.light.colors.bravo.collectionIndex][0][0] * state.base.l.interval
-      )
-    ) % 100
+    (state.modes.light.l +
+      state.modes.light.colors.bravo.l +
+      state.collections[state.modes.light.colors.bravo.collectionIndex][0][0] *
+        state.base.l.interval) %
+    100
   }% ${
-    (((state.modes.light.c * 10) + state.modes.light.colors.bravo.c +
-    (
-      state.collections[state.modes.light.colors.bravo.collectionIndex][0][1] * (state.base.c.interval * 10)
-    )
-  ) % 5) /10
-  } ${
-    (state.modes.light.h + state.modes.light.colors.bravo.h + state.modes.light.colors.bravo.collectionShift) % 360
-  });
+      ((state.modes.light.c * 10 +
+        state.modes.light.colors.bravo.c +
+        state.collections[
+          state.modes.light.colors.bravo.collectionIndex
+        ][0][1] *
+          (state.base.c.interval * 10)) %
+        5) /
+      10
+    } ${
+      (state.modes.light.h +
+        state.modes.light.colors.bravo.h +
+        state.modes.light.colors.bravo.collectionShift) %
+      360
+    });
 
   --color-foxtrot: oklch(${
-    (state.modes.light.l + state.modes.light.colors.bravo.l + 
-      (
-      state.collections[state.modes.light.colors.bravo.collectionIndex][1][0] * state.base.l.interval
-      )
-    ) % 100
+    (state.modes.light.l +
+      state.modes.light.colors.bravo.l +
+      state.collections[state.modes.light.colors.bravo.collectionIndex][1][0] *
+        state.base.l.interval) %
+    100
   }% ${
-    (((state.modes.light.c * 10) + state.modes.light.colors.bravo.c +
-    (
-      state.collections[state.modes.light.colors.bravo.collectionIndex][1][1] * (state.base.c.interval * 10)
-    )
-  ) % 5) /10
-  } ${
-    (state.modes.light.h + state.modes.light.colors.bravo.h + state.modes.light.colors.bravo.collectionShift) % 360
-  });
+      ((state.modes.light.c * 10 +
+        state.modes.light.colors.bravo.c +
+        state.collections[
+          state.modes.light.colors.bravo.collectionIndex
+        ][1][1] *
+          (state.base.c.interval * 10)) %
+        5) /
+      10
+    } ${
+      (state.modes.light.h +
+        state.modes.light.colors.bravo.h +
+        state.modes.light.colors.bravo.collectionShift) %
+      360
+    });
 
 
-  --size-1: 2.986rem;
-  --size-2: 2.488rem;
-  --size-3: 2.074rem;
-  --size-4: 1.728rem;
-  --size-5: 1.44rem;
-  --size-6: 1.2rem;
-  --size-7: 1rem;
-  --size-8: 0.833rem;
-  --size-9: 0.694rem;
-  --size-10: 0.579rem;
 
 }
 
 
     `
-
 
     /*
     state.colors.forEach((color) => {
@@ -911,11 +984,9 @@ function sendStylesheet(msg) {
     })
     */
 
-
     childWindow.postMessage(stylePayload())
-
   } else {
-    console.log("Window is not available")
+    console.log('Window is not available')
   }
 }
 
@@ -923,13 +994,14 @@ function stylePayload() {
   let payload = `
 ${baseFont()}
 :root {
-${baseProps()}
+  ${baseProps()}
+  ${lightModeProps()}
 }
+${propsCSS()}
 ${baseCSS()}
   `
   return payload
 }
-
 
 function throttle(func, timeFrame) {
   var lastTime = 0
@@ -1169,7 +1241,10 @@ function updateProps() {
   primaries().forEach((primary) => {
     collectionCoords().forEach((coords) => {
       const key = `tertiaryRect-${primary.key}-${coords[0]}-${coords[1]}`
-      let h = (state.active.colors[primary.key].secondaryH + state.modes[state.active.mode].colors[primary.key].h) % 360
+      let h =
+        (state.active.colors[primary.key].secondaryH +
+          state.modes[state.active.mode].colors[primary.key].h) %
+        360
       let l =
         (state.modes[state.active.mode].colors[primary.key].l +
           100 +
@@ -1209,11 +1284,10 @@ function updateProps() {
   })
 
   updateEl(`.currentCSS`, {
-    innerHTML: stylePayload()
+    innerHTML: stylePayload(),
   })
 
   sendStylesheet()
-
 }
 
 function updateState() {
