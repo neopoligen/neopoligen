@@ -810,7 +810,6 @@ h1 {
 h2 { 
   font-size: var(--size-2); 
   --flow-space: 1.3em;
-
 }
 
 h3 { 

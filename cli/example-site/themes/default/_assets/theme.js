@@ -23,13 +23,13 @@ function addListenerTo(target, event, func) {
 }
 
 
-function addSvgTo(parent, tag, attrs = {}) {
-  const target = getEl(parent)
-  if (target) {
-    const el = document.createElementNS('http://www.w3.org/2000/svg', tag)
-    updateSvgAttrs(el, attrs)
-    target.appendChild(el)
-    return el
+function addSvgTo(target, tag, attrs = {}) {
+  const el = getEl(target)
+  if (el) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', tag)
+    updateSvgAttrs(svg, attrs)
+    el.appendChild(svg)
+    return svg
   }
 }
 

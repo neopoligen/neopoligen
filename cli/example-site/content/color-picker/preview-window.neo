@@ -17,6 +17,10 @@ bravo, charlie, delta, echo, and foxtrot. There
 are also black and white styles. All of the colors and
 the black and white styles
 
+-- h2
+
+Examples
+
 
 -- html
 
@@ -38,6 +42,7 @@ the black and white styles
     Write at once or you may forget it
   </div>
 </tab-group>
+
 
 
 
@@ -170,6 +175,6 @@ customElements.define('tab-group', TabGroup);
 -- metadata
 -- date: 2024-04-26
 -- id: 2fehqqas
--- template: single-column
+-- template: one-column
 
 
