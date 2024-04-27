@@ -931,7 +931,9 @@ function lightModeProps() {
         (state.modes.light.l + state.modes.light.colors.bravo.l) % 100
       }% ${
         ((state.modes.light.c * 10 + state.modes.light.colors.bravo.c) % 5) / 10
-      } ${(state.modes.light.h + state.modes.light.colors.bravo.h) % 360})`
+      } ${
+        (state.modes.light.h + state.modes.light.colors.bravo.h) % 360
+      }) / ${alpha}`
     )
     response += prop(
       `--border-bravo-${alpha}`,
@@ -963,12 +965,110 @@ function lightModeProps() {
           state.modes.light.colors.alfa.h +
           state.modes.light.colors.alfa.collectionShift) %
         360
-      })`
+      } / ${alpha})`
     )
     response += prop(
       `--border-charlie-${alpha}`,
       `1px solid var(--color-charlie-${alpha})`
     )
+
+    // delta
+    response += prop(
+      `--color-delta-${alpha}`,
+      `oklch(${
+        (state.modes.light.l +
+          state.modes.light.colors.alfa.l +
+          state.collections[
+            state.modes.light.colors.alfa.collectionIndex
+          ][1][0] *
+            state.base.l.interval) %
+        100
+      }% ${
+        ((state.modes.light.c * 10 +
+          state.modes.light.colors.alfa.c +
+          state.collections[
+            state.modes.light.colors.alfa.collectionIndex
+          ][1][1] *
+            (state.base.c.interval * 10)) %
+          5) /
+        10
+      } ${
+        (state.modes.light.h +
+          state.modes.light.colors.alfa.h +
+          state.modes.light.colors.alfa.collectionShift) %
+        360
+      } / ${alpha})`
+    )
+    response += prop(
+      `--border-delta-${alpha}`,
+      `1px solid var(--color-delta-${alpha})`
+    )
+
+    // echo
+    response += prop(
+      `--color-echo-${alpha}`,
+      `oklch(${
+        (state.modes.light.l +
+          state.modes.light.colors.bravo.l +
+          state.collections[
+            state.modes.light.colors.bravo.collectionIndex
+          ][0][0] *
+            state.base.l.interval) %
+        100
+      }% ${
+        ((state.modes.light.c * 10 +
+          state.modes.light.colors.bravo.c +
+          state.collections[
+            state.modes.light.colors.bravo.collectionIndex
+          ][0][1] *
+            (state.base.c.interval * 10)) %
+          5) /
+        10
+      } ${
+        (state.modes.light.h +
+          state.modes.light.colors.bravo.h +
+          state.modes.light.colors.bravo.collectionShift) %
+        360
+      } / ${alpha})`
+    )
+    response += prop(
+      `--border-echo-${alpha}`,
+      `1px solid var(--color-echo-${alpha})`
+    )
+
+    // foxtrot
+    response += prop(
+      `--color-foxtrot-${alpha}`,
+      `oklch(${
+        (state.modes.light.l +
+          state.modes.light.colors.bravo.l +
+          state.collections[
+            state.modes.light.colors.bravo.collectionIndex
+          ][1][0] *
+            state.base.l.interval) %
+        100
+      }% ${
+        ((state.modes.light.c * 10 +
+          state.modes.light.colors.bravo.c +
+          state.collections[
+            state.modes.light.colors.bravo.collectionIndex
+          ][1][1] *
+            (state.base.c.interval * 10)) %
+          5) /
+        10
+      } ${
+        (state.modes.light.h +
+          state.modes.light.colors.bravo.h +
+          state.modes.light.colors.bravo.collectionShift) %
+        360
+      } / ${alpha})`
+    )
+    response += prop(
+      `--border-foxtrot-${alpha}`,
+      `1px solid var(--color-foxtrot-${alpha})`
+    )
+
+    //
   }
 
   return response.trim()
