@@ -63,6 +63,10 @@ function appendInnerText(target, text) {
   }
 }
 
+function getData(target, key) {
+  // TODO
+}
+
 function getEl(target) {
   if (typeof target === 'string') {
     const el = document.querySelector(target)
@@ -136,6 +140,16 @@ function removeClassFrom(target, className) {
     el.classList.remove(className)
     return el
   }
+}
+
+function setData(target, key, value) {
+  // TODO
+}
+
+function setHTML(target, value) {
+  updateAttrs(target, {
+    innerHTML: value
+  })
 }
 
 function setStorage(key, value) {

@@ -89,21 +89,21 @@ let state = {
   ],
   modes: {
     light: {
-      l: 81.476,
-      c: 0.04839,
-      h: 76.757,
+      l: 90.762,
+      c: 0.06625,
+      h: 252.9,
       colors: {
         alfa: {
           l: 40,
-          c: 4,
-          h: 0,
+          c: 2,
+          h: 180,
           collectionShift: 180,
           collectionIndex: 7,
         },
         bravo: {
-          l: 20,
-          c: 4,
-          h: 0,
+          l: 40,
+          c: 0,
+          h: 300,
           collectionShift: 60,
           collectionIndex: 10,
         },
@@ -435,17 +435,6 @@ function buildChipRows() {
 }
 
 function buildChips() {
-  //   for (let cIndex = 0; cIndex < 5; cIndex++) {
-  //     for (let lIndex = 0; lIndex < 5; lIndex++) {
-  //       addTo(`.chipRow-${cIndex}`, 'div', {
-  //         innerHTML: `<div class="chip chip-${lIndex}-${cIndex}">
-  //         ${lIndex * state.base.l.interval} - ${cIndex}
-  //         </div>
-  //         `,
-  //       })
-  //     }
-  //   }
-
   lValues().forEach((l, lIndex) => {
     cValues().forEach((c, cIndex) => {
       addTo(`.chipRow-${cIndex}`, 'div', {
@@ -564,7 +553,6 @@ function buildSecondaryButtons() {
   })
 }
 
-// TODO: Rename Secondary there to Tertiary
 function buildTertiaryButtons() {
   primaries().forEach((primary) => {
     collections().forEach((collection, collectionIndex) => {
@@ -601,12 +589,14 @@ function buildTertiaryButtons() {
 }
 
 function buildSlider(config) {
-  const label = addTo('.sliders', 'label', {
+  const label = addTo(`.sliders`, 'label', {
+    for: `slider${config.key}`,
     innerHTML: `<span>${config.label}</span>`,
   })
-  addTo(label, 'input', {
+  addTo(`.sliders`, 'input', {
     classes: ['slider', `${config.key}Slider`],
     name: `${config.key}Slider`,
+    id: `slider${config.key}`,
     type: 'range',
     min: config.min,
     max: config.max,
@@ -614,6 +604,17 @@ function buildSlider(config) {
     data: [['key', config.key]],
     listeners: [['input', handleSliderChange]],
     value: config.value,
+  })
+  addTo(`.sliders`, `button`, {
+    classes: [`getFromButton-${config.key}`],
+    innerHTML: `Get From: dark mode`,
+    listeners: [
+      [`click`, handleGetFromClick]
+    ],
+    data: [
+      [`key`, config.key],
+      [`modeToGet`, `dark`]
+    ]
   })
 }
 
@@ -705,9 +706,18 @@ function handleColorButtonClick(event) {
   updateProps()
 }
 
+function handleGetFromClick(event) {
+  logMsg("TODO: getFromClick")
+}
+
 function handleModeClick(event) {
   state.active.mode = getRadioValue('mode')
-  logMsg(state.active.mode)
+  const otherMode = state.active.mode === `light` ? `dark` : `light`
+  parts().forEach((part) => {
+    setValue(`.${part}Slider`, state.modes[state.active.mode][part])
+    setHTML(`.getFromButton-${part}`, `Get From: ${otherMode} mode`)
+  })
+
   updateState()
   updateChips()
   updateProps()
@@ -730,13 +740,13 @@ function handleSecondaryButtonClick(event) {
   updateProps()
 }
 
-const handleSliderChange = throttle((event) => {
+const handleSliderChange = debounce((event) => {
   const key = event.target.dataset.key
   const value = parseFloat(event.target.value)
   //logMsg(value)
   updateState()
   updateProps()
-}, 50)
+}, 40)
 
 function handleTertiaryButtonClick(event) {
   // console.log(event.target.dataset)
@@ -1105,6 +1115,10 @@ function openWindow() {
     })
   }
   childWindow.focus()
+}
+
+function parts() {
+  return [`l`, `c`, `h`]
 }
 
 function primaries() {
