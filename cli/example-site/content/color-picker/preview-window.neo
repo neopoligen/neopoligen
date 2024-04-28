@@ -26,14 +26,37 @@ Examples
 
 
 <tab-group>
-  <div role='tablist'>
-    <button role='tab' aria-selected='true'>1</button>
-    <button role='tab'>2</button>
-    <button role='tab'>3</button>
+  <div role="tablist">
+    <button role="tab" aria-selected="true">1</button>
+    <button role="tab">2</button>
+    <button role="tab">3</button>
   </div>
 
-  <div role='tabpanel'>
-    <p>Base colors</p>
+  <div role="tabpanel" class="flow">
+    <p>
+        <em>Welcome To The Example Panel</em> - This area is used
+        to demonstrate the color palette in multiple ways. This first panel
+        doesn't have any extra colors in it on purpose. The idea is to get
+        a sense of the base without being overwhelmed by color swatches. 
+    </p>
+    <p>
+        <em>Live Updating</em> - The colors in this window update
+        automatically when you move the sliders and click the swatches in 
+        the main picker window. (Note that if the page refreshes for some
+        reason the connection gets lost. If you make changes in the main
+        window that aren't doing anything here close this window and
+        relaunch it)
+    </p>
+  </div>
+
+  <div role="tabpanel" class="flow" hidden>
+    <p><strong>Base colors:</strong> There are six base colors for each
+    palette: alfa, bravo, charlie, delta, echo, and foxtrot. I find these
+    generic names easier to work with than names like &quot;primary&quot;,
+    &quot;secondary&quot;, &quot;accent&quot;, etc... Those names have 
+    specific meaning and I often find I want to use a color when the meaning
+    doesn't fit. 
+    </p>
     <div class="swatch-row">
         <div>
             <div class="color-alfa">alfa</div>
@@ -61,14 +84,19 @@ Examples
         </div>
     </div>
 
+    <p><strong>Why Not Numbers?</strong> For a similar reason. Numbers imply
+    order which I often think of as priority when it comes to 
+    design. Trying to remember what priority or level I each color is 
+    is harder for me to do then remembering them with the name. Sure, there's
+    an implicit order with the alfa, bravo, charlie... names, but it's
+    a lot easier for me to remember that &quot;.color-charlie&quot; is green than
+    &quot;.color-4&quot;</p>
+  </div>
 
+  <div role="tabpanel" class="flow">
+    TODO: Add more examples here
   </div>
-  <div role='tabpanel' hidden>
-    Take the winding path to reach the lake
-  </div>
-  <div role='tabpanel' hidden>
-    Write at once or you may forget it
-  </div>
+
 </tab-group>
 
 
@@ -83,7 +111,34 @@ Examples
 .swatch-square {
     width: 60px;
     height: 60px; 
+    border-radius: 0.4rem;
 }
+
+[role='tab'] {
+  background: none;
+  border: none;
+  color: var(--color-delta-60);
+  cursor: pointer;
+  font: inherit;
+  outline: inherit;
+  padding-block: 0 2px;
+  padding-inline: 11px;
+  &[aria-selected='true'] {
+    border-bottom: 3px solid var(--color-charlie);
+    color: var(--color-charlie);
+    padding-block: 0 0;
+  }
+}
+
+[role='tablist'] {
+  border-bottom: 1px solid var(--color-charlie);
+}
+
+[role='tabpanel'] {
+  padding-block: 1.4rem;
+}
+
+
 
 
 -- html
@@ -96,11 +151,34 @@ Examples
 let currentStyleData = ""
 let styleEl
 
+function addPlaceholderText() {
+    const paragraphs = [
+        `The rest of the text below this line is place holder text just to fill out some more space for the example.`,
+        `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mi id massa pellentesque laoreet sit amet ut lectus. Aenean vitae diam iaculis, efficitur purus vitae, posuere odio. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vestibulum vulputate auctor justo, et iaculis ipsum fermentum in. Sed nec quam turpis.`,
+        `In neque enim, accumsan non purus non, ultrices tristique metus. Mauris at pulvinar lacus. Pellentesque blandit convallis justo, ac malesuada diam. Nulla sed porttitor magna, nec commodo mauris. Proin sit amet tincidunt dui. Morbi lobortis justo nisl, quis efficitur justo lobortis id.`,
+        `Fusce accumsan sem vitae enim imperdiet, a vulputate libero varius.`,
+        `Donec dictum lorem arcu, vehicula blandit quam semper ac. Curabitur tempus semper finibus. Morbi est orci, pretium ut ipsum sed, pulvinar egestas ligula. Sed lobortis nibh eu vehicula viverra. Vivamus maximus metus at lectus eleifend volutpat id in sapien. Pellentesque tortor dolor, consequat at scelerisque porta, hendrerit sed lectus. Pellentesque scelerisque ex odio.`,
+        `Suspendisse potenti. Proin condimentum ullamcorper eleifend. In non eros mattis, efficitur diam in, tincidunt tortor. Nunc lobortis nunc nunc, id tristique ante commodo a. Mauris vulputate quis nulla quis sollicitudin. Maecenas ornare tellus lacus, vitae tempus ligula sollicitudin quis. Maecenas non tellus in libero convallis ullamcorper.`,
+        `Suspendisse porttitor eget mi quis lobortis. Aliquam non lorem luctus, maximus lectus sed, imperdiet sem. Vivamus congue quam vitae nisl aliquet congue et in magna. Aliquam sit amet urna augue. Ut quis nisl urna.`,
+    ]
+    const els = document.querySelectorAll(`[role='tabpanel']`)
+    els.forEach((el) => {
+        addTo(el, 'h2', { innerHTML: "Placeholder Text" })
+        paragraphs.forEach((p) => {
+            addTo(el, 'p', {
+                innerHTML: p
+            })
+        })
+    }) 
+}
+
 function updateStyles() {
     styleEl.innerHTML = currentStyleData
+    /*
     updateEl(`.currentStyle`, {
         innerHTML: currentStyleData
     })
+    */
 }
 
 window.addEventListener("message", (event) => {
@@ -114,6 +192,7 @@ window.addEventListener("message", (event) => {
 
 document.addEventListener("DOMContentLoaded", () => {
     styleEl = addTo(document.head, 'style')
+    addPlaceholderText() 
 })
 
 

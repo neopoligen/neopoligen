@@ -377,6 +377,12 @@ img {
   color: var(--color-bravo);
 }
 
+pre {
+  white-space: pre-wrap; 
+  overflow-wrap: break-word;
+}
+
+
 .wrapper {
   width: min(100vw - 3rem, 58ch);
   margin-inline: auto;
@@ -1095,7 +1101,7 @@ function modes() {
 }
 
 function openWindow() {
-  const params = `scrollbars=no,resizable=yes,status=no,location=no,toolbar=no,menubar=no`
+  const params = `scrollbars=no,resizable=yes,status=no,location=no,toolbar=no,menubar=no,width=800,top=20,left=20`
   if (childWindow && childWindow.name === childWindowName) {
     //sendStylesheet("Connection Already Established")
   } else {
