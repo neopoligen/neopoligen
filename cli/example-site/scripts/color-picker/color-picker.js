@@ -360,14 +360,6 @@ h6 {
   font-size: var(--size-6); 
 }
 
-.heading_level_section h2,
-.heading_level_section h3,
-.heading_level_section h4,
-.heading_level_section h5,
-.heading_level_section h6 {
-  border-bottom: var(--border-charlie);
-}
-
 img {
   max-width: 100%;
   display: block;
@@ -714,6 +706,8 @@ function handleColorButtonClick(event) {
 }
 
 function handleModeClick(event) {
+  state.active.mode = getRadioValue('mode')
+  logMsg(state.active.mode)
   updateState()
   updateChips()
   updateProps()

@@ -94,7 +94,9 @@ Examples
   </div>
 
   <div role="tabpanel" class="flow">
-    TODO: Add more examples here
+    <p>Black and white colors are in the palette as well as alpha channel
+    versions of all the colors backing of the opacity in 5% intervals:</p>
+    
   </div>
 
 </tab-group>

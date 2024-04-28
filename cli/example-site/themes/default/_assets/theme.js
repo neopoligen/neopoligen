@@ -13,7 +13,6 @@ function addClassTo(target, className) {
   }
 }
 
-
 function addListenerTo(target, event, func) {
   const el = getEl(target)
   if (el) {
@@ -21,7 +20,6 @@ function addListenerTo(target, event, func) {
     return el
   }
 }
-
 
 function addSvgTo(target, tag, attrs = {}) {
   const el = getEl(target)
@@ -33,28 +31,28 @@ function addSvgTo(target, tag, attrs = {}) {
   }
 }
 
-function addTo(parent, tag, attrs = {}) {
-  const target = getEl(parent)
-  if (target) {
-    const el = document.createElement(tag)
-    updateAttrs(el, attrs)
-    target.appendChild(el)
-    return el
+function addTo(target, tag, attrs = {}) {
+  const el = getEl(target)
+  if (el) {
+    const newEl = document.createElement(tag)
+    updateAttrs(newEl, attrs)
+    el.appendChild(newEl)
+    return newEl
   }
 }
 
-function addToFront(parent, tag, attrs = {}) {
-  const target = getEl(parent)
-  if (target) {
-    const el = document.createElement(tag)
-    updateAttrs(el, attrs)
-    if (target.hasChildNodes()) {
-      const first_child = target.firstChild
-      target.insertBefore(el, first_child)
+function addToFront(target, tag, attrs = {}) {
+  const el = getEl(target)
+  if (el) {
+    const newEl = document.createElement(tag)
+    updateAttrs(newEl, attrs)
+    if (el.hasChildNodes()) {
+      const first_child = el.firstChild
+      el.insertBefore(newEl, first_child)
     } else {
-      target.appendChild(el)
+      el.appendChild(newEl)
     }
-    return el
+    return newEl
   }
 }
 
@@ -82,8 +80,8 @@ function getEl(target) {
   }
 }
 
-function getFloat(selector) {
-  const el = getEl(selector)
+function getFloat(target) {
+  const el = getEl(target)
   if (el) {
     return parseFloat(el.value)
   } else {
@@ -91,10 +89,19 @@ function getFloat(selector) {
   }
 }
 
-function getInt(selector) {
-  const el = getEl(selector)
+function getInt(target) {
+  const el = getEl(target)
   if (el) {
     return parseInt(el.value, 10)
+  } else {
+    return undefined
+  }
+}
+
+function getRadioValue(name) {
+  const el = getEl(`[name=${name}]:checked`)
+  if (el) {
+    return el.value
   } else {
     return undefined
   }
@@ -106,8 +113,8 @@ function getStorage(key, defaultValue = undefined) {
     : defaultValue
 }
 
-function getValue(selector) {
-  const el = getEl(selector)
+function getValue(target) {
+  const el = getEl(target)
   if (el) {
     return el.value
   } else {
@@ -133,6 +140,15 @@ function removeClassFrom(target, className) {
 
 function setStorage(key, value) {
   localStorage.setItem(key, JSON.stringify({ payload: value }))
+}
+
+function setValue(target, value) {
+  const el = getEl(target)
+  if (el) {
+    el.value = value
+  } else {
+    logError(`Could not set value: ${value}`)
+  }
 }
 
 function updateEl(target, attrs = {}) {
