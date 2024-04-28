@@ -110,23 +110,23 @@ let state = {
       },
     },
     dark: {
-      l: 30,
-      c: 0.3637,
-      h: 93.484,
+      l: 16.009,
+      c: 0.06625,
+      h: 252.9,
       colors: {
         alfa: {
           l: 40,
-          c: 0,
-          h: 0,
-          collectionShift: 0,
-          collectionIndex: 0,
+          c: 2,
+          h: 180,
+          collectionShift: 180,
+          collectionIndex: 7,
         },
         bravo: {
-          l: 60,
+          l: 80,
           c: 0,
-          h: 0,
-          collectionShift: 0,
-          collectionIndex: 0,
+          h: 300,
+          collectionShift: 60,
+          collectionIndex: 10,
         },
       },
     },
@@ -315,7 +315,7 @@ a:hover, a:focus {
 }
 
 body { 
-  background-color: var(--color-background);
+  background-color: var(--color-base);
   color: var(--color-bravo); 
   font-size: 16px;
   line-height: 1.5; 
@@ -613,7 +613,6 @@ function buildSlider(config) {
     ],
     data: [
       [`key`, config.key],
-      [`modeToGet`, `dark`]
     ]
   })
 }
@@ -707,17 +706,21 @@ function handleColorButtonClick(event) {
 }
 
 function handleGetFromClick(event) {
-  logMsg("TODO: getFromClick")
+  const key = event.target.dataset.key
+  const otherMode = state.active.mode === `light` ? `dark` : `light`
+  setValue(`.${key}Slider`, state.modes[otherMode][key])
+  updateState()
+  updateChips()
+  updateProps()
 }
 
 function handleModeClick(event) {
   state.active.mode = getRadioValue('mode')
   const otherMode = state.active.mode === `light` ? `dark` : `light`
-  parts().forEach((part) => {
-    setValue(`.${part}Slider`, state.modes[state.active.mode][part])
-    setHTML(`.getFromButton-${part}`, `Get From: ${otherMode} mode`)
+  lch().forEach((key) => {
+    setValue(`.${key}Slider`, state.modes[state.active.mode][key])
+    setHTML(`.getFromButton-${key}`, `Get From: ${otherMode} mode`)
   })
-
   updateState()
   updateChips()
   updateProps()
@@ -780,15 +783,19 @@ function launchPreviewWindow() {
   logMsg('launch')
 }
 
+function lch() {
+  return [`l`, `c`, `h`]
+}
+
 function lightModeProps() {
   let response = ``
 
-  // background
+  // base for background
   response += prop(
-    `--color-background`,
+    `--color-base`,
     `oklch(${state.modes.light.l}% ${state.modes.light.c} ${state.modes.light.h})`
   )
-  response += prop(`--border-background`, `1px solid var(--color-background)`)
+  response += prop(`--border-base`, `1px solid var(--color-base)`)
 
   // alfa
   response += prop(
@@ -918,7 +925,7 @@ function lightModeProps() {
 
   for (let alpha = 5; alpha <= 95; alpha = alpha + 5) {
     response += prop(
-      `--color-background-${alpha}`,
+      `--color-base-${alpha}`,
       `oklch(${state.modes.light.l}% ${state.modes.light.c} ${state.modes.light.h} / ${alpha}%)`
     )
 
@@ -1117,10 +1124,6 @@ function openWindow() {
   childWindow.focus()
 }
 
-function parts() {
-  return [`l`, `c`, `h`]
-}
-
 function primaries() {
   return state.primaries
 }
@@ -1135,15 +1138,15 @@ function prop(key, value) {
 
 function propsCSS() {
   let response = ``
-  response += style(`.color-background`, `color: var(--color-background);`)
+  response += style(`.color-base`, `color: var(--color-base);`)
   colors().forEach((color) => {
     response += style(`.color-${color}`, `color: var(--color-${color});`)
   })
 
   for (let alpha = 5; alpha <= 95; alpha = alpha + 5) {
     response += style(
-      `.color-background-${alpha}`,
-      `color: var(--color-background-${alpha});`
+      `.color-base-${alpha}`,
+      `color: var(--color-base-${alpha});`
     )
     colors().forEach((color) => {
       response += style(
@@ -1153,7 +1156,7 @@ function propsCSS() {
     })
   }
 
-  response += style(`.bg-background`, `background-color: var(--color-background);`)
+  response += style(`.bg-base`, `background-color: var(--color-base);`)
   colors().forEach((color) => {
     response += style(`.bg-${color}`, `background-color: var(--color-${color});`)
   })
@@ -1161,8 +1164,8 @@ function propsCSS() {
 
   for (let alpha = 5; alpha <= 95; alpha = alpha + 5) {
     response += style(
-      `.bg-background-${alpha}`,
-      `background-color: var(--color-background-${alpha});`
+      `.bg-base-${alpha}`,
+      `background-color: var(--color-base-${alpha});`
     )
     colors().forEach((color) => {
       response += style(
