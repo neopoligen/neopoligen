@@ -21,6 +21,13 @@ function addListenerTo(target, event, func) {
   }
 }
 
+function addListenersTo(selector, event, func) {
+  const els = document.querySelectorAll(selector)
+  els.forEach((el) => {
+    el.addEventListener(event, func)
+  })
+}
+
 function addSvgTo(target, tag, attrs = {}) {
   const el = getEl(target)
   if (el) {
@@ -82,6 +89,10 @@ function getEl(target) {
     logError(`Could not get element: ${target}`)
     return undefined
   }
+}
+
+function getEls(selector) {
+  return document.querySelectorAll(selector)
 }
 
 function getFloat(target) {
@@ -173,14 +184,24 @@ function updateEl(target, attrs = {}) {
   return el
 }
 
+function updateEls(selector, attrs = {}) {
+  const els = getEls(selector)
+  els.forEach((el) => {
+    updateAttrs(el, attrs)
+  })
+}
+
 function updateAttrs(target, attrs) {
   const el = getEl(target)
   if (el) {
-    const nonAttrs = ['classes', 'data', 'listeners']
+    const nonAttrs = ['aria', 'classes', 'data', 'listeners']
     for (let key in attrs) {
       if (!nonAttrs.includes(key)) {
         el[key] = attrs[key]
       }
+    }
+    for (let index in attrs.aria) {
+      el.setAttribute(`aria-${attrs.aria[index][0]}`, attrs.aria[index][1])
     }
     for (let index in attrs.classes) {
       el.classList.add(attrs.classes[index])
