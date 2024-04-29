@@ -72,7 +72,7 @@ mod test {
                     containers: vec![Child::Block(vec![
                         Span::WordSegment {
                             text: "papa".to_string(),
-                            template: "spans/word.neojinja".to_string(),
+                            template: "spans/word_segment.neojinja".to_string(),
                         },
                         Span::Space {
                             text: " ".to_string(),
@@ -80,7 +80,7 @@ mod test {
                         },
                         Span::WordSegment {
                             text: "mike".to_string(),
-                            template: "spans/word.neojinja".to_string(),
+                            template: "spans/word_segment.neojinja".to_string(),
                         },
                     ])],
                 },

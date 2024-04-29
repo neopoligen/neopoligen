@@ -120,7 +120,7 @@ mod test {
                 span_type: "link".to_string(),
                 spans: vec![Span::WordSegment {
                     text: "bravo".to_string(),
-                    template: "spans/word.neojinja".to_string(),
+                    template: "spans/word_segment.neojinja".to_string(),
                 }],
                 key_value_attributes: BTreeMap::new(),
                 flag_attributes,
@@ -146,7 +146,7 @@ mod test {
                 span_type: "link".to_string(),
                 spans: vec![Span::WordSegment {
                     text: "Sierra".to_string(),
-                    template: "spans/word.neojinja".to_string(),
+                    template: "spans/word_segment.neojinja".to_string(),
                 }],
                 key_value_attributes,
                 flag_attributes,

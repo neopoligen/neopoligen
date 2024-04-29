@@ -8,7 +8,7 @@ pub fn word(source: &str) -> IResult<&str, Span> {
         source,
         Span::WordSegment {
             text: content.to_string(),
-            template: "spans/word.neojinja".to_string(),
+            template: "spans/word_segment.neojinja".to_string(),
         },
     ))
 }
@@ -25,7 +25,7 @@ mod test {
             " ",
             Span::WordSegment {
                 text: "delta".to_string(),
-                template: "spans/word.neojinja".to_string(),
+                template: "spans/word_segment.neojinja".to_string(),
             },
         ));
         let right = word(source);
@@ -39,7 +39,7 @@ mod test {
             " ",
             Span::WordSegment {
                 text: "-".to_string(),
-                template: "spans/word.neojinja".to_string(),
+                template: "spans/word_segment.neojinja".to_string(),
             },
         ));
         let right = word(source);

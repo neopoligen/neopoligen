@@ -41,7 +41,7 @@ pub fn footnote<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str, Spa
         Span::StandardSpan {
             spans: vec![Span::WordSegment {
                 text: "example".to_string(),
-                template: "spans/word.neojinja".to_string(),
+                template: "spans/word_segment.neojinja".to_string(),
             }],
             key_value_attributes: BTreeMap::new(),
             flag_attributes: BTreeSet::new(),
@@ -67,7 +67,7 @@ mod test {
                 span_type: "footnote".to_string(),
                 spans: vec![Span::WordSegment {
                     text: "example".to_string(),
-                    template: "spans/word.neojinja".to_string(),
+                    template: "spans/word_segment.neojinja".to_string(),
                 }],
                 key_value_attributes: BTreeMap::new(),
                 flag_attributes: BTreeSet::new(),

@@ -101,7 +101,7 @@ mod test {
                         containers: vec![Child::Block(vec![
                             Span::WordSegment {
                                 text: "whiskey".to_string(),
-                                template: "spans/word.neojinja".to_string(),
+                                template: "spans/word_segment.neojinja".to_string(),
                             },
                             Span::Space {
                                 text: " ".to_string(),
@@ -109,7 +109,7 @@ mod test {
                             },
                             Span::WordSegment {
                                 text: "juliette".to_string(),
-                                template: "spans/word.neojinja".to_string(),
+                                template: "spans/word_segment.neojinja".to_string(),
                             },
                         ])],
                     },
@@ -117,7 +117,7 @@ mod test {
                         containers: vec![Child::Block(vec![
                             Span::WordSegment {
                                 text: "romeo".to_string(),
-                                template: "spans/word.neojinja".to_string(),
+                                template: "spans/word_segment.neojinja".to_string(),
                             },
                             Span::Space {
                                 text: "\n".to_string(),
@@ -125,7 +125,7 @@ mod test {
                             },
                             Span::WordSegment {
                                 text: "victor".to_string(),
-                                template: "spans/word.neojinja".to_string(),
+                                template: "spans/word_segment.neojinja".to_string(),
                             },
                         ])],
                     },

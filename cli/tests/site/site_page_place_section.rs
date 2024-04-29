@@ -22,33 +22,33 @@ mod site_page_place_section {
             bounds: "full".to_string(),
             category: SectionCategory::StandardSectionFull {
                 containers: vec![Child::Block(vec![
-                    Span::Word {
+                    Span::WordSegment {
                         text: "Basic".to_string(),
-                        template: "spans/word.neojinja".to_string(),
+                        template: "spans/word_segment.neojinja".to_string(),
                     },
                     Span::Space {
                         text: " ".to_string(),
                         template: "spans/space.neojinja".to_string(),
                     },
-                    Span::Word {
+                    Span::WordSegment {
                         text: "Place".to_string(),
-                        template: "spans/word.neojinja".to_string(),
+                        template: "spans/word_segment.neojinja".to_string(),
                     },
                     Span::Space {
                         text: " ".to_string(),
                         template: "spans/space.neojinja".to_string(),
                     },
-                    Span::Word {
+                    Span::WordSegment {
                         text: "Section".to_string(),
-                        template: "spans/word.neojinja".to_string(),
+                        template: "spans/word_segment.neojinja".to_string(),
                     },
                     Span::Space {
                         text: " ".to_string(),
                         template: "spans/space.neojinja".to_string(),
                     },
-                    Span::Word {
+                    Span::WordSegment {
                         text: "Test".to_string(),
-                        template: "spans/word.neojinja".to_string(),
+                        template: "spans/word_segment.neojinja".to_string(),
                     },
                 ])],
             },

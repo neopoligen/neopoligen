@@ -63,7 +63,7 @@ mod test {
                 span_type: "strong".to_string(),
                 spans: vec![Span::WordSegment {
                     text: "Hotel".to_string(),
-                    template: "spans/word.neojinja".to_string(),
+                    template: "spans/word_segment.neojinja".to_string(),
                 }],
                 key_value_attributes: BTreeMap::new(),
                 flag_attributes: BTreeSet::new(),

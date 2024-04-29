@@ -85,7 +85,7 @@
 //             Child::Block(vec![
 //                 Span::WordSegment {
 //                     text: "juliette".to_string(),
-//                     template: "spans/word.neojinja".to_string()
+//                     template: "spans/word_segment.neojinja".to_string()
 //                 },
 //                 Span::Space {
 //                     text: " ".to_string(),
@@ -93,7 +93,7 @@
 //                 },
 //                 Span::WordSegment {
 //                     text: "foxtrot".to_string(),
-//                     template: "spans/word.neojinja".to_string()
+//                     template: "spans/word_segment.neojinja".to_string()
 //                 }
 //             ]),
 //         ));

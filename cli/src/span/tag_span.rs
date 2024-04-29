@@ -20,7 +20,7 @@ mod test {
     #[test]
     fn single_word_isolated() {
         let source = "alfa";
-        let left = Span::WordSegment{text: "alfa".to_string(), template: "spans/word.neojinja".to_string()};
+        let left = Span::WordSegment{text: "alfa".to_string(), template: "spans/word_segment.neojinja".to_string()};
         let right = tag_span(source).unwrap().1;
         assert_eq!(left, right);
     }
