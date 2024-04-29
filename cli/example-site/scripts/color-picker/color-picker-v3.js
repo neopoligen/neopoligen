@@ -114,37 +114,11 @@ customElements.define(
         innerHTML: 'Launch Preview Window',
       })
     }
-
-    getEl(target) {
-      if (typeof target === 'string') {
-        const el = this.shadowRoot.querySelector(target)
-        if (el) {
-          return el
-        } else {
-          logError(`Could not find querySelector for: ${target}`)
-          return undefined
-        }
-      } else if (target) {
-        return target
-      } else {
-        logError(`Could not get element: ${target}`)
-        return undefined
-      }
-    }
-
-    getValue(target) {
-      const el = this.getEl(target)
-      if (el) {
-        return el.value
-      } else {
-        return undefined
-      }
-    }
-
+    
     handleModeClick(event) {
-      this.state.active.mode = this.getValue('[name="mode"]:checked')
+      this.state.active.mode = this.modGetValue('[name="mode"]:checked')
       this.lch().forEach((key) => {
-        this.setValue(`.slider-${key}`, this.state.modes[this.mode()][key])
+        this.modSetValue(`.slider-${key}`, this.state.modes[this.mode()][key])
         // this.setHTML(`.getFromButton-${key}`, `Get From: ${otherMode} mode`)
       })
       this.update()
@@ -316,37 +290,6 @@ customElements.define(
       }
     }
 
-    logError(msg) {
-      console.error(`${Date.now()} - ERROR: ` + msg)
-    }
-
-    logMsg(msg) {
-      console.log(`${Date.now()} - INFO: ` + msg)
-    }
-
-    modAddTo(target, tag, attrs = {}) {
-      const el = this.getEl(target)
-      if (el) {
-        const newEl = document.createElement(tag)
-        updateAttrs(newEl, attrs)
-        el.appendChild(newEl)
-        return newEl
-      }
-    }
-
-    modGetFloat(target) {
-      const el = this.getEl(target)
-      if (el) {
-        return parseFloat(el.value)
-      } else {
-        return undefined
-      }
-    }
-
-    modLogObject(msg) {
-      console.log(msg)
-    }
-
     mode() {
       return this.state.active.mode
     }
@@ -367,25 +310,16 @@ customElements.define(
       }
     }
 
-    setValue(target, value) {
-      const el = this.getEl(target)
-      if (el) {
-        el.value = value
-      } else {
-        this.logError(`Could not set value: ${value}`)
-      }
-    }
-
     update() {
       this.lch().forEach((key) => {
         this.state.modes[this.mode()][key] = this.modGetFloat(`.slider-${key}`)
-        this.logMsg(this.state.modes[this.mode()][key])
+        this.modLogMsg(this.state.modes[this.mode()][key])
       })
-      this.logMsg('Doing update')
+      this.modLogMsg('Doing update')
     }
 
     updateAttrs(target, attrs) {
-      const el = getEl(target)
+      const el = modGetEl(target)
       if (el) {
         const nonAttrs = ['aria', 'classes', 'data', 'listeners']
         for (let key in attrs) {
@@ -409,6 +343,75 @@ customElements.define(
           )
         }
         return el
+      }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////
+    // Module functions
+
+    modAddTo(target, tag, attrs = {}) {
+      const el = this.modGetEl(target)
+      if (el) {
+        const newEl = document.createElement(tag)
+        updateAttrs(newEl, attrs)
+        el.appendChild(newEl)
+        return newEl
+      }
+    }
+
+    modGetEl(target) {
+      if (typeof target === 'string') {
+        const el = this.shadowRoot.querySelector(target)
+        if (el) {
+          return el
+        } else {
+          modLogError(`Could not find querySelector for: ${target}`)
+          return undefined
+        }
+      } else if (target) {
+        return target
+      } else {
+        modLogError(`Could not get element: ${target}`)
+        return undefined
+      }
+    }
+
+    modGetFloat(target) {
+      const el = this.modGetEl(target)
+      if (el) {
+        return parseFloat(el.value)
+      } else {
+        return undefined
+      }
+    }
+
+    modGetValue(target) {
+      const el = this.modGetEl(target)
+      if (el) {
+        return el.value
+      } else {
+        return undefined
+      }
+    }
+
+    modLogError(msg) {
+      console.error(`${Date.now()} - ERROR: ` + msg)
+    }
+
+    modLogMsg(msg) {
+      console.log(`${Date.now()} - INFO: ` + msg)
+    }
+
+    modLogObject(msg) {
+      console.log(msg)
+    }
+
+    modSetValue(target, value) {
+      const el = this.modGetEl(target)
+      if (el) {
+        el.value = value
+      } else {
+        this.modLogError(`Could not set value: ${value}`)
       }
     }
   }
