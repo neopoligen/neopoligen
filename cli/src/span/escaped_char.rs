@@ -4,7 +4,7 @@ use nom::bytes::complete::tag;
 use nom::IResult;
 
 pub fn escaped_char(source: &str) -> IResult<&str, Span> {
-    let (source, result) = tag(r"\")(source)?;
+    let (source, _) = tag(r"\")(source)?;
     let (source, result) = alt((tag(r"^"), tag("*")))(source)?;
     Ok((
         source,
@@ -17,8 +17,8 @@ pub fn escaped_char(source: &str) -> IResult<&str, Span> {
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use pretty_assertions::assert_eq;
+    // use super::*;
+    // use pretty_assertions::assert_eq;
     // use nom::error::Error;
     // use nom::error::ErrorKind;
     // use nom::Err;

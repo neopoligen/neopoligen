@@ -22,6 +22,8 @@ mod test {
     use super::*;
     use crate::span::Span;
     use pretty_assertions::assert_eq;
+    use std::collections::BTreeMap;
+    use std::collections::BTreeSet;
 
     #[test]
     fn basic_block() {
@@ -66,6 +68,33 @@ mod test {
                 Span::WordSegment {
                     text: "ta".to_string(),
                     template: "spans/word_segment.neojinja".to_string(),
+                },
+            ]),
+        ));
+        let right = block(source, &config);
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn basic_footnote() {
+        let source = r#"echo^ping^^"#;
+        let config = Config::set1();
+        let left = Ok((
+            "",
+            Child::Block(vec![
+                Span::WordSegment {
+                    text: "echo".to_string(),
+                    template: "spans/word_segment.neojinja".to_string(),
+                },
+                Span::Footnote {
+                    span_type: "footnote".to_string(),
+                    spans: vec![Span::WordSegment {
+                        text: "ping".to_string(),
+                        template: "spans/word_segment.neojinja".to_string(),
+                    }],
+                    flag_attributes: BTreeSet::new(),
+                    key_value_attributes: BTreeMap::new(),
+                    template: "spans/footnote.neojinja".to_string(),
                 },
             ]),
         ));

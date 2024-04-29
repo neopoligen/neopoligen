@@ -17,8 +17,7 @@ pub mod word_segment;
 
 use crate::config::Config;
 use crate::span::escaped_char::escaped_char;
-use crate::span::escaped_pipe::escaped_pipe; // TODO: Deprecate this for escaped_char
-                                             // use crate::span::footnote::footnote;
+use crate::span::footnote::footnote;
 use crate::span::greater_than::greater_than;
 // use crate::span::inline_key_value_span_no_attributes::inline_key_value_span_no_attributes;
 // use crate::span::inline_key_value_span_with_attributes::inline_key_value_span_with_attributes;
@@ -45,6 +44,13 @@ pub enum Span {
     // Deprecate this and move it to escaped char
     EscapedPipe {
         text: String,
+        template: String,
+    },
+    Footnote {
+        key_value_attributes: BTreeMap<String, String>,
+        flag_attributes: BTreeSet<String>,
+        span_type: String,
+        spans: Vec<Span>,
         template: String,
     },
     GreaterThan {
@@ -103,6 +109,7 @@ pub fn span<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str, Span> {
         greater_than,
         single_newline,
         word_segment,
+        |src| footnote(src, config),
     ))(source)?;
     Ok((source, content))
 }

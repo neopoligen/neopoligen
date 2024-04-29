@@ -2,12 +2,12 @@ use crate::config::Config;
 use crate::span::span;
 use crate::span::Span;
 use nom::bytes::complete::tag;
-use nom::bytes::complete::tag_no_case;
-use nom::bytes::complete::take_until;
-use nom::error::Error;
-use nom::error::ErrorKind;
+// use nom::bytes::complete::tag_no_case;
+// use nom::bytes::complete::take_until;
+// use nom::error::Error;
+// use nom::error::ErrorKind;
 use nom::multi::many1;
-use nom::Err;
+// use nom::Err;
 use nom::IResult;
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
@@ -38,7 +38,7 @@ pub fn footnote<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str, Spa
 
     Ok((
         source,
-        Span::StandardSpan {
+        Span::Footnote {
             spans: content,
             key_value_attributes: BTreeMap::new(),
             flag_attributes: BTreeSet::new(),
@@ -59,7 +59,7 @@ mod test {
         let config = Config::set1();
         let left = Ok((
             "",
-            Span::StandardSpan {
+            Span::Footnote {
                 span_type: "footnote".to_string(),
                 spans: vec![Span::WordSegment {
                     text: "example".to_string(),
