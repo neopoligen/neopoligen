@@ -10,25 +10,15 @@ customElements.define(
       this.buildSliders()
     }
 
-    addTo(target, tag, attrs = {}) {
-      const el = this.getEl(target)
-      if (el) {
-        const newEl = document.createElement(tag)
-        updateAttrs(newEl, attrs)
-        el.appendChild(newEl)
-        return newEl
-      }
-    }
-
     buildModeButtons() {
-      addTo(this.shadowRoot, 'div', {
+      this.modAddTo(this.shadowRoot, 'div', {
         classes: ['modes'],
       })
       this.modes().forEach((mode) => {
-        const label = this.addTo('.modes', 'label', {
+        const label = this.modAddTo('.modes', 'label', {
           innerHTML: `<span>${mode}</span>`,
         })
-        this.addTo(label, 'input', {
+        this.modAddTo(label, 'input', {
           type: 'radio',
           name: 'mode',
           checked: mode === 'light' ? true : false,
@@ -48,16 +38,16 @@ customElements.define(
     }
 
     buildSlider(config) {
-      const sliders = this.addTo(this.shadowRoot, 'div', {
+      const sliders = this.modAddTo(this.shadowRoot, 'div', {
         classes: ['sliders'],
       })
 
-      this.addTo(sliders, 'label', {
+      this.modAddTo(sliders, 'label', {
         for: `slider-${config.key}`,
         innerHTML: `<span>${config.label}</span>`,
       })
 
-      this.addTo(sliders, 'input', {
+      this.modAddTo(sliders, 'input', {
         classes: ['slider', `slider-${config.key}`],
         name: `slider-${config.key}`,
         id: `slider-${config.key}`,
@@ -65,9 +55,7 @@ customElements.define(
         min: config.min,
         max: config.max,
         step: config.step,
-        data: [
-            ['key', config.key]
-        ],
+        data: [['key', config.key]],
         listeners: [
           [
             'input',
@@ -80,7 +68,7 @@ customElements.define(
       })
 
       // original to review
-      // addTo(`.sliders`, `button`, {
+      // modAddTo(`.sliders`, `button`, {
       //   classes: [`getFromButton-${config.key}`],
       //   innerHTML: `Get From: dark mode`,
       //   listeners: [
@@ -122,7 +110,7 @@ customElements.define(
     }
 
     buildWrapper() {
-      addTo(this.shadowRoot, 'button', {
+      this.modAddTo(this.shadowRoot, 'button', {
         innerHTML: 'Launch Preview Window',
       })
     }
@@ -334,6 +322,16 @@ customElements.define(
 
     logMsg(msg) {
       console.log(`${Date.now()} - INFO: ` + msg)
+    }
+
+    modAddTo(target, tag, attrs = {}) {
+      const el = this.getEl(target)
+      if (el) {
+        const newEl = document.createElement(tag)
+        updateAttrs(newEl, attrs)
+        el.appendChild(newEl)
+        return newEl
+      }
     }
 
     modGetFloat(target) {
