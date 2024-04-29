@@ -1482,7 +1482,6 @@ function modeProps(mode) {
   return response.trim()
 }
 
-
 function modes() {
   const tmp = []
   for (let mode in state.modes) {

@@ -24,9 +24,6 @@ pub fn inline_key_value_span_with_attributes<'a>(
     source: &'a str,
     config: &'a Config,
 ) -> IResult<&'a str, Span> {
-
-
-
     let (source, _) = tag_no_case("<<")(source)?;
     let (source, span_type) = match match config.key_value_spans.iter().find_map(|t| {
         match tag_no_case::<&str, &str, Error<&str>>(t.as_str())(source) {

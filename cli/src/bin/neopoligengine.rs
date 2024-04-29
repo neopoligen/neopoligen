@@ -288,7 +288,7 @@ fn run_watcher(reloader: Reloader, config: Config, neo_env: NeoEnv) {
                                 && !e.path.starts_with(template_test_error_dir)
                                 && !e.path.starts_with(&config.folders.build_root)
                             {
-                                dbg!(&e);
+                                // dbg!(&e);
                                 let timestamp = std::time::SystemTime::now()
                                     .duration_since(std::time::SystemTime::UNIX_EPOCH)
                                     .unwrap()

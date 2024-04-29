@@ -2,13 +2,13 @@ use crate::span::Span;
 use nom::bytes::complete::is_not;
 use nom::IResult;
 
-pub fn word(source: &str) -> IResult<&str, Span> {
-    let (source, content) = is_not(" \n\t|<>^")(source)?;
+pub fn word_segment(source: &str) -> IResult<&str, Span> {
+    let (source, content) = is_not(" \\\n\t|<>^`_*")(source)?;
     Ok((
         source,
-        Span::Word {
+        Span::WordSegment {
             text: content.to_string(),
-            template: "spans/word.neojinja".to_string(),
+            template: "spans/word_segment.neojinja".to_string(),
         },
     ))
 }
@@ -23,12 +23,12 @@ mod test {
         let source = "delta ";
         let left = Ok((
             " ",
-            Span::Word {
+            Span::WordSegment {
                 text: "delta".to_string(),
-                template: "spans/word.neojinja".to_string(),
+                template: "spans/word_segment.neojinja".to_string(),
             },
         ));
-        let right = word(source);
+        let right = word_segment(source);
         assert_eq!(left, right);
     }
 
@@ -37,12 +37,12 @@ mod test {
         let source = "- ";
         let left = Ok((
             " ",
-            Span::Word {
+            Span::WordSegment {
                 text: "-".to_string(),
-                template: "spans/word.neojinja".to_string(),
+                template: "spans/word_segment.neojinja".to_string(),
             },
         ));
-        let right = word(source);
+        let right = word_segment(source);
         assert_eq!(left, right);
     }
 }

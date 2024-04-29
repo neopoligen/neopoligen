@@ -3,9 +3,18 @@
 Welcome To The Neopoligen Cookbook
 
 This site is an example of some things
-you can do with Neopoligen. It's a great place
+you can do with Neopoligen. The published version of the site is at
+<<link|cookbook.neopoligen.com|https://cookbook.neopoligen.com/>>.
+A copy of all the files that make up the site
+is installed in the "cookbook" folder in your
+"Neopoligen" folder. It's a great place
 to learn by looking under the hood to see how thing
-works.
+works. 
+
+
+
+
+
 
 -- code
 -- rust

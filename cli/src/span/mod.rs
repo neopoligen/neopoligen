@@ -1,4 +1,5 @@
 pub mod escaped_pipe;
+pub mod footnote;
 pub mod greater_than;
 pub mod inline_key_value_span_no_attributes;
 pub mod inline_key_value_span_with_attributes;
@@ -11,12 +12,13 @@ pub mod space;
 pub mod tag_span;
 pub mod tag_word;
 pub mod word;
+pub mod word_segment;
 
 use crate::config::Config;
 use crate::span::escaped_pipe::escaped_pipe;
 use crate::span::greater_than::greater_than;
-use crate::span::inline_key_value_span_no_attributes::inline_key_value_span_no_attributes;
-use crate::span::inline_key_value_span_with_attributes::inline_key_value_span_with_attributes;
+// use crate::span::inline_key_value_span_no_attributes::inline_key_value_span_no_attributes;
+// use crate::span::inline_key_value_span_with_attributes::inline_key_value_span_with_attributes;
 use crate::span::inline_standard_span_no_attributes::inline_standard_span_no_attributes;
 use crate::span::inline_standard_span_with_attributes::inline_standard_span_with_attributes;
 use crate::span::less_than::less_than;
@@ -32,6 +34,11 @@ use std::collections::{BTreeMap, BTreeSet};
 #[derive(Clone, Debug, Serialize, PartialEq)]
 #[serde(content = "content", rename_all = "lowercase", tag = "type")]
 pub enum Span {
+    EscapedChar {
+        text: String,
+        template: String,
+    },
+    // Deprecate this and move it to escaped char
     EscapedPipe {
         text: String,
         template: String,
@@ -40,6 +47,7 @@ pub enum Span {
         text: String,
         template: String,
     },
+    // Deprecated: Remove these
     KeyValueSpan {
         key_value_attributes: BTreeMap<String, String>,
         flag_attributes: BTreeSet<String>,
@@ -71,12 +79,16 @@ pub enum Span {
         text: String,
         template: String,
     },
+    WordSegment {
+        text: String,
+        template: String,
+    },
 }
 
 pub fn span<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str, Span> {
     let (source, content) = alt((
-        |src| inline_key_value_span_no_attributes(src, config),
-        |src| inline_key_value_span_with_attributes(src, config),
+        // |src| inline_key_value_span_no_attributes(src, config),
+        // |src| inline_key_value_span_with_attributes(src, config),
         |src| inline_standard_span_with_attributes(src, config),
         |src| inline_standard_span_no_attributes(src, config),
         pipe_by_itself_in_code,
