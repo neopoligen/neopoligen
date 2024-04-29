@@ -314,16 +314,26 @@ a:hover, a:focus {
   color: var(--color-bravo);
 }
 
+.blue {
+  color: blue;
+}
+
 body { 
   background-color: var(--color-base);
   color: var(--color-bravo); 
   font-size: 16px;
   line-height: 1.5; 
+  font-family: 'Inter';
 }
 
 .flow > :where(:not(:first-child)) {
   margin-top: var(--flow-space, 1em);
 }
+
+.green {
+  color: green;
+}
+
 
 h1, h2, h3, h4, h5, h6 {
   color: var(--color-alfa);
@@ -369,11 +379,70 @@ img {
   color: var(--color-bravo);
 }
 
+.numberedLines {
+  counter-reset: lineNumber;
+}
+
+.numberedLine {
+  counter-increment: lineNumber;
+}
+
+.numberedLine:before {
+  display: inline-block;
+  color: goldenrod;
+  content: counter(lineNumber);
+  padding-right: 0.7rem;
+  text-align: right;
+  width: 2rem;
+}
+
 pre {
   white-space: pre-wrap; 
   overflow-wrap: break-word;
 }
 
+.red {
+  color: red;
+}
+
+[role="ld-mode"] {
+  color: var(--color-bravo-60);
+  background-color: var(--color-base);
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  outline: none;
+}
+
+[role="ld-mode"]:hover {
+  color: var(--color-charlie);
+}
+
+[role="ld-mode"][aria-selected="true"] {
+  color: var(--color-bravo);
+  border-bottom: 1px solid var(--color-bravo);
+}
+
+.two-column {
+  max-width: var(--width-alfa);
+  margin-top: 0;
+  margin-inline: auto;
+  align-items: start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
+.two-column > :first-child {
+  flex-basis: 20ch;
+  flex-grow: 1;
+  outline: 1px solid blue;
+}
+
+.two-column > :last-child {
+  flex-basis: 62ch;
+  flex-grow: 9999;
+}
 
 .wrapper {
   width: min(100vw - 3rem, 58ch);
@@ -404,13 +473,14 @@ function baseProps() {
   response += prop(`--size-8`, `0.833rem`)
   response += prop(`--size-9`, `0.694rem`)
   response += prop(`--size-10`, `0.579rem`)
+  response += prop(`--width-alfa`, `86ch`)
 
   response += prop(`--color-black`, `rgb(0 0 0)`)
   response += prop(`--border-black`, `1px solid var(--color-black)`)
   response += prop(`--color-white`, `rgb(255 255 255)`)
   response += prop(`--border-white`, `1px solid var(--color-white)`)
 
-  for (let alpha = 5; alpha <= 95; alpha = alpha + 5) {
+  for (let alpha = 10; alpha <= 90; alpha = alpha + 10) {
     response += prop(`--color-black-${alpha}`, `rgb(0 0 0 / ${alpha}%)`)
     response += prop(
       `--border-black-${alpha}`,
@@ -924,7 +994,7 @@ function lightModeProps() {
   )
   response += prop(`--border-foxtrot`, `1px solid var(--color-foxtrot)`)
 
-  for (let alpha = 5; alpha <= 95; alpha = alpha + 5) {
+  for (let alpha = 10; alpha <= 90; alpha = alpha + 10) {
     response += prop(
       `--color-base-${alpha}`,
       `oklch(${state.modes.light.l}% ${state.modes.light.c} ${state.modes.light.h} / ${alpha}%)`
@@ -1240,7 +1310,7 @@ function modeProps(mode) {
   )
   response += prop(`--border-foxtrot`, `1px solid var(--color-foxtrot)`)
 
-  for (let alpha = 5; alpha <= 95; alpha = alpha + 5) {
+  for (let alpha = 10; alpha <= 90; alpha = alpha + 10) {
     response += prop(
       `--color-base-${alpha}`,
       `oklch(${state.modes[mode].l}% ${state.modes[mode].c} ${state.modes[mode].h} / ${alpha}%)`
@@ -1453,7 +1523,7 @@ function propsCSS() {
     response += style(`.color-${color}`, `color: var(--color-${color});`)
   })
 
-  for (let alpha = 5; alpha <= 95; alpha = alpha + 5) {
+  for (let alpha = 10; alpha <= 90; alpha = alpha + 10) {
     response += style(
       `.color-base-${alpha}`,
       `color: var(--color-base-${alpha});`
@@ -1472,7 +1542,7 @@ function propsCSS() {
   })
 
 
-  for (let alpha = 5; alpha <= 95; alpha = alpha + 5) {
+  for (let alpha = 10; alpha <= 90; alpha = alpha + 10) {
     response += style(
       `.bg-base-${alpha}`,
       `background-color: var(--color-base-${alpha});`
@@ -1506,12 +1576,20 @@ function stylePayload() {
 ${baseFont()}
 :root {
   ${baseProps()}
+}
+body {
   ${modeProps('light')}
 }
-@media (prefers-color-scheme: dark) {
-:root {
+body.dark {
   ${modeProps('dark')}
 }
+@media (prefers-color-scheme: dark) {
+  body {
+    ${modeProps('dark')}
+  }
+  body.light {
+    ${modeProps('light')}
+  }
 }
 ${propsCSS()}
 ${baseCSS()}

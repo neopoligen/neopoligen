@@ -36,13 +36,15 @@ etc, etc, etc...
 -- template: show
 
 body {
-    color: goldenrod;
+
 }
 
 -- javascript
 -- template: show
 
 logMsg("this is one ping only");
+
+
 
 
 

@@ -22,6 +22,7 @@
 [# NOTE: Keep theme.js about head-for-head.neojinja 
 so other scripts can use it #]
 <script src="/theme/theme.js"></script>
+<script src="/theme/theme-components.js" type="module"></script>
 
 [! include "includes/head-for-head.neojinja" !]
 
@@ -34,7 +35,9 @@ so other scripts can use it #]
 
 </head>
 <body>
-[@ get_collection(site, page_id, [["examples", "!2fwpuxie"], ["spans"]]) @]
+    <header class="one-column">
+<settings-gear></settings-gear>
+    </header>
     <main class="two-column">
         <div class="sidebar">
             <ul>
@@ -43,7 +46,6 @@ so other scripts can use it #]
                 <li>[@ theme.link_or_title(site, page_id, "2fz5gcz6") @]</li>
                 <li>[@ theme.link_or_title(site, page_id, "2fbyip5v") @]</li>
             </ul>
-            
         </div>
         <article class="flow">
         [! block body !][! endblock !]

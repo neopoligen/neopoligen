@@ -71,7 +71,8 @@ function appendInnerText(target, text) {
 }
 
 function getData(target, key) {
-  // TODO
+  // TODO: get a data attribute value from an element
+  // with JSON stringify
 }
 
 function getEl(target) {
@@ -154,7 +155,8 @@ function removeClassFrom(target, className) {
 }
 
 function setData(target, key, value) {
-  // TODO
+  // TODO: set data attributes for an element
+  // with JSON stringify
 }
 
 function setHTML(target, value) {

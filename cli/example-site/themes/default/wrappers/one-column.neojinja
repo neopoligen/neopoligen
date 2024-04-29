@@ -22,6 +22,8 @@
 [# NOTE: Keep theme.js about head-for-head.neojinja 
 so other scripts can use it #]
 <script src="/theme/theme.js"></script>
+<script src="/theme/theme-components.js" type="module"></script>
+
 
 [! include "includes/head-for-head.neojinja" !]
 
@@ -35,6 +37,7 @@ so other scripts can use it #]
 <body>
     <header class="wrapper">
 [@ theme.link_or_title(site, page_id, "2dwmgthu", { "title": "Home Page" }) @]
+<settings-gear></settings-gear>
     </header>
     <main class="wrapper">
         <article class="flow">
