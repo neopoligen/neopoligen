@@ -68,16 +68,19 @@ customElements.define(
       })
 
       // original to review
-      // modAddTo(`.sliders`, `button`, {
-      //   classes: [`getFromButton-${config.key}`],
-      //   innerHTML: `Get From: dark mode`,
-      //   listeners: [
-      //     [`click`, handleGetFromClick]
-      //   ],
-      //   data: [
-      //     [`key`, config.key],
-      //   ]
-      // })
+      this.modAddTo(sliders, `button`, {
+        classes: [`get-from-${config.key}`],
+        innerHTML: `Get From: dark mode`,
+        listeners: [
+          [
+            `click`,
+            (event) => {
+              this.handleGetFromClick.call(this, event)
+            },
+          ],
+        ],
+        data: [[`key`, config.key]],
+      })
     }
 
     buildSliders() {
@@ -114,7 +117,18 @@ customElements.define(
         innerHTML: 'Launch Preview Window',
       })
     }
-    
+
+    handleGetFromClick(event) {
+      const key = event.target.dataset.key
+      this.state.modes[this.mode()][key] =
+        this.state.modes[this.otherMode()][key]
+      this.modSetValue(
+        `.slider-${key}`,
+        this.state.modes[this.otherMode()][key]
+      )
+      this.update()
+    }
+
     handleModeClick(event) {
       this.state.active.mode = this.modGetValue('[name="mode"]:checked')
       this.lch().forEach((key) => {
@@ -128,12 +142,15 @@ customElements.define(
       if (this.timeoutId === undefined) {
         this.timeoutId = null
       }
-      void function () {
+      void function (key) {
         window.clearTimeout(this.timeoutId)
         this.timeoutId = window.setTimeout(() => {
+          this.state.modes[this.mode()][key] = this.modGetFloat(
+            `.slider-${key}`
+          )
           this.update()
         }, 30)
-      }.call(this)
+      }.call(this, event.target.dataset.key)
     }
 
     lch() {
@@ -311,11 +328,10 @@ customElements.define(
     }
 
     update() {
-      this.lch().forEach((key) => {
-        this.state.modes[this.mode()][key] = this.modGetFloat(`.slider-${key}`)
-        this.modLogMsg(this.state.modes[this.mode()][key])
-      })
-      this.modLogMsg('Doing update')
+      // this.modLog('Doing update')
+      //   this.lch().forEach((key) => {
+      //     this.state.modes[this.mode()][key] = this.modGetFloat(`.slider-${key}`)
+      //   })
     }
 
     updateAttrs(target, attrs) {
@@ -398,7 +414,7 @@ customElements.define(
       console.error(`${Date.now()} - ERROR: ` + msg)
     }
 
-    modLogMsg(msg) {
+    modLog(msg) {
       console.log(`${Date.now()} - INFO: ` + msg)
     }
 
