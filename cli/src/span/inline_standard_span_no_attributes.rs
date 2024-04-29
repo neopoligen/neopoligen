@@ -61,7 +61,7 @@ mod test {
             "",
             Span::StandardSpan {
                 span_type: "strong".to_string(),
-                spans: vec![Span::Word {
+                spans: vec![Span::WordSegment {
                     text: "Hotel".to_string(),
                     template: "spans/word.neojinja".to_string(),
                 }],

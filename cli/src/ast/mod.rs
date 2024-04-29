@@ -36,7 +36,7 @@ mod test {
     //             category: SectionCategory::StandardSectionFull {
     //                 containers: vec![
     //                     Child::Block(vec![
-    //                         Span::Word {
+    //                         Span::WordSegment {
     //                             text: "Site".to_string(),
     //                             template: "spans/word.neojinja".to_string(),
     //                         },
@@ -44,7 +44,7 @@ mod test {
     //                             text: " ".to_string(),
     //                             template: "spans/space.neojinja".to_string(),
     //                         },
-    //                         Span::Word {
+    //                         Span::WordSegment {
     //                             text: "2".to_string(),
     //                             template: "spans/word.neojinja".to_string(),
     //                         },
@@ -52,7 +52,7 @@ mod test {
     //                             text: " ".to_string(),
     //                             template: "spans/space.neojinja".to_string(),
     //                         },
-    //                         Span::Word {
+    //                         Span::WordSegment {
     //                             text: "Home".to_string(),
     //                             template: "spans/word.neojinja".to_string(),
     //                         },
@@ -60,13 +60,13 @@ mod test {
     //                             text: " ".to_string(),
     //                             template: "spans/space.neojinja".to_string(),
     //                         },
-    //                         Span::Word {
+    //                         Span::WordSegment {
     //                             text: "Page".to_string(),
     //                             template: "spans/word.neojinja".to_string(),
     //                         },
     //                     ]),
     //                     Child::Block(vec![
-    //                         Span::Word {
+    //                         Span::WordSegment {
     //                             text: "The".to_string(),
     //                             template: "spans/word.neojinja".to_string(),
     //                         },
@@ -74,7 +74,7 @@ mod test {
     //                             text: " ".to_string(),
     //                             template: "spans/space.neojinja".to_string(),
     //                         },
-    //                         Span::Word {
+    //                         Span::WordSegment {
     //                             text: "initial".to_string(),
     //                             template: "spans/word.neojinja".to_string(),
     //                         },
@@ -82,7 +82,7 @@ mod test {
     //                             text: " ".to_string(),
     //                             template: "spans/space.neojinja".to_string(),
     //                         },
-    //                         Span::Word {
+    //                         Span::WordSegment {
     //                             text: "test".to_string(),
     //                             template: "spans/word.neojinja".to_string(),
     //                         },
@@ -90,7 +90,7 @@ mod test {
     //                             text: " ".to_string(),
     //                             template: "spans/space.neojinja".to_string(),
     //                         },
-    //                         Span::Word {
+    //                         Span::WordSegment {
     //                             text: "page".to_string(),
     //                             template: "spans/word.neojinja".to_string(),
     //                         },
@@ -144,7 +144,7 @@ mod test {
     //                 bounds: "end".to_string(),
     //                 category: SectionCategory::PreformattedSectionEnd {
     //                     containers: vec![Child::Block(vec![
-    //                         Span::Word {
+    //                         Span::WordSegment {
     //                             text: "alfa".to_string(),
     //                             template: "spans/word.neojinja".to_string(),
     //                         },
@@ -152,7 +152,7 @@ mod test {
     //                             text: " ".to_string(),
     //                             template: "spans/space.neojinja".to_string(),
     //                         },
-    //                         Span::Word {
+    //                         Span::WordSegment {
     //                             text: "bravo".to_string(),
     //                             template: "spans/word.neojinja".to_string(),
     //                         },
@@ -212,7 +212,7 @@ mod test {
     //                 flag_attributes: BTreeSet::new(),
     //                 bounds: "end".to_string(),
     //                 category: SectionCategory::PreformattedSectionEnd {
-    //                     containers: vec![Child::Block(vec![Span::Word {
+    //                     containers: vec![Child::Block(vec![Span::WordSegment {
     //                         text: "Yankee".to_string(),
     //                         template: "spans/word.neojinja".to_string(),
     //                     }])],
@@ -241,7 +241,7 @@ mod test {
     //                     bounds: "end".to_string(),
     //                     category: SectionCategory::StandardSectionEnd {
     //                         containers: vec![Child::Block(vec![
-    //                             Span::Word {
+    //                             Span::WordSegment {
     //                                 text: "Charlie".to_string(),
     //                                 template: "spans/word.neojinja".to_string(),
     //                             },
@@ -249,7 +249,7 @@ mod test {
     //                                 text: " ".to_string(),
     //                                 template: "spans/space.neojinja".to_string(),
     //                             },
-    //                             Span::Word {
+    //                             Span::WordSegment {
     //                                 text: "Bravo".to_string(),
     //                                 template: "spans/word.neojinja".to_string(),
     //                             },

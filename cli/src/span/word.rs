@@ -6,7 +6,7 @@ pub fn word(source: &str) -> IResult<&str, Span> {
     let (source, content) = is_not(" \n\t|<>^")(source)?;
     Ok((
         source,
-        Span::Word {
+        Span::WordSegment {
             text: content.to_string(),
             template: "spans/word.neojinja".to_string(),
         },
@@ -23,7 +23,7 @@ mod test {
         let source = "delta ";
         let left = Ok((
             " ",
-            Span::Word {
+            Span::WordSegment {
                 text: "delta".to_string(),
                 template: "spans/word.neojinja".to_string(),
             },
@@ -37,7 +37,7 @@ mod test {
         let source = "- ";
         let left = Ok((
             " ",
-            Span::Word {
+            Span::WordSegment {
                 text: "-".to_string(),
                 template: "spans/word.neojinja".to_string(),
             },

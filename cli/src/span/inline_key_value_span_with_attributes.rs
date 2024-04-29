@@ -123,7 +123,7 @@ mod test {
             "",
             Span::KeyValueSpan {
                 span_type: "ilink".to_string(),
-                spans: vec![Span::Word {
+                spans: vec![Span::WordSegment {
                     text: "Sierra".to_string(),
                     template: "spans/word.neojinja".to_string(),
                 }],
@@ -148,7 +148,7 @@ mod test {
     //         "",
     //         Span::StandardSpan {
     //             span_type: "link".to_string(),
-    //             spans: vec![Span::Word {
+    //             spans: vec![Span::WordSegment {
     //                 text: "bravo".to_string(),
     //                 template: "spans/word.neojinja".to_string(),
     //             }],
@@ -176,7 +176,7 @@ mod test {
     //         "",
     //         Span::StandardSpan {
     //             span_type: "link".to_string(),
-    //             spans: vec![Span::Word {
+    //             spans: vec![Span::WordSegment {
     //                 text: "Sierra".to_string(),
     //                 template: "spans/word.neojinja".to_string(),
     //             }],

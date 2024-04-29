@@ -39,7 +39,7 @@ pub fn footnote<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str, Spa
     Ok((
         source,
         Span::StandardSpan {
-            spans: vec![Span::Word {
+            spans: vec![Span::WordSegment {
                 text: "example".to_string(),
                 template: "spans/word.neojinja".to_string(),
             }],
@@ -65,7 +65,7 @@ mod test {
             "",
             Span::StandardSpan {
                 span_type: "footnote".to_string(),
-                spans: vec![Span::Word {
+                spans: vec![Span::WordSegment {
                     text: "example".to_string(),
                     template: "spans/word.neojinja".to_string(),
                 }],

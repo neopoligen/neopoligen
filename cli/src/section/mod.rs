@@ -384,7 +384,7 @@ mod test {
                 bounds: "full".to_string(),
                 category: SectionCategory::StandardSectionFull {
                     containers: vec![Child::Block(vec![
-                        Span::Word {
+                        Span::WordSegment {
                             text: "Title".to_string(),
                             template: "spans/word.neojinja".to_string(),
                         },
@@ -392,7 +392,7 @@ mod test {
                             text: " ".to_string(),
                             template: "spans/space.neojinja".to_string(),
                         },
-                        Span::Word {
+                        Span::WordSegment {
                             text: "Echo".to_string(),
                             template: "spans/word.neojinja".to_string(),
                         },
@@ -424,7 +424,7 @@ mod test {
                 bounds: "full".to_string(),
                 category: SectionCategory::StandardSectionFull {
                     containers: vec![Child::Block(vec![
-                        Span::Word {
+                        Span::WordSegment {
                             text: "Title".to_string(),
                             template: "spans/word.neojinja".to_string(),
                         },
@@ -432,7 +432,7 @@ mod test {
                             text: " ".to_string(),
                             template: "spans/space.neojinja".to_string(),
                         },
-                        Span::Word {
+                        Span::WordSegment {
                             text: "Echo".to_string(),
                             template: "spans/word.neojinja".to_string(),
                         },

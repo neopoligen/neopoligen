@@ -11,7 +11,7 @@ pub mod single_newline;
 pub mod space;
 pub mod tag_span;
 pub mod tag_word;
-pub mod word;
+// pub mod word; // deprecated in favor of word_segment
 pub mod word_segment;
 
 use crate::config::Config;
@@ -25,7 +25,8 @@ use crate::span::less_than::less_than;
 use crate::span::pipe_by_itself_in_code::pipe_by_itself_in_code;
 use crate::span::single_newline::single_newline;
 use crate::span::space::space;
-use crate::span::word::word;
+// use crate::span::word::word; // deprecated by word_segment
+use crate::span::word_segment::word_segment;
 use nom::branch::alt;
 use nom::IResult;
 use serde::Serialize;
@@ -75,10 +76,11 @@ pub enum Span {
         spans: Vec<Span>,
         template: String,
     },
-    Word {
-        text: String,
-        template: String,
-    },
+
+    //Word {
+    //   text: String,
+    //  template: String,
+    //},
     WordSegment {
         text: String,
         template: String,
@@ -97,7 +99,7 @@ pub fn span<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str, Span> {
         less_than,
         greater_than,
         single_newline,
-        word,
+        word_segment,
     ))(source)?;
     Ok((source, content))
 }

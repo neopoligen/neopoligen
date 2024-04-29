@@ -83,7 +83,7 @@
 //         let left = Ok((
 //             "- whiskey\n\n-- p",
 //             Child::Block(vec![
-//                 Span::Word {
+//                 Span::WordSegment {
 //                     text: "juliette".to_string(),
 //                     template: "spans/word.neojinja".to_string()
 //                 },
@@ -91,7 +91,7 @@
 //                     text: " ".to_string(),
 //                     template: "spans/space.neojinja".to_string()
 //                 },
-//                 Span::Word {
+//                 Span::WordSegment {
 //                     text: "foxtrot".to_string(),
 //                     template: "spans/word.neojinja".to_string()
 //                 }
