@@ -1,7 +1,3 @@
--- title
-
-Color Picker
-
 -- css
 
 .currentState {
@@ -48,5 +44,6 @@ Color Picker
 -- date: 2024-04-25
 -- id: 2fbyip5v
 -- template: one-column
+-- title: Color Picker
 
 

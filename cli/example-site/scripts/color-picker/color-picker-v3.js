@@ -19,6 +19,7 @@ customElements.define(
       this.buildPrimaryWrapper()
       this.buildPrimaryButtons()
       this.buildPrimaryChips()
+      this.buildSecondaryButtons()
       this.update()
     }
 
@@ -107,46 +108,84 @@ customElements.define(
         <div class="chip-details">
           <div class="chip-title">#</div>
           <div class="chip-text">${this.state.sampleText}</div>
-          <div class="chip-buttons"></div>
+          <div class="chip-buttons-${l}-${cIndex}"></div>
         </div>
         </div>`,
           })
+          this.primaryColors().forEach((color) => {
+            this.modAddTo(`.chip-buttons-${l}-${cIndex}`, 'button', {
+              classes: [`chipButton-${color}-${l}-${cIndex}`],
+              innerHTML: color,
+              data: [
+                ['color', color],
+                ['l', l],
+                ['cIndex', cIndex],
+              ],
+              listeners: [
+                [
+                  'click',
+                  (event) => this.handleColorButtonClick.call(this, event),
+                ],
+              ],
+            })
+          })
         })
       })
-
-      //   lValues().forEach((l, lIndex) => {
-      //     cValues().forEach((c, cIndex) => {
-      //       addTo(`.chipRow-${cIndex}`, 'div', {
-      //         innerHTML: `
-      //   <div class="chip chip-${l}-${cIndex}">
-      //   <div class="x-chipSwatch"></div>
-      //   <div class="chipDetails">
-      //     <div class="chipTitle">#</div>
-      //     <div class="chipText">${state.sampleText}</div>
-      //     <div class="chipButtons-${l}-${cIndex}"></div>
-      //   </div>
-      //   </div>`,
-      //       })
-
-      //       primaryColors().forEach((color) => {
-      //         addTo(`.chipButtons-${l}-${cIndex}`, 'button', {
-      //           classes: [`chipButton-${color}-${l}-${cIndex}`],
-      //           innerHTML: color,
-      //           data: [
-      //             ['color', color],
-      //             ['l', l],
-      //             ['cIndex', cIndex],
-      //           ],
-      //           listeners: [['click', handleColorButtonClick]],
-      //         })
-      //       })
-      //     })
-      //   })
     }
 
     buildPrimaryWrapper() {
       this.primaryWrapper = this.modAddTo(this.wrapper, 'div', {
         classes: ['primary-wrapper'],
+      })
+    }
+
+    buildSecondaryButtons() {
+      this.primaries().forEach((primary) => {
+        const secondaryButtons = this.modAddTo(this.wrapper, 'div', {
+          classes: ['secondary-buttons'],
+        })
+
+        const key = primary.secondaries.join('')
+        this.hValues().forEach((h, hIndex) => {
+          let buttonWrapper = this.modAddTo(secondaryButtons, 'div', {
+            innerHTML: `
+              <div class="secondaryButtonHeader secondaryButtonHeader-${primary.key}-${h}"></div>
+              <div class="secondaryButtonHolder secondaryButtonHolder-${primary.key}-${h}">x</div>
+              <div class="secondaryButtonFooter secondaryButtonFooter-${primary.key}-${h}"></div>
+              `,
+          })
+          let btn = this.modAddSvgTo(
+            `.secondaryButtonHolder-${primary.key}-${h}`,
+            'svg',
+            {
+              classes: [
+                `secondaryButton`,
+                `secondaryButton-${primary.key}-${h}`,
+              ],
+              width: 30,
+              height: 30,
+            }
+          )
+          //   for (let coord1 = -1; coord1 <= 1; coord1++) {
+          //     for (let coord2 = -1; coord2 <= 1; coord2++) {
+          //       addSvgTo(btn, 'rect', {
+          //         classes: [
+          //           `secondaryRect-coords-${primary.key}-${coord1}-${coord2}-${h}`,
+          //         ],
+          //         x: (coord1 + 1) * 10,
+          //         y: (coord2 + 1) * 10,
+          //         width: 10,
+          //         height: 10,
+          //         //styles: [['fill', 'yellow']],
+          //         data: [
+          //           ['primary', primary.key],
+          //           ['secondaryH', hIndex * state.base.h.interval],
+          //         ],
+          //         listeners: [['click', handleSecondaryButtonClick]],
+          //       })
+          //     }
+          //   }
+        })
       })
     }
 
@@ -229,11 +268,18 @@ customElements.define(
       this.wrapper = this.modAddTo(this.shadowRoot, 'div', {
         classes: ['picker-wrapper'],
       })
+      this.modAddTo(this.wrapper, 'h2', {
+        innerHTML: 'Color Picker',
+      })
     }
 
     cOffset(offset, mode) {
       let response = (this.state.modes[mode].c + offset) % this.state.base.c.max
       return response
+    }
+
+    colors() {
+      return ['alfa', 'bravo', 'charlie', 'delta', 'echo', 'foxtrot']
     }
 
     cValue(mode) {
@@ -250,6 +296,33 @@ customElements.define(
         values.push(c)
       }
       return values
+    }
+
+    handleColorButtonClick(event) {
+      this.state.modes[this.mode()].colors[event.target.dataset.color].l =
+        parseInt(event.target.dataset.l, 10)
+      this.state.modes[this.mode()].colors[event.target.dataset.color].c =
+        parseInt(event.target.dataset.cIndex, 10)
+      this.state.modes[this.mode()].colors[event.target.dataset.color].h =
+        this.state.active.h
+      this.update()
+
+      // state.modes[state.active.mode].colors[event.target.dataset.color].c =
+      //   parseInt(event.target.dataset.cIndex, 10)
+      // state.modes[state.active.mode].colors[event.target.dataset.color].h =
+      //   state.active.h
+      // updateState()
+      // updateProps()
+
+      // console.log(event.target.dataset)
+      // state.modes[state.active.mode].colors[event.target.dataset.color].l =
+      //   parseInt(event.target.dataset.l, 10)
+      // state.modes[state.active.mode].colors[event.target.dataset.color].c =
+      //   parseInt(event.target.dataset.cIndex, 10)
+      // state.modes[state.active.mode].colors[event.target.dataset.color].h =
+      //   state.active.h
+      // updateState()
+      // updateProps()
     }
 
     handleGetFromClick(event) {
@@ -363,6 +436,14 @@ customElements.define(
       }
     }
 
+    primaries() {
+      return this.state.primaries
+    }
+
+    primaryColors() {
+      return ['alfa', 'bravo']
+    }
+
     setupActiveStyles() {
       const styles = this.ownerDocument.createElement('style')
       let sheet = `
@@ -376,7 +457,16 @@ customElements.define(
     display: flex;
     flex-wrap: wrap;
 }
+
+h2 {
+    color: var(--color-alfa);
+}
       `
+
+      this.colors().forEach((color) => {
+        const key = `color-${color}`
+        sheet += `.${key} { color: var(--${key}); }`
+      })
 
       // full loop
       this.lValues().forEach((l) => {
@@ -596,7 +686,7 @@ customElements.define(
     // Module functions
 
     modAddSvgTo(target, tag, attrs = {}) {
-      const el = getEl(target)
+      const el = this.modGetEl(target)
       if (el) {
         const svg = this.ownerDocument.createElementNS(
           'http://www.w3.org/2000/svg',
