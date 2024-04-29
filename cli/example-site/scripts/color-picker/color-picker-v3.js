@@ -70,7 +70,7 @@ customElements.define(
       // original to review
       this.modAddTo(sliders, `button`, {
         classes: [`get-from-${config.key}`],
-        innerHTML: `Get From: dark mode`,
+        innerHTML: `Copy ${this.state.modes.dark.display}`,
         listeners: [
           [
             `click`,
@@ -133,7 +133,10 @@ customElements.define(
       this.state.active.mode = this.modGetValue('[name="mode"]:checked')
       this.lch().forEach((key) => {
         this.modSetValue(`.slider-${key}`, this.state.modes[this.mode()][key])
-        // this.setHTML(`.getFromButton-${key}`, `Get From: ${otherMode} mode`)
+        this.modSetHTML(
+          `.get-from-${key}`,
+          `copy ${this.state.modes[this.otherMode()].display}`
+        )
       })
       this.update()
     }
@@ -249,6 +252,7 @@ customElements.define(
         ],
         modes: {
           light: {
+            display: '☀',
             l: 90.762,
             c: 0.06625,
             h: 252.9,
@@ -270,6 +274,7 @@ customElements.define(
             },
           },
           dark: {
+            display: '☾',
             l: 16.009,
             c: 0.06625,
             h: 252.9,
@@ -334,34 +339,6 @@ customElements.define(
       //   })
     }
 
-    updateAttrs(target, attrs) {
-      const el = modGetEl(target)
-      if (el) {
-        const nonAttrs = ['aria', 'classes', 'data', 'listeners']
-        for (let key in attrs) {
-          if (!nonAttrs.includes(key)) {
-            el[key] = attrs[key]
-          }
-        }
-        for (let index in attrs.aria) {
-          el.setAttribute(`aria-${attrs.aria[index][0]}`, attrs.aria[index][1])
-        }
-        for (let index in attrs.classes) {
-          el.classList.add(attrs.classes[index])
-        }
-        for (let index in attrs.data) {
-          el.dataset[attrs.data[index][0]] = attrs.data[index][1]
-        }
-        for (let index in attrs.listeners) {
-          el.addEventListener(
-            attrs.listeners[index][0],
-            attrs.listeners[index][1]
-          )
-        }
-        return el
-      }
-    }
-
     /////////////////////////////////////////////////////////////////////////////
     // Module functions
 
@@ -369,7 +346,7 @@ customElements.define(
       const el = this.modGetEl(target)
       if (el) {
         const newEl = document.createElement(tag)
-        updateAttrs(newEl, attrs)
+        this.modUpdateAttrs(newEl, attrs)
         el.appendChild(newEl)
         return newEl
       }
@@ -381,13 +358,13 @@ customElements.define(
         if (el) {
           return el
         } else {
-          modLogError(`Could not find querySelector for: ${target}`)
+          this.modLogError(`Could not find querySelector for: ${target}`)
           return undefined
         }
       } else if (target) {
         return target
       } else {
-        modLogError(`Could not get element: ${target}`)
+        this.modLogError(`Could not get element: ${target}`)
         return undefined
       }
     }
@@ -422,6 +399,12 @@ customElements.define(
       console.log(msg)
     }
 
+    modSetHTML(target, value) {
+      this.modUpdateAttrs(target, {
+        innerHTML: value,
+      })
+    }
+
     modSetValue(target, value) {
       const el = this.modGetEl(target)
       if (el) {
@@ -430,5 +413,35 @@ customElements.define(
         this.modLogError(`Could not set value: ${value}`)
       }
     }
+
+    modUpdateAttrs(target, attrs) {
+      const el = this.modGetEl(target)
+      if (el) {
+        const nonAttrs = ['aria', 'classes', 'data', 'listeners']
+        for (let key in attrs) {
+          if (!nonAttrs.includes(key)) {
+            el[key] = attrs[key]
+          }
+        }
+        for (let index in attrs.aria) {
+          el.setAttribute(`aria-${attrs.aria[index][0]}`, attrs.aria[index][1])
+        }
+        for (let index in attrs.classes) {
+          el.classList.add(attrs.classes[index])
+        }
+        for (let index in attrs.data) {
+          el.dataset[attrs.data[index][0]] = attrs.data[index][1]
+        }
+        for (let index in attrs.listeners) {
+          el.addEventListener(
+            attrs.listeners[index][0],
+            attrs.listeners[index][1]
+          )
+        }
+        return el
+      }
+    }
+
+    //
   }
 )
