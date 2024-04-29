@@ -324,11 +324,11 @@ customElements.define(
 
     lOffset(offset, mode) {
       let response = (this.state.modes[mode].l + offset) % this.state.base.l.max
-      return `${response}%`
+      return response
     }
 
     lValue(mode) {
-      return `${this.state.modes[mode].l}%`
+      return this.state.modes[mode].l
     }
 
     lValues() {
@@ -556,17 +556,18 @@ customElements.define(
       // set the active base
       this.devProps[`--color-base-active`] = `oklch(${this.lValue(
         this.mode()
-      )} ${this.cValue(this.mode())} ${this.hValue(this.mode())})`
+      )}% ${this.cValue(this.mode())} ${this.hValue(this.mode())})`
 
       // set the active explicit colors
       this.lValues().forEach((l) => {
         this.cValues().forEach((c, cIndex) => {
           this.hValues().forEach((h) => {
             const key = `${l}-${cIndex}-${h}`
+            this.modLog(this.lValue(this.mode()))
             const theL = this.lOffset(l, this.mode())
             const theC = this.cOffset(c, this.mode())
             const theH = h
-            this.devProps[`--color-${key}`] = `oklch(${theL} ${theC} ${theH})`
+            this.devProps[`--color-${key}`] = `oklch(${theL}% ${theC} ${theH})`
           })
         })
       })
@@ -578,8 +579,7 @@ customElements.define(
           const theL = this.lOffset(l, this.mode())
           const theC = this.cOffset(c, this.mode())
           const theH = this.state.active.h
-          this.modLog(theH)
-          this.devProps[`--chip-${key}`] = `oklch(${theL} ${theC} ${theH})`
+          this.devProps[`--chip-${key}`] = `oklch(${theL}% ${theC} ${theH})`
         })
       })
 
