@@ -10,13 +10,15 @@ customElements.define(
       }
       this.devProps = {}
       this.attachShadow({ mode: 'open' })
-      this.loadInitialState()
+      this.setInitialState()
       this.setupActiveStyles()
       this.buildWrapper()
       this.buildPreviewButton()
       this.buildModeButtons()
       this.buildSliders()
+      this.buildPrimaryWrapper()
       this.buildPrimaryButtons()
+      this.buildPrimaryChips()
       this.update()
     }
 
@@ -55,7 +57,7 @@ customElements.define(
 
     buildPrimaryButton(parent, h) {
       const button = this.modAddTo(parent, 'div', {
-        innerHTML: h,
+        // innerHTML: h,
       })
       const svg = this.modAddSvgTo(button, 'svg', {
         width: 50,
@@ -68,7 +70,7 @@ customElements.define(
             y: 40 - cIndex * 10,
             width: 10,
             height: 10,
-            classes: ['primary-rect', `primary-rect-${l}-${cIndex}-${h}`],
+            classes: ['primary-rect', `fill-${l}-${cIndex}-${h}`],
             data: [['h', h]],
             listeners: [
               [
@@ -82,11 +84,69 @@ customElements.define(
     }
 
     buildPrimaryButtons() {
-      const primaryButtons = this.modAddTo(this.wrapper, 'div', {
+      const primaryButtons = this.modAddTo(this.primaryWrapper, 'div', {
         classes: ['primary-buttons'],
       })
       this.hValues().forEach((h) => {
         this.buildPrimaryButton(primaryButtons, h)
+      })
+    }
+
+    buildPrimaryChips() {
+      const primaryChips = this.modAddTo(this.primaryWrapper, 'div', {
+        classes: ['primary-chips'],
+      })
+
+      this.lValues().forEach((l, lIndex) => {
+        const chipLine = this.modAddTo(primaryChips, 'div', {})
+        this.cValues().forEach((c, cIndex) => {
+          this.modAddTo(chipLine, 'div', {
+            innerHTML: `
+        <div class="chip chip-${l}-${cIndex}">
+        <div class="x-chip-swatch"></div>
+        <div class="chip-details">
+          <div class="chip-title">#</div>
+          <div class="chip-text">${this.state.sampleText}</div>
+          <div class="chip-buttons"></div>
+        </div>
+        </div>`,
+          })
+        })
+      })
+
+      //   lValues().forEach((l, lIndex) => {
+      //     cValues().forEach((c, cIndex) => {
+      //       addTo(`.chipRow-${cIndex}`, 'div', {
+      //         innerHTML: `
+      //   <div class="chip chip-${l}-${cIndex}">
+      //   <div class="x-chipSwatch"></div>
+      //   <div class="chipDetails">
+      //     <div class="chipTitle">#</div>
+      //     <div class="chipText">${state.sampleText}</div>
+      //     <div class="chipButtons-${l}-${cIndex}"></div>
+      //   </div>
+      //   </div>`,
+      //       })
+
+      //       primaryColors().forEach((color) => {
+      //         addTo(`.chipButtons-${l}-${cIndex}`, 'button', {
+      //           classes: [`chipButton-${color}-${l}-${cIndex}`],
+      //           innerHTML: color,
+      //           data: [
+      //             ['color', color],
+      //             ['l', l],
+      //             ['cIndex', cIndex],
+      //           ],
+      //           listeners: [['click', handleColorButtonClick]],
+      //         })
+      //       })
+      //     })
+      //   })
+    }
+
+    buildPrimaryWrapper() {
+      this.primaryWrapper = this.modAddTo(this.wrapper, 'div', {
+        classes: ['primary-wrapper'],
       })
     }
 
@@ -172,9 +232,13 @@ customElements.define(
     }
 
     cOffset(offset, mode) {
-        let response = (this.state.modes[mode].c + offset) % this.state.base.c.max
-        return response
-      }
+      let response = (this.state.modes[mode].c + offset) % this.state.base.c.max
+      return response
+    }
+
+    cValue(mode) {
+      return this.state.modes[mode].c
+    }
 
     cValues() {
       const values = []
@@ -212,7 +276,9 @@ customElements.define(
     }
 
     handlePrimaryButtonClick(event) {
-      this.state.active.h = this.modGetInt(event.target)
+      this.modLogObject(event.target)
+      this.state.active.h = this.modGetDataInt(event.target, 'h')
+      this.modLog(this.state.active.h)
       this.update()
     }
 
@@ -231,11 +297,14 @@ customElements.define(
       }.call(this, event.target.dataset.key)
     }
 
-
     hOffset(offset, mode) {
-        let response = (this.state.modes[mode].h + offset) % this.state.base.h.max
-        return response
-      }
+      let response = (this.state.modes[mode].h + offset) % this.state.base.h.max
+      return response
+    }
+
+    hValue(mode) {
+      return this.state.modes[mode].h
+    }
 
     hValues() {
       const values = []
@@ -253,7 +322,85 @@ customElements.define(
       return [`l`, `c`, `h`]
     }
 
-    loadInitialState() {
+    lOffset(offset, mode) {
+      let response = (this.state.modes[mode].l + offset) % this.state.base.l.max
+      return `${response}%`
+    }
+
+    lValue(mode) {
+      return `${this.state.modes[mode].l}%`
+    }
+
+    lValues() {
+      const values = []
+      for (
+        let l = 0;
+        l < this.state.base.l.max;
+        l += this.state.base.l.interval
+      ) {
+        values.push(l)
+      }
+      return values
+    }
+
+    mode() {
+      return this.state.active.mode
+    }
+
+    modes() {
+      const tmp = []
+      for (let mode in this.state.modes) {
+        tmp.push(mode)
+      }
+      return tmp
+    }
+
+    otherMode() {
+      if (this.mode() === 'light') {
+        return 'dark'
+      } else {
+        return 'light'
+      }
+    }
+
+    setupActiveStyles() {
+      const styles = this.ownerDocument.createElement('style')
+      let sheet = `
+.picker-wrapper { 
+    padding: 1rem;
+    background-color: var(--color-base-active); 
+    border-radius: 0.6rem;
+}
+
+.primary-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+      `
+
+      // full loop
+      this.lValues().forEach((l) => {
+        this.cValues().forEach((c, cIndex) => {
+          this.hValues().forEach((h) => {
+            const key = `${l}-${cIndex}-${h}`
+            sheet += `.fill-${key} { fill: var(--color-${key}); }`
+          })
+        })
+      })
+
+      // chip connected to current chip color
+      this.lValues().forEach((l) => {
+        this.cValues().forEach((c, cIndex) => {
+          const key = `chip-${l}-${cIndex}`
+          sheet += `.${key} { color: var(--${key}); }`
+        })
+      })
+
+      styles.innerHTML = sheet
+      this.shadowRoot.appendChild(styles)
+    }
+
+    setInitialState() {
       this.state = {
         base: {
           l: {
@@ -346,7 +493,7 @@ customElements.define(
         modes: {
           light: {
             display: '☀',
-            l: 90.762,
+            l: 70.762,
             c: 0.06625,
             h: 252.9,
             colors: {
@@ -405,78 +552,55 @@ customElements.define(
       }
     }
 
-    lOffset(offset, mode) {
-      let response = (this.state.modes[mode].l + offset) % this.state.base.l.max
-      return `${response}%`
-    }
-
-    lValues() {
-      const values = []
-      for (
-        let l = 0;
-        l < this.state.base.l.max;
-        l += this.state.base.l.interval
-      ) {
-        values.push(l)
-      }
-      return values
-    }
-
-    mode() {
-      return this.state.active.mode
-    }
-
-    modes() {
-      const tmp = []
-      for (let mode in this.state.modes) {
-        tmp.push(mode)
-      }
-      return tmp
-    }
-
-    otherMode() {
-      if (this.mode() === 'light') {
-        return 'dark'
-      } else {
-        return 'light'
-      }
-    }
-
-    setupActiveStyles() {
-      const styles = this.ownerDocument.createElement('style')
-      let sheet = ``
-      this.lValues().forEach((l) => {
-        this.cValues().forEach((c, cIndex) => {
-          this.hValues().forEach((h) => {
-            const key = `${l}-${cIndex}-${h}`
-            sheet += `.primary-rect-${key} { fill: var(--color-${key}); }`
-          })
-        })
-      })
-      styles.innerHTML = sheet
-      this.shadowRoot.appendChild(styles)
-    }
-
     update() {
+      // set the active base
+      this.devProps[`--color-base-active`] = `oklch(${this.lValue(
+        this.mode()
+      )} ${this.cValue(this.mode())} ${this.hValue(this.mode())})`
+
+      // set the active explicit colors
       this.lValues().forEach((l) => {
         this.cValues().forEach((c, cIndex) => {
           this.hValues().forEach((h) => {
             const key = `${l}-${cIndex}-${h}`
-            // this.modLog(this.mode())
-            // this.modLog(this.state.modes[this.mode()].l)
-            // this.modLog(this.lOffset(this.state.modes[this.mode()].l, l))
-            // this.modLog(this.lValue(this.mode()))
-
             const theL = this.lOffset(l, this.mode())
             const theC = this.cOffset(c, this.mode())
-            const theH = this.hOffset(h, this.mode())
-           // const theC = this.cOffset(this.state.modes[this.mode()].c, c)
+            // const theH = this.hOffset(h, this.mode())
+            // const theH = this.hOffset(h, this.mode())
+        // const theH = this.state.active.h
+        const theH = h
             this.devProps[`--color-${key}`] = `oklch(${theL} ${theC} ${theH})`
           })
         })
       })
+
+      // set the active chip colors for the current hue
+      //   chip-${l}-${cIndex}
+      this.lValues().forEach((l) => {
+        this.cValues().forEach((c, cIndex) => {
+          //   this.hValues().forEach((h) => {
+          const key = `${l}-${cIndex}`
+          const theL = this.lOffset(l, this.mode())
+          const theC = this.cOffset(c, this.mode())
+        //   const theH = this.hOffset(this.hValue(this.mode()), this.mode())
+        //   const theH = this.hOffset(this.hValue(this.mode()), this.mode())
+
+        const theH = this.state.active.h
+          // const theH = this.hValue(this.mode())
+          this.modLog(theH)
+          this.devProps[
+            `--chip-${key}`
+          ] = `oklch(${theL} ${theC} ${theH})`
+          //   })
+        })
+      })
+
+      // update all the dev props
       for (let prop in this.devProps) {
-        document.documentElement.style.setProperty(prop, this.devProps[prop])
+        this.ownerDocument.documentElement.style.setProperty(
+          prop,
+          this.devProps[prop]
+        )
       }
     }
 
@@ -506,6 +630,24 @@ customElements.define(
       }
     }
 
+    modGetData(target, key) {
+      const el = this.modGetEl(target)
+      if (el) {
+        return el.dataset[key]
+      } else {
+        return undefined
+      }
+    }
+
+    modGetDataInt(target, key) {
+      const el = this.modGetEl(target)
+      if (el) {
+        return parseInt(el.dataset[key], 10)
+      } else {
+        return undefined
+      }
+    }
+
     modGetEl(target) {
       if (typeof target === 'string') {
         const el = this.shadowRoot.querySelector(target)
@@ -527,6 +669,15 @@ customElements.define(
       const el = this.modGetEl(target)
       if (el) {
         return parseFloat(el.value)
+      } else {
+        return undefined
+      }
+    }
+
+    modGetInt(target) {
+      const el = this.modGetEl(target)
+      if (el) {
+        return parseInt(el.value, 10)
       } else {
         return undefined
       }

@@ -29,7 +29,8 @@ Color Picker
 <color-picker></color-picker>
 
 <div class="picker">
-    <button class="preview-launcher">Launch Preview Window</button>
+    <!--
+    <button class="preview-launcher">Launch Preview Window</button> 
     <div class="modes"></div>
     <div class="sliders"></div>
     <div class="primaryButtons"></div>
@@ -39,7 +40,7 @@ Color Picker
     <div class="echofoxtrotButtons secondaryButtons"></div>
     <div class="echofoxtrotChips"></div>
     <pre class="currentCSS">Loading CSS...</pre>
-    <pre class="currentState"></pre>
+    <pre class="currentState"></pre>-->
 </div>
 
 
