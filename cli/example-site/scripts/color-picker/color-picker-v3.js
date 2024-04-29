@@ -4,14 +4,20 @@ customElements.define(
     constructor() {
       super()
       this.state = {}
-      this.props = { light: {}, dark: {} }
+      this.mainProps = {
+        light: {},
+        dark: {},
+      }
+      this.devProps = {}
       this.attachShadow({ mode: 'open' })
       this.loadInitialState()
+      this.setupActiveStyles()
       this.buildWrapper()
       this.buildPreviewButton()
       this.buildModeButtons()
       this.buildSliders()
       this.buildPrimaryButtons()
+      this.update()
     }
 
     buildModeButtons() {
@@ -62,9 +68,14 @@ customElements.define(
             y: 40 - cIndex * 10,
             width: 10,
             height: 10,
-            classes: ['primary-rect', `primary-rect-${l}-${cString(c)}-${h}`],
+            classes: ['primary-rect', `primary-rect-${l}-${cIndex}-${h}`],
             data: [['h', h]],
-            listeners: [['click', handlePrimaryButtonClick]],
+            listeners: [
+              [
+                'click',
+                (event) => this.handlePrimaryButtonClick.call(this, event),
+              ],
+            ],
           })
         })
       })
@@ -130,27 +141,27 @@ customElements.define(
         key: 'l',
         label: 'Lightness',
         min: 0,
-        max: state.base.l.max,
-        step: state.base.l.step,
-        value: state.modes.light.l,
+        max: this.state.base.l.max,
+        step: this.state.base.l.step,
+        value: this.state.modes.light.l,
       })
 
       this.buildSlider({
         key: 'c',
         label: 'Chroma',
         min: 0,
-        max: state.base.c.max,
-        step: state.base.c.step,
-        value: state.modes.light.c,
+        max: this.state.base.c.max,
+        step: this.state.base.c.step,
+        value: this.state.modes.light.c,
       })
 
       this.buildSlider({
         key: 'h',
         label: 'Hue',
         min: 0,
-        max: state.base.h.max,
-        step: state.base.h.step,
-        value: state.modes.light.h,
+        max: this.state.base.h.max,
+        step: this.state.base.h.step,
+        value: this.state.modes.light.h,
       })
     }
 
@@ -196,8 +207,8 @@ customElements.define(
     }
 
     handlePrimaryButtonClick(event) {
-        this.state.active.h = this.modGetInt(event.target)
-        this.update()
+      this.state.active.h = this.modGetInt(event.target)
+      this.update()
     }
 
     handleSliderChange(event) {
@@ -383,6 +394,12 @@ customElements.define(
       }
     }
 
+    lOffset(offset, mode) {
+      let response = (this.state.modes[mode].l + offset) % this.state.base.l.max
+    //   this.modLog(response)
+      return `${response}%`
+    }
+
     lValues() {
       const values = []
       for (
@@ -401,7 +418,7 @@ customElements.define(
 
     modes() {
       const tmp = []
-      for (let mode in state.modes) {
+      for (let mode in this.state.modes) {
         tmp.push(mode)
       }
       return tmp
@@ -415,11 +432,41 @@ customElements.define(
       }
     }
 
+    setupActiveStyles() {
+      const styles = this.ownerDocument.createElement('style')
+      let sheet = ``
+      this.lValues().forEach((l) => {
+        this.cValues().forEach((c, cIndex) => {
+          this.hValues().forEach((h) => {
+            const key = `${l}-${cIndex}-${h}`
+            sheet += `.primary-rect-${key} { fill: var(--color-${key}); }`
+          })
+        })
+      })
+      styles.innerHTML = sheet
+      this.shadowRoot.appendChild(styles)
+    }
+
     update() {
-      // this.modLog('Doing update')
-      //   this.lch().forEach((key) => {
-      //     this.state.modes[this.mode()][key] = this.modGetFloat(`.slider-${key}`)
-      //   })
+      this.lValues().forEach((l) => {
+        this.cValues().forEach((c, cIndex) => {
+          this.hValues().forEach((h) => {
+            const key = `${l}-${cIndex}-${h}`
+            // this.modLog(this.mode())
+            // this.modLog(this.state.modes[this.mode()].l)
+            // this.modLog(this.lOffset(this.state.modes[this.mode()].l, l))
+            // this.modLog(this.lValue(this.mode()))
+
+            const theL = this.lOffset(l, this.mode())
+            // const theC = this.cOffset(c, this.mode())
+           // const theC = this.cOffset(this.state.modes[this.mode()].c, c)
+            this.devProps[`--color-${key}`] = `oklch(${theL} 0.2 200)`
+          })
+        })
+      })
+      for (let prop in this.devProps) {
+        document.documentElement.style.setProperty(prop, this.devProps[prop])
+      }
     }
 
     /////////////////////////////////////////////////////////////////////////////
