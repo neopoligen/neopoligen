@@ -6,13 +6,13 @@
     [! include "subsections/forward.neojinja" !]
 
 [! if section.content.key_value_attributes.title or section.content.key_value_attributes.subtitle !]
-<div class="heading_subsection" 
+<div class="heading_subsection footnote_heading" 
 [! if section.content.key_value_attributes.id !]
 id="footnote-[@ section.content.key_value_attributes.id @]"
 [! endif !]
 >
     [! if section.content.key_value_attributes.id !]
-        <a href="#footnote-[@ section.content.key_value_attributes.id @]-ref">[@ section.content.key_value_attributes.id @]</a>
+        <sup><a href="#footnote-[@ section.content.key_value_attributes.id @]-ref">[@ section.content.key_value_attributes.id @]</a></sup>
     [! endif !]
 
     [! if section.content.key_value_attributes.title !]
@@ -22,12 +22,13 @@ id="footnote-[@ section.content.key_value_attributes.id @]"
         [! endif !]
     </div>
     [! if section.content.key_value_attributes.id !]
-        <a href="#footnote-[@ section.content.key_value_attributes.id @]-ref">&#8617;</a>
+        <sup><a href="#footnote-[@ section.content.key_value_attributes.id @]-ref">&#8617;</a></sup>
     [! endif !]
 
     [! endif !]
 </div>
 [! endif !]
+
 
 
     [! include "subsections/preface.neojinja" !]

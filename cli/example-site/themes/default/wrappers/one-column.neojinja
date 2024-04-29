@@ -27,6 +27,7 @@ so other scripts can use it #]
 
 [! include "includes/head-for-head.neojinja" !]
 
+<link rel="stylesheet" href="/theme/colors.css" />
 <link rel="stylesheet" href="/theme/styles.css" />
 <link rel="stylesheet" href="/theme/highlighting/code-solarized-light.css" />
 [! include "includes/css-for-head.neojinja" !]

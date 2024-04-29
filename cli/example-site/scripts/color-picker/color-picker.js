@@ -306,8 +306,9 @@ function baseCSS() {
   margin: 0;
 }
 
-a {
+a, a:active {
   color: var(--color-charlie);
+  text-decoration: none;
 }
 
 a:hover, a:focus {
@@ -330,10 +331,14 @@ body {
   margin-top: var(--flow-space, 1em);
 }
 
+.footnote_heading {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .green {
   color: green;
 }
-
 
 h1, h2, h3, h4, h5, h6 {
   color: var(--color-alfa);
@@ -473,7 +478,6 @@ function baseProps() {
   response += prop(`--size-8`, `0.833rem`)
   response += prop(`--size-9`, `0.694rem`)
   response += prop(`--size-10`, `0.579rem`)
-  response += prop(`--width-alfa`, `86ch`)
 
   response += prop(`--color-black`, `rgb(0 0 0)`)
   response += prop(`--border-black`, `1px solid var(--color-black)`)

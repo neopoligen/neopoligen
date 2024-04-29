@@ -21,8 +21,11 @@ Color Picker
 -- head
 
 <script src="/scripts/color-picker/color-picker.js"></script>
+<script src="/scripts/color-picker/color-picker-v3.js"></script>
 
 -- html
+
+<color-picker></color-picker>
 
 <div class="picker">
     <button class="preview-launcher">Launch Preview Window</button>
