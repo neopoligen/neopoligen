@@ -171,6 +171,11 @@ customElements.define(
       })
     }
 
+    cOffset(offset, mode) {
+        let response = (this.state.modes[mode].c + offset) % this.state.base.c.max
+        return response
+      }
+
     cValues() {
       const values = []
       for (
@@ -225,6 +230,12 @@ customElements.define(
         }, 30)
       }.call(this, event.target.dataset.key)
     }
+
+
+    hOffset(offset, mode) {
+        let response = (this.state.modes[mode].h + offset) % this.state.base.h.max
+        return response
+      }
 
     hValues() {
       const values = []
@@ -396,7 +407,6 @@ customElements.define(
 
     lOffset(offset, mode) {
       let response = (this.state.modes[mode].l + offset) % this.state.base.l.max
-    //   this.modLog(response)
       return `${response}%`
     }
 
@@ -458,9 +468,10 @@ customElements.define(
             // this.modLog(this.lValue(this.mode()))
 
             const theL = this.lOffset(l, this.mode())
-            // const theC = this.cOffset(c, this.mode())
+            const theC = this.cOffset(c, this.mode())
+            const theH = this.hOffset(h, this.mode())
            // const theC = this.cOffset(this.state.modes[this.mode()].c, c)
-            this.devProps[`--color-${key}`] = `oklch(${theL} 0.2 200)`
+            this.devProps[`--color-${key}`] = `oklch(${theL} ${theC} ${theH})`
           })
         })
       })
