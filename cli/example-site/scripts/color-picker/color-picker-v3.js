@@ -565,33 +565,21 @@ customElements.define(
             const key = `${l}-${cIndex}-${h}`
             const theL = this.lOffset(l, this.mode())
             const theC = this.cOffset(c, this.mode())
-            // const theH = this.hOffset(h, this.mode())
-            // const theH = this.hOffset(h, this.mode())
-        // const theH = this.state.active.h
-        const theH = h
+            const theH = h
             this.devProps[`--color-${key}`] = `oklch(${theL} ${theC} ${theH})`
           })
         })
       })
 
       // set the active chip colors for the current hue
-      //   chip-${l}-${cIndex}
       this.lValues().forEach((l) => {
         this.cValues().forEach((c, cIndex) => {
-          //   this.hValues().forEach((h) => {
           const key = `${l}-${cIndex}`
           const theL = this.lOffset(l, this.mode())
           const theC = this.cOffset(c, this.mode())
-        //   const theH = this.hOffset(this.hValue(this.mode()), this.mode())
-        //   const theH = this.hOffset(this.hValue(this.mode()), this.mode())
-
-        const theH = this.state.active.h
-          // const theH = this.hValue(this.mode())
+          const theH = this.state.active.h
           this.modLog(theH)
-          this.devProps[
-            `--chip-${key}`
-          ] = `oklch(${theL} ${theC} ${theH})`
-          //   })
+          this.devProps[`--chip-${key}`] = `oklch(${theL} ${theC} ${theH})`
         })
       })
 
