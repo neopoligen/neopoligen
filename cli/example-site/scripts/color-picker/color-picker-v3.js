@@ -3,15 +3,19 @@ customElements.define(
   class CodeBlock extends HTMLElement {
     constructor() {
       super()
+      this.state = {}
+      this.props = { light: {}, dark: {} }
       this.attachShadow({ mode: 'open' })
       this.loadInitialState()
       this.buildWrapper()
+      this.buildPreviewButton()
       this.buildModeButtons()
       this.buildSliders()
+      this.buildPrimaryButtons()
     }
 
     buildModeButtons() {
-      this.modAddTo(this.shadowRoot, 'div', {
+      this.modAddTo(this.wrapper, 'div', {
         classes: ['modes'],
       })
       this.modes().forEach((mode) => {
@@ -37,8 +41,46 @@ customElements.define(
       })
     }
 
+    buildPreviewButton() {
+      this.modAddTo(this.wrapper, 'button', {
+        innerHTML: 'Launch Preview Window',
+      })
+    }
+
+    buildPrimaryButton(parent, h) {
+      const button = this.modAddTo(parent, 'div', {
+        innerHTML: h,
+      })
+      const svg = this.modAddSvgTo(button, 'svg', {
+        width: 50,
+        height: 50,
+      })
+      this.lValues().forEach((l, lIndex) => {
+        this.cValues().forEach((c, cIndex) => {
+          this.modAddSvgTo(svg, 'rect', {
+            x: lIndex * 10,
+            y: 40 - cIndex * 10,
+            width: 10,
+            height: 10,
+            classes: ['primary-rect', `primary-rect-${l}-${cString(c)}-${h}`],
+            data: [['h', h]],
+            listeners: [['click', handlePrimaryButtonClick]],
+          })
+        })
+      })
+    }
+
+    buildPrimaryButtons() {
+      const primaryButtons = this.modAddTo(this.wrapper, 'div', {
+        classes: ['primary-buttons'],
+      })
+      this.hValues().forEach((h) => {
+        this.buildPrimaryButton(primaryButtons, h)
+      })
+    }
+
     buildSlider(config) {
-      const sliders = this.modAddTo(this.shadowRoot, 'div', {
+      const sliders = this.modAddTo(this.wrapper, 'div', {
         classes: ['sliders'],
       })
 
@@ -113,9 +155,21 @@ customElements.define(
     }
 
     buildWrapper() {
-      this.modAddTo(this.shadowRoot, 'button', {
-        innerHTML: 'Launch Preview Window',
+      this.wrapper = this.modAddTo(this.shadowRoot, 'div', {
+        classes: ['picker-wrapper'],
       })
+    }
+
+    cValues() {
+      const values = []
+      for (
+        let c = 0;
+        c < this.state.base.c.max;
+        c += this.state.base.c.interval
+      ) {
+        values.push(c)
+      }
+      return values
     }
 
     handleGetFromClick(event) {
@@ -141,6 +195,11 @@ customElements.define(
       this.update()
     }
 
+    handlePrimaryButtonClick(event) {
+        this.state.active.h = this.modGetInt(event.target)
+        this.update()
+    }
+
     handleSliderChange(event) {
       if (this.timeoutId === undefined) {
         this.timeoutId = null
@@ -154,6 +213,18 @@ customElements.define(
           this.update()
         }, 30)
       }.call(this, event.target.dataset.key)
+    }
+
+    hValues() {
+      const values = []
+      for (
+        let h = 0;
+        h < this.state.base.h.max;
+        h += this.state.base.h.interval
+      ) {
+        values.push(h)
+      }
+      return values
     }
 
     lch() {
@@ -312,6 +383,18 @@ customElements.define(
       }
     }
 
+    lValues() {
+      const values = []
+      for (
+        let l = 0;
+        l < this.state.base.l.max;
+        l += this.state.base.l.interval
+      ) {
+        values.push(l)
+      }
+      return values
+    }
+
     mode() {
       return this.state.active.mode
     }
@@ -342,10 +425,23 @@ customElements.define(
     /////////////////////////////////////////////////////////////////////////////
     // Module functions
 
+    modAddSvgTo(target, tag, attrs = {}) {
+      const el = getEl(target)
+      if (el) {
+        const svg = this.ownerDocument.createElementNS(
+          'http://www.w3.org/2000/svg',
+          tag
+        )
+        this.modUpdateSvgAttrs(svg, attrs)
+        el.appendChild(svg)
+        return svg
+      }
+    }
+
     modAddTo(target, tag, attrs = {}) {
       const el = this.modGetEl(target)
       if (el) {
-        const newEl = document.createElement(tag)
+        const newEl = this.ownerDocument.createElement(tag)
         this.modUpdateAttrs(newEl, attrs)
         el.appendChild(newEl)
         return newEl
@@ -437,6 +533,34 @@ customElements.define(
             attrs.listeners[index][0],
             attrs.listeners[index][1]
           )
+        }
+        return el
+      }
+    }
+
+    modUpdateSvgAttrs(target, attrs) {
+      const el = this.modGetEl(target)
+      if (el) {
+        const nonAttrs = ['classes', 'data', 'listeners', 'styles']
+        for (let key in attrs) {
+          if (!nonAttrs.includes(key)) {
+            el.setAttribute(key, attrs[key])
+          }
+        }
+        for (let index in attrs.classes) {
+          el.classList.add(attrs.classes[index])
+        }
+        for (let index in attrs.data) {
+          el.dataset[attrs.data[index][0]] = attrs.data[index][1]
+        }
+        for (let index in attrs.listeners) {
+          el.addEventListener(
+            attrs.listeners[index][0],
+            attrs.listeners[index][1]
+          )
+        }
+        for (let index in attrs.styles) {
+          el.style[attrs.styles[index][0]] = attrs.styles[index][1]
         }
         return el
       }
