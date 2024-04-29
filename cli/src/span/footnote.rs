@@ -13,8 +13,8 @@ use std::collections::BTreeMap;
 use std::collections::BTreeSet;
 
 pub fn footnote<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str, Span> {
-    let (source, _) = tag_no_case("^example^^")(source)?;
-    let (source, content_to_parse) = take_until("^")(source)?;
+    let (source, _) = tag("^")(source)?;
+    let (source, content) = many1(|src| span(src, config))(source)?;
     let (source, _) = tag("^^")(source)?;
 
     // let (source, span_type) = match match config.standard_spans.iter().find_map(|t| {
@@ -39,10 +39,7 @@ pub fn footnote<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str, Spa
     Ok((
         source,
         Span::StandardSpan {
-            spans: vec![Span::WordSegment {
-                text: "example".to_string(),
-                template: "spans/word_segment.neojinja".to_string(),
-            }],
+            spans: content,
             key_value_attributes: BTreeMap::new(),
             flag_attributes: BTreeSet::new(),
             span_type: "footnote".to_string(),
@@ -57,7 +54,6 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
-    #[ignore]
     fn basic_footnote() {
         let source = "^example^^";
         let config = Config::set1();

@@ -1,14 +1,13 @@
 use crate::span::Span;
-use nom::IResult;
 use nom::bytes::complete::tag;
+use nom::IResult;
 
 pub fn escaped_pipe(source: &str) -> IResult<&str, Span> {
     let (source, result) = tag(r"\|")(source)?;
     Ok((
         source,
         Span::EscapedPipe {
-            text:
-            result.to_string(),
+            text: result.to_string(),
             template: "spans/escaped_pipe.neojinja".to_string(),
         },
     ))
@@ -43,5 +42,4 @@ mod test {
     //     let right = greater_than(source);
     //     assert_eq!(left, right);
     // }
-
 }

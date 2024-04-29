@@ -1,3 +1,4 @@
+pub mod escaped_char;
 pub mod escaped_pipe;
 pub mod footnote;
 pub mod greater_than;
@@ -15,7 +16,9 @@ pub mod tag_word;
 pub mod word_segment;
 
 use crate::config::Config;
-use crate::span::escaped_pipe::escaped_pipe;
+use crate::span::escaped_char::escaped_char;
+use crate::span::escaped_pipe::escaped_pipe; // TODO: Deprecate this for escaped_char
+                                             // use crate::span::footnote::footnote;
 use crate::span::greater_than::greater_than;
 // use crate::span::inline_key_value_span_no_attributes::inline_key_value_span_no_attributes;
 // use crate::span::inline_key_value_span_with_attributes::inline_key_value_span_with_attributes;
@@ -94,7 +97,7 @@ pub fn span<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str, Span> {
         |src| inline_standard_span_with_attributes(src, config),
         |src| inline_standard_span_no_attributes(src, config),
         pipe_by_itself_in_code,
-        escaped_pipe,
+        escaped_char,
         space,
         less_than,
         greater_than,
@@ -105,6 +108,4 @@ pub fn span<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str, Span> {
 }
 
 #[cfg(test)]
-mod test {
-    // testing it done at the lower level
-}
+mod test {}
