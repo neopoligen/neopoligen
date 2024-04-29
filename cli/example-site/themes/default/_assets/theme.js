@@ -146,6 +146,10 @@ function logMsg(msg) {
   console.log(`${Date.now()} - INFO: ${msg}`)
 }
 
+function logObject(msg) {
+  console.log(msg)
+}
+
 function removeClassFrom(target, className) {
   const el = getEl(target)
   if (el) {

@@ -65,7 +65,9 @@ customElements.define(
         min: config.min,
         max: config.max,
         step: config.step,
-        data: [['key', config.key]],
+        data: [
+            ['key', config.key]
+        ],
         listeners: [
           [
             'input',
@@ -153,27 +155,23 @@ customElements.define(
 
     handleModeClick(event) {
       this.state.active.mode = this.getValue('[name="mode"]:checked')
-      // original stuff to review
       this.lch().forEach((key) => {
-        this.setValue(`.slider-${key}`, state.modes[this.mode()][key])
+        this.setValue(`.slider-${key}`, this.state.modes[this.mode()][key])
         // this.setHTML(`.getFromButton-${key}`, `Get From: ${otherMode} mode`)
       })
-      // updateState()
-      // updateChips()
-      // updateProps()
+      this.update()
     }
 
     handleSliderChange(event) {
       if (this.timeoutId === undefined) {
         this.timeoutId = null
       }
-      void (function (that) {
-        window.clearTimeout(that.timeoutId)
-        that.timeoutId = window.setTimeout(() => {
-            logMsg(event)
-          that.update()
+      void function () {
+        window.clearTimeout(this.timeoutId)
+        this.timeoutId = window.setTimeout(() => {
+          this.update()
         }, 30)
-      })(this)
+      }.call(this)
     }
 
     lch() {
@@ -338,6 +336,19 @@ customElements.define(
       console.log(`${Date.now()} - INFO: ` + msg)
     }
 
+    modGetFloat(target) {
+      const el = this.getEl(target)
+      if (el) {
+        return parseFloat(el.value)
+      } else {
+        return undefined
+      }
+    }
+
+    modLogObject(msg) {
+      console.log(msg)
+    }
+
     mode() {
       return this.state.active.mode
     }
@@ -368,6 +379,10 @@ customElements.define(
     }
 
     update() {
+      this.lch().forEach((key) => {
+        this.state.modes[this.mode()][key] = this.modGetFloat(`.slider-${key}`)
+        this.logMsg(this.state.modes[this.mode()][key])
+      })
       this.logMsg('Doing update')
     }
 
