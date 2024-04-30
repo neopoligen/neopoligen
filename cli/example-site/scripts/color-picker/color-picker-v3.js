@@ -183,18 +183,7 @@ customElements.define(
         classes: ['main-wrapper'],
         innerHTML: `
   <h2>Color Picker</h2>
-
   <div class="content-wrapper">
-
-    <div class="stripe-wrapper">
-        <div class="stripe bg-alfa"></div>
-        <div class="stripe bg-bravo"></div>
-        <div class="stripe bg-charlie"></div>
-        <div class="stripe bg-delta"></div>
-        <div class="stripe bg-echo"></div>
-        <div class="stripe bg-foxtrot"></div>
-    </div>
-
     <div class="interface-wrapper">
         <div class="preview-section section-wrapper"></div>
         <div class="top-section section-wrapper">
@@ -211,18 +200,26 @@ customElements.define(
         <div class="section-wrapper">
             <h4>Secondary Colors</h4>
             <div class="secondary-section">
-                <div class="secondary-buttons charliedelta-section">
-                    <div class="charliedelta-buttons"></div>
+                <div class="secondary-wrapper charliedelta-section">
                     <div class="charliedelta-chips"></div>
+                    <div class="secondary-buttons charliedelta-buttons"></div>
                 </div>
-                <div class="secondary-buttons echofoxtrot-section">
-                    <div class="echofoxtrot-buttons"></div>
+                <div class="secondary-wrapper echofoxtrot-section">
                     <div class="echofoxtrot-chips"></div>
+                    <div class="secondary-buttons echofoxtrot-buttons"></div>
                 </div>
             </div>
         </div>
-    </div>
 
+        <div class="stripe-wrapper section-wrapper">
+            <div class="stripe bg-alfa"></div>
+            <div class="stripe bg-bravo"></div>
+            <div class="stripe bg-charlie"></div>
+            <div class="stripe bg-delta"></div>
+            <div class="stripe bg-echo"></div>
+            <div class="stripe bg-foxtrot"></div>
+        </div>
+    </div>
   </div>
 
           `,
@@ -276,11 +273,6 @@ button {
     cursor: pointer;
 }
 
-.content-wrapper {
-    display: grid;
-    grid-template-columns: 80px 1fr;
-}
-
 h2, h4 {
     color: var(--dev-color-alfa);
 }
@@ -309,6 +301,13 @@ h2, h4 {
 
 .primary-button {
     margin-bottom: 0.9rem;
+    border: 3px solid var(--dev-color-bw-match-40);
+    border-radius: 0.3rem;
+}
+
+.primary-button.selected {
+    margin-bottom: 0.9rem;
+    border: 3px solid var(--dev-color-bw-reverse-70);
 }
 
 .primary-chip {
@@ -332,8 +331,27 @@ h2, h4 {
     flex-wrap: wrap;
 }
 
+.secondary-buttons {
+    display: flex;
+    flex-wrap: flex;
+    gap: 20px;
+}
+
+.secondary-section {
+    display: flex;
+    flex-wrap: flex;
+    gap: 20px;
+}
+
+.secondary-wrapper {
+    display: grid;
+    border: 1px solid var(--dev-color-bw-reverse-40);
+    padding: 0.7rem;
+    border-radius: 0.5rem;
+}
+
 .section-wrapper {
-    border: 1px solid var(--dev-color-reverse-40);
+    border: 1px solid var(--dev-color-bw-reverse-40);
     padding: 0.9rem;
     border-radius: 0.5rem;
     margin-bottom: 2.5rem;
@@ -345,12 +363,12 @@ h2, h4 {
 }
 
 .stripe {
-    min-width: 8px;
-    min-height: 10px;
+    min-width: 6px;
+    min-height: 18px;
 }
 
 .stripe-wrapper {
-    border: 1px solid var(--dev-color-reverse-40);
+    border: 1px solid var(--dev-color-bw-reverse-40);
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     border-radius: 0.5rem;
@@ -478,7 +496,7 @@ h2, h4 {
       const svg = this.modAddSvgTo(parent, 'svg', {
         width: 50,
         height: 50,
-        classes: ['primary-button'],
+        classes: ['primary-button', `primary-button-${h}`],
       })
       this.lValues().forEach((l, lIndex) => {
         this.cValues().forEach((c, cIndex) => {
@@ -917,105 +935,101 @@ h2, h4 {
 
     getBravo(mode) {}
 
-    getCharlie(mode) {}
+    getCharlie(mode) {
+        let payload = []
+        payload.push(
+          (this.state.modes[mode].l +
+            this.state.modes[mode].colors.alfa.l +
+            this.state.base.l.max +
+            this.state.base.l.interval *
+              this.state.collections[
+                this.state.modes[mode].colors.alfa.collectionIndex
+              ][0][0]) %
+            this.state.base.l.max
+        )
+        payload.push(
+          (this.state.modes[mode].c +
+            this.state.modes[mode].colors.alfa.c +
+            this.state.base.c.max +
+            this.state.base.c.interval *
+              this.state.collections[
+                this.state.modes[mode].colors.alfa.collectionIndex
+              ][0][1]) %
+            this.state.base.c.max
+        )
+        payload.push(
+          (this.state.modes[mode].h +
+            this.state.modes[mode].colors.alfa.h +
+            this.state.modes[mode].colors.alfa.collectionShift) %
+            360
+        )
+        return payload
+      }
 
-    getDelta(mode) {}
-
-    getEcho(mode) {
-      // this.primaries().forEach((primary) => {
-      //     this.collectionCoords().forEach((coords) => {
-      //       const key = `tertiaryRect-${primary.key}-${coords[0]}-${coords[1]}`
-      //       let h =
-      //         (this.state.active.colors[primary.key].secondaryH +
-      //           this.state.modes[this.mode()].colors[primary.key].h) %
-      //         360
-      //       let l =
-      //         (this.state.modes[this.mode()].colors[primary.key].l +
-      //           100 +
-      //           20 * coords[0]) %
-      //         100
-      //       let c =
-      //         (this.state.modes[this.mode()].colors[primary.key].c +
-      //           5 +
-      //           coords[1]) %
-      //         5
-      //       this.devProps[`--${key}`] = `var(--color-${l}-${c}-${h})`
-      //     })
-      //   })
-
+    getDelta(mode) {
       let payload = []
-
       payload.push(
-        (((this.state.modes[mode].colors.bravo.l +
-          100 +
-          20 *
+        (this.state.modes[mode].l +
+          this.state.modes[mode].colors.alfa.l +
+          this.state.base.l.max +
+          this.state.base.l.interval *
             this.state.collections[
-              this.state.modes[mode].colors.bravo.collectionIndex
-            ][0][0]) %
-          100) +
-          this.state.modes[mode].colors.bravo.l +
-          this.state.modes[mode].l) %
+              this.state.modes[mode].colors.alfa.collectionIndex
+            ][1][0]) %
           this.state.base.l.max
       )
-
-      //   payload.push(
-      //     (this.state.modes[mode].l +
-      //       this.state.base.l.max +
-      //       this.state.base.l.interval *
-      //         this.state.collections[
-      //           this.state.modes[mode].colors.bravo.collectionIndex
-      //         ][0][0]) %
-      //       this.state.base.l.max
-      //   )
-
       payload.push(
-        ((this.state.modes[this.mode()].c +
-          5 +
-          this.state.collections[
-            this.state.modes[mode].colors.bravo.collectionIndex
-          ][0][1]) %
-          5) /
-          10
+        (this.state.modes[mode].c +
+          this.state.modes[mode].colors.alfa.c +
+          this.state.base.c.max +
+          this.state.base.c.interval *
+            this.state.collections[
+              this.state.modes[mode].colors.alfa.collectionIndex
+            ][1][1]) %
+          this.state.base.c.max
       )
-
       payload.push(
-        (this.state.modes[mode].colors.bravo.collectionShift *
-          this.state.base.h.max +
-          this.state.modes[mode].h) %
+        (this.state.modes[mode].h +
+          this.state.modes[mode].colors.alfa.h +
+          this.state.modes[mode].colors.alfa.collectionShift) %
           360
       )
-
-      //   payload.push(
-      //     (this.state.modes[mode].l +
-      //       this.state.modes[mode].colors.bravo.l +
-      //       this.state.collections[
-      //         this.state.modes[mode].colors.bravo.collectionIndex
-      //       ][0][0] *
-      //         this.state.base.l.interval) %
-      //       100
-      //   )
-      //   payload.push(
-      //     ((this.state.modes[mode].c * 10 +
-      //       this.state.modes[mode].colors.bravo.c +
-      //       this.state.collections[
-      //         this.state.modes[mode].colors.bravo.collectionIndex
-      //       ][0][1] *
-      //         (this.state.base.c.interval * 10)) %
-      //       5) /
-      //       10
-      //   )
-      //   payload.push(
-      //     (this.state.modes[mode].h +
-      //       this.state.modes[mode].colors.bravo.h +
-      //       this.state.modes[mode].colors.bravo.collectionShift) %
-      //       360
-      //   )
       return payload
     }
 
+    getEcho(mode) {
+        let payload = []
+        payload.push(
+          (this.state.modes[mode].l +
+            this.state.modes[mode].colors.bravo.l +
+            this.state.base.l.max +
+            this.state.base.l.interval *
+              this.state.collections[
+                this.state.modes[mode].colors.bravo.collectionIndex
+              ][0][0]) %
+            this.state.base.l.max
+        )
+        payload.push(
+          (this.state.modes[mode].c +
+            this.state.modes[mode].colors.bravo.c +
+            this.state.base.c.max +
+            this.state.base.c.interval *
+              this.state.collections[
+                this.state.modes[mode].colors.bravo.collectionIndex
+              ][0][1]) %
+            this.state.base.c.max
+        )
+        payload.push(
+          (this.state.modes[mode].h +
+            this.state.modes[mode].colors.bravo.h +
+            this.state.modes[mode].colors.bravo.collectionShift) %
+            360
+        )
+        return payload
+      }
+
     getFoxtrot(mode) {
       let payload = []
-
       payload.push(
         (this.state.modes[mode].l +
           this.state.modes[mode].colors.bravo.l +
@@ -1026,7 +1040,6 @@ h2, h4 {
             ][1][0]) %
           this.state.base.l.max
       )
-
       payload.push(
         (this.state.modes[mode].c +
           this.state.modes[mode].colors.bravo.c +
@@ -1037,7 +1050,6 @@ h2, h4 {
             ][1][1]) %
           this.state.base.c.max
       )
-
       payload.push(
         (this.state.modes[mode].h +
           this.state.modes[mode].colors.bravo.h +
@@ -1697,11 +1709,15 @@ h2, h4 {
       // only doing a few since that's all that's needed for the d
       // design
       if (this.mode() === 'light') {
-        this.devProps[`--dev-color-reverse-40`] = `rgb(0 0 0 / 40%)`
-        this.devProps[`--dev-color-reverse-70`] = `rgb(0 0 0 / 70%)`
+        this.devProps[`--dev-color-bw-match-40`] = `rgb(255 255 255 / 40%)`
+        this.devProps[`--dev-color-bw-match-70`] = `rgb(255 255 255 / 70%)`
+        this.devProps[`--dev-color-bw-reverse-40`] = `rgb(0 0 0 / 40%)`
+        this.devProps[`--dev-color-bw-reverse-70`] = `rgb(0 0 0 / 70%)`
       } else {
-        this.devProps[`--dev-color-reverse-40`] = `rgb(255 255 255 / 40%)`
-        this.devProps[`--dev-color-reverse-70`] = `rgb(255 255 255 / 70%)`
+        this.devProps[`--dev-color-bw-match-40`] = `rgb(0 0 0 / 40%)`
+        this.devProps[`--dev-color-bw-match-70`] = `rgb(0 0 0 / 70%)`
+        this.devProps[`--dev-color-bw-reverse-40`] = `rgb(255 255 255 / 40%)`
+        this.devProps[`--dev-color-bw-reverse-70`] = `rgb(255 255 255 / 70%)`
       }
 
       // alfa
@@ -1737,54 +1753,65 @@ h2, h4 {
       })`
 
       // charlie
-      this.devProps[`--dev-color-charlie`] = `oklch(${
-        (this.state.modes[this.mode()].l +
-          this.state.modes[this.mode()].colors.alfa.l +
-          this.state.collections[
-            this.state.modes[this.mode()].colors.alfa.collectionIndex
-          ][0][0] *
-            this.state.base.l.interval) %
-        100
-      }% ${
-        ((this.state.modes[this.mode()].c * 10 +
-          this.state.modes[this.mode()].colors.alfa.c +
-          this.state.collections[
-            this.state.modes[this.mode()].colors.alfa.collectionIndex
-          ][0][1] *
-            (this.state.base.c.interval * 10)) %
-          5) /
-        10
-      } ${
-        (this.state.modes[this.mode()].h +
-          this.state.modes[this.mode()].colors.alfa.h +
-          this.state.modes[this.mode()].colors.alfa.collectionShift) %
-        360
-      })`
+      let charlieValues = this.getCharlie(this.mode())
+      this.devProps[
+        `--dev-color-charlie`
+      ] = `oklch(${charlieValues[0]}% ${charlieValues[1]} ${charlieValues[2]})`
+
+    //   this.devProps[`--dev-color-charlie`] = `oklch(${
+    //     (this.state.modes[this.mode()].l +
+    //       this.state.modes[this.mode()].colors.alfa.l +
+    //       this.state.collections[
+    //         this.state.modes[this.mode()].colors.alfa.collectionIndex
+    //       ][0][0] *
+    //         this.state.base.l.interval) %
+    //     100
+    //   }% ${
+    //     ((this.state.modes[this.mode()].c * 10 +
+    //       this.state.modes[this.mode()].colors.alfa.c +
+    //       this.state.collections[
+    //         this.state.modes[this.mode()].colors.alfa.collectionIndex
+    //       ][0][1] *
+    //         (this.state.base.c.interval * 10)) %
+    //       5) /
+    //     10
+    //   } ${
+    //     (this.state.modes[this.mode()].h +
+    //       this.state.modes[this.mode()].colors.alfa.h +
+    //       this.state.modes[this.mode()].colors.alfa.collectionShift) %
+    //     360
+    //   })`
 
       // delta
-      this.devProps[`--dev-color-delta`] = `oklch(${
-        (this.state.modes[this.mode()].l +
-          this.state.modes[this.mode()].colors.alfa.l +
-          this.state.collections[
-            this.state.modes[this.mode()].colors.alfa.collectionIndex
-          ][1][0] *
-            this.state.base.l.interval) %
-        100
-      }% ${
-        ((this.state.modes[this.mode()].c * 10 +
-          this.state.modes[this.mode()].colors.alfa.c +
-          this.state.collections[
-            this.state.modes[this.mode()].colors.alfa.collectionIndex
-          ][1][1] *
-            (this.state.base.c.interval * 10)) %
-          5) /
-        10
-      } ${
-        (this.state.modes[this.mode()].h +
-          this.state.modes[this.mode()].colors.alfa.h +
-          this.state.modes[this.mode()].colors.alfa.collectionShift) %
-        360
-      })`
+      let deltaValues = this.getDelta(this.mode())
+      this.devProps[
+        `--dev-color-delta`
+      ] = `oklch(${deltaValues[0]}% ${deltaValues[1]} ${deltaValues[2]})`
+
+    //   this.devProps[`--dev-color-delta`] = `oklch(${
+    //     (this.state.modes[this.mode()].l +
+    //       this.state.modes[this.mode()].colors.alfa.l +
+    //       this.state.collections[
+    //         this.state.modes[this.mode()].colors.alfa.collectionIndex
+    //       ][1][0] *
+    //         this.state.base.l.interval) %
+    //     100
+    //   }% ${
+    //     ((this.state.modes[this.mode()].c * 10 +
+    //       this.state.modes[this.mode()].colors.alfa.c +
+    //       this.state.collections[
+    //         this.state.modes[this.mode()].colors.alfa.collectionIndex
+    //       ][1][1] *
+    //         (this.state.base.c.interval * 10)) %
+    //       5) /
+    //     10
+    //   } ${
+    //     (this.state.modes[this.mode()].h +
+    //       this.state.modes[this.mode()].colors.alfa.h +
+    //       this.state.modes[this.mode()].colors.alfa.collectionShift) %
+    //     360
+    //   })`
+
 
       let echoValues = this.getEcho(this.mode())
       //   this.modLogObject(echoValues)
