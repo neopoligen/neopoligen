@@ -183,25 +183,48 @@ customElements.define(
         classes: ['main-wrapper'],
         innerHTML: `
   <h2>Color Picker</h2>
-  <div class="preview-section"></div>
-  <div class="top-section">
-    <div class="mode-section"></div>
-    <div class="slider-section"></div>
+
+  <div class="content-wrapper">
+
+    <div class="stripe-wrapper">
+        <div class="stripe bg-alfa"></div>
+        <div class="stripe bg-bravo"></div>
+        <div class="stripe bg-charlie"></div>
+        <div class="stripe bg-delta"></div>
+        <div class="stripe bg-echo"></div>
+        <div class="stripe bg-foxtrot"></div>
+    </div>
+
+    <div class="interface-wrapper">
+        <div class="preview-section section-wrapper"></div>
+        <div class="top-section section-wrapper">
+            <div class="mode-section"></div>
+            <div class="slider-section"></div>
+        </div>
+        <div class="section-wrapper">
+            <h4>Primary Colors</h4>
+            <div class="primary-section">
+                <div class="primary-buttons"></div>
+                <div class="primary-chips"></div>
+            </div>
+        </div>
+        <div class="section-wrapper">
+            <h4>Secondary Colors</h4>
+            <div class="secondary-section">
+                <div class="secondary-buttons charliedelta-section">
+                    <div class="charliedelta-buttons"></div>
+                    <div class="charliedelta-chips"></div>
+                </div>
+                <div class="secondary-buttons echofoxtrot-section">
+                    <div class="echofoxtrot-buttons"></div>
+                    <div class="echofoxtrot-chips"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
   </div>
-  <div class="primary-section">
-    <div class="primary-buttons"></div>
-    <div class="primary-chips"></div>
-  </div>
-  <div class="secondary-section">
-      <div class="secondary-buttons charliedelta-section">
-          <div class="charliedelta-buttons"></div>
-          <div class="charliedelta-chips"></div>
-      </div>
-      <div class="secondary-buttons echofoxtrot-section">
-          <div class="echofoxtrot-buttons"></div>
-          <div class="echofoxtrot-chips"></div>
-      </div>
-  </div>
+
           `,
       })
     }
@@ -209,57 +232,151 @@ customElements.define(
     addStyles() {
       const styles = this.ownerDocument.createElement('style')
       let sheet = `
-  .main-wrapper { 
-      padding: 1rem;
-      background-color: var(--dev-color-base); 
-      border-radius: 0.6rem;
-      color: var(--dev-color-bravo);
-      max-width: 1100px;
-      margin: auto;
-  }
-  
-  .primary-wrapper {
-      display: flex;
-      flex-wrap: wrap;
-  }
-  
-  h2 {
-      color: var(--dev-color-alfa);
-  }
-  
-  .primary-chip-row {
-      display: flex;
-      flex-wrap: wrap;
-  }
-  
-  .primary-chip {
-      max-width: 160px;
-      margin: 0.5rem;
-      font-size: 0.7rem;
-  }
-  
-  .chip-button {
-      border: none;
-      background: none;
-      color: currentColor;
-      outline: none;
-      margin: 0;
-      padding: 0;
-      font-size: 0.7rem;
-      cursor: pointer;
-  }
-  
-  button {
-      background: none;
-      border: none;
-      color: currentColor;
-      margin: 0;
-      padding: 0;
-  
-  }
-  
-  
-        `
+
+.bg-alfa {
+    background-color: var(--dev-color-alfa);
+}
+
+.bg-bravo {
+    background-color: var(--dev-color-bravo);
+}
+
+.bg-charlie {
+    background-color: var(--dev-color-charlie);
+}
+
+.bg-delta {
+    background-color: var(--dev-color-delta);
+}
+
+.bg-echo {
+    background-color: var(--dev-color-echo);
+}
+
+.bg-foxtrot {
+    background-color: var(--dev-color-foxtrot);
+}
+
+button {
+    background: none;
+    border: none;
+    color: currentColor;
+    margin: 0;
+    padding: 0;
+}
+
+.chip-button {
+    border: none;
+    background: none;
+    color: currentColor;
+    outline: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.7rem;
+    cursor: pointer;
+}
+
+.content-wrapper {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+}
+
+h2, h4 {
+    color: var(--dev-color-alfa);
+}
+
+.main-wrapper { 
+    padding: 1rem;
+    background-color: var(--dev-color-base); 
+    border-radius: 0.6rem;
+    color: var(--dev-color-bravo);
+    max-width: 1100px;
+    margin: auto;
+}
+
+.mode-button-selected {
+    text-decoration: underline;
+}
+
+.mode-section {
+    display: grid;
+}
+
+.preview-section {
+    text-align: center;
+
+}
+
+.primary-button {
+    margin-bottom: 0.9rem;
+}
+
+.primary-chip {
+    max-width: 110px;
+    margin: 0.6rem;
+    font-size: 0.7rem;
+}
+
+.primary-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.primary-section {
+    display: grid;
+    grid-template-columns: 70px 1fr;
+}
+
+.primary-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.section-wrapper {
+    border: 1px solid rgb(0 0 0 / 45%);
+    padding: 0.9rem;
+    border-radius: 0.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.sliders {
+    display: grid;
+    grid-template-columns: 100px 1fr 80px;
+}
+
+.stripe {
+    min-width: 8px;
+    min-height: 10px;
+}
+
+.stripe-wrapper {
+    border: 1px solid rgb(0 0 0 / 45%);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    border-radius: 0.5rem;
+    margin-right: 0.9rem;
+}
+
+.stripe-wrapper :first-child {
+    border-top-left-radius: 0.4rem;
+    border-bottom-left-radius: 0.4rem;
+}
+
+.stripe-wrapper :last-child {
+    border-top-right-radius: 0.4rem;
+    border-bottom-right-radius: 0.4rem;
+}
+
+
+
+.top-section {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    margin-top: 1.7rem;
+    margin-bottom: 1.9rem;
+}
+
+`
 
       this.colors().forEach((color) => {
         const key = `dev-color-${color}`
@@ -309,30 +426,44 @@ customElements.define(
     }
 
     buildModeButtons() {
-      this.modAddTo(`.mode-section`, 'div', {
-        classes: ['modes'],
-      })
       this.modes().forEach((mode) => {
-        const label = this.modAddTo('.modes', 'label', {
-          innerHTML: `<span>${mode}</span>`,
-        })
-        this.modAddTo(label, 'input', {
-          type: 'radio',
-          name: 'mode',
-          checked: mode === 'light' ? true : false,
-          value: mode,
+        this.modAddTo(`.mode-section`, 'button', {
+          innerHTML: mode === 'light' ? 'Light ☀' : 'Dark ☾',
+          data: [['mode', mode]],
           listeners: [
             [
-              'input',
+              'click',
               (event) => {
                 this.handleModeClick.call(this, event)
               },
             ],
           ],
           // listeners: [['input', () => { console.log("HEREREREH") }]],
-          classes: [`mode-${mode}`],
+          classes: [`mode-button-${mode}`],
         })
       })
+
+      //   this.modes().forEach((mode) => {
+      //     const label = this.modAddTo('.modes', 'label', {
+      //       innerHTML: `<span>${mode}</span>`,
+      //     })
+      //     this.modAddTo(label, 'input', {
+      //       type: 'radio',
+      //       name: 'mode',
+      //       checked: mode === 'light' ? true : false,
+      //       value: mode,
+      //       listeners: [
+      //         [
+      //           'input',
+      //           (event) => {
+      //             this.handleModeClick.call(this, event)
+      //           },
+      //         ],
+      //       ],
+      //       // listeners: [['input', () => { console.log("HEREREREH") }]],
+      //       classes: [`mode-${mode}`],
+      //     })
+      //   })
     }
 
     buildPreviewButton() {
@@ -345,12 +476,10 @@ customElements.define(
     }
 
     buildPrimaryButton(parent, h) {
-      const button = this.modAddTo(parent, 'div', {
-        // innerHTML: h,
-      })
-      const svg = this.modAddSvgTo(button, 'svg', {
+      const svg = this.modAddSvgTo(parent, 'svg', {
         width: 50,
         height: 50,
+        classes: ['primary-button'],
       })
       this.lValues().forEach((l, lIndex) => {
         this.cValues().forEach((c, cIndex) => {
@@ -388,14 +517,13 @@ customElements.define(
           this.cValues().forEach((c, cIndex) => {
             this.modAddTo(chipLine, 'div', {
               innerHTML: `
-        <div class="primary-chip chip-${l}-${cIndex}">
         <div class="x-chip-swatch"></div>
         <div class="chip-details">
           <div class="chip-title-${l}-${cIndex}">#</div>
           <div class="chip-text">${this.state.sampleText}</div>
           <div class="chip-buttons chip-buttons-${l}-${cIndex}"></div>
-        </div>
         </div>`,
+              classes: ['primary-chip', `chip-${l}-${cIndex}`],
             })
             this.primaryColors().forEach((color) => {
               this.modAddTo(`.chip-buttons-${l}-${cIndex}`, 'button', {
@@ -512,7 +640,7 @@ customElements.define(
       // original to review
       this.modAddTo(sliders, `button`, {
         classes: [`get-from-${config.key}`],
-        innerHTML: `Copy ${this.state.modes.dark.display}`,
+        innerHTML: `copy ${this.state.modes.dark.display}`,
         listeners: [
           [
             `click`,
@@ -1204,7 +1332,7 @@ customElements.define(
     }
 
     handleModeClick(event) {
-      this.state.active.mode = this.modGetValue('[name="mode"]:checked')
+      this.state.active.mode = event.target.dataset.mode
       this.lch().forEach((key) => {
         this.modSetValue(`.slider-${key}`, this.state.modes[this.mode()][key])
         this.modSetHTML(
@@ -1464,6 +1592,110 @@ customElements.define(
         360
       })`
 
+      // charlie
+      this.devProps[`--dev-color-charlie`] = `oklch(${
+        (this.state.modes[this.mode()].l +
+          this.state.modes[this.mode()].colors.alfa.l +
+          this.state.collections[
+            this.state.modes[this.mode()].colors.alfa.collectionIndex
+          ][0][0] *
+            this.state.base.l.interval) %
+        100
+      }% ${
+        ((this.state.modes[this.mode()].c * 10 +
+          this.state.modes[this.mode()].colors.alfa.c +
+          this.state.collections[
+            this.state.modes[this.mode()].colors.alfa.collectionIndex
+          ][0][1] *
+            (this.state.base.c.interval * 10)) %
+          5) /
+        10
+      } ${
+        (this.state.modes[this.mode()].h +
+          this.state.modes[this.mode()].colors.alfa.h +
+          this.state.modes[this.mode()].colors.alfa.collectionShift) %
+        360
+      })`
+
+
+      // delta
+      this.devProps[`--dev-color-delta`] = `oklch(${
+        (this.state.modes[this.mode()].l +
+          this.state.modes[this.mode()].colors.alfa.l +
+          this.state.collections[
+            this.state.modes[this.mode()].colors.alfa.collectionIndex
+          ][1][0] *
+            this.state.base.l.interval) %
+        100
+      }% ${
+        ((this.state.modes[this.mode()].c * 10 +
+          this.state.modes[this.mode()].colors.alfa.c +
+          this.state.collections[
+            this.state.modes[this.mode()].colors.alfa.collectionIndex
+          ][1][1] *
+            (this.state.base.c.interval * 10)) %
+          5) /
+        10
+      } ${
+        (this.state.modes[this.mode()].h +
+          this.state.modes[this.mode()].colors.alfa.h +
+          this.state.modes[this.mode()].colors.alfa.collectionShift) %
+        360
+      })`
+
+
+      // echo
+      this.devProps[`--dev-color-echo`] = `oklch(${
+        (this.state.modes[this.mode()].l +
+          this.state.modes[this.mode()].colors.bravo.l +
+          this.state.collections[
+            this.state.modes[this.mode()].colors.bravo.collectionIndex
+          ][0][0] *
+            this.state.base.l.interval) %
+        100
+      }% ${
+        ((this.state.modes[this.mode()].c * 10 +
+          this.state.modes[this.mode()].colors.bravo.c +
+          this.state.collections[
+            this.state.modes[this.mode()].colors.bravo.collectionIndex
+          ][0][1] *
+            (this.state.base.c.interval * 10)) %
+          5) /
+        10
+      } ${
+        (this.state.modes[this.mode()].h +
+          this.state.modes[this.mode()].colors.bravo.h +
+          this.state.modes[this.mode()].colors.bravo.collectionShift) %
+        360
+      })`
+
+
+      // foxtrot
+      this.devProps[`--dev-color-foxtrot`] = `oklch(${
+        (this.state.modes[this.mode()].l +
+          this.state.modes[this.mode()].colors.bravo.l +
+          this.state.collections[
+            this.state.modes[this.mode()].colors.bravo.collectionIndex
+          ][1][0] *
+            this.state.base.l.interval) %
+        100
+      }% ${
+        ((this.state.modes[this.mode()].c * 10 +
+          this.state.modes[this.mode()].colors.bravo.c +
+          this.state.collections[
+            this.state.modes[this.mode()].colors.bravo.collectionIndex
+          ][1][1] *
+            (this.state.base.c.interval * 10)) %
+          5) /
+        10
+      } ${
+        (this.state.modes[this.mode()].h +
+          this.state.modes[this.mode()].colors.bravo.h +
+          this.state.modes[this.mode()].colors.bravo.collectionShift) %
+        360
+      })`
+
+
       // set the active explicit colors
       this.lValues().forEach((l) => {
         this.cValues().forEach((c, cIndex) => {
@@ -1535,6 +1767,15 @@ customElements.define(
         })
       })
 
+      // mode button highlight
+      if (this.state.active.mode === 'light') {
+        this.modAddClassTo(`.mode-button-light`, `mode-button-selected`)
+        this.modRemoveClassFrom(`.mode-button-dark`, `mode-button-selected`)
+      } else {
+        this.modAddClassTo(`.mode-button-dark`, `mode-button-selected`)
+        this.modRemoveClassFrom(`.mode-button-light`, `mode-button-selected`)
+      }
+
       // update all the dev props
       for (let prop in this.devProps) {
         this.ownerDocument.documentElement.style.setProperty(
@@ -1548,6 +1789,15 @@ customElements.define(
 
     /////////////////////////////////////////////////////////////////////////////
     // Module functions
+
+    modAddClassTo(target, c) {
+      const el = this.modGetEl(target)
+      if (el) {
+        el.classList.add(c)
+      } else {
+        this.modLogError('Could not add class')
+      }
+    }
 
     modAddSvgTo(target, tag, attrs = {}) {
       const el = this.modGetEl(target)
@@ -1644,6 +1894,15 @@ customElements.define(
 
     modLogObject(msg) {
       console.log(msg)
+    }
+
+    modRemoveClassFrom(target, c) {
+      const el = this.modGetEl(target)
+      if (el) {
+        el.classList.remove(c)
+      } else {
+        this.modLogError('Could not remove class')
+      }
     }
 
     modSetHTML(target, value) {
