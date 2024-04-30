@@ -315,6 +315,21 @@ customElements.define(
       return response
     }
 
+    collectionCoords() {
+        const refChecks = []
+        const response = []
+        this.state.collections.forEach((collection) => {
+          collection.forEach((coords) => {
+            const refCheck = `${coords[0]}-${coords[1]}`
+            if (!refChecks.includes(refCheck)) {
+              refChecks.push(refCheck)
+              response.push([coords[0], coords[1]])
+            }
+          })
+        })
+        return response
+      }
+
     collections() {
       return this.state.collections
     }
@@ -539,6 +554,15 @@ h2 {
         })
       })
 
+      // tertiary rect prep
+      this.primaries().forEach((primary) => {
+        this.collectionCoords().forEach((coords) => {
+          const key = `tertiaryRect-${primary.key}-${coords[0]}-${coords[1]}`
+          sheet += `.${key} { fill: var(--${key}); }`
+        })
+      })
+
+
       styles.innerHTML = sheet
       this.shadowRoot.appendChild(styles)
     }
@@ -747,6 +771,26 @@ h2 {
               this.devProps[`--${key}`] = `var(--color-${l2}-${c2}-${h2})`
             })
           })
+        })
+      })
+
+      // tertiaries
+      this.primaries().forEach((primary) => {
+        this.collectionCoords().forEach((coords) => {
+          const key = `tertiaryRect-${primary.key}-${coords[0]}-${coords[1]}`
+          let h =
+            (this.state.active.colors[primary.key].secondaryH +
+              this.state.modes[this.mode()].colors[primary.key].h) %
+            360
+          let l =
+            (this.state.modes[this.mode()].colors[primary.key].l +
+              100 +
+              20 * coords[0]) %
+            100
+          let c =
+            (this.state.modes[this.mode()].colors[primary.key].c + 5 + coords[1]) %
+            5
+          this.devProps[`--${key}`] = `var(--color-${l}-${c}-${h})`
         })
       })
 
