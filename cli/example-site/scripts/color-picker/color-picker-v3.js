@@ -1008,66 +1008,39 @@ h2, h3 {
     }
 
     getEcho(mode) {
-      let payload = []
-      payload.push(
-        (this.state.modes[mode].l +
-          this.state.modes[mode].colors.bravo.l +
-          this.state.base.l.max +
-          this.state.base.l.interval *
+        let payload = []
+        payload.push(
+          (this.state.modes[mode].l +
+            this.state.modes[mode].colors.bravo.l +
+            this.state.base.l.max +
             this.state.collections[
               this.state.modes[mode].colors.bravo.collectionIndex
-            ][0][0]) %
-          this.state.base.l.max
-      )
-      payload.push(
-        (this.state.modes[mode].c +
-          this.state.modes[mode].colors.bravo.c +
-          this.state.base.c.max +
-          this.state.base.c.interval *
+            ][0][0] *
+              this.state.base.l.interval) %
+            100
+        )
+        payload.push(
+          ((this.state.modes[mode].c * 10 +
+            this.state.modes[mode].colors.bravo.c +
+            this.state.base.c.max * 10 +
             this.state.collections[
               this.state.modes[mode].colors.bravo.collectionIndex
-            ][0][1]) %
-          this.state.base.c.max
-      )
-      payload.push(
-        (this.state.modes[mode].h +
-          this.state.modes[mode].colors.bravo.h +
-          this.state.modes[mode].colors.bravo.collectionShift) %
-          360
-      )
-      return payload
-    }
+            ][0][1] *
+              (this.state.base.c.interval * 10)) %
+            5) /
+            10
+        )
+        payload.push(
+          (this.state.modes[mode].h +
+            this.state.modes[mode].colors.bravo.h +
+            this.state.modes[mode].colors.bravo.collectionShift) %
+            360
+        )
+        return payload
+      }
 
     getFoxtrot(mode) {
       let payload = []
-
-      //   payload.push(
-      //     (this.state.modes[mode].l +
-      //       this.state.modes[mode].colors.bravo.l +
-      //       this.state.base.l.max +
-      //       this.state.base.l.interval *
-      //         this.state.collections[
-      //           this.state.modes[mode].colors.bravo.collectionIndex
-      //         ][1][0]) %
-      //       this.state.base.l.max
-      //   )
-      //   payload.push(
-      //     (this.state.modes[mode].c +
-      //       this.state.modes[mode].colors.bravo.c +
-      //       this.state.base.c.max +
-      //       this.state.base.c.interval *
-      //         this.state.collections[
-      //           this.state.modes[mode].colors.bravo.collectionIndex
-      //         ][1][1]) %
-      //       this.state.base.c.max
-      //   )
-      //   payload.push(
-      //     (this.state.modes[mode].h +
-      //       this.state.modes[mode].colors.bravo.h +
-      //       this.state.modes[mode].colors.bravo.collectionShift) %
-      //       360
-      //   )
-
       payload.push(
         (this.state.modes[mode].l +
           this.state.modes[mode].colors.bravo.l +
@@ -1095,7 +1068,6 @@ h2, h3 {
           this.state.modes[mode].colors.bravo.collectionShift) %
           360
       )
-
       return payload
     }
 
