@@ -243,7 +243,8 @@ window.addEventListener("message", (event) => {
 
 function makeAlphaExamples() {
     colors.forEach((color) => {
-        pageAddTo('.alpha-examples', 'div', {
+        const colorWrapper = pageAddTo('.alpha-examples', 'div', {})
+        pageAddTo(colorWrapper, 'div', {
             innerHTML: `
             <div class="alpha-example alpha-example-${color}">
                 <div class="color-${color}">--color-${color}</div>
@@ -251,6 +252,18 @@ function makeAlphaExamples() {
             </div>
             `
         })
+
+        for (let alpha = 90; alpha > 0; alpha = alpha - 10) {
+            pageAddTo(colorWrapper, 'div', {
+                innerHTML: `
+                <div class="alpha-example alpha-example-${color}-${alpha}">
+                    <div class="color-${color}-${alpha}">--color-${color}-${alpha}</div>
+                    <div class="bg-${color}-${alpha} alpha-swatch"></div>
+                </div>
+                `
+            })
+        }
+
     })
 }
 
@@ -266,15 +279,15 @@ document.addEventListener("DOMContentLoaded", () => {
 -- css
 
 .alpha-example {
-    max-width: 240px;
+    max-width: 340px;
     display: flex;
     flex-wrap: wrap;
     margin: 0.1rem;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
 }
 
 .alpha-example :first-child {
-    min-width: 120px;
+    min-width: 190px;
 }
 
 

@@ -1036,7 +1036,14 @@ h2, h3 {
           `--color-${color}`,
           `oklch(${theValues[color][0]}% ${theValues[color][1]} ${theValues[color][2]})`
         )
+        for (let alpha = 90; alpha > 0; alpha = alpha - 10) {
+            response += this.prop(
+                `--color-${color}-${alpha}`,
+                `oklch(${theValues[color][0]}% ${theValues[color][1]} ${theValues[color][2]} / ${alpha}%)`
+              )
+        }
       }
+
       return response.trim()
     }
 
