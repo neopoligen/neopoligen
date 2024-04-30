@@ -1003,6 +1003,19 @@ h2, h3 {
       return payload
     }
 
+    genMatchStyles(mode) {
+      let config = {
+        light: { match: '255 255 255', reverse: '0 0 0' },
+        dark: { match: '0 0 0', reverse: '255 255 255' },
+      }
+      let styles = ``
+
+      styles += `--color-bw-match: rgb(${config[mode].match});\n`
+      styles += `--color-bw-reverse: rgb(${config[mode].reverse});\n`
+
+      return styles
+    }
+
     genStyles(mode) {
       let response = ``
       const theValues = {
@@ -1265,18 +1278,30 @@ h2, h3 {
 `
 
       styles += `body { 
-        
-${this.genStyles('light')} }
+${this.genMatchStyles('light')}        
+${this.genStyles('light')} 
+}
         
 `
 
-      styles += `body.dark { ${this.genStyles('dark')} }\n`
+      styles += `body.dark { 
+        ${this.genMatchStyles('dark')}  
+        ${this.genStyles('dark')} 
+    }\n`
 
       styles += `@media (prefers-color-scheme: dark) {\n`
 
-      styles += `body { ${this.genStyles('dark')} }\n`
+      styles += `body { 
+ 
+        ${this.genMatchStyles('dark')}  
+        ${this.genStyles('dark')} 
+    
+    }\n`
 
-      styles += `body.light { ${this.genStyles('light')} }\n`
+      styles += `body.light { 
+        ${this.genMatchStyles('light')}  
+        ${this.genStyles('light')} 
+    }\n`
 
       styles += `}\n`
 
