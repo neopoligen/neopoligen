@@ -191,31 +191,32 @@ customElements.define(
             <div class="slider-section"></div>
         </div>
         <div class="section-wrapper">
-            <h3>Primary Colors: <span class="dev-color-alfa">alfa</span> <span class="dev-color-bravo">bravo</span></h3>
+            <h3>Primary: <span class="dev-color-alfa">alfa</span> <span class="dev-color-bravo">bravo</span></h3>
             <div class="primary-section">
                 <div class="primary-buttons"></div>
                 <div class="primary-chips"></div>
             </div>
         </div>
         <div class="section-wrapper">
-        <h3>Secondary Colors: 
-            <span class="dev-color-charlie">charlie</span>
-            <span class="dev-color-delta">delta</span>
-            <span class="dev-color-echo">echo</span>
-            <span class="dev-color-foxtrot">foxtrot</span>
-         </h3>
             <div class="secondary-section">
                 <div class="secondary-wrapper charliedelta-section">
-                    <div class="charliedelta-chips"></div>
+                    <h3>Secondary: 
+                        <span class="dev-color-charlie">charlie</span>
+                        <span class="dev-color-delta">delta</span>
+                    </h3>
                     <div class="secondary-buttons charliedelta-buttons"></div>
+                    <div class="charliedelta-chips"></div>
                 </div>
                 <div class="secondary-wrapper echofoxtrot-section">
-                    <div class="echofoxtrot-chips"></div>
+                    <h3>Secondary: 
+                        <span class="dev-color-echo">echo</span>
+                        <span class="dev-color-foxtrot">foxtrot</span>
+                    </h3>
                     <div class="secondary-buttons echofoxtrot-buttons"></div>
+                    <div class="echofoxtrot-chips"></div>
                 </div>
             </div>
         </div>
-
         <div class="stripe-wrapper section-wrapper">
             <div class="stripe bg-alfa"></div>
             <div class="stripe bg-bravo"></div>
@@ -239,6 +240,10 @@ customElements.define(
     addStyles() {
       const styles = this.ownerDocument.createElement('style')
       let sheet = `
+@font-face {
+    font-family: 'Inter';
+    src: url('/theme/fonts/Inter-VariableFont_slnt,wght.ttf') format('opentype');
+}
 
 .bg-alfa {
     background-color: var(--dev-color-alfa);
@@ -270,6 +275,7 @@ button {
     color: currentColor;
     margin: 0;
     padding: 0;
+    cursor: pointer;
 }
 
 .chip-button {
@@ -283,6 +289,24 @@ button {
     cursor: pointer;
 }
 
+.chip-button-alfa {
+    text-align: left;
+}
+
+.chip-button-bravo {
+    text-align: right;
+}
+
+.chip-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 0.4rem;
+}
+
+.chip-title {
+    font-weight: 700;
+}
+
 h2, h3 {
     color: var(--dev-color-bw-reverse-90);
 }
@@ -292,8 +316,9 @@ h2, h3 {
     background-color: var(--dev-color-base); 
     border-radius: 0.6rem;
     color: var(--dev-color-bravo);
-    max-width: 1100px;
+    max-width: 1200px;
     margin: auto;
+    font-family: 'Inter';
 }
 
 .mode-button-selected {
@@ -311,13 +336,13 @@ h2, h3 {
 
 .primary-button {
     margin-bottom: 0.9rem;
-    border: 3px solid var(--dev-color-bw-match-40);
+    border: 2px solid var(--dev-color-bw-match-90);
     border-radius: 0.3rem;
 }
 
 .primary-button-selected {
     margin-bottom: 0.9rem;
-    border: 3px solid var(--dev-color-bw-reverse-70);
+    border: 2px solid var(--dev-color-bw-reverse-90);
 }
 
 .primary-chip {
@@ -331,6 +356,10 @@ h2, h3 {
     flex-wrap: wrap;
 }
 
+.primary-rect {
+    cursor: pointer;
+}
+
 .primary-section {
     display: grid;
     grid-template-columns: 70px 1fr;
@@ -341,10 +370,25 @@ h2, h3 {
     flex-wrap: wrap;
 }
 
+
+.secondaryButton {
+    border: 2px solid var(--dev-color-bw-match-90);
+    border-radius: 0.4rem;
+}
+
+
+.secondaryButton-selected {
+    border: 2px solid var(--dev-color-bw-reverse-90);
+}
+
 .secondary-buttons {
     display: flex;
     flex-wrap: flex;
     gap: 20px;
+}
+
+.secondary-rect {
+    cursor: pointer;
 }
 
 .secondary-section {
@@ -395,6 +439,9 @@ h2, h3 {
     border-bottom-right-radius: 0.4rem;
 }
 
+.tertiary-rect {
+    cursor: pointer;
+}
 
 .top-section {
     display: grid;
@@ -443,7 +490,7 @@ h2, h3 {
       // tertiary rect prep
       this.primaries().forEach((primary) => {
         this.collectionCoords().forEach((coords) => {
-          const key = `tertiaryRect-${primary.key}-${coords[0]}-${coords[1]}`
+          const key = `tertiary-rect-${primary.key}-${coords[0]}-${coords[1]}`
           sheet += `.${key} { fill: var(--${key}); }`
         })
       })
@@ -544,9 +591,9 @@ h2, h3 {
           this.cValues().forEach((c, cIndex) => {
             this.modAddTo(chipLine, 'div', {
               innerHTML: `
-        <div class="x-chip-swatch"></div>
+        <div class="chip-swatch chip-swatch-${l}-${cIndex}"></div>
         <div class="chip-details">
-          <div class="chip-title-${l}-${cIndex}">#</div>
+          <div class="chip-title chip-title-${l}-${cIndex}">#</div>
           <div class="chip-text">${this.state.sampleText}</div>
           <div class="chip-buttons chip-buttons-${l}-${cIndex}"></div>
         </div>`,
@@ -609,6 +656,7 @@ h2, h3 {
             for (let coord2 = -1; coord2 <= 1; coord2++) {
               this.modAddSvgTo(btn, 'rect', {
                 classes: [
+                  `secondary-rect`,
                   `secondary-rect-coords-${primary.key}-${coord1}-${coord2}-${h}`,
                 ],
                 x: (coord1 + 1) * 10,
@@ -713,20 +761,22 @@ h2, h3 {
       this.primaries().forEach((primary) => {
         this.collections().forEach((collection, collectionIndex) => {
           const mainKey = primary.secondaries.join('')
+
           const el = this.modAddSvgTo(`.${mainKey}-chips`, 'svg', {
             classes: [
-              'tertiaryChip',
-              `tertiaryChip-index-${primary.key}-${collectionIndex}`,
+              'tertiary-chip',
+              `tertiary-chip-index-${primary.key}-${collectionIndex}`,
             ],
             width: 20,
             height: 40,
           })
+
           collection.forEach((coords, coordsIndex) => {
             const key = primary.key
             this.modAddSvgTo(el, 'rect', {
               classes: [
-                'tertiaryRect',
-                `tertiaryRect-${key}-${coords[0]}-${coords[1]}`,
+                'tertiary-rect',
+                `tertiary-rect-${key}-${coords[0]}-${coords[1]}`,
               ],
               x: 0,
               y: coordsIndex * 20,
@@ -1011,7 +1061,14 @@ h2, h3 {
       let styles = ``
 
       styles += `--color-bw-match: rgb(${config[mode].match});\n`
+      for (let alpha = 90; alpha > 0; alpha = alpha - 10) {
+        styles += `--color-bw-match-${alpha}: rgb(${config[mode].match} / ${alpha}%);\n`
+      }
+
       styles += `--color-bw-reverse: rgb(${config[mode].reverse});\n`
+      for (let alpha = 90; alpha > 0; alpha = alpha - 10) {
+        styles += `--color-bw-reverse-${alpha}: rgb(${config[mode].reverse} / ${alpha}%);\n`
+      }
 
       return styles
     }
@@ -1037,10 +1094,10 @@ h2, h3 {
           `oklch(${theValues[color][0]}% ${theValues[color][1]} ${theValues[color][2]})`
         )
         for (let alpha = 90; alpha > 0; alpha = alpha - 10) {
-            response += this.prop(
-                `--color-${color}-${alpha}`,
-                `oklch(${theValues[color][0]}% ${theValues[color][1]} ${theValues[color][2]} / ${alpha}%)`
-              )
+          response += this.prop(
+            `--color-${color}-${alpha}`,
+            `oklch(${theValues[color][0]}% ${theValues[color][1]} ${theValues[color][2]} / ${alpha}%)`
+          )
         }
       }
 
@@ -1435,7 +1492,7 @@ ${this.genStyles('light')}
       // tertiaries
       this.primaries().forEach((primary) => {
         this.collectionCoords().forEach((coords) => {
-          const key = `tertiaryRect-${primary.key}-${coords[0]}-${coords[1]}`
+          const key = `tertiary-rect-${primary.key}-${coords[0]}-${coords[1]}`
           let h =
             (this.state.active.colors[primary.key].secondaryH +
               this.state.modes[this.mode()].colors[primary.key].h) %
@@ -1481,6 +1538,34 @@ ${this.genStyles('light')}
             `primary-button-selected`
           )
         }
+      })
+
+      // update the secondary button styles
+      this.primaryColors().forEach((color) => {
+        this.hValues().forEach((h) => {
+          let hCheck = this.state.active.colors[color].secondaryH % 360
+          if (h === hCheck) {
+            this.modAddClassTo(
+              `.secondaryButton-${color}-${h}`,
+              `secondaryButton-selected`
+            )
+          } else {
+            this.modRemoveClassFrom(
+              `.secondaryButton-${color}-${h}`,
+              `secondaryButton-selected`
+            )
+          }
+        })
+      })
+
+      // chip titles
+      this.lValues().forEach((l) => {
+        this.cValues().forEach((c, cIndex) => {
+          this.modUpdateHTML(
+            `.chip-title-${l}-${cIndex}`,
+            `# ${l}-${cIndex}-${this.state.active.h}`
+          )
+        })
       })
 
       this.modUpdateHTML(`.raw-data`, JSON.stringify(this.state.modes, null, 2))

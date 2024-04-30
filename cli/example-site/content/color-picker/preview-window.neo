@@ -9,23 +9,9 @@ will work just by looking at swatches. I need to see it for
 real. That's what this page is for. The picker generates
 a stylesheet that this page uses directly.
 
-Each palette consists of base/background color, 
-six palette colors, and black and white. There are alpha
-channel versions of each reducing opacity in 10% increments.
-The examples below are a kind of visual documentation that
-show how the colors work with each other in different 
-combinations.
-
-The page is connected live to the picker. Changing values
-there updates the colors here. (Note: the connection isn't
-as stable as I'd like yet. If you don't see colors here or
-they stop updating you'll need to close this window and
-relaunch it for the time being)
-
 -- h2
 
-Examples
-
+Details And Examples
 
 -- html
 
@@ -42,8 +28,11 @@ Examples
 
 
     <div role="tabpanel" class="flow">
-        <h3>Alpha Channel Gradients</h3>
-        <p>Here's what the alpha channel versions for the colors look like</p>
+        <h3>Overview</h3>
+        <p>Palettes consist of a base color, six corresponding colors, and black and
+        white CSS prop variables. There are versions of each color going from 10%
+        to full opacity. This is the current set. Play around with the picker and
+        the colors will update live here.</p>
         <div class="alpha-examples"></div>
     </div>
 
