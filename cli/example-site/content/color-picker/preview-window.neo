@@ -29,12 +29,28 @@ Details And Examples
 
     <div role="tabpanel" class="flow">
         <h3>Overview</h3>
-        <p>Palettes consist of a base color, six corresponding colors, and black and
+        <p>Palettes consist of a base/background color, six related colors, and black and
         white CSS prop variables. There are versions of each color going from 10%
         to full opacity. This is the current set. Play around with the picker and
         the colors will update live here.</p>
         <div class="alpha-examples"></div>
     </div>
+
+
+  <div role="tabpanel" class="flow">
+    <h3>A full style sheet</h3>
+    <p>The color picker is designed to generate styles for both a light and a 
+    dark mode. Each mode is completely independent. There are buttons beside
+    the sliders to easily get a value from the alternate mode for optional 
+    syncing.</p>
+    <p>The output style sheet includes CSS variable properties for both 
+    light and dark mode. Light mode is the default. If a system preference
+    is available that gets used. </p>
+    <p>There are also copies of styles set for <code>body.dark</code> and
+    <code>body.light</code> (which is in a <code>prefers-color-scheme: dark</code>
+    media query). These 
+    </p>
+  </div>
 
 
   <div role="tabpanel" class="flow" hidden>
@@ -83,15 +99,7 @@ Details And Examples
   </div>
 
 
-  <div role="tabpanel" class="flow">
-    <p>
-        <strong>Here's Some Text</strong> This example is nothing but text via the Placeholder Text section below. 
-        The idea is to remove the swatches to see what just text and heading look like. 
-    </p>
-    <p>
 
-    </p>
-  </div>
 
     <div role="tabpanel" class="flow">
         <p><strong>Black and White - Match and Reverse</strong></p>

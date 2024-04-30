@@ -168,14 +168,19 @@ customElements.define(
           h: 0,
           colors: {
             alfa: {
-              secondaryH: 180,
+              secondaryH: 240,
             },
             bravo: {
-              secondaryH: 60,
+              secondaryH: 180,
             },
           },
         },
       }
+
+      // make sure active is set to light to start with
+      this.state.active.colors.alfa.secondaryH = this.state.modes.light.colors.alfa.collectionShift
+      this.state.active.colors.bravo.secondaryH = this.state.modes.light.colors.bravo.collectionShift
+
     }
 
     addMainWrapper() {
@@ -355,7 +360,7 @@ h2, h3 {
     margin: 0.6rem;
     font-size: 0.7rem;
     display: grid;
-    grid-template-columns: 5px 1fr;
+    grid-template-columns: 11px 1fr;
     gap: 6px;
     border: 1px solid rgb(0 0 0 / 0%);
 }
@@ -1569,7 +1574,8 @@ ${this.genStyles('light')}
       // update the secondary button styles
       this.primaryColors().forEach((color) => {
         this.hValues().forEach((h) => {
-          let hCheck = this.state.active.colors[color].secondaryH % 360
+          let hCheck = (this.state.modes[this.mode()].colors[color].collectionShift) % 360
+          this.modLog(hCheck)
           if (h === hCheck) {
             this.modAddStyleTo(
               `.secondaryButton-${color}-${h}`,
@@ -1594,39 +1600,42 @@ ${this.genStyles('light')}
         })
       })
 
-      // primary chip selected and
-      this.lValues().forEach((l) => {
-        this.cValues().forEach((c, cIndex) => {
-          this.primaryColors().forEach((color) => {
-            if (
-              this.state.modes[this.mode()].colors.alfa.l === l &&
-              this.state.modes[this.mode()].colors.alfa.c === cIndex &&
-              this.state.modes[this.mode()].colors.alfa.h ===
-                this.state.active.h
-            ) {
-              this.modAddStyleTo(
-                `.chip-${l}-${cIndex}`,
-                `primary-chip-selected-${l}-${cIndex}`
-              )
-            } else if (
-              this.state.modes[this.mode()].colors.bravo.l === l &&
-              this.state.modes[this.mode()].colors.bravo.c === cIndex &&
-              this.state.modes[this.mode()].colors.bravo.h ===
-                this.state.active.h
-            ) {
-              this.modAddStyleTo(
-                `.chip-${l}-${cIndex}`,
-                `primary-chip-selected-${l}-${cIndex}`
-              )
-            } else {
-              this.modRemoveStyleFrom(
-                `.chip-${l}-${cIndex}`,
-                `primary-chip-selected-${l}-${cIndex}`
-              )
-            }
-          })
-        })
-      })
+    //   // primary chip selected
+    //   // Off for now since the border was so strong
+    //   // visually
+    //   this.lValues().forEach((l) => {
+    //     this.cValues().forEach((c, cIndex) => {
+    //       this.primaryColors().forEach((color) => {
+    //         if (
+    //           this.state.modes[this.mode()].colors.alfa.l === l &&
+    //           this.state.modes[this.mode()].colors.alfa.c === cIndex &&
+    //           this.state.modes[this.mode()].colors.alfa.h ===
+    //             this.state.active.h
+    //         ) {
+    //           this.modAddStyleTo(
+    //             `.chip-${l}-${cIndex}`,
+    //             `primary-chip-selected-${l}-${cIndex}`
+    //           )
+    //         } else if (
+    //           this.state.modes[this.mode()].colors.bravo.l === l &&
+    //           this.state.modes[this.mode()].colors.bravo.c === cIndex &&
+    //           this.state.modes[this.mode()].colors.bravo.h ===
+    //             this.state.active.h
+    //         ) {
+    //           this.modAddStyleTo(
+    //             `.chip-${l}-${cIndex}`,
+    //             `primary-chip-selected-${l}-${cIndex}`
+    //           )
+    //         } else {
+    //           this.modRemoveStyleFrom(
+    //             `.chip-${l}-${cIndex}`,
+    //             `primary-chip-selected-${l}-${cIndex}`
+    //           )
+    //         }
+    //       })
+    //     })
+    //   })
+
 
       //  alfa bravo bolds
       this.lValues().forEach((l) => {
