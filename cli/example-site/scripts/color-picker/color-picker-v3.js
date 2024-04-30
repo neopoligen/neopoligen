@@ -142,8 +142,8 @@ customElements.define(
           dark: {
             display: '☾',
             l: 16.009,
-            c: 0.06625,
-            h: 252.9,
+            c: 0.03076,
+            h: 39.927,
             colors: {
               alfa: {
                 l: 40,
