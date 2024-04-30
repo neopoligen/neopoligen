@@ -166,25 +166,24 @@ customElements.define(
               height: 30,
             }
           )
-          //   for (let coord1 = -1; coord1 <= 1; coord1++) {
-          //     for (let coord2 = -1; coord2 <= 1; coord2++) {
-          //       addSvgTo(btn, 'rect', {
-          //         classes: [
-          //           `secondaryRect-coords-${primary.key}-${coord1}-${coord2}-${h}`,
-          //         ],
-          //         x: (coord1 + 1) * 10,
-          //         y: (coord2 + 1) * 10,
-          //         width: 10,
-          //         height: 10,
-          //         //styles: [['fill', 'yellow']],
-          //         data: [
-          //           ['primary', primary.key],
-          //           ['secondaryH', hIndex * state.base.h.interval],
-          //         ],
-          //         listeners: [['click', handleSecondaryButtonClick]],
-          //       })
-          //     }
-          //   }
+          for (let coord1 = -1; coord1 <= 1; coord1++) {
+            for (let coord2 = -1; coord2 <= 1; coord2++) {
+              this.modAddSvgTo(btn, 'rect', {
+                classes: [
+                  `secondary-rect-coords-${primary.key}-${coord1}-${coord2}-${h}`,
+                ],
+                x: (coord1 + 1) * 10,
+                y: (coord2 + 1) * 10,
+                width: 10,
+                height: 10,
+                data: [
+                  ['primary', primary.key],
+                  ['secondaryH', hIndex * this.state.base.h.interval],
+                ],
+                //   listeners: [['click', handleSecondaryButtonClick]],
+              })
+            }
+          }
         })
       })
     }
@@ -276,6 +275,10 @@ customElements.define(
     cOffset(offset, mode) {
       let response = (this.state.modes[mode].c + offset) % this.state.base.c.max
       return response
+    }
+
+    collections() {
+      return this.state.collections
     }
 
     colors() {
@@ -486,6 +489,18 @@ h2 {
         })
       })
 
+      // secondary button prep
+      this.primaries().forEach((primary) => {
+        this.hValues().forEach((h, hIndex) => {
+          for (let coord1 = -1; coord1 <= 1; coord1++) {
+            for (let coord2 = -1; coord2 <= 1; coord2++) {
+              const key = `secondary-rect-coords-${primary.key}-${coord1}-${coord2}-${h}`
+              sheet += `.${key} { fill: var(--color-${key}); }`
+            }
+          }
+        })
+      })
+
       styles.innerHTML = sheet
       this.shadowRoot.appendChild(styles)
     }
@@ -658,9 +673,19 @@ h2 {
             const theC = this.cOffset(c, this.mode())
             const theH = h
             this.devProps[`--color-${key}`] = `oklch(${theL}% ${theC} ${theH})`
+            // this.modes().forEach((mode) => {
+            //   const modeKey = `${l}-${cIndex}-${h}-${mode}`
+            //   const lMode = this.lOffset(l, mode)
+            //   const cMode = this.cOffset(c, mode)
+            //   const hMode = h
+            //   this.devProps[
+            //     `--color-${modeKey}`
+            //   ] = `oklch(${theL}% ${theC} ${theH})`
+            // })
           })
         })
       })
+
 
       // set the active chip colors for the current hue
       this.lValues().forEach((l) => {
@@ -670,6 +695,45 @@ h2 {
           const theC = this.cOffset(c, this.mode())
           const theH = this.state.active.h
           this.devProps[`--chip-${key}`] = `oklch(${theL}% ${theC} ${theH})`
+        })
+      })
+
+      //   // secondary colors
+      //   this.primaries().forEach((primary) => {
+      //     this.hValues().forEach((h, hIndex) => {
+      //       for (let coord1 = -1; coord1 <= 1; coord1++) {
+      //         for (let coord2 = -1; coord2 <= 1; coord2++) {
+      //           const key = `secondary-rect-coords-${primary.key}-${coord1}-${coord2}-${h}`
+      //           this.devProps[`--color-${key}`] = 'green'
+      //         }
+      //       }
+      //     })
+      //   })
+
+      // secondary rects
+      this.primaries().forEach((primary, primaryIndex) => {
+        this.hValues().forEach((h) => {
+          this.collections().forEach((collection) => {
+            collection.forEach((coords) => {
+              const key = `color-secondary-rect-coords-${primary.key}-${coords[0]}-${coords[1]}-${h}`
+              console.log(key)
+              let h2 =
+                (this.state.modes[this.mode()].colors[primary.key].h + h) % 360
+              let l2 =
+                (this.state.modes[this.mode()].colors[primary.key].l +
+                  100 +
+                  20 * coords[0]) %
+                100
+              let c2 =
+                (this.state.modes[this.mode()].colors[primary.key].c +
+                  5 +
+                  coords[1]) %
+                5
+              this.devProps[
+                `--${key}`
+              ] = `var(--color-${l2}-${c2}-${h2})`
+            })
+          })
         })
       })
 
