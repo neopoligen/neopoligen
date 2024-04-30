@@ -943,10 +943,80 @@ h2, h3 {
 
     getAlfa(mode) {
       // TBD on if going to switch to this
+
+      // // alfa
+      // this.devProps[`--dev-color-alfa`] = `oklch(${
+      //     (this.state.modes[this.mode()].l +
+      //       this.state.modes[this.mode()].colors.alfa.l) %
+      //     100
+      //   }% ${
+      //     ((this.state.modes[this.mode()].c * 10 +
+      //       this.state.modes[this.mode()].colors.alfa.c) %
+      //       5) /
+      //     10
+      //   } ${
+      //     (this.state.modes[this.mode()].h +
+      //       this.state.modes[this.mode()].colors.alfa.h) %
+      //     360
+      //   })`
+
+      //   // bravo
+      //   this.devProps[`--dev-color-bravo`] = `oklch(${
+      //     (this.state.modes[this.mode()].l +
+      //       this.state.modes[this.mode()].colors.bravo.l) %
+      //     100
+      //   }% ${
+      //     ((this.state.modes[this.mode()].c * 10 +
+      //       this.state.modes[this.mode()].colors.bravo.c) %
+      //       5) /
+      //     10
+      //   } ${
+      //     (this.state.modes[this.mode()].h +
+      //       this.state.modes[this.mode()].colors.bravo.h) %
+      //     360
+      //   })`
+
+      let payload = []
+      payload.push(
+        (this.state.modes[this.mode()].l +
+          this.state.modes[this.mode()].colors.alfa.l) %
+          100
+      )
+      payload.push(
+        ((this.state.modes[this.mode()].c * 10 +
+          this.state.modes[this.mode()].colors.alfa.c) %
+          5) /
+          10
+      )
+      payload.push(
+        (this.state.modes[this.mode()].h +
+          this.state.modes[this.mode()].colors.alfa.h) %
+          360
+      )
+      return payload
     }
 
     getBravo(mode) {
-      // TBD on if going to switch to this
+      let payload = []
+      
+      payload.push(
+        (this.state.modes[this.mode()].l +
+          this.state.modes[this.mode()].colors.bravo.l) %
+          100
+      )
+      payload.push(
+        ((this.state.modes[this.mode()].c * 10 +
+          this.state.modes[this.mode()].colors.bravo.c) %
+          5) /
+          10
+      )
+      payload.push(
+        (this.state.modes[this.mode()].h +
+          this.state.modes[this.mode()].colors.bravo.h) %
+          360
+      )
+
+      return payload
     }
 
     getCharlie(mode) {
@@ -1088,21 +1158,29 @@ h2, h3 {
       //   response += this.prop(`--border-base`, `1px solid var(--color-base)`)
 
       // alfa
+      const alfaValues = this.getAlfa(mode)
+
       response += this.prop(
         `--color-alfa`,
-        `oklch(${
-          (this.state.modes[mode].l + this.state.modes[mode].colors.alfa.l) %
-          100
-        }% ${
-          ((this.state.modes[mode].c * 10 +
-            this.state.modes[mode].colors.alfa.c) %
-            5) /
-          10
-        } ${
-          (this.state.modes[mode].h + this.state.modes[mode].colors.alfa.h) %
-          360
-        })`
+        `oklch(${alfaValues[0]}% ${alfaValues[1]} ${alfaValues[2]})`
       )
+
+      //   response += this.prop(
+      //     `--color-alfa`,
+      //     `oklch(${
+      //       (this.state.modes[mode].l + this.state.modes[mode].colors.alfa.l) %
+      //       100
+      //     }% ${
+      //       ((this.state.modes[mode].c * 10 +
+      //         this.state.modes[mode].colors.alfa.c) %
+      //         5) /
+      //       10
+      //     } ${
+      //       (this.state.modes[mode].h + this.state.modes[mode].colors.alfa.h) %
+      //       360
+      //     })`
+      //   )
+
       //   response += this.prop(`--border-alpha`, `1px solid var(--color-alpha)`)
 
       // bravo
@@ -1744,56 +1822,65 @@ h2, h3 {
         this.devProps[`--dev-color-bw-reverse-90`] = `rgb(255 255 255 / 90%)`
       }
 
-      // alfa
-      this.devProps[`--dev-color-alfa`] = `oklch(${
-        (this.state.modes[this.mode()].l +
-          this.state.modes[this.mode()].colors.alfa.l) %
-        100
-      }% ${
-        ((this.state.modes[this.mode()].c * 10 +
-          this.state.modes[this.mode()].colors.alfa.c) %
-          5) /
-        10
-      } ${
-        (this.state.modes[this.mode()].h +
-          this.state.modes[this.mode()].colors.alfa.h) %
-        360
-      })`
+      //   // alfa
+      //   this.devProps[`--dev-color-alfa`] = `oklch(${
+      //     (this.state.modes[this.mode()].l +
+      //       this.state.modes[this.mode()].colors.alfa.l) %
+      //     100
+      //   }% ${
+      //     ((this.state.modes[this.mode()].c * 10 +
+      //       this.state.modes[this.mode()].colors.alfa.c) %
+      //       5) /
+      //     10
+      //   } ${
+      //     (this.state.modes[this.mode()].h +
+      //       this.state.modes[this.mode()].colors.alfa.h) %
+      //     360
+      //   })`
 
-      // bravo
-      this.devProps[`--dev-color-bravo`] = `oklch(${
-        (this.state.modes[this.mode()].l +
-          this.state.modes[this.mode()].colors.bravo.l) %
-        100
-      }% ${
-        ((this.state.modes[this.mode()].c * 10 +
-          this.state.modes[this.mode()].colors.bravo.c) %
-          5) /
-        10
-      } ${
-        (this.state.modes[this.mode()].h +
-          this.state.modes[this.mode()].colors.bravo.h) %
-        360
-      })`
+      //   // bravo
+      //   this.devProps[`--dev-color-bravo`] = `oklch(${
+      //     (this.state.modes[this.mode()].l +
+      //       this.state.modes[this.mode()].colors.bravo.l) %
+      //     100
+      //   }% ${
+      //     ((this.state.modes[this.mode()].c * 10 +
+      //       this.state.modes[this.mode()].colors.bravo.c) %
+      //       5) /
+      //     10
+      //   } ${
+      //     (this.state.modes[this.mode()].h +
+      //       this.state.modes[this.mode()].colors.bravo.h) %
+      //     360
+      //   })`
 
-      // charlie
-      let charlieValues = this.getCharlie(this.mode())
+      // set the dev-colors
+      const alfaValues = this.getAlfa(this.mode())
+      this.devProps[
+        `--dev-color-alfa`
+      ] = `oklch(${alfaValues[0]}% ${alfaValues[1]} ${alfaValues[2]})`
+
+      const bravoValues = this.getBravo(this.mode())
+      this.devProps[
+        `--dev-color-bravo`
+      ] = `oklch(${bravoValues[0]}% ${bravoValues[1]} ${bravoValues[2]})`
+
+      const charlieValues = this.getCharlie(this.mode())
       this.devProps[
         `--dev-color-charlie`
       ] = `oklch(${charlieValues[0]}% ${charlieValues[1]} ${charlieValues[2]})`
 
-      // delta
-      let deltaValues = this.getDelta(this.mode())
+      const deltaValues = this.getDelta(this.mode())
       this.devProps[
         `--dev-color-delta`
       ] = `oklch(${deltaValues[0]}% ${deltaValues[1]} ${deltaValues[2]})`
 
-      let echoValues = this.getEcho(this.mode())
+      const echoValues = this.getEcho(this.mode())
       this.devProps[
         `--dev-color-echo`
       ] = `oklch(${echoValues[0]}% ${echoValues[1]} ${echoValues[2]})`
 
-      let foxtrotValues = this.getFoxtrot(this.mode())
+      const foxtrotValues = this.getFoxtrot(this.mode())
       this.modLogObject(foxtrotValues)
       this.devProps[
         `--dev-color-foxtrot`
