@@ -795,146 +795,36 @@ h2, h3 {
     }
 
     genBaseStyles() {
-      return ` .color-base { color: var(--color-base); }
-        .color-alfa { color: var(--color-alfa); }
-        .color-bravo { color: var(--color-bravo); }
-        .color-charlie { color: var(--color-charlie); }
-        .color-delta { color: var(--color-delta); }
-        .color-echo { color: var(--color-echo); }
-        .color-foxtrot { color: var(--color-foxtrot); }
-        .color-base-10 { color: var(--color-base-10); }
-        .color-alfa-10 { color: var(--color-alfa-10); }
-        .color-bravo-10 { color: var(--color-bravo-10); }
-        .color-charlie-10 { color: var(--color-charlie-10); }
-        .color-delta-10 { color: var(--color-delta-10); }
-        .color-echo-10 { color: var(--color-echo-10); }
-        .color-foxtrot-10 { color: var(--color-foxtrot-10); }
-        .color-base-20 { color: var(--color-base-20); }
-        .color-alfa-20 { color: var(--color-alfa-20); }
-        .color-bravo-20 { color: var(--color-bravo-20); }
-        .color-charlie-20 { color: var(--color-charlie-20); }
-        .color-delta-20 { color: var(--color-delta-20); }
-        .color-echo-20 { color: var(--color-echo-20); }
-        .color-foxtrot-20 { color: var(--color-foxtrot-20); }
-        .color-base-30 { color: var(--color-base-30); }
-        .color-alfa-30 { color: var(--color-alfa-30); }
-        .color-bravo-30 { color: var(--color-bravo-30); }
-        .color-charlie-30 { color: var(--color-charlie-30); }
-        .color-delta-30 { color: var(--color-delta-30); }
-        .color-echo-30 { color: var(--color-echo-30); }
-        .color-foxtrot-30 { color: var(--color-foxtrot-30); }
-        .color-base-40 { color: var(--color-base-40); }
-        .color-alfa-40 { color: var(--color-alfa-40); }
-        .color-bravo-40 { color: var(--color-bravo-40); }
-        .color-charlie-40 { color: var(--color-charlie-40); }
-        .color-delta-40 { color: var(--color-delta-40); }
-        .color-echo-40 { color: var(--color-echo-40); }
-        .color-foxtrot-40 { color: var(--color-foxtrot-40); }
-        .color-base-50 { color: var(--color-base-50); }
-        .color-alfa-50 { color: var(--color-alfa-50); }
-        .color-bravo-50 { color: var(--color-bravo-50); }
-        .color-charlie-50 { color: var(--color-charlie-50); }
-        .color-delta-50 { color: var(--color-delta-50); }
-        .color-echo-50 { color: var(--color-echo-50); }
-        .color-foxtrot-50 { color: var(--color-foxtrot-50); }
-        .color-base-60 { color: var(--color-base-60); }
-        .color-alfa-60 { color: var(--color-alfa-60); }
-        .color-bravo-60 { color: var(--color-bravo-60); }
-        .color-charlie-60 { color: var(--color-charlie-60); }
-        .color-delta-60 { color: var(--color-delta-60); }
-        .color-echo-60 { color: var(--color-echo-60); }
-        .color-foxtrot-60 { color: var(--color-foxtrot-60); }
-        .color-base-70 { color: var(--color-base-70); }
-        .color-alfa-70 { color: var(--color-alfa-70); }
-        .color-bravo-70 { color: var(--color-bravo-70); }
-        .color-charlie-70 { color: var(--color-charlie-70); }
-        .color-delta-70 { color: var(--color-delta-70); }
-        .color-echo-70 { color: var(--color-echo-70); }
-        .color-foxtrot-70 { color: var(--color-foxtrot-70); }
-        .color-base-80 { color: var(--color-base-80); }
-        .color-alfa-80 { color: var(--color-alfa-80); }
-        .color-bravo-80 { color: var(--color-bravo-80); }
-        .color-charlie-80 { color: var(--color-charlie-80); }
-        .color-delta-80 { color: var(--color-delta-80); }
-        .color-echo-80 { color: var(--color-echo-80); }
-        .color-foxtrot-80 { color: var(--color-foxtrot-80); }
-        .color-base-90 { color: var(--color-base-90); }
-        .color-alfa-90 { color: var(--color-alfa-90); }
-        .color-bravo-90 { color: var(--color-bravo-90); }
-        .color-charlie-90 { color: var(--color-charlie-90); }
-        .color-delta-90 { color: var(--color-delta-90); }
-        .color-echo-90 { color: var(--color-echo-90); }
-        .color-foxtrot-90 { color: var(--color-foxtrot-90); }
-        .bg-base { background-color: var(--color-base); }
-        .bg-alfa { background-color: var(--color-alfa); }
-        .bg-bravo { background-color: var(--color-bravo); }
-        .bg-charlie { background-color: var(--color-charlie); }
-        .bg-delta { background-color: var(--color-delta); }
-        .bg-echo { background-color: var(--color-echo); }
-        .bg-foxtrot { background-color: var(--color-foxtrot); }
-        .bg-base-10 { background-color: var(--color-base-10); }
-        .bg-alfa-10 { background-color: var(--color-alfa-10); }
-        .bg-bravo-10 { background-color: var(--color-bravo-10); }
-        .bg-charlie-10 { background-color: var(--color-charlie-10); }
-        .bg-delta-10 { background-color: var(--color-delta-10); }
-        .bg-echo-10 { background-color: var(--color-echo-10); }
-        .bg-foxtrot-10 { background-color: var(--color-foxtrot-10); }
-        .bg-base-20 { background-color: var(--color-base-20); }
-        .bg-alfa-20 { background-color: var(--color-alfa-20); }
-        .bg-bravo-20 { background-color: var(--color-bravo-20); }
-        .bg-charlie-20 { background-color: var(--color-charlie-20); }
-        .bg-delta-20 { background-color: var(--color-delta-20); }
-        .bg-echo-20 { background-color: var(--color-echo-20); }
-        .bg-foxtrot-20 { background-color: var(--color-foxtrot-20); }
-        .bg-base-30 { background-color: var(--color-base-30); }
-        .bg-alfa-30 { background-color: var(--color-alfa-30); }
-        .bg-bravo-30 { background-color: var(--color-bravo-30); }
-        .bg-charlie-30 { background-color: var(--color-charlie-30); }
-        .bg-delta-30 { background-color: var(--color-delta-30); }
-        .bg-echo-30 { background-color: var(--color-echo-30); }
-        .bg-foxtrot-30 { background-color: var(--color-foxtrot-30); }
-        .bg-base-40 { background-color: var(--color-base-40); }
-        .bg-alfa-40 { background-color: var(--color-alfa-40); }
-        .bg-bravo-40 { background-color: var(--color-bravo-40); }
-        .bg-charlie-40 { background-color: var(--color-charlie-40); }
-        .bg-delta-40 { background-color: var(--color-delta-40); }
-        .bg-echo-40 { background-color: var(--color-echo-40); }
-        .bg-foxtrot-40 { background-color: var(--color-foxtrot-40); }
-        .bg-base-50 { background-color: var(--color-base-50); }
-        .bg-alfa-50 { background-color: var(--color-alfa-50); }
-        .bg-bravo-50 { background-color: var(--color-bravo-50); }
-        .bg-charlie-50 { background-color: var(--color-charlie-50); }
-        .bg-delta-50 { background-color: var(--color-delta-50); }
-        .bg-echo-50 { background-color: var(--color-echo-50); }
-        .bg-foxtrot-50 { background-color: var(--color-foxtrot-50); }
-        .bg-base-60 { background-color: var(--color-base-60); }
-        .bg-alfa-60 { background-color: var(--color-alfa-60); }
-        .bg-bravo-60 { background-color: var(--color-bravo-60); }
-        .bg-charlie-60 { background-color: var(--color-charlie-60); }
-        .bg-delta-60 { background-color: var(--color-delta-60); }
-        .bg-echo-60 { background-color: var(--color-echo-60); }
-        .bg-foxtrot-60 { background-color: var(--color-foxtrot-60); }
-        .bg-base-70 { background-color: var(--color-base-70); }
-        .bg-alfa-70 { background-color: var(--color-alfa-70); }
-        .bg-bravo-70 { background-color: var(--color-bravo-70); }
-        .bg-charlie-70 { background-color: var(--color-charlie-70); }
-        .bg-delta-70 { background-color: var(--color-delta-70); }
-        .bg-echo-70 { background-color: var(--color-echo-70); }
-        .bg-foxtrot-70 { background-color: var(--color-foxtrot-70); }
-        .bg-base-80 { background-color: var(--color-base-80); }
-        .bg-alfa-80 { background-color: var(--color-alfa-80); }
-        .bg-bravo-80 { background-color: var(--color-bravo-80); }
-        .bg-charlie-80 { background-color: var(--color-charlie-80); }
-        .bg-delta-80 { background-color: var(--color-delta-80); }
-        .bg-echo-80 { background-color: var(--color-echo-80); }
-        .bg-foxtrot-80 { background-color: var(--color-foxtrot-80); }
-        .bg-base-90 { background-color: var(--color-base-90); }
-        .bg-alfa-90 { background-color: var(--color-alfa-90); }
-        .bg-bravo-90 { background-color: var(--color-bravo-90); }
-        .bg-charlie-90 { background-color: var(--color-charlie-90); }
-        .bg-delta-90 { background-color: var(--color-delta-90); }
-        .bg-echo-90 { background-color: var(--color-echo-90); }
-        .bg-foxtrot-90 { background-color: var(--color-foxtrot-90); }`
+      let styles = ``
+
+      const keys = [
+        'base',
+        'alfa',
+        'bravo',
+        'charlie',
+        'delta',
+        'echo',
+        'foxtrot',
+        'black',
+        'white',
+        'bw-match',
+        'bw-reverse',
+      ]
+
+      keys.forEach((key) => {
+        styles += `.color-${key} { color: var(--color-${key}); }\n`
+        for (let alpha = 10; alpha < 100; alpha = alpha + 10) {
+          styles += `.color-${key}-${alpha} { color: var(--color-${key}-${alpha}); }\n`
+        }
+      })
+
+      keys.forEach((key) => {
+        styles += `.bg-${key} { background-color: var(--color-${key}); }\n`
+        for (let alpha = 10; alpha < 100; alpha = alpha + 10) {
+          styles += `.bg-${key}-${alpha} { background-color: var(--color-${key}-${alpha}); }\n`
+        }
+      })
+      return styles
     }
 
     prop(key, value) {
@@ -1374,7 +1264,11 @@ h2, h3 {
 
 `
 
-      styles += `body { ${this.genStyles('light')} }\n`
+      styles += `body { 
+        
+${this.genStyles('light')} }
+        
+`
 
       styles += `body.dark { ${this.genStyles('dark')} }\n`
 
@@ -1424,38 +1318,6 @@ h2, h3 {
         this.devProps[`--dev-color-bw-reverse-70`] = `rgb(255 255 255 / 70%)`
         this.devProps[`--dev-color-bw-reverse-90`] = `rgb(255 255 255 / 90%)`
       }
-
-      //   // alfa
-      //   this.devProps[`--dev-color-alfa`] = `oklch(${
-      //     (this.state.modes[this.mode()].l +
-      //       this.state.modes[this.mode()].colors.alfa.l) %
-      //     100
-      //   }% ${
-      //     ((this.state.modes[this.mode()].c * 10 +
-      //       this.state.modes[this.mode()].colors.alfa.c) %
-      //       5) /
-      //     10
-      //   } ${
-      //     (this.state.modes[this.mode()].h +
-      //       this.state.modes[this.mode()].colors.alfa.h) %
-      //     360
-      //   })`
-
-      //   // bravo
-      //   this.devProps[`--dev-color-bravo`] = `oklch(${
-      //     (this.state.modes[this.mode()].l +
-      //       this.state.modes[this.mode()].colors.bravo.l) %
-      //     100
-      //   }% ${
-      //     ((this.state.modes[this.mode()].c * 10 +
-      //       this.state.modes[this.mode()].colors.bravo.c) %
-      //       5) /
-      //     10
-      //   } ${
-      //     (this.state.modes[this.mode()].h +
-      //       this.state.modes[this.mode()].colors.bravo.h) %
-      //     360
-      //   })`
 
       // set the dev-colors
       const alfaValues = this.getAlfa(this.mode())
