@@ -9,6 +9,8 @@ customElements.define(
         dark: {},
       }
       this.devProps = {}
+      this.childWindow
+      this.childWindowName = 'previewWindow'
       this.attachShadow({ mode: 'open' })
       this.setInitialState()
       this.setupActiveStyles()
@@ -63,6 +65,9 @@ customElements.define(
     buildPreviewButton() {
       this.modAddTo(this.mainWrapper, 'button', {
         innerHTML: 'Launch Preview Window',
+        listeners: [
+          ['click', (event) => this.handlePreviewButtonClick.call(this, event)],
+        ],
       })
     }
 
@@ -108,13 +113,15 @@ customElements.define(
         classes: ['primary-chips'],
       })
 
-      this.lValues().reverse().forEach((l, lIndex) => {
-        const chipLine = this.modAddTo(primaryChips, 'div', {
-          classes: ['primary-chip-row'],
-        })
-        this.cValues().forEach((c, cIndex) => {
-          this.modAddTo(chipLine, 'div', {
-            innerHTML: `
+      this.lValues()
+        .reverse()
+        .forEach((l, lIndex) => {
+          const chipLine = this.modAddTo(primaryChips, 'div', {
+            classes: ['primary-chip-row'],
+          })
+          this.cValues().forEach((c, cIndex) => {
+            this.modAddTo(chipLine, 'div', {
+              innerHTML: `
         <div class="primary-chip chip-${l}-${cIndex}">
         <div class="x-chip-swatch"></div>
         <div class="chip-details">
@@ -123,26 +130,30 @@ customElements.define(
           <div class="chip-buttons chip-buttons-${l}-${cIndex}"></div>
         </div>
         </div>`,
-          })
-          this.primaryColors().forEach((color) => {
-            this.modAddTo(`.chip-buttons-${l}-${cIndex}`, 'button', {
-              classes: [`chip-button`, `chip-button-${color}`, `chipButton-${color}-${l}-${cIndex}`],
-              innerHTML: color,
-              data: [
-                ['color', color],
-                ['l', l],
-                ['cIndex', cIndex],
-              ],
-              listeners: [
-                [
-                  'click',
-                  (event) => this.handleColorButtonClick.call(this, event),
+            })
+            this.primaryColors().forEach((color) => {
+              this.modAddTo(`.chip-buttons-${l}-${cIndex}`, 'button', {
+                classes: [
+                  `chip-button`,
+                  `chip-button-${color}`,
+                  `chipButton-${color}-${l}-${cIndex}`,
                 ],
-              ],
+                innerHTML: color,
+                data: [
+                  ['color', color],
+                  ['l', l],
+                  ['cIndex', cIndex],
+                ],
+                listeners: [
+                  [
+                    'click',
+                    (event) => this.handleColorButtonClick.call(this, event),
+                  ],
+                ],
+              })
             })
           })
         })
-      })
     }
 
     buildPrimaryWrapper() {
@@ -410,6 +421,23 @@ customElements.define(
         )
       })
       this.update()
+    }
+
+    handlePreviewButtonClick(event) {
+      const params = `scrollbars=no,resizable=yes,status=no,location=no,toolbar=no,menubar=no,width=800,top=20,left=20`
+      if (this.childWindow && this.childWindow.name === this.childWindowName) {
+        //sendStylesheet("Connection Already Established")
+      } else {
+        this.childWindow = window.open(
+          '/en/2fehqqas/',
+          this.childWindowName,
+          params
+        )
+        this.childWindow.addEventListener('load', () => {
+          sendStylesheet()
+        })
+      }
+      this.childWindow.focus()
     }
 
     handlePrimaryButtonClick(event) {
