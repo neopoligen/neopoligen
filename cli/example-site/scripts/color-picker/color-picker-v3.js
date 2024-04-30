@@ -13,39 +13,299 @@ customElements.define(
       this.childWindowName = 'previewWindow'
       this.els = {}
       this.attachShadow({ mode: 'open' })
-      this.setInitialState()
-      this.setupActiveStyles()
-      this.buildMainWrapper()
+      this.addInitialState()
+      this.addStyles()
+      this.addMainWrapper()
       this.buildPreviewButton()
       this.buildModeButtons()
       this.buildSliders()
       this.buildPrimaryButtons()
-    //   this.buildPrimaryChips()
-    //   this.buildSecondaryButtons()
-    //   this.buildTertiaryButtons()
+      this.buildPrimaryChips()
+      this.buildSecondaryButtons()
+      this.buildTertiaryButtons()
       this.update()
     }
 
-    buildMainWrapper() {
+    addInitialState() {
+      this.state = {
+        base: {
+          l: {
+            interval: 20,
+            max: 100,
+            step: 0.001,
+          },
+          c: {
+            interval: 0.1,
+            max: 0.5,
+            step: 0.00001,
+          },
+          h: {
+            interval: 60,
+            max: 360,
+            step: 0.001,
+          },
+        },
+        collections: [
+          [
+            [-1, -1],
+            [0, 0],
+          ],
+          [
+            [-1, 0],
+            [0, 0],
+          ],
+          [
+            [-1, 1],
+            [0, 0],
+          ],
+          [
+            [0, -1],
+            [0, 0],
+          ],
+          [
+            [0, 1],
+            [0, 0],
+          ],
+          [
+            [1, -1],
+            [0, 0],
+          ],
+          [
+            [1, 0],
+            [0, 0],
+          ],
+          [
+            [1, 1],
+            [0, 0],
+          ],
+          [
+            [-1, -1],
+            [1, -1],
+          ],
+          [
+            [-1, 0],
+            [1, 0],
+          ],
+          [
+            [-1, 1],
+            [1, 1],
+          ],
+          [
+            [-1, -1],
+            [-1, 1],
+          ],
+          [
+            [0, -1],
+            [0, 1],
+          ],
+          [
+            [1, -1],
+            [1, 1],
+          ],
+          [
+            [-1, -1],
+            [1, 1],
+          ],
+          [
+            [1, -1],
+            [-1, 1],
+          ],
+        ],
+        colors: ['alfa', 'bravo', 'charlie', 'delta', 'echo', 'foxtrot'],
+        primaries: [
+          { key: 'alfa', secondaries: ['charlie', 'delta'] },
+          { key: 'bravo', secondaries: ['echo', 'foxtrot'] },
+        ],
+        modes: {
+          light: {
+            display: '☀',
+            l: 70.762,
+            c: 0.06625,
+            h: 252.9,
+            colors: {
+              alfa: {
+                l: 40,
+                c: 2,
+                h: 180,
+                collectionShift: 180,
+                collectionIndex: 7,
+              },
+              bravo: {
+                l: 40,
+                c: 0,
+                h: 300,
+                collectionShift: 60,
+                collectionIndex: 10,
+              },
+            },
+          },
+          dark: {
+            display: '☾',
+            l: 16.009,
+            c: 0.06625,
+            h: 252.9,
+            colors: {
+              alfa: {
+                l: 40,
+                c: 2,
+                h: 180,
+                collectionShift: 180,
+                collectionIndex: 7,
+              },
+              bravo: {
+                l: 80,
+                c: 0,
+                h: 300,
+                collectionShift: 60,
+                collectionIndex: 10,
+              },
+            },
+          },
+        },
+        sampleText: 'Lorem ipsum sit amet elit leo augue ex nec null tellus',
+        active: {
+          mode: 'light',
+          h: 0,
+          colors: {
+            alfa: {
+              secondaryH: 180,
+            },
+            bravo: {
+              secondaryH: 60,
+            },
+          },
+        },
+      }
+    }
+
+    addMainWrapper() {
       this.els.mainWrapper = this.modAddTo(this.shadowRoot, 'div', {
         classes: ['main-wrapper'],
         innerHTML: `
-<h2>Color Picker</h2>
-<div class="preview-section"></div>
-<div class="top-section">
-  <div class="mode-section"></div>
-  <div class="slider-section"></div>
-</div>
-<div class="primary-section">
-  <div class="primary-buttons"></div>
-  <div class="primary-chips"></div>
-</div>
-<div class="secondary-section">
-    <div class="secondary-buttons charliedelta-section"></div>
-    <div class="secondary-buttons deltaecho-section"></div>
-</div>
-        `
+  <h2>Color Picker</h2>
+  <div class="preview-section"></div>
+  <div class="top-section">
+    <div class="mode-section"></div>
+    <div class="slider-section"></div>
+  </div>
+  <div class="primary-section">
+    <div class="primary-buttons"></div>
+    <div class="primary-chips"></div>
+  </div>
+  <div class="secondary-section">
+      <div class="secondary-buttons charliedelta-section">
+          <div class="charliedelta-buttons"></div>
+          <div class="charliedelta-chips"></div>
+      </div>
+      <div class="secondary-buttons echofoxtrot-section">
+          <div class="echofoxtrot-buttons"></div>
+          <div class="echofoxtrot-chips"></div>
+      </div>
+  </div>
+          `,
       })
+    }
+
+    addStyles() {
+      const styles = this.ownerDocument.createElement('style')
+      let sheet = `
+  .main-wrapper { 
+      padding: 1rem;
+      background-color: var(--dev-color-base); 
+      border-radius: 0.6rem;
+      color: var(--dev-color-bravo);
+      max-width: 1100px;
+      margin: auto;
+  }
+  
+  .primary-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+  }
+  
+  h2 {
+      color: var(--dev-color-alfa);
+  }
+  
+  .primary-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+  }
+  
+  .primary-chip {
+      max-width: 160px;
+      margin: 0.5rem;
+      font-size: 0.7rem;
+  }
+  
+  .chip-button {
+      border: none;
+      background: none;
+      color: currentColor;
+      outline: none;
+      margin: 0;
+      padding: 0;
+      font-size: 0.7rem;
+      cursor: pointer;
+  }
+  
+  button {
+      background: none;
+      border: none;
+      color: currentColor;
+      margin: 0;
+      padding: 0;
+  
+  }
+  
+  
+        `
+
+      this.colors().forEach((color) => {
+        const key = `dev-color-${color}`
+        sheet += `.${key} { color: var(--${key}); }`
+      })
+
+      // full loop
+      this.lValues().forEach((l) => {
+        this.cValues().forEach((c, cIndex) => {
+          this.hValues().forEach((h) => {
+            const key = `${l}-${cIndex}-${h}`
+            sheet += `.fill-${key} { fill: var(--color-${key}); }`
+          })
+        })
+      })
+
+      // chip connected to current chip color
+      this.lValues().forEach((l) => {
+        this.cValues().forEach((c, cIndex) => {
+          const key = `chip-${l}-${cIndex}`
+          sheet += `.${key} { color: var(--${key}); }`
+        })
+      })
+
+      // secondary button prep
+      this.primaries().forEach((primary) => {
+        this.hValues().forEach((h, hIndex) => {
+          for (let coord1 = -1; coord1 <= 1; coord1++) {
+            for (let coord2 = -1; coord2 <= 1; coord2++) {
+              const key = `secondary-rect-coords-${primary.key}-${coord1}-${coord2}-${h}`
+              sheet += `.${key} { fill: var(--color-${key}); }`
+            }
+          }
+        })
+      })
+
+      // tertiary rect prep
+      this.primaries().forEach((primary) => {
+        this.collectionCoords().forEach((coords) => {
+          const key = `tertiaryRect-${primary.key}-${coords[0]}-${coords[1]}`
+          sheet += `.${key} { fill: var(--${key}); }`
+        })
+      })
+
+      styles.innerHTML = sheet
+      this.shadowRoot.appendChild(styles)
     }
 
     buildModeButtons() {
@@ -119,13 +379,10 @@ customElements.define(
     }
 
     buildPrimaryChips() {
-      const primaryChips = this.modAddTo(this.primaryWrapper, 'div', {
-        classes: ['primary-chips'],
-      })
       this.lValues()
         .reverse()
         .forEach((l, lIndex) => {
-          const chipLine = this.modAddTo(primaryChips, 'div', {
+          const chipLine = this.modAddTo(`.primary-chips`, 'div', {
             classes: ['primary-chip-row'],
           })
           this.cValues().forEach((c, cIndex) => {
@@ -168,13 +425,13 @@ customElements.define(
     buildSecondaryButtons() {
       this.primaries().forEach((primary) => {
         const mainKey = primary.secondaries.join('')
-        const secondaryButtons = this.modAddTo(this.els.mainWrapper, 'div', {
-          classes: ['secondary-buttons', `${mainKey}-chips`],
-        })
+        // const secondaryButtons = this.modAddTo(this.els.mainWrapper, 'div', {
+        //   classes: ['secondary-buttons', `${mainKey}-chips`],
+        // })
 
         const key = primary.secondaries.join('')
         this.hValues().forEach((h, hIndex) => {
-          let buttonWrapper = this.modAddTo(secondaryButtons, 'div', {
+          let buttonWrapper = this.modAddTo(`.${mainKey}-buttons`, 'div', {
             innerHTML: `
               <div class="secondaryButtonHeader secondaryButtonHeader-${primary.key}-${h}"></div>
               <div class="secondaryButtonHolder secondaryButtonHolder-${primary.key}-${h}"></div>
@@ -537,7 +794,7 @@ customElements.define(
         `--color-base`,
         `oklch(${this.state.modes[mode].l}% ${this.state.modes[mode].c} ${this.state.modes[mode].h})`
       )
-    //   response += this.prop(`--border-base`, `1px solid var(--color-base)`)
+      //   response += this.prop(`--border-base`, `1px solid var(--color-base)`)
 
       // alfa
       response += this.prop(
@@ -555,7 +812,7 @@ customElements.define(
           360
         })`
       )
-    //   response += this.prop(`--border-alpha`, `1px solid var(--color-alpha)`)
+      //   response += this.prop(`--border-alpha`, `1px solid var(--color-alpha)`)
 
       // bravo
       response += this.prop(
@@ -573,7 +830,7 @@ customElements.define(
           360
         })`
       )
-    //   response += this.prop(`--border-bravo`, `1px solid var(--color-bravo)`)
+      //   response += this.prop(`--border-bravo`, `1px solid var(--color-bravo)`)
 
       // charlie
       response += this.prop(
@@ -602,10 +859,10 @@ customElements.define(
           360
         })`
       )
-    //   response += this.prop(
-    //     `--border-charlie`,
-    //     `1px solid var(--color-charlie)`
-    //   )
+      //   response += this.prop(
+      //     `--border-charlie`,
+      //     `1px solid var(--color-charlie)`
+      //   )
 
       // delta
       response += this.prop(
@@ -634,32 +891,33 @@ customElements.define(
           360
         })`
       )
-    //   response += this.prop(`--border-delta`, `1px solid var(--color-delta)`)
+      //   response += this.prop(`--border-delta`, `1px solid var(--color-delta)`)
 
       // echo
 
-        let lEcho =
-          (this.state.modes[mode].l +
-            this.state.modes[mode].colors.bravo.l +
-            this.state.collections[
-              this.state.modes[mode].colors.bravo.collectionIndex
-            ][0][0] *
-              this.state.base.l.interval) %
-          100
-        this.modLog(lEcho)
+      let lEcho =
+        (this.state.modes[mode].l +
+          this.state.modes[mode].colors.bravo.l +
+          this.state.collections[
+            this.state.modes[mode].colors.bravo.collectionIndex
+          ][0][0] *
+            this.state.base.l.interval) %
+        100
+      this.modLog(lEcho)
 
-        let cEcho =
-          ((this.state.modes[mode].c * 10 +
-            this.state.modes[mode].colors.bravo.c +
-            this.state.collections[
-              this.state.modes[mode].colors.bravo.collectionIndex
-            ][0][1] *
-              (this.state.base.c.interval * 10)) %
-            5) /
-          10
-        this.modLog(cEcho)
+      let cEcho =
+        ((this.state.modes[mode].c * 10 +
+          this.state.modes[mode].colors.bravo.c +
+          this.state.collections[
+            this.state.modes[mode].colors.bravo.collectionIndex
+          ][0][1] *
+            (this.state.base.c.interval * 10)) %
+          5) /
+        10
+      this.modLog(cEcho)
 
-      let hEcho = (this.state.modes[mode].h +
+      let hEcho =
+        (this.state.modes[mode].h +
           this.state.modes[mode].colors.bravo.h +
           this.state.modes[mode].colors.bravo.collectionShift) %
         360
@@ -691,7 +949,7 @@ customElements.define(
           360
         })`
       )
-    //   response += this.prop(`--border-echo`, `1px solid var(--color-echo)`)
+      //   response += this.prop(`--border-echo`, `1px solid var(--color-echo)`)
 
       // foxtrot
       response += this.prop(
@@ -720,10 +978,10 @@ customElements.define(
           360
         })`
       )
-    //   response += this.prop(
-    //     `--border-foxtrot`,
-    //     `1px solid var(--color-foxtrot)`
-    //   )
+      //   response += this.prop(
+      //     `--border-foxtrot`,
+      //     `1px solid var(--color-foxtrot)`
+      //   )
 
       for (let alpha = 10; alpha <= 90; alpha = alpha + 10) {
         response += this.prop(
@@ -1165,260 +1423,6 @@ customElements.define(
         this.childWindow.postMessage(payload)
       } else {
         this.modLog('Window is not available')
-      }
-    }
-
-    setupActiveStyles() {
-      const styles = this.ownerDocument.createElement('style')
-      let sheet = `
-.main-wrapper { 
-    padding: 1rem;
-    background-color: var(--dev-color-base); 
-    border-radius: 0.6rem;
-    color: var(--dev-color-bravo);
-    max-width: 1100px;
-    margin: auto;
-}
-
-.primary-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-h2 {
-    color: var(--dev-color-alfa);
-}
-
-.primary-chip-row {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.primary-chip {
-    max-width: 160px;
-    margin: 0.5rem;
-    font-size: 0.7rem;
-}
-
-.chip-button {
-    border: none;
-    background: none;
-    color: currentColor;
-    outline: none;
-    margin: 0;
-    padding: 0;
-    font-size: 0.7rem;
-    cursor: pointer;
-}
-
-button {
-    background: none;
-    border: none;
-    color: currentColor;
-    margin: 0;
-    padding: 0;
-
-}
-
-
-      `
-
-      this.colors().forEach((color) => {
-        const key = `dev-color-${color}`
-        sheet += `.${key} { color: var(--${key}); }`
-      })
-
-      // full loop
-      this.lValues().forEach((l) => {
-        this.cValues().forEach((c, cIndex) => {
-          this.hValues().forEach((h) => {
-            const key = `${l}-${cIndex}-${h}`
-            sheet += `.fill-${key} { fill: var(--color-${key}); }`
-          })
-        })
-      })
-
-      // chip connected to current chip color
-      this.lValues().forEach((l) => {
-        this.cValues().forEach((c, cIndex) => {
-          const key = `chip-${l}-${cIndex}`
-          sheet += `.${key} { color: var(--${key}); }`
-        })
-      })
-
-      // secondary button prep
-      this.primaries().forEach((primary) => {
-        this.hValues().forEach((h, hIndex) => {
-          for (let coord1 = -1; coord1 <= 1; coord1++) {
-            for (let coord2 = -1; coord2 <= 1; coord2++) {
-              const key = `secondary-rect-coords-${primary.key}-${coord1}-${coord2}-${h}`
-              sheet += `.${key} { fill: var(--color-${key}); }`
-            }
-          }
-        })
-      })
-
-      // tertiary rect prep
-      this.primaries().forEach((primary) => {
-        this.collectionCoords().forEach((coords) => {
-          const key = `tertiaryRect-${primary.key}-${coords[0]}-${coords[1]}`
-          sheet += `.${key} { fill: var(--${key}); }`
-        })
-      })
-
-      styles.innerHTML = sheet
-      this.shadowRoot.appendChild(styles)
-    }
-
-    setInitialState() {
-      this.state = {
-        base: {
-          l: {
-            interval: 20,
-            max: 100,
-            step: 0.001,
-          },
-          c: {
-            interval: 0.1,
-            max: 0.5,
-            step: 0.00001,
-          },
-          h: {
-            interval: 60,
-            max: 360,
-            step: 0.001,
-          },
-        },
-        collections: [
-          [
-            [-1, -1],
-            [0, 0],
-          ],
-          [
-            [-1, 0],
-            [0, 0],
-          ],
-          [
-            [-1, 1],
-            [0, 0],
-          ],
-          [
-            [0, -1],
-            [0, 0],
-          ],
-          [
-            [0, 1],
-            [0, 0],
-          ],
-          [
-            [1, -1],
-            [0, 0],
-          ],
-          [
-            [1, 0],
-            [0, 0],
-          ],
-          [
-            [1, 1],
-            [0, 0],
-          ],
-          [
-            [-1, -1],
-            [1, -1],
-          ],
-          [
-            [-1, 0],
-            [1, 0],
-          ],
-          [
-            [-1, 1],
-            [1, 1],
-          ],
-          [
-            [-1, -1],
-            [-1, 1],
-          ],
-          [
-            [0, -1],
-            [0, 1],
-          ],
-          [
-            [1, -1],
-            [1, 1],
-          ],
-          [
-            [-1, -1],
-            [1, 1],
-          ],
-          [
-            [1, -1],
-            [-1, 1],
-          ],
-        ],
-        colors: ['alfa', 'bravo', 'charlie', 'delta', 'echo', 'foxtrot'],
-        primaries: [
-          { key: 'alfa', secondaries: ['charlie', 'delta'] },
-          { key: 'bravo', secondaries: ['echo', 'foxtrot'] },
-        ],
-        modes: {
-          light: {
-            display: '☀',
-            l: 70.762,
-            c: 0.06625,
-            h: 252.9,
-            colors: {
-              alfa: {
-                l: 40,
-                c: 2,
-                h: 180,
-                collectionShift: 180,
-                collectionIndex: 7,
-              },
-              bravo: {
-                l: 40,
-                c: 0,
-                h: 300,
-                collectionShift: 60,
-                collectionIndex: 10,
-              },
-            },
-          },
-          dark: {
-            display: '☾',
-            l: 16.009,
-            c: 0.06625,
-            h: 252.9,
-            colors: {
-              alfa: {
-                l: 40,
-                c: 2,
-                h: 180,
-                collectionShift: 180,
-                collectionIndex: 7,
-              },
-              bravo: {
-                l: 80,
-                c: 0,
-                h: 300,
-                collectionShift: 60,
-                collectionIndex: 10,
-              },
-            },
-          },
-        },
-        sampleText: 'Lorem ipsum sit amet elit leo augue ex nec null tellus',
-        active: {
-          mode: 'light',
-          h: 0,
-          colors: {
-            alfa: {
-              secondaryH: 180,
-            },
-            bravo: {
-              secondaryH: 60,
-            },
-          },
-        },
       }
     }
 
