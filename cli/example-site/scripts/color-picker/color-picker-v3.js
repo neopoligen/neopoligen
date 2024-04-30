@@ -108,23 +108,25 @@ customElements.define(
         classes: ['primary-chips'],
       })
 
-      this.lValues().forEach((l, lIndex) => {
-        const chipLine = this.modAddTo(primaryChips, 'div', {})
+      this.lValues().reverse().forEach((l, lIndex) => {
+        const chipLine = this.modAddTo(primaryChips, 'div', {
+          classes: ['primary-chip-row'],
+        })
         this.cValues().forEach((c, cIndex) => {
           this.modAddTo(chipLine, 'div', {
             innerHTML: `
-        <div class="chip chip-${l}-${cIndex}">
+        <div class="primary-chip chip-${l}-${cIndex}">
         <div class="x-chip-swatch"></div>
         <div class="chip-details">
-          <div class="chip-title">#</div>
+          <div class="chip-title-${l}-${cIndex}">#</div>
           <div class="chip-text">${this.state.sampleText}</div>
-          <div class="chip-buttons-${l}-${cIndex}"></div>
+          <div class="chip-buttons chip-buttons-${l}-${cIndex}"></div>
         </div>
         </div>`,
           })
           this.primaryColors().forEach((color) => {
             this.modAddTo(`.chip-buttons-${l}-${cIndex}`, 'button', {
-              classes: [`chipButton-${color}-${l}-${cIndex}`],
+              classes: [`chip-button`, `chip-button-${color}`, `chipButton-${color}-${l}-${cIndex}`],
               innerHTML: color,
               data: [
                 ['color', color],
@@ -529,6 +531,8 @@ customElements.define(
     background-color: var(--dev-color-base); 
     border-radius: 0.6rem;
     color: var(--dev-color-bravo);
+    max-width: 1100px;
+    margin: auto;
 }
 
 .primary-wrapper {
@@ -539,6 +543,29 @@ customElements.define(
 h2 {
     color: var(--dev-color-alfa);
 }
+
+.primary-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.primary-chip {
+    max-width: 160px;
+    margin: 0.5rem;
+    font-size: 0.7rem;
+}
+
+.chip-button {
+    border: none;
+    background: none;
+    color: currentColor;
+    outline: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.7rem;
+    cursor: pointer;
+}
+
 
       `
 
@@ -764,11 +791,20 @@ h2 {
       })`
 
       // bravo
-      this.devProps[`--dev-color-bravo`] =
-      `oklch(${(this.state.modes[this.mode()].l + this.state.modes[this.mode()].colors.bravo.l) % 100}% ${
-        ((this.state.modes[this.mode()].c * 10 + this.state.modes[this.mode()].colors.bravo.c) % 5) / 10
-      } ${(this.state.modes[this.mode()].h + this.state.modes[this.mode()].colors.bravo.h) % 360})`
-
+      this.devProps[`--dev-color-bravo`] = `oklch(${
+        (this.state.modes[this.mode()].l +
+          this.state.modes[this.mode()].colors.bravo.l) %
+        100
+      }% ${
+        ((this.state.modes[this.mode()].c * 10 +
+          this.state.modes[this.mode()].colors.bravo.c) %
+          5) /
+        10
+      } ${
+        (this.state.modes[this.mode()].h +
+          this.state.modes[this.mode()].colors.bravo.h) %
+        360
+      })`
 
       // set the active explicit colors
       this.lValues().forEach((l) => {
