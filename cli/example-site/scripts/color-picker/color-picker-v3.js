@@ -673,19 +673,9 @@ h2 {
             const theC = this.cOffset(c, this.mode())
             const theH = h
             this.devProps[`--color-${key}`] = `oklch(${theL}% ${theC} ${theH})`
-            // this.modes().forEach((mode) => {
-            //   const modeKey = `${l}-${cIndex}-${h}-${mode}`
-            //   const lMode = this.lOffset(l, mode)
-            //   const cMode = this.cOffset(c, mode)
-            //   const hMode = h
-            //   this.devProps[
-            //     `--color-${modeKey}`
-            //   ] = `oklch(${theL}% ${theC} ${theH})`
-            // })
           })
         })
       })
-
 
       // set the active chip colors for the current hue
       this.lValues().forEach((l) => {
@@ -697,18 +687,6 @@ h2 {
           this.devProps[`--chip-${key}`] = `oklch(${theL}% ${theC} ${theH})`
         })
       })
-
-      //   // secondary colors
-      //   this.primaries().forEach((primary) => {
-      //     this.hValues().forEach((h, hIndex) => {
-      //       for (let coord1 = -1; coord1 <= 1; coord1++) {
-      //         for (let coord2 = -1; coord2 <= 1; coord2++) {
-      //           const key = `secondary-rect-coords-${primary.key}-${coord1}-${coord2}-${h}`
-      //           this.devProps[`--color-${key}`] = 'green'
-      //         }
-      //       }
-      //     })
-      //   })
 
       // secondary rects
       this.primaries().forEach((primary, primaryIndex) => {
@@ -729,9 +707,7 @@ h2 {
                   5 +
                   coords[1]) %
                 5
-              this.devProps[
-                `--${key}`
-              ] = `var(--color-${l2}-${c2}-${h2})`
+              this.devProps[`--${key}`] = `var(--color-${l2}-${c2}-${h2})`
             })
           })
         })
