@@ -125,17 +125,17 @@ customElements.define(
             colors: {
               alfa: {
                 l: 40,
-                c: 2,
-                h: 180,
-                collectionShift: 180,
-                collectionIndex: 7,
+                c: 1,
+                h: 120,
+                collectionShift: 240,
+                collectionIndex: 10,
               },
               bravo: {
                 l: 40,
-                c: 2,
-                h: 120,
-                collectionShift: 300,
-                collectionIndex: 13,
+                c: 0,
+                h: 0,
+                collectionShift: 180,
+                collectionIndex: 7,
               },
             },
           },
@@ -303,6 +303,11 @@ button {
     margin-top: 0.4rem;
 }
 
+.chip-swatch {
+    min-width: 0.1rem;
+    min-height: 0.1rem;
+}
+
 .chip-title {
     font-weight: 700;
 }
@@ -349,6 +354,14 @@ h2, h3 {
     max-width: 110px;
     margin: 0.6rem;
     font-size: 0.7rem;
+    display: grid;
+    grid-template-columns: 5px 1fr;
+    gap: 6px;
+    border: 1px solid rgb(0 0 0 / 0%);
+}
+
+.primary-chip-selected {
+    border: 1px solid var(--dev-color-bw-reverse);
 }
 
 .primary-chip-row {
@@ -439,6 +452,10 @@ h2, h3 {
     border-bottom-right-radius: 0.4rem;
 }
 
+.strong {
+    font-weight: 700;
+}
+
 .tertiary-rect {
     cursor: pointer;
 }
@@ -472,6 +489,15 @@ h2, h3 {
         this.cValues().forEach((c, cIndex) => {
           const key = `chip-${l}-${cIndex}`
           sheet += `.${key} { color: var(--${key}); }`
+        })
+      })
+
+      // chip swatches and selected
+      this.lValues().forEach((l) => {
+        this.cValues().forEach((c, cIndex) => {
+          const key = `chip-${l}-${cIndex}`
+          sheet += `.chip-swatch-${l}-${cIndex} { background-color: var(--${key}); }`
+          sheet += `.primary-chip-selected-${l}-${cIndex} { border: 1px solid var(--${key}); }`
         })
       })
 
@@ -604,7 +630,7 @@ h2, h3 {
                 classes: [
                   `chip-button`,
                   `chip-button-${color}`,
-                  `chipButton-${color}-${l}-${cIndex}`,
+                  `chip-button-${color}-${l}-${cIndex}`,
                 ],
                 innerHTML: color,
                 data: [
@@ -1513,11 +1539,11 @@ ${this.genStyles('light')}
 
       // mode button highlight
       if (this.state.active.mode === 'light') {
-        this.modAddClassTo(`.mode-button-light`, `mode-button-selected`)
-        this.modRemoveClassFrom(`.mode-button-dark`, `mode-button-selected`)
+        this.modAddStyleTo(`.mode-button-light`, `mode-button-selected`)
+        this.modRemoveStyleFrom(`.mode-button-dark`, `mode-button-selected`)
       } else {
-        this.modAddClassTo(`.mode-button-dark`, `mode-button-selected`)
-        this.modRemoveClassFrom(`.mode-button-light`, `mode-button-selected`)
+        this.modAddStyleTo(`.mode-button-dark`, `mode-button-selected`)
+        this.modRemoveStyleFrom(`.mode-button-light`, `mode-button-selected`)
       }
 
       // update all the dev props
@@ -1531,9 +1557,9 @@ ${this.genStyles('light')}
       // update the primary button styles
       this.hValues().forEach((h) => {
         if (h === this.state.active.h) {
-          this.modAddClassTo(`.primary-button-${h}`, `primary-button-selected`)
+          this.modAddStyleTo(`.primary-button-${h}`, `primary-button-selected`)
         } else {
-          this.modRemoveClassFrom(
+          this.modRemoveStyleFrom(
             `.primary-button-${h}`,
             `primary-button-selected`
           )
@@ -1545,12 +1571,12 @@ ${this.genStyles('light')}
         this.hValues().forEach((h) => {
           let hCheck = this.state.active.colors[color].secondaryH % 360
           if (h === hCheck) {
-            this.modAddClassTo(
+            this.modAddStyleTo(
               `.secondaryButton-${color}-${h}`,
               `secondaryButton-selected`
             )
           } else {
-            this.modRemoveClassFrom(
+            this.modRemoveStyleFrom(
               `.secondaryButton-${color}-${h}`,
               `secondaryButton-selected`
             )
@@ -1558,13 +1584,74 @@ ${this.genStyles('light')}
         })
       })
 
-      // chip titles
+      // primary chip titles
       this.lValues().forEach((l) => {
         this.cValues().forEach((c, cIndex) => {
           this.modUpdateHTML(
             `.chip-title-${l}-${cIndex}`,
             `# ${l}-${cIndex}-${this.state.active.h}`
           )
+        })
+      })
+
+      // primary chip selected and alfa bravo bolds
+      this.lValues().forEach((l) => {
+        this.cValues().forEach((c, cIndex) => {
+          this.primaryColors().forEach((color) => {
+            if (
+              this.state.modes[this.mode()].colors.alfa.l === l &&
+              this.state.modes[this.mode()].colors.alfa.c === cIndex &&
+              this.state.modes[this.mode()].colors.alfa.h ===
+                this.state.active.h
+            ) {
+              this.modAddStyleTo(
+                `.chip-${l}-${cIndex}`,
+                `primary-chip-selected-${l}-${cIndex}`
+              )
+              this.modAddStyleTo(
+                `.chip-button-alfa-${l}-${cIndex}`,
+                `strong`
+              )
+              this.modRemoveStyleFrom(
+                `.chip-button-bravo-${l}-${cIndex}`,
+                `strong`
+              )
+              this.modUpdateHTML(`.chip-button-alfa-${l}-${cIndex}`, `alfa &lt;`)
+            } else if (
+              this.state.modes[this.mode()].colors.bravo.l === l &&
+              this.state.modes[this.mode()].colors.bravo.c === cIndex &&
+              this.state.modes[this.mode()].colors.bravo.h ===
+                this.state.active.h
+            ) {
+              this.modAddStyleTo(
+                `.chip-${l}-${cIndex}`,
+                `primary-chip-selected-${l}-${cIndex}`
+              )
+              this.modAddStyleTo(
+                `.chip-button-bravo-${l}-${cIndex}`,
+                `strong`
+              )
+              this.modRemoveStyleFrom(
+                `.chip-button-alfa-${l}-${cIndex}`,
+                `strong`
+              )
+              this.modUpdateHTML(`.chip-button-alfa-${l}-${cIndex}`, `alfa`)
+            } else {
+              this.modRemoveStyleFrom(
+                `.chip-${l}-${cIndex}`,
+                `primary-chip-selected-${l}-${cIndex}`
+              )
+              this.modRemoveStyleFrom(
+                `.chip-button-alfa-${l}-${cIndex}`,
+                `strong`
+              )
+              this.modRemoveStyleFrom(
+                `.chip-button-bravo-${l}-${cIndex}`,
+                `strong`
+              )
+              this.modUpdateHTML(`.chip-button-alfa-${l}-${cIndex}`, `alfa`)
+            }
+          })
         })
       })
 
@@ -1576,7 +1663,7 @@ ${this.genStyles('light')}
     /////////////////////////////////////////////////////////////////////////////
     // Module functions
 
-    modAddClassTo(target, c) {
+    modAddStyleTo(target, c) {
       const el = this.modGetEl(target)
       if (el) {
         el.classList.add(c)
@@ -1682,7 +1769,7 @@ ${this.genStyles('light')}
       console.log(msg)
     }
 
-    modRemoveClassFrom(target, c) {
+    modRemoveStyleFrom(target, c) {
       const el = this.modGetEl(target)
       if (el) {
         el.classList.remove(c)
