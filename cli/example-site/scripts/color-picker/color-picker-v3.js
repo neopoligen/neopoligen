@@ -913,6 +913,93 @@ h2, h4 {
       return `${key}: ${value};\n`
     }
 
+    getAlfa(mode) {}
+
+    getBravo(mode) {}
+
+    getCharlie(mode) {}
+
+    getDelta(mode) {}
+
+    getEcho(mode) {
+      // this.primaries().forEach((primary) => {
+      //     this.collectionCoords().forEach((coords) => {
+      //       const key = `tertiaryRect-${primary.key}-${coords[0]}-${coords[1]}`
+      //       let h =
+      //         (this.state.active.colors[primary.key].secondaryH +
+      //           this.state.modes[this.mode()].colors[primary.key].h) %
+      //         360
+      //       let l =
+      //         (this.state.modes[this.mode()].colors[primary.key].l +
+      //           100 +
+      //           20 * coords[0]) %
+      //         100
+      //       let c =
+      //         (this.state.modes[this.mode()].colors[primary.key].c +
+      //           5 +
+      //           coords[1]) %
+      //         5
+      //       this.devProps[`--${key}`] = `var(--color-${l}-${c}-${h})`
+      //     })
+      //   })
+
+      let payload = []
+      payload.push(
+        (this.state.modes[mode].l +
+          this.state.base.l.max +
+          this.state.base.l.interval *
+            this.state.collections[
+              this.state.modes[mode].colors.bravo.collectionIndex
+            ][0][0]) %
+          this.state.base.l.max
+      )
+
+      payload.push(
+        ((this.state.modes[this.mode()].c +
+          5 +
+          this.state.collections[
+            this.state.modes[mode].colors.bravo.collectionIndex
+          ][0][1]) %
+          5) /
+          10
+      )
+
+      payload.push(
+        (this.state.active.colors['bravo'].secondaryH +
+          this.state.modes[mode].h) %
+          360
+      )
+
+      //   payload.push(
+      //     (this.state.modes[mode].l +
+      //       this.state.modes[mode].colors.bravo.l +
+      //       this.state.collections[
+      //         this.state.modes[mode].colors.bravo.collectionIndex
+      //       ][0][0] *
+      //         this.state.base.l.interval) %
+      //       100
+      //   )
+      //   payload.push(
+      //     ((this.state.modes[mode].c * 10 +
+      //       this.state.modes[mode].colors.bravo.c +
+      //       this.state.collections[
+      //         this.state.modes[mode].colors.bravo.collectionIndex
+      //       ][0][1] *
+      //         (this.state.base.c.interval * 10)) %
+      //       5) /
+      //       10
+      //   )
+      //   payload.push(
+      //     (this.state.modes[mode].h +
+      //       this.state.modes[mode].colors.bravo.h +
+      //       this.state.modes[mode].colors.bravo.collectionShift) %
+      //       360
+      //   )
+      return payload
+    }
+
+    getFoxtrot(mode) {}
+
     genStyles(mode) {
       let response = ``
 
@@ -1030,7 +1117,7 @@ h2, h4 {
           ][0][0] *
             this.state.base.l.interval) %
         100
-      this.modLog(lEcho)
+      //   this.modLog(lEcho)
 
       let cEcho =
         ((this.state.modes[mode].c * 10 +
@@ -1041,14 +1128,14 @@ h2, h4 {
             (this.state.base.c.interval * 10)) %
           5) /
         10
-      this.modLog(cEcho)
+      //   this.modLog(cEcho)
 
       let hEcho =
         (this.state.modes[mode].h +
           this.state.modes[mode].colors.bravo.h +
           this.state.modes[mode].colors.bravo.collectionShift) %
         360
-      this.modLog(hEcho)
+      //   this.modLog(hEcho)
 
       response += this.prop(
         `--color-echo`,
@@ -1561,7 +1648,7 @@ h2, h4 {
 
       // set the reverse style
       // only doing a few since that's all that's needed for the d
-      // design 
+      // design
       if (this.mode() === 'light') {
         this.devProps[`--dev-color-reverse-40`] = `rgb(0 0 0 / 40%)`
         this.devProps[`--dev-color-reverse-70`] = `rgb(0 0 0 / 70%)`
@@ -1569,7 +1656,6 @@ h2, h4 {
         this.devProps[`--dev-color-reverse-40`] = `rgb(255 255 255 / 40%)`
         this.devProps[`--dev-color-reverse-70`] = `rgb(255 255 255 / 70%)`
       }
-
 
       // alfa
       this.devProps[`--dev-color-alfa`] = `oklch(${
@@ -1628,7 +1714,6 @@ h2, h4 {
         360
       })`
 
-
       // delta
       this.devProps[`--dev-color-delta`] = `oklch(${
         (this.state.modes[this.mode()].l +
@@ -1654,6 +1739,8 @@ h2, h4 {
         360
       })`
 
+      let echoValues = this.getEcho(this.mode())
+      this.modLogObject(echoValues)
 
       // echo
       this.devProps[`--dev-color-echo`] = `oklch(${
@@ -1680,7 +1767,6 @@ h2, h4 {
         360
       })`
 
-
       // foxtrot
       this.devProps[`--dev-color-foxtrot`] = `oklch(${
         (this.state.modes[this.mode()].l +
@@ -1705,7 +1791,6 @@ h2, h4 {
           this.state.modes[this.mode()].colors.bravo.collectionShift) %
         360
       })`
-
 
       // set the active explicit colors
       this.lValues().forEach((l) => {
