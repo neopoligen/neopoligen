@@ -517,137 +517,147 @@ customElements.define(
     }
 
     genLightStyles() {
-        return `  --color-base: oklch(90.762% 0.06625 252.9);
-        --border-base: 1px solid var(--color-base);
-        --color-alfa: oklch(30.762% 0.26625 72.89999999999998);
-        --border-alpha: 1px solid var(--color-alpha);
-        --color-bravo: oklch(30.762% 0.06625 192.89999999999998);
-        --border-bravo: 1px solid var(--color-bravo);
-        --color-charlie: oklch(50.762% 0.36625 252.89999999999998);
-        --border-charlie: 1px solid var(--color-charlie);
-        --color-delta: oklch(30.762% 0.26625 252.89999999999998);
-        --border-delta: 1px solid var(--color-delta);
-        --color-echo: oklch(10.762% 0.16625 252.89999999999998);
-        --border-echo: 1px solid var(--color-echo);
-        --color-foxtrot: oklch(50.762% 0.16625 252.89999999999998);
-        --border-foxtrot: 1px solid var(--color-foxtrot);
-        --color-base-10: oklch(90.762% 0.06625 252.9 / 10%);
-        --color-alfa-10: oklch(30.762% 0.26625 72.89999999999998 / 10);
-        --border-alfa-10: 1px solid var(--color-alfa-10);
-        --color-bravo-10: oklch(30.762% 0.06625 192.89999999999998) / 10;
-        --border-bravo-10: 1px solid var(--color-bravo-10);
-        --color-charlie-10: oklch(50.762% 0.36625 252.89999999999998 / 10);
-        --border-charlie-10: 1px solid var(--color-charlie-10);
-        --color-delta-10: oklch(30.762% 0.26625 252.89999999999998 / 10);
-        --border-delta-10: 1px solid var(--color-delta-10);
-        --color-echo-10: oklch(10.762% 0.16625 252.89999999999998 / 10);
-        --border-echo-10: 1px solid var(--color-echo-10);
-        --color-foxtrot-10: oklch(50.762% 0.16625 252.89999999999998 / 10);
-        --border-foxtrot-10: 1px solid var(--color-foxtrot-10);
-        --color-base-20: oklch(90.762% 0.06625 252.9 / 20%);
-        --color-alfa-20: oklch(30.762% 0.26625 72.89999999999998 / 20);
-        --border-alfa-20: 1px solid var(--color-alfa-20);
-        --color-bravo-20: oklch(30.762% 0.06625 192.89999999999998) / 20;
-        --border-bravo-20: 1px solid var(--color-bravo-20);
-        --color-charlie-20: oklch(50.762% 0.36625 252.89999999999998 / 20);
-        --border-charlie-20: 1px solid var(--color-charlie-20);
-        --color-delta-20: oklch(30.762% 0.26625 252.89999999999998 / 20);
-        --border-delta-20: 1px solid var(--color-delta-20);
-        --color-echo-20: oklch(10.762% 0.16625 252.89999999999998 / 20);
-        --border-echo-20: 1px solid var(--color-echo-20);
-        --color-foxtrot-20: oklch(50.762% 0.16625 252.89999999999998 / 20);
-        --border-foxtrot-20: 1px solid var(--color-foxtrot-20);
-        --color-base-30: oklch(90.762% 0.06625 252.9 / 30%);
-        --color-alfa-30: oklch(30.762% 0.26625 72.89999999999998 / 30);
-        --border-alfa-30: 1px solid var(--color-alfa-30);
-        --color-bravo-30: oklch(30.762% 0.06625 192.89999999999998) / 30;
-        --border-bravo-30: 1px solid var(--color-bravo-30);
-        --color-charlie-30: oklch(50.762% 0.36625 252.89999999999998 / 30);
-        --border-charlie-30: 1px solid var(--color-charlie-30);
-        --color-delta-30: oklch(30.762% 0.26625 252.89999999999998 / 30);
-        --border-delta-30: 1px solid var(--color-delta-30);
-        --color-echo-30: oklch(10.762% 0.16625 252.89999999999998 / 30);
-        --border-echo-30: 1px solid var(--color-echo-30);
-        --color-foxtrot-30: oklch(50.762% 0.16625 252.89999999999998 / 30);
-        --border-foxtrot-30: 1px solid var(--color-foxtrot-30);
-        --color-base-40: oklch(90.762% 0.06625 252.9 / 40%);
-        --color-alfa-40: oklch(30.762% 0.26625 72.89999999999998 / 40);
-        --border-alfa-40: 1px solid var(--color-alfa-40);
-        --color-bravo-40: oklch(30.762% 0.06625 192.89999999999998) / 40;
-        --border-bravo-40: 1px solid var(--color-bravo-40);
-        --color-charlie-40: oklch(50.762% 0.36625 252.89999999999998 / 40);
-        --border-charlie-40: 1px solid var(--color-charlie-40);
-        --color-delta-40: oklch(30.762% 0.26625 252.89999999999998 / 40);
-        --border-delta-40: 1px solid var(--color-delta-40);
-        --color-echo-40: oklch(10.762% 0.16625 252.89999999999998 / 40);
-        --border-echo-40: 1px solid var(--color-echo-40);
-        --color-foxtrot-40: oklch(50.762% 0.16625 252.89999999999998 / 40);
-        --border-foxtrot-40: 1px solid var(--color-foxtrot-40);
-        --color-base-50: oklch(90.762% 0.06625 252.9 / 50%);
-        --color-alfa-50: oklch(30.762% 0.26625 72.89999999999998 / 50);
-        --border-alfa-50: 1px solid var(--color-alfa-50);
-        --color-bravo-50: oklch(30.762% 0.06625 192.89999999999998) / 50;
-        --border-bravo-50: 1px solid var(--color-bravo-50);
-        --color-charlie-50: oklch(50.762% 0.36625 252.89999999999998 / 50);
-        --border-charlie-50: 1px solid var(--color-charlie-50);
-        --color-delta-50: oklch(30.762% 0.26625 252.89999999999998 / 50);
-        --border-delta-50: 1px solid var(--color-delta-50);
-        --color-echo-50: oklch(10.762% 0.16625 252.89999999999998 / 50);
-        --border-echo-50: 1px solid var(--color-echo-50);
-        --color-foxtrot-50: oklch(50.762% 0.16625 252.89999999999998 / 50);
-        --border-foxtrot-50: 1px solid var(--color-foxtrot-50);
-        --color-base-60: oklch(90.762% 0.06625 252.9 / 60%);
-        --color-alfa-60: oklch(30.762% 0.26625 72.89999999999998 / 60);
-        --border-alfa-60: 1px solid var(--color-alfa-60);
-        --color-bravo-60: oklch(30.762% 0.06625 192.89999999999998) / 60;
-        --border-bravo-60: 1px solid var(--color-bravo-60);
-        --color-charlie-60: oklch(50.762% 0.36625 252.89999999999998 / 60);
-        --border-charlie-60: 1px solid var(--color-charlie-60);
-        --color-delta-60: oklch(30.762% 0.26625 252.89999999999998 / 60);
-        --border-delta-60: 1px solid var(--color-delta-60);
-        --color-echo-60: oklch(10.762% 0.16625 252.89999999999998 / 60);
-        --border-echo-60: 1px solid var(--color-echo-60);
-        --color-foxtrot-60: oklch(50.762% 0.16625 252.89999999999998 / 60);
-        --border-foxtrot-60: 1px solid var(--color-foxtrot-60);
-        --color-base-70: oklch(90.762% 0.06625 252.9 / 70%);
-        --color-alfa-70: oklch(30.762% 0.26625 72.89999999999998 / 70);
-        --border-alfa-70: 1px solid var(--color-alfa-70);
-        --color-bravo-70: oklch(30.762% 0.06625 192.89999999999998) / 70;
-        --border-bravo-70: 1px solid var(--color-bravo-70);
-        --color-charlie-70: oklch(50.762% 0.36625 252.89999999999998 / 70);
-        --border-charlie-70: 1px solid var(--color-charlie-70);
-        --color-delta-70: oklch(30.762% 0.26625 252.89999999999998 / 70);
-        --border-delta-70: 1px solid var(--color-delta-70);
-        --color-echo-70: oklch(10.762% 0.16625 252.89999999999998 / 70);
-        --border-echo-70: 1px solid var(--color-echo-70);
-        --color-foxtrot-70: oklch(50.762% 0.16625 252.89999999999998 / 70);
-        --border-foxtrot-70: 1px solid var(--color-foxtrot-70);
-        --color-base-80: oklch(90.762% 0.06625 252.9 / 80%);
-        --color-alfa-80: oklch(30.762% 0.26625 72.89999999999998 / 80);
-        --border-alfa-80: 1px solid var(--color-alfa-80);
-        --color-bravo-80: oklch(30.762% 0.06625 192.89999999999998) / 80;
-        --border-bravo-80: 1px solid var(--color-bravo-80);
-        --color-charlie-80: oklch(50.762% 0.36625 252.89999999999998 / 80);
-        --border-charlie-80: 1px solid var(--color-charlie-80);
-        --color-delta-80: oklch(30.762% 0.26625 252.89999999999998 / 80);
-        --border-delta-80: 1px solid var(--color-delta-80);
-        --color-echo-80: oklch(10.762% 0.16625 252.89999999999998 / 80);
-        --border-echo-80: 1px solid var(--color-echo-80);
-        --color-foxtrot-80: oklch(50.762% 0.16625 252.89999999999998 / 80);
-        --border-foxtrot-80: 1px solid var(--color-foxtrot-80);
-        --color-base-90: oklch(90.762% 0.06625 252.9 / 90%);
-        --color-alfa-90: oklch(30.762% 0.26625 72.89999999999998 / 90);
-        --border-alfa-90: 1px solid var(--color-alfa-90);
-        --color-bravo-90: oklch(30.762% 0.06625 192.89999999999998) / 90;
-        --border-bravo-90: 1px solid var(--color-bravo-90);
-        --color-charlie-90: oklch(50.762% 0.36625 252.89999999999998 / 90);
-        --border-charlie-90: 1px solid var(--color-charlie-90);
-        --color-delta-90: oklch(30.762% 0.26625 252.89999999999998 / 90);
-        --border-delta-90: 1px solid var(--color-delta-90);
-        --color-echo-90: oklch(10.762% 0.16625 252.89999999999998 / 90);
-        --border-echo-90: 1px solid var(--color-echo-90);
-        --color-foxtrot-90: oklch(50.762% 0.16625 252.89999999999998 / 90);
-        --border-foxtrot-90: 1px solid var(--color-foxtrot-90);`
+
+
+
+        // return `  --color-base: oklch(90.762% 0.06625 252.9);
+        // --border-base: 1px solid var(--color-base);
+        // --color-alfa: oklch(30.762% 0.26625 72.89999999999998);
+        // --border-alpha: 1px solid var(--color-alpha);
+        // --color-bravo: oklch(30.762% 0.06625 192.89999999999998);
+        // --border-bravo: 1px solid var(--color-bravo);
+        // --color-charlie: oklch(50.762% 0.36625 252.89999999999998);
+        // --border-charlie: 1px solid var(--color-charlie);
+        // --color-delta: oklch(30.762% 0.26625 252.89999999999998);
+        // --border-delta: 1px solid var(--color-delta);
+        // --color-echo: oklch(10.762% 0.16625 252.89999999999998);
+        // --border-echo: 1px solid var(--color-echo);
+        // --color-foxtrot: oklch(50.762% 0.16625 252.89999999999998);
+        // --border-foxtrot: 1px solid var(--color-foxtrot);
+        // --color-base-10: oklch(90.762% 0.06625 252.9 / 10%);
+        // --color-alfa-10: oklch(30.762% 0.26625 72.89999999999998 / 10);
+        // --border-alfa-10: 1px solid var(--color-alfa-10);
+        // --color-bravo-10: oklch(30.762% 0.06625 192.89999999999998) / 10;
+        // --border-bravo-10: 1px solid var(--color-bravo-10);
+        // --color-charlie-10: oklch(50.762% 0.36625 252.89999999999998 / 10);
+        // --border-charlie-10: 1px solid var(--color-charlie-10);
+        // --color-delta-10: oklch(30.762% 0.26625 252.89999999999998 / 10);
+        // --border-delta-10: 1px solid var(--color-delta-10);
+        // --color-echo-10: oklch(10.762% 0.16625 252.89999999999998 / 10);
+        // --border-echo-10: 1px solid var(--color-echo-10);
+        // --color-foxtrot-10: oklch(50.762% 0.16625 252.89999999999998 / 10);
+        // --border-foxtrot-10: 1px solid var(--color-foxtrot-10);
+        // --color-base-20: oklch(90.762% 0.06625 252.9 / 20%);
+        // --color-alfa-20: oklch(30.762% 0.26625 72.89999999999998 / 20);
+        // --border-alfa-20: 1px solid var(--color-alfa-20);
+        // --color-bravo-20: oklch(30.762% 0.06625 192.89999999999998) / 20;
+        // --border-bravo-20: 1px solid var(--color-bravo-20);
+        // --color-charlie-20: oklch(50.762% 0.36625 252.89999999999998 / 20);
+        // --border-charlie-20: 1px solid var(--color-charlie-20);
+        // --color-delta-20: oklch(30.762% 0.26625 252.89999999999998 / 20);
+        // --border-delta-20: 1px solid var(--color-delta-20);
+        // --color-echo-20: oklch(10.762% 0.16625 252.89999999999998 / 20);
+        // --border-echo-20: 1px solid var(--color-echo-20);
+        // --color-foxtrot-20: oklch(50.762% 0.16625 252.89999999999998 / 20);
+        // --border-foxtrot-20: 1px solid var(--color-foxtrot-20);
+        // --color-base-30: oklch(90.762% 0.06625 252.9 / 30%);
+        // --color-alfa-30: oklch(30.762% 0.26625 72.89999999999998 / 30);
+        // --border-alfa-30: 1px solid var(--color-alfa-30);
+        // --color-bravo-30: oklch(30.762% 0.06625 192.89999999999998) / 30;
+        // --border-bravo-30: 1px solid var(--color-bravo-30);
+        // --color-charlie-30: oklch(50.762% 0.36625 252.89999999999998 / 30);
+        // --border-charlie-30: 1px solid var(--color-charlie-30);
+        // --color-delta-30: oklch(30.762% 0.26625 252.89999999999998 / 30);
+        // --border-delta-30: 1px solid var(--color-delta-30);
+        // --color-echo-30: oklch(10.762% 0.16625 252.89999999999998 / 30);
+        // --border-echo-30: 1px solid var(--color-echo-30);
+        // --color-foxtrot-30: oklch(50.762% 0.16625 252.89999999999998 / 30);
+        // --border-foxtrot-30: 1px solid var(--color-foxtrot-30);
+        // --color-base-40: oklch(90.762% 0.06625 252.9 / 40%);
+        // --color-alfa-40: oklch(30.762% 0.26625 72.89999999999998 / 40);
+        // --border-alfa-40: 1px solid var(--color-alfa-40);
+        // --color-bravo-40: oklch(30.762% 0.06625 192.89999999999998) / 40;
+        // --border-bravo-40: 1px solid var(--color-bravo-40);
+        // --color-charlie-40: oklch(50.762% 0.36625 252.89999999999998 / 40);
+        // --border-charlie-40: 1px solid var(--color-charlie-40);
+        // --color-delta-40: oklch(30.762% 0.26625 252.89999999999998 / 40);
+        // --border-delta-40: 1px solid var(--color-delta-40);
+        // --color-echo-40: oklch(10.762% 0.16625 252.89999999999998 / 40);
+        // --border-echo-40: 1px solid var(--color-echo-40);
+        // --color-foxtrot-40: oklch(50.762% 0.16625 252.89999999999998 / 40);
+        // --border-foxtrot-40: 1px solid var(--color-foxtrot-40);
+        // --color-base-50: oklch(90.762% 0.06625 252.9 / 50%);
+        // --color-alfa-50: oklch(30.762% 0.26625 72.89999999999998 / 50);
+        // --border-alfa-50: 1px solid var(--color-alfa-50);
+        // --color-bravo-50: oklch(30.762% 0.06625 192.89999999999998) / 50;
+        // --border-bravo-50: 1px solid var(--color-bravo-50);
+        // --color-charlie-50: oklch(50.762% 0.36625 252.89999999999998 / 50);
+        // --border-charlie-50: 1px solid var(--color-charlie-50);
+        // --color-delta-50: oklch(30.762% 0.26625 252.89999999999998 / 50);
+        // --border-delta-50: 1px solid var(--color-delta-50);
+        // --color-echo-50: oklch(10.762% 0.16625 252.89999999999998 / 50);
+        // --border-echo-50: 1px solid var(--color-echo-50);
+        // --color-foxtrot-50: oklch(50.762% 0.16625 252.89999999999998 / 50);
+        // --border-foxtrot-50: 1px solid var(--color-foxtrot-50);
+        // --color-base-60: oklch(90.762% 0.06625 252.9 / 60%);
+        // --color-alfa-60: oklch(30.762% 0.26625 72.89999999999998 / 60);
+        // --border-alfa-60: 1px solid var(--color-alfa-60);
+        // --color-bravo-60: oklch(30.762% 0.06625 192.89999999999998) / 60;
+        // --border-bravo-60: 1px solid var(--color-bravo-60);
+        // --color-charlie-60: oklch(50.762% 0.36625 252.89999999999998 / 60);
+        // --border-charlie-60: 1px solid var(--color-charlie-60);
+        // --color-delta-60: oklch(30.762% 0.26625 252.89999999999998 / 60);
+        // --border-delta-60: 1px solid var(--color-delta-60);
+        // --color-echo-60: oklch(10.762% 0.16625 252.89999999999998 / 60);
+        // --border-echo-60: 1px solid var(--color-echo-60);
+        // --color-foxtrot-60: oklch(50.762% 0.16625 252.89999999999998 / 60);
+        // --border-foxtrot-60: 1px solid var(--color-foxtrot-60);
+        // --color-base-70: oklch(90.762% 0.06625 252.9 / 70%);
+        // --color-alfa-70: oklch(30.762% 0.26625 72.89999999999998 / 70);
+        // --border-alfa-70: 1px solid var(--color-alfa-70);
+        // --color-bravo-70: oklch(30.762% 0.06625 192.89999999999998) / 70;
+        // --border-bravo-70: 1px solid var(--color-bravo-70);
+        // --color-charlie-70: oklch(50.762% 0.36625 252.89999999999998 / 70);
+        // --border-charlie-70: 1px solid var(--color-charlie-70);
+        // --color-delta-70: oklch(30.762% 0.26625 252.89999999999998 / 70);
+        // --border-delta-70: 1px solid var(--color-delta-70);
+        // --color-echo-70: oklch(10.762% 0.16625 252.89999999999998 / 70);
+        // --border-echo-70: 1px solid var(--color-echo-70);
+        // --color-foxtrot-70: oklch(50.762% 0.16625 252.89999999999998 / 70);
+        // --border-foxtrot-70: 1px solid var(--color-foxtrot-70);
+        // --color-base-80: oklch(90.762% 0.06625 252.9 / 80%);
+        // --color-alfa-80: oklch(30.762% 0.26625 72.89999999999998 / 80);
+        // --border-alfa-80: 1px solid var(--color-alfa-80);
+        // --color-bravo-80: oklch(30.762% 0.06625 192.89999999999998) / 80;
+        // --border-bravo-80: 1px solid var(--color-bravo-80);
+        // --color-charlie-80: oklch(50.762% 0.36625 252.89999999999998 / 80);
+        // --border-charlie-80: 1px solid var(--color-charlie-80);
+        // --color-delta-80: oklch(30.762% 0.26625 252.89999999999998 / 80);
+        // --border-delta-80: 1px solid var(--color-delta-80);
+        // --color-echo-80: oklch(10.762% 0.16625 252.89999999999998 / 80);
+        // --border-echo-80: 1px solid var(--color-echo-80);
+        // --color-foxtrot-80: oklch(50.762% 0.16625 252.89999999999998 / 80);
+        // --border-foxtrot-80: 1px solid var(--color-foxtrot-80);
+        // --color-base-90: oklch(90.762% 0.06625 252.9 / 90%);
+        // --color-alfa-90: oklch(30.762% 0.26625 72.89999999999998 / 90);
+        // --border-alfa-90: 1px solid var(--color-alfa-90);
+        // --color-bravo-90: oklch(30.762% 0.06625 192.89999999999998) / 90;
+        // --border-bravo-90: 1px solid var(--color-bravo-90);
+        // --color-charlie-90: oklch(50.762% 0.36625 252.89999999999998 / 90);
+        // --border-charlie-90: 1px solid var(--color-charlie-90);
+        // --color-delta-90: oklch(30.762% 0.26625 252.89999999999998 / 90);
+        // --border-delta-90: 1px solid var(--color-delta-90);
+        // --color-echo-90: oklch(10.762% 0.16625 252.89999999999998 / 90);
+        // --border-echo-90: 1px solid var(--color-echo-90);
+        // --color-foxtrot-90: oklch(50.762% 0.16625 252.89999999999998 / 90);
+        // --border-foxtrot-90: 1px solid var(--color-foxtrot-90);`
+
+
+        let styles = ``
+
+        return styles
+
+
     }
 
     genDarkStyles() {
@@ -785,6 +795,322 @@ customElements.define(
 
     }
 
+    prop(key, value) {
+        return `${key}: ${value};\n`
+    }
+
+
+ genStyles(mode) {
+    let response = ``
+  
+    // base for background
+    response += this.prop(
+      `--color-base`,
+      `oklch(${this.state.modes[mode].l}% ${this.state.modes[mode].c} ${this.state.modes[mode].h})`
+    )
+    response += this.prop(`--border-base`, `1px solid var(--color-base)`)
+  
+    // alfa
+    response += this.prop(
+      `--color-alfa`,
+      `oklch(${(this.state.modes[mode].l + this.state.modes[mode].colors.alfa.l) % 100}% ${
+        ((this.state.modes[mode].c * 10 + this.state.modes[mode].colors.alfa.c) % 5) / 10
+      } ${(this.state.modes[mode].h + this.state.modes[mode].colors.alfa.h) % 360})`
+    )
+    response += this.prop(`--border-alpha`, `1px solid var(--color-alpha)`)
+  
+    // bravo
+    response += this.prop(
+      `--color-bravo`,
+      `oklch(${(this.state.modes[mode].l + this.state.modes[mode].colors.bravo.l) % 100}% ${
+        ((this.state.modes[mode].c * 10 + this.state.modes[mode].colors.bravo.c) % 5) / 10
+      } ${(this.state.modes[mode].h + this.state.modes[mode].colors.bravo.h) % 360})`
+    )
+    response += this.prop(`--border-bravo`, `1px solid var(--color-bravo)`)
+  
+    // charlie
+    response += this.prop(
+      `--color-charlie`,
+      `oklch(${
+        (this.state.modes[mode].l +
+          this.state.modes[mode].colors.alfa.l +
+          this.state.collections[this.state.modes[mode].colors.alfa.collectionIndex][0][0] *
+            this.state.base.l.interval) %
+        100
+      }% ${
+        ((this.state.modes[mode].c * 10 +
+          this.state.modes[mode].colors.alfa.c +
+          this.state.collections[this.state.modes[mode].colors.alfa.collectionIndex][0][1] *
+            (this.state.base.c.interval * 10)) %
+          5) /
+        10
+      } ${
+        (this.state.modes[mode].h +
+            this.state.modes[mode].colors.alfa.h +
+            this.state.modes[mode].colors.alfa.collectionShift) %
+        360
+      })`
+    )
+    response += this.prop(`--border-charlie`, `1px solid var(--color-charlie)`)
+  
+    // delta
+    response += this.prop(
+      `--color-delta`,
+      `oklch(${
+        (this.state.modes[mode].l +
+            this.state.modes[mode].colors.alfa.l +
+          this.state.collections[this.state.modes[mode].colors.alfa.collectionIndex][1][0] *
+          this.state.base.l.interval) %
+        100
+      }% ${
+        ((this.state.modes[mode].c * 10 +
+            this.state.modes[mode].colors.alfa.c +
+          this.state.collections[this.state.modes[mode].colors.alfa.collectionIndex][1][1] *
+            (this.state.base.c.interval * 10)) %
+          5) /
+        10
+      } ${
+        (this.state.modes[mode].h +
+            this.state.modes[mode].colors.alfa.h +
+          this.state.modes[mode].colors.alfa.collectionShift) %
+        360
+      })`
+    )
+    response += this.prop(`--border-delta`, `1px solid var(--color-delta)`)
+  
+    // echo
+    response += this.prop(
+      `--color-echo`,
+      `oklch(${
+        (this.state.modes[mode].l +
+            this.state.modes[mode].colors.bravo.l +
+          this.state.collections[
+            this.state.modes[mode].colors.bravo.collectionIndex
+          ][0][0] *
+          this.state.base.l.interval) %
+        100
+      }% ${
+        ((this.state.modes[mode].c * 10 +
+            this.state.modes[mode].colors.bravo.c +
+          this.state.collections[
+            this.state.modes[mode].colors.bravo.collectionIndex
+          ][0][1] *
+            (this.state.base.c.interval * 10)) %
+          5) /
+        10
+      } ${
+        (this.state.modes[mode].h +
+          this.state.modes[mode].colors.bravo.h +
+          this.state.modes[mode].colors.bravo.collectionShift) %
+        360
+      })`
+    )
+    response += this.prop(`--border-echo`, `1px solid var(--color-echo)`)
+  
+    // foxtrot
+    response += this.prop(
+      `--color-foxtrot`,
+      `oklch(${
+        (this.state.modes[mode].l +
+          this.state.modes[mode].colors.bravo.l +
+          this.state.collections[
+            this.state.modes[mode].colors.bravo.collectionIndex
+          ][1][0] *
+            this.state.base.l.interval) %
+        100
+      }% ${
+        ((this.state.modes[mode].c * 10 +
+          this.state.modes[mode].colors.bravo.c +
+          this.state.collections[
+            this.state.modes[mode].colors.bravo.collectionIndex
+          ][1][1] *
+            (this.state.base.c.interval * 10)) %
+          5) /
+        10
+      } ${
+        (this.state.modes[mode].h +
+          this.state.modes[mode].colors.bravo.h +
+          this.state.modes[mode].colors.bravo.collectionShift) %
+        360
+      })`
+    )
+    response += this.prop(`--border-foxtrot`, `1px solid var(--color-foxtrot)`)
+  
+    for (let alpha = 10; alpha <= 90; alpha = alpha + 10) {
+      response += this.prop(
+        `--color-base-${alpha}`,
+        `oklch(${this.state.modes[mode].l}% ${this.state.modes[mode].c} ${this.state.modes[mode].h} / ${alpha}%)`
+      )
+  
+      // alfa
+      response += this.prop(
+        `--color-alfa-${alpha}`,
+        `oklch(${
+          (this.state.modes[mode].l + this.state.modes[mode].colors.alfa.l) % 100
+        }% ${
+          ((this.state.modes[mode].c * 10 + this.state.modes[mode].colors.alfa.c) % 5) / 10
+        } ${
+          (this.state.modes[mode].h + this.state.modes[mode].colors.alfa.h) % 360
+        } / ${alpha})`
+      )
+      response += this.prop(
+        `--border-alfa-${alpha}`,
+        `1px solid var(--color-alfa-${alpha})`
+      )
+  
+      // bravo
+      response += this.prop(
+        `--color-bravo-${alpha}`,
+        `oklch(${
+          (this.state.modes[mode].l + this.state.modes[mode].colors.bravo.l) % 100
+        }% ${
+          ((this.state.modes[mode].c * 10 + this.state.modes[mode].colors.bravo.c) % 5) / 10
+        } ${
+          (this.state.modes[mode].h + this.state.modes[mode].colors.bravo.h) % 360
+        }) / ${alpha}`
+      )
+      response += this.prop(
+        `--border-bravo-${alpha}`,
+        `1px solid var(--color-bravo-${alpha})`
+      )
+  
+      // charlie
+      response += this.prop(
+        `--color-charlie-${alpha}`,
+        `oklch(${
+          (this.state.modes[mode].l +
+            this.state.modes[mode].colors.alfa.l +
+            this.state.collections[
+              this.state.modes[mode].colors.alfa.collectionIndex
+            ][0][0] *
+              this.state.base.l.interval) %
+          100
+        }% ${
+          ((this.state.modes[mode].c * 10 +
+            this.state.modes[mode].colors.alfa.c +
+            this.state.collections[
+              this.state.modes[mode].colors.alfa.collectionIndex
+            ][0][1] *
+              (this.state.base.c.interval * 10)) %
+            5) /
+          10
+        } ${
+          (this.state.modes[mode].h +
+            this.state.modes[mode].colors.alfa.h +
+            this.state.modes[mode].colors.alfa.collectionShift) %
+          360
+        } / ${alpha})`
+      )
+      response += this.prop(
+        `--border-charlie-${alpha}`,
+        `1px solid var(--color-charlie-${alpha})`
+      )
+  
+      // delta
+      response += this.prop(
+        `--color-delta-${alpha}`,
+        `oklch(${
+          (this.state.modes[mode].l +
+            this.state.modes[mode].colors.alfa.l +
+            this.state.collections[
+              this.state.modes[mode].colors.alfa.collectionIndex
+            ][1][0] *
+              this.state.base.l.interval) %
+          100
+        }% ${
+          ((this.state.modes[mode].c * 10 +
+            this.state.modes[mode].colors.alfa.c +
+            this.state.collections[
+              this.state.modes[mode].colors.alfa.collectionIndex
+            ][1][1] *
+              (this.state.base.c.interval * 10)) %
+            5) /
+          10
+        } ${
+          (this.state.modes[mode].h +
+            this.state.modes[mode].colors.alfa.h +
+            this.state.modes[mode].colors.alfa.collectionShift) %
+          360
+        } / ${alpha})`
+      )
+      response += this.prop(
+        `--border-delta-${alpha}`,
+        `1px solid var(--color-delta-${alpha})`
+      )
+  
+      // echo
+      response += this.prop(
+        `--color-echo-${alpha}`,
+        `oklch(${
+          (this.state.modes[mode].l +
+            this.state.modes[mode].colors.bravo.l +
+            this.state.collections[
+              this.state.modes[mode].colors.bravo.collectionIndex
+            ][0][0] *
+              this.state.base.l.interval) %
+          100
+        }% ${
+          ((this.state.modes[mode].c * 10 +
+            this.state.modes[mode].colors.bravo.c +
+            this.state.collections[
+              this.state.modes[mode].colors.bravo.collectionIndex
+            ][0][1] *
+              (this.state.base.c.interval * 10)) %
+            5) /
+          10
+        } ${
+          (this.state.modes[mode].h +
+            this.state.modes[mode].colors.bravo.h +
+            this.state.modes[mode].colors.bravo.collectionShift) %
+          360
+        } / ${alpha})`
+      )
+      response += this.prop(
+        `--border-echo-${alpha}`,
+        `1px solid var(--color-echo-${alpha})`
+      )
+  
+      // foxtrot
+      response += this.prop(
+        `--color-foxtrot-${alpha}`,
+        `oklch(${
+          (this.state.modes[mode].l +
+            this.state.modes[mode].colors.bravo.l +
+            this.state.collections[
+              this.state.modes[mode].colors.bravo.collectionIndex
+            ][1][0] *
+              this.state.base.l.interval) %
+          100
+        }% ${
+          ((this.state.modes[mode].c * 10 +
+            this.state.modes[mode].colors.bravo.c +
+            this.state.collections[
+              this.state.modes[mode].colors.bravo.collectionIndex
+            ][1][1] *
+              (this.state.base.c.interval * 10)) %
+            5) /
+          10
+        } ${
+          (this.state.modes[mode].h +
+            this.state.modes[mode].colors.bravo.h +
+            this.state.modes[mode].colors.bravo.collectionShift) %
+          360
+        } / ${alpha})`
+      )
+      response += this.prop(
+        `--border-foxtrot-${alpha}`,
+        `1px solid var(--color-foxtrot-${alpha})`
+      )
+  
+      //
+    }
+  
+    return response.trim()
+  }
+  
+
+
+
     handleColorButtonClick(event) {
       this.state.modes[this.mode()].colors[event.target.dataset.color].l =
         parseInt(event.target.dataset.l, 10)
@@ -794,20 +1120,20 @@ customElements.define(
         this.state.active.h
       this.update()
 
-      // state.modes[state.active.mode].colors[event.target.dataset.color].c =
+      // this.state.modes[this.state.active.mode].colors[event.target.dataset.color].c =
       //   parseInt(event.target.dataset.cIndex, 10)
-      // state.modes[state.active.mode].colors[event.target.dataset.color].h =
-      //   state.active.h
+      // this.state.modes[this.state.active.mode].colors[event.target.dataset.color].h =
+      //   this.state.active.h
       // updateState()
       // updateProps()
 
       // console.log(event.target.dataset)
-      // state.modes[state.active.mode].colors[event.target.dataset.color].l =
+      // this.state.modes[this.state.active.mode].colors[event.target.dataset.color].l =
       //   parseInt(event.target.dataset.l, 10)
-      // state.modes[state.active.mode].colors[event.target.dataset.color].c =
+      // this.state.modes[this.state.active.mode].colors[event.target.dataset.color].c =
       //   parseInt(event.target.dataset.cIndex, 10)
-      // state.modes[state.active.mode].colors[event.target.dataset.color].h =
-      //   state.active.h
+      // this.state.modes[this.state.active.mode].colors[event.target.dataset.color].h =
+      //   this.state.active.h
       // updateState()
       // updateProps()
     }
@@ -1020,15 +1346,15 @@ customElements.define(
 
 `
 
-styles += `body { ${this.genLightStyles()} }\n`
+styles += `body { ${this.genStyles('light')} }\n`
     
-styles += `body.dark { ${this.genDarkStyles()} }\n`
+styles += `body.dark { ${this.genStyles('dark')} }\n`
 
 styles += `@media (prefers-color-scheme: dark) {\n`
 
-styles += `body { ${this.genDarkStyles()} }\n`
+styles += `body { ${this.genStyles('dark')} }\n`
     
-styles += `body.light { ${this.genLightStyles()} }\n`
+styles += `body.light { ${this.genStyles('light')} }\n`
 
 styles += `}\n`
 
