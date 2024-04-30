@@ -1,0 +1,6 @@
+[!- extends "wrappers/one-column.neojinja" -!]
+[!- import "includes/theme-macros.neojinja" as theme -!]
+
+[! block body !]
+[@ theme.main_body(site, page_id) @]
+[! endblock !]

@@ -36,11 +36,11 @@ so other scripts can use it #]
 
 </head>
 <body>
-    <header class="one-column-wrapper">
+    <header class="zero-columns-wrapper">
 [@ theme.link_or_title(site, page_id, "2dwmgthu", { "title": "Home Page" }) @]
 <settings-gear></settings-gear>
     </header>
-    <main class="one-column-wrapper">
+    <main class="zero-columns-wrapper">
         <article class="flow">
         [! block body !][! endblock !]
         </article>

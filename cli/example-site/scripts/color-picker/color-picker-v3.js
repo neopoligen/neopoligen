@@ -12,7 +12,7 @@ customElements.define(
       this.attachShadow({ mode: 'open' })
       this.setInitialState()
       this.setupActiveStyles()
-      this.buildWrapper()
+      this.buildMainWrapper()
       this.buildPreviewButton()
       this.buildModeButtons()
       this.buildSliders()
@@ -24,8 +24,17 @@ customElements.define(
       this.update()
     }
 
+    buildMainWrapper() {
+      this.mainWrapper = this.modAddTo(this.shadowRoot, 'div', {
+        classes: ['main-wrapper'],
+      })
+      this.modAddTo(this.mainWrapper, 'h2', {
+        innerHTML: 'Color Picker',
+      })
+    }
+
     buildModeButtons() {
-      this.modAddTo(this.wrapper, 'div', {
+      this.modAddTo(this.mainWrapper, 'div', {
         classes: ['modes'],
       })
       this.modes().forEach((mode) => {
@@ -52,7 +61,7 @@ customElements.define(
     }
 
     buildPreviewButton() {
-      this.modAddTo(this.wrapper, 'button', {
+      this.modAddTo(this.mainWrapper, 'button', {
         innerHTML: 'Launch Preview Window',
       })
     }
@@ -135,7 +144,7 @@ customElements.define(
     }
 
     buildPrimaryWrapper() {
-      this.primaryWrapper = this.modAddTo(this.wrapper, 'div', {
+      this.primaryWrapper = this.modAddTo(this.mainWrapper, 'div', {
         classes: ['primary-wrapper'],
       })
     }
@@ -143,7 +152,7 @@ customElements.define(
     buildSecondaryButtons() {
       this.primaries().forEach((primary) => {
         const mainKey = primary.secondaries.join('')
-        const secondaryButtons = this.modAddTo(this.wrapper, 'div', {
+        const secondaryButtons = this.modAddTo(this.mainWrapper, 'div', {
           classes: ['secondary-buttons', `${mainKey}-chips`],
         })
 
@@ -182,7 +191,14 @@ customElements.define(
                   ['primary', primary.key],
                   ['secondaryH', hIndex * this.state.base.h.interval],
                 ],
-                //   listeners: [['click', handleSecondaryButtonClick]],
+                listeners: [
+                  [
+                    'click',
+                    (event) => {
+                      this.handleSecondaryButtonClick.call(this, event)
+                    },
+                  ],
+                ],
               })
             }
           }
@@ -191,7 +207,7 @@ customElements.define(
     }
 
     buildSlider(config) {
-      const sliders = this.modAddTo(this.wrapper, 'div', {
+      const sliders = this.modAddTo(this.mainWrapper, 'div', {
         classes: ['sliders'],
       })
 
@@ -265,48 +281,38 @@ customElements.define(
       })
     }
 
- buildTertiaryButtons() {
-        this.primaries().forEach((primary) => {
-          this.collections().forEach((collection, collectionIndex) => {
-            const mainKey = primary.secondaries.join('')
-            const el = this.modAddSvgTo(`.${mainKey}-chips`, 'svg', {
+    buildTertiaryButtons() {
+      this.primaries().forEach((primary) => {
+        this.collections().forEach((collection, collectionIndex) => {
+          const mainKey = primary.secondaries.join('')
+          const el = this.modAddSvgTo(`.${mainKey}-chips`, 'svg', {
+            classes: [
+              'tertiaryChip',
+              `tertiaryChip-index-${primary.key}-${collectionIndex}`,
+            ],
+            width: 20,
+            height: 40,
+          })
+          collection.forEach((coords, coordsIndex) => {
+            const key = primary.key
+            this.modAddSvgTo(el, 'rect', {
               classes: [
-                'tertiaryChip',
-                `tertiaryChip-index-${primary.key}-${collectionIndex}`,
+                'tertiaryRect',
+                `tertiaryRect-${key}-${coords[0]}-${coords[1]}`,
               ],
+              x: 0,
+              y: coordsIndex * 20,
               width: 20,
-              height: 40,
-            })
-            collection.forEach((coords, coordsIndex) => {
-              const key = primary.key
-              this.modAddSvgTo(el, 'rect', {
-                classes: [
-                  'tertiaryRect',
-                  `tertiaryRect-${key}-${coords[0]}-${coords[1]}`,
-                ],
-                x: 0,
-                y: coordsIndex * 20,
-                width: 20,
-                height: 20,
-                data: [
-                  ['mode', this.state.active.mode],
-                  ['primary', primary.key],
-                  ['collectionIndex', collectionIndex],
-                ],
-                // listeners: [['click', handleTertiaryButtonClick]],
-              })
+              height: 20,
+              data: [
+                ['mode', this.state.active.mode],
+                ['primary', primary.key],
+                ['collectionIndex', collectionIndex],
+              ],
+              // listeners: [['click', handleTertiaryButtonClick]],
             })
           })
         })
-      }
-
-
-    buildWrapper() {
-      this.wrapper = this.modAddTo(this.shadowRoot, 'div', {
-        classes: ['picker-wrapper'],
-      })
-      this.modAddTo(this.wrapper, 'h2', {
-        innerHTML: 'Color Picker',
       })
     }
 
@@ -316,19 +322,19 @@ customElements.define(
     }
 
     collectionCoords() {
-        const refChecks = []
-        const response = []
-        this.state.collections.forEach((collection) => {
-          collection.forEach((coords) => {
-            const refCheck = `${coords[0]}-${coords[1]}`
-            if (!refChecks.includes(refCheck)) {
-              refChecks.push(refCheck)
-              response.push([coords[0], coords[1]])
-            }
-          })
+      const refChecks = []
+      const response = []
+      this.state.collections.forEach((collection) => {
+        collection.forEach((coords) => {
+          const refCheck = `${coords[0]}-${coords[1]}`
+          if (!refChecks.includes(refCheck)) {
+            refChecks.push(refCheck)
+            response.push([coords[0], coords[1]])
+          }
         })
-        return response
-      }
+      })
+      return response
+    }
 
     collections() {
       return this.state.collections
@@ -405,9 +411,13 @@ customElements.define(
     }
 
     handlePrimaryButtonClick(event) {
-    //   this.modLogObject(event.target)
       this.state.active.h = this.modGetDataInt(event.target, 'h')
-    //   this.modLog(this.state.active.h)
+      this.update()
+    }
+
+    handleSecondaryButtonClick(event) {
+      this.state.active.colors[event.target.dataset.primary].secondaryH =
+        parseInt(event.target.dataset.secondaryH)
       this.update()
     }
 
@@ -424,6 +434,17 @@ customElements.define(
           this.update()
         }, 30)
       }.call(this, event.target.dataset.key)
+    }
+
+    handleTertiaryButtonClick(event) {
+      this.state.modes[event.target.dataset.mode].colors[
+        event.target.dataset.primary
+      ].collectionIndex = parseInt(event.target.dataset.collectionIndex, 10)
+      this.state.modes[event.target.dataset.mode].colors[
+        event.target.dataset.primary
+      ].collectionShift =
+        this.state.active.colors[event.target.dataset.primary].secondaryH
+      this.update()
     }
 
     hOffset(offset, mode) {
@@ -503,10 +524,11 @@ customElements.define(
     setupActiveStyles() {
       const styles = this.ownerDocument.createElement('style')
       let sheet = `
-.picker-wrapper { 
+.main-wrapper { 
     padding: 1rem;
-    background-color: var(--color-base-active); 
+    background-color: var(--dev-color-base); 
     border-radius: 0.6rem;
+    color: var(--dev-color-bravo);
 }
 
 .primary-wrapper {
@@ -514,9 +536,6 @@ customElements.define(
     flex-wrap: wrap;
 }
 
-h2 {
-    color: var(--color-alfa);
-}
       `
 
       this.colors().forEach((color) => {
@@ -561,7 +580,6 @@ h2 {
           sheet += `.${key} { fill: var(--${key}); }`
         })
       })
-
 
       styles.innerHTML = sheet
       this.shadowRoot.appendChild(styles)
@@ -733,7 +751,7 @@ h2 {
             // this.modLog(this.lValue(this.mode()))
             const theL = this.lOffset(l, this.mode())
             const theC = this.cOffset(c, this.mode())
-            const theH = h
+            const theH = this.state.modes[this.mode()].h + h
             this.devProps[`--color-${key}`] = `oklch(${theL}% ${theC} ${theH})`
           })
         })
@@ -745,7 +763,7 @@ h2 {
           const key = `${l}-${cIndex}`
           const theL = this.lOffset(l, this.mode())
           const theC = this.cOffset(c, this.mode())
-          const theH = this.state.active.h
+          const theH = this.state.active.h + this.state.modes[this.mode()].h
           this.devProps[`--chip-${key}`] = `oklch(${theL}% ${theC} ${theH})`
         })
       })
@@ -788,7 +806,9 @@ h2 {
               20 * coords[0]) %
             100
           let c =
-            (this.state.modes[this.mode()].colors[primary.key].c + 5 + coords[1]) %
+            (this.state.modes[this.mode()].colors[primary.key].c +
+              5 +
+              coords[1]) %
             5
           this.devProps[`--${key}`] = `var(--color-${l}-${c}-${h})`
         })
