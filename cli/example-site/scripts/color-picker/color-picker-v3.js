@@ -1024,7 +1024,7 @@ styles += `body { ${this.genLightStyles()} }\n`
     
 styles += `body.dark { ${this.genDarkStyles()} }\n`
 
-styles += `  @media (prefers-color-scheme: dark) {\n`
+styles += `@media (prefers-color-scheme: dark) {\n`
 
 styles += `body { ${this.genDarkStyles()} }\n`
     
@@ -1034,9 +1034,13 @@ styles += `}\n`
 
 styles += `${this.genBaseStyles()}\n`
 
-
       if (this.childWindow && this.childWindow.name === this.childWindowName) {
-        this.childWindow.postMessage(styles)
+        const payload = JSON.stringify({
+            type: "colors-and-fonts",
+            styles: styles,
+            mode: this.mode()
+        })
+        this.childWindow.postMessage(payload)
       } else {
         this.modLog('Window is not available')
       }
@@ -1403,6 +1407,8 @@ h2 {
           this.devProps[prop]
         )
       }
+
+      this.sendStylesheet()
     }
 
     /////////////////////////////////////////////////////////////////////////////
