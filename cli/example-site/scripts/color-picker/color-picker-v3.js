@@ -20,6 +20,7 @@ customElements.define(
       this.buildPrimaryButtons()
       this.buildPrimaryChips()
       this.buildSecondaryButtons()
+      this.buildTertiaryButtons()
       this.update()
     }
 
@@ -141,8 +142,9 @@ customElements.define(
 
     buildSecondaryButtons() {
       this.primaries().forEach((primary) => {
+        const mainKey = primary.secondaries.join('')
         const secondaryButtons = this.modAddTo(this.wrapper, 'div', {
-          classes: ['secondary-buttons'],
+          classes: ['secondary-buttons', `${mainKey}-chips`],
         })
 
         const key = primary.secondaries.join('')
@@ -150,7 +152,7 @@ customElements.define(
           let buttonWrapper = this.modAddTo(secondaryButtons, 'div', {
             innerHTML: `
               <div class="secondaryButtonHeader secondaryButtonHeader-${primary.key}-${h}"></div>
-              <div class="secondaryButtonHolder secondaryButtonHolder-${primary.key}-${h}">x</div>
+              <div class="secondaryButtonHolder secondaryButtonHolder-${primary.key}-${h}"></div>
               <div class="secondaryButtonFooter secondaryButtonFooter-${primary.key}-${h}"></div>
               `,
           })
@@ -263,6 +265,42 @@ customElements.define(
       })
     }
 
+ buildTertiaryButtons() {
+        this.primaries().forEach((primary) => {
+          this.collections().forEach((collection, collectionIndex) => {
+            const mainKey = primary.secondaries.join('')
+            const el = this.modAddSvgTo(`.${mainKey}-chips`, 'svg', {
+              classes: [
+                'tertiaryChip',
+                `tertiaryChip-index-${primary.key}-${collectionIndex}`,
+              ],
+              width: 20,
+              height: 40,
+            })
+            collection.forEach((coords, coordsIndex) => {
+              const key = primary.key
+              this.modAddSvgTo(el, 'rect', {
+                classes: [
+                  'tertiaryRect',
+                  `tertiaryRect-${key}-${coords[0]}-${coords[1]}`,
+                ],
+                x: 0,
+                y: coordsIndex * 20,
+                width: 20,
+                height: 20,
+                data: [
+                  ['mode', this.state.active.mode],
+                  ['primary', primary.key],
+                  ['collectionIndex', collectionIndex],
+                ],
+                // listeners: [['click', handleTertiaryButtonClick]],
+              })
+            })
+          })
+        })
+      }
+
+
     buildWrapper() {
       this.wrapper = this.modAddTo(this.shadowRoot, 'div', {
         classes: ['picker-wrapper'],
@@ -352,9 +390,9 @@ customElements.define(
     }
 
     handlePrimaryButtonClick(event) {
-      this.modLogObject(event.target)
+    //   this.modLogObject(event.target)
       this.state.active.h = this.modGetDataInt(event.target, 'h')
-      this.modLog(this.state.active.h)
+    //   this.modLog(this.state.active.h)
       this.update()
     }
 
@@ -668,7 +706,7 @@ h2 {
         this.cValues().forEach((c, cIndex) => {
           this.hValues().forEach((h) => {
             const key = `${l}-${cIndex}-${h}`
-            this.modLog(this.lValue(this.mode()))
+            // this.modLog(this.lValue(this.mode()))
             const theL = this.lOffset(l, this.mode())
             const theC = this.cOffset(c, this.mode())
             const theH = h
@@ -694,7 +732,6 @@ h2 {
           this.collections().forEach((collection) => {
             collection.forEach((coords) => {
               const key = `color-secondary-rect-coords-${primary.key}-${coords[0]}-${coords[1]}-${h}`
-              console.log(key)
               let h2 =
                 (this.state.modes[this.mode()].colors[primary.key].h + h) % 360
               let l2 =
