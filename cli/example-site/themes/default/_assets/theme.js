@@ -5,54 +5,54 @@
 // and internal 'target' to 'el'
 
 
-function addClassTo(target, className) {
-  const el = getEl(target)
+function pageAddClassTo(target, className) {
+  const el = pageGetEl(target)
   if (el) {
     el.classList.add(className)
     return el
   }
 }
 
-function addListenerTo(target, event, func) {
-  const el = getEl(target)
+function pageAddListenerTo(target, event, func) {
+  const el = pageGetEl(target)
   if (el) {
     el.addEventListener(event, func)
     return el
   }
 }
 
-function addListenersTo(selector, event, func) {
+function pageAddListenersTo(selector, event, func) {
   const els = document.querySelectorAll(selector)
   els.forEach((el) => {
     el.addEventListener(event, func)
   })
 }
 
-function addSvgTo(target, tag, attrs = {}) {
-  const el = getEl(target)
+function pageAddSvgTo(target, tag, attrs = {}) {
+  const el = pageGetEl(target)
   if (el) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', tag)
-    updateSvgAttrs(svg, attrs)
+    pageUpdateSvgAttrs(svg, attrs)
     el.appendChild(svg)
     return svg
   }
 }
 
-function addTo(target, tag, attrs = {}) {
-  const el = getEl(target)
+function pageAddTo(target, tag, attrs = {}) {
+  const el = pageGetEl(target)
   if (el) {
     const newEl = document.createElement(tag)
-    updateAttrs(newEl, attrs)
+    pageUpdateAttrs(newEl, attrs)
     el.appendChild(newEl)
     return newEl
   }
 }
 
-function addToFront(target, tag, attrs = {}) {
-  const el = getEl(target)
+function pageAddToFront(target, tag, attrs = {}) {
+  const el = pageGetEl(target)
   if (el) {
     const newEl = document.createElement(tag)
-    updateAttrs(newEl, attrs)
+    pageUpdateAttrs(newEl, attrs)
     if (el.hasChildNodes()) {
       const first_child = el.firstChild
       el.insertBefore(newEl, first_child)
@@ -63,41 +63,41 @@ function addToFront(target, tag, attrs = {}) {
   }
 }
 
-function appendInnerText(target, text) {
-  const el = getEl(target)
+function pageAppendText(target, text) {
+  const el = pageGetEl(target)
   if (el) {
     el.innerText = el.innerText + text
   }
 }
 
-function getData(target, key) {
+function pageGetData(target, key) {
   // TODO: get a data attribute value from an element
   // with JSON stringify
 }
 
-function getEl(target) {
+function pageGetEl(target) {
   if (typeof target === 'string') {
     const el = document.querySelector(target)
     if (el) {
       return el
     } else {
-      logError(`Could not find querySelector for: ${target}`)
+      pageLogError(`Could not find querySelector for: ${target}`)
       return undefined
     }
   } else if (target) {
     return target
   } else {
-    logError(`Could not get element: ${target}`)
+    pageLogError(`Could not get element: ${target}`)
     return undefined
   }
 }
 
-function getEls(selector) {
+function pageGetEls(selector) {
   return document.querySelectorAll(selector)
 }
 
-function getFloat(target) {
-  const el = getEl(target)
+function pageGetFloat(target) {
+  const el = pageGetEl(target)
   if (el) {
     return parseFloat(el.value)
   } else {
@@ -105,8 +105,8 @@ function getFloat(target) {
   }
 }
 
-function getInt(target) {
-  const el = getEl(target)
+function pageGetInt(target) {
+  const el = pageGetEl(target)
   if (el) {
     return parseInt(el.value, 10)
   } else {
@@ -114,23 +114,14 @@ function getInt(target) {
   }
 }
 
-function getRadioValue(name) {
-  const el = getEl(`[name=${name}]:checked`)
-  if (el) {
-    return el.value
-  } else {
-    return undefined
-  }
-}
-
-function getStorage(key, defaultValue = undefined) {
+function pageGetStorage(key, defaultValue = undefined) {
   return localStorage.getItem(key)
     ? JSON.parse(localStorage.getItem(key)).payload
     : defaultValue
 }
 
-function getValue(target) {
-  const el = getEl(target)
+function pageGetValue(target) {
+  const el = pageGetEl(target)
   if (el) {
     return el.value
   } else {
@@ -138,67 +129,67 @@ function getValue(target) {
   }
 }
 
-function logError(msg) {
+function pageLogError(msg) {
   console.error(`${Date.now()} - ERROR: ${msg}`)
 }
 
-function logMsg(msg) {
+function pageLog(msg) {
   console.log(`${Date.now()} - INFO: ${msg}`)
 }
 
-function logObject(msg) {
+function pageLogObject(msg) {
   console.log(msg)
 }
 
-function removeClassFrom(target, className) {
-  const el = getEl(target)
+function pageRemoveClassFrom(target, className) {
+  const el = pageGetEl(target)
   if (el) {
     el.classList.remove(className)
     return el
   }
 }
 
-function setData(target, key, value) {
+function pageSetData(target, key, value) {
   // TODO: set data attributes for an element
   // with JSON stringify
 }
 
-function setHTML(target, value) {
-  updateAttrs(target, {
+function pageSetHTML(target, value) {
+  pageUpdateAttrs(target, {
     innerHTML: value
   })
 }
 
-function setStorage(key, value) {
+function pageSetStorage(key, value) {
   localStorage.setItem(key, JSON.stringify({ payload: value }))
 }
 
-function setValue(target, value) {
-  const el = getEl(target)
+function pageSetValue(target, value) {
+  const el = pageGetEl(target)
   if (el) {
     el.value = value
   } else {
-    logError(`Could not set value: ${value}`)
+    pageLogError(`Could not set value: ${value}`)
   }
 }
 
-function updateEl(target, attrs = {}) {
-  const el = getEl(target)
+function pageUpdateEl(target, attrs = {}) {
+  const el = pageGetEl(target)
   if (el) {
-    updateAttrs(el,attrs)
+    pageUpdateAttrs(el,attrs)
   }
   return el
 }
 
-function updateEls(selector, attrs = {}) {
-  const els = getEls(selector)
+function pageUpdateEls(selector, attrs = {}) {
+  const els = pageGetEls(selector)
   els.forEach((el) => {
-    updateAttrs(el, attrs)
+    pageUpdateAttrs(el, attrs)
   })
 }
 
-function updateAttrs(target, attrs) {
-  const el = getEl(target)
+function pageUpdateAttrs(target, attrs) {
+  const el = pageGetEl(target)
   if (el) {
     const nonAttrs = ['aria', 'classes', 'data', 'listeners']
     for (let key in attrs) {
@@ -222,8 +213,8 @@ function updateAttrs(target, attrs) {
   }
 }
 
-function updateSvgAttrs(target, attrs) {
-  const el = getEl(target)
+function pageUpdateSvgAttrs(target, attrs) {
+  const el = pageGetEl(target)
   if (el) {
     const nonAttrs = ['classes', 'data', 'listeners', 'styles']
     for (let key in attrs) {

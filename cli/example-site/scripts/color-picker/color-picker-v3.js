@@ -942,40 +942,6 @@ h2, h3 {
     }
 
     getAlfa(mode) {
-      // TBD on if going to switch to this
-
-      // // alfa
-      // this.devProps[`--dev-color-alfa`] = `oklch(${
-      //     (this.state.modes[this.mode()].l +
-      //       this.state.modes[this.mode()].colors.alfa.l) %
-      //     100
-      //   }% ${
-      //     ((this.state.modes[this.mode()].c * 10 +
-      //       this.state.modes[this.mode()].colors.alfa.c) %
-      //       5) /
-      //     10
-      //   } ${
-      //     (this.state.modes[this.mode()].h +
-      //       this.state.modes[this.mode()].colors.alfa.h) %
-      //     360
-      //   })`
-
-      //   // bravo
-      //   this.devProps[`--dev-color-bravo`] = `oklch(${
-      //     (this.state.modes[this.mode()].l +
-      //       this.state.modes[this.mode()].colors.bravo.l) %
-      //     100
-      //   }% ${
-      //     ((this.state.modes[this.mode()].c * 10 +
-      //       this.state.modes[this.mode()].colors.bravo.c) %
-      //       5) /
-      //     10
-      //   } ${
-      //     (this.state.modes[this.mode()].h +
-      //       this.state.modes[this.mode()].colors.bravo.h) %
-      //     360
-      //   })`
-
       let payload = []
       payload.push(
         (this.state.modes[this.mode()].l +

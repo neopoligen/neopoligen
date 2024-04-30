@@ -40,9 +40,18 @@ Examples
     <button role="tab">6</button>
   </div>
 
+
+    <div role="tabpanel" class="flow">
+        <h3>Alpha Channel Gradients</h3>
+        <p>Here's what the alpha channel versions for the colors look like</p>
+        <div class="alpha-examples"></div>
+    </div>
+
+
   <div role="tabpanel" class="flow" hidden>
     <p><strong>Base colors:</strong> There are six base colors for each
-    palette: alfa, bravo, charlie, delta, echo, and foxtrot. I find these
+    palette: --color-alfa, --color-bravo, --color-charlie, --color-delta, 
+    --color-echo, and --color-foxtrot. I find these
     generic names easier to work with than names like &quot;primary&quot;,
     &quot;secondary&quot;, &quot;accent&quot;, etc... Those names have 
     specific meaning and I often find I want to use a color when the meaning
@@ -87,31 +96,32 @@ Examples
 
   <div role="tabpanel" class="flow">
     <p>
-        <em>Welcome To The Example Panel</em> - This area is used
-        to demonstrate the color palette in multiple ways. This first panel
-        doesn't have any extra colors in it on purpose. The idea is to get
-        a sense of the base without being overwhelmed by color swatches. 
+        <strong>Here's Some Text</strong> This example is nothing but text via the Placeholder Text section below. 
+        The idea is to remove the swatches to see what just text and heading look like. 
     </p>
     <p>
-        <em>Live Updating</em> - The colors in this window update
-        automatically when you move the sliders and click the swatches in 
-        the main picker window. (Note that if the page refreshes for some
-        reason the connection gets lost. If you make changes in the main
-        window that aren't doing anything here close this window and
-        relaunch it)
+
     </p>
   </div>
 
-  <div role="tabpanel" class="flow">
-    <p>Black and white colors are in the palette as well as alpha channel
-    versions of all the colors backing of the opacity in 5% intervals:</p>
-  </div>
-
-
     <div role="tabpanel" class="flow">
-        <h3>TODO: Alpha Channel Gradients</h3>
-        <pre></pre>
+        <p><strong>Black and White - Match and Reverse</strong></p>
+        <p>
+            In addition to <em>--color-black</em> and <em>--color-white</em>, the stylesheet
+            also was <em>--color-bw-match</em> and <em>--color-bw-reverse</em>.
+        </p>
+        <p>Light Mode:</p>
+        <ul>
+            <li><em>--color-bw-match</em> is white</li>
+            <li><em>--color-bw-reverse</em> is black</li>
+        </ul>
+        <p>Dark Mode:</p>
+        <ul>
+            <li><em>--color-bw-match</em> is black</li>
+            <li><em>--color-bw-reverse</em> is white</li>
+        </ul>
     </div>
+
 
     <div role="tabpanel" class="flow">
         <h3>TODO: Black And White - Match And Reverse</h3>
@@ -180,6 +190,8 @@ Examples
 let currentStyleData = ""
 let styleEl
 
+const colors = ['alfa', 'bravo', 'charlie', 'delta', 'echo', 'foxtort', 'black', 'white', 'bw-match', 'bw-reverse']
+
 function addPlaceholderText() {
     const paragraphs = [
         `The rest of the text below this line is place holder text just to fill out some more space for the example. It's below every example to help provide the context of a page.`,
@@ -192,9 +204,9 @@ function addPlaceholderText() {
     ]
     const els = document.querySelectorAll(`[role='tabpanel']`)
     els.forEach((el) => {
-        addTo(el, 'h2', { innerHTML: "Placeholder Text" })
+        pageAddTo(el, 'h2', { innerHTML: "Placeholder Text" })
         paragraphs.forEach((p) => {
-            addTo(el, 'p', {
+            pageAddTo(el, 'p', {
                 innerHTML: p
             })
         })
@@ -229,17 +241,60 @@ window.addEventListener("message", (event) => {
   }
 })
 
+function makeAlphaExamples() {
+    colors.forEach((color) => {
+        pageAddTo('.alpha-examples', 'div', {
+            innerHTML: `
+            <div class="alpha-example alpha-example-${color}">
+                <div class="color-${color}">--color-${color}</div>
+                <div class="bg-${color} alpha-swatch"></div>
+            </div>
+            `
+        })
+    })
+}
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
-    styleEl = addTo(document.head, 'style')
+    styleEl = pageAddTo(document.head, 'style')
     addPlaceholderText() 
+    makeAlphaExamples()
 })
 
 
 -- css
 
+.alpha-example {
+    max-width: 240px;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0.1rem;
+    font-size: 0.8rem;
+}
+
+.alpha-example :first-child {
+    min-width: 120px;
+}
+
+
+.alpha-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+}
+
+.alpha-swatch {
+    min-width: 100px;
+    min-height: 0.9rem;
+}
+
 main {
     margin: 1.3rem;
 }
+
+
+
 
 -- head
 
