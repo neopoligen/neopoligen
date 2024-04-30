@@ -1594,7 +1594,7 @@ ${this.genStyles('light')}
         })
       })
 
-      // primary chip selected and alfa bravo bolds
+      // primary chip selected and
       this.lValues().forEach((l) => {
         this.cValues().forEach((c, cIndex) => {
           this.primaryColors().forEach((color) => {
@@ -1608,15 +1608,6 @@ ${this.genStyles('light')}
                 `.chip-${l}-${cIndex}`,
                 `primary-chip-selected-${l}-${cIndex}`
               )
-              this.modAddStyleTo(
-                `.chip-button-alfa-${l}-${cIndex}`,
-                `strong`
-              )
-              this.modRemoveStyleFrom(
-                `.chip-button-bravo-${l}-${cIndex}`,
-                `strong`
-              )
-              this.modUpdateHTML(`.chip-button-alfa-${l}-${cIndex}`, `alfa &lt;`)
             } else if (
               this.state.modes[this.mode()].colors.bravo.l === l &&
               this.state.modes[this.mode()].colors.bravo.c === cIndex &&
@@ -1627,33 +1618,63 @@ ${this.genStyles('light')}
                 `.chip-${l}-${cIndex}`,
                 `primary-chip-selected-${l}-${cIndex}`
               )
-              this.modAddStyleTo(
-                `.chip-button-bravo-${l}-${cIndex}`,
-                `strong`
-              )
-              this.modRemoveStyleFrom(
-                `.chip-button-alfa-${l}-${cIndex}`,
-                `strong`
-              )
-              this.modUpdateHTML(`.chip-button-alfa-${l}-${cIndex}`, `alfa`)
             } else {
               this.modRemoveStyleFrom(
                 `.chip-${l}-${cIndex}`,
                 `primary-chip-selected-${l}-${cIndex}`
               )
-              this.modRemoveStyleFrom(
-                `.chip-button-alfa-${l}-${cIndex}`,
-                `strong`
-              )
-              this.modRemoveStyleFrom(
-                `.chip-button-bravo-${l}-${cIndex}`,
-                `strong`
-              )
-              this.modUpdateHTML(`.chip-button-alfa-${l}-${cIndex}`, `alfa`)
             }
           })
         })
       })
+
+      //  alfa bravo bolds
+      this.lValues().forEach((l) => {
+        this.cValues().forEach((c, cIndex) => {
+          this.primaryColors().forEach((color) => {
+            if (
+              this.state.modes[this.mode()].colors.alfa.l === l &&
+              this.state.modes[this.mode()].colors.alfa.c === cIndex &&
+              this.state.modes[this.mode()].colors.alfa.h ===
+                this.state.active.h
+            ) {
+              this.modUpdateHTML(`.chip-button-alfa-${l}-${cIndex}`, `alfa &lt;`)
+              this.modAddStyleTo(
+                `.chip-button-alfa-${l}-${cIndex}`,
+                `strong`
+              )
+            } else {
+                this.modUpdateHTML(`.chip-button-alfa-${l}-${cIndex}`, `alfa`)
+                this.modRemoveStyleFrom(
+                  `.chip-button-alfa-${l}-${cIndex}`,
+                  `strong`
+                )
+            }
+            
+            if (
+              this.state.modes[this.mode()].colors.bravo.l === l &&
+              this.state.modes[this.mode()].colors.bravo.c === cIndex &&
+              this.state.modes[this.mode()].colors.bravo.h ===
+                this.state.active.h
+            ) {
+              this.modUpdateHTML(`.chip-button-bravo-${l}-${cIndex}`, `&gt; bravo`)
+              this.modAddStyleTo(
+                `.chip-button-bravo-${l}-${cIndex}`,
+                `strong`
+              )
+            } else {
+              this.modUpdateHTML(`.chip-button-bravo-${l}-${cIndex}`, `bravo`)
+              this.modRemoveStyleFrom(
+                `.chip-button-bravo-${l}-${cIndex}`,
+                `strong`
+              )
+            }
+          })
+        })
+      })
+
+
+
 
       this.modUpdateHTML(`.raw-data`, JSON.stringify(this.state.modes, null, 2))
 
