@@ -154,12 +154,6 @@ function pageSetData(target, key, value) {
   // with JSON stringify
 }
 
-function pageSetHTML(target, value) {
-  pageUpdateAttrs(target, {
-    innerHTML: value
-  })
-}
-
 function pageSetStorage(key, value) {
   localStorage.setItem(key, JSON.stringify({ payload: value }))
 }
@@ -171,21 +165,6 @@ function pageSetValue(target, value) {
   } else {
     pageLogError(`Could not set value: ${value}`)
   }
-}
-
-function pageUpdateEl(target, attrs = {}) {
-  const el = pageGetEl(target)
-  if (el) {
-    pageUpdateAttrs(el,attrs)
-  }
-  return el
-}
-
-function pageUpdateEls(selector, attrs = {}) {
-  const els = pageGetEls(selector)
-  els.forEach((el) => {
-    pageUpdateAttrs(el, attrs)
-  })
 }
 
 function pageUpdateAttrs(target, attrs) {
@@ -212,6 +191,29 @@ function pageUpdateAttrs(target, attrs) {
     return el
   }
 }
+
+function pageUpdateEl(target, attrs = {}) {
+  const el = pageGetEl(target)
+  if (el) {
+    pageUpdateAttrs(el,attrs)
+  }
+  return el
+}
+
+function pageUpdateEls(selector, attrs = {}) {
+  const els = pageGetEls(selector)
+  els.forEach((el) => {
+    pageUpdateAttrs(el, attrs)
+  })
+}
+
+
+function pageUpdateHTML(target, value) {
+  pageUpdateAttrs(target, {
+    innerHTML: value
+  })
+}
+
 
 function pageUpdateSvgAttrs(target, attrs) {
   const el = pageGetEl(target)

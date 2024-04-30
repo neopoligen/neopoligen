@@ -190,7 +190,7 @@ Examples
 let currentStyleData = ""
 let styleEl
 
-const colors = ['alfa', 'bravo', 'charlie', 'delta', 'echo', 'foxtort', 'black', 'white', 'bw-match', 'bw-reverse']
+const colors = ['alfa', 'bravo', 'charlie', 'delta', 'echo', 'foxtrot', 'black', 'white', 'bw-match', 'bw-reverse']
 
 function addPlaceholderText() {
     const paragraphs = [
@@ -216,7 +216,7 @@ function addPlaceholderText() {
 function updateStyles() {
     styleEl.innerHTML = currentStyleData
     
-    updateEl(`.fonts-and-colors`, {
+    pageUpdateEl(`.fonts-and-colors`, {
         innerHTML: currentStyleData
     })
    
