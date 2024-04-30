@@ -119,9 +119,9 @@ customElements.define(
         modes: {
           light: {
             display: '☀',
-            l: 70.762,
-            c: 0.06625,
-            h: 252.9,
+            l: 92.669,
+            c: 0.03076,
+            h: 39.927,
             colors: {
               alfa: {
                 l: 40,
@@ -132,8 +132,8 @@ customElements.define(
               },
               bravo: {
                 l: 40,
-                c: 0,
-                h: 300,
+                c: 2,
+                h: 120,
                 collectionShift: 60,
                 collectionIndex: 10,
               },
@@ -191,7 +191,7 @@ customElements.define(
             <div class="slider-section"></div>
         </div>
         <div class="section-wrapper">
-            <h4>Primary Colors</h4>
+            <h3>Primary Colors: <span class="dev-color-alfa">alfa</span> <span class="dev-color-bravo">bravo</span></h3>
             <div class="primary-section">
                 <div class="primary-buttons"></div>
                 <div class="primary-chips"></div>
@@ -218,6 +218,11 @@ customElements.define(
             <div class="stripe bg-delta"></div>
             <div class="stripe bg-echo"></div>
             <div class="stripe bg-foxtrot"></div>
+        </div>
+
+        <div class="debug-wrapper section-wrapper">
+            <h3>Raw Data</h3>
+            <pre class="raw-data"></pre>
         </div>
     </div>
   </div>
@@ -273,8 +278,8 @@ button {
     cursor: pointer;
 }
 
-h2, h4 {
-    color: var(--dev-color-alfa);
+h2, h3 {
+    color: var(--dev-color-bw-reverse-90);
 }
 
 .main-wrapper { 
@@ -305,7 +310,7 @@ h2, h4 {
     border-radius: 0.3rem;
 }
 
-.primary-button.selected {
+.primary-button-selected {
     margin-bottom: 0.9rem;
     border: 3px solid var(--dev-color-bw-reverse-70);
 }
@@ -936,35 +941,35 @@ h2, h4 {
     getBravo(mode) {}
 
     getCharlie(mode) {
-        let payload = []
-        payload.push(
-          (this.state.modes[mode].l +
-            this.state.modes[mode].colors.alfa.l +
-            this.state.base.l.max +
-            this.state.base.l.interval *
-              this.state.collections[
-                this.state.modes[mode].colors.alfa.collectionIndex
-              ][0][0]) %
-            this.state.base.l.max
-        )
-        payload.push(
-          (this.state.modes[mode].c +
-            this.state.modes[mode].colors.alfa.c +
-            this.state.base.c.max +
-            this.state.base.c.interval *
-              this.state.collections[
-                this.state.modes[mode].colors.alfa.collectionIndex
-              ][0][1]) %
-            this.state.base.c.max
-        )
-        payload.push(
-          (this.state.modes[mode].h +
-            this.state.modes[mode].colors.alfa.h +
-            this.state.modes[mode].colors.alfa.collectionShift) %
-            360
-        )
-        return payload
-      }
+      let payload = []
+      payload.push(
+        (this.state.modes[mode].l +
+          this.state.modes[mode].colors.alfa.l +
+          this.state.base.l.max +
+          this.state.base.l.interval *
+            this.state.collections[
+              this.state.modes[mode].colors.alfa.collectionIndex
+            ][0][0]) %
+          this.state.base.l.max
+      )
+      payload.push(
+        (this.state.modes[mode].c +
+          this.state.modes[mode].colors.alfa.c +
+          this.state.base.c.max +
+          this.state.base.c.interval *
+            this.state.collections[
+              this.state.modes[mode].colors.alfa.collectionIndex
+            ][0][1]) %
+          this.state.base.c.max
+      )
+      payload.push(
+        (this.state.modes[mode].h +
+          this.state.modes[mode].colors.alfa.h +
+          this.state.modes[mode].colors.alfa.collectionShift) %
+          360
+      )
+      return payload
+    }
 
     getDelta(mode) {
       let payload = []
@@ -998,35 +1003,35 @@ h2, h4 {
     }
 
     getEcho(mode) {
-        let payload = []
-        payload.push(
-          (this.state.modes[mode].l +
-            this.state.modes[mode].colors.bravo.l +
-            this.state.base.l.max +
-            this.state.base.l.interval *
-              this.state.collections[
-                this.state.modes[mode].colors.bravo.collectionIndex
-              ][0][0]) %
-            this.state.base.l.max
-        )
-        payload.push(
-          (this.state.modes[mode].c +
-            this.state.modes[mode].colors.bravo.c +
-            this.state.base.c.max +
-            this.state.base.c.interval *
-              this.state.collections[
-                this.state.modes[mode].colors.bravo.collectionIndex
-              ][0][1]) %
-            this.state.base.c.max
-        )
-        payload.push(
-          (this.state.modes[mode].h +
-            this.state.modes[mode].colors.bravo.h +
-            this.state.modes[mode].colors.bravo.collectionShift) %
-            360
-        )
-        return payload
-      }
+      let payload = []
+      payload.push(
+        (this.state.modes[mode].l +
+          this.state.modes[mode].colors.bravo.l +
+          this.state.base.l.max +
+          this.state.base.l.interval *
+            this.state.collections[
+              this.state.modes[mode].colors.bravo.collectionIndex
+            ][0][0]) %
+          this.state.base.l.max
+      )
+      payload.push(
+        (this.state.modes[mode].c +
+          this.state.modes[mode].colors.bravo.c +
+          this.state.base.c.max +
+          this.state.base.c.interval *
+            this.state.collections[
+              this.state.modes[mode].colors.bravo.collectionIndex
+            ][0][1]) %
+          this.state.base.c.max
+      )
+      payload.push(
+        (this.state.modes[mode].h +
+          this.state.modes[mode].colors.bravo.h +
+          this.state.modes[mode].colors.bravo.collectionShift) %
+          360
+      )
+      return payload
+    }
 
     getFoxtrot(mode) {
       let payload = []
@@ -1480,7 +1485,7 @@ h2, h4 {
       this.state.active.mode = event.target.dataset.mode
       this.lch().forEach((key) => {
         this.modSetValue(`.slider-${key}`, this.state.modes[this.mode()][key])
-        this.modSetHTML(
+        this.modUpdateHTML(
           `.get-from-${key}`,
           `copy ${this.state.modes[this.otherMode()].display}`
         )
@@ -1711,13 +1716,17 @@ h2, h4 {
       if (this.mode() === 'light') {
         this.devProps[`--dev-color-bw-match-40`] = `rgb(255 255 255 / 40%)`
         this.devProps[`--dev-color-bw-match-70`] = `rgb(255 255 255 / 70%)`
+        this.devProps[`--dev-color-bw-match-90`] = `rgb(255 255 255 / 90%)`
         this.devProps[`--dev-color-bw-reverse-40`] = `rgb(0 0 0 / 40%)`
         this.devProps[`--dev-color-bw-reverse-70`] = `rgb(0 0 0 / 70%)`
+        this.devProps[`--dev-color-bw-reverse-90`] = `rgb(0 0 0 / 90%)`
       } else {
         this.devProps[`--dev-color-bw-match-40`] = `rgb(0 0 0 / 40%)`
         this.devProps[`--dev-color-bw-match-70`] = `rgb(0 0 0 / 70%)`
+        this.devProps[`--dev-color-bw-match-90`] = `rgb(0 0 0 / 90%)`
         this.devProps[`--dev-color-bw-reverse-40`] = `rgb(255 255 255 / 40%)`
         this.devProps[`--dev-color-bw-reverse-70`] = `rgb(255 255 255 / 70%)`
+        this.devProps[`--dev-color-bw-reverse-90`] = `rgb(255 255 255 / 90%)`
       }
 
       // alfa
@@ -1863,6 +1872,20 @@ h2, h4 {
         )
       }
 
+      // update the primary button styles
+      this.hValues().forEach((h) => {
+        if (h === this.state.active.h) {
+          this.modAddClassTo(`.primary-button-${h}`, `primary-button-selected`)
+        } else {
+          this.modRemoveClassFrom(
+            `.primary-button-${h}`,
+            `primary-button-selected`
+          )
+        }
+      })
+
+      this.modUpdateHTML(`.raw-data`, JSON.stringify(this.state.modes, null, 2))
+
       this.sendStylesheet()
     }
 
@@ -1984,12 +2007,6 @@ h2, h4 {
       }
     }
 
-    modSetHTML(target, value) {
-      this.modUpdateAttrs(target, {
-        innerHTML: value,
-      })
-    }
-
     modSetValue(target, value) {
       const el = this.modGetEl(target)
       if (el) {
@@ -2025,6 +2042,12 @@ h2, h4 {
         }
         return el
       }
+    }
+
+    modUpdateHTML(target, value) {
+      this.modUpdateAttrs(target, {
+        innerHTML: value,
+      })
     }
 
     modUpdateSvgAttrs(target, attrs) {
