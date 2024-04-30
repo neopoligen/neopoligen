@@ -1019,23 +1019,22 @@ h2, h4 {
       payload.push(
         (this.state.modes[mode].l +
           this.state.modes[mode].colors.bravo.l +
+          this.state.base.l.max +
           this.state.base.l.interval *
             this.state.collections[
               this.state.modes[mode].colors.bravo.collectionIndex
             ][1][0]) %
           this.state.base.l.max
       )
-      
+
       payload.push(
-        (((this.state.modes[mode].colors.bravo.c +
+        (this.state.modes[mode].c +
+          this.state.modes[mode].colors.bravo.c +
           this.state.base.c.max +
           this.state.base.c.interval *
             this.state.collections[
               this.state.modes[mode].colors.bravo.collectionIndex
-            ][1][0]) %
-          this.state.base.c.max) +
-          this.state.modes[mode].colors.bravo.c +
-          this.state.modes[mode].c) %
+            ][1][1]) %
           this.state.base.c.max
       )
 
@@ -1044,17 +1043,6 @@ h2, h4 {
           this.state.modes[mode].colors.bravo.h +
           this.state.modes[mode].colors.bravo.collectionShift) %
           360
-
-        // (((this.state.modes[mode].colors.bravo.h +
-        //   this.state.base.h.max +
-        //   this.state.base.h.interval *
-        //     this.state.collections[
-        //       this.state.modes[mode].colors.bravo.collectionIndex
-        //     ][1][0]) %
-        //   this.state.base.h.max) +
-        //   this.state.modes[mode].colors.bravo.h +
-        //   this.state.modes[mode].h) %
-        //   this.state.base.h.max
       )
       return payload
     }
