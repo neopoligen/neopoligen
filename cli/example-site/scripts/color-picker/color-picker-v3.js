@@ -318,7 +318,6 @@ customElements.define(
               width: 20,
               height: 20,
               data: [
-                ['mode', this.state.active.mode],
                 ['primary', primary.key],
                 ['collectionIndex', collectionIndex],
               ],
@@ -523,8 +522,6 @@ customElements.define(
         .bg-foxtrot-90 { background-color: var(--color-foxtrot-90); }`
     }
 
-
-
     prop(key, value) {
       return `${key}: ${value};\n`
     }
@@ -638,32 +635,32 @@ customElements.define(
 
       // echo
 
-      //   let lEcho =
-      //     (this.state.modes[mode].l +
-      //       this.state.modes[mode].colors.bravo.l +
-      //       this.state.collections[
-      //         this.state.modes[mode].colors.bravo.collectionIndex
-      //       ][0][0] *
-      //         this.state.base.l.interval) %
-      //     100
-      //   this.modLog(lEcho)
+        let lEcho =
+          (this.state.modes[mode].l +
+            this.state.modes[mode].colors.bravo.l +
+            this.state.collections[
+              this.state.modes[mode].colors.bravo.collectionIndex
+            ][0][0] *
+              this.state.base.l.interval) %
+          100
+        this.modLog(lEcho)
 
-      //   let cEcho =
-      //     ((this.state.modes[mode].c * 10 +
-      //       this.state.modes[mode].colors.bravo.c +
-      //       this.state.collections[
-      //         this.state.modes[mode].colors.bravo.collectionIndex
-      //       ][0][1] *
-      //         (this.state.base.c.interval * 10)) %
-      //       5) /
-      //     10
-      //   this.modLog(cEcho)
+        let cEcho =
+          ((this.state.modes[mode].c * 10 +
+            this.state.modes[mode].colors.bravo.c +
+            this.state.collections[
+              this.state.modes[mode].colors.bravo.collectionIndex
+            ][0][1] *
+              (this.state.base.c.interval * 10)) %
+            5) /
+          10
+        this.modLog(cEcho)
 
-      // let hEcho = (this.state.modes[mode].h +
-      //     this.state.modes[mode].colors.bravo.h +
-      //     this.state.modes[mode].colors.bravo.collectionShift) %
-      //   360
-      // this.modLog(hEcho)
+      let hEcho = (this.state.modes[mode].h +
+          this.state.modes[mode].colors.bravo.h +
+          this.state.modes[mode].colors.bravo.collectionShift) %
+        360
+      this.modLog(hEcho)
 
       response += this.prop(
         `--color-echo`,
@@ -1001,10 +998,10 @@ customElements.define(
     }
 
     handleTertiaryButtonClick(event) {
-      this.state.modes[event.target.dataset.mode].colors[
+      this.state.modes[this.mode()].colors[
         event.target.dataset.primary
       ].collectionIndex = parseInt(event.target.dataset.collectionIndex, 10)
-      this.state.modes[event.target.dataset.mode].colors[
+      this.state.modes[this.mode()].colors[
         event.target.dataset.primary
       ].collectionShift =
         this.state.active.colors[event.target.dataset.primary].secondaryH
