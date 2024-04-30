@@ -4,18 +4,23 @@ Color Picker Preview Window
 
 Welcome to the Neopoligen Color Picker Preview Window!
 
-The purpose of this page is to show what colors from the
-picker looks like in real use. It's a lot easier to see 
-how things will look when the colors aren't surrounded
-by all the other options like they are in the picker
-itself. 
+I'm not good at being able to determine how a color palette
+will work just by looking at swatches. I need to see it for
+real. That's what this page is for. The picker generates
+a stylesheet that this page uses directly.
 
-Six colors are defined with each palette in addition
-to the base color that's used for the background. To
-keep things generic, the colors are given names: alfa,
-bravo, charlie, delta, echo, and foxtrot. There
-are also black and white styles. All of the colors and
-the black and white styles
+Each palette consists of base/background color, 
+six palette colors, and black and white. There are alpha
+channel versions of each reducing opacity in 10% increments.
+The examples below are a kind of visual documentation that
+show how the colors work with each other in different 
+combinations.
+
+The page is connected live to the picker. Changing values
+there updates the colors here. (Note: the connection isn't
+as stable as I'd like yet. If you don't see colors here or
+they stop updating you'll need to close this window and
+relaunch it for the time being)
 
 -- h2
 
@@ -31,6 +36,8 @@ Examples
     <button role="tab">2</button>
     <button role="tab">3</button>
     <button role="tab">4</button>
+    <button role="tab">5</button>
+    <button role="tab">6</button>
   </div>
 
   <div role="tabpanel" class="flow" hidden>
@@ -39,7 +46,7 @@ Examples
     generic names easier to work with than names like &quot;primary&quot;,
     &quot;secondary&quot;, &quot;accent&quot;, etc... Those names have 
     specific meaning and I often find I want to use a color when the meaning
-    doesn't fit. 
+    doesn't fit. Here's what they look like for this palette:
     </p>
     <div class="swatch-row">
         <div>
@@ -100,10 +107,24 @@ Examples
     versions of all the colors backing of the opacity in 5% intervals:</p>
   </div>
 
+
     <div role="tabpanel" class="flow">
-    <h3>The Fonts And Colors Stylesheets</h3>
-    <pre><code class="fonts-and-colors"></code></pre>
+        <h3>TODO: Alpha Channel Gradients</h3>
+        <pre></pre>
     </div>
+
+    <div role="tabpanel" class="flow">
+        <h3>TODO: Black And White - Match And Reverse</h3>
+        <pre></pre>
+    </div>
+
+    <div role="tabpanel" class="flow">
+        <h3>The Fonts And Colors Stylesheets</h3>
+        <pre><code class="fonts-and-colors"></code></pre>
+    </div>
+
+
+
 
 </tab-group>
 
@@ -161,7 +182,7 @@ let styleEl
 
 function addPlaceholderText() {
     const paragraphs = [
-        `The rest of the text below this line is place holder text just to fill out some more space for the example.`,
+        `The rest of the text below this line is place holder text just to fill out some more space for the example. It's below every example to help provide the context of a page.`,
         `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mi id massa pellentesque laoreet sit amet ut lectus. Aenean vitae diam iaculis, efficitur purus vitae, posuere odio. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vestibulum vulputate auctor justo, et iaculis ipsum fermentum in. Sed nec quam turpis.`,
         `In neque enim, accumsan non purus non, ultrices tristique metus. Mauris at pulvinar lacus. Pellentesque blandit convallis justo, ac malesuada diam. Nulla sed porttitor magna, nec commodo mauris. Proin sit amet tincidunt dui. Morbi lobortis justo nisl, quis efficitur justo lobortis id.`,
         `Fusce accumsan sem vitae enim imperdiet, a vulputate libero varius.`,
