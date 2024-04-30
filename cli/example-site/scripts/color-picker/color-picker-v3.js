@@ -333,7 +333,7 @@ h2, h4 {
 }
 
 .section-wrapper {
-    border: 1px solid rgb(0 0 0 / 45%);
+    border: 1px solid var(--dev-color-reverse-40);
     padding: 0.9rem;
     border-radius: 0.5rem;
     margin-bottom: 2.5rem;
@@ -350,7 +350,7 @@ h2, h4 {
 }
 
 .stripe-wrapper {
-    border: 1px solid rgb(0 0 0 / 45%);
+    border: 1px solid var(--dev-color-reverse-40);
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     border-radius: 0.5rem;
@@ -366,7 +366,6 @@ h2, h4 {
     border-top-right-radius: 0.4rem;
     border-bottom-right-radius: 0.4rem;
 }
-
 
 
 .top-section {
@@ -1559,6 +1558,18 @@ h2, h4 {
       this.devProps[`--dev-color-base`] = `oklch(${this.lValue(
         this.mode()
       )}% ${this.cValue(this.mode())} ${this.hValue(this.mode())})`
+
+      // set the reverse style
+      // only doing a few since that's all that's needed for the d
+      // design 
+      if (this.mode() === 'light') {
+        this.devProps[`--dev-color-reverse-40`] = `rgb(0 0 0 / 40%)`
+        this.devProps[`--dev-color-reverse-70`] = `rgb(0 0 0 / 70%)`
+      } else {
+        this.devProps[`--dev-color-reverse-40`] = `rgb(255 255 255 / 40%)`
+        this.devProps[`--dev-color-reverse-70`] = `rgb(255 255 255 / 70%)`
+      }
+
 
       // alfa
       this.devProps[`--dev-color-alfa`] = `oklch(${
