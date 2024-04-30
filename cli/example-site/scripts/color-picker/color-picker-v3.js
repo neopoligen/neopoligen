@@ -11,6 +11,7 @@ customElements.define(
       this.devProps = {}
       this.childWindow
       this.childWindowName = 'previewWindow'
+      this.els = {}
       this.attachShadow({ mode: 'open' })
       this.setInitialState()
       this.setupActiveStyles()
@@ -18,25 +19,37 @@ customElements.define(
       this.buildPreviewButton()
       this.buildModeButtons()
       this.buildSliders()
-      this.buildPrimaryWrapper()
       this.buildPrimaryButtons()
-      this.buildPrimaryChips()
-      this.buildSecondaryButtons()
-      this.buildTertiaryButtons()
+    //   this.buildPrimaryChips()
+    //   this.buildSecondaryButtons()
+    //   this.buildTertiaryButtons()
       this.update()
     }
 
     buildMainWrapper() {
-      this.mainWrapper = this.modAddTo(this.shadowRoot, 'div', {
+      this.els.mainWrapper = this.modAddTo(this.shadowRoot, 'div', {
         classes: ['main-wrapper'],
-      })
-      this.modAddTo(this.mainWrapper, 'h2', {
-        innerHTML: 'Color Picker',
+        innerHTML: `
+<h2>Color Picker</h2>
+<div class="preview-section"></div>
+<div class="top-section">
+  <div class="mode-section"></div>
+  <div class="slider-section"></div>
+</div>
+<div class="primary-section">
+  <div class="primary-buttons"></div>
+  <div class="primary-chips"></div>
+</div>
+<div class="secondary-section">
+    <div class="secondary-buttons charliedelta-section"></div>
+    <div class="secondary-buttons deltaecho-section"></div>
+</div>
+        `
       })
     }
 
     buildModeButtons() {
-      this.modAddTo(this.mainWrapper, 'div', {
+      this.modAddTo(`.mode-section`, 'div', {
         classes: ['modes'],
       })
       this.modes().forEach((mode) => {
@@ -63,7 +76,7 @@ customElements.define(
     }
 
     buildPreviewButton() {
-      this.modAddTo(this.mainWrapper, 'button', {
+      this.modAddTo(`.preview-section`, 'button', {
         innerHTML: 'Launch Preview Window',
         listeners: [
           ['click', (event) => this.handlePreviewButtonClick.call(this, event)],
@@ -100,11 +113,8 @@ customElements.define(
     }
 
     buildPrimaryButtons() {
-      const primaryButtons = this.modAddTo(this.primaryWrapper, 'div', {
-        classes: ['primary-buttons'],
-      })
       this.hValues().forEach((h) => {
-        this.buildPrimaryButton(primaryButtons, h)
+        this.buildPrimaryButton(`.primary-buttons`, h)
       })
     }
 
@@ -112,7 +122,6 @@ customElements.define(
       const primaryChips = this.modAddTo(this.primaryWrapper, 'div', {
         classes: ['primary-chips'],
       })
-
       this.lValues()
         .reverse()
         .forEach((l, lIndex) => {
@@ -156,16 +165,10 @@ customElements.define(
         })
     }
 
-    buildPrimaryWrapper() {
-      this.primaryWrapper = this.modAddTo(this.mainWrapper, 'div', {
-        classes: ['primary-wrapper'],
-      })
-    }
-
     buildSecondaryButtons() {
       this.primaries().forEach((primary) => {
         const mainKey = primary.secondaries.join('')
-        const secondaryButtons = this.modAddTo(this.mainWrapper, 'div', {
+        const secondaryButtons = this.modAddTo(this.els.mainWrapper, 'div', {
           classes: ['secondary-buttons', `${mainKey}-chips`],
         })
 
@@ -220,7 +223,7 @@ customElements.define(
     }
 
     buildSlider(config) {
-      const sliders = this.modAddTo(this.mainWrapper, 'div', {
+      const sliders = this.modAddTo(`.slider-section`, 'div', {
         classes: ['sliders'],
       })
 
@@ -1206,6 +1209,15 @@ h2 {
     padding: 0;
     font-size: 0.7rem;
     cursor: pointer;
+}
+
+button {
+    background: none;
+    border: none;
+    color: currentColor;
+    margin: 0;
+    padding: 0;
+
 }
 
 
