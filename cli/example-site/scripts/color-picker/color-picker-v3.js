@@ -998,7 +998,7 @@ h2, h3 {
 
     getBravo(mode) {
       let payload = []
-      
+
       payload.push(
         (this.state.modes[this.mode()].l +
           this.state.modes[this.mode()].colors.bravo.l) %
@@ -1150,20 +1150,47 @@ h2, h3 {
     genStyles(mode) {
       let response = ``
 
-      // base for background
-      response += this.prop(
-        `--color-base`,
-        `oklch(${this.state.modes[mode].l}% ${this.state.modes[mode].c} ${this.state.modes[mode].h})`
-      )
-      //   response += this.prop(`--border-base`, `1px solid var(--color-base)`)
+      const theValues = {
+        base: [
+          this.state.modes[mode].l,
+          this.state.modes[mode].c,
+          this.state.modes[mode].h,
+        ],
+        alfa: this.getAlfa(mode),
+        bravo: this.getBravo(mode),
+        charlie: this.getCharlie(mode),
+        delta: this.getDelta(mode),
+        echo: this.getEcho(mode),
+        foxtrot: this.getFoxtrot(mode),
+      }
 
-      // alfa
-      const alfaValues = this.getAlfa(mode)
+      for (let color in theValues) {
+        response += this.prop(
+          `--color-${color}`,
+          `oklch(${theValues[color][0]}% ${theValues[color][1]} ${theValues[color][2]})`
+        )
+      }
 
-      response += this.prop(
-        `--color-alfa`,
-        `oklch(${alfaValues[0]}% ${alfaValues[1]} ${alfaValues[2]})`
-      )
+
+      //   // base for background
+      //   response += this.prop(
+      //     `--color-base`,
+      //     `oklch(${this.state.modes[mode].l}% ${this.state.modes[mode].c} ${this.state.modes[mode].h})`
+      //   )
+      //   //   response += this.prop(`--border-base`, `1px solid var(--color-base)`)
+
+      //   // alfa
+      //   const alfaValues = this.getAlfa(mode)
+      //   const bravoValues = this.getBravo(mode)
+      //   const charlieValues = this.getCharlie(mode)
+      //   const deltaValues = this.getDelta(mode)
+      //   const echoValues = this.getEcho(mode)
+      //   const foxtrotValues = this.getFoxtrot(mode)
+
+      //   response += this.prop(
+      //     `--color-alfa`,
+      //     `oklch(${alfaValues[0]}% ${alfaValues[1]} ${alfaValues[2]})`
+      //   )
 
       //   response += this.prop(
       //     `--color-alfa`,
@@ -1184,352 +1211,352 @@ h2, h3 {
       //   response += this.prop(`--border-alpha`, `1px solid var(--color-alpha)`)
 
       // bravo
-      response += this.prop(
-        `--color-bravo`,
-        `oklch(${
-          (this.state.modes[mode].l + this.state.modes[mode].colors.bravo.l) %
-          100
-        }% ${
-          ((this.state.modes[mode].c * 10 +
-            this.state.modes[mode].colors.bravo.c) %
-            5) /
-          10
-        } ${
-          (this.state.modes[mode].h + this.state.modes[mode].colors.bravo.h) %
-          360
-        })`
-      )
-      //   response += this.prop(`--border-bravo`, `1px solid var(--color-bravo)`)
+      //   response += this.prop(
+      //     `--color-bravo`,
+      //     `oklch(${
+      //       (this.state.modes[mode].l + this.state.modes[mode].colors.bravo.l) %
+      //       100
+      //     }% ${
+      //       ((this.state.modes[mode].c * 10 +
+      //         this.state.modes[mode].colors.bravo.c) %
+      //         5) /
+      //       10
+      //     } ${
+      //       (this.state.modes[mode].h + this.state.modes[mode].colors.bravo.h) %
+      //       360
+      //     })`
+      //   )
+      //   //   response += this.prop(`--border-bravo`, `1px solid var(--color-bravo)`)
 
       // charlie
-      response += this.prop(
-        `--color-charlie`,
-        `oklch(${
-          (this.state.modes[mode].l +
-            this.state.modes[mode].colors.alfa.l +
-            this.state.collections[
-              this.state.modes[mode].colors.alfa.collectionIndex
-            ][0][0] *
-              this.state.base.l.interval) %
-          100
-        }% ${
-          ((this.state.modes[mode].c * 10 +
-            this.state.modes[mode].colors.alfa.c +
-            this.state.collections[
-              this.state.modes[mode].colors.alfa.collectionIndex
-            ][0][1] *
-              (this.state.base.c.interval * 10)) %
-            5) /
-          10
-        } ${
-          (this.state.modes[mode].h +
-            this.state.modes[mode].colors.alfa.h +
-            this.state.modes[mode].colors.alfa.collectionShift) %
-          360
-        })`
-      )
+      //   response += this.prop(
+      //     `--color-charlie`,
+      //     `oklch(${
+      //       (this.state.modes[mode].l +
+      //         this.state.modes[mode].colors.alfa.l +
+      //         this.state.collections[
+      //           this.state.modes[mode].colors.alfa.collectionIndex
+      //         ][0][0] *
+      //           this.state.base.l.interval) %
+      //       100
+      //     }% ${
+      //       ((this.state.modes[mode].c * 10 +
+      //         this.state.modes[mode].colors.alfa.c +
+      //         this.state.collections[
+      //           this.state.modes[mode].colors.alfa.collectionIndex
+      //         ][0][1] *
+      //           (this.state.base.c.interval * 10)) %
+      //         5) /
+      //       10
+      //     } ${
+      //       (this.state.modes[mode].h +
+      //         this.state.modes[mode].colors.alfa.h +
+      //         this.state.modes[mode].colors.alfa.collectionShift) %
+      //       360
+      //     })`
+      //   )
       //   response += this.prop(
       //     `--border-charlie`,
       //     `1px solid var(--color-charlie)`
       //   )
 
       // delta
-      response += this.prop(
-        `--color-delta`,
-        `oklch(${
-          (this.state.modes[mode].l +
-            this.state.modes[mode].colors.alfa.l +
-            this.state.collections[
-              this.state.modes[mode].colors.alfa.collectionIndex
-            ][1][0] *
-              this.state.base.l.interval) %
-          100
-        }% ${
-          ((this.state.modes[mode].c * 10 +
-            this.state.modes[mode].colors.alfa.c +
-            this.state.collections[
-              this.state.modes[mode].colors.alfa.collectionIndex
-            ][1][1] *
-              (this.state.base.c.interval * 10)) %
-            5) /
-          10
-        } ${
-          (this.state.modes[mode].h +
-            this.state.modes[mode].colors.alfa.h +
-            this.state.modes[mode].colors.alfa.collectionShift) %
-          360
-        })`
-      )
-      //   response += this.prop(`--border-delta`, `1px solid var(--color-delta)`)
+      //   response += this.prop(
+      //     `--color-delta`,
+      //     `oklch(${
+      //       (this.state.modes[mode].l +
+      //         this.state.modes[mode].colors.alfa.l +
+      //         this.state.collections[
+      //           this.state.modes[mode].colors.alfa.collectionIndex
+      //         ][1][0] *
+      //           this.state.base.l.interval) %
+      //       100
+      //     }% ${
+      //       ((this.state.modes[mode].c * 10 +
+      //         this.state.modes[mode].colors.alfa.c +
+      //         this.state.collections[
+      //           this.state.modes[mode].colors.alfa.collectionIndex
+      //         ][1][1] *
+      //           (this.state.base.c.interval * 10)) %
+      //         5) /
+      //       10
+      //     } ${
+      //       (this.state.modes[mode].h +
+      //         this.state.modes[mode].colors.alfa.h +
+      //         this.state.modes[mode].colors.alfa.collectionShift) %
+      //       360
+      //     })`
+      //   )
+      //   //   response += this.prop(`--border-delta`, `1px solid var(--color-delta)`)
 
       // echo
 
-      let lEcho =
-        (this.state.modes[mode].l +
-          this.state.modes[mode].colors.bravo.l +
-          this.state.collections[
-            this.state.modes[mode].colors.bravo.collectionIndex
-          ][0][0] *
-            this.state.base.l.interval) %
-        100
-      //   this.modLog(lEcho)
+      //   let lEcho =
+      //     (this.state.modes[mode].l +
+      //       this.state.modes[mode].colors.bravo.l +
+      //       this.state.collections[
+      //         this.state.modes[mode].colors.bravo.collectionIndex
+      //       ][0][0] *
+      //         this.state.base.l.interval) %
+      //     100
+      //   //   this.modLog(lEcho)
 
-      let cEcho =
-        ((this.state.modes[mode].c * 10 +
-          this.state.modes[mode].colors.bravo.c +
-          this.state.collections[
-            this.state.modes[mode].colors.bravo.collectionIndex
-          ][0][1] *
-            (this.state.base.c.interval * 10)) %
-          5) /
-        10
-      //   this.modLog(cEcho)
+      //   let cEcho =
+      //     ((this.state.modes[mode].c * 10 +
+      //       this.state.modes[mode].colors.bravo.c +
+      //       this.state.collections[
+      //         this.state.modes[mode].colors.bravo.collectionIndex
+      //       ][0][1] *
+      //         (this.state.base.c.interval * 10)) %
+      //       5) /
+      //     10
+      //   //   this.modLog(cEcho)
 
-      let hEcho =
-        (this.state.modes[mode].h +
-          this.state.modes[mode].colors.bravo.h +
-          this.state.modes[mode].colors.bravo.collectionShift) %
-        360
-      //   this.modLog(hEcho)
+      //   let hEcho =
+      //     (this.state.modes[mode].h +
+      //       this.state.modes[mode].colors.bravo.h +
+      //       this.state.modes[mode].colors.bravo.collectionShift) %
+      //     360
+      //   //   this.modLog(hEcho)
 
-      response += this.prop(
-        `--color-echo`,
-        `oklch(${
-          (this.state.modes[mode].l +
-            this.state.modes[mode].colors.bravo.l +
-            this.state.collections[
-              this.state.modes[mode].colors.bravo.collectionIndex
-            ][0][0] *
-              this.state.base.l.interval) %
-          100
-        }% ${
-          ((this.state.modes[mode].c * 10 +
-            this.state.modes[mode].colors.bravo.c +
-            this.state.collections[
-              this.state.modes[mode].colors.bravo.collectionIndex
-            ][0][1] *
-              (this.state.base.c.interval * 10)) %
-            5) /
-          10
-        } ${
-          (this.state.modes[mode].h +
-            this.state.modes[mode].colors.bravo.h +
-            this.state.modes[mode].colors.bravo.collectionShift) %
-          360
-        })`
-      )
+      //   response += this.prop(
+      //     `--color-echo`,
+      //     `oklch(${
+      //       (this.state.modes[mode].l +
+      //         this.state.modes[mode].colors.bravo.l +
+      //         this.state.collections[
+      //           this.state.modes[mode].colors.bravo.collectionIndex
+      //         ][0][0] *
+      //           this.state.base.l.interval) %
+      //       100
+      //     }% ${
+      //       ((this.state.modes[mode].c * 10 +
+      //         this.state.modes[mode].colors.bravo.c +
+      //         this.state.collections[
+      //           this.state.modes[mode].colors.bravo.collectionIndex
+      //         ][0][1] *
+      //           (this.state.base.c.interval * 10)) %
+      //         5) /
+      //       10
+      //     } ${
+      //       (this.state.modes[mode].h +
+      //         this.state.modes[mode].colors.bravo.h +
+      //         this.state.modes[mode].colors.bravo.collectionShift) %
+      //       360
+      //     })`
+      //   )
       //   response += this.prop(`--border-echo`, `1px solid var(--color-echo)`)
 
       // foxtrot
-      response += this.prop(
-        `--color-foxtrot`,
-        `oklch(${
-          (this.state.modes[mode].l +
-            this.state.modes[mode].colors.bravo.l +
-            this.state.collections[
-              this.state.modes[mode].colors.bravo.collectionIndex
-            ][1][0] *
-              this.state.base.l.interval) %
-          100
-        }% ${
-          ((this.state.modes[mode].c * 10 +
-            this.state.modes[mode].colors.bravo.c +
-            this.state.collections[
-              this.state.modes[mode].colors.bravo.collectionIndex
-            ][1][1] *
-              (this.state.base.c.interval * 10)) %
-            5) /
-          10
-        } ${
-          (this.state.modes[mode].h +
-            this.state.modes[mode].colors.bravo.h +
-            this.state.modes[mode].colors.bravo.collectionShift) %
-          360
-        })`
-      )
       //   response += this.prop(
-      //     `--border-foxtrot`,
-      //     `1px solid var(--color-foxtrot)`
+      //     `--color-foxtrot`,
+      //     `oklch(${
+      //       (this.state.modes[mode].l +
+      //         this.state.modes[mode].colors.bravo.l +
+      //         this.state.collections[
+      //           this.state.modes[mode].colors.bravo.collectionIndex
+      //         ][1][0] *
+      //           this.state.base.l.interval) %
+      //       100
+      //     }% ${
+      //       ((this.state.modes[mode].c * 10 +
+      //         this.state.modes[mode].colors.bravo.c +
+      //         this.state.collections[
+      //           this.state.modes[mode].colors.bravo.collectionIndex
+      //         ][1][1] *
+      //           (this.state.base.c.interval * 10)) %
+      //         5) /
+      //       10
+      //     } ${
+      //       (this.state.modes[mode].h +
+      //         this.state.modes[mode].colors.bravo.h +
+      //         this.state.modes[mode].colors.bravo.collectionShift) %
+      //       360
+      //     })`
       //   )
+      //   //   response += this.prop(
+      //   //     `--border-foxtrot`,
+      //   //     `1px solid var(--color-foxtrot)`
+      //   //   )
 
-      for (let alpha = 10; alpha <= 90; alpha = alpha + 10) {
-        response += this.prop(
-          `--color-base-${alpha}`,
-          `oklch(${this.state.modes[mode].l}% ${this.state.modes[mode].c} ${this.state.modes[mode].h} / ${alpha}%)`
-        )
+      //   for (let alpha = 10; alpha <= 90; alpha = alpha + 10) {
+      //     response += this.prop(
+      //       `--color-base-${alpha}`,
+      //       `oklch(${this.state.modes[mode].l}% ${this.state.modes[mode].c} ${this.state.modes[mode].h} / ${alpha}%)`
+      //     )
 
-        // alfa
-        response += this.prop(
-          `--color-alfa-${alpha}`,
-          `oklch(${
-            (this.state.modes[mode].l + this.state.modes[mode].colors.alfa.l) %
-            100
-          }% ${
-            ((this.state.modes[mode].c * 10 +
-              this.state.modes[mode].colors.alfa.c) %
-              5) /
-            10
-          } ${
-            (this.state.modes[mode].h + this.state.modes[mode].colors.alfa.h) %
-            360
-          } / ${alpha})`
-        )
-        // response += this.prop(
-        //   `--border-alfa-${alpha}`,
-        //   `1px solid var(--color-alfa-${alpha})`
-        // )
+      //     // alfa
+      //     response += this.prop(
+      //       `--color-alfa-${alpha}`,
+      //       `oklch(${
+      //         (this.state.modes[mode].l + this.state.modes[mode].colors.alfa.l) %
+      //         100
+      //       }% ${
+      //         ((this.state.modes[mode].c * 10 +
+      //           this.state.modes[mode].colors.alfa.c) %
+      //           5) /
+      //         10
+      //       } ${
+      //         (this.state.modes[mode].h + this.state.modes[mode].colors.alfa.h) %
+      //         360
+      //       } / ${alpha})`
+      //     )
+      //     // response += this.prop(
+      //     //   `--border-alfa-${alpha}`,
+      //     //   `1px solid var(--color-alfa-${alpha})`
+      //     // )
 
-        // bravo
-        response += this.prop(
-          `--color-bravo-${alpha}`,
-          `oklch(${
-            (this.state.modes[mode].l + this.state.modes[mode].colors.bravo.l) %
-            100
-          }% ${
-            ((this.state.modes[mode].c * 10 +
-              this.state.modes[mode].colors.bravo.c) %
-              5) /
-            10
-          } ${
-            (this.state.modes[mode].h + this.state.modes[mode].colors.bravo.h) %
-            360
-          }) / ${alpha}`
-        )
-        // response += this.prop(
-        //   `--border-bravo-${alpha}`,
-        //   `1px solid var(--color-bravo-${alpha})`
-        // )
+      //     // bravo
+      //     response += this.prop(
+      //       `--color-bravo-${alpha}`,
+      //       `oklch(${
+      //         (this.state.modes[mode].l + this.state.modes[mode].colors.bravo.l) %
+      //         100
+      //       }% ${
+      //         ((this.state.modes[mode].c * 10 +
+      //           this.state.modes[mode].colors.bravo.c) %
+      //           5) /
+      //         10
+      //       } ${
+      //         (this.state.modes[mode].h + this.state.modes[mode].colors.bravo.h) %
+      //         360
+      //       }) / ${alpha}`
+      //     )
+      //     // response += this.prop(
+      //     //   `--border-bravo-${alpha}`,
+      //     //   `1px solid var(--color-bravo-${alpha})`
+      //     // )
 
-        // charlie
-        response += this.prop(
-          `--color-charlie-${alpha}`,
-          `oklch(${
-            (this.state.modes[mode].l +
-              this.state.modes[mode].colors.alfa.l +
-              this.state.collections[
-                this.state.modes[mode].colors.alfa.collectionIndex
-              ][0][0] *
-                this.state.base.l.interval) %
-            100
-          }% ${
-            ((this.state.modes[mode].c * 10 +
-              this.state.modes[mode].colors.alfa.c +
-              this.state.collections[
-                this.state.modes[mode].colors.alfa.collectionIndex
-              ][0][1] *
-                (this.state.base.c.interval * 10)) %
-              5) /
-            10
-          } ${
-            (this.state.modes[mode].h +
-              this.state.modes[mode].colors.alfa.h +
-              this.state.modes[mode].colors.alfa.collectionShift) %
-            360
-          } / ${alpha})`
-        )
-        // response += this.prop(
-        //   `--border-charlie-${alpha}`,
-        //   `1px solid var(--color-charlie-${alpha})`
-        // )
+      //     // charlie
+      //     response += this.prop(
+      //       `--color-charlie-${alpha}`,
+      //       `oklch(${
+      //         (this.state.modes[mode].l +
+      //           this.state.modes[mode].colors.alfa.l +
+      //           this.state.collections[
+      //             this.state.modes[mode].colors.alfa.collectionIndex
+      //           ][0][0] *
+      //             this.state.base.l.interval) %
+      //         100
+      //       }% ${
+      //         ((this.state.modes[mode].c * 10 +
+      //           this.state.modes[mode].colors.alfa.c +
+      //           this.state.collections[
+      //             this.state.modes[mode].colors.alfa.collectionIndex
+      //           ][0][1] *
+      //             (this.state.base.c.interval * 10)) %
+      //           5) /
+      //         10
+      //       } ${
+      //         (this.state.modes[mode].h +
+      //           this.state.modes[mode].colors.alfa.h +
+      //           this.state.modes[mode].colors.alfa.collectionShift) %
+      //         360
+      //       } / ${alpha})`
+      //     )
+      //     // response += this.prop(
+      //     //   `--border-charlie-${alpha}`,
+      //     //   `1px solid var(--color-charlie-${alpha})`
+      //     // )
 
-        // delta
-        response += this.prop(
-          `--color-delta-${alpha}`,
-          `oklch(${
-            (this.state.modes[mode].l +
-              this.state.modes[mode].colors.alfa.l +
-              this.state.collections[
-                this.state.modes[mode].colors.alfa.collectionIndex
-              ][1][0] *
-                this.state.base.l.interval) %
-            100
-          }% ${
-            ((this.state.modes[mode].c * 10 +
-              this.state.modes[mode].colors.alfa.c +
-              this.state.collections[
-                this.state.modes[mode].colors.alfa.collectionIndex
-              ][1][1] *
-                (this.state.base.c.interval * 10)) %
-              5) /
-            10
-          } ${
-            (this.state.modes[mode].h +
-              this.state.modes[mode].colors.alfa.h +
-              this.state.modes[mode].colors.alfa.collectionShift) %
-            360
-          } / ${alpha})`
-        )
-        // response += this.prop(
-        //   `--border-delta-${alpha}`,
-        //   `1px solid var(--color-delta-${alpha})`
-        // )
+      //     // delta
+      //     response += this.prop(
+      //       `--color-delta-${alpha}`,
+      //       `oklch(${
+      //         (this.state.modes[mode].l +
+      //           this.state.modes[mode].colors.alfa.l +
+      //           this.state.collections[
+      //             this.state.modes[mode].colors.alfa.collectionIndex
+      //           ][1][0] *
+      //             this.state.base.l.interval) %
+      //         100
+      //       }% ${
+      //         ((this.state.modes[mode].c * 10 +
+      //           this.state.modes[mode].colors.alfa.c +
+      //           this.state.collections[
+      //             this.state.modes[mode].colors.alfa.collectionIndex
+      //           ][1][1] *
+      //             (this.state.base.c.interval * 10)) %
+      //           5) /
+      //         10
+      //       } ${
+      //         (this.state.modes[mode].h +
+      //           this.state.modes[mode].colors.alfa.h +
+      //           this.state.modes[mode].colors.alfa.collectionShift) %
+      //         360
+      //       } / ${alpha})`
+      //     )
+      //     // response += this.prop(
+      //     //   `--border-delta-${alpha}`,
+      //     //   `1px solid var(--color-delta-${alpha})`
+      //     // )
 
-        // echo
-        response += this.prop(
-          `--color-echo-${alpha}`,
-          `oklch(${
-            (this.state.modes[mode].l +
-              this.state.modes[mode].colors.bravo.l +
-              this.state.collections[
-                this.state.modes[mode].colors.bravo.collectionIndex
-              ][0][0] *
-                this.state.base.l.interval) %
-            100
-          }% ${
-            ((this.state.modes[mode].c * 10 +
-              this.state.modes[mode].colors.bravo.c +
-              this.state.collections[
-                this.state.modes[mode].colors.bravo.collectionIndex
-              ][0][1] *
-                (this.state.base.c.interval * 10)) %
-              5) /
-            10
-          } ${
-            (this.state.modes[mode].h +
-              this.state.modes[mode].colors.bravo.h +
-              this.state.modes[mode].colors.bravo.collectionShift) %
-            360
-          } / ${alpha})`
-        )
-        // response += this.prop(
-        //   `--border-echo-${alpha}`,
-        //   `1px solid var(--color-echo-${alpha})`
-        // )
+      //     // echo
+      //     response += this.prop(
+      //       `--color-echo-${alpha}`,
+      //       `oklch(${
+      //         (this.state.modes[mode].l +
+      //           this.state.modes[mode].colors.bravo.l +
+      //           this.state.collections[
+      //             this.state.modes[mode].colors.bravo.collectionIndex
+      //           ][0][0] *
+      //             this.state.base.l.interval) %
+      //         100
+      //       }% ${
+      //         ((this.state.modes[mode].c * 10 +
+      //           this.state.modes[mode].colors.bravo.c +
+      //           this.state.collections[
+      //             this.state.modes[mode].colors.bravo.collectionIndex
+      //           ][0][1] *
+      //             (this.state.base.c.interval * 10)) %
+      //           5) /
+      //         10
+      //       } ${
+      //         (this.state.modes[mode].h +
+      //           this.state.modes[mode].colors.bravo.h +
+      //           this.state.modes[mode].colors.bravo.collectionShift) %
+      //         360
+      //       } / ${alpha})`
+      //     )
+      //     // response += this.prop(
+      //     //   `--border-echo-${alpha}`,
+      //     //   `1px solid var(--color-echo-${alpha})`
+      //     // )
 
-        // foxtrot
-        response += this.prop(
-          `--color-foxtrot-${alpha}`,
-          `oklch(${
-            (this.state.modes[mode].l +
-              this.state.modes[mode].colors.bravo.l +
-              this.state.collections[
-                this.state.modes[mode].colors.bravo.collectionIndex
-              ][1][0] *
-                this.state.base.l.interval) %
-            100
-          }% ${
-            ((this.state.modes[mode].c * 10 +
-              this.state.modes[mode].colors.bravo.c +
-              this.state.collections[
-                this.state.modes[mode].colors.bravo.collectionIndex
-              ][1][1] *
-                (this.state.base.c.interval * 10)) %
-              5) /
-            10
-          } ${
-            (this.state.modes[mode].h +
-              this.state.modes[mode].colors.bravo.h +
-              this.state.modes[mode].colors.bravo.collectionShift) %
-            360
-          } / ${alpha})`
-        )
-        // response += this.prop(
-        //   `--border-foxtrot-${alpha}`,
-        //   `1px solid var(--color-foxtrot-${alpha})`
-        // )
+      //     // foxtrot
+      //     response += this.prop(
+      //       `--color-foxtrot-${alpha}`,
+      //       `oklch(${
+      //         (this.state.modes[mode].l +
+      //           this.state.modes[mode].colors.bravo.l +
+      //           this.state.collections[
+      //             this.state.modes[mode].colors.bravo.collectionIndex
+      //           ][1][0] *
+      //             this.state.base.l.interval) %
+      //         100
+      //       }% ${
+      //         ((this.state.modes[mode].c * 10 +
+      //           this.state.modes[mode].colors.bravo.c +
+      //           this.state.collections[
+      //             this.state.modes[mode].colors.bravo.collectionIndex
+      //           ][1][1] *
+      //             (this.state.base.c.interval * 10)) %
+      //           5) /
+      //         10
+      //       } ${
+      //         (this.state.modes[mode].h +
+      //           this.state.modes[mode].colors.bravo.h +
+      //           this.state.modes[mode].colors.bravo.collectionShift) %
+      //         360
+      //       } / ${alpha})`
+      //     )
+      //     // response += this.prop(
+      //     //   `--border-foxtrot-${alpha}`,
+      //     //   `1px solid var(--color-foxtrot-${alpha})`
+      //     // )
 
-        //
-      }
+      //     //
+      //   }
 
       return response.trim()
     }
