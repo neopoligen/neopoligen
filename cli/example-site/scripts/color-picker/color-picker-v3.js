@@ -536,10 +536,14 @@ customElements.define(
     flex-wrap: wrap;
 }
 
+h2 {
+    color: var(--dev-color-alfa);
+}
+
       `
 
       this.colors().forEach((color) => {
-        const key = `color-${color}`
+        const key = `dev-color-${color}`
         sheet += `.${key} { color: var(--${key}); }`
       })
 
@@ -739,9 +743,32 @@ customElements.define(
 
     update() {
       // set the active base
-      this.devProps[`--color-base-active`] = `oklch(${this.lValue(
+      this.devProps[`--dev-color-base`] = `oklch(${this.lValue(
         this.mode()
       )}% ${this.cValue(this.mode())} ${this.hValue(this.mode())})`
+
+      // alfa
+      this.devProps[`--dev-color-alfa`] = `oklch(${
+        (this.state.modes[this.mode()].l +
+          this.state.modes[this.mode()].colors.alfa.l) %
+        100
+      }% ${
+        ((this.state.modes[this.mode()].c * 10 +
+          this.state.modes[this.mode()].colors.alfa.c) %
+          5) /
+        10
+      } ${
+        (this.state.modes[this.mode()].h +
+          this.state.modes[this.mode()].colors.alfa.h) %
+        360
+      })`
+
+      // bravo
+      this.devProps[`--dev-color-bravo`] =
+      `oklch(${(this.state.modes[this.mode()].l + this.state.modes[this.mode()].colors.bravo.l) % 100}% ${
+        ((this.state.modes[this.mode()].c * 10 + this.state.modes[this.mode()].colors.bravo.c) % 5) / 10
+      } ${(this.state.modes[this.mode()].h + this.state.modes[this.mode()].colors.bravo.h) % 360})`
+
 
       // set the active explicit colors
       this.lValues().forEach((l) => {
