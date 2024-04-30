@@ -30,23 +30,7 @@ Examples
     <button role="tab" aria-selected="true">1</button>
     <button role="tab">2</button>
     <button role="tab">3</button>
-  </div>
-
-  <div role="tabpanel" class="flow">
-    <p>
-        <em>Welcome To The Example Panel</em> - This area is used
-        to demonstrate the color palette in multiple ways. This first panel
-        doesn't have any extra colors in it on purpose. The idea is to get
-        a sense of the base without being overwhelmed by color swatches. 
-    </p>
-    <p>
-        <em>Live Updating</em> - The colors in this window update
-        automatically when you move the sliders and click the swatches in 
-        the main picker window. (Note that if the page refreshes for some
-        reason the connection gets lost. If you make changes in the main
-        window that aren't doing anything here close this window and
-        relaunch it)
-    </p>
+    <button role="tab">4</button>
   </div>
 
   <div role="tabpanel" class="flow" hidden>
@@ -93,11 +77,33 @@ Examples
     &quot;.color-4&quot;</p>
   </div>
 
+
+  <div role="tabpanel" class="flow">
+    <p>
+        <em>Welcome To The Example Panel</em> - This area is used
+        to demonstrate the color palette in multiple ways. This first panel
+        doesn't have any extra colors in it on purpose. The idea is to get
+        a sense of the base without being overwhelmed by color swatches. 
+    </p>
+    <p>
+        <em>Live Updating</em> - The colors in this window update
+        automatically when you move the sliders and click the swatches in 
+        the main picker window. (Note that if the page refreshes for some
+        reason the connection gets lost. If you make changes in the main
+        window that aren't doing anything here close this window and
+        relaunch it)
+    </p>
+  </div>
+
   <div role="tabpanel" class="flow">
     <p>Black and white colors are in the palette as well as alpha channel
     versions of all the colors backing of the opacity in 5% intervals:</p>
-
   </div>
+
+    <div role="tabpanel" class="flow">
+    <h3>The Fonts And Colors Stylesheets</h3>
+    <pre><code class="fonts-and-colors"></code></pre>
+    </div>
 
 </tab-group>
 
@@ -176,11 +182,11 @@ function addPlaceholderText() {
 
 function updateStyles() {
     styleEl.innerHTML = currentStyleData
-    /*
-    updateEl(`.currentStyle`, {
+    
+    updateEl(`.fonts-and-colors`, {
         innerHTML: currentStyleData
     })
-    */
+   
 }
 
 window.addEventListener("message", (event) => {
@@ -207,6 +213,12 @@ document.addEventListener("DOMContentLoaded", () => {
     addPlaceholderText() 
 })
 
+
+-- css
+
+main {
+    margin: 1.3rem;
+}
 
 -- head
 
