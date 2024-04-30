@@ -198,18 +198,14 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 
+-- head
 
--- javascript
--- type: module
-
-
-
-
+<link rel="stylesheet" href="/theme/styles.css" />
 
 
 -- metadata
 -- date: 2024-04-26
 -- id: 2fehqqas
--- template: no-css
+-- template: no-css-no-header
 
 
