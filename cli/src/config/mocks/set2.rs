@@ -52,7 +52,6 @@ impl Config {
 
         let folders = ConfigFolders {
             build_root,
-            configuration_root: configuration_root.clone(),
             files_root,
             images_root,
             mp3s_root,
@@ -130,11 +129,6 @@ impl Config {
             yaml,
         };
 
-        let input_date_formats: Vec<String> = vec![
-            "%Y-%m-%d %H:%M:%S".to_string(),
-            "%Y-%m-%dT%H:%M:%S".to_string(),
-        ];
-
         let json_plugins: BTreeMap<String, String> = BTreeMap::new();
 
         let key_value_spans: Vec<String> = vec!["class".to_string(), "ilink".to_string()];
@@ -156,7 +150,6 @@ impl Config {
 
         Config {
             folders,
-            input_date_formats,
             json_config,
             json_plugins,
             key_value_spans,

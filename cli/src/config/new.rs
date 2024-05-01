@@ -19,8 +19,8 @@ impl Config {
 
         let json_config = load_config_file(json_config_path).unwrap();
 
-        let configuration_root =
-            PathBuf::from(format!("{}/{}", project_root.display(), "configuration"));
+        //        let configuration_root =
+        //           PathBuf::from(format!("{}/{}", project_root.display(), "configuration"));
         // Deprecated: TODO - get this from the JSON
         // let default_language = json_config.default_language;
 
@@ -74,7 +74,6 @@ impl Config {
 
         let folders = ConfigFolders {
             build_root,
-            configuration_root: configuration_root.clone(),
             files_root,
             images_root,
             mp3s_root,
@@ -219,9 +218,6 @@ impl Config {
             .collect();
         let key_value_spans = sorted(unsorted_key_value_spans).rev().collect();
 
-        let input_date_formats =
-            get_config_file_lines(&configuration_root, "input-date-formats.txt");
-
         let section_attribute_excludes =
             get_config_file_lines(&theme_configuration_root, "section-attribute-excludes.txt");
 
@@ -243,7 +239,6 @@ impl Config {
             //
             // default_language,
             folders,
-            input_date_formats,
             json_config,
             json_plugins,
             key_value_spans,
@@ -274,27 +269,6 @@ fn get_config_file_lines(file_dir: &PathBuf, file_name: &str) -> Vec<String> {
                 }
             })
             .collect(),
-        Err(e) => panic!(
-            "\nERROR: Could not read config file:\n({})\n{}\n",
-            e,
-            &file_path.display()
-        ),
-    }
-}
-
-fn get_config_file_single_line(file_dir: &PathBuf, file_name: &str) -> Option<String> {
-    let mut file_path = file_dir.clone();
-    file_path.push(file_name);
-    match fs::read_to_string(&file_path) {
-        Ok(data) => data.lines().find_map(|line| {
-            if line.trim().starts_with("#") {
-                None
-            } else if line.trim() != "" {
-                Some(line.trim().to_string())
-            } else {
-                None
-            }
-        }),
         Err(e) => panic!(
             "\nERROR: Could not read config file:\n({})\n{}\n",
             e,

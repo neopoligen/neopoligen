@@ -5,7 +5,7 @@ use std::path::PathBuf;
 #[serde(rename_all = "lowercase", tag = "type")]
 pub struct ConfigFolders {
     pub build_root: PathBuf,
-    pub configuration_root: PathBuf,
+    // Deprecated: TODO: remove configuration_root
     pub content_root: PathBuf,
     pub files_root: PathBuf,
     pub images_root: PathBuf,
