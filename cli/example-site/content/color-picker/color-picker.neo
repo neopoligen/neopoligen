@@ -4,39 +4,25 @@ Color Picker
 
 -- css
 
-.currentState {
-    font-size: 0.6rem;
-}
-
-.primaryButtons {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.secondaryButtons {
-    display: flex;
-    flex-wrap: wrap;
-}
-
 header {
-  width: min(100vw - 3rem, 98ch);
+  max-width: min(100vw - 3rem, 60rem);
   margin-inline: auto;
 }
 
 main {
-  width: min(100vw - 3rem, 98ch);
+  max-width: min(100vw - 3rem, 60rem);
   margin-inline: auto;
 }
 
 footer {
-  width: min(100vw - 3rem, 98ch);
+  max-width: min(100vw - 3rem, 60rem);
   margin-inline: auto;
 }
 
 
 -- head
 
-<script src="/scripts/color-picker/color-picker-v3.js"></script>
+<script src="/scripts/components/color-picker-v3.js"></script>
 <link rel="stylesheet" href="/theme/styles.css" />
 
 -- html

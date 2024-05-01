@@ -24,6 +24,7 @@ customElements.define(
       this.buildPrimaryChips()
       this.buildSecondaryButtons()
       this.buildTertiaryButtons()
+      this.buildLightDarkDefaultButtons()
       this.update()
     }
 
@@ -176,6 +177,7 @@ customElements.define(
             },
           },
         },
+        default_mode: 'light',
       }
 
       // make sure active is set to light to start with
@@ -316,6 +318,7 @@ customElements.define(
 
         <div class="stylesheet-wrapper section-wrapper">
             <h3>Stylesheet</h3>
+            <div>Default to: <span "ld-default-wrapper"><span class="ld-default"></span></span></div>
             <pre class="the-stylesheet"></pre>
         </div>
         
@@ -372,6 +375,10 @@ button {
     cursor: pointer;
 }
 
+button:hover {
+  text-decoration: underline;
+}
+
 .chip-button {
     border: none;
     background: none;
@@ -406,13 +413,16 @@ button {
     font-weight: 700;
 }
 
-
 .flow > :where(:not(:first-child)) {
   margin-top: var(--flow-space, 1em);
 }
 
 h2, h3 {
     color: var(--dev-color-bw-reverse-90);
+}
+
+.ld-default-button {
+  margin-inline: 0.3rem;
 }
 
 .main-wrapper { 
@@ -482,7 +492,6 @@ h2, h3 {
     flex-wrap: wrap;
 }
 
-
 .secondaryButton {
     margin: 2px;
     border-radius: 0.4rem;
@@ -521,6 +530,10 @@ h2, h3 {
     padding: 0.9rem;
     border-radius: 0.5rem;
     margin-bottom: 2.5rem;
+}
+
+.selected {
+  text-decoration: underline;
 }
 
 .sliders {
@@ -569,6 +582,10 @@ h2, h3 {
 
 .tertiary-rect {
     cursor: pointer;
+}
+
+.the-stylesheet {
+  font-size: var(--size-9);
 }
 
 .top-section {
@@ -636,6 +653,24 @@ h2, h3 {
       this.shadowRoot.appendChild(styles)
     }
 
+    buildLightDarkDefaultButtons() {
+      this.modes().forEach((mode) => {
+        this.modAddTo(`.ld-default`, 'button', {
+          innerHTML: mode === 'light' ? 'Light' : 'Dark',
+          data: [['mode', mode]],
+          listeners: [
+            [
+              'click',
+              (event) => {
+                this.handleLightDarkDefaultClick.call(this, event)
+              },
+            ],
+          ],
+          classes: [`ld-default-button`, `ld-default-button-${mode}`],
+        })
+      })
+    }
+
     buildModeButtons() {
       this.modes().forEach((mode) => {
         this.modAddTo(`.mode-section`, 'button', {
@@ -690,20 +725,16 @@ h2, h3 {
         })
       } else {
         this.modAddTo(`.preview-section`, 'div', {
-            innerHTML: "Error: preview href not defined"
+          innerHTML: 'Error: preview href not defined',
         })
       }
 
       this.modAddTo(`.preview-section`, 'button', {
         innerHTML: 'Randomize',
         listeners: [
-          [
-            'click',
-            (event) => this.handleRandomizeClick.call(this, event),
-          ],
+          ['click', (event) => this.handleRandomizeClick.call(this, event)],
         ],
       })
-
     }
 
     buildPrimaryButton(parent, h) {
@@ -986,7 +1017,7 @@ h2, h3 {
     }
 
     connectedCallback() {
-        this.buildPreviewButton()
+      this.buildPreviewButton()
     }
 
     cValue(mode) {
@@ -1399,6 +1430,19 @@ h2, h3 {
       this.update()
     }
 
+    handleLightDarkDefaultClick(event) {
+      this.state.default_mode = event.target.dataset.mode
+      // this.lch().forEach((key) => {
+        // this.modSetValue(`.slider-${key}`, this.state.modes[this.mode()][key])
+        // this.modUpdateHTML(
+        //   `.get-from-${key}`,
+        //   `copy ${this.state.modes[this.otherMode()].display}`
+        // )
+      // })
+      this.update()
+
+    }
+
     handleModeClick(event) {
       this.state.active.mode = event.target.dataset.mode
       this.lch().forEach((key) => {
@@ -1436,22 +1480,36 @@ h2, h3 {
     handleRandomizeClick(event) {
       if (this.mode() === 'light') {
         this.state.modes[this.mode()].l = this.randomNumBetween(50, 99)
-        this.state.modes[this.mode()].c = this.randomNumBetween(1000, 2800000) / 10000000
+        this.state.modes[this.mode()].c =
+          this.randomNumBetween(1000, 2800000) / 10000000
         this.state.modes[this.mode()].h = this.randomNumBetween(0, 359)
-        this.state.modes[this.mode()].colors.alfa.l = this.randomNumBetween(0, 4) * 20
-        this.state.modes[this.mode()].colors.alfa.c = this.randomNumBetween(0, 4)
-        this.state.modes[this.mode()].colors.alfa.h = this.randomNumBetween(0, 6) * 60
-        this.state.modes[this.mode()].colors.alfa.collectionShift = this.randomNumBetween(0, 6) * 60
-        this.state.modes[this.mode()].colors.alfa.collectionIndex = this.randomNumBetween(0, 15)
-        this.state.modes[this.mode()].colors.bravo.l = this.randomNumBetween(0, 4) * 20
-        this.state.modes[this.mode()].colors.bravo.c = this.randomNumBetween(0, 4)
-        this.state.modes[this.mode()].colors.bravo.h = this.randomNumBetween(0, 6) * 60
-        this.state.modes[this.mode()].colors.bravo.collectionShift = this.randomNumBetween(0, 6) * 60
-        this.state.modes[this.mode()].colors.bravo.collectionIndex = this.randomNumBetween(0, 15)
+        this.state.modes[this.mode()].colors.alfa.l =
+          this.randomNumBetween(0, 4) * 20
+        this.state.modes[this.mode()].colors.alfa.c = this.randomNumBetween(
+          0,
+          4
+        )
+        this.state.modes[this.mode()].colors.alfa.h =
+          this.randomNumBetween(0, 6) * 60
+        this.state.modes[this.mode()].colors.alfa.collectionShift =
+          this.randomNumBetween(0, 6) * 60
+        this.state.modes[this.mode()].colors.alfa.collectionIndex =
+          this.randomNumBetween(0, 15)
+        this.state.modes[this.mode()].colors.bravo.l =
+          this.randomNumBetween(0, 4) * 20
+        this.state.modes[this.mode()].colors.bravo.c = this.randomNumBetween(
+          0,
+          4
+        )
+        this.state.modes[this.mode()].colors.bravo.h =
+          this.randomNumBetween(0, 6) * 60
+        this.state.modes[this.mode()].colors.bravo.collectionShift =
+          this.randomNumBetween(0, 6) * 60
+        this.state.modes[this.mode()].colors.bravo.collectionIndex =
+          this.randomNumBetween(0, 15)
         this.updateSliders()
         this.update()
       } else {
-
       }
     }
 
@@ -1565,7 +1623,7 @@ h2, h3 {
       return `${key}: ${value};\n`
     }
 
-    randomNumBetween(min, max) { 
+    randomNumBetween(min, max) {
       return Math.floor(Math.random() * (max - min + 1) + min)
     }
 
@@ -1775,8 +1833,7 @@ h2, h3 {
       // update the secondary button styles
       this.primaryColors().forEach((color) => {
         this.hValues().forEach((h) => {
-          let hCheck =
-            this.state.active.colors[color].secondaryH % 360
+          let hCheck = this.state.active.colors[color].secondaryH % 360
           if (h === hCheck) {
             this.modAddStyleTo(
               `.secondaryButton-${color}-${h}`,
@@ -1882,7 +1939,16 @@ h2, h3 {
         })
       })
 
-        this.modUpdateHTML(`.raw-data`, JSON.stringify(this.state.modes, null, 2))
+      // light/dark default button highlight
+      this.modes().forEach((mode) => {
+        if (mode == this.state.default_mode) {
+          this.modAddStyleTo(`.ld-default-button-${mode}`, 'selected')
+        } else {
+          this.modRemoveStyleFrom(`.ld-default-button-${mode}`, 'selected')
+        }
+      })
+
+      this.modUpdateHTML(`.raw-data`, JSON.stringify(this.state.modes, null, 2))
 
       this.modUpdateHTML(`.the-stylesheet`, this.genStylesFull())
 
