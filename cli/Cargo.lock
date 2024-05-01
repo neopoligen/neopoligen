@@ -952,7 +952,7 @@ dependencies = [
 
 [[package]]
 name = "neopoligengine"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "Inflector",
  "axum",
