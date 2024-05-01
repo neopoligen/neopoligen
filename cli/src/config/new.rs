@@ -137,9 +137,6 @@ impl Config {
             }
         });
 
-        let main_body_section_excludes =
-            get_config_file_lines(&theme_configuration_root, "main-body-excludes.txt");
-
         // Plugins
 
         // TODO: Add the plug section names here
@@ -218,9 +215,6 @@ impl Config {
             .collect();
         let key_value_spans = sorted(unsorted_key_value_spans).rev().collect();
 
-        let section_attribute_excludes =
-            get_config_file_lines(&theme_configuration_root, "section-attribute-excludes.txt");
-
         let section_categories = ConfigSectionCategories {
             checklist,
             comment,
@@ -242,8 +236,6 @@ impl Config {
             json_config,
             json_plugins,
             key_value_spans,
-            main_body_section_excludes,
-            section_attribute_excludes,
             section_categories,
             standard_spans,
             text_plugins,

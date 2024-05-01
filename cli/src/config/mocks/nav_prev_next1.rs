@@ -138,25 +138,15 @@ impl Config {
         let standard_spans: Vec<String> =
             vec!["strong".to_string(), "link".to_string(), "em".to_string()];
 
-        let main_body_section_excludes: Vec<String> = vec![
-            "metadata".to_string(),
-            "title".to_string(),
-            "forward".to_string(),
-        ];
-
         let text_plugins: BTreeMap<String, String> = BTreeMap::new();
 
         let time_zone_offset = "-5:00".to_string();
-
-        let section_attribute_excludes = vec![];
 
         Config {
             folders,
             json_config,
             json_plugins,
             key_value_spans,
-            main_body_section_excludes,
-            section_attribute_excludes,
             section_categories,
             standard_spans,
             text_plugins,

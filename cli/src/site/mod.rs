@@ -456,43 +456,43 @@ impl Site {
         self.pages.iter().map(|page| page.0.to_string()).collect()
     }
 
-    #[instrument(skip(self))]
-    pub fn page_main_body(&self, args: &[Value]) -> Value {
-        let now = Instant::now();
-        // event!(Level::DEBUG, "running page_main_body");
-        if let Some(page) = self.pages.get(&args[0].to_string()) {
-            // event!(Level::DEBUG, "{}", page.source_path.display());
-            let response = Value::from_serialize(
-                &page
-                    .ast
-                    .clone()
-                    .into_iter()
-                    .filter_map(|child| {
-                        if let Child::Section(sec) = &child {
-                            if self.config.main_body_section_excludes.contains(&sec.r#type) {
-                                None
-                            } else {
-                                Some(child)
-                            }
-                        } else if let Child::List(sec) = &child {
-                            if self.config.main_body_section_excludes.contains(&sec.r#type) {
-                                None
-                            } else {
-                                Some(child)
-                            }
-                        } else {
-                            None
-                        }
-                    })
-                    .collect::<Vec<Child>>(),
-            );
-            event!(Level::DEBUG, "||{:?}||", now.elapsed());
-            response
-        } else {
-            event!(Level::DEBUG, "||{:?}||", now.elapsed());
-            Value::from_serialize::<Vec<Child>>(vec![])
-        }
-    }
+    // #[instrument(skip(self))]
+    // pub fn page_main_body(&self, args: &[Value]) -> Value {
+    //     let now = Instant::now();
+    //     // event!(Level::DEBUG, "running page_main_body");
+    //     if let Some(page) = self.pages.get(&args[0].to_string()) {
+    //         // event!(Level::DEBUG, "{}", page.source_path.display());
+    //         let response = Value::from_serialize(
+    //             &page
+    //                 .ast
+    //                 .clone()
+    //                 .into_iter()
+    //                 .filter_map(|child| {
+    //                     if let Child::Section(sec) = &child {
+    //                         if self.config.main_body_section_excludes.contains(&sec.r#type) {
+    //                             None
+    //                         } else {
+    //                             Some(child)
+    //                         }
+    //                     } else if let Child::List(sec) = &child {
+    //                         if self.config.main_body_section_excludes.contains(&sec.r#type) {
+    //                             None
+    //                         } else {
+    //                             Some(child)
+    //                         }
+    //                     } else {
+    //                         None
+    //                     }
+    //                 })
+    //                 .collect::<Vec<Child>>(),
+    //         );
+    //         event!(Level::DEBUG, "||{:?}||", now.elapsed());
+    //         response
+    //     } else {
+    //         event!(Level::DEBUG, "||{:?}||", now.elapsed());
+    //         Value::from_serialize::<Vec<Child>>(vec![])
+    //     }
+    // }
 
     // Deprecated, should be able to pull directly from the
     // page in the generate_files() approach

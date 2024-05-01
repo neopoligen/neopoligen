@@ -1,5 +1,4 @@
-[!- include "includes/_global.neojinja" -!]
-
+[!- include "config.neojinja" -!]
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,7 +25,6 @@ so other scripts can use it #]
 <script src="/theme/theme.js"></script>
 <script src="/theme/theme-components.js" type="module"></script>
 
-
 [! include "includes/head-for-head.neojinja" !]
 
 <link rel="stylesheet" href="/theme/fonts-and-colors.css" />
@@ -47,6 +45,6 @@ so other scripts can use it #]
         [! block body !][! endblock !]
         </article>
     </main>
-    <footer class="one-column-wrapper footer">[@ domain @]</footer>
+    <footer class="one-column-wrapper footer"><a href="/">[@ domain @]</a></footer>
 </body>
 </html>  
