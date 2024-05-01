@@ -977,8 +977,6 @@ h2, h3 {
     }
 
     genStylesFull() {
-
-
       let styles = `
       :root {
           --color-black: rgb(0 0 0);
@@ -1024,38 +1022,38 @@ h2, h3 {
       }
       
       `
-      
-            styles += `body { 
+
+      styles += `body { 
       ${this.genMatchStyles('light')}        
       ${this.genStyles('light')} 
       }
               
       `
-      
-            styles += `body.dark { 
+
+      styles += `body.dark { 
               ${this.genMatchStyles('dark')}  
               ${this.genStyles('dark')} 
           }\n`
-      
-            styles += `@media (prefers-color-scheme: dark) {\n`
-      
-            styles += `body { 
+
+      styles += `@media (prefers-color-scheme: dark) {\n`
+
+      styles += `body { 
        
               ${this.genMatchStyles('dark')}  
               ${this.genStyles('dark')} 
           
           }\n`
-      
-            styles += `body.light { 
+
+      styles += `body.light { 
               ${this.genMatchStyles('light')}  
               ${this.genStyles('light')} 
           }\n`
-      
-            styles += `}\n`
-      
-            styles += `${this.genBaseStyles()}\n`
-      
-   return styles
+
+      styles += `}\n`
+
+      styles += `${this.genBaseStyles()}\n`
+
+      return styles
     }
 
     getAlfa(mode) {
@@ -1415,7 +1413,6 @@ h2, h3 {
     sendStylesheet() {
       // TODO: Add bw-match and bw-reverse
 
-
       if (this.childWindow && this.childWindow.name === this.childWindowName) {
         const payload = JSON.stringify({
           type: 'colors-and-fonts',
@@ -1516,23 +1513,24 @@ h2, h3 {
           this.collections().forEach((collection, collectionIndex) => {
             let h2 =
               (this.state.modes[this.mode()].colors[primary.key].h + h) % 360
-            if (h2 === this.state.active.colors[primary.key].secondaryH) {
-              if (
-                collectionIndex ===
-                this.state.modes[this.mode()].colors[primary.key]
-                  .collectionIndex
-              ) {
-                this.modAddStyleTo(
-                  `.tertiary-chip-index-${primary.key}-${collectionIndex}`,
-                  `tertiary-chip-selected`
-                )
-              } else {
-                this.modRemoveStyleFrom(
-                  `.tertiary-chip-index-${primary.key}-${collectionIndex}`,
-                  `tertiary-chip-selected`
-                )
-              }
-            }
+            // if (h2 === this.state.active.colors[primary.key].secondaryH) {
+            // if (h2 === this.state.active.colors[primary.key].secondaryH) {
+            //   if (
+            //     collectionIndex ===
+            //     this.state.modes[this.mode()].colors[primary.key]
+            //       .collectionIndex
+            //   ) {
+            //     this.modAddStyleTo(
+            //       `.tertiary-chip-index-${primary.key}-${collectionIndex}`,
+            //       `tertiary-chip-selected`
+            //     )
+            //   } else {
+            //     this.modRemoveStyleFrom(
+            //       `.tertiary-chip-index-${primary.key}-${collectionIndex}`,
+            //       `tertiary-chip-selected`
+            //     )
+            //   }
+            // }
             collection.forEach((coords) => {
               const key = `color-secondary-rect-coords-${primary.key}-${coords[0]}-${coords[1]}-${h}`
               let l2 =
@@ -1553,7 +1551,7 @@ h2, h3 {
 
       // tertiaries
       this.primaries().forEach((primary) => {
-        this.collectionCoords().forEach((coords) => {
+        this.collectionCoords().forEach((coords, coordsIndex) => {
           const key = `tertiary-rect-${primary.key}-${coords[0]}-${coords[1]}`
           let h =
             (this.state.active.colors[primary.key].secondaryH +
@@ -1570,6 +1568,31 @@ h2, h3 {
               coords[1]) %
             5
           this.devProps[`--${key}`] = `var(--color-${l}-${c}-${h})`
+        })
+      })
+
+      this.primaries().forEach((primary, primaryIndex) => {
+        this.collections().forEach((collection, collectionIndex) => {
+          this.modRemoveStyleFrom(
+            `.tertiary-chip-index-${primary.key}-${collectionIndex}`,
+            `tertiary-chip-selected`
+          )
+          if (
+            this.state.modes[this.mode()].colors[primary.key]
+              .collectionShift ===
+            this.state.active.colors[primary.key].secondaryH
+          ) {
+            if (
+              collectionIndex ===
+              this.state.modes[this.mode()].colors[primary.key].collectionIndex
+            ) {
+              this.modAddStyleTo(
+                `.tertiary-chip-index-${primary.key}-${collectionIndex}`,
+                `tertiary-chip-selected`
+              )
+            } else {
+            }
+          }
         })
       })
 
@@ -1717,7 +1740,7 @@ h2, h3 {
         })
       })
 
-    //   this.modUpdateHTML(`.raw-data`, JSON.stringify(this.state.modes, null, 2))
+      //   this.modUpdateHTML(`.raw-data`, JSON.stringify(this.state.modes, null, 2))
 
       this.modUpdateHTML(`.the-stylesheet`, this.genStylesFull())
 
