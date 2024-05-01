@@ -1,8 +1,9 @@
 [!- extends "wrappers/one-column.neojinja" -!]
 [!- include "config.neojinja" -!]
 [!- import "macros.neojinja" as theme -!]
-[@ theme.initialize_page(site, page_id, data) -@]
+[@ theme.initialize_page(site, page_id, config) -@]
 
 [! block body !]
-[@ theme.main_body_with_examples(site, page_id) @]
+TODO: Update this to use a metadata flag
+[# theme.main_body_with_examples(site, page_id) #]
 [! endblock !]

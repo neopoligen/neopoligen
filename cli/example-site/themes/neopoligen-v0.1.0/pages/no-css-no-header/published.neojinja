@@ -1,8 +1,0 @@
-[!- extends "wrappers/no-css-no-header.neojinja" -!]
-[!- include "config.neojinja" -!]
-[!- import "macros.neojinja" as theme -!]
-[@ theme.initialize_page(site, page_id, data) -@]
-
-[! block body !]
-[@ theme.main_body(site, page_id) @]
-[! endblock !]
