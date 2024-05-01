@@ -1,6 +1,6 @@
 {
-  "defaultLanguage": "en",
+  "default_language": "en",
   "domain": "localhost:1993",
-  "inputDateFormats": ["%Y-%m-%d"],
-  "theme": "default"
+  "input_date_formats": ["%Y-%m-%d"],
+  "theme": "neopoligen-v0.1.0"
 }
