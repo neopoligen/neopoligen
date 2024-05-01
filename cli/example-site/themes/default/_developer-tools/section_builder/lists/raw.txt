@@ -1,6 +1,0 @@
-code
-data
-pre
-raw
-results
-textarea

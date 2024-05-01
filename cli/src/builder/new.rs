@@ -11,8 +11,13 @@ impl Builder {
             file_set,
             config: config.clone(),
             neo_env: neo_env.clone(),
-            template_errors: vec![],
-            outputs: BTreeMap::new(),
+            outputs: BTreeMap::new(), // Deprecated. move to outputs_dev
+            outputs_dev: vec![],
+            build_time: None,
+            template_tests_found: 0,
+            template_tests_run: 0,
+            template_tests_skipped: 0,
+            template_tests_errors: vec![],
         }
     }
 }

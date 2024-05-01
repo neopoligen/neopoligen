@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -rf ~/Documents/Neopoligen/neopoligen-dev-site
+rm -rf ~/Documents/Neopoligen/cookbook
 export NEOENV=dev 
 
 cd cli\
@@ -8,3 +8,4 @@ cd cli\
   && cd target/release\
   && mv neopoligengine neopoligengine-aarch64-apple-darwin
 
+echo "INFO: Finsihed tauri dev run-before-dev"

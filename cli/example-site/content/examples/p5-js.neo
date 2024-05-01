@@ -1,0 +1,50 @@
+-- title
+
+Using p5.js
+
+The default theme comes with a creative coding 
+packaged called "p5" installed. You can 
+use it like this:
+
+
+-- start-example
+
+
+-- html
+
+<div id="p5Wrapper"></div>
+
+
+-- head
+
+<script src="/scripts/p5/p5.min-1-9-2.js"></script>
+
+
+-- javascript
+
+let x = 50
+let speed = 3
+
+function setup() {
+  var canvas = createCanvas(300, 100)
+  canvas.parent('p5Wrapper')
+}
+
+function draw() {
+  background(220)
+  ellipse(x,50,80,80)
+  if (x > 250) {
+    speed = -3
+  } 
+  if (x < 50) {
+    speed = 3
+  }
+  x = x + speed
+}
+
+-- end-example
+
+
+-- metadata
+-- id: 2fwpuxie
+-- template: neo-examples

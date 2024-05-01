@@ -1,0 +1,424 @@
+-- title
+
+Color Picker Preview Window
+
+Welcome to the Neopoligen Color Picker Preview Window!
+
+I'm not good at being able to determine how a color palette
+will work just by looking at swatches. I need to see it for
+real. That's what this page is for. The picker generates
+a stylesheet that this page uses directly.
+
+-- h2
+
+Details And Examples
+
+-- html
+
+
+<tab-group>
+  <div role="tablist">
+    <button role="tab" aria-selected="true">1</button>
+    <button role="tab">2</button>
+    <button role="tab">3</button>
+    <button role="tab">4</button>
+    <button role="tab">5</button>
+  </div>
+
+
+    <div role="tabpanel" class="flow">
+        <h3>Overview</h3>
+        <p>Palettes consist of a base/background color, six related colors, and black and
+        white CSS prop variables. There are versions of each color going from 10%
+        to full opacity. This is the current set. Play around with the picker and
+        the colors will update live here.</p>
+        <div class="alpha-examples"></div>
+    </div>
+
+
+  <div role="tabpanel" class="flow">
+    <h3>A full style sheet</h3>
+    <p>The color picker is designed to generate styles for both a light and a 
+    dark mode. Each mode is completely independent. There are buttons beside
+    the sliders to easily get a value from the alternate mode for optional 
+    syncing.</p>
+    <p>The output style sheet includes CSS variable properties for both 
+    light and dark mode. Light mode is the default. If a system preference
+    is available that gets used. </p>
+  </div>
+
+
+  <div role="tabpanel" class="flow" hidden>
+    <p><strong>Base colors:</strong> There are six base colors for each
+    palette: --color-alfa, --color-bravo, --color-charlie, --color-delta, 
+    --color-echo, and --color-foxtrot. I find these
+    generic names easier to work with than names like &quot;primary&quot;,
+    &quot;secondary&quot;, &quot;accent&quot;, etc... Those names have 
+    specific meaning and I often find I want to use a color when the meaning
+    doesn't fit. Here's what they look like for this palette:
+    </p>
+    <div class="swatch-row">
+        <div>
+            <div class="color-alfa">alfa</div>
+            <div class="swatch-square bg-alfa"></div>
+        </div>
+        <div>
+            <div class="color-bravo">bravo</div>
+            <div class="swatch-square bg-bravo"></div>
+        </div>
+        <div>
+            <div class="color-charlie">charlie</div>
+            <div class="swatch-square bg-charlie"></div>
+        </div>
+        <div>
+            <div class="color-delta">delta</div>
+            <div class="swatch-square bg-delta"></div>
+        </div>
+        <div>
+            <div class="color-echo">echo</div>
+            <div class="swatch-square bg-echo"></div>
+        </div>
+        <div>
+            <div class="color-foxtrot">foxtrot</div>
+            <div class="swatch-square bg-foxtrot"></div>
+        </div>
+    </div>
+
+    <p><strong>Why Not Numbers?</strong> For a similar reason. Numbers imply
+    order which I often think of as priority when it comes to 
+    design. Trying to remember what priority or level I each color is 
+    is harder for me to do then remembering them with the name. Sure, there's
+    an implicit order with the alfa, bravo, charlie... names, but it's
+    a lot easier for me to remember that &quot;.color-charlie&quot; is green than
+    &quot;.color-4&quot;</p>
+  </div>
+
+
+    <div role="tabpanel" class="flow">
+        <p><strong>Black and White - Match and Reverse</strong></p>
+        <p>
+            In addition to <em>--color-black</em> and <em>--color-white</em>, the stylesheet
+            also was <em>--color-bw-match</em> and <em>--color-bw-reverse</em>.
+        </p>
+        <p>Light Mode:</p>
+        <ul>
+            <li><em>--color-bw-match</em> is white</li>
+            <li><em>--color-bw-reverse</em> is black</li>
+        </ul>
+        <p>Dark Mode:</p>
+        <ul>
+            <li><em>--color-bw-match</em> is black</li>
+            <li><em>--color-bw-reverse</em> is white</li>
+        </ul>
+        <p>The idea with these is you can add a border to something
+    that's black when the page is in light mode and will flip to white
+    when the page goes into dark mode. </p>
+    </div>
+
+
+<div role="tabpanel" class="flow">
+    <h3>Heading Underline Examples</h3>
+    <p>This example contains several sections that each have a heading 
+    with the alfa color and then one of the other five colors used
+    for a one pixel border underline. There's a 
+    bunch of place holder text between heading to help reduce visual
+    noise from the other headings.<p>
+
+ <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec varius 
+ et mi a varius. Donec porta pharetra nunc tempor semper. Cras sollicitudin 
+ dignissim dolor, vitae tempus nisi gravida et. Praesent elit ipsum, 
+ vulputate id blandit at, condimentum quis tellus. Donec vel est porta. </p>
+ 
+ <p>Sagittis risus sed, efficitur neque. Maecenas risus risus, tempor ac urna iaculis, 
+ facilisis tristique mi. Aliquam vel rhoncus eros. Nam blandit dictum est, ut 
+ euismod elit posuere sed. Donec hendrerit, est suscipit scelerisque tempus, 
+ purus ante efficitur ex, a maximus felis massa sed odio. Proin ut bibendum ex, 
+ a tristique diam. Donec suscipit, dui a semper sagittis, turpis dui fringilla 
+ libero, in cursus orci arcu consectetur purus.</p>
+
+    <p>Praesent ac venenatis diam. Cras venenatis enim vitae justo porttitor condimentum. 
+    Maecenas sit amet tincidunt augue. Phasellus luctus, mi ut tincidunt feugiat, justo 
+    elit vulputate metus, ut sagittis urna dui ac mi. Nunc rhoncus lorem eros, porttitor 
+    ullamcorper magna pellentesque eget. Aenean scelerisque eget felis eget pellentesque.
+     Cras non massa tellus. </p>
+
+    <div class="heading-examples flow">
+    </div>
+
+</div>
+
+
+</tab-group>
+
+
+-- css
+
+.swatch-row {
+    display: flex;
+    flex-wrap: flex;
+    gap: 20px;
+}
+
+.swatch-square {
+    width: 60px;
+    height: 60px; 
+    border-radius: 0.4rem;
+}
+
+[role='tab'] {
+  background: none;
+  border: none;
+  color: var(--color-delta-60);
+  cursor: pointer;
+  font: inherit;
+  outline: inherit;
+  padding-block: 0 2px;
+  padding-inline: 11px;
+  &[aria-selected='true'] {
+    border-bottom: 3px solid var(--color-charlie);
+    color: var(--color-charlie);
+    padding-block: 0 0;
+  }
+}
+
+[role='tablist'] {
+  border-bottom: 1px solid var(--color-charlie);
+}
+
+[role='tabpanel'] {
+  padding-block: 1.4rem;
+}
+
+
+
+
+-- html
+
+<pre class="currentStyle"></pre>
+
+
+-- javascript
+
+let currentStyleData = ""
+let styleEl
+
+const colors = ['alfa', 'bravo', 'charlie', 'delta', 'echo', 'foxtrot', 'black', 'white', 'bw-match', 'bw-reverse']
+
+function addPlaceholderText() {
+    const paragraphs = [
+        `The rest of the text below this line is place holder text just to fill out some more space for the example. It's below every example to help provide the context of a page.`,
+        `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mi id massa pellentesque laoreet sit amet ut lectus. Aenean vitae diam iaculis, efficitur purus vitae, posuere odio. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vestibulum vulputate auctor justo, et iaculis ipsum fermentum in. Sed nec quam turpis.`,
+        `In neque enim, accumsan non purus non, ultrices tristique metus. Mauris at pulvinar lacus. Pellentesque blandit convallis justo, ac malesuada diam. Nulla sed porttitor magna, nec commodo mauris. Proin sit amet tincidunt dui. Morbi lobortis justo nisl, quis efficitur justo lobortis id.`,
+        `Fusce accumsan sem vitae enim imperdiet, a vulputate libero varius.`,
+        `Donec dictum lorem arcu, vehicula blandit quam semper ac. Curabitur tempus semper finibus. Morbi est orci, pretium ut ipsum sed, pulvinar egestas ligula. Sed lobortis nibh eu vehicula viverra. Vivamus maximus metus at lectus eleifend volutpat id in sapien. Pellentesque tortor dolor, consequat at scelerisque porta, hendrerit sed lectus. Pellentesque scelerisque ex odio.`,
+        `Suspendisse potenti. Proin condimentum ullamcorper eleifend. In non eros mattis, efficitur diam in, tincidunt tortor. Nunc lobortis nunc nunc, id tristique ante commodo a. Mauris vulputate quis nulla quis sollicitudin. Maecenas ornare tellus lacus, vitae tempus ligula sollicitudin quis. Maecenas non tellus in libero convallis ullamcorper.`,
+        `Suspendisse porttitor eget mi quis lobortis. Aliquam non lorem luctus, maximus lectus sed, imperdiet sem. Vivamus congue quam vitae nisl aliquet congue et in magna. Aliquam sit amet urna augue. Ut quis nisl urna.`,
+    ]
+    const els = document.querySelectorAll(`[role='tabpanel']`)
+    els.forEach((el) => {
+        pageAddTo(el, 'h2', { innerHTML: "Placeholder Text" })
+        paragraphs.forEach((p) => {
+            pageAddTo(el, 'p', {
+                innerHTML: p
+            })
+        })
+    }) 
+}
+
+
+function updateStyles() {
+    styleEl.innerHTML = currentStyleData
+    
+    /*
+    pageUpdateEl(`.fonts-and-colors`, {
+        innerHTML: currentStyleData
+    })
+   */
+
+}
+
+window.addEventListener("message", (event) => {
+  if (event.isTrusted === true && event.origin === window.location.origin) {
+    let data = JSON.parse(event.data)
+    if (data.type === "colors-and-fonts") {
+        if (styleEl) {
+            if (data.mode === 'light') {
+                document.body.classList.add('light')
+                document.body.classList.remove('dark')
+            } else {
+                document.body.classList.add('dark')
+                document.body.classList.remove('light')
+            }
+            currentStyleData = data.styles
+            updateStyles()
+        }
+    }
+  }
+})
+
+function makeAlphaExamples() {
+    colors.forEach((color) => {
+        const colorWrapper = pageAddTo('.alpha-examples', 'div', {})
+        pageAddTo(colorWrapper, 'div', {
+            innerHTML: `
+            <div class="alpha-example alpha-example-${color}">
+                <div class="color-${color}">--color-${color}</div>
+                <div class="bg-${color} alpha-swatch"></div>
+            </div>
+            `
+        })
+
+        for (let alpha = 90; alpha > 0; alpha = alpha - 10) {
+            pageAddTo(colorWrapper, 'div', {
+                innerHTML: `
+                <div class="alpha-example alpha-example-${color}-${alpha}">
+                    <div class="color-${color}-${alpha}">--color-${color}-${alpha}</div>
+                    <div class="bg-${color}-${alpha} alpha-swatch"></div>
+                </div>
+                `
+            })
+        }
+
+    })
+}
+
+
+function makeHeadingExamples() {
+    const c1s = ['alfa']
+    const c2s = ['bravo', 'charlie', 'delta', 'echo', 'foxtrot']
+
+    c1s.forEach((c1) => {
+        c2s.forEach((c2) => {
+            this.pageAddTo(`.heading-examples`, 'div', {
+                classes: ['flow'],
+                innerHTML: `<h3 class="${c1}-${c2}">Heading ${c1} - Underline ${c2}</h3>
+               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec varius 
+ et mi a varius. Donec porta pharetra nunc tempor semper. Cras sollicitudin 
+ dignissim dolor, vitae tempus nisi gravida et. Praesent elit ipsum, 
+ vulputate id blandit at, condimentum quis tellus. Donec vel est porta. </p>
+ 
+ <p>Sagittis risus sed, efficitur neque. Maecenas risus risus, tempor ac urna iaculis, 
+ facilisis tristique mi. Aliquam vel rhoncus eros. Nam blandit dictum est, ut 
+ euismod elit posuere sed. Donec hendrerit, est suscipit scelerisque tempus, 
+ purus ante efficitur ex, a maximus felis massa sed odio. Proin ut bibendum ex, 
+ a tristique diam. Donec suscipit, dui a semper sagittis, turpis dui fringilla 
+ libero, in cursus orci arcu consectetur purus.</p>
+
+    <p>Praesent ac venenatis diam. Cras venenatis enim vitae justo porttitor condimentum. 
+    Maecenas sit amet tincidunt augue. Phasellus luctus, mi ut tincidunt feugiat, justo 
+    elit vulputate metus, ut sagittis urna dui ac mi. Nunc rhoncus lorem eros, porttitor 
+    ullamcorper magna pellentesque eget. Aenean scelerisque eget felis eget pellentesque.
+     Cras non massa tellus. </p>  
+
+<p>Donec dictum lorem arcu, vehicula blandit quam semper ac. Curabitur tempus semper finibus.
+ Morbi est orci, pretium ut ipsum sed, pulvinar egestas ligula. Sed lobortis nibh eu vehicula
+  viverra. Vivamus maximus metus at lectus eleifend volutpat id in sapien. Pellentesque tortor 
+  dolor, consequat at scelerisque porta, hendrerit sed lectus. Pellentesque scelerisque ex odio.</p>
+
+<p>Suspendisse potenti. Proin condimentum ullamcorper eleifend. In non eros mattis, efficitur 
+diam in, tincidunt tortor. Nunc lobortis nunc nunc, id tristique ante commodo a. Mauris vulputate 
+quis nulla quis sollicitudin. Maecenas ornare tellus lacus, vitae tempus ligula sollicitudin quis. 
+Maecenas non tellus in libero convallis ullamcorper.</p>
+
+                `
+            })
+        })
+    })
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    styleEl = pageAddTo(document.head, 'style')
+    addPlaceholderText() 
+    makeAlphaExamples()
+    makeHeadingExamples()
+})
+
+
+-- css
+
+:root {
+
+          --size-1: 2.986rem;
+          --size-2: 2.488rem;
+          --size-3: 2.074rem;
+          --size-4: 1.728rem;
+          --size-5: 1.44rem;
+          --size-6: 1.2rem;
+          --size-7: 1rem;
+          --size-8: 0.833rem;
+          --size-9: 0.694rem;
+          --size-10: 0.579rem;
+}
+
+.alpha-example {
+    max-width: 340px;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0.1rem;
+    font-size: 0.7rem;
+}
+
+.alpha-example :first-child {
+    min-width: 190px;
+}
+
+
+.alpha-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+}
+
+.alpha-swatch {
+    min-width: 100px;
+    min-height: 0.9rem;
+}
+
+main {
+    margin: 1.3rem;
+}
+
+h2 {
+    border-bottom: 1px solid var(--color-charlie);
+}
+
+.alfa-charlie {
+    color: var(--color-alfa);
+    border-bottom: 1px solid var(--color-charlie);
+}
+
+.alfa-bravo {
+    color: var(--color-alfa);
+    border-bottom: 1px solid var(--color-charlie);
+}
+
+.alfa-delta {
+    color: var(--color-alfa);
+    border-bottom: 1px solid var(--color-delta);
+}
+
+.alfa-echo {
+    color: var(--color-alfa);
+    border-bottom: 1px solid var(--color-echo);
+}
+
+.alfa-foxtrot {
+    color: var(--color-alfa);
+    border-bottom: 1px solid var(--color-foxtrot);
+}
+
+
+-- head
+
+<link rel="stylesheet" href="/theme/styles.css" />
+
+<script src="/theme/theme.js"></script>
+<script src="/theme/theme-components.js" type="module"></script>
+
+
+-- metadata
+-- date: 2024-04-26
+-- id: 2fehqqas
+-- template: empty
+

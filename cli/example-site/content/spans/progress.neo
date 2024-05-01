@@ -1,0 +1,23 @@
+-- title
+
+Span: progress 
+
+-- subtitle
+
+The Progress Indicator Span
+
+-- p
+
+Basic Example: 
+
+<<progress|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<progress|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- id: 2bqpmjjr
+

@@ -1,0 +1,38 @@
+[!- import "includes/theme-macros.neojinja" as theme -!]
+
+<section 
+    [@ theme.section_attrs(site, page_id, section, ["footnote_default_section", "standard_section", "flow"]) -@]
+>
+    [! include "subsections/forward.neojinja" !]
+
+[! if section.content.key_value_attributes.title or section.content.key_value_attributes.subtitle !]
+<div class="heading_subsection footnote_heading" 
+[! if section.content.key_value_attributes.id !]
+id="footnote-[@ section.content.key_value_attributes.id @]"
+[! endif !]
+>
+    [! if section.content.key_value_attributes.id !]
+        <sup><a href="#footnote-[@ section.content.key_value_attributes.id @]-ref">[@ section.content.key_value_attributes.id @]</a></sup>
+    [! endif !]
+
+    [! if section.content.key_value_attributes.title !]
+    <div class="title_subsection">[@ section.content.key_value_attributes.title @]
+        [! if section.content.key_value_attributes.subtitle !]
+        <span class="subtitle_subsection">This is a subtitle</span>
+        [! endif !]
+    </div>
+    [! if section.content.key_value_attributes.id !]
+        <sup><a href="#footnote-[@ section.content.key_value_attributes.id @]-ref">&#8617;</a></sup>
+    [! endif !]
+
+    [! endif !]
+</div>
+[! endif !]
+
+
+
+    [! include "subsections/preface.neojinja" !]
+
+    [! include "subsections/content_index0.neojinja" !]
+
+    [! include "subsections/afterword.neojinja" !]

@@ -1,0 +1,23 @@
+-- title
+
+Span: ins 
+
+-- subtitle
+
+The Inserted Text Span
+
+-- p
+
+Basic Example: 
+
+<<ins|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<ins|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- id: 2bqpk8yk
+

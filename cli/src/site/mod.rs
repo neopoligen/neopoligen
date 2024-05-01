@@ -125,28 +125,29 @@ impl Site {
         "".to_string()
     }
 
-    #[instrument(skip(self))]
-    pub fn highlight_code(&self, args: &[Value]) -> String {
-        let now = Instant::now();
-        let code = args[0].to_string();
-        let lang = args[1].to_string();
-        let syntax_set = SyntaxSet::load_defaults_newlines();
-        let syntax = syntax_set
-            .find_syntax_by_token(&lang)
-            .unwrap_or_else(|| syntax_set.find_syntax_plain_text());
-        let mut html_generator =
-            ClassedHTMLGenerator::new_with_class_style(syntax, &syntax_set, ClassStyle::Spaced);
-        for line in LinesWithEndings::from(code.trim()) {
-            let _ = html_generator.parse_html_for_line_which_includes_newline(line);
-        }
-        let initial_html = html_generator.finalize();
-        let output_html: Vec<_> = initial_html
-            .lines()
-            .map(|line| format!(r#"<span class="numberedLine">{}</span>"#, line))
-            .collect();
-        event!(Level::DEBUG, "||{:?}||", now.elapsed());
-        format!("{}", output_html.join("\n"))
-    }
+    // // deprecated in favor of the function inside the build env Environment
+    // #[instrument(skip(self))]
+    // pub fn highlight_code(&self, args: &[Value]) -> String {
+    //     let now = Instant::now();
+    //     let code = args[0].to_string();
+    //     let lang = args[1].to_string();
+    //     let syntax_set = SyntaxSet::load_defaults_newlines();
+    //     let syntax = syntax_set
+    //         .find_syntax_by_token(&lang)
+    //         .unwrap_or_else(|| syntax_set.find_syntax_plain_text());
+    //     let mut html_generator =
+    //         ClassedHTMLGenerator::new_with_class_style(syntax, &syntax_set, ClassStyle::Spaced);
+    //     for line in LinesWithEndings::from(code.trim()) {
+    //         let _ = html_generator.parse_html_for_line_which_includes_newline(line);
+    //     }
+    //     let initial_html = html_generator.finalize();
+    //     let output_html: Vec<_> = initial_html
+    //         .lines()
+    //         .map(|line| format!(r#"<span class="numberedLine">{}</span>"#, line))
+    //         .collect();
+    //     event!(Level::DEBUG, "||{:?}||", now.elapsed());
+    //     format!("{}", output_html.join("\n"))
+    // }
 
     #[instrument(skip(self))]
     pub fn page_head(&self, args: &[Value]) -> Vec<String> {
@@ -410,7 +411,7 @@ impl Site {
                     event!(Level::DEBUG, "||{:?}||", now.elapsed());
                     Some(format!(
                         "/{}/{}/?{}",
-                        self.config.default_language,
+                        self.config.json_config.default_language,
                         id,
                         self.page_href_title(&id).unwrap()
                     ))
@@ -528,7 +529,7 @@ impl Site {
                 None => Some(format!(
                     "{}/{}/{}/index.html",
                     self.config.folders.build_root.display(),
-                    self.config.default_language,
+                    self.config.json_config.default_language,
                     &id,
                 )),
             },
@@ -779,7 +780,7 @@ impl Site {
 // // MOVED
 // fn get_span_words(span: &Span) -> Vec<String> {
 //     match span {
-//         Span::Word { text, .. } => {
+//         Span::WordSegment { text, .. } => {
 //             vec![text.to_string()]
 //         }
 //         Span::Space { .. } => vec![" ".to_string()],

@@ -67,9 +67,9 @@ mod test {
             "",
             Span::KeyValueSpan {
                 span_type: "class".to_string(),
-                spans: vec![Span::Word {
+                spans: vec![Span::WordSegment {
                     text: "Lima".to_string(),
-                    template: "spans/word.neojinja".to_string(),
+                    template: "spans/word_segment.neojinja".to_string(),
                 }],
                 key_value_attributes: BTreeMap::new(),
                 flag_attributes: BTreeSet::new(),

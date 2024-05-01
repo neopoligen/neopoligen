@@ -4,8 +4,9 @@ use std::path::PathBuf;
 
 impl Config {
     pub fn parsing_tests() -> Config {
+        let json_config = JsonConfig::stub1();
+        let theme_name = &json_config.theme;
         let project_root = PathBuf::from("leading-dir/Neopoligen/parsing-tests");
-        let theme_name = String::from("test-theme");
 
         let configuration_root =
             PathBuf::from(format!("{}/{}", project_root.display(), "configuration"));
@@ -56,7 +57,6 @@ impl Config {
 
         let folders = ConfigFolders {
             build_root,
-            configuration_root: configuration_root.clone(),
             files_root,
             images_root,
             mp3s_root,
@@ -138,11 +138,6 @@ impl Config {
             yaml,
         };
 
-        let input_date_formats: Vec<String> = vec![
-            "%Y-%m-%d %H:%M:%S".to_string(),
-            "%Y-%m-%dT%H:%M:%S".to_string(),
-        ];
-
         let json_plugins: BTreeMap<String, String> = BTreeMap::new();
 
         let key_value_spans: Vec<String> = vec!["class".to_string(), "ilink".to_string()];
@@ -164,17 +159,11 @@ impl Config {
 
         let time_zone_offset = "-5:00".to_string();
 
-        let domain = "localhost".to_string();
-
         let section_attribute_excludes = vec![];
 
-        let default_language = String::from("en");
-
         Config {
-            default_language,
-            domain,
             folders,
-            input_date_formats,
+            json_config,
             json_plugins,
             key_value_spans,
             main_body_section_excludes,
@@ -182,7 +171,6 @@ impl Config {
             section_categories,
             standard_spans,
             text_plugins,
-            theme_name,
             time_zone_offset,
         }
     }

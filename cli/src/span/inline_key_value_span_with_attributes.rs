@@ -24,9 +24,6 @@ pub fn inline_key_value_span_with_attributes<'a>(
     source: &'a str,
     config: &'a Config,
 ) -> IResult<&'a str, Span> {
-
-
-
     let (source, _) = tag_no_case("<<")(source)?;
     let (source, span_type) = match match config.key_value_spans.iter().find_map(|t| {
         match tag_no_case::<&str, &str, Error<&str>>(t.as_str())(source) {
@@ -126,9 +123,9 @@ mod test {
             "",
             Span::KeyValueSpan {
                 span_type: "ilink".to_string(),
-                spans: vec![Span::Word {
+                spans: vec![Span::WordSegment {
                     text: "Sierra".to_string(),
-                    template: "spans/word.neojinja".to_string(),
+                    template: "spans/word_segment.neojinja".to_string(),
                 }],
                 key_value_attributes,
                 flag_attributes,
@@ -151,9 +148,9 @@ mod test {
     //         "",
     //         Span::StandardSpan {
     //             span_type: "link".to_string(),
-    //             spans: vec![Span::Word {
+    //             spans: vec![Span::WordSegment {
     //                 text: "bravo".to_string(),
-    //                 template: "spans/word.neojinja".to_string(),
+    //                 template: "spans/word_segment.neojinja".to_string(),
     //             }],
     //             key_value_attributes: BTreeMap::new(),
     //             flag_attributes,
@@ -179,9 +176,9 @@ mod test {
     //         "",
     //         Span::StandardSpan {
     //             span_type: "link".to_string(),
-    //             spans: vec![Span::Word {
+    //             spans: vec![Span::WordSegment {
     //                 text: "Sierra".to_string(),
-    //                 template: "spans/word.neojinja".to_string(),
+    //                 template: "spans/word_segment.neojinja".to_string(),
     //             }],
     //             key_value_attributes,
     //             flag_attributes,

@@ -28,7 +28,8 @@ impl Page {
                     }) {
                         Some(id) => {
                             let title = title(&id, &ast);
-                            let href = href(&id, &ast, &title, &config.default_language);
+                            let href =
+                                href(&id, &ast, &title, &config.json_config.default_language);
                             let html_link = html_link(&href, &title);
                             let path_parts = path_parts(&source_path, config);
                             let folders = folders(&source_path, config);
@@ -289,7 +290,7 @@ fn filter_section(sec: &Section) -> Option<String> {
 
 fn get_span_words(span: &Span) -> Vec<String> {
     match span {
-        Span::Word { text, .. } => {
+        Span::WordSegment { text, .. } => {
             vec![text.to_string()]
         }
         Span::Space { .. } => vec![" ".to_string()],
@@ -331,7 +332,7 @@ fn output_file_path(id: &String, ast: &Vec<Child>, config: &Config) -> Option<St
         None => Some(format!(
             "{}/{}/{}/index.html",
             config.folders.build_root.display(),
-            config.default_language,
+            config.json_config.default_language,
             &id,
         )),
     }

@@ -99,33 +99,33 @@ mod test {
                 items: vec![
                     Item::ListItem {
                         containers: vec![Child::Block(vec![
-                            Span::Word {
+                            Span::WordSegment {
                                 text: "whiskey".to_string(),
-                                template: "spans/word.neojinja".to_string(),
+                                template: "spans/word_segment.neojinja".to_string(),
                             },
                             Span::Space {
                                 text: " ".to_string(),
                                 template: "spans/space.neojinja".to_string(),
                             },
-                            Span::Word {
+                            Span::WordSegment {
                                 text: "juliette".to_string(),
-                                template: "spans/word.neojinja".to_string(),
+                                template: "spans/word_segment.neojinja".to_string(),
                             },
                         ])],
                     },
                     Item::ListItem {
                         containers: vec![Child::Block(vec![
-                            Span::Word {
+                            Span::WordSegment {
                                 text: "romeo".to_string(),
-                                template: "spans/word.neojinja".to_string(),
+                                template: "spans/word_segment.neojinja".to_string(),
                             },
                             Span::Space {
                                 text: "\n".to_string(),
                                 template: "spans/space.neojinja".to_string(),
                             },
-                            Span::Word {
+                            Span::WordSegment {
                                 text: "victor".to_string(),
-                                template: "spans/word.neojinja".to_string(),
+                                template: "spans/word_segment.neojinja".to_string(),
                             },
                         ])],
                     },

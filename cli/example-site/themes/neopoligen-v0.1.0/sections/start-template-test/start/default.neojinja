@@ -1,0 +1,13 @@
+[!- import "includes/theme-macros.neojinja" as theme -!]
+
+[# 
+WARNING: This is maily used for testing, not output to a page. 
+If you change this, it'll probably break all the template
+tests 
+#]
+
+<div class="start-template-test-header">
+[! for content in section.content.category.content.containers !]
+    <p>[@- theme.output_payload(site, page_id, content) -@]</p>
+[! endfor !]
+</div><!-- /start-template-test-header -->

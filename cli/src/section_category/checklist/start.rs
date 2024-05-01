@@ -104,34 +104,34 @@ mod test {
     //                 Item::ChecklistItem {
     //                     status: Some("x".to_string()),
     //                     containers: vec![Child::Block(vec![
-    //                         Span::Word {
+    //                         Span::WordSegment {
     //                             text: "delta".to_string(),
-    //                             template: "spans/word.neojinja".to_string(),
+    //                             template: "spans/word_segment.neojinja".to_string(),
     //                         },
     //                         Span::Space {
     //                             text: " ".to_string(),
     //                             template: "spans/space.neojinja".to_string(),
     //                         },
-    //                         Span::Word {
+    //                         Span::WordSegment {
     //                             text: "hotel".to_string(),
-    //                             template: "spans/word.neojinja".to_string(),
+    //                             template: "spans/word_segment.neojinja".to_string(),
     //                         },
     //                     ])],
     //                 },
     //                 Item::ChecklistItem {
     //                     status: None,
     //                     containers: vec![Child::Block(vec![
-    //                         Span::Word {
+    //                         Span::WordSegment {
     //                             text: "sierra".to_string(),
-    //                             template: "spans/word.neojinja".to_string(),
+    //                             template: "spans/word_segment.neojinja".to_string(),
     //                         },
     //                         Span::Space {
     //                             text: "\n".to_string(),
     //                             template: "spans/space.neojinja".to_string(),
     //                         },
-    //                         Span::Word {
+    //                         Span::WordSegment {
     //                             text: "echo".to_string(),
-    //                             template: "spans/word.neojinja".to_string(),
+    //                             template: "spans/word_segment.neojinja".to_string(),
     //                         },
     //                     ])],
     //                 },

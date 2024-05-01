@@ -1,0 +1,63 @@
+-- title
+
+Welcome To The Neopoligen Cookbook
+
+This site is an example of some things
+you can do with Neopoligen. The published version of the site is at
+<<link|cookbook.neopoligen.com|https://cookbook.neopoligen.com/>>.
+A copy of all the files that make up the site
+is installed in the "cookbook" folder in your
+"Neopoligen" folder. It's a great place
+to learn by looking under the hood to see how thing
+works. 
+
+
+This is a footnote thing^here^^
+
+
+
+-- code
+-- rust
+
+fn main() {
+    println!("Hello, code!");
+}
+
+
+-- html
+-- template: show
+
+<div>PING IT</div>
+
+
+-- list
+-- title: Stuff to add
+
+- This is a list
+of things
+
+etc, etc, etc...
+
+- and another item
+
+
+-- css
+-- template: show
+
+body {
+
+}
+
+-- javascript
+-- template: show
+
+logMsg("this is one ping only");
+
+
+
+
+
+-- metadata
+-- id: 2dwmgthu
+-- path: /
+

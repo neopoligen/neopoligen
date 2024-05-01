@@ -73,17 +73,17 @@ mod test {
                 bounds: "end".to_string(),
                 category: SectionCategory::YamlSectionEnd {
                     containers: vec![Child::Block(vec![
-                        Span::Word {
+                        Span::WordSegment {
                             text: "papa".to_string(),
-                            template: "spans/word.neojinja".to_string(),
+                            template: "spans/word_segment.neojinja".to_string(),
                         },
                         Span::Space {
                             text: " ".to_string(),
                             template: "spans/space.neojinja".to_string(),
                         },
-                        Span::Word {
+                        Span::WordSegment {
                             text: "mike".to_string(),
-                            template: "spans/word.neojinja".to_string(),
+                            template: "spans/word_segment.neojinja".to_string(),
                         },
                     ])],
                 },

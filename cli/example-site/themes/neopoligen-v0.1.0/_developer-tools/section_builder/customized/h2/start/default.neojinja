@@ -1,0 +1,26 @@
+[!- import "includes/theme-macros.neojinja" as theme -!]
+
+<section 
+[@ theme.section_attrs(site, page_id, section, ["h2_default_section", "standard_section", "heading_level_section", "flow"]) -@]
+>
+
+    [! include "subsections/forward.neojinja" !]
+
+    [! for content in section.content.category.content.containers !]
+        [! if loop.first !]
+        <div class="heading_subsection">
+            <h2 class="title_subsection">[@- output_payload(site, page_id, content) -@]</h2>
+            [! if section.content.key_value_attributes.subtitle !]
+            <div class="subtitle_subsection">This is a subtitle</div>
+            [! endif !]
+        </div>
+
+            [! include "subsections/preface.neojinja" !]
+
+        [! endif !]
+    [! endfor !]
+
+    [! include "subsections/content_index1.neojinja" !]
+
+    [! include "subsections/afterword.neojinja" !]
+

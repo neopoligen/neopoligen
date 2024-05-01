@@ -5,26 +5,40 @@ use crate::file_set::FileSet;
 use crate::neo_config::NeoEnv;
 use crate::site::Site;
 use crate::template_error::TemplateError;
-//use dirs::config_local_dir;
 use fs_extra::dir::copy;
 use minijinja::context;
 use minijinja::Environment;
 use minijinja::Syntax;
 use minijinja::Value;
 use std::collections::BTreeMap;
+use std::collections::BTreeSet;
 use std::fs;
 use std::fs::create_dir_all;
 use std::path::PathBuf;
 use std::time::Instant;
+use syntect::html::{ClassStyle, ClassedHTMLGenerator};
+use syntect::parsing::SyntaxSet;
+use syntect::util::LinesWithEndings;
 use tracing::{event, instrument, Level};
 
 pub struct Builder {
-    file_set: FileSet,
+    pub build_time: Option<String>,
     config: Config,
+    file_set: FileSet,
     #[allow(dead_code)]
     neo_env: NeoEnv,
-    pub template_errors: Vec<TemplateError>,
     pub outputs: BTreeMap<PathBuf, String>,
+    pub outputs_dev: Vec<Output>,
+    pub template_tests_errors: Vec<TemplateError>,
+    pub template_tests_found: usize,
+    pub template_tests_run: usize,
+    pub template_tests_skipped: usize,
+}
+
+pub struct Output {
+    pub content: String,
+    pub output_path: PathBuf,
+    pub source_path: PathBuf,
 }
 
 impl Builder {
@@ -74,7 +88,11 @@ impl Builder {
 
     #[instrument(skip(self))]
     pub fn generate_files(&mut self) {
+        let timestamp = chrono::prelude::Local::now();
+        self.build_time = Some(timestamp.to_rfc2822());
         let mut env = Environment::new();
+        env.add_function("highlight_code", highlight_code);
+        env.add_function("get_collection", get_collection);
         env.set_syntax(Syntax {
             block_start: "[!".into(),
             block_end: "!]".into(),
@@ -94,6 +112,7 @@ impl Builder {
             .for_each(|t| env.add_template_owned(t.0, t.1).unwrap());
         site.pages.iter().for_each(|p| {
             let page = p.1;
+            // event!(Level::INFO, "Processing: {}", page.source_path.display());
             // dbg!(page.id.clone());
             let template_searches = vec![
                 format!(
@@ -124,11 +143,18 @@ impl Builder {
                         Ok(output) => {
                             self.outputs.insert(
                                 PathBuf::from(&page.output_file_path.clone().unwrap()),
-                                output,
+                                output.clone(),
                             );
+                            self.outputs_dev.push(Output {
+                                content: output,
+                                source_path: page.source_path.clone(),
+                                output_path: PathBuf::from(&page.output_file_path.clone().unwrap()),
+                            });
                             ()
                         }
-                        Err(e) => event!(Level::ERROR, "Error: {}", e),
+                        Err(e) => {
+                            event!(Level::ERROR, "File: {}, {}", page.source_path.display(), e)
+                        }
                     }
                 } else {
                     event!(Level::ERROR, "Could not get template: {}", template_name);
@@ -166,25 +192,10 @@ impl Builder {
                     output.0.display()
                 );
             }
-            event!(Level::INFO, "Writing: {}", output.0.display());
+            event!(Level::DEBUG, "Writing: {}", output.0.display());
         });
     }
 }
-
-// // TODO: if you ever have to mess with this, change it to use
-// // a Result return type
-// fn file_exists(path: &PathBuf) -> bool {
-//     match path.try_exists() {
-//         Ok(exists) => {
-//             if exists == true {
-//                 true
-//             } else {
-//                 false
-//             }
-//         }
-//         Err(_) => false,
-//     }
-// }
 
 fn verify_dir(dir: &PathBuf) -> std::io::Result<()> {
     if dir.exists() {
@@ -192,4 +203,113 @@ fn verify_dir(dir: &PathBuf) -> std::io::Result<()> {
     } else {
         fs::create_dir_all(dir)
     }
+}
+
+fn highlight_code(code: String, lang: String) -> String {
+    let syntax_set = SyntaxSet::load_defaults_newlines();
+    let syntax = syntax_set
+        .find_syntax_by_token(&lang)
+        .unwrap_or_else(|| syntax_set.find_syntax_plain_text());
+    let mut html_generator =
+        ClassedHTMLGenerator::new_with_class_style(syntax, &syntax_set, ClassStyle::Spaced);
+    for line in LinesWithEndings::from(code.trim()) {
+        let _ = html_generator.parse_html_for_line_which_includes_newline(line);
+    }
+    let initial_html = html_generator.finalize();
+    let output_html: Vec<_> = initial_html
+        .lines()
+        .map(|line| format!(r#"<span class="numberedLine">{}</span>"#, line))
+        .collect();
+    format!(
+        r#"<pre class="numberedLines"><code>{}</code></pre>"#,
+        output_html.join("\n")
+    )
+}
+
+#[instrument(skip(site))]
+fn get_collection(site: &Value, page_id: &Value, filters_raw: &Value) -> Value {
+    let mut filters: Vec<(Vec<String>, Vec<String>)> = vec![];
+    match filters_raw.try_iter() {
+        Ok(filters_iter) => {
+            filters_iter.for_each(|filter| match filter.try_iter() {
+                Ok(items) => {
+                    let mut accept: Vec<String> = vec![];
+                    let mut reject: Vec<String> = vec![];
+                    items.for_each(|item| {
+                        if item.to_string().starts_with("!") {
+                            let string_to_add = item.to_string();
+                            reject.push(string_to_add.strip_prefix("!").unwrap().to_string());
+                        } else {
+                            accept.push(item.to_string());
+                        }
+                    });
+                    filters.push((accept, reject));
+                }
+                Err(e) => event!(Level::ERROR, "{}", e),
+            });
+        }
+        Err(e) => event!(Level::ERROR, "{}", e),
+    }
+    // dbg!(&filters);
+
+    let mut ids: BTreeSet<String> = BTreeSet::new();
+    match site.get_attr("pages") {
+        Ok(pages) => {
+            match pages.try_iter() {
+                Ok(pages_iter) => pages_iter.for_each(|id| {
+                    match pages.get_attr(id.as_str().expect("got str")) {
+                        Ok(page) => {
+                            let mut add_page = false;
+                            match page.get_attr("tags") {
+                                Ok(tags) => {
+                                    let tags2 = tags.clone();
+
+                                    // do the first loop to add
+                                    match tags.try_iter() {
+                                        Ok(tags_iter) => {
+                                            tags_iter.for_each(|tag| {
+                                                filters.iter().for_each(|filter| {
+                                                    if filter.0.contains(&tag.to_string()) {
+                                                        add_page = true;
+                                                    }
+                                                    ()
+                                                });
+                                            });
+                                        }
+                                        Err(e) => event!(Level::ERROR, "{}", e),
+                                    };
+
+                                    // loop again to remove because order matters
+                                    match tags2.try_iter() {
+                                        Ok(tags_iter) => {
+                                            tags_iter.for_each(|tag| {
+                                                filters.iter().for_each(|filter| {
+                                                    if filter.1.contains(&tag.to_string()) {
+                                                        add_page = false;
+                                                    }
+                                                    ()
+                                                });
+                                            });
+                                        }
+                                        Err(e) => event!(Level::ERROR, "{}", e),
+                                    };
+                                }
+                                Err(e) => event!(Level::ERROR, "{}", e),
+                            }
+
+                            if add_page {
+                                ids.insert(id.to_string());
+                            }
+                        }
+                        Err(e) => event!(Level::ERROR, "{}", e),
+                    };
+                }),
+                Err(e) => event!(Level::ERROR, "{}", e),
+            };
+        }
+        Err(e) => {
+            event!(Level::ERROR, "{}", e);
+        }
+    };
+    Value::from_iter(ids.into_iter())
 }

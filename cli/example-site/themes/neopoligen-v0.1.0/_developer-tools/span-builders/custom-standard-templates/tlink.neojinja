@@ -1,0 +1,39 @@
+[#- type: standard -#]
+[!- import "includes/theme-macros.neojinja" as theme -!]
+
+[! if page_id == span.content.spans[0].content.text !]
+[@ theme.page_title(site, page_id, span.content.spans[0].content.text) @]
+[! else !]
+    [! if site.pages[span.content.spans[0].content.text] !]
+        <a href="[@ theme.page_href(site, page_id, span.content.spans[0].content.text) @]"
+        class="page-link
+        [@ span.content.key_value_attributes['class'] @]
+        "
+
+        [!- for attribute in span.content.key_value_attributes -!]
+        [@- ' ' -@]
+        [! if attribute != 'class' !]
+        [@- attribute -@]="[@- span.content.key_value_attributes[attribute] -@]"
+        [! endif !]
+        [!- endfor -!]
+        [!- for flag in span.content.flag_attributes -!]
+        [@- ' ' -@][@- flag -@]
+        [!- endfor -!]
+        >
+        [@- theme.page_title(site, page_id, span.content.spans[0].content.text) -@]
+        </a>
+    [! else !]
+        <span class="missing-page">[missing-page]</span>
+    [! endif !]
+[! endif !]
+
+
+~~~~~~~~~~
+
+
+-- metadata
+-- date: 2024-02-03 03:13:57
+-- id: 2brmmqau
+-- status: published
+
+

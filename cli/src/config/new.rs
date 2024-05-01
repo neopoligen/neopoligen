@@ -1,4 +1,5 @@
 use crate::config::Config;
+use crate::config::JsonConfig;
 use crate::config_folders::ConfigFolders;
 use crate::config_section_categories::ConfigSectionCategories;
 use crate::helpers::file_exists::file_exists;
@@ -13,10 +14,16 @@ use std::path::PathBuf;
 
 impl Config {
     pub fn new(project_root: PathBuf) -> Config {
-        let configuration_root =
-            PathBuf::from(format!("{}/{}", project_root.display(), "configuration"));
-        let default_language =
-            get_config_file_single_line(&configuration_root, "default-language.txt").unwrap();
+        let json_config_path =
+            PathBuf::from(format!("{}/{}", project_root.display(), "config.json"));
+
+        let json_config = load_config_file(json_config_path).unwrap();
+
+        //        let configuration_root =
+        //           PathBuf::from(format!("{}/{}", project_root.display(), "configuration"));
+        // Deprecated: TODO - get this from the JSON
+        // let default_language = json_config.default_language;
+
         let files_root = PathBuf::from(format!("{}/{}", project_root.display(), "files"));
         let images_root = PathBuf::from(format!("{}/{}", project_root.display(), "images"));
         let mp3s_root = PathBuf::from(format!("{}/{}", project_root.display(), "mp3s"));
@@ -30,7 +37,7 @@ impl Config {
         //  PathBuf::from(format!("{}/parsing-errors", status_root.display(),));
         // let theme_errors_root = PathBuf::from(format!("{}/theme-errors", status_root.display(),));
 
-        let theme_name = get_config_file_single_line(&configuration_root, "theme.txt").unwrap();
+        let theme_name = &json_config.theme;
 
         let mut theme_root = themes_root.clone();
         theme_root.push(&theme_name);
@@ -67,7 +74,6 @@ impl Config {
 
         let folders = ConfigFolders {
             build_root,
-            configuration_root: configuration_root.clone(),
             files_root,
             images_root,
             mp3s_root,
@@ -179,11 +185,6 @@ impl Config {
         let now = Local::now();
         let time_zone_offset = now.offset();
 
-        let domain = get_config_file_lines(&configuration_root, "domain.txt")
-            .first()
-            .unwrap()
-            .to_string();
-
         let span_file_paths = get_file_paths_for_extension(&folders.theme_spans_root, "neojinja");
         // dbg!(&span_file_paths);
         let unsorted_standard_spans: Vec<String> = span_file_paths
@@ -217,9 +218,6 @@ impl Config {
             .collect();
         let key_value_spans = sorted(unsorted_key_value_spans).rev().collect();
 
-        let input_date_formats =
-            get_config_file_lines(&configuration_root, "input-date-formats.txt");
-
         let section_attribute_excludes =
             get_config_file_lines(&theme_configuration_root, "section-attribute-excludes.txt");
 
@@ -238,10 +236,10 @@ impl Config {
         };
 
         Config {
-            default_language,
-            domain: domain.parse().unwrap(),
+            //
+            // default_language,
             folders,
-            input_date_formats,
+            json_config,
             json_plugins,
             key_value_spans,
             main_body_section_excludes,
@@ -249,12 +247,12 @@ impl Config {
             section_categories,
             standard_spans,
             text_plugins,
-            theme_name,
             time_zone_offset: time_zone_offset.to_string(),
         }
     }
 }
 
+// Deprecated: TODO: Remove this in favor of using the JSON
 fn get_config_file_lines(file_dir: &PathBuf, file_name: &str) -> Vec<String> {
     let mut file_path = file_dir.clone();
     file_path.push(file_name);
@@ -279,30 +277,32 @@ fn get_config_file_lines(file_dir: &PathBuf, file_name: &str) -> Vec<String> {
     }
 }
 
-fn get_config_file_single_line(file_dir: &PathBuf, file_name: &str) -> Option<String> {
-    let mut file_path = file_dir.clone();
-    file_path.push(file_name);
-    match fs::read_to_string(&file_path) {
-        Ok(data) => data.lines().find_map(|line| {
-            if line.trim().starts_with("#") {
-                None
-            } else if line.trim() != "" {
-                Some(line.trim().to_string())
-            } else {
-                None
-            }
-        }),
-        Err(e) => panic!(
-            "\nERROR: Could not read config file:\n({})\n{}\n",
-            e,
-            &file_path.display()
-        ),
-    }
-}
-
 #[cfg(test)]
 mod test {
     // NOTE: This is basically all file system
     // stuff. TODO is to add better error
     // messages for missing files
+}
+
+fn load_config_file(path: PathBuf) -> Result<JsonConfig, String> {
+    match path.try_exists() {
+        Ok(exists) => {
+            if exists == true {
+                match fs::read_to_string(&path) {
+                    Ok(text) => match serde_json::from_str::<JsonConfig>(text.as_str()) {
+                        Ok(data) => Ok(data),
+                        Err(e) => Err(format!(
+                            "Could not parse JSON file: {}\n{}",
+                            &path.display(),
+                            e
+                        )),
+                    },
+                    Err(_) => Err(format!("Could not read JSON file: {}", &path.display())),
+                }
+            } else {
+                Err(format!("Could not read JSON file: {}", &path.display()))
+            }
+        }
+        Err(_) => Err(format!("No file at: {}", &path.display())),
+    }
 }

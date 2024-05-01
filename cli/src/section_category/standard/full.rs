@@ -111,17 +111,17 @@ mod test {
                 bounds: "full".to_string(),
                 category: SectionCategory::StandardSectionFull {
                     containers: vec![Child::Block(vec![
-                        Span::Word {
+                        Span::WordSegment {
                             text: "delta".to_string(),
-                            template: "spans/word.neojinja".to_string(),
+                            template: "spans/word_segment.neojinja".to_string(),
                         },
                         Span::Space {
                             text: " ".to_string(),
                             template: "spans/space.neojinja".to_string(),
                         },
-                        Span::Word {
+                        Span::WordSegment {
                             text: "lima".to_string(),
-                            template: "spans/word.neojinja".to_string(),
+                            template: "spans/word_segment.neojinja".to_string(),
                         },
                     ])],
                 },
@@ -159,25 +159,25 @@ mod test {
                 bounds: "full".to_string(),
                 category: SectionCategory::StandardSectionFull {
                     containers: vec![Child::Block(vec![
-                        Span::Word {
+                        Span::WordSegment {
                             text: "tango".to_string(),
-                            template: "spans/word.neojinja".to_string(),
+                            template: "spans/word_segment.neojinja".to_string(),
                         },
                         Span::Space {
                             text: " ".to_string(),
                             template: "spans/space.neojinja".to_string(),
                         },
-                        Span::Word {
+                        Span::WordSegment {
                             text: "alfa".to_string(),
-                            template: "spans/word.neojinja".to_string(),
+                            template: "spans/word_segment.neojinja".to_string(),
                         },
                         Span::Space {
                             text: "\n".to_string(),
                             template: "spans/space.neojinja".to_string(),
                         },
-                        Span::Word {
+                        Span::WordSegment {
                             text: "bravo".to_string(),
-                            template: "spans/word.neojinja".to_string(),
+                            template: "spans/word_segment.neojinja".to_string(),
                         },
                     ])],
                 },
@@ -217,47 +217,47 @@ mod test {
                 category: SectionCategory::StandardSectionFull {
                     containers: vec![
                         Child::Block(vec![
-                            Span::Word {
+                            Span::WordSegment {
                                 text: "delta".to_string(),
-                                template: "spans/word.neojinja".to_string(),
+                                template: "spans/word_segment.neojinja".to_string(),
                             },
                             Span::Space {
                                 text: " ".to_string(),
                                 template: "spans/space.neojinja".to_string(),
                             },
-                            Span::Word {
+                            Span::WordSegment {
                                 text: "echo".to_string(),
-                                template: "spans/word.neojinja".to_string(),
+                                template: "spans/word_segment.neojinja".to_string(),
                             },
                             Span::Space {
                                 text: "\n".to_string(),
                                 template: "spans/space.neojinja".to_string(),
                             },
-                            Span::Word {
+                            Span::WordSegment {
                                 text: "whiskey".to_string(),
-                                template: "spans/word.neojinja".to_string(),
+                                template: "spans/word_segment.neojinja".to_string(),
                             },
                         ]),
                         Child::Block(vec![
-                            Span::Word {
+                            Span::WordSegment {
                                 text: "mike".to_string(),
-                                template: "spans/word.neojinja".to_string(),
+                                template: "spans/word_segment.neojinja".to_string(),
                             },
                             Span::Space {
                                 text: " ".to_string(),
                                 template: "spans/space.neojinja".to_string(),
                             },
-                            Span::Word {
+                            Span::WordSegment {
                                 text: "oscar".to_string(),
-                                template: "spans/word.neojinja".to_string(),
+                                template: "spans/word_segment.neojinja".to_string(),
                             },
                             Span::Space {
                                 text: "\n".to_string(),
                                 template: "spans/space.neojinja".to_string(),
                             },
-                            Span::Word {
+                            Span::WordSegment {
                                 text: "papa".to_string(),
-                                template: "spans/word.neojinja".to_string(),
+                                template: "spans/word_segment.neojinja".to_string(),
                             },
                         ]),
                     ],

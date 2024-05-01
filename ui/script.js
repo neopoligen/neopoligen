@@ -46,7 +46,7 @@ function get_active_site() {
 
 function get_template_error_status() {
   invoke('get_template_error_status', {}).then((raw) => {
-    const el = document.querySelector('.templateErrorStatus')
+    const el = document.querySelector('.buildStatus')
     el.innerHTML = raw 
   })
 }

@@ -779,7 +779,7 @@ impl Site {
 // // MOVED
 // fn get_span_words(span: &Span) -> Vec<String> {
 //     match span {
-//         Span::Word { text, .. } => {
+//         Span::WordSegment { text, .. } => {
 //             vec![text.to_string()]
 //         }
 //         Span::Space { .. } => vec![" ".to_string()],

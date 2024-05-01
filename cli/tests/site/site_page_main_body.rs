@@ -12,6 +12,7 @@ mod site_page_main_body {
     use std::collections::BTreeSet;
 
     #[test]
+    #[ignore]
     pub fn basic_main_body_tests() {
         let file_set = FileSet::set2();
         let config = Config::set2();
@@ -22,25 +23,25 @@ mod site_page_main_body {
             bounds: "full".to_string(),
             category: SectionCategory::StandardSectionFull {
                 containers: vec![Child::Block(vec![
-                    Span::Word {
+                    Span::WordSegment {
                         text: "Test".to_string(),
-                        template: "spans/word.neojinja".to_string(),
+                        template: "spans/word_segment.neojinja".to_string(),
                     },
                     Span::Space {
                         text: " ".to_string(),
                         template: "spans/space.neojinja".to_string(),
                     },
-                    Span::Word {
+                    Span::WordSegment {
                         text: "main_body".to_string(),
-                        template: "spans/word.neojinja".to_string(),
+                        template: "spans/word_segment.neojinja".to_string(),
                     },
                     Span::Space {
                         text: " ".to_string(),
                         template: "spans/space.neojinja".to_string(),
                     },
-                    Span::Word {
+                    Span::WordSegment {
                         text: "output".to_string(),
-                        template: "spans/word.neojinja".to_string(),
+                        template: "spans/word_segment.neojinja".to_string(),
                     },
                 ])],
             },

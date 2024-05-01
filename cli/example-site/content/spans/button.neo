@@ -1,0 +1,23 @@
+-- title
+
+Span: button 
+
+-- subtitle
+
+The Button Span
+
+-- p
+
+Basic Example: 
+
+<<button|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<button|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- id: 2bqpd2kj
+

@@ -1,0 +1,2 @@
+[# output defined in includes/theme-macros.neojinja #]
+[!- include "sections/p/full/default.neojinja" -!]
