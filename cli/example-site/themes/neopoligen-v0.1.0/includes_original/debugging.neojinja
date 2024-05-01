@@ -1,4 +1,4 @@
-[!- import "includes/theme-macros.neojinja" as theme -!]
+[!- import "macros.neojinja" as theme -!]
 <section class="debugging">
 <h3>Debugging</h3>
 <ul>

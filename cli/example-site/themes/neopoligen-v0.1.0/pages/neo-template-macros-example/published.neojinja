@@ -1,5 +1,5 @@
 [!- extends "wrappers/two-column.neojinja" -!]
-[!- import "includes/theme-macros.neojinja" as theme -!]
+[!- import "macros.neojinja" as theme -!]
 
 [# 
 WARNING: This page is used for testing as well as 

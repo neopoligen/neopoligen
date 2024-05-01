@@ -27,7 +27,7 @@ so other scripts can use it #]
 
 [! include "includes/head-for-head.neojinja" !]
 
-<link rel="stylesheet" href="/theme/fonts-and-colors.css" />
+<link rel="stylesheet" href="/theme/variables.css" />
 <link rel="stylesheet" href="/theme/styles.css" />
 <link rel="stylesheet" href="/theme/highlighting/code-solarized-light.css" />
 [! include "includes/css-for-head.neojinja" !]
@@ -37,6 +37,7 @@ so other scripts can use it #]
 </head>
 <body>
     <header class="one-column-wrapper">
+    <div>
 [@ theme.link_or_title(site, page_id, "2dwmgthu", { "title": "Home Page" }) @]
 <settings-gear></settings-gear>
     </header>

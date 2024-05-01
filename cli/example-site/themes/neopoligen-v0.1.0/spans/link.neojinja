@@ -1,5 +1,5 @@
 [#- type: standard -#]
-[!- import "includes/theme-macros.neojinja" as theme -!]
+[!- import "macros.neojinja" as theme -!]
 
 <a href="[@- span.content.flag_attributes[0] -@]"
 [!- for attribute in span.content.key_value_attributes -!]

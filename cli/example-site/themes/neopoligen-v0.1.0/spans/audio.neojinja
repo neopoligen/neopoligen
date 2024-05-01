@@ -1,5 +1,5 @@
 [#- type: standard -#]
-[!- import "includes/theme-macros.neojinja" as theme -!]
+[!- import "macros.neojinja" as theme -!]
 
 
 TODO: AUDIO

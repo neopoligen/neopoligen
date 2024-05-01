@@ -1,4 +1,4 @@
-[!- import "includes/theme-macros.neojinja" as theme -!]
+[!- import "macros.neojinja" as theme -!]
 
 <section 
     [@ theme.section_attrs(site, page_id, section, ["image_default_section", "standard_section", "flow"]) -@]

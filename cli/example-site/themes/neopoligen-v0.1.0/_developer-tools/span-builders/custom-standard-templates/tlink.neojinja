@@ -1,5 +1,5 @@
 [#- type: standard -#]
-[!- import "includes/theme-macros.neojinja" as theme -!]
+[!- import "macros.neojinja" as theme -!]
 
 [! if page_id == span.content.spans[0].content.text !]
 [@ theme.page_title(site, page_id, span.content.spans[0].content.text) @]
