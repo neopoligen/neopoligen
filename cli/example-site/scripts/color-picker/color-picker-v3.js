@@ -178,9 +178,10 @@ customElements.define(
       }
 
       // make sure active is set to light to start with
-      this.state.active.colors.alfa.secondaryH = this.state.modes.light.colors.alfa.collectionShift
-      this.state.active.colors.bravo.secondaryH = this.state.modes.light.colors.bravo.collectionShift
-
+      this.state.active.colors.alfa.secondaryH =
+        this.state.modes.light.colors.alfa.collectionShift
+      this.state.active.colors.bravo.secondaryH =
+        this.state.modes.light.colors.bravo.collectionShift
     }
 
     addMainWrapper() {
@@ -231,10 +232,17 @@ customElements.define(
             <div class="stripe bg-foxtrot"></div>
         </div>
 
+        <div class="stylesheet-wrapper section-wrapper">
+            <h3>Stylesheet</h3>
+            <pre class="the-stylesheet"></pre>
+        </div>
+
+        <!--
         <div class="debug-wrapper section-wrapper">
             <h3>Raw Data</h3>
             <pre class="raw-data"></pre>
         </div>
+        -->
     </div>
   </div>
 
@@ -459,6 +467,15 @@ h2, h3 {
 
 .strong {
     font-weight: 700;
+}
+
+.tertiary-chip {
+    border-inline: 1px solid var(--dev-color-bw-match-90);
+    border-block: 3px solid var(--dev-color-bw-match-90);
+}
+
+.tertiary-chip-selected {
+    border-block: 3px solid var(--dev-color-bw-reverse-90);
 }
 
 .tertiary-rect {
@@ -908,8 +925,137 @@ h2, h3 {
       return styles
     }
 
-    prop(key, value) {
-      return `${key}: ${value};\n`
+    genMatchStyles(mode) {
+      let config = {
+        light: { match: '255 255 255', reverse: '0 0 0' },
+        dark: { match: '0 0 0', reverse: '255 255 255' },
+      }
+      let styles = ``
+
+      styles += `--color-bw-match: rgb(${config[mode].match});\n`
+      for (let alpha = 90; alpha > 0; alpha = alpha - 10) {
+        styles += `--color-bw-match-${alpha}: rgb(${config[mode].match} / ${alpha}%);\n`
+      }
+
+      styles += `--color-bw-reverse: rgb(${config[mode].reverse});\n`
+      for (let alpha = 90; alpha > 0; alpha = alpha - 10) {
+        styles += `--color-bw-reverse-${alpha}: rgb(${config[mode].reverse} / ${alpha}%);\n`
+      }
+
+      return styles
+    }
+
+    genStyles(mode) {
+      let response = ``
+      const theValues = {
+        base: [
+          this.state.modes[mode].l,
+          this.state.modes[mode].c,
+          this.state.modes[mode].h,
+        ],
+        alfa: this.getAlfa(mode),
+        bravo: this.getBravo(mode),
+        charlie: this.getCharlie(mode),
+        delta: this.getDelta(mode),
+        echo: this.getEcho(mode),
+        foxtrot: this.getFoxtrot(mode),
+      }
+      for (let color in theValues) {
+        response += this.prop(
+          `--color-${color}`,
+          `oklch(${theValues[color][0]}% ${theValues[color][1]} ${theValues[color][2]})`
+        )
+        for (let alpha = 90; alpha > 0; alpha = alpha - 10) {
+          response += this.prop(
+            `--color-${color}-${alpha}`,
+            `oklch(${theValues[color][0]}% ${theValues[color][1]} ${theValues[color][2]} / ${alpha}%)`
+          )
+        }
+      }
+
+      return response.trim()
+    }
+
+    genStylesFull() {
+
+
+      let styles = `
+      :root {
+          --color-black: rgb(0 0 0);
+          --border-black: 1px solid var(--color-black);
+          --color-white: rgb(255 255 255);
+          --border-white: 1px solid var(--color-white);
+          --color-black-10: rgb(0 0 0 / 10%);
+          --border-black-10: 1px solid var(--color-black-10);
+          --color-white-10: rgb(255 255 255 / 10%);
+          --border-white-10: 1px solid var(--color-white-10);
+          --color-black-20: rgb(0 0 0 / 20%);
+          --border-black-20: 1px solid var(--color-black-20);
+          --color-white-20: rgb(255 255 255 / 20%);
+          --border-white-20: 1px solid var(--color-white-20);
+          --color-black-30: rgb(0 0 0 / 30%);
+          --border-black-30: 1px solid var(--color-black-30);
+          --color-white-30: rgb(255 255 255 / 30%);
+          --border-white-30: 1px solid var(--color-white-30);
+          --color-black-40: rgb(0 0 0 / 40%);
+          --border-black-40: 1px solid var(--color-black-40);
+          --color-white-40: rgb(255 255 255 / 40%);
+          --border-white-40: 1px solid var(--color-white-40);
+          --color-black-50: rgb(0 0 0 / 50%);
+          --border-black-50: 1px solid var(--color-black-50);
+          --color-white-50: rgb(255 255 255 / 50%);
+          --border-white-50: 1px solid var(--color-white-50);
+          --color-black-60: rgb(0 0 0 / 60%);
+          --border-black-60: 1px solid var(--color-black-60);
+          --color-white-60: rgb(255 255 255 / 60%);
+          --border-white-60: 1px solid var(--color-white-60);
+          --color-black-70: rgb(0 0 0 / 70%);
+          --border-black-70: 1px solid var(--color-black-70);
+          --color-white-70: rgb(255 255 255 / 70%);
+          --border-white-70: 1px solid var(--color-white-70);
+          --color-black-80: rgb(0 0 0 / 80%);
+          --border-black-80: 1px solid var(--color-black-80);
+          --color-white-80: rgb(255 255 255 / 80%);
+          --border-white-80: 1px solid var(--color-white-80);
+          --color-black-90: rgb(0 0 0 / 90%);
+          --border-black-90: 1px solid var(--color-black-90);
+          --color-white-90: rgb(255 255 255 / 90%);
+          --border-white-90: 1px solid var(--color-white-90);
+      }
+      
+      `
+      
+            styles += `body { 
+      ${this.genMatchStyles('light')}        
+      ${this.genStyles('light')} 
+      }
+              
+      `
+      
+            styles += `body.dark { 
+              ${this.genMatchStyles('dark')}  
+              ${this.genStyles('dark')} 
+          }\n`
+      
+            styles += `@media (prefers-color-scheme: dark) {\n`
+      
+            styles += `body { 
+       
+              ${this.genMatchStyles('dark')}  
+              ${this.genStyles('dark')} 
+          
+          }\n`
+      
+            styles += `body.light { 
+              ${this.genMatchStyles('light')}  
+              ${this.genStyles('light')} 
+          }\n`
+      
+            styles += `}\n`
+      
+            styles += `${this.genBaseStyles()}\n`
+      
+   return styles
     }
 
     getAlfa(mode) {
@@ -1082,57 +1228,6 @@ h2, h3 {
           360
       )
       return payload
-    }
-
-    genMatchStyles(mode) {
-      let config = {
-        light: { match: '255 255 255', reverse: '0 0 0' },
-        dark: { match: '0 0 0', reverse: '255 255 255' },
-      }
-      let styles = ``
-
-      styles += `--color-bw-match: rgb(${config[mode].match});\n`
-      for (let alpha = 90; alpha > 0; alpha = alpha - 10) {
-        styles += `--color-bw-match-${alpha}: rgb(${config[mode].match} / ${alpha}%);\n`
-      }
-
-      styles += `--color-bw-reverse: rgb(${config[mode].reverse});\n`
-      for (let alpha = 90; alpha > 0; alpha = alpha - 10) {
-        styles += `--color-bw-reverse-${alpha}: rgb(${config[mode].reverse} / ${alpha}%);\n`
-      }
-
-      return styles
-    }
-
-    genStyles(mode) {
-      let response = ``
-      const theValues = {
-        base: [
-          this.state.modes[mode].l,
-          this.state.modes[mode].c,
-          this.state.modes[mode].h,
-        ],
-        alfa: this.getAlfa(mode),
-        bravo: this.getBravo(mode),
-        charlie: this.getCharlie(mode),
-        delta: this.getDelta(mode),
-        echo: this.getEcho(mode),
-        foxtrot: this.getFoxtrot(mode),
-      }
-      for (let color in theValues) {
-        response += this.prop(
-          `--color-${color}`,
-          `oklch(${theValues[color][0]}% ${theValues[color][1]} ${theValues[color][2]})`
-        )
-        for (let alpha = 90; alpha > 0; alpha = alpha - 10) {
-          response += this.prop(
-            `--color-${color}-${alpha}`,
-            `oklch(${theValues[color][0]}% ${theValues[color][1]} ${theValues[color][2]} / ${alpha}%)`
-          )
-        }
-      }
-
-      return response.trim()
     }
 
     handleColorButtonClick(event) {
@@ -1313,99 +1408,18 @@ h2, h3 {
       return ['alfa', 'bravo']
     }
 
+    prop(key, value) {
+      return `${key}: ${value};\n`
+    }
+
     sendStylesheet() {
       // TODO: Add bw-match and bw-reverse
 
-      let styles = `
-:root {
-    --size-1: 2.986rem;
-    --size-2: 2.488rem;
-    --size-3: 2.074rem;
-    --size-4: 1.728rem;
-    --size-5: 1.44rem;
-    --size-6: 1.2rem;
-    --size-7: 1rem;
-    --size-8: 0.833rem;
-    --size-9: 0.694rem;
-    --size-10: 0.579rem;
-    --color-black: rgb(0 0 0);
-    --border-black: 1px solid var(--color-black);
-    --color-white: rgb(255 255 255);
-    --border-white: 1px solid var(--color-white);
-    --color-black-10: rgb(0 0 0 / 10%);
-    --border-black-10: 1px solid var(--color-black-10);
-    --color-white-10: rgb(255 255 255 / 10%);
-    --border-white-10: 1px solid var(--color-white-10);
-    --color-black-20: rgb(0 0 0 / 20%);
-    --border-black-20: 1px solid var(--color-black-20);
-    --color-white-20: rgb(255 255 255 / 20%);
-    --border-white-20: 1px solid var(--color-white-20);
-    --color-black-30: rgb(0 0 0 / 30%);
-    --border-black-30: 1px solid var(--color-black-30);
-    --color-white-30: rgb(255 255 255 / 30%);
-    --border-white-30: 1px solid var(--color-white-30);
-    --color-black-40: rgb(0 0 0 / 40%);
-    --border-black-40: 1px solid var(--color-black-40);
-    --color-white-40: rgb(255 255 255 / 40%);
-    --border-white-40: 1px solid var(--color-white-40);
-    --color-black-50: rgb(0 0 0 / 50%);
-    --border-black-50: 1px solid var(--color-black-50);
-    --color-white-50: rgb(255 255 255 / 50%);
-    --border-white-50: 1px solid var(--color-white-50);
-    --color-black-60: rgb(0 0 0 / 60%);
-    --border-black-60: 1px solid var(--color-black-60);
-    --color-white-60: rgb(255 255 255 / 60%);
-    --border-white-60: 1px solid var(--color-white-60);
-    --color-black-70: rgb(0 0 0 / 70%);
-    --border-black-70: 1px solid var(--color-black-70);
-    --color-white-70: rgb(255 255 255 / 70%);
-    --border-white-70: 1px solid var(--color-white-70);
-    --color-black-80: rgb(0 0 0 / 80%);
-    --border-black-80: 1px solid var(--color-black-80);
-    --color-white-80: rgb(255 255 255 / 80%);
-    --border-white-80: 1px solid var(--color-white-80);
-    --color-black-90: rgb(0 0 0 / 90%);
-    --border-black-90: 1px solid var(--color-black-90);
-    --color-white-90: rgb(255 255 255 / 90%);
-    --border-white-90: 1px solid var(--color-white-90);
-}
-
-`
-
-      styles += `body { 
-${this.genMatchStyles('light')}        
-${this.genStyles('light')} 
-}
-        
-`
-
-      styles += `body.dark { 
-        ${this.genMatchStyles('dark')}  
-        ${this.genStyles('dark')} 
-    }\n`
-
-      styles += `@media (prefers-color-scheme: dark) {\n`
-
-      styles += `body { 
- 
-        ${this.genMatchStyles('dark')}  
-        ${this.genStyles('dark')} 
-    
-    }\n`
-
-      styles += `body.light { 
-        ${this.genMatchStyles('light')}  
-        ${this.genStyles('light')} 
-    }\n`
-
-      styles += `}\n`
-
-      styles += `${this.genBaseStyles()}\n`
 
       if (this.childWindow && this.childWindow.name === this.childWindowName) {
         const payload = JSON.stringify({
           type: 'colors-and-fonts',
-          styles: styles,
+          styles: this.genStylesFull(),
           mode: this.mode(),
         })
         this.childWindow.postMessage(payload)
@@ -1499,11 +1513,28 @@ ${this.genStyles('light')}
       // secondary rects
       this.primaries().forEach((primary, primaryIndex) => {
         this.hValues().forEach((h) => {
-          this.collections().forEach((collection) => {
+          this.collections().forEach((collection, collectionIndex) => {
+            let h2 =
+              (this.state.modes[this.mode()].colors[primary.key].h + h) % 360
+            if (h2 === this.state.active.colors[primary.key].secondaryH) {
+              if (
+                collectionIndex ===
+                this.state.modes[this.mode()].colors[primary.key]
+                  .collectionIndex
+              ) {
+                this.modAddStyleTo(
+                  `.tertiary-chip-index-${primary.key}-${collectionIndex}`,
+                  `tertiary-chip-selected`
+                )
+              } else {
+                this.modRemoveStyleFrom(
+                  `.tertiary-chip-index-${primary.key}-${collectionIndex}`,
+                  `tertiary-chip-selected`
+                )
+              }
+            }
             collection.forEach((coords) => {
               const key = `color-secondary-rect-coords-${primary.key}-${coords[0]}-${coords[1]}-${h}`
-              let h2 =
-                (this.state.modes[this.mode()].colors[primary.key].h + h) % 360
               let l2 =
                 (this.state.modes[this.mode()].colors[primary.key].l +
                   100 +
@@ -1542,6 +1573,11 @@ ${this.genStyles('light')}
         })
       })
 
+      //   // selected tertiary
+      //   this.collections().forEach((collection, collectionIndex) => {
+      //     this.modAddStyleTo(`.tertiary-chip-index-alfa-${collectionIndex}`, `tertiary-chip-selected`)
+      //   })
+
       // mode button highlight
       if (this.state.active.mode === 'light') {
         this.modAddStyleTo(`.mode-button-light`, `mode-button-selected`)
@@ -1574,8 +1610,8 @@ ${this.genStyles('light')}
       // update the secondary button styles
       this.primaryColors().forEach((color) => {
         this.hValues().forEach((h) => {
-          let hCheck = (this.state.modes[this.mode()].colors[color].collectionShift) % 360
-          this.modLog(hCheck)
+          let hCheck =
+            this.state.modes[this.mode()].colors[color].collectionShift % 360
           if (h === hCheck) {
             this.modAddStyleTo(
               `.secondaryButton-${color}-${h}`,
@@ -1600,42 +1636,41 @@ ${this.genStyles('light')}
         })
       })
 
-    //   // primary chip selected
-    //   // Off for now since the border was so strong
-    //   // visually
-    //   this.lValues().forEach((l) => {
-    //     this.cValues().forEach((c, cIndex) => {
-    //       this.primaryColors().forEach((color) => {
-    //         if (
-    //           this.state.modes[this.mode()].colors.alfa.l === l &&
-    //           this.state.modes[this.mode()].colors.alfa.c === cIndex &&
-    //           this.state.modes[this.mode()].colors.alfa.h ===
-    //             this.state.active.h
-    //         ) {
-    //           this.modAddStyleTo(
-    //             `.chip-${l}-${cIndex}`,
-    //             `primary-chip-selected-${l}-${cIndex}`
-    //           )
-    //         } else if (
-    //           this.state.modes[this.mode()].colors.bravo.l === l &&
-    //           this.state.modes[this.mode()].colors.bravo.c === cIndex &&
-    //           this.state.modes[this.mode()].colors.bravo.h ===
-    //             this.state.active.h
-    //         ) {
-    //           this.modAddStyleTo(
-    //             `.chip-${l}-${cIndex}`,
-    //             `primary-chip-selected-${l}-${cIndex}`
-    //           )
-    //         } else {
-    //           this.modRemoveStyleFrom(
-    //             `.chip-${l}-${cIndex}`,
-    //             `primary-chip-selected-${l}-${cIndex}`
-    //           )
-    //         }
-    //       })
-    //     })
-    //   })
-
+      //   // primary chip selected
+      //   // Off for now since the border was so strong
+      //   // visually
+      //   this.lValues().forEach((l) => {
+      //     this.cValues().forEach((c, cIndex) => {
+      //       this.primaryColors().forEach((color) => {
+      //         if (
+      //           this.state.modes[this.mode()].colors.alfa.l === l &&
+      //           this.state.modes[this.mode()].colors.alfa.c === cIndex &&
+      //           this.state.modes[this.mode()].colors.alfa.h ===
+      //             this.state.active.h
+      //         ) {
+      //           this.modAddStyleTo(
+      //             `.chip-${l}-${cIndex}`,
+      //             `primary-chip-selected-${l}-${cIndex}`
+      //           )
+      //         } else if (
+      //           this.state.modes[this.mode()].colors.bravo.l === l &&
+      //           this.state.modes[this.mode()].colors.bravo.c === cIndex &&
+      //           this.state.modes[this.mode()].colors.bravo.h ===
+      //             this.state.active.h
+      //         ) {
+      //           this.modAddStyleTo(
+      //             `.chip-${l}-${cIndex}`,
+      //             `primary-chip-selected-${l}-${cIndex}`
+      //           )
+      //         } else {
+      //           this.modRemoveStyleFrom(
+      //             `.chip-${l}-${cIndex}`,
+      //             `primary-chip-selected-${l}-${cIndex}`
+      //           )
+      //         }
+      //       })
+      //     })
+      //   })
 
       //  alfa bravo bolds
       this.lValues().forEach((l) => {
@@ -1647,30 +1682,30 @@ ${this.genStyles('light')}
               this.state.modes[this.mode()].colors.alfa.h ===
                 this.state.active.h
             ) {
-              this.modUpdateHTML(`.chip-button-alfa-${l}-${cIndex}`, `alfa &lt;`)
-              this.modAddStyleTo(
+              this.modUpdateHTML(
+                `.chip-button-alfa-${l}-${cIndex}`,
+                `alfa &lt;`
+              )
+              this.modAddStyleTo(`.chip-button-alfa-${l}-${cIndex}`, `strong`)
+            } else {
+              this.modUpdateHTML(`.chip-button-alfa-${l}-${cIndex}`, `alfa`)
+              this.modRemoveStyleFrom(
                 `.chip-button-alfa-${l}-${cIndex}`,
                 `strong`
               )
-            } else {
-                this.modUpdateHTML(`.chip-button-alfa-${l}-${cIndex}`, `alfa`)
-                this.modRemoveStyleFrom(
-                  `.chip-button-alfa-${l}-${cIndex}`,
-                  `strong`
-                )
             }
-            
+
             if (
               this.state.modes[this.mode()].colors.bravo.l === l &&
               this.state.modes[this.mode()].colors.bravo.c === cIndex &&
               this.state.modes[this.mode()].colors.bravo.h ===
                 this.state.active.h
             ) {
-              this.modUpdateHTML(`.chip-button-bravo-${l}-${cIndex}`, `&gt; bravo`)
-              this.modAddStyleTo(
+              this.modUpdateHTML(
                 `.chip-button-bravo-${l}-${cIndex}`,
-                `strong`
+                `&gt; bravo`
               )
+              this.modAddStyleTo(`.chip-button-bravo-${l}-${cIndex}`, `strong`)
             } else {
               this.modUpdateHTML(`.chip-button-bravo-${l}-${cIndex}`, `bravo`)
               this.modRemoveStyleFrom(
@@ -1682,10 +1717,9 @@ ${this.genStyles('light')}
         })
       })
 
+    //   this.modUpdateHTML(`.raw-data`, JSON.stringify(this.state.modes, null, 2))
 
-
-
-      this.modUpdateHTML(`.raw-data`, JSON.stringify(this.state.modes, null, 2))
+      this.modUpdateHTML(`.the-stylesheet`, this.genStylesFull())
 
       this.sendStylesheet()
     }
