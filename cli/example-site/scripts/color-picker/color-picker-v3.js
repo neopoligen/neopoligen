@@ -1596,10 +1596,6 @@ h2, h3 {
         })
       })
 
-      //   // selected tertiary
-      //   this.collections().forEach((collection, collectionIndex) => {
-      //     this.modAddStyleTo(`.tertiary-chip-index-alfa-${collectionIndex}`, `tertiary-chip-selected`)
-      //   })
 
       // mode button highlight
       if (this.state.active.mode === 'light') {
