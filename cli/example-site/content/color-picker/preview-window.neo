@@ -119,8 +119,8 @@ Details And Examples
 <div role="tabpanel" class="flow">
     <h3>Heading Underline Examples</h3>
     <p>This example contains several sections that each have a heading 
-    with a different primary color and underline color combination. 
-    The title of each section is the name of the colors. There's a 
+    with the alfa color and then one of the other five colors used
+    for a one pixel border underline. There's a 
     bunch of place holder text between heading to help reduce visual
     noise from the other headings.<p>
 
@@ -284,8 +284,8 @@ function makeAlphaExamples() {
 
 
 function makeHeadingExamples() {
-    const c1s = ['alfa', 'bravo']
-    const c2s = ['charlie', 'delta', 'echo', 'foxtrot']
+    const c1s = ['alfa']
+    const c2s = ['bravo', 'charlie', 'delta', 'echo', 'foxtrot']
 
     c1s.forEach((c1) => {
         c2s.forEach((c2) => {
@@ -388,6 +388,11 @@ h2 {
     border-bottom: 1px solid var(--color-charlie);
 }
 
+.alfa-bravo {
+    color: var(--color-alfa);
+    border-bottom: 1px solid var(--color-charlie);
+}
+
 .alfa-delta {
     color: var(--color-alfa);
     border-bottom: 1px solid var(--color-delta);
@@ -403,25 +408,6 @@ h2 {
     border-bottom: 1px solid var(--color-foxtrot);
 }
 
-.bravo-charlie {
-    color: var(--color-bravo);
-    border-bottom: 1px solid var(--color-charlie);
-}
-
-.bravo-delta {
-    color: var(--color-bravo);
-    border-bottom: 1px solid var(--color-delta);
-}
-
-.bravo-echo {
-    color: var(--color-bravo);
-    border-bottom: 1px solid var(--color-echo);
-}
-
-.bravo-foxtrot {
-    color: var(--color-bravo);
-    border-bottom: 1px solid var(--color-foxtrot);
-}
 
 -- head
 

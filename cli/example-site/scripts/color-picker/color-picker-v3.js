@@ -538,11 +538,13 @@ h2, h3 {
 }
 
 .tertiary-chip {
-    border-inline: 1px solid var(--dev-color-bw-match-90);
+    border-inline: 2px solid var(--dev-color-bw-match-90);
     border-block: 3px solid var(--dev-color-bw-match-90);
+    margin: 1px;
 }
 
 .tertiary-chip-selected {
+    border-inline: 2px solid var(--dev-color-bw-reverse-90);
     border-block: 3px solid var(--dev-color-bw-reverse-90);
 }
 
