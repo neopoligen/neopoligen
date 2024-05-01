@@ -158,10 +158,7 @@ impl Config {
 
         let section_attribute_excludes = vec![];
 
-        let default_language = String::from("en");
-
         Config {
-            default_language,
             domain,
             folders,
             input_date_formats,

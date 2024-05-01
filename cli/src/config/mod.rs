@@ -38,7 +38,7 @@ pub struct Config {
     pub text_plugins: BTreeMap<String, String>,
     ////////////////////////////
     // Deprecated: move to json.default_language
-    pub default_language: String,
+    // pub default_language: String,
     // Deprecated: move to json.domain
     pub domain: String,
     // Deprecated: move to json.input_date_formats

@@ -22,8 +22,8 @@ impl Config {
         let configuration_root =
             PathBuf::from(format!("{}/{}", project_root.display(), "configuration"));
         // Deprecated: TODO - get this from the JSON
-        let default_language =
-            get_config_file_single_line(&configuration_root, "default-language.txt").unwrap();
+        // let default_language = json_config.default_language;
+
         let files_root = PathBuf::from(format!("{}/{}", project_root.display(), "files"));
         let images_root = PathBuf::from(format!("{}/{}", project_root.display(), "images"));
         let mp3s_root = PathBuf::from(format!("{}/{}", project_root.display(), "mp3s"));
@@ -245,7 +245,8 @@ impl Config {
         };
 
         Config {
-            default_language,
+            //
+            // default_language,
             domain: domain.parse().unwrap(),
             folders,
             input_date_formats,

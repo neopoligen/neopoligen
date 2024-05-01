@@ -411,7 +411,7 @@ impl Site {
                     event!(Level::DEBUG, "||{:?}||", now.elapsed());
                     Some(format!(
                         "/{}/{}/?{}",
-                        self.config.default_language,
+                        self.config.json_config.default_language,
                         id,
                         self.page_href_title(&id).unwrap()
                     ))
@@ -529,7 +529,7 @@ impl Site {
                 None => Some(format!(
                     "{}/{}/{}/index.html",
                     self.config.folders.build_root.display(),
-                    self.config.default_language,
+                    self.config.json_config.default_language,
                     &id,
                 )),
             },
