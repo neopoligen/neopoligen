@@ -283,12 +283,13 @@ customElements.define(
             a feature to let you choose to default to dark modes instead
             </li>
             <li>
-                The picker uses OKLCH which I'm finding much nicer to work with 
+                The picker uses <a href="https://oklch.com/">OKLCH</a> 
+                which I'm finding much nicer to work with 
                 in terms of the way the math picks the colors. I'm using a
                 naive approach that results in values that fall out of 
                 the range of colors inside the color space. I'll see about 
                 addressing that at some point. For now, I'm relying on the
-                fact that the browser fallbacks I've seen work fine. 
+                fact that the browser fallbacks I've seen work fine
                 </li>
             <li>
                 The output stylesheet includes two copies of both the 
@@ -433,8 +434,8 @@ h2, h3 {
 }
 
 .preview-section {
-    text-align: center;
-
+    display: grid;
+    gap: 14px;
 }
 
 .primary-button {
@@ -692,6 +693,17 @@ h2, h3 {
             innerHTML: "Error: preview href not defined"
         })
       }
+
+      this.modAddTo(`.preview-section`, 'button', {
+        innerHTML: 'Randomize',
+        listeners: [
+          [
+            'click',
+            (event) => this.handleRandomizeClick.call(this, event),
+          ],
+        ],
+      })
+
     }
 
     buildPrimaryButton(parent, h) {
@@ -1421,6 +1433,28 @@ h2, h3 {
       this.update()
     }
 
+    handleRandomizeClick(event) {
+      if (this.mode() === 'light') {
+        this.state.modes[this.mode()].l = this.randomNumBetween(50, 99)
+        this.state.modes[this.mode()].c = this.randomNumBetween(1000, 2800000) / 10000000
+        this.state.modes[this.mode()].h = this.randomNumBetween(0, 359)
+        this.state.modes[this.mode()].colors.alfa.l = this.randomNumBetween(0, 4) * 20
+        this.state.modes[this.mode()].colors.alfa.c = this.randomNumBetween(0, 4)
+        this.state.modes[this.mode()].colors.alfa.h = this.randomNumBetween(0, 6) * 60
+        this.state.modes[this.mode()].colors.alfa.collectionShift = this.randomNumBetween(0, 6) * 60
+        this.state.modes[this.mode()].colors.alfa.collectionIndex = this.randomNumBetween(0, 15)
+        this.state.modes[this.mode()].colors.bravo.l = this.randomNumBetween(0, 4) * 20
+        this.state.modes[this.mode()].colors.bravo.c = this.randomNumBetween(0, 4)
+        this.state.modes[this.mode()].colors.bravo.h = this.randomNumBetween(0, 6) * 60
+        this.state.modes[this.mode()].colors.bravo.collectionShift = this.randomNumBetween(0, 6) * 60
+        this.state.modes[this.mode()].colors.bravo.collectionIndex = this.randomNumBetween(0, 15)
+        this.updateSliders()
+        this.update()
+      } else {
+
+      }
+    }
+
     handleSecondaryButtonClick(event) {
       this.state.active.colors[event.target.dataset.primary].secondaryH =
         parseInt(event.target.dataset.secondaryH)
@@ -1531,6 +1565,10 @@ h2, h3 {
       return `${key}: ${value};\n`
     }
 
+    randomNumBetween(min, max) { 
+      return Math.floor(Math.random() * (max - min + 1) + min)
+    }
+
     sendStylesheet() {
       // TODO: Add bw-match and bw-reverse
 
@@ -1544,6 +1582,12 @@ h2, h3 {
       } else {
         this.modLog('Window is not available')
       }
+    }
+
+    updateSliders() {
+      this.modSetValue(`.slider-l`, this.state.modes[this.mode()].l)
+      this.modSetValue(`.slider-c`, this.state.modes[this.mode()].c)
+      this.modSetValue(`.slider-h`, this.state.modes[this.mode()].h)
     }
 
     update() {
