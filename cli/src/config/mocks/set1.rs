@@ -158,12 +158,9 @@ impl Config {
 
         let time_zone_offset = "-5:00".to_string();
 
-        let domain = "localhost".to_string();
-
         let section_attribute_excludes = vec![];
 
         Config {
-            domain,
             folders,
             input_date_formats,
             json_config,

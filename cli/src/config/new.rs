@@ -186,11 +186,6 @@ impl Config {
         let now = Local::now();
         let time_zone_offset = now.offset();
 
-        let domain = get_config_file_lines(&configuration_root, "domain.txt")
-            .first()
-            .unwrap()
-            .to_string();
-
         let span_file_paths = get_file_paths_for_extension(&folders.theme_spans_root, "neojinja");
         // dbg!(&span_file_paths);
         let unsorted_standard_spans: Vec<String> = span_file_paths
@@ -247,7 +242,6 @@ impl Config {
         Config {
             //
             // default_language,
-            domain: domain.parse().unwrap(),
             folders,
             input_date_formats,
             json_config,

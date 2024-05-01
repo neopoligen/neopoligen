@@ -37,10 +37,6 @@ pub struct Config {
     pub standard_spans: Vec<String>,
     pub text_plugins: BTreeMap<String, String>,
     ////////////////////////////
-    // Deprecated: move to json.default_language
-    // pub default_language: String,
-    // Deprecated: move to json.domain
-    pub domain: String,
     // Deprecated: move to json.input_date_formats
     pub input_date_formats: Vec<String>,
     // Deprecated: TODO - remove: key_value_spans
