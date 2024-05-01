@@ -22,6 +22,7 @@ Details And Examples
     <button role="tab">2</button>
     <button role="tab">3</button>
     <button role="tab">4</button>
+    <button role="tab">5</button>
   </div>
 
 
@@ -93,8 +94,6 @@ Details And Examples
   </div>
 
 
-
-
     <div role="tabpanel" class="flow">
         <p><strong>Black and White - Match and Reverse</strong></p>
         <p>
@@ -117,6 +116,36 @@ Details And Examples
     </div>
 
 
+<div role="tabpanel" class="flow">
+    <h3>Heading Underline Examples</h3>
+    <p>This example contains several sections that each have a heading 
+    with a different primary color and underline color combination. 
+    The title of each section is the name of the colors. There's a 
+    bunch of place holder text between heading to help reduce visual
+    noise from the other headings.<p>
+
+ <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec varius 
+ et mi a varius. Donec porta pharetra nunc tempor semper. Cras sollicitudin 
+ dignissim dolor, vitae tempus nisi gravida et. Praesent elit ipsum, 
+ vulputate id blandit at, condimentum quis tellus. Donec vel est porta. </p>
+ 
+ <p>Sagittis risus sed, efficitur neque. Maecenas risus risus, tempor ac urna iaculis, 
+ facilisis tristique mi. Aliquam vel rhoncus eros. Nam blandit dictum est, ut 
+ euismod elit posuere sed. Donec hendrerit, est suscipit scelerisque tempus, 
+ purus ante efficitur ex, a maximus felis massa sed odio. Proin ut bibendum ex, 
+ a tristique diam. Donec suscipit, dui a semper sagittis, turpis dui fringilla 
+ libero, in cursus orci arcu consectetur purus.</p>
+
+    <p>Praesent ac venenatis diam. Cras venenatis enim vitae justo porttitor condimentum. 
+    Maecenas sit amet tincidunt augue. Phasellus luctus, mi ut tincidunt feugiat, justo 
+    elit vulputate metus, ut sagittis urna dui ac mi. Nunc rhoncus lorem eros, porttitor 
+    ullamcorper magna pellentesque eget. Aenean scelerisque eget felis eget pellentesque.
+     Cras non massa tellus. </p>
+
+    <div class="heading-examples flow">
+    </div>
+
+</div>
 
 
 </tab-group>
@@ -196,6 +225,7 @@ function addPlaceholderText() {
     }) 
 }
 
+
 function updateStyles() {
     styleEl.innerHTML = currentStyleData
     
@@ -253,11 +283,55 @@ function makeAlphaExamples() {
 }
 
 
+function makeHeadingExamples() {
+    const c1s = ['alfa', 'bravo']
+    const c2s = ['charlie', 'delta', 'echo', 'foxtrot']
+
+    c1s.forEach((c1) => {
+        c2s.forEach((c2) => {
+            this.pageAddTo(`.heading-examples`, 'div', {
+                classes: ['flow'],
+                innerHTML: `<h3 class="${c1}-${c2}">Heading ${c1} - Underline ${c2}</h3>
+               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec varius 
+ et mi a varius. Donec porta pharetra nunc tempor semper. Cras sollicitudin 
+ dignissim dolor, vitae tempus nisi gravida et. Praesent elit ipsum, 
+ vulputate id blandit at, condimentum quis tellus. Donec vel est porta. </p>
+ 
+ <p>Sagittis risus sed, efficitur neque. Maecenas risus risus, tempor ac urna iaculis, 
+ facilisis tristique mi. Aliquam vel rhoncus eros. Nam blandit dictum est, ut 
+ euismod elit posuere sed. Donec hendrerit, est suscipit scelerisque tempus, 
+ purus ante efficitur ex, a maximus felis massa sed odio. Proin ut bibendum ex, 
+ a tristique diam. Donec suscipit, dui a semper sagittis, turpis dui fringilla 
+ libero, in cursus orci arcu consectetur purus.</p>
+
+    <p>Praesent ac venenatis diam. Cras venenatis enim vitae justo porttitor condimentum. 
+    Maecenas sit amet tincidunt augue. Phasellus luctus, mi ut tincidunt feugiat, justo 
+    elit vulputate metus, ut sagittis urna dui ac mi. Nunc rhoncus lorem eros, porttitor 
+    ullamcorper magna pellentesque eget. Aenean scelerisque eget felis eget pellentesque.
+     Cras non massa tellus. </p>  
+
+<p>Donec dictum lorem arcu, vehicula blandit quam semper ac. Curabitur tempus semper finibus.
+ Morbi est orci, pretium ut ipsum sed, pulvinar egestas ligula. Sed lobortis nibh eu vehicula
+  viverra. Vivamus maximus metus at lectus eleifend volutpat id in sapien. Pellentesque tortor 
+  dolor, consequat at scelerisque porta, hendrerit sed lectus. Pellentesque scelerisque ex odio.</p>
+
+<p>Suspendisse potenti. Proin condimentum ullamcorper eleifend. In non eros mattis, efficitur 
+diam in, tincidunt tortor. Nunc lobortis nunc nunc, id tristique ante commodo a. Mauris vulputate 
+quis nulla quis sollicitudin. Maecenas ornare tellus lacus, vitae tempus ligula sollicitudin quis. 
+Maecenas non tellus in libero convallis ullamcorper.</p>
+
+                `
+            })
+        })
+    })
+}
+
 
 document.addEventListener("DOMContentLoaded", () => {
     styleEl = pageAddTo(document.head, 'style')
     addPlaceholderText() 
     makeAlphaExamples()
+    makeHeadingExamples()
 })
 
 
@@ -309,7 +383,45 @@ h2 {
     border-bottom: 1px solid var(--color-charlie);
 }
 
+.alfa-charlie {
+    color: var(--color-alfa);
+    border-bottom: 1px solid var(--color-charlie);
+}
 
+.alfa-delta {
+    color: var(--color-alfa);
+    border-bottom: 1px solid var(--color-delta);
+}
+
+.alfa-echo {
+    color: var(--color-alfa);
+    border-bottom: 1px solid var(--color-echo);
+}
+
+.alfa-foxtrot {
+    color: var(--color-alfa);
+    border-bottom: 1px solid var(--color-foxtrot);
+}
+
+.bravo-charlie {
+    color: var(--color-bravo);
+    border-bottom: 1px solid var(--color-charlie);
+}
+
+.bravo-delta {
+    color: var(--color-bravo);
+    border-bottom: 1px solid var(--color-delta);
+}
+
+.bravo-echo {
+    color: var(--color-bravo);
+    border-bottom: 1px solid var(--color-echo);
+}
+
+.bravo-foxtrot {
+    color: var(--color-bravo);
+    border-bottom: 1px solid var(--color-foxtrot);
+}
 
 -- head
 
