@@ -420,5 +420,8 @@ h2 {
 -- metadata
 -- date: 2024-04-26
 -- id: 2fehqqas
--- template: empty
+-- template: one-column
+-- no-footer
+-- no-header
+
 

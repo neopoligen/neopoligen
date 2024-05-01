@@ -1,0 +1,3 @@
+[! if config.show_footer == true !]
+<footer><a href="/">[@ config.domain @]</a></footer>
+[! endif !]

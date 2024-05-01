@@ -1,3 +1,7 @@
+-- title
+
+Color Picker 
+
 -- css
 
 .currentState {
@@ -14,36 +18,27 @@
     flex-wrap: wrap;
 }
 
+main {
+  width: min(100vw - 3rem, 98ch);
+  margin-inline: auto;
+}
+
+
 -- head
 
-<!--
-<script src="/scripts/color-picker/color-picker.js"></script> -->
 <script src="/scripts/color-picker/color-picker-v3.js"></script>
+<link rel="stylesheet" href="/theme/styles.css" />
 
 -- html
 
 <color-picker data-preview-href="/en/2fehqqas/"></color-picker>
 
-<div class="picker">
-    <!--
-    <button class="preview-launcher">Launch Preview Window</button> 
-    <div class="modes"></div>
-    <div class="sliders"></div>
-    <div class="primaryButtons"></div>
-    <div class="chips"></div>
-    <div class="charliedeltaButtons secondaryButtons"></div>
-    <div class="charliedeltaChips"></div>
-    <div class="echofoxtrotButtons secondaryButtons"></div>
-    <div class="echofoxtrotChips"></div>
-    <pre class="currentCSS">Loading CSS...</pre>
-    <pre class="currentState"></pre>-->
-</div>
-
 
 -- metadata
 -- date: 2024-04-25
 -- id: 2etmrmai
--- title: Color Picker
 -- no-css
+-- template: full-width
+
 
 

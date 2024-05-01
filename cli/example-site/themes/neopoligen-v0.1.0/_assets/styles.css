@@ -3,10 +3,6 @@
   src: url('/theme/fonts/Inter-VariableFont_slnt,wght.ttf') format('opentype');
 }
 
-:root {
-  --width-alfa: 86ch;
-}
-
 *, 
 *::before, 
 *::after {
@@ -33,7 +29,7 @@ a:hover, a:focus {
 body { 
   background-color: var(--color-base);
   color: var(--color-bravo); 
-  font-size: 16px;
+  font-size: var(--size-base);
   line-height: 1.5; 
   font-family: 'Inter';
 }
@@ -122,6 +118,11 @@ pre {
   overflow-wrap: break-word;
 }
 
+.one-column main {
+  width: min(100vw - 3rem, var(--width-alfa));
+  margin-inline: auto;
+}
+
 .red {
   color: red;
 }
@@ -144,7 +145,7 @@ pre {
   border-bottom: 1px solid var(--color-bravo);
 }
 
-.two-column {
+.xtwo-column {
   max-width: var(--width-alfa);
   margin-top: 0;
   margin-inline: auto;
@@ -154,18 +155,13 @@ pre {
   gap: 1em;
 }
 
-.two-column > :first-child {
+.xtwo-column > :first-child {
   flex-basis: 20ch;
   flex-grow: 1;
   outline: 1px solid blue;
 }
 
-.two-column > :last-child {
+.xtwo-column > :last-child {
   flex-basis: 62ch;
   flex-grow: 9999;
-}
-
-.one-column-wrapper {
-  width: min(100vw - 3rem, 62ch);
-  margin-inline: auto;
 }

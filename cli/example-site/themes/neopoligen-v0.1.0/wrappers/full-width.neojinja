@@ -26,7 +26,7 @@
 [! include "includes/javascript-for-head.neojinja" !]
 
 </head>
-<body class="one-column">
+<body class="full-width">
     [! include "includes/header.neojinja" !]
     <main>
         <article class="flow">

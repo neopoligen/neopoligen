@@ -1,0 +1,6 @@
+[! if config.show_header == true !]
+<header>
+    [@ theme.link_or_title(site, page_id, "2dwmgthu", { "title": "Home Page" }) @]
+    <settings-gear></settings-gear>
+</header>
+[! endif !]

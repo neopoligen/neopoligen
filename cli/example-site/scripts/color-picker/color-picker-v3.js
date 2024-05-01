@@ -12,6 +12,8 @@ customElements.define(
       this.childWindow
       this.childWindowName = 'previewWindow'
       this.els = {}
+      this.parentStylesheet = this.ownerDocument.createElement('style')
+      this.ownerDocument.head.appendChild(this.parentStylesheet)
       this.attachShadow({ mode: 'open' })
       this.addInitialState()
       this.addStyles()
@@ -187,7 +189,6 @@ customElements.define(
       this.els.mainWrapper = this.modAddTo(this.shadowRoot, 'div', {
         classes: ['main-wrapper'],
         innerHTML: `
-  <h2>Color Picker</h2>
   <div class="content-wrapper">
     <div class="interface-wrapper">
         <div class="preview-section section-wrapper"></div>
@@ -233,7 +234,7 @@ customElements.define(
 
         <div class="section-wrapper">
         <h3>Instructions</h3>
-        <ol>
+        <ol class="flow">
             <li>Launch the Preview Window</li>
             <li>Use the Lightness, Chrome, and Hue sliders to pick a background color
             that the rest of the colors are based off of</li>
@@ -253,7 +254,7 @@ customElements.define(
             button but don't have it working yet, it's on the way)</li>
         </ol> 
         <h3>Notes</h3>
-        <ul>
+        <ul class="flow">
             <li>
                 I've tried a bunch of color pickers, but never found one I liked. It
                 always felt like I was missing some knowledge about how to use them to
@@ -294,6 +295,9 @@ customElements.define(
                 available. I'm working on a web component example
                 of that that I'll link here when it's done
             </li>
+            <li>The stylesheet also includes sizes. That's prep work for 
+            a future iteration that'll let you change fonts settings as well</li>
+
             <li>Sometimes the preview window looses connections. Close
             it and reopen it if it stops updating or loses it's styles</li>
         </ul>
@@ -392,6 +396,11 @@ button {
     font-weight: 700;
 }
 
+
+.flow > :where(:not(:first-child)) {
+  margin-top: var(--flow-space, 1em);
+}
+
 h2, h3 {
     color: var(--dev-color-bw-reverse-90);
 }
@@ -421,7 +430,7 @@ h2, h3 {
 
 .primary-button {
     margin-bottom: 0.9rem;
-    border: 2px solid var(--dev-color-bw-match-90);
+    margin;
     border-radius: 0.3rem;
 }
 
@@ -465,7 +474,7 @@ h2, h3 {
 
 
 .secondaryButton {
-    border: 2px solid var(--dev-color-bw-match-90);
+    margin: 2px;
     border-radius: 0.4rem;
 }
 
@@ -537,12 +546,13 @@ h2, h3 {
 }
 
 .tertiary-chip {
-    border-inline: 2px solid var(--dev-color-bw-match-90);
-    border-block: 3px solid var(--dev-color-bw-match-90);
-    margin: 1px;
+    margin-inline: 2px;
+    margin-block: 3px;
 }
 
 .tertiary-chip-selected {
+    margin-inline: 0px;
+    margin-block: 0px;
     border-inline: 2px solid var(--dev-color-bw-reverse-90);
     border-block: 3px solid var(--dev-color-bw-reverse-90);
 }
@@ -1065,6 +1075,22 @@ h2, h3 {
     genStylesFull() {
       let styles = `
       :root {
+
+    --size-base: 16px;
+    --size-1: 2.986rem;
+    --size-2: 2.488rem;
+    --size-3: 2.074rem;
+    --size-4: 1.728rem;
+    --size-5: 1.44rem;
+    --size-6: 1.2rem;
+    --size-7: 1rem;
+    --size-8: 0.833rem;
+    --size-9: 0.694rem;
+    --size-10: 0.579rem;
+
+    --width-alfa: 68ch;
+
+
           --color-black: rgb(0 0 0);
           --border-black: 1px solid var(--color-black);
           --color-white: rgb(255 255 255);
@@ -1808,6 +1834,7 @@ h2, h3 {
 
       this.modUpdateHTML(`.the-stylesheet`, this.genStylesFull())
 
+      this.modUpdateHTML(this.parentStylesheet, this.genStylesFull())
       this.sendStylesheet()
     }
 

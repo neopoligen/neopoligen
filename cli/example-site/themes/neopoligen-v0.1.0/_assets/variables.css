@@ -1,5 +1,6 @@
 
 :root {
+    --size-base: 16px;
     --size-1: 2.986rem;
     --size-2: 2.488rem;
     --size-3: 2.074rem;
@@ -10,6 +11,10 @@
     --size-8: 0.833rem;
     --size-9: 0.694rem;
     --size-10: 0.579rem;
+
+    --width-alfa: 68ch;
+    
+
     --color-black: rgb(0 0 0);
     --border-black: 1px solid var(--color-black);
     --color-white: rgb(255 255 255);
