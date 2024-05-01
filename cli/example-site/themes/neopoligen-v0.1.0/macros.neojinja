@@ -7,6 +7,13 @@
 </pre>
 [! endmacro !]
 
+[#############################################################################]
+[! macro init(site, page_id, d) !]
+[! set d.show_css = true !]
+[! endmacro !]
+
+
+
 
 [#############################################################################]
 [# TODO: Handle if the page doesn't exist #]
@@ -191,3 +198,19 @@ id="[@ section.content.key_value_attributes.id @]"
 [! endif !]
 [! endmacro !]
 
+
+[#############################################################################]
+[! macro show_css(site, page_id) !]
+[#
+[! set vars.show_css = true !]
+[! for section in site.pages[page_id].ast !]
+[! if section.content.type == "metadata" !]
+    [! for flag in section.content.flag_attributes !]
+        [! if flag == "no-css" !]
+            [! set vars.show_css = false !]
+        [! endif !]
+    [! endfor !]
+[! endif !]
+[! endfor !]
+#]
+[! endmacro !]

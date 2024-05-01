@@ -1,5 +1,7 @@
 [!- extends "wrappers/empty.neojinja" -!]
+[!- include "config.neojinja" -!]
 [!- import "macros.neojinja" as theme -!]
+[@ theme.init(site, page_id, data) -@]
 
 [! block body !]
 [@ theme.main_body(site, page_id) @]

@@ -1,1 +1,3 @@
-[! set domain = "cookbook.neopoligen.com" !]
+[! set data = namespace() !]
+[! set data.domain = "cookbook.neopoligen.com" !]
+

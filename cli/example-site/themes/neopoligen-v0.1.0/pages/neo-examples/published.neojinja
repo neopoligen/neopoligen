@@ -1,5 +1,7 @@
 [!- extends "wrappers/one-column.neojinja" -!]
+[!- include "config.neojinja" -!]
 [!- import "macros.neojinja" as theme -!]
+[@ theme.init(site, page_id, data) -@]
 
 [! block body !]
 [@ theme.main_body_with_examples(site, page_id) @]
