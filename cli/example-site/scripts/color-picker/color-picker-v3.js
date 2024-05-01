@@ -1513,24 +1513,6 @@ h2, h3 {
           this.collections().forEach((collection, collectionIndex) => {
             let h2 =
               (this.state.modes[this.mode()].colors[primary.key].h + h) % 360
-            // if (h2 === this.state.active.colors[primary.key].secondaryH) {
-            // if (h2 === this.state.active.colors[primary.key].secondaryH) {
-            //   if (
-            //     collectionIndex ===
-            //     this.state.modes[this.mode()].colors[primary.key]
-            //       .collectionIndex
-            //   ) {
-            //     this.modAddStyleTo(
-            //       `.tertiary-chip-index-${primary.key}-${collectionIndex}`,
-            //       `tertiary-chip-selected`
-            //     )
-            //   } else {
-            //     this.modRemoveStyleFrom(
-            //       `.tertiary-chip-index-${primary.key}-${collectionIndex}`,
-            //       `tertiary-chip-selected`
-            //     )
-            //   }
-            // }
             collection.forEach((coords) => {
               const key = `color-secondary-rect-coords-${primary.key}-${coords[0]}-${coords[1]}-${h}`
               let l2 =
@@ -1595,7 +1577,6 @@ h2, h3 {
           }
         })
       })
-
 
       // mode button highlight
       if (this.state.active.mode === 'light') {
