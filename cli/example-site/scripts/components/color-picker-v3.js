@@ -252,8 +252,9 @@ customElements.define(
             Secondary <em>echo</em> and <em>foxtrot</em> in the same way.</li>
             <li>Switch to Dark mode and set it as well</li>
             <li>When you've got things the way you want them copy the style sheet
-            from below and you'll be ready to go (note: I'm adding an auto-copy to clipboard
-            button but don't have it working yet, it's on the way)</li>
+            from below where you can choose to default to either light or
+            dark mode</li>
+            
         </ol> 
         <h3>Notes</h3>
         <ul class="flow">
@@ -1186,32 +1187,30 @@ h2, h3 {
       
       `
 
-      styles += `body { 
-      ${this.genMatchStyles('light')}        
-      ${this.genStyles('light')} 
+      const mode = this.state.default_mode
+      const altMode = mode === 'light' ? 'dark' : 'light'
+      
+      styles += `:root {
+        color-scheme: ${mode} ${altMode};
       }
-              
-      `
-
-      styles += `body.dark { 
-              ${this.genMatchStyles('dark')}  
-              ${this.genStyles('dark')} 
-          }\n`
-
-      styles += `@media (prefers-color-scheme: dark) {\n`
-
+      `      
       styles += `body { 
-       
-              ${this.genMatchStyles('dark')}  
-              ${this.genStyles('dark')} 
-          
+      ${this.genMatchStyles(mode)}        
+      ${this.genStyles(mode)} 
+      }`
+      styles += `body.${altMode} { 
+              ${this.genMatchStyles(altMode)}  
+              ${this.genStyles(altMode)} 
           }\n`
-
-      styles += `body.light { 
-              ${this.genMatchStyles('light')}  
-              ${this.genStyles('light')} 
+      styles += `@media (prefers-color-scheme: ${altMode}) {\n`
+      styles += `body { 
+              ${this.genMatchStyles(altMode)}  
+              ${this.genStyles(altMode)} 
           }\n`
-
+      styles += `body.${mode} { 
+              ${this.genMatchStyles(mode)}  
+              ${this.genStyles(mode)} 
+          }\n`
       styles += `}\n`
 
       styles += `${this.genBaseStyles()}\n`
