@@ -18,7 +18,17 @@ Color Picker
     flex-wrap: wrap;
 }
 
+header {
+  width: min(100vw - 3rem, 98ch);
+  margin-inline: auto;
+}
+
 main {
+  width: min(100vw - 3rem, 98ch);
+  margin-inline: auto;
+}
+
+footer {
   width: min(100vw - 3rem, 98ch);
   margin-inline: auto;
 }

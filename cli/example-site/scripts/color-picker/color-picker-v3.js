@@ -196,6 +196,14 @@ customElements.define(
             <div class="mode-section"></div>
             <div class="slider-section"></div>
         </div>
+        <div class="stripe-wrapper section-wrapper">
+            <div class="stripe bg-alfa"></div>
+            <div class="stripe bg-bravo"></div>
+            <div class="stripe bg-charlie"></div>
+            <div class="stripe bg-delta"></div>
+            <div class="stripe bg-echo"></div>
+            <div class="stripe bg-foxtrot"></div>
+        </div>
         <div class="section-wrapper">
             <h3>Primary: <span class="dev-color-alfa">alfa</span> <span class="dev-color-bravo">bravo</span></h3>
             <div class="primary-section">
@@ -222,14 +230,6 @@ customElements.define(
                     <div class="echofoxtrot-chips"></div>
                 </div>
             </div>
-        </div>
-        <div class="stripe-wrapper section-wrapper">
-            <div class="stripe bg-alfa"></div>
-            <div class="stripe bg-bravo"></div>
-            <div class="stripe bg-charlie"></div>
-            <div class="stripe bg-delta"></div>
-            <div class="stripe bg-echo"></div>
-            <div class="stripe bg-foxtrot"></div>
         </div>
 
         <div class="section-wrapper">
@@ -1724,7 +1724,7 @@ h2, h3 {
       this.primaryColors().forEach((color) => {
         this.hValues().forEach((h) => {
           let hCheck =
-            this.state.modes[this.mode()].colors[color].collectionShift % 360
+            this.state.active.colors[color].secondaryH % 360
           if (h === hCheck) {
             this.modAddStyleTo(
               `.secondaryButton-${color}-${h}`,
