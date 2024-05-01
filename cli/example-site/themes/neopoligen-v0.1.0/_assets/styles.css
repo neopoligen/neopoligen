@@ -42,6 +42,11 @@ body {
   margin-top: var(--flow-space, 1em);
 }
 
+.footer {
+  margin-top: 2.8rem;
+  margin-bottom: 1.8rem;
+}
+
 .footnote_heading {
   display: flex;
   flex-wrap: wrap;
@@ -160,7 +165,7 @@ pre {
   flex-grow: 9999;
 }
 
-.wrapper {
-  width: min(100vw - 3rem, 58ch);
+.one-column-wrapper {
+  width: min(100vw - 3rem, 62ch);
   margin-inline: auto;
 }

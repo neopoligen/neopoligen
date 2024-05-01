@@ -1,3 +1,5 @@
+[!- include "includes/_global.neojinja" -!]
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,5 +47,6 @@ so other scripts can use it #]
         [! block body !][! endblock !]
         </article>
     </main>
+    <footer class="one-column-wrapper footer">[@ domain @]</footer>
 </body>
 </html>  
