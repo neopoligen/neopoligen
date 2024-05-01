@@ -1,7 +1,7 @@
 [!- extends "wrappers/two-column.neojinja" -!]
 [!- include "config.neojinja" -!]
 [!- import "macros.neojinja" as theme -!]
-[@ theme.init(site, page_id, data) -@]
+[@ theme.initialize_page(site, page_id, data) -@]
 
 [# 
 WARNING: This page is used for testing as well as 

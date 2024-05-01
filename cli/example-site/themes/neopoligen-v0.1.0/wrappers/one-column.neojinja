@@ -15,13 +15,11 @@
 <script src="/theme/theme.js"></script>
 <script src="/theme/theme-components.js" type="module"></script>
 
-
 [! if data.show_css == true !]
 <link rel="stylesheet" href="/theme/variables.css" />
 <link rel="stylesheet" href="/theme/styles.css" />
 <link rel="stylesheet" href="/theme/highlighting/code-solarized-light.css" />
 [! endif !]
-
 
 [! include "includes/head-for-head.neojinja" !]
 [! include "includes/css-for-head.neojinja" !]
@@ -36,8 +34,6 @@
     </header>
     <main class="one-column-wrapper">
         <article class="flow">
-        [@ data.ping @]
-        [@ theme.show_css(site, page_id) @]
         [! block body !][! endblock !]
         </article>
     </main>
