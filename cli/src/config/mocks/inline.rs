@@ -4,6 +4,7 @@ use std::path::PathBuf;
 
 impl Config {
     pub fn inline() -> Config {
+        let json_config = JsonConfig::stub1();
         let project_root = PathBuf::from("leading-dir/Neopoligen/inline-test-site");
         let theme_name = String::from("inline-tests-theme");
         let configuration_root =
@@ -163,6 +164,7 @@ impl Config {
             domain,
             folders,
             input_date_formats,
+            json_config,
             json_plugins,
             key_value_spans,
             main_body_section_excludes,
