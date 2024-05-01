@@ -45,8 +45,6 @@ pub struct Config {
     pub main_body_section_excludes: Vec<String>,
     // Deprecated: TODO - remove: section_attriubte_excludes
     pub section_attribute_excludes: Vec<String>,
-    // Deprecated: move to json.theme_name
-    pub theme_name: String,
     // Deprecated: move to json.time_zone_offset
     pub time_zone_offset: String,
 }

@@ -37,7 +37,7 @@ impl Config {
         //  PathBuf::from(format!("{}/parsing-errors", status_root.display(),));
         // let theme_errors_root = PathBuf::from(format!("{}/theme-errors", status_root.display(),));
 
-        let theme_name = get_config_file_single_line(&configuration_root, "theme.txt").unwrap();
+        let theme_name = &json_config.theme;
 
         let mut theme_root = themes_root.clone();
         theme_root.push(&theme_name);
@@ -252,7 +252,6 @@ impl Config {
             section_categories,
             standard_spans,
             text_plugins,
-            theme_name,
             time_zone_offset: time_zone_offset.to_string(),
         }
     }

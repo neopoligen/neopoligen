@@ -5,9 +5,8 @@ use std::path::PathBuf;
 impl Config {
     pub fn set2() -> Config {
         let json_config = JsonConfig::stub1();
+        let theme_name = &json_config.theme;
         let project_root = PathBuf::from("leading-dir/Neopoligen/set2-test-site");
-        let theme_name = String::from("dev-theme2");
-
         let configuration_root =
             PathBuf::from(format!("{}/{}", project_root.display(), "configuration"));
 
@@ -166,7 +165,6 @@ impl Config {
             section_categories,
             standard_spans,
             text_plugins,
-            theme_name,
             time_zone_offset,
         }
     }
