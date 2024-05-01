@@ -1,6 +1,6 @@
 [! if config.show_header == true !]
 <header>
-    [@ theme.link_or_title(site, page_id, "2dwmgthu", { "title": "Home Page" }) @]
+    [@ theme.link_or_title(site, page_id, config.home_page_id, { "title": "Home Page" }) @]
     <settings-gear></settings-gear>
 </header>
 [! endif !]

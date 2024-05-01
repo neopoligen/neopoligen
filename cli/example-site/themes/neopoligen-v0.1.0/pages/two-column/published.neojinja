@@ -1,4 +1,4 @@
-[!- extends "wrappers/one-column.neojinja" -!]
+[!- extends "wrappers/two-column.neojinja" -!]
 [!- include "config.neojinja" -!]
 [!- import "macros.neojinja" as theme -!]
 [@ theme.initialize_page(site, page_id, config) -@]

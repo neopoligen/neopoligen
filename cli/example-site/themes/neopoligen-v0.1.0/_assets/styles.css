@@ -38,9 +38,12 @@ body {
   margin-top: var(--flow-space, 1em);
 }
 
-.footer {
+footer {
+  border-top: 1px solid var(--color-charlie-30);
   margin-top: 2.8rem;
   margin-bottom: 1.8rem;
+  text-align: center;
+  font-size: var(--size-8);
 }
 
 .footnote_heading {
@@ -118,8 +121,18 @@ pre {
   overflow-wrap: break-word;
 }
 
+.one-column footer {
+  max-width: min(100vw - 3rem, var(--width-alfa));
+  margin-inline: auto;
+}
+
+.one-column header {
+  max-width: min(100vw - 3rem, var(--width-alfa));
+  margin-inline: auto;
+}
+
 .one-column main {
-  width: min(100vw - 3rem, var(--width-alfa));
+  max-width: min(100vw - 3rem, var(--width-alfa));
   margin-inline: auto;
 }
 

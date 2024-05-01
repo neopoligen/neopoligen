@@ -60,5 +60,5 @@ logMsg("this is one ping only");
 -- metadata
 -- id: 2dwmgthu
 -- path: /
-
+-- template: two-column
 
