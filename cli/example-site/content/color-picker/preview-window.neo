@@ -413,10 +413,12 @@ h2 {
 
 <link rel="stylesheet" href="/theme/styles.css" />
 
+<script src="/theme/theme.js"></script>
+<script src="/theme/theme-components.js" type="module"></script>
+
 
 -- metadata
 -- date: 2024-04-26
 -- id: 2fehqqas
--- template: no-css-no-header
-
+-- template: empty
 

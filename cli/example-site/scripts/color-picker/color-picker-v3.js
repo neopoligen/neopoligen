@@ -16,7 +16,6 @@ customElements.define(
       this.addInitialState()
       this.addStyles()
       this.addMainWrapper()
-      this.buildPreviewButton()
       this.buildModeButtons()
       this.buildSliders()
       this.buildPrimaryButtons()
@@ -659,12 +658,21 @@ h2, h3 {
     }
 
     buildPreviewButton() {
-      this.modAddTo(`.preview-section`, 'button', {
-        innerHTML: 'Launch Preview Window',
-        listeners: [
-          ['click', (event) => this.handlePreviewButtonClick.call(this, event)],
-        ],
-      })
+      if (this.dataset.previewHref) {
+        this.modAddTo(`.preview-section`, 'button', {
+          innerHTML: 'Launch Preview Window',
+          listeners: [
+            [
+              'click',
+              (event) => this.handlePreviewButtonClick.call(this, event),
+            ],
+          ],
+        })
+      } else {
+        this.modAddTo(`.preview-section`, 'div', {
+            innerHTML: "Error: preview href not defined"
+        })
+      }
     }
 
     buildPrimaryButton(parent, h) {
@@ -946,6 +954,10 @@ h2, h3 {
       return ['alfa', 'bravo', 'charlie', 'delta', 'echo', 'foxtrot']
     }
 
+    connectedCallback() {
+        this.buildPreviewButton()
+    }
+
     cValue(mode) {
       return this.state.modes[mode].c
     }
@@ -1033,12 +1045,16 @@ h2, h3 {
       for (let color in theValues) {
         response += this.prop(
           `--color-${color}`,
-          `oklch(${theValues[color][0].toFixed(3)}% ${theValues[color][1].toFixed(5)} ${theValues[color][2].toFixed(3)})`
+          `oklch(${theValues[color][0].toFixed(3)}% ${theValues[
+            color
+          ][1].toFixed(5)} ${theValues[color][2].toFixed(3)})`
         )
         for (let alpha = 90; alpha > 0; alpha = alpha - 10) {
           response += this.prop(
             `--color-${color}-${alpha}`,
-            `oklch(${theValues[color][0].toFixed(3)}% ${theValues[color][1].toFixed(5)} ${theValues[color][2].toFixed(3)} / ${alpha}%)`
+            `oklch(${theValues[color][0].toFixed(3)}% ${theValues[
+              color
+            ][1].toFixed(5)} ${theValues[color][2].toFixed(3)} / ${alpha}%)`
           )
         }
       }
@@ -1355,7 +1371,7 @@ h2, h3 {
         //sendStylesheet("Connection Already Established")
       } else {
         this.childWindow = window.open(
-          '/en/2fehqqas/',
+          this.dataset.previewHref,
           this.childWindowName,
           params
         )

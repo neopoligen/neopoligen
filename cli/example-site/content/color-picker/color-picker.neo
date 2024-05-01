@@ -22,7 +22,7 @@
 
 -- html
 
-<color-picker></color-picker>
+<color-picker data-preview-href="/en/2fehqqas/"></color-picker>
 
 <div class="picker">
     <!--
@@ -42,7 +42,7 @@
 
 -- metadata
 -- date: 2024-04-25
--- id: 2fbyip5v
+-- id: 2etmrmai
 -- template: no-css
 -- title: Color Picker
 
