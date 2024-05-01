@@ -22,8 +22,6 @@ Details And Examples
     <button role="tab">2</button>
     <button role="tab">3</button>
     <button role="tab">4</button>
-    <button role="tab">5</button>
-    <button role="tab">6</button>
   </div>
 
 
@@ -46,10 +44,6 @@ Details And Examples
     <p>The output style sheet includes CSS variable properties for both 
     light and dark mode. Light mode is the default. If a system preference
     is available that gets used. </p>
-    <p>There are also copies of styles set for <code>body.dark</code> and
-    <code>body.light</code> (which is in a <code>prefers-color-scheme: dark</code>
-    media query). These 
-    </p>
   </div>
 
 
@@ -117,17 +111,9 @@ Details And Examples
             <li><em>--color-bw-match</em> is black</li>
             <li><em>--color-bw-reverse</em> is white</li>
         </ul>
-    </div>
-
-
-    <div role="tabpanel" class="flow">
-        <h3>TODO: Black And White - Match And Reverse</h3>
-        <pre></pre>
-    </div>
-
-    <div role="tabpanel" class="flow">
-        <h3>The Fonts And Colors Stylesheets</h3>
-        <pre><code class="fonts-and-colors"></code></pre>
+        <p>The idea with these is you can add a border to something
+    that's black when the page is in light mode and will flip to white
+    when the page goes into dark mode. </p>
     </div>
 
 
@@ -213,10 +199,12 @@ function addPlaceholderText() {
 function updateStyles() {
     styleEl.innerHTML = currentStyleData
     
+    /*
     pageUpdateEl(`.fonts-and-colors`, {
         innerHTML: currentStyleData
     })
-   
+   */
+
 }
 
 window.addEventListener("message", (event) => {
