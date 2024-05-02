@@ -539,6 +539,558 @@ pre {
   }
 )
 
+
+
+customElements.define(
+  'html-block',
+  class extends HTMLElement {
+    template() {
+      const template = this.ownerDocument.createElement('template')
+      template.innerHTML = `
+<style>
+.code {
+  color: var(--code-block-alfa);
+  background-color: var(--code-block-base);
+}
+
+.comment,
+.meta.documentation {
+  color: var(--code-block-bravo);
+}
+.string {
+  color: var(--code-block-charlie);
+}
+.string.regexp {
+  color: var(--code-block-charlie);
+}
+.constant.character.escape {
+  color: var(--code-block-delta);
+}
+.constant.numeric {
+  color: var(--code-block-echo);
+}
+.variable {
+  color: var(--code-block-foxtrot);
+}
+.variable.function {
+  color: var(--code-block-golf);
+}
+.variable.language {
+  color: var(--code-block-hotel);
+}
+.keyword {
+  color: var(--code-block-india);
+}
+.meta.import .keyword,
+.keyword.control.import,
+.keyword.control.import.from,
+.keyword.other.import,
+.keyword.control.at-rule.include,
+.keyword.control.at-rule.import {
+  color: var(--code-block-juliet);
+}
+.keyword.operator.comparison,
+.keyword.operator.assignment,
+.keyword.operator.arithmetic {
+  color: var(--code-block-kilo);
+}
+.storage {
+  color: var(--code-block-india);
+}
+.storage.modifier {
+  color: var(--code-block-lima);
+}
+.keyword.control.class,
+.entity.name,
+.entity.name.class,
+.entity.name.type.class {
+  color: var(--code-block-golf);
+}
+.entity.other.inherited-class {
+  color: var(--code-block-foxtrot);
+}
+.entity.other.attribute-name {
+  color: var(--code-block-golf);
+}
+.support,
+.support.type,
+.support.class {
+  color: var(--code-block-india);
+}
+.entity.name.function {
+  color: var(--code-block-golf);
+}
+.punctuation.definition.variable {
+  color: var(--code-block-india);
+}
+.constant,
+.constant.language,
+.meta.preprocessor {
+  color: var(--code-block-golf);
+}
+.entity.name.section {
+  color: var(--code-block-juliet);
+}
+.support.function.construct,
+.keyword.other.new {
+  color: var(--code-block-delta);
+}
+.constant.character,
+.constant.other {
+  color: var(--code-block-juliet);
+}
+.entity.name.tag {
+  color: var(--code-block-foxtrot);
+}
+.punctuation.definition.tag.html,
+.punctuation.definition.tag.begin,
+.punctuation.definition.tag.end {
+  color: var(--code-block-bravo);
+}
+.support.function {
+  color: var(--code-block-india);
+}
+.punctuation.separator.continuation {
+  color: var(--code-block-delta);
+}
+.storage.type {
+  color: var(--code-block-foxtrot);
+}
+.support.type.exception {
+  color: var(--code-block-juliet);
+}
+.keyword.other.special-method {
+  color: var(--code-block-juliet);
+}
+.invalid {
+  background-color: var(--code-block-mike);
+}
+.string.quoted.double,
+.string.quoted.single {
+  color: var(--code-block-charlie);
+}
+.punctuation.definition.string {
+  color: var(--code-block-alfa);
+}
+.meta.brace.square,
+.punctuation.section.brackets {
+  color: var(--code-block-foxtrot);
+}
+.meta.brace.round,
+.meta.brace.curly,
+.punctuation.section,
+.punctuation.section.block,
+.punctuation.definition.parameters,
+.punctuation.section.group {
+  color: var(--code-block-kilo);
+}
+.support.constant.color,
+.invalid.deprecated.color.w3c-non-standard-color-name.scss {
+  color: var(--code-block-golf);
+}
+.meta.selector.css {
+  color: var(--code-block-kilo);
+}
+.entity.name.tag.css,
+.entity.name.tag.scss,
+.source.less .keyword.control.html.elements,
+.source.sass .keyword.control.untitled {
+  color: var(--code-block-golf);
+}
+.entity.other.attribute-name.class {
+  color: var(--code-block-golf);
+}
+.entity.other.attribute-name.id {
+  color: var(--code-block-golf);
+}
+.entity.other.attribute-name.pseudo-element,
+.entity.other.attribute-name.tag.pseudo-element,
+.entity.other.attribute-name.pseudo-class,
+.entity.other.attribute-name.tag.pseudo-class {
+  color: var(--code-block-foxtrot);
+}
+.text.html.basic .meta.tag.other.html,
+.text.html.basic .meta.tag.any.html,
+.text.html.basic .meta.tag.block.any,
+.text.html.basic .meta.tag.inline.any,
+.text.html.basic .meta.tag.structure.any.html,
+.text.html.basic .source.js.embedded.html,
+.punctuation.separator.key-value.html {
+  color: var(--code-block-kilo);
+}
+.text.html.basic .entity.other.attribute-name.html,
+.meta.tag.xml .entity.other.attribute-name {
+  color: var(--code-block-golf);
+}
+.keyword.other.special-method.ruby {
+  color: var(--code-block-india);
+}
+.variable.other.constant.ruby {
+  color: var(--code-block-golf);
+}
+.constant.other.symbol.ruby {
+  color: var(--code-block-charlie);
+}
+.keyword.other.special-method.ruby {
+  color: var(--code-block-juliet);
+}
+.meta.array .support.function.construct.php {
+  color: var(--code-block-golf);
+}
+.entity.name.function.preprocessor.c,
+.meta.preprocessor.c.include,
+.meta.preprocessor.macro.c {
+  color: var(--code-block-juliet);
+}
+.meta.preprocessor.c.include .string.quoted.other.lt-gt.include.c,
+.meta.preprocessor.c.include .punctuation.definition.string.begin.c,
+.meta.preprocessor.c.include .punctuation.definition.string.end.c {
+  color: var(--code-block-charlie);
+}
+.other.package.exclude,
+.other.remove {
+  color: var(--code-block-delta);
+}
+.other.add {
+  color: var(--code-block-charlie);
+}
+.punctuation.section.group.tex,
+.punctuation.definition.arguments.begin.latex,
+.punctuation.definition.arguments.end.latex,
+.punctuation.definition.arguments.latex {
+  color: var(--code-block-delta);
+}
+.meta.group.braces.tex {
+  color: var(--code-block-golf);
+}
+.string.other.math.tex {
+  color: var(--code-block-golf);
+}
+.variable.parameter.function.latex {
+  color: var(--code-block-juliet);
+}
+.punctuation.definition.constant.math.tex {
+  color: var(--code-block-delta);
+}
+.text.tex.latex .constant.other.math.tex,
+.constant.other.general.math.tex,
+.constant.other.general.math.tex,
+.constant.character.math.tex {
+  color: var(--code-block-charlie);
+}
+.string.other.math.tex {
+  color: var(--code-block-golf);
+}
+.punctuation.definition.string.begin.tex,
+.punctuation.definition.string.end.tex {
+  color: var(--code-block-delta);
+}
+.keyword.control.label.latex,
+.text.tex.latex .constant.other.general.math.tex {
+  color: var(--code-block-charlie);
+}
+.variable.parameter.definition.label.latex {
+  color: var(--code-block-delta);
+}
+.support.function.be.latex {
+  color: var(--code-block-india);
+}
+.support.function.section.latex {
+  color: var(--code-block-juliet);
+}
+.support.function.general.tex {
+  color: var(--code-block-charlie);
+}
+.keyword.control.ref.latex {
+  color: var(--code-block-charlie);
+}
+.storage.type.class.python,
+.storage.type.function.python,
+.storage.modifier.global.python {
+  color: var(--code-block-india);
+}
+.support.type.exception.python {
+  color: var(--code-block-golf);
+}
+.meta.scope.for-in-loop.shell,
+.variable.other.loop.shell {
+  color: var(--code-block-lima);
+}
+.meta.scope.case-block.shell,
+.meta.scope.case-body.shell {
+  color: var(--code-block-lima);
+}
+.punctuation.definition.logical-expression.shell {
+  color: var(--code-block-delta);
+}
+.storage.modifier.c++ {
+  color: var(--code-block-india);
+}
+.support.function.perl {
+  color: var(--code-block-foxtrot);
+}
+.meta.diff,
+.meta.diff.header {
+  color: var(--code-block-bravo);
+}
+.meta.diff.range {
+  color: var(--code-block-foxtrot);
+}
+.markup.deleted {
+  color: var(--code-block-delta);
+}
+.markup.changed {
+  color: var(--code-block-charlie);
+}
+.markup.inserted {
+  color: var(--code-block-india);
+}
+.markup.heading,
+.punctuation.definition.heading.markdown {
+  color: var(--code-block-golf);
+}
+.markup.quote {
+  color: var(--code-block-india);
+}
+.markup.italic {
+  font-style: italic;
+}
+.markup.bold {
+  font-weight: bold;
+}
+.markup.underline.link.markdown,
+.meta.link.reference .constant.other.reference.link.markdown {
+  color: var(--code-block-charlie);
+}
+.constant.other.reference.link.markdown {
+  color: var(--code-block-echo);
+}
+.meta.paragraph.markdown .meta.dummy.line-break {
+  background-color: var(--code-block-bravo);
+}
+.sublimelinter.notes {
+  color: var(--code-block-bravo);
+  background-color: var(--code-block-bravo);
+}
+.sublimelinter.outline.illegal {
+  color: var(--code-block-bravo);
+  background-color: var(--code-block-bravo);
+}
+.sublimelinter.underline.illegal {
+  background-color: var(--code-block-delta);
+}
+.sublimelinter.outline.warning {
+  color: var(--code-block-alfa);
+  background-color: var(--code-block-alfa);
+}
+.sublimelinter.underline.warning {
+  background-color: var(--code-block-golf);
+}
+.sublimelinter.outline.violation {
+  color: var(--code-block-kilo);
+  background-color: var(--code-block-kilo);
+}
+.sublimelinter.underline.violation {
+  background-color: var(--code-block-juliet);
+}
+.sublimelinter.mark.warning {
+  color: var(--code-block-golf);
+}
+.sublimelinter.mark.error {
+  color: var(--code-block-delta);
+}
+.sublimelinter.gutter-mark {
+  color: var(--code-block-kilo);
+}
+.brackethighlighter.all {
+  color: var(--code-block-bravo);
+}
+.entity.name.filename.find-in-files {
+  color: var(--code-block-charlie);
+}
+.constant.numeric.line-number.find-in-files {
+  color: var(--code-block-bravo);
+}
+.markup.deleted.git_gutter {
+  color: var(--code-block-delta);
+}
+.markup.inserted.git_gutter {
+  color: var(--code-block-india);
+}
+.markup.changed.git_gutter {
+  color: var(--code-block-golf);
+}
+.variable.other.readwrite.js,
+.variable.other.object.js,
+.variable.other.constant.js {
+  color: var(--code-block-alfa);
+}
+</style>
+
+<style>
+*, 
+*::before, 
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+.code-block-copy-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  background: none;
+  color: var(--code-block-line-numbers);
+  border: 1px solid var(--code-block-line-numbers);
+  border-radius: 0.3rem;
+}
+
+.code-block-wrapper {
+  position: relative;
+  padding: 0.7rem;
+  background-color: var(--code-block-base);
+  border-radius: 0.3rem;
+  border: 1px solid var(--code-block-border);
+}
+
+.numberedLines {
+  counter-reset: lineNumber;
+  line-height: 1.3;
+  position: relative;
+  left: 2.8rem;
+  margin-right: 4rem;
+}
+
+.numberedLine {
+  counter-increment: lineNumber;
+}
+
+.numberedLine:before {
+  display: inline-block;
+  color: var(--code-block-line-numbers);
+  content: counter(lineNumber);
+  text-align: right;
+  width: 2rem;
+  position: absolute;
+  left: -3rem;
+}
+
+pre {
+  white-space: pre-wrap; 
+  overflow-wrap: break-word;
+  font-size: var(--size-7, 0.3rem); 
+}
+
+.scroll {
+  max-height: 60rem;
+  overflow-y: scroll;
+}
+
+</style>
+
+
+<div class="heading_subsection">
+  <slot name="title"></slot>
+  <slot name="subtitle"></slot>
+</div>
+
+<div class="code-block-wrapper">
+  <button class="code-block-copy-button">copy</button>
+  <pre class="numberedLines"></pre>
+</div>`
+
+      return template
+    }
+
+
+    constructor() {
+      super()
+      this.attachShadow({ mode: 'open' })
+    }
+
+    addClickListener() {
+      const el = this.shadowRoot.querySelector('.code-block-copy-button')
+      el.addEventListener('click', (event) =>
+        this.handleClick.call(this, event)
+      )
+    }
+
+    connectedCallback() {
+      this.content = this.template().content.cloneNode(true)
+      this.shadowRoot.appendChild(this.content)
+      this.addClickListener()
+      const observer = new MutationObserver((list, observer) =>
+        this.updateContent.call(this, list, observer)
+      )
+      observer.observe(this, { childList: true, subtree: true })
+      this.updateContent()
+    }
+
+    updateContent() {
+
+      // const title = this.querySelector('h3')
+      // if (title) {
+      //   this.shadowRoot.querySelector('h3').innerHTML = title.innerHTML
+      // } else {
+      //   this.shadowRoot.querySelector('h3').innerHTML = 'code'
+      // }
+
+      const code_in = this.querySelector('pre')
+      const code_out = this.shadowRoot.querySelector('pre')
+      if (code_in) {
+        const lines = code_in.innerHTML.split('\n')
+        const trimmer = []
+        const trimmed = []
+        const re = /^\s*$/
+        let hitFirstLine = false
+        lines.forEach((line) => {
+          if (!line.match(re)) {
+            hitFirstLine = true
+          }
+          if (hitFirstLine === true) {
+            trimmer.unshift(line)
+          }
+        })
+        let hitLastLine = false
+        trimmer.forEach((line) => {
+          if (!line.match(re)) {
+            hitLastLine = true
+          } 
+          if (hitLastLine === true) {
+            trimmed.unshift(`<span class="numberedLine"></span>${line}`)
+            // trimmed.unshift(`--- ${line}`)
+          //  trimmed.unshift(`${line}`)
+          }
+        })
+        code_out.innerHTML = trimmed.join("\n")
+
+        if (code_in.classList.contains("scroll")) {
+          code_out.classList.add("scroll") 
+        }
+      }
+    }
+
+    async copyCode(button) {
+      try {
+        await navigator.clipboard.writeText(this.querySelector('pre').innerText)
+        button.innerHTML = 'Copied!'
+      } catch (err) {
+        button.innerHTML = 'Error copying'
+      }
+    }
+
+    handleClick(event) {
+      this.copyCode(event.target)
+    }
+  }
+)
+
+
+
+
 customElements.define(
   'settings-gear',
   class SettingsGear extends HTMLElement {
