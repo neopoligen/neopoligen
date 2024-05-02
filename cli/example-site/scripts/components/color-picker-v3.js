@@ -179,17 +179,17 @@ customElements.define(
         },
         defaultMode: 'light',
         codeBlockColors: {
-          alfa: { l: 20, c: 0.1, h: 30 },
-          bravo: { l: 20, c: 0.1, h: 60 },
-          charlie: { l: 20, c: 0.1, h: 90 },
-          delta: { l: 20, c: 0.1, h: 120 },
-          echo: { l: 20, c: 0.1, h: 150 },
-          foxtrot: { l: 20, c: 0.1, h: 180 },
-          golf: { l: 20, c: 0.1, h: 120 },
-          hotel: { l: 20, c: 0.1, h: 180 },
-          india: { l: 20, c: 0.1, h: 240 },
-          juliet: { l: 20, c: 0.1, h: 300 },
-          kilo: { l: 20, c: 0.1, h: 330 },
+          alfa: { l: 40, c: 0.1, h: 30 },
+          bravo: { l: 40, c: 0.1, h: 60 },
+          charlie: { l: 40, c: 0.1, h: 90 },
+          delta: { l: 40, c: 0.1, h: 120 },
+          echo: { l: 40, c: 0.1, h: 150 },
+          foxtrot: { l: 40, c: 0.1, h: 180 },
+          golf: { l: 40, c: 0.1, h: 120 },
+          hotel: { l: 40, c: 0.1, h: 180 },
+          india: { l: 40, c: 0.1, h: 240 },
+          juliet: { l: 40, c: 0.1, h: 300 },
+          kilo: { l: 40, c: 0.1, h: 330 },
           lima: { l: 40, c: 0.1, h: 15 },
           mike: { l: 40, c: 0.1, h: 45 },
         },
@@ -1350,18 +1350,25 @@ h2, h3 {
         } else {
           payload.push(newH)
         }
-      
-    } else {
-      payload.push(
-        (this.state.modes[mode].colors.bravo.l - l) % this.state.base.l.max
-      )
-      payload.push(
-        (this.state.modes[mode].colors.bravo.c - c) % this.state.base.c.max
-      )
-      payload.push(
-        (this.state.modes[mode].colors.bravo.h - h) % this.state.base.h.max
-      )
-
+      } else {
+        let newL = this.state.modes[mode].colors.bravo.l - l
+        if (newL < 0) {
+          payload.push(this.state.modes[mode].colors.bravo.l + l)
+        } else {
+          payload.push(newL)
+        }
+        let newC = this.state.modes[mode].colors.bravo.c - c
+        if (newC < 0) {
+          payload.push(this.state.modes[mode].colors.bravo.c + c)
+        } else {
+          payload.push(newC)
+        }
+        let newH = this.state.modes[mode].colors.bravo.h - h
+        if (newH < 0) {
+          payload.push(this.state.modes[mode].colors.bravo.h + h)
+        } else {
+          payload.push(newH)
+        }
       }
       return payload
     }
