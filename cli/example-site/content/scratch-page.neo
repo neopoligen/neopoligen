@@ -2,12 +2,322 @@
 
 A System Preferences Based Light/Dark Mode Switcher 
 
--- p
+-- warning
+-- title: Head's Up
 
-here
+There's some weird attempts at accessibility in here 
+right now. I'm still learning what I'm doing with that
+so consider this a work in progress for now. 
+
+-- h2
+
+Introduction
+
+I'm building out an example site for my Neopoligen^neo^^ website
+builder. It'll act as the default "getting started" site. I'm 
+putting in several things to make it easier to get up and running
+for folks who don't have experience with websites yet. One of those
+things is a light/dark mode switcher. This page is where 
+I'm building and testing that functionality. 
+
+-- list
+-- title: Goals
+
+- Make it a web component that can be included with a default
+set of components for the site
+
+- Make sure it's accessible
+
+- Start by reading the value from the system if one was defined
+
+- Show what the current system value is 
+
+- Default to light mode if no system settings was detected
+
+- Provide the ability to manually toggle between dark and light 
+mode
+
+- Provide the ability to fall back to using the system preferences
+(if they're available otherwise fallback to light mode)
+
+- Store your setting so it sets itself when you visit the site
+in another session
+
+-- h2
+
+The Code
+
+Here's what I've got so far.
+
+-- html/
+-- template: show
+
+<div class="example-wrapper">
+  <example-color-switcher></example-color-switcher>
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur 
+    venenatis, sem at laoreet facilisis, sapien nisi tincidunt purus, 
+    rhoncus lacinia lectus enim sit amet nibh. Nullam enim quam, 
+    ultricies et ipsum ut, porttitor laoreet turpis. Quisque eu massa.
+  </p>
+</div>
+
+-- /html
+
+-- javascript
+-- template: show
+-- type: module
+
+customElements.define('example-color-switcher', 
+  class ExampleColorSwitcher extends HTMLElement {
+    constructor() {
+      super()
+      this.attachShadow({ mode: 'open' })
+      this.loadConfig()
+      this.addStyles()
+      this.addWrapper()
+      this.addButtons()
+      this.addListeners()
+      this.setInitialMode()
+    }
+
+    addButtons() {
+      for (let mode in this.config.modes) {
+        const button = this.config.modes[mode]
+        const btn =  this.ownerDocument.createElement('button')
+        btn.dataset.mode = mode
+        btn.setAttribute('role', 'exampleMode')
+        btn.addEventListener('click', (event) => {
+          this.handleClick.call(this, event)
+        }) 
+        if (button.mode !== 'auto') {
+          btn.innerHTML = `${button.text} ${button.token}`
+        }
+        this.wrapper.appendChild(btn)
+      }
+    }
+
+    addListeners() {
+      window.matchMedia('(prefers-color-scheme: dark)')
+        .addEventListener('change', () => {
+          this.updateAutoDisplay.call(this)
+        })
+    }
+
+    addStyles() {
+      const styles =  this.ownerDocument.createElement('style')
+      styles.innerHTML = `
+[role="exampleMode"] {
+  color: currentColor;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  outline: none;
+  filter: brightness(60%);
+  margin: 0;
+  padding: 0;
+}
+
+[role="exampleMode"][aria-selected="true"] {
+  border-bottom: 2px solid currentColor;
+  filter: brightness(100%);
+}
+
+.switcher-wrapper {
+  margin: 0;
+  display: flex;
+  flex-wrap: warp;
+  gap: 1.4rem;
+}
+`
+      this.shadowRoot.appendChild(styles)
+    }
+
+    addWrapper() {
+      this.wrapper = this.ownerDocument.createElement('div')
+      this.wrapper.classList.add('switcher-wrapper')
+      this.shadowRoot.appendChild(this.wrapper)
+    }
+
+    handleClick(event) {
+      this.setMode(event.target.dataset.mode)
+    }
+
+    loadConfig() {
+      this.config = {
+        modes: {
+          light: { text: "Light", token: "☀"},
+          dark: { text: "Dark", token: "☾" },
+          auto: { text: "", token: "" },
+        }
+      }
+    }
+
+    setInitialMode() {
+      this.updateAutoDisplay.call(this)
+      const mode = localStorage.getItem('colorMode')
+      if (mode) {
+        this.setMode(mode)
+      } else {
+        this.setMode('auto')
+      }
+    }
+
+    setMode(mode) {
+      localStorage.setItem('colorMode', mode)
+      if (mode === `auto`) {
+        document.body.classList.remove('light')
+        document.body.classList.remove('dark')
+      } else {
+        const removeMode = mode === 'light' ? 'dark' : 'light'
+        document.body.classList.add(mode)
+        document.body.classList.remove(removeMode)
+      }
+      const buttons = this.shadowRoot.querySelectorAll(`[role="exampleMode"]`)
+      buttons.forEach((button) => {
+        if (button.dataset.mode === mode) {
+          button.setAttribute('aria-selected', true)
+        } else {
+          button.setAttribute('aria-selected', false)
+        }
+      })
+    }
+
+    updateAutoDisplay() {
+      const els = this.shadowRoot.querySelectorAll('[role="exampleMode"][data-mode="auto"]')
+      els.forEach((el) => {
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          el.innerHTML = `Auto (${this.config.modes.dark.token})`
+        } else {
+          el.innerHTML = `Auto (${this.config.modes.light.token})`
+        }
+      })
+    }
+  }
+)
+
+
+
+-- css/
+-- template: show
+
+body {
+  --example-color: black;
+  --example-bg-color: #ccc;
+  --example-color-selected: black;
+  --example-color-not-selected: #555;
+}
+
+body.dark {
+  --example-color: #ccc;
+  --example-bg-color: black;
+  --example-color-selected: #ccc;
+  --example-color-not-selected: #888;
+}
+
+@media (prefers-color-scheme: dark) { 
+  body {
+    --example-color: #ccc;
+    --example-bg-color: black;
+    --example-color-selected: #ccc;
+    --example-color-not-selected: #888;
+  }
+  body.light {
+    --example-color: black;
+    --example-bg-color: #ccc;
+    --example-color-selected: black;
+    --example-color-not-selected: #555;
+  }
+}
+
+.example-wrapper {
+  color: var(--example-color);
+  background-color: var(--example-bg-color);
+}
+
+example-color-switcher {
+  display: inline-block;
+  margin-block: 0.8rem;
+}
+
+.example-wrapper {
+  margin-top: 1.4rem;
+  padding: 0.8rem;
+  border-radius: 0.4rem;
+}
+
+-- /css
+
+-- h2
+
+Usage
+
+I keep the javascript in a file called `components.js`` with the
+rest of my web components. That gets loaded on the page with:
+
+-- code/
+-- html
+
+<script src="/path/to/components.js" type="module"></script>
+
+-- /code
+
+The CSS resides in my base stylesheet.
+
+
+-- notes
+
+- Another goal is to be able to put this element on the 
+page multiple times and have them all work and stay in
+sync. I haven't done much work with web components so 
+I'm not sure what the possible approaches are, but I'm
+sure it's possible. I'll look into that at some point
+
+- The Auto feature picks up system settings if the browser has 
+access to them. If you go into your preferences and change them
+the page will update as well
+
+- This approach duplicates each set of styles to line things up
+for light and dark mode. There are ways to do this without 
+the duplication, but I'm not worried about it. Lots of other
+things across my site to work on before trying for that 
+micro-optimization
+
+
+-- footnote
+-- id: neo
+-- title: Neopoligen 
+-- subtitle: the website building app I'm working on
+-- url: https://www.neopoligen.com/
+
+
+-- ref
+-- url: https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme
+-- title: MDN - CSS prefers-color-scheme
+
+-- ref
+-- url: https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia
+-- title: MDN - matchMedia
+
+-- ref
+-- url: https://css-tricks.com/a-complete-guide-to-dark-mode-on-the-web/
+-- title: A Complete Guide to Dark Mode on the Web
+
+-- ref
+-- title: MDN - shadow DOM
+-- url: https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM
+
+
+
+
+
+
 
 -- metadata
 -- date: 2023-07-16 22:41:22
 -- id: 2sgie56k
 -- type: css
 -- status: draft 
+
+

@@ -3,9 +3,10 @@
 tlink Span Template Tests
 
 -- notes
-- `tlink`` stands for "Title Link"
 
-- It works by checking the current page_id with a target
+- tlink stands for Title Link
+
+- It works by checking the current pageid with a target
 page id
 
 - If the IDs are the same, just the title of the page
