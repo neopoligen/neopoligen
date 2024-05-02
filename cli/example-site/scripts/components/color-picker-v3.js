@@ -287,7 +287,7 @@ customElements.define(
           The <em>Randomize</em> button produces random values for the Lightness,
           Chroma, and Hue. It only changes the Light/Dark mode you're currently on. 
           If Light mode is active the Lightness is above 50%. In Dark mode it's
-          below 50%. 
+          below 50%. After you've randomized you can tweak or pick colors. 
         </p>
         <h3>Notes</h3>
         <ul class="flow">
@@ -315,6 +315,12 @@ customElements.define(
                 The copy buttons at the end of the sliders can be used to
                 pull in the corresponding value from the alternate mode
                 to sync things up
+            </li>
+            <li>
+                The stylesheets ends up around 40KB. It compresses to around
+                4KB. I'm not planning to add any tree-shaking/filtering to this
+                tool. That's something to handle down-stream if it
+                becomes necessary
             </li>
             <li>
                 The picker uses <a href="https://oklch.com/">OKLCH</a> 
@@ -352,13 +358,17 @@ customElements.define(
         </div>
 
         <div class="stylesheet-wrapper section-wrapper">
-            <h3>Stylesheet</h3>
-            <pre class="the-stylesheet"></pre>
+            <code-block>
+              <h3 slot="title">Stylesheet</h3>
+              <pre slot="code" class="the-stylesheet"></pre>
+            </code-block>
         </div>
         
         <div class="debug-wrapper section-wrapper">
-            <h3>Raw Data</h3>
-            <pre class="raw-data"></pre>
+        <code-block>
+          <h3 slot="title">Raw Data</h3>
+          <pre slot="code" class="raw-data"></pre>
+        </code-block>
         </div>
         
     </div>
