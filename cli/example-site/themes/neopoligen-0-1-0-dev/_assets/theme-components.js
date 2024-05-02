@@ -470,8 +470,6 @@ pre {
       )
     }
 
-
-
     connectedCallback() {
       this.content = this.template().content.cloneNode(true)
       this.shadowRoot.appendChild(this.content)
@@ -480,6 +478,7 @@ pre {
         this.updateContent.call(this, list, observer)
       )
       observer.observe(this, { childList: true, subtree: true })
+      this.updateContent()
     }
 
     updateContent() {

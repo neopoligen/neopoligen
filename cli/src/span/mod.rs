@@ -1,3 +1,4 @@
+pub mod code;
 pub mod escaped_char;
 pub mod escaped_pipe;
 pub mod footnote;
@@ -16,6 +17,7 @@ pub mod tag_word;
 pub mod word_segment;
 
 use crate::config::Config;
+use crate::span::code::code;
 use crate::span::escaped_char::escaped_char;
 use crate::span::footnote::footnote;
 use crate::span::greater_than::greater_than;
@@ -37,6 +39,13 @@ use std::collections::{BTreeMap, BTreeSet};
 #[derive(Clone, Debug, Serialize, PartialEq)]
 #[serde(content = "content", rename_all = "lowercase", tag = "type")]
 pub enum Span {
+    Code {
+        key_value_attributes: BTreeMap<String, String>,
+        flag_attributes: BTreeSet<String>,
+        span_type: String,
+        spans: Vec<Span>,
+        template: String,
+    },
     EscapedChar {
         text: String,
         template: String,
@@ -110,6 +119,7 @@ pub fn span<'a>(source: &'a str, config: &'a Config) -> IResult<&'a str, Span> {
         single_newline,
         word_segment,
         |src| footnote(src, config),
+        |src| code(src, config),
     ))(source)?;
     Ok((source, content))
 }
