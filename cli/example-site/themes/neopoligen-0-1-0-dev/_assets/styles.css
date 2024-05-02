@@ -111,21 +111,6 @@ img {
   color: var(--color-bravo);
 }
 
-::part(code-block-title) {
-  color: var(--color-alfa);
-  line-height: 1.1;
-  text-wrap: balance;
-  font-weight: 900;
-  font-size: var(--size-3); 
-  --flow-space: 1.0em;
-  margin-top: 1.4rem;
-}
-
-pre {
-  white-space: pre-wrap; 
-  overflow-wrap: break-word;
-}
-
 .one-column footer {
   max-width: min(100vw - 3rem, var(--width-alfa));
   margin-inline: auto;

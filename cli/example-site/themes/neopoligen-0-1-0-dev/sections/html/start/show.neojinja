@@ -32,9 +32,14 @@
     </div>
 
     <div class="content_subsection flow">
+        <code-block>
+            <h3>Source</h3>
+            <pre>
         [! autoescape false !]
         [@ highlight_code(section.content.category.content.text, "html") @]
         [! endautoescape !]
+        </pre>
+        </code-block>
     </div>   
 
 

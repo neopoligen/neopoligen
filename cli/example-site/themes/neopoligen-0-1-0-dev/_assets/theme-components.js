@@ -511,7 +511,9 @@ pre {
             hitLastLine = true
           } 
           if (hitLastLine === true) {
-           trimmed.unshift(`<span class="numberedLine">${line}</span>`)
+            trimmed.unshift(`<span class="numberedLine"></span>${line}`)
+            // trimmed.unshift(`--- ${line}`)
+          //  trimmed.unshift(`${line}`)
           }
         })
         code_out.innerHTML = trimmed.join("\n")

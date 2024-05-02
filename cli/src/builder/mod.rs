@@ -16,6 +16,9 @@ use std::fs;
 use std::fs::create_dir_all;
 use std::path::PathBuf;
 use std::time::Instant;
+use syntect::easy::HighlightLines;
+use syntect::highlighting::ThemeSet;
+use syntect::html::{styled_line_to_highlighted_html, IncludeBackground};
 use syntect::html::{ClassStyle, ClassedHTMLGenerator};
 use syntect::parsing::SyntaxSet;
 use syntect::util::LinesWithEndings;
@@ -205,6 +208,46 @@ fn verify_dir(dir: &PathBuf) -> std::io::Result<()> {
     }
 }
 
+// fn highlight_code_probably_not_necessary(code: &str, lang: &str) -> String {
+//     let ps = SyntaxSet::load_defaults_newlines();
+//     let ts = ThemeSet::load_defaults();
+//     let syntax = ps
+//         .find_syntax_by_token(lang)
+//         .unwrap_or_else(|| ps.find_syntax_plain_text());
+//     let mut h = HighlightLines::new(syntax, &ts.themes["Solarized (dark)"]);
+//     let regions = h.highlight_line(code, &ps).unwrap();
+//     let mut html = styled_line_to_highlighted_html(&regions[..], IncludeBackground::No).unwrap();
+//     let replacements = vec![
+//         ("color:#839496;", "alfa "),
+//         ("color:#dc322f;", "bravo "),
+//         ("color:#002b36;", "charlie "),
+//         ("color:#2aa198;", "delta "),
+//         ("color:#b58900;", "echo "),
+//         ("color:#657b83;", "foxtrot "),
+//         ("color:#268bd2;", "golf "),
+//         ("color:#d33682;", "hotel "),
+//         ("color:#6c71c4;", "india "),
+//         ("color:#6e2e32;", "juliett "),
+//         ("color:#586e75;", "kilo "),
+//         ("color:#cb4b16;", "lima "),
+//         ("color:#93a1a1;", "mike "),
+//         ("color:#859900;", "november "),
+//         ("background-color:#839496;", "alfa "),
+//         ("background-color:#dc322f;", "bravo "),
+//         ("background-color:#002b36;", "charlie "),
+//         ("background-color:#b58900;", "delta "),
+//         ("background-color:#657b83;", "echo "),
+//         ("background-color:#6e2e32;", "foxtrot "),
+//         ("background-color:#586e75;", "golf "),
+//         ("background-color:#cb4b16;", "hotel "),
+//     ];
+//     replacements
+//         .iter()
+//         .for_each(|r| html = html.replace(r.0, r.1));
+//     html = html.replace("span style", "span class");
+//     html
+// }
+
 fn highlight_code(code: String, lang: String) -> String {
     let syntax_set = SyntaxSet::load_defaults_newlines();
     let syntax = syntax_set
@@ -215,12 +258,7 @@ fn highlight_code(code: String, lang: String) -> String {
     for line in LinesWithEndings::from(code.trim()) {
         let _ = html_generator.parse_html_for_line_which_includes_newline(line);
     }
-    let initial_html = html_generator.finalize();
-    let output_html: Vec<_> = initial_html
-        .lines()
-        .map(|line| format!(r#"<span class="numberedLine">{}</span>"#, line))
-        .collect();
-    format!(r#"{}"#, output_html.join("\n"))
+    html_generator.finalize()
 }
 
 #[instrument(skip(site))]
