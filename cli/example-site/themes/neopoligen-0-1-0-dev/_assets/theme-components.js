@@ -3,11 +3,12 @@ customElements.define('code-block',
     constructor() {
       super()
       this.attachShadow({ mode: 'open' })
+    
     }
 
     addClickListener() {
-      const el = this.shadowRoot.querySelector('::part(copy-button)')
-      el.addEventListener('click', (event) => this.handleClick.call(this, event))
+      // const el = this.shadowRoot.querySelector('::part(code-block-copy-button)')
+      // el.addEventListener('click', (event) => this.handleClick.call(this, event))
     }
 
     connectedCallback() {
@@ -444,7 +445,7 @@ customElements.define('code-block',
 <div part="code-block-title">${this.getTitle()}</div>
 ${this.getSubtitle()}
 <div part="code-block-wrapper">
-  <button part="code-block-copy-button">Copy</button>
+  <button part="code-block-copy-button">TODO: Make this copy</button>
   ${this.getCode()}
 </div>`
 

@@ -51,7 +51,7 @@ body {
 -- javascript
 -- template: show
 
-logMsg("this is one ping only");
+console.log("this is one ping only");
 
 
 

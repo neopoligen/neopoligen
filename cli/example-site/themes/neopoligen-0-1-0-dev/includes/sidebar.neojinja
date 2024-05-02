@@ -1,6 +1,6 @@
 <div class="sidebar">
     <ul>
-        <li>[@ theme.link_or_title(site, page_id, "2dwmgthu", { "title": "Home Page" }) @]</li>
+        <li>[@ theme.link_or_title(site, page_id, "2sjfzivl", { "title": "Home Page" }) @]</li>
         <li>[@ theme.link_or_title(site, page_id, "2etmrmai") @]</li>
         <li>[@ theme.link_or_title(site, page_id, "2flhvb9s") @]</li>
     </ul>

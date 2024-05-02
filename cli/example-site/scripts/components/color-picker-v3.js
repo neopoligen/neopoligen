@@ -175,7 +175,7 @@ customElements.define(
             },
           },
         },
-        defaultMode: 'light',
+        defaultMode: 'dark',
         codeBlockColors: {
           alfa: { l: 40, c: 0.1, h: 30 },
           bravo: { l: 40, c: 0.1, h: 60 },
@@ -1032,6 +1032,7 @@ h2, h3 {
 
     connectedCallback() {
       this.buildPreviewButton()
+      this.update()
     }
 
     cValue(mode) {
@@ -1242,10 +1243,11 @@ h2, h3 {
       const mode = this.state.defaultMode
       const altMode = mode === 'light' ? 'dark' : 'light'
 
-      styles += `:root {
-        color-scheme: ${mode} ${altMode};
-      }
-      `
+      // styles += `:root {
+      //   color-scheme: ${mode} ${altMode};
+      // }
+      // `
+
       styles += `body { 
       ${this.genMatchStyles(mode)}        
       ${this.genStyles(mode)} 
@@ -1273,19 +1275,19 @@ h2, h3 {
     getAlfa(mode) {
       let payload = []
       payload.push(
-        (this.state.modes[this.mode()].l +
-          this.state.modes[this.mode()].colors.alfa.l) %
+        (this.state.modes[mode].l +
+          this.state.modes[mode].colors.alfa.l) %
           100
       )
       payload.push(
-        ((this.state.modes[this.mode()].c * 10 +
-          this.state.modes[this.mode()].colors.alfa.c) %
+        ((this.state.modes[mode].c * 10 +
+          this.state.modes[mode].colors.alfa.c) %
           5) /
           10
       )
       payload.push(
-        (this.state.modes[this.mode()].h +
-          this.state.modes[this.mode()].colors.alfa.h) %
+        (this.state.modes[mode].h +
+          this.state.modes[mode].colors.alfa.h) %
           360
       )
       return payload
@@ -1295,19 +1297,19 @@ h2, h3 {
       let payload = []
 
       payload.push(
-        (this.state.modes[this.mode()].l +
-          this.state.modes[this.mode()].colors.bravo.l) %
+        (this.state.modes[mode].l +
+          this.state.modes[mode].colors.bravo.l) %
           100
       )
       payload.push(
-        ((this.state.modes[this.mode()].c * 10 +
-          this.state.modes[this.mode()].colors.bravo.c) %
+        ((this.state.modes[mode].c * 10 +
+          this.state.modes[mode].colors.bravo.c) %
           5) /
           10
       )
       payload.push(
-        (this.state.modes[this.mode()].h +
-          this.state.modes[this.mode()].colors.bravo.h) %
+        (this.state.modes[mode].h +
+          this.state.modes[mode].colors.bravo.h) %
           360
       )
 
@@ -1772,6 +1774,8 @@ h2, h3 {
       this.devProps[
         `--dev-color-alfa`
       ] = `oklch(${alfaValues[0]}% ${alfaValues[1]} ${alfaValues[2]})`
+
+      console.log(alfaValues)
 
       const bravoValues = this.getBravo(this.mode())
       this.devProps[
