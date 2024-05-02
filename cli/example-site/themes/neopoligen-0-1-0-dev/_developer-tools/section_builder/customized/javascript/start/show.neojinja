@@ -5,6 +5,30 @@
 
     [! include "subsections/forward.neojinja" !]
 
+
+        <code-block>
+            <h3 slot="title">
+                [! if section.content.key_value_attributes.title !]
+                    [@ section.content.key_value_attributes.title @]
+                [! else !]
+                    javascript
+                [! endif !]
+            </h3>
+
+            [! if section.content.key_value_attributes.subtitle !]
+            <div slot="subtitle">[@ section.content.key_value_attributes.subtitle @]</div>
+            [! endif !]
+
+            <pre slot="code">
+                [! autoescape false !]
+                [@ highlight_code(section.content.category.content.text, "javascript") @]
+                [! endautoescape !]
+            </pre>
+
+        </code-block>
+
+
+
     <div class="heading_subsection">
         <h3 class="title_subsection">
         [! if section.content.key_value_attributes.title !]

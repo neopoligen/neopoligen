@@ -417,14 +417,12 @@ customElements.define(
   counter-reset: lineNumber;
   line-height: 1.3;
   position: relative;
+  left: 2.8rem;
+  margin-right: 4rem;
 }
 
 .numberedLine {
   counter-increment: lineNumber;
-  font-size: var(--size-8, 0.3rem); 
-  position: relative;
-  left: 2.4rem;
-  margin-right: 2.7rem;
 }
 
 .numberedLine:before {
@@ -434,12 +432,13 @@ customElements.define(
   text-align: right;
   width: 2rem;
   position: absolute;
-  left: -2.4rem;
+  left: -3rem;
 }
 
 pre {
   white-space: pre-wrap; 
   overflow-wrap: break-word;
+  font-size: var(--size-8, 0.8rem); 
 }
 
 .scroll {
@@ -449,11 +448,18 @@ pre {
 
 </style>
 
-<h3></h3>
-<div class="code-block-wrapper">
+
+<div class="heading_subsection">
+  <slot name="title"></slot>
+  <slot name="subtitle"></slot>
+</div>
+
+<div class="content_subsection code-block-wrapper">
   <button class="code-block-copy-button">copy</button>
   <pre class="numberedLines"></pre>
-</div>`
+</div>
+
+`
 
       return template
     }
@@ -482,12 +488,6 @@ pre {
     }
 
     updateContent() {
-      const title = this.querySelector('h3')
-      if (title) {
-        this.shadowRoot.querySelector('h3').innerHTML = title.innerHTML
-      } else {
-        this.shadowRoot.querySelector('h3').innerHTML = 'code'
-      }
 
       const code_in = this.querySelector('pre')
       const code_out = this.shadowRoot.querySelector('pre')

@@ -10,7 +10,7 @@
                 [! if section.content.key_value_attributes.title !]
                     [@ section.content.key_value_attributes.title @]
                 [! else !]
-                    HTML
+                    html
                 [! endif !]
             </h3>
 
