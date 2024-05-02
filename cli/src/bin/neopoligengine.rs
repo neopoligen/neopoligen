@@ -93,7 +93,7 @@ async fn main() {
                         let now = Instant::now();
                         build_site(&config, &neo_env);
                         event!(Level::DEBUG, "SITEBUILDTIME: {:?}", now.elapsed());
-                        if false {
+                        if true {
                             // TODO Set a flag so this can be toggled on/off in the config
                             run_web_server(config, neo_env).await;
                         }
