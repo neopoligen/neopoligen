@@ -170,7 +170,8 @@ Details And Examples
             is a prototype attempt at autogenerating variables with 
             styles for them. They are based off the <em>bravo</em>
             color assuming that's what will be used for the main
-            body text.
+            body text. (I'll probably end up adding another slider
+            or two here to tweak these a bit)
         </p>
         <code-block>
 <x-code><span class="numberedLine"><span class="source rust"><span class="meta function rust"><span class="meta function rust"><span class="storage type function rust">fn</span> </span><span class="entity name function rust">main</span></span><span class="meta function rust"><span class="meta function parameters rust"><span class="punctuation section parameters begin rust">(</span></span><span class="meta function rust"><span class="meta function parameters rust"><span class="punctuation section parameters end rust">)</span></span></span></span><span class="meta function rust"> </span><span class="meta function rust"><span class="meta block rust"><span class="punctuation section block begin rust">{</span></span>
@@ -179,7 +180,9 @@ Details And Examples
         </code-block>
         <p>The styles are:</p>
         <ul>
+            <li>--code-block-base (<span class="code-block-base">sample</span>)</li>
             <li class="code-block-line-numbers">--code-block-line-numbers</li>
+            <li class="code-block-border">--code-block-border</li>
             <li class="code-block-alfa">--code-block-alfa</li>
             <li class="code-block-bravo">--code-block-bravo</li>
             <li class="code-block-charlie">--code-block-charlie</li>
@@ -193,10 +196,7 @@ Details And Examples
             <li class="code-block-kilo">--code-block-kilo</li>
             <li class="code-block-lima">--code-block-lima</li>
             <li class="code-block-mike">--code-block-mike</li>
-        </ul>
-        <p>There's also a <em>--code-block-base</em>. Still 
-        working on exactly what that'll be</p>
-        
+        </ul>        
     </div>  
 
 </tab-group>

@@ -416,6 +416,20 @@ customElements.define('code-block',
 .variable.other.constant.js {
   color: var(--code-block-alfa);
 }
+
+::part(code-wrapper) {
+  padding: 0.7rem;
+  background-color: var(--code-block-base);
+  border-radius: 0.3rem;
+  border: 1px solid var(--code-block-border);
+}
+
+::part(copy-button) {
+  background: none;
+  color: var(--code-block-line-numbers);
+  border: 1px solid var(--code-block-line-numbers);
+  border-radius: 0.3rem;
+}
 </style>
 
 <div part="title">${this.getTitle()}</div>
@@ -443,7 +457,7 @@ ${this.getSubtitle()}
     getCode() {
       const codeEl = this.querySelector('x-code')
       if (codeEl) {
-        return `<pre><code part="code">${codeEl.innerHTML}</code></pre>`
+        return `<pre part="code-wrapper"><code part="code">${codeEl.innerHTML}</code></pre>`
       }
     }
 

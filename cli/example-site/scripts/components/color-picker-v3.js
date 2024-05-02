@@ -1087,6 +1087,9 @@ h2, h3 {
         styles += `.code-block-${key} { color: var(--code-block-${key}); }\n`
       }
 
+      styles += `.code-block-line-numbers { color: var(--code-block-line-numbers); }\n`
+      styles += `.code-block-base { color: var(--code-block-base); }\n`
+      styles += `.code-block-border { color: var(--code-block-border); }\n`
       return styles
     }
 
@@ -1106,6 +1109,10 @@ h2, h3 {
       for (let alpha = 90; alpha > 0; alpha = alpha - 10) {
         styles += `--color-bw-reverse-${alpha}: rgb(${config[mode].reverse} / ${alpha}%);\n`
       }
+
+      styles += `--code-block-base: rgb(${config[mode].match} / 20%);\n`
+
+      styles += `--code-block-border: rgb(${config[mode].reverse} / 60%);\n`
 
       return styles
     }
@@ -1142,6 +1149,8 @@ h2, h3 {
         }
       }
 
+
+
       for (let color in this.state.codeBlockColors) {
         const theValues = this.getCodeBlockColor(
           mode,
@@ -1156,6 +1165,15 @@ h2, h3 {
           )} ${theValues[2].toFixed(3)})`
         )
       }
+
+      const forLineNumbers = this.getBravo(mode)
+      response += this.prop(
+        `--code-block-line-numbers`,
+        `oklch(${forLineNumbers[0].toFixed(3)}% ${forLineNumbers[1].toFixed(
+          5
+        )} ${forLineNumbers[2].toFixed(3)} / 45%)`)
+
+
 
       return response.trim()
     }
@@ -1218,6 +1236,7 @@ h2, h3 {
           --border-black-90: 1px solid var(--color-black-90);
           --color-white-90: rgb(255 255 255 / 90%);
           --border-white-90: 1px solid var(--color-white-90);
+          
       }
       
       `
