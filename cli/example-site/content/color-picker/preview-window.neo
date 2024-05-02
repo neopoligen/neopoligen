@@ -553,5 +553,6 @@ h2 {
 -- template: one-column
 -- no-footer
 -- no-header
+-- no-css
 
 

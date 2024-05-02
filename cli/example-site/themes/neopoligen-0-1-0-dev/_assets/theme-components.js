@@ -7,31 +7,14 @@ customElements.define('code-block',
     }
 
     addClickListener() {
-      // const el = this.shadowRoot.querySelector('::part(code-block-copy-button)')
-      // el.addEventListener('click', (event) => this.handleClick.call(this, event))
+      const el = this.shadowRoot.querySelector('.code-block-copy-button')
+      el.addEventListener('click', (event) => this.handleClick.call(this, event))
     }
 
     connectedCallback() {
       const template = this.ownerDocument.createElement('template') 
       template.innerHTML = `
 <style>
-.numberedLines {
-  counter-reset: lineNumber;
-}
-
-.numberedLine {
-  counter-increment: lineNumber;
-}
-
-.numberedLine:before {
-  display: inline-block;
-  color: var(--code-block-line-numbers);
-  content: counter(lineNumber);
-  padding-right: 0.7rem;
-  text-align: right;
-  width: 2rem;
-}
-
 .code {
   color: var(--code-block-alfa);
   background-color: var(--code-block-base);
@@ -422,7 +405,7 @@ customElements.define('code-block',
   margin: 0;
 }
 
-::part(code-block-copy-button) {
+.code-block-copy-button {
   position: absolute;
   right: 0;
   top: 0;
@@ -432,7 +415,7 @@ customElements.define('code-block',
   border-radius: 0.3rem;
 }
 
-::part(code-block-wrapper) {
+.code-block-wrapper {
   position: relative;
   padding: 0.7rem;
   background-color: var(--code-block-base);
@@ -440,12 +423,29 @@ customElements.define('code-block',
   border: 1px solid var(--code-block-border);
 }
 
+.numberedLines {
+  counter-reset: lineNumber;
+}
+
+.numberedLine {
+  counter-increment: lineNumber;
+}
+
+.numberedLine:before {
+  display: inline-block;
+  color: var(--code-block-line-numbers);
+  content: counter(lineNumber);
+  padding-right: 0.7rem;
+  text-align: right;
+  width: 2rem;
+}
+
 </style>
 
 <div part="code-block-title">${this.getTitle()}</div>
 ${this.getSubtitle()}
-<div part="code-block-wrapper">
-  <button part="code-block-copy-button">TODO: Make this copy</button>
+<div class="code-block-wrapper">
+  <button class="code-block-copy-button">copy</button>
   ${this.getCode()}
 </div>`
 
@@ -456,7 +456,7 @@ ${this.getSubtitle()}
     async copyCode(button) {
       try {
         await navigator.clipboard.writeText(
-          this.shadowRoot.querySelector('::part(code-block-code)').innerText
+          this.shadowRoot.querySelector('.code-block-code').innerText
         )
         button.innerHTML = "Copied!"
       } catch (err) {
@@ -467,14 +467,14 @@ ${this.getSubtitle()}
     getCode() {
       const codeEl = this.querySelector('x-code')
       if (codeEl) {
-        return `<pre><code part="code-block-code">${codeEl.innerHTML}</code></pre>`
+        return `<pre><code class="code-block-code">${codeEl.innerHTML}</code></pre>`
       }
     }
 
     getSubtitle() {
       const subtitleEl = this.querySelector('x-subtitle')
       if (subtitleEl !== null) {
-        return `<div part="code-block-subtitle">${subtitleEl.innerHTML}</div>`
+        return `<div class="code-block-subtitle">${subtitleEl.innerHTML}</div>`
       } else {
         return ""
       }
