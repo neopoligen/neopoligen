@@ -3,7 +3,6 @@ customElements.define('code-block',
     constructor() {
       super()
       this.attachShadow({ mode: 'open' })
-    
     }
 
     addClickListener() {
@@ -439,14 +438,12 @@ customElements.define('code-block',
   text-align: right;
   width: 2rem;
 }
-
 </style>
 
-<div part="code-block-title">${this.getTitle()}</div>
-${this.getSubtitle()}
+<slot name="title"></slot>
 <div class="code-block-wrapper">
   <button class="code-block-copy-button">copy</button>
-  ${this.getCode()}
+  <slot name="code"></slot>
 </div>`
 
       this.shadowRoot.appendChild(template.content.cloneNode(true))
@@ -464,12 +461,12 @@ ${this.getSubtitle()}
       }
     } 
 
-    getCode() {
-      const codeEl = this.querySelector('x-code')
-      if (codeEl) {
-        return `<pre><code class="code-block-code">${codeEl.innerHTML}</code></pre>`
-      }
-    }
+    // getCode() {
+    //   const codeEl = this.querySelector('x-code')
+    //   if (codeEl) {
+    //     return `<pre><code class="code-block-code">${codeEl.innerHTML}</code></pre>`
+    //   }
+    // }
 
     getSubtitle() {
       const subtitleEl = this.querySelector('x-subtitle')
@@ -480,14 +477,14 @@ ${this.getSubtitle()}
       }
     }
 
-    getTitle() {
-      const titleEl = this.querySelector('x-title')
-      if (titleEl) {
-        return titleEl.innerHTML
-      } else {
-        return 'code'
-      }
-    }
+    // getTitle() {
+    //   const titleEl = this.querySelector('x-title')
+    //   if (titleEl) {
+    //     return titleEl.innerHTML
+    //   } else {
+    //     return 'code'
+    //   }
+    // }
 
     handleClick(event) {
       this.copyCode(event.target)
