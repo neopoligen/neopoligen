@@ -1,16 +1,7 @@
 customElements.define('code-block', 
   class extends HTMLElement {    
-    constructor() {
-      super()
-      this.attachShadow({ mode: 'open' })
-    }
 
-    addClickListener() {
-      const el = this.shadowRoot.querySelector('.code-block-copy-button')
-      el.addEventListener('click', (event) => this.handleClick.call(this, event))
-    }
-
-    connectedCallback() {
+    template() {
       const template = this.ownerDocument.createElement('template') 
       template.innerHTML = `
 <style>
@@ -440,51 +431,58 @@ customElements.define('code-block',
 }
 </style>
 
-<slot name="title"></slot>
+<h3></h3>
 <div class="code-block-wrapper">
   <button class="code-block-copy-button">copy</button>
-  <slot name="code"></slot>
+  <pre></pre>
 </div>`
 
-      this.shadowRoot.appendChild(template.content.cloneNode(true))
+      return template
+    }
+
+    constructor() {
+      super()
+      this.attachShadow({ mode: 'open' })
+    }
+
+    addClickListener() {
+      const el = this.shadowRoot.querySelector('.code-block-copy-button')
+      el.addEventListener('click', (event) => this.handleClick.call(this, event))
+    }
+
+    connectedCallback() {
+      this.content = this.template().content.cloneNode(true)
+      this.shadowRoot.appendChild(this.content)
       this.addClickListener()
+      const observer = new MutationObserver(
+        (list, observer) => this.updateContent.call(this, list, observer)
+      );
+      observer.observe(this, {childList: true, subtree: true,})
+    }
+
+    updateContent() {
+      const title = this.querySelector('h3')
+      if (title) {
+        this.shadowRoot.querySelector('h3').innerHTML = title.innerHTML
+      } else {
+        this.shadowRoot.querySelector('h3').innerHTML = 'code'
+      }
+      const code = this.querySelector('pre')
+      if (code) {
+        this.shadowRoot.querySelector('pre').innerHTML = code.innerHTML
+      } 
     }
 
     async copyCode(button) {
       try {
         await navigator.clipboard.writeText(
-          this.shadowRoot.querySelector('.code-block-code').innerText
+          this.querySelector('pre').innerText
         )
         button.innerHTML = "Copied!"
       } catch (err) {
         button.innerHTML = "Error copying"
       }
     } 
-
-    // getCode() {
-    //   const codeEl = this.querySelector('x-code')
-    //   if (codeEl) {
-    //     return `<pre><code class="code-block-code">${codeEl.innerHTML}</code></pre>`
-    //   }
-    // }
-
-    getSubtitle() {
-      const subtitleEl = this.querySelector('x-subtitle')
-      if (subtitleEl !== null) {
-        return `<div class="code-block-subtitle">${subtitleEl.innerHTML}</div>`
-      } else {
-        return ""
-      }
-    }
-
-    // getTitle() {
-    //   const titleEl = this.querySelector('x-title')
-    //   if (titleEl) {
-    //     return titleEl.innerHTML
-    //   } else {
-    //     return 'code'
-    //   }
-    // }
 
     handleClick(event) {
       this.copyCode(event.target)

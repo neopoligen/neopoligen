@@ -359,14 +359,14 @@ customElements.define(
 
         <div class="stylesheet-wrapper section-wrapper">
             <code-block>
-              <h3 slot="title">Stylesheet</h3>
-              <pre slot="code" class="the-stylesheet"></pre>
+              <h3>Stylesheet</h3>
+              <pre class="the-stylesheet">initial code</pre>
             </code-block>
         </div>
         
         <div class="debug-wrapper section-wrapper">
         <code-block>
-          <h3 slot="title">Raw Data</h3>
+          <h3>Raw Data</h3>
           <pre slot="code" class="raw-data"></pre>
         </code-block>
         </div>
