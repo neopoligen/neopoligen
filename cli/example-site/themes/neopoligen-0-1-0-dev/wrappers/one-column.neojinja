@@ -29,8 +29,9 @@
     <main>
         <article class="flow">
         [! block body !][! endblock !]
-        </article>
         [! include "includes/footnotes.neojinja" !]
+        [! include "includes/references.neojinja" !]
+        </article>
     </main>
     [! include "includes/footer.neojinja" !]
 </body>

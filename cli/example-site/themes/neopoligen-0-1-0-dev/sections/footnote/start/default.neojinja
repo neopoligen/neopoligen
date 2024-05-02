@@ -18,7 +18,8 @@ id="footnote-[@ section.content.key_value_attributes.id @]"
     [! if section.content.key_value_attributes.title !]
     <div class="title_subsection">[@ section.content.key_value_attributes.title @]
         [! if section.content.key_value_attributes.subtitle !]
-        <span class="subtitle_subsection">This is a subtitle</span>
+        - 
+        <span class="subtitle_subsection">[@ section.content.key_value_attributes.subtitle @]</span>
         [! endif !]
     </div>
     [! if section.content.key_value_attributes.id !]
