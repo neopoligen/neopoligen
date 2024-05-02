@@ -25,7 +25,9 @@
             </pre>
 
             <div slot="render">
-
+        [! autoescape false !]
+        [@ section.content.category.content.text @]
+        [! endautoescape !]
             </div>
         </html-block>
 

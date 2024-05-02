@@ -981,7 +981,7 @@ customElements.define(
 pre {
   white-space: pre-wrap; 
   overflow-wrap: break-word;
-  font-size: var(--size-7, 0.3rem); 
+  font-size: var(--size-8, 0.8rem); 
 }
 
 .scroll {
@@ -997,7 +997,11 @@ pre {
   <slot name="subtitle"></slot>
 </div>
 
-<div class="code-block-wrapper">
+<div class="content_subsection flow">
+<slot name="render"></slot>
+</div>
+
+<div class="content_subsection code-block-wrapper">
   <button class="code-block-copy-button">copy</button>
   <pre class="numberedLines"></pre>
 </div>`
