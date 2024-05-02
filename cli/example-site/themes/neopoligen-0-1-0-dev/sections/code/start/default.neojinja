@@ -5,46 +5,34 @@
 
     [! include "subsections/forward.neojinja" !]
 
-    <div class="heading_subsection">
-        <h3 class="title_subsection">
-        [! if section.content.key_value_attributes.title !]
-            [@ section.content.key_value_attributes.title @]
-        [! else !]
-            [! if section.content.flag_attributes[0] !]
-                [@ section.content.flag_attributes[0] @]
-            [! else !]
-                Code
+        <code-block>
+            <h3 slot="title">
+                [! if section.content.key_value_attributes.title !]
+                    [@ section.content.key_value_attributes.title @]
+                [! else !]
+                    [! if section.content.flag_attributes[0] !]
+                        [@ section.content.flag_attributes[0] @]
+                    [! else !]
+                        code
+                    [! endif !]
+                [! endif !]
+            </h3>
+
+            [! if section.content.key_value_attributes.subtitle !]
+            <div slot="subtitle">[@ section.content.key_value_attributes.subtitle @]</div>
             [! endif !]
-        [! endif !]
-        </h3>
-        [! if section.content.key_value_attributes.subtitle !]
-            <div class="subtitle_subsection">[@ section.content.key_value_attributes.subtitle @]</div>
-        [! endif !]
-    </div>
 
-    [! include "subsections/preface.neojinja" !]
+            <div slot="preface">[! include "subsections/preface.neojinja" !]</div>
 
-    <div class="content_subsection flow">
-        [! autoescape false !]
-        [! if section.content.flag_attributes[0] !]
-        [@ highlight_code(section.content.category.content.text, section.content.flag_attributes[0]) @]
-        [! else !]
-        [@ highlight_code(section.content.category.content.text, "txt") @]
-        [! endif !]
-        [! endautoescape !]
-    </div>
-
-    <code-block>
-        <x-title>Code</x-title>
-        <x-code>
-        [! autoescape false !]
-        [! if section.content.flag_attributes[0] !]
-        [@ highlight_code(section.content.category.content.text, section.content.flag_attributes[0]) @]
-        [! else !]
-        [@ highlight_code(section.content.category.content.text, "txt") @]
-        [! endif !]
-        [! endautoescape !]
-        </x-code>
-    </code-block>
+            <pre slot="code">
+                [! autoescape false !]
+                [! if section.content.flag_attributes[0] !]
+                [@ highlight_code(section.content.category.content.text, section.content.flag_attributes[0]) @]
+                [! else !]
+                [@ highlight_code(section.content.category.content.text, "txt") @]
+                [! endif !]
+                [! endautoescape !]
+            </pre>
+        </code-block>
 
     [! include "subsections/afterword.neojinja" !]
