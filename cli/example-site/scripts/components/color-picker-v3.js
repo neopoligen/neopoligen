@@ -12,8 +12,6 @@ customElements.define(
       this.childWindow
       this.childWindowName = 'previewWindow'
       this.els = {}
-      this.parentStylesheet = this.ownerDocument.createElement('style')
-      this.ownerDocument.head.appendChild(this.parentStylesheet)
       this.attachShadow({ mode: 'open' })
       this.addInitialState()
       this.addStyles()
@@ -2048,7 +2046,6 @@ h2, h3 {
 
       this.modUpdateHTML(`.the-stylesheet`, this.genStylesFull())
 
-      this.modUpdateHTML(this.parentStylesheet, this.genStylesFull())
       this.sendStylesheet()
     }
 

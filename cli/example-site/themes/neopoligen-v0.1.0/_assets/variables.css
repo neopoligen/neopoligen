@@ -54,6 +54,7 @@
             --border-black-90: 1px solid var(--color-black-90);
             --color-white-90: rgb(255 255 255 / 90%);
             --border-white-90: 1px solid var(--color-white-90);
+            
         }
         
         :root {
@@ -80,6 +81,8 @@
   --color-bw-reverse-30: rgb(0 0 0 / 30%);
   --color-bw-reverse-20: rgb(0 0 0 / 20%);
   --color-bw-reverse-10: rgb(0 0 0 / 10%);
+  --code-block-base: rgb(255 255 255 / 20%);
+  --code-block-border: rgb(0 0 0 / 60%);
           
         --color-base: oklch(92.669% 0.03076 39.927);
   --color-base-90: oklch(92.669% 0.03076 39.927 / 90%);
@@ -150,7 +153,21 @@
   --color-foxtrot-40: oklch(52.669% 0.13076 39.927 / 40%);
   --color-foxtrot-30: oklch(52.669% 0.13076 39.927 / 30%);
   --color-foxtrot-20: oklch(52.669% 0.13076 39.927 / 20%);
-  --color-foxtrot-10: oklch(52.669% 0.13076 39.927 / 10%); 
+  --color-foxtrot-10: oklch(52.669% 0.13076 39.927 / 10%);
+  --code-block-alfa: oklch(80.000% 0.10000 30.000);
+  --code-block-bravo: oklch(80.000% 0.10000 60.000);
+  --code-block-charlie: oklch(80.000% 0.10000 90.000);
+  --code-block-delta: oklch(80.000% 0.10000 120.000);
+  --code-block-echo: oklch(80.000% 0.10000 150.000);
+  --code-block-foxtrot: oklch(80.000% 0.10000 180.000);
+  --code-block-golf: oklch(80.000% 0.10000 120.000);
+  --code-block-hotel: oklch(80.000% 0.10000 180.000);
+  --code-block-india: oklch(80.000% 0.10000 240.000);
+  --code-block-juliet: oklch(80.000% 0.10000 300.000);
+  --code-block-kilo: oklch(80.000% 0.10000 330.000);
+  --code-block-lima: oklch(80.000% 0.10000 15.000);
+  --code-block-mike: oklch(80.000% 0.10000 45.000);
+  --code-block-line-numbers: oklch(32.669% 0.03076 39.927 / 45%); 
         }body.dark { 
                 --color-bw-match: rgb(0 0 0);
   --color-bw-match-90: rgb(0 0 0 / 90%);
@@ -172,6 +189,8 @@
   --color-bw-reverse-30: rgb(255 255 255 / 30%);
   --color-bw-reverse-20: rgb(255 255 255 / 20%);
   --color-bw-reverse-10: rgb(255 255 255 / 10%);
+  --code-block-base: rgb(0 0 0 / 20%);
+  --code-block-border: rgb(255 255 255 / 60%);
     
                 --color-base: oklch(16.009% 0.03076 39.927);
   --color-base-90: oklch(16.009% 0.03076 39.927 / 90%);
@@ -242,7 +261,21 @@
   --color-foxtrot-40: oklch(76.009% 0.13076 159.927 / 40%);
   --color-foxtrot-30: oklch(76.009% 0.13076 159.927 / 30%);
   --color-foxtrot-20: oklch(76.009% 0.13076 159.927 / 20%);
-  --color-foxtrot-10: oklch(76.009% 0.13076 159.927 / 10%); 
+  --color-foxtrot-10: oklch(76.009% 0.13076 159.927 / 10%);
+  --code-block-alfa: oklch(40.000% 0.10000 270.000);
+  --code-block-bravo: oklch(40.000% 0.10000 240.000);
+  --code-block-charlie: oklch(40.000% 0.10000 210.000);
+  --code-block-delta: oklch(40.000% 0.10000 180.000);
+  --code-block-echo: oklch(40.000% 0.10000 150.000);
+  --code-block-foxtrot: oklch(40.000% 0.10000 120.000);
+  --code-block-golf: oklch(40.000% 0.10000 180.000);
+  --code-block-hotel: oklch(40.000% 0.10000 120.000);
+  --code-block-india: oklch(40.000% 0.10000 60.000);
+  --code-block-juliet: oklch(40.000% 0.10000 0.000);
+  --code-block-kilo: oklch(40.000% 0.10000 630.000);
+  --code-block-lima: oklch(40.000% 0.10000 285.000);
+  --code-block-mike: oklch(40.000% 0.10000 255.000);
+  --code-block-line-numbers: oklch(32.669% 0.03076 39.927 / 45%); 
             }
   @media (prefers-color-scheme: dark) {
   body { 
@@ -266,6 +299,8 @@
   --color-bw-reverse-30: rgb(255 255 255 / 30%);
   --color-bw-reverse-20: rgb(255 255 255 / 20%);
   --color-bw-reverse-10: rgb(255 255 255 / 10%);
+  --code-block-base: rgb(0 0 0 / 20%);
+  --code-block-border: rgb(255 255 255 / 60%);
     
                 --color-base: oklch(16.009% 0.03076 39.927);
   --color-base-90: oklch(16.009% 0.03076 39.927 / 90%);
@@ -336,7 +371,21 @@
   --color-foxtrot-40: oklch(76.009% 0.13076 159.927 / 40%);
   --color-foxtrot-30: oklch(76.009% 0.13076 159.927 / 30%);
   --color-foxtrot-20: oklch(76.009% 0.13076 159.927 / 20%);
-  --color-foxtrot-10: oklch(76.009% 0.13076 159.927 / 10%); 
+  --color-foxtrot-10: oklch(76.009% 0.13076 159.927 / 10%);
+  --code-block-alfa: oklch(40.000% 0.10000 270.000);
+  --code-block-bravo: oklch(40.000% 0.10000 240.000);
+  --code-block-charlie: oklch(40.000% 0.10000 210.000);
+  --code-block-delta: oklch(40.000% 0.10000 180.000);
+  --code-block-echo: oklch(40.000% 0.10000 150.000);
+  --code-block-foxtrot: oklch(40.000% 0.10000 120.000);
+  --code-block-golf: oklch(40.000% 0.10000 180.000);
+  --code-block-hotel: oklch(40.000% 0.10000 120.000);
+  --code-block-india: oklch(40.000% 0.10000 60.000);
+  --code-block-juliet: oklch(40.000% 0.10000 0.000);
+  --code-block-kilo: oklch(40.000% 0.10000 630.000);
+  --code-block-lima: oklch(40.000% 0.10000 285.000);
+  --code-block-mike: oklch(40.000% 0.10000 255.000);
+  --code-block-line-numbers: oklch(32.669% 0.03076 39.927 / 45%); 
             }
   body.light { 
                 --color-bw-match: rgb(255 255 255);
@@ -359,6 +408,8 @@
   --color-bw-reverse-30: rgb(0 0 0 / 30%);
   --color-bw-reverse-20: rgb(0 0 0 / 20%);
   --color-bw-reverse-10: rgb(0 0 0 / 10%);
+  --code-block-base: rgb(255 255 255 / 20%);
+  --code-block-border: rgb(0 0 0 / 60%);
     
                 --color-base: oklch(92.669% 0.03076 39.927);
   --color-base-90: oklch(92.669% 0.03076 39.927 / 90%);
@@ -429,7 +480,21 @@
   --color-foxtrot-40: oklch(52.669% 0.13076 39.927 / 40%);
   --color-foxtrot-30: oklch(52.669% 0.13076 39.927 / 30%);
   --color-foxtrot-20: oklch(52.669% 0.13076 39.927 / 20%);
-  --color-foxtrot-10: oklch(52.669% 0.13076 39.927 / 10%); 
+  --color-foxtrot-10: oklch(52.669% 0.13076 39.927 / 10%);
+  --code-block-alfa: oklch(80.000% 0.10000 30.000);
+  --code-block-bravo: oklch(80.000% 0.10000 60.000);
+  --code-block-charlie: oklch(80.000% 0.10000 90.000);
+  --code-block-delta: oklch(80.000% 0.10000 120.000);
+  --code-block-echo: oklch(80.000% 0.10000 150.000);
+  --code-block-foxtrot: oklch(80.000% 0.10000 180.000);
+  --code-block-golf: oklch(80.000% 0.10000 120.000);
+  --code-block-hotel: oklch(80.000% 0.10000 180.000);
+  --code-block-india: oklch(80.000% 0.10000 240.000);
+  --code-block-juliet: oklch(80.000% 0.10000 300.000);
+  --code-block-kilo: oklch(80.000% 0.10000 330.000);
+  --code-block-lima: oklch(80.000% 0.10000 15.000);
+  --code-block-mike: oklch(80.000% 0.10000 45.000);
+  --code-block-line-numbers: oklch(32.669% 0.03076 39.927 / 45%); 
             }
   }
   .color-base { color: var(--color-base); }
@@ -652,3 +717,19 @@
   .bg-bw-reverse-70 { background-color: var(--color-bw-reverse-70); }
   .bg-bw-reverse-80 { background-color: var(--color-bw-reverse-80); }
   .bg-bw-reverse-90 { background-color: var(--color-bw-reverse-90); }
+  .code-block-alfa { color: var(--code-block-alfa); }
+  .code-block-bravo { color: var(--code-block-bravo); }
+  .code-block-charlie { color: var(--code-block-charlie); }
+  .code-block-delta { color: var(--code-block-delta); }
+  .code-block-echo { color: var(--code-block-echo); }
+  .code-block-foxtrot { color: var(--code-block-foxtrot); }
+  .code-block-golf { color: var(--code-block-golf); }
+  .code-block-hotel { color: var(--code-block-hotel); }
+  .code-block-india { color: var(--code-block-india); }
+  .code-block-juliet { color: var(--code-block-juliet); }
+  .code-block-kilo { color: var(--code-block-kilo); }
+  .code-block-lima { color: var(--code-block-lima); }
+  .code-block-mike { color: var(--code-block-mike); }
+  .code-block-line-numbers { color: var(--code-block-line-numbers); }
+  .code-block-base { color: var(--code-block-base); }
+  .code-block-border { color: var(--code-block-border); }
