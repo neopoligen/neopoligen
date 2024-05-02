@@ -34,4 +34,17 @@
         [! endautoescape !]
     </div>
 
+    <code-block>
+        <x-title>Code</x-title>
+        <x-code>
+        [! autoescape false !]
+        [! if section.content.flag_attributes[0] !]
+        [@ highlight_code(section.content.category.content.text, section.content.flag_attributes[0]) @]
+        [! else !]
+        [@ highlight_code(section.content.category.content.text, "txt") @]
+        [! endif !]
+        [! endautoescape !]
+        </x-code>
+    </code-block>
+
     [! include "subsections/afterword.neojinja" !]

@@ -17,6 +17,16 @@ Fasten two pins on each side
 Fly by night, and you waste little time
 Glue the sheet to the dark blue background
 
+-- code
+-- rust
+
+fn main() {
+    println!("asdf");
+}
+
+
+-- p
+
 Go now and come here later
 Greet the new guests and leave quickly
 Guess the results from the first scores

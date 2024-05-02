@@ -177,7 +177,22 @@ customElements.define(
             },
           },
         },
-        default_mode: 'light',
+        defaultMode: 'light',
+        codeBlockColors: {
+          alfa: { l: 20, c: 0.1, h: 30 },
+          bravo: { l: 20, c: 0.1, h: 60 },
+          charlie: { l: 20, c: 0.1, h: 90 },
+          delta: { l: 20, c: 0.1, h: 120 },
+          echo: { l: 20, c: 0.1, h: 150 },
+          foxtrot: { l: 20, c: 0.1, h: 180 },
+          golf: { l: 20, c: 0.1, h: 120 },
+          hotel: { l: 20, c: 0.1, h: 180 },
+          india: { l: 20, c: 0.1, h: 240 },
+          juliet: { l: 20, c: 0.1, h: 300 },
+          kilo: { l: 20, c: 0.1, h: 330 },
+          lima: { l: 40, c: 0.1, h: 15 },
+          mike: { l: 40, c: 0.1, h: 45 },
+        },
       }
 
       // make sure active is set to light to start with
@@ -1067,6 +1082,11 @@ h2, h3 {
           styles += `.bg-${key}-${alpha} { background-color: var(--color-${key}-${alpha}); }\n`
         }
       })
+
+      for (let key in this.state.codeBlockColors) {
+        styles += `.code-block-${key} { color: var(--code-block-${key}); }\n`
+      }
+
       return styles
     }
 
@@ -1120,6 +1140,21 @@ h2, h3 {
             ][1].toFixed(5)} ${theValues[color][2].toFixed(3)} / ${alpha}%)`
           )
         }
+      }
+
+      for (let color in this.state.codeBlockColors) {
+        const theValues = this.getCodeBlockColor(
+          mode,
+          this.state.codeBlockColors[color].l,
+          this.state.codeBlockColors[color].c,
+          this.state.codeBlockColors[color].h
+        )
+        response += this.prop(
+          `--code-block-${color}`,
+          `oklch(${theValues[0].toFixed(3)}% ${theValues[1].toFixed(
+            5
+          )} ${theValues[2].toFixed(3)})`
+        )
       }
 
       return response.trim()
@@ -1187,13 +1222,13 @@ h2, h3 {
       
       `
 
-      const mode = this.state.default_mode
+      const mode = this.state.defaultMode
       const altMode = mode === 'light' ? 'dark' : 'light'
-      
+
       styles += `:root {
         color-scheme: ${mode} ${altMode};
       }
-      `      
+      `
       styles += `body { 
       ${this.genMatchStyles(mode)}        
       ${this.genStyles(mode)} 
@@ -1291,6 +1326,43 @@ h2, h3 {
           this.state.modes[mode].colors.alfa.collectionShift) %
           360
       )
+      return payload
+    }
+
+    getCodeBlockColor(mode, l, c, h) {
+      const payload = []
+      if (mode === 'light') {
+        let newL = this.state.modes[mode].colors.bravo.l + l
+        if (newL > this.state.base.l.max) {
+          payload.push(this.state.modes[mode].colors.bravo.l - l)
+        } else {
+          payload.push(newL)
+        }
+        let newC = this.state.modes[mode].colors.bravo.c + c
+        if (newC > 0.31) {
+          payload.push(this.state.modes[mode].colors.bravo.c - c)
+        } else {
+          payload.push(newC)
+        }
+        let newH = this.state.modes[mode].colors.bravo.h + h
+        if (newH > this.state.base.h.max) {
+          payload.push(this.state.modes[mode].colors.bravo.h - h)
+        } else {
+          payload.push(newH)
+        }
+      
+    } else {
+      payload.push(
+        (this.state.modes[mode].colors.bravo.l - l) % this.state.base.l.max
+      )
+      payload.push(
+        (this.state.modes[mode].colors.bravo.c - c) % this.state.base.c.max
+      )
+      payload.push(
+        (this.state.modes[mode].colors.bravo.h - h) % this.state.base.h.max
+      )
+
+      }
       return payload
     }
 
@@ -1430,16 +1502,15 @@ h2, h3 {
     }
 
     handleLightDarkDefaultClick(event) {
-      this.state.default_mode = event.target.dataset.mode
+      this.state.defaultMode = event.target.dataset.mode
       // this.lch().forEach((key) => {
-        // this.modSetValue(`.slider-${key}`, this.state.modes[this.mode()][key])
-        // this.modUpdateHTML(
-        //   `.get-from-${key}`,
-        //   `copy ${this.state.modes[this.otherMode()].display}`
-        // )
+      // this.modSetValue(`.slider-${key}`, this.state.modes[this.mode()][key])
+      // this.modUpdateHTML(
+      //   `.get-from-${key}`,
+      //   `copy ${this.state.modes[this.otherMode()].display}`
+      // )
       // })
       this.update()
-
     }
 
     handleModeClick(event) {
@@ -1940,7 +2011,7 @@ h2, h3 {
 
       // light/dark default button highlight
       this.modes().forEach((mode) => {
-        if (mode == this.state.default_mode) {
+        if (mode == this.state.defaultMode) {
           this.modAddStyleTo(`.ld-default-button-${mode}`, 'selected')
         } else {
           this.modRemoveStyleFrom(`.ld-default-button-${mode}`, 'selected')
