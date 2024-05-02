@@ -1,8 +1,8 @@
-customElements.define('code-block', 
-  class extends HTMLElement {    
-
+customElements.define(
+  'code-block',
+  class extends HTMLElement {
     template() {
-      const template = this.ownerDocument.createElement('template') 
+      const template = this.ownerDocument.createElement('template')
       template.innerHTML = `
 <style>
 .code {
@@ -415,26 +415,38 @@ customElements.define('code-block',
 
 .numberedLines {
   counter-reset: lineNumber;
+  line-height: 1.3;
+  position: relative;
 }
 
 .numberedLine {
   counter-increment: lineNumber;
+  font-size: var(--size-8, 0.3rem); 
+  position: relative;
+  left: 2.4rem;
+  margin-right: 2.7rem;
 }
 
 .numberedLine:before {
   display: inline-block;
   color: var(--code-block-line-numbers);
   content: counter(lineNumber);
-  padding-right: 0.7rem;
   text-align: right;
   width: 2rem;
+  position: absolute;
+  left: -2.4rem;
+}
+
+pre {
+  white-space: pre-wrap; 
+  overflow-wrap: break-word;
 }
 </style>
 
 <h3></h3>
 <div class="code-block-wrapper">
   <button class="code-block-copy-button">copy</button>
-  <pre></pre>
+  <pre class="numberedLines"></pre>
 </div>`
 
       return template
@@ -447,17 +459,19 @@ customElements.define('code-block',
 
     addClickListener() {
       const el = this.shadowRoot.querySelector('.code-block-copy-button')
-      el.addEventListener('click', (event) => this.handleClick.call(this, event))
+      el.addEventListener('click', (event) =>
+        this.handleClick.call(this, event)
+      )
     }
 
     connectedCallback() {
       this.content = this.template().content.cloneNode(true)
       this.shadowRoot.appendChild(this.content)
       this.addClickListener()
-      const observer = new MutationObserver(
-        (list, observer) => this.updateContent.call(this, list, observer)
-      );
-      observer.observe(this, {childList: true, subtree: true,})
+      const observer = new MutationObserver((list, observer) =>
+        this.updateContent.call(this, list, observer)
+      )
+      observer.observe(this, { childList: true, subtree: true })
     }
 
     updateContent() {
@@ -469,29 +483,36 @@ customElements.define('code-block',
       }
       const code = this.querySelector('pre')
       if (code) {
-        this.shadowRoot.querySelector('pre').innerHTML = code.innerHTML
-      } 
+        const lines = code.innerHTML.split('\n')
+        const trimmedLines = []
+        const re = /^\s*$/
+        let hitFirstLine = false
+        lines.forEach((line) => {
+          if (!line.match(re)) {
+            hitFirstLine = true
+          }
+          if (hitFirstLine === true) {
+            trimmedLines.push(`<span class="numberedLine">${line}</span>`)
+          }
+        })
+        this.shadowRoot.querySelector('pre').innerHTML = trimmedLines.join("\n")
+      }
     }
 
     async copyCode(button) {
       try {
-        await navigator.clipboard.writeText(
-          this.querySelector('pre').innerText
-        )
-        button.innerHTML = "Copied!"
+        await navigator.clipboard.writeText(this.querySelector('pre').innerText)
+        button.innerHTML = 'Copied!'
       } catch (err) {
-        button.innerHTML = "Error copying"
+        button.innerHTML = 'Error copying'
       }
-    } 
+    }
 
     handleClick(event) {
       this.copyCode(event.target)
     }
-
   }
 )
-
-
 
 customElements.define(
   'settings-gear',
