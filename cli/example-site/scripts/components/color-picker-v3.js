@@ -324,6 +324,10 @@ customElements.define(
               calculations. I plan to add a feature that will let you save
               and load these
             </li>
+            <li>I'm looking to add calculations for contrast ratios. 
+            I'm not sure how to do that with OKLCH yet. If you know, 
+            <a href="https://hachyderm.io/deck/@TheIdOfAlan">hit me up on mastodon</a>
+            </li>
 
             <li>Sometimes the preview window looses connections. Close
             it and reopen it if it stops updating or loses it's styles</li>

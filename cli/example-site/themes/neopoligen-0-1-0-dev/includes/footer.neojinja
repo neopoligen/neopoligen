@@ -1,3 +1,7 @@
 [! if config.show_footer == true !]
-<footer><a href="/">[@ config.domain @]</a></footer>
+<footer>
+[! if config.site_author !][@ config.site_author @][! endif !]
+[! if config.site_author and config.domain !] ~ [! endif !]
+[! if config.domain !]<a href="/">[@ config.domain @]</a>[! endif !]
+</footer>
 [! endif !]
