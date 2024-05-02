@@ -89,6 +89,19 @@ h6 {
   font-size: var(--size-6); 
 }
 
+.header {
+  margin-top: 0.4rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header ul {
+  padding: 0;
+  display: flex;
+  list-style: none;
+  gap: 12px;
+}
+
 img {
   max-width: 100%;
   display: block;
