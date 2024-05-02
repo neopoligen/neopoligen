@@ -1,8 +1,0 @@
-[#- type: standard -#]
-[!- import "includes/theme-macros.neojinja" as theme -!]
-
-TODO: Object
-
-[#
-<object [@- macros.span_attributes(span.content) -@]></object>
-#]

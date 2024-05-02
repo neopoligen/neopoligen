@@ -1,0 +1,2 @@
+[!- import "macros.neojinja" as theme -!]
+[@- macros.breadcrumbs(menu) -@]

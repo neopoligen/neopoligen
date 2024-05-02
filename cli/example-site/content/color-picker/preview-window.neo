@@ -23,6 +23,9 @@ Details And Examples
     <button role="tab">3</button>
     <button role="tab">4</button>
     <button role="tab">5</button>
+    <button role="tab">6</button>
+    <button role="tab">7</button>
+    <button role="tab">8</button>
   </div>
 
 
@@ -111,47 +114,176 @@ Details And Examples
             <li><em>--color-bw-reverse</em> is white</li>
         </ul>
         <p>The idea with these is you can add a border to something
-    that's black when the page is in light mode and will flip to white
-    when the page goes into dark mode. </p>
+        that's black when the page is in light mode and will flip to white
+        when the page goes into dark mode. </p>
     </div>
 
 
-<div role="tabpanel" class="flow">
-    <h3>Heading Underline Examples</h3>
-    <p>This example contains several sections that each have a heading 
-    with the alfa color and then one of the other five colors used
-    for a one pixel border underline. There's a 
-    bunch of place holder text between heading to help reduce visual
-    noise from the other headings.<p>
+    <div role="tabpanel" class="flow">
+        <h3>Heading Underline Examples</h3>
+        <p>This example contains several sections that each have a heading 
+        with the alfa color and then one of the other five colors used
+        for a one pixel border underline. There's a 
+        bunch of place holder text between heading to help reduce visual
+        noise from the other headings.<p>
 
- <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec varius 
- et mi a varius. Donec porta pharetra nunc tempor semper. Cras sollicitudin 
- dignissim dolor, vitae tempus nisi gravida et. Praesent elit ipsum, 
- vulputate id blandit at, condimentum quis tellus. Donec vel est porta. </p>
- 
- <p>Sagittis risus sed, efficitur neque. Maecenas risus risus, tempor ac urna iaculis, 
- facilisis tristique mi. Aliquam vel rhoncus eros. Nam blandit dictum est, ut 
- euismod elit posuere sed. Donec hendrerit, est suscipit scelerisque tempus, 
- purus ante efficitur ex, a maximus felis massa sed odio. Proin ut bibendum ex, 
- a tristique diam. Donec suscipit, dui a semper sagittis, turpis dui fringilla 
- libero, in cursus orci arcu consectetur purus.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec varius 
+    et mi a varius. Donec porta pharetra nunc tempor semper. Cras sollicitudin 
+    dignissim dolor, vitae tempus nisi gravida et. Praesent elit ipsum, 
+    vulputate id blandit at, condimentum quis tellus. Donec vel est porta. </p>
+    
+    <p>Sagittis risus sed, efficitur neque. Maecenas risus risus, tempor ac urna iaculis, 
+    facilisis tristique mi. Aliquam vel rhoncus eros. Nam blandit dictum est, ut 
+    euismod elit posuere sed. Donec hendrerit, est suscipit scelerisque tempus, 
+    purus ante efficitur ex, a maximus felis massa sed odio. Proin ut bibendum ex, 
+    a tristique diam. Donec suscipit, dui a semper sagittis, turpis dui fringilla 
+    libero, in cursus orci arcu consectetur purus.</p>
 
-    <p>Praesent ac venenatis diam. Cras venenatis enim vitae justo porttitor condimentum. 
-    Maecenas sit amet tincidunt augue. Phasellus luctus, mi ut tincidunt feugiat, justo 
-    elit vulputate metus, ut sagittis urna dui ac mi. Nunc rhoncus lorem eros, porttitor 
-    ullamcorper magna pellentesque eget. Aenean scelerisque eget felis eget pellentesque.
-     Cras non massa tellus. </p>
-
-    <div class="heading-examples flow">
+        <p>Praesent ac venenatis diam. Cras venenatis enim vitae justo porttitor condimentum. 
+        Maecenas sit amet tincidunt augue. Phasellus luctus, mi ut tincidunt feugiat, justo 
+        elit vulputate metus, ut sagittis urna dui ac mi. Nunc rhoncus lorem eros, porttitor 
+        ullamcorper magna pellentesque eget. Aenean scelerisque eget felis eget pellentesque.
+        Cras non massa tellus. </p>
+        <div class="heading-examples flow">
+        </div>
     </div>
 
-</div>
 
+
+
+    <div role="tabpanel" class="flow">
+        <h3>Link Examples</h3>
+        <p>This example contains several paragraphs with links
+        in the different colors. The main body text is <em>bravo</em> so
+        the examples are <em>alfa</em>, <em>charlie</em>, <em>delta</em>,
+        <em>echo</em>, <em>foxtrot</em>.<p>
+        <p><a href="#" class="alfa-link">alfa link</a></p>
+        <p>Lorem ipsum <a href="#" class="alfa-link">alfa link</a> dolor sit amet, consectetur adipiscing elit. Pellentesque dapibus nunc eu leo consectetur, quis tempor nunc pretium. Phasellus commodo vitae libero a tristique. Maecenas quis neque malesuada leo rutrum luctus <a href="#" class="alfa-link">alfa link</a> id et ante. Donec turpis tortor, feugiat in condimentum in, pharetra ut quam. Vestibulum rutrum sem et orci blandit sodales. Proin faucibus pellentesque elementum. </p>
+        <p><a href="#" class="charlie-link">charlie link</a></p>
+        <p>Sed enim <a href="#" class="charlie-link">charlie link</a> massa, pellentesque a tempor vitae, pulvinar nec elit. Nulla turpis neque, interdum et pulvinar nec, ullamcorper at orci.  Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere <a href="#" class="charlie-link">charlie link</a> cubilia curae; Fusce sem magna, rhoncus quis ex in, imperdiet euismod nulla. Aenean consectetur nunc eu quam aliquet fermentum. Nulla ac placerat turpis. Nam odio arcu, dapibus vel posuere ac, aliquet eu lorem. Donec et viverra diam.</p>
+        <p><a href="#" class="delta-link">delta link</a></p>
+        <p>Aliquam erat <a href="#" class="delta-link">delta link</a> volutpat. Sed interdum euismod commodo. Aenean lacus erat, ultrices in dapibus ut, posuere vitae nulla. Vestibulum at pulvinar quam. Etiam dictum sapien bibendum, semper tellus. Praesent sollicitudin maximus aliquam. Nulla quis posuere ante. Maecenas in purus sit amet odio ornare <a href="#" class="delta-link">delta link</a> sollicitudin. Vestibulum ligula urna, ultricies sed efficitur vel, fermentum ut lorem. In augue ligula, posuere id diam vitae, pellentesque auctor ipsum.</p>
+        <p><a href="#" class="echo-link">echo link</a></p>
+        <p>Mauris ut <a href="#" class="echo-link">echo link</a> urna ut risus euismod varius sit amet quis risus. Aenean ut malesuada purus. Sed vitae ornare dolor, mollis ultrices metus. Praesent tincidunt nisi a erat sodales mollis. Nunc vulputate finibus eros, vitae posuere nisi porttitor at. Nunc nec nisi malesuada, facilisis augue id, placerat sem. Nam felis <a href="#" class="echo-link">echo link</a> eros, faucibus eget tellus a, finibus aliquam mauris. Aenean facilisis neque odio, ut ultrices ante laoreet eu. Phasellus fermentum elit sit amet ultrices egestas.</p>
+        <p><a href="#" class="foxtrot-link">foxtrot link</a></p>
+        <p>In nulla <a href="#" class="foxtrot-link">foxtrot link</a> et leo quis urna gravida malesuada sed quis nisl. In dapibus dolor dignissim neque aliquam, non vulputate metus consectetur. Donec commodo laoreet accumsan. Vivamus vitae dolor mauris. Nunc non sollicitudin nulla. Suspendisse porta velit a vulputate interdum. Aenean bibendum ut ex id vulputate. Vivamus finibus vitae erat eu semper. Sed dui augue, <a href="#" class="foxtrot-link">foxtrot link</a> tincidunt ut aliquet ac, euismod ut magna. Duis volutpat odio a semper lacinia. Integer turpis eros, accumsan non consequat et, dictum nec tellus. </p>
+    </div>
+
+
+    <div role="tabpanel" class="flow">
+        <h3>Link Examples</h3>
+        <p>This is the same as the prior example, but the links have been bolded.<p>
+        <p><a href="#" class="alfa-link-strong">alfa link</a></p>
+        <p>Lorem ipsum <a href="#" class="alfa-link-strong">alfa link</a> dolor sit amet, consectetur adipiscing elit. Pellentesque dapibus nunc eu leo consectetur, quis tempor nunc pretium. Phasellus commodo vitae libero a tristique. Maecenas quis neque malesuada leo rutrum luctus <a href="#" class="alfa-link-strong">alfa link</a> id et ante. Donec turpis tortor, feugiat in condimentum in, pharetra ut quam. Vestibulum rutrum sem et orci blandit sodales. Proin faucibus pellentesque elementum. </p>
+        <p><a href="#" class="charlie-link-strong">charlie link</a></p>
+        <p>Sed enim <a href="#" class="charlie-link-strong">charlie link</a> massa, pellentesque a tempor vitae, pulvinar nec elit. Nulla turpis neque, interdum et pulvinar nec, ullamcorper at orci.  Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere <a href="#" class="charlie-link-strong">charlie link</a> cubilia curae; Fusce sem magna, rhoncus quis ex in, imperdiet euismod nulla. Aenean consectetur nunc eu quam aliquet fermentum. Nulla ac placerat turpis. Nam odio arcu, dapibus vel posuere ac, aliquet eu lorem. Donec et viverra diam.</p>
+        <p><a href="#" class="delta-link-strong">delta link</a></p>
+        <p>Aliquam erat <a href="#" class="delta-link-strong">delta link</a> volutpat. Sed interdum euismod commodo. Aenean lacus erat, ultrices in dapibus ut, posuere vitae nulla. Vestibulum at pulvinar quam. Etiam dictum sapien bibendum, semper tellus. Praesent sollicitudin maximus aliquam. Nulla quis posuere ante. Maecenas in purus sit amet odio ornare <a href="#" class="delta-link-strong">delta link</a> sollicitudin. Vestibulum ligula urna, ultricies sed efficitur vel, fermentum ut lorem. In augue ligula, posuere id diam vitae, pellentesque auctor ipsum.</p>
+        <p><a href="#" class="echo-link-strong">echo link</a></p>
+        <p>Mauris ut <a href="#" class="echo-link-strong">echo link</a> urna ut risus euismod varius sit amet quis risus. Aenean ut malesuada purus. Sed vitae ornare dolor, mollis ultrices metus. Praesent tincidunt nisi a erat sodales mollis. Nunc vulputate finibus eros, vitae posuere nisi porttitor at. Nunc nec nisi malesuada, facilisis augue id, placerat sem. Nam felis <a href="#" class="echo-link-strong">echo link</a> eros, faucibus eget tellus a, finibus aliquam mauris. Aenean facilisis neque odio, ut ultrices ante laoreet eu. Phasellus fermentum elit sit amet ultrices egestas.</p>
+        <p><a href="#" class="foxtrot-link-strong">foxtrot link</a></p>
+        <p>In nulla <a href="#" class="foxtrot-link-strong">foxtrot link</a> et leo quis urna gravida malesuada sed quis nisl. In dapibus dolor dignissim neque aliquam, non vulputate metus consectetur. Donec commodo laoreet accumsan. Vivamus vitae dolor mauris. Nunc non sollicitudin nulla. Suspendisse porta velit a vulputate interdum. Aenean bibendum ut ex id vulputate. Vivamus finibus vitae erat eu semper. Sed dui augue, <a href="#" class="foxtrot-link-strong">foxtrot link</a> tincidunt ut aliquet ac, euismod ut magna. Duis volutpat odio a semper lacinia. Integer turpis eros, accumsan non consequat et, dictum nec tellus. </p>
+    </div>
+
+
+
+    <div role="tabpanel" class="flow">
+        <h3>Code Blocks</h3>
+        <p>
+            I make a lot of programming code blocks in my content. This
+            is a prototype attempt at autogenerating variables with 
+            styles for them. They are based off the <em>bravo</em>
+            color assuming that's what will be used for the main
+            body text. (I'll probably end up adding another slider
+            or two here to tweak these a bit)
+        </p>
+        <code-block>
+<x-code><span class="numberedLine"><span class="source rust"><span class="meta function rust"><span class="meta function rust"><span class="storage type function rust">fn</span> </span><span class="entity name function rust">main</span></span><span class="meta function rust"><span class="meta function parameters rust"><span class="punctuation section parameters begin rust">(</span></span><span class="meta function rust"><span class="meta function parameters rust"><span class="punctuation section parameters end rust">)</span></span></span></span><span class="meta function rust"> </span><span class="meta function rust"><span class="meta block rust"><span class="punctuation section block begin rust">{</span></span>
+<span class="numberedLine">  <span class="support macro rust">println!</span><span class="meta group rust"><span class="punctuation section group begin rust">(</span></span><span class="meta group rust"><span class="string quoted double rust"><span class="punctuation definition string begin rust">&quot;</span>Hello, World<span class="punctuation definition string end rust">&quot;</span></span></span><span class="meta group rust"><span class="punctuation section group end rust">)</span></span><span class="punctuation terminator rust">;</span></span>
+<span class="numberedLine"></span><span class="meta block rust"><span class="punctuation section block end rust">}</span></span></span></span></span></x-code>
+        </code-block>
+        <p>The styles are:</p>
+        <ul>
+            <li>--code-block-base (<span class="code-block-base">sample</span>)</li>
+            <li class="code-block-line-numbers">--code-block-line-numbers</li>
+            <li class="code-block-border">--code-block-border</li>
+            <li class="code-block-alfa">--code-block-alfa</li>
+            <li class="code-block-bravo">--code-block-bravo</li>
+            <li class="code-block-charlie">--code-block-charlie</li>
+            <li class="code-block-delta">--code-block-delta</li>
+            <li class="code-block-echo">--code-block-echo</li>
+            <li class="code-block-foxtrot">--code-block-foxtrot</li>
+            <li class="code-block-golf">--code-block-golf</li>
+            <li class="code-block-hotel">--code-block-hotel</li>
+            <li class="code-block-india">--code-block-india</li>
+            <li class="code-block-juliet">--code-block-juliet</li>
+            <li class="code-block-kilo">--code-block-kilo</li>
+            <li class="code-block-lima">--code-block-lima</li>
+            <li class="code-block-mike">--code-block-mike</li>
+        </ul>        
+    </div>  
 
 </tab-group>
 
 
 -- css
+
+.alfa-link {
+    color: var(--color-alfa);
+}
+
+.bravo-link {
+    color: var(--color-bravo);
+}
+
+.charlie-link {
+    color: var(--color-charlie);
+}
+
+.delta-link {
+    color: var(--color-delta);
+}
+
+.echo-link {
+    color: var(--color-echo);
+}
+
+.foxtrot-link {
+    color: var(--color-foxtrot);
+}
+
+
+
+.alfa-link-strong {
+    color: var(--color-alfa);
+    font-weight: 700;
+}
+
+.bravo-link-strong {
+    color: var(--color-bravo);
+    font-weight: 700;
+}
+
+.charlie-link-strong {
+    color: var(--color-charlie);
+    font-weight: 700;
+}
+
+.delta-link-strong {
+    color: var(--color-delta);
+    font-weight: 700;
+}
+
+.echo-link-strong {
+    color: var(--color-echo);
+    font-weight: 700;
+}
+
+.foxtrot-link-strong {
+    color: var(--color-foxtrot);
+    font-weight: 700;
+}
+
 
 .swatch-row {
     display: flex;
@@ -413,12 +545,14 @@ h2 {
 
 <link rel="stylesheet" href="/theme/styles.css" />
 
-<script src="/theme/theme.js"></script>
-<script src="/theme/theme-components.js" type="module"></script>
 
 
 -- metadata
 -- date: 2024-04-26
 -- id: 2fehqqas
--- template: empty
+-- template: one-column
+-- no-footer
+-- no-header
+-- no-css
+
 

@@ -1,2 +1,0 @@
-[!- import "includes/theme-macros.neojinja" as theme -!]
-[@- macros.prev_next(menu) -@]

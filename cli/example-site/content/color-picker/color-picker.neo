@@ -1,49 +1,37 @@
+-- title
+
+Color Picker 
+
 -- css
 
-.currentState {
-    font-size: 0.6rem;
+header {
+  max-width: min(100vw - 3rem, 60rem);
+  margin-inline: auto;
 }
 
-.primaryButtons {
-    display: flex;
-    flex-wrap: wrap;
+main {
+  max-width: min(100vw - 3rem, 60rem);
+  margin-inline: auto;
 }
 
-.secondaryButtons {
-    display: flex;
-    flex-wrap: wrap;
+footer {
+  max-width: min(100vw - 3rem, 60rem);
+  margin-inline: auto;
 }
+
 
 -- head
 
-<!--
-<script src="/scripts/color-picker/color-picker.js"></script> -->
-<script src="/scripts/color-picker/color-picker-v3.js"></script>
+<script src="/scripts/components/color-picker-v3.js"></script>
+<link rel="stylesheet" href="/theme/styles.css" />
 
 -- html
 
 <color-picker data-preview-href="/en/2fehqqas/"></color-picker>
 
-<div class="picker">
-    <!--
-    <button class="preview-launcher">Launch Preview Window</button> 
-    <div class="modes"></div>
-    <div class="sliders"></div>
-    <div class="primaryButtons"></div>
-    <div class="chips"></div>
-    <div class="charliedeltaButtons secondaryButtons"></div>
-    <div class="charliedeltaChips"></div>
-    <div class="echofoxtrotButtons secondaryButtons"></div>
-    <div class="echofoxtrotChips"></div>
-    <pre class="currentCSS">Loading CSS...</pre>
-    <pre class="currentState"></pre>-->
-</div>
-
 
 -- metadata
 -- date: 2024-04-25
 -- id: 2etmrmai
--- template: no-css
--- title: Color Picker
-
+-- template: full-width
 

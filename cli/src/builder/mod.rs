@@ -220,10 +220,7 @@ fn highlight_code(code: String, lang: String) -> String {
         .lines()
         .map(|line| format!(r#"<span class="numberedLine">{}</span>"#, line))
         .collect();
-    format!(
-        r#"<pre class="numberedLines"><code>{}</code></pre>"#,
-        output_html.join("\n")
-    )
+    format!(r#"{}"#, output_html.join("\n"))
 }
 
 #[instrument(skip(site))]
@@ -296,7 +293,6 @@ fn get_collection(site: &Value, page_id: &Value, filters_raw: &Value) -> Value {
                                 }
                                 Err(e) => event!(Level::ERROR, "{}", e),
                             }
-
                             if add_page {
                                 ids.insert(id.to_string());
                             }
