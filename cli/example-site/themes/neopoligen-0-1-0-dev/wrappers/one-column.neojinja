@@ -30,6 +30,7 @@
         <article class="flow">
         [! block body !][! endblock !]
         </article>
+        [! include "includes/footnotes.neojinja" !]
     </main>
     [! include "includes/footer.neojinja" !]
 </body>

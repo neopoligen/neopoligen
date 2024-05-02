@@ -8,6 +8,8 @@
 [! endmacro !]
 
 [#############################################################################]
+[# TODO: Move this into a single data.whatever object and set up to 
+pull in from the top level .json config #]
 [! macro initialize_page(site, page_id, d) !]
 [# CSS flag #]
 [! set d.show_css = true !]
@@ -99,12 +101,17 @@ class="
 [#############################################################################]
 [! macro main_body(site, page_id) !]
 [! for section in site.pages[page_id].ast !]
+    [! if section.content.type not in config.main_body_excludes !]
     [@ output_payload(site, page_id, section) -@]
+    [! endif !]
 [! endfor !]
 [! endmacro !]
 
 
+
 [#############################################################################]
+[# TODO: Deprecate this and make it a flag that gets read
+in from the metadata #]
 [! macro main_body_with_examples(site, page_id) !]
 [! with 
     capture_example = "off", 

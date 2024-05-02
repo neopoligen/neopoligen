@@ -10,10 +10,25 @@ right now. I'm still learning what I'm doing with that
 so consider this a work in progress for now. 
 
 
--- /html
+-- footnote
+-- id: neo
+-- title: Neopoligen 
+-- subtitle: the website building app I'm working on
+-- url: https://www.neopoligen.com/
+
+
+
+-- footnote
+-- id: 2
+-- title: Neopoligen 
+-- subtitle: the website building app I'm working on
+-- url: https://www.neopoligen.com/
+
+
 
 
 -- h2
+
 
 Introduction
 
@@ -288,12 +303,6 @@ the duplication, but I'm not worried about it. Lots of other
 things across my site to work on before trying for that 
 micro-optimization
 
-
--- footnote
--- id: neo
--- title: Neopoligen 
--- subtitle: the website building app I'm working on
--- url: https://www.neopoligen.com/
 
 
 -- ref
