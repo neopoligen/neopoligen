@@ -1,5 +1,5 @@
 {
   "default_language": "en",
   "input_date_formats": ["%Y-%m-%d"],
-  "theme": "neopoligen-v0.1.0"
+  "theme": "neopoligen-0-1-0-dev"
 }
