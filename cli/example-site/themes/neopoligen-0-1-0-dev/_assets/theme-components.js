@@ -441,6 +441,12 @@ pre {
   white-space: pre-wrap; 
   overflow-wrap: break-word;
 }
+
+.scroll {
+  max-height: 60rem;
+  overflow-y: scroll;
+}
+
 </style>
 
 <h3></h3>
@@ -464,6 +470,8 @@ pre {
       )
     }
 
+
+
     connectedCallback() {
       this.content = this.template().content.cloneNode(true)
       this.shadowRoot.appendChild(this.content)
@@ -481,10 +489,13 @@ pre {
       } else {
         this.shadowRoot.querySelector('h3').innerHTML = 'code'
       }
-      const code = this.querySelector('pre')
-      if (code) {
-        const lines = code.innerHTML.split('\n')
-        const trimmedLines = []
+
+      const code_in = this.querySelector('pre')
+      const code_out = this.shadowRoot.querySelector('pre')
+      if (code_in) {
+        const lines = code_in.innerHTML.split('\n')
+        const trimmer = []
+        const trimmed = []
         const re = /^\s*$/
         let hitFirstLine = false
         lines.forEach((line) => {
@@ -492,10 +503,23 @@ pre {
             hitFirstLine = true
           }
           if (hitFirstLine === true) {
-            trimmedLines.push(`<span class="numberedLine">${line}</span>`)
+            trimmer.unshift(line)
           }
         })
-        this.shadowRoot.querySelector('pre').innerHTML = trimmedLines.join("\n")
+        let hitLastLine = false
+        trimmer.forEach((line) => {
+          if (!line.match(re)) {
+            hitLastLine = true
+          } 
+          if (hitLastLine === true) {
+           trimmed.unshift(`<span class="numberedLine">${line}</span>`)
+          }
+        })
+        code_out.innerHTML = trimmed.join("\n")
+
+        if (code_in.classList.contains("scroll")) {
+          code_out.classList.add("scroll") 
+        }
       }
     }
 
