@@ -14,14 +14,6 @@ customElements.define('code-block',
       const template = this.ownerDocument.createElement('template') 
       template.innerHTML = `
 <style>
-::part(wrapper) {
-  position: relative;
-}
-::part(copy-button) {
-  position: absolute;
-  right: 0;
-}
-
 .numberedLines {
   counter-reset: lineNumber;
 }
@@ -416,26 +408,43 @@ customElements.define('code-block',
 .variable.other.constant.js {
   color: var(--code-block-alfa);
 }
+</style>
 
-::part(code-wrapper) {
+<style>
+*, 
+*::before, 
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+::part(code-block-copy-button) {
+  position: absolute;
+  right: 0;
+  top: 0;
+  background: none;
+  color: var(--code-block-line-numbers);
+  border: 1px solid var(--code-block-line-numbers);
+  border-radius: 0.3rem;
+}
+
+::part(code-block-wrapper) {
+  position: relative;
   padding: 0.7rem;
   background-color: var(--code-block-base);
   border-radius: 0.3rem;
   border: 1px solid var(--code-block-border);
 }
 
-::part(copy-button) {
-  background: none;
-  color: var(--code-block-line-numbers);
-  border: 1px solid var(--code-block-line-numbers);
-  border-radius: 0.3rem;
-}
 </style>
 
-<div part="title">${this.getTitle()}</div>
+<div part="code-block-title">${this.getTitle()}</div>
 ${this.getSubtitle()}
-<div part="wrapper">
-  <button part="copy-button">Copy</button>
+<div part="code-block-wrapper">
+  <button part="code-block-copy-button">Copy</button>
   ${this.getCode()}
 </div>`
 
@@ -446,7 +455,7 @@ ${this.getSubtitle()}
     async copyCode(button) {
       try {
         await navigator.clipboard.writeText(
-          this.shadowRoot.querySelector('::part(code)').innerText
+          this.shadowRoot.querySelector('::part(code-block-code)').innerText
         )
         button.innerHTML = "Copied!"
       } catch (err) {
@@ -457,14 +466,14 @@ ${this.getSubtitle()}
     getCode() {
       const codeEl = this.querySelector('x-code')
       if (codeEl) {
-        return `<pre part="code-wrapper"><code part="code">${codeEl.innerHTML}</code></pre>`
+        return `<pre><code part="code-block-code">${codeEl.innerHTML}</code></pre>`
       }
     }
 
     getSubtitle() {
       const subtitleEl = this.querySelector('x-subtitle')
       if (subtitleEl !== null) {
-        return `<div part="subtitle">${subtitleEl.innerHTML}</div>`
+        return `<div part="code-block-subtitle">${subtitleEl.innerHTML}</div>`
       } else {
         return ""
       }

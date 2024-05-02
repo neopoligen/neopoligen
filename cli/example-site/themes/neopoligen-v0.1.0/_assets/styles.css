@@ -75,7 +75,6 @@ h2 {
 h3 { 
   font-size: var(--size-3); 
   --flow-space: 1.0em;
-
 }
 
 h4 { 
@@ -99,21 +98,14 @@ img {
   color: var(--color-bravo);
 }
 
-.numberedLines {
-  counter-reset: lineNumber;
-}
-
-.numberedLine {
-  counter-increment: lineNumber;
-}
-
-.numberedLine:before {
-  display: inline-block;
-  color: goldenrod;
-  content: counter(lineNumber);
-  padding-right: 0.7rem;
-  text-align: right;
-  width: 2rem;
+::part(code-block-title) {
+  color: var(--color-alfa);
+  line-height: 1.1;
+  text-wrap: balance;
+  font-weight: 900;
+  font-size: var(--size-3); 
+  --flow-space: 1.0em;
+  margin-top: 1.4rem;
 }
 
 pre {
