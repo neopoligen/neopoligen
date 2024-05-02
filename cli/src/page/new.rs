@@ -64,14 +64,16 @@ impl Page {
                         None => None,
                     }
                 } else {
-                    println!(
-                        "{}",
-                        format!(
-                            "ERROR: {}\nStopped parsing at:\n{}\n",
-                            &source_path.display(),
-                            remainder
-                        )
-                    );
+                    // // TODO: Log this out in a way that makes
+                    // // it findable
+                    // println!(
+                    //     "{}",
+                    //     format!(
+                    //         "ERROR: {}\nStopped parsing at:\n{}\n",
+                    //         &source_path.display(),
+                    //         remainder
+                    //     )
+                    // );
 
                     None
                 }

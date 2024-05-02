@@ -2,5 +2,5 @@
 [! set config.site_author = "alan w. smith" !]
 [! set config.domain = "cookbook.neopoligen.com" !]
 [! set config.home_page_id = "2sjfzivl" !]
-[! set config.main_body_excludes = ["endnote", "footnote", "ref", "metadata"] !]
+[! set config.main_body_excludes = ["endnote", "footnote", "ref", "metadata", "comment"] !]
 
