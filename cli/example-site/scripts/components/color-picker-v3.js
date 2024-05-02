@@ -360,7 +360,7 @@ customElements.define(
         <div class="stylesheet-wrapper section-wrapper">
             <code-block>
               <h3>Stylesheet</h3>
-              <pre class="the-stylesheet">initial code</pre>
+              <pre class="the-stylesheet scroll"></pre>
             </code-block>
         </div>
         
