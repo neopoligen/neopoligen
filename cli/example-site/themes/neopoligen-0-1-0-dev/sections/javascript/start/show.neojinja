@@ -5,7 +5,6 @@
 
     [! include "subsections/forward.neojinja" !]
 
-
         <code-block>
             <h3 slot="title">
                 [! if section.content.key_value_attributes.title !]
@@ -19,35 +18,13 @@
             <div slot="subtitle">[@ section.content.key_value_attributes.subtitle @]</div>
             [! endif !]
 
+            <div slot="preface">[! include "subsections/preface.neojinja" !]</div>
+
             <pre slot="code">
                 [! autoescape false !]
                 [@ highlight_code(section.content.category.content.text, "javascript") @]
                 [! endautoescape !]
             </pre>
-
         </code-block>
-
-
-
-    <div class="heading_subsection">
-        <h3 class="title_subsection">
-        [! if section.content.key_value_attributes.title !]
-            [@ section.content.key_value_attributes.title @]
-        [! else !]
-            JavaScript
-        [! endif !]
-        </h3>
-        [! if section.content.key_value_attributes.subtitle !]
-        <div class="subtitle_subsection">This is a subtitle</div>
-        [! endif !]
-    </div>
-
-    [! include "subsections/preface.neojinja" !]
-
-    <div class="content_subsection flow">
-        [! autoescape false !]
-        [@ highlight_code(section.content.category.content.text, "javascript") @]
-        [! endautoescape !]
-    </div>   
 
     [! include "subsections/afterword.neojinja" !]

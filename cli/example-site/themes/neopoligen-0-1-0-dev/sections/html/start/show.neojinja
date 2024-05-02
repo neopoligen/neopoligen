@@ -18,6 +18,8 @@
             <div slot="subtitle">[@ section.content.key_value_attributes.subtitle @]</div>
             [! endif !]
 
+            <div slot="preface">[! include "subsections/preface.neojinja" !]</div>
+
             <pre slot="code">
                 [! autoescape false !]
                 [@ highlight_code(section.content.category.content.text, "html") @]
@@ -25,48 +27,11 @@
             </pre>
 
             <div slot="render">
-        [! autoescape false !]
-        [@ section.content.category.content.text @]
-        [! endautoescape !]
+                [! autoescape false !]
+                [@ section.content.category.content.text @]
+                [! endautoescape !]
             </div>
         </html-block>
 
 
     [! include "subsections/afterword.neojinja" !]
-
-<!--
-
-    <div class="heading_subsection">
-        <h3 class="title_subsection">
-        [! if section.content.key_value_attributes.title !]
-            [@ section.content.key_value_attributes.title @]
-        [! else !]
-            HTML
-        [! endif !]
-        </h3>
-        [! if section.content.key_value_attributes.subtitle !]
-        <div class="subtitle_subsection">This is a subtitle</div>
-        [! endif !]
-    </div>
-
-    [! include "subsections/preface.neojinja" !]
-
-
-    <div class="content_subsection flow">
-        [! autoescape false !]
-        [@ section.content.category.content.text @]
-        [! endautoescape !]
-    </div>
-
-    <div class="heading_subsection secondary_heading_subsection">
-        <div class="title_subsection">Source</div>
-    </div>
-
-    <div class="content_subsection flow">
-
-    </div>   
-
-
-    [! include "subsections/afterword.neojinja" !]
-
--->
