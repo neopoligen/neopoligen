@@ -1,0 +1,38 @@
+[!- import "macros.neojinja" as theme -!]
+<section 
+[@ theme.section_attrs(site, page_id, section, ["code_default_section", "raw_section", "flow"]) -@]
+>
+
+    [! include "subsections/forward.neojinja" !]
+
+        <code-block>
+            <h3 slot="title">
+                [! if section.content.key_value_attributes.title !]
+                    [@ section.content.key_value_attributes.title @]
+                [! else !]
+                    [! if section.content.flag_attributes[0] !]
+                        [@ section.content.flag_attributes[0] @]
+                    [! else !]
+                        code
+                    [! endif !]
+                [! endif !]
+            </h3>
+
+            [! if section.content.key_value_attributes.subtitle !]
+            <div slot="subtitle">[@ section.content.key_value_attributes.subtitle @]</div>
+            [! endif !]
+
+            <div slot="preface">[! include "subsections/preface.neojinja" !]</div>
+
+            <pre slot="code">
+                [! autoescape false !]
+                [! if section.content.flag_attributes[0] !]
+                [@ highlight_code(section.content.category.content.text, section.content.flag_attributes[0]) @]
+                [! else !]
+                [@ highlight_code(section.content.category.content.text, "txt") @]
+                [! endif !]
+                [! endautoescape !]
+            </pre>
+        </code-block>
+
+    [! include "subsections/afterword.neojinja" !]

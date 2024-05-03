@@ -1,0 +1,60 @@
+{
+  "build": {
+    "beforeDevCommand": { "script": "tauri/helpers/run-before-dev", "wait": true },
+    "beforeBuildCommand": "",
+    "devPath": "../ui",
+    "distDir": "../ui",
+    "withGlobalTauri": true
+  },
+  "package": {
+    "productName": "Neopoligen",
+    "version": "0.1.0"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "shell": {
+        "all": false,
+        "open": true,
+        "sidecar": true,
+        "scope": [
+          { 
+            "name": "../cli/target/aarch64-apple-darwin/release/neopoligengine", 
+            "sidecard": true,
+            "cmd": "neopoligengine"
+          }
+        ]
+      }
+    },
+    "bundle": {
+      "active": true,
+      "externalBin": [
+        "../cli/target/aarch64-apple-darwin/release/neopoligengine"
+      ],
+      "targets": "all",
+      "identifier": "com.neopoligen.app",
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ]
+    },
+    "security": {
+      "csp": null
+    },
+    "windows": [
+      {
+        "fullscreen": false,
+        "resizable": true,
+        "title": "Neopoligen",
+        "width": 700,
+        "height": 800,
+        "x": 30,
+        "y": 30
+      }
+    ]
+  }
+}
+
