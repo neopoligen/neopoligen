@@ -6,38 +6,46 @@ APPLE_TEAM_ID = { script = ["security find-generic-password -w -a alan -s alan--
 APPLE_API_ISSUER = { script = ["security find-generic-password -w -a alan -s alan--neopoligen-tauri--APPLE_API_ISSUER"] }
 APPLE_API_KEY = { script = ["security find-generic-password -w -a alan -s alan--neopoligen-tauri--APPLE_API_KEY"] }
 APPLE_API_KEY_PATH = { script = ["security find-generic-password -w -a alan -s alan--neopoligen-tauri--APPLE_API_KEY_PATH"] }
-APPLE_CERTIFICATE = { script = ["cat /Users/alan/.ssh/Certificates.txt"] }
+APPLE_CERTIFICATE = { script = ["cat /Users/alan/.ssh/Certificates.txt | xargs"] }
 APPLE_CERTIFICATE_PASSWORD = { script = ["security find-generic-password -w -a alan -s alan--neopoligen-tauri--APPLE_CERTIFICATE_PASSWORD"] }
+
 
 [tasks.aarch64-apple-darwin]
 dependencies = [
   "aarch64-apple-darwin--cli-build",
-  "aarch64-apple-darwin--load-tauri-config"
+  "aarch64-apple-darwin--cli-rename",
+  "aarch64-apple-darwin--load-tauri-config",
+  "aarch64-apple-darwin--build-tauri"
 ]
-
 
 [tasks.aarch64-apple-darwin--cli-build]
 cwd = "cli"
 command = "cargo"
 args = ["build", "--release", "--target", "aarch64-apple-darwin"]
 
+[tasks.aarch64-apple-darwin--cli-rename]
+cwd = "cli/target/aarch64-apple-darwin/release"
+command = "cp"
+args = ["neopoligengine", "neopoligengine-aarch64-apple-darwin"]
+
 [tasks.aarch64-apple-darwin--load-tauri-config]
 cwd = "tauri"
 command = "cp"
 args = ["tauri.conf-aarch64-apple-darwin.json", "tauri.conf.json"]
 
+[tasks.aarch64-apple-darwin--build-tauri]
+cwd = "tauri"
+command = "cargo"
+args = ["tauri", "build", "--target", "aarch64-apple-darwin"]
 
-[tasks.a]
-command = "export"
-args = ["APPLE_ID=`security find-generic-password -w -a alan -s alan--neopoligen-tauri--APPLE_ID`"]
-
-[tasks.b]
-command = "./test-env.bash"
+[tasks.echo]
+command = "./echo"
 
 [tasks.flow]
 dependencies = [
-  #"aarch64-apple-darwin"
-  "b"
+  "aarch64-apple-darwin"
+  #"echo"
+
 ]
 
 

@@ -19,7 +19,7 @@
         "sidecar": true,
         "scope": [
           { 
-            "name": "../cli/target/release/neopoligengine", 
+            "name": "../cli/target/aarch64-apple-darwin/release/neopoligengine", 
             "sidecard": true,
             "cmd": "neopoligengine"
           }
@@ -29,7 +29,7 @@
     "bundle": {
       "active": true,
       "externalBin": [
-        "../cli/target/release/neopoligengine"
+        "../cli/target/aarch64-apple-darwin/release/neopoligengine"
       ],
       "targets": "all",
       "identifier": "com.neopoligen.app",
