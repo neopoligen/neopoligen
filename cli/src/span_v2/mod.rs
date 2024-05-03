@@ -186,6 +186,29 @@ mod test {
         assert_eq!(left, right);
     }
 
+    #[test]
+    fn inline_tag_with_multiple_kv_attrs() {
+        let source = "<<code|hotel|india: juliet|kilo: lima>>";
+        let left = SpanV2::Tag {
+            r#type: "code".to_string(),
+            spans: vec![SpanV2::WordSegment {
+                text: "hotel".to_string(),
+            }],
+            attrs: vec![
+                SpanAttrV2::KeyValue {
+                    key: "india".to_string(),
+                    value: "juliet".to_string(),
+                },
+                SpanAttrV2::KeyValue {
+                    key: "kilo".to_string(),
+                    value: "lima".to_string(),
+                },
+            ],
+        };
+        let right = span_v2(source).unwrap().1;
+        assert_eq!(left, right);
+    }
+
     // #[test]
     // fn basic_space() {
     //     let source = " x";
