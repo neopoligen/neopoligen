@@ -66,3 +66,46 @@ fn multiple_paragraphs() {
     let right = page(source).unwrap().1;
     assert_eq!(left, right);
 }
+
+#[test]
+fn multiple_sections() {
+    let source = "-- note\n\ntango echo\n\n-- div\n\ndelta alfa";
+    let left = vec![
+        Section::Standard {
+            attrs: vec![],
+            content: vec![Block::Paragraph {
+                spans: vec![
+                    Span::WordPart {
+                        text: "tango".to_string(),
+                    },
+                    Span::Space {
+                        text: " ".to_string(),
+                    },
+                    Span::WordPart {
+                        text: "echo".to_string(),
+                    },
+                ],
+            }],
+            r#type: "note".to_string(),
+        },
+        Section::Standard {
+            attrs: vec![],
+            content: vec![Block::Paragraph {
+                spans: vec![
+                    Span::WordPart {
+                        text: "delta".to_string(),
+                    },
+                    Span::Space {
+                        text: " ".to_string(),
+                    },
+                    Span::WordPart {
+                        text: "alfa".to_string(),
+                    },
+                ],
+            }],
+            r#type: "div".to_string(),
+        },
+    ];
+    let right = page(source).unwrap().1;
+    assert_eq!(left, right);
+}

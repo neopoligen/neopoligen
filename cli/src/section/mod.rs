@@ -69,7 +69,6 @@ pub fn section(source: &str) -> IResult<&str, Section, ErrorTree<&str>> {
         .parse(source)?;
     let (source, _) = empty_line.context("section").parse(source)?;
     let (source, result) = many1(block).context("section").parse(source)?;
-    dbg!(source);
     Ok((
         source,
         Section::Standard {
