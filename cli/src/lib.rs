@@ -25,6 +25,7 @@ pub mod section_category;
 pub mod site;
 pub mod span;
 pub mod span_attribute;
+pub mod span_v2;
 pub mod template_error;
 pub mod template_tester;
 pub mod text_plugin;

@@ -6,5 +6,5 @@ use serde::Serialize;
 #[serde(content = "content", rename_all = "lowercase", tag = "type")]
 pub enum TagAttribute {
     Boolean { key: String },
-    KeyValue { key: String, value: String }
+    KeyValue { key: String, value: String },
 }

@@ -40,7 +40,6 @@ pub fn inline_key_value_span_with_attributes<'a>(
         Ok(x) => Ok(x),
         Err(_) => Err(Err::Error(Error::new(source, ErrorKind::Tag))),
     }?;
-
     let (source, _) = tag(":")(source)?;
     let (source, _) = space1(source)?;
     let (source, value) = take_until("|")(source)?;
