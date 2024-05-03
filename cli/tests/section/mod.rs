@@ -93,26 +93,29 @@ fn flag_attribute() {
     assert_eq!(left, right);
 }
 
-// #[test]
-// fn kv_attr_test() {
-//     let source = "-- title\n-- key: value\n\nhotel papa";
-//     let left = Section::Standard {
-//         attrs: vec![],
-//         content: vec![Block::Paragraph {
-//             spans: vec![
-//                 Span::WordPart {
-//                     text: "hotel".to_string(),
-//                 },
-//                 Span::Space {
-//                     text: " ".to_string(),
-//                 },
-//                 Span::WordPart {
-//                     text: "papa".to_string(),
-//                 },
-//             ],
-//         }],
-//         r#type: "title".to_string(),
-//     };
-//     let right = section(source).unwrap().1;
-//     assert_eq!(left, right);
-// }
+#[test]
+fn kv_attr_test() {
+    let source = "-- title\n-- key: value\n\nhotel papa";
+    let left = Section::Standard {
+        attrs: vec![SectionAttr::KeyValue {
+            key: "key".to_string(),
+            value: "value".to_string(),
+        }],
+        content: vec![Block::Paragraph {
+            spans: vec![
+                Span::WordPart {
+                    text: "hotel".to_string(),
+                },
+                Span::Space {
+                    text: " ".to_string(),
+                },
+                Span::WordPart {
+                    text: "papa".to_string(),
+                },
+            ],
+        }],
+        r#type: "title".to_string(),
+    };
+    let right = section(source).unwrap().1;
+    assert_eq!(left, right);
+}
