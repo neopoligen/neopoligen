@@ -4,6 +4,6 @@ pub mod config;
 pub mod page;
 pub mod page_error;
 pub mod section;
-pub mod section_attrs;
+pub mod section_attr;
 pub mod site;
 pub mod span;

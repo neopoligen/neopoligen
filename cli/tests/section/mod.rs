@@ -65,3 +65,27 @@ fn multiple_paragraphs() {
     let right = section(source).unwrap().1;
     assert_eq!(left, right);
 }
+
+#[test]
+fn flag_attribute() {
+    let source = "-- title\n-- flag-attr\n\nhotel papa";
+    let left = Section::Standard {
+        attrs: vec![],
+        content: vec![Block::Paragraph {
+            spans: vec![
+                Span::WordPart {
+                    text: "hotel".to_string(),
+                },
+                Span::Space {
+                    text: " ".to_string(),
+                },
+                Span::WordPart {
+                    text: "papa".to_string(),
+                },
+            ],
+        }],
+        r#type: "title".to_string(),
+    };
+    let right = section(source).unwrap().1;
+    assert_eq!(left, right);
+}
