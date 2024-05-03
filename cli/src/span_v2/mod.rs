@@ -8,6 +8,7 @@ use nom::multi::many1;
 use nom::IResult;
 use nom_supreme::error::ErrorTree;
 //use nom_supreme::error::GenericErrorTree;
+use nom::combinator::not;
 use serde::Serialize;
 
 #[derive(Clone, Debug, Serialize, PartialEq)]
@@ -61,6 +62,8 @@ fn span_attr_v2(source: &str) -> IResult<&str, SpanAttrV2, ErrorTree<&str>> {
 
 fn span_attr_flag_v2(source: &str) -> IResult<&str, SpanAttrV2, ErrorTree<&str>> {
     let (source, flag) = is_not("|:>")(source)?;
+    let (source, _) = not(tag(":"))(source)?;
+
     Ok((
         source,
         SpanAttrV2::Flag {
@@ -71,7 +74,6 @@ fn span_attr_flag_v2(source: &str) -> IResult<&str, SpanAttrV2, ErrorTree<&str>>
 
 fn span_attr_kv_v2(source: &str) -> IResult<&str, SpanAttrV2, ErrorTree<&str>> {
     let (source, key) = is_not(":")(source)?;
-    dbg!(key);
     let (source, _) = tag(":")(source)?;
     let (source, _) = space0(source)?;
     let (source, value) = is_not("|>")(source)?;
@@ -102,7 +104,7 @@ fn span_tag(source: &str) -> IResult<&str, SpanV2, ErrorTree<&str>> {
 }
 
 fn word_segment(source: &str) -> IResult<&str, SpanV2, ErrorTree<&str>> {
-    let (source, content) = is_not("<> |")(source)?;
+    let (source, content) = is_not("<> :|")(source)?;
     Ok((
         source,
         SpanV2::WordSegment {
@@ -149,46 +151,40 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // fn inline_tag_with_flag_attr() {
-    //     let source = "<<strong|delta|echo>>";
-    //     let attrs = vec![SpanAttrV2::Flag {
-    //         key: "echo".to_string(),
-    //     }];
-    //     let left = Ok((
-    //         "",
-    //         SpanV2::Tag {
-    //             r#type: "strong".to_string(),
-    //             spans: vec![SpanV2::WordSegment {
-    //                 text: "delta".to_string(),
-    //             }],
-    //             attrs,
-    //         },
-    //     ));
-    //     let right = span_v2(source);
-    //     // assert_eq!(left, right);
-    // }
+    #[test]
+    fn inline_tag_with_flag_attr() {
+        let source = "<<strong|delta|echo>>";
+        let attrs = vec![SpanAttrV2::Flag {
+            key: "echo".to_string(),
+        }];
+        let left = SpanV2::Tag {
+            r#type: "strong".to_string(),
+            spans: vec![SpanV2::WordSegment {
+                text: "delta".to_string(),
+            }],
+            attrs,
+        };
+        let right = span_v2(source).unwrap().1;
+        assert_eq!(left, right);
+    }
 
-    //#[test]
-    //fn inline_tag_with_kv_attr() {
-    //    let source = "<<bold|echo|foxtrot: golf>>";
-    //    let attrs = vec![SpanAttrV2::KeyValue {
-    //        key: "foxtrot".to_string(),
-    //        value: "golf".to_string(),
-    //    }];
-    //    let left = Ok((
-    //        "",
-    //        SpanV2::Tag {
-    //            r#type: "bold".to_string(),
-    //            spans: vec![SpanV2::WordSegment {
-    //                text: "echo".to_string(),
-    //            }],
-    //            attrs,
-    //        },
-    //    ));
-    //    let right = span_v2(source);
-    //    //assert_eq!(left, right);
-    //}
+    #[test]
+    fn inline_tag_with_kv_attr() {
+        let source = "<<bold|echo|foxtrot: golf>>";
+        let attrs = vec![SpanAttrV2::KeyValue {
+            key: "foxtrot".to_string(),
+            value: "golf".to_string(),
+        }];
+        let left = SpanV2::Tag {
+            r#type: "bold".to_string(),
+            spans: vec![SpanV2::WordSegment {
+                text: "echo".to_string(),
+            }],
+            attrs,
+        };
+        let right = span_v2(source).unwrap().1;
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // fn basic_space() {
