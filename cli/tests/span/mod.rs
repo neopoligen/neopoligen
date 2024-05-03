@@ -30,3 +30,15 @@ fn single_newline() {
     let right = span(source).unwrap().1;
     assert_eq!(left, right);
 }
+
+#[test]
+fn paragraph_break_should_error() {
+    let source = "\n\n";
+    assert!(span(source).is_err());
+}
+
+#[test]
+fn be_okay_with_empty_lines() {
+    let source = "\n   \n";
+    assert!(span(source).is_err());
+}
