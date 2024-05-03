@@ -2,6 +2,7 @@ use crate::span::*;
 // use nom::branch::alt;
 // use nom::bytes::complete::is_not;
 // use nom::character::complete::space1;
+use nom::character::complete::multispace0;
 use nom::multi::many1;
 use nom::IResult;
 use nom::Parser;
@@ -17,5 +18,6 @@ pub enum Block {
 
 pub fn block(source: &str) -> IResult<&str, Block, ErrorTree<&str>> {
     let (source, result) = many1(span).context("block").parse(source)?;
+    let (source, _) = multispace0.context("section").parse(source)?;
     Ok((source, Block::Paragraph { spans: result }))
 }

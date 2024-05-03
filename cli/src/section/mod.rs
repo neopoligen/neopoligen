@@ -11,6 +11,7 @@ use serde::Serialize;
 // use nom::combinator::not;
 use nom::multi::many1;
 // use nom::sequence::tuple;
+use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::character::complete::line_ending;
 use nom::character::complete::space0;
@@ -62,12 +63,13 @@ pub enum SectionBounds {
 pub fn section(source: &str) -> IResult<&str, Section, ErrorTree<&str>> {
     let (source, _) = tag("--").context("section").parse(source)?;
     let (source, _) = space1.context("section").parse(source)?;
-    let (source, r#type) = tag("title").context("section").parse(source)?;
+    let (source, r#type) = is_not(" \n\t").context("section").parse(source)?;
     let (source, _) = tuple((space0, line_ending))
         .context("section")
         .parse(source)?;
     let (source, _) = empty_line.context("section").parse(source)?;
-    let (source, result) = many1(block).context("block").parse(source)?;
+    let (source, result) = many1(block).context("section").parse(source)?;
+    dbg!(source);
     Ok((
         source,
         Section::Standard {
