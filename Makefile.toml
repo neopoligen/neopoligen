@@ -8,6 +8,9 @@ APPLE_API_KEY = { script = ["security find-generic-password -w -a alan -s alan--
 APPLE_API_KEY_PATH = { script = ["security find-generic-password -w -a alan -s alan--neopoligen-tauri--APPLE_API_KEY_PATH"] }
 APPLE_CERTIFICATE = { script = ["cat /Users/alan/.ssh/Certificates.txt | xargs"] }
 APPLE_CERTIFICATE_PASSWORD = { script = ["security find-generic-password -w -a alan -s alan--neopoligen-tauri--APPLE_CERTIFICATE_PASSWORD"] }
+CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER = "x86_64-linux-gnu-gcc"
+#PKG_CONFIG_SYSROOT_DIR = "/"
+#PKG_CONFIG_PATH = "/opt/homebrew/lib"
 
 
 [tasks.aarch64-apple-darwin]
@@ -38,13 +41,81 @@ cwd = "tauri"
 command = "cargo"
 args = ["tauri", "build", "--target", "aarch64-apple-darwin"]
 
-[tasks.echo]
-command = "./echo"
+#####################################
+
+[tasks.x86_64-apple-darwin]
+dependencies = [
+  "x86_64-apple-darwin--cli-build",
+  "x86_64-apple-darwin--cli-rename",
+  "x86_64-apple-darwin--load-tauri-config",
+  "x86_64-apple-darwin--build-tauri"
+]
+
+[tasks.x86_64-apple-darwin--cli-build]
+cwd = "cli"
+command = "cargo"
+args = ["build", "--release", "--target", "x86_64-apple-darwin"]
+
+[tasks.x86_64-apple-darwin--cli-rename]
+cwd = "cli/target/x86_64-apple-darwin/release"
+command = "cp"
+args = ["neopoligengine", "neopoligengine-x86_64-apple-darwin"]
+
+[tasks.x86_64-apple-darwin--load-tauri-config]
+cwd = "tauri"
+command = "cp"
+args = ["tauri.conf-x86_64-apple-darwin.json", "tauri.conf.json"]
+
+[tasks.x86_64-apple-darwin--build-tauri]
+cwd = "tauri"
+command = "cargo"
+args = ["tauri", "build", "--target", "x86_64-apple-darwin"]
+
+########################################
+
+
+[tasks.x86_64-unknown-linux-gnu]
+dependencies = [
+  "x86_64-unknown-linux-gnu--cli-build",
+  "x86_64-unknown-linux-gnu--cli-rename",
+  "x86_64-unknown-linux-gnu--load-tauri-config",
+  "x86_64-unknown-linux-gnu--build-tauri"
+]
+
+[tasks.x86_64-unknown-linux-gnu--cli-build]
+cwd = "cli"
+command = "cargo"
+args = ["build", "--release", "--target", "x86_64-unknown-linux-gnu"]
+
+[tasks.x86_64-unknown-linux-gnu--cli-rename]
+cwd = "cli/target/x86_64-unknown-linux-gnu/release"
+command = "cp"
+args = ["neopoligengine", "neopoligengine-x86_64-unknown-linux-gnu"]
+
+[tasks.x86_64-unknown-linux-gnu--load-tauri-config]
+cwd = "tauri"
+command = "cp"
+args = ["tauri.conf-x86_64-unknown-linux-gnu.json", "tauri.conf.json"]
+
+[tasks.x86_64-unknown-linux-gnu--build-tauri]
+cwd = "tauri"
+command = "cargo"
+args = ["tauri", "build", "--target", "x86_64-unknown-linux-gnu"]
+
+
+#########################################
+
+[tasks.put-aarch64-config-back]
+cwd = "tauri"
+command = "cp"
+args = ["tauri.conf-aarch64-apple-darwin.json", "tauri.conf.json"]
 
 [tasks.flow]
 dependencies = [
-  "aarch64-apple-darwin"
-  #"echo"
+  #"aarch64-apple-darwin"
+  # "x86_64-apple-darwin",
+  #"x86_64-unknown-linux-gnu",
+  #"put-aarch64-config-back"
 
 ]
 
