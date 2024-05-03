@@ -66,7 +66,7 @@ pub fn section(source: &str) -> IResult<&str, Section, ErrorTree<&str>> {
     Ok((
         source,
         Section::Standard {
-            attrs: vec![],
+            attrs,
             content: result,
             r#type: r#type.to_string(),
         },

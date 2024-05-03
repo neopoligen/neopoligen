@@ -1,3 +1,4 @@
+use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::character::complete::line_ending;
@@ -15,6 +16,25 @@ pub enum SectionAttr {
 }
 
 pub fn section_attr(source: &str) -> IResult<&str, SectionAttr, ErrorTree<&str>> {
+    let (source, attr) = alt((flag_attr, kv_attr))
+        .context("section_attr")
+        .parse(source)?;
+    Ok((source, attr))
+}
+
+pub fn flag_attr(source: &str) -> IResult<&str, SectionAttr, ErrorTree<&str>> {
+    let (source, _) = tag("--").context("section_attr").parse(source)?;
+    let (source, key) = is_not(":\n").context("section_attr").parse(source)?;
+    let (source, _) = line_ending.context("section_attr").parse(source)?;
+    Ok((
+        source,
+        SectionAttr::Flag {
+            key: key.trim().to_string(),
+        },
+    ))
+}
+
+pub fn kv_attr(source: &str) -> IResult<&str, SectionAttr, ErrorTree<&str>> {
     let (source, _) = tag("--").context("section_attr").parse(source)?;
     let (source, key) = is_not(":\n").context("section_attr").parse(source)?;
     let (source, _) = line_ending.context("section_attr").parse(source)?;

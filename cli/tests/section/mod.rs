@@ -1,5 +1,6 @@
 use neopoligengine::block::*;
 use neopoligengine::section::*;
+use neopoligengine::section_attr::SectionAttr;
 use neopoligengine::span::*;
 use pretty_assertions::assert_eq;
 
@@ -70,7 +71,9 @@ fn multiple_paragraphs() {
 fn flag_attribute() {
     let source = "-- title\n-- flag-attr\n\nhotel papa";
     let left = Section::Standard {
-        attrs: vec![],
+        attrs: vec![SectionAttr::Flag {
+            key: "flag-attr".to_string(),
+        }],
         content: vec![Block::Paragraph {
             spans: vec![
                 Span::WordPart {
@@ -89,3 +92,27 @@ fn flag_attribute() {
     let right = section(source).unwrap().1;
     assert_eq!(left, right);
 }
+
+// #[test]
+// fn kv_attr_test() {
+//     let source = "-- title\n-- key: value\n\nhotel papa";
+//     let left = Section::Standard {
+//         attrs: vec![],
+//         content: vec![Block::Paragraph {
+//             spans: vec![
+//                 Span::WordPart {
+//                     text: "hotel".to_string(),
+//                 },
+//                 Span::Space {
+//                     text: " ".to_string(),
+//                 },
+//                 Span::WordPart {
+//                     text: "papa".to_string(),
+//                 },
+//             ],
+//         }],
+//         r#type: "title".to_string(),
+//     };
+//     let right = section(source).unwrap().1;
+//     assert_eq!(left, right);
+// }
