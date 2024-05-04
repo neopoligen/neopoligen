@@ -1,6 +1,6 @@
 use crate::page::Page;
-use crate::section::Section;
-use crate::section_attr::SectionAttr;
+// use crate::section::Section;
+// use crate::section_attr::SectionAttr;
 use crate::site_config::SiteConfigV2;
 use minijinja::context;
 //use minijinja::syntax;
@@ -245,50 +245,4 @@ impl Site {
     }
 
     //
-}
-
-// Deprecated: Move this to page and deleted when
-// done
-fn get_page_id(ast: &Vec<Section>) -> Option<String> {
-    ast.iter().find_map(|sec_enum| {
-        if let Section::Json { r#type, attrs, .. } = sec_enum {
-            if r#type == "metadata" {
-                attrs.iter().find_map(|attr| {
-                    if let SectionAttr::KeyValue { key, value } = attr {
-                        if key == "id" {
-                            Some(value.trim().to_string())
-                        } else {
-                            None
-                        }
-                    } else {
-                        None
-                    }
-                })
-            } else {
-                None
-            }
-        } else {
-            None
-        }
-    })
-}
-
-fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result<PathBuf, String> {
-    match path.strip_prefix(find) {
-        Ok(path_part) => Ok(replace.clone().join(path_part)),
-        Err(e) => Err(format!("Problem: {}", e)),
-    }
-}
-
-fn write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
-    match path.parent() {
-        Some(parent_dir) => match fs::create_dir_all(parent_dir) {
-            Ok(_) => match fs::write(path, content) {
-                Ok(_) => Ok(()),
-                Err(e) => Err(e.to_string()),
-            },
-            Err(e) => Err(e.to_string()),
-        },
-        None => Err("Could not make directory".to_string()),
-    }
 }

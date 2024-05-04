@@ -110,6 +110,6 @@ fn get_page_id(ast: &Vec<Section>) -> Result<String, Error> {
 fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result<PathBuf, String> {
     match path.strip_prefix(find) {
         Ok(path_part) => Ok(replace.clone().join(path_part)),
-        Err(e) => Err("Problem".to_string()), // todo make this a better error
+        Err(e) => Err(format!("{}", e)), // todo make this a better error
     }
 }
