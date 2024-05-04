@@ -4,6 +4,7 @@ use crate::section_attr::SectionAttr;
 use crate::site_config::SiteConfigV2;
 use minijinja::context;
 //use minijinja::syntax;
+// use crate::error::Error;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
 use minijinja::Value;
@@ -18,10 +19,10 @@ use walkdir::WalkDir;
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct Site {
     pub config: SiteConfigV2,
-    pub source_files: BTreeMap<PathBuf, String>,
+    pub page_errors: BTreeMap<PathBuf, Page>,
     pub missing_ids: BTreeMap<PathBuf, String>,
     pub pages: BTreeMap<String, Page>,
-    pub parsing_errors: BTreeMap<PathBuf, String>,
+    pub source_files: BTreeMap<PathBuf, String>,
     pub templates: BTreeMap<String, String>,
 }
 
@@ -34,7 +35,7 @@ impl Site {
             source_files: BTreeMap::new(),
             missing_ids: BTreeMap::new(),
             pages: BTreeMap::new(),
-            parsing_errors: BTreeMap::new(),
+            page_errors: BTreeMap::new(),
             templates: BTreeMap::new(),
         }
     }
@@ -44,14 +45,15 @@ impl Site {
     //
 
     pub fn output_errors(&self) {
-        self.parsing_errors.iter().for_each(|p| {
-            if let Err(e) = write_file_with_mkdir(&p.0, &p.1) {
-                event!(Level::ERROR, "Could not write error file: {}", e);
-            }
-        });
-        self.missing_ids.iter().for_each(|p| {
-            let _ = write_file_with_mkdir(&p.0, &p.1);
-        });
+
+        // self.parsing_errors.iter().for_each(|p| {
+        //     if let Err(e) = write_file_with_mkdir(&p.0, &p.1) {
+        //         event!(Level::ERROR, "Could not write error file: {}", e);
+        //     }
+        // });
+        // self.missing_ids.iter().for_each(|p| {
+        //     let _ = write_file_with_mkdir(&p.0, &p.1);
+        // });
     }
 
     pub fn generate_pages(&self) -> BTreeMap<PathBuf, String> {
@@ -106,8 +108,15 @@ impl Site {
     }
 
     pub fn parse_pages(&mut self) {
-        self.source_files.iter().for_each(|f| ());
+        self.source_files.iter().for_each(|f| {
+            let p = Page::new(f.1.clone(), f.0.clone(), &self.config);
+            if let Some(_) = p.error.clone() {
+                self.page_errors.insert(p.output_path.clone().unwrap(), p);
+            } else {
+            }
+        });
     }
+
     //match ast(f.1, &self.config.sections) {
     //   Ok(ast) => {
     //  },

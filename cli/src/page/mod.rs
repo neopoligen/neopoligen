@@ -20,7 +20,7 @@ pub struct Page {
 }
 
 impl Page {
-    pub fn new(source_text: String, config: &SiteConfigV2) -> Page {
+    pub fn new(source_text: String, source_path: PathBuf, config: &SiteConfigV2) -> Page {
         match ast(&source_text, &config.sections) {
             Ok(ast) => match get_page_id(&ast) {
                 Ok(id) => {
@@ -39,25 +39,41 @@ impl Page {
                         tags: vec![],
                     }
                 }
-                Err(e) => Page {
+                Err(e) => {
+                    let output_path = replace_path(
+                        &source_path,
+                        config.paths.get("content_root").unwrap(),
+                        config.paths.get("errors_root").unwrap(),
+                    )
+                    .unwrap();
+                    Page {
+                        ast: None,
+                        error: Some(e),
+                        folders: vec![],
+                        id: None,
+                        output_path: Some(output_path),
+                        source_text,
+                        tags: vec![],
+                    }
+                }
+            },
+            Err(error) => {
+                let output_path = replace_path(
+                    &source_path,
+                    config.paths.get("content_root").unwrap(),
+                    config.paths.get("errors_root").unwrap(),
+                )
+                .unwrap();
+                Page {
                     ast: None,
-                    error: Some(e),
+                    error: Some(error),
                     folders: vec![],
                     id: None,
-                    output_path: None,
+                    output_path: Some(output_path),
                     source_text,
                     tags: vec![],
-                },
-            },
-            Err(error) => Page {
-                ast: None,
-                error: Some(error),
-                folders: vec![],
-                id: None,
-                output_path: None,
-                source_text,
-                tags: vec![],
-            },
+                }
+            }
         }
     }
 }
@@ -88,5 +104,12 @@ fn get_page_id(ast: &Vec<Section>) -> Result<String, Error> {
         None => Err(Error {
             kind: ErrorKind::MissingIdError {},
         }),
+    }
+}
+
+fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result<PathBuf, String> {
+    match path.strip_prefix(find) {
+        Ok(path_part) => Ok(replace.clone().join(path_part)),
+        Err(e) => Err("Problem".to_string()), // todo make this a better error
     }
 }

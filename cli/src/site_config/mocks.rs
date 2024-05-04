@@ -18,11 +18,12 @@ impl SiteConfigV2 {
         let mut paths = BTreeMap::new();
         paths.insert(
             "content_root".to_string(),
-            PathBuf::from("/mock/content/root"),
+            PathBuf::from("/mock/root/content"),
         );
+        paths.insert("output_root".to_string(), PathBuf::from("/mock/root/docs"));
         paths.insert(
-            "output_root".to_string(),
-            PathBuf::from("/mock/output/root"),
+            "errors_root".to_string(),
+            PathBuf::from("/mock/root/status/errors"),
         );
         SiteConfigV2 {
             default_language: "en".to_string(),
