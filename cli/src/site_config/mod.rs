@@ -40,8 +40,8 @@ fn get_folder_path(project_root: &PathBuf, name: &str) -> PathBuf {
 // it's its own thing to provide straight access
 // to errors from serde
 pub struct BaseConfig {
-    default_language: String,
-    theme: String,
-    date_formats: Vec<String>,
-    domain: Option<String>,
+    // default_language: String,
+    // theme: String,
+    // date_formats: Vec<String>,
+    // domain: Option<String>,
 }

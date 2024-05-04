@@ -1,3 +1,4 @@
+use crate::ast::ast;
 use crate::page::Page;
 use crate::site_config::SiteConfig;
 use serde::Serialize;
@@ -26,6 +27,15 @@ impl Site {
 }
 
 impl Site {
+    pub fn parse_pages(&mut self) {
+        self.content_files.iter().for_each(|f| {
+            let ast = ast(f.1);
+            dbg!(ast);
+
+            ()
+        })
+    }
+
     pub fn load_pages(&mut self) {
         let dir = &self.config.folders.content_root;
         if dir.exists() {

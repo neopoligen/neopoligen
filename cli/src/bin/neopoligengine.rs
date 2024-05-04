@@ -50,8 +50,8 @@ fn main() {
         let site_conf = SiteConfig::new(engine_conf.dev.active_site);
         let mut site = Site::new(site_conf);
         site.load_pages();
-        // site.generate_pages();
-        dbg!(site);
+        site.parse_pages();
+        // dbg!(site);
         // dbg!(&site_conf.folders.content_root);
         // dbg!(fs);
         //dbg!(site_conf);

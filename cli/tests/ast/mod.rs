@@ -1,5 +1,5 @@
+use neopoligengine::ast::*;
 use neopoligengine::block::*;
-use neopoligengine::page::*;
 use neopoligengine::section::*;
 use neopoligengine::span::*;
 use pretty_assertions::assert_eq;
@@ -24,7 +24,7 @@ fn basic_page_parse() {
         }],
         r#type: "title".to_string(),
     }];
-    let right = page(source).unwrap().1;
+    let right = ast(source).unwrap().1;
     assert_eq!(left, right);
 }
 
@@ -63,7 +63,7 @@ fn multiple_paragraphs() {
         ],
         r#type: "p".to_string(),
     }];
-    let right = page(source).unwrap().1;
+    let right = ast(source).unwrap().1;
     assert_eq!(left, right);
 }
 
@@ -106,6 +106,6 @@ fn multiple_sections() {
             r#type: "div".to_string(),
         },
     ];
-    let right = page(source).unwrap().1;
+    let right = ast(source).unwrap().1;
     assert_eq!(left, right);
 }
