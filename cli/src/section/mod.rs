@@ -2,6 +2,7 @@ use crate::block::*;
 use crate::section_attr::*;
 use crate::site_sections::SiteSections;
 use crate::span::empty_line;
+use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::character::complete::line_ending;
@@ -54,6 +55,10 @@ pub enum Section {
         source: String,
         r#type: String,
     },
+
+    // this is just used to start the
+    // loop for looking for things.
+    Initializer,
 }
 
 #[derive(Debug, Serialize, Clone)]
@@ -66,12 +71,57 @@ pub enum SectionBounds {
 
 pub fn section<'a>(
     source: &'a str,
-    _sections: &'a SiteSections,
+    sections: &'a SiteSections,
+) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let (source, result) = alt((
+        |src| basic_section(src, &sections.basic),
+        |src| basic_section(src, &sections.basic),
+    ))
+    .context("section")
+    .parse(source)?;
+    Ok((source, result))
+
+    // let initial_source = source;
+    // let (source, _) = tag("--").context("section").parse(source)?;
+    // let (source, _) = space1.context("section").parse(source)?;
+    // let (source, r#type) = is_not(" \n\t").context("section").parse(source)?;
+    // let (source, _) = tuple((space0, line_ending))
+    //     .context("section")
+    //     .parse(source)?;
+    // let (source, attrs) = many0(section_attr).context("section").parse(source)?;
+    // let (source, _) = empty_line.context("section").parse(source)?;
+    // let (source, result) = many1(block).context("section").parse(source)?;
+    // let initial_source = &initial_source.replace(source, "");
+    // Ok((
+    //     source,
+    //     Section::Basic {
+    //         attrs,
+    //         content: result,
+    //         source: initial_source.to_string(),
+    //         r#type: r#type.to_string(),
+    //     },
+    // ))
+}
+
+fn basic_section<'a>(
+    source: &'a str,
+    list: &'a Vec<String>,
+) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let (source, result) = list.iter().fold(initial_error(), |acc, item| match acc {
+        Ok(v) => Ok(v),
+        _ => basic_section_finder(source, item),
+    })?;
+    Ok((source, result))
+}
+
+pub fn basic_section_finder<'a>(
+    source: &'a str,
+    key: &'a str,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let initial_source = source;
     let (source, _) = tag("--").context("section").parse(source)?;
     let (source, _) = space1.context("section").parse(source)?;
-    let (source, r#type) = is_not(" \n\t").context("section").parse(source)?;
+    let (source, r#type) = tag(key).context("section").parse(source)?;
     let (source, _) = tuple((space0, line_ending))
         .context("section")
         .parse(source)?;
@@ -88,4 +138,13 @@ pub fn section<'a>(
             r#type: r#type.to_string(),
         },
     ))
+}
+
+fn initial_error<'a>() -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    // the purpose of this function is just to put an
+    // error in the accumulator. There's a way to do that
+    // with just making an error, but I haven't solved all
+    // the parts to that yet.
+    let (_, _) = tag("asdf").parse("fdsa")?;
+    Ok(("", Section::Initializer))
 }
