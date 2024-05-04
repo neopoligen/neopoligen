@@ -103,6 +103,30 @@ fn get_page_id(ast: &Vec<Section>) -> Result<String, Error> {
     }
 }
 
+fn get_page_path(ast: &Vec<Section>) -> Option<PathBuf> {
+    ast.iter().find_map(|sec_enum| {
+        if let Section::Json { r#type, attrs, .. } = sec_enum {
+            if r#type == "metadata" {
+                attrs.iter().find_map(|attr| {
+                    if let SectionAttr::KeyValue { key, value } = attr {
+                        if key == "path" {
+                            Some(PathBuf::from(value.trim().to_string()))
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    }
+                })
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    })
+}
+
 fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result<PathBuf, String> {
     match path.strip_prefix(find) {
         Ok(path_part) => Ok(replace.clone().join(path_part)),
@@ -111,9 +135,31 @@ fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result<Pat
 }
 
 fn get_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfigV2) -> Option<PathBuf> {
-    Some(config.paths.get("output_root").unwrap().join(format!(
-        "{}/{}/index.html",
-        config.default_language.clone(),
-        id.clone()
-    )))
+    match get_page_path(ast) {
+        Some(mut path) => {
+            if path.is_absolute() {
+                path = path.strip_prefix("/").unwrap().to_path_buf();
+            }
+
+            let mut full_path = config.paths.get("output_root").unwrap().join(path);
+            match full_path.extension() {
+                Some(_) => Some(full_path),
+                None => Some(full_path.join(PathBuf::from("index.html"))),
+            }
+
+            // Some(full_path)
+
+            // Some(config.paths.get("output_root").unwrap().join(format!(
+            // "{}/{}/index.html",
+            // config.default_language.clone(),
+            // id
+            // )))
+        }
+
+        None => Some(config.paths.get("output_root").unwrap().join(format!(
+            "{}/{}/index.html",
+            config.default_language.clone(),
+            id
+        ))),
+    }
 }

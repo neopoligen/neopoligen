@@ -42,10 +42,10 @@ fn watch_for_no_id() {
     "-- metadata\n-- id: some-test-id",
     "/mock/root/docs/en/some-test-id/index.html"
 )]
-// #[case(
-//     "-- metadata\n-- id: test-id\n-- path: /some-path",
-//     "/mock/root/docs/some-path/index.html"
-// )]
+#[case(
+    "-- metadata\n-- id: test-id\n-- path: /some-path",
+    "/mock/root/docs/some-path/index.html"
+)]
 fn run_test(#[case] input: &str, #[case] expected: &str) {
     let source_path = PathBuf::from("/mock/root/content/some-folder/1234.neo");
     let config = SiteConfigV2::mock1();
