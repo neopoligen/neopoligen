@@ -9,6 +9,7 @@ use nom_supreme::final_parser::final_parser;
 use nom_supreme::final_parser::Location;
 use nom_supreme::final_parser::RecreateContext;
 use nom_supreme::parser_ext::ParserExt;
+use std::collections::BTreeMap;
 use std::fmt;
 
 // pub fn ast<'a>(
@@ -46,7 +47,10 @@ impl fmt::Display for ParserError {
     }
 }
 
-pub fn ast<'a>(source: &'a str, sections: &'a SiteSections) -> Result<Vec<Section>, ParserError> {
+pub fn ast<'a>(
+    source: &'a str,
+    sections: &'a BTreeMap<String, Vec<String>>,
+) -> Result<Vec<Section>, ParserError> {
     match final_parser(|src| do_parse(src, &sections))(source) {
         Ok(data) => Ok(data),
         Err(e) => Err(get_error(source, &e)),
@@ -55,7 +59,7 @@ pub fn ast<'a>(source: &'a str, sections: &'a SiteSections) -> Result<Vec<Sectio
 
 fn do_parse<'a>(
     source: &'a str,
-    sections: &'a SiteSections,
+    sections: &'a BTreeMap<String, Vec<String>>,
 ) -> IResult<&'a str, Vec<Section>, ErrorTree<&'a str>> {
     let (source, result) = many1(|src| section(src, sections))
         .context("page")

@@ -49,6 +49,13 @@ pub struct SiteFolders {
     pub status_root: PathBuf,
 }
 
+impl SiteConfigV2 {
+    pub fn load_sections(&mut self) {
+        self.sections
+            .insert("basic".to_string(), vec!["title".to_string()]);
+    }
+}
+
 impl SiteConfig {
     pub fn new(site_name: String) -> SiteConfig {
         let mut project_root = document_dir().clone().unwrap();
@@ -56,11 +63,9 @@ impl SiteConfig {
         project_root.push(site_name.as_str());
         let mut site_config_json = project_root.clone();
         site_config_json.push("config.json");
-
         // TODO: add grace error handling if the config can't
         // be read.
         let main_config = load_config_file(site_config_json).unwrap();
-
         let folders = SiteFolders {
             content_root: get_folder_path(&project_root, "content"),
             error_root: get_folder_path(&project_root, "status/errors"),

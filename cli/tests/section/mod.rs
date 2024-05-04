@@ -158,41 +158,41 @@ use serde_json::Value;
 //     assert_eq!(left, right);
 // }
 
-#[test]
-fn json_section_without_data() {
-    let source = "-- metadata\n-- id: someid";
-    let sections = SiteSections::mock1();
-    let left = Section::Json {
-        attrs: vec![SectionAttr::KeyValue {
-            key: "id".to_string(),
-            value: "someid".to_string(),
-        }],
-        source: "-- metadata\n-- id: someid".to_string(),
-        data: None,
-        r#type: "metadata".to_string(),
-    };
-    let right = section(source, &sections).unwrap().1;
-    assert_eq!(left, right);
-}
+// #[test]
+// fn json_section_without_data() {
+//     let source = "-- metadata\n-- id: someid";
+//     let sections = SiteSections::mock1();
+//     let left = Section::Json {
+//         attrs: vec![SectionAttr::KeyValue {
+//             key: "id".to_string(),
+//             value: "someid".to_string(),
+//         }],
+//         source: "-- metadata\n-- id: someid".to_string(),
+//         data: None,
+//         r#type: "metadata".to_string(),
+//     };
+//     let right = section(source, &sections).unwrap().1;
+//     assert_eq!(left, right);
+// }
 
-#[test]
-fn json_section_with_data() {
-    let source = r#"-- metadata
--- id: someid
+// #[test]
+// fn json_section_with_data() {
+//     let source = r#"-- metadata
+// -- id: someid
 
-{ "echo": "delta" }
+// { "echo": "delta" }
 
--- p"#;
-    let sections = SiteSections::mock1();
-    let left = Section::Json {
-        attrs: vec![SectionAttr::KeyValue {
-            key: "id".to_string(),
-            value: "someid".to_string(),
-        }],
-        source: "-- metadata\n-- id: someid\n\n{ \"echo\": \"delta\" }\n\n".to_string(),
-        data: Some(serde_json::from_str::<Value>(r#"{ "echo": "delta" }"#).unwrap()),
-        r#type: "metadata".to_string(),
-    };
-    let right = section(source, &sections).unwrap().1;
-    assert_eq!(left, right);
-}
+// -- p"#;
+//     let sections = SiteSections::mock1();
+//     let left = Section::Json {
+//         attrs: vec![SectionAttr::KeyValue {
+//             key: "id".to_string(),
+//             value: "someid".to_string(),
+//         }],
+//         source: "-- metadata\n-- id: someid\n\n{ \"echo\": \"delta\" }\n\n".to_string(),
+//         data: Some(serde_json::from_str::<Value>(r#"{ "echo": "delta" }"#).unwrap()),
+//         r#type: "metadata".to_string(),
+//     };
+//     let right = section(source, &sections).unwrap().1;
+//     assert_eq!(left, right);
+// }

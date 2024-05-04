@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use crate::block::*;
 use crate::section_attr::*;
 use crate::site_sections::SiteSections;
@@ -80,12 +82,12 @@ pub enum SectionBounds {
 
 pub fn section<'a>(
     source: &'a str,
-    sections: &'a SiteSections,
+    sections: &'a BTreeMap<String, Vec<String>>,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, result) = alt((
-        |src| basic_section(src, &sections.basic),
-        |src| json_section(src, &sections.json),
-        |src| raw_section(src, &sections.raw),
+        |src| basic_section(src, &sections.get("basic").unwrap()),
+        //|src| json_section(src, &sections.json),
+        //|src| raw_section(src, &sections.raw),
     ))
     .context("section")
     .parse(source)?;
