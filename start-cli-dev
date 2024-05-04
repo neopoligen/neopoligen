@@ -6,4 +6,4 @@ watchexec\
   -r\
   -c\
   --workdir=cli\
-  ./helpers/do-dev-test-run
+  ./helpers/do-dev-test-run-cli
