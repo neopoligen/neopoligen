@@ -52,32 +52,17 @@ fn main() {
     if let Ok(engine_config) = load_engine_config_file(&engine_config_path) {
         match load_site_config_file(&neopoligen_root, &engine_config.dev.active_site) {
             Ok(mut site_config) => {
+                dbg!(&site_config);
                 site_config.load_sections();
-                // dbg!(&site_config);
-
                 let mut site = Site::new(site_config);
                 site.load_pages();
                 site.parse_pages();
-                dbg!(site);
+                let _ = empty_dir(&site.config.paths.get("errors_root").unwrap());
+                site.output_errors();
+                // dbg!(site);
             }
             Err(e) => println!("{}", e),
         }
-
-        // let site_conf = SiteConfig::new(engine_conf.dev.active_site);
-
-        // let site_conf = SiteConfig::new(engine_conf.dev.active_site);
-        // let mut site = Site::new(site_conf);
-        // site.load_pages();
-        // site.parse_pages();
-        // let _ = empty_dir(&site.config.folders.error_root);
-        // site.parsing_errors.iter().for_each(|p| {
-        //     if let Err(e) = write_file_with_mkdir(&p.0, &p.1) {
-        //         event!(Level::ERROR, "Could not write error file: {}", e);
-        //     }
-        // });
-        // site.missing_ids.iter().for_each(|p| {
-        //     let _ = write_file_with_mkdir(&p.0, &p.1);
-        // });
     } else {
         event!(
             Level::ERROR,
@@ -127,19 +112,6 @@ fn empty_dir(dir: &PathBuf) -> std::io::Result<()> {
     Ok(())
 }
 
-fn write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
-    match path.parent() {
-        Some(parent_dir) => match fs::create_dir_all(parent_dir) {
-            Ok(_) => match fs::write(path, content) {
-                Ok(_) => Ok(()),
-                Err(e) => Err(e.to_string()),
-            },
-            Err(e) => Err(e.to_string()),
-        },
-        None => Err("Could not make directory".to_string()),
-    }
-}
-
 fn load_site_config_file(neo_root: &PathBuf, acitve_site: &str) -> Result<SiteConfigV2, String> {
     let mut project_root = neo_root.clone();
     project_root.push(acitve_site);
@@ -163,7 +135,7 @@ fn load_site_config_file(neo_root: &PathBuf, acitve_site: &str) -> Result<SiteCo
                             );
                             config.paths.insert(
                                 "errors_root".to_string(),
-                                project_root.join(PathBuf::from("errors")),
+                                project_root.join(PathBuf::from("status/errors")),
                             );
                             config.paths.insert(
                                 "themes_root".to_string(),
@@ -176,10 +148,6 @@ fn load_site_config_file(neo_root: &PathBuf, acitve_site: &str) -> Result<SiteCo
                             config.paths.insert(
                                 "status_root".to_string(),
                                 project_root.join(PathBuf::from("status")),
-                            );
-                            config.paths.insert(
-                                "errors_root".to_string(),
-                                project_root.join(PathBuf::from("errors")),
                             );
                             config
                                 .paths

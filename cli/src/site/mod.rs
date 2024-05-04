@@ -36,6 +36,17 @@ impl Site {
 impl Site {
     //
 
+    pub fn output_errors(&self) {
+        self.parsing_errors.iter().for_each(|p| {
+            if let Err(e) = write_file_with_mkdir(&p.0, &p.1) {
+                event!(Level::ERROR, "Could not write error file: {}", e);
+            }
+        });
+        self.missing_ids.iter().for_each(|p| {
+            let _ = write_file_with_mkdir(&p.0, &p.1);
+        });
+    }
+
     pub fn parse_pages(&mut self) {
         self.content_files.iter().for_each(|f| {
             let error_file_path = replace_path(
@@ -136,5 +147,18 @@ fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result<Pat
     match path.strip_prefix(find) {
         Ok(path_part) => Ok(replace.clone().join(path_part)),
         Err(e) => Err(format!("Problem: {}", e)),
+    }
+}
+
+fn write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
+    match path.parent() {
+        Some(parent_dir) => match fs::create_dir_all(parent_dir) {
+            Ok(_) => match fs::write(path, content) {
+                Ok(_) => Ok(()),
+                Err(e) => Err(e.to_string()),
+            },
+            Err(e) => Err(e.to_string()),
+        },
+        None => Err("Could not make directory".to_string()),
     }
 }
