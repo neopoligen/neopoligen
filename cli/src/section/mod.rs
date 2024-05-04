@@ -10,9 +10,10 @@ use nom::character::complete::multispace0;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::eof;
+use nom::combinator::not;
 use nom::combinator::rest;
 use nom::multi::many0;
-use nom::multi::many1;
+// use nom::multi::many1;
 use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
@@ -24,9 +25,12 @@ use serde_json::Value;
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(tag = "kind", rename_all = "lowercase")]
 pub enum Section {
+    Base {
+        content: Vec<Block>,
+    },
     Basic {
         attrs: Vec<SectionAttr>,
-        content: Vec<Block>,
+        content: Vec<Section>,
         source: String,
         r#type: String,
     },
@@ -56,7 +60,7 @@ pub enum Section {
     },
     Unknown {
         attrs: Vec<SectionAttr>,
-        content: Vec<Block>,
+        content: Vec<Section>,
         source: String,
         r#type: String,
     },
@@ -103,23 +107,28 @@ pub fn basic_section_finder<'a>(
     key: &'a str,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let initial_source = source;
-    let (source, _) = tag("--").context("section").parse(source)?;
-    let (source, _) = space1.context("section").parse(source)?;
-    let (source, r#type) = tag(key).context("section").parse(source)?;
+    let (source, _) = tag("--").context("basic_section_finder").parse(source)?;
+    let (source, _) = space1.context("basic_section_finder").parse(source)?;
+    let (source, r#type) = tag(key).context("basic_section_finder").parse(source)?;
+    let (source, _) = not(tag("/"))
+        .context("basic_section_finder")
+        .parse(source)?;
     let (source, _) = alt((tuple((multispace0, eof)), tuple((space0, line_ending))))
-        .context("section")
+        .context("basic_section_finder")
         .parse(source)?;
-    let (source, attrs) = many0(section_attr).context("section").parse(source)?;
+    let (source, attrs) = many0(section_attr)
+        .context("basic_section_finder")
+        .parse(source)?;
     let (source, _) = alt((empty_line.map(|_| ""), eof))
-        .context("section")
+        .context("basic_section_finder")
         .parse(source)?;
-    let (source, result) = many0(block).context("section").parse(source)?;
+    let (source, result) = many0(block).context("basic_section_finder").parse(source)?;
     let initial_source = &initial_source.replace(source, "");
     Ok((
         source,
         Section::Basic {
             attrs,
-            content: result,
+            content: vec![Section::Base { content: result }],
             source: initial_source.to_string(),
             r#type: r#type.to_string(),
         },
