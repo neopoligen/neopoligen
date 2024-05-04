@@ -3,7 +3,7 @@ use crate::ast::ast;
 use crate::error::*;
 use crate::section::*;
 use crate::section_attr::SectionAttr;
-use crate::site_config::SiteConfigV2;
+use crate::site_config::SiteConfig;
 use serde::Serialize;
 use std::path::PathBuf;
 
@@ -20,7 +20,7 @@ pub struct Page {
 }
 
 impl Page {
-    pub fn new(source_text: String, source_path: PathBuf, config: &SiteConfigV2) -> Page {
+    pub fn new(source_text: String, source_path: PathBuf, config: &SiteConfig) -> Page {
         match ast(&source_text, &config.sections) {
             Ok(ast) => match get_page_id(&ast) {
                 Ok(id) => {
@@ -134,7 +134,7 @@ fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result<Pat
     }
 }
 
-fn get_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfigV2) -> Option<PathBuf> {
+fn get_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Option<PathBuf> {
     match get_page_path(ast) {
         Some(mut path) => {
             if path.is_absolute() {

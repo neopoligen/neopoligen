@@ -1,9 +1,9 @@
 use crate::ast::ast;
 use crate::section::Section;
-use crate::site_config::SiteConfigV2;
+use crate::site_config::SiteConfig;
 
 pub fn ast_mock1() -> Vec<Section> {
-    let config = SiteConfigV2::mock1();
+    let config = SiteConfig::mock1();
     let content = r#"-- title
 
 This is a title

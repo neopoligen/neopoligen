@@ -1,7 +1,7 @@
 use neopoligengine::block::*;
 use neopoligengine::section::*;
 use neopoligengine::section_attr::SectionAttr;
-use neopoligengine::site_config::SiteConfigV2;
+use neopoligengine::site_config::SiteConfig;
 use neopoligengine::span::*;
 use pretty_assertions::assert_eq;
 use serde_json::Value;
@@ -9,7 +9,7 @@ use serde_json::Value;
 #[test]
 fn basic_section() {
     let source = "-- p\n\nyankee romeo";
-    let config = SiteConfigV2::mock1();
+    let config = SiteConfig::mock1();
     let left = Section::Basic {
         attrs: vec![],
         bounds: SectionBounds::Full,
@@ -36,7 +36,7 @@ fn basic_section() {
 #[test]
 fn empty_section_no_attrs() {
     let source = "-- p\n\n";
-    let config = SiteConfigV2::mock1();
+    let config = SiteConfig::mock1();
     let left = Section::Basic {
         attrs: vec![],
         bounds: SectionBounds::Full,
@@ -51,7 +51,7 @@ fn empty_section_no_attrs() {
 #[test]
 fn empty_section_no_attrs_only_one_newline() {
     let source = "-- p\n";
-    let config = SiteConfigV2::mock1();
+    let config = SiteConfig::mock1();
     let left = Section::Basic {
         attrs: vec![],
         bounds: SectionBounds::Full,
@@ -66,7 +66,7 @@ fn empty_section_no_attrs_only_one_newline() {
 #[test]
 fn multiple_paragraphs() {
     let source = "-- div\n\nsierra tango\n\nindia lima\n\n";
-    let config = SiteConfigV2::mock1();
+    let config = SiteConfig::mock1();
     let left = Section::Basic {
         attrs: vec![],
         bounds: SectionBounds::Full,
@@ -108,7 +108,7 @@ fn multiple_paragraphs() {
 #[test]
 fn flag_attribute() {
     let source = "-- title\n-- flag-attr\n\nhotel papa";
-    let config = SiteConfigV2::mock1();
+    let config = SiteConfig::mock1();
     let left = Section::Basic {
         attrs: vec![SectionAttr::Flag {
             key: "flag-attr".to_string(),
@@ -137,7 +137,7 @@ fn flag_attribute() {
 #[test]
 fn kv_attr_test() {
     let source = "-- title\n-- key: value\n\nhotel papa";
-    let config = SiteConfigV2::mock1();
+    let config = SiteConfig::mock1();
     let left = Section::Basic {
         attrs: vec![SectionAttr::KeyValue {
             key: "key".to_string(),
@@ -167,7 +167,7 @@ fn kv_attr_test() {
 #[test]
 fn json_section_without_data() {
     let source = "-- metadata\n-- id: someid";
-    let config = SiteConfigV2::mock1();
+    let config = SiteConfig::mock1();
     let left = Section::Json {
         attrs: vec![SectionAttr::KeyValue {
             key: "id".to_string(),
@@ -190,7 +190,7 @@ fn json_section_with_data() {
 { "echo": "delta" }
 
 -- p"#;
-    let config = SiteConfigV2::mock1();
+    let config = SiteConfig::mock1();
     let left = Section::Json {
         attrs: vec![SectionAttr::KeyValue {
             key: "id".to_string(),

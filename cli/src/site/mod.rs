@@ -1,7 +1,7 @@
 use crate::page::Page;
 // use crate::section::Section;
 // use crate::section_attr::SectionAttr;
-use crate::site_config::SiteConfigV2;
+use crate::site_config::SiteConfig;
 use minijinja::context;
 //use minijinja::syntax;
 // use crate::error::Error;
@@ -18,7 +18,7 @@ use walkdir::WalkDir;
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct Site {
-    pub config: SiteConfigV2,
+    pub config: SiteConfig,
     pub page_errors: BTreeMap<PathBuf, Page>,
     pub missing_ids: BTreeMap<PathBuf, String>,
     pub pages: BTreeMap<String, Page>,
@@ -28,7 +28,7 @@ pub struct Site {
 
 impl Site {
     #[instrument]
-    pub fn new(config: SiteConfigV2) -> Site {
+    pub fn new(config: SiteConfig) -> Site {
         event!(Level::DEBUG, "Creating Site Object");
         Site {
             config,

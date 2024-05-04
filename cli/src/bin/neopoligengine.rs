@@ -3,7 +3,7 @@ use dirs::document_dir;
 use neopoligengine::engine_config::EngineConfig;
 use neopoligengine::site::Site;
 // use neopoligengine::site_config::SiteConfig;
-use neopoligengine::site_config::SiteConfigV2;
+use neopoligengine::site_config::SiteConfig;
 use std::fs;
 use std::path::PathBuf;
 use tracing::{event, instrument, Level};
@@ -117,7 +117,7 @@ fn empty_dir(dir: &PathBuf) -> std::io::Result<()> {
     Ok(())
 }
 
-fn load_site_config_file(neo_root: &PathBuf, acitve_site: &str) -> Result<SiteConfigV2, String> {
+fn load_site_config_file(neo_root: &PathBuf, acitve_site: &str) -> Result<SiteConfig, String> {
     let mut project_root = neo_root.clone();
     project_root.push(acitve_site);
     let mut site_config_path = project_root.clone();
@@ -126,7 +126,7 @@ fn load_site_config_file(neo_root: &PathBuf, acitve_site: &str) -> Result<SiteCo
         Ok(exists) => {
             if exists == true {
                 match fs::read_to_string(&site_config_path) {
-                    Ok(text) => match serde_json::from_str::<SiteConfigV2>(text.as_str()) {
+                    Ok(text) => match serde_json::from_str::<SiteConfig>(text.as_str()) {
                         Ok(mut config) => {
                             config
                                 .paths

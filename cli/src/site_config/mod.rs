@@ -10,7 +10,7 @@ use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
-pub struct SiteConfigV2 {
+pub struct SiteConfig {
     #[serde(default = "default_language")]
     pub default_language: String,
 
@@ -31,7 +31,7 @@ pub struct ThemeConfig {
     pub options: Value,
 }
 
-impl SiteConfigV2 {
+impl SiteConfig {
     pub fn load_sections(&mut self) {
         self.sections.insert(
             "basic".to_string(),
