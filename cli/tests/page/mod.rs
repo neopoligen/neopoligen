@@ -7,10 +7,10 @@ use neopoligengine::page::Page;
 use neopoligengine::site_config::SiteConfigV2;
 use pretty_assertions::assert_eq;
 // use serde_json::Value;
-// use std::path::{, PathBuf};
+use std::path::PathBuf;
 
 #[test]
-fn output_path_default() {
+fn get_id() {
     let source_text = "-- metadata\n-- id: some-test-id".to_string();
     let config = SiteConfigV2::mock1();
     let p = Page::new(source_text, &config);
@@ -19,5 +19,12 @@ fn output_path_default() {
     assert_eq!(left, right);
 }
 
-//     let left = PathBuf::from("/example/docs/en/asdf/index.html");
-//     let right = p.output_path.unwrap();
+#[test]
+fn get_default_path() {
+    let source_text = "-- metadata\n-- id: some-test-id".to_string();
+    let config = SiteConfigV2::mock1();
+    let p = Page::new(source_text, &config);
+    let left = PathBuf::from("/mock/output/root/en/some-test-id/index.html");
+    let right = p.output_path.unwrap();
+    assert_eq!(left, right);
+}

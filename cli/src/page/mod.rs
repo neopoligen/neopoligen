@@ -23,15 +23,22 @@ impl Page {
     pub fn new(source_text: String, config: &SiteConfigV2) -> Page {
         match ast(&source_text, &config.sections) {
             Ok(ast) => match get_page_id(&ast) {
-                Ok(id) => Page {
-                    ast: Some(ast),
-                    error: None,
-                    folders: vec![],
-                    id: Some(id),
-                    output_path: None,
-                    source_text,
-                    tags: vec![],
-                },
+                Ok(id) => {
+                    let output_path = Some(config.paths.get("output_root").unwrap().join(format!(
+                        "{}/{}/index.html",
+                        config.default_language.clone(),
+                        id.clone()
+                    )));
+                    Page {
+                        ast: Some(ast),
+                        error: None,
+                        folders: vec![],
+                        id: Some(id),
+                        output_path,
+                        source_text,
+                        tags: vec![],
+                    }
+                }
                 Err(e) => Page {
                     ast: None,
                     error: Some(e),
