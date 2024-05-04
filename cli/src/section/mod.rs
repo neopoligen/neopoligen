@@ -130,7 +130,7 @@ fn json_section<'a>(
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, result) = list.iter().fold(initial_error(), |acc, item| match acc {
         Ok(v) => Ok(v),
-        _ => basic_section_finder(source, item),
+        _ => json_section_finder(source, item),
     })?;
     Ok((source, result))
 }
@@ -154,9 +154,9 @@ pub fn json_section_finder<'a>(
     let initial_source = &initial_source.replace(source, "");
     Ok((
         source,
-        Section::Basic {
+        Section::Json {
             attrs,
-            content: result,
+            object: None,
             source: initial_source.to_string(),
             r#type: r#type.to_string(),
         },

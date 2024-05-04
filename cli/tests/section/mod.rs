@@ -159,15 +159,17 @@ fn kv_attr_test() {
 }
 
 #[test]
-#[ignore]
 fn json_section() {
-    let source = "-- metadata\n-- id: someid\n\nasf";
+    let source = "-- metadata\n-- id: someid";
     let sections = SiteSections::mock1();
     let left = Section::Json {
-        attrs: vec![],
+        attrs: vec![SectionAttr::KeyValue {
+            key: "id".to_string(),
+            value: "someid".to_string(),
+        }],
         source: "-- metadata\n-- id: someid".to_string(),
         object: None,
-        r#type: "p".to_string(),
+        r#type: "metadata".to_string(),
     };
     let right = section(source, &sections).unwrap().1;
     assert_eq!(left, right);
