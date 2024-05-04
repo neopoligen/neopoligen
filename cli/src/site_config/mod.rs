@@ -1,3 +1,4 @@
+use crate::site_sections::SiteSections;
 use dirs::document_dir;
 use serde::Serialize;
 use std::path::PathBuf;
@@ -16,16 +17,6 @@ pub struct SiteFolders {
     pub output_root: PathBuf,
     pub project_root: PathBuf,
     pub themes_root: PathBuf,
-}
-
-#[derive(Clone, Debug, PartialEq, Serialize)]
-#[serde(tag = "type", rename_all = "lowercase")]
-pub struct SiteSections {
-    basic: Vec<String>,
-    checklist: Vec<String>,
-    json: Vec<String>,
-    list: Vec<String>,
-    raw: Vec<String>,
 }
 
 impl SiteConfig {

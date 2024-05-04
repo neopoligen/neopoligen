@@ -1,5 +1,6 @@
 use crate::block::*;
 use crate::section_attr::*;
+use crate::site_sections::SiteSections;
 use crate::span::empty_line;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
@@ -63,8 +64,11 @@ pub enum SectionBounds {
     Start,
 }
 
-pub fn section(source: &str) -> IResult<&str, Section, ErrorTree<&str>> {
-    let initial_source = source.clone();
+pub fn section<'a>(
+    source: &'a str,
+    _sections: &'a SiteSections,
+) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let initial_source = source;
     let (source, _) = tag("--").context("section").parse(source)?;
     let (source, _) = space1.context("section").parse(source)?;
     let (source, r#type) = is_not(" \n\t").context("section").parse(source)?;

@@ -1,12 +1,14 @@
 use neopoligengine::ast::*;
 use neopoligengine::block::*;
 use neopoligengine::section::*;
+use neopoligengine::site_sections::*;
 use neopoligengine::span::*;
 use pretty_assertions::assert_eq;
 
 #[test]
 fn basic_page_parse() {
     let source = "-- title\n\necho foxtrot";
+    let sections = SiteSections::mock1();
     let left = vec![Section::Basic {
         attrs: vec![],
         content: vec![Block::Paragraph {
@@ -25,13 +27,14 @@ fn basic_page_parse() {
         source: "-- title\n\necho foxtrot".to_string(),
         r#type: "title".to_string(),
     }];
-    let right = ast(source).unwrap().1;
+    let right = ast(source, &sections).unwrap().1;
     assert_eq!(left, right);
 }
 
 #[test]
 fn multiple_paragraphs() {
     let source = "-- p\n\nwhiskey tango\n\npapa juliet";
+    let sections = SiteSections::mock1();
     let left = vec![Section::Basic {
         attrs: vec![],
         content: vec![
@@ -65,13 +68,14 @@ fn multiple_paragraphs() {
         source: "-- p\n\nwhiskey tango\n\npapa juliet".to_string(),
         r#type: "p".to_string(),
     }];
-    let right = ast(source).unwrap().1;
+    let right = ast(source, &sections).unwrap().1;
     assert_eq!(left, right);
 }
 
 #[test]
 fn multiple_sections() {
     let source = "-- note\n\ntango echo\n\n-- div\n\ndelta alfa";
+    let sections = SiteSections::mock1();
     let left = vec![
         Section::Basic {
             attrs: vec![],
@@ -110,6 +114,6 @@ fn multiple_sections() {
             r#type: "div".to_string(),
         },
     ];
-    let right = ast(source).unwrap().1;
+    let right = ast(source, &sections).unwrap().1;
     assert_eq!(left, right);
 }

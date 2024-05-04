@@ -1,12 +1,14 @@
 use neopoligengine::block::*;
 use neopoligengine::section::*;
 use neopoligengine::section_attr::SectionAttr;
+use neopoligengine::site_sections::SiteSections;
 use neopoligengine::span::*;
 use pretty_assertions::assert_eq;
 
 #[test]
 fn basic_section() {
     let source = "-- p\n\nyankee romeo";
+    let sections = SiteSections::mock1();
     let left = Section::Basic {
         attrs: vec![],
         content: vec![Block::Paragraph {
@@ -25,13 +27,14 @@ fn basic_section() {
         source: "-- p\n\nyankee romeo".to_string(),
         r#type: "p".to_string(),
     };
-    let right = section(source).unwrap().1;
+    let right = section(source, &sections).unwrap().1;
     assert_eq!(left, right);
 }
 
 #[test]
 fn multiple_paragraphs() {
     let source = "-- div\n\nsierra tango\n\nindia lima\n\n";
+    let sections = SiteSections::mock1();
     let left = Section::Basic {
         attrs: vec![],
         content: vec![
@@ -65,13 +68,14 @@ fn multiple_paragraphs() {
         source: "-- div\n\nsierra tango\n\nindia lima\n\n".to_string(),
         r#type: "div".to_string(),
     };
-    let right = section(source).unwrap().1;
+    let right = section(source, &sections).unwrap().1;
     assert_eq!(left, right);
 }
 
 #[test]
 fn flag_attribute() {
     let source = "-- title\n-- flag-attr\n\nhotel papa";
+    let sections = SiteSections::mock1();
     let left = Section::Basic {
         attrs: vec![SectionAttr::Flag {
             key: "flag-attr".to_string(),
@@ -92,13 +96,14 @@ fn flag_attribute() {
         source: "-- title\n-- flag-attr\n\nhotel papa".to_string(),
         r#type: "title".to_string(),
     };
-    let right = section(source).unwrap().1;
+    let right = section(source, &sections).unwrap().1;
     assert_eq!(left, right);
 }
 
 #[test]
 fn kv_attr_test() {
     let source = "-- title\n-- key: value\n\nhotel papa";
+    let sections = SiteSections::mock1();
     let left = Section::Basic {
         attrs: vec![SectionAttr::KeyValue {
             key: "key".to_string(),
@@ -120,6 +125,6 @@ fn kv_attr_test() {
         source: "-- title\n-- key: value\n\nhotel papa".to_string(),
         r#type: "title".to_string(),
     };
-    let right = section(source).unwrap().1;
+    let right = section(source, &sections).unwrap().1;
     assert_eq!(left, right);
 }

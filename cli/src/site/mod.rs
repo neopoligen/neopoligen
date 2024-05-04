@@ -29,9 +29,11 @@ impl Site {
 impl Site {
     pub fn parse_pages(&mut self) {
         self.content_files.iter().for_each(|f| {
-            let ast = ast(f.1);
-            dbg!(ast);
-
+            let ast = ast(f.1, &self.config.sections);
+            match ast {
+                Ok(_) => (),
+                Err(_) => (),
+            };
             ()
         })
     }
