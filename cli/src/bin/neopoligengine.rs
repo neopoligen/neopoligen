@@ -50,13 +50,11 @@ fn main() {
     engine_config_path.push("config-v0-1-0.json");
 
     if let Ok(engine_config) = load_engine_config_file(&engine_config_path) {
-        // let mut site_config_path = neopoligen_root.clone();
-        // site_config_path.push(engine_config.dev.active_site);
-        //site_config_path.push("config.json");
         match load_site_config_file(&neopoligen_root, &engine_config.dev.active_site) {
             Ok(site_config) => {
-                dbg!(site_config);
-                ()
+                let mut site = Site::new(site_config);
+                site.load_pages();
+                // site.parse_pages();
             }
             Err(e) => println!("{}", e),
         }

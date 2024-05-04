@@ -74,35 +74,35 @@ impl Site {
     //     });
     // }
 
-    // #[instrument]
-    // pub fn load_pages(&mut self) {
-    //     let dir = &self.config.folders.content_root;
-    //     if dir.exists() {
-    //         WalkDir::new(dir)
-    //             .into_iter()
-    //             .filter(|entry| match entry.as_ref().unwrap().path().extension() {
-    //                 Some(ext) => ext.to_str().unwrap() == "neo",
-    //                 None => false,
-    //             })
-    //             .for_each(|entry| {
-    //                 let path = entry.as_ref().unwrap().path().to_path_buf();
-    //                 match fs::read_to_string(&path) {
-    //                     Ok(content) => {
-    //                         self.content_files.insert(path, content);
-    //                     }
-    //                     Err(e) => {
-    //                         event!(Level::ERROR, "{}", e)
-    //                     }
-    //                 }
-    //             });
-    //     } else {
-    //         event!(
-    //             Level::ERROR,
-    //             "Direcotory does not exist: {}",
-    //             &dir.display()
-    //         );
-    //     }
-    // }
+    #[instrument]
+    pub fn load_pages(&mut self) {
+        let dir = &self.config.paths.get("content_root").unwrap();
+        if dir.exists() {
+            WalkDir::new(dir)
+                .into_iter()
+                .filter(|entry| match entry.as_ref().unwrap().path().extension() {
+                    Some(ext) => ext.to_str().unwrap() == "neo",
+                    None => false,
+                })
+                .for_each(|entry| {
+                    let path = entry.as_ref().unwrap().path().to_path_buf();
+                    match fs::read_to_string(&path) {
+                        Ok(content) => {
+                            self.content_files.insert(path, content);
+                        }
+                        Err(e) => {
+                            event!(Level::ERROR, "{}", e)
+                        }
+                    }
+                });
+        } else {
+            event!(
+                Level::ERROR,
+                "Direcotory does not exist: {}",
+                &dir.display()
+            );
+        }
+    }
 
     //
 }
