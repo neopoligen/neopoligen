@@ -1,8 +1,6 @@
 use dirs::document_dir;
-//use neopoligengine::engine_config;
 use neopoligengine::engine_config::EngineConfig;
 use neopoligengine::site::Site;
-// use neopoligengine::site_config::SiteConfig;
 use neopoligengine::site_config::SiteConfig;
 use std::fs;
 use std::path::PathBuf;
@@ -53,18 +51,7 @@ fn main() {
         match load_site_config_file(&neopoligen_root, &engine_config.dev.active_site) {
             Ok(mut site_config) => {
                 site_config.load_sections();
-                let mut site = Site::new(site_config);
-                site.load_templates();
-                site.load_source_files();
-                site.parse_pages();
-                let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
-                let _ = empty_dir(&site.config.paths.get("errors_root").unwrap());
-                site.generate_content_pages().iter().for_each(|p| {
-                    let _ = write_file_with_mkdir(p.0, p.1);
-                });
-                site.page_errors.iter().for_each(|p| {
-                    let _ = write_file_with_mkdir(p.0, &p.1.error.clone().unwrap().to_string());
-                });
+                build_site(&site_config);
             }
             Err(e) => println!("{}", e),
         }
@@ -75,6 +62,21 @@ fn main() {
             engine_config_path.display()
         );
     }
+}
+
+fn build_site(site_config: &SiteConfig){
+    let mut site = Site::new(site_config.clone());
+    site.load_templates();
+    site.load_source_files();
+    site.parse_pages();
+    let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
+    let _ = empty_dir(&site.config.paths.get("errors_root").unwrap());
+    site.generate_content_pages().iter().for_each(|p| {
+        let _ = write_file_with_mkdir(p.0, p.1);
+    });
+    site.page_errors.iter().for_each(|p| {
+        let _ = write_file_with_mkdir(p.0, &p.1.error.clone().unwrap().to_string());
+    });
 }
 
 fn load_engine_config_file(path: &PathBuf) -> Result<EngineConfig, String> {
