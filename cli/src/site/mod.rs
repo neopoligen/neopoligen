@@ -40,7 +40,10 @@ impl Site {
                         &self.config.folders.content_root,
                         &self.config.folders.error_root,
                     );
-                    write_file_with_mkdir(&error_file_path.unwrap(), &e.to_string());
+                    let _ = write_file_with_mkdir(
+                        &error_file_path.unwrap().with_extension("txt"),
+                        &e.to_string(),
+                    );
 
                     // dbg!(e);
                     ()

@@ -35,7 +35,12 @@ impl SiteConfig {
         SiteConfig {
             folders,
             sections: SiteSections {
-                basic: vec!["p".to_string(), "div".to_string(), "note".to_string()],
+                basic: vec![
+                    "title".to_string(),
+                    "p".to_string(),
+                    "div".to_string(),
+                    "note".to_string(),
+                ],
                 checklist: vec!["checklist".to_string()],
                 json: vec!["metadata".to_string()],
                 list: vec!["list".to_string()],
