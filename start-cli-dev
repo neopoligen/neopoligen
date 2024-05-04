@@ -1,5 +1,6 @@
 #!/bin/bash
 
+export NEOENV=dev
 watchexec\
   -E NEOENV=dev\
   -e rs,neojinja,neo\

@@ -44,11 +44,14 @@ fn main() {
         .with(stdout_layer);
     tracing::subscriber::set_global_default(subscriber).expect("unable to set global subscriber");
 
-    let mut engine_config_path = neopoligen_root.clone();
-    engine_config_path.push("config-v0-1-0.json");
+    let engine_config_path = match std::env::var("NEOENV") {
+        Ok(val) => neopoligen_root.join(PathBuf::from(format!("config-{}.json", val)))
+        ,
+        Err(_) => neopoligen_root.join(PathBuf::from(format!("config.json")))
+    };
 
     if let Ok(engine_config) = load_engine_config_file(&engine_config_path) {
-        match load_site_config_file(&neopoligen_root, &engine_config.dev.active_site) {
+        match load_site_config_file(&neopoligen_root, &engine_config.active_site) {
             Ok(mut site_config) => {
                 site_config.load_sections();
                 build_site(&site_config);
@@ -64,7 +67,7 @@ fn main() {
     }
 }
 
-fn build_site(site_config: &SiteConfig){
+fn build_site(site_config: &SiteConfig) {
     let mut site = Site::new(site_config.clone());
     site.load_templates();
     site.load_source_files();
