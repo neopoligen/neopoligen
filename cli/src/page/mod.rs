@@ -24,11 +24,7 @@ impl Page {
         match ast(&source_text, &config.sections) {
             Ok(ast) => match get_page_id(&ast) {
                 Ok(id) => {
-                    let output_path = Some(config.paths.get("output_root").unwrap().join(format!(
-                        "{}/{}/index.html",
-                        config.default_language.clone(),
-                        id.clone()
-                    )));
+                    let output_path = get_output_path(&id, &ast, &config);
                     Page {
                         ast: Some(ast),
                         error: None,
@@ -112,4 +108,12 @@ fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result<Pat
         Ok(path_part) => Ok(replace.clone().join(path_part)),
         Err(e) => Err(format!("{}", e)), // todo make this a better error
     }
+}
+
+fn get_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfigV2) -> Option<PathBuf> {
+    Some(config.paths.get("output_root").unwrap().join(format!(
+        "{}/{}/index.html",
+        config.default_language.clone(),
+        id.clone()
+    )))
 }
