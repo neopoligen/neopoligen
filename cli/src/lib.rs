@@ -4,7 +4,6 @@ pub mod builder;
 pub mod engine_config;
 pub mod error;
 pub mod page;
-pub mod page_error;
 pub mod section;
 pub mod section_attr;
 pub mod site;
