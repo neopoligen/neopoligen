@@ -51,6 +51,8 @@ fn main() {
         let mut site = Site::new(site_conf);
         site.load_pages();
         site.parse_pages();
+        dbg!(site.pages);
+
         // dbg!(site);
         // dbg!(&site_conf.folders.content_root);
         // dbg!(fs);

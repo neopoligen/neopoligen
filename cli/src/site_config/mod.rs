@@ -17,6 +17,7 @@ pub struct SiteFolders {
     pub output_root: PathBuf,
     pub project_root: PathBuf,
     pub themes_root: PathBuf,
+    pub error_root: PathBuf,
 }
 
 impl SiteConfig {
@@ -27,6 +28,7 @@ impl SiteConfig {
         let folders = SiteFolders {
             project_root: project_root.clone(),
             content_root: get_folder_path(&project_root, "content"),
+            error_root: get_folder_path(&project_root, "errors"),
             output_root: get_folder_path(&project_root, "docs"),
             themes_root: get_folder_path(&project_root, "themes"),
         };

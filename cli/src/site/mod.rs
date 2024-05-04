@@ -11,9 +11,9 @@ use walkdir::WalkDir;
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct Site {
-    config: SiteConfig,
-    content_files: BTreeMap<PathBuf, String>,
-    pages: BTreeMap<String, Page>,
+    pub config: SiteConfig,
+    pub content_files: BTreeMap<PathBuf, String>,
+    pub pages: BTreeMap<String, Page>,
 }
 
 impl Site {
@@ -29,10 +29,22 @@ impl Site {
 impl Site {
     pub fn parse_pages(&mut self) {
         self.content_files.iter().for_each(|f| {
-            let ast = ast(f.1, &self.config.sections);
-            match ast {
-                Ok(_) => (),
-                Err(_) => (),
+            match ast(f.1, &self.config.sections) {
+                Ok(data) => {
+                    // dbg!(data);
+                    ()
+                }
+                Err(e) => {
+                    let error_file_path = replace_path(
+                        &f.0,
+                        &self.config.folders.content_root,
+                        &self.config.folders.error_root,
+                    );
+                    write_file_with_mkdir(&error_file_path.unwrap(), &e.to_string());
+
+                    // dbg!(e);
+                    ()
+                }
             };
             ()
         })
@@ -63,5 +75,25 @@ impl Site {
         } else {
             println!("Error, dir does not exist");
         }
+    }
+}
+
+fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result<PathBuf, String> {
+    match path.strip_prefix(find) {
+        Ok(path_part) => Ok(replace.clone().join(path_part)),
+        Err(e) => Err("Problem".to_string()), // todo make this a better error
+    }
+}
+
+fn write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
+    match path.parent() {
+        Some(parent_dir) => match fs::create_dir_all(parent_dir) {
+            Ok(_) => match fs::write(path, content) {
+                Ok(_) => Ok(()),
+                Err(e) => Err(e.to_string()),
+            },
+            Err(e) => Err(e.to_string()),
+        },
+        None => Err("Could not make directory".to_string()),
     }
 }
