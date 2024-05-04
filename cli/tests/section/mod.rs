@@ -2,10 +2,10 @@ use neopoligengine::block::*;
 use neopoligengine::section::*;
 use neopoligengine::section_attr::SectionAttr;
 // use neopoligengine::site_sections::SiteSections;
+use neopoligengine::site_config::SiteConfigV2;
 use neopoligengine::span::*;
 use pretty_assertions::assert_eq;
-// use serde_json::Value;
-use neopoligengine::site_config::SiteConfigV2;
+use serde_json::Value;
 
 #[test]
 fn basic_section() {
@@ -135,70 +135,73 @@ fn flag_attribute() {
     assert_eq!(left, right);
 }
 
-// #[test]
-// fn kv_attr_test() {
-//     let source = "-- title\n-- key: value\n\nhotel papa";
-//     let sections = SiteSections::mock1();
-//     let left = Section::Basic {
-//         attrs: vec![SectionAttr::KeyValue {
-//             key: "key".to_string(),
-//             value: "value".to_string(),
-//         }],
-//         content: vec![Block::Paragraph {
-//             spans: vec![
-//                 Span::WordPart {
-//                     text: "hotel".to_string(),
-//                 },
-//                 Span::Space {
-//                     text: " ".to_string(),
-//                 },
-//                 Span::WordPart {
-//                     text: "papa".to_string(),
-//                 },
-//             ],
-//         }],
-//         source: "-- title\n-- key: value\n\nhotel papa".to_string(),
-//         r#type: "title".to_string(),
-//     };
-//     let right = section(source, &sections).unwrap().1;
-//     assert_eq!(left, right);
-// }
+#[test]
+fn kv_attr_test() {
+    let source = "-- title\n-- key: value\n\nhotel papa";
+    let config = SiteConfigV2::mock1();
+    let left = Section::Basic {
+        attrs: vec![SectionAttr::KeyValue {
+            key: "key".to_string(),
+            value: "value".to_string(),
+        }],
+        bounds: SectionBounds::Full,
+        content: vec![Block::Paragraph {
+            spans: vec![
+                Span::WordPart {
+                    text: "hotel".to_string(),
+                },
+                Span::Space {
+                    text: " ".to_string(),
+                },
+                Span::WordPart {
+                    text: "papa".to_string(),
+                },
+            ],
+        }],
+        source: "-- title\n-- key: value\n\nhotel papa".to_string(),
+        r#type: "title".to_string(),
+    };
+    let right = section(source, &config.sections).unwrap().1;
+    assert_eq!(left, right);
+}
 
-// #[test]
-// fn json_section_without_data() {
-//     let source = "-- metadata\n-- id: someid";
-//     let sections = SiteSections::mock1();
-//     let left = Section::Json {
-//         attrs: vec![SectionAttr::KeyValue {
-//             key: "id".to_string(),
-//             value: "someid".to_string(),
-//         }],
-//         source: "-- metadata\n-- id: someid".to_string(),
-//         data: None,
-//         r#type: "metadata".to_string(),
-//     };
-//     let right = section(source, &sections).unwrap().1;
-//     assert_eq!(left, right);
-// }
+#[test]
+fn json_section_without_data() {
+    let source = "-- metadata\n-- id: someid";
+    let config = SiteConfigV2::mock1();
+    let left = Section::Json {
+        attrs: vec![SectionAttr::KeyValue {
+            key: "id".to_string(),
+            value: "someid".to_string(),
+        }],
+        bounds: SectionBounds::Full,
+        source: "-- metadata\n-- id: someid".to_string(),
+        data: None,
+        r#type: "metadata".to_string(),
+    };
+    let right = section(source, &config.sections).unwrap().1;
+    assert_eq!(left, right);
+}
 
-// #[test]
-// fn json_section_with_data() {
-//     let source = r#"-- metadata
-// -- id: someid
+#[test]
+fn json_section_with_data() {
+    let source = r#"-- metadata
+-- id: someid
 
-// { "echo": "delta" }
+{ "echo": "delta" }
 
-// -- p"#;
-//     let sections = SiteSections::mock1();
-//     let left = Section::Json {
-//         attrs: vec![SectionAttr::KeyValue {
-//             key: "id".to_string(),
-//             value: "someid".to_string(),
-//         }],
-//         source: "-- metadata\n-- id: someid\n\n{ \"echo\": \"delta\" }\n\n".to_string(),
-//         data: Some(serde_json::from_str::<Value>(r#"{ "echo": "delta" }"#).unwrap()),
-//         r#type: "metadata".to_string(),
-//     };
-//     let right = section(source, &sections).unwrap().1;
-//     assert_eq!(left, right);
-// }
+-- p"#;
+    let config = SiteConfigV2::mock1();
+    let left = Section::Json {
+        attrs: vec![SectionAttr::KeyValue {
+            key: "id".to_string(),
+            value: "someid".to_string(),
+        }],
+        bounds: SectionBounds::Full,
+        source: "-- metadata\n-- id: someid\n\n{ \"echo\": \"delta\" }\n\n".to_string(),
+        data: Some(serde_json::from_str::<Value>(r#"{ "echo": "delta" }"#).unwrap()),
+        r#type: "metadata".to_string(),
+    };
+    let right = section(source, &config.sections).unwrap().1;
+    assert_eq!(left, right);
+}
