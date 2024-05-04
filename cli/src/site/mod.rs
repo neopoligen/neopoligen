@@ -5,7 +5,7 @@ use serde::Serialize;
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
-// use walkdir::DirEntry;
+use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
@@ -32,8 +32,8 @@ impl Site {
     pub fn parse_pages(&mut self) {
         self.content_files.iter().for_each(|f| {
             match ast(f.1, &self.config.sections) {
-                Ok(data) => {
-                    // dbg!(data);
+                Ok(ast) => {
+                    dbg!(ast);
                     ()
                 }
                 Err(e) => {
@@ -49,6 +49,7 @@ impl Site {
         })
     }
 
+    #[instrument]
     pub fn load_pages(&mut self) {
         let dir = &self.config.folders.content_root;
         if dir.exists() {
@@ -63,16 +64,18 @@ impl Site {
                     match fs::read_to_string(&path) {
                         Ok(content) => {
                             self.content_files.insert(path, content);
-                            ()
                         }
                         Err(e) => {
-                            println!("{}", e);
-                            ()
+                            event!(Level::ERROR, "{}", e)
                         }
                     }
                 });
         } else {
-            println!("Error, dir does not exist");
+            event!(
+                Level::ERROR,
+                "Direcotory does not exist: {}",
+                &dir.display()
+            );
         }
     }
 }
@@ -80,6 +83,6 @@ impl Site {
 fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result<PathBuf, String> {
     match path.strip_prefix(find) {
         Ok(path_part) => Ok(replace.clone().join(path_part)),
-        Err(e) => Err("Problem".to_string()), // todo make this a better error
+        Err(e) => Err(format!("Problem: {}", e)),
     }
 }

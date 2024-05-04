@@ -51,18 +51,12 @@ fn main() {
         let mut site = Site::new(site_conf);
         site.load_pages();
         site.parse_pages();
-        //dbg!(site.pages);
         let _ = empty_dir(&site.config.folders.error_root);
         site.parsing_errors.iter().for_each(|p| {
             if let Err(e) = write_file_with_mkdir(&p.0, &p.1) {
                 event!(Level::ERROR, "Could not write error file: {}", e);
             }
         });
-
-        // dbg!(site);
-        // dbg!(&site_conf.folders.content_root);
-        // dbg!(fs);
-        //dbg!(site_conf);
     } else {
         event!(Level::ERROR, "Could not open config file");
     }
