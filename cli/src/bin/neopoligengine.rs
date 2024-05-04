@@ -52,14 +52,15 @@ fn main() {
     if let Ok(engine_config) = load_engine_config_file(&engine_config_path) {
         match load_site_config_file(&neopoligen_root, &engine_config.dev.active_site) {
             Ok(mut site_config) => {
-                dbg!(&site_config);
+                // dbg!(&site_config);
                 site_config.load_sections();
                 let mut site = Site::new(site_config);
-                site.load_pages();
-                site.parse_pages();
-                let _ = empty_dir(&site.config.paths.get("errors_root").unwrap());
-                site.output_errors();
-                // dbg!(site);
+                site.load_templates();
+                dbg!(site.templates);
+                // site.load_pages();
+                // site.parse_pages();
+                // let _ = empty_dir(&site.config.paths.get("errors_root").unwrap());
+                // site.output_errors();
             }
             Err(e) => println!("{}", e),
         }

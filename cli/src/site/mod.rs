@@ -17,6 +17,7 @@ pub struct Site {
     pub missing_ids: BTreeMap<PathBuf, String>,
     pub pages: BTreeMap<String, Page>,
     pub parsing_errors: BTreeMap<PathBuf, String>,
+    pub templates: BTreeMap<String, String>,
 }
 
 impl Site {
@@ -29,6 +30,7 @@ impl Site {
             missing_ids: BTreeMap::new(),
             pages: BTreeMap::new(),
             parsing_errors: BTreeMap::new(),
+            templates: BTreeMap::new(),
         }
     }
 }
@@ -61,7 +63,9 @@ impl Site {
                     if let Some(id) = get_page_id(&ast) {
                         let mut output_path =
                             self.config.paths.get("output_root").unwrap().to_path_buf();
-                        output_path.push("todo-fixme.txt");
+                        output_path.push(self.config.default_language.clone());
+                        output_path.push(id.clone());
+                        output_path.push("index.html");
                         let page = Page {
                             ast,
                             id: id.clone(),
@@ -112,6 +116,39 @@ impl Site {
                 Level::ERROR,
                 "Direcotory does not exist: {}",
                 &dir.display()
+            );
+        }
+    }
+
+    pub fn load_templates(&mut self) {
+        let mut templates_root = self.config.paths.get("themes_root").unwrap().to_path_buf();
+        templates_root.push(self.config.theme.name.clone());
+        templates_root.push("templates");
+        if templates_root.exists() {
+            WalkDir::new(templates_root.clone())
+                .into_iter()
+                .filter(|entry| match entry.as_ref().unwrap().path().extension() {
+                    Some(ext) => ext.to_str().unwrap() == "neoj",
+                    None => false,
+                })
+                .for_each(|entry| {
+                    let path = entry.as_ref().unwrap().path().to_path_buf();
+                    match fs::read_to_string(&path) {
+                        Ok(content) => {
+                            let template_name = path.strip_prefix(templates_root.clone()).unwrap();
+                            self.templates
+                                .insert(template_name.to_string_lossy().to_string(), content);
+                        }
+                        Err(e) => {
+                            event!(Level::ERROR, "{}", e)
+                        }
+                    }
+                });
+        } else {
+            event!(
+                Level::ERROR,
+                "Direcotory does not exist: {}",
+                &templates_root.display()
             );
         }
     }
