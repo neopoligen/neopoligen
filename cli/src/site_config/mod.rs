@@ -3,7 +3,7 @@ use dirs::document_dir;
 use serde::Deserialize;
 use serde::Serialize;
 use serde_json;
-// use serde_json::Value;
+use serde_json::Value;
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
@@ -14,11 +14,21 @@ pub struct SiteConfigV2 {
     #[serde(default = "default_language")]
     pub default_language: String,
 
-    #[serde(default = "empty_folders")]
-    pub folders: BTreeMap<String, PathBuf>,
+    #[serde(default = "empty_paths")]
+    pub paths: BTreeMap<String, PathBuf>,
 
     #[serde(default = "empty_sections")]
     pub sections: BTreeMap<String, Vec<String>>,
+
+    pub theme: ThemeConfig,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[serde(tag = "type", rename_all = "lowercase")]
+pub struct ThemeConfig {
+    pub name: String,
+    #[serde(default = "empty_options")]
+    pub options: Value,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
@@ -131,8 +141,12 @@ fn default_language() -> String {
     "en".to_string()
 }
 
-fn empty_folders() -> BTreeMap<String, PathBuf> {
+fn empty_paths() -> BTreeMap<String, PathBuf> {
     BTreeMap::new()
+}
+
+fn empty_options() -> Value {
+    serde_json::from_str::<Value>("{}").unwrap()
 }
 
 fn empty_sections() -> BTreeMap<String, Vec<String>> {

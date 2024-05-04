@@ -50,13 +50,12 @@ fn main() {
     engine_config_path.push("config-v0-1-0.json");
 
     if let Ok(engine_config) = load_engine_config_file(&engine_config_path) {
-        let mut site_config_path = neopoligen_root.clone();
-        site_config_path.push(engine_config.dev.active_site);
-        site_config_path.push("config.json");
-        match load_site_config_file(&site_config_path) {
+        // let mut site_config_path = neopoligen_root.clone();
+        // site_config_path.push(engine_config.dev.active_site);
+        //site_config_path.push("config.json");
+        match load_site_config_file(&neopoligen_root, &engine_config.dev.active_site) {
             Ok(site_config) => {
                 dbg!(site_config);
-                println!("asdf");
                 ()
             }
             Err(e) => println!("{}", e),
@@ -139,27 +138,69 @@ fn write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
     }
 }
 
-fn load_site_config_file(path: &PathBuf) -> Result<SiteConfigV2, String> {
-    match path.try_exists() {
+fn load_site_config_file(neo_root: &PathBuf, acitve_site: &str) -> Result<SiteConfigV2, String> {
+    let mut project_root = neo_root.clone();
+    project_root.push(acitve_site);
+    let mut site_config_path = project_root.clone();
+    site_config_path.push("config.json");
+    match site_config_path.try_exists() {
         Ok(exists) => {
             if exists == true {
-                match fs::read_to_string(&path) {
+                match fs::read_to_string(&site_config_path) {
                     Ok(text) => match serde_json::from_str::<SiteConfigV2>(text.as_str()) {
-                        Ok(data) => Ok(data),
+                        Ok(mut config) => {
+                            config
+                                .paths
+                                .insert("neopoligen_root".to_string(), neo_root.clone());
+                            config
+                                .paths
+                                .insert("project_root".to_string(), project_root.clone());
+                            config.paths.insert(
+                                "content_root".to_string(),
+                                project_root.join(PathBuf::from("content")),
+                            );
+                            config.paths.insert(
+                                "errors_root".to_string(),
+                                project_root.join(PathBuf::from("errors")),
+                            );
+                            config.paths.insert(
+                                "themes_root".to_string(),
+                                project_root.join(PathBuf::from("themes")),
+                            );
+                            config.paths.insert(
+                                "output_root".to_string(),
+                                project_root.join(PathBuf::from("docs")),
+                            );
+                            config.paths.insert(
+                                "status_root".to_string(),
+                                project_root.join(PathBuf::from("status")),
+                            );
+                            config.paths.insert(
+                                "errors_root".to_string(),
+                                project_root.join(PathBuf::from("errors")),
+                            );
+                            config
+                                .paths
+                                .insert("site_config_path".to_string(), site_config_path.clone());
+                            Ok(config)
+                        }
                         Err(e) => Err(format!(
                             "Could not parse JSON file: {}\n{}",
-                            &path.display(),
+                            &site_config_path.display(),
                             e
                         )),
                     },
                     Err(e) => Err(format!(
                         "Could not read JSON file: {}\n{}",
-                        &path.display(),
+                        &site_config_path.display(),
                         e
                     )),
                 }
             } else {
-                Err(format!("Could not read JSON file: {}", &path.display()))
+                Err(format!(
+                    "Could not read JSON file: {}",
+                    &site_config_path.display()
+                ))
             }
         }
         Err(e) => Err(format!("{}", e)),
