@@ -9,5 +9,4 @@ pub mod section;
 pub mod section_attr;
 pub mod site;
 pub mod site_config;
-pub mod site_sections;
 pub mod span;
