@@ -1,7 +1,6 @@
 pub mod block;
 pub mod builder;
 pub mod engine_config;
-pub mod file_set;
 pub mod page;
 pub mod page_error;
 pub mod section;

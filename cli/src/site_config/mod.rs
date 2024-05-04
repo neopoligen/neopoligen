@@ -1,20 +1,19 @@
 use dirs::document_dir;
-use serde::Deserialize;
 use serde::Serialize;
 use std::path::PathBuf;
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct SiteConfig {
-    folders: SiteFolders,
+    pub folders: SiteFolders,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct SiteFolders {
-    content_root: PathBuf,
-    output_root: PathBuf,
-    project_root: PathBuf,
+    pub content_root: PathBuf,
+    pub output_root: PathBuf,
+    pub project_root: PathBuf,
 }
 
 impl SiteConfig {

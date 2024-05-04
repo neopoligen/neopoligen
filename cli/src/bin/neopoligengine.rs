@@ -1,6 +1,6 @@
 use dirs::document_dir;
 use neopoligengine::engine_config::EngineConfig;
-use neopoligengine::file_set::FileSet;
+use neopoligengine::site::Site;
 use neopoligengine::site_config::SiteConfig;
 use std::fs;
 use std::path::PathBuf;
@@ -48,8 +48,13 @@ fn main() {
     config_path.push("config-v0-1-0.json");
     if let Ok(engine_conf) = load_config_file(config_path) {
         let site_conf = SiteConfig::new(engine_conf.dev.active_site);
-        let fs = FileSet::new();
-        dbg!(site_conf);
+        let mut site = Site::new(site_conf);
+        site.load_pages();
+        // site.generate_pages();
+        dbg!(site);
+        // dbg!(&site_conf.folders.content_root);
+        // dbg!(fs);
+        //dbg!(site_conf);
     } else {
         event!(Level::ERROR, "Could not open config file");
     }
