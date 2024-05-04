@@ -44,10 +44,14 @@ impl Site {
             match ast(f.1, &self.config.sections) {
                 Ok(ast) => {
                     if let Some(id) = get_page_id(&ast) {
+                        let mut output_path = self.config.folders.output_root.clone();
+                        output_path.push("todo-fixme.txt");
+
                         let page = Page {
                             ast,
                             id: id.clone(),
                             source_path: f.0.clone(),
+                            output_path,
                         };
                         let _ = self.pages.insert(id, page).is_none();
                     } else {

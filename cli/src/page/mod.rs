@@ -10,6 +10,6 @@ pub struct Page {
     pub id: String,
     // pub tags: Vec<String>,
     pub source_path: PathBuf,
-    // pub output_path: PathBuf,
+    pub output_path: PathBuf,
     // pub folders: Vec<String>,
 }
