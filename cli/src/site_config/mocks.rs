@@ -10,11 +10,23 @@ impl SiteConfigV2 {
         let mut sections = BTreeMap::new();
         sections.insert(
             "basic".to_string(),
-            vec!["title".to_string(), "p".to_string()],
+            vec![
+                "div".to_string(),
+                "note".to_string(),
+                "p".to_string(),
+                "title".to_string(),
+            ],
         );
         sections.insert("json".to_string(), vec!["metadata".to_string()]);
-        sections.insert("raw".to_string(), vec!["code".to_string()]);
-
+        sections.insert(
+            "raw".to_string(),
+            vec![
+                "code".to_string(),
+                "css".to_string(),
+                "html".to_string(),
+                "javascript".to_string(),
+            ],
+        );
         let mut paths = BTreeMap::new();
         paths.insert(
             "content_root".to_string(),

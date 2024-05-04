@@ -26,52 +26,52 @@ use serde_json::Value;
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(tag = "kind", rename_all = "lowercase")]
 pub enum Section {
-    Base {
-        content: Vec<Block>,
-    },
     Basic {
         attrs: Vec<SectionAttr>,
-        content: Vec<Section>,
+        bounds: SectionBounds,
+        content: Vec<Block>,
         source: String,
         r#type: String,
     },
     Checklist {
         attrs: Vec<SectionAttr>,
+        bounds: SectionBounds,
         items: Vec<Section>,
         source: String,
         r#type: String,
     },
     Json {
         attrs: Vec<SectionAttr>,
+        bounds: SectionBounds,
         data: Option<Value>,
         source: String,
         r#type: String,
     },
     List {
         attrs: Vec<SectionAttr>,
+        bounds: SectionBounds,
         items: Vec<Section>,
         source: String,
         r#type: String,
     },
     Raw {
         attrs: Vec<SectionAttr>,
+        bounds: SectionBounds,
         text: String,
         source: String,
         r#type: String,
     },
     Unknown {
         attrs: Vec<SectionAttr>,
-        content: Vec<Section>,
+        bounds: SectionBounds,
+        content: Vec<Block>,
         source: String,
         r#type: String,
     },
-
-    // this is just used to start the
-    // loop for looking for things.
     Initializer,
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum SectionBounds {
     End,
@@ -130,7 +130,8 @@ pub fn basic_section_finder<'a>(
         source,
         Section::Basic {
             attrs,
-            content: vec![Section::Base { content: result }],
+            bounds: SectionBounds::Full,
+            content: result,
             source: initial_source.to_string(),
             r#type: r#type.to_string(),
         },
@@ -176,6 +177,7 @@ pub fn json_section_finder<'a>(
         source,
         Section::Json {
             attrs,
+            bounds: SectionBounds::Full,
             data,
             source: initial_source.to_string(),
             r#type: r#type.to_string(),
@@ -222,6 +224,7 @@ pub fn raw_section_finder<'a>(
         source,
         Section::Json {
             attrs,
+            bounds: SectionBounds::Full,
             data,
             source: initial_source.to_string(),
             r#type: r#type.to_string(),
