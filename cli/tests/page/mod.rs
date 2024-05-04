@@ -38,6 +38,6 @@ fn watch_for_no_id() {
     let config = SiteConfigV2::mock1();
     let p = Page::new(source_text, source_path, &config);
     let left = PathBuf::from("/mock/root/status/errors/some-folder/1234.txt");
-    //let right = p.output_path.unwrap();
-    //assert_eq!(left, right);
+    let right = p.output_path.unwrap();
+    assert_eq!(left, right);
 }

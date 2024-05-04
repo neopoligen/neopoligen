@@ -52,14 +52,11 @@ fn main() {
     if let Ok(engine_config) = load_engine_config_file(&engine_config_path) {
         match load_site_config_file(&neopoligen_root, &engine_config.dev.active_site) {
             Ok(mut site_config) => {
-                // dbg!(&site_config);
                 site_config.load_sections();
                 let mut site = Site::new(site_config);
                 site.load_templates();
                 site.load_source_files();
                 site.parse_pages();
-                // Note: this is done here since you can't mutate
-                // the site object while writing
                 let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
                 let _ = empty_dir(&site.config.paths.get("errors_root").unwrap());
                 site.generate_content_pages().iter().for_each(|p| {

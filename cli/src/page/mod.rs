@@ -51,7 +51,7 @@ impl Page {
                         error: Some(e),
                         folders: vec![],
                         id: None,
-                        output_path: Some(output_path),
+                        output_path: Some(output_path.with_extension("txt")),
                         source_text,
                         tags: vec![],
                     }
@@ -69,7 +69,7 @@ impl Page {
                     error: Some(error),
                     folders: vec![],
                     id: None,
-                    output_path: Some(output_path),
+                    output_path: Some(output_path.with_extension("txt")),
                     source_text,
                     tags: vec![],
                 }
