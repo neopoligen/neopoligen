@@ -18,6 +18,7 @@ pub struct SiteFolders {
     pub project_root: PathBuf,
     pub themes_root: PathBuf,
     pub error_root: PathBuf,
+    pub status_root: PathBuf,
 }
 
 impl SiteConfig {
@@ -26,10 +27,11 @@ impl SiteConfig {
         project_root.push("Neopoligen");
         project_root.push(site_name.as_str());
         let folders = SiteFolders {
-            project_root: project_root.clone(),
             content_root: get_folder_path(&project_root, "content"),
-            error_root: get_folder_path(&project_root, "errors"),
+            error_root: get_folder_path(&project_root, "status/errors"),
             output_root: get_folder_path(&project_root, "docs"),
+            project_root: project_root.clone(),
+            status_root: get_folder_path(&project_root, "status"),
             themes_root: get_folder_path(&project_root, "themes"),
         };
         SiteConfig {

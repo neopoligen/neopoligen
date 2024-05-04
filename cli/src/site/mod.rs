@@ -14,6 +14,7 @@ pub struct Site {
     pub config: SiteConfig,
     pub content_files: BTreeMap<PathBuf, String>,
     pub pages: BTreeMap<String, Page>,
+    pub parsing_errors: BTreeMap<PathBuf, String>,
 }
 
 impl Site {
@@ -22,6 +23,7 @@ impl Site {
             config,
             content_files: BTreeMap::new(),
             pages: BTreeMap::new(),
+            parsing_errors: BTreeMap::new(),
         }
     }
 }
@@ -35,21 +37,15 @@ impl Site {
                     ()
                 }
                 Err(e) => {
-                    let error_file_path = replace_path(
+                    if let Ok(error_file_path) = replace_path(
                         &f.0,
                         &self.config.folders.content_root,
                         &self.config.folders.error_root,
-                    );
-                    let _ = write_file_with_mkdir(
-                        &error_file_path.unwrap().with_extension("txt"),
-                        &e.to_string(),
-                    );
-
-                    // dbg!(e);
-                    ()
+                    ) {
+                        self.parsing_errors.insert(error_file_path, e.to_string());
+                    }
                 }
             };
-            ()
         })
     }
 
@@ -85,18 +81,5 @@ fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result<Pat
     match path.strip_prefix(find) {
         Ok(path_part) => Ok(replace.clone().join(path_part)),
         Err(e) => Err("Problem".to_string()), // todo make this a better error
-    }
-}
-
-fn write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
-    match path.parent() {
-        Some(parent_dir) => match fs::create_dir_all(parent_dir) {
-            Ok(_) => match fs::write(path, content) {
-                Ok(_) => Ok(()),
-                Err(e) => Err(e.to_string()),
-            },
-            Err(e) => Err(e.to_string()),
-        },
-        None => Err("Could not make directory".to_string()),
     }
 }

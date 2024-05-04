@@ -51,7 +51,13 @@ fn main() {
         let mut site = Site::new(site_conf);
         site.load_pages();
         site.parse_pages();
-        dbg!(site.pages);
+        //dbg!(site.pages);
+        let _ = empty_dir(&site.config.folders.error_root);
+        site.parsing_errors.iter().for_each(|p| {
+            if let Err(e) = write_file_with_mkdir(&p.0, &p.1) {
+                event!(Level::ERROR, "Could not write error file: {}", e);
+            }
+        });
 
         // dbg!(site);
         // dbg!(&site_conf.folders.content_root);
@@ -78,5 +84,31 @@ fn load_config_file(path: PathBuf) -> Result<EngineConfig, String> {
             }
         }
         Err(_) => Err(format!("No file at: {}", &path.display())),
+    }
+}
+
+fn empty_dir(dir: &PathBuf) -> std::io::Result<()> {
+    for entry in dir.read_dir()? {
+        let entry = entry?;
+        let path = entry.path();
+        if path.is_dir() {
+            fs::remove_dir_all(path)?;
+        } else {
+            fs::remove_file(path)?;
+        }
+    }
+    Ok(())
+}
+
+fn write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
+    match path.parent() {
+        Some(parent_dir) => match fs::create_dir_all(parent_dir) {
+            Ok(_) => match fs::write(path, content) {
+                Ok(_) => Ok(()),
+                Err(e) => Err(e.to_string()),
+            },
+            Err(e) => Err(e.to_string()),
+        },
+        None => Err("Could not make directory".to_string()),
     }
 }
