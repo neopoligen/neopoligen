@@ -4,11 +4,13 @@ use crate::site_sections::SiteSections;
 use crate::span::empty_line;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
+use nom::bytes::complete::take_until;
 use nom::character::complete::line_ending;
 use nom::character::complete::multispace0;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::eof;
+use nom::combinator::rest;
 use nom::multi::many0;
 use nom::multi::many1;
 use nom::sequence::tuple;
@@ -36,7 +38,7 @@ pub enum Section {
     },
     Json {
         attrs: Vec<SectionAttr>,
-        object: Option<Value>,
+        data: Option<Value>,
         source: String,
         r#type: String,
     },
@@ -140,23 +142,30 @@ pub fn json_section_finder<'a>(
     key: &'a str,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let initial_source = source;
-    let (source, _) = tag("--").context("section").parse(source)?;
-    let (source, _) = space1.context("section").parse(source)?;
-    let (source, r#type) = tag(key).context("section").parse(source)?;
+    let (source, _) = tag("--").context("json_section").parse(source)?;
+    let (source, _) = space1.context("json_section").parse(source)?;
+    let (source, r#type) = tag(key).context("json_section").parse(source)?;
     let (source, _) = tuple((space0, line_ending))
-        .context("section")
+        .context("json_section")
         .parse(source)?;
-    let (source, attrs) = many0(section_attr).context("section").parse(source)?;
+    let (source, attrs) = many0(section_attr).context("json_section").parse(source)?;
     let (source, _) = alt((empty_line.map(|_| ""), eof))
-        .context("section")
+        .context("json_section")
         .parse(source)?;
-    let (source, result) = many0(block).context("section").parse(source)?;
+    let (source, raw_string) = alt((take_until("\n--"), rest))
+        .context("json_section")
+        .parse(source)?;
+    let data = match serde_json::from_str::<Value>(raw_string) {
+        Ok(data) => Some(data),
+        Err(_) => None,
+    };
+    let (source, _) = multispace0(source)?;
     let initial_source = &initial_source.replace(source, "");
     Ok((
         source,
         Section::Json {
             attrs,
-            object: None,
+            data,
             source: initial_source.to_string(),
             r#type: r#type.to_string(),
         },
