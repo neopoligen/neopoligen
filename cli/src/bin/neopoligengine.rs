@@ -60,15 +60,16 @@ fn main() {
                 site.load_source_files();
                 // dbg!(&site.source_files);
                 site.parse_pages();
-                dbg!(&site.pages);
-                let pages = site.generate_pages();
-                let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
-                pages.iter().for_each(|p| {
-                    let _ = write_file_with_mkdir(p.0, p.1);
-                });
-                // dbg!(pages);
-                let _ = empty_dir(&site.config.paths.get("errors_root").unwrap());
-                site.output_errors();
+
+                // dbg!(&site.pages);
+                // let pages = site.generate_pages();
+                // let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
+                // pages.iter().for_each(|p| {
+                //     let _ = write_file_with_mkdir(p.0, p.1);
+                // });
+                // // dbg!(pages);
+                // let _ = empty_dir(&site.config.paths.get("errors_root").unwrap());
+                // site.output_errors();
             }
             Err(e) => println!("{}", e),
         }

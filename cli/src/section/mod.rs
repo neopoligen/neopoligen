@@ -2,7 +2,6 @@ use std::collections::BTreeMap;
 
 use crate::block::*;
 use crate::section_attr::*;
-use crate::site_sections::SiteSections;
 use crate::span::empty_line;
 use nom::branch::alt;
 use nom::bytes::complete::tag;

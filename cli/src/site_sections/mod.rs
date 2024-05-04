@@ -1,3 +1,6 @@
+// Deprecated: This is now in the config
+// so this should be removed
+
 pub mod mock;
 
 use serde::Serialize;

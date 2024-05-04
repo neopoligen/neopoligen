@@ -1,0 +1,23 @@
+// use neopoligengine::ast::mocks::ast_mock1;
+use neopoligengine::page::Page;
+// use neopoligengine::section::*;
+// use neopoligengine::section_attr::SectionAttr;
+// use neopoligengine::site_sections::SiteSections;
+// use neopoligengine::span::*;
+use neopoligengine::site_config::SiteConfigV2;
+use pretty_assertions::assert_eq;
+// use serde_json::Value;
+// use std::path::{, PathBuf};
+
+#[test]
+fn output_path_default() {
+    let source_text = "-- metadata\n-- id: some-test-id".to_string();
+    let config = SiteConfigV2::mock1();
+    let p = Page::new(source_text, &config);
+    let left = "some-test-id".to_string();
+    let right = p.id.unwrap();
+    assert_eq!(left, right);
+}
+
+//     let left = PathBuf::from("/example/docs/en/asdf/index.html");
+//     let right = p.output_path.unwrap();

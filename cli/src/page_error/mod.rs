@@ -1,3 +1,5 @@
+// Deprecated: remove when main error/mod.rs is done
+//
 use serde::Serialize;
 
 #[derive(Clone, Debug, PartialEq, Serialize)]

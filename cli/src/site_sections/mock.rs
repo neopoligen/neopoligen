@@ -1,3 +1,5 @@
+// Deprecated: This is now in the config
+// so this should be removed
 use crate::site_sections::SiteSections;
 
 impl SiteSections {

@@ -1,3 +1,5 @@
+pub mod mocks;
+
 use crate::site_sections::SiteSections;
 use dirs::document_dir;
 use serde::Deserialize;
