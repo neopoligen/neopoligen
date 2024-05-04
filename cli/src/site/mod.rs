@@ -45,7 +45,6 @@ impl Site {
     //
 
     pub fn output_errors(&self) {
-
         // self.parsing_errors.iter().for_each(|p| {
         //     if let Err(e) = write_file_with_mkdir(&p.0, &p.1) {
         //         event!(Level::ERROR, "Could not write error file: {}", e);
@@ -56,7 +55,7 @@ impl Site {
         // });
     }
 
-    pub fn generate_pages(&self) -> BTreeMap<PathBuf, String> {
+    pub fn generate_content_pages(&self) -> BTreeMap<PathBuf, String> {
         let mut outputs = BTreeMap::new();
         let mut env = Environment::new();
         let site_obj = Value::from_serialize(&self.clone());
@@ -74,7 +73,6 @@ impl Site {
             .iter()
             .for_each(|t| env.add_template_owned(t.0, t.1).unwrap());
         self.pages.iter().for_each(|p| {
-            dbg!(p.0);
             let template_name = "default.neoj";
             if let Ok(tmpl) = env.get_template(template_name) {
                 match tmpl.render(context!(
@@ -94,7 +92,6 @@ impl Site {
             ()
         });
         outputs
-        //BTreeMap::new()
     }
 
     pub fn parse_pages(&mut self) {
@@ -187,7 +184,6 @@ impl Site {
     #[instrument]
     pub fn load_source_files(&mut self) {
         let dir = &self.config.paths.get("content_root").unwrap();
-        dbg!(&dir);
         if dir.exists() {
             WalkDir::new(dir)
                 .into_iter()

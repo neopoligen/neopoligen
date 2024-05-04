@@ -62,10 +62,12 @@ fn main() {
                 // the site object while writing
                 let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
                 let _ = empty_dir(&site.config.paths.get("errors_root").unwrap());
-                site.generate_pages().iter().for_each(|p| {
+                site.generate_content_pages().iter().for_each(|p| {
                     let _ = write_file_with_mkdir(p.0, p.1);
                 });
-                // site.get_error_pages().iter()
+                site.page_errors.iter().for_each(|p| {
+                    let _ = write_file_with_mkdir(p.0, &p.1.error.clone().unwrap().to_string());
+                });
             }
             Err(e) => println!("{}", e),
         }
