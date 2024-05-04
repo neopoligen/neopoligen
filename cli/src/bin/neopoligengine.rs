@@ -57,6 +57,9 @@ fn main() {
                 event!(Level::ERROR, "Could not write error file: {}", e);
             }
         });
+        site.missing_ids.iter().for_each(|p| {
+            let _ = write_file_with_mkdir(&p.0, &p.1);
+        });
     } else {
         event!(Level::ERROR, "Could not open config file");
     }

@@ -46,7 +46,7 @@ impl SiteConfig {
                 checklist: vec!["checklist".to_string()],
                 json: vec!["metadata".to_string()],
                 list: vec!["list".to_string()],
-                raw: vec!["code".to_string()],
+                raw: vec!["code".to_string(), "html".to_string()],
             },
         }
     }
