@@ -14,6 +14,7 @@ pub struct SiteFolders {
     pub content_root: PathBuf,
     pub output_root: PathBuf,
     pub project_root: PathBuf,
+    pub themes_root: PathBuf,
 }
 
 impl SiteConfig {
@@ -25,6 +26,7 @@ impl SiteConfig {
             project_root: project_root.clone(),
             content_root: get_folder_path(&project_root, "content"),
             output_root: get_folder_path(&project_root, "docs"),
+            themes_root: get_folder_path(&project_root, "themes"),
         };
         SiteConfig { folders }
     }

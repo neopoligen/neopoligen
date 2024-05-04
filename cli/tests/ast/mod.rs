@@ -22,6 +22,7 @@ fn basic_page_parse() {
                 },
             ],
         }],
+        source: "-- title\n\necho foxtrot".to_string(),
         r#type: "title".to_string(),
     }];
     let right = ast(source).unwrap().1;
@@ -61,6 +62,7 @@ fn multiple_paragraphs() {
                 ],
             },
         ],
+        source: "-- p\n\nwhiskey tango\n\npapa juliet".to_string(),
         r#type: "p".to_string(),
     }];
     let right = ast(source).unwrap().1;
@@ -86,6 +88,7 @@ fn multiple_sections() {
                     },
                 ],
             }],
+            source: "-- note\n\ntango echo\n\n".to_string(),
             r#type: "note".to_string(),
         },
         Section::Standard {
@@ -103,6 +106,7 @@ fn multiple_sections() {
                     },
                 ],
             }],
+            source: "-- div\n\ndelta alfa".to_string(),
             r#type: "div".to_string(),
         },
     ];

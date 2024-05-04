@@ -22,6 +22,7 @@ fn basic_section() {
                 },
             ],
         }],
+        source: "-- p\n\nyankee romeo".to_string(),
         r#type: "p".to_string(),
     };
     let right = section(source).unwrap().1;
@@ -61,6 +62,7 @@ fn multiple_paragraphs() {
                 ],
             },
         ],
+        source: "-- div\n\nsierra tango\n\nindia lima\n\n".to_string(),
         r#type: "div".to_string(),
     };
     let right = section(source).unwrap().1;
@@ -87,6 +89,7 @@ fn flag_attribute() {
                 },
             ],
         }],
+        source: "-- title\n-- flag-attr\n\nhotel papa".to_string(),
         r#type: "title".to_string(),
     };
     let right = section(source).unwrap().1;
@@ -114,6 +117,7 @@ fn kv_attr_test() {
                 },
             ],
         }],
+        source: "-- title\n-- key: value\n\nhotel papa".to_string(),
         r#type: "title".to_string(),
     };
     let right = section(source).unwrap().1;
