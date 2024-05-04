@@ -55,7 +55,9 @@ impl Site {
     }
 
     pub fn generate_pages(&self) -> BTreeMap<PathBuf, String> {
+        let mut outputs = BTreeMap::new();
         let mut env = Environment::new();
+        let site_obj = Value::from_serialize(&self.clone());
         env.set_syntax(
             SyntaxConfig::builder()
                 .block_delimiters("[!", "!]")
@@ -69,22 +71,37 @@ impl Site {
         self.templates
             .iter()
             .for_each(|t| env.add_template_owned(t.0, t.1).unwrap());
-
         self.pages.iter().for_each(|p| {
             dbg!(p.0);
+            let template_name = "default.neoj";
+            if let Ok(tmpl) = env.get_template(template_name) {
+                match tmpl.render(context!(
+                     site => site_obj,
+                    page_id => p.0
+                )) {
+                    Ok(output) => {
+                        outputs.insert(
+                            //PathBuf::from(&page.output_file_path.clone().unwrap()),
+                            p.1.output_path.clone(),
+                            output.clone(),
+                        );
+                        // self.outputs_dev.push(Output {
+                        //     content: output,
+                        //     source_path: page.source_path.clone(),
+                        //     output_path: PathBuf::from(&page.output_file_path.clone().unwrap()),
+                        // });
+                        ()
+                    }
+                    Err(e) => {
+                        event!(Level::ERROR, "File: {}, {}", p.1.output_path.display(), e)
+                    }
+                }
+            } else {
+                event!(Level::ERROR, "Could not get template: {}", template_name);
+            }
             ()
         });
-
-        // env.set_syntax(Syntax {
-        //     block_start: "[!".into(),
-        //     block_end: "!]".into(),
-        //     variable_start: "[@".into(),
-        //     variable_end: "@]".into(),
-        //     comment_start: "[#".into(),
-        //     comment_end: "#]".into(),
-        // })
-
-        BTreeMap::new()
+        outputs
     }
 
     pub fn parse_pages(&mut self) {

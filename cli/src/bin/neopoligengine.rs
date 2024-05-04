@@ -62,7 +62,11 @@ fn main() {
                 site.parse_pages();
                 dbg!(&site.pages);
                 let pages = site.generate_pages();
-                dbg!(pages);
+                let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
+                pages.iter().for_each(|p| {
+                    let _ = write_file_with_mkdir(p.0, p.1);
+                });
+                // dbg!(pages);
                 let _ = empty_dir(&site.config.paths.get("errors_root").unwrap());
                 site.output_errors();
             }
@@ -179,5 +183,17 @@ fn load_site_config_file(neo_root: &PathBuf, acitve_site: &str) -> Result<SiteCo
             }
         }
         Err(e) => Err(format!("{}", e)),
+    }
+}
+fn write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
+    match path.parent() {
+        Some(parent_dir) => match fs::create_dir_all(parent_dir) {
+            Ok(_) => match fs::write(path, content) {
+                Ok(_) => Ok(()),
+                Err(e) => Err(e.to_string()),
+            },
+            Err(e) => Err(e.to_string()),
+        },
+        None => Err("Could not make directory".to_string()),
     }
 }
