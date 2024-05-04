@@ -1,7 +1,7 @@
-use crate::ast::ast;
 use crate::page::Page;
 use crate::section::Section;
 use crate::site_config::SiteConfig;
+use crate::{ast::ast, section_attr::SectionAttr};
 use serde::Serialize;
 use std::collections::BTreeMap;
 use std::fs;
@@ -41,7 +41,6 @@ impl Site {
             )
             .unwrap()
             .with_extension("txt");
-
             match ast(f.1, &self.config.sections) {
                 Ok(ast) => {
                     if let Some(id) = get_page_id(&ast) {
@@ -56,7 +55,7 @@ impl Site {
                             .missing_ids
                             .insert(
                                 error_file_path,
-                                format!("Missing ID: \n{}", f.1.to_string()),
+                                format!("Missing ID: \n\n{}", f.1.to_string()),
                             )
                             .is_none();
                     }
@@ -100,7 +99,27 @@ impl Site {
 }
 
 fn get_page_id(ast: &Vec<Section>) -> Option<String> {
-    None
+    ast.iter().find_map(|sec_enum| {
+        if let Section::Json { r#type, attrs, .. } = sec_enum {
+            if r#type == "metadata" {
+                attrs.iter().find_map(|attr| {
+                    if let SectionAttr::KeyValue { key, value } = attr {
+                        if key == "id" {
+                            Some(value.trim().to_string())
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    }
+                })
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    })
 }
 
 fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result<PathBuf, String> {
