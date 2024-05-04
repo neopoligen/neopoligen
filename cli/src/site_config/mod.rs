@@ -6,6 +6,7 @@ use std::path::PathBuf;
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct SiteConfig {
     pub folders: SiteFolders,
+    pub sections: SiteSections,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
@@ -15,6 +16,16 @@ pub struct SiteFolders {
     pub output_root: PathBuf,
     pub project_root: PathBuf,
     pub themes_root: PathBuf,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize)]
+#[serde(tag = "type", rename_all = "lowercase")]
+pub struct SiteSections {
+    basic: Vec<String>,
+    checklist: Vec<String>,
+    json: Vec<String>,
+    list: Vec<String>,
+    raw: Vec<String>,
 }
 
 impl SiteConfig {
@@ -28,7 +39,16 @@ impl SiteConfig {
             output_root: get_folder_path(&project_root, "docs"),
             themes_root: get_folder_path(&project_root, "themes"),
         };
-        SiteConfig { folders }
+        SiteConfig {
+            folders,
+            sections: SiteSections {
+                basic: vec!["p".to_string(), "div".to_string(), "note".to_string()],
+                checklist: vec!["checklist".to_string()],
+                json: vec!["metadata".to_string()],
+                list: vec!["list".to_string()],
+                raw: vec!["code".to_string()],
+            },
+        }
     }
 }
 

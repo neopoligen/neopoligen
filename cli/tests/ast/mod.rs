@@ -7,7 +7,7 @@ use pretty_assertions::assert_eq;
 #[test]
 fn basic_page_parse() {
     let source = "-- title\n\necho foxtrot";
-    let left = vec![Section::Standard {
+    let left = vec![Section::Basic {
         attrs: vec![],
         content: vec![Block::Paragraph {
             spans: vec![
@@ -32,7 +32,7 @@ fn basic_page_parse() {
 #[test]
 fn multiple_paragraphs() {
     let source = "-- p\n\nwhiskey tango\n\npapa juliet";
-    let left = vec![Section::Standard {
+    let left = vec![Section::Basic {
         attrs: vec![],
         content: vec![
             Block::Paragraph {
@@ -73,7 +73,7 @@ fn multiple_paragraphs() {
 fn multiple_sections() {
     let source = "-- note\n\ntango echo\n\n-- div\n\ndelta alfa";
     let left = vec![
-        Section::Standard {
+        Section::Basic {
             attrs: vec![],
             content: vec![Block::Paragraph {
                 spans: vec![
@@ -91,7 +91,7 @@ fn multiple_sections() {
             source: "-- note\n\ntango echo\n\n".to_string(),
             r#type: "note".to_string(),
         },
-        Section::Standard {
+        Section::Basic {
             attrs: vec![],
             content: vec![Block::Paragraph {
                 spans: vec![

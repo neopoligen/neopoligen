@@ -18,6 +18,12 @@ use serde::Serialize;
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(tag = "kind", rename_all = "lowercase")]
 pub enum Section {
+    Basic {
+        attrs: Vec<SectionAttr>,
+        content: Vec<Block>,
+        source: String,
+        r#type: String,
+    },
     Checklist {
         attrs: Vec<SectionAttr>,
         items: Vec<Section>,
@@ -38,12 +44,6 @@ pub enum Section {
     Raw {
         attrs: Vec<SectionAttr>,
         text: String,
-        source: String,
-        r#type: String,
-    },
-    Standard {
-        attrs: Vec<SectionAttr>,
-        content: Vec<Block>,
         source: String,
         r#type: String,
     },
@@ -77,7 +77,7 @@ pub fn section(source: &str) -> IResult<&str, Section, ErrorTree<&str>> {
     let initial_source = &initial_source.replace(source, "");
     Ok((
         source,
-        Section::Standard {
+        Section::Basic {
             attrs,
             content: result,
             source: initial_source.to_string(),

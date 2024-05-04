@@ -7,7 +7,7 @@ use pretty_assertions::assert_eq;
 #[test]
 fn basic_section() {
     let source = "-- p\n\nyankee romeo";
-    let left = Section::Standard {
+    let left = Section::Basic {
         attrs: vec![],
         content: vec![Block::Paragraph {
             spans: vec![
@@ -32,7 +32,7 @@ fn basic_section() {
 #[test]
 fn multiple_paragraphs() {
     let source = "-- div\n\nsierra tango\n\nindia lima\n\n";
-    let left = Section::Standard {
+    let left = Section::Basic {
         attrs: vec![],
         content: vec![
             Block::Paragraph {
@@ -72,7 +72,7 @@ fn multiple_paragraphs() {
 #[test]
 fn flag_attribute() {
     let source = "-- title\n-- flag-attr\n\nhotel papa";
-    let left = Section::Standard {
+    let left = Section::Basic {
         attrs: vec![SectionAttr::Flag {
             key: "flag-attr".to_string(),
         }],
@@ -99,7 +99,7 @@ fn flag_attribute() {
 #[test]
 fn kv_attr_test() {
     let source = "-- title\n-- key: value\n\nhotel papa";
-    let left = Section::Standard {
+    let left = Section::Basic {
         attrs: vec![SectionAttr::KeyValue {
             key: "key".to_string(),
             value: "value".to_string(),
