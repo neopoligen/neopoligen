@@ -84,7 +84,7 @@ impl Site {
                     Ok(output) => {
                         outputs.insert(
                             //PathBuf::from(&page.output_file_path.clone().unwrap()),
-                            p.1.output_path.clone(),
+                            p.1.output_path.clone().unwrap(),
                             output.clone(),
                         );
                         // self.outputs_dev.push(Output {
@@ -103,8 +103,8 @@ impl Site {
             }
             ()
         });
-        // outputs
-        BTreeMap::new()
+        outputs
+        //BTreeMap::new()
     }
 
     pub fn parse_pages(&mut self) {
@@ -113,6 +113,7 @@ impl Site {
             if let Some(_) = p.error.clone() {
                 self.page_errors.insert(p.output_path.clone().unwrap(), p);
             } else {
+                self.pages.insert(p.id.clone().unwrap(), p);
             }
         });
     }

@@ -56,21 +56,14 @@ fn main() {
                 site_config.load_sections();
                 let mut site = Site::new(site_config);
                 site.load_templates();
-                // dbg!(site.templates);
                 site.load_source_files();
-                // dbg!(&site.source_files);
                 site.parse_pages();
-                // dbg!(site);
+                let output_pages = site.generate_pages();
                 let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
                 let _ = empty_dir(&site.config.paths.get("errors_root").unwrap());
-
-                // dbg!(&site.pages);
-                // let pages = site.generate_pages();
-                // pages.iter().for_each(|p| {
-                //     let _ = write_file_with_mkdir(p.0, p.1);
-                // });
-                // // dbg!(pages);
-                // site.output_errors();
+                output_pages.iter().for_each(|p| {
+                    let _ = write_file_with_mkdir(p.0, p.1);
+                });
             }
             Err(e) => println!("{}", e),
         }
