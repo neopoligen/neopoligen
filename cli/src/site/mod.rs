@@ -82,17 +82,7 @@ impl Site {
                     page_id => p.0
                 )) {
                     Ok(output) => {
-                        outputs.insert(
-                            //PathBuf::from(&page.output_file_path.clone().unwrap()),
-                            p.1.output_path.clone().unwrap(),
-                            output.clone(),
-                        );
-                        // self.outputs_dev.push(Output {
-                        //     content: output,
-                        //     source_path: page.source_path.clone(),
-                        //     output_path: PathBuf::from(&page.output_file_path.clone().unwrap()),
-                        // });
-                        ()
+                        outputs.insert(p.1.output_path.clone().unwrap(), output.clone());
                     }
                     Err(e) => {
                         event!(Level::ERROR, "{}", e)

@@ -58,12 +58,14 @@ fn main() {
                 site.load_templates();
                 site.load_source_files();
                 site.parse_pages();
-                let output_pages = site.generate_pages();
+                // Note: this is done here since you can't mutate
+                // the site object while writing
                 let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
                 let _ = empty_dir(&site.config.paths.get("errors_root").unwrap());
-                output_pages.iter().for_each(|p| {
+                site.generate_pages().iter().for_each(|p| {
                     let _ = write_file_with_mkdir(p.0, p.1);
                 });
+                // site.get_error_pages().iter()
             }
             Err(e) => println!("{}", e),
         }
