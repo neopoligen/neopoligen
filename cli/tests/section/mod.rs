@@ -4,6 +4,7 @@ use neopoligengine::section_attr::SectionAttr;
 use neopoligengine::site_sections::SiteSections;
 use neopoligengine::span::*;
 use pretty_assertions::assert_eq;
+use serde_json::Value;
 
 #[test]
 fn basic_section() {
@@ -25,6 +26,34 @@ fn basic_section() {
             ],
         }],
         source: "-- p\n\nyankee romeo".to_string(),
+        r#type: "p".to_string(),
+    };
+    let right = section(source, &sections).unwrap().1;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn empty_section_no_attrs() {
+    let source = "-- p\n\n";
+    let sections = SiteSections::mock1();
+    let left = Section::Basic {
+        attrs: vec![],
+        content: vec![],
+        source: "-- p\n\n".to_string(),
+        r#type: "p".to_string(),
+    };
+    let right = section(source, &sections).unwrap().1;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn empty_section_no_attrs_only_one_newline() {
+    let source = "-- p\n";
+    let sections = SiteSections::mock1();
+    let left = Section::Basic {
+        attrs: vec![],
+        content: vec![],
+        source: "-- p\n".to_string(),
         r#type: "p".to_string(),
     };
     let right = section(source, &sections).unwrap().1;
@@ -124,6 +153,21 @@ fn kv_attr_test() {
         }],
         source: "-- title\n-- key: value\n\nhotel papa".to_string(),
         r#type: "title".to_string(),
+    };
+    let right = section(source, &sections).unwrap().1;
+    assert_eq!(left, right);
+}
+
+#[test]
+#[ignore]
+fn json_section() {
+    let source = "-- metadata\n-- id: someid\n\nasf";
+    let sections = SiteSections::mock1();
+    let left = Section::Json {
+        attrs: vec![],
+        source: "-- metadata\n-- id: someid".to_string(),
+        object: None,
+        r#type: "p".to_string(),
     };
     let right = section(source, &sections).unwrap().1;
     assert_eq!(left, right);
