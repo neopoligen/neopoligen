@@ -51,8 +51,21 @@ pub struct SiteFolders {
 
 impl SiteConfigV2 {
     pub fn load_sections(&mut self) {
+        self.sections.insert(
+            "basic".to_string(),
+            vec!["title".to_string(), "div".to_string(), "p".to_string()],
+        );
         self.sections
-            .insert("basic".to_string(), vec!["title".to_string()]);
+            .insert("json".to_string(), vec!["metadata".to_string()]);
+        self.sections.insert(
+            "raw".to_string(),
+            vec![
+                "code".to_string(),
+                "html".to_string(),
+                "javascript".to_string(),
+                "css".to_string(),
+            ],
+        );
     }
 }
 

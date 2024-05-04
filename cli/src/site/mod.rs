@@ -2,6 +2,11 @@ use crate::page::Page;
 use crate::section::Section;
 use crate::site_config::SiteConfigV2;
 use crate::{ast::ast, section_attr::SectionAttr};
+use minijinja::context;
+//use minijinja::syntax;
+use minijinja::syntax::SyntaxConfig;
+use minijinja::Environment;
+use minijinja::Value;
 use serde::Serialize;
 use std::collections::BTreeMap;
 use std::fs;
@@ -13,7 +18,7 @@ use walkdir::WalkDir;
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct Site {
     pub config: SiteConfigV2,
-    pub content_files: BTreeMap<PathBuf, String>,
+    pub source_files: BTreeMap<PathBuf, String>,
     pub missing_ids: BTreeMap<PathBuf, String>,
     pub pages: BTreeMap<String, Page>,
     pub parsing_errors: BTreeMap<PathBuf, String>,
@@ -26,7 +31,7 @@ impl Site {
         event!(Level::DEBUG, "Creating Site Object");
         Site {
             config,
-            content_files: BTreeMap::new(),
+            source_files: BTreeMap::new(),
             missing_ids: BTreeMap::new(),
             pages: BTreeMap::new(),
             parsing_errors: BTreeMap::new(),
@@ -49,8 +54,41 @@ impl Site {
         });
     }
 
+    pub fn generate_pages(&self) -> BTreeMap<PathBuf, String> {
+        let mut env = Environment::new();
+        env.set_syntax(
+            SyntaxConfig::builder()
+                .block_delimiters("[!", "!]")
+                .variable_delimiters("[@", "@]")
+                .comment_delimiters("[#", "#]")
+                .build()
+                .unwrap(),
+        );
+        env.set_trim_blocks(true);
+        env.set_lstrip_blocks(true);
+        self.templates
+            .iter()
+            .for_each(|t| env.add_template_owned(t.0, t.1).unwrap());
+
+        self.pages.iter().for_each(|p| {
+            dbg!(p.0);
+            ()
+        });
+
+        // env.set_syntax(Syntax {
+        //     block_start: "[!".into(),
+        //     block_end: "!]".into(),
+        //     variable_start: "[@".into(),
+        //     variable_end: "@]".into(),
+        //     comment_start: "[#".into(),
+        //     comment_end: "#]".into(),
+        // })
+
+        BTreeMap::new()
+    }
+
     pub fn parse_pages(&mut self) {
-        self.content_files.iter().for_each(|f| {
+        self.source_files.iter().for_each(|f| {
             let error_file_path = replace_path(
                 &f.0,
                 &self.config.paths.get("content_root").unwrap(),
@@ -91,8 +129,9 @@ impl Site {
     }
 
     #[instrument]
-    pub fn load_pages(&mut self) {
+    pub fn load_source_files(&mut self) {
         let dir = &self.config.paths.get("content_root").unwrap();
+        dbg!(&dir);
         if dir.exists() {
             WalkDir::new(dir)
                 .into_iter()
@@ -104,7 +143,7 @@ impl Site {
                     let path = entry.as_ref().unwrap().path().to_path_buf();
                     match fs::read_to_string(&path) {
                         Ok(content) => {
-                            self.content_files.insert(path, content);
+                            self.source_files.insert(path, content);
                         }
                         Err(e) => {
                             event!(Level::ERROR, "{}", e)

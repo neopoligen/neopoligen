@@ -86,8 +86,8 @@ pub fn section<'a>(
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, result) = alt((
         |src| basic_section(src, &sections.get("basic").unwrap()),
-        //|src| json_section(src, &sections.json),
-        //|src| raw_section(src, &sections.raw),
+        |src| json_section(src, &sections.get("json").unwrap()),
+        |src| raw_section(src, &sections.get("raw").unwrap()),
     ))
     .context("section")
     .parse(source)?;
