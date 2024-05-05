@@ -1,4 +1,5 @@
 pub mod basic;
+pub mod end;
 pub mod json;
 pub mod list;
 pub mod list_item;
@@ -6,6 +7,7 @@ pub mod raw;
 
 use crate::block::*;
 use crate::section::basic::basic_section;
+use crate::section::end::end_section;
 use crate::section::json::json_section;
 use crate::section::list::list_section;
 use crate::section::raw::raw_section;
@@ -39,6 +41,13 @@ pub enum Section {
         source: String,
         r#type: String,
     },
+    Generic {
+        attrs: Vec<SectionAttr>,
+        bounds: SectionBounds,
+        content: Vec<Block>,
+        source: String,
+        r#type: String,
+    },
     Json {
         attrs: Vec<SectionAttr>,
         bounds: SectionBounds,
@@ -66,13 +75,6 @@ pub enum Section {
         source: String,
         r#type: String,
     },
-    Unknown {
-        attrs: Vec<SectionAttr>,
-        bounds: SectionBounds,
-        content: Vec<Block>,
-        source: String,
-        r#type: String,
-    },
     Initializer,
 }
 
@@ -89,6 +91,7 @@ pub fn section<'a>(
     sections: &'a BTreeMap<String, Vec<String>>,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, result) = alt((
+        end_section,
         |src| basic_section(src, &sections.get("basic").unwrap()),
         |src| json_section(src, &sections.get("json").unwrap()),
         |src| list_section(src, &sections.get("list").unwrap()),

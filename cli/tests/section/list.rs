@@ -92,3 +92,31 @@ fn start_list() {
     let right = section(source, &config.sections).unwrap().1;
     assert_eq!(left, right);
 }
+
+#[test]
+#[ignore]
+fn list_end_section() {
+    let source = "-- /list\n\necho charlie";
+    let config = SiteConfig::mock1();
+    let left = Section::Basic {
+        attrs: vec![],
+        bounds: SectionBounds::Full,
+        content: vec![Block::Paragraph {
+            spans: vec![
+                Span::WordPart {
+                    text: "echo".to_string(),
+                },
+                Span::Space {
+                    text: " ".to_string(),
+                },
+                Span::WordPart {
+                    text: "charlie".to_string(),
+                },
+            ],
+        }],
+        source: "-- /list\n\necho charlie".to_string(),
+        r#type: "list".to_string(),
+    };
+    let right = section(&source, &config.sections).unwrap().1;
+    assert_eq!(left, right);
+}

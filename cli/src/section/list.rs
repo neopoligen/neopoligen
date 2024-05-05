@@ -9,7 +9,7 @@ use nom::character::complete::multispace0;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::eof;
-use nom::combinator::not;
+// use nom::combinator::not;
 use nom::combinator::opt;
 use nom::multi::many0;
 use nom::sequence::tuple;
@@ -52,7 +52,6 @@ fn list_section_finder<'a>(
         .context("list_section_finder")
         .parse(source)?;
     let initial_source = &initial_source.replace(source, "");
-
     if start.is_some() {
         Ok((
             source,
@@ -87,15 +86,4 @@ fn list_section_finder<'a>(
             },
         ))
     }
-
-    // Ok((
-    //     source,
-    //     Section::List {
-    //         attrs,
-    //         bounds: SectionBounds::Full,
-    //         items,
-    //         source: initial_source.to_string(),
-    //         r#type: r#type.to_string(),
-    //     },
-    // ))
 }
