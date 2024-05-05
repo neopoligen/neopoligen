@@ -24,13 +24,7 @@ pub fn basic_section<'a>(
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, result) = list.iter().fold(initial_error(), |acc, item| match acc {
         Ok(v) => Ok(v),
-        _ => alt((
-            |src| basic_full_section_finder(src, item),
-            //|src| basic_start_section_finder(src, item),
-            // |src| basic_end_section_finder(src, item),
-        ))
-        .context("basic_section")
-        .parse(source),
+        _ => basic_full_section_finder(source, item),
     })?;
     Ok((source, result))
 }
