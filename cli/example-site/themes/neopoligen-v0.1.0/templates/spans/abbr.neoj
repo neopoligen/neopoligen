@@ -1,0 +1,8 @@
+{# type: standard #}
+{%- import "includes/macros.neoj" as theme -%}
+
+<abbr>
+{% for span in span.content.spans %}
+{{- theme.output_spans(site, page_id, span) -}}
+{% endfor %}
+</abbr>
