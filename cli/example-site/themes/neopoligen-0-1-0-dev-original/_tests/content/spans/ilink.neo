@@ -1,0 +1,60 @@
+-- title
+
+ilink
+
+The `ilink`` is used to link arbitrary text to a 
+specific page on the site by it's id. (it stands
+for "internal link")
+
+-- start-template-test
+
+Basic test to a page that exists
+
+-- naked
+
+<<ilink|this is a link|2fvdjqd5>>
+
+-- expected-output
+
+<a href="/en/2fvdjqd5/?link-target-page" class="page-link">
+    this is a link
+</a>
+
+
+-- start-template-test
+
+ilink with extra class and id attributes
+
+-- naked
+
+<<ilink|this is a link|2fvdjqd5|class: green|id: some_id>>
+
+-- expected-output
+
+<a href="/en/2fvdjqd5/?link-target-page" 
+    class="page-link green" id="some_id">
+    this is a link
+</a>
+
+
+-- start-template-test
+
+ilink to invalid page returns text wrapped in
+a span with a missing-link class
+
+-- naked
+
+<<ilink|this is a link|invalid-id>>
+
+-- expected-output
+
+<span class="missing-link">
+    this is a link
+</span>
+
+
+
+-- metadata
+-- date: 2024-04-25
+-- id: 2fzulrf4
+

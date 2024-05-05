@@ -1,0 +1,7 @@
+[! for section in site.pages[page_id].ast !]
+    [! if section.content.type == "head" !]
+        [! autoescape false !]
+        [@ section.content.category.content.text -@]
+        [! endautoescape !]
+    [! endif !]
+[! endfor !]

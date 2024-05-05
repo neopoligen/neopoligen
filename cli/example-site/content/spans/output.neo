@@ -1,0 +1,23 @@
+-- title
+
+Span: output 
+
+-- subtitle
+
+The Output Span
+
+-- p
+
+Basic Example: 
+
+<<output|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<output|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- id: 2bqplnvt
+

@@ -1,0 +1,23 @@
+-- title
+
+Span: mark 
+
+-- subtitle
+
+The Mark Text Span
+
+-- p
+
+Basic Example: 
+
+<<mark|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<mark|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- id: 2bqpkczs
+

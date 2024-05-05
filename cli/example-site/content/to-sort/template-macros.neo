@@ -1,0 +1,22 @@
+-- title
+
+Template Macro Examples
+
+-- note
+
+This page is build from the tests that verify the 
+everything is working as expected. Because of the
+way that currently works you'll need to inspect
+the output elements if you want to see the actual 
+HTML that's generated (TODO: Write up how to 
+inspect element)
+
+I'll write up more about this in the future. For now,
+you can check out the theme's 
+`pages/neo-template-macros-example/published.neojinja`` 
+file to see how it works.
+
+
+-- metadata
+-- id: 2fz5gcz6
+-- template: neo-template-macros-example

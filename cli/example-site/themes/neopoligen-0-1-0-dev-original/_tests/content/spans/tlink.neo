@@ -1,0 +1,110 @@
+-- title
+
+tlink Span Template Tests
+
+-- notes
+
+- tlink stands for Title Link
+
+- It works by checking the current pageid with a target
+page id
+
+- If the IDs are the same, just the title of the page
+is returned. 
+
+- If the IDs are different, a link pointing to the 
+target page is returned
+
+- If the target ID isn't found then a message shows
+up saying that
+
+- Both attributes and flags can be passed in. 
+
+
+-- start-template-test
+
+Basic Test
+
+-- naked
+
+<<tlink|2fvdjqd5>>
+
+-- expected-output
+
+<a href="/en/2fvdjqd5/?link-target-page" class="page-link">
+    <span class="page-title">
+        Link Target Page
+    </span>
+</a>
+
+
+
+-- start-template-test
+
+Output "[missing]" if the requested
+page ID doesn't exist
+
+-- naked
+
+<<tlink|invalid-page-id>>
+
+-- expected-output
+
+
+<span class="missing-page">
+        [missing-page]
+</span>
+
+
+
+
+-- start-template-test
+
+Link to the ID for this page which
+outputs the title instead of a link
+
+-- naked
+
+<<tlink|2fvfxsjw>>
+
+-- expected-output
+
+<span class="page-title">tlink Span Template Tests</span>
+
+
+
+-- start-template-test
+
+Add an attribute
+
+-- naked
+
+<<tlink|2fvdjqd5|class: green>>
+
+-- expected-output
+
+<a href="/en/2fvdjqd5/?link-target-page" class="page-link green">
+    <span class="page-title">Link Target Page</span>
+</a>
+
+
+
+-- start-template-test
+
+Add a flag
+
+-- naked
+
+<<tlink|2fvdjqd5|hidden>>
+
+-- expected-output
+
+<a href="/en/2fvdjqd5/?link-target-page" class="page-link" hidden>
+    <span class="page-title">Link Target Page</span>
+</a>
+
+
+
+-- metadata
+-- id: 2fvfxsjw
+

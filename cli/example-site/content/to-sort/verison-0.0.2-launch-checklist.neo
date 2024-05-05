@@ -1,0 +1,60 @@
+-- title
+
+Version 0.0.2 Launch Checklist
+
+-- checklist
+
+
+[] Spans documentation
+
+[] Sections documentation
+
+[] Initial Glossary
+
+[] image section
+
+[] mp3 section
+
+[] Checklists
+
+[] wiki spans
+
+[] Nav Menus
+
+[] Color Picker
+
+[] definition section
+
+[x] code section
+
+[x] ilink spans
+
+[x] tlink spans
+
+[x] start/end examples for showing content source for sections
+
+[x] head section with show template and head integration 
+
+[x] css section with show template and head integration
+
+[x] javascript section with show template and head integration
+
+[x] html sections with show template
+
+[x] naked section for direct output
+
+[x] page-source section to show the entire page source
+
+[x] template testing with start-template-test and expected-output sections
+
+[x] title section
+
+[x] p5.js example
+
+[x] Basic collections 
+
+
+
+-- metadata
+-- date: 2024-04-25
+-- id: 2fbvhnma
