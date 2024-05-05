@@ -36,13 +36,14 @@ impl SiteConfig {
     pub fn load_sections(&mut self) {
         // define the sections
         self.sections.insert("basic".to_string(), vec![]);
+        self.sections.insert("checklist".to_string(), vec![]);
         self.sections.insert("comment".to_string(), vec![]);
+        self.sections.insert("detail".to_string(), vec![]);
         self.sections.insert("json".to_string(), vec![]);
         self.sections.insert("list".to_string(), vec![]);
-        self.sections.insert("checklist".to_string(), vec![]);
         self.sections.insert("raw".to_string(), vec![]);
         self.sections.insert("table".to_string(), vec![]);
-        self.sections.insert("detail".to_string(), vec![]);
+        self.sections.insert("yaml".to_string(), vec![]);
 
         let section_root = self
             .paths
