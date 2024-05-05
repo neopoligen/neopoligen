@@ -2,9 +2,17 @@
 <html>
 <head>
 <style>
+* {
+    margin:0;
+    padding: 0.3rem;
+}
+
 body {
     background-color: black;
     color: #aaa;
+}
+div {
+    border: 1px solid #222;
 }
 </style>
 </head>

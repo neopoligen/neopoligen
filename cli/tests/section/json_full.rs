@@ -46,3 +46,18 @@ fn json_section_with_data() {
     let right = section(source, &config.sections).unwrap().1;
     assert_eq!(left, right);
 }
+
+#[test]
+fn empty_section() {
+    let source = "-- metadata\n\n\n\n-- p";
+    let config = SiteConfig::mock1();
+    let left = Section::Json {
+        attrs: vec![],
+        bounds: SectionBounds::Full,
+        source: "-- metadata\n\n\n\n".to_string(),
+        data: None,
+        r#type: "metadata".to_string(),
+    };
+    let right = section(source, &config.sections).unwrap().1;
+    assert_eq!(left, right);
+}

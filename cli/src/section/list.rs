@@ -10,6 +10,7 @@ use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::eof;
 use nom::combinator::not;
+use nom::combinator::opt;
 use nom::multi::many0;
 use nom::sequence::tuple;
 use nom::IResult;
@@ -35,8 +36,9 @@ fn list_section_finder<'a>(
     let initial_source = source;
     let (source, _) = tag("--").context("list_section_finder").parse(source)?;
     let (source, _) = space1.context("list_section_finder").parse(source)?;
+    let (source, end) = opt(tag("/")).context("list_section_finder").parse(source)?;
     let (source, r#type) = tag(key).context("list_section_finder").parse(source)?;
-    let (source, _) = not(tag("/")).context("list_section_finder").parse(source)?;
+    let (source, start) = opt(tag("/")).context("list_section_finder").parse(source)?;
     let (source, _) = alt((tuple((multispace0, eof)), tuple((space0, line_ending))))
         .context("list_section_finder")
         .parse(source)?;
@@ -49,16 +51,51 @@ fn list_section_finder<'a>(
     let (source, items) = many0(list_item_full_section)
         .context("list_section_finder")
         .parse(source)?;
-    //let (source, result) = many0(block).context("list_section_finder").parse(source)?;
     let initial_source = &initial_source.replace(source, "");
-    Ok((
-        source,
-        Section::List {
-            attrs,
-            bounds: SectionBounds::Full,
-            items,
-            source: initial_source.to_string(),
-            r#type: r#type.to_string(),
-        },
-    ))
+
+    if start.is_some() {
+        Ok((
+            source,
+            Section::List {
+                attrs,
+                bounds: SectionBounds::Start,
+                items,
+                source: initial_source.to_string(),
+                r#type: r#type.to_string(),
+            },
+        ))
+    } else if end.is_some() {
+        Ok((
+            source,
+            Section::List {
+                attrs,
+                bounds: SectionBounds::End,
+                items,
+                source: initial_source.to_string(),
+                r#type: r#type.to_string(),
+            },
+        ))
+    } else {
+        Ok((
+            source,
+            Section::List {
+                attrs,
+                bounds: SectionBounds::Full,
+                items,
+                source: initial_source.to_string(),
+                r#type: r#type.to_string(),
+            },
+        ))
+    }
+
+    // Ok((
+    //     source,
+    //     Section::List {
+    //         attrs,
+    //         bounds: SectionBounds::Full,
+    //         items,
+    //         source: initial_source.to_string(),
+    //         r#type: r#type.to_string(),
+    //     },
+    // ))
 }
