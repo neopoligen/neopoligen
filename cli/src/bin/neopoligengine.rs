@@ -178,6 +178,27 @@ fn load_site_config_file(neo_root: &PathBuf, acitve_site: &str) -> Result<SiteCo
                             config.paths.insert(
                                 "status_root".to_string(),
                                 project_root.join(PathBuf::from("status")),
+                                
+                            );
+                            config.paths.insert(
+                                "files_root".to_string(),
+                                project_root.join(PathBuf::from("files")),
+                                
+                            );
+                            config.paths.insert(
+                                "images_root".to_string(),
+                                project_root.join(PathBuf::from("images")),
+                                
+                            );
+                            config.paths.insert(
+                                "mp3s_root".to_string(),
+                                project_root.join(PathBuf::from("mp3s")),
+                                
+                            );
+                            config.paths.insert(
+                                "scripts_root".to_string(),
+                                project_root.join(PathBuf::from("scripts")),
+                                
                             );
                             config
                                 .paths
@@ -219,9 +240,17 @@ fn run_watcher(reloader: Reloader, site_config: SiteConfig) {
                     match e.kind {
                         DebouncedEventKind::Any => {
                             if e.path
-                                .starts_with(&site_config.paths.get("content_root").unwrap()) 
-                                // e.path
-                                // .starts_with(&site_config.paths.get("themes_root").unwrap())
+                                .starts_with(&site_config.paths.get("content_root").unwrap()) ||
+                                e.path
+                                .starts_with(&site_config.paths.get("files_root").unwrap()) ||
+                                e.path
+                                .starts_with(&site_config.paths.get("images_root").unwrap())||
+                                e.path
+                                .starts_with(&site_config.paths.get("mp3s_root").unwrap())||
+                                e.path
+                                .starts_with(&site_config.paths.get("scripts_root").unwrap()) ||
+                                e.path
+                                .starts_with(&site_config.paths.get("themes_root").unwrap())
 
                             {
                                 Some(e)
