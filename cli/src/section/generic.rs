@@ -64,7 +64,7 @@ pub fn generic_section<'a>(source: &'a str) -> IResult<&'a str, Section, ErrorTr
     } else {
         Ok((
             source,
-            Section::Basic {
+            Section::Generic {
                 attrs,
                 bounds: SectionBounds::Full,
                 content: result,

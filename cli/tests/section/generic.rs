@@ -1,6 +1,5 @@
 use neopoligengine::block::*;
 use neopoligengine::section::*;
-use neopoligengine::section_attr::SectionAttr;
 use neopoligengine::site_config::SiteConfig;
 use neopoligengine::span::*;
 use pretty_assertions::assert_eq;
@@ -9,7 +8,7 @@ use pretty_assertions::assert_eq;
 fn generic_section() {
     let source = "-- unknown-tag\n\njuliet tango";
     let config = SiteConfig::mock1();
-    let left = Section::Basic {
+    let left = Section::Generic {
         attrs: vec![],
         bounds: SectionBounds::Full,
         content: vec![Block::Paragraph {

@@ -9,8 +9,10 @@ canvas
 div
 definition
 end-example
+endnote
 footnote
 forward
+generic
 h1
 h2
 h3
