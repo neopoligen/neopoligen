@@ -1,27 +1,20 @@
-// use crate::block::*;
-// use crate::section::list::list_section;
 use crate::section::*;
 use crate::section_attr::*;
 use crate::span::empty_line;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
-// use nom::bytes::complete::take_until;
 use nom::character::complete::line_ending;
 use nom::character::complete::multispace0;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::eof;
 use nom::combinator::not;
-// use nom::combinator::rest;
 use nom::multi::many0;
-// use std::collections::BTreeMap;
-// use nom::multi::many1;
 use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-// use serde::Serialize;
 use serde_json::Value;
 
 pub fn json_section<'a>(
