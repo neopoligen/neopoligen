@@ -153,6 +153,11 @@ fn load_site_config_file(neo_root: &PathBuf, active_site: &str) -> Result<SiteCo
                 match fs::read_to_string(&site_config_path) {
                     Ok(text) => match serde_json::from_str::<SiteConfig>(text.as_str()) {
                         Ok(mut config) => {
+                            config.paths.insert(
+                                "theme_root".to_string(),
+                                project_root
+                                    .join(PathBuf::from(format!("themes/{}", config.theme.name))),
+                            );
                             config
                                 .paths
                                 .insert("neopoligen_root".to_string(), neo_root.clone());

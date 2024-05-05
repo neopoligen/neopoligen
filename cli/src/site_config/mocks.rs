@@ -18,6 +18,7 @@ impl SiteConfig {
             ],
         );
         sections.insert("json".to_string(), vec!["metadata".to_string()]);
+        sections.insert("list".to_string(), vec!["list".to_string()]);
         sections.insert(
             "raw".to_string(),
             vec![

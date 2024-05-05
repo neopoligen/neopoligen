@@ -204,3 +204,18 @@ fn json_section_with_data() {
     let right = section(source, &config.sections).unwrap().1;
     assert_eq!(left, right);
 }
+
+#[test]
+fn basic_list() {
+    let source = "-- list\n\n- alfa\n\n- bravo";
+    let config = SiteConfig::mock1();
+    let left = Section::List {
+        attrs: vec![],
+        bounds: SectionBounds::Full,
+        items: vec![],
+        source: "-- list\n\n- alfa\n\n- bravo".to_string(),
+        r#type: "list".to_string(),
+    };
+    let right = section(source, &config.sections).unwrap().1;
+    assert_eq!(left, right);
+}

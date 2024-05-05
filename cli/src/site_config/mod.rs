@@ -32,10 +32,19 @@ pub struct ThemeConfig {
 
 impl SiteConfig {
     pub fn load_sections(&mut self) {
+        let section_root = self
+            .paths
+            .get("theme_root")
+            .unwrap()
+            .clone()
+            .join(PathBuf::from("templates/sections"));
+
         self.sections.insert(
             "basic".to_string(),
             vec!["title".to_string(), "div".to_string(), "p".to_string()],
         );
+        self.sections
+            .insert("list".to_string(), vec!["list".to_string()]);
         self.sections
             .insert("json".to_string(), vec!["metadata".to_string()]);
         self.sections.insert(

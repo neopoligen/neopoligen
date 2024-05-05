@@ -54,6 +54,12 @@ pub enum Section {
         source: String,
         r#type: String,
     },
+    ListItem {
+        bounds: SectionBounds,
+        content: Vec<Block>,
+        source: String,
+        r#type: String,
+    },
     Raw {
         attrs: Vec<SectionAttr>,
         bounds: SectionBounds,
@@ -86,6 +92,7 @@ pub fn section<'a>(
     let (source, result) = alt((
         |src| basic_section(src, &sections.get("basic").unwrap()),
         |src| json_section(src, &sections.get("json").unwrap()),
+        |src| list_section(src, &sections.get("list").unwrap()),
         |src| raw_section(src, &sections.get("raw").unwrap()),
     ))
     .context("section")
@@ -181,6 +188,70 @@ pub fn json_section_finder<'a>(
             data,
             source: initial_source.to_string(),
             r#type: r#type.to_string(),
+        },
+    ))
+}
+
+fn list_section<'a>(
+    source: &'a str,
+    list: &'a Vec<String>,
+) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let (source, result) = list.iter().fold(initial_error(), |acc, item| match acc {
+        Ok(v) => Ok(v),
+        _ => list_section_finder(source, item),
+    })?;
+    Ok((source, result))
+}
+
+pub fn list_section_finder<'a>(
+    source: &'a str,
+    key: &'a str,
+) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let initial_source = source;
+    let (source, _) = tag("--").context("list_section_finder").parse(source)?;
+    let (source, _) = space1.context("list_section_finder").parse(source)?;
+    let (source, r#type) = tag(key).context("list_section_finder").parse(source)?;
+    let (source, _) = not(tag("/")).context("list_section_finder").parse(source)?;
+    let (source, _) = alt((tuple((multispace0, eof)), tuple((space0, line_ending))))
+        .context("list_section_finder")
+        .parse(source)?;
+    let (source, attrs) = many0(section_attr)
+        .context("list_section_finder")
+        .parse(source)?;
+    let (source, _) = alt((empty_line.map(|_| ""), eof))
+        .context("list_section_finder")
+        .parse(source)?;
+    let (source, items) = many0(list_item)
+        .context("list_section_finder")
+        .parse(source)?;
+    //let (source, result) = many0(block).context("list_section_finder").parse(source)?;
+    let initial_source = &initial_source.replace(source, "");
+    Ok((
+        source,
+        Section::List {
+            attrs,
+            bounds: SectionBounds::Full,
+            items: vec![],
+            source: initial_source.to_string(),
+            r#type: r#type.to_string(),
+        },
+    ))
+}
+
+pub fn list_item<'a>(source: &'a str) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let initial_source = source;
+    let (source, _) = tag("-").context("list_section_finder").parse(source)?;
+    // let (source, _) = not(tag("/")).context("list_section_finder").parse(source)?;
+    let (source, _) = space1.context("list_section_finder").parse(source)?;
+    let (source, result) = many0(block).context("list_section_finder").parse(source)?;
+    let initial_source = &initial_source.replace(source, "");
+    Ok((
+        source,
+        Section::ListItem {
+            bounds: SectionBounds::Full,
+            content: result,
+            source: initial_source.to_string(),
+            r#type: "list_item".to_string(),
         },
     ))
 }
