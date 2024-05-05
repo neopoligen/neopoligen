@@ -10,6 +10,7 @@ use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::eof;
 use nom::combinator::not;
+use nom::combinator::opt;
 use nom::multi::many0;
 use nom::sequence::tuple;
 use nom::IResult;
@@ -25,8 +26,8 @@ pub fn basic_section<'a>(
         Ok(v) => Ok(v),
         _ => alt((
             |src| basic_full_section_finder(src, item),
-            |src| basic_start_section_finder(src, item),
-            |src| basic_end_section_finder(src, item),
+            //|src| basic_start_section_finder(src, item),
+            // |src| basic_end_section_finder(src, item),
         ))
         .context("basic_section")
         .parse(source),
@@ -43,10 +44,13 @@ fn basic_full_section_finder<'a>(
         .context("basic_full_section_finder")
         .parse(source)?;
     let (source, _) = space1.context("basic_full_section_finder").parse(source)?;
+    let (source, end) = opt(tag("/"))
+        .context("basic_full_section_finder")
+        .parse(source)?;
     let (source, r#type) = tag(key)
         .context("basic_full_section_finder")
         .parse(source)?;
-    let (source, _) = not(tag("/"))
+    let (source, start) = opt(tag("/"))
         .context("basic_full_section_finder")
         .parse(source)?;
     let (source, _) = alt((tuple((multispace0, eof)), tuple((space0, line_ending))))
@@ -62,16 +66,40 @@ fn basic_full_section_finder<'a>(
         .context("basic_full_section_finder")
         .parse(source)?;
     let initial_source = &initial_source.replace(source, "");
-    Ok((
-        source,
-        Section::Basic {
-            attrs,
-            bounds: SectionBounds::Full,
-            content: result,
-            source: initial_source.to_string(),
-            r#type: r#type.to_string(),
-        },
-    ))
+    if start.is_some() {
+        Ok((
+            source,
+            Section::Basic {
+                attrs,
+                bounds: SectionBounds::Start,
+                content: result,
+                source: initial_source.to_string(),
+                r#type: r#type.to_string(),
+            },
+        ))
+    } else if end.is_some() {
+        Ok((
+            source,
+            Section::Basic {
+                attrs,
+                bounds: SectionBounds::End,
+                content: result,
+                source: initial_source.to_string(),
+                r#type: r#type.to_string(),
+            },
+        ))
+    } else {
+        Ok((
+            source,
+            Section::Basic {
+                attrs,
+                bounds: SectionBounds::Full,
+                content: result,
+                source: initial_source.to_string(),
+                r#type: r#type.to_string(),
+            },
+        ))
+    }
 }
 
 fn basic_start_section_finder<'a>(
