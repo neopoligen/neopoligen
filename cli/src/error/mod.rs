@@ -15,12 +15,39 @@ pub enum ErrorKind {
         source: String,
         message: String,
     },
-    MissingIdError {},
+    MissingIdError {
+        source: String,
+    },
 }
 
 impl fmt::Display for Error {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.write_str("ERROR")?;
+        match &self.kind {
+            ErrorKind::ParserError {
+                line,
+                column,
+                remainder,
+                message,
+                ..
+            } => {
+                fmt.write_str("Error: ")?;
+                fmt.write_str(message.as_str())?;
+                fmt.write_str("\n")?;
+                fmt.write_str("Line: ")?;
+                fmt.write_str(line.to_string().as_str())?;
+                fmt.write_str(" Column: ")?;
+                fmt.write_str(column.to_string().as_str())?;
+                fmt.write_str(" At: ")?;
+                fmt.write_str("\n")?;
+                fmt.write_str("\n")?;
+                fmt.write_str(remainder.as_str())?;
+            }
+            ErrorKind::MissingIdError { source } => {
+                fmt.write_str("Missing ID\n\n")?;
+                fmt.write_str(source.as_str())?;
+                // fmt.write_str(sel)
+            }
+        }
         Ok(())
     }
 

@@ -22,7 +22,7 @@ pub struct Page {
 impl Page {
     pub fn new(source_text: String, source_path: PathBuf, config: &SiteConfig) -> Page {
         match ast(&source_text, &config.sections) {
-            Ok(ast) => match get_page_id(&ast) {
+            Ok(ast) => match get_page_id(&ast, &source_text) {
                 Ok(id) => {
                     let output_path = get_output_path(&id, &ast, &config);
                     Page {
@@ -74,7 +74,7 @@ impl Page {
     }
 }
 
-fn get_page_id(ast: &Vec<Section>) -> Result<String, Error> {
+fn get_page_id(ast: &Vec<Section>, source_text: &str) -> Result<String, Error> {
     match ast.iter().find_map(|sec_enum| {
         if let Section::Json { r#type, attrs, .. } = sec_enum {
             if r#type == "metadata" {
@@ -98,7 +98,9 @@ fn get_page_id(ast: &Vec<Section>) -> Result<String, Error> {
     }) {
         Some(v) => Ok(v),
         None => Err(Error {
-            kind: ErrorKind::MissingIdError {},
+            kind: ErrorKind::MissingIdError {
+                source: source_text.to_string(),
+            },
         }),
     }
 }
