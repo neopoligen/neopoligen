@@ -55,7 +55,6 @@ fn list_section_finder<'a>(
     let (source, _) = alt((empty_line.map(|_| ""), eof))
         .context("list_section_finder")
         .parse(source)?;
-    dbg!(&source);
     let (source, items) = many0(list_item_full_section)
         .context("list_section_finder")
         .parse(source)?;

@@ -24,11 +24,9 @@ use nom_supreme::parser_ext::ParserExt;
 // use serde_json::Value;
 
 pub fn list_item_block<'a>(source: &'a str) -> IResult<&'a str, Block, ErrorTree<&'a str>> {
-    dbg!(source);
     let (source, _) = not(tag("-")).context("list_item_block").parse(source)?;
-    let (source, blck) = block.context("list_item_block").parse(source)?;
-
-    Ok((source, blck))
+    let (source, the_block) = block.context("list_item_block").parse(source)?;
+    Ok((source, the_block))
 }
 
 pub fn list_item_full_section<'a>(
