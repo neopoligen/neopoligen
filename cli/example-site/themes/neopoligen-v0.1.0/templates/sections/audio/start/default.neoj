@@ -1,4 +1,4 @@
-[!- import "macros.neoj" as theme -!]
+[!- import "includes/macros.neoj" as theme -!]
 
 <div>
 <pre>[@ section|tojson(true) @]</pre>

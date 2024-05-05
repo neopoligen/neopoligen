@@ -1,4 +1,4 @@
-[!- import "macros.neoj" as theme -!]
+[!- import "includes/macros.neoj" as theme -!]
 <section 
 [@ theme.section_attrs(site, page_id, section, ["results_default_section", "raw_section", "flow"]) -@]
 >

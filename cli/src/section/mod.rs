@@ -72,7 +72,7 @@ pub enum Section {
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
-#[serde(tag = "type", rename_all = "lowercase")]
+#[serde(rename_all = "lowercase")]
 pub enum SectionBounds {
     End,
     Full,
