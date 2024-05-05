@@ -251,7 +251,6 @@ fn run_watcher(reloader: Reloader, site_config: SiteConfig) {
                                 .starts_with(&site_config.paths.get("scripts_root").unwrap()) ||
                                 e.path
                                 .starts_with(&site_config.paths.get("themes_root").unwrap())
-
                             {
                                 Some(e)
                             } else {
@@ -260,10 +259,6 @@ fn run_watcher(reloader: Reloader, site_config: SiteConfig) {
                         }
                         _ => None,
                     }
-                    // if e.kind == DebouncedEventKind::Any {
-                    //     dbg!(e.kind);
-                    // };
-                    // None::<String>
                 }) {
                     Some(_) => {
                         build_site(&site_config);
@@ -271,17 +266,6 @@ fn run_watcher(reloader: Reloader, site_config: SiteConfig) {
                     },
                     None => {}
                 }
-                // dbg!(&events);
-                // let mut site_builder = SiteBuilder::new(config);
-                // site_builder.build_site();
-                // println!("site build. calling reload");
-                // println!("reload request sent");
-
-                // println!("CMD: CLEAR");
-                // println!("Caught new change at {}", timestamp);
-                // build_site(&site_config);
-                // println!("Sending reload signal");
-                // reloader.reload();
             }
             Err(e) => println!("Error {:?}", e),
         },
