@@ -65,24 +65,6 @@ impl SiteConfig {
                 }
             }
         });
-
-        // self.sections.insert(
-        //     "basic".to_string(),
-        //     vec!["title".to_string(), "div".to_string(), "p".to_string()],
-        // );
-        // self.sections
-        //     .insert("list".to_string(), vec!["list".to_string()]);
-        // self.sections
-        //     .insert("json".to_string(), vec!["metadata".to_string()]);
-        // self.sections.insert(
-        //     "raw".to_string(),
-        //     vec![
-        //         "code".to_string(),
-        //         "html".to_string(),
-        //         "javascript".to_string(),
-        //         "css".to_string(),
-        //     ],
-        // );
     }
 }
 
