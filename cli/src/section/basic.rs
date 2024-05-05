@@ -23,7 +23,12 @@ pub fn basic_section<'a>(
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, result) = list.iter().fold(initial_error(), |acc, item| match acc {
         Ok(v) => Ok(v),
-        _ => basic_full_section_finder(source, item),
+        _ => alt((
+            |src| basic_full_section_finder(src, item),
+            |src| basic_start_section_finder(src, item),
+        ))
+        .context("basic_section")
+        .parse(source),
     })?;
     Ok((source, result))
 }
@@ -61,6 +66,46 @@ fn basic_full_section_finder<'a>(
         Section::Basic {
             attrs,
             bounds: SectionBounds::Full,
+            content: result,
+            source: initial_source.to_string(),
+            r#type: r#type.to_string(),
+        },
+    ))
+}
+
+fn basic_start_section_finder<'a>(
+    source: &'a str,
+    key: &'a str,
+) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let initial_source = source;
+    let (source, _) = tag("--")
+        .context("basic_start_section_finder")
+        .parse(source)?;
+    let (source, _) = space1.context("basic_start_section_finder").parse(source)?;
+    let (source, r#type) = tag(key)
+        .context("basic_start_section_finder")
+        .parse(source)?;
+    let (source, _) = tag("/")
+        .context("basic_start_section_finder")
+        .parse(source)?;
+    let (source, _) = alt((tuple((multispace0, eof)), tuple((space0, line_ending))))
+        .context("basic_start_section_finder")
+        .parse(source)?;
+    let (source, attrs) = many0(section_attr)
+        .context("basic_start_section_finder")
+        .parse(source)?;
+    let (source, _) = alt((empty_line.map(|_| ""), eof))
+        .context("basic_start_section_finder")
+        .parse(source)?;
+    let (source, result) = many0(block)
+        .context("basic_start_section_finder")
+        .parse(source)?;
+    let initial_source = &initial_source.replace(source, "");
+    Ok((
+        source,
+        Section::Basic {
+            attrs,
+            bounds: SectionBounds::Start,
             content: result,
             source: initial_source.to_string(),
             r#type: r#type.to_string(),

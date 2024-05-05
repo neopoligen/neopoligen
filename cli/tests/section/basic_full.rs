@@ -4,7 +4,6 @@ use neopoligengine::section_attr::SectionAttr;
 use neopoligengine::site_config::SiteConfig;
 use neopoligengine::span::*;
 use pretty_assertions::assert_eq;
-use serde_json::Value;
 
 #[test]
 fn basic_section() {
