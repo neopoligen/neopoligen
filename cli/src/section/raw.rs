@@ -40,18 +40,21 @@ fn raw_full_section_finder<'a>(
     key: &'a str,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let initial_source = source;
-    let (source, _) = tag("--").context("raw_section").parse(source)?;
-    let (source, _) = space1.context("raw_section").parse(source)?;
-    let (source, r#type) = tag(key).context("raw_section").parse(source)?;
+    let (source, _) = tag("--").context("raw_full_section").parse(source)?;
+    let (source, _) = space1.context("raw_full_section").parse(source)?;
+    let (source, r#type) = tag(key).context("raw_full_section").parse(source)?;
+    let (source, _) = not(tag("/")).context("raw_full_section").parse(source)?;
     let (source, _) = tuple((space0, line_ending))
-        .context("raw_section")
+        .context("raw_full_section")
         .parse(source)?;
-    let (source, attrs) = many0(section_attr).context("raw_section").parse(source)?;
+    let (source, attrs) = many0(section_attr)
+        .context("raw_full_section")
+        .parse(source)?;
     let (source, _) = alt((empty_line.map(|_| ""), eof))
-        .context("raw_section")
+        .context("raw_full_section")
         .parse(source)?;
     let (source, raw_string) = alt((take_until("\n--"), rest))
-        .context("raw_section")
+        .context("raw_full_section")
         .parse(source)?;
     let data = match serde_json::from_str::<Value>(raw_string) {
         Ok(data) => Some(data),

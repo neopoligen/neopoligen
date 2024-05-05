@@ -30,32 +30,38 @@ pub fn basic_section<'a>(
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, result) = list.iter().fold(initial_error(), |acc, item| match acc {
         Ok(v) => Ok(v),
-        _ => basic_section_finder(source, item),
+        _ => basic_full_section_finder(source, item),
     })?;
     Ok((source, result))
 }
 
-fn basic_section_finder<'a>(
+fn basic_full_section_finder<'a>(
     source: &'a str,
     key: &'a str,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let initial_source = source;
-    let (source, _) = tag("--").context("basic_section_finder").parse(source)?;
-    let (source, _) = space1.context("basic_section_finder").parse(source)?;
-    let (source, r#type) = tag(key).context("basic_section_finder").parse(source)?;
+    let (source, _) = tag("--")
+        .context("basic_full_section_finder")
+        .parse(source)?;
+    let (source, _) = space1.context("basic_full_section_finder").parse(source)?;
+    let (source, r#type) = tag(key)
+        .context("basic_full_section_finder")
+        .parse(source)?;
     let (source, _) = not(tag("/"))
-        .context("basic_section_finder")
+        .context("basic_full_section_finder")
         .parse(source)?;
     let (source, _) = alt((tuple((multispace0, eof)), tuple((space0, line_ending))))
-        .context("basic_section_finder")
+        .context("basic_full_section_finder")
         .parse(source)?;
     let (source, attrs) = many0(section_attr)
-        .context("basic_section_finder")
+        .context("basic_full_section_finder")
         .parse(source)?;
     let (source, _) = alt((empty_line.map(|_| ""), eof))
-        .context("basic_section_finder")
+        .context("basic_full_section_finder")
         .parse(source)?;
-    let (source, result) = many0(block).context("basic_section_finder").parse(source)?;
+    let (source, result) = many0(block)
+        .context("basic_full_section_finder")
+        .parse(source)?;
     let initial_source = &initial_source.replace(source, "");
     Ok((
         source,
