@@ -140,8 +140,7 @@ fn get_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Option<
             if path.is_absolute() {
                 path = path.strip_prefix("/").unwrap().to_path_buf();
             }
-
-            let mut full_path = config.paths.get("output_root").unwrap().join(path);
+            let full_path = config.paths.get("output_root").unwrap().join(path);
             match full_path.extension() {
                 Some(_) => Some(full_path),
                 None => Some(full_path.join(PathBuf::from("index.html"))),
