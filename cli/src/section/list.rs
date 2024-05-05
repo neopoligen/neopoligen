@@ -1,4 +1,4 @@
-use crate::section::list_item::list_item_full_section;
+use crate::section::list_item::list_item;
 use crate::section::*;
 use crate::section_attr::*;
 use crate::span::empty_line;
@@ -48,7 +48,7 @@ fn list_section_finder<'a>(
     let (source, _) = alt((empty_line.map(|_| ""), eof))
         .context("list_section_finder")
         .parse(source)?;
-    let (source, items) = many0(list_item_full_section)
+    let (source, items) = many0(list_item)
         .context("list_section_finder")
         .parse(source)?;
     let initial_source = &initial_source.replace(source, "");
