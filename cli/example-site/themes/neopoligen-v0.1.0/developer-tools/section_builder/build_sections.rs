@@ -25,7 +25,7 @@ fn main() {
     let files = get_files_in_a_single_dir(config_dir.clone());
     make_section_dirs(bounds.clone(), config_dir.clone(), files.clone());
     make_stubs(bounds.clone(), config_dir.clone(), files.clone());
-    // make_category_txt_files(bounds.clone(), config_dir.clone(), files.clone());
+    make_category_txt_files(bounds.clone(), config_dir.clone(), files.clone());
     // copy_customized_files(&output_dir);
 }
 
