@@ -26,12 +26,11 @@ fn main() {
     make_section_dirs(bounds.clone(), config_dir.clone(), files.clone());
     make_stubs(bounds.clone(), config_dir.clone(), files.clone());
     make_category_txt_files(bounds.clone(), config_dir.clone(), files.clone());
-    // copy_customized_files(&output_dir);
+    copy_customized_files(&output_dir);
 }
 
 fn copy_customized_files(output_dir: &PathBuf) {
     let input_dir = PathBuf::from("customized");
-
     get_files_in_dir_matching_extensions_recursively(
         &input_dir, 
         vec!["neoj"]
@@ -43,7 +42,6 @@ fn copy_customized_files(output_dir: &PathBuf) {
         // dbg!(&out_path);
         let _ = fs::copy(&in_path, &out_path);
     });
-
     get_files_in_dir_matching_extensions_recursively(
         &input_dir, 
         vec!["txt"]

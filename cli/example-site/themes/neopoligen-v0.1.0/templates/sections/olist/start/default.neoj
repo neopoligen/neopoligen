@@ -1,14 +1,8 @@
 [!- import "includes/macros.neoj" as theme -!]
 
-<section>
     <ul class="flow">
-        [!- for item in section.content.items -!]
-        <li class="list_item flow">
-            [!- for container in item.content.containers -!]
-            <p>
-                [@- output_payload(site, page_id, container) -@]
-            </p>
-            [!- endfor -!]
-        </li>
-        [!- endfor -!]
-    </ul>
+
+[! for item in section.items !]
+    [! set include_file = "sections/list_item/" + item.bounds + "/default.neoj" !]
+    [! include include_file !]
+[! endfor !]
