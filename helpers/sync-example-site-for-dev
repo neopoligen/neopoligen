@@ -1,8 +1,8 @@
 #!/bin/bash
 
 watchexec\
-  --project-origin "../cli"\
-  -w "../cli"\
+  --project-origin .\
+  -w "../cli/example-site"\
   --workdir "../cli/example-site"\
-  -e neoj\
+  -e neo,neoj\
   "rsync -av ./ ~/Documents/Neopoligen/v0.1.0-dev/"

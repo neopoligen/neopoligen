@@ -12,7 +12,9 @@ body {
 
 
 <pre>
-[@ site.pages[page_id]|tojson(true) @]
+[! for section in site.pages[page_id].ast !]
+    [@ section.type @]
+[! endfor !]
 </pre>
 
 </body>
