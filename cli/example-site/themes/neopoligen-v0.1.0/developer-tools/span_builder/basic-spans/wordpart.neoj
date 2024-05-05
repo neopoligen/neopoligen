@@ -1,11 +1,4 @@
 [#- type: standard -#]
-[!- import "macros.neojinja" as theme -!]
 
 [@ span.text @]
 
-~~~~~~~~~~
-
--- metadata
--- date: 2024-02-03 03:13:57
--- id: 2bswl83n
--- status: published

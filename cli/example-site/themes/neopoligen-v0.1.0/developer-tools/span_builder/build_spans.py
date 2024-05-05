@@ -82,9 +82,7 @@ jinja_template = """{# type: standard #}
 {%- import "includes/macros.neoj" as theme -%}
 
 <SPANKEY>
-{% for span in span.content.spans %}
-{{- theme.output_spans(site, page_id, span) -}}
-{% endfor %}
+TODO-FROM-span_builder
 </SPANKEY>
 """
 

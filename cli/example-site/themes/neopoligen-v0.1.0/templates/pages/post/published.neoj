@@ -10,20 +10,12 @@ body {
 </head>
 <body>
 
-
-<pre>
 [! for section in site.pages[page_id].ast !]
 [! if section.type != "metadata" !]
     [! set include_path = "sections/" + section.type + "/" + section.bounds + "/default.neoj" !]
-    [@ include_path @]
-    [@ section.type @]
-    [@ section.bounds @]
-    
     [! include include_path !]
-
 [! endif !]
 [! endfor !]
-</pre>
 
 </body>
 </html>

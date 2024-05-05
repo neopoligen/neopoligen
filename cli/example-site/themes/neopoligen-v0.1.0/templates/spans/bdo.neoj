@@ -2,7 +2,5 @@
 {%- import "includes/macros.neoj" as theme -%}
 
 <bdo>
-{% for span in span.content.spans %}
-{{- theme.output_spans(site, page_id, span) -}}
-{% endfor %}
+TODO-FROM-span_builder
 </bdo>
