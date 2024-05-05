@@ -206,7 +206,7 @@ fn json_section_with_data() {
 }
 
 #[test]
-fn solo_basic_list() {
+fn basic_list() {
     let source = "-- list\n\n- alfa\n\n- bravo";
     let config = SiteConfig::mock1();
     let left = Section::List {
