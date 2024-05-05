@@ -2,11 +2,13 @@ pub mod basic;
 pub mod json;
 pub mod list;
 pub mod list_item;
+pub mod raw;
 
 use crate::block::*;
 use crate::section::basic::basic_section;
 use crate::section::json::json_section;
 use crate::section::list::list_section;
+use crate::section::raw::raw_section;
 use crate::section_attr::*;
 use crate::span::empty_line;
 use nom::branch::alt;
@@ -106,53 +108,6 @@ pub fn section<'a>(
     .parse(source)?;
     Ok((source, result))
 }
-fn raw_section<'a>(
-    source: &'a str,
-    list: &'a Vec<String>,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, result) = list.iter().fold(initial_error(), |acc, item| match acc {
-        Ok(v) => Ok(v),
-        _ => raw_section_finder(source, item),
-    })?;
-    Ok((source, result))
-}
-
-pub fn raw_section_finder<'a>(
-    source: &'a str,
-    key: &'a str,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let initial_source = source;
-    let (source, _) = tag("--").context("raw_section").parse(source)?;
-    let (source, _) = space1.context("raw_section").parse(source)?;
-    let (source, r#type) = tag(key).context("raw_section").parse(source)?;
-    let (source, _) = tuple((space0, line_ending))
-        .context("raw_section")
-        .parse(source)?;
-    let (source, attrs) = many0(section_attr).context("raw_section").parse(source)?;
-    let (source, _) = alt((empty_line.map(|_| ""), eof))
-        .context("raw_section")
-        .parse(source)?;
-    let (source, raw_string) = alt((take_until("\n--"), rest))
-        .context("raw_section")
-        .parse(source)?;
-    let data = match serde_json::from_str::<Value>(raw_string) {
-        Ok(data) => Some(data),
-        Err(_) => None,
-    };
-    let (source, _) = multispace0(source)?;
-    let initial_source = &initial_source.replace(source, "");
-    Ok((
-        source,
-        Section::Json {
-            attrs,
-            bounds: SectionBounds::Full,
-            data,
-            source: initial_source.to_string(),
-            r#type: r#type.to_string(),
-        },
-    ))
-}
-
 fn initial_error<'a>() -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     // the purpose of this function is just to put an
     // error in the accumulator. There's a way to do that
