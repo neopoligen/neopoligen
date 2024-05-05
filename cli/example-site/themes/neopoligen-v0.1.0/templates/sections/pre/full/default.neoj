@@ -1,2 +1,2 @@
-[!- include "sections/pre/start/default.neojinja" -!]
+[!- include "sections/pre/start/default.neoj" -!]
 </section>

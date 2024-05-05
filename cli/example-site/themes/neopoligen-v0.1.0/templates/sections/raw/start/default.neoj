@@ -1,13 +1,13 @@
-[!- import "macros.neojinja" as theme -!]
+[!- import "macros.neoj" as theme -!]
 <section 
 [@ theme.section_attrs(site, page_id, section, ["raw_default_section", "raw_section", "flow"]) -@]
 >
 
-    [! include "subsections/forward.neojinja" !]
+    [! include "subsections/forward.neoj" !]
 
-    [! include "subsections/heading_basic.neojinja" !]
+    [! include "subsections/heading_basic.neoj" !]
 
-    [! include "subsections/preface.neojinja" !]
+    [! include "subsections/preface.neoj" !]
 
     <div class="content_subsection flow">
         <pre>
@@ -17,4 +17,4 @@
         </pre>
     </div>
 
-    [! include "subsections/afterword.neojinja" !]
+    [! include "subsections/afterword.neoj" !]

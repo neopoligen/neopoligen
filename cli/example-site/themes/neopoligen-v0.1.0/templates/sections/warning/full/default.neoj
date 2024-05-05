@@ -1,2 +1,2 @@
-[!- include "sections/warning/start/default.neojinja" -!]
+[!- include "sections/warning/start/default.neoj" -!]
 </div>

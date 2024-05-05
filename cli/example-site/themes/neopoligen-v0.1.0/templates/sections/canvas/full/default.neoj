@@ -1,2 +1,2 @@
-[!- include "sections/canvas/start/default.neojinja" -!]
+[!- include "sections/canvas/start/default.neoj" -!]
 </div>

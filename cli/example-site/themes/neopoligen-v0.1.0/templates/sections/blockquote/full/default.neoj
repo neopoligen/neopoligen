@@ -1,2 +1,2 @@
-[!- include "sections/blockquote/start/default.neojinja" -!]
+[!- include "sections/blockquote/start/default.neoj" -!]
 </div>

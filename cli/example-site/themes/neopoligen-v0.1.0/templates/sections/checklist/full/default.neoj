@@ -1,2 +1,2 @@
-[!- include "sections/checklist/start/default.neojinja" -!]
+[!- include "sections/checklist/start/default.neoj" -!]
 </section>

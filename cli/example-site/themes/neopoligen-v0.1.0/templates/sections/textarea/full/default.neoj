@@ -1,2 +1,2 @@
-[!- include "sections/textarea/start/default.neojinja" -!]
+[!- include "sections/textarea/start/default.neoj" -!]
 </section>
