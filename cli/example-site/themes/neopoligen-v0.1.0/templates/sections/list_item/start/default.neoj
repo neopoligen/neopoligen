@@ -1,5 +1,5 @@
 <li>
-[! for block in  item.content !]
+[! for block in item.content !]
 <p>
     [! for span in block.spans !]
         [! set include_path = "spans/" + span.type + ".neoj" !]

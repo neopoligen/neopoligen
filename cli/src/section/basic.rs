@@ -43,7 +43,7 @@ fn basic_section_finder<'a>(
     let (source, start) = opt(tag("/"))
         .context("basic_full_section_finder")
         .parse(source)?;
-    let (source, _) = alt((tuple((multispace0, eof)), tuple((space0, line_ending))))
+    let (source, _) = alt((tuple((space0, eof)), tuple((space0, line_ending))))
         .context("basic_full_section_finder")
         .parse(source)?;
     let (source, attrs) = many0(section_attr)
@@ -124,42 +124,42 @@ fn basic_section_finder<'a>(
 //     ))
 // }
 
-fn basic_end_section_finder<'a>(
-    source: &'a str,
-    key: &'a str,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let initial_source = source;
-    let (source, _) = tag("--")
-        .context("basic_start_section_finder")
-        .parse(source)?;
-    let (source, _) = space1.context("basic_start_section_finder").parse(source)?;
-    let (source, _) = tag("/")
-        .context("basic_start_section_finder")
-        .parse(source)?;
-    let (source, r#type) = tag(key)
-        .context("basic_start_section_finder")
-        .parse(source)?;
-    let (source, _) = alt((tuple((multispace0, eof)), tuple((space0, line_ending))))
-        .context("basic_start_section_finder")
-        .parse(source)?;
-    let (source, attrs) = many0(section_attr)
-        .context("basic_start_section_finder")
-        .parse(source)?;
-    let (source, _) = alt((empty_line.map(|_| ""), eof))
-        .context("basic_start_section_finder")
-        .parse(source)?;
-    let (source, result) = many0(block)
-        .context("basic_start_section_finder")
-        .parse(source)?;
-    let initial_source = &initial_source.replace(source, "");
-    Ok((
-        source,
-        Section::Basic {
-            attrs,
-            bounds: SectionBounds::End,
-            content: result,
-            source: initial_source.to_string(),
-            r#type: r#type.to_string(),
-        },
-    ))
-}
+// fn basic_end_section_finder<'a>(
+//     source: &'a str,
+//     key: &'a str,
+// ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+//     let initial_source = source;
+//     let (source, _) = tag("--")
+//         .context("basic_start_section_finder")
+//         .parse(source)?;
+//     let (source, _) = space1.context("basic_start_section_finder").parse(source)?;
+//     let (source, _) = tag("/")
+//         .context("basic_start_section_finder")
+//         .parse(source)?;
+//     let (source, r#type) = tag(key)
+//         .context("basic_start_section_finder")
+//         .parse(source)?;
+//     let (source, _) = alt((tuple((space0, eof)), tuple((space0, line_ending))))
+//         .context("basic_start_section_finder")
+//         .parse(source)?;
+//     let (source, attrs) = many0(section_attr)
+//         .context("basic_start_section_finder")
+//         .parse(source)?;
+//     let (source, _) = alt((empty_line.map(|_| ""), eof))
+//         .context("basic_start_section_finder")
+//         .parse(source)?;
+//     let (source, result) = many0(block)
+//         .context("basic_start_section_finder")
+//         .parse(source)?;
+//     let initial_source = &initial_source.replace(source, "");
+//     Ok((
+//         source,
+//         Section::Basic {
+//             attrs,
+//             bounds: SectionBounds::End,
+//             content: result,
+//             source: initial_source.to_string(),
+//             r#type: r#type.to_string(),
+//         },
+//     ))
+// }

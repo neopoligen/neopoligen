@@ -34,13 +34,18 @@ pub fn generic_section<'a>(source: &'a str) -> IResult<&'a str, Section, ErrorTr
     let (source, start) = opt(tag("/"))
         .context("basic_full_section_finder")
         .parse(source)?;
-    let (source, _) = alt((tuple((multispace0, eof)), tuple((space0, line_ending))))
-        .context("basic_full_section_finder")
-        .parse(source)?;
+    let (source, _) = alt((
+        tuple((space0, |src| {
+            eof.context("basic_full_section_finder").parse(src)
+        })),
+        tuple((space0, line_ending)),
+    ))
+    .context("basic_full_section_finder")
+    .parse(source)?;
     let (source, attrs) = many0(section_attr)
         .context("basic_full_section_finder")
         .parse(source)?;
-    let (source, _) = alt((empty_line.map(|_| ""), eof))
+    let (source, _) = alt((empty_line.map(|_| ""), |src| eof.context("here").parse(src)))
         .context("basic_full_section_finder")
         .parse(source)?;
     let (source, _) = multispace0
@@ -130,13 +135,16 @@ fn basic_end_section_finder<'a>(
     let (source, r#type) = tag(key)
         .context("basic_start_section_finder")
         .parse(source)?;
-    let (source, _) = alt((tuple((multispace0, eof)), tuple((space0, line_ending))))
-        .context("basic_start_section_finder")
-        .parse(source)?;
+    let (source, _) = alt((
+        tuple((space0, |src| eof.context("here").parse(src))),
+        tuple((space0, line_ending)),
+    ))
+    .context("basic_start_section_finder")
+    .parse(source)?;
     let (source, attrs) = many0(section_attr)
         .context("basic_start_section_finder")
         .parse(source)?;
-    let (source, _) = alt((empty_line.map(|_| ""), eof))
+    let (source, _) = alt((empty_line.map(|_| ""), |src| eof.context("here").parse(src)))
         .context("basic_start_section_finder")
         .parse(source)?;
     let (source, result) = many0(block)

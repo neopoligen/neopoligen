@@ -9,7 +9,7 @@ use nom::character::complete::multispace0;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::eof;
-// use nom::combinator::not;
+use nom::combinator::not;
 use nom::combinator::opt;
 use nom::multi::many0;
 use nom::sequence::tuple;
@@ -36,7 +36,7 @@ fn list_section_finder<'a>(
     let initial_source = source;
     let (source, _) = tag("--").context("list_section_finder").parse(source)?;
     let (source, _) = space1.context("list_section_finder").parse(source)?;
-    let (source, end) = opt(tag("/")).context("list_section_finder").parse(source)?;
+    let (source, _) = not(tag("/")).context("list_section_finder").parse(source)?;
     let (source, r#type) = tag(key).context("list_section_finder").parse(source)?;
     let (source, start) = opt(tag("/")).context("list_section_finder").parse(source)?;
     let (source, _) = alt((tuple((multispace0, eof)), tuple((space0, line_ending))))
@@ -58,17 +58,6 @@ fn list_section_finder<'a>(
             Section::List {
                 attrs,
                 bounds: SectionBounds::Start,
-                items,
-                source: initial_source.to_string(),
-                r#type: r#type.to_string(),
-            },
-        ))
-    } else if end.is_some() {
-        Ok((
-            source,
-            Section::List {
-                attrs,
-                bounds: SectionBounds::End,
                 items,
                 source: initial_source.to_string(),
                 r#type: r#type.to_string(),

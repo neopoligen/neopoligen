@@ -58,3 +58,30 @@ fn basic_end_section() {
     let right = section(&source, &config.sections).unwrap().1;
     assert_eq!(left, right);
 }
+
+#[test]
+fn basic_end_section_alt_position() {
+    let source = "--/ div\n\nhotel delta\n\n";
+    let config = SiteConfig::mock1();
+    let left = Section::Basic {
+        attrs: vec![],
+        bounds: SectionBounds::End,
+        content: vec![Block::Paragraph {
+            spans: vec![
+                Span::WordPart {
+                    text: "hotel".to_string(),
+                },
+                Span::Space {
+                    text: " ".to_string(),
+                },
+                Span::WordPart {
+                    text: "delta".to_string(),
+                },
+            ],
+        }],
+        source: "--/ div\n\nhotel delta\n\n".to_string(),
+        r#type: "div".to_string(),
+    };
+    let right = section(&source, &config.sections).unwrap().1;
+    assert_eq!(left, right);
+}

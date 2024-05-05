@@ -4,7 +4,7 @@ use crate::page::Page;
 use crate::site_config::SiteConfig;
 use minijinja::context;
 //use minijinja::syntax;
-use crate::error::Error;
+// use crate::error::Error;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
 use minijinja::Value;
@@ -86,7 +86,7 @@ impl Site {
                         outputs.insert(p.1.output_path.clone().unwrap(), output.clone());
                     }
                     Err(e) => {
-                        event!(Level::ERROR, "{}\n{}", p.1.source_path.display(), e);
+                        event!(Level::ERROR, "{}\n{:?}", p.1.source_path.display(), e);
                         self.render_errors
                             .insert(p.1.source_path.clone(), format!("{:?}", e));
                         ()

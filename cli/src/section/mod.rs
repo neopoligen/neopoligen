@@ -26,6 +26,8 @@ use serde::Serialize;
 use serde_json::Value;
 use std::collections::BTreeMap;
 
+use self::end::end_section_alt_position;
+
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(tag = "kind", rename_all = "lowercase")]
 pub enum Section {
@@ -94,6 +96,7 @@ pub fn section<'a>(
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, result) = alt((
         end_section,
+        end_section_alt_position,
         |src| basic_section(src, &sections.get("basic").unwrap()),
         |src| json_section(src, &sections.get("json").unwrap()),
         |src| list_section(src, &sections.get("list").unwrap()),
