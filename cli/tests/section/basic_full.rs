@@ -48,6 +48,21 @@ fn empty_section_no_attrs() {
 }
 
 #[test]
+fn empty_section_no_attrs_multiple_newlines() {
+    let source = "-- p\n\n\n\n-- metadata";
+    let config = SiteConfig::mock1();
+    let left = Section::Basic {
+        attrs: vec![],
+        bounds: SectionBounds::Full,
+        content: vec![],
+        source: "-- p\n\n\n\n".to_string(),
+        r#type: "p".to_string(),
+    };
+    let right = section(source, &config.sections).unwrap().1;
+    assert_eq!(left, right);
+}
+
+#[test]
 fn empty_section_no_attrs_only_one_newline() {
     let source = "-- p\n";
     let config = SiteConfig::mock1();

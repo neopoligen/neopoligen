@@ -56,6 +56,9 @@ fn basic_full_section_finder<'a>(
     let (source, _) = alt((empty_line.map(|_| ""), eof))
         .context("basic_full_section_finder")
         .parse(source)?;
+    let (source, _) = multispace0
+        .context("basic_full_section_finder")
+        .parse(source)?;
     let (source, result) = many0(block)
         .context("basic_full_section_finder")
         .parse(source)?;
