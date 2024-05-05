@@ -8,9 +8,19 @@ use tracing::{event, instrument, Level};
 use tracing_subscriber::filter;
 use tracing_subscriber::fmt;
 use tracing_subscriber::prelude::*;
+use tower_http::services::ServeDir;
+use tower_livereload::LiveReloadLayer;
+use tower_livereload::Reloader;
+use axum::Router;
+// use notify_debouncer_mini::new_debouncer;
+// use notify_debouncer_mini::notify::RecursiveMode;
+// use notify_debouncer_mini::DebounceEventResult;
+// use notify_debouncer_mini::DebouncedEventKind;
+// use rust_embed::RustEmbed;
 
+#[tokio::main]
 #[instrument]
-fn main() {
+async fn main() {
     let mut neopoligen_root = document_dir().unwrap();
     neopoligen_root.push("Neopoligen");
 
@@ -60,6 +70,7 @@ fn main() {
             Ok(mut site_config) => {
                 site_config.load_sections();
                 build_site(&site_config);
+                run_web_server(site_config.clone()).await;
             }
             Err(e) => println!("{}", e),
         }
@@ -191,6 +202,25 @@ fn load_site_config_file(neo_root: &PathBuf, acitve_site: &str) -> Result<SiteCo
         Err(e) => Err(format!("{}", e)),
     }
 }
+
+#[instrument]
+async fn run_web_server(config: SiteConfig) {
+    let livereload = LiveReloadLayer::new();
+    let reloader = livereload.reloader();
+    let app = Router::new()
+        .nest_service("/", ServeDir::new(&config.paths.get("output_root").unwrap()))
+        .layer(livereload);
+    // tokio::spawn(async move {
+    //     run_watcher(reloader, config.clone(), neo_env);
+    // });
+    event!(Level::INFO, "Starting web server");
+    if let Ok(listener) = tokio::net::TcpListener::bind("localhost:1989").await {
+        if (axum::serve(listener, app).await).is_ok() {
+            // Server is going at this point
+        }
+    }
+}
+
 fn write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
     match path.parent() {
         Some(parent_dir) => match fs::create_dir_all(parent_dir) {
