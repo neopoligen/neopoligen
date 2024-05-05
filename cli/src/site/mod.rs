@@ -73,7 +73,7 @@ impl Site {
             .iter()
             .for_each(|t| env.add_template_owned(t.0, t.1).unwrap());
         self.pages.iter().for_each(|p| {
-            let template_name = "default.neoj";
+            let template_name = "pages/post/published.neoj";
             if let Ok(tmpl) = env.get_template(template_name) {
                 match tmpl.render(context!(
                      site => site_obj,
@@ -90,9 +90,14 @@ impl Site {
                 event!(Level::ERROR, "Could not get template: {}", template_name);
             }
             ()
+
+            //
         });
         outputs
     }
+
+    //
+    //
 
     pub fn parse_pages(&mut self) {
         self.source_files.iter().for_each(|f| {

@@ -142,9 +142,9 @@ fn empty_dir(dir: &PathBuf) -> std::io::Result<()> {
     Ok(())
 }
 
-fn load_site_config_file(neo_root: &PathBuf, acitve_site: &str) -> Result<SiteConfig, String> {
+fn load_site_config_file(neo_root: &PathBuf, active_site: &str) -> Result<SiteConfig, String> {
     let mut project_root = neo_root.clone();
-    project_root.push(acitve_site);
+    project_root.push(active_site);
     let mut site_config_path = project_root.clone();
     site_config_path.push("config.json");
     match site_config_path.try_exists() {
@@ -178,27 +178,22 @@ fn load_site_config_file(neo_root: &PathBuf, acitve_site: &str) -> Result<SiteCo
                             config.paths.insert(
                                 "status_root".to_string(),
                                 project_root.join(PathBuf::from("status")),
-                                
                             );
                             config.paths.insert(
                                 "files_root".to_string(),
                                 project_root.join(PathBuf::from("files")),
-                                
                             );
                             config.paths.insert(
                                 "images_root".to_string(),
                                 project_root.join(PathBuf::from("images")),
-                                
                             );
                             config.paths.insert(
                                 "mp3s_root".to_string(),
                                 project_root.join(PathBuf::from("mp3s")),
-                                
                             );
                             config.paths.insert(
                                 "scripts_root".to_string(),
                                 project_root.join(PathBuf::from("scripts")),
-                                
                             );
                             config
                                 .paths
@@ -236,34 +231,32 @@ fn run_watcher(reloader: Reloader, site_config: SiteConfig) {
         Duration::from_millis(100),
         move |res: DebounceEventResult| match res {
             Ok(events) => {
-                match events.iter().find_map(|e| {
-                    match e.kind {
-                        DebouncedEventKind::Any => {
-                            if e.path
-                                .starts_with(&site_config.paths.get("content_root").unwrap()) ||
-                                e.path
-                                .starts_with(&site_config.paths.get("files_root").unwrap()) ||
-                                e.path
-                                .starts_with(&site_config.paths.get("images_root").unwrap())||
-                                e.path
-                                .starts_with(&site_config.paths.get("mp3s_root").unwrap())||
-                                e.path
-                                .starts_with(&site_config.paths.get("scripts_root").unwrap()) ||
-                                e.path
+                match events.iter().find_map(|e| match e.kind {
+                    DebouncedEventKind::Any => {
+                        if e.path
+                            .starts_with(&site_config.paths.get("content_root").unwrap())
+                            || e.path
+                                .starts_with(&site_config.paths.get("files_root").unwrap())
+                            || e.path
+                                .starts_with(&site_config.paths.get("images_root").unwrap())
+                            || e.path
+                                .starts_with(&site_config.paths.get("mp3s_root").unwrap())
+                            || e.path
+                                .starts_with(&site_config.paths.get("scripts_root").unwrap())
+                            || e.path
                                 .starts_with(&site_config.paths.get("themes_root").unwrap())
-                            {
-                                Some(e)
-                            } else {
-                                None
-                            }
+                        {
+                            Some(e)
+                        } else {
+                            None
                         }
-                        _ => None,
                     }
+                    _ => None,
                 }) {
                     Some(_) => {
                         build_site(&site_config);
                         reloader.reload();
-                    },
+                    }
                     None => {}
                 }
             }
@@ -279,7 +272,6 @@ fn run_watcher(reloader: Reloader, site_config: SiteConfig) {
     // loop since clippy says that wastes cpu
     loop {}
 }
-
 
 #[instrument(skip(site_config))]
 async fn run_web_server(site_config: SiteConfig) {

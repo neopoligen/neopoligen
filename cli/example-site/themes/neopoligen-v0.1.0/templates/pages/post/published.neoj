@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+    background-color: black;
+    color: #aaa;
+}
+</style>
+</head>
+<body>
+
+
+<pre>
+[@ site.pages[page_id]|tojson(true) @]
+</pre>
+
+</body>
+</html>

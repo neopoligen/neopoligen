@@ -1,0 +1,9 @@
+#!/bin/bash
+
+watchexec\
+  --project-origin "../cli"\
+  -w "../cli"\
+  --workdir "../cli"\
+  -r\
+  -e rs\
+  "bash -c 'cargo test -- --nocapture && cargo run'"
