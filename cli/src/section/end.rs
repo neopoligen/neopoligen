@@ -26,7 +26,7 @@ pub fn end_section<'a>(source: &'a str) -> IResult<&'a str, Section, ErrorTree<&
     let (source, _) = tag("/")
         .context("basic_full_section_finder")
         .parse(source)?;
-    let (source, r#type) = is_not(" \n")
+    let (source, r#type) = is_not(" /\n")
         .context("basic_full_section_finder")
         .parse(source)?;
     let (source, _) = alt((tuple((multispace0, eof)), tuple((space0, line_ending))))

@@ -9,6 +9,7 @@ use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::eof;
 use nom::combinator::not;
+use nom::combinator::opt;
 use nom::multi::many0;
 use nom::sequence::tuple;
 use nom::IResult;
@@ -46,21 +47,17 @@ fn raw_full_section_finder<'a>(
     let (source, _) = alt((empty_line.map(|_| ""), eof))
         .context("raw_full_section")
         .parse(source)?;
-    let (source, raw_string) = alt((take_until("\n--"), rest))
+    let (source, text) = alt((take_until("\n--"), rest))
         .context("raw_full_section")
         .parse(source)?;
-    let data = match serde_json::from_str::<Value>(raw_string) {
-        Ok(data) => Some(data),
-        Err(_) => None,
-    };
     let (source, _) = multispace0(source)?;
     let initial_source = &initial_source.replace(source, "");
     Ok((
         source,
-        Section::Json {
+        Section::Raw {
             attrs,
             bounds: SectionBounds::Full,
-            data,
+            text: text.to_string(),
             source: initial_source.to_string(),
             r#type: r#type.to_string(),
         },

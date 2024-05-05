@@ -100,6 +100,10 @@ fn build_site(site_config: &SiteConfig) {
     site.page_errors.iter().for_each(|p| {
         let _ = write_file_with_mkdir(p.0, &p.1.error.clone().unwrap().to_string());
     });
+    site.render_errors.iter().for_each(|p| {
+        dbg!(&p.0);
+        let _ = write_file_with_mkdir(p.0, p.1);
+    })
 }
 
 fn load_engine_config_file(path: &PathBuf) -> Result<EngineConfig, String> {

@@ -3,3 +3,7 @@ pre
 raw
 results
 textarea
+html
+javascript
+css
+head

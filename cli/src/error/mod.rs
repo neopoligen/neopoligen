@@ -8,6 +8,9 @@ pub struct Error {
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 pub enum ErrorKind {
+    MissingIdError {
+        source: String,
+    },
     ParserError {
         line: usize,
         column: usize,
@@ -15,8 +18,8 @@ pub enum ErrorKind {
         source: String,
         message: String,
     },
-    MissingIdError {
-        source: String,
+    RenderTemplate {
+        message: String,
     },
 }
 
@@ -45,6 +48,10 @@ impl fmt::Display for Error {
             ErrorKind::MissingIdError { source } => {
                 fmt.write_str("Missing ID\n\n")?;
                 fmt.write_str(source.as_str())?;
+            }
+            ErrorKind::RenderTemplate { message } => {
+                fmt.write_str("Problem Rending Template\n\n")?;
+                fmt.write_str(message.as_str())?;
             }
         }
         Ok(())

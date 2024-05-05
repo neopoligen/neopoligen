@@ -15,6 +15,7 @@ pub struct Page {
     pub folders: Vec<String>,
     pub id: Option<String>,
     pub output_path: Option<PathBuf>,
+    pub source_path: PathBuf,
     pub source_text: String,
     pub tags: Vec<String>,
 }
@@ -31,6 +32,7 @@ impl Page {
                         folders: vec![],
                         id: Some(id),
                         output_path,
+                        source_path,
                         source_text,
                         tags: vec![],
                     }
@@ -48,6 +50,7 @@ impl Page {
                         folders: vec![],
                         id: None,
                         output_path: Some(output_path.with_extension("txt")),
+                        source_path,
                         source_text,
                         tags: vec![],
                     }
@@ -66,6 +69,7 @@ impl Page {
                     folders: vec![],
                     id: None,
                     output_path: Some(output_path.with_extension("txt")),
+                    source_path,
                     source_text,
                     tags: vec![],
                 }

@@ -26,6 +26,7 @@ impl SiteConfig {
                 "css".to_string(),
                 "html".to_string(),
                 "javascript".to_string(),
+                "pre".to_string(),
             ],
         );
         let mut paths = BTreeMap::new();

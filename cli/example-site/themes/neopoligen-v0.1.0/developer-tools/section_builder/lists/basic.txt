@@ -7,6 +7,8 @@ bookmark
 blurb
 canvas
 div
+definition
+end-example
 footnote
 forward
 h1
@@ -29,6 +31,7 @@ related
 section
 short
 spotify
+start-example
 subtitle
 template
 title

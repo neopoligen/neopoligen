@@ -1,5 +1,6 @@
 pub mod basic;
 pub mod end;
+pub mod generic;
 pub mod json;
 pub mod list;
 pub mod list_item;
@@ -8,6 +9,7 @@ pub mod raw;
 use crate::block::*;
 use crate::section::basic::basic_section;
 use crate::section::end::end_section;
+use crate::section::generic::generic_section;
 use crate::section::json::json_section;
 use crate::section::list::list_section;
 use crate::section::raw::raw_section;
@@ -96,6 +98,7 @@ pub fn section<'a>(
         |src| json_section(src, &sections.get("json").unwrap()),
         |src| list_section(src, &sections.get("list").unwrap()),
         |src| raw_section(src, &sections.get("raw").unwrap()),
+        generic_section, // keep this last
     ))
     .context("section")
     .parse(source)?;

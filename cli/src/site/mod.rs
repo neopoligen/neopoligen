@@ -4,7 +4,7 @@ use crate::page::Page;
 use crate::site_config::SiteConfig;
 use minijinja::context;
 //use minijinja::syntax;
-// use crate::error::Error;
+use crate::error::Error;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
 use minijinja::Value;
@@ -20,6 +20,7 @@ use walkdir::WalkDir;
 pub struct Site {
     pub config: SiteConfig,
     pub page_errors: BTreeMap<PathBuf, Page>,
+    pub render_errors: BTreeMap<PathBuf, String>,
     pub missing_ids: BTreeMap<PathBuf, String>,
     pub pages: BTreeMap<String, Page>,
     pub source_files: BTreeMap<PathBuf, String>,
@@ -36,6 +37,7 @@ impl Site {
             missing_ids: BTreeMap::new(),
             pages: BTreeMap::new(),
             page_errors: BTreeMap::new(),
+            render_errors: BTreeMap::new(),
             templates: BTreeMap::new(),
         }
     }
@@ -55,9 +57,10 @@ impl Site {
         // });
     }
 
-    pub fn generate_content_pages(&self) -> BTreeMap<PathBuf, String> {
+    pub fn generate_content_pages(&mut self) -> BTreeMap<PathBuf, String> {
         let mut outputs = BTreeMap::new();
         let mut env = Environment::new();
+        env.set_debug(true);
         let site_obj = Value::from_serialize(&self.clone());
         env.set_syntax(
             SyntaxConfig::builder()
@@ -83,7 +86,10 @@ impl Site {
                         outputs.insert(p.1.output_path.clone().unwrap(), output.clone());
                     }
                     Err(e) => {
-                        event!(Level::ERROR, "{}", e)
+                        event!(Level::ERROR, "{}\n{}", p.1.source_path.display(), e);
+                        self.render_errors
+                            .insert(p.1.source_path.clone(), format!("{:?}", e));
+                        ()
                     }
                 }
             } else {
