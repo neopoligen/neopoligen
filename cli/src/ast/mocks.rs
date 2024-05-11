@@ -15,5 +15,5 @@ This is a paragraph
 -- metadata
 -- date: 2024-03-04 10:11:12
 -- id: ast-mock1"#;
-    ast(&content, &config.sections).unwrap()
+    ast(&content, &config.sections, &config.spans).unwrap()
 }

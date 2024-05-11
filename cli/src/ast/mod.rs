@@ -2,6 +2,7 @@ pub mod mocks;
 
 use crate::error::*;
 use crate::section::*;
+use crate::sections::*;
 use nom::multi::many1;
 use nom::IResult;
 use nom::Parser;
@@ -11,7 +12,7 @@ use nom_supreme::final_parser::final_parser;
 use nom_supreme::final_parser::Location;
 use nom_supreme::final_parser::RecreateContext;
 use nom_supreme::parser_ext::ParserExt;
-use std::collections::BTreeMap;
+// use std::collections::BTreeMap;
 
 // pub fn ast<'a>(
 //     source: &'a str,
@@ -47,9 +48,10 @@ use std::collections::BTreeMap;
 
 pub fn ast<'a>(
     source: &'a str,
-    sections: &'a BTreeMap<String, Vec<String>>,
+    sections: &'a Sections,
+    spans: &'a Vec<String>,
 ) -> Result<Vec<Section>, Error> {
-    match final_parser(|src| do_parse(src, &sections))(source) {
+    match final_parser(|src| do_parse(src, &sections, &spans))(source) {
         Ok(data) => Ok(data),
         Err(e) => Err(get_error(source, &e)),
     }
@@ -57,9 +59,10 @@ pub fn ast<'a>(
 
 fn do_parse<'a>(
     source: &'a str,
-    sections: &'a BTreeMap<String, Vec<String>>,
+    sections: &'a Sections,
+    spans: &'a Vec<String>,
 ) -> IResult<&'a str, Vec<Section>, ErrorTree<&'a str>> {
-    let (source, result) = many1(|src| section(src, sections))
+    let (source, result) = many1(|src| start_or_full_section(src, &sections, spans))
         .context("page")
         .parse(source)?;
     Ok((source, result))

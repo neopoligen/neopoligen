@@ -2,7 +2,6 @@
 use crate::ast::ast;
 use crate::error::*;
 use crate::section::*;
-use crate::section_attr::SectionAttr;
 use crate::site_config::SiteConfig;
 use serde::Serialize;
 use std::path::PathBuf;
@@ -22,7 +21,7 @@ pub struct Page {
 
 impl Page {
     pub fn new(source_text: String, source_path: PathBuf, config: &SiteConfig) -> Page {
-        match ast(&source_text, &config.sections) {
+        match ast(&source_text, &config.sections.clone(), &config.spans) {
             Ok(ast) => match get_page_id(&ast, &source_text) {
                 Ok(id) => {
                     let output_path = get_output_path(&id, &ast, &config);
@@ -83,12 +82,8 @@ fn get_page_id(ast: &Vec<Section>, source_text: &str) -> Result<String, Error> {
         if let Section::Json { r#type, attrs, .. } = sec_enum {
             if r#type == "metadata" {
                 attrs.iter().find_map(|attr| {
-                    if let SectionAttr::KeyValue { key, value } = attr {
-                        if key == "id" {
-                            Some(value.trim().to_string())
-                        } else {
-                            None
-                        }
+                    if attr.0 == "id" {
+                        Some(attr.1.trim().to_string())
                     } else {
                         None
                     }
@@ -111,15 +106,11 @@ fn get_page_id(ast: &Vec<Section>, source_text: &str) -> Result<String, Error> {
 
 fn get_page_path(ast: &Vec<Section>) -> Option<PathBuf> {
     ast.iter().find_map(|sec_enum| {
-        if let Section::Json { r#type, attrs, .. } = sec_enum {
+        if let Section::Yaml { r#type, attrs, .. } = sec_enum {
             if r#type == "metadata" {
                 attrs.iter().find_map(|attr| {
-                    if let SectionAttr::KeyValue { key, value } = attr {
-                        if key == "path" {
-                            Some(PathBuf::from(value.trim().to_string()))
-                        } else {
-                            None
-                        }
+                    if attr.0 == "path" {
+                        Some(PathBuf::from(attr.1.trim().to_string()))
                     } else {
                         None
                     }
@@ -151,16 +142,13 @@ fn get_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Option<
                 Some(_) => Some(full_path),
                 None => Some(full_path.join(PathBuf::from("index.html"))),
             }
-
             // Some(full_path)
-
             // Some(config.paths.get("output_root").unwrap().join(format!(
             // "{}/{}/index.html",
             // config.default_language.clone(),
             // id
             // )))
         }
-
         None => Some(config.paths.get("output_root").unwrap().join(format!(
             "{}/{}/index.html",
             config.default_language.clone(),

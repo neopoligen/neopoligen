@@ -4,7 +4,7 @@ pub mod engine_config;
 pub mod error;
 pub mod page;
 pub mod section;
-pub mod section_attr;
+pub mod sections;
 pub mod site;
 pub mod site_config;
 pub mod span;

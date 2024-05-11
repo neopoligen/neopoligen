@@ -1,59 +1,18 @@
 use crate::block::*;
 use crate::section::*;
+use crate::sections::*;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
+use nom::bytes::complete::take_until;
 use nom::character::complete::multispace0;
-use nom::combinator::not;
+use nom::combinator::rest;
 use nom::multi::many0;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-use crate::sections::*;
 
-pub fn list_item_block<'a>(
-    source: &'a str,
-    spans: &'a Vec<String>,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, _) = not(tag("-")).context("").parse(source)?;
-    let (source, _) = not(eof).context("").parse(source)?;
-    // dbg!(&source);
-    let (source, spans) = many0(|src| span_finder(src, spans))
-        .context("")
-        .parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    Ok((source, Section::Block { spans }))
-}
-
-pub fn list_item<'a>(
-    source: &'a str,
-    spans: &'a Vec<String>,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, _) = tag("- ").context("").parse(source)?;
-    let (source, children) = many0(|src| list_item_block(src, spans))
-        .context("")
-        .parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    Ok((source, Section::ListItem { children }))
-}
-
-pub fn list_item_with_sections<'a>(
-    source: &'a str,
-    sections: &'a Sections,
-    spans: &'a Vec<String>,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, _) = tag("- ").context("").parse(source)?;
-    let (source, children) = many0(alt((
-        |src| list_item_block(src, spans),
-        |src| start_or_full_section(src, &sections, &spans),
-    )))
-    .context("")
-    .parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    Ok((source, Section::ListItem { children }))
-}
-
-pub fn list_section_end<'a>(
+pub fn yaml_section_end<'a>(
     source: &'a str,
     spans: &'a Vec<String>,
     key: &'a str,
@@ -79,32 +38,34 @@ pub fn list_section_end<'a>(
     });
     Ok((
         source,
-        Section::List {
+        Section::Yaml {
             attrs,
             bounds: "end".to_string(),
             children,
+            data: None,
             flags,
             r#type: r#type.to_string(),
         },
     ))
 }
 
-pub fn list_section_full<'a>(
+pub fn yaml_section_full<'a>(
     source: &'a str,
     sections: &'a Sections,
-    spans: &'a Vec<String>,
+    _spans: &'a Vec<String>,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, r#type) = (|src| tag_finder(src, &sections.list))
+    let (source, r#type) = (|src| tag_finder(src, &sections.yaml))
         .context("")
         .parse(source)?;
     let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
     let (source, raw_attrs) = many0(section_attr).context("").parse(source)?;
     let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = many0(|src| list_item(src, spans))
+    let (source, _) = many0(empty_until_newline_or_eof)
         .context("")
         .parse(source)?;
+    let (source, text) = alt((take_until("\n--"), rest)).context("").parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
     let mut attrs: BTreeMap<String, String> = BTreeMap::new();
     let mut flags: Vec<String> = vec![];
     raw_attrs.iter().for_each(|attr| match attr {
@@ -116,35 +77,37 @@ pub fn list_section_full<'a>(
     });
     Ok((
         source,
-        Section::List {
+        Section::Yaml {
             attrs,
             bounds: "full".to_string(),
-            children,
+            children: vec![],
+            data: Some(text.trim_end().to_string()),
             flags,
             r#type: r#type.to_string(),
         },
     ))
 }
 
-pub fn list_section_start<'a>(
+pub fn yaml_section_start<'a>(
     source: &'a str,
     sections: &'a Sections,
     spans: &'a Vec<String>,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, r#type) = (|src| tag_finder(src, &sections.list))
+    let (source, r#type) = (|src| tag_finder(src, &sections.yaml))
         .context("")
         .parse(source)?;
+    let end_key = format!("-- /{}", r#type);
     let (source, _) = tag("/").context("").parse(source)?;
     let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
     let (source, raw_attrs) = many0(section_attr).context("").parse(source)?;
     let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    let (source, mut children) = many0(|src| list_item_with_sections(src, &sections, &spans))
+    let (source, _) = many0(empty_until_newline_or_eof)
         .context("")
         .parse(source)?;
-    let (source, end_section) = list_section_end(source, spans, r#type)?;
-    children.push(end_section);
+    let (source, text) = take_until(end_key.as_str()).context("").parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
+    let (source, end_section) = yaml_section_end(source, spans, r#type)?;
     let mut attrs: BTreeMap<String, String> = BTreeMap::new();
     let mut flags: Vec<String> = vec![];
     raw_attrs.iter().for_each(|attr| match attr {
@@ -156,10 +119,11 @@ pub fn list_section_start<'a>(
     });
     Ok((
         source,
-        Section::List {
+        Section::Yaml {
             attrs,
             bounds: "start".to_string(),
-            children,
+            children: vec![end_section],
+            data: Some(text.trim_end().to_string()),
             flags,
             r#type: r#type.to_string(),
         },
