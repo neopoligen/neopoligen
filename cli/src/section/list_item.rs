@@ -100,7 +100,7 @@ pub fn list_item_end_section<'a>(source: &'a str) -> IResult<&'a str, Section, E
     Ok((
         source,
         Section::ListItem {
-            bounds: SectionBounds::Start,
+            bounds: SectionBounds::End,
             content: result,
             source: initial_source.to_string(),
             r#type: "list_item".to_string(),

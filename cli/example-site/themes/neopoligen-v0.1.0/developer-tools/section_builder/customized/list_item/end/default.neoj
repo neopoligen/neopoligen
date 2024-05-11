@@ -1,2 +1,11 @@
 </li>
-[!- include "sections/p/full/default.neoj" -!]
+<li>
+[! for block in item.content !]
+<p>
+    [! for span in block.spans !]
+        [! set include_path = "spans/" + span.type + ".neoj" !]
+        [! include include_path !]
+    [! endfor !]
+    </p>
+[! endfor !]
+</li>
