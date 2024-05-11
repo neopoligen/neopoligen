@@ -90,20 +90,28 @@ fn build_site(site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
     let mut site = Site::new(site_config.clone());
     site.load_templates();
+    site.load_template_test_files();
     site.load_source_files();
     site.parse_pages();
+
     let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
     let _ = empty_dir(&site.config.paths.get("errors_root").unwrap());
     site.generate_content_pages().iter().for_each(|p| {
-        let _ = write_file_with_mkdir(p.0, p.1);
+        let output_path = &site
+            .config
+            .paths
+            .get("output_root")
+            .unwrap()
+            .join(p.0.strip_prefix("/").unwrap());
+        let _ = write_file_with_mkdir(output_path, p.1);
     });
-    site.page_errors.iter().for_each(|p| {
-        let _ = write_file_with_mkdir(p.0, &p.1.error.clone().unwrap().to_string());
-    });
-    site.render_errors.iter().for_each(|p| {
-        dbg!(&p.0);
-        let _ = write_file_with_mkdir(p.0, p.1);
-    })
+    // site.page_errors.iter().for_each(|p| {
+    //     let _ = write_file_with_mkdir(p.0, &p.1.error.clone().unwrap().to_string());
+    // });
+    // site.render_errors.iter().for_each(|p| {
+    //     dbg!(&p.0);
+    //     let _ = write_file_with_mkdir(p.0, p.1);
+    // })
 }
 
 fn load_engine_config_file(path: &PathBuf) -> Result<EngineConfig, String> {

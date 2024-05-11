@@ -10,6 +10,7 @@ use minijinja::Environment;
 use minijinja::Value;
 use serde::Serialize;
 use std::collections::BTreeMap;
+use std::collections::BTreeSet;
 use std::fs;
 use std::path::PathBuf;
 use tracing::{event, instrument, Level};
@@ -19,12 +20,13 @@ use walkdir::WalkDir;
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct Site {
     pub config: SiteConfig,
-    pub page_errors: BTreeMap<PathBuf, Page>,
+    pub page_errors: Vec<Page>,
     pub render_errors: BTreeMap<PathBuf, String>,
     pub missing_ids: BTreeMap<PathBuf, String>,
     pub pages: BTreeMap<String, Page>,
     pub source_files: BTreeMap<PathBuf, String>,
     pub templates: BTreeMap<String, String>,
+    pub template_test_files: BTreeMap<PathBuf, String>,
 }
 
 impl Site {
@@ -36,9 +38,10 @@ impl Site {
             source_files: BTreeMap::new(),
             missing_ids: BTreeMap::new(),
             pages: BTreeMap::new(),
-            page_errors: BTreeMap::new(),
+            page_errors: vec![],
             render_errors: BTreeMap::new(),
             templates: BTreeMap::new(),
+            template_test_files: BTreeMap::new(),
         }
     }
 }
@@ -83,7 +86,8 @@ impl Site {
                     page_id => p.0
                 )) {
                     Ok(output) => {
-                        outputs.insert(p.1.output_path.clone().unwrap(), output.clone());
+                        // dbg!(&p.1.rel_output_path);
+                        outputs.insert(p.1.rel_output_path.clone().unwrap(), output.clone());
                     }
                     Err(e) => {
                         event!(Level::ERROR, "{}\n{:?}", p.1.source_path.display(), e);
@@ -102,14 +106,11 @@ impl Site {
         outputs
     }
 
-    //
-    //
-
     pub fn parse_pages(&mut self) {
         self.source_files.iter().for_each(|f| {
             let p = Page::new(f.1.clone(), f.0.clone(), &self.config);
             if let Some(_) = p.error.clone() {
-                self.page_errors.insert(p.output_path.clone().unwrap(), p);
+                self.page_errors.push(p);
             } else {
                 self.pages.insert(p.id.clone().unwrap(), p);
             }
@@ -222,6 +223,37 @@ impl Site {
         }
     }
 
+    #[instrument(skip(self))]
+    pub fn load_template_test_files(&mut self) {
+        let mut dir = self.config.paths.get("theme_root").unwrap().clone();
+        dir.push("tests/content");
+        if dir.exists() {
+            WalkDir::new(dir)
+                .into_iter()
+                .filter(|entry| match entry.as_ref().unwrap().path().extension() {
+                    Some(ext) => ext.to_str().unwrap() == "neo",
+                    None => false,
+                })
+                .for_each(|entry| {
+                    let path = entry.as_ref().unwrap().path().to_path_buf();
+                    match fs::read_to_string(&path) {
+                        Ok(content) => {
+                            self.source_files.insert(path, content);
+                        }
+                        Err(e) => {
+                            event!(Level::ERROR, "{}", e)
+                        }
+                    }
+                });
+        } else {
+            event!(
+                Level::ERROR,
+                "Direcotory does not exist: {}",
+                &dir.display()
+            );
+        }
+    }
+
     pub fn load_templates(&mut self) {
         let mut templates_root = self.config.paths.get("themes_root").unwrap().to_path_buf();
         templates_root.push(self.config.theme.name.clone());
@@ -254,6 +286,8 @@ impl Site {
             );
         }
     }
+
+    pub fn test_templates(&self) {}
 
     //
 }

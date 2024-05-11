@@ -13,7 +13,7 @@ pub struct Page {
     pub error: Option<Error>,
     pub folders: Vec<String>,
     pub id: Option<String>,
-    pub output_path: Option<PathBuf>,
+    pub rel_output_path: Option<PathBuf>,
     pub source_path: PathBuf,
     pub source_text: String,
     pub tags: Vec<String>,
@@ -26,31 +26,32 @@ impl Page {
                 // dbg!(&ast);
                 match get_page_id(&ast, &source_text) {
                     Ok(id) => {
-                        let output_path = get_output_path(&id, &ast, &config);
+                        let rel_output_path = get_rel_output_path(&id, &ast, &config);
                         Page {
                             ast: Some(ast),
                             error: None,
                             folders: vec![],
                             id: Some(id),
-                            output_path,
+                            rel_output_path,
                             source_path,
                             source_text,
                             tags: vec![],
                         }
                     }
                     Err(e) => {
-                        let output_path = replace_path(
-                            &source_path,
-                            config.paths.get("content_root").unwrap(),
-                            config.paths.get("errors_root").unwrap(),
-                        )
-                        .unwrap();
+                        // let output_path = replace_path(
+                        //     &source_path,
+                        //     config.paths.get("content_root").unwrap(),
+                        //     config.paths.get("errors_root").unwrap(),
+                        // )
+                        // .unwrap();
                         Page {
                             ast: None,
                             error: Some(e),
                             folders: vec![],
                             id: None,
-                            output_path: Some(output_path.with_extension("txt")),
+                            // output_path: Some(output_path.with_extension("txt")),
+                            rel_output_path: None,
                             source_path,
                             source_text,
                             tags: vec![],
@@ -60,18 +61,19 @@ impl Page {
             }
             Err(error) => {
                 // dbg!(&error);
-                let output_path = replace_path(
-                    &source_path,
-                    config.paths.get("content_root").unwrap(),
-                    config.paths.get("errors_root").unwrap(),
-                )
-                .unwrap();
+                // let output_path = replace_path(
+                //     &source_path,
+                //     config.paths.get("content_root").unwrap(),
+                //     config.paths.get("errors_root").unwrap(),
+                // )
+                // .unwrap();
                 Page {
                     ast: None,
                     error: Some(error),
                     folders: vec![],
                     id: None,
-                    output_path: Some(output_path.with_extension("txt")),
+                    // output_path: Some(output_path.with_extension("txt")),
+                    rel_output_path: None,
                     source_path,
                     source_text,
                     tags: vec![],
@@ -136,13 +138,14 @@ fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result<Pat
     }
 }
 
-fn get_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Option<PathBuf> {
+fn get_rel_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Option<PathBuf> {
     match get_page_path(ast) {
         Some(mut path) => {
+            // let mut full_path = config.paths.get("output_root").unwrap().join(path);
             if path.is_absolute() {
                 path = path.strip_prefix("/").unwrap().to_path_buf();
             }
-            let full_path = config.paths.get("output_root").unwrap().join(path);
+            let full_path = PathBuf::from("/").join(path);
             match full_path.extension() {
                 Some(_) => Some(full_path),
                 None => Some(full_path.join(PathBuf::from("index.html"))),
@@ -154,10 +157,36 @@ fn get_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Option<
             // id
             // )))
         }
-        None => Some(config.paths.get("output_root").unwrap().join(format!(
+        None => Some(PathBuf::from("/").join(format!(
             "{}/{}/index.html",
             config.default_language.clone(),
             id
         ))),
     }
 }
+
+// fn get_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Option<PathBuf> {
+//     match get_page_path(ast) {
+//         Some(mut path) => {
+//             if path.is_absolute() {
+//                 path = path.strip_prefix("/").unwrap().to_path_buf();
+//             }
+//             let full_path = config.paths.get("output_root").unwrap().join(path);
+//             match full_path.extension() {
+//                 Some(_) => Some(full_path),
+//                 None => Some(full_path.join(PathBuf::from("index.html"))),
+//             }
+//             // Some(full_path)
+//             // Some(config.paths.get("output_root").unwrap().join(format!(
+//             // "{}/{}/index.html",
+//             // config.default_language.clone(),
+//             // id
+//             // )))
+//         }
+//         None => Some(config.paths.get("output_root").unwrap().join(format!(
+//             "{}/{}/index.html",
+//             config.default_language.clone(),
+//             id
+//         ))),
+//     }
+// }
