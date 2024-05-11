@@ -51,7 +51,6 @@ impl SiteConfig {
                 checklist: vec!["div".to_string()],
                 comment: vec!["div".to_string()],
                 detail: vec!["div".to_string()],
-                generic: vec!["div".to_string()],
                 json: vec!["div".to_string()],
                 list: vec!["div".to_string()],
                 raw: vec!["div".to_string()],

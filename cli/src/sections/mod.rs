@@ -8,7 +8,6 @@ pub struct Sections {
     pub checklist: Vec<String>,
     pub comment: Vec<String>,
     pub detail: Vec<String>,
-    pub generic: Vec<String>,
     pub json: Vec<String>,
     pub list: Vec<String>,
     pub raw: Vec<String>,

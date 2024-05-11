@@ -49,27 +49,61 @@ impl SiteConfig {
         // self.sections.insert("table".to_string(), vec![]);
         // self.sections.insert("yaml".to_string(), vec![]);
 
-        // let section_root = self
-        //     .paths
-        //     .get("theme_root")
-        //     .unwrap()
-        //     .clone()
-        //     .join(PathBuf::from("templates/sections"));
-        // let section_dirs = get_dirs_in_dir(&section_root).unwrap();
-        // section_dirs.iter().for_each(|dir| {
-        //     let cat_file_path = dir.join("category.txt");
-        //     if cat_file_path.exists() {
-        //         if let Ok(cat_raw) = fs::read_to_string(cat_file_path) {
-        //             if let Some(name) = cat_raw.lines().nth(0) {
-        //                 if let Some(vec_to_add_to) = self.sections.get_mut(name) {
-        //                     if let Some(basename) = dir.file_name() {
-        //                         vec_to_add_to.push(basename.to_string_lossy().to_string());
-        //                     }
-        //                 }
-        //             };
-        //         }
-        //     }
-        // });
+        let section_root = self
+            .paths
+            .get("theme_root")
+            .unwrap()
+            .clone()
+            .join(PathBuf::from("templates/sections"));
+        let section_dirs = get_dirs_in_dir(&section_root).unwrap();
+        section_dirs.iter().for_each(|dir| {
+            let cat_file_path = dir.join("category.txt");
+            if cat_file_path.exists() {
+                if let Ok(cat_raw) = fs::read_to_string(cat_file_path) {
+                    if let Some(basename) = dir.file_name() {
+                        if let Some(name) = cat_raw.lines().nth(0) {
+                            if name == "basic" {
+                                self.sections
+                                    .basic
+                                    .push(basename.to_string_lossy().to_string())
+                            } else if name == "checklist" {
+                                self.sections
+                                    .checklist
+                                    .push(basename.to_string_lossy().to_string())
+                            } else if name == "comment" {
+                                self.sections
+                                    .comment
+                                    .push(basename.to_string_lossy().to_string())
+                            } else if name == "detail" {
+                                self.sections
+                                    .detail
+                                    .push(basename.to_string_lossy().to_string())
+                            } else if name == "json" {
+                                self.sections
+                                    .json
+                                    .push(basename.to_string_lossy().to_string())
+                            } else if name == "list" {
+                                self.sections
+                                    .list
+                                    .push(basename.to_string_lossy().to_string())
+                            } else if name == "raw" {
+                                self.sections
+                                    .raw
+                                    .push(basename.to_string_lossy().to_string())
+                            } else if name == "table" {
+                                self.sections
+                                    .table
+                                    .push(basename.to_string_lossy().to_string())
+                            } else if name == "yaml" {
+                                self.sections
+                                    .yaml
+                                    .push(basename.to_string_lossy().to_string())
+                            }
+                        }
+                    };
+                }
+            }
+        });
     }
 }
 
@@ -91,7 +125,6 @@ fn empty_sections() -> Sections {
         checklist: vec![],
         comment: vec![],
         detail: vec![],
-        generic: vec![],
         json: vec![],
         list: vec![],
         raw: vec![],

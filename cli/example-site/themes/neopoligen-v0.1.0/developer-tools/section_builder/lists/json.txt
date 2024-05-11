@@ -1,1 +1,1 @@
-metadata
+json-example

@@ -52,7 +52,7 @@ pub fn generic_section_full<'a>(
     spans: &'a Vec<String>,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, r#type) = (|src| tag_finder(src, &sections.generic))
+    let (source, r#type) = is_not(" /\n\t")
         .context("")
         .parse(source)?;
     let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
@@ -89,7 +89,7 @@ pub fn generic_section_start<'a>(
     spans: &'a Vec<String>,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, r#type) = (|src| tag_finder(src, &sections.generic))
+    let (source, r#type) = is_not(" /\n\t")
         .context("")
         .parse(source)?;
     let (source, _) = tag("/").context("").parse(source)?;

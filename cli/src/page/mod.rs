@@ -22,40 +22,44 @@ pub struct Page {
 impl Page {
     pub fn new(source_text: String, source_path: PathBuf, config: &SiteConfig) -> Page {
         match ast(&source_text, &config.sections.clone(), &config.spans) {
-            Ok(ast) => match get_page_id(&ast, &source_text) {
-                Ok(id) => {
-                    let output_path = get_output_path(&id, &ast, &config);
-                    Page {
-                        ast: Some(ast),
-                        error: None,
-                        folders: vec![],
-                        id: Some(id),
-                        output_path,
-                        source_path,
-                        source_text,
-                        tags: vec![],
+            Ok(ast) => {
+                // dbg!(&ast);
+                match get_page_id(&ast, &source_text) {
+                    Ok(id) => {
+                        let output_path = get_output_path(&id, &ast, &config);
+                        Page {
+                            ast: Some(ast),
+                            error: None,
+                            folders: vec![],
+                            id: Some(id),
+                            output_path,
+                            source_path,
+                            source_text,
+                            tags: vec![],
+                        }
+                    }
+                    Err(e) => {
+                        let output_path = replace_path(
+                            &source_path,
+                            config.paths.get("content_root").unwrap(),
+                            config.paths.get("errors_root").unwrap(),
+                        )
+                        .unwrap();
+                        Page {
+                            ast: None,
+                            error: Some(e),
+                            folders: vec![],
+                            id: None,
+                            output_path: Some(output_path.with_extension("txt")),
+                            source_path,
+                            source_text,
+                            tags: vec![],
+                        }
                     }
                 }
-                Err(e) => {
-                    let output_path = replace_path(
-                        &source_path,
-                        config.paths.get("content_root").unwrap(),
-                        config.paths.get("errors_root").unwrap(),
-                    )
-                    .unwrap();
-                    Page {
-                        ast: None,
-                        error: Some(e),
-                        folders: vec![],
-                        id: None,
-                        output_path: Some(output_path.with_extension("txt")),
-                        source_path,
-                        source_text,
-                        tags: vec![],
-                    }
-                }
-            },
+            }
             Err(error) => {
+                // dbg!(&error);
                 let output_path = replace_path(
                     &source_path,
                     config.paths.get("content_root").unwrap(),
