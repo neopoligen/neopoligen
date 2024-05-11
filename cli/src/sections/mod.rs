@@ -5,6 +5,7 @@ use serde::Serialize;
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct Sections {
     pub basic: Vec<String>,
+    pub block: Vec<String>,
     pub checklist: Vec<String>,
     pub comment: Vec<String>,
     pub detail: Vec<String>,

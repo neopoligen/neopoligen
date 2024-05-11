@@ -48,7 +48,9 @@ pub enum Section {
         r#type: String,
     },
     Block {
+        bounds: String,
         spans: Vec<Span>,
+        r#type: String,
     },
     Checklist {
         attrs: BTreeMap<String, String>,

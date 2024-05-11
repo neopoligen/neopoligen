@@ -54,17 +54,24 @@ pub fn yaml_section_full<'a>(
     sections: &'a Sections,
     _spans: &'a Vec<String>,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    // dbg!(&source);
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder(src, &sections.yaml))
         .context("")
         .parse(source)?;
     let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
+    // dbg!(&source);
     let (source, raw_attrs) = many0(section_attr).context("").parse(source)?;
+    // dbg!(&source);
     let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-    let (source, _) = many0(empty_until_newline_or_eof)
+    // dbg!(&source);
+    // dbg!("a-----------");
+    let (source, _) = multispace0
         .context("")
         .parse(source)?;
-    let (source, text) = alt((take_until("\n--"), rest)).context("").parse(source)?;
+    // dbg!("-----------");
+    // dbg!(&source);
+    let (source, text) = alt((take_until("\n--"), rest, eof)).context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let mut attrs: BTreeMap<String, String> = BTreeMap::new();
     let mut flags: Vec<String> = vec![];

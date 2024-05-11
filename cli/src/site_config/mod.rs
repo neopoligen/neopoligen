@@ -122,6 +122,7 @@ fn empty_options() -> Value {
 fn empty_sections() -> Sections {
     Sections {
         basic: vec![],
+        block: vec![],
         checklist: vec![],
         comment: vec![],
         detail: vec![],

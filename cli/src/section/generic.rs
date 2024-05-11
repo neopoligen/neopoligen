@@ -48,7 +48,7 @@ pub fn generic_section_end<'a>(
 
 pub fn generic_section_full<'a>(
     source: &'a str,
-    sections: &'a Sections,
+    _sections: &'a Sections,
     spans: &'a Vec<String>,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;

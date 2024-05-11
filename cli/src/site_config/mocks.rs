@@ -48,6 +48,7 @@ impl SiteConfig {
             },
             sections: Sections {
                 basic: vec!["div".to_string()],
+                block: vec!["div".to_string()],
                 checklist: vec!["div".to_string()],
                 comment: vec!["div".to_string()],
                 detail: vec!["div".to_string()],

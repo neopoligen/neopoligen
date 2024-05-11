@@ -83,7 +83,8 @@ impl Page {
 
 fn get_page_id(ast: &Vec<Section>, source_text: &str) -> Result<String, Error> {
     match ast.iter().find_map(|sec_enum| {
-        if let Section::Json { r#type, attrs, .. } = sec_enum {
+        // dbg!(&sec_enum);
+        if let Section::Yaml { r#type, attrs, .. } = sec_enum {
             if r#type == "metadata" {
                 attrs.iter().find_map(|attr| {
                     if attr.0 == "id" {
