@@ -7,6 +7,7 @@ use notify_debouncer_mini::new_debouncer;
 use notify_debouncer_mini::notify::RecursiveMode;
 use notify_debouncer_mini::DebounceEventResult;
 use notify_debouncer_mini::DebouncedEventKind;
+use regex::Regex;
 use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
@@ -91,6 +92,7 @@ fn build_site(site_config: &SiteConfig) {
     let mut site = Site::new(site_config.clone());
     let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
     let _ = empty_dir(&site.config.paths.get("render_errors_root").unwrap());
+    let _ = empty_dir(&site.config.paths.get("theme_errors_root").unwrap());
     site.load_templates();
     site.load_template_test_files();
     site.parse_pages();
@@ -112,8 +114,10 @@ fn build_site(site_config: &SiteConfig) {
             .iter()
             .fold("".to_string(), |acc, (expected, got)| {
                 format!(
-                    "{}### Expected:\n\n{}\n\n\n### Got: {}\n\n",
-                    acc, expected, got
+                    "{}### Expected:\n\n{}\n\n\n### Got:\n\n{}\n\n",
+                    acc,
+                    simple_format_html(expected),
+                    simple_format_html(got)
                 )
             });
         let _ = write_file_with_mkdir(error_file_path, &error_text);
@@ -365,4 +369,32 @@ fn write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
         },
         None => Err("Could not make directory".to_string()),
     }
+}
+
+fn simple_format_html(code: &str) -> String {
+    let mut re = Regex::new(r"\n").unwrap();
+    let output = re.replace_all(code, " ");
+    re = Regex::new(r" \s+").unwrap();
+    let output = re.replace_all(&output, " ");
+    re = Regex::new(r"\s+<").unwrap();
+    let output = re.replace_all(&output, "<");
+    re = Regex::new(r">\s+").unwrap();
+    let output = re.replace_all(&output, ">");
+    let parts: Vec<&str> = output.split("<").collect();
+    let mut assembler: Vec<String> = vec![];
+    let mut level = 0i8;
+    assembler.push(parts[0].to_string());
+    parts.iter().skip(1).for_each(|part| {
+        if part.starts_with("/") {
+            level -= 2;
+        }
+        for _ in 0..level {
+            assembler.push(" ".to_string());
+        }
+        assembler.push(format!("<{}\n", part));
+        if !part.starts_with("/") {
+            level += 2;
+        }
+    });
+    assembler.join("").to_string()
 }

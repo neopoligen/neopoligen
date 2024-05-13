@@ -1,0 +1,19 @@
+[! for child in section.children !]
+[! set include_path = "sections/" + child.type + "/" + child.bounds + "/default.neoj" !]
+[! include include_path !]
+[! endfor !]
+
+
+[#
+
+
+
+
+[! if section.content.category.content.containers[0] !]
+<div class="content_subsection flow">
+    [! for content in section.content.category.content.containers !]
+        <p>[@- output_payload(site, page_id, content) -@]</p>
+    [! endfor !]
+</div>
+[! endif !]
+#]

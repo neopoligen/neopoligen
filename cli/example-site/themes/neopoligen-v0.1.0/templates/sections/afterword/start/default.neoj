@@ -1,9 +1,8 @@
 [!- import "includes/macros.neoj" as theme -!]
 
-<div>
+<section class="afterword-section basic-section flow">
 
-[! for child in section.children !]
-[! set include_path = "sections/" + child.type + "/" + child.bounds + "/default.neoj" !]
-[! include include_path !]
-[! endfor !]
+
+[! include "subsections/content-full.neoj" !]
+
 

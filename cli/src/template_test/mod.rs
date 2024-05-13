@@ -22,10 +22,10 @@ impl TemplateTest {
         let tests: Vec<&str> = rendered.split("<!-- START_TEMPLATE_TEST -->").collect();
         tests.iter().skip(1).for_each(|t| {
             let parts: Vec<&str> = t.split("<!-- EXPECTED_OUTPUT -->").collect();
-            let left = parts[0].replace("\n", "").replace(" ", "");
-            let right = parts[1].replace("\n", "").replace(" ", "");
+            let left = parts[1].replace("\n", "").replace(" ", "");
+            let right = parts[0].replace("\n", "").replace(" ", "");
             if left != right {
-                errors.push((parts[0].to_string(), parts[1].to_string()));
+                errors.push((parts[1].to_string(), parts[0].to_string()));
             }
         });
         TemplateTest {
