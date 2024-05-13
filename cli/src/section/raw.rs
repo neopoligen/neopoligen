@@ -31,8 +31,13 @@ pub fn raw_section_end<'a>(
     let mut flags: Vec<String> = vec![];
     raw_attrs.iter().for_each(|attr| match attr {
         SectionAttr::KeyValue { key, value } => {
-            attrs.insert(key.to_string(), value.to_string());
-            ()
+            if attrs.contains_key(key) {
+                let to_update = attrs.get_mut(key).unwrap();
+                to_update.push_str(" ");
+                to_update.push_str(value);
+            } else {
+                attrs.insert(key.to_string(), value.to_string());
+            }
         }
         SectionAttr::Flag { key } => flags.push(key.to_string()),
     });
@@ -70,8 +75,13 @@ pub fn raw_section_full<'a>(
     let mut flags: Vec<String> = vec![];
     raw_attrs.iter().for_each(|attr| match attr {
         SectionAttr::KeyValue { key, value } => {
-            attrs.insert(key.to_string(), value.to_string());
-            ()
+            if attrs.contains_key(key) {
+                let to_update = attrs.get_mut(key).unwrap();
+                to_update.push_str(" ");
+                to_update.push_str(value);
+            } else {
+                attrs.insert(key.to_string(), value.to_string());
+            }
         }
         SectionAttr::Flag { key } => flags.push(key.to_string()),
     });
@@ -112,8 +122,13 @@ pub fn raw_section_start<'a>(
     let mut flags: Vec<String> = vec![];
     raw_attrs.iter().for_each(|attr| match attr {
         SectionAttr::KeyValue { key, value } => {
-            attrs.insert(key.to_string(), value.to_string());
-            ()
+            if attrs.contains_key(key) {
+                let to_update = attrs.get_mut(key).unwrap();
+                to_update.push_str(" ");
+                to_update.push_str(value);
+            } else {
+                attrs.insert(key.to_string(), value.to_string());
+            }
         }
         SectionAttr::Flag { key } => flags.push(key.to_string()),
     });

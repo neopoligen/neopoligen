@@ -46,6 +46,10 @@ Test with attributes
     data-ping="one ping only"
     id="some_id"
 >
+    <div class="section-forward">
+    this is a forward with multiple lines
+    </div>
+
     <div class="section-heading">
         <h2 class="section-title">some title</h2>
         <h2 class="section-title">this is an h2</h2>
