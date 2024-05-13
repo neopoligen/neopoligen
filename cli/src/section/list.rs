@@ -1,5 +1,6 @@
 use crate::block::*;
 use crate::section::*;
+use crate::sections::*;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;
@@ -9,7 +10,6 @@ use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-use crate::sections::*;
 
 pub fn list_item_block<'a>(
     source: &'a str,
@@ -22,7 +22,14 @@ pub fn list_item_block<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    Ok((source, Section::Block { bounds: "full".to_string(), spans, r#type: "list_item".to_string() }))
+    Ok((
+        source,
+        Section::Block {
+            bounds: "full".to_string(),
+            spans,
+            r#type: "list-item".to_string(),
+        },
+    ))
 }
 
 pub fn list_item<'a>(

@@ -22,7 +22,14 @@ pub fn checklist_item_block<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    Ok((source, Section::Block { bounds: "full".to_string(), spans, r#type: "checklist_item".to_string() }))
+    Ok((
+        source,
+        Section::Block {
+            bounds: "full".to_string(),
+            spans,
+            r#type: "checklist-item".to_string(),
+        },
+    ))
 }
 
 pub fn checklist_item<'a>(
@@ -170,7 +177,7 @@ pub fn checklist_section_start<'a>(
         .context("")
         .parse(source)?;
     let (source, end_section) = checklist_section_end(source, spans, r#type)?;
-    children.push(end_section);    
+    children.push(end_section);
     let mut attrs: BTreeMap<String, String> = BTreeMap::new();
     let mut flags: Vec<String> = vec![];
     raw_attrs.iter().for_each(|attr| match attr {

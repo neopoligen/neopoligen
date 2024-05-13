@@ -1,0 +1,5 @@
+<p>
+[! for span in child.spans !]
+[! set include_path = "spans/" + span.kind + ".neoj" !]
+[! include include_path !]
+[! endfor !]

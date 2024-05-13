@@ -20,7 +20,14 @@ pub fn block_of_anything<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    Ok((source, Section::Block { bounds: "full".to_string(), spans, r#type: "basic_block".to_string() }))
+    Ok((
+        source,
+        Section::Block {
+            bounds: "full".to_string(),
+            spans,
+            r#type: "basic-block".to_string(),
+        },
+    ))
 }
 
 pub fn block_of_end_content<'a>(
@@ -34,5 +41,12 @@ pub fn block_of_end_content<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    Ok((source, Section::Block { bounds: "full".to_string(),  spans, r#type: "basic_block".to_string() }))
+    Ok((
+        source,
+        Section::Block {
+            bounds: "full".to_string(),
+            spans,
+            r#type: "basic-block".to_string(),
+        },
+    ))
 }
