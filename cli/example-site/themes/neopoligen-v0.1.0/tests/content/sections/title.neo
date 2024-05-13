@@ -1,0 +1,26 @@
+-- start-template-test
+
+-- title
+
+This Is A Title
+
+This is a paragraph
+
+-- expected-output/
+
+<section class="title-section basic-section flow">
+    <div class="page-heading">
+        <h1>This Is A Title</h1>
+    </div>
+    <p>This is a paragraph</p>
+</section>
+
+
+-- /expected-output
+
+
+
+
+-- metadata
+-- date: 2024-05-13 12:01:11
+-- id: 2gq3elmt

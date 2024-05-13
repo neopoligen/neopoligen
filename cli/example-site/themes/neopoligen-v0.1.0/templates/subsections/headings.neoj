@@ -32,15 +32,3 @@
 </div>
 [! endif !]
 
-[#
-[! if section.content.key_value_attributes.title or section.content.key_value_attributes.subtitle !]
-<div class="heading_subsection">
-    [! if section.content.key_value_attributes.title !]
-    <h2 class="title_subsection">[@ section.content.key_value_attributes.title @]</h2>
-    [! endif !]
-    [! if section.content.key_value_attributes.subtitle !]
-    <div class="subtitle_subsection">This is a subtitle</div>
-    [! endif !]
-</div>
-[! endif !]
-#]
