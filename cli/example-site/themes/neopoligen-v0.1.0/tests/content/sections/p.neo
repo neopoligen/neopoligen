@@ -41,8 +41,9 @@ Test with attributes
     data-ping="one ping only"
     id="some_id"
 >
-    <div class="section-headings">
-        <h2>some title</h2>
+    <div class="section-heading">
+        <h2 class="section-title">some title</h2>
+        <div class="section-subtitle">this is a subtitle</div>
     </div>
 
     <p>Test with attributes</p>

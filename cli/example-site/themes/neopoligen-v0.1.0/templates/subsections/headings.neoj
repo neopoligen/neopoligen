@@ -1,6 +1,9 @@
 [! if section.attrs.title !]
-<div class="section-headings">
-    <h2>[@ section.attrs.title @]</h2>
+<div class="section-heading">
+    <h2 class="section-title">[@ section.attrs.title @]</h2>
+    [! if section.attrs.subtitle !]
+    <div class="section-subtitle">[@ section.attrs.subtitle @]</div>
+    [! endif !]
 </div>
 [! endif !]
 
