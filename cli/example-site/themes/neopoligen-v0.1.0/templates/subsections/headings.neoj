@@ -1,6 +1,31 @@
-[! if section.attrs.title !]
+[! if 
+    section.attrs.title or 
+    section.attrs.h1 or 
+    section.attrs.h2 or 
+    section.attrs.h3 or 
+    section.attrs.h4 or 
+    section.attrs.h5 or 
+    section.attrs.h6 
+!]
 <div class="section-heading">
+    [! if section.attrs.title !]
     <h2 class="section-title">[@ section.attrs.title @]</h2>
+    [! endif !]
+    [! if section.attrs.h2 !]
+    <h2 class="section-title">[@ section.attrs.h2 @]</h2>
+    [! endif !]
+    [! if section.attrs.h3 !]
+    <h3 class="section-title">[@ section.attrs.h3 @]</h3>
+    [! endif !]
+    [! if section.attrs.h4 !]
+    <h4 class="section-title">[@ section.attrs.h4 @]</h4>
+    [! endif !]
+    [! if section.attrs.h5 !]
+    <h5 class="section-title">[@ section.attrs.h5 @]</h5>
+    [! endif !]
+    [! if section.attrs.h6 !]
+    <h6 class="section-title">[@ section.attrs.h6 @]</h6>
+    [! endif !]
     [! if section.attrs.subtitle !]
     <div class="section-subtitle">[@ section.attrs.subtitle @]</div>
     [! endif !]

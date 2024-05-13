@@ -24,6 +24,11 @@ With multiple paragraphs
 -- class: green
 -- title: some title
 -- subtitle: this is a subtitle
+-- h2: this is an h2
+-- h3: this is an h3
+-- h4: this is an h4
+-- h5: this is an h5
+-- h6: this is an h6
 -- forward: this is a forward
 -- forward: with multiple lines
 -- preface: this is a preface
@@ -43,6 +48,11 @@ Test with attributes
 >
     <div class="section-heading">
         <h2 class="section-title">some title</h2>
+        <h2 class="section-title">this is an h2</h2>
+        <h3 class="section-title">this is an h3</h3>
+        <h4 class="section-title">this is an h4</h4>
+        <h5 class="section-title">this is an h5</h5>
+        <h6 class="section-title">this is an h6</h6>
         <div class="section-subtitle">this is a subtitle</div>
     </div>
 
