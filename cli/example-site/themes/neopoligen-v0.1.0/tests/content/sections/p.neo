@@ -46,6 +46,7 @@ Test with attributes
     data-ping="one ping only"
     id="some_id"
 >
+
     <div class="section-forward">
     this is a forward with multiple lines
     </div>
@@ -60,7 +61,15 @@ Test with attributes
         <div class="section-subtitle">this is a subtitle</div>
     </div>
 
+    <div class="section-preface">
+    this is a preface that also has multiple lines
+    </div>
+
     <p>Test with attributes</p>
+
+    <div class="section-afterword">
+    this is an afterword with multiple lines as well
+    </div>
 </section>
 
 
