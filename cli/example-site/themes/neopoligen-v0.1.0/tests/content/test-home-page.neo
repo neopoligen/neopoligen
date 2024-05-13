@@ -1,19 +1,19 @@
--- start-template-test
+-- start-template-test 
 
--- p
+-- title
 
-alfa bravo
+Page Title
 
--- expected-output
 
-<p>alfa bravo</p>
+-- expected-output/
 
--- end-template-test
+<p>Page Title</p>
+
+-- /expected-output
 
 
 -- metadata
--- date: 2024-05-11 10:14:00
+-- date: 2024-05-11
 -- id: 2gkcnmfq
--- type: release-notes
--- status: scratch
+
 

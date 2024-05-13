@@ -1,16 +1,12 @@
 use crate::page::Page;
-// use crate::section::Section;
-// use crate::section_attr::SectionAttr;
 use crate::site_config::SiteConfig;
+use crate::template_test::*;
 use minijinja::context;
-//use minijinja::syntax;
-// use crate::error::Error;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
 use minijinja::Value;
 use serde::Serialize;
 use std::collections::BTreeMap;
-use std::collections::BTreeSet;
 use std::fs;
 use std::path::PathBuf;
 use tracing::{event, instrument, Level};
@@ -26,7 +22,14 @@ pub struct Site {
     pub pages: BTreeMap<String, Page>,
     pub source_files: BTreeMap<PathBuf, String>,
     pub templates: BTreeMap<String, String>,
+    pub template_tests: Vec<TemplateTest>,
+
+    // deprecate these so you can run with the
+    // main templates with ``site.pages[page_id]``
     pub template_test_files: BTreeMap<PathBuf, String>,
+    pub template_test_pages: BTreeMap<String, Page>,
+    pub template_test_page_errors: Vec<Page>,
+    pub template_test_render_errors: BTreeMap<PathBuf, String>,
 }
 
 impl Site {
@@ -41,7 +44,12 @@ impl Site {
             page_errors: vec![],
             render_errors: BTreeMap::new(),
             templates: BTreeMap::new(),
+            template_tests: vec![],
+            // todo: deprecated these four
             template_test_files: BTreeMap::new(),
+            template_test_pages: BTreeMap::new(),
+            template_test_page_errors: vec![],
+            template_test_render_errors: BTreeMap::new(),
         }
     }
 }
@@ -100,7 +108,6 @@ impl Site {
                 event!(Level::ERROR, "Could not get template: {}", template_name);
             }
             ()
-
             //
         });
         outputs
@@ -115,6 +122,70 @@ impl Site {
                 self.pages.insert(p.id.clone().unwrap(), p);
             }
         });
+    }
+
+    pub fn parse_template_tests(&mut self) {
+        self.template_test_files.iter().for_each(|f| {
+            let p = Page::new(f.1.clone(), f.0.clone(), &self.config);
+            if let Some(_) = p.error.clone() {
+                self.template_test_page_errors.push(p);
+            } else {
+                self.template_test_pages.insert(p.id.clone().unwrap(), p);
+            }
+        });
+    }
+
+    pub fn find_template_errors(&mut self) -> Vec<TemplateTest> {
+        let mut outputs = vec![];
+        let mut env = Environment::new();
+        env.set_debug(true);
+        let site_obj = Value::from_serialize(&self.clone());
+        env.set_syntax(
+            SyntaxConfig::builder()
+                .block_delimiters("[!", "!]")
+                .variable_delimiters("[@", "@]")
+                .comment_delimiters("[#", "#]")
+                .build()
+                .unwrap(),
+        );
+        env.set_trim_blocks(true);
+        env.set_lstrip_blocks(true);
+        self.templates
+            .iter()
+            .for_each(|t| env.add_template_owned(t.0, t.1).unwrap());
+        self.pages.iter().for_each(|p| {
+            let template_name = "pages/post/published.neoj";
+            if let Ok(tmpl) = env.get_template(template_name) {
+                match tmpl.render(context!(
+                     site => site_obj,
+                    page_id => p.0
+                )) {
+                    Ok(output) => {
+                        let tt = TemplateTest::new(p.1.clone(), output.clone());
+                        if tt.errors.len() > 0 {
+                            outputs.push(tt);
+                        }
+
+                        // match tt.status() {
+                        //     TemplateTestStatus::Failed => {
+                        //         outputs.push(tt);
+                        //     }
+                        //     _ => (),
+                        // }
+                    }
+                    Err(e) => {
+                        //dbg!(p.0);
+                        event!(Level::ERROR, "{}\n{:?}", p.1.source_path.display(), e);
+                        self.template_test_render_errors
+                            .insert(p.1.source_path.clone(), format!("{:?}", e));
+                        ()
+                    }
+                }
+            } else {
+                event!(Level::ERROR, "Could not get template: {}", template_name);
+            }
+        });
+        outputs
     }
 
     //match ast(f.1, &self.config.sections) {
@@ -286,8 +357,6 @@ impl Site {
             );
         }
     }
-
-    pub fn test_templates(&self) {}
 
     //
 }

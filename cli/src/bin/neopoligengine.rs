@@ -89,13 +89,44 @@ async fn main() {
 fn build_site(site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
     let mut site = Site::new(site_config.clone());
+    let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
+    let _ = empty_dir(&site.config.paths.get("render_errors_root").unwrap());
     site.load_templates();
     site.load_template_test_files();
+    site.parse_pages();
+    site.find_template_errors().iter().for_each(|tt| {
+        let error_file_path = &site
+            .config
+            .paths
+            .get("theme_errors_root")
+            .unwrap()
+            .join(
+                &tt.page
+                    .source_path
+                    .strip_prefix(&site.config.paths.get("theme_tests_content_root").unwrap())
+                    .unwrap(),
+            )
+            .with_extension("txt");
+
+        let error_text = tt
+            .errors
+            .iter()
+            .fold("".to_string(), |acc, (expected, got)| {
+                format!(
+                    "{}### Expected:\n\n{}\n\n\n### Got: {}\n\n",
+                    acc, expected, got
+                )
+            });
+        let _ = write_file_with_mkdir(error_file_path, &error_text);
+    });
+
+    // site.generate_template_errors().iter().for_each(|p| {
+    //     dbg!(p);
+    //     ()
+    // });
+
     site.load_source_files();
     site.parse_pages();
-
-    let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
-    let _ = empty_dir(&site.config.paths.get("errors_root").unwrap());
     site.generate_content_pages().iter().for_each(|p| {
         let output_path = &site
             .config
@@ -105,6 +136,7 @@ fn build_site(site_config: &SiteConfig) {
             .join(p.0.strip_prefix("/").unwrap());
         let _ = write_file_with_mkdir(output_path, p.1);
     });
+
     // site.page_errors.iter().for_each(|p| {
     //     let _ = write_file_with_mkdir(p.0, &p.1.error.clone().unwrap().to_string());
     // });
@@ -170,6 +202,20 @@ fn load_site_config_file(neo_root: &PathBuf, active_site: &str) -> Result<SiteCo
                                 project_root
                                     .join(PathBuf::from(format!("themes/{}", config.theme.name))),
                             );
+                            config.paths.insert(
+                                "theme_tests_root".to_string(),
+                                project_root.join(PathBuf::from(format!(
+                                    "themes/{}/tests",
+                                    config.theme.name
+                                ))),
+                            );
+                            config.paths.insert(
+                                "theme_tests_content_root".to_string(),
+                                project_root.join(PathBuf::from(format!(
+                                    "themes/{}/tests/content",
+                                    config.theme.name
+                                ))),
+                            );
                             config
                                 .paths
                                 .insert("neopoligen_root".to_string(), neo_root.clone());
@@ -181,8 +227,12 @@ fn load_site_config_file(neo_root: &PathBuf, active_site: &str) -> Result<SiteCo
                                 project_root.join(PathBuf::from("content")),
                             );
                             config.paths.insert(
-                                "errors_root".to_string(),
-                                project_root.join(PathBuf::from("status/errors")),
+                                "render_errors_root".to_string(),
+                                project_root.join(PathBuf::from("status/render-errors")),
+                            );
+                            config.paths.insert(
+                                "theme_errors_root".to_string(),
+                                project_root.join(PathBuf::from("status/theme-errors")),
                             );
                             config.paths.insert(
                                 "themes_root".to_string(),
