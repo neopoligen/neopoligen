@@ -114,6 +114,8 @@ impl Site {
     }
 
     pub fn parse_pages(&mut self) {
+        self.page_errors = vec![]; // make sure templates are cleared
+        self.pages = BTreeMap::new(); // make sure templates are cleared
         self.source_files.iter().for_each(|f| {
             let p = Page::new(f.1.clone(), f.0.clone(), &self.config);
             if let Some(_) = p.error.clone() {
@@ -266,6 +268,7 @@ impl Site {
 
     #[instrument]
     pub fn load_source_files(&mut self) {
+        self.source_files = BTreeMap::new(); // do this to clear the templates
         let dir = &self.config.paths.get("content_root").unwrap();
         if dir.exists() {
             WalkDir::new(dir)

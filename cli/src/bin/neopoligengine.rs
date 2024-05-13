@@ -107,7 +107,6 @@ fn build_site(site_config: &SiteConfig) {
                     .unwrap(),
             )
             .with_extension("txt");
-
         let error_text = tt
             .errors
             .iter()
@@ -119,12 +118,6 @@ fn build_site(site_config: &SiteConfig) {
             });
         let _ = write_file_with_mkdir(error_file_path, &error_text);
     });
-
-    // site.generate_template_errors().iter().for_each(|p| {
-    //     dbg!(p);
-    //     ()
-    // });
-
     site.load_source_files();
     site.parse_pages();
     site.generate_content_pages().iter().for_each(|p| {
