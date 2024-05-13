@@ -17,6 +17,40 @@ With multiple paragraphs
 -- /expected-output
 
 
+-- start-template-test
+
+-- p
+-- id: some_id
+-- class: green
+-- title: some title
+-- subtitle: this is a subtitle
+-- forward: this is a forward
+-- forward: with multiple lines
+-- preface: this is a preface
+-- preface: that also has multiple lines
+-- afterword: this is an afterword
+-- afterword: with multiple lines as well
+-- data-ping: one ping only
+
+Test with attributes
+
+-- expected-output/
+
+<section 
+    class="p-section basic-section flow green"
+    data-ping="one ping only"
+    id="some_id"
+>
+    <div class="section-headings">
+        <h2>some title</h2>
+    </div>
+
+    <p>Test with attributes</p>
+</section>
+
+
+-- /expected-output
+
 
 
 -- metadata
