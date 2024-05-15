@@ -5,16 +5,24 @@ Welcome To The Neopoligen Cookbook
 This site is an example of some things
 you can do with Neopoligen
 
--- list
+-- list/
 
 - alfa
 
-- bravo
+    -- list/
+
+    - bravo
+
+    - charlie
+
+    -- /list
+
+- delta
+
+-- /list
 
 
 
 -- metadata
 -- id: 2sjfzivl
 -- path: /
-
-
