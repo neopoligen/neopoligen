@@ -1,5 +1,6 @@
 [!- import "includes/macros.neoj" as theme -!]
 
+<section class="warnings-section list-section flow">
 <ul class="flow">
 [! for child in section.children !]
 [@ theme.output_section(site, page_id, child) @]

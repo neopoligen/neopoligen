@@ -1,0 +1,107 @@
+-- title
+
+List Tests
+
+
+-- start-template-test
+
+-- list
+
+- alfa bravo
+
+charlie delta
+
+- echo foxtrot
+
+-- expected-output/
+
+<section class="list-section list-section flow">
+  <ul class="flow">
+    <li>
+      <p>alfa bravo</p>
+      <p>charlie delta</p>
+    </li>
+    <li>
+      <p>echo foxtrot</p>
+    </li>
+  </ul>
+</section>
+
+-- /expected-output
+
+
+-- x-start-template-test
+
+-- list
+-- id: some_id
+-- class: green
+-- title: some title
+-- subtitle: this is a subtitle
+-- h2: this is an h2
+-- h3: this is an h3
+-- h4: this is an h4
+-- h5: this is an h5
+-- h6: this is an h6
+-- forward: this is a forward
+-- forward: with multiple lines
+-- preface: this is a preface
+-- preface: that also has multiple lines
+-- afterword: this is an afterword
+-- afterword: with multiple lines as well
+-- data-ping: one ping only
+
+- alfa
+
+- bravo
+
+-- expected-output/
+
+
+<section 
+    class="p-section basic-section flow green"
+    data-ping="one ping only"
+    id="some_id"
+>
+
+    <div class="section-forward">
+    this is a forward with multiple lines
+    </div>
+
+    <div class="section-heading">
+        <h2 class="section-title">some title</h2>
+        <h2 class="section-title">this is an h2</h2>
+        <h3 class="section-title">this is an h3</h3>
+        <h4 class="section-title">this is an h4</h4>
+        <h5 class="section-title">this is an h5</h5>
+        <h6 class="section-title">this is an h6</h6>
+        <div class="section-subtitle">this is a subtitle</div>
+    </div>
+
+    <div class="section-preface">
+    this is a preface that also has multiple lines
+    </div>
+
+    <ul class="flow">
+        <li>
+        <p>alfa
+        </li>
+        <p>charlie delta
+        </li>
+        </li>
+        <li>
+        <p>echo foxtrot
+        </li>
+        </li>
+    </ul>
+
+    <div class="section-afterword">
+    this is an afterword with multiple lines as well
+    </div>
+</section>
+
+-- /expected-output
+
+
+-- metadata
+-- date: 2024-05-15 10:06:00
+-- id: 2gvttbdo
