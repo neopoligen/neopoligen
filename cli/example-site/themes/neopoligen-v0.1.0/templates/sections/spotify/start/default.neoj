@@ -23,7 +23,6 @@
 [! endfor !]
 >
 
-
 [! include "subsections/forward.neoj" !]
 [! include "subsections/headings.neoj" !]
 [! include "subsections/preface.neoj" !]
