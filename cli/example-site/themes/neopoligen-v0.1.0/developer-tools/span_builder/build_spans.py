@@ -120,8 +120,8 @@ for span in spans:
     neo_path = f"{pages_directory}/{span[0]}.neo"
     neo_text = neo_template.replace("SPANKEY", span[0]).replace(
         "TEXT", span[1]).replace("KSUID", span[2])
-    with open(neo_path, "w") as _out2:
-        _out2.write(neo_text)
+    # with open(neo_path, "w") as _out2:
+    #     _out2.write(neo_text)
 
 
 # Load the custom templates

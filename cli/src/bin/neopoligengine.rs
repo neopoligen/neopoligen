@@ -96,6 +96,7 @@ fn build_site(site_config: &SiteConfig) {
     site.load_templates();
     site.load_template_test_files();
     site.parse_pages();
+
     site.find_template_errors().iter().for_each(|tt| {
         let error_file_path = &site
             .config
@@ -109,51 +110,80 @@ fn build_site(site_config: &SiteConfig) {
                     .unwrap(),
             )
             .with_extension("txt");
-        let error_text = tt
-            .errors
-            .iter()
-            .fold("".to_string(), |acc, (expected, got)| {
-                format!(
-                    "{}### Expected:\n\n{}\n\n\n### Got:\n\n{}\n\n",
-                    acc,
-                    simple_format_html(expected),
-                    simple_format_html(got)
-                )
-            });
-        let _ = write_file_with_mkdir(error_file_path, &error_text);
-    });
-    site.load_source_files();
-    site.parse_pages();
-    site.generate_content_pages().iter().for_each(|p| {
-        let output_path = &site
-            .config
-            .paths
-            .get("output_root")
-            .unwrap()
-            .join(p.0.strip_prefix("/").unwrap());
-        let _ = write_file_with_mkdir(output_path, p.1);
+        if let Some(render_error) = &tt.render_error {
+            let _ = write_file_with_mkdir(error_file_path, &render_error);
+        } else {
+            let error_text =
+                tt.template_errors
+                    .iter()
+                    .fold("".to_string(), |acc, (expected, got)| {
+                        format!(
+                            "{}### Expected:\n\n{}\n\n\n### Got:\n\n{}\n\n",
+                            acc,
+                            simple_format_html(expected),
+                            simple_format_html(got)
+                        )
+                    });
+            let _ = write_file_with_mkdir(error_file_path, &error_text);
+        }
     });
 
-    site.page_errors.iter().for_each(|p| {
-        let error_file_path = &site
-            .config
-            .paths
-            .get("render_errors_root")
-            .unwrap()
-            .join(
-                &p.source_path
-                    .strip_prefix(&site.config.paths.get("content_root").unwrap())
-                    .unwrap(),
-            )
-            .with_extension("txt");
-        //dbg!(error_file_path);
-        let _ = write_file_with_mkdir(error_file_path, &p.error.clone().unwrap().to_string());
-    });
+    //site.render_errors.iter().for_each(|p| {
+    //    dbg!(&p.0);
+    //    //let _ = write_file_with_mkdir(p.0, p.1);
+    //});
+
+    //// render errors for templates
+    //site.page_errors.iter().for_each(|p| {
+    //    let error_file_path = &site
+    //        .config
+    //        .paths
+    //        .get("theme_errors_root")
+    //        .unwrap()
+    //        .join(
+    //            &p.source_path
+    //                .strip_prefix(&site.config.paths.get("content_root").unwrap())
+    //                .unwrap(),
+    //        )
+    //        .with_extension("txt");
+    //    //dbg!(error_file_path);
+    //    let _ = write_file_with_mkdir(error_file_path, &p.error.clone().unwrap().to_string());
+    //});
+
+    // site.load_source_files();
+    // site.parse_pages();
+    // site.generate_content_pages().iter().for_each(|p| {
+    //     let output_path = &site
+    //         .config
+    //         .paths
+    //         .get("output_root")
+    //         .unwrap()
+    //         .join(p.0.strip_prefix("/").unwrap());
+    //     let _ = write_file_with_mkdir(output_path, p.1);
+    // });
+
+    //site.page_errors.iter().for_each(|p| {
+    //    let error_file_path = &site
+    //        .config
+    //        .paths
+    //        .get("render_errors_root")
+    //        .unwrap()
+    //        .join(
+    //            &p.source_path
+    //                .strip_prefix(&site.config.paths.get("content_root").unwrap())
+    //                .unwrap(),
+    //        )
+    //        .with_extension("txt");
+    //    //dbg!(error_file_path);
+    //    let _ = write_file_with_mkdir(error_file_path, &p.error.clone().unwrap().to_string());
+    //});
 
     //site.render_errors.iter().for_each(|p| {
     //   dbg!(&p.0);
     //  let _ = write_file_with_mkdir(p.0, p.1);
     //})
+
+    //
 }
 
 fn load_engine_config_file(path: &PathBuf) -> Result<EngineConfig, String> {

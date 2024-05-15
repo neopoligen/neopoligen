@@ -163,8 +163,8 @@ impl Site {
                     page_id => p.0
                 )) {
                     Ok(output) => {
-                        let tt = TemplateTest::new(p.1.clone(), output.clone());
-                        if tt.errors.len() > 0 {
+                        let tt = TemplateTest::new(p.1.clone(), Some(output.clone()), None);
+                        if tt.template_errors.len() > 0 {
                             outputs.push(tt);
                         }
 
@@ -176,11 +176,12 @@ impl Site {
                         // }
                     }
                     Err(e) => {
+                        let tt = TemplateTest::new(p.1.clone(), None, Some(format!("{:?}", e)));
+                        outputs.push(tt);
                         //dbg!(p.0);
-                        event!(Level::ERROR, "{}\n{:?}", p.1.source_path.display(), e);
-                        self.template_test_render_errors
-                            .insert(p.1.source_path.clone(), format!("{:?}", e));
-                        ()
+                        //event!(Level::ERROR, "{}\n{:?}", p.1.source_path.display(), e);
+                        //self.template_test_render_errors
+                        //   .insert(p.1.source_path.clone(), format!("{:?}", e));
                     }
                 }
             } else {
