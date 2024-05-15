@@ -30,7 +30,7 @@ charlie delta
 -- /expected-output
 
 
--- x-start-template-test
+-- start-template-test
 
 -- list
 -- id: some_id
@@ -58,7 +58,7 @@ charlie delta
 
 
 <section 
-    class="p-section basic-section flow green"
+    class="list-section list-section flow green"
     data-ping="one ping only"
     id="some_id"
 >
@@ -82,16 +82,12 @@ charlie delta
     </div>
 
     <ul class="flow">
-        <li>
-        <p>alfa
-        </li>
-        <p>charlie delta
-        </li>
-        </li>
-        <li>
-        <p>echo foxtrot
-        </li>
-        </li>
+    <li>
+      <p>alfa</p>
+    </li>
+    <li>
+      <p>bravo</p>
+    </li>
     </ul>
 
     <div class="section-afterword">
@@ -100,6 +96,7 @@ charlie delta
 </section>
 
 -- /expected-output
+
 
 
 -- metadata
