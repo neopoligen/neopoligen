@@ -21,7 +21,7 @@ div {
 <body>
 
 [! for section in site.pages[page_id].ast !]
-[@ theme.output_main_section(site, page_id, section) @]
+[@ theme.output_section(site, page_id, section) @]
 [#
 [! if section.type != "metadata" !]
     [! if section.kind == "generic" !]
