@@ -1,0 +1,4 @@
+[#############################################################################]
+[! macro output_main_section(site, page_id, section) !]
+[@ section @]
+[! endmacro !]

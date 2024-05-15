@@ -176,6 +176,7 @@ impl Site {
                         // }
                     }
                     Err(e) => {
+                        dbg!(&e);
                         let tt = TemplateTest::new(p.1.clone(), None, Some(format!("{:?}", e)));
                         outputs.push(tt);
                         //dbg!(p.0);

@@ -150,33 +150,33 @@ fn build_site(site_config: &SiteConfig) {
     //    let _ = write_file_with_mkdir(error_file_path, &p.error.clone().unwrap().to_string());
     //});
 
-    // site.load_source_files();
-    // site.parse_pages();
-    // site.generate_content_pages().iter().for_each(|p| {
-    //     let output_path = &site
-    //         .config
-    //         .paths
-    //         .get("output_root")
-    //         .unwrap()
-    //         .join(p.0.strip_prefix("/").unwrap());
-    //     let _ = write_file_with_mkdir(output_path, p.1);
-    // });
+    site.load_source_files();
+    site.parse_pages();
+    site.generate_content_pages().iter().for_each(|p| {
+        let output_path = &site
+            .config
+            .paths
+            .get("output_root")
+            .unwrap()
+            .join(p.0.strip_prefix("/").unwrap());
+        let _ = write_file_with_mkdir(output_path, p.1);
+    });
 
-    //site.page_errors.iter().for_each(|p| {
-    //    let error_file_path = &site
-    //        .config
-    //        .paths
-    //        .get("render_errors_root")
-    //        .unwrap()
-    //        .join(
-    //            &p.source_path
-    //                .strip_prefix(&site.config.paths.get("content_root").unwrap())
-    //                .unwrap(),
-    //        )
-    //        .with_extension("txt");
-    //    //dbg!(error_file_path);
-    //    let _ = write_file_with_mkdir(error_file_path, &p.error.clone().unwrap().to_string());
-    //});
+    site.page_errors.iter().for_each(|p| {
+        let error_file_path = &site
+            .config
+            .paths
+            .get("render_errors_root")
+            .unwrap()
+            .join(
+                &p.source_path
+                    .strip_prefix(&site.config.paths.get("content_root").unwrap())
+                    .unwrap(),
+            )
+            .with_extension("txt");
+        //dbg!(error_file_path);
+        let _ = write_file_with_mkdir(error_file_path, &p.error.clone().unwrap().to_string());
+    });
 
     //site.render_errors.iter().for_each(|p| {
     //   dbg!(&p.0);

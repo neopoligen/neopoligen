@@ -1,3 +1,5 @@
+[!- import "includes/macros.neoj" as theme -!]
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,6 +21,8 @@ div {
 <body>
 
 [! for section in site.pages[page_id].ast !]
+[@ theme.output_main_section(site, page_id, section) @]
+[#
 [! if section.type != "metadata" !]
     [! if section.kind == "generic" !]
         [! set include_path = "sections/generic/" + section.bounds + "/default.neoj" !]
@@ -28,7 +32,9 @@ div {
         [! include include_path !]
     [! endif !]
 [! endif !]
+#]
 [! endfor !]
+
 
 <pre>
 [@ site.pages[page_id].ast|tojson(true) @]
