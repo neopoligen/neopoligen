@@ -107,7 +107,6 @@ impl Site {
             } else {
                 event!(Level::ERROR, "Could not get template: {}", template_name);
             }
-            ()
             //
         });
         outputs

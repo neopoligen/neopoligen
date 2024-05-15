@@ -1,4 +1,5 @@
-<li>
+<li>--
+[#
 [! for block in item.content !]
 <p>
     [! for span in block.spans !]
@@ -7,3 +8,4 @@
     [! endfor !]
     </p>
 [! endfor !]
+#]

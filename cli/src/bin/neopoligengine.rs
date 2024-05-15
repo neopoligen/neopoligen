@@ -178,10 +178,12 @@ fn build_site(site_config: &SiteConfig) {
         let _ = write_file_with_mkdir(error_file_path, &p.error.clone().unwrap().to_string());
     });
 
-    //site.render_errors.iter().for_each(|p| {
-    //   dbg!(&p.0);
-    //  let _ = write_file_with_mkdir(p.0, p.1);
-    //})
+    // TODO: Move this so it's not included in the site
+    // object, maybe
+    site.render_errors.iter().for_each(|p| {
+        dbg!(&p.0);
+        let _ = write_file_with_mkdir(p.0, p.1);
+    })
 
     //
 }
