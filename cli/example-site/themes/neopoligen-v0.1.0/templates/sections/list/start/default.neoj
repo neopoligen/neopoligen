@@ -1,17 +1,6 @@
 [!- import "includes/macros.neoj" as theme -!]
 
-    <ul class="flow">
-[@ theme.view_section_as_json(site, page_id, section) @]
-
-
-[#
+<ul class="flow">
 [! for child in section.children !]
 [@ theme.output_section(site, page_id, child) @]
 [! endfor !]
-
-
-[! for item in section.items !]
-    [! set include_file = "sections/list_item/" + item.bounds + "/default.neoj" !]
-    [! include include_file !]
-[! endfor !]
-#]

@@ -1,11 +1,7 @@
-<li>--
-[#
-[! for block in item.content !]
-<p>
-    [! for span in block.spans !]
-        [! set include_path = "spans/" + span.type + ".neoj" !]
-        [! include include_path !]
-    [! endfor !]
-    </p>
+[!- import "includes/macros.neoj" as theme -!]
+
+<li>[! for child in section.children !]
+[@ theme.output_section(site, page_id, child) @]
 [! endfor !]
-#]
+
+

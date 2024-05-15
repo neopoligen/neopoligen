@@ -1,4 +1,4 @@
-</ul>
+</li>
 [! if section.children !]
 [!- include "sections/p/full/default.neoj" -!]
 [! endif !]

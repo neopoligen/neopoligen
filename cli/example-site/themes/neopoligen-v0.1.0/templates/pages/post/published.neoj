@@ -22,17 +22,6 @@ div {
 
 [! for section in site.pages[page_id].ast !]
 [@ theme.output_section(site, page_id, section) @]
-[#
-[! if section.type != "metadata" !]
-    [! if section.kind == "generic" !]
-        [! set include_path = "sections/generic/" + section.bounds + "/default.neoj" !]
-        [! include include_path !]
-    [! else !]
-        [! set include_path = "sections/" + section.type + "/" + section.bounds + "/default.neoj" !]
-        [! include include_path !]
-    [! endif !]
-[! endif !]
-#]
 [! endfor !]
 
 
