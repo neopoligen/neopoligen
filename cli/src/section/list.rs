@@ -27,7 +27,7 @@ pub fn list_item_block<'a>(
         Section::Block {
             bounds: "full".to_string(),
             spans,
-            r#type: "list-item".to_string(),
+            r#type: "list-item-block".to_string(),
         },
     ))
 }
@@ -41,7 +41,7 @@ pub fn list_item<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    Ok((source, Section::ListItem { children }))
+    Ok((source, Section::ListItem { bounds: "full".to_string(), children, r#type: "list-item".to_string() }))
 }
 
 pub fn list_item_with_sections<'a>(
@@ -57,7 +57,7 @@ pub fn list_item_with_sections<'a>(
     .context("")
     .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    Ok((source, Section::ListItem { children }))
+    Ok((source, Section::ListItem { bounds: "full".to_string(), children, r#type: "list-item".to_string() }))
 }
 
 pub fn list_section_end<'a>(

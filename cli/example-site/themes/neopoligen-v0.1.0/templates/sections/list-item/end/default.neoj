@@ -1,4 +1,5 @@
 </li>
+[#
 <li>
 [! for block in item.content !]
 <p>
@@ -9,3 +10,4 @@
     </p>
 [! endfor !]
 </li>
+#]

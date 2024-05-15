@@ -8,3 +8,11 @@
     [! include include_path !]
 [! endif !]
 [! endmacro !]
+
+
+[#############################################################################]
+[! macro view_section_as_json(site, page_id, section) !]
+<pre>
+[@ section|tojson(true) @]
+</pre>
+[! endmacro !]

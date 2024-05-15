@@ -60,9 +60,11 @@ pub enum Section {
         bounds: String,
     },
     ChecklistItem {
+        bounds: String,
         children: Vec<Section>,
         status: bool,
         status_value: Option<String>,
+        r#type: String,
     },
     Comment {
         bounds: String,
@@ -93,7 +95,9 @@ pub enum Section {
         r#type: String,
     },
     ListItem {
+        bounds: String,
         children: Vec<Section>,
+        r#type: String,
     },
     Raw {
         attrs: BTreeMap<String, String>,

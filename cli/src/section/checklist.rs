@@ -27,7 +27,7 @@ pub fn checklist_item_block<'a>(
         Section::Block {
             bounds: "full".to_string(),
             spans,
-            r#type: "checklist-item".to_string(),
+            r#type: "checklist-item-block".to_string(),
         },
     ))
 }
@@ -46,9 +46,11 @@ pub fn checklist_item<'a>(
     Ok((
         source,
         Section::ChecklistItem {
+            bounds: "full".to_string(),
             children,
             status: false,
             status_value: None,
+            r#type: "checklist-item".to_string(),
         },
     ))
 }
@@ -69,9 +71,11 @@ pub fn checklist_item_with_sections<'a>(
     Ok((
         source,
         Section::ChecklistItem {
+            bounds: "full".to_string(),
             children,
             status: false,
             status_value: None,
+            r#type: "checklist-item".to_string(),
         },
     ))
 }
