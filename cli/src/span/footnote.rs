@@ -33,6 +33,7 @@ pub fn footnote_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> 
             attrs,
             flags,
             text: text.to_string(),
+            r#type: "footnote".to_string(),
         },
     ))
 }

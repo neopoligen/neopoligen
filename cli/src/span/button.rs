@@ -33,6 +33,7 @@ pub fn button_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
             attrs,
             flags,
             text: text.to_string(),
+            r#type: "button".to_string(),
         },
     ))
 }

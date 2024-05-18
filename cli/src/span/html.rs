@@ -14,6 +14,7 @@ pub fn html_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         source,
         Span::Html {
             text: text.to_string(),
+            r#type: "html".to_string(),
         },
     ))
 }

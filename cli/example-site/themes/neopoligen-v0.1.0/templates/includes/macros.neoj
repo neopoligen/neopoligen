@@ -9,6 +9,11 @@
 [! endif !]
 [! endmacro !]
 
+[#############################################################################]
+[! macro output_span(site, page_id, span) !]
+    [! include "spans/" + span.type + ".neoj" !]
+[! endmacro !]
+
 
 [#############################################################################]
 [! macro view_section_as_json(site, page_id, section) !]

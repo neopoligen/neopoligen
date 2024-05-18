@@ -5,7 +5,13 @@ Welcome To The Neopoligen Cookbook
 This site is an example of some things
 you can do with Neopoligen
 
-``code is here|class: green``
+-- list
+
+- code: ``this is code``
+
+- strong: **this is strong**
+
+- strong2: <<strong|test 2|class: green>>
 
 
 

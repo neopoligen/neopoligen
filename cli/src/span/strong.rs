@@ -33,6 +33,7 @@ pub fn strong_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
             attrs,
             flags,
             text: text.to_string(),
+            r#type: "strong".to_string(),
         },
     ))
 }

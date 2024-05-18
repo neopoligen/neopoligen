@@ -4,5 +4,5 @@ watchexec\
   --project-origin .\
   -w "../cli/example-site/themes/neopoligen-v0.1.0/developer-tools/span_builder"\
   --workdir "../cli/example-site/themes/neopoligen-v0.1.0/developer-tools/span_builder"\
-  -e rs,neoj,txt\
+  -e py,rs,neoj,txt\
   ./build_spans.py

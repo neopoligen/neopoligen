@@ -33,6 +33,7 @@ pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
             attrs,
             flags,
             text: text.to_string(),
+            r#type: "code".to_string(),
         },
     ))
 }

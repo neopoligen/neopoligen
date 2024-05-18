@@ -38,24 +38,29 @@ pub enum Span {
         attrs: BTreeMap<String, String>,
         flags: Vec<String>,
         text: String,
+        r#type: String,
     },
     Code {
         attrs: BTreeMap<String, String>,
         flags: Vec<String>,
         text: String,
+        r#type: String,
     },
     Em {
         attrs: BTreeMap<String, String>,
         flags: Vec<String>,
         text: String,
+        r#type: String,
     },
     Footnote {
         attrs: BTreeMap<String, String>,
         flags: Vec<String>,
         text: String,
+        r#type: String,
     },
     Html {
         text: String,
+        r#type: String,
     },
     KnownSpan {
         attrs: BTreeMap<String, String>,
@@ -68,17 +73,21 @@ pub enum Span {
         flags: Vec<String>,
         text: String,
         href: Option<String>,
+        r#type: String,
     },
     Newline {
         text: String,
+        r#type: String,
     },
     Space {
         text: String,
+        r#type: String,
     },
     Strong {
         attrs: BTreeMap<String, String>,
         flags: Vec<String>,
         text: String,
+        r#type: String,
     },
     UnknownSpan {
         r#type: String,
@@ -88,6 +97,7 @@ pub enum Span {
     },
     WordPart {
         text: String,
+        r#type: String,
     },
 }
 
@@ -128,6 +138,7 @@ pub fn newline(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         source,
         Span::Space {
             text: text.1.to_string(),
+            r#type: "space".to_string(),
         },
     ))
 }
@@ -138,6 +149,7 @@ pub fn space(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         source,
         Span::Space {
             text: text.to_string(),
+            r#type: "space".to_string(),
         },
     ))
 }
@@ -243,6 +255,7 @@ pub fn word_part(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         source,
         Span::WordPart {
             text: text.to_string(),
+            r#type: "wordpart".to_string(),
         },
     ))
 }

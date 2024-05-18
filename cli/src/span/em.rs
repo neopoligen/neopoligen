@@ -33,6 +33,7 @@ pub fn em_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
             attrs,
             flags,
             text: text.to_string(),
+            r#type: "em".to_string(),
         },
     ))
 }

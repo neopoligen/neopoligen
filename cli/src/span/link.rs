@@ -41,6 +41,7 @@ pub fn link_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
             flags: flags.into(),
             href,
             text: text.to_string(),
+            r#type: "link".to_string(),
         },
     ))
 }

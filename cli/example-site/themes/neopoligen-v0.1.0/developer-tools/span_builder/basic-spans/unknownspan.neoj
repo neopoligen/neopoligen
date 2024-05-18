@@ -1,7 +1,6 @@
-[# type: basic #]
 [!- import "includes/macros.neoj" as theme -!]
 
-<data
+<[@ span.type @]
 [! for attr in span.attrs !]
 [@ ' ' @][@ attr @]="[@ span.attrs[attr] @]"
 [! endfor !]
@@ -16,4 +15,4 @@
 [@ theme.output_span(site, page_id, child) @]
 [! endfor !]
 [! endif !]
-</data>
+</[@ span.type @]>

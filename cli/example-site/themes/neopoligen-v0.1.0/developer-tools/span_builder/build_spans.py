@@ -77,12 +77,24 @@ spans = [
 ]
 
 
+jinja_template = """[# type: basic #]
+[!- import "includes/macros.neoj" as theme -!]
 
-jinja_template = """{# type: standard #}
-{%- import "includes/macros.neoj" as theme -%}
-
-<SPANKEY>
-TODO-FROM-span_builder
+<SPANKEY
+[! for attr in span.attrs !]
+[@ ' ' @][@ attr @]="[@ span.attrs[attr] @]"
+[! endfor !]
+[! for flag in span.flags !]
+[@ ' ' @][@ flag @]
+[! endfor !]
+>
+[! if span.text !]
+[@ span.text @]
+[! else !]
+[! for child in span.spans !]
+[@ theme.output_span(site, page_id, child) @]
+[! endfor !]
+[! endif !]
 </SPANKEY>
 """
 
