@@ -1,0 +1,9 @@
+[!- import "includes/macros.neoj" as theme -!]
+
+<li><div class="checklist-checkbox-wrapper"><input type="checkbox" /></div>
+<div class="checklist-blocks-wrapper">
+[! for child in section.children !]
+[@ theme.output_section(site, page_id, child) @]
+[! endfor !]
+</div>
+

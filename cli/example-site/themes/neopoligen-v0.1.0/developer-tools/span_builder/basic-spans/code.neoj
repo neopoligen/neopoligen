@@ -1,0 +1,8 @@
+<code
+[! for attr in span.attrs!]
+[@ ' ' @][@ attr @]="[@ span.attrs[attr] @]"
+[! endfor !]
+[! for flag in span.flags!]
+[@ ' ' @][@ flag @]
+[! endfor !]
+>[@ span.text @]</code>
