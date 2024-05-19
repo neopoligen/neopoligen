@@ -3,27 +3,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-<style>
-* {
-    margin:0;
-    padding: 0.3rem;
-}
-
-body {
-    background-color: black;
-    color: #aaa;
-}
-div {
-    border: 1px solid #222;
-}
-</style>
+<link rel="stylesheet" href="/theme/styles/main.css" />
 </head>
 <body>
 
 [! for section in site.pages[page_id].ast !]
 [@ theme.output_section(site, page_id, section) @]
 [! endfor !]
-
 
 <pre>
 [@ site.pages[page_id].ast|tojson(true) @]

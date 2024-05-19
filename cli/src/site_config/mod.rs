@@ -19,6 +19,10 @@ pub struct SiteConfig {
     #[serde(default = "empty_paths")]
     pub paths: BTreeMap<String, PathBuf>,
 
+    pub project_root: Option<PathBuf>,
+
+    //#[serde(default = "empty_dirs")]
+    //pub dirs: SiteDirs
     #[serde(default = "empty_sections")]
     pub sections: Sections,
 
@@ -37,6 +41,20 @@ pub struct ThemeConfig {
 }
 
 impl SiteConfig {
+    // TODO: Move paths. to dir functions
+    pub fn content_dir(&self) -> PathBuf {
+        self.project_root.clone().unwrap().join("content")
+    }
+    pub fn themes_dir(&self) -> PathBuf {
+        self.project_root.clone().unwrap().join("themes")
+    }
+    pub fn theme_dir(&self) -> PathBuf {
+        self.project_root
+            .clone()
+            .unwrap()
+            .join(PathBuf::from(format!("themes/{}", self.theme.name)))
+    }
+
     pub fn load_sections(&mut self) {
         // // define the sections
         // self.sections.insert("basic".to_string(), vec![]);

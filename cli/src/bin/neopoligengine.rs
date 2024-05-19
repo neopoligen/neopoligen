@@ -1,17 +1,13 @@
 use axum::Router;
 use dirs::document_dir;
 use neopoligengine::engine_config::EngineConfig;
+use neopoligengine::file_watcher::FileWatcher;
 use neopoligengine::site::Site;
 use neopoligengine::site_config::SiteConfig;
-use notify_debouncer_mini::new_debouncer;
-use notify_debouncer_mini::notify::RecursiveMode;
-use notify_debouncer_mini::DebounceEventResult;
-use notify_debouncer_mini::DebouncedEventKind;
 use regex::Regex;
 use std::fs;
-use std::path::Path;
 use std::path::PathBuf;
-use std::time::Duration;
+use tokio::sync::mpsc;
 use tower_http::services::ServeDir;
 use tower_livereload::LiveReloadLayer;
 use tower_livereload::Reloader;
@@ -19,7 +15,6 @@ use tracing::{event, instrument, Level};
 use tracing_subscriber::filter;
 use tracing_subscriber::fmt;
 use tracing_subscriber::prelude::*;
-// use rust_embed::RustEmbed;
 
 #[tokio::main]
 #[instrument]
@@ -93,10 +88,10 @@ fn build_site(site_config: &SiteConfig) {
     let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
     let _ = empty_dir(&site.config.paths.get("render_errors_root").unwrap());
     let _ = empty_dir(&site.config.paths.get("theme_errors_root").unwrap());
+    //site.copy_theme_assets();
     site.load_templates();
     site.load_template_test_files();
     site.parse_pages();
-
     site.find_template_errors().iter().for_each(|tt| {
         let error_file_path = &site
             .config
@@ -228,6 +223,7 @@ fn empty_dir(dir: &PathBuf) -> std::io::Result<()> {
     Ok(())
 }
 
+// todo. move paths, to dir function calls
 fn load_site_config_file(neo_root: &PathBuf, active_site: &str) -> Result<SiteConfig, String> {
     let mut project_root = neo_root.clone();
     project_root.push(active_site);
@@ -239,6 +235,7 @@ fn load_site_config_file(neo_root: &PathBuf, active_site: &str) -> Result<SiteCo
                 match fs::read_to_string(&site_config_path) {
                     Ok(text) => match serde_json::from_str::<SiteConfig>(text.as_str()) {
                         Ok(mut config) => {
+                            config.project_root = Some(project_root.clone());
                             config.paths.insert(
                                 "theme_root".to_string(),
                                 project_root
@@ -332,54 +329,60 @@ fn load_site_config_file(neo_root: &PathBuf, active_site: &str) -> Result<SiteCo
     }
 }
 
-#[instrument(skip(reloader, site_config))]
-fn run_watcher(reloader: Reloader, site_config: SiteConfig) {
-    println!("Starting watcher");
-    let watch_path = site_config.paths.get("project_root").unwrap().clone();
-    let mut debouncer = new_debouncer(
-        Duration::from_millis(100),
-        move |res: DebounceEventResult| match res {
-            Ok(events) => {
-                match events.iter().find_map(|e| match e.kind {
-                    DebouncedEventKind::Any => {
-                        if e.path
-                            .starts_with(&site_config.paths.get("content_root").unwrap())
-                            || e.path
-                                .starts_with(&site_config.paths.get("files_root").unwrap())
-                            || e.path
-                                .starts_with(&site_config.paths.get("images_root").unwrap())
-                            || e.path
-                                .starts_with(&site_config.paths.get("mp3s_root").unwrap())
-                            || e.path
-                                .starts_with(&site_config.paths.get("scripts_root").unwrap())
-                            || e.path
-                                .starts_with(&site_config.paths.get("themes_root").unwrap())
-                        {
-                            Some(e)
-                        } else {
-                            None
-                        }
-                    }
-                    _ => None,
-                }) {
-                    Some(_) => {
-                        build_site(&site_config);
-                        reloader.reload();
-                    }
-                    None => {}
-                }
-            }
-            Err(e) => println!("Error {:?}", e),
-        },
-    )
-    .unwrap();
-    debouncer
-        .watcher()
-        .watch(Path::new(&watch_path), RecursiveMode::Recursive)
-        .unwrap();
-    // TODO: Figure out how to keep this open without the
-    // loop since clippy says that wastes cpu
-    loop {}
+// #[instrument(skip(reloader, site_config))]
+// fn run_watcher(reloader: Reloader, site_config: SiteConfig) {
+//     println!("Starting watcher");
+//     let watch_path = site_config.paths.get("project_root").unwrap().clone();
+//     let mut debouncer = new_debouncer(
+//         Duration::from_millis(100),
+//         move |res: DebounceEventResult| match res {
+//             Ok(events) => {
+//                 match events.iter().find_map(|e| match e.kind {
+//                     DebouncedEventKind::Any => {
+//                         if e.path
+//                             .starts_with(&site_config.paths.get("content_root").unwrap())
+//                             || e.path
+//                                 .starts_with(&site_config.paths.get("files_root").unwrap())
+//                             || e.path
+//                                 .starts_with(&site_config.paths.get("images_root").unwrap())
+//                             || e.path
+//                                 .starts_with(&site_config.paths.get("mp3s_root").unwrap())
+//                             || e.path
+//                                 .starts_with(&site_config.paths.get("scripts_root").unwrap())
+//                             || e.path
+//                                 .starts_with(&site_config.paths.get("themes_root").unwrap())
+//                         {
+//                             Some(e)
+//                         } else {
+//                             None
+//                         }
+//                     }
+//                     _ => None,
+//                 }) {
+//                     Some(_) => {
+//                         build_site(&site_config);
+//                         reloader.reload();
+//                     }
+//                     None => {}
+//                 }
+//             }
+//             Err(e) => println!("Error {:?}", e),
+//         },
+//     )
+//     .unwrap();
+//     debouncer
+//         .watcher()
+//         .watch(Path::new(&watch_path), RecursiveMode::Recursive)
+//         .unwrap();
+//     // TODO: Figure out how to keep this open without the
+//     // loop since clippy says that wastes cpu
+//     loop {}
+// }
+
+async fn catch_file_changes(reloader: Reloader, mut rx: mpsc::Receiver<Vec<PathBuf>>) {
+    while let Some(r) = rx.recv().await {
+        dbg!(r);
+    }
 }
 
 #[instrument(skip(site_config))]
@@ -392,10 +395,15 @@ async fn run_web_server(site_config: SiteConfig) {
             ServeDir::new(&site_config.paths.get("output_root").unwrap()),
         )
         .layer(livereload);
-    tokio::spawn(async move {
-        run_watcher(reloader, site_config.clone());
-    });
     event!(Level::INFO, "Starting web server");
+    let (tx, rx) = mpsc::channel(1);
+    let _theme_watcher = FileWatcher::new(&site_config.theme_dir(), tx.clone()).await;
+    let _content_watcher = FileWatcher::new(&site_config.content_dir(), tx.clone()).await;
+
+    tokio::spawn(async move {
+        catch_file_changes(reloader, rx).await;
+    });
+
     if let Ok(listener) = tokio::net::TcpListener::bind("localhost:1989").await {
         if (axum::serve(listener, app).await).is_ok() {
             // Server is going at this point

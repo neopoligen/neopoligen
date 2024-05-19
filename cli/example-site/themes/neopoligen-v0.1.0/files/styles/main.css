@@ -1,0 +1,31 @@
+*, 
+*::before, 
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+.blue {
+  color: blue;
+}
+
+body {
+  background-color: #333;
+  color: goldenrod;
+}
+
+.green {
+  color: green;
+}
+
+
+
+
+
+
+
+
+

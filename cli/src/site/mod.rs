@@ -1,6 +1,7 @@
 use crate::page::Page;
 use crate::site_config::SiteConfig;
 use crate::template_test::*;
+use fs_extra::dir::copy;
 use minijinja::context;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
@@ -56,6 +57,23 @@ impl Site {
 
 impl Site {
     //
+
+    pub fn copy_theme_assets(&self) {
+        let mut options = fs_extra::dir::CopyOptions::new();
+        options.overwrite = true;
+        options.content_only = true;
+
+        let mut in_dir = self.config.paths.get("theme_root").unwrap().to_path_buf();
+        in_dir.push("files");
+
+        let mut out_dir = self.config.paths.get("output_root").unwrap().to_path_buf();
+        out_dir.push("theme");
+
+        match copy(in_dir, out_dir, &options) {
+            Ok(_) => (),
+            Err(e) => println!("{}", e),
+        }
+    }
 
     pub fn output_errors(&self) {
         // self.parsing_errors.iter().for_each(|p| {
@@ -166,7 +184,6 @@ impl Site {
                         if tt.template_errors.len() > 0 {
                             outputs.push(tt);
                         }
-
                         // match tt.status() {
                         //     TemplateTestStatus::Failed => {
                         //         outputs.push(tt);
