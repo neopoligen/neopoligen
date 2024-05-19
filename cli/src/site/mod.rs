@@ -58,21 +58,55 @@ impl Site {
 impl Site {
     //
 
-    pub fn copy_theme_assets(&self) {
-        let mut options = fs_extra::dir::CopyOptions::new();
-        options.overwrite = true;
-        options.content_only = true;
+    pub fn copy_theme_assets(&self) -> Result<(), std::io::Error> {
+        let source_dir = self.config.theme_dir().join(PathBuf::from("files"));
+        let dest_dir = self.config.output_dir().join(PathBuf::from("theme"));
 
-        let mut in_dir = self.config.paths.get("theme_root").unwrap().to_path_buf();
-        in_dir.push("files");
-
-        let mut out_dir = self.config.paths.get("output_root").unwrap().to_path_buf();
-        out_dir.push("theme");
-
-        match copy(in_dir, out_dir, &options) {
-            Ok(_) => (),
-            Err(e) => println!("{}", e),
+        for entry in WalkDir::new(&source_dir) {
+            let source_path = entry?.into_path();
+            let dest_path = dest_dir.join(source_path.strip_prefix(&source_dir).unwrap());
+            if source_path.is_dir() {
+                fs::create_dir_all(dest_path)?;
+            } else {
+                let data = std::fs::read(source_path)?;
+                std::fs::write(dest_path, &data)?;
+            }
         }
+
+        Ok(())
+
+        // let mut options = fs_extra::dir::CopyOptions::new();
+        // options.overwrite = true;
+        // options.content_only = true;
+
+        // let in_dir = self.config.theme_dir().join(PathBuf::from("files"));
+        // let out_dir = self.config.output_dir().join(PathBuf::from("theme"));
+        // // let out_dir = PathBuf::from("/Users/alan/Desktop/_tmp_theme_output");
+
+        //let mut in_dir = self.config.paths.get("theme_root").unwrap().to_path_buf();
+        //in_dir.push("files");
+
+        //let mut out_dir = self.config.paths.get("output_root").unwrap().to_path_buf();
+        //out_dir.push("theme");
+
+        // dbg!(&in_dir);
+        // dbg!(&out_dir);
+
+        // use fs::copy;
+        // let tmp_source = PathBuf::from("/Users/alan/Documents/Neopoligen/v0.1.0-dev/themes/neopoligen-v0.1.0/files/styles/main.css");
+        // let mut tmp_dest =
+        //     PathBuf::from("/Users/alan/Documents/Neopoligen/v0.1.0-dev/docs/theme/styles");
+        // let mut tmp_dest = PathBuf::from("/Users/alan/Desktop/tmp-output");
+        // fs::create_dir_all(&tmp_dest).unwrap();
+        // tmp_dest.push("main.css");
+        // copy(tmp_source, tmp_dest).unwrap();
+
+        // match copy(&in_dir, &out_dir, &options) {
+        //     Ok(_) => (),
+        //     Err(e) => println!("{:?}", e),
+        // }
+
+        //
     }
 
     pub fn output_errors(&self) {

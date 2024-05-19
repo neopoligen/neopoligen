@@ -1,5 +1,6 @@
 use axum::Router;
 use dirs::document_dir;
+use minijinja::__context::build;
 use neopoligengine::engine_config::EngineConfig;
 use neopoligengine::file_watcher::FileWatcher;
 use neopoligengine::site::Site;
@@ -88,7 +89,6 @@ fn build_site(site_config: &SiteConfig) {
     let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
     let _ = empty_dir(&site.config.paths.get("render_errors_root").unwrap());
     let _ = empty_dir(&site.config.paths.get("theme_errors_root").unwrap());
-    //site.copy_theme_assets();
     site.load_templates();
     site.load_template_test_files();
     site.parse_pages();
@@ -178,8 +178,9 @@ fn build_site(site_config: &SiteConfig) {
     site.render_errors.iter().for_each(|p| {
         dbg!(&p.0);
         let _ = write_file_with_mkdir(p.0, p.1);
-    })
+    });
 
+    let _ = site.copy_theme_assets();
     //
 }
 
@@ -379,9 +380,14 @@ fn load_site_config_file(neo_root: &PathBuf, active_site: &str) -> Result<SiteCo
 //     loop {}
 // }
 
-async fn catch_file_changes(reloader: Reloader, mut rx: mpsc::Receiver<Vec<PathBuf>>) {
+async fn catch_file_changes(
+    reloader: Reloader,
+    site_config: SiteConfig,
+    mut rx: mpsc::Receiver<Vec<PathBuf>>,
+) {
     while let Some(r) = rx.recv().await {
-        dbg!(r);
+        build_site(&site_config);
+        reloader.reload();
     }
 }
 
@@ -397,13 +403,13 @@ async fn run_web_server(site_config: SiteConfig) {
         .layer(livereload);
     event!(Level::INFO, "Starting web server");
     let (tx, rx) = mpsc::channel(1);
+    //dbg!(&site_config.content_dir());
+    //dbg!(&site_config.theme_dir());
     let _theme_watcher = FileWatcher::new(&site_config.theme_dir(), tx.clone()).await;
     let _content_watcher = FileWatcher::new(&site_config.content_dir(), tx.clone()).await;
-
     tokio::spawn(async move {
-        catch_file_changes(reloader, rx).await;
+        catch_file_changes(reloader, site_config, rx).await;
     });
-
     if let Ok(listener) = tokio::net::TcpListener::bind("localhost:1989").await {
         if (axum::serve(listener, app).await).is_ok() {
             // Server is going at this point

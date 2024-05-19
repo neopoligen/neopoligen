@@ -45,6 +45,9 @@ impl SiteConfig {
     pub fn content_dir(&self) -> PathBuf {
         self.project_root.clone().unwrap().join("content")
     }
+    pub fn output_dir(&self) -> PathBuf {
+        self.project_root.clone().unwrap().join("docs")
+    }
     pub fn themes_dir(&self) -> PathBuf {
         self.project_root.clone().unwrap().join("themes")
     }

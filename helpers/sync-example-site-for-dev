@@ -4,5 +4,5 @@ watchexec\
   --project-origin .\
   -w "../cli/example-site"\
   --workdir "../cli/example-site"\
-  -e neo,neoj\
+  -e css,neo,neoj\
   "rsync -av ./ ~/Documents/Neopoligen/v0.1.0-dev/"

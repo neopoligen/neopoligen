@@ -1,5 +1,4 @@
 use itertools::Itertools;
-use notify::event::ModifyKind;
 use notify_debouncer_full::{new_debouncer, notify::*, DebounceEventResult, Debouncer, FileIdMap};
 use std::path::PathBuf;
 use std::time::Duration;
@@ -18,8 +17,8 @@ impl FileWatcher {
             None,
             move |result: DebounceEventResult| match result {
                 Ok(events) => {
+                    dbg!(".");
                     dbg!(&events);
-                    //dbg!(".");
                     let paths: Vec<_> = events
                         .iter()
                         .filter_map(|e| match e.event.kind {
@@ -30,8 +29,7 @@ impl FileWatcher {
                         })
                         .flatten()
                         .unique()
-                        .filter_map(|p| if p.is_dir() { None } else { Some(p) })
-                        // .filter_map(|p| Some(p))
+                        //.filter_map(|p| if p.is_file() { Some(p) } else { None })
                         .collect();
                     if paths.len() > 0 {
                         let tx = tx.clone();
