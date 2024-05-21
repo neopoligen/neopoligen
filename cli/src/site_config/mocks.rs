@@ -2,7 +2,6 @@ use std::collections::BTreeMap;
 
 use crate::sections::*;
 use crate::site_config::SiteConfig;
-use crate::site_config::ThemeConfig;
 use serde_json::Value;
 use std::path::PathBuf;
 
@@ -42,10 +41,8 @@ impl SiteConfig {
         );
         SiteConfig {
             default_language: "en".to_string(),
-            theme: ThemeConfig {
-                name: "mock-config-theme".to_string(),
-                options: serde_json::from_str::<Value>("{}").unwrap(),
-            },
+            theme: "mock-config-theme".to_string(),
+            theme_options: None,
             sections: Sections {
                 basic: vec!["div".to_string()],
                 block: vec!["div".to_string()],

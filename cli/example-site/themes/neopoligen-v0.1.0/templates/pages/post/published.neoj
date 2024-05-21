@@ -1,5 +1,6 @@
 [!- extends "wrappers/one-column.neoj" -!]
-[!- import "includes/macros.neoj" as theme -!]
+[!- include "includes/config-loader.neoj" -!]
+[!- import "includes/theme.neoj" as theme -!]
 
 [! block body !]
 [! for section in site.pages[page_id].ast !]

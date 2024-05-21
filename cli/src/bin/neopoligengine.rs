@@ -290,20 +290,18 @@ fn load_site_config_file(neo_root: &PathBuf, active_site: &str) -> Result<SiteCo
                             config.paths.insert(
                                 "theme_root".to_string(),
                                 project_root
-                                    .join(PathBuf::from(format!("themes/{}", config.theme.name))),
+                                    .join(PathBuf::from(format!("themes/{}", config.theme))),
                             );
                             config.paths.insert(
                                 "theme_tests_root".to_string(),
-                                project_root.join(PathBuf::from(format!(
-                                    "themes/{}/tests",
-                                    config.theme.name
-                                ))),
+                                project_root
+                                    .join(PathBuf::from(format!("themes/{}/tests", config.theme))),
                             );
                             config.paths.insert(
                                 "theme_tests_content_root".to_string(),
                                 project_root.join(PathBuf::from(format!(
                                     "themes/{}/tests/content",
-                                    config.theme.name
+                                    config.theme
                                 ))),
                             );
                             config

@@ -1,0 +1,7 @@
+[! set config = namespace() !]
+[! set config.theme_name = site.config.theme !]
+[! set config.theme = site.config.theme_options !]
+[# TODO handle: no_css #]
+[# TODO handle: no_javascript #]
+[# TODO handle: no_header #]
+[# TODO handle: no_footer #]

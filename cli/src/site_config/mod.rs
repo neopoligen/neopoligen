@@ -29,16 +29,17 @@ pub struct SiteConfig {
     #[serde(default = "empty_spans")]
     pub spans: Vec<String>,
 
-    pub theme: ThemeConfig,
+    pub theme: String,
+    pub theme_options: Option<Value>,
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-#[serde(tag = "type", rename_all = "lowercase")]
-pub struct ThemeConfig {
-    pub name: String,
-    #[serde(default = "empty_options")]
-    pub options: Value,
-}
+// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+// #[serde(tag = "type", rename_all = "lowercase")]
+// pub struct ThemeConfig {
+//     pub name: String,
+//     #[serde(default = "empty_options")]
+//     pub options: Value,
+// }
 
 impl SiteConfig {
     // TODO: Move paths. to dir functions
@@ -55,7 +56,7 @@ impl SiteConfig {
         self.project_root
             .clone()
             .unwrap()
-            .join(PathBuf::from(format!("themes/{}", self.theme.name)))
+            .join(PathBuf::from(format!("themes/{}", self.theme)))
     }
 
     pub fn load_sections(&mut self) {
@@ -136,9 +137,9 @@ fn empty_paths() -> BTreeMap<String, PathBuf> {
     BTreeMap::new()
 }
 
-fn empty_options() -> Value {
-    serde_json::from_str::<Value>("{}").unwrap()
-}
+// fn empty_options() -> Value {
+//     serde_json::from_str::<Value>("{}").unwrap()
+// }
 
 fn empty_sections() -> Sections {
     Sections {

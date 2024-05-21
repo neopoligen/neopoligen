@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>[# TODO: Add page title #]</title>
+<title>[# TODO: Add page title #][@ config.theme @]</title>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -33,18 +33,17 @@
 
 </head>
 <body class="full-width">
+[@ config.theme @]
     [#
     [! include "includes/header.neojinja" !]
     #]
     <main>
-        <article class="flow">
         [! block body !][! endblock !]
         [#
         [! include "includes/endnotes.neojinja" !]
         [! include "includes/footnotes.neojinja" !]
         [! include "includes/references.neojinja" !]
         #]
-        </article>
     </main>
     [#
     [! include "includes/footer.neojinja" !]

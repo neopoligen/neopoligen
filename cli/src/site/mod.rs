@@ -1,7 +1,7 @@
 use crate::page::Page;
 use crate::site_config::SiteConfig;
 use crate::template_test::*;
-use fs_extra::dir::copy;
+// use fs_extra::dir::copy;
 use minijinja::context;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
@@ -396,7 +396,7 @@ impl Site {
 
     pub fn load_templates(&mut self) {
         let mut templates_root = self.config.paths.get("themes_root").unwrap().to_path_buf();
-        templates_root.push(self.config.theme.name.clone());
+        templates_root.push(self.config.theme.clone());
         templates_root.push("templates");
         if templates_root.exists() {
             WalkDir::new(templates_root.clone())
