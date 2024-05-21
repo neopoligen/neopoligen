@@ -34,7 +34,6 @@
     [! if not loop.first !]
       <p>
     [! endif !]
-
     [! for span in child.spans !]
     [! set include_path = "spans/" + span.kind + ".neoj" !]
     [! include include_path !]
@@ -43,6 +42,8 @@
       </p>
     [! endif !]
   [!- endif -!]
+[!- else -!]
+<div>---</div>
 [!- endfor -!]
 
     [! if section.attrs.id !]

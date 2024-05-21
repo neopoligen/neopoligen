@@ -33,15 +33,18 @@ you can do with Neopoligen
 [] bravo
 
 
--- footnote
--- title: Some footnote
+-- footnote/
+-- title: Some footnote 3 
 -- id: 1
 
 this is the content of the footnote
 
 and another paragraph
 
+-- /footnote
+
 
 -- metadata
 -- id: 2sjfzivl
 -- path: /
+-- debug

@@ -17,3 +17,15 @@
 [# TODO handle: no_footer -#]
 [! set config.show_footer = true -!]
 
+
+[! for section in site.pages[page_id].ast !]
+  [! if section.type == "metadata" !]
+    [! for flag in section.flags !]
+      [! if flag == "debug" !]
+        [! set config.debug = true !]
+      [! endif !]
+    [! endfor !]
+  [! endif !]
+[! endfor !]
+
+
