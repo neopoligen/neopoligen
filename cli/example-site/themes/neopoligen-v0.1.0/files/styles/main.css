@@ -762,6 +762,39 @@ body {
   color: green;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-alfa);
+  line-height: 1.1;
+  text-wrap: balance;
+  font-weight: 900;
+}
+
+h1 { 
+  font-size: var(--size-1);
+  margin-top: 1em; 
+}
+
+h2 { 
+  font-size: var(--size-2); 
+  --flow-space: 1.3em;
+}
+
+h3 { 
+  font-size: var(--size-3); 
+  --flow-space: 1.0em;
+}
+
+h4 { 
+  font-size: var(--size-4); 
+}
+
+h5 { 
+  font-size: var(--size-5); 
+}
+
+h6 { 
+  font-size: var(--size-6); 
+}
 main {
   max-width: min(100vw - 3rem, var(--width-alfa));
   margin-inline: auto;

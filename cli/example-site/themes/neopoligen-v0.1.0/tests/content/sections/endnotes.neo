@@ -1,0 +1,27 @@
+-- title
+
+
+-- start-template-test
+
+-- endnote
+
+This is an end note
+
+-- expected-output/
+
+<div class="endnote flow">
+<p>This is an end note</p>
+</div>
+
+
+
+-- /expected-output
+
+
+-- metadata
+-- date: 2024-05-21T16:09:21
+-- id: 2gn8ph5s
+-- type: post
+-- status: scratch
+
+
