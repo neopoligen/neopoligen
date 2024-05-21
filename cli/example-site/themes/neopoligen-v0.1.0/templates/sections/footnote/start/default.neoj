@@ -44,5 +44,9 @@
     [! endif !]
   [!- endif -!]
 [!- endfor -!]
+
+    [! if section.attrs.id !]
+        <a href="#footnote-ref-[@ section.attrs.id @]">&#8617;</a>
+    [! endif !]
 </p>
 

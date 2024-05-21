@@ -24,6 +24,8 @@ Footnote^^1^^
   <p>
     <span class="footnote-title">footnote title
     </span>
+    <a href="#footnote-ref-1">&#8617;
+    </a>
   </p>
 </div>
 
@@ -56,6 +58,8 @@ content of footnote
   <p>
     <span class="footnote-title">footnote title
     </span> - content of footnote
+    <a href="#footnote-ref-2">&#8617;
+    </a>
   </p>
 </div>
 

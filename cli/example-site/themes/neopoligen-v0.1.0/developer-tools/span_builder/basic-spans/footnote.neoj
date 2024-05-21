@@ -1,9 +1,9 @@
 <sup
-[! for attr in span.attrs!]
+[!- for attr in span.attrs!]
 [@ ' ' @][@ attr @]="[@ span.attrs[attr] @]"
-[! endfor !]
-[! for flag in span.flags!]
+[!- endfor -!]
+[!- for flag in span.flags!]
 [@ ' ' @][@ flag @]
-[! endfor !]
+[!- endfor -!]
 ><a href="#footnote-[@ span.text @]" id="footnote-ref-[@ span.text @]">
 [@ span.text @]</a></sup>
