@@ -1,6 +1,7 @@
+[!- import "includes/macros.neoj" as theme -!]
+
 <p>
 [! for span in section.spans !]
-[! set include_path = "spans/" + span.kind + ".neoj" !]
-[! include include_path !]
+[@ theme.output_span(site, page_id, span) @]
 [! endfor !]
 

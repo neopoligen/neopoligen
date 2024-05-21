@@ -1,0 +1,104 @@
+-- title
+
+Thoughts On Digital Gardens In 2024
+
+I'm at the tail end of making my own website builder^^1^^ 
+(aka static site generator). It's lead me to some ideas about 
+digital gardens.
+
+
+-- list
+
+- Traditional website tooling paradigms don't jive well with the 
+a garden approach. Unless there's a super easy way make things 
+really different, there's not a lot of exploration that's gonna 
+happen
+
+- Something I did a while ago is made a links^^2^^ site and then 
+used subdomains for the foundation of my digital garden. Each 
+sub-domain being it's own thing. The freedom of starting fresh 
+each time was a huge contributing factor in the amount I made
+
+- The reason I went with the sub-domains is because I was running 
+nextjs for my main site at the time. It was just too much friction 
+to experiment and play with. So, I'd pop new subdomains whenever 
+I wanted to mess around with a new idea
+
+- One of the design goals for my site builder is to make it easy 
+to work on my primary domain for these experiments and sandboxes. 
+I've got it set up so that I can add metadata to a page that will 
+change templates, or keep the basic template, but skip the css. 
+More importantly, I can add CSS and JavaScript directly to my 
+content files. Any page can be completely stand-alone from the 
+main structure of the site with no extra overhead
+
+- My plan is to make the home page of the site function like the 
+links page does now. It'll have projects on it instead of being a 
+list of posts. This will be done by hand and first and eventually 
+with a config file where I'll automate things like the latest posts 
+in different categories, etc...
+
+
+-- p
+
+It comes down to reducing friction. The more effort it takes to do 
+something different, the less likely it is I'll try it. Until I reduced 
+the friction by using subdomains I didn't realize how much I __wasn't__ doing. 
+
+I'm on v38 of my site builder. Even in the early prototype stages I 
+could feel a big difference in how much more I was making because there was 
+less drag. Whether you call it a digital garden or just a website, my 
+suggestion is to pay attention to how much friction it takes to make things 
+and do what you can to reduce it as much as possible. It's a lot more fun 
+when it feels less like work.
+
+
+-- endnote
+
+My links site is here:
+
+<<link|https://links.alanwsmith.com/|https://links.alanwsmith.com/>>
+
+Fair warning that several things are broken while I'm retooling everything. 
+
+
+-- endnote
+
+The top link on the links page is:
+
+How To Grow Your Digital Garden With Sub-Domains
+
+It's offline at the moment, but the general idea is making lots of subdomains 
+for experiments. I'm moving away from that because the tooling I'm setting 
+up now let's me have the same low-friction way to build things while keeping 
+them on my primary domain. That said, it's still a viable strategy though 
+if your using something that gets in the way of trying new things
+
+-- footnote
+-- id: 1
+-- title: Neopoligen Website Builder
+-- url: https://www.neopoligen.com/
+
+This is the tool I've been working on for the past two years that
+built this site. 
+
+-- footnote
+-- id: 2
+-- title: My Links Site
+-- url: https://links.alanwsmith.com/
+
+This will largely be going away. After I finish up Neopoligen 
+I'll be migrating most of the content back onto this main 
+site. (A big reason I wrote the site builder is because I couldn't
+easily make things on my main site and the sub-domains where
+a temporary measure while I figured that ou2gmkhvfrt)
+
+
+
+-- metadata
+-- date: 2024-05-21T12:51:02
+-- id: 2gmkhvfr
+-- type: webdev 
+-- status: published 
+
+
