@@ -1,17 +1,17 @@
-pub mod button;
 pub mod code;
 pub mod em;
 pub mod footnote;
 pub mod html;
 pub mod link;
+pub mod strike;
 pub mod strong;
 
-use crate::span::button::*;
 use crate::span::code::*;
 use crate::span::em::*;
 use crate::span::footnote::*;
 use crate::span::html::*;
 use crate::span::link::*;
+use crate::span::strike::*;
 use crate::span::strong::*;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
@@ -27,19 +27,13 @@ use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-use std::collections::BTreeMap;
 use serde::Deserialize;
 use serde::Serialize;
+use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "kind", rename_all = "lowercase")]
 pub enum Span {
-    Button {
-        attrs: BTreeMap<String, String>,
-        flags: Vec<String>,
-        text: String,
-        r#type: String,
-    },
     Code {
         attrs: BTreeMap<String, String>,
         flags: Vec<String>,
@@ -83,6 +77,12 @@ pub enum Span {
         text: String,
         r#type: String,
     },
+    S {
+        attrs: BTreeMap<String, String>,
+        flags: Vec<String>,
+        text: String,
+        r#type: String,
+    },
     Strong {
         attrs: BTreeMap<String, String>,
         flags: Vec<String>,
@@ -111,7 +111,7 @@ pub fn span_finder<'a>(
     spans: &'a Vec<String>,
 ) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
     let (source, span) = alt((
-        button_shorthand,
+        strike_shorthand,
         code_shorthand,
         em_shorthand,
         footnote_shorthand,

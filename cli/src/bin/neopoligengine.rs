@@ -1,6 +1,6 @@
 use axum::Router;
 use dirs::document_dir;
-use minijinja::__context::build;
+//use minijinja::__context::build;
 use neopoligengine::engine_config::EngineConfig;
 use neopoligengine::file_watcher::FileWatcher;
 use neopoligengine::site::Site;
@@ -174,10 +174,21 @@ fn build_site(site_config: &SiteConfig) {
     });
 
     // TODO: Move this so it's not included in the site
-    // object, maybe
+    // object so it doesn't show all the other errors for every
+    // error in a semi-recursive way.
     site.render_errors.iter().for_each(|p| {
-        dbg!(&p.0);
-        let _ = write_file_with_mkdir(p.0, p.1);
+        let error_file_path = &site
+            .config
+            .paths
+            .get("render_errors_root")
+            .unwrap()
+            .join(
+                &p.0.strip_prefix(&site.config.paths.get("content_root").unwrap())
+                    .unwrap(),
+            )
+            .with_extension("txt");
+        dbg!(error_file_path);
+        let _ = write_file_with_mkdir(error_file_path, p.1);
     });
 
     let _ = site.copy_theme_assets();

@@ -7,21 +7,31 @@ you can do with Neopoligen
 
 -- list
 
-- code: ``this is code``
+- code: ``this is code|class: green``
 
 - strong: **this is strong**
 
 - strong2: <<strong|test 2|class: green>>
 
+- em: <<em|some em>>
+
+- em2: __more em__
+
+- em3: __more em|class: green__
+
+- strikethrough: ~~strikethrough~~
+
+- strikethrough2: ~~strikethrough|class: green~~
+
+- footnote ^^1^^
 
 
 
+-- todo
 
+[] alfa
 
-
-
-
-
+[] bravo
 
 
 -- metadata

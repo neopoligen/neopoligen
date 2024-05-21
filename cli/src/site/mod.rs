@@ -150,7 +150,7 @@ impl Site {
                         outputs.insert(p.1.rel_output_path.clone().unwrap(), output.clone());
                     }
                     Err(e) => {
-                        event!(Level::ERROR, "{}\n{:?}", p.1.source_path.display(), e);
+                        // event!(Level::ERROR, "{}\n{:?}", p.1.source_path.display(), e);
                         self.render_errors
                             .insert(p.1.source_path.clone(), format!("{:?}", e));
                         ()
