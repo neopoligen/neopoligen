@@ -1,10 +1,10 @@
 [!- import "includes/macros.neoj" as theme -!]
 
 <section class="template-section basic-section flow
-[! if section.attrs.class !][@ ' ' @][@ section.attrs.class @][! endif !]
+[!- if section.attrs.class -!][@ ' ' @][@ section.attrs.class @][!- endif -!]
 "
-[! for attr in section.attrs !]
-[! if 
+[!- for attr in section.attrs -!]
+[!- if 
     attr != 'afterword' and 
     attr != 'class' and 
     attr != 'forward' and 
@@ -19,12 +19,12 @@
     attr != 'title' 
 !]
 [@ attr @]="[@ section.attrs[attr] @]"
-[! endif !]
-[! endfor !]
+[!- endif -!]
+[!- endfor -!]
 >
 
-[! include "subsections/forward.neoj" !]
-[! include "subsections/headings.neoj" !]
-[! include "subsections/preface.neoj" !]
-[! include "subsections/content-full.neoj" !]
-[! include "subsections/afterword.neoj" !]
+[!- include "subsections/forward.neoj" -!]
+[!- include "subsections/headings.neoj" -!]
+[!- include "subsections/preface.neoj" -!]
+[!- include "subsections/content-full.neoj" -!]
+[!- include "subsections/afterword.neoj" -!]

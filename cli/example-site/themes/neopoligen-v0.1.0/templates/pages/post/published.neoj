@@ -4,10 +4,10 @@
 
 [! block body !]
 [! for section in site.pages[page_id].ast !]
+[! if section.type != "footnote" !]
 [@ theme.output_section(site, page_id, section) @]
+[! endif !]
 [! endfor !]
 
-<pre>
-[@ site.pages[page_id].ast|tojson(true) @]
-</pre>
 [! endblock !]
+

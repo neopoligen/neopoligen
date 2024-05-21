@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>[# TODO: Add page title #][@ config.theme @]</title>
+<title>[# TODO: Add page title #][@ config.theme.site_name_for_title @]</title>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -25,28 +25,34 @@
 #]
 
 [#
-[! include "includes/head-extras-from-page.neojinja" !]
-[! include "includes/head-css-from-page.neojinja" !]
-[! include "includes/head-javascript-from-page.neojinja" !]
+[! include "includes/head-extras-from-page.neoj" !]
+[! include "includes/head-css-from-page.neoj" !]
+[! include "includes/head-javascript-from-page.neoj" !]
 #]
 
 
 </head>
 <body class="full-width">
-[@ config.theme @]
     [#
-    [! include "includes/header.neojinja" !]
+    [! include "includes/header.neoj" !]
     #]
     <main>
         [! block body !][! endblock !]
+        [! include "includes/footnotes.neoj" !]
+
         [#
-        [! include "includes/endnotes.neojinja" !]
-        [! include "includes/footnotes.neojinja" !]
-        [! include "includes/references.neojinja" !]
+        [! include "includes/endnotes.neoj" !]
+        [! include "includes/references.neoj" !]
         #]
     </main>
     [#
-    [! include "includes/footer.neojinja" !]
+    [! include "includes/footer.neoj" !]
     #]
+
+[#
+<pre>
+[@ site.pages[page_id].ast|tojson(true) @]
+</pre>
+#]
 </body>
 </html>  

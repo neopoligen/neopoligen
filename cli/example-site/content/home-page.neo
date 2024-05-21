@@ -26,12 +26,20 @@ you can do with Neopoligen
 - footnote^^1^^
 
 
-
 -- todo
 
 [] alfa
 
 [] bravo
+
+
+-- footnote
+-- title: Some footnote
+-- id: 1
+
+this is the content of the footnote
+
+and another paragraph
 
 
 -- metadata

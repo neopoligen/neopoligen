@@ -1,7 +1,16 @@
-[! set config = namespace() !]
-[! set config.theme_name = site.config.theme !]
-[! set config.theme = site.config.theme_options !]
-[# TODO handle: no_css #]
-[# TODO handle: no_javascript #]
-[# TODO handle: no_header #]
-[# TODO handle: no_footer #]
+[! set config = namespace() -!]
+[! set config.theme_name = site.config.theme -!]
+[! set config.theme = site.config.theme_options -!]
+
+[# TODO handle: no_css -#]
+[! set config.use_css = true -!]
+
+[# TODO handle: no_javascript -#]
+[! set config.use_javascript = true -!]
+
+[# TODO handle: no_header -#]
+[! set config.show_header = true -!]
+
+[# TODO handle: no_footer -#]
+[! set config.show_footer = true -!]
+

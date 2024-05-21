@@ -12,17 +12,20 @@ Footnote^^1^^
 
 -- expected-output/
 
-<section class="list-section list-section flow">
-  <ul class="flow">
-    <li>
-      <p>alfa bravo</p>
-      <p>charlie delta</p>
-    </li>
-    <li>
-      <p>echo foxtrot</p>
-    </li>
-  </ul>
+<section class="p-section basic-section flow">
+  <p>Footnote
+    <sup >
+      <a href="#1">1
+      </a>
+    </sup>
+  </p>
 </section>
+<div class="footnote-div basic-div flow">
+  <div class="section-heading">
+    <h2 class="section-title">some footnote title
+    </h2>
+  </div>
+</div>
 
 -- /expected-output
 
