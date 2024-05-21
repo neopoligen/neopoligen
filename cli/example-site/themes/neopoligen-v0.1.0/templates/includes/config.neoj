@@ -2,6 +2,9 @@
 [! set config.theme_name = site.config.theme -!]
 [! set config.theme = site.config.theme_options -!]
 
+[# TODO handle: debug-#]
+[! set config.debug = false -!]
+
 [# TODO handle: no_css -#]
 [! set config.use_css = true -!]
 

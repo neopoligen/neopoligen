@@ -1,5 +1,5 @@
 [!- extends "wrappers/one-column.neoj" -!]
-[!- include "includes/config-loader.neoj" -!]
+[!- include "includes/config.neoj" -!]
 [!- import "includes/theme.neoj" as theme -!]
 
 [! block body !]
