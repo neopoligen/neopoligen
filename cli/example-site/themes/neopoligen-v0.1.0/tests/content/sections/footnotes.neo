@@ -8,7 +8,7 @@ Footnote^^1^^
 
 -- footnote
 -- id: 1
--- title: some footnote title
+-- title: footnote title 
 
 -- expected-output/
 
@@ -20,14 +20,50 @@ Footnote^^1^^
     </sup>
   </p>
 </section>
-<div class="footnote-div basic-div flow">
-  <div class="section-heading">
-    <h2 class="section-title">some footnote title
-    </h2>
-  </div>
+<div class="footnote flow">
+  <p>
+    <span class="footnote-title">footnote title
+    </span>
+  </p>
 </div>
 
 -- /expected-output
+
+
+-- start-template-test
+
+-- p
+
+Footnote^^2^^
+
+-- footnote
+-- id: 2
+-- title: footnote title 
+
+content of footnote
+
+-- expected-output/
+
+<section class="p-section basic-section flow">
+  <p>Footnote
+    <sup >
+      <a href="#2">2
+      </a>
+    </sup>
+  </p>
+</section>
+<div class="footnote flow">
+  <p>
+    <span class="footnote-title">footnote title
+    </span> - content of footnote
+  </p>
+</div>
+
+-- /expected-output
+
+
+
+
 
 
 -- metadata

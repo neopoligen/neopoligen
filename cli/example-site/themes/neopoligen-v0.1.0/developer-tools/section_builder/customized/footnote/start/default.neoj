@@ -24,5 +24,20 @@
 [!- endfor -!]
 >
 
-[@ section.attrs.title @]
-[!- include "subsections/content-full.neoj" -!]
+<p>
+  <span class="footnote-title">[@ section.attrs.title @]</span>
+[!- for child in section.children -!]
+[!- if loop.first -!] 
+  [@- ' '  -@]-[@- ' '  -@] 
+[!- endif -!]
+  [!- if child.type == "basic-block" -!]
+
+[! for span in child.spans !]
+[! set include_path = "spans/" + span.kind + ".neoj" !]
+[! include include_path !]
+[! endfor !]
+
+  [!- endif -!]
+[!- endfor -!]
+</p>
+
