@@ -5,5 +5,5 @@
 [! for flag in span.flags!]
 [@ ' ' @][@ flag @]
 [! endfor !]
-><a href="#[@ span.text @]">
+><a href="#footnote-[@ span.text @]" id="footnote-ref-[@ span.text @]">
 [@ span.text @]</a></sup>

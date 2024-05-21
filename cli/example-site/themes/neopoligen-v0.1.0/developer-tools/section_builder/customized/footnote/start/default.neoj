@@ -31,12 +31,17 @@
   [@- ' '  -@]-[@- ' '  -@] 
 [!- endif -!]
   [!- if child.type == "basic-block" -!]
+    [! if not loop.first !]
+      <p>
+    [! endif !]
 
-[! for span in child.spans !]
-[! set include_path = "spans/" + span.kind + ".neoj" !]
-[! include include_path !]
-[! endfor !]
-
+    [! for span in child.spans !]
+    [! set include_path = "spans/" + span.kind + ".neoj" !]
+    [! include include_path !]
+    [! endfor !]
+    [! if not loop.last !]
+      </p>
+    [! endif !]
   [!- endif -!]
 [!- endfor -!]
 </p>
