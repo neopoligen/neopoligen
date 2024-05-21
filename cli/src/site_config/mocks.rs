@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 
 use crate::sections::*;
 use crate::site_config::SiteConfig;
-use serde_json::Value;
+//use serde_json::Value;
 use std::path::PathBuf;
 
 impl SiteConfig {
@@ -55,7 +55,7 @@ impl SiteConfig {
                 table: vec!["div".to_string()],
                 yaml: vec!["div".to_string()],
             },
-            spans: vec!["em".to_string(), "strong".to_string()],
+            spans: vec!["em".to_string(), "link".to_string(), "strong".to_string()],
             paths,
             project_root: Some(PathBuf::from("/mock/project/root")),
         }

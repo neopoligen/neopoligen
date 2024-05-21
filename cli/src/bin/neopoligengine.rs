@@ -433,7 +433,7 @@ async fn catch_file_changes(
     site_config: SiteConfig,
     mut rx: mpsc::Receiver<Vec<PathBuf>>,
 ) {
-    while let Some(r) = rx.recv().await {
+    while let Some(_r) = rx.recv().await {
         check_templates(&site_config);
         build_site(&site_config);
         reloader.reload();

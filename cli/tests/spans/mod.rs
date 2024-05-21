@@ -78,3 +78,22 @@ fn footnote_connected_to_word() {
         .1;
     assert_eq!(left, right);
 }
+
+#[test]
+fn link_basic() {
+    let config = SiteConfig::mock1();
+    let source = "<<link|text|https://www.example.com/>>";
+    let left = vec![Span::KnownSpan {
+        attrs: BTreeMap::new(),
+        flags: vec!["https://www.example.com/".to_string()],
+        spans: vec![Span::WordPart {
+            text: "text".to_string(),
+            r#type: "wordpart".to_string(),
+        }],
+        r#type: "link".to_string(),
+    }];
+    let right = many1(|src| span_finder(src, &config.spans))(source)
+        .unwrap()
+        .1;
+    assert_eq!(left, right);
+}

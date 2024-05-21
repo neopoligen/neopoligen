@@ -1,0 +1,19 @@
+#!/bin/bash
+
+export APPLE_SIGNING_IDENTITY=`security find-generic-password -w -a alan -s alan--neopoligen-tauri--APPLE_SIGNING_IDENTITY`
+export APPLE_ID=`security find-generic-password -w -a alan -s alan--neopoligen-tauri--APPLE_ID`
+export APPLE_PASSWORD=`security find-generic-password -w -a alan -s alan--neopoligen-tauri--APPLE_PASSWORD`
+export APPLE_TEAM_ID=`security find-generic-password -w -a alan -s alan--neopoligen-tauri--APPLE_TEAM_ID`
+export APPLE_API_ISSUER=`security find-generic-password -w -a alan -s alan--neopoligen-tauri--APPLE_API_ISSUER`
+export APPLE_API_KEY=`security find-generic-password -w -a alan -s alan--neopoligen-tauri--APPLE_API_KEY`
+export APPLE_API_KEY_PATH=`security find-generic-password -w -a alan -s alan--neopoligen-tauri--APPLE_API_KEY_PATH`
+export APPLE_CERTIFICATE=`cat /Users/alan/.ssh/Certificates.txt`
+export APPLE_CERTIFICATE_PASSWORD=`security find-generic-password -w -a alan -s alan--neopoligen-tauri--APPLE_CERTIFICATE_PASSWORD`
+
+cd ../cli \
+&& cargo build --release --target aarch64-apple-darwin \
+&& mv target/aarch64-apple-darwin/release/neopoligengine target/aarch64-apple-darwin/release/neopoligengine-aarch64-apple-darwin \
+&& cd ../tauri \
+&& cp tauri.conf-aarch64-apple-darwin.json tauri.conf.json \
+&& cargo tauri build
+

@@ -2,6 +2,7 @@ pub mod code;
 pub mod em;
 pub mod footnote;
 pub mod html;
+pub mod known_span;
 pub mod link;
 pub mod strike;
 pub mod strong;
@@ -10,6 +11,7 @@ use crate::span::code::*;
 use crate::span::em::*;
 use crate::span::footnote::*;
 use crate::span::html::*;
+use crate::span::known_span::*;
 use crate::span::link::*;
 use crate::span::strike::*;
 use crate::span::strong::*;
@@ -62,6 +64,7 @@ pub enum Span {
         spans: Vec<Span>,
         r#type: String,
     },
+    /*
     Link {
         attrs: BTreeMap<String, String>,
         flags: Vec<String>,
@@ -69,6 +72,7 @@ pub enum Span {
         href: Option<String>,
         r#type: String,
     },
+    */
     Newline {
         text: String,
         r#type: String,
@@ -154,46 +158,11 @@ pub fn space(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     ))
 }
 
-pub fn known_span<'a>(
-    source: &'a str,
-    spans: &'a Vec<String>,
-) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
-    let (source, _) = tag("<<").context("").parse(source)?;
-    let (source, _) = space0.context("").parse(source)?;
-    let (source, r#type) = (|src| known_span_type(src, spans))
-        .context("")
-        .parse(source)?;
-    let (source, _) = tag("|").context("").parse(source)?;
-    let (source, spans) = many0(|src| span_finder(src, spans))
-        .context("")
-        .parse(source)?;
-    let (source, raw_attrs) = many0(alt((span_key_value_attr, span_flag_attr)))
-        .context("")
-        .parse(source)?;
-    let (source, _) = tag(">>").context("").parse(source)?;
-    let mut flags: Vec<String> = vec![];
-    let mut attrs = BTreeMap::new();
-    raw_attrs.iter().for_each(|attr| match attr {
-        SpanAttr::KeyValue { key, value } => {
-            attrs.insert(key.to_string(), value.to_string());
-        }
-        SpanAttr::Flag { key } => flags.push(key.to_string()),
-    });
-    Ok((
-        source,
-        Span::KnownSpan {
-            r#type: r#type.to_string(),
-            spans,
-            flags,
-            attrs,
-        },
-    ))
-}
-
 pub fn span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, key) = is_not(" |\n\t:").context("").parse(source)?;
     let (source, _) = tag(":").context("").parse(source)?;
+    let (source, _) = space1.context("").parse(source)?;
     let (source, value) = is_not(">|").context("").parse(source)?;
     Ok((
         source,
@@ -206,7 +175,7 @@ pub fn span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&s
 
 pub fn span_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
-    let (source, key) = is_not(" |\n\t:>").context("").parse(source)?;
+    let (source, key) = is_not(" |\n\t>").context("").parse(source)?;
     Ok((
         source,
         SpanAttr::Flag {

@@ -1,7 +1,7 @@
 use crate::span::*;
 use nom::branch::alt;
-use nom::bytes::complete::tag;
 use nom::bytes::complete::is_not;
+use nom::bytes::complete::tag;
 use nom::multi::many0;
 use nom::IResult;
 use nom::Parser;
@@ -28,19 +28,19 @@ pub fn link_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         }
         SpanAttr::Flag { key } => flags.push_back(key.to_string()),
     });
-    let href = if flags.len() > 0 {
-        Some(flags.pop_front().unwrap().clone())
-    } else {
-        None
-    };
+
+    // let href = if flags.len() > 0 {
+    //     Some(flags.pop_front().unwrap().clone())
+    // } else {
+    //     None
+    // };
 
     Ok((
         source,
-        Span::Link {
+        Span::KnownSpan {
             attrs,
             flags: flags.into(),
-            href,
-            text: text.to_string(),
+            spans: vec![],
             r#type: "link".to_string(),
         },
     ))

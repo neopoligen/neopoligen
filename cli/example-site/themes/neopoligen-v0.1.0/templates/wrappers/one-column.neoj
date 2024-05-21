@@ -37,6 +37,16 @@
     [! include "includes/header.neoj" !]
     #]
     <main>
+            <div class="under-construction flow">
+                <strong>Under Construction</strong>
+                <p>
+                Head's up that I'm in the middle of changing 
+                things around on my site right now. Lots of stuff is broken. Everything from full
+                pages to individual links. It's all part of the fun of doing the &quot;work-in-public&quot;
+                thing. I should have things settled down a little by the weekend. 
+                </p>
+            </div>
+
         [! block body !][! endblock !]
         [! include "includes/footnotes.neoj" !]
 

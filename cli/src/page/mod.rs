@@ -131,12 +131,12 @@ fn get_page_path(ast: &Vec<Section>) -> Option<PathBuf> {
     })
 }
 
-fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result<PathBuf, String> {
-    match path.strip_prefix(find) {
-        Ok(path_part) => Ok(replace.clone().join(path_part)),
-        Err(e) => Err(format!("{}", e)), // todo make this a better error
-    }
-}
+// fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result<PathBuf, String> {
+//     match path.strip_prefix(find) {
+//         Ok(path_part) => Ok(replace.clone().join(path_part)),
+//         Err(e) => Err(format!("{}", e)), // todo make this a better error
+//     }
+// }
 
 fn get_rel_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Option<PathBuf> {
     match get_page_path(ast) {

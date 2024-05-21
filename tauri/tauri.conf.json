@@ -1,6 +1,6 @@
 {
   "build": {
-    "beforeDevCommand": { "script": "", "wait": true },
+    "beforeDevCommand": { "script": "tauri/helpers/run-before-dev", "wait": true },
     "beforeBuildCommand": "",
     "devPath": "../ui",
     "distDir": "../ui",
@@ -19,7 +19,7 @@
         "sidecar": true,
         "scope": [
           { 
-            "name": "../cli/target/x86_64-unknown-linux/release/neopoligengine", 
+            "name": "../cli/target/aarch64-apple-darwin/release/neopoligengine", 
             "sidecard": true,
             "cmd": "neopoligengine"
           }
@@ -29,7 +29,7 @@
     "bundle": {
       "active": true,
       "externalBin": [
-        "../cli/target/x86_64-unknown-linux/release/neopoligengine"
+        "../cli/target/aarch64-apple-darwin/release/neopoligengine"
       ],
       "targets": "all",
       "identifier": "com.neopoligen.app",
