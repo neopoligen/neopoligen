@@ -32,10 +32,8 @@
 
 
 </head>
-<body class="full-width">
-    [#
+<body class="one-column">
     [! include "includes/header.neoj" !]
-    #]
     <main class="flow">
             <div class="under-construction flow">
                 <strong>Under Construction</strong>

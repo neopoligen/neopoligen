@@ -746,6 +746,15 @@
   margin: 0;
 }
 
+a, a:active {
+  color: var(--color-foxtrot);
+  text-decoration: none;
+}
+
+a:hover, a:focus {
+  color: var(--color-bravo);
+}
+
 body { 
   background-color: var(--color-base);
   color: var(--color-bravo); 
@@ -795,7 +804,13 @@ h5 {
 h6 { 
   font-size: var(--size-6); 
 }
-main {
+
+.one-column header {
+  max-width: min(100vw - 3rem, var(--width-alfa));
+  margin-inline: auto;
+}
+
+.one-column main {
   max-width: min(100vw - 3rem, var(--width-alfa));
   margin-inline: auto;
 }
