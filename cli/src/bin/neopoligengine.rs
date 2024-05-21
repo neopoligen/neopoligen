@@ -123,11 +123,6 @@ fn build_site(site_config: &SiteConfig) {
         }
     });
 
-    //site.render_errors.iter().for_each(|p| {
-    //    dbg!(&p.0);
-    //    //let _ = write_file_with_mkdir(p.0, p.1);
-    //});
-
     //// render errors for templates
     //site.page_errors.iter().for_each(|p| {
     //    let error_file_path = &site
