@@ -6,68 +6,35 @@
 
 Footnote^^1^^
 
+
 -- footnote
 -- id: 1
 -- title: footnote title 
+
 
 -- expected-output/
 
 <section class="p-section basic-section flow">
   <p>Footnote
-    <sup >
+    <sup>
       <a href="#footnote-1" id="footnote-ref-1">1
       </a>
     </sup>
   </p>
 </section>
 <div class="footnote flow">
-  <p>
-    <span class="footnote-title">footnote title
-    </span>
-    <a href="#footnote-ref-1">&#8617;
-    </a>
-  </p>
-</div>
-
--- /expected-output
-
-
--- start-template-test
-
--- p
-
-Footnote^^2^^
-
--- footnote
--- id: 2
--- title: footnote title 
-
-content of footnote
-
--- expected-output/
-
-<section class="p-section basic-section flow">
-  <p>Footnote
-    <sup >
-      <a href="#footnote-2" id="footnote-ref-2">2
+  <div class="footnote-content flow">
+    <p>
+      <span class="footnote-title">footnote title
+      </span>
+    </div>
+    <div class="footnote-return">
+      <a href="#footnote-ref-1">&#8617;
       </a>
-    </sup>
-  </p>
-</section>
-<div class="footnote flow">
-  <p>
-    <span class="footnote-title">footnote title
-    </span> - content of footnote
-    <a href="#footnote-ref-2">&#8617;
-    </a>
-  </p>
-</div>
+    </div>
+  </div>
 
 -- /expected-output
-
-
-
-
 
 
 -- metadata

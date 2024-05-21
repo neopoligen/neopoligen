@@ -1,5 +1,6 @@
 [!- import "includes/macros.neoj" as theme -!]
 
+
 <div class="footnote flow
 [!- if section.attrs.class -!][@ ' ' @][@ section.attrs.class @][!- endif -!]
 "
@@ -24,12 +25,13 @@
 [!- endfor -!]
 >
 
+<div class="footnote-content flow">
 <p>
   <span class="footnote-title">[@ section.attrs.title @]</span>
 [!- for child in section.children -!]
-[!- if loop.first -!] 
-  [@- ' '  -@]-[@- ' '  -@] 
-[!- endif -!]
+  [!- if loop.first -!] 
+    [@- ' '  -@]-[@- ' '  -@] 
+  [!- endif -!]
   [!- if child.type == "basic-block" -!]
     [! if not loop.first !]
       <p>
@@ -38,16 +40,16 @@
     [! set include_path = "spans/" + span.kind + ".neoj" !]
     [! include include_path !]
     [! endfor !]
-    [! if not loop.last !]
       </p>
-    [! endif !]
+  [!- elif child.type != "footnote" -!]
+    [@ child @]
   [!- endif -!]
-[!- else -!]
-<div>---</div>
 [!- endfor -!]
 
-    [! if section.attrs.id !]
-        <a href="#footnote-ref-[@ section.attrs.id @]">&#8617;</a>
-    [! endif !]
-</p>
+</div>
 
+<div class="footnote-return">
+      [! if section.attrs.id !]
+          <a href="#footnote-ref-[@ section.attrs.id @]">&#8617;</a>
+      [! endif !]
+</div>

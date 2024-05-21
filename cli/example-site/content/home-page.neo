@@ -34,7 +34,7 @@ you can do with Neopoligen
 
 
 -- footnote/
--- title: Some footnote 3 
+-- title: Some footnote 5
 -- id: 1
 
 this is the content of the footnote
@@ -43,6 +43,7 @@ and another paragraph
 
 -- /footnote
 
+asdf
 
 -- metadata
 -- id: 2sjfzivl
