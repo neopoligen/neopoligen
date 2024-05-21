@@ -42,7 +42,7 @@
     [! endfor !]
       </p>
   [!- elif child.type != "footnote" -!]
-    [@ child @]
+    [@ theme.output_section(site, page_id, child) @]
   [!- endif -!]
 [!- endfor -!]
 

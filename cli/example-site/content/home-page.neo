@@ -41,6 +41,14 @@ this is the content of the footnote
 
 and another paragraph
 
+-- list/
+
+- a
+
+- b
+
+-- /list
+
 -- /footnote
 
 asdf
