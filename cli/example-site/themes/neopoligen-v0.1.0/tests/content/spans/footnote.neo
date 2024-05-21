@@ -1,0 +1,22 @@
+-- title
+
+-- start-template-test
+
+^^footnote^^
+
+-- expected-output/
+
+<p>
+    <sup><a href="#footnote">footnote</a></sup>
+</p>
+
+-- /expected-output
+
+
+
+
+-- metadata
+-- date: 2024-05-21 07:34:53
+-- id: 2gm8g4ti
+
+

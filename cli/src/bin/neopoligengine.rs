@@ -68,6 +68,7 @@ async fn main() {
         match load_site_config_file(&neopoligen_root, &engine_config.active_site) {
             Ok(mut site_config) => {
                 site_config.load_sections();
+                check_templates(&site_config);
                 build_site(&site_config);
                 run_web_server(site_config.clone()).await;
             }
@@ -83,14 +84,13 @@ async fn main() {
 }
 
 #[instrument(skip(site_config))]
-fn build_site(site_config: &SiteConfig) {
-    event!(Level::INFO, "Building Site");
+fn check_templates(site_config: &SiteConfig) {
+    event!(Level::INFO, "Checking Templates");
     let mut site = Site::new(site_config.clone());
-    let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
-    let _ = empty_dir(&site.config.paths.get("render_errors_root").unwrap());
     let _ = empty_dir(&site.config.paths.get("theme_errors_root").unwrap());
     site.load_templates();
     site.load_template_test_files();
+    site.load_template_test_template();
     site.parse_pages();
     site.find_template_errors().iter().for_each(|tt| {
         let error_file_path = &site
@@ -122,6 +122,50 @@ fn build_site(site_config: &SiteConfig) {
             let _ = write_file_with_mkdir(error_file_path, &error_text);
         }
     });
+}
+
+#[instrument(skip(site_config))]
+fn build_site(site_config: &SiteConfig) {
+    event!(Level::INFO, "Building Site");
+    // This is the first run through the does the templates
+    let mut site = Site::new(site_config.clone());
+    let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
+    let _ = empty_dir(&site.config.paths.get("render_errors_root").unwrap());
+    site.load_templates();
+
+    // site.load_template_test_files();
+    // site.load_template_test_template();
+    // site.parse_pages();
+    // site.find_template_errors().iter().for_each(|tt| {
+    //     let error_file_path = &site
+    //         .config
+    //         .paths
+    //         .get("theme_errors_root")
+    //         .unwrap()
+    //         .join(
+    //             &tt.page
+    //                 .source_path
+    //                 .strip_prefix(&site.config.paths.get("theme_tests_content_root").unwrap())
+    //                 .unwrap(),
+    //         )
+    //         .with_extension("txt");
+    //     if let Some(render_error) = &tt.render_error {
+    //         let _ = write_file_with_mkdir(error_file_path, &render_error);
+    //     } else {
+    //         let error_text =
+    //             tt.template_errors
+    //                 .iter()
+    //                 .fold("".to_string(), |acc, (expected, got)| {
+    //                     format!(
+    //                         "{}### Expected:\n\n{}\n\n\n### Got:\n\n{}\n\n",
+    //                         acc,
+    //                         simple_format_html(expected),
+    //                         simple_format_html(got)
+    //                     )
+    //                 });
+    //         let _ = write_file_with_mkdir(error_file_path, &error_text);
+    //     }
+    // });
 
     //// render errors for templates
     //site.page_errors.iter().for_each(|p| {
@@ -392,6 +436,7 @@ async fn catch_file_changes(
     mut rx: mpsc::Receiver<Vec<PathBuf>>,
 ) {
     while let Some(r) = rx.recv().await {
+        check_templates(&site_config);
         build_site(&site_config);
         reloader.reload();
     }

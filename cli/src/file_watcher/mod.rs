@@ -17,8 +17,8 @@ impl FileWatcher {
             None,
             move |result: DebounceEventResult| match result {
                 Ok(events) => {
-                    dbg!(".");
-                    dbg!(&events);
+                    //dbg!(".");
+                    //dbg!(&events);
                     let paths: Vec<_> = events
                         .iter()
                         .filter_map(|e| match e.event.kind {

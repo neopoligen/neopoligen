@@ -380,6 +380,20 @@ impl Site {
         }
     }
 
+    pub fn load_template_test_template(&mut self) {
+        // This is designed to overwrite pages/post/published.neoj
+        // for a basic output that can be used to test templates
+        let template_as_string = String::from(
+            r#"
+[!- import "includes/macros.neoj" as theme -!]
+[! for section in site.pages[page_id].ast !]
+[@ theme.output_section(site, page_id, section) @]
+[! endfor !]"#,
+        );
+        self.templates
+            .insert("pages/post/published.neoj".to_string(), template_as_string);
+    }
+
     pub fn load_templates(&mut self) {
         let mut templates_root = self.config.paths.get("themes_root").unwrap().to_path_buf();
         templates_root.push(self.config.theme.name.clone());

@@ -1,0 +1,36 @@
+-- title
+
+-- start-template-test
+
+-- p
+
+Footnote^^1^^
+
+-- footnote
+-- id: 1
+-- title: some footnote title
+
+-- expected-output/
+
+<section class="list-section list-section flow">
+  <ul class="flow">
+    <li>
+      <p>alfa bravo</p>
+      <p>charlie delta</p>
+    </li>
+    <li>
+      <p>echo foxtrot</p>
+    </li>
+  </ul>
+</section>
+
+-- /expected-output
+
+
+
+
+-- metadata
+-- date: 2024-05-21 07:37:49
+-- id: 2gm8ceda
+
+
