@@ -1,12 +1,7 @@
+[!- extends "wrappers/one-column.neoj" -!]
 [!- import "includes/macros.neoj" as theme -!]
 
-<!DOCTYPE html>
-<html>
-<head>
-<link rel="stylesheet" href="/theme/styles/main.css" />
-</head>
-<body>
-
+[! block body !]
 [! for section in site.pages[page_id].ast !]
 [@ theme.output_section(site, page_id, section) @]
 [! endfor !]
@@ -14,5 +9,4 @@
 <pre>
 [@ site.pages[page_id].ast|tojson(true) @]
 </pre>
-</body>
-</html>
+[! endblock !]

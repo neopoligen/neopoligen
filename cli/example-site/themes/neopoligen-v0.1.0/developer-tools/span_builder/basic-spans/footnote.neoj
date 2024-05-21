@@ -7,4 +7,3 @@
 [! endfor !]
 ><a href="#[@ span.text @]">
 [@ span.text @]</a></sup>
-

@@ -1,4 +1,1 @@
-[#- type: standard -#]
-
-[@ span.text @]
-
+[@- span.text -@]

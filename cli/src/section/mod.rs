@@ -7,13 +7,13 @@ pub mod list;
 pub mod raw;
 pub mod yaml;
 
-use crate::section::raw::*;
 use crate::section::basic::*;
 use crate::section::checklist::*;
 use crate::section::comment::*;
 use crate::section::generic::*;
 use crate::section::json::*;
 use crate::section::list::*;
+use crate::section::raw::*;
 use crate::section::yaml::*;
 use crate::sections::*;
 use crate::span::*;
@@ -32,10 +32,9 @@ use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-use std::collections::BTreeMap;
 use serde::Deserialize;
 use serde::Serialize;
-
+use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "kind", rename_all = "lowercase")]
