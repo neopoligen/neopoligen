@@ -12,15 +12,15 @@ use std::collections::VecDeque;
 
 // TODO: set this up to output to a regular link
 pub fn link_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let (source, _) = tag(">>").context("").parse(source)?;
-    let (source, _text) = is_not(">|").context("").parse(source)?;
+    let (source, _) = tag("[[").context("").parse(source)?;
+    let (source, _text) = is_not("]|").context("").parse(source)?;
     let (source, raw_attrs) = many0(alt((
         link_shorthand_key_value_attr,
         link_shorthand_flag_attr,
     )))
     .context("")
     .parse(source)?;
-    let (source, _) = tag(">>").context("").parse(source)?;
+    let (source, _) = tag("]]").context("").parse(source)?;
     let mut flags: VecDeque<String> = VecDeque::new();
     let mut attrs = BTreeMap::new();
     raw_attrs.iter().for_each(|attr| match attr {

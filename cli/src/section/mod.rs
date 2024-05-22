@@ -220,7 +220,7 @@ pub fn tag_finder<'a>(
         .iter()
         .fold(initial_error(), |acc, item| match acc {
             Ok(v) => Ok(v),
-            _ => tag(item.as_str()).parse(source),
+            _ => tag(item.as_str()).context("").parse(source),
         })?;
     Ok((source, result))
 }

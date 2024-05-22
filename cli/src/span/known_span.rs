@@ -7,7 +7,7 @@ use nom::bytes::complete::tag;
 use nom::character::complete::space0;
 // use nom::character::complete::space1;
 // use nom::combinator::not;
-use nom::multi::many0;
+use nom::multi::many1;
 // use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
@@ -21,15 +21,24 @@ pub fn known_span<'a>(
     source: &'a str,
     spans: &'a Vec<String>,
 ) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    dbg!("a------------------");
+    dbg!(&source);
     let (source, _) = tag("<<").context("").parse(source)?;
     let (source, _) = space0.context("").parse(source)?;
     let (source, r#type) = (|src| known_span_type(src, spans))
         .context("")
         .parse(source)?;
+    dbg!("b------------------");
+    dbg!(&source);
+
     let (source, _) = tag("|").context("").parse(source)?;
-    let (source, spans) = many0(|src| span_finder(src, spans))
+    dbg!("c------------------");
+    dbg!(&source);
+    let (source, spans) = many1(|src| span_finder(src, spans))
         .context("")
         .parse(source)?;
+    dbg!("d------------------");
+    dbg!(&source);
     // Make sure to look for key_value first so that ":" can
     // be used in URLs
     let (source, raw_attrs) = many0(alt((span_key_value_attr, span_flag_attr)))

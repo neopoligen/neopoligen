@@ -1,7 +1,7 @@
 use crate::span::*;
 use nom::branch::alt;
-use nom::bytes::complete::tag;
 use nom::bytes::complete::is_not;
+use nom::bytes::complete::tag;
 use nom::multi::many0;
 use nom::IResult;
 use nom::Parser;
@@ -12,12 +12,9 @@ use std::collections::BTreeMap;
 pub fn em_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let (source, _) = tag("__").context("").parse(source)?;
     let (source, text) = is_not("_|").context("").parse(source)?;
-    let (source, raw_attrs) = many0(alt((
-        em_shorthand_key_value_attr,
-        em_shorthand_flag_attr,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, raw_attrs) = many0(alt((em_shorthand_key_value_attr, em_shorthand_flag_attr)))
+        .context("")
+        .parse(source)?;
     let (source, _) = tag("__").context("").parse(source)?;
     let mut flags: Vec<String> = vec![];
     let mut attrs = BTreeMap::new();

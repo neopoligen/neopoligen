@@ -7,28 +7,8 @@ use std::path::PathBuf;
 
 impl SiteConfig {
     pub fn mock1() -> SiteConfig {
-        let mut sections = BTreeMap::new();
-        sections.insert(
-            "basic".to_string(),
-            vec![
-                "div".to_string(),
-                "note".to_string(),
-                "p".to_string(),
-                "title".to_string(),
-            ],
-        );
-        sections.insert("json".to_string(), vec!["metadata".to_string()]);
-        sections.insert("list".to_string(), vec!["list".to_string()]);
-        sections.insert(
-            "raw".to_string(),
-            vec![
-                "code".to_string(),
-                "css".to_string(),
-                "html".to_string(),
-                "javascript".to_string(),
-                "pre".to_string(),
-            ],
-        );
+        let mut sections: BTreeMap<String, Vec<String>> = BTreeMap::new();
+
         let mut paths = BTreeMap::new();
         paths.insert(
             "content_root".to_string(),
@@ -39,21 +19,40 @@ impl SiteConfig {
             "errors_root".to_string(),
             PathBuf::from("/mock/root/status/errors"),
         );
+
         SiteConfig {
             default_language: "en".to_string(),
             theme: "mock-config-theme".to_string(),
             theme_options: None,
             sections: Sections {
-                basic: vec!["div".to_string()],
-                block: vec!["div".to_string()],
-                checklist: vec!["div".to_string()],
-                comment: vec!["div".to_string()],
-                detail: vec!["div".to_string()],
-                json: vec!["div".to_string()],
-                list: vec!["div".to_string()],
-                raw: vec!["div".to_string()],
-                table: vec!["div".to_string()],
-                yaml: vec!["div".to_string()],
+                basic: vec![
+                    "div".to_string(),
+                    "p".to_string(),
+                    "title".to_string(),
+                    "note".to_string(),
+                    "warning".to_string(),
+                ],
+                block: vec!["basic-block".to_string()],
+                checklist: vec!["todo".to_string()],
+                comment: vec!["comment".to_string()],
+                detail: vec!["detail".to_string()],
+                json: vec!["metadata".to_string()],
+                list: vec!["list".to_string()],
+                raw: vec!["code".to_string()],
+                table: vec!["table".to_string()],
+                yaml: vec!["yaml".to_string()],
+                // sections.insert("json".to_string(), vec!["metadata".to_string()]);
+                // sections.insert("list".to_string(), vec!["list".to_string()]);
+                // sections.insert(
+                //     "raw".to_string(),
+                //     vec![
+                //         "code".to_string(),
+                //         "css".to_string(),
+                //         "html".to_string(),
+                //         "javascript".to_string(),
+                //         "pre".to_string(),
+                //     ],
+                // );
             },
             spans: vec!["em".to_string(), "link".to_string(), "strong".to_string()],
             paths,
