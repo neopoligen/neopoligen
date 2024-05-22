@@ -99,7 +99,7 @@ fn link_basic() {
 }
 
 #[test]
-fn solo_link_shorthand() {
+fn link_shorthand() {
     let config = SiteConfig::mock1();
     let source = "[[text|https://www.example.com/]]";
     let left = vec![Span::KnownSpan {

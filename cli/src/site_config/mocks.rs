@@ -7,8 +7,7 @@ use std::path::PathBuf;
 
 impl SiteConfig {
     pub fn mock1() -> SiteConfig {
-        let mut sections: BTreeMap<String, Vec<String>> = BTreeMap::new();
-
+        // let sections: BTreeMap<String, Vec<String>> = BTreeMap::new();
         let mut paths = BTreeMap::new();
         paths.insert(
             "content_root".to_string(),
