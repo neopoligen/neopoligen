@@ -1,3 +1,4 @@
+[!- import "includes/theme.neoj" as theme -!]
 <code
 [! for attr in span.attrs!]
 [@ ' ' @][@ attr @]="[@ span.attrs[attr] @]"
@@ -5,4 +6,10 @@
 [! for flag in span.flags!]
 [@ ' ' @][@ flag @]
 [! endfor !]
->[@ span.text @]</code>
+>
+
+[!- for child in span.spans -!]
+[@- theme.output_span(site, page_id, child) -@]
+[!- endfor -!]
+
+</code>

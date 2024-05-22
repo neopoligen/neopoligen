@@ -128,7 +128,7 @@ pub fn span_finder<'a>(
 ) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
     let (source, span) = alt((
         strike_shorthand,
-        code_shorthand,
+        |src| code_shorthand(src, spans),
         |src| em_shorthand(src, spans),
         footnote_shorthand,
         |src| link_shorthand(src, spans),

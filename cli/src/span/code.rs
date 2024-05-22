@@ -10,36 +10,36 @@ use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 use std::collections::BTreeMap;
 
-pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let (source, _) = tag("``").context("").parse(source)?;
-    let (source, text) = is_not("`|").context("").parse(source)?;
-    let (source, raw_attrs) = many0(alt((
-        code_shorthand_key_value_attr,
-        code_shorthand_flag_attr,
-    )))
-    .context("")
-    .parse(source)?;
-    let (source, _) = tag("``").context("").parse(source)?;
-    let mut flags: Vec<String> = vec![];
-    let mut attrs = BTreeMap::new();
-    raw_attrs.iter().for_each(|attr| match attr {
-        SpanAttr::KeyValue { key, value } => {
-            attrs.insert(key.to_string(), value.to_string());
-        }
-        SpanAttr::Flag { key } => flags.push(key.to_string()),
-    });
-    Ok((
-        source,
-        Span::Code {
-            attrs,
-            flags,
-            text: text.to_string(),
-            r#type: "code".to_string(),
-        },
-    ))
-}
+// pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+//     let (source, _) = tag("``").context("").parse(source)?;
+//     let (source, text) = is_not("`|").context("").parse(source)?;
+//     let (source, raw_attrs) = many0(alt((
+//         code_shorthand_key_value_attr,
+//         code_shorthand_flag_attr,
+//     )))
+//     .context("")
+//     .parse(source)?;
+//     let (source, _) = tag("``").context("").parse(source)?;
+//     let mut flags: Vec<String> = vec![];
+//     let mut attrs = BTreeMap::new();
+//     raw_attrs.iter().for_each(|attr| match attr {
+//         SpanAttr::KeyValue { key, value } => {
+//             attrs.insert(key.to_string(), value.to_string());
+//         }
+//         SpanAttr::Flag { key } => flags.push(key.to_string()),
+//     });
+//     Ok((
+//         source,
+//         Span::Code {
+//             attrs,
+//             flags,
+//             text: text.to_string(),
+//             r#type: "code".to_string(),
+//         },
+//     ))
+// }
 
-pub fn code_shorthand_dev<'a>(
+pub fn code_shorthand<'a>(
     source: &'a str,
     spans: &'a Vec<String>,
 ) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
@@ -119,7 +119,7 @@ mod test {
             }],
             r#type: "code".to_string(),
         };
-        let right = (|src| code_shorthand_dev(src, &config.spans))(source)
+        let right = (|src| code_shorthand(src, &config.spans))(source)
             .unwrap()
             .1;
         assert_eq!(left, right);
@@ -141,7 +141,7 @@ mod test {
             }],
             r#type: "code".to_string(),
         };
-        let right = (|src| code_shorthand_dev(src, &config.spans))(source)
+        let right = (|src| code_shorthand(src, &config.spans))(source)
             .unwrap()
             .1;
         assert_eq!(left, right);
@@ -163,7 +163,7 @@ mod test {
             }],
             r#type: "code".to_string(),
         };
-        let right = (|src| code_shorthand_dev(src, &config.spans))(source)
+        let right = (|src| code_shorthand(src, &config.spans))(source)
             .unwrap()
             .1;
         assert_eq!(left, right);
