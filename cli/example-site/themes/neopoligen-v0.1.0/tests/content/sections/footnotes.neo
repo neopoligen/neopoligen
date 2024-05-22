@@ -9,8 +9,8 @@ Footnote^^1^^
 
 -- footnote
 -- id: 1
--- title: footnote title 
 
+footnote text
 
 -- expected-output/
 
@@ -22,17 +22,22 @@ Footnote^^1^^
     </sup>
   </p>
 </section>
-<div class="footnote flow">
-  <div class="footnote-content flow">
-    <p>
-      <span class="footnote-title">footnote title
-      </span>
-    </div>
-    <div class="footnote-return">
-      <a href="#footnote-ref-1">&#8617;
+<div class="footnote">
+  <div class="footnote-target">
+    <sup>
+      <a href="#footnote-ref-1" id="footnote-1">1
       </a>
-    </div>
+    </sup>
   </div>
+  <div class="footnote-content flow">
+    <p>footnote text
+    </p>
+  </div>
+  <div class="footnote-return">
+    <a href="#footnote-ref-1">&#8617;
+    </a>
+  </div>
+</div>
 
 -- /expected-output
 

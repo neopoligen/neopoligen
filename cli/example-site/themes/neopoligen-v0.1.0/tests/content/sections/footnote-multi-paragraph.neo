@@ -27,11 +27,17 @@ second paragraph
     </sup>
   </p>
 </section>
-<div class="footnote flow">
+<div class="footnote">
+  <div class="footnote-target">
+    <sup>
+      <a href="#footnote-ref-2" id="footnote-2">2
+      </a>
+    </sup>
+  </div>
   <div class="footnote-content flow">
-    <p>
-      <span class="footnote-title">footnote title
-      </span>- content of footnote
+    <p>footnote title
+    </p>
+    <p>content of footnote
     </p>
     <p>second paragraph
     </p>

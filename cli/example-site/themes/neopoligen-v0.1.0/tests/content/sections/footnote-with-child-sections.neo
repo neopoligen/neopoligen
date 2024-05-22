@@ -34,11 +34,17 @@ some text
     </sup>
   </p>
 </section>
-<div class="footnote flow">
+<div class="footnote">
+  <div class="footnote-target">
+    <sup>
+      <a href="#footnote-ref-3" id="footnote-3">3
+      </a>
+    </sup>
+  </div>
   <div class="footnote-content flow">
-    <p>
-      <span class="footnote-title">footnote title 3
-      </span>- some text
+    <p>footnote title 3
+    </p>
+    <p>some text
     </p>
     <section class="list-section list-section flow " >
       <ul class="flow">
@@ -53,10 +59,11 @@ some text
       </ul>
     </section>
   </div>
-  <div class="footnote-return">
-    <a href="#footnote-ref-3">&#8617;
-    </a>
-  </div>
+</div>
+<div class="footnote-return">
+  <a href="#footnote-ref-3">&#8617;
+  </a>
+</div>
 
 -- /expected-output
 
