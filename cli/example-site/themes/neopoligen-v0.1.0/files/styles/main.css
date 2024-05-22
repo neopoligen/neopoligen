@@ -794,8 +794,6 @@ body {
   padding-left: 0;
 }
 
-
-
 .green {
   color: green;
 }
@@ -833,6 +831,19 @@ h5 {
 
 h6 { 
   font-size: var(--size-6); 
+}
+
+.one-column footer{
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  padding-top: 1.8rem;
+  font-size: var(--size-6);
+  border-top: 1px solid var(--color-charlie);
+  margin-top: 6.4rem;
+  margin-bottom: 1.7rem;
+  max-width: min(100vw - 3rem, var(--width-alfa));
+  margin-inline: auto;
 }
 
 .one-column header {

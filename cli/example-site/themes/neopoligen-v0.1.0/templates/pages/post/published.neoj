@@ -2,16 +2,16 @@
 [!- include "includes/config.neoj" -!]
 [!- import "includes/theme.neoj" as theme -!]
 
-[! block body !]
-[! for section in site.pages[page_id].ast !]
-[! if 
-  section.type != "endnote" and
-  section.type != "footnote" and
-  section.type != "metadata" and
-  section.type != "ref" 
-  !]
-[@ theme.output_section(site, page_id, section) @]
-[! endif !]
-[! endfor !]
-[! endblock !]
+[!- block title -!]
+[!- for section in site.pages[page_id].ast -!]
+[!- if section.type == "title" -!]
+[@- theme.output_section(site, page_id, section) -@]
+[!- endif -!]
+[!- endfor -!]
+[!- endblock -!]
+
+
+[!- block body -!]
+[!- include "includes/main-body.neoj" -!]
+[!- endblock -!]
 
