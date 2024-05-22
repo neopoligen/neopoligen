@@ -1,3 +1,4 @@
+pub mod close_brace;
 pub mod code;
 pub mod em;
 pub mod footnote;
@@ -8,6 +9,7 @@ pub mod open_brace;
 pub mod strike;
 pub mod strong;
 
+use crate::span::close_brace::*;
 use crate::span::code::*;
 use crate::span::em::*;
 use crate::span::footnote::*;
@@ -133,6 +135,7 @@ pub fn span_finder<'a>(
         space,
         word_part,
         open_brace,
+        close_brace,
         |src| unknown_span(src, spans),
     ))
     .context("")
