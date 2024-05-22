@@ -3,6 +3,17 @@
   src: url('/theme/fonts/Inter-VariableFont_slnt,wght.ttf') format('opentype');
 }
 
+@font-face {
+  font-family: 'Lora';
+  src: url('/theme/fonts/Lora-VariableFont_wght.ttf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Lora-Italic';
+  src: url('/theme/fonts/Lora-Italic-VariableFont_wght.ttf') format('opentype');
+}
+
+
 :root {
       --size-base: 16px;
       --size-1: 2.986rem;
@@ -833,6 +844,13 @@ h6 {
   font-size: var(--size-6); 
 }
 
+.section-signal {
+  color: var(--color-charlie);
+  padding-block: 1.2rem 1.6rem;
+  padding-block: 1.2rem;
+  text-align: center;
+}
+
 .one-column footer{
   display: flex;
   gap: 20px;
@@ -854,6 +872,14 @@ h6 {
 .one-column main {
   max-width: min(100vw - 3rem, var(--width-alfa));
   margin-inline: auto;
+}
+
+.page-heading {
+  padding-bottom: 2.1rem;
+}
+
+.title-section h1 {
+  border-bottom: 1px solid var(--color-charlie);
 }
 
 .under-construction {

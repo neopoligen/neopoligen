@@ -37,10 +37,7 @@
         [! block body !][! endblock !]
         [! include "includes/endnotes.neoj" !]
         [! include "includes/footnotes.neoj" !]
-
-        [#
         [! include "includes/references.neoj" !]
-        #]
     </main>
     [! include "includes/footer.neoj" !]
 
