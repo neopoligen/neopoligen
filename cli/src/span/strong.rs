@@ -1,7 +1,7 @@
 use crate::span::*;
 use nom::branch::alt;
-use nom::bytes::complete::tag;
 use nom::bytes::complete::is_not;
+use nom::bytes::complete::tag;
 use nom::multi::many0;
 use nom::IResult;
 use nom::Parser;

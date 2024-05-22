@@ -1,6 +1,6 @@
 pub mod close_brace;
 pub mod code;
-pub mod em;
+pub mod em_shorthand;
 pub mod footnote;
 pub mod greater_than;
 pub mod html;
@@ -13,7 +13,7 @@ pub mod strong;
 
 use crate::span::close_brace::*;
 use crate::span::code::*;
-use crate::span::em::*;
+use crate::span::em_shorthand::*;
 use crate::span::footnote::*;
 use crate::span::greater_than::*;
 use crate::span::html::*;
@@ -127,14 +127,14 @@ pub fn span_finder<'a>(
     spans: &'a Vec<String>,
 ) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
     let (source, span) = alt((
-        |src| known_span(src, spans),
         strike_shorthand,
         code_shorthand,
-        em_shorthand,
+        |src| em_shorthand(src, spans),
         footnote_shorthand,
         |src| link_shorthand(src, spans),
         strong_shorthand,
         html_shorthand,
+        |src| known_span(src, spans),
         newline,
         space,
         word_part,
@@ -235,7 +235,7 @@ pub fn unknown_span<'a>(
 }
 
 pub fn word_part(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let (source, text) = is_not(" \n\t<>|^[]").context("").parse(source)?;
+    let (source, text) = is_not(" \n\t<>|^[]_").context("").parse(source)?;
     Ok((
         source,
         Span::WordPart {

@@ -214,7 +214,9 @@ fn title_from_title_section(ast: &Vec<Section>) -> Option<String> {
                                     _ => None,
                                 })
                                 .collect::<Vec<String>>()
-                                .join(""),
+                                .join("")
+                                .trim()
+                                .to_string(),
                         )
                     } else {
                         None
