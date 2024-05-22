@@ -4,6 +4,7 @@ pub mod footnote;
 pub mod html;
 pub mod known_span;
 pub mod link;
+pub mod open_brace;
 pub mod strike;
 pub mod strong;
 
@@ -13,6 +14,7 @@ use crate::span::footnote::*;
 use crate::span::html::*;
 use crate::span::known_span::*;
 use crate::span::link::*;
+use crate::span::open_brace::*;
 use crate::span::strike::*;
 use crate::span::strong::*;
 use nom::branch::alt;
@@ -77,6 +79,10 @@ pub enum Span {
         text: String,
         r#type: String,
     },
+    RawText {
+        text: String,
+        r#type: String,
+    },
     Space {
         text: String,
         r#type: String,
@@ -126,6 +132,7 @@ pub fn span_finder<'a>(
         newline,
         space,
         word_part,
+        open_brace,
         |src| unknown_span(src, spans),
     ))
     .context("")

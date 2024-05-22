@@ -161,3 +161,23 @@ fn em_basic_span() {
         .1;
     assert_eq!(left, right);
 }
+
+#[test]
+fn open_brace() {
+    let config = SiteConfig::mock1();
+    let source = "[x";
+    let left = vec![
+        Span::RawText {
+            text: "[".to_string(),
+            r#type: "open-brace".to_string(),
+        },
+        Span::WordPart {
+            text: "x".to_string(),
+            r#type: "wordpart".to_string(),
+        },
+    ];
+    let right = many1(|src| span_finder(src, &config.spans))(source)
+        .unwrap()
+        .1;
+    assert_eq!(left, right);
+}
