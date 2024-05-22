@@ -3,6 +3,7 @@ use crate::ast::ast;
 use crate::error::*;
 use crate::section::*;
 use crate::site_config::SiteConfig;
+use crate::span::Span;
 use serde::Serialize;
 use std::path::PathBuf;
 
@@ -17,6 +18,7 @@ pub struct Page {
     pub source_path: PathBuf,
     pub source_text: String,
     pub tags: Vec<String>,
+    pub title_as_plain_text: Option<String>,
 }
 
 impl Page {
@@ -26,6 +28,7 @@ impl Page {
                 // dbg!(&ast);
                 match get_page_id(&ast, &source_text) {
                     Ok(id) => {
+                        let title_as_plain_text = get_title_as_plain_text(&id, &ast);
                         let rel_output_path = get_rel_output_path(&id, &ast, &config);
                         Page {
                             ast: Some(ast),
@@ -36,6 +39,7 @@ impl Page {
                             source_path,
                             source_text,
                             tags: vec![],
+                            title_as_plain_text,
                         }
                     }
                     Err(e) => {
@@ -55,6 +59,7 @@ impl Page {
                             source_path,
                             source_text,
                             tags: vec![],
+                            title_as_plain_text: None,
                         }
                     }
                 }
@@ -77,6 +82,7 @@ impl Page {
                     source_path,
                     source_text,
                     tags: vec![],
+                    title_as_plain_text: None,
                 }
             }
         }
@@ -164,6 +170,85 @@ fn get_rel_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Opt
         ))),
     }
 }
+
+fn get_title_as_plain_text(id: &String, ast: &Vec<Section>) -> Option<String> {
+    //title_from_metadata(ast)
+    title_from_title_section(ast)
+}
+
+fn title_from_metadata(ast: &Vec<Section>) -> Option<String> {
+    ast.iter().find_map(|sec_enum| {
+        if let Section::Yaml { r#type, attrs, .. } = sec_enum {
+            if r#type == "metadata" {
+                attrs.iter().find_map(|attr| {
+                    if attr.0 == "title" {
+                        Some(attr.1.trim().to_string())
+                    } else {
+                        None
+                    }
+                })
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    })
+}
+
+fn title_from_title_section(ast: &Vec<Section>) -> Option<String> {
+    ast.iter().find_map(|sec_enum| match sec_enum {
+        Section::Basic {
+            r#type, children, ..
+        } => {
+            if *r#type == String::from("title") {
+                if children.len() > 0 {
+                    if let Section::Block { spans, .. } = &children[0] {
+                        Some(
+                            spans
+                                .iter()
+                                .filter_map(|s| match s {
+                                    Span::WordPart { text, .. } => Some(text.to_string()),
+                                    Span::Space { .. } => Some(" ".to_string()),
+                                    Span::Newline { .. } => Some(" ".to_string()),
+                                    _ => None,
+                                })
+                                .collect::<Vec<String>>()
+                                .join(""),
+                        )
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        }
+        _ => None,
+    })
+}
+
+// fn get_page_path(ast: &Vec<Section>) -> Option<PathBuf> {
+//     ast.iter().find_map(|sec_enum| {
+//         if let Section::Yaml { r#type, attrs, .. } = sec_enum {
+//             if r#type == "metadata" {
+//                 attrs.iter().find_map(|attr| {
+//                     if attr.0 == "path" {
+//                         Some(PathBuf::from(attr.1.trim().to_string()))
+//                     } else {
+//                         None
+//                     }
+//                 })
+//             } else {
+//                 None
+//             }
+//         } else {
+//             None
+//         }
+//     })
+// }
 
 // fn get_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Option<PathBuf> {
 //     match get_page_path(ast) {

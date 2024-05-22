@@ -1,0 +1,8 @@
+[!- import "includes/theme.neoj" as theme -!]
+
+
+
+<meta property="og:title" content="[@ site.pages[page_id].title_as_plain_text @]" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="TODO" />
+<meta property="og:image" content="https://www.alanwsmith.com/images/og-images/site-og-image-base.png" />

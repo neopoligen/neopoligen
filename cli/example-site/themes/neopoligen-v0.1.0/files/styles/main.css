@@ -844,6 +844,10 @@ h6 {
   font-size: var(--size-6); 
 }
 
+header a {
+  color: var(--color-charlie);
+}
+
 .section-signal {
   color: var(--color-charlie);
   padding-block: 1.2rem 1.6rem;
