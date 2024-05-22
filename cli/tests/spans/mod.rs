@@ -201,3 +201,43 @@ fn close_brace() {
         .1;
     assert_eq!(left, right);
 }
+
+#[test]
+fn less_than() {
+    let config = SiteConfig::mock1();
+    let source = "<x";
+    let left = vec![
+        Span::RawText {
+            text: "<".to_string(),
+            r#type: "less-than".to_string(),
+        },
+        Span::WordPart {
+            text: "x".to_string(),
+            r#type: "wordpart".to_string(),
+        },
+    ];
+    let right = many1(|src| span_finder(src, &config.spans))(source)
+        .unwrap()
+        .1;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn greater_than() {
+    let config = SiteConfig::mock1();
+    let source = "> ";
+    let left = vec![
+        Span::RawText {
+            text: ">".to_string(),
+            r#type: "greater-than".to_string(),
+        },
+        Span::Space {
+            text: " ".to_string(),
+            r#type: "space".to_string(),
+        },
+    ];
+    let right = many1(|src| span_finder(src, &config.spans))(source)
+        .unwrap()
+        .1;
+    assert_eq!(left, right);
+}

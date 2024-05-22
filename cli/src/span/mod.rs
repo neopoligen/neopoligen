@@ -2,8 +2,10 @@ pub mod close_brace;
 pub mod code;
 pub mod em;
 pub mod footnote;
+pub mod greater_than;
 pub mod html;
 pub mod known_span;
+pub mod less_than;
 pub mod link;
 pub mod open_brace;
 pub mod strike;
@@ -13,8 +15,10 @@ use crate::span::close_brace::*;
 use crate::span::code::*;
 use crate::span::em::*;
 use crate::span::footnote::*;
+use crate::span::greater_than::*;
 use crate::span::html::*;
 use crate::span::known_span::*;
+use crate::span::less_than::*;
 use crate::span::link::*;
 use crate::span::open_brace::*;
 use crate::span::strike::*;
@@ -136,6 +140,8 @@ pub fn span_finder<'a>(
         word_part,
         open_brace,
         close_brace,
+        less_than,
+        greater_than,
         |src| unknown_span(src, spans),
     ))
     .context("")
