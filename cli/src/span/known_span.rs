@@ -46,3 +46,71 @@ pub fn known_span<'a>(
         },
     ))
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::site_config::SiteConfig;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn basic_word() {
+        let config = SiteConfig::mock1();
+        let source = "<<span|alfa>>";
+        let attrs = BTreeMap::new();
+        let flags = vec![];
+        let left = Span::KnownSpan {
+            attrs,
+            flags,
+            spans: vec![Span::WordPart {
+                text: "alfa".to_string(),
+                r#type: "wordpart".to_string(),
+            }],
+            r#type: "span".to_string(),
+        };
+        let right = (|src| known_span(src, &config.spans))(source).unwrap().1;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn with_attr() {
+        let config = SiteConfig::mock1();
+        let source = "<<span|alfa|class: bravo>>";
+        let mut attrs = BTreeMap::new();
+        attrs.insert("class".to_string(), "bravo".to_string());
+        let flags = vec![];
+        let left = Span::KnownSpan {
+            attrs,
+            flags,
+            spans: vec![Span::WordPart {
+                text: "alfa".to_string(),
+                r#type: "wordpart".to_string(),
+            }],
+            r#type: "span".to_string(),
+        };
+        let right = (|src| known_span(src, &config.spans))(source).unwrap().1;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn with_flag() {
+        let config = SiteConfig::mock1();
+        let source = "<<span|alfa|some-flag>>";
+        let attrs = BTreeMap::new();
+        let mut flags = vec![];
+        flags.push("some-flag".to_string());
+        let left = Span::KnownSpan {
+            attrs,
+            flags,
+            spans: vec![Span::WordPart {
+                text: "alfa".to_string(),
+                r#type: "wordpart".to_string(),
+            }],
+            r#type: "span".to_string(),
+        };
+        let right = (|src| known_span(src, &config.spans))(source).unwrap().1;
+        assert_eq!(left, right);
+    }
+
+    //
+}

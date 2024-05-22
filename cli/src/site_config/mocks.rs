@@ -53,7 +53,12 @@ impl SiteConfig {
                 //     ],
                 // );
             },
-            spans: vec!["em".to_string(), "link".to_string(), "strong".to_string()],
+            spans: vec![
+                "em".to_string(),
+                "link".to_string(),
+                "span".to_string(),
+                "strong".to_string(),
+            ],
             paths,
             project_root: Some(PathBuf::from("/mock/project/root")),
         }

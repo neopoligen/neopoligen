@@ -161,7 +161,12 @@ fn empty_sections() -> Sections {
 
 fn empty_spans() -> Vec<String> {
     // TODO: Load these dynamically by looking at the theme
-    vec!["em".to_string(), "strong".to_string(), "link".to_string()]
+    vec![
+        "em".to_string(),
+        "strong".to_string(),
+        "span".to_string(),
+        "link".to_string(),
+    ]
 }
 
 fn get_dirs_in_dir(dir: &PathBuf) -> io::Result<Vec<PathBuf>> {
