@@ -97,3 +97,48 @@ fn link_basic() {
         .1;
     assert_eq!(left, right);
 }
+
+#[test]
+fn em_basic_span() {
+    let config = SiteConfig::mock1();
+    let source = "of <<em|1s>> and 0s.";
+    let left = vec![
+        Span::WordPart {
+            text: "of".to_string(),
+            r#type: "wordpart".to_string(),
+        },
+        Span::Space {
+            text: " ".to_string(),
+            r#type: "space".to_string(),
+        },
+        Span::KnownSpan {
+            attrs: BTreeMap::new(),
+            flags: vec![],
+            spans: vec![Span::WordPart {
+                text: "1s".to_string(),
+                r#type: "wordpart".to_string(),
+            }],
+            r#type: "em".to_string(),
+        },
+        Span::Space {
+            text: " ".to_string(),
+            r#type: "space".to_string(),
+        },
+        Span::WordPart {
+            text: "and".to_string(),
+            r#type: "wordpart".to_string(),
+        },
+        Span::Space {
+            text: " ".to_string(),
+            r#type: "space".to_string(),
+        },
+        Span::WordPart {
+            text: "0s.".to_string(),
+            r#type: "wordpart".to_string(),
+        },
+    ];
+    let right = many1(|src| span_finder(src, &config.spans))(source)
+        .unwrap()
+        .1;
+    assert_eq!(left, right);
+}
