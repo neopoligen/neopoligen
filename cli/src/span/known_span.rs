@@ -1,20 +1,12 @@
 use crate::span::*;
 use nom::branch::alt;
-// use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
-// use nom::character::complete::line_ending;
-// use nom::character::complete::multispace0;
 use nom::character::complete::space0;
-// use nom::character::complete::space1;
-// use nom::combinator::not;
 use nom::multi::many1;
-// use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-// use serde::Deserialize;
-// use serde::Serialize;
 use std::collections::BTreeMap;
 
 pub fn known_span<'a>(
