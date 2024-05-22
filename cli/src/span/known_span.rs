@@ -21,24 +21,15 @@ pub fn known_span<'a>(
     source: &'a str,
     spans: &'a Vec<String>,
 ) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
-    dbg!("a------------------");
-    dbg!(&source);
     let (source, _) = tag("<<").context("").parse(source)?;
     let (source, _) = space0.context("").parse(source)?;
     let (source, r#type) = (|src| known_span_type(src, spans))
         .context("")
         .parse(source)?;
-    dbg!("b------------------");
-    dbg!(&source);
-
     let (source, _) = tag("|").context("").parse(source)?;
-    dbg!("c------------------");
-    dbg!(&source);
     let (source, spans) = many1(|src| span_finder(src, spans))
         .context("")
         .parse(source)?;
-    dbg!("d------------------");
-    dbg!(&source);
     // Make sure to look for key_value first so that ":" can
     // be used in URLs
     let (source, raw_attrs) = many0(alt((span_key_value_attr, span_flag_attr)))

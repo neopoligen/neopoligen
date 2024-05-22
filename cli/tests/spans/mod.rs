@@ -99,6 +99,25 @@ fn link_basic() {
 }
 
 #[test]
+fn solo_link_shorthand() {
+    let config = SiteConfig::mock1();
+    let source = "[[text|https://www.example.com/]]";
+    let left = vec![Span::KnownSpan {
+        attrs: BTreeMap::new(),
+        flags: vec!["https://www.example.com/".to_string()],
+        spans: vec![Span::WordPart {
+            text: "text".to_string(),
+            r#type: "wordpart".to_string(),
+        }],
+        r#type: "link".to_string(),
+    }];
+    let right = many1(|src| span_finder(src, &config.spans))(source)
+        .unwrap()
+        .1;
+    assert_eq!(left, right);
+}
+
+#[test]
 fn em_basic_span() {
     let config = SiteConfig::mock1();
     let source = "of <<em|1s>> and 0s.";

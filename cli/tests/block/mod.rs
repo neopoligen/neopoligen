@@ -55,7 +55,7 @@ fn block_with_em() {
 }
 
 #[test]
-fn solo_block_with_multiple_ems() {
+fn block_with_multiple_ems() {
     let config = SiteConfig::mock1();
     let source = "<<em|1s>> and <<em|0s>>.\n\n";
     let left = Section::Block {

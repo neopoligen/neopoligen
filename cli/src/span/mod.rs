@@ -114,14 +114,13 @@ pub fn span_finder<'a>(
     source: &'a str,
     spans: &'a Vec<String>,
 ) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
-    dbg!("q -----------------", &source);
     let (source, span) = alt((
         |src| known_span(src, spans),
         strike_shorthand,
         code_shorthand,
         em_shorthand,
         footnote_shorthand,
-        link_shorthand,
+        |src| link_shorthand(src, spans),
         strong_shorthand,
         html_shorthand,
         newline,
@@ -220,11 +219,7 @@ pub fn unknown_span<'a>(
 }
 
 pub fn word_part(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    dbg!("e------------------");
-    dbg!(&source);
-    let (source, text) = is_not(" \n\t<>|^").context("").parse(source)?;
-    dbg!("f------------------");
-    dbg!(&source);
+    let (source, text) = is_not(" \n\t<>|^[]").context("").parse(source)?;
     Ok((
         source,
         Span::WordPart {
