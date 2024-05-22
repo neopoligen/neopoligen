@@ -1,4 +1,4 @@
-[!- import "includes/macros.neoj" as theme -!]
+[!- import "includes/theme.neoj" as theme -!]
 
 <li><div class="checklist-checkbox-wrapper"><input type="checkbox" /></div>
 <div class="checklist-blocks-wrapper">

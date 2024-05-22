@@ -1,5 +1,5 @@
 [# type: basic #]
-[!- import "includes/macros.neoj" as theme -!]
+[!- import "includes/theme.neoj" as theme -!]
 
 <sup
 [! for attr in span.attrs !]

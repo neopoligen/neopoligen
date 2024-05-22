@@ -231,6 +231,7 @@ fn build_site(site_config: &SiteConfig) {
     });
 
     let _ = site.copy_theme_assets();
+    let _ = site.copy_images();
     //
 }
 
@@ -428,6 +429,7 @@ fn load_site_config_file(neo_root: &PathBuf, active_site: &str) -> Result<SiteCo
 //     loop {}
 // }
 
+#[instrument(skip(reloader, site_config, rx))]
 async fn catch_file_changes(
     reloader: Reloader,
     site_config: SiteConfig,
@@ -436,6 +438,7 @@ async fn catch_file_changes(
     while let Some(_r) = rx.recv().await {
         check_templates(&site_config);
         build_site(&site_config);
+        event!(Level::INFO, "Reloading Browser");
         reloader.reload();
     }
 }

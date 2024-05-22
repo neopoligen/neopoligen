@@ -1,4 +1,4 @@
-[!- import "includes/macros.neoj" as theme -!]
+[!- import "includes/theme.neoj" as theme -!]
 
 [! for child in section.children !]
 [@ theme.output_section(site, page_id, child) @]

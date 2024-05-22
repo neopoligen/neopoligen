@@ -1,4 +1,4 @@
-[!- import "includes/macros.neoj" as theme -!]
+[!- import "includes/theme.neoj" as theme -!]
 
 <p>
 [!- for span in section.spans -!]

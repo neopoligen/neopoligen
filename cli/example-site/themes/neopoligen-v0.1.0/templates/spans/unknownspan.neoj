@@ -1,4 +1,4 @@
-[!- import "includes/macros.neoj" as theme -!]
+[!- import "includes/theme.neoj" as theme -!]
 
 <[@ span.type @]
 [! for attr in span.attrs !]

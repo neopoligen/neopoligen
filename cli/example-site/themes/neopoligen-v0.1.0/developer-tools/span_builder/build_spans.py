@@ -78,7 +78,7 @@ spans = [
 
 
 jinja_template = """[# type: basic #]
-[!- import "includes/macros.neoj" as theme -!]
+[!- import "includes/theme.neoj" as theme -!]
 
 <SPANKEY
 [! for attr in span.attrs !]

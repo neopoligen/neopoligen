@@ -13,6 +13,5 @@
 [@ theme.output_section(site, page_id, section) @]
 [! endif !]
 [! endfor !]
-
 [! endblock !]
 

@@ -1,4 +1,4 @@
-[!- import "includes/macros.neoj" as theme -!]
+[!- import "includes/theme.neoj" as theme -!]
 
 <section class="end-example-section basic-section flow
 [!- if section.attrs.class -!][@ ' ' @][@ section.attrs.class @][!- endif -!]
