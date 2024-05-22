@@ -37,7 +37,7 @@
       <p>
     [! endif !]
     [! for span in child.spans !]
-    [@ theme.output_span(site, page_id, span) @]
+    [@- theme.output_span(site, page_id, span) -@]
     [! endfor !]
       </p>
   [!- elif child.type != "footnote" -!]

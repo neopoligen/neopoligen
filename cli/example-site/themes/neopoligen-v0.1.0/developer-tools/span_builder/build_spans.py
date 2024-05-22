@@ -77,26 +77,28 @@ spans = [
 ]
 
 
-jinja_template = """[# type: basic #]
+jinja_template = """[#- type: basic -#]
 [!- import "includes/theme.neoj" as theme -!]
 
 <SPANKEY
-[! for attr in span.attrs !]
-[@ ' ' @][@ attr @]="[@ span.attrs[attr] @]"
-[! endfor !]
-[! for flag in span.flags !]
-[@ ' ' @][@ flag @]
-[! endfor !]
+[!- for attr in span.attrs -!]
+[@- ' ' @][@ attr @]="[@ span.attrs[attr] @]"
+[!- endfor -!]
+[!- for flag in span.flags -!]
+[@- ' ' -@][@- flag -@]
+[!- endfor -!]
 >
-[! if span.text !]
-[@ span.text @]
-[! else !]
-[! for child in span.spans !]
-[@ theme.output_span(site, page_id, child) @]
-[! endfor !]
-[! endif !]
+[!- if span.text -!]
+[@- span.text -@]
+[!- else -!]
+[!- for child in span.spans -!]
+[@- theme.output_span(site, page_id, child) -@]
+[!- endfor -!]
+[!- endif -!]
 </SPANKEY>
+[#- -#]
 """
+
 
 neo_template = """-- title
 
@@ -105,6 +107,7 @@ Span: SPANKEY
 -- subtitle
 
 TEXT
+
 
 -- p
 
