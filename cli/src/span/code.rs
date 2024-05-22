@@ -125,45 +125,49 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // fn with_attr() {
-    //     let config = SiteConfig::mock1();
-    //     let source = "__alfa|class: bravo__";
-    //     let mut attrs = BTreeMap::new();
-    //     attrs.insert("class".to_string(), "bravo".to_string());
-    //     let flags = vec![];
-    //     let left = Span::KnownSpan {
-    //         attrs,
-    //         flags,
-    //         spans: vec![Span::WordPart {
-    //             text: "alfa".to_string(),
-    //             r#type: "wordpart".to_string(),
-    //         }],
-    //         r#type: "em".to_string(),
-    //     };
-    //     let right = (|src| em_shorthand(src, &config.spans))(source).unwrap().1;
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn with_attr() {
+        let config = SiteConfig::mock1();
+        let source = "``alfa|class: bravo``";
+        let mut attrs = BTreeMap::new();
+        attrs.insert("class".to_string(), "bravo".to_string());
+        let flags = vec![];
+        let left = Span::KnownSpan {
+            attrs,
+            flags,
+            spans: vec![Span::WordPart {
+                text: "alfa".to_string(),
+                r#type: "wordpart".to_string(),
+            }],
+            r#type: "code".to_string(),
+        };
+        let right = (|src| code_shorthand_dev(src, &config.spans))(source)
+            .unwrap()
+            .1;
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // fn with_flag() {
-    //     let config = SiteConfig::mock1();
-    //     let source = "__alfa|some-flag__";
-    //     let attrs = BTreeMap::new();
-    //     let mut flags = vec![];
-    //     flags.push("some-flag".to_string());
-    //     let left = Span::KnownSpan {
-    //         attrs,
-    //         flags,
-    //         spans: vec![Span::WordPart {
-    //             text: "alfa".to_string(),
-    //             r#type: "wordpart".to_string(),
-    //         }],
-    //         r#type: "em".to_string(),
-    //     };
-    //     let right = (|src| em_shorthand(src, &config.spans))(source).unwrap().1;
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn with_flag() {
+        let config = SiteConfig::mock1();
+        let source = "``alfa|some-flag``";
+        let attrs = BTreeMap::new();
+        let mut flags = vec![];
+        flags.push("some-flag".to_string());
+        let left = Span::KnownSpan {
+            attrs,
+            flags,
+            spans: vec![Span::WordPart {
+                text: "alfa".to_string(),
+                r#type: "wordpart".to_string(),
+            }],
+            r#type: "code".to_string(),
+        };
+        let right = (|src| code_shorthand_dev(src, &config.spans))(source)
+            .unwrap()
+            .1;
+        assert_eq!(left, right);
+    }
 
     //
 }
