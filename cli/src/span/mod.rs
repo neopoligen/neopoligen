@@ -235,7 +235,7 @@ pub fn unknown_span<'a>(
 }
 
 pub fn word_part(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let (source, text) = is_not(" \n\t<>|^[]_").context("").parse(source)?;
+    let (source, text) = is_not(" \n\t<>|^[]_`").context("").parse(source)?;
     Ok((
         source,
         Span::WordPart {
