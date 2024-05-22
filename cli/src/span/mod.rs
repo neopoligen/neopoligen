@@ -10,6 +10,7 @@ pub mod link;
 pub mod open_brace;
 pub mod strike;
 pub mod strong;
+pub mod underscore;
 
 use crate::span::close_brace::*;
 use crate::span::code::*;
@@ -23,6 +24,7 @@ use crate::span::link::*;
 use crate::span::open_brace::*;
 use crate::span::strike::*;
 use crate::span::strong::*;
+use crate::span::underscore::*;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
@@ -142,6 +144,7 @@ pub fn span_finder<'a>(
         close_brace,
         less_than,
         greater_than,
+        underscore,
         |src| unknown_span(src, spans),
     ))
     .context("")
