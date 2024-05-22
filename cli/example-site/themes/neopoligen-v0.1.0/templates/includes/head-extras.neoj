@@ -1,0 +1,6 @@
+[! for section in site.pages[page_id].ast !]
+[! if section.type == "head" !]
+[@ section.text @]
+[! endif !]
+[! endfor !]
+

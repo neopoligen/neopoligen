@@ -1,0 +1,7 @@
+[! for section in site.pages[page_id].ast !]
+[! if section.type == "javascript" !]
+<script>
+[@ section.text @]
+</script>
+[! endif !]
+[! endfor !]
