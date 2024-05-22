@@ -45,7 +45,7 @@
 
 <div class="footnote-return">
       [! if section.attrs.id !]
-          <a href="#footnote-ref-[@ section.attrs.id @]">&#8617;</a>
+          <a href="#footnote-ref-[@ section.attrs.id @]">&#x21EF;</a>
       [! endif !]
 </div>
 

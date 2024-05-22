@@ -759,8 +759,12 @@ a, a:active {
   text-decoration: none;
 }
 
-a:hover, a:focus {
+a:hover {
   color: var(--color-bravo);
+}
+
+a:focus {
+  color: var(--color-foxtrot);
 }
 
 body { 
@@ -777,13 +781,20 @@ body {
 
 .footnote {
   display: flex;
-  gap: 10px;
+  gap: 18px;
+}
+
+.footnote-return {
+  display: flex;
+  align-items: end;
 }
 
 .footnotes-section ul {
   list-style: none;
   padding-left: 0;
 }
+
+
 
 .green {
   color: green;
