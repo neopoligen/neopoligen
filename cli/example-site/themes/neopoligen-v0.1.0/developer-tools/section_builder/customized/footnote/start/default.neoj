@@ -1,7 +1,6 @@
 [!- import "includes/theme.neoj" as theme -!]
 
-
-<div class="footnote flow
+<div class="footnote 
 [!- if section.attrs.class -!][@ ' ' @][@ section.attrs.class @][!- endif -!]
 "
 [!- for attr in section.attrs -!]
@@ -25,26 +24,23 @@
 [!- endfor -!]
 >
 
-<div class="footnote-content flow">
-<p>
-  <span class="footnote-title">[@ section.attrs.title @]</span>
-[!- for child in section.children -!]
-  [!- if loop.first -!] 
-    [@- ' '  -@]-[@- ' '  -@] 
-  [!- endif -!]
-  [!- if child.type == "basic-block" -!]
-    [! if not loop.first !]
-      <p>
-    [! endif !]
-    [! for span in child.spans !]
-    [@- theme.output_span(site, page_id, span) -@]
-    [! endfor !]
-      </p>
-  [!- elif child.type != "footnote" -!]
-    [@ theme.output_section(site, page_id, child) @]
-  [!- endif -!]
-[!- endfor -!]
+[!- if section.attrs.id -!]
+<div class="footnote-target">
+<sup>
+<a href="#footnote-ref-[@- section.attrs.id -@]" id="footnote-[@- section.attrs.id -@]">
+[@- section.attrs.id -@]
+</a>
+</sup>
+</div>
+[!- endif -!]
 
+<div class="footnote-content flow">
+[!- if section.attrs.title -!]
+<p>[@ section.attrs.title @]</p>
+[!- endif -!]
+[!- for child in section.children -!]
+  [@- theme.output_section(site, page_id, child) -@]
+[!- endfor -!]
 </div>
 
 <div class="footnote-return">
@@ -52,3 +48,4 @@
           <a href="#footnote-ref-[@ section.attrs.id @]">&#8617;</a>
       [! endif !]
 </div>
+
