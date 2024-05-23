@@ -20,6 +20,7 @@ axum = "0.7.5"
 dirs = "5.0.1"
 fontdb = "0.17.0"
 fs_extra = "1.3.0"
+html-escape = "0.2.13"
 itertools = "0.13.0"
 minijinja = { version = "2.0.1", features = ["debug", "loader", "custom_syntax", "json"] }
 nom = "7.1.3"

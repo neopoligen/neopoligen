@@ -1,8 +1,8 @@
+use crate::og_image::*;
 use crate::page::Page;
 use crate::site_config::SiteConfig;
 use crate::template_test::*;
-// use fs_extra::dir::copy;
-use crate::og_image::*;
+use html_escape::encode_text;
 use minijinja::context;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
@@ -95,10 +95,12 @@ impl Site {
         let _ = fs::create_dir_all(self.config.og_images_dir());
         self.pages.iter().for_each(|p| {
             if let (Some(id), Some(title)) = (&p.1.id, &p.1.title_as_plain_text) {
+                event!(Level::INFO, "{}", &id);
+                event!(Level::INFO, "   {}", &title);
                 let og_image = OgImage {
                     text_areas: vec![
                         OgImageTextArea {
-                            color: "white".to_string(),
+                            color: "#0481c5".to_string(),
                             font_family: "Arial".to_string(),
                             font_size: 20,
                             line_height: 40,
@@ -109,13 +111,13 @@ impl Site {
                             y: 600,
                         },
                         OgImageTextArea {
-                            color: "white".to_string(),
+                            color: "#0481c5".to_string(),
                             font_family: "Arial".to_string(),
-                            font_size: 100,
+                            font_size: 92,
                             line_height: 100,
-                            max_char_width: 20,
-                            max_lines: 2,
-                            text: title.to_string(),
+                            max_char_width: 18,
+                            max_lines: 4,
+                            text: encode_text(title).to_string(),
                             x: 110,
                             y: 240,
                         },

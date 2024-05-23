@@ -24,7 +24,7 @@ impl OgImage {
 <svg version="1.1"
      width="1200" height="630"
      xmlns="http://www.w3.org/2000/svg">
-    <rect width="100%" height="100%" fill="black" />
+    <rect width="100%" height="100%" style="fill: #170a06;" />
     {}
 </svg>
 "#,
@@ -59,7 +59,7 @@ pub struct OgImageTextArea {
 
 impl OgImageTextArea {
     pub fn svg_elements(&self) -> String {
-        let mut lines: Vec<String> = vec![];
+        let mut lines: Vec<String> = vec!["".to_string()];
         let words = self.text.split(" ").collect::<Vec<&str>>();
         let _ = words.iter().fold(0, |acc, w| {
             let position = acc + w.len();
