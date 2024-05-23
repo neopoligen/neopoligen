@@ -87,18 +87,20 @@ impl Page {
     }
 
     pub fn plain_text_from_spans(spans: &Vec<Span>) -> Option<String> {
-        Some(
-            spans
-                .iter()
-                .filter_map(|s| match s {
-                    Span::WordPart { text, .. } => Some(text.to_string()),
-                    Span::Space { .. } => Some(" ".to_string()),
-                    Span::KnownSpan { spans, .. } => Page::plain_text_from_spans(&spans),
-                    _ => None,
-                })
-                .collect::<Vec<String>>()
-                .join(""),
-        )
+        let strings = spans
+            .iter()
+            .filter_map(|s| match s {
+                Span::WordPart { text, .. } => Some(text.to_string()),
+                Span::Space { .. } => Some(" ".to_string()),
+                Span::KnownSpan { spans, .. } => Page::plain_text_from_spans(&spans),
+                _ => None,
+            })
+            .collect::<Vec<String>>();
+        if strings.len() > 0 {
+            Some(strings.join(""))
+        } else {
+            None
+        }
     }
 
     //

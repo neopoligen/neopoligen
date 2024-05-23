@@ -52,6 +52,14 @@ fn plain_text_from_spans_recursive() {
 }
 
 #[test]
+fn plain_text_from_spans_with_empty_vec_returns_none() {
+    let spans = vec![];
+    let expect = None;
+    let got = Page::plain_text_from_spans(&spans);
+    assert_eq!(expect, got);
+}
+
+#[test]
 fn title_from_metadata() {
     let source_text = r#"
 -- metadata
