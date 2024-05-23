@@ -189,18 +189,18 @@ fn get_rel_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Opt
 }
 
 fn title_as_plain_text(id: &String, ast: &Vec<Section>) -> Option<String> {
-    if let Some(title) = title_from_metadata(ast) {
-        Some(title)
+    let text = if let Some(title) = title_from_metadata(ast) {
+        title
     } else if let Some(title) = title_from_title_section(ast) {
-        Some(title)
+        title
     } else if let Some(title) = title_from_any_section(ast) {
-        Some(title)
+        title
     } else if let Some(title) = title_from_first_few_words(ast) {
-        Some(title)
+        title
     } else {
-        Some(id.to_string())
-    }
-    //title_from_title_section(ast)
+        id.to_string()
+    };
+    Some(text.trim().to_string())
 }
 
 fn title_from_any_section(ast: &Vec<Section>) -> Option<String> {
