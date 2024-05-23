@@ -132,13 +132,16 @@ impl Site {
                         ],
                     };
                     og_image.render_svg(&cache_path);
-                    let output_path = self.config.og_images_dir().join(format!("{}.png", id));
-                    let _ = std::fs::copy(&cache_path, output_path);
                 }
 
                 //dbg!(&id);
                 //dbg!(&title);
                 //dbg!(output_path);
+
+                // always copy the image in from cache since the
+                // output dir is blown away on each iteration
+                let output_path = self.config.og_images_dir().join(format!("{}.png", id));
+                let _ = std::fs::copy(&cache_path, output_path);
             }
         });
         event!(Level::INFO, "Finished OG Images");
