@@ -60,6 +60,24 @@ fn plain_text_from_spans_with_empty_vec_returns_none() {
 }
 
 #[test]
+fn title_for_url_basic() {
+    let source_text = r#"
+-- metadata
+-- id: abcd1234
+-- date: 2024-05-20
+-- title: Title For URL 
+"#
+    .trim_start()
+    .to_string();
+    let source_path = PathBuf::from("/mock/root/content/test-page.neo");
+    let config = SiteConfig::mock1();
+    let page = Page::new(source_text, source_path, &config);
+    let expect = "title-for-url".to_string();
+    let got = page.title_for_url.unwrap();
+    assert_eq!(expect, got);
+}
+
+#[test]
 fn title_from_metadata() {
     let source_text = r#"
 -- metadata

@@ -4,6 +4,7 @@ use crate::error::*;
 use crate::section::*;
 use crate::site_config::SiteConfig;
 use crate::span::Span;
+use regex::Regex;
 use serde::Serialize;
 use std::path::PathBuf;
 
@@ -19,6 +20,7 @@ pub struct Page {
     pub source_text: String,
     pub tags: Vec<String>,
     pub title_as_plain_text: Option<String>,
+    pub title_for_url: Option<String>,
 }
 
 impl Page {
@@ -28,6 +30,7 @@ impl Page {
                 match get_page_id(&ast, &source_text) {
                     Ok(id) => {
                         let title_as_plain_text = title_as_plain_text(&id, &ast);
+                        let title_for_url = title_for_url(&title_as_plain_text);
                         let rel_output_path = get_rel_output_path(&id, &ast, &config);
                         Page {
                             ast: Some(ast),
@@ -39,6 +42,7 @@ impl Page {
                             source_text,
                             tags: vec![],
                             title_as_plain_text,
+                            title_for_url,
                         }
                     }
                     Err(e) => {
@@ -59,6 +63,7 @@ impl Page {
                             source_text,
                             tags: vec![],
                             title_as_plain_text: None,
+                            title_for_url: None,
                         }
                     }
                 }
@@ -81,6 +86,7 @@ impl Page {
                     source_text,
                     tags: vec![],
                     title_as_plain_text: None,
+                    title_for_url: None,
                 }
             }
         }
@@ -189,6 +195,11 @@ fn get_rel_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Opt
 }
 
 fn title_as_plain_text(id: &String, ast: &Vec<Section>) -> Option<String> {
+    //! This is the main function that produces the titles use
+    //! in the app. It tries to get the title from the metadata,
+    //! a title section, any section with a title attribute, or
+    //! the first few words of a basic section. If none of those
+    //! work it falls back to using the id of the page
     let text = if let Some(title) = title_from_metadata(ast) {
         title
     } else if let Some(title) = title_from_title_section(ast) {
@@ -203,7 +214,19 @@ fn title_as_plain_text(id: &String, ast: &Vec<Section>) -> Option<String> {
     Some(text.trim().to_string())
 }
 
+fn title_for_url(plain_text_title: &Option<String>) -> Option<String> {
+    if let Some(original) = plain_text_title {
+        let re = Regex::new(r"\W").unwrap();
+        let text = original.to_lowercase();
+        let updated = re.replace_all(&text, "-");
+        Some(updated.to_string())
+    } else {
+        None
+    }
+}
+
 fn title_from_any_section(ast: &Vec<Section>) -> Option<String> {
+    //! Support from title_as_plain_text
     ast.iter().find_map(|child| {
         match child {
             Section::Basic { attrs, .. } => attrs.get("title"),
@@ -214,6 +237,7 @@ fn title_from_any_section(ast: &Vec<Section>) -> Option<String> {
 }
 
 fn title_from_first_few_words(ast: &Vec<Section>) -> Option<String> {
+    //! Support from title_as_plain_text
     ast.iter().find_map(|sec_enum| match sec_enum {
         Section::Basic { children, .. } => {
             if children.len() > 0 {
@@ -236,6 +260,7 @@ fn title_from_first_few_words(ast: &Vec<Section>) -> Option<String> {
 }
 
 fn title_from_metadata(ast: &Vec<Section>) -> Option<String> {
+    //! Support from title_as_plain_text
     ast.iter().find_map(|sec_enum| {
         if let Section::Yaml { r#type, attrs, .. } = sec_enum {
             if r#type == "metadata" {
@@ -256,6 +281,7 @@ fn title_from_metadata(ast: &Vec<Section>) -> Option<String> {
 }
 
 fn title_from_title_section(ast: &Vec<Section>) -> Option<String> {
+    //! Support from title_as_plain_text
     ast.iter().find_map(|sec_enum| match sec_enum {
         Section::Basic {
             r#type, children, ..
