@@ -4,6 +4,7 @@ use crate::error::*;
 use crate::section::*;
 use crate::site_config::SiteConfig;
 use crate::span::Span;
+use itertools::kmerge;
 use serde::Serialize;
 use std::path::PathBuf;
 
@@ -172,10 +173,24 @@ fn get_rel_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Opt
 fn get_title_as_plain_text(id: &String, ast: &Vec<Section>) -> Option<String> {
     if let Some(title) = title_from_metadata(ast) {
         Some(title)
+    } else if let Some(title) = title_from_title_section(ast) {
+        Some(title)
+    } else if let Some(title) = title_from_any_section(ast) {
+        Some(title)
     } else {
         Some(id.to_string())
     }
     //title_from_title_section(ast)
+}
+
+fn title_from_any_section(ast: &Vec<Section>) -> Option<String> {
+    ast.iter().find_map(|child| {
+        match child {
+            Section::Basic { attrs, .. } => attrs.get("title"),
+            _ => None,
+        }
+        .cloned()
+    })
 }
 
 fn title_from_metadata(ast: &Vec<Section>) -> Option<String> {
