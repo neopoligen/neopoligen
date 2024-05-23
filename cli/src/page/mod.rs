@@ -250,7 +250,7 @@ fn title_for_url(plain_text_title: &Option<String>) -> Option<String> {
 }
 
 fn title_from_any_section(ast: &Vec<Section>) -> Option<String> {
-    //! Support from title_as_plain_text
+    //! Support for title_as_plain_text
     ast.iter().find_map(|child| {
         match child {
             Section::Basic { attrs, .. } => attrs.get("title"),
@@ -261,7 +261,7 @@ fn title_from_any_section(ast: &Vec<Section>) -> Option<String> {
 }
 
 fn title_from_first_few_words(ast: &Vec<Section>) -> Option<String> {
-    //! Support from title_as_plain_text
+    //! Support for title_as_plain_text
     ast.iter().find_map(|sec_enum| match sec_enum {
         Section::Basic { children, .. } => {
             if children.len() > 0 {
@@ -284,7 +284,7 @@ fn title_from_first_few_words(ast: &Vec<Section>) -> Option<String> {
 }
 
 fn title_from_metadata(ast: &Vec<Section>) -> Option<String> {
-    //! Support from title_as_plain_text
+    //! Support for title_as_plain_text
     ast.iter().find_map(|sec_enum| {
         if let Section::Yaml { r#type, attrs, .. } = sec_enum {
             if r#type == "metadata" {
@@ -305,7 +305,7 @@ fn title_from_metadata(ast: &Vec<Section>) -> Option<String> {
 }
 
 fn title_from_title_section(ast: &Vec<Section>) -> Option<String> {
-    //! Support from title_as_plain_text
+    //! Support for title_as_plain_text
     ast.iter().find_map(|sec_enum| match sec_enum {
         Section::Basic {
             r#type, children, ..
@@ -327,49 +327,3 @@ fn title_from_title_section(ast: &Vec<Section>) -> Option<String> {
         _ => None,
     })
 }
-
-// fn get_page_path(ast: &Vec<Section>) -> Option<PathBuf> {
-//     ast.iter().find_map(|sec_enum| {
-//         if let Section::Yaml { r#type, attrs, .. } = sec_enum {
-//             if r#type == "metadata" {
-//                 attrs.iter().find_map(|attr| {
-//                     if attr.0 == "path" {
-//                         Some(PathBuf::from(attr.1.trim().to_string()))
-//                     } else {
-//                         None
-//                     }
-//                 })
-//             } else {
-//                 None
-//             }
-//         } else {
-//             None
-//         }
-//     })
-// }
-
-// fn get_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Option<PathBuf> {
-//     match get_page_path(ast) {
-//         Some(mut path) => {
-//             if path.is_absolute() {
-//                 path = path.strip_prefix("/").unwrap().to_path_buf();
-//             }
-//             let full_path = config.paths.get("output_root").unwrap().join(path);
-//             match full_path.extension() {
-//                 Some(_) => Some(full_path),
-//                 None => Some(full_path.join(PathBuf::from("index.html"))),
-//             }
-//             // Some(full_path)
-//             // Some(config.paths.get("output_root").unwrap().join(format!(
-//             // "{}/{}/index.html",
-//             // config.default_language.clone(),
-//             // id
-//             // )))
-//         }
-//         None => Some(config.paths.get("output_root").unwrap().join(format!(
-//             "{}/{}/index.html",
-//             config.default_language.clone(),
-//             id
-//         ))),
-//     }
-// }
