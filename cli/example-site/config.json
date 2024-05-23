@@ -1,9 +1,10 @@
 {
+    "base_url": "http://localhost:1989",
     "default_language": "en",
     "input_date_formats": ["%Y-%m-%d"],
     "theme": "neopoligen-v0.1.0",
     "theme_options": {
-        "site_name_for_title": "alanwsmith.com"
+        "site_name_for_title": "Neopoligen Example Site"
       }
   }
   

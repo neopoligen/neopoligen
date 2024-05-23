@@ -13,6 +13,12 @@ use std::path::PathBuf;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct SiteConfig {
+    // e.g. "https://www.alanwsmith.com"
+    // There should not be a trailing slash on this since
+    // the page hrefs all start with a slash for absolute
+    // URLs
+    pub base_url: String,
+
     #[serde(default = "default_language")]
     pub default_language: String,
 
