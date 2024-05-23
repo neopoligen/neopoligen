@@ -1,6 +1,7 @@
 use neopoligengine::span::Span;
 use neopoligengine::{page::Page, site_config::SiteConfig};
 use pretty_assertions::assert_eq;
+use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 #[test]
@@ -20,6 +21,32 @@ fn plain_text_from_spans_basic() {
         },
     ];
     let expect = "alfa bravo".to_string();
+    let got = Page::plain_text_from_spans(&spans).unwrap();
+    assert_eq!(expect, got);
+}
+
+#[test]
+fn plain_text_from_spans_recursive() {
+    let spans = vec![
+        Span::WordPart {
+            text: "charlie".to_string(),
+            r#type: "word-part".to_string(),
+        },
+        Span::Space {
+            text: " ".to_string(),
+            r#type: "space".to_string(),
+        },
+        Span::KnownSpan {
+            attrs: BTreeMap::new(),
+            flags: vec![],
+            spans: vec![Span::WordPart {
+                text: "delta".to_string(),
+                r#type: "word-part".to_string(),
+            }],
+            r#type: "span".to_string(),
+        },
+    ];
+    let expect = "charlie delta".to_string();
     let got = Page::plain_text_from_spans(&spans).unwrap();
     assert_eq!(expect, got);
 }
@@ -47,7 +74,7 @@ fn title_from_title_section() {
     let source_text = r#"
 -- title
 
-Bravo Title
+Bravo <<em|Title>>
 
 -- metadata
 -- id: abcd1234

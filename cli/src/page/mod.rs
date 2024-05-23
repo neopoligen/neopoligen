@@ -93,6 +93,7 @@ impl Page {
                 .filter_map(|s| match s {
                     Span::WordPart { text, .. } => Some(text.to_string()),
                     Span::Space { .. } => Some(" ".to_string()),
+                    Span::KnownSpan { spans, .. } => Page::plain_text_from_spans(&spans),
                     _ => None,
                 })
                 .collect::<Vec<String>>()
@@ -236,20 +237,7 @@ fn title_from_title_section(ast: &Vec<Section>) -> Option<String> {
             if *r#type == String::from("title") {
                 if children.len() > 0 {
                     if let Section::Block { spans, .. } = &children[0] {
-                        Some(
-                            spans
-                                .iter()
-                                .filter_map(|s| match s {
-                                    Span::WordPart { text, .. } => Some(text.to_string()),
-                                    Span::Space { .. } => Some(" ".to_string()),
-                                    Span::Newline { .. } => Some(" ".to_string()),
-                                    _ => None,
-                                })
-                                .collect::<Vec<String>>()
-                                .join("")
-                                .trim()
-                                .to_string(),
-                        )
+                        Page::plain_text_from_spans(&spans)
                     } else {
                         None
                     }
