@@ -146,6 +146,7 @@ fn get_page_id(ast: &Vec<Section>, source_text: &str) -> Result<String, Error> {
 }
 
 fn get_page_path(ast: &Vec<Section>) -> Option<PathBuf> {
+    //! TODO: prevent '..' directory movement
     ast.iter().find_map(|sec_enum| {
         if let Section::Yaml { r#type, attrs, .. } = sec_enum {
             if r#type == "metadata" {
@@ -165,17 +166,9 @@ fn get_page_path(ast: &Vec<Section>) -> Option<PathBuf> {
     })
 }
 
-// fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result<PathBuf, String> {
-//     match path.strip_prefix(find) {
-//         Ok(path_part) => Ok(replace.clone().join(path_part)),
-//         Err(e) => Err(format!("{}", e)), // todo make this a better error
-//     }
-// }
-
 fn get_rel_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Option<PathBuf> {
     match get_page_path(ast) {
         Some(mut path) => {
-            // let mut full_path = config.paths.get("output_root").unwrap().join(path);
             if path.is_absolute() {
                 path = path.strip_prefix("/").unwrap().to_path_buf();
             }
@@ -184,12 +177,6 @@ fn get_rel_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Opt
                 Some(_) => Some(full_path),
                 None => Some(full_path.join(PathBuf::from("index.html"))),
             }
-            // Some(full_path)
-            // Some(config.paths.get("output_root").unwrap().join(format!(
-            // "{}/{}/index.html",
-            // config.default_language.clone(),
-            // id
-            // )))
         }
         None => Some(PathBuf::from("/").join(format!(
             "{}/{}/index.html",
@@ -200,6 +187,9 @@ fn get_rel_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Opt
 }
 
 fn href(ast: &Vec<Section>, title: &Option<String>, base_url: &Option<PathBuf>) -> Option<String> {
+    //! This is the href that is used for linking to the
+    //! page. It's the path to the directory followed by the
+    //! page title formatted for the URL as a query param
     if let Some(p) = get_page_path(ast) {
         Some(p.to_string_lossy().to_string())
     } else {
