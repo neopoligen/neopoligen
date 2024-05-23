@@ -3,6 +3,7 @@ pub mod block;
 pub mod engine_config;
 pub mod error;
 pub mod file_watcher;
+pub mod og_image;
 pub mod page;
 pub mod section;
 pub mod sections;

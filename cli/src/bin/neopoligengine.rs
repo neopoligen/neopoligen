@@ -230,6 +230,7 @@ fn build_site(site_config: &SiteConfig) {
         let _ = write_file_with_mkdir(error_file_path, p.1);
     });
 
+    let _ = site.make_og_images();
     let _ = site.copy_theme_assets();
     let _ = site.copy_images();
     //

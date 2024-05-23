@@ -2,6 +2,7 @@ use crate::page::Page;
 use crate::site_config::SiteConfig;
 use crate::template_test::*;
 // use fs_extra::dir::copy;
+use crate::og_image::*;
 use minijinja::context;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
@@ -86,6 +87,48 @@ impl Site {
             }
         }
         Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn make_og_images(&self) {
+        event!(Level::INFO, "Making OG Images");
+        let _ = fs::create_dir_all(self.config.og_images_dir());
+        self.pages.iter().for_each(|p| {
+            if let (Some(id), Some(title)) = (&p.1.id, &p.1.title_as_plain_text) {
+                let og_image = OgImage {
+                    text_areas: vec![
+                        OgImageTextArea {
+                            color: "white".to_string(),
+                            font_family: "Arial".to_string(),
+                            font_size: 20,
+                            line_height: 40,
+                            max_char_width: 20,
+                            max_lines: 2,
+                            text: "alanwsmith.com".to_string(),
+                            x: 1000,
+                            y: 600,
+                        },
+                        OgImageTextArea {
+                            color: "white".to_string(),
+                            font_family: "Arial".to_string(),
+                            font_size: 100,
+                            line_height: 100,
+                            max_char_width: 20,
+                            max_lines: 2,
+                            text: title.to_string(),
+                            x: 110,
+                            y: 240,
+                        },
+                    ],
+                };
+                let output_path = self.config.og_images_dir().join(format!("{}.png", id));
+                og_image.render_svg(&output_path);
+                //dbg!(&id);
+                //dbg!(&title);
+                //dbg!(output_path);
+            }
+        });
+        event!(Level::INFO, "Finished OG Images");
     }
 
     pub fn output_errors(&self) {
