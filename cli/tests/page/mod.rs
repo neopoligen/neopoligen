@@ -121,6 +121,30 @@ Some content
 }
 
 #[test]
+fn title_from_first_few_words() {
+    let source_text = r#"
+-- p
+
+This is the <<em|first>> few words from a paragraph
+section that will end up being in the title. But,
+only part of them. Not the full paragraph. 
+
+
+-- metadata
+-- id: abcd1234
+-- date: 2024-05-20
+"#
+    .trim_start()
+    .to_string();
+    let source_path = PathBuf::from("/mock/root/content/test-page.neo");
+    let config = SiteConfig::mock1();
+    let page = Page::new(source_text, source_path, &config);
+    let expect = "This is the first few words from a paragraph".to_string();
+    let got = page.title_as_plain_text.unwrap();
+    assert_eq!(expect, got);
+}
+
+#[test]
 fn title_from_id() {
     let source_text = r#"
 -- metadata

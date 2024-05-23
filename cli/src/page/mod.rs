@@ -195,6 +195,8 @@ fn title_as_plain_text(id: &String, ast: &Vec<Section>) -> Option<String> {
         Some(title)
     } else if let Some(title) = title_from_any_section(ast) {
         Some(title)
+    } else if let Some(title) = title_from_first_few_words(ast) {
+        Some(title)
     } else {
         Some(id.to_string())
     }
@@ -208,6 +210,28 @@ fn title_from_any_section(ast: &Vec<Section>) -> Option<String> {
             _ => None,
         }
         .cloned()
+    })
+}
+
+fn title_from_first_few_words(ast: &Vec<Section>) -> Option<String> {
+    ast.iter().find_map(|sec_enum| match sec_enum {
+        Section::Basic { children, .. } => {
+            if children.len() > 0 {
+                if let Section::Block { spans, .. } = &children[0] {
+                    if let Some(full_block) = Page::plain_text_from_spans(&spans) {
+                        let words = full_block.split(" ").take(9).collect::<Vec<&str>>();
+                        Some(words.join(" "))
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        }
+        _ => None,
     })
 }
 
