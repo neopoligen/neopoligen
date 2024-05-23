@@ -78,6 +78,24 @@ fn title_for_url_basic() {
 }
 
 #[test]
+fn title_for_url_deal_with_chars_and_multi_spaces() {
+    let source_text = r#"
+-- metadata
+-- id: abcd1234
+-- date: 2024-05-20
+-- title: - Another ' URL 42 ~ title -
+"#
+    .trim_start()
+    .to_string();
+    let source_path = PathBuf::from("/mock/root/content/test-page.neo");
+    let config = SiteConfig::mock1();
+    let page = Page::new(source_text, source_path, &config);
+    let expect = "another-url-42-title".to_string();
+    let got = page.title_for_url.unwrap();
+    assert_eq!(expect, got);
+}
+
+#[test]
 fn title_from_metadata() {
     let source_text = r#"
 -- metadata

@@ -216,9 +216,15 @@ fn title_as_plain_text(id: &String, ast: &Vec<Section>) -> Option<String> {
 
 fn title_for_url(plain_text_title: &Option<String>) -> Option<String> {
     if let Some(original) = plain_text_title {
-        let re = Regex::new(r"\W").unwrap();
-        let text = original.to_lowercase();
-        let updated = re.replace_all(&text, "-");
+        let re1 = Regex::new(r"\W").unwrap();
+        let re2 = Regex::new(r"-+").unwrap();
+        let re3 = Regex::new(r"^-").unwrap();
+        let re4 = Regex::new(r"-$").unwrap();
+        let mut updated = original.to_lowercase();
+        updated = re1.replace_all(&updated, "-").to_string();
+        updated = re2.replace_all(&updated, "-").to_string();
+        updated = re3.replace_all(&updated, "").to_string();
+        updated = re4.replace_all(&updated, "").to_string();
         Some(updated.to_string())
     } else {
         None
