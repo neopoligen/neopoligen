@@ -49,6 +49,9 @@ pub struct SiteConfig {
 
 impl SiteConfig {
     // TODO: Move paths. to dir functions
+    pub fn cache_dir(&self) -> PathBuf {
+        self.project_root.clone().unwrap().join("cache")
+    }
     pub fn content_dir(&self) -> PathBuf {
         self.project_root.clone().unwrap().join("content")
     }
