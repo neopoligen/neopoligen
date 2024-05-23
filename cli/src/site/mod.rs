@@ -10,6 +10,7 @@ use minijinja::Value;
 use serde::Serialize;
 use std::collections::BTreeMap;
 use std::fs;
+use std::fs::Metadata;
 use std::path::PathBuf;
 use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
@@ -95,13 +96,24 @@ impl Site {
         let og_image_cache_dir = self.config.cache_dir().join("og-images");
         let _ = fs::create_dir_all(self.config.og_images_dir());
         let _ = fs::create_dir_all(&og_image_cache_dir);
-
         self.pages.iter().for_each(|p| {
             if let (Some(id), Some(title)) = (&p.1.id, &p.1.title_as_plain_text) {
                 let mut make_image = false;
                 let cache_path = og_image_cache_dir.join(format!("{}.png", &id));
                 if !cache_path.exists() {
                     make_image = true;
+                } else {
+                    if let (Ok(content_metadata), Ok(cache_metadata)) =
+                        (fs::metadata(&p.1.source_path), fs::metadata(&cache_path))
+                    {
+                        if let (Ok(content_time), Ok(cache_time)) =
+                            (content_metadata.modified(), cache_metadata.modified())
+                        {
+                            if content_time > cache_time {
+                                make_image = true
+                            }
+                        }
+                    }
                 }
                 if make_image {
                     // event!(Level::INFO, "Making OG Image: {} - {}", &id, &title);
@@ -133,11 +145,6 @@ impl Site {
                     };
                     og_image.render_svg(&cache_path);
                 }
-
-                //dbg!(&id);
-                //dbg!(&title);
-                //dbg!(output_path);
-
                 // always copy the image in from cache since the
                 // output dir is blown away on each iteration
                 let output_path = self.config.og_images_dir().join(format!("{}.png", id));
