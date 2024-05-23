@@ -4,7 +4,6 @@ use crate::error::*;
 use crate::section::*;
 use crate::site_config::SiteConfig;
 use crate::span::Span;
-use itertools::kmerge;
 use serde::Serialize;
 use std::path::PathBuf;
 
@@ -28,7 +27,7 @@ impl Page {
             Ok(ast) => {
                 match get_page_id(&ast, &source_text) {
                     Ok(id) => {
-                        let title_as_plain_text = get_title_as_plain_text(&id, &ast);
+                        let title_as_plain_text = title_as_plain_text(&id, &ast);
                         let rel_output_path = get_rel_output_path(&id, &ast, &config);
                         Page {
                             ast: Some(ast),
@@ -86,6 +85,22 @@ impl Page {
             }
         }
     }
+
+    pub fn plain_text_from_spans(spans: &Vec<Span>) -> Option<String> {
+        Some(
+            spans
+                .iter()
+                .filter_map(|s| match s {
+                    Span::WordPart { text, .. } => Some(text.to_string()),
+                    Span::Space { .. } => Some(" ".to_string()),
+                    _ => None,
+                })
+                .collect::<Vec<String>>()
+                .join(""),
+        )
+    }
+
+    //
 }
 
 fn get_page_id(ast: &Vec<Section>, source_text: &str) -> Result<String, Error> {
@@ -170,7 +185,7 @@ fn get_rel_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Opt
     }
 }
 
-fn get_title_as_plain_text(id: &String, ast: &Vec<Section>) -> Option<String> {
+fn title_as_plain_text(id: &String, ast: &Vec<Section>) -> Option<String> {
     if let Some(title) = title_from_metadata(ast) {
         Some(title)
     } else if let Some(title) = title_from_title_section(ast) {

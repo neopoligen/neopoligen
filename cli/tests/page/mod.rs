@@ -1,6 +1,28 @@
+use neopoligengine::span::Span;
 use neopoligengine::{page::Page, site_config::SiteConfig};
 use pretty_assertions::assert_eq;
 use std::path::PathBuf;
+
+#[test]
+fn plain_text_from_spans_basic() {
+    let spans = vec![
+        Span::WordPart {
+            text: "alfa".to_string(),
+            r#type: "word-part".to_string(),
+        },
+        Span::Space {
+            text: " ".to_string(),
+            r#type: "space".to_string(),
+        },
+        Span::WordPart {
+            text: "bravo".to_string(),
+            r#type: "word-part".to_string(),
+        },
+    ];
+    let expect = "alfa bravo".to_string();
+    let got = Page::plain_text_from_spans(&spans).unwrap();
+    assert_eq!(expect, got);
+}
 
 #[test]
 fn title_from_metadata() {
