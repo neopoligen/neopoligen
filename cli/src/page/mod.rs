@@ -25,7 +25,6 @@ impl Page {
     pub fn new(source_text: String, source_path: PathBuf, config: &SiteConfig) -> Page {
         match ast(&source_text, &config.sections.clone(), &config.spans) {
             Ok(ast) => {
-                // dbg!(&ast);
                 match get_page_id(&ast, &source_text) {
                     Ok(id) => {
                         let title_as_plain_text = get_title_as_plain_text(&id, &ast);
@@ -65,7 +64,6 @@ impl Page {
                 }
             }
             Err(error) => {
-                // dbg!(&error);
                 // let output_path = replace_path(
                 //     &source_path,
                 //     config.paths.get("content_root").unwrap(),
@@ -172,11 +170,11 @@ fn get_rel_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Opt
 }
 
 fn get_title_as_plain_text(_id: &String, ast: &Vec<Section>) -> Option<String> {
-    //title_from_metadata(ast)
-    title_from_title_section(ast)
+    title_from_metadata(ast)
+    //title_from_title_section(ast)
 }
 
-fn _title_from_metadata(ast: &Vec<Section>) -> Option<String> {
+fn title_from_metadata(ast: &Vec<Section>) -> Option<String> {
     ast.iter().find_map(|sec_enum| {
         if let Section::Yaml { r#type, attrs, .. } = sec_enum {
             if r#type == "metadata" {

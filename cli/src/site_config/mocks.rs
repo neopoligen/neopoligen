@@ -35,11 +35,11 @@ impl SiteConfig {
                 checklist: vec!["todo".to_string()],
                 comment: vec!["comment".to_string()],
                 detail: vec!["detail".to_string()],
-                json: vec!["metadata".to_string()],
+                json: vec!["json-example".to_string()],
                 list: vec!["list".to_string()],
                 raw: vec!["code".to_string()],
                 table: vec!["table".to_string()],
-                yaml: vec!["yaml".to_string()],
+                yaml: vec!["metadata".to_string()],
                 // sections.insert("json".to_string(), vec!["metadata".to_string()]);
                 // sections.insert("list".to_string(), vec!["list".to_string()]);
                 // sections.insert(

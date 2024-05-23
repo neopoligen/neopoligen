@@ -1,6 +1,8 @@
+pub mod backtic;
 pub mod close_brace;
 pub mod code;
 pub mod em_shorthand;
+pub mod escaped_pipe;
 pub mod footnote;
 pub mod greater_than;
 pub mod html;
@@ -12,9 +14,11 @@ pub mod strike;
 pub mod strong;
 pub mod underscore;
 
+use crate::span::backtic::*;
 use crate::span::close_brace::*;
 use crate::span::code::*;
 use crate::span::em_shorthand::*;
+use crate::span::escaped_pipe::*;
 use crate::span::footnote::*;
 use crate::span::greater_than::*;
 use crate::span::html::*;
@@ -129,6 +133,7 @@ pub fn span_finder<'a>(
     spans: &'a Vec<String>,
 ) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
     let (source, span) = alt((
+        escaped_pipe,
         strike_shorthand,
         |src| code_shorthand(src, spans),
         |src| em_shorthand(src, spans),
@@ -144,6 +149,7 @@ pub fn span_finder<'a>(
         close_brace,
         less_than,
         greater_than,
+        backtic,
         underscore,
         |src| unknown_span(src, spans),
     ))

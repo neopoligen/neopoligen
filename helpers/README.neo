@@ -1,0 +1,55 @@
+-- title
+
+Helpers README
+
+-- h2
+
+General Dev
+
+Run each of these in their own terminal:
+
+-- list/
+
+- build-sections
+
+- build-spans
+
+- sync-example-site-for-dev
+
+- sync-neo-template-to-aws (this one is for my personal site)
+
+-- /list
+
+That gets all the parts moving. 
+
+Then you can do one of:
+
+-- list/
+
+- build-cli-and-run = Build to cli tool and run it
+
+- build-tauri-app = Builds and cli and the tauri app (which you can then run)
+
+- test-cli = Runs the cli tests on each file change
+
+TODO: Set the dev env var
+
+- test-cli-and-run = Runs the cli tests and process on each change
+
+TODO: Set dev env var
+
+- solo-test-cli = Runs only tests marked with "solo"
+
+TODO: Set dev env var
+
+- solo-test-cli-and-run = Runs only tests marked with "solo" then runs
+
+TODO: Set dev env var
+
+
+
+-- metadata
+-- date: 2024-05-23T09:58:44
+-- id: 2gs407us
+
+

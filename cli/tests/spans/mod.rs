@@ -242,16 +242,24 @@ fn greater_than() {
     assert_eq!(left, right);
 }
 
-// #[test]
-// fn single_backtick() {
-//     let config = SiteConfig::mock1();
-//     let source = "|";
-//     let left = vec![Span::WordPart {
-//         text: "alfa".to_string(),
-//         r#type: "wordpart".to_string(),
-//     }];
-//     let right = many1(|src| span_finder(src, &config.spans))(source)
-//         .unwrap()
-//         .1;
-//     assert_eq!(left, right);
-// }
+#[test]
+fn escaped_pipe_in_code() {
+    let config = SiteConfig::mock1();
+    let source = "``\\|``";
+    let attrs = BTreeMap::new();
+    let flags = vec![];
+    let left = vec![Span::KnownSpan {
+        attrs,
+        flags,
+        spans: vec![Span::RawText {
+            text: "\\|".to_string(),
+            r#type: "escaped-pipe".to_string(),
+        }],
+        r#type: "code".to_string(),
+    }];
+
+    let right = many1(|src| span_finder(src, &config.spans))(source)
+        .unwrap()
+        .1;
+    assert_eq!(left, right);
+}
