@@ -33,7 +33,7 @@ impl Page {
                         let title_as_plain_text = title_as_plain_text(&id, &ast);
                         let title_for_url = title_for_url(&title_as_plain_text);
                         let rel_output_path = get_rel_output_path(&id, &ast, &config);
-                        let href = href(&title_for_url, &rel_output_path);
+                        let href = href(&ast, &title_for_url, &rel_output_path);
                         Page {
                             ast: Some(ast),
                             error: None,
@@ -199,12 +199,16 @@ fn get_rel_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Opt
     }
 }
 
-fn href(title: &Option<String>, base_url: &Option<PathBuf>) -> Option<String> {
-    if let (Some(t), Some(p)) = (title, base_url) {
-        let output = p.parent().unwrap().join(format!("?{}", t));
-        Some(output.to_string_lossy().to_string())
+fn href(ast: &Vec<Section>, title: &Option<String>, base_url: &Option<PathBuf>) -> Option<String> {
+    if let Some(p) = get_page_path(ast) {
+        Some(p.to_string_lossy().to_string())
     } else {
-        None
+        if let (Some(t), Some(p)) = (title, base_url) {
+            let output = p.parent().unwrap().join(format!("?{}", t));
+            Some(output.to_string_lossy().to_string())
+        } else {
+            None
+        }
     }
 }
 
