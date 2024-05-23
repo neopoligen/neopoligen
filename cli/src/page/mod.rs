@@ -169,8 +169,12 @@ fn get_rel_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Opt
     }
 }
 
-fn get_title_as_plain_text(_id: &String, ast: &Vec<Section>) -> Option<String> {
-    title_from_metadata(ast)
+fn get_title_as_plain_text(id: &String, ast: &Vec<Section>) -> Option<String> {
+    if let Some(title) = title_from_metadata(ast) {
+        Some(title)
+    } else {
+        Some(id.to_string())
+    }
     //title_from_title_section(ast)
 }
 
