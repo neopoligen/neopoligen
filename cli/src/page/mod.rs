@@ -14,6 +14,7 @@ pub struct Page {
     pub ast: Option<Vec<Section>>,
     pub error: Option<Error>,
     pub folders: Vec<String>,
+    pub href: Option<String>,
     pub id: Option<String>,
     pub rel_output_path: Option<PathBuf>,
     pub source_path: PathBuf,
@@ -32,10 +33,12 @@ impl Page {
                         let title_as_plain_text = title_as_plain_text(&id, &ast);
                         let title_for_url = title_for_url(&title_as_plain_text);
                         let rel_output_path = get_rel_output_path(&id, &ast, &config);
+                        let href = href(&title_for_url, &rel_output_path);
                         Page {
                             ast: Some(ast),
                             error: None,
                             folders: vec![],
+                            href,
                             id: Some(id),
                             rel_output_path,
                             source_path,
@@ -57,6 +60,7 @@ impl Page {
                             error: Some(e),
                             folders: vec![],
                             id: None,
+                            href: None,
                             // output_path: Some(output_path.with_extension("txt")),
                             rel_output_path: None,
                             source_path,
@@ -79,6 +83,7 @@ impl Page {
                     ast: None,
                     error: Some(error),
                     folders: vec![],
+                    href: None,
                     id: None,
                     // output_path: Some(output_path.with_extension("txt")),
                     rel_output_path: None,
@@ -191,6 +196,15 @@ fn get_rel_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Opt
             config.default_language.clone(),
             id
         ))),
+    }
+}
+
+fn href(title: &Option<String>, base_url: &Option<PathBuf>) -> Option<String> {
+    if let (Some(t), Some(p)) = (title, base_url) {
+        let output = p.parent().unwrap().join(format!("?{}", t));
+        Some(output.to_string_lossy().to_string())
+    } else {
+        None
     }
 }
 
