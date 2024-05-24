@@ -3,6 +3,7 @@
 [! for section in site.pages[page_id].ast !]
     [! if section.type == "footnote" !]
         [! if ns.count == 0 !]
+            <div class="section-signal">═══ § ═══</div>
             <section class="footnotes-section flow"> 
             <h2>Footnotes</h2>
             <ul class="flow">

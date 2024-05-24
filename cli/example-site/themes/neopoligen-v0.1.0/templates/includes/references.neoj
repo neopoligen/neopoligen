@@ -3,6 +3,7 @@
 [! for section in site.pages[page_id].ast !]
     [! if section.type == "ref" !]
         [! if ns.count == 0 !]
+            <div class="section-signal">═══ § ═══</div>
             <section class="references-section flow"> 
             <h2>References</h2>
             <div>TODO: Format References</div>

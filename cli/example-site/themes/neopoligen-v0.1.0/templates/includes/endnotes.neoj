@@ -3,6 +3,7 @@
 [! for section in site.pages[page_id].ast !]
     [! if section.type == "endnote" !]
         [! if ns.count == 0 !]
+            <div class="section-signal">═══ § ═══</div>
             <section class="endnotes-section flow"> 
             <h2>Endnotes</h2>
             <ul class="flow">

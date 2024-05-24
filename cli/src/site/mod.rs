@@ -10,7 +10,6 @@ use minijinja::Value;
 use serde::Serialize;
 use std::collections::BTreeMap;
 use std::fs;
-use std::fs::Metadata;
 use std::path::PathBuf;
 use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
