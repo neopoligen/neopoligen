@@ -7,18 +7,9 @@
 
 [! include "includes/head-og-metadata.neoj" !]
 [! include "includes/head-favicons.neoj" !]
-
-<!--
-<script src="/theme/theme.js"></script>
-<script src="/theme/theme-components.js" type="module"></script>
--->
-
-
-
 [! include "includes/head-extras.neoj" !]
-[! include "includes/head-css.neoj" !]
 [! include "includes/head-javascript.neoj" !]
-
+[! include "includes/head-css.neoj" !]
 
 </head>
 <body class="one-column">
