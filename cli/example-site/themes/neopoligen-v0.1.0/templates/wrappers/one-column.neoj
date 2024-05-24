@@ -20,11 +20,5 @@
         [! include "includes/endmatter.neoj" !]
     </main>
     [! include "includes/footer.neoj" !]
-
-[! if config.debug == true !]
-<pre>
-[@ site.pages[page_id].ast|tojson(true) @]
-</pre>
-[! endif !]
 </body>
 </html>  

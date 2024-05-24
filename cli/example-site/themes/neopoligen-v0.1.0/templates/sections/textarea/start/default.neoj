@@ -1,4 +1,4 @@
-<section class="textarea-default-section raw-category-default-section flow
+<section class="textarea-default-section raw-default-category-section flow
 [!- if section.attrs.class -!][@ ' ' @][@ section.attrs.class @][!- endif -!]
 "
 [!- for attr in section.attrs -!]

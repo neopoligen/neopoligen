@@ -1,4 +1,4 @@
-<section class="html-show-section raw-show-section flow
+<section class="html-show-section raw-show-category-section flow
 [! if section.attrs.class !][@ ' ' @][@ section.attrs.class @][! endif !]"
 [! for attr in section.attrs !]
 [! if 
@@ -24,10 +24,14 @@
 
 [! include "subsections/forward.neoj" !]
 <h2>HTML</h2>
-<div class="show-code-subheader">Output</div>
+<div class="html-example-subheader">Output</div>
+<div class="html-example-wrapper">
 [@ section.text @]
-<div class="show-code-subheader">Code</div>
-<pre><code>----</code></pre>
+</div>
+<div class="html-example-subheader">Source</div>
+<div class="html-example-wrapper">
+<pre><code>[! autoescape true !][@ section.text @][! endautoescape !]</code></pre>
+</div>
 [! include "subsections/preface.neoj" !]
 [! include "subsections/content-skip-one.neoj" !]
 [! include "subsections/afterword.neoj" !]
