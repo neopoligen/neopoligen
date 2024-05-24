@@ -1,0 +1,63 @@
+[!- import "includes/theme.neoj" as theme -!]
+
+<div class="section-signal">═══ § ═══</div>
+
+[! for section in site.pages[page_id].ast !]
+    [! if section.type == "afterword" !]
+        [@ theme.output_section(site, page_id, section) @]
+    [! endif !]
+[! endfor !]
+
+
+[! set ns = namespace(count = 0)!]
+[! for section in site.pages[page_id].ast !]
+    [! if section.type == "endnote" !]
+        [! if ns.count == 0 !]
+            <section class="endnotes-section flow"> 
+            <h2>Endnotes</h2>
+            <ul class="flow">
+            [! set ns.count = ns.count + 1 !]
+        [! endif !]
+        <li>[@ theme.output_section(site, page_id, section) @]</li>
+    [! endif !]
+[! endfor !]
+[! if ns.count > 0 !]
+</ul>
+</section>
+[! endif !]
+
+[! set ns = namespace(count = 0)!]
+[! for section in site.pages[page_id].ast !]
+    [! if section.type == "footnote" !]
+        [! if ns.count == 0 !]
+            <section class="footnotes-section flow"> 
+            <h2>Footnotes</h2>
+            <ul class="flow">
+            [! set ns.count = ns.count + 1 !]
+        [! endif !]
+        <li>[@ theme.output_section(site, page_id, section) @]</li>
+    [! endif !]
+[! endfor !]
+[! if ns.count > 0 !]
+</ul>
+</section>
+[! endif !]
+
+
+[! set ns = namespace(count = 0)!]
+[! for section in site.pages[page_id].ast !]
+    [! if section.type == "ref" !]
+        [! if ns.count == 0 !]
+            <section class="references-section flow"> 
+            <h2>References</h2>
+            <div>TODO: Format References</div>
+            <ul class="flow">
+            [! set ns.count = ns.count + 1 !]
+        [! endif !]
+        <li>[@ theme.output_section(site, page_id, section) @]</li>
+    [! endif !]
+[! endfor !]
+[! if ns.count > 0 !]
+</ul>
+</section>
+[! endif !]

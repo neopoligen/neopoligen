@@ -1,5 +1,10 @@
 <footer>
-<a href="/">alanwsmith.com</a>
-<a href="https://hachyderm.io/deck/@TheIdOfAlan">mastodon</a>
-<span class="color-alfa-60">I haven't built an RSS feed yet, but it's on the list</span>
+<div class="footer-line">
+  <a href="/">alanwsmith.com</a>
+  <a href="https://hachyderm.io/deck/@TheIdOfAlan">mastodon</a>
+  <span class="color-alfa-60">I haven't built an RSS feed yet, but it's on the list</span>
+</div>
+<div class="footer-line">
+  <div class="permalink center">Permalink<br>[@ site.config.base_url @][@ site.pages[page_id].href @]</div>
+</div>
 </footer>

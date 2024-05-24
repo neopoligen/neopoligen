@@ -22,8 +22,6 @@
 [! endfor !]
 >
 
-<div class="section-signal">═══ § ═══</div>
-
 [! include "subsections/forward.neoj" !]
 
 <div class="page-heading">

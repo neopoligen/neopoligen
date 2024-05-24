@@ -29,6 +29,10 @@ body {
   font-family: 'Inter';
 }
 
+.center {
+  text-align: center;
+}
+
 .flow > :where(:not(:first-child)) {
   margin-top: var(--flow-space, 1em);
 }
@@ -71,7 +75,7 @@ h1 {
 h2 { 
   font-size: var(--size-2); 
   margin-top: 1.3em;
-  border-bottom: 1px solid var(--color-foxtrot);
+  border-bottom: 1px solid var(--color-charlie);
 }
 
 h3 { 
@@ -95,22 +99,25 @@ header a {
   color: var(--color-charlie);
 }
 
-.section-signal {
-  color: var(--color-charlie);
-  padding-block: 1.2rem 1.6rem;
-  padding-block: 1.2rem;
-  text-align: center;
-}
-
-.one-column footer{
+.footer-line {
   display: flex;
   gap: 20px;
   justify-content: center;
   padding-top: 1.8rem;
   font-size: var(--size-6);
-  border-top: 1px solid var(--color-charlie);
+}
+
+.section-signal {
+  color: var(--color-charlie);
+  padding-block: 1.4rem;
+  text-align: center;
+}
+
+.one-column footer{
+  color: var(--color-bravo-30);
   margin-top: 6.4rem;
   margin-bottom: 1.7rem;
+  border-top: 1px solid var(--color-charlie);
   max-width: min(100vw - 3rem, var(--width-alfa));
   margin-inline: auto;
 }

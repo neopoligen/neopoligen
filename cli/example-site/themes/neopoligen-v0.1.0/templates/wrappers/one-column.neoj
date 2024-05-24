@@ -17,9 +17,7 @@
     <main class="flow">
         [! block title !][! endblock !]
         [! block body !][! endblock !]
-        [! include "includes/endnotes.neoj" !]
-        [! include "includes/footnotes.neoj" !]
-        [! include "includes/references.neoj" !]
+        [! include "includes/endmatter.neoj" !]
     </main>
     [! include "includes/footer.neoj" !]
 

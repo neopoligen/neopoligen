@@ -2,6 +2,7 @@
 
 [!- for section in site.pages[page_id].ast -!]
 [!- if 
+  section.type != "afterword" and
   section.type != "blurb" and
   section.type != "endnote" and
   section.type != "footnote" and
