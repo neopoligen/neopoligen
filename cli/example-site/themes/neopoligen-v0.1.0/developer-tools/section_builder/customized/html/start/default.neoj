@@ -1,4 +1,4 @@
-<section class="html-section raw-section flow
+<section class="html-section raw-default-category-section flow
 [! if section.attrs.class !][@ ' ' @][@ section.attrs.class @][! endif !]"
 [! for attr in section.attrs !]
 [! if 
