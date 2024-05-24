@@ -13,13 +13,7 @@
 <script src="/theme/theme-components.js" type="module"></script>
 -->
 
-<link rel="stylesheet" href="/theme/styles/main.css" />
 
-[#
-[! if config.show_css == true !]
-<link rel="stylesheet" href="/theme/styles/main.css" />
-[! endif !]
-#]
 
 [! include "includes/head-extras.neoj" !]
 [! include "includes/head-css.neoj" !]

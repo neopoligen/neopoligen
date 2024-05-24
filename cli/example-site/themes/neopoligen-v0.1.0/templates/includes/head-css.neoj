@@ -1,3 +1,7 @@
+[! if config.use_css == true !]
+<link rel="stylesheet" href="/theme/styles/theme.css" />
+[! endif !]
+
 [! for section in site.pages[page_id].ast !]
 [! if section.type == "css" !]
 <style>

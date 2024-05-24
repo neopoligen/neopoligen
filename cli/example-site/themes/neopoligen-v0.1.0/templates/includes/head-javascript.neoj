@@ -1,3 +1,4 @@
+
 [! for section in site.pages[page_id].ast !]
 [! if section.type == "javascript" !]
 <script>
