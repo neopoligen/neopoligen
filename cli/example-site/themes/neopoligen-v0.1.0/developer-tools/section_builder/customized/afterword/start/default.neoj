@@ -1,6 +1,6 @@
 [!- import "includes/theme.neoj" as theme -!]
 
-<section class="afterword-section basic-section flow
+<section class="afterword-default-section basic-default-category-section flow
 [! if section.attrs.class !][@ ' ' @][@ section.attrs.class @][! endif !]"
 [! for attr in section.attrs !]
 [! if 
@@ -24,7 +24,6 @@
 
 [! include "subsections/forward.neoj" !]
 
-<div class="page-heading">
 <h2>
   [! if section.attrs.title !]
     [@ section.attrs.title @]
@@ -32,7 +31,6 @@
     Afterword
   [! endif !]
 </h2>
-</div>
 
 [! include "subsections/preface.neoj" !]
 [! include "subsections/content-full.neoj" !]

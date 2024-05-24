@@ -1,6 +1,6 @@
 [!- import "includes/theme.neoj" as theme -!]
 
-<section class="youtube-section basic-section flow
+<section class="youtube-section basic-default-category-section flow
 [! if section.attrs.class !][@ ' ' @][@ section.attrs.class @][! endif !]"
 [! for attr in section.attrs !]
 [! if 

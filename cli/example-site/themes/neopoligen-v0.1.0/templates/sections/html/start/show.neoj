@@ -1,6 +1,4 @@
-[!- import "includes/theme.neoj" as theme -!]
-
-<section class="afterword-default-section basic-default-category-section flow
+<section class="html-show-section raw-show-section flow
 [! if section.attrs.class !][@ ' ' @][@ section.attrs.class @][! endif !]"
 [! for attr in section.attrs !]
 [! if 
@@ -13,6 +11,7 @@
     attr != 'h4' and 
     attr != 'h5' and 
     attr != 'h6' and 
+    attr != 'id' and 
     attr != 'preface' and 
     attr != 'subtitle' and 
     attr != 'title' 
@@ -22,16 +21,13 @@
 [! endfor !]
 >
 
+
 [! include "subsections/forward.neoj" !]
-
-<h2>
-  [! if section.attrs.title !]
-    [@ section.attrs.title @]
-  [! else !]
-    Afterword
-  [! endif !]
-</h2>
-
+<h2>HTML</h2>
+<div class="show-code-subheader">Output</div>
+[@ section.text @]
+<div class="show-code-subheader">Code</div>
+<pre><code>----</code></pre>
 [! include "subsections/preface.neoj" !]
-[! include "subsections/content-full.neoj" !]
+[! include "subsections/content-skip-one.neoj" !]
 [! include "subsections/afterword.neoj" !]

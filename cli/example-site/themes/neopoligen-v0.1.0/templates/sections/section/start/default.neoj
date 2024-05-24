@@ -1,6 +1,6 @@
 [!- import "includes/theme.neoj" as theme -!]
 
-<section class="section-section basic-section flow
+<section class="section-default-section basic-category-default-section flow
 [!- if section.attrs.class -!][@ ' ' @][@ section.attrs.class @][!- endif -!]
 "
 [!- for attr in section.attrs -!]
