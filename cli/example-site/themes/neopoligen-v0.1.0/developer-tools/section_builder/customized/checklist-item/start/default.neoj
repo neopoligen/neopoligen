@@ -1,7 +1,7 @@
 [!- import "includes/theme.neoj" as theme -!]
 
 <li><div class="checklist-checkbox-wrapper"><input type="checkbox" /></div>
-<div class="checklist-blocks-wrapper">
+<div class="checklist-blocks-wrapper flow">
 [! for child in section.children !]
 [@ theme.output_section(site, page_id, child) @]
 [! endfor !]

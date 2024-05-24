@@ -1,4 +1,16 @@
 [#############################################################################]
+[! macro output_css(site, page_id, section) !]
+[! if section.type == "css" !]
+<style>
+[@ section.text @]
+</style>
+[! endif !]
+[! for child in section.children !]
+[@ output_css(site, page_id, child) @]
+[! endfor !]
+[! endmacro !]
+
+[#############################################################################]
 [! macro output_section(site, page_id, section) !]
 [! if section.kind == "generic" !]
     [! include "sections/generic/" + section.bounds + "/default.neoj" ignore missing !]
@@ -16,6 +28,7 @@
   [! endif !]
 [! endif !]
 [! endmacro !]
+
 
 [#############################################################################]
 [!- macro output_span(site, page_id, span) -!]
