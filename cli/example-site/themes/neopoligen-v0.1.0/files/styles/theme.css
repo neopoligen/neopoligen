@@ -56,6 +56,11 @@ body {
   padding-left: 0;
 }
 
+.footnotes-section li {
+  border-left: 1px solid var(--color-bravo-20);
+  padding-left: 0.3rem;
+}
+
 .green {
   color: green;
 }
