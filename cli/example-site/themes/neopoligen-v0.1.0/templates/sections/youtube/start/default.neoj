@@ -27,8 +27,7 @@
 
 <div class="youtube-video">
 [! if section.flags[0] !]
-<lite-youtube videoid="[@ section.flags[0] @]" playlabel="Play"
-></lite-youtube>
+<lite-youtube videoid="[@ section.flags[0] @]" playlabel="Play Video"></lite-youtube>
 [! endif !]
 </div>
 

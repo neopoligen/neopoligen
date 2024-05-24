@@ -1,6 +1,10 @@
+<link rel="stylesheet" href="/theme/styles/variables.css" />
+
 [! if config.use_css == true !]
 <link rel="stylesheet" href="/theme/styles/theme.css" />
 [! endif !]
+
+<link rel="stylesheet" href="/theme/styles/lite-yt-embed.css" />
 
 [! for section in site.pages[page_id].ast !]
 [! if section.type == "css" !]
