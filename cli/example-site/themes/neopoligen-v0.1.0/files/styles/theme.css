@@ -167,11 +167,13 @@ header a {
 }
 
 .line-marker:before {
+    color: var(--color-foxtrot-60);
+    content: counter(lineNumber);
     display: inline-block;
-    color: goldenrod;
-    content: counter(lineNumber) "    ";
-    text-align: right;
-    margin-left: -5ch;
+    margin-left: -7.5ch;
+    padding-right: 2.7ch;
+    text-align: end;
+    width: 7.5ch;
 }
 
 .section-signal {

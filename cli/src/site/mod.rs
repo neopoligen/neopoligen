@@ -1,4 +1,3 @@
-//use crate::helpers::Helpers;
 use crate::og_image::*;
 use crate::page::Page;
 use crate::site_config::SiteConfig;
@@ -29,7 +28,6 @@ use walkdir::WalkDir;
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct Site {
     pub config: SiteConfig,
-    pub render_errors: BTreeMap<PathBuf, String>,
     pub missing_ids: BTreeMap<PathBuf, String>,
     pub pages: BTreeMap<String, Page>,
     pub source_files: BTreeMap<PathBuf, String>,
@@ -53,7 +51,6 @@ impl Site {
             source_files: BTreeMap::new(),
             missing_ids: BTreeMap::new(),
             pages: BTreeMap::new(),
-            render_errors: BTreeMap::new(),
             templates: BTreeMap::new(),
             template_tests: vec![],
             // todo: deprecated these four
@@ -160,7 +157,6 @@ impl Site {
                 let _ = std::fs::copy(&cache_path, output_path);
             }
         });
-        event!(Level::INFO, "Finished OG Images");
     }
 
     pub fn output_errors(&self) {
@@ -174,7 +170,10 @@ impl Site {
         // });
     }
 
-    pub fn generate_content_pages(&mut self) -> BTreeMap<PathBuf, String> {
+    pub fn generate_content_pages(
+        &mut self,
+        render_errors: &mut BTreeMap<PathBuf, String>,
+    ) -> BTreeMap<PathBuf, String> {
         let mut outputs = BTreeMap::new();
         let mut env = Environment::new();
         env.set_debug(true);
@@ -209,8 +208,7 @@ impl Site {
                     }
                     Err(e) => {
                         // event!(Level::ERROR, "{}\n{:?}", p.1.source_path.display(), e);
-                        self.render_errors
-                            .insert(p.1.source_path.clone(), format!("{:?}", e));
+                        render_errors.insert(p.1.source_path.clone(), format!("{:?}", e));
                         ()
                     }
                 }
@@ -222,7 +220,9 @@ impl Site {
         outputs
     }
 
+    #[instrument(skip(self, page_errors))]
     pub fn parse_pages(&mut self, page_errors: &mut Vec<Page>) {
+        event!(Level::INFO, "Parsing Pages");
         self.pages = BTreeMap::new(); // make sure templates are cleared
         self.source_files.iter().for_each(|f| {
             let p = Page::new(f.1.clone(), f.0.clone(), &self.config);
@@ -379,8 +379,9 @@ impl Site {
     //     });
     // }
 
-    #[instrument]
+    #[instrument(skip(self))]
     pub fn load_source_files(&mut self) {
+        event!(Level::INFO, "Loading Source Files");
         self.source_files = BTreeMap::new(); // do this to clear the templates
         let dir = &self.config.paths.get("content_root").unwrap();
         if dir.exists() {
@@ -455,7 +456,9 @@ impl Site {
             .insert("pages/post/published.neoj".to_string(), template_as_string);
     }
 
+    #[instrument(skip(self))]
     pub fn load_templates(&mut self) {
+        event!(Level::INFO, "Loading Templates");
         let mut templates_root = self.config.paths.get("themes_root").unwrap().to_path_buf();
         templates_root.push(self.config.theme.clone());
         templates_root.push("templates");

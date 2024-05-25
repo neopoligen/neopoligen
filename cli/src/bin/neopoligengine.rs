@@ -7,6 +7,7 @@ use neopoligengine::page::Page;
 use neopoligengine::site::Site;
 use neopoligengine::site_config::SiteConfig;
 use regex::Regex;
+use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
 use tokio::sync::mpsc;
@@ -89,6 +90,7 @@ fn check_templates(site_config: &SiteConfig) {
     event!(Level::INFO, "Checking Templates");
     let mut site = Site::new(site_config.clone());
     let mut page_errors: Vec<Page> = vec![];
+    let mut render_errors: BTreeMap<PathBuf, String> = BTreeMap::new();
     let _ = empty_dir(&site.config.paths.get("theme_errors_root").unwrap());
     site.load_templates();
     site.load_template_test_files();
@@ -142,35 +144,36 @@ fn check_templates(site_config: &SiteConfig) {
     //    //dbg!(error_file_path);
     //    let _ = write_file_with_mkdir(error_file_path, &p.error.clone().unwrap().to_string());
     //});
+
+    //TODO: add in render errors here too
 }
 
 #[instrument(skip(site_config))]
 fn build_site(site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
-
-    // This is the first run through the does the template tests
     let mut site = Site::new(site_config.clone());
     let mut page_errors: Vec<Page> = vec![];
+    let mut render_errors: BTreeMap<PathBuf, String> = BTreeMap::new();
     let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
     let _ = empty_dir(&site.config.paths.get("render_errors_root").unwrap());
     site.load_templates();
-
-    // This builds the actual files (don't clear the dirs otherwise
-    // you'll erase the template output errors. // TODO: split
-    // template test errors into their own dir
-    site.load_templates();
     site.load_source_files();
     site.parse_pages(&mut page_errors);
-    site.generate_content_pages().iter().for_each(|p| {
-        let output_path = &site
-            .config
-            .paths
-            .get("output_root")
-            .unwrap()
-            .join(p.0.strip_prefix("/").unwrap());
-        let _ = write_file_with_mkdir(output_path, p.1);
-    });
 
+    event!(Level::INFO, "Generating Pages");
+    site.generate_content_pages(&mut render_errors)
+        .iter()
+        .for_each(|p| {
+            let output_path = &site
+                .config
+                .paths
+                .get("output_root")
+                .unwrap()
+                .join(p.0.strip_prefix("/").unwrap());
+            let _ = write_file_with_mkdir(output_path, p.1);
+        });
+
+    event!(Level::INFO, "Listing Page Errors");
     page_errors.iter().for_each(|p| {
         let error_file_path = &site
             .config
@@ -187,10 +190,8 @@ fn build_site(site_config: &SiteConfig) {
         let _ = write_file_with_mkdir(error_file_path, &p.error.clone().unwrap().to_string());
     });
 
-    // TODO: Move this so it's not included in the site
-    // object so it doesn't show all the other errors for every
-    // error in a semi-recursive way.
-    site.render_errors.iter().for_each(|p| {
+    event!(Level::INFO, "Listing Render Errors");
+    render_errors.iter().for_each(|p| {
         let error_file_path = &site
             .config
             .paths
