@@ -6,6 +6,14 @@ This site is an example of some things
 you can do with Neopoligen
 
 
+-- html/
+-- template: show
+
+<em>ping</em>
+
+-- /html
+
+
 -- h2
 
 This is an h2

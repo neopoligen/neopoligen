@@ -1,3 +1,4 @@
+use crate::helpers::Helpers;
 use crate::og_image::*;
 use crate::page::Page;
 use crate::site_config::SiteConfig;
@@ -168,7 +169,9 @@ impl Site {
         let mut outputs = BTreeMap::new();
         let mut env = Environment::new();
         env.set_debug(true);
-        let site_obj = Value::from_serialize(&self.clone());
+        let site_obj = Value::from_serialize(self.clone());
+        let helper_struct = Helpers {};
+        let helper_obj = Value::from_object(helper_struct);
         env.set_syntax(
             SyntaxConfig::builder()
                 .block_delimiters("[!", "!]")
@@ -186,7 +189,8 @@ impl Site {
             let template_name = "pages/post/published.neoj";
             if let Ok(tmpl) = env.get_template(template_name) {
                 match tmpl.render(context!(
-                     site => site_obj,
+                    site => site_obj,
+                    helpers => helper_obj,
                     page_id => p.0
                 )) {
                     Ok(output) => {
@@ -237,6 +241,8 @@ impl Site {
         let mut env = Environment::new();
         env.set_debug(true);
         let site_obj = Value::from_serialize(&self.clone());
+        let helper_struct = Helpers {};
+        let helper_obj = Value::from_object(helper_struct);
         env.set_syntax(
             SyntaxConfig::builder()
                 .block_delimiters("[!", "!]")
@@ -255,6 +261,7 @@ impl Site {
             if let Ok(tmpl) = env.get_template(template_name) {
                 match tmpl.render(context!(
                      site => site_obj,
+                    helpers => helper_obj,
                     page_id => p.0
                 )) {
                     Ok(output) => {
