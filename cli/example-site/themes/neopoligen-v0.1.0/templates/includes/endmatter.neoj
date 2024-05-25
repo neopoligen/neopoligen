@@ -28,11 +28,11 @@
 
 [! set ns = namespace(count = 0)!]
 [! for section in site.pages[page_id].ast !]
-    [! if section.type == "footnote" !]
+    [! if section.type == "footnote" or section.type == "ref" !]
         [! if ns.count == 0 !]
             <section class="footnotes-section flow"> 
-            <h2>Footnotes</h2>
-            <ul class="flow">
+            <h2>Footnotes And References</h2>
+            <ul class="flow-2">
             [! set ns.count = ns.count + 1 !]
         [! endif !]
         <li>[@ theme.output_section(site, page_id, section) @]</li>
@@ -44,6 +44,8 @@
 [! endif !]
 
 
+[# DEPRECATED: This can be removed when Footnotes And References
+is working in the section above 
 [! set ns = namespace(count = 0)!]
 [! for section in site.pages[page_id].ast !]
     [! if section.type == "ref" !]
@@ -61,3 +63,5 @@
 </ul>
 </section>
 [! endif !]
+#]
+

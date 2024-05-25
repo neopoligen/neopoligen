@@ -38,7 +38,6 @@ body {
   border-radius: 0.4rem;
   margin: 1.4rem;
   padding-block: 0.5rem;
-  padding-inline: 1.5rem;
   background-color: var(--color-alfa-10);
   font-size: var(--size-6);
 }
@@ -46,10 +45,16 @@ body {
 .code-example-wrapper pre {
   white-space: pre-wrap; 
   overflow-wrap: break-word;
+  margin-left: 6ch;
+  padding-right: 8ch;
 }
 
 .flow > :where(:not(:first-child)) {
   margin-top: var(--flow-space, 1em);
+}
+
+.flow-2 > :where(:not(:first-child)) {
+  margin-top: 1.5em;
 }
 
 .footer-line {
@@ -60,7 +65,7 @@ body {
   font-size: var(--size-6);
 }
 
-.footnote {
+.footnote-or-reference {
   display: flex;
   gap: 18px;
 }
@@ -68,6 +73,7 @@ body {
 .footnote-return {
   border-left: 1px solid var(--color-bravo-20);
   padding-left: 0.3rem;
+  min-width: 8ch;
   /*
   display: flex;
   align-items: end;
@@ -80,7 +86,6 @@ body {
 }
 
 .footnotes-section li {
-  border-left: 1px solid var(--color-bravo-20);
   padding-left: 0.3rem;
 }
 
@@ -141,10 +146,15 @@ header a {
   font-size: var(--size-6);
 }
 
-
 .html-example-wrapper pre {
   white-space: pre-wrap; 
   overflow-wrap: break-word;
+}
+
+.html-show-section {
+  border: 1px solid var(--color-charlie-80);
+  border-radius: 0.4rem;
+  margin: 1.4rem;
 }
 
 
@@ -159,10 +169,9 @@ header a {
 .line-marker:before {
     display: inline-block;
     color: goldenrod;
-    content: counter(lineNumber);
-    padding-right: 1.5rem;
+    content: counter(lineNumber) "    ";
     text-align: right;
-    width: 4rem;
+    margin-left: -5ch;
 }
 
 .section-signal {

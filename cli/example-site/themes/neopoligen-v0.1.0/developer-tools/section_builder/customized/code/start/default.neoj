@@ -23,7 +23,6 @@
 
 
 [! include "subsections/forward.neoj" !]
-<h2>Code</h2>
 <div class="code-example-wrapper">
 <pre class="line-numbers"><code>[! autoescape false!]
 [!- if section.flags[0] !]

@@ -23,7 +23,6 @@
 
 
 [! include "subsections/forward.neoj" !]
-<h2>HTML</h2>
 <div class="html-example-subheader">Output</div>
 <div class="html-example-wrapper">
 [@ section.text @]
