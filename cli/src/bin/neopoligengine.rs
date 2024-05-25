@@ -127,7 +127,7 @@ fn check_templates(site_config: &SiteConfig) {
 
     // TODO: See if this needs to be pulled back in
     //// render errors for templates
-    //site.page_errors.iter().for_each(|p| {
+    //page_errors.iter().for_each(|p| {
     //    let error_file_path = &site
     //        .config
     //        .paths

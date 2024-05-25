@@ -29,7 +29,6 @@ use walkdir::WalkDir;
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct Site {
     pub config: SiteConfig,
-    pub page_errors: Vec<Page>,
     pub render_errors: BTreeMap<PathBuf, String>,
     pub missing_ids: BTreeMap<PathBuf, String>,
     pub pages: BTreeMap<String, Page>,
@@ -54,7 +53,6 @@ impl Site {
             source_files: BTreeMap::new(),
             missing_ids: BTreeMap::new(),
             pages: BTreeMap::new(),
-            page_errors: vec![],
             render_errors: BTreeMap::new(),
             templates: BTreeMap::new(),
             template_tests: vec![],
@@ -225,7 +223,6 @@ impl Site {
     }
 
     pub fn parse_pages(&mut self, page_errors: &mut Vec<Page>) {
-        self.page_errors = vec![]; // make sure templates are cleared
         self.pages = BTreeMap::new(); // make sure templates are cleared
         self.source_files.iter().for_each(|f| {
             let p = Page::new(f.1.clone(), f.0.clone(), &self.config);
