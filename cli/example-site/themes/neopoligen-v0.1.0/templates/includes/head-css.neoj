@@ -2,6 +2,7 @@
 
 [! if config.use_css == true !]
 <link rel="stylesheet" href="/theme/styles/theme.css" />
+<link rel="stylesheet" href="/theme/styles/syntax-highlighting/code-base16-ocean-dark.css" />
 [! endif !]
 
 <link rel="stylesheet" href="/theme/styles/lite-yt-embed.css" />

@@ -30,7 +30,7 @@
 </div>
 <div class="html-example-subheader">Source</div>
 <div class="html-example-wrapper">
-<pre><code>[! autoescape true !][@ section.text @][! endautoescape !]</code></pre>
+<pre><code>[! autoescape false!][@ highlight_code(section.text, "html") @][! endautoescape !]</code></pre>
 </div>
 [! include "subsections/preface.neoj" !]
 [! include "subsections/content-skip-one.neoj" !]

@@ -1,4 +1,4 @@
-use crate::helpers::Helpers;
+//use crate::helpers::Helpers;
 use crate::og_image::*;
 use crate::page::Page;
 use crate::site_config::SiteConfig;
@@ -6,12 +6,16 @@ use crate::template_test::*;
 use html_escape::encode_text;
 use minijinja::context;
 use minijinja::syntax::SyntaxConfig;
+use minijinja::value::Value;
 use minijinja::Environment;
-use minijinja::Value;
+use regex::Regex;
 use serde::Serialize;
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
+use syntect::html::{ClassStyle, ClassedHTMLGenerator};
+use syntect::parsing::SyntaxSet;
+use syntect::util::LinesWithEndings;
 use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 
@@ -169,9 +173,10 @@ impl Site {
         let mut outputs = BTreeMap::new();
         let mut env = Environment::new();
         env.set_debug(true);
+        env.add_function("highlight_code", highlight_code);
         let site_obj = Value::from_serialize(self.clone());
-        let helper_struct = Helpers {};
-        let helper_obj = Value::from_object(helper_struct);
+        // let helper_struct = Helpers {};
+        // let helper_obj = Value::from_object(helper_struct);
         env.set_syntax(
             SyntaxConfig::builder()
                 .block_delimiters("[!", "!]")
@@ -190,7 +195,7 @@ impl Site {
             if let Ok(tmpl) = env.get_template(template_name) {
                 match tmpl.render(context!(
                     site => site_obj,
-                    helpers => helper_obj,
+                    // helpers => helper_obj,
                     page_id => p.0
                 )) {
                     Ok(output) => {
@@ -240,9 +245,10 @@ impl Site {
         let mut outputs = vec![];
         let mut env = Environment::new();
         env.set_debug(true);
+        env.add_function("highlight_code", highlight_code);
         let site_obj = Value::from_serialize(&self.clone());
-        let helper_struct = Helpers {};
-        let helper_obj = Value::from_object(helper_struct);
+        // let helper_struct = Helpers {};
+        // let helper_obj = Value::from_object(helper_struct);
         env.set_syntax(
             SyntaxConfig::builder()
                 .block_delimiters("[!", "!]")
@@ -261,7 +267,7 @@ impl Site {
             if let Ok(tmpl) = env.get_template(template_name) {
                 match tmpl.render(context!(
                      site => site_obj,
-                    helpers => helper_obj,
+                    //helpers => helper_obj,
                     page_id => p.0
                 )) {
                     Ok(output) => {
@@ -479,4 +485,40 @@ impl Site {
     }
 
     //
+}
+
+pub fn highlight_code(args: &[Value]) -> String {
+    let code = args[0].to_string();
+    let lang = args[1].to_string();
+    let syntax_set = SyntaxSet::load_defaults_newlines();
+    let syntax = syntax_set
+        .find_syntax_by_token(&lang)
+        .unwrap_or_else(|| syntax_set.find_syntax_plain_text());
+    let mut html_generator =
+        ClassedHTMLGenerator::new_with_class_style(syntax, &syntax_set, ClassStyle::Spaced);
+    for line in LinesWithEndings::from(&trim_empty_lines(&code)) {
+        let _ = html_generator.parse_html_for_line_which_includes_newline(line);
+    }
+    let initial_html = html_generator.finalize();
+    let output_html: Vec<_> = initial_html
+        .lines()
+        .map(|line| format!(r#"<span class="line-marker"></span>{}"#, line))
+        .collect();
+    output_html.join("\n")
+}
+
+pub fn trim_empty_lines(source: &str) -> String {
+    let re = Regex::new(r"\S").unwrap();
+    let trimmed_front = source.split("\n").fold("".to_string(), |acc, l| {
+        if !acc.is_empty() {
+            acc + l + "\n"
+        } else {
+            if re.is_match(l) {
+                l.to_string() + "\n"
+            } else {
+                acc
+            }
+        }
+    });
+    trimmed_front.trim_end().to_string()
 }
