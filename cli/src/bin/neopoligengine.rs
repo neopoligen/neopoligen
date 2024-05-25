@@ -3,6 +3,7 @@ use dirs::document_dir;
 //use minijinja::__context::build;
 use neopoligengine::engine_config::EngineConfig;
 use neopoligengine::file_watcher::FileWatcher;
+use neopoligengine::page::Page;
 use neopoligengine::site::Site;
 use neopoligengine::site_config::SiteConfig;
 use regex::Regex;
@@ -87,11 +88,12 @@ async fn main() {
 fn check_templates(site_config: &SiteConfig) {
     event!(Level::INFO, "Checking Templates");
     let mut site = Site::new(site_config.clone());
+    let mut page_errors: Vec<Page> = vec![];
     let _ = empty_dir(&site.config.paths.get("theme_errors_root").unwrap());
     site.load_templates();
     site.load_template_test_files();
     site.load_template_test_template();
-    site.parse_pages();
+    site.parse_pages(&mut page_errors);
     site.find_template_errors().iter().for_each(|tt| {
         let error_file_path = &site
             .config
@@ -122,51 +124,8 @@ fn check_templates(site_config: &SiteConfig) {
             let _ = write_file_with_mkdir(error_file_path, &error_text);
         }
     });
-}
 
-#[instrument(skip(site_config))]
-fn build_site(site_config: &SiteConfig) {
-    event!(Level::INFO, "Building Site");
-    // This is the first run through the does the templates
-    let mut site = Site::new(site_config.clone());
-    let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
-    let _ = empty_dir(&site.config.paths.get("render_errors_root").unwrap());
-    site.load_templates();
-
-    // site.load_template_test_files();
-    // site.load_template_test_template();
-    // site.parse_pages();
-    // site.find_template_errors().iter().for_each(|tt| {
-    //     let error_file_path = &site
-    //         .config
-    //         .paths
-    //         .get("theme_errors_root")
-    //         .unwrap()
-    //         .join(
-    //             &tt.page
-    //                 .source_path
-    //                 .strip_prefix(&site.config.paths.get("theme_tests_content_root").unwrap())
-    //                 .unwrap(),
-    //         )
-    //         .with_extension("txt");
-    //     if let Some(render_error) = &tt.render_error {
-    //         let _ = write_file_with_mkdir(error_file_path, &render_error);
-    //     } else {
-    //         let error_text =
-    //             tt.template_errors
-    //                 .iter()
-    //                 .fold("".to_string(), |acc, (expected, got)| {
-    //                     format!(
-    //                         "{}### Expected:\n\n{}\n\n\n### Got:\n\n{}\n\n",
-    //                         acc,
-    //                         simple_format_html(expected),
-    //                         simple_format_html(got)
-    //                     )
-    //                 });
-    //         let _ = write_file_with_mkdir(error_file_path, &error_text);
-    //     }
-    // });
-
+    // TODO: See if this needs to be pulled back in
     //// render errors for templates
     //site.page_errors.iter().for_each(|p| {
     //    let error_file_path = &site
@@ -183,9 +142,25 @@ fn build_site(site_config: &SiteConfig) {
     //    //dbg!(error_file_path);
     //    let _ = write_file_with_mkdir(error_file_path, &p.error.clone().unwrap().to_string());
     //});
+}
 
+#[instrument(skip(site_config))]
+fn build_site(site_config: &SiteConfig) {
+    event!(Level::INFO, "Building Site");
+
+    // This is the first run through the does the template tests
+    let mut site = Site::new(site_config.clone());
+    let mut page_errors: Vec<Page> = vec![];
+    let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
+    let _ = empty_dir(&site.config.paths.get("render_errors_root").unwrap());
+    site.load_templates();
+
+    // This builds the actual files (don't clear the dirs otherwise
+    // you'll erase the template output errors. // TODO: split
+    // template test errors into their own dir
+    site.load_templates();
     site.load_source_files();
-    site.parse_pages();
+    site.parse_pages(&mut page_errors);
     site.generate_content_pages().iter().for_each(|p| {
         let output_path = &site
             .config
@@ -196,7 +171,7 @@ fn build_site(site_config: &SiteConfig) {
         let _ = write_file_with_mkdir(output_path, p.1);
     });
 
-    site.page_errors.iter().for_each(|p| {
+    page_errors.iter().for_each(|p| {
         let error_file_path = &site
             .config
             .paths

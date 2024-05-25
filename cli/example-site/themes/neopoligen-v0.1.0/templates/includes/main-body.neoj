@@ -2,12 +2,23 @@
 
 [!- for section in site.pages[page_id].ast -!]
 [!- if 
+  section.type == "forward"  or
+  section.type == "tldr" 
+-!]
+[@- theme.output_section(site, page_id, section) -@]
+[!- endif -!]
+[!- endfor -!]
+
+[!- for section in site.pages[page_id].ast -!]
+[!- if 
   section.type != "afterword" and
   section.type != "blurb" and
   section.type != "endnote" and
   section.type != "footnote" and
+  section.type != "forward" and
   section.type != "metadata" and
   section.type != "ref" and
+  section.type != "tldr" and
   section.type != "title" 
   -!]
 [@- theme.output_section(site, page_id, section) -@]

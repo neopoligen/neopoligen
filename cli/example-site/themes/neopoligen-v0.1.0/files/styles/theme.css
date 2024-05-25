@@ -43,6 +43,11 @@ body {
   font-size: var(--size-6);
 }
 
+.code-example-wrapper pre {
+  white-space: pre-wrap; 
+  overflow-wrap: break-word;
+}
+
 .flow > :where(:not(:first-child)) {
   margin-top: var(--flow-space, 1em);
 }
@@ -136,6 +141,13 @@ header a {
   font-size: var(--size-6);
 }
 
+
+.html-example-wrapper pre {
+  white-space: pre-wrap; 
+  overflow-wrap: break-word;
+}
+
+
 .line-numbers {
   counter-reset: lineNumber;
 }
@@ -148,9 +160,9 @@ header a {
     display: inline-block;
     color: goldenrod;
     content: counter(lineNumber);
-    padding-right: 0.7rem;
+    padding-right: 1.5rem;
     text-align: right;
-    width: 2rem;
+    width: 4rem;
 }
 
 .section-signal {

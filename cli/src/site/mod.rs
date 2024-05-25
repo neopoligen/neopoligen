@@ -3,15 +3,21 @@ use crate::og_image::*;
 use crate::page::Page;
 use crate::site_config::SiteConfig;
 use crate::template_test::*;
+use anyhow::Result;
 use html_escape::encode_text;
+use image::DynamicImage;
 use minijinja::context;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::value::Value;
 use minijinja::Environment;
 use regex::Regex;
+use rimage::config::{Codec, EncoderConfig};
+use rimage::Decoder;
+use rimage::Encoder;
 use serde::Serialize;
 use std::collections::BTreeMap;
 use std::fs;
+use std::fs::File;
 use std::path::PathBuf;
 use syntect::html::{ClassStyle, ClassedHTMLGenerator};
 use syntect::parsing::SyntaxSet;
@@ -148,6 +154,7 @@ impl Site {
                         ],
                     };
                     og_image.render_svg(&cache_path);
+                    let _ = optimize_png(&cache_path, &cache_path);
                 }
                 // always copy the image in from cache since the
                 // output dir is blown away on each iteration
@@ -217,13 +224,13 @@ impl Site {
         outputs
     }
 
-    pub fn parse_pages(&mut self) {
+    pub fn parse_pages(&mut self, page_errors: &mut Vec<Page>) {
         self.page_errors = vec![]; // make sure templates are cleared
         self.pages = BTreeMap::new(); // make sure templates are cleared
         self.source_files.iter().for_each(|f| {
             let p = Page::new(f.1.clone(), f.0.clone(), &self.config);
             if let Some(_) = p.error.clone() {
-                self.page_errors.push(p);
+                page_errors.push(p);
             } else {
                 self.pages.insert(p.id.clone().unwrap(), p);
             }
@@ -521,4 +528,14 @@ pub fn trim_empty_lines(source: &str) -> String {
         }
     });
     trimmed_front.trim_end().to_string()
+}
+
+pub fn optimize_png(input: &PathBuf, output: &PathBuf) -> Result<()> {
+    let decoder = Decoder::from_path(input)?;
+    let image = decoder.decode()?;
+    let config = EncoderConfig::new(Codec::OxiPng);
+    let file = File::create(&output)?;
+    let encoder = Encoder::new(file, DynamicImage::ImageRgba8(image.into())).with_config(config);
+    encoder.encode()?;
+    Ok(())
 }

@@ -1,4 +1,4 @@
-[TODO: Code]
+</section>
 [!- if section.children -!]
 [!- include "sections/p/full/default.neoj" -!]
 [!- endif -!]
