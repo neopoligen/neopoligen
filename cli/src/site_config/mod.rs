@@ -48,7 +48,9 @@ pub struct SiteConfig {
 // }
 
 impl SiteConfig {
-    // TODO: Move paths. to dir functions
+    pub fn cache_db_path(&self) -> PathBuf {
+        self.cache_dir().join("cache.sqlite")
+    }
     pub fn cache_dir(&self) -> PathBuf {
         self.project_root.clone().unwrap().join("cache")
     }

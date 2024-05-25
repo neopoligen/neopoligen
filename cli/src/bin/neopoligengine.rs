@@ -1,13 +1,12 @@
 use axum::Router;
 use dirs::document_dir;
-//use minijinja::__context::build;
+use neopoligengine::builder::Builder;
 use neopoligengine::engine_config::EngineConfig;
 use neopoligengine::file_watcher::FileWatcher;
 use neopoligengine::page::Page;
 use neopoligengine::site::Site;
 use neopoligengine::site_config::SiteConfig;
 use regex::Regex;
-use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
 use tokio::sync::mpsc;
@@ -90,7 +89,7 @@ fn check_templates(site_config: &SiteConfig) {
     event!(Level::INFO, "Checking Templates");
     let mut site = Site::new(site_config.clone());
     let mut page_errors: Vec<Page> = vec![];
-    let mut render_errors: BTreeMap<PathBuf, String> = BTreeMap::new();
+    //let mut render_errors: BTreeMap<PathBuf, String> = BTreeMap::new();
     let _ = empty_dir(&site.config.paths.get("theme_errors_root").unwrap());
     site.load_templates();
     site.load_template_test_files();
@@ -151,66 +150,74 @@ fn check_templates(site_config: &SiteConfig) {
 #[instrument(skip(site_config))]
 fn build_site(site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
-    let mut site = Site::new(site_config.clone());
-    let mut page_errors: Vec<Page> = vec![];
-    let mut render_errors: BTreeMap<PathBuf, String> = BTreeMap::new();
-    let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
-    let _ = empty_dir(&site.config.paths.get("render_errors_root").unwrap());
-    site.load_templates();
-    site.load_source_files();
-    site.parse_pages(&mut page_errors);
-    site.set_page_paths();
-    //site.toggle_cached_files();
+    if let Ok(builder) = Builder::new(site_config.clone()) {
+        let _ = builder.create_cache_db_if_necessary();
+    }
 
-    event!(Level::INFO, "Generating Pages");
-    site.generate_content_pages(&mut render_errors)
-        .iter()
-        .for_each(|p| {
-            let output_path = &site
-                .config
-                .paths
-                .get("output_root")
-                .unwrap()
-                .join(p.0.strip_prefix("/").unwrap());
-            let _ = write_file_with_mkdir(output_path, p.1);
-        });
+    // let mut site = Site::new(site_config.clone());
+    // let mut page_errors: Vec<Page> = vec![];
+    // let mut render_errors: BTreeMap<PathBuf, String> = BTreeMap::new();
+    // let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
+    // let _ = empty_dir(&site.config.paths.get("render_errors_root").unwrap());
+    // site.load_templates();
+    // site.load_source_files();
+    // site.parse_pages(&mut page_errors);
+    // site.set_page_paths();
+    // site.toggle_cached_files();
 
-    event!(Level::INFO, "Listing Page Errors");
-    page_errors.iter().for_each(|p| {
-        let error_file_path = &site
-            .config
-            .paths
-            .get("render_errors_root")
-            .unwrap()
-            .join(
-                &p.source_path
-                    .strip_prefix(&site.config.paths.get("content_root").unwrap())
-                    .unwrap(),
-            )
-            .with_extension("txt");
-        //dbg!(error_file_path);
-        let _ = write_file_with_mkdir(error_file_path, &p.error.clone().unwrap().to_string());
-    });
+    //event!(Level::INFO, "Generating Pages Into Cache");
+    //site.generate_content_pages(&mut render_errors)
+    //    .iter()
+    //    .for_each(|p| {
+    //        dbg!(&p.0);
+    //        //let output_pat = &site
+    //        //   .config
+    //        //  .cache_dir()
+    //        // .join(p.0.strip_prefix("/").unwrap());
+    //        let _ = write_file_with_mkdir(&p.0, &p.2);
+    //    });
 
-    event!(Level::INFO, "Listing Render Errors");
-    render_errors.iter().for_each(|p| {
-        let error_file_path = &site
-            .config
-            .paths
-            .get("render_errors_root")
-            .unwrap()
-            .join(
-                &p.0.strip_prefix(&site.config.paths.get("content_root").unwrap())
-                    .unwrap(),
-            )
-            .with_extension("txt");
-        dbg!(error_file_path);
-        let _ = write_file_with_mkdir(error_file_path, p.1);
-    });
+    // event!(Level::INFO, "Publishing Cache");
+    // site.pages.iter().for_each(|p| {
+    // });
 
-    let _ = site.make_og_images();
-    let _ = site.copy_theme_assets();
-    let _ = site.copy_images();
+    //event!(Level::INFO, "Listing Page Errors");
+    //page_errors.iter().for_each(|p| {
+    //    let error_file_path = &site
+    //        .config
+    //        .paths
+    //        .get("render_errors_root")
+    //        .unwrap()
+    //        .join(
+    //            &p.source_path
+    //                .strip_prefix(&site.config.paths.get("content_root").unwrap())
+    //                .unwrap(),
+    //        )
+    //        .with_extension("txt");
+    //    //dbg!(error_file_path);
+    //    let _ = write_file_with_mkdir(error_file_path, &p.error.clone().unwrap().to_string());
+    //});
+
+    // event!(Level::INFO, "Listing Render Errors");
+    // render_errors.iter().for_each(|p| {
+    //     let error_file_path = &site
+    //         .config
+    //         .paths
+    //         .get("render_errors_root")
+    //         .unwrap()
+    //         .join(
+    //             &p.0.strip_prefix(&site.config.paths.get("content_root").unwrap())
+    //                 .unwrap(),
+    //         )
+    //         .with_extension("txt");
+    //     dbg!(error_file_path);
+    //     let _ = write_file_with_mkdir(error_file_path, p.1);
+    // });
+
+    // let _ = site.make_og_images();
+    // let _ = site.copy_theme_assets();
+    // let _ = site.copy_images();
+
     //
 }
 

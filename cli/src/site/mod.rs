@@ -173,8 +173,8 @@ impl Site {
     pub fn generate_content_pages(
         &mut self,
         render_errors: &mut BTreeMap<PathBuf, String>,
-    ) -> BTreeMap<PathBuf, String> {
-        let mut outputs = BTreeMap::new();
+    ) -> Vec<(PathBuf, PathBuf, String)> {
+        let mut outputs: Vec<(PathBuf, PathBuf, String)> = vec![];
         let mut env = Environment::new();
         env.set_debug(true);
         env.add_function("highlight_code", highlight_code);
@@ -195,25 +195,32 @@ impl Site {
             .iter()
             .for_each(|t| env.add_template_owned(t.0, t.1).unwrap());
         self.pages.iter().for_each(|p| {
-            let template_name = "pages/post/published.neoj";
-            if let Ok(tmpl) = env.get_template(template_name) {
-                match tmpl.render(context!(
-                    site => site_obj,
-                    // helpers => helper_obj,
-                    page_id => p.0
-                )) {
-                    Ok(output) => {
-                        // dbg!(&p.1.rel_output_path);
-                        outputs.insert(p.1.rel_output_path.clone().unwrap(), output.clone());
+            if p.1.do_render {
+                let template_name = "pages/post/published.neoj";
+                if let Ok(tmpl) = env.get_template(template_name) {
+                    match tmpl.render(context!(
+                        site => site_obj,
+                        // helpers => helper_obj,
+                        page_id => p.0
+                    )) {
+                        Ok(output) => {
+                            //outputs.push((
+                            //p.1.full_cache_path.clone().unwrap(),
+                            //p.1.full_output_path.clone().unwrap(),
+                            //output,
+                            //));
+                            // dbg!(&p.1.rel_output_path);
+                            //outputs.insert(p.0.to_string(), p.clone());
+                        }
+                        Err(e) => {
+                            // event!(Level::ERROR, "{}\n{:?}", p.1.source_path.display(), e);
+                            //render_errors.insert(p.0, format!("{:?}", e));
+                            ()
+                        }
                     }
-                    Err(e) => {
-                        // event!(Level::ERROR, "{}\n{:?}", p.1.source_path.display(), e);
-                        render_errors.insert(p.1.source_path.clone(), format!("{:?}", e));
-                        ()
-                    }
+                } else {
+                    event!(Level::ERROR, "Could not get template: {}", template_name);
                 }
-            } else {
-                event!(Level::ERROR, "Could not get template: {}", template_name);
             }
         });
         outputs
@@ -508,16 +515,10 @@ impl Site {
     }
 
     pub fn toggle_cached_files(&mut self) {
-        self.pages.iter().for_each(|mut p| {
-            if let Some(rel_output_path) = &p.1.rel_output_path {
-                let output_path = self
-                    .config
-                    .paths
-                    .get("output_root")
-                    .unwrap()
-                    .join(rel_output_path);
-                dbg!(output_path);
-            };
+        self.pages.iter_mut().for_each(|p| {
+            if let Some(cache_path) = &p.1.full_cache_path {
+                p.1.do_render = is_cache_stale(&p.1.source_path, &cache_path);
+            }
         })
     }
 
@@ -570,6 +571,6 @@ pub fn optimize_png(input: &PathBuf, output: &PathBuf) -> Result<()> {
     Ok(())
 }
 
-// pub fn is_cache_stale(source_file: &PathBuf, cache_file: &PathBuf) -> bool {
-//     true
-// }
+pub fn is_cache_stale(source_file: &PathBuf, cache_file: &PathBuf) -> bool {
+    true
+}
