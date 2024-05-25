@@ -14,7 +14,7 @@
     attr != 'id' and 
     attr != 'preface' and 
     attr != 'subtitle' and 
-    attr != 'title' 
+    attr != 'title'
 !]
 [@ attr @]="[@ section.attrs[attr] @]"
 [! endif !]
@@ -29,8 +29,8 @@
 [@ section.text @]
 </div>
 <div class="html-example-subheader">Source</div>
-<div class="html-example-wrapper">
-<pre><code>[! autoescape false!][@ highlight_code(section.text, "html") @][! endautoescape !]</code></pre>
+<div class="code-example-wrapper">
+<pre class="line-numbers"><code>[! autoescape false!][@ highlight_code(section.text, "html") @][! endautoescape !]</code></pre>
 </div>
 [! include "subsections/preface.neoj" !]
 [! include "subsections/content-skip-one.neoj" !]

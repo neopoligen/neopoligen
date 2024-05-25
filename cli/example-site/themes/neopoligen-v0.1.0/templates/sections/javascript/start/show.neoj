@@ -24,7 +24,9 @@
 
 [! include "subsections/forward.neoj" !]
 <h2>JavaScript</h2>
-<pre><code>[! autoescape true !][@ section.text @][! endautoescape !]</code></pre>
+<div class="code-example-wrapper">
+<pre class="line-numbers"><code>[! autoescape false !][@ highlight_code(section.text, "javascript") @][! endautoescape !]</code></pre>
+</div>
 [! include "subsections/preface.neoj" !]
 [! include "subsections/content-skip-one.neoj" !]
 [! include "subsections/afterword.neoj" !]

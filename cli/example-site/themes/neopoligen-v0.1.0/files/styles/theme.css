@@ -33,6 +33,16 @@ body {
   text-align: center;
 }
 
+.code-example-wrapper {
+  border: 1px solid var(--color-charlie-80);
+  border-radius: 0.4rem;
+  margin: 1.4rem;
+  padding-block: 0.5rem;
+  padding-inline: 1.5rem;
+  background-color: var(--color-alfa-10);
+  font-size: var(--size-6);
+}
+
 .flow > :where(:not(:first-child)) {
   margin-top: var(--flow-space, 1em);
 }
@@ -114,8 +124,6 @@ header a {
 
 .html-example-subheader {
   color: var(--color-alfa);
-
-
 }
 
 .html-example-wrapper {
@@ -124,8 +132,26 @@ header a {
   margin: 1.4rem;
   padding-block: 0.5rem;
   padding-inline: 1.5rem;
+  background-color: var(--color-alfa-10);
+  font-size: var(--size-6);
 }
 
+.line-numbers {
+  counter-reset: lineNumber;
+}
+
+.line-marker {
+  counter-increment: lineNumber;
+}
+
+.line-marker:before {
+    display: inline-block;
+    color: goldenrod;
+    content: counter(lineNumber);
+    padding-right: 0.7rem;
+    text-align: right;
+    width: 2rem;
+}
 
 .section-signal {
   color: var(--color-charlie);
