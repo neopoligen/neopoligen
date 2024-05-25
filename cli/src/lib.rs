@@ -11,5 +11,6 @@ pub mod section;
 pub mod sections;
 pub mod site;
 pub mod site_config;
+pub mod site_v2;
 pub mod span;
 pub mod template_test;

@@ -154,8 +154,9 @@ fn build_site(site_config: &SiteConfig) {
         let _ = builder.create_cache_db_if_necessary();
         let _ = builder.load_cached_pages();
         let _ = builder.load_source_files();
+        let _ = builder.clear_changed_asts();
         let _ = builder.generate_missing_asts();
-        //let _ = builder.make_site_object();
+        let _ = builder.generate_page_content();
         //dbg!(builder.pages);
     }
 

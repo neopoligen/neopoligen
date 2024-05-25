@@ -1,5 +1,6 @@
 use crate::page_v2::PageV2;
 use crate::site_config::SiteConfig;
+use crate::site_v2::SiteV2;
 use anyhow::Result;
 use rusqlite::Connection;
 use std::collections::BTreeMap;
@@ -7,7 +8,7 @@ use std::{fs, path::PathBuf};
 use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Builder {
     pub pages: BTreeMap<PathBuf, PageV2>,
     pub config: SiteConfig,
@@ -15,12 +16,9 @@ pub struct Builder {
 }
 
 impl Builder {
-    pub fn new(config: SiteConfig) -> Result<Builder> {
-        Ok(Builder {
-            pages: BTreeMap::new(),
-            config,
-            //pages: vec![],
-        })
+    pub fn clear_changed_asts(&self) -> Result<()> {
+        // TODO: clear changed ASTs here
+        Ok(())
     }
 
     pub fn create_cache_db_if_necessary(&self) -> Result<()> {
@@ -37,6 +35,12 @@ impl Builder {
                 p.1.generate_ast(&self.config);
             }
         });
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn generate_page_content(&mut self) -> Result<()> {
+        let site = SiteV2::new(&self.config, &self.pages);
         Ok(())
     }
 
@@ -77,6 +81,14 @@ impl Builder {
                 }
             });
         Ok(())
+    }
+
+    pub fn new(config: SiteConfig) -> Result<Builder> {
+        Ok(Builder {
+            pages: BTreeMap::new(),
+            config,
+            //pages: vec![],
+        })
     }
 
     // pub fn cache_hashes(&self) -> Vec<(PathBuf, String)> {

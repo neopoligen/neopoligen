@@ -1,10 +1,12 @@
+pub mod mocks;
+
 use crate::ast::ast;
 use std::path::PathBuf;
 
 use crate::section::Section;
 use crate::site_config::SiteConfig;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct PageV2 {
     pub ast: Vec<Section>,
     pub cached_hash: Option<String>,
@@ -24,9 +26,29 @@ impl PageV2 {
         }
     }
 
+    pub fn id(&self) -> Option<String> {
+        self.ast.iter().find_map(|sec_enum| {
+            if let Section::Yaml { r#type, attrs, .. } = sec_enum {
+                if r#type == "metadata" {
+                    attrs.iter().find_map(|attr| {
+                        if attr.0 == "id" {
+                            Some(attr.1.trim().to_string())
+                        } else {
+                            None
+                        }
+                    })
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        })
+    }
+
     pub fn new_from_cache(source_path: String, cached_hash: String, _source_ast: String) -> PageV2 {
         PageV2 {
-            ast: vec![],
+            ast: vec![], // TODO: load in the cached AST here
             cached_hash: Some(cached_hash),
             source_path: Some(PathBuf::from(source_path)),
             source_content: None,
