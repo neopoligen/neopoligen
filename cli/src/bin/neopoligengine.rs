@@ -159,6 +159,8 @@ fn build_site(site_config: &SiteConfig) {
     site.load_templates();
     site.load_source_files();
     site.parse_pages(&mut page_errors);
+    site.set_page_paths();
+    //site.toggle_cached_files();
 
     event!(Level::INFO, "Generating Pages");
     site.generate_content_pages(&mut render_errors)

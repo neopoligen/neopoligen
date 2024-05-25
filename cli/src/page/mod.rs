@@ -12,8 +12,11 @@ use std::path::PathBuf;
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct Page {
     pub ast: Option<Vec<Section>>,
+    pub do_render: bool,
     pub error: Option<Error>,
     pub folders: Vec<String>,
+    pub full_output_path: Option<PathBuf>,
+    pub full_cache_path: Option<PathBuf>,
     pub href: Option<String>,
     pub id: Option<String>,
     pub rel_output_path: Option<PathBuf>,
@@ -36,8 +39,11 @@ impl Page {
                         let href = href(&ast, &title_for_url, &rel_output_path);
                         Page {
                             ast: Some(ast),
+                            do_render: true,
                             error: None,
                             folders: vec![],
+                            full_cache_path: None,
+                            full_output_path: None,
                             href,
                             id: Some(id),
                             rel_output_path,
@@ -57,8 +63,11 @@ impl Page {
                         // .unwrap();
                         Page {
                             ast: None,
+                            do_render: false,
                             error: Some(e),
                             folders: vec![],
+                            full_cache_path: None,
+                            full_output_path: None,
                             id: None,
                             href: None,
                             // output_path: Some(output_path.with_extension("txt")),
@@ -81,8 +90,11 @@ impl Page {
                 // .unwrap();
                 Page {
                     ast: None,
+                    do_render: false,
                     error: Some(error),
                     folders: vec![],
+                    full_cache_path: None,
+                    full_output_path: None,
                     href: None,
                     id: None,
                     // output_path: Some(output_path.with_extension("txt")),

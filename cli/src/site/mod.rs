@@ -215,7 +215,6 @@ impl Site {
             } else {
                 event!(Level::ERROR, "Could not get template: {}", template_name);
             }
-            //
         });
         outputs
     }
@@ -491,6 +490,37 @@ impl Site {
         }
     }
 
+    pub fn set_page_paths(&mut self) {
+        self.pages.iter_mut().for_each(|p| {
+            if let Some(rel_output_path) = p.1.rel_output_path.clone() {
+                p.1.full_cache_path = Some(
+                    self.config
+                        .page_cache_dir()
+                        .join(rel_output_path.strip_prefix("/").unwrap()),
+                );
+                p.1.full_output_path = Some(
+                    self.config
+                        .output_dir()
+                        .join(rel_output_path.strip_prefix("/").unwrap()),
+                );
+            };
+        });
+    }
+
+    pub fn toggle_cached_files(&mut self) {
+        self.pages.iter().for_each(|mut p| {
+            if let Some(rel_output_path) = &p.1.rel_output_path {
+                let output_path = self
+                    .config
+                    .paths
+                    .get("output_root")
+                    .unwrap()
+                    .join(rel_output_path);
+                dbg!(output_path);
+            };
+        })
+    }
+
     //
 }
 
@@ -539,3 +569,7 @@ pub fn optimize_png(input: &PathBuf, output: &PathBuf) -> Result<()> {
     encoder.encode()?;
     Ok(())
 }
+
+// pub fn is_cache_stale(source_file: &PathBuf, cache_file: &PathBuf) -> bool {
+//     true
+// }
