@@ -150,8 +150,13 @@ fn check_templates(site_config: &SiteConfig) {
 #[instrument(skip(site_config))]
 fn build_site(site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
-    if let Ok(builder) = Builder::new(site_config.clone()) {
+    if let Ok(mut builder) = Builder::new(site_config.clone()) {
         let _ = builder.create_cache_db_if_necessary();
+        let _ = builder.load_cached_pages();
+        let _ = builder.load_source_files();
+        let _ = builder.generate_missing_asts();
+        //let _ = builder.make_site_object();
+        //dbg!(builder.pages);
     }
 
     // let mut site = Site::new(site_config.clone());

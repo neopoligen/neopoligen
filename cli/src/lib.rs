@@ -6,7 +6,7 @@ pub mod error;
 pub mod file_watcher;
 pub mod og_image;
 pub mod page;
-pub mod page_cache;
+pub mod page_v2;
 pub mod section;
 pub mod sections;
 pub mod site;
