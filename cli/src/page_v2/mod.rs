@@ -13,6 +13,7 @@ pub struct PageV2 {
     pub config: SiteConfig,
     pub source_path: Option<PathBuf>,
     pub source_content: Option<String>,
+    pub output: Option<String>,
 }
 
 impl PageV2 {
@@ -52,11 +53,13 @@ impl PageV2 {
         config: SiteConfig,
         cached_hash: String,
         _source_ast: String,
+        output: String,
     ) -> PageV2 {
         PageV2 {
             ast: vec![], // TODO: load in the cached AST here
             cached_hash: Some(cached_hash),
             config,
+            output: Some(output),
             source_path: Some(PathBuf::from(source_path)),
             source_content: None,
         }
@@ -71,17 +74,22 @@ impl PageV2 {
             ast: vec![],
             cached_hash: None,
             config,
+            output: None,
             source_path: Some(source_path),
             source_content: Some(source_content),
         }
     }
 
     pub fn rel_file_path(&self) -> Option<PathBuf> {
-        Some(
-            PathBuf::from(self.config.default_language.clone())
-                .join(self.id().unwrap())
-                .join("index.html"),
-        )
+        if let Some(id) = self.id() {
+            Some(
+                PathBuf::from(self.config.default_language.clone())
+                    .join(id)
+                    .join("index.html"),
+            )
+        } else {
+            None
+        }
     }
 
     // pub fn hash(&self) -> String {

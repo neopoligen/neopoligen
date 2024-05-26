@@ -90,13 +90,15 @@ impl Builder {
                     page_id => p.1.id()
                 )) {
                     Ok(output) => {
-                        p.1.source_content = Some(output);
+                        p.1.output = Some(output);
                     }
                     Err(_) => {
-                        p.1.source_content = None;
+                        // TODO: Provide error handling here
+                        p.1.output = None;
                     }
                 }
             } else {
+                // TODO: Provide error handling here
                 event!(Level::ERROR, "Could not get template: {}", template_name);
             }
         });
@@ -154,7 +156,11 @@ impl Builder {
 
     pub fn output_content_files(&self) -> Result<()> {
         self.pages.iter().for_each(|p| {
-            // let output_path = self.config.output_dir().join(p.1.rel_file_path());
+            if let (Some(rel_file_path), Some(output)) = (p.1.rel_file_path(), p.1.output.clone()) {
+                let output_path = self.config.output_dir().join(rel_file_path);
+                // TODO: Add error handling here
+                let _ = write_file_with_mkdir(&output_path, &output);
+            }
         });
         Ok(())
     }
@@ -196,4 +202,17 @@ pub fn trim_empty_lines(source: &str) -> String {
         }
     });
     trimmed_front.trim_end().to_string()
+}
+
+fn write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
+    match path.parent() {
+        Some(parent_dir) => match fs::create_dir_all(parent_dir) {
+            Ok(_) => match fs::write(path, content) {
+                Ok(_) => Ok(()),
+                Err(e) => Err(e.to_string()),
+            },
+            Err(e) => Err(e.to_string()),
+        },
+        None => Err("Could not make directory".to_string()),
+    }
 }

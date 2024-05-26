@@ -21,6 +21,7 @@ Mock File 1 With AST
             ast: vec![],
             cached_hash: None,
             config: SiteConfig::mock1(),
+            output: None,
             source_path: Some(PathBuf::from("/mock/root/content/some-file.neo")),
             source_content: Some(content),
         };
