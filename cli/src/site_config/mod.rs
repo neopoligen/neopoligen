@@ -63,6 +63,9 @@ impl SiteConfig {
     pub fn og_images_dir(&self) -> PathBuf {
         self.output_dir().clone().join("og-images")
     }
+    pub fn og_images_cache_dir(&self) -> PathBuf {
+        self.cache_dir().clone().join("og-images")
+    }
     pub fn output_dir(&self) -> PathBuf {
         self.project_root.clone().unwrap().join("docs")
     }

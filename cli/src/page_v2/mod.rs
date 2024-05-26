@@ -3,6 +3,7 @@ pub mod mocks;
 use crate::ast::ast;
 use crate::section::Section;
 use crate::site_config::SiteConfig;
+use crate::span::Span;
 use serde::Deserialize;
 use serde::Serialize;
 use std::path::PathBuf;
@@ -18,6 +19,40 @@ pub struct PageV2 {
 }
 
 impl PageV2 {
+    // DEPRECATED
+    // pub fn new_from_cache(
+    //     source_path: String,
+    //     config: SiteConfig,
+    //     cached_hash: String,
+    //     _source_ast: String,
+    //     output: String,
+    // ) -> PageV2 {
+    //     PageV2 {
+    //         ast: vec![], // TODO: load in the cached AST here
+    //         cached_hash: Some(cached_hash),
+    //         config,
+    //         output: Some(output),
+    //         source_path: Some(PathBuf::from(source_path)),
+    //         source_content: None,
+    //     }
+    // }
+    pub fn new_from_filesystem(
+        source_path: PathBuf,
+        config: SiteConfig,
+        source_content: String,
+    ) -> PageV2 {
+        PageV2 {
+            ast: vec![],
+            cached_hash: None,
+            config,
+            output: None,
+            source_path: Some(source_path),
+            source_content: Some(source_content),
+        }
+    }
+}
+
+impl PageV2 {
     pub fn generate_ast(&mut self, config: &SiteConfig) {
         match ast(
             &self.source_content.clone().unwrap(),
@@ -26,6 +61,14 @@ impl PageV2 {
         ) {
             Ok(ast) => self.ast = ast,
             Err(_) => {}
+        }
+    }
+
+    pub fn hash(&self) -> Option<String> {
+        if let Some(content) = &self.source_content {
+            Some(sha256::digest(content))
+        } else {
+            None
         }
     }
 
@@ -49,35 +92,20 @@ impl PageV2 {
         })
     }
 
-    // pub fn new_from_cache(
-    //     source_path: String,
-    //     config: SiteConfig,
-    //     cached_hash: String,
-    //     _source_ast: String,
-    //     output: String,
-    // ) -> PageV2 {
-    //     PageV2 {
-    //         ast: vec![], // TODO: load in the cached AST here
-    //         cached_hash: Some(cached_hash),
-    //         config,
-    //         output: Some(output),
-    //         source_path: Some(PathBuf::from(source_path)),
-    //         source_content: None,
-    //     }
-    // }
-
-    pub fn new_from_filesystem(
-        source_path: PathBuf,
-        config: SiteConfig,
-        source_content: String,
-    ) -> PageV2 {
-        PageV2 {
-            ast: vec![],
-            cached_hash: None,
-            config,
-            output: None,
-            source_path: Some(source_path),
-            source_content: Some(source_content),
+    pub fn plain_text_from_spans(spans: &Vec<Span>) -> Option<String> {
+        let strings = spans
+            .iter()
+            .filter_map(|s| match s {
+                Span::WordPart { text, .. } => Some(text.to_string()),
+                Span::Space { .. } => Some(" ".to_string()),
+                Span::KnownSpan { spans, .. } => PageV2::plain_text_from_spans(&spans),
+                _ => None,
+            })
+            .collect::<Vec<String>>();
+        if strings.len() > 0 {
+            Some(strings.join(""))
+        } else {
+            None
         }
     }
 
@@ -119,11 +147,32 @@ impl PageV2 {
         }
     }
 
-    pub fn hash(&self) -> Option<String> {
-        if let Some(content) = &self.source_content {
-            Some(sha256::digest(content))
-        } else {
-            None
-        }
+    pub fn title_as_plain_text(&self) -> Option<String> {
+        self.title_from_title_section()
     }
+
+    pub fn title_from_title_section(&self) -> Option<String> {
+        self.ast.iter().find_map(|sec_enum| match sec_enum {
+            Section::Basic {
+                r#type, children, ..
+            } => {
+                if *r#type == String::from("title") {
+                    if children.len() > 0 {
+                        if let Section::Block { spans, .. } = &children[0] {
+                            PageV2::plain_text_from_spans(&spans)
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            }
+            _ => None,
+        })
+    }
+
+    //
 }

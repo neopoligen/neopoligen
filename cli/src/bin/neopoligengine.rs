@@ -162,7 +162,7 @@ fn build_site(site_config: &SiteConfig) {
             Ok(_) => (),
             Err(e) => println!("{:?}", e),
         }
-        // let _ = site.make_og_images();
+        let _ = builder.make_og_images();
         let _ = builder.copy_theme_assets();
         // let _ = site.copy_images();
 
