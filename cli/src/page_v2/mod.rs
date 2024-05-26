@@ -4,6 +4,7 @@ use crate::ast::ast;
 use crate::section::Section;
 use crate::site_config::SiteConfig;
 use crate::span::Span;
+use regex::Regex;
 use serde::Deserialize;
 use serde::Serialize;
 use std::path::PathBuf;
@@ -67,6 +68,15 @@ impl PageV2 {
     pub fn hash(&self) -> Option<String> {
         if let Some(content) = &self.source_content {
             Some(sha256::digest(content))
+        } else {
+            None
+        }
+    }
+
+    pub fn href(&self) -> Option<String> {
+        if let (Some(rel_path), Some(title)) = (self.rel_file_path(), self.title_for_url()) {
+            let p = PathBuf::from("/").join(rel_path.parent().unwrap());
+            Some(format!("{}/?{}", p.display(), title))
         } else {
             None
         }
@@ -158,6 +168,23 @@ impl PageV2 {
             Some(title)
         } else {
             Some(self.id().unwrap())
+        }
+    }
+
+    pub fn title_for_url(&self) -> Option<String> {
+        if let Some(original) = self.title_as_plain_text() {
+            let re1 = Regex::new(r"\W").unwrap();
+            let re2 = Regex::new(r"-+").unwrap();
+            let re3 = Regex::new(r"^-").unwrap();
+            let re4 = Regex::new(r"-$").unwrap();
+            let mut updated = original.to_lowercase();
+            updated = re1.replace_all(&updated, "-").to_string();
+            updated = re2.replace_all(&updated, "-").to_string();
+            updated = re3.replace_all(&updated, "").to_string();
+            updated = re4.replace_all(&updated, "").to_string();
+            Some(updated.to_string())
+        } else {
+            None
         }
     }
 

@@ -3,6 +3,14 @@ use pretty_assertions::assert_eq;
 use std::path::PathBuf;
 
 #[test]
+fn href_basic() {
+    let p = PageV2::mock_6_url_title_parsing();
+    let left = "/en/abcd1234/?another-url-42-title".to_string();
+    let right = p.href().unwrap();
+    assert_eq!(left, right)
+}
+
+#[test]
 fn id_basic() {
     let p = PageV2::mock_1_with_ast();
     let left = "abcd1234".to_string();
@@ -63,5 +71,21 @@ fn title_as_plain_text_from_id() {
     let p = PageV2::mock_5_no_title();
     let left = "echo8171".to_string();
     let right = p.title_as_plain_text().unwrap();
+    assert_eq!(left, right)
+}
+
+#[test]
+fn title_for_url_basic() {
+    let p = PageV2::mock_1_with_ast();
+    let left = "mock-file-1-with-ast".to_string();
+    let right = p.title_for_url().unwrap();
+    assert_eq!(left, right)
+}
+
+#[test]
+fn title_for_url_deal_with_chars_and_multi_spaces() {
+    let p = PageV2::mock_6_url_title_parsing();
+    let left = "another-url-42-title".to_string();
+    let right = p.title_for_url().unwrap();
     assert_eq!(left, right)
 }

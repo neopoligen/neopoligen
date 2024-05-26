@@ -130,5 +130,26 @@ title is found
         p
     }
 
+    pub fn mock_6_url_title_parsing() -> PageV2 {
+        let content = r#"
+-- metadata
+-- id: abcd1234
+-- date: 2024-05-20
+-- title: - Another ' URL 42 ~ title -
+"#
+        .trim_start()
+        .to_string();
+        let mut p = PageV2 {
+            ast: vec![],
+            config: SiteConfig::mock1(),
+            output: None,
+            source_path: Some(PathBuf::from("/mock/root/content/no-title.neo")),
+            source_content: Some(content),
+        };
+        let config = SiteConfig::mock1();
+        p.generate_ast(&config);
+        p
+    }
+
     //
 }
