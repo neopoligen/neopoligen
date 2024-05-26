@@ -154,8 +154,10 @@ impl PageV2 {
             Some(title)
         } else if let Some(title) = self.title_from_any_section() {
             Some(title)
+        } else if let Some(title) = self.title_from_first_few_words() {
+            Some(title)
         } else {
-            None
+            Some(self.id().unwrap())
         }
     }
 
@@ -166,6 +168,28 @@ impl PageV2 {
                 _ => None,
             }
             .cloned()
+        })
+    }
+
+    pub fn title_from_first_few_words(&self) -> Option<String> {
+        self.ast.iter().find_map(|sec_enum| match sec_enum {
+            Section::Basic { children, .. } => {
+                if children.len() > 0 {
+                    if let Section::Block { spans, .. } = &children[0] {
+                        if let Some(full_block) = self.plain_text_from_spans(&spans) {
+                            let words = full_block.split(" ").take(9).collect::<Vec<&str>>();
+                            Some(words.join(" "))
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            }
+            _ => None,
         })
     }
 

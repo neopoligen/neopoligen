@@ -72,12 +72,57 @@ Some text for the bookmark
 "#
         .trim_start()
         .to_string();
-
         let mut p = PageV2 {
             ast: vec![],
             config: SiteConfig::mock1(),
             output: None,
             source_path: Some(PathBuf::from("/mock/root/content/sub-dir/bookmakr.neo")),
+            source_content: Some(content),
+        };
+        let config = SiteConfig::mock1();
+        p.generate_ast(&config);
+        p
+    }
+
+    pub fn mock_4_title_from_text() -> PageV2 {
+        let content = r#"
+-- div 
+
+This is to test the title that comes in from the
+first few words of the first section if no other
+title is found
+
+-- metadata
+-- id: delta7262 
+-- data: 2024-05-22T10:11:12
+"#
+        .trim_start()
+        .to_string();
+        let mut p = PageV2 {
+            ast: vec![],
+            config: SiteConfig::mock1(),
+            output: None,
+            source_path: Some(PathBuf::from("/mock/root/content/title-from-body-text.neo")),
+            source_content: Some(content),
+        };
+        let config = SiteConfig::mock1();
+        p.generate_ast(&config);
+        p
+    }
+
+    pub fn mock_5_no_title() -> PageV2 {
+        let content = r#"
+-- metadata
+-- id: echo8171 
+-- data: 2024-05-22T10:11:12
+"#
+        .trim_start()
+        .to_string();
+        let mut p = PageV2 {
+            ast: vec![],
+            config: SiteConfig::mock1(),
+            output: None,
+            source_path: Some(PathBuf::from("/mock/root/content/no-title.neo")),
             source_content: Some(content),
         };
         let config = SiteConfig::mock1();

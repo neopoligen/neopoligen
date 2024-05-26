@@ -49,3 +49,19 @@ fn title_as_plain_text_from_any_section() {
     let right = p.title_as_plain_text().unwrap();
     assert_eq!(left, right)
 }
+
+#[test]
+fn title_as_plain_text_from_first_few_words() {
+    let p = PageV2::mock_4_title_from_text();
+    let left = "This is to test the title that comes in".to_string();
+    let right = p.title_as_plain_text().unwrap();
+    assert_eq!(left, right)
+}
+
+#[test]
+fn title_as_plain_text_from_id() {
+    let p = PageV2::mock_5_no_title();
+    let left = "echo8171".to_string();
+    let right = p.title_as_plain_text().unwrap();
+    assert_eq!(left, right)
+}
