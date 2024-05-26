@@ -3,7 +3,7 @@ pub mod object;
 use crate::{page_v2::PageV2, site_config::SiteConfig};
 use minijinja::value::Value;
 use minijinja::Error;
-use rusqlite::config;
+// use rusqlite::config;
 use serde::Serialize;
 use std::collections::BTreeMap;
 use std::path::PathBuf;
@@ -31,7 +31,12 @@ impl SiteV2 {
 
 impl SiteV2 {
     pub fn base_url(&self) -> Result<Value, Error> {
-        Ok(Value::from(&self.config.base_url))
+        if let Some(url) = &self.config.base_url {
+            Ok(Value::from(url))
+        } else {
+            // TODO: Make this an Error
+            Ok(Value::from(""))
+        }
     }
 
     pub fn config(&self) -> Result<Value, Error> {
@@ -54,8 +59,8 @@ impl SiteV2 {
     pub fn page_permalink(&self, args: &[Value]) -> Result<Value, Error> {
         match &self.pages.get(&args[0].to_string()) {
             Some(page) => {
-                if let Some(href) = page.href() {
-                    Ok(Value::from(href))
+                if let Some(permalink) = page.permalink() {
+                    Ok(Value::from(permalink))
                 } else {
                     Ok(Value::from(""))
                 }

@@ -17,7 +17,7 @@ pub struct SiteConfig {
     // There should not be a trailing slash on this since
     // the page hrefs all start with a slash for absolute
     // URLs
-    pub base_url: String,
+    pub base_url: Option<String>,
 
     #[serde(default = "default_language")]
     pub default_language: String,
@@ -27,8 +27,6 @@ pub struct SiteConfig {
 
     pub project_root: Option<PathBuf>,
 
-    //#[serde(default = "empty_dirs")]
-    //pub dirs: SiteDirs
     #[serde(default = "empty_sections")]
     pub sections: Sections,
 
@@ -48,6 +46,13 @@ pub struct SiteConfig {
 // }
 
 impl SiteConfig {
+    pub fn base_url(&self) -> Option<String> {
+        if let Some(base_url) = &self.base_url {
+            Some(base_url.strip_suffix("/").unwrap().to_string())
+        } else {
+            None
+        }
+    }
     pub fn cache_db_path(&self) -> PathBuf {
         self.cache_dir().join("cache.sqlite")
     }

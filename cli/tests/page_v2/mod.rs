@@ -19,6 +19,14 @@ fn id_basic() {
 }
 
 #[test]
+fn permalink_basic() {
+    let p = PageV2::mock_1_with_ast();
+    let left = "https://www.example.com/en/abcd1234/?mock-file-1-with-ast".to_string();
+    let right = p.permalink().unwrap();
+    assert_eq!(left, right)
+}
+
+#[test]
 fn rel_file_path_basic() {
     let p = PageV2::mock_1_with_ast();
     let left = PathBuf::from("en/abcd1234/index.html");

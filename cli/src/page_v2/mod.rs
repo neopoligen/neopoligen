@@ -20,23 +20,6 @@ pub struct PageV2 {
 }
 
 impl PageV2 {
-    // DEPRECATED
-    // pub fn new_from_cache(
-    //     source_path: String,
-    //     config: SiteConfig,
-    //     cached_hash: String,
-    //     _source_ast: String,
-    //     output: String,
-    // ) -> PageV2 {
-    //     PageV2 {
-    //         ast: vec![], // TODO: load in the cached AST here
-    //         cached_hash: Some(cached_hash),
-    //         config,
-    //         output: Some(output),
-    //         source_path: Some(PathBuf::from(source_path)),
-    //         source_content: None,
-    //     }
-    // }
     pub fn new_from_filesystem(
         source_path: PathBuf,
         config: SiteConfig,
@@ -100,6 +83,14 @@ impl PageV2 {
                 None
             }
         })
+    }
+
+    pub fn permalink(&self) -> Option<String> {
+        if let (Some(base_url), Some(href)) = (&self.config.base_url(), &self.href()) {
+            Some(format!("{}{}", base_url, href))
+        } else {
+            None
+        }
     }
 
     pub fn plain_text_from_spans(&self, spans: &Vec<Span>) -> Option<String> {
