@@ -21,16 +21,31 @@ use walkdir::WalkDir;
 pub struct Builder {
     pub pages: BTreeMap<PathBuf, PageV2>,
     pub config: SiteConfig,
-    // pub pages: Vec<PageV2>,
 }
 
 impl Builder {
-    pub fn create_cache_db_if_necessary(&self) -> Result<()> {
-        let conn = Connection::open(self.config.cache_db_path())?;
-        conn.execute(
-            "CREATE TABLE IF NOT EXISTS page_archive (path TEXT, page TEXT)",
-            (),
-        )?;
+    pub fn new(config: SiteConfig) -> Result<Builder> {
+        Ok(Builder {
+            pages: BTreeMap::new(),
+            config,
+        })
+    }
+}
+
+impl Builder {
+    pub fn copy_theme_assets(&self) -> Result<(), std::io::Error> {
+        let source_dir = self.config.theme_dir().join(PathBuf::from("files"));
+        let dest_dir = self.config.output_dir().join(PathBuf::from("theme"));
+        for entry in WalkDir::new(&source_dir) {
+            let source_path = entry?.into_path();
+            let dest_path = dest_dir.join(source_path.strip_prefix(&source_dir).unwrap());
+            if source_path.is_dir() {
+                fs::create_dir_all(dest_path)?;
+            } else {
+                let data = std::fs::read(source_path)?;
+                std::fs::write(dest_path, &data)?;
+            }
+        }
         Ok(())
     }
 
@@ -110,7 +125,12 @@ impl Builder {
 
     #[instrument(skip(self))]
     pub fn load_cached_pages(&mut self) -> Result<()> {
+        event!(Level::INFO, "Loading Cached Files");
         let conn = Connection::open(self.config.cache_db_path())?;
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS page_archive (path TEXT, page TEXT)",
+            (),
+        )?;
         let mut stmt = conn.prepare("SELECT path, page FROM page_archive")?;
         let mut rows = stmt.query([])?;
         while let Some(row) = rows.next()? {
@@ -156,13 +176,6 @@ impl Builder {
                 }
             });
         Ok(())
-    }
-
-    pub fn new(config: SiteConfig) -> Result<Builder> {
-        Ok(Builder {
-            pages: BTreeMap::new(),
-            config,
-        })
     }
 
     pub fn output_content_files(&self) -> Result<()> {

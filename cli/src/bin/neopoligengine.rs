@@ -151,7 +151,7 @@ fn check_templates(site_config: &SiteConfig) {
 fn build_site(site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
     if let Ok(mut builder) = Builder::new(site_config.clone()) {
-        let _ = builder.create_cache_db_if_necessary();
+        // let _ = empty_dir(&site_config.output_dir());
         let _ = builder.load_cached_pages();
         let _ = builder.load_source_files();
         let _ = builder.generate_missing_asts();
@@ -161,10 +161,14 @@ fn build_site(site_config: &SiteConfig) {
             Ok(_) => (),
             Err(e) => println!("{:?}", e),
         }
+        // let _ = site.make_og_images();
+        let _ = builder.copy_theme_assets();
+        // let _ = site.copy_images();
 
         //dbg!(builder.pages);
     }
 
+    // DEPRECATED
     // let mut site = Site::new(site_config.clone());
     // let mut page_errors: Vec<Page> = vec![];
     // let mut render_errors: BTreeMap<PathBuf, String> = BTreeMap::new();
@@ -176,6 +180,7 @@ fn build_site(site_config: &SiteConfig) {
     // site.set_page_paths();
     // site.toggle_cached_files();
 
+    // DEPRECATED
     //event!(Level::INFO, "Generating Pages Into Cache");
     //site.generate_content_pages(&mut render_errors)
     //    .iter()
@@ -188,10 +193,12 @@ fn build_site(site_config: &SiteConfig) {
     //        let _ = write_file_with_mkdir(&p.0, &p.2);
     //    });
 
+    // DEPRECATED
     // event!(Level::INFO, "Publishing Cache");
     // site.pages.iter().for_each(|p| {
     // });
 
+    // DEPRECATED
     //event!(Level::INFO, "Listing Page Errors");
     //page_errors.iter().for_each(|p| {
     //    let error_file_path = &site
@@ -209,6 +216,7 @@ fn build_site(site_config: &SiteConfig) {
     //    let _ = write_file_with_mkdir(error_file_path, &p.error.clone().unwrap().to_string());
     //});
 
+    // DEPRECATED
     // event!(Level::INFO, "Listing Render Errors");
     // render_errors.iter().for_each(|p| {
     //     let error_file_path = &site
@@ -225,6 +233,7 @@ fn build_site(site_config: &SiteConfig) {
     //     let _ = write_file_with_mkdir(error_file_path, p.1);
     // });
 
+    // DEPRECATED
     // let _ = site.make_og_images();
     // let _ = site.copy_theme_assets();
     // let _ = site.copy_images();
