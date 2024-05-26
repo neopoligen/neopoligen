@@ -67,6 +67,9 @@ impl SiteConfig {
     pub fn page_cache_dir(&self) -> PathBuf {
         self.cache_dir().join("pages")
     }
+    pub fn custom_og_images_dir(&self) -> PathBuf {
+        self.project_root.clone().unwrap().join("og-images")
+    }
     pub fn tmp_dir(&self) -> PathBuf {
         self.cache_dir().join("tmp")
     }

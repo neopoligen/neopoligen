@@ -197,12 +197,32 @@ impl Builder {
     }
 
     #[instrument(skip(self))]
+    pub fn make_sure_dirs_exist(&self) -> Result<()> {
+        event!(Level::INFO, "Making Sure Directories Exist");
+        let _ = fs::create_dir_all(self.config.custom_og_images_dir());
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn make_og_images(&self) -> Result<()> {
         event!(Level::INFO, "Making OG Images");
         let _ = fs::create_dir_all(self.config.tmp_dir());
         let _ = fs::create_dir_all(self.config.og_images_cache_dir());
         let _ = fs::create_dir_all(self.config.og_images_dir());
         let tmp_path = self.config.tmp_dir().join("og-image.png");
+
+        let custom_og_images = get_files_with_extension_in_a_single_directory(
+            &self.config.custom_og_images_dir(),
+            "jpg",
+        );
+
+        for custom_image in custom_og_images {
+            let cache_path = self
+                .config
+                .og_images_cache_dir()
+                .join(custom_image.file_name().unwrap());
+            fs::copy(&custom_image, &cache_path)?;
+        }
 
         for p in &self.pages {
             if let (Some(id), Some(title)) = (&p.1.id(), &p.1.title_as_plain_text()) {
@@ -339,6 +359,31 @@ body {
     }
 
     //
+}
+
+pub fn get_files_with_extension_in_a_single_directory(
+    dir: &PathBuf,
+    extension: &str,
+) -> Vec<PathBuf> {
+    fs::read_dir(dir)
+        .unwrap()
+        .into_iter()
+        .filter(|p| {
+            if p.as_ref().unwrap().path().is_file() {
+                true
+            } else {
+                false
+            }
+        })
+        .filter(|p| match p.as_ref().unwrap().path().extension() {
+            Some(ext) => ext == extension,
+            None => false,
+        })
+        .filter_map(|p| match p.as_ref().unwrap().path().strip_prefix(".") {
+            Ok(_) => None,
+            Err(_) => Some(p.as_ref().unwrap().path()),
+        })
+        .collect()
 }
 
 pub fn highlight_code(args: &[Value]) -> String {
