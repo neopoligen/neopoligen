@@ -14,8 +14,10 @@ impl Object for SiteV2 {
         match name {
             "base_url" => self.base_url(),
             "config" => self.config(),
+            "page_href" => self.page_href(args),
             "page_permalink" => self.page_permalink(args),
-            "sections_for_page" => self.sections_for_page(args),
+            "page_sections" => self.page_sections(args),
+            "page_title_as_plain_text" => self.page_title_as_plain_text(args),
             "theme" => self.theme(),
             _ => Ok(Value::from("")),
         }

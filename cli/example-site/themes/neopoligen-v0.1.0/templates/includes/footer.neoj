@@ -12,7 +12,7 @@
 [! if config.debug == true !]
 <code-block2>
 <pre slot="the-code">
-[@ site.pages[page_id].ast|tojson(true) @]
+[@ site.page_sections(page_id)|tojson(true) @]
 </pre>
 </code-block2>
 [! endif !]

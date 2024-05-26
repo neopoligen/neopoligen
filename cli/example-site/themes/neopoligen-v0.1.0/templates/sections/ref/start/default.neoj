@@ -55,8 +55,8 @@
 </p>
 [! elif section.attrs.tlink !]
 <p>
-  <a href="[@ site.pages[section.attrs.tlink].href @]">
-  [@ site.pages[section.attrs.tlink].title_as_plain_text @]
+  <a href="[@ site.page_pref(section.attrs.tlink) @]">
+  [@ site.page_title_as_plain_text(section.attrs.tlink) @]
   </a>
   [!- if section.attrs.subtitle -!]
     [@ ' - ' @][@ section.attrs.subtitle @]

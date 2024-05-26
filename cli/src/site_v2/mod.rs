@@ -38,6 +38,19 @@ impl SiteV2 {
         Ok(Value::from_serialize(&self.config))
     }
 
+    pub fn page_href(&self, args: &[Value]) -> Result<Value, Error> {
+        match &self.pages.get(&args[0].to_string()) {
+            Some(page) => {
+                if let Some(href) = page.href() {
+                    Ok(Value::from(href))
+                } else {
+                    Ok(Value::from(""))
+                }
+            }
+            None => Ok(Value::from("")),
+        }
+    }
+
     pub fn page_permalink(&self, args: &[Value]) -> Result<Value, Error> {
         match &self.pages.get(&args[0].to_string()) {
             Some(page) => {
@@ -51,9 +64,16 @@ impl SiteV2 {
         }
     }
 
-    pub fn sections_for_page(&self, args: &[Value]) -> Result<Value, Error> {
+    pub fn page_sections(&self, args: &[Value]) -> Result<Value, Error> {
         match &self.pages.get(&args[0].to_string()) {
             Some(page) => Ok(Value::from_serialize(&page.ast)),
+            None => Ok(Value::from("")),
+        }
+    }
+
+    pub fn page_title_as_plain_text(&self, args: &[Value]) -> Result<Value, Error> {
+        match &self.pages.get(&args[0].to_string()) {
+            Some(page) => Ok(Value::from_serialize(&page.title_as_plain_text())),
             None => Ok(Value::from("")),
         }
     }
