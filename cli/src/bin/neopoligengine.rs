@@ -154,14 +154,13 @@ fn build_site(site_config: &SiteConfig) {
         let _ = builder.create_cache_db_if_necessary();
         let _ = builder.load_cached_pages();
         let _ = builder.load_source_files();
-        //let _ = builder.generate_missing_asts();
-        //let _ = builder.generate_page_content();
-        //let _ = builder.output_content_files();
-
-        // match builder.update_cache() {
-        //     Ok(_) => (),
-        //     Err(e) => println!("{:?}", e),
-        // }
+        let _ = builder.generate_missing_asts();
+        let _ = builder.generate_page_content();
+        let _ = builder.output_content_files();
+        match builder.update_cache() {
+            Ok(_) => (),
+            Err(e) => println!("{:?}", e),
+        }
 
         //dbg!(builder.pages);
     }

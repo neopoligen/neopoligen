@@ -81,23 +81,28 @@ impl Builder {
                 };
             });
         self.pages.iter_mut().for_each(|p| {
-            let template_name = "pages/post/published.neoj";
-            if let Ok(tmpl) = env.get_template(template_name) {
-                match tmpl.render(context!(
-                    site => site,
-                    page_id => p.1.id()
-                )) {
-                    Ok(output) => {
-                        p.1.output = Some(output);
-                    }
-                    Err(_) => {
+            match p.1.output {
+                Some(_) => {}
+                None => {
+                    let template_name = "pages/post/published.neoj";
+                    if let Ok(tmpl) = env.get_template(template_name) {
+                        match tmpl.render(context!(
+                            site => site,
+                            page_id => p.1.id()
+                        )) {
+                            Ok(output) => {
+                                p.1.output = Some(output);
+                            }
+                            Err(_) => {
+                                // TODO: Provide error handling here
+                                p.1.output = None;
+                            }
+                        }
+                    } else {
                         // TODO: Provide error handling here
-                        p.1.output = None;
+                        event!(Level::ERROR, "Could not get template: {}", template_name);
                     }
                 }
-            } else {
-                // TODO: Provide error handling here
-                event!(Level::ERROR, "Could not get template: {}", template_name);
             }
         });
         Ok(())
@@ -137,14 +142,10 @@ impl Builder {
                         match self.pages.get(&path.clone()) {
                             Some(cache_page) => {
                                 if cache_page.hash() != page.hash() {
-                                    dbg!("replacing");
                                     self.pages.insert(path.clone(), page);
-                                } else {
-                                    dbg!("already have it");
                                 }
                             }
                             None => {
-                                dbg!("adding");
                                 self.pages.insert(path.clone(), page);
                             }
                         }
