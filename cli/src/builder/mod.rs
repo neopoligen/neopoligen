@@ -35,6 +35,14 @@ impl Builder {
 }
 
 impl Builder {
+    pub fn debug_flush_cache(&self) -> Result<()> {
+        // this is a temporary thing to flush the cache until
+        // another way to flush it is set up
+        let conn = Connection::open(self.config.cache_db_path())?;
+        conn.execute("DROP TABLE IF EXISTS page_archive", ())?;
+        Ok(())
+    }
+
     pub fn copy_theme_assets(&self) -> Result<(), std::io::Error> {
         let source_dir = self.config.theme_dir().join(PathBuf::from("files"));
         let dest_dir = self.config.output_dir().join(PathBuf::from("theme"));
@@ -64,7 +72,7 @@ impl Builder {
     #[instrument(skip(self))]
     pub fn generate_page_content(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating Page Content");
-        let site = Value::from_serialize(SiteV2::new(&self.config, &self.pages));
+        let site = Value::from_object(SiteV2::new(&self.config, &self.pages));
         let mut env = Environment::new();
         env.set_debug(true);
         env.add_function("highlight_code", highlight_code);
@@ -111,8 +119,9 @@ impl Builder {
                                 self.last_edit = Some(output.clone());
                                 p.1.output = Some(output);
                             }
-                            Err(_) => {
+                            Err(e) => {
                                 // TODO: Provide error handling here
+                                event!(Level::ERROR, "{}", e);
                                 p.1.output = None;
                             }
                         }

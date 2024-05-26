@@ -5,8 +5,9 @@
   <span class="color-alfa-60">I haven't built an RSS feed yet, but it's on the list</span>
 </div>
 <div class="footer-line">
-  <div class="permalink center">Permalink<br>[@ site.config.base_url @][@ site.pages[page_id].href @]</div>
+  <div class="permalink center">Permalink<br>[@ site.page_permalink(page_id) @]</div>
 </div>
+
 
 [! if config.debug == true !]
 <code-block2>

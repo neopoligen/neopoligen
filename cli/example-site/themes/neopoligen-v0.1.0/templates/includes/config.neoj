@@ -1,6 +1,6 @@
 [! set config = namespace() -!]
-[! set config.theme_name = site.config.theme -!]
-[! set config.theme = site.config.theme_options -!]
+[! set config.theme = site.load_config() -!]
+
 
 [# TODO handle: debug-#]
 [! set config.debug = false -!]
@@ -17,6 +17,7 @@
 [# TODO handle: no-footer -#]
 [! set config.show_footer = true -!]
 
+[#
 [! for section in site.pages[page_id].ast !]
   [! if section.type == "metadata" !]
     [! for flag in section.flags !]
@@ -32,5 +33,5 @@
     [! endfor !]
   [! endif !]
 [! endfor !]
-
+#]
 
