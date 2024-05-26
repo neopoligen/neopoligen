@@ -33,3 +33,11 @@ fn title_as_plain_text_from_title_section() {
     let right = p.title_as_plain_text().unwrap();
     assert_eq!(left, right)
 }
+
+#[test]
+fn title_as_plain_text_from_metadata() {
+    let p = PageV2::mock_2_home_page();
+    let left = "Title From Metadata".to_string();
+    let right = p.title_as_plain_text().unwrap();
+    assert_eq!(left, right)
+}

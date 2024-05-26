@@ -11,7 +11,7 @@ use std::path::PathBuf;
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct PageV2 {
     pub ast: Vec<Section>,
-    pub cached_hash: Option<String>,
+    //pub cached_hash: Option<String>,
     pub config: SiteConfig,
     pub source_path: Option<PathBuf>,
     pub source_content: Option<String>,
@@ -43,7 +43,7 @@ impl PageV2 {
     ) -> PageV2 {
         PageV2 {
             ast: vec![],
-            cached_hash: None,
+            //cached_hash: None,
             config,
             output: None,
             source_path: Some(source_path),
@@ -92,13 +92,13 @@ impl PageV2 {
         })
     }
 
-    pub fn plain_text_from_spans(spans: &Vec<Span>) -> Option<String> {
+    pub fn plain_text_from_spans(&self, spans: &Vec<Span>) -> Option<String> {
         let strings = spans
             .iter()
             .filter_map(|s| match s {
                 Span::WordPart { text, .. } => Some(text.to_string()),
                 Span::Space { .. } => Some(" ".to_string()),
-                Span::KnownSpan { spans, .. } => PageV2::plain_text_from_spans(&spans),
+                Span::KnownSpan { spans, .. } => self.plain_text_from_spans(&spans),
                 _ => None,
             })
             .collect::<Vec<String>>();
@@ -148,7 +148,33 @@ impl PageV2 {
     }
 
     pub fn title_as_plain_text(&self) -> Option<String> {
-        self.title_from_title_section()
+        if let Some(title) = self.title_from_metadata() {
+            Some(title)
+        } else if let Some(title) = self.title_from_title_section() {
+            Some(title)
+        } else {
+            None
+        }
+    }
+
+    fn title_from_metadata(&self) -> Option<String> {
+        self.ast.iter().find_map(|sec_enum| {
+            if let Section::Yaml { r#type, attrs, .. } = sec_enum {
+                if r#type == "metadata" {
+                    attrs.iter().find_map(|attr| {
+                        if attr.0 == "title" {
+                            Some(attr.1.trim().to_string())
+                        } else {
+                            None
+                        }
+                    })
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        })
     }
 
     pub fn title_from_title_section(&self) -> Option<String> {
@@ -159,7 +185,7 @@ impl PageV2 {
                 if *r#type == String::from("title") {
                     if children.len() > 0 {
                         if let Section::Block { spans, .. } = &children[0] {
-                            PageV2::plain_text_from_spans(&spans)
+                            self.plain_text_from_spans(&spans)
                         } else {
                             None
                         }

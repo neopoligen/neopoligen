@@ -21,7 +21,6 @@ Mock File 1 With AST
 
         let mut p = PageV2 {
             ast: vec![],
-            cached_hash: None,
             config: SiteConfig::mock1(),
             output: None,
             source_path: Some(PathBuf::from("/mock/root/content/some-file.neo")),
@@ -41,6 +40,7 @@ Home Page Mock Up
 -- metadata
 -- id: bravo123 
 -- data: 2024-05-20T10:11:12
+-- title: Title From Metadata
 -- path: /
 "#
         .trim_start()
@@ -48,7 +48,6 @@ Home Page Mock Up
 
         let mut p = PageV2 {
             ast: vec![],
-            cached_hash: None,
             config: SiteConfig::mock1(),
             output: None,
             source_path: Some(PathBuf::from("/mock/root/content/home-page.neo")),
