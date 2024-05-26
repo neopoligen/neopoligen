@@ -20,7 +20,7 @@ impl SiteConfig {
         );
 
         SiteConfig {
-            base_url: Some("https://www.example.com/".to_string()),
+            base_url_raw: Some("https://www.example.com/".to_string()),
             default_language: "en".to_string(),
             theme: "mock-config-theme".to_string(),
             theme_options: None,
