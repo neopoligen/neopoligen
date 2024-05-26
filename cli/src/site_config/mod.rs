@@ -38,7 +38,7 @@ pub struct SiteConfig {
 impl SiteConfig {
     pub fn base_url(&self) -> Option<String> {
         if let Some(base_url) = &self.base_url_raw {
-            Some(base_url.strip_suffix("/").unwrap().to_string())
+            Some(base_url.trim_end_matches("/").to_string())
         } else {
             None
         }

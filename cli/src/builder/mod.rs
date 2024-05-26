@@ -267,8 +267,24 @@ impl Builder {
 
     pub fn output_last_edit(&self) -> Result<()> {
         let output_path = self.config.output_dir().join("last-edit/index.html");
+        let no_last_edit_content = r#"<!DOCTYPE html>
+<html><head><style>
+body {
+    background-color: #333;
+    color: #aaa;
+    font-size: 4rem;
+}
+</style></head>
+<body>
+<a href="/">Home</a>
+<p>No edits made yet in this session</p>
+</body>
+</html>"#
+            .to_string();
         if let Some(content) = &self.last_edit {
             let _ = write_file_with_mkdir(&output_path, &content);
+        } else {
+            let _ = write_file_with_mkdir(&output_path, &no_last_edit_content);
         }
         Ok(())
     }

@@ -5,7 +5,7 @@
 
 <script src="/theme/scripts/lite-yt-embed.js"></script>
 
-[! for section in site.pages[page_id].ast !]
+[! for section in site.page_sections(page_id) !]
 [! if section.type == "javascript" !]
 <script [! if section.attrs.type !]type="[@ section.attrs.type @]"[! endif !]>
 [@ section.text @]

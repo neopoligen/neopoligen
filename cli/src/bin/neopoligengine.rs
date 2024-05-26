@@ -86,45 +86,49 @@ async fn main() {
 
 #[instrument(skip(site_config))]
 fn check_templates(site_config: &SiteConfig) {
-    event!(Level::INFO, "Checking Templates");
-    let mut site = Site::new(site_config.clone());
-    let mut page_errors: Vec<Page> = vec![];
-    //let mut render_errors: BTreeMap<PathBuf, String> = BTreeMap::new();
-    let _ = empty_dir(&site.config.paths.get("theme_errors_root").unwrap());
-    site.load_templates();
-    site.load_template_test_files();
-    site.load_template_test_template();
-    site.parse_pages(&mut page_errors);
-    site.find_template_errors().iter().for_each(|tt| {
-        let error_file_path = &site
-            .config
-            .paths
-            .get("theme_errors_root")
-            .unwrap()
-            .join(
-                &tt.page
-                    .source_path
-                    .strip_prefix(&site.config.paths.get("theme_tests_content_root").unwrap())
-                    .unwrap(),
-            )
-            .with_extension("txt");
-        if let Some(render_error) = &tt.render_error {
-            let _ = write_file_with_mkdir(error_file_path, &render_error);
-        } else {
-            let error_text =
-                tt.template_errors
-                    .iter()
-                    .fold("".to_string(), |acc, (expected, got)| {
-                        format!(
-                            "{}### Expected:\n\n{}\n\n\n### Got:\n\n{}\n\n",
-                            acc,
-                            simple_format_html(expected),
-                            simple_format_html(got)
-                        )
-                    });
-            let _ = write_file_with_mkdir(error_file_path, &error_text);
-        }
-    });
+
+    // This is the old way to check template, needs to be updated
+    // to work with site_v2
+
+    //event!(Level::INFO, "Checking Templates");
+    //let mut site = Site::new(site_config.clone());
+    //let mut page_errors: Vec<Page> = vec![];
+    ////let mut render_errors: BTreeMap<PathBuf, String> = BTreeMap::new();
+    //let _ = empty_dir(&site.config.paths.get("theme_errors_root").unwrap());
+    //site.load_templates();
+    //site.load_template_test_files();
+    //site.load_template_test_template();
+    //site.parse_pages(&mut page_errors);
+    //site.find_template_errors().iter().for_each(|tt| {
+    //    let error_file_path = &site
+    //        .config
+    //        .paths
+    //        .get("theme_errors_root")
+    //        .unwrap()
+    //        .join(
+    //            &tt.page
+    //                .source_path
+    //                .strip_prefix(&site.config.paths.get("theme_tests_content_root").unwrap())
+    //                .unwrap(),
+    //        )
+    //        .with_extension("txt");
+    //    if let Some(render_error) = &tt.render_error {
+    //        let _ = write_file_with_mkdir(error_file_path, &render_error);
+    //    } else {
+    //        let error_text =
+    //            tt.template_errors
+    //                .iter()
+    //                .fold("".to_string(), |acc, (expected, got)| {
+    //                    format!(
+    //                        "{}### Expected:\n\n{}\n\n\n### Got:\n\n{}\n\n",
+    //                        acc,
+    //                        simple_format_html(expected),
+    //                        simple_format_html(got)
+    //                    )
+    //                });
+    //        let _ = write_file_with_mkdir(error_file_path, &error_text);
+    //    }
+    //});
 
     // TODO: See if this needs to be pulled back in
     //// render errors for templates
@@ -151,7 +155,7 @@ fn check_templates(site_config: &SiteConfig) {
 fn build_site(site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
     if let Ok(mut builder) = Builder::new(site_config.clone()) {
-        // let _ = empty_dir(&site_config.output_dir());
+        let _ = empty_dir(&site_config.output_dir());
         let _ = builder.debug_flush_cache();
         let _ = builder.load_cached_pages();
         let _ = builder.load_source_files();
