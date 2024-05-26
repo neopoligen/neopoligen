@@ -41,6 +41,7 @@ impl Builder {
     #[instrument(skip(self))]
     pub fn generate_page_content(&mut self) -> Result<()> {
         let site = SiteV2::new(&self.config, &self.pages);
+        dbg!(site);
         Ok(())
     }
 
