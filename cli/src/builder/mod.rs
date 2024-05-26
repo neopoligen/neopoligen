@@ -2,9 +2,17 @@ use crate::page_v2::PageV2;
 use crate::site_config::SiteConfig;
 use crate::site_v2::SiteV2;
 use anyhow::Result;
+use minijinja::context;
+use minijinja::syntax::SyntaxConfig;
+use minijinja::value::Value;
+use minijinja::Environment;
+use regex::Regex;
 use rusqlite::Connection;
 use std::collections::BTreeMap;
 use std::{fs, path::PathBuf};
+use syntect::html::{ClassStyle, ClassedHTMLGenerator};
+use syntect::parsing::SyntaxSet;
+use syntect::util::LinesWithEndings;
 use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 
@@ -40,8 +48,13 @@ impl Builder {
 
     #[instrument(skip(self))]
     pub fn generate_page_content(&mut self) -> Result<()> {
-        let site = SiteV2::new(&self.config, &self.pages);
-        dbg!(site);
+        let site = Value::from_serialize(SiteV2::new(&self.config, &self.pages));
+        let mut env = Environment::new();
+        env.set_debug(true);
+        env.add_function("highlight_code", highlight_code);
+        self.pages.iter_mut().for_each(|p| {
+            dbg!(&p.1.id());
+        });
         Ok(())
     }
 
@@ -97,4 +110,40 @@ impl Builder {
     // }
 
     //
+}
+
+pub fn highlight_code(args: &[Value]) -> String {
+    let code = args[0].to_string();
+    let lang = args[1].to_string();
+    let syntax_set = SyntaxSet::load_defaults_newlines();
+    let syntax = syntax_set
+        .find_syntax_by_token(&lang)
+        .unwrap_or_else(|| syntax_set.find_syntax_plain_text());
+    let mut html_generator =
+        ClassedHTMLGenerator::new_with_class_style(syntax, &syntax_set, ClassStyle::Spaced);
+    for line in LinesWithEndings::from(&trim_empty_lines(&code)) {
+        let _ = html_generator.parse_html_for_line_which_includes_newline(line);
+    }
+    let initial_html = html_generator.finalize();
+    let output_html: Vec<_> = initial_html
+        .lines()
+        .map(|line| format!(r#"<span class="line-marker"></span>{}"#, line))
+        .collect();
+    output_html.join("\n")
+}
+
+pub fn trim_empty_lines(source: &str) -> String {
+    let re = Regex::new(r"\S").unwrap();
+    let trimmed_front = source.split("\n").fold("".to_string(), |acc, l| {
+        if !acc.is_empty() {
+            acc + l + "\n"
+        } else {
+            if re.is_match(l) {
+                l.to_string() + "\n"
+            } else {
+                acc
+            }
+        }
+    });
+    trimmed_front.trim_end().to_string()
 }

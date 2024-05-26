@@ -1,12 +1,12 @@
 pub mod mocks;
 
 use crate::ast::ast;
-use std::path::PathBuf;
-
 use crate::section::Section;
 use crate::site_config::SiteConfig;
+use serde::Serialize;
+use std::path::PathBuf;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
 pub struct PageV2 {
     pub ast: Vec<Section>,
     pub cached_hash: Option<String>,

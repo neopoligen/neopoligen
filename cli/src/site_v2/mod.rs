@@ -1,8 +1,9 @@
 use crate::{page_v2::PageV2, site_config::SiteConfig};
+use serde::Serialize;
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct SiteV2 {
     pub config: SiteConfig,
     pub pages: BTreeMap<String, PageV2>,
