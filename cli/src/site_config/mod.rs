@@ -78,6 +78,9 @@ impl SiteConfig {
             .unwrap()
             .join(PathBuf::from(format!("themes/{}", self.theme)))
     }
+    pub fn templates_dir(&self) -> PathBuf {
+        self.theme_dir().join("templates")
+    }
 
     pub fn load_sections(&mut self) {
         // // define the sections

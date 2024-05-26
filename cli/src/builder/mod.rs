@@ -52,6 +52,37 @@ impl Builder {
         let mut env = Environment::new();
         env.set_debug(true);
         env.add_function("highlight_code", highlight_code);
+        env.set_syntax(
+            SyntaxConfig::builder()
+                .block_delimiters("[!", "!]")
+                .variable_delimiters("[@", "@]")
+                .comment_delimiters("[#", "#]")
+                .build()
+                .unwrap(),
+        );
+
+        WalkDir::new(self.config.templates_dir())
+            .into_iter()
+            .filter(|entry| match entry.as_ref().unwrap().path().extension() {
+                Some(ext) => ext.to_str().unwrap() == "neoj",
+                None => false,
+            })
+            .for_each(|entry| {
+                let path = entry.as_ref().unwrap().path().to_path_buf();
+                match fs::read_to_string(&path) {
+                    Ok(content) => {
+                        let template_name = path.strip_prefix(self.config.templates_dir()).unwrap();
+                        let _ = env.add_template_owned(
+                            template_name.to_string_lossy().to_string(),
+                            content,
+                        );
+                    }
+                    Err(e) => {
+                        event!(Level::ERROR, "{}", e)
+                    }
+                };
+            });
+
         self.pages.iter_mut().for_each(|p| {
             dbg!(&p.1.id());
         });
