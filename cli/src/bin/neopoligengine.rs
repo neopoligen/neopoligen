@@ -157,6 +157,7 @@ fn build_site(site_config: &SiteConfig) {
         let _ = builder.clear_changed_asts();
         let _ = builder.generate_missing_asts();
         let _ = builder.generate_page_content();
+        let _ = builder.output_content_files();
         //dbg!(builder.pages);
     }
 

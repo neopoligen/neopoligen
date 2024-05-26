@@ -10,6 +10,7 @@ use std::path::PathBuf;
 pub struct PageV2 {
     pub ast: Vec<Section>,
     pub cached_hash: Option<String>,
+    pub config: SiteConfig,
     pub source_path: Option<PathBuf>,
     pub source_content: Option<String>,
 }
@@ -46,22 +47,41 @@ impl PageV2 {
         })
     }
 
-    pub fn new_from_cache(source_path: String, cached_hash: String, _source_ast: String) -> PageV2 {
+    pub fn new_from_cache(
+        source_path: String,
+        config: SiteConfig,
+        cached_hash: String,
+        _source_ast: String,
+    ) -> PageV2 {
         PageV2 {
             ast: vec![], // TODO: load in the cached AST here
             cached_hash: Some(cached_hash),
+            config,
             source_path: Some(PathBuf::from(source_path)),
             source_content: None,
         }
     }
 
-    pub fn new_from_filesystem(source_path: PathBuf, source_content: String) -> PageV2 {
+    pub fn new_from_filesystem(
+        source_path: PathBuf,
+        config: SiteConfig,
+        source_content: String,
+    ) -> PageV2 {
         PageV2 {
             ast: vec![],
             cached_hash: None,
+            config,
             source_path: Some(source_path),
             source_content: Some(source_content),
         }
+    }
+
+    pub fn rel_file_path(&self) -> Option<PathBuf> {
+        Some(
+            PathBuf::from(self.config.default_language.clone())
+                .join(self.id().unwrap())
+                .join("index.html"),
+        )
     }
 
     // pub fn hash(&self) -> String {

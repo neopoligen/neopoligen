@@ -61,7 +61,6 @@ impl Builder {
                 .build()
                 .unwrap(),
         );
-
         WalkDir::new(self.config.templates_dir())
             .into_iter()
             .filter(|entry| match entry.as_ref().unwrap().path().extension() {
@@ -83,7 +82,6 @@ impl Builder {
                     }
                 };
             });
-
         self.pages.iter_mut().for_each(|p| {
             let template_name = "pages/post/published.neoj";
             if let Ok(tmpl) = env.get_template(template_name) {
@@ -93,19 +91,9 @@ impl Builder {
                 )) {
                     Ok(output) => {
                         p.1.source_content = Some(output);
-                        //outputs.push((
-                        //p.1.full_cache_path.clone().unwrap(),
-                        //p.1.full_output_path.clone().unwrap(),
-                        //output,
-                        //));
-                        // dbg!(&p.1.rel_output_path);
-                        //outputs.insert(p.0.to_string(), p.clone());
                     }
                     Err(_) => {
                         p.1.source_content = None;
-                        // event!(Level::ERROR, "{}\n{:?}", p.1.source_path.display(), e);
-                        //render_errors.insert(p.0, format!("{:?}", e));
-                        ()
                     }
                 }
             } else {
@@ -142,8 +130,10 @@ impl Builder {
                 let path = entry.as_ref().unwrap().path().to_path_buf();
                 match fs::read_to_string(&path) {
                     Ok(content) => {
-                        self.pages
-                            .insert(path.clone(), PageV2::new_from_filesystem(path, content));
+                        self.pages.insert(
+                            path.clone(),
+                            PageV2::new_from_filesystem(path, self.config.clone(), content),
+                        );
                         ()
                     }
                     Err(e) => {
@@ -162,9 +152,12 @@ impl Builder {
         })
     }
 
-    // pub fn cache_hashes(&self) -> Vec<(PathBuf, String)> {
-    //     vec![]
-    // }
+    pub fn output_content_files(&self) -> Result<()> {
+        self.pages.iter().for_each(|p| {
+            // let output_path = self.config.output_dir().join(p.1.rel_file_path());
+        });
+        Ok(())
+    }
 
     //
 }

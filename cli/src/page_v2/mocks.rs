@@ -20,7 +20,8 @@ Mock File 1 With AST
         let mut p = PageV2 {
             ast: vec![],
             cached_hash: None,
-            source_path: Some(PathBuf::from("/mock-root/contents/some-file.neo")),
+            config: SiteConfig::mock1(),
+            source_path: Some(PathBuf::from("/mock/root/content/some-file.neo")),
             source_content: Some(content),
         };
         let config = SiteConfig::mock1();
