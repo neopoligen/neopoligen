@@ -15,6 +15,7 @@ impl Object for SiteV2 {
             "base_url" => self.base_url(),
             "config" => self.config(),
             "page_href" => self.page_href(args),
+            "page_og_image" => self.page_og_image(args),
             "page_permalink" => self.page_permalink(args),
             "page_sections" => self.page_sections(args),
             "page_title_as_plain_text" => self.page_title_as_plain_text(args),

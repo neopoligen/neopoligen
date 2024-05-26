@@ -19,6 +19,14 @@ fn id_basic() {
 }
 
 #[test]
+fn og_image_basic() {
+    let p = PageV2::mock_1_with_ast();
+    let left = "https://www.example.com/og-images/abcd1234.jpg".to_string();
+    let right = p.og_image().unwrap();
+    assert_eq!(left, right)
+}
+
+#[test]
 fn permalink_basic() {
     let p = PageV2::mock_1_with_ast();
     let left = "https://www.example.com/en/abcd1234/?mock-file-1-with-ast".to_string();

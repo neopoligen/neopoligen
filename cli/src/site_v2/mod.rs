@@ -55,6 +55,19 @@ impl SiteV2 {
         }
     }
 
+    pub fn page_og_image(&self, args: &[Value]) -> Result<Value, Error> {
+        match &self.pages.get(&args[0].to_string()) {
+            Some(page) => {
+                if let Some(og_image) = page.og_image() {
+                    Ok(Value::from(og_image))
+                } else {
+                    Ok(Value::from(""))
+                }
+            }
+            None => Ok(Value::from("")),
+        }
+    }
+
     pub fn page_permalink(&self, args: &[Value]) -> Result<Value, Error> {
         match &self.pages.get(&args[0].to_string()) {
             Some(page) => {

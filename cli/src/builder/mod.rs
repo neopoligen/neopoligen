@@ -1,15 +1,21 @@
+use crate::og_image::*;
 use crate::page_v2::PageV2;
 use crate::site_config::SiteConfig;
 use crate::site_v2::SiteV2;
 use anyhow::Result;
+use image::DynamicImage;
 use minijinja::context;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::value::Value;
 use minijinja::Environment;
 use regex::Regex;
+use rimage::config::{Codec, EncoderConfig};
+use rimage::Decoder;
+use rimage::Encoder;
 use rusqlite::Connection;
 use serde_json;
 use std::collections::BTreeMap;
+use std::fs::File;
 use std::{fs, path::PathBuf};
 use syntect::html::{ClassStyle, ClassedHTMLGenerator};
 use syntect::parsing::SyntaxSet;
@@ -191,67 +197,81 @@ impl Builder {
     }
 
     #[instrument(skip(self))]
-    pub fn make_og_images(&self) {
+    pub fn make_og_images(&self) -> Result<()> {
         event!(Level::INFO, "Making OG Images");
+        let _ = fs::create_dir_all(self.config.tmp_dir());
         let _ = fs::create_dir_all(self.config.og_images_cache_dir());
         let _ = fs::create_dir_all(self.config.og_images_dir());
+        let tmp_path = self.config.tmp_dir().join("og-image.png");
 
-        // self.pages.iter().for_each(|p| {
-        //     if let (Some(id), Some(title)) = (&p.1.id, &p.1.title_as_plain_text) {
-        //         let mut make_image = false;
-        //         let cache_path = og_image_cache_dir.join(format!("{}.png", &id));
-        //         if !cache_path.exists() {
-        //             make_image = true;
-        //         } else {
-        //             if let (Ok(content_metadata), Ok(cache_metadata)) =
-        //                 (fs::metadata(&p.1.source_path), fs::metadata(&cache_path))
-        //             {
-        //                 if let (Ok(content_time), Ok(cache_time)) =
-        //                     (content_metadata.modified(), cache_metadata.modified())
-        //                 {
-        //                     if content_time > cache_time {
-        //                         make_image = true
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //         if make_image {
-        //             // event!(Level::INFO, "Making OG Image: {} - {}", &id, &title);
-        //             let og_image = OgImage {
-        //                 text_areas: vec![
-        //                     OgImageTextArea {
-        //                         color: "#0481c5".to_string(),
-        //                         font_family: "Arial".to_string(),
-        //                         font_size: 20,
-        //                         line_height: 40,
-        //                         max_char_width: 20,
-        //                         max_lines: 2,
-        //                         text: "alanwsmith.com".to_string(),
-        //                         x: 1000,
-        //                         y: 600,
-        //                     },
-        //                     OgImageTextArea {
-        //                         color: "#0481c5".to_string(),
-        //                         font_family: "Arial".to_string(),
-        //                         font_size: 92,
-        //                         line_height: 100,
-        //                         max_char_width: 18,
-        //                         max_lines: 4,
-        //                         text: encode_text(title).to_string(),
-        //                         x: 110,
-        //                         y: 240,
-        //                     },
-        //                 ],
-        //             };
-        //             og_image.render_svg(&cache_path);
-        //             let _ = optimize_png(&cache_path, &cache_path);
-        //         }
-        //         // always copy the image in from cache since the
-        //         // output dir is blown away on each iteration
-        //         let output_path = self.config.og_images_dir().join(format!("{}.png", id));
-        //         let _ = std::fs::copy(&cache_path, output_path);
-        //     }
-        // });
+        for p in &self.pages {
+            if let (Some(id), Some(title)) = (&p.1.id(), &p.1.title_as_plain_text()) {
+                let mut make_image = false;
+                let cache_path = &self
+                    .config
+                    .og_images_cache_dir()
+                    .join(format!("{}.jpg", &id));
+                let output_path = &self.config.og_images_dir().join(format!("{}.png", &id));
+                if !cache_path.exists() {
+                    make_image = true;
+                } else {
+                    if let (Ok(content_metadata), Ok(cache_metadata)) = (
+                        fs::metadata(&p.1.source_path.clone().unwrap()),
+                        fs::metadata(&cache_path),
+                    ) {
+                        if let (Ok(content_time), Ok(cache_time)) =
+                            (content_metadata.modified(), cache_metadata.modified())
+                        {
+                            if content_time > cache_time {
+                                make_image = true
+                            }
+                        }
+                    }
+                }
+                if make_image {
+                    event!(Level::INFO, "Making OG Image: {} - {}", &id, &title);
+                    let og_image = OgImage {
+                        text_areas: vec![
+                            OgImageTextArea {
+                                color: "#0481c5".to_string(),
+                                font_family: "Arial".to_string(),
+                                font_size: 20,
+                                line_height: 40,
+                                max_char_width: 20,
+                                max_lines: 2,
+                                text: "alanwsmith.com".to_string(),
+                                x: 1000,
+                                y: 600,
+                            },
+                            OgImageTextArea {
+                                color: "#0481c5".to_string(),
+                                font_family: "Arial".to_string(),
+                                font_size: 92,
+                                line_height: 100,
+                                max_char_width: 18,
+                                max_lines: 4,
+                                //text: encode_text(title).to_string(),
+                                text: "sadsf".to_string(),
+                                x: 110,
+                                y: 240,
+                            },
+                        ],
+                    };
+                    og_image.render_svg(&tmp_path);
+                    let decoder = Decoder::from_path(&tmp_path)?;
+                    let image = decoder.decode()?;
+                    let config = EncoderConfig::new(Codec::MozJpeg)
+                        .with_quality(80.0)
+                        .unwrap();
+                    let file = File::create(&cache_path)?;
+                    let encoder = Encoder::new(file, DynamicImage::ImageRgba8(image.into()))
+                        .with_config(config);
+                    encoder.encode()?;
+                }
+                let _ = std::fs::copy(&cache_path, &output_path);
+            }
+        }
+        Ok(())
     }
 
     pub fn output_content_files(&self) -> Result<()> {

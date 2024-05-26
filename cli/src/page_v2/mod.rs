@@ -85,6 +85,14 @@ impl PageV2 {
         })
     }
 
+    pub fn og_image(&self) -> Option<String> {
+        if let (Some(base_url), Some(id)) = (&self.config.base_url(), &self.id()) {
+            Some(format!("{}/og-images/{}.jpg", base_url, id))
+        } else {
+            None
+        }
+    }
+
     pub fn permalink(&self) -> Option<String> {
         if let (Some(base_url), Some(href)) = (&self.config.base_url(), &self.href()) {
             Some(format!("{}{}", base_url, href))
@@ -158,7 +166,7 @@ impl PageV2 {
         } else if let Some(title) = self.title_from_first_few_words() {
             Some(title)
         } else {
-            Some(self.id().unwrap())
+            self.id()
         }
     }
 
