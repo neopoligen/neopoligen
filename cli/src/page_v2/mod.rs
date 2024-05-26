@@ -3,10 +3,11 @@ pub mod mocks;
 use crate::ast::ast;
 use crate::section::Section;
 use crate::site_config::SiteConfig;
+use serde::Deserialize;
 use serde::Serialize;
 use std::path::PathBuf;
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct PageV2 {
     pub ast: Vec<Section>,
     pub cached_hash: Option<String>,
@@ -48,22 +49,22 @@ impl PageV2 {
         })
     }
 
-    pub fn new_from_cache(
-        source_path: String,
-        config: SiteConfig,
-        cached_hash: String,
-        _source_ast: String,
-        output: String,
-    ) -> PageV2 {
-        PageV2 {
-            ast: vec![], // TODO: load in the cached AST here
-            cached_hash: Some(cached_hash),
-            config,
-            output: Some(output),
-            source_path: Some(PathBuf::from(source_path)),
-            source_content: None,
-        }
-    }
+    // pub fn new_from_cache(
+    //     source_path: String,
+    //     config: SiteConfig,
+    //     cached_hash: String,
+    //     _source_ast: String,
+    //     output: String,
+    // ) -> PageV2 {
+    //     PageV2 {
+    //         ast: vec![], // TODO: load in the cached AST here
+    //         cached_hash: Some(cached_hash),
+    //         config,
+    //         output: Some(output),
+    //         source_path: Some(PathBuf::from(source_path)),
+    //         source_content: None,
+    //     }
+    // }
 
     pub fn new_from_filesystem(
         source_path: PathBuf,
@@ -118,7 +119,11 @@ impl PageV2 {
         }
     }
 
-    // pub fn hash(&self) -> String {
-    //     sha256::digest(&self.source_content)
-    // }
+    pub fn hash(&self) -> Option<String> {
+        if let Some(content) = &self.source_content {
+            Some(sha256::digest(content))
+        } else {
+            None
+        }
+    }
 }

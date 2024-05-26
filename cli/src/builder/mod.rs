@@ -8,6 +8,7 @@ use minijinja::value::Value;
 use minijinja::Environment;
 use regex::Regex;
 use rusqlite::Connection;
+use serde_json;
 use std::collections::BTreeMap;
 use std::{fs, path::PathBuf};
 use syntect::html::{ClassStyle, ClassedHTMLGenerator};
@@ -24,15 +25,12 @@ pub struct Builder {
 }
 
 impl Builder {
-    pub fn clear_changed_asts(&self) -> Result<()> {
-        // TODO: clear changed ASTs here
-        Ok(())
-    }
-
     pub fn create_cache_db_if_necessary(&self) -> Result<()> {
         let conn = Connection::open(self.config.cache_db_path())?;
         conn.execute(
-            "CREATE TABLE IF NOT EXISTS page_archive (source_path TEXT, cached_hash TEXT, ast TEXT, output_content TEXT)", ())?;
+            "CREATE TABLE IF NOT EXISTS page_archive (path TEXT, page TEXT)",
+            (),
+        )?;
         Ok(())
     }
 
@@ -106,14 +104,16 @@ impl Builder {
     }
 
     #[instrument(skip(self))]
-    pub fn load_cached_pages(&self) -> Result<()> {
+    pub fn load_cached_pages(&mut self) -> Result<()> {
         let conn = Connection::open(self.config.cache_db_path())?;
-        let mut stmt =
-            conn.prepare("SELECT source_path, cached_hash, source_ast FROM page_archive")?;
+        let mut stmt = conn.prepare("SELECT path, page FROM page_archive")?;
         let mut rows = stmt.query([])?;
         while let Some(row) = rows.next()? {
-            //let source_path = row.get(0)?.as_path_buf();
-            //dbg!(source_path);
+            let path_string: String = row.get(0)?;
+            let path = PathBuf::from(path_string);
+            let page: String = row.get(1)?;
+            let p: PageV2 = serde_json::from_str(&page.to_string())?;
+            self.pages.insert(path, p);
         }
         Ok(())
     }
@@ -132,11 +132,22 @@ impl Builder {
                 let path = entry.as_ref().unwrap().path().to_path_buf();
                 match fs::read_to_string(&path) {
                     Ok(content) => {
-                        self.pages.insert(
-                            path.clone(),
-                            PageV2::new_from_filesystem(path, self.config.clone(), content),
-                        );
-                        ()
+                        let page =
+                            PageV2::new_from_filesystem(path.clone(), self.config.clone(), content);
+                        match self.pages.get(&path.clone()) {
+                            Some(cache_page) => {
+                                if cache_page.hash() != page.hash() {
+                                    dbg!("replacing");
+                                    self.pages.insert(path.clone(), page);
+                                } else {
+                                    dbg!("already have it");
+                                }
+                            }
+                            None => {
+                                dbg!("adding");
+                                self.pages.insert(path.clone(), page);
+                            }
+                        }
                     }
                     Err(e) => {
                         event!(Level::ERROR, "{}", e)
@@ -150,7 +161,6 @@ impl Builder {
         Ok(Builder {
             pages: BTreeMap::new(),
             config,
-            //pages: vec![],
         })
     }
 
@@ -162,6 +172,36 @@ impl Builder {
                 let _ = write_file_with_mkdir(&output_path, &output);
             }
         });
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn update_cache(&self) -> Result<()> {
+        event!(Level::INFO, "Updating Cache");
+        let mut conn = Connection::open(self.config.cache_db_path())?;
+        conn.execute("DROP TABLE IF EXISTS page_archive", ())?;
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS page_archive (path TEXT, page TEXT)",
+            (),
+        )?;
+        let query = "INSERT INTO page_archive(path, page) VALUES (?1, ?2)";
+        let tx = conn.transaction()?;
+        for p in self.pages.iter() {
+            if let Ok(data) = serde_json::to_string(p.1) {
+                tx.execute(
+                    query,
+                    (
+                        p.1.source_path
+                            .clone()
+                            .unwrap()
+                            .to_string_lossy()
+                            .to_string(),
+                        data,
+                    ),
+                )?;
+            };
+        }
+        tx.commit()?;
         Ok(())
     }
 
