@@ -35,14 +35,6 @@ pub struct SiteConfig {
     pub theme_options: Option<Value>,
 }
 
-// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-// #[serde(tag = "type", rename_all = "lowercase")]
-// pub struct ThemeConfig {
-//     pub name: String,
-//     #[serde(default = "empty_options")]
-//     pub options: Value,
-// }
-
 impl SiteConfig {
     pub fn base_url(&self) -> Option<String> {
         if let Some(base_url) = &self.base_url_raw {
