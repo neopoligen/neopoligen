@@ -1,0 +1,14 @@
+[! if config.use_javascript == true !]
+<script src="/theme/scripts/theme.js"></script>
+<script src="/theme/scripts/components.js"></script>
+[! endif !]
+
+<script src="/theme/scripts/lite-yt-embed.js"></script>
+
+[! for section in site.pages[page_id].ast !]
+[! if section.type == "javascript" !]
+<script [! if section.attrs.type !]type="[@ section.attrs.type @]"[! endif !]>
+[@ section.text @]
+</script>
+[! endif !]
+[! endfor !]

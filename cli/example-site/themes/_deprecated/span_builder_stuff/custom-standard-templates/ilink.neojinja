@@ -1,0 +1,42 @@
+[#- type: standard -#]
+[!- import "macros.neojinja" as theme -!]
+
+[! if site.pages[span.content.flag_attributes[0]] !]
+
+<a href="[@ theme.page_href(site, page_id, span.content.flag_attributes[0]) @]"
+class="page-link
+[@ span.content.key_value_attributes.class -@]
+"
+[!- for attribute in span.content.key_value_attributes -!]
+[@- ' ' -@]
+[! if attribute != 'class' !]
+[@- attribute -@]="[@- span.content.key_value_attributes[attribute] -@]"
+[! endif !]
+[!- endfor -!]
+[!- for flag in span.content.flag_attributes -!]
+[!- if loop.first != true -!]
+[@- ' ' -@]
+[@- flag -@]
+[!- endif -!]
+[!- endfor -!]>
+[!- for span in span.content.spans -!]
+[@- theme.output_spans(site, page_id, span) -@]
+[!- endfor -!]
+</a>
+
+
+[! else !]
+<span class="missing-link">
+[!- for span in span.content.spans -!]
+[@- theme.output_spans(site, page_id, span) -@]
+[!- endfor -!]
+</span>
+[! endif !]
+
+
+
+~~~~~~~~~~
+
+-- metadata
+-- date: 2024-02-03
+-- id: 2bsiloon

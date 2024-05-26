@@ -1,0 +1,22 @@
+-- title
+
+Welcome To The Neopoligen Cookbook 
+
+-- note
+
+Keep the id `2dwmgthu`` which is the same
+as the example-site page so that things
+line up on the `pages/neo-template-macros-example/published.neojinja``
+page for both testing and documentation
+
+The title should be kept as "Welcome To The Neopoligen Cookbook"
+too
+
+And the path needs to be `/``
+
+
+-- metadata
+-- id: 2dwmgthu
+-- path: /
+
+

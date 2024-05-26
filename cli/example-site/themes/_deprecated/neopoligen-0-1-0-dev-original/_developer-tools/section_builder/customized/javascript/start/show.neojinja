@@ -1,0 +1,30 @@
+[!- import "macros.neojinja" as theme -!]
+<section 
+[@ theme.section_attrs(site, page_id, section, ["javascript_show_section", "raw_section", "flow"]) -@]
+>
+
+    [! include "subsections/forward.neojinja" !]
+
+        <code-block>
+            <h3 slot="title">
+                [! if section.content.key_value_attributes.title !]
+                    [@ section.content.key_value_attributes.title @]
+                [! else !]
+                    javascript
+                [! endif !]
+            </h3>
+
+            [! if section.content.key_value_attributes.subtitle !]
+            <div slot="subtitle">[@ section.content.key_value_attributes.subtitle @]</div>
+            [! endif !]
+
+            <div slot="preface">[! include "subsections/preface.neojinja" !]</div>
+
+            <pre slot="code">
+                [! autoescape false !]
+                [@ highlight_code(section.content.category.content.text, "javascript") @]
+                [! endautoescape !]
+            </pre>
+        </code-block>
+
+    [! include "subsections/afterword.neojinja" !]

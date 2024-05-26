@@ -1,0 +1,80 @@
+-- title
+
+footnote with child sections
+
+-- start-template-test
+
+-- p
+
+Footnote^^3^^
+
+-- footnote/
+-- id: 3
+-- title: footnote title 3
+
+some text
+
+-- list/
+
+- a
+
+- b
+
+-- /list
+
+-- /footnote
+
+-- expected-output/
+
+<section class="p-section basic-section flow">
+  <p>Footnote
+    <sup>
+      <a href="#footnote-3" id="footnote-ref-3">3
+      </a>
+    </sup>
+  </p>
+</section>
+<div class="footnote">
+  <div class="footnote-target">
+    <sup>
+      <a href="#footnote-ref-3" id="footnote-3">3
+      </a>
+    </sup>
+  </div>
+  <div class="footnote-content flow">
+    <p>footnote title 3
+    </p>
+    <p>some text
+    </p>
+    <section class="list-section list-section flow " >
+      <ul class="flow">
+        <li>
+          <p>a
+          </p>
+        </li>
+        <li>
+          <p>b
+          </p>
+        </li>
+      </ul>
+    </section>
+  </div>
+</div>
+<div class="footnote-return">
+  <a href="#footnote-ref-3">&#x21EF;
+  </a>
+</div>
+
+-- /expected-output
+
+
+
+
+
+-- metadata
+-- date: 2024-05-21 12:25:54
+-- id: 2gmhepkc
+-- type: release-notes
+-- status: scratch
+
+

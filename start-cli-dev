@@ -1,9 +1,0 @@
-#!/bin/bash
-
-watchexec\
-  -E NEOENV=dev\
-  -e rs,neojinja,neo\
-  -r\
-  -c\
-  --workdir=cli\
-  ./helpers/do-dev-test-run

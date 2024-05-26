@@ -1,0 +1,8 @@
+#!/bin/bash
+
+watchexec\
+  --project-origin .\
+  -w "../cli/example-site/themes/neopoligen-v0.1.0/developer-tools/section_builder"\
+  --workdir "../cli/example-site/themes/neopoligen-v0.1.0/developer-tools/section_builder"\
+  -e rs,neoj,txt\
+  ./build_sections.rs

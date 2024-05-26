@@ -1,0 +1,64 @@
+-- title
+
+footnote - multiple paragraphs
+
+
+-- start-template-test
+
+-- p
+
+Footnote^^2^^
+
+-- footnote
+-- id: 2
+-- title: footnote title 
+
+content of footnote
+
+second paragraph
+
+-- expected-output/
+
+<section class="p-section basic-section flow">
+  <p>Footnote
+    <sup>
+      <a href="#footnote-2" id="footnote-ref-2">2
+      </a>
+    </sup>
+  </p>
+</section>
+<div class="footnote">
+  <div class="footnote-target">
+    <sup>
+      <a href="#footnote-ref-2" id="footnote-2">2
+      </a>
+    </sup>
+  </div>
+  <div class="footnote-content flow">
+    <p>footnote title
+    </p>
+    <p>content of footnote
+    </p>
+    <p>second paragraph
+    </p>
+  </div>
+  <div class="footnote-return">
+    <a href="#footnote-ref-2">&#x21EF;
+    </a>
+  </div>
+</div>
+
+-- /expected-output
+
+
+
+
+
+
+-- metadata
+-- date: 2024-05-21 12:23:24
+-- id: 2gmhlxcy
+-- type: release-notes
+-- status: scratch
+
+

@@ -1,0 +1,52 @@
+-- title
+
+Nested List Test
+
+-- start-template-test
+
+-- list/
+
+- alfa
+
+    -- list/
+
+    - bravo
+
+    -- /list
+
+- charlie
+
+-- /list
+
+
+-- expected-output/
+
+<section class="list-section list-section flow " >
+  <ul class="flow">
+    <li>
+      <p>alfa
+      </p>
+      <section class="list-section list-section flow " >
+        <ul class="flow">
+          <li>
+            <p>bravo
+            </p>
+          </li>
+        </ul>
+      </section>
+    </li>
+    <li>
+      <p>charlie
+      </p>
+    </li>
+  </ul>
+</section>
+
+-- /expected-output
+
+
+
+
+-- metadata
+-- date: 2024-05-15 10:22:44
+-- id: 2gvvvnpo

@@ -1,0 +1,23 @@
+-- title
+
+List span test
+
+-- start-template-test
+
+<<link|text|https://www.example.com/>>
+
+-- expected-output/
+
+<p>
+    <a href="https://www.example.com/">text</a>
+</p>
+
+-- /expected-output
+
+
+
+-- metadata
+-- date: 2024-05-21T14:28:46
+-- id: 2gmwaokz
+
+
