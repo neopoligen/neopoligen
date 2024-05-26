@@ -166,10 +166,6 @@ fn empty_paths() -> BTreeMap<String, PathBuf> {
     BTreeMap::new()
 }
 
-// fn empty_options() -> Value {
-//     serde_json::from_str::<Value>("{}").unwrap()
-// }
-
 fn empty_sections() -> Sections {
     Sections {
         basic: vec![],
