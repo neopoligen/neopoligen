@@ -157,6 +157,7 @@ fn build_site(site_config: &SiteConfig) {
         let _ = builder.generate_missing_asts();
         let _ = builder.generate_page_content();
         let _ = builder.output_content_files();
+        let _ = builder.output_last_edit();
         match builder.update_cache() {
             Ok(_) => (),
             Err(e) => println!("{:?}", e),
@@ -441,7 +442,8 @@ async fn catch_file_changes(
     site_config: SiteConfig,
     mut rx: mpsc::Receiver<Vec<PathBuf>>,
 ) {
-    while let Some(_r) = rx.recv().await {
+    while let Some(r) = rx.recv().await {
+        dbg!(r);
         check_templates(&site_config);
         build_site(&site_config);
         event!(Level::INFO, "Reloading Browser");

@@ -21,6 +21,7 @@ use walkdir::WalkDir;
 pub struct Builder {
     pub pages: BTreeMap<PathBuf, PageV2>,
     pub config: SiteConfig,
+    pub last_edit: Option<String>,
 }
 
 impl Builder {
@@ -28,6 +29,7 @@ impl Builder {
         Ok(Builder {
             pages: BTreeMap::new(),
             config,
+            last_edit: None,
         })
     }
 }
@@ -106,6 +108,7 @@ impl Builder {
                             page_id => p.1.id()
                         )) {
                             Ok(output) => {
+                                self.last_edit = Some(output.clone());
                                 p.1.output = Some(output);
                             }
                             Err(_) => {
@@ -186,6 +189,14 @@ impl Builder {
                 let _ = write_file_with_mkdir(&output_path, &output);
             }
         });
+        Ok(())
+    }
+
+    pub fn output_last_edit(&self) -> Result<()> {
+        let output_path = self.config.output_dir().join("last-edit/index.html");
+        if let Some(content) = &self.last_edit {
+            let _ = write_file_with_mkdir(&output_path, &content);
+        }
         Ok(())
     }
 
