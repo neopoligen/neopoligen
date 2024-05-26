@@ -2,7 +2,7 @@
 
 <div class="section-signal">═══ § ═══</div>
 
-[! for section in site.pages[page_id].ast !]
+[! for section in site.sections_for_page(page_id) !]
     [! if section.type == "afterword" !]
         [@ theme.output_section(site, page_id, section) @]
     [! endif !]
@@ -10,7 +10,7 @@
 
 
 [! set ns = namespace(count = 0)!]
-[! for section in site.pages[page_id].ast !]
+[! for section in site.sections_for_page(page_id) !]
     [! if section.type == "endnote" !]
         [! if ns.count == 0 !]
             <section class="endnotes-section flow"> 
@@ -27,7 +27,7 @@
 [! endif !]
 
 [! set ns = namespace(count = 0)!]
-[! for section in site.pages[page_id].ast !]
+[! for section in site.sections_for_page(page_id) !]
     [! if section.type == "footnote" or section.type == "ref" !]
         [! if ns.count == 0 !]
             <section class="footnotes-section flow"> 
@@ -64,4 +64,5 @@ is working in the section above
 </section>
 [! endif !]
 #]
+
 

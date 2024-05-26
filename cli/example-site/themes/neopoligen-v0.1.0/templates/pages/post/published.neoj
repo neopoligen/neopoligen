@@ -3,11 +3,9 @@
 [!- import "includes/theme.neoj" as theme -!]
 
 [!- block title -!]
-[!- for section in site.page_ast(page_id) -!]
+[!- for section in site.sections_for_page(page_id) -!]
 [!- if section.type == "title" -!]
-[#
 [@- theme.output_section(site, page_id, section) -@]
-#]
 [!- endif -!]
 [!- endfor -!]
 [!- endblock -!]

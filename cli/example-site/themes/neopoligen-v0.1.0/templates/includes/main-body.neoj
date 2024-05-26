@@ -1,6 +1,6 @@
 [!- import "includes/theme.neoj" as theme -!]
 
-[!- for section in site.pages[page_id].ast -!]
+[!- for section in site.sections_for_page(page_id) -!]
 [!- if 
   section.type == "forward"  or
   section.type == "tldr" 
@@ -9,7 +9,7 @@
 [!- endif -!]
 [!- endfor -!]
 
-[!- for section in site.pages[page_id].ast -!]
+[!- for section in site.sections_for_page(page_id) -!]
 [!- if 
   section.type != "afterword" and
   section.type != "blurb" and

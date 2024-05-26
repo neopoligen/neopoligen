@@ -3,6 +3,7 @@ pub mod object;
 use crate::{page_v2::PageV2, site_config::SiteConfig};
 use minijinja::value::Value;
 use minijinja::Error;
+use rusqlite::config;
 use serde::Serialize;
 use std::collections::BTreeMap;
 use std::path::PathBuf;
@@ -33,12 +34,8 @@ impl SiteV2 {
         Ok(Value::from(&self.config.base_url))
     }
 
-    pub fn page_ast(&self, args: &[Value]) -> Result<Value, Error> {
-        match &self.pages.get(&args[0].to_string()) {
-            Some(page) => Ok(Value::from_serialize(&page.ast)),
-            // TODO: send errors here
-            None => Ok(Value::from("")),
-        }
+    pub fn config(&self) -> Result<Value, Error> {
+        Ok(Value::from_serialize(&self.config))
     }
 
     pub fn page_permalink(&self, args: &[Value]) -> Result<Value, Error> {
@@ -52,5 +49,16 @@ impl SiteV2 {
             }
             None => Ok(Value::from("")),
         }
+    }
+
+    pub fn sections_for_page(&self, args: &[Value]) -> Result<Value, Error> {
+        match &self.pages.get(&args[0].to_string()) {
+            Some(page) => Ok(Value::from_serialize(&page.ast)),
+            None => Ok(Value::from("")),
+        }
+    }
+
+    pub fn theme(&self) -> Result<Value, Error> {
+        Ok(Value::from_serialize(&self.config.theme_options))
     }
 }

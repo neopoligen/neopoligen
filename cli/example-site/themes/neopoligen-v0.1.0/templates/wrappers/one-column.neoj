@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-[#
-<title>[@ config.theme.site_name_for_title @]</title>
-#]
+<title>[@ site.theme().site_name_for_title @]</title>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -17,14 +15,11 @@
 
 </head>
 <body class="one-column">
-
     [! include "includes/header.neoj" !]
     <main class="flow">
         [! block title !][! endblock !]
-        [#
         [! block body !][! endblock !]
         [! include "includes/endmatter.neoj" !]
-        #]
     </main>
 
     [! include "includes/footer.neoj" !]

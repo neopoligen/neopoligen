@@ -1,6 +1,4 @@
 [! set config = namespace() -!]
-[! set config.theme = site.load_config() -!]
-
 
 [# TODO handle: debug-#]
 [! set config.debug = false -!]

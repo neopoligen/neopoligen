@@ -13,19 +13,13 @@ impl Object for SiteV2 {
     ) -> Result<Value, Error> {
         match name {
             "base_url" => self.base_url(),
-            "page_ast" => self.page_ast(args),
+            "config" => self.config(),
             "page_permalink" => self.page_permalink(args),
-            "load_config" => Ok(Value::from_serialize(&self.config)),
+            "sections_for_page" => self.sections_for_page(args),
+            "theme" => self.theme(),
             _ => Ok(Value::from("")),
         }
     }
-
-    // fn get_value(self: &Arc<Self>, key: &Value) -> Option<Value> {
-    //     match key.as_str().unwrap() {
-    //         "pages" => Some(Value::from_serialize(&self.pages)),
-    //         _ => None,
-    //     }
-    // }
 }
 
 impl Display for SiteV2 {
