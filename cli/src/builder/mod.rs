@@ -48,6 +48,7 @@ impl Builder {
 
     #[instrument(skip(self))]
     pub fn generate_page_content(&mut self) -> Result<()> {
+        event!(Level::INFO, "Generating Page Content");
         let site = Value::from_serialize(SiteV2::new(&self.config, &self.pages));
         let mut env = Environment::new();
         env.set_debug(true);
@@ -84,7 +85,32 @@ impl Builder {
             });
 
         self.pages.iter_mut().for_each(|p| {
-            dbg!(&p.1.id());
+            let template_name = "pages/post/published.neoj";
+            if let Ok(tmpl) = env.get_template(template_name) {
+                match tmpl.render(context!(
+                    site => site,
+                    page_id => p.1.id()
+                )) {
+                    Ok(output) => {
+                        p.1.source_content = Some(output);
+                        //outputs.push((
+                        //p.1.full_cache_path.clone().unwrap(),
+                        //p.1.full_output_path.clone().unwrap(),
+                        //output,
+                        //));
+                        // dbg!(&p.1.rel_output_path);
+                        //outputs.insert(p.0.to_string(), p.clone());
+                    }
+                    Err(_) => {
+                        p.1.source_content = None;
+                        // event!(Level::ERROR, "{}\n{:?}", p.1.source_path.display(), e);
+                        //render_errors.insert(p.0, format!("{:?}", e));
+                        ()
+                    }
+                }
+            } else {
+                event!(Level::ERROR, "Could not get template: {}", template_name);
+            }
         });
         Ok(())
     }
