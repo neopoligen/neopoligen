@@ -58,5 +58,32 @@ Home Page Mock Up
         p
     }
 
+    pub fn mock_3_bookmark_section() -> PageV2 {
+        let content = r#"
+-- bookmark
+-- title: Title From Bookmark Attribute
+-- url: https://www.example.com
+
+Some text for the bookmark
+
+-- metadata
+-- id: charlie3737 
+-- data: 2024-05-21T10:11:12
+"#
+        .trim_start()
+        .to_string();
+
+        let mut p = PageV2 {
+            ast: vec![],
+            config: SiteConfig::mock1(),
+            output: None,
+            source_path: Some(PathBuf::from("/mock/root/content/sub-dir/bookmakr.neo")),
+            source_content: Some(content),
+        };
+        let config = SiteConfig::mock1();
+        p.generate_ast(&config);
+        p
+    }
+
     //
 }

@@ -41,3 +41,11 @@ fn title_as_plain_text_from_metadata() {
     let right = p.title_as_plain_text().unwrap();
     assert_eq!(left, right)
 }
+
+#[test]
+fn title_as_plain_text_from_any_section() {
+    let p = PageV2::mock_3_bookmark_section();
+    let left = "Title From Bookmark Attribute".to_string();
+    let right = p.title_as_plain_text().unwrap();
+    assert_eq!(left, right)
+}

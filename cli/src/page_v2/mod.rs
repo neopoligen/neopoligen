@@ -152,9 +152,21 @@ impl PageV2 {
             Some(title)
         } else if let Some(title) = self.title_from_title_section() {
             Some(title)
+        } else if let Some(title) = self.title_from_any_section() {
+            Some(title)
         } else {
             None
         }
+    }
+
+    pub fn title_from_any_section(&self) -> Option<String> {
+        self.ast.iter().find_map(|child| {
+            match child {
+                Section::Basic { attrs, .. } => attrs.get("title"),
+                _ => None,
+            }
+            .cloned()
+        })
     }
 
     fn title_from_metadata(&self) -> Option<String> {

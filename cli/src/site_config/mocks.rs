@@ -26,6 +26,7 @@ impl SiteConfig {
             theme_options: None,
             sections: Sections {
                 basic: vec![
+                    "bookmark".to_string(),
                     "div".to_string(),
                     "p".to_string(),
                     "title".to_string(),
