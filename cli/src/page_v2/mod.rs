@@ -81,14 +81,40 @@ impl PageV2 {
     }
 
     pub fn rel_file_path(&self) -> Option<PathBuf> {
-        if let Some(id) = self.id() {
-            Some(
-                PathBuf::from(self.config.default_language.clone())
-                    .join(id)
-                    .join("index.html"),
-            )
-        } else {
-            None
+        match self.ast.iter().find_map(|sec_enum| {
+            if let Section::Yaml { r#type, attrs, .. } = sec_enum {
+                if r#type == "metadata" {
+                    attrs.iter().find_map(|attr| {
+                        if attr.0 == "path" {
+                            let path = PathBuf::from(attr.1.trim())
+                                .join("index.html")
+                                .strip_prefix("/")
+                                .unwrap()
+                                .to_path_buf();
+                            Some(path)
+                        } else {
+                            None
+                        }
+                    })
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        }) {
+            Some(path) => Some(path),
+            None => {
+                if let Some(id) = self.id() {
+                    Some(
+                        PathBuf::from(self.config.default_language.clone())
+                            .join(id)
+                            .join("index.html"),
+                    )
+                } else {
+                    None
+                }
+            }
         }
     }
 

@@ -17,3 +17,11 @@ fn rel_file_path_basic() {
     let right = p.rel_file_path().unwrap();
     assert_eq!(left, right)
 }
+
+#[test]
+fn rel_file_path_for_home_page() {
+    let p = PageV2::mock_2_home_page();
+    let left = PathBuf::from("index.html");
+    let right = p.rel_file_path().unwrap();
+    assert_eq!(left, right)
+}
