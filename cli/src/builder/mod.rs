@@ -211,7 +211,7 @@ impl Builder {
                     .config
                     .og_images_cache_dir()
                     .join(format!("{}.jpg", &id));
-                let output_path = &self.config.og_images_dir().join(format!("{}.png", &id));
+                let output_path = &self.config.og_images_dir().join(format!("{}.jpg", &id));
                 if !cache_path.exists() {
                     make_image = true;
                 } else {
@@ -246,14 +246,13 @@ impl Builder {
                             OgImageTextArea {
                                 color: "#0481c5".to_string(),
                                 font_family: "Arial".to_string(),
-                                font_size: 92,
+                                font_size: 86,
                                 line_height: 100,
                                 max_char_width: 18,
                                 max_lines: 4,
-                                //text: encode_text(title).to_string(),
-                                text: "sadsf".to_string(),
-                                x: 110,
-                                y: 240,
+                                text: title.to_string(),
+                                x: 80,
+                                y: 220,
                             },
                         ],
                     };

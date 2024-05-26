@@ -1,3 +1,4 @@
+use html_escape;
 use resvg;
 use std::path::PathBuf;
 use tiny_skia::Pixmap;
@@ -60,7 +61,8 @@ pub struct OgImageTextArea {
 impl OgImageTextArea {
     pub fn svg_elements(&self) -> String {
         let mut lines: Vec<String> = vec!["".to_string()];
-        let words = self.text.split(" ").collect::<Vec<&str>>();
+        let encoded_text = html_escape::encode_safe(&self.text);
+        let words = encoded_text.split(" ").collect::<Vec<&str>>();
         let _ = words.iter().fold(0, |acc, w| {
             let position = acc + w.len();
             let line_index = position / self.max_char_width;
