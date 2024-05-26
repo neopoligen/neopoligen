@@ -5,6 +5,7 @@ use serde::Deserialize;
 use serde::Serialize;
 use serde_json;
 use serde_json::Value;
+use std::arch::aarch64;
 use std::collections::BTreeMap;
 use std::fs::{self, DirEntry};
 use std::io;
@@ -17,7 +18,7 @@ pub struct SiteConfig {
     pub base_url_raw: Option<String>,
 
     #[serde(default = "default_language")]
-    pub default_language: String,
+    pub default_language: Option<String>,
 
     #[serde(default = "empty_paths")]
     pub paths: BTreeMap<String, PathBuf>,
@@ -157,8 +158,8 @@ impl SiteConfig {
     }
 }
 
-fn default_language() -> String {
-    "en".to_string()
+fn default_language() -> Option<String> {
+    Some("en".to_string())
 }
 
 fn empty_paths() -> BTreeMap<String, PathBuf> {

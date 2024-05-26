@@ -192,7 +192,7 @@ fn get_rel_output_path(id: &str, ast: &Vec<Section>, config: &SiteConfig) -> Opt
         }
         None => Some(PathBuf::from("/").join(format!(
             "{}/{}/index.html",
-            config.default_language.clone(),
+            config.default_language.clone().unwrap(),
             id
         ))),
     }

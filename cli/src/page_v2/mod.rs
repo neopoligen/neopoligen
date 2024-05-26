@@ -137,7 +137,7 @@ impl PageV2 {
             None => {
                 if let Some(id) = self.id() {
                     Some(
-                        PathBuf::from(self.config.default_language.clone())
+                        PathBuf::from(self.config.default_language.clone().unwrap())
                             .join(id)
                             .join("index.html"),
                     )
