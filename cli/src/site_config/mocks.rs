@@ -23,6 +23,10 @@ impl SiteConfig {
 
         SiteConfig {
             base_url_raw: "https://www.example.com".to_string(),
+            // these values are hard coded for now as part of the set up
+            // for responsive images. Doing a hard code to avoid adding
+            // the extra item to the config.
+            base_image_widths: vec![100, 300, 500, 750, 1000, 1500],
             default_language: "en".to_string(),
             theme: ThemeConfig {
                 name: "mock-config-theme".to_string(),

@@ -16,6 +16,8 @@ pub struct SiteConfig {
     #[serde(rename = "base_url")]
     pub base_url_raw: String,
 
+    pub base_image_widths: Vec<u32>,
+
     pub default_language: String,
 
     // #[serde(default = "empty_paths")]
@@ -77,14 +79,9 @@ impl SiteConfig {
 
     pub fn image_widths(&self) -> Vec<u32> {
         let mut tmp = BTreeSet::new();
-        // hard coded sizes for responsive images.
-        // these get added into the mix with the
-        // explicitly defined ones from the config
-        tmp.insert(100);
-        tmp.insert(300);
-        tmp.insert(500);
-        tmp.insert(750);
-        tmp.insert(1000);
+        for w in self.base_image_widths.iter() {
+            tmp.insert(*w);
+        }
 
         for image in self.theme.images.iter() {
             tmp.insert(image.max_width);

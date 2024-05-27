@@ -51,8 +51,6 @@ impl Builder {
     pub fn copy_image_cache_to_prod(&self) -> Result<()> {
         for entry in WalkDir::new(self.config.image_cache_dir()) {
             let cache_path = entry?.into_path();
-            dbg!("--------------------------------");
-            dbg!(&cache_path);
             let dest_path = self.config.image_dest_dir().join(
                 cache_path
                     .strip_prefix(self.config.image_cache_dir())

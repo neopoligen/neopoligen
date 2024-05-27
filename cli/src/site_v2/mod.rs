@@ -66,7 +66,12 @@ impl SiteV2 {
     }
 
     pub fn image_widths(&self, args: &[Value]) -> Result<Value, Error> {
-        Ok(Value::from_serialize(vec![3, 4, 5]))
+        let key = args[0].to_string();
+        if let Some(widths) = self.images.get(&key) {
+            Ok(Value::from_serialize(widths))
+        } else {
+            Ok(Value::from_serialize::<Vec<&str>>(vec![]))
+        }
     }
 
     pub fn page_href(&self, args: &[Value]) -> Result<Value, Error> {
