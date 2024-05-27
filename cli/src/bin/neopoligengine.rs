@@ -155,11 +155,12 @@ fn check_templates(site_config: &SiteConfig) {
 fn build_site(site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
     if let Ok(mut builder) = Builder::new(site_config.clone()) {
-        // // let _ = builder.debug_flush_cache();
+        let _ = builder.debug_flush_cache();
         let _ = empty_dir(&site_config.output_dir());
         let _ = builder.prep_dirs();
         let _ = builder.load_images();
         let _ = builder.update_image_cache();
+        let _ = builder.copy_image_cache_to_prod();
         let _ = builder.load_cached_pages();
         let _ = builder.load_source_files();
         let _ = builder.generate_missing_asts();

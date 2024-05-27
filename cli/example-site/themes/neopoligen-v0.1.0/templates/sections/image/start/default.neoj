@@ -1,3 +1,9 @@
-<section>
-<img src="[@ image_path(section.flags[0]) @]" />
+<div>
+IMAGE TEST2
+
+[! if section.flags[0] !]
+[@ site.image_widths(section.flags[0]) @]
+<img src="/images/[@ section.flags[0] @]/raw.jpg" />
+[! endif !]
+
 

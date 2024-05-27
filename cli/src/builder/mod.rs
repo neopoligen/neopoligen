@@ -48,6 +48,27 @@ impl Builder {
 }
 
 impl Builder {
+    pub fn copy_image_cache_to_prod(&self) -> Result<()> {
+        for entry in WalkDir::new(self.config.image_cache_dir()) {
+            let cache_path = entry?.into_path();
+            dbg!("--------------------------------");
+            dbg!(&cache_path);
+            let dest_path = self.config.image_dest_dir().join(
+                cache_path
+                    .strip_prefix(self.config.image_cache_dir())
+                    .unwrap(),
+            );
+            if cache_path.is_dir() {
+                fs::create_dir_all(dest_path)?;
+            } else {
+                // Reminder: don't fs::copy because of notify loop bug
+                let data = std::fs::read(&cache_path)?;
+                std::fs::write(&dest_path, &data)?;
+            }
+        }
+        Ok(())
+    }
+
     pub fn debug_flush_cache(&self) -> Result<()> {
         // this is a temporary thing to flush the cache until
         // another way to flush it is set up
@@ -72,9 +93,10 @@ impl Builder {
         Ok(())
     }
 
-    pub fn escape_image_name(&self, source: &str) -> Option<String> {
-        Some(source.to_string())
-    }
+    // // DEPRECATED: Remove when images are done
+    // pub fn escape_image_name(&self, source: &str) -> Option<String> {
+    //     Some(source.to_string())
+    // }
 
     #[instrument(skip(self))]
     pub fn generate_missing_asts(&mut self) -> Result<()> {
@@ -89,7 +111,7 @@ impl Builder {
     #[instrument(skip(self))]
     pub fn generate_page_content(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating Page Content");
-        let site = Value::from_object(SiteV2::new(&self.config, &self.pages));
+        let site_obj = Value::from_object(SiteV2::new(&self.config, &self.pages, &self.images));
         let mut env = Environment::new();
         env.set_debug(true);
         env.add_function("highlight_code", highlight_code);
@@ -130,7 +152,7 @@ impl Builder {
                     let template_name = "pages/post/published.neoj";
                     if let Ok(tmpl) = env.get_template(template_name) {
                         match tmpl.render(context!(
-                            site => site,
+                            site => site_obj,
                             page_id => p.1.id()
                         )) {
                             Ok(output) => {

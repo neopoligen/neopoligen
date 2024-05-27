@@ -1,5 +1,6 @@
 pub mod object;
 
+use crate::image::Image;
 use crate::{page_v2::PageV2, site_config::SiteConfig};
 use minijinja::value::Value;
 use minijinja::Error;
@@ -10,11 +11,37 @@ use std::path::PathBuf;
 #[derive(Debug, Serialize)]
 pub struct SiteV2 {
     pub config: SiteConfig,
+    pub images: BTreeMap<String, Value>,
     pub pages: BTreeMap<String, PageV2>,
 }
 
+#[derive(Debug, Serialize)]
+pub struct SiteImage {
+    width: u32,
+    height: u32,
+    key: String,
+    extension: String,
+}
+
 impl SiteV2 {
-    pub fn new(config: &SiteConfig, source_pages: &BTreeMap<PathBuf, PageV2>) -> SiteV2 {
+    pub fn new(
+        config: &SiteConfig,
+        source_pages: &BTreeMap<PathBuf, PageV2>,
+        source_images: &Vec<Image>,
+    ) -> SiteV2 {
+        let mut images = BTreeMap::new();
+        for image in source_images.iter() {
+            images.insert(
+                image.key().expect("key"),
+                Value::from_serialize(SiteImage {
+                    width: image.width.expect("width"),
+                    height: image.height.expect("height"),
+                    extension: image.extension().expect("extension"),
+                    key: image.key().expect("key"),
+                }),
+            );
+        }
+
         let mut pages: BTreeMap<String, PageV2> = BTreeMap::new();
         source_pages.iter().for_each(|p| {
             if let Some(id) = p.1.id() {
@@ -23,6 +50,7 @@ impl SiteV2 {
         });
         SiteV2 {
             config: config.clone(),
+            images,
             pages,
         }
     }
@@ -35,6 +63,10 @@ impl SiteV2 {
 
     pub fn config(&self) -> Result<Value, Error> {
         Ok(Value::from_serialize(&self.config))
+    }
+
+    pub fn image_widths(&self, args: &[Value]) -> Result<Value, Error> {
+        Ok(Value::from_serialize(vec![3, 4, 5]))
     }
 
     pub fn page_href(&self, args: &[Value]) -> Result<Value, Error> {
