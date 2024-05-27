@@ -16,6 +16,16 @@ pub struct Image {
 }
 
 impl Image {
+    pub fn extension(&self) -> Result<String> {
+        Ok(self
+            .source_path
+            .extension()
+            .expect("Could not get extension")
+            .to_string_lossy()
+            .to_string()
+            .to_lowercase())
+    }
+
     pub fn key(&self) -> Result<String> {
         let stem = &self
             .source_path

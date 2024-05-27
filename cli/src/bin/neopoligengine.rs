@@ -158,6 +158,7 @@ fn build_site(site_config: &SiteConfig) {
         let _ = empty_dir(&site_config.output_dir());
         let _ = builder.prep_dirs();
         let _ = builder.load_images();
+        let _ = builder.update_image_cache();
 
         // // let _ = builder.debug_flush_cache();
         // let _ = builder.load_cached_pages();
@@ -173,7 +174,7 @@ fn build_site(site_config: &SiteConfig) {
         // let _ = builder.generate_page_content();
         // let _ = builder.output_content_files();
         // let _ = builder.output_last_edit();
-        // match builder.update_cache() {
+        // match builder.update_page_cache() {
         //     Ok(_) => (),
         //     Err(e) => println!("{:?}", e),
         // }

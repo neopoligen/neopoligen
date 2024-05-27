@@ -177,12 +177,14 @@ impl Builder {
         event!(Level::INFO, "Loading Images");
         for entry in WalkDir::new(self.config.image_source_dir()) {
             let source_path = entry?.into_path();
-            self.images.push(Image {
-                config: self.config.clone(),
-                source_path,
-                width: None,
-                height: None,
-            });
+            if let Some(_) = source_path.extension() {
+                self.images.push(Image {
+                    config: self.config.clone(),
+                    source_path,
+                    width: None,
+                    height: None,
+                });
+            }
         }
         Ok(())
     }
@@ -510,8 +512,8 @@ body {
     }
 
     #[instrument(skip(self))]
-    pub fn update_cache(&self) -> Result<()> {
-        event!(Level::INFO, "Updating Cache");
+    pub fn update_page_cache(&self) -> Result<()> {
+        event!(Level::INFO, "Updating Page Cache");
         let mut conn = Connection::open(self.config.cache_db_path())?;
         conn.execute("DROP TABLE IF EXISTS page_archive", ())?;
         conn.execute(
@@ -536,6 +538,17 @@ body {
             };
         }
         tx.commit()?;
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn update_image_cache(&self) -> Result<()> {
+        event!(Level::INFO, "Updating Image Cache");
+        for image in self.images.iter() {
+            let cache_path = self.config.image_cache_dir().join(image.key()?);
+            dbg!(cache_path);
+        }
+
         Ok(())
     }
 

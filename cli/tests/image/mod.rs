@@ -3,6 +3,14 @@ use pretty_assertions::assert_eq;
 use std::collections::BTreeSet;
 
 #[test]
+fn extension_is_lowercase() {
+    let image = Image::mock_1();
+    let left = "jpg".to_string();
+    let right = image.extension().unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
 fn key_basic() {
     let image = Image::mock_1();
     let left = "image-name".to_string();
