@@ -18,9 +18,8 @@ pub struct SiteConfig {
     #[serde(default = "default_language")]
     pub default_language: Option<String>,
 
-    #[serde(default = "empty_paths")]
-    pub paths: BTreeMap<String, PathBuf>,
-
+    // #[serde(default = "empty_paths")]
+    // pub paths: BTreeMap<String, PathBuf>,
     pub project_root: Option<PathBuf>,
 
     #[serde(default = "empty_sections")]
@@ -44,7 +43,7 @@ pub struct ThemeConfig {
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct ImageConfig {
-    pub class: String,
+    pub template: String,
     pub sizes: Vec<u32>,
 }
 

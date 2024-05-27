@@ -1,3 +1,5 @@
+pub mod mocks;
+
 use crate::og_image::*;
 use crate::page_v2::PageV2;
 use crate::site_config::SiteConfig;
@@ -64,6 +66,10 @@ impl Builder {
             }
         }
         Ok(())
+    }
+
+    pub fn escape_image_name(&self, source: &str) -> Option<String> {
+        Some(source.to_string())
     }
 
     #[instrument(skip(self))]
@@ -199,73 +205,160 @@ impl Builder {
     }
 
     #[instrument(skip(self))]
-    pub fn make_images(&mut self) -> Result<()> {
+    pub fn copy_raw_images(&mut self) -> Result<()> {
+        // TODO: Make the filenames URL Safe
         event!(Level::INFO, "Making Images");
         for entry in WalkDir::new(self.config.image_source_dir()) {
             let source_path = entry?.into_path();
-            if let (Some(stem), Some(extension)) =
-                (source_path.file_stem(), source_path.extension())
-            {
-                let stem = stem.to_string_lossy().to_string();
-                event!(Level::INFO, "- Image: {}", stem);
-                if extension.to_ascii_lowercase() == "jpg"
-                    || extension.to_ascii_lowercase() == "jpeg"
-                    || extension.to_ascii_lowercase() == "png"
-                {
-                    let cache_path = self.config.image_cache_dir().join(
-                        source_path
-                            .strip_prefix(self.config.image_source_dir())
-                            .unwrap(),
-                    );
-                    if is_cache_stale(&source_path, &cache_path) {
-                        let parent_dir = cache_path.parent().unwrap();
-                        fs::create_dir_all(&parent_dir)?;
-                        // don't use fs::copy here because it'll trigger an
-                        // infinite loop with notify on macs
-                        let data = std::fs::read(&source_path)?;
-                        std::fs::write(&cache_path, &data)?;
-                        let image_dir = &cache_path.parent().unwrap().join(stem);
-                        // dbg!(image_dir);
-                        fs::create_dir_all(&image_dir)?;
-                        let decoder = Decoder::from_path(&source_path)?;
-                        let image = decoder.decode()?;
-                        let resize_width =
-                            std::cmp::min(image.width(), self.config.max_image_width.unwrap());
-                        // dbg!(resize_width);
-                        let base_image_path = image_dir.join(format!(
-                            "base.{}",
-                            extension.to_string_lossy().to_ascii_lowercase()
-                        ));
-                        if &extension.to_ascii_lowercase() == "jpg"
-                            || &extension.to_ascii_lowercase() == "jpeg"
-                        {
-                            resize_and_optimize_jpg(&cache_path, resize_width, &base_image_path)?;
-                        }
-                        if &extension.to_ascii_lowercase() == "png" {
-                            resize_and_optimize_png(&cache_path, resize_width, &base_image_path)?;
-                        }
-                    }
+            if let Some(extension) = source_path.extension() {
+                if let Ok(rel_path) = source_path.strip_prefix(self.config.image_source_dir()) {
+                    dbg!(&rel_path);
                 }
             }
+
+            // if let (Some(stem), Some(extension)) =
+            //     (source_path.file_stem(), source_path.extension())
+            // {
+            //      if let base_name = self.escape_image_name(&stem) {
+            //     }
+            // }
+
+            // let source_path = entry?.into_path();
+            // if let (Some(stem), Some(extension)) =
+            //     (source_path.file_stem(), source_path.extension())
+            // {
+            //     let stem = stem.to_string_lossy().to_string();
+            //     event!(Level::INFO, "- Image: {}", stem);
+            //     if extension.to_ascii_lowercase() == "jpg"
+            //         || extension.to_ascii_lowercase() == "jpeg"
+            //         || extension.to_ascii_lowercase() == "png"
+            //     {
+            //         let cache_path = self.config.image_cache_dir().join(
+            //             source_path
+            //                 .strip_prefix(self.config.image_source_dir())
+            //                 .unwrap(),
+            //         );
+            //         if is_cache_stale(&source_path, &cache_path) {
+            //             let parent_dir = cache_path.parent().unwrap();
+            //             fs::create_dir_all(&parent_dir)?;
+            //             // don't use fs::copy here because it'll trigger an
+            //             // infinite loop with notify on macs
+            //             let data = std::fs::read(&source_path)?;
+            //             std::fs::write(&cache_path, &data)?;
+            //             let image_dir = &cache_path.parent().unwrap().join(stem);
+            //             // dbg!(image_dir);
+            //             fs::create_dir_all(&image_dir)?;
+            //             let decoder = Decoder::from_path(&source_path)?;
+            //             let image = decoder.decode()?;
+            //             let resize_width =
+            //                 std::cmp::min(image.width(), self.config.max_image_width.unwrap());
+            //             // dbg!(resize_width);
+            //             let base_image_path = image_dir.join(format!(
+            //                 "base.{}",
+            //                 extension.to_string_lossy().to_ascii_lowercase()
+            //             ));
+            //             if &extension.to_ascii_lowercase() == "jpg"
+            //                 || &extension.to_ascii_lowercase() == "jpeg"
+            //             {
+            //                 resize_and_optimize_jpg(&cache_path, resize_width, &base_image_path)?;
+            //             }
+            //             if &extension.to_ascii_lowercase() == "png" {
+            //                 resize_and_optimize_png(&cache_path, resize_width, &base_image_path)?;
+            //             }
+            //         }
+            //     }
+            // }
         }
-        for entry in WalkDir::new(self.config.image_cache_dir()) {
-            let cache_path = entry?.into_path();
-            let dest_path = self.config.image_dest_dir().join(
-                cache_path
-                    .strip_prefix(self.config.image_cache_dir())
-                    .unwrap(),
-            );
-            if cache_path.is_dir() {
-                fs::create_dir_all(&dest_path)?;
-            } else {
-                // don't use fs::copy here because it'll trigger an
-                // infinite loop with notify on macs
-                let data = std::fs::read(&cache_path)?;
-                std::fs::write(&dest_path, &data)?;
-            }
-        }
+
+        // for entry in WalkDir::new(self.config.image_cache_dir()) {
+        //     let cache_path = entry?.into_path();
+        //     let dest_path = self.config.image_dest_dir().join(
+        //         cache_path
+        //             .strip_prefix(self.config.image_cache_dir())
+        //             .unwrap(),
+        //     );
+        //     if cache_path.is_dir() {
+        //         fs::create_dir_all(&dest_path)?;
+        //     } else {
+        //         // don't use fs::copy here because it'll trigger an
+        //         // infinite loop with notify on macs
+        //         let data = std::fs::read(&cache_path)?;
+        //         std::fs::write(&dest_path, &data)?;
+        //     }
+        // }
+
+        //
         Ok(())
     }
+
+    // #[instrument(skip(self))]
+    // pub fn make_images(&mut self) -> Result<()> {
+    //     event!(Level::INFO, "Making Images");
+    //     for entry in WalkDir::new(self.config.image_source_dir()) {
+    //         let source_path = entry?.into_path();
+    //         if let (Some(stem), Some(extension)) =
+    //             (source_path.file_stem(), source_path.extension())
+    //         {
+    //             let stem = stem.to_string_lossy().to_string();
+    //             event!(Level::INFO, "- Image: {}", stem);
+    //             if extension.to_ascii_lowercase() == "jpg"
+    //                 || extension.to_ascii_lowercase() == "jpeg"
+    //                 || extension.to_ascii_lowercase() == "png"
+    //             {
+    //                 let cache_path = self.config.image_cache_dir().join(
+    //                     source_path
+    //                         .strip_prefix(self.config.image_source_dir())
+    //                         .unwrap(),
+    //                 );
+    //                 if is_cache_stale(&source_path, &cache_path) {
+    //                     let parent_dir = cache_path.parent().unwrap();
+    //                     fs::create_dir_all(&parent_dir)?;
+    //                     // don't use fs::copy here because it'll trigger an
+    //                     // infinite loop with notify on macs
+    //                     let data = std::fs::read(&source_path)?;
+    //                     std::fs::write(&cache_path, &data)?;
+    //                     let image_dir = &cache_path.parent().unwrap().join(stem);
+    //                     // dbg!(image_dir);
+    //                     fs::create_dir_all(&image_dir)?;
+    //                     let decoder = Decoder::from_path(&source_path)?;
+    //                     let image = decoder.decode()?;
+    //                     let resize_width =
+    //                         std::cmp::min(image.width(), self.config.max_image_width.unwrap());
+    //                     // dbg!(resize_width);
+    //                     let base_image_path = image_dir.join(format!(
+    //                         "base.{}",
+    //                         extension.to_string_lossy().to_ascii_lowercase()
+    //                     ));
+    //                     if &extension.to_ascii_lowercase() == "jpg"
+    //                         || &extension.to_ascii_lowercase() == "jpeg"
+    //                     {
+    //                         resize_and_optimize_jpg(&cache_path, resize_width, &base_image_path)?;
+    //                     }
+    //                     if &extension.to_ascii_lowercase() == "png" {
+    //                         resize_and_optimize_png(&cache_path, resize_width, &base_image_path)?;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     for entry in WalkDir::new(self.config.image_cache_dir()) {
+    //         let cache_path = entry?.into_path();
+    //         let dest_path = self.config.image_dest_dir().join(
+    //             cache_path
+    //                 .strip_prefix(self.config.image_cache_dir())
+    //                 .unwrap(),
+    //         );
+    //         if cache_path.is_dir() {
+    //             fs::create_dir_all(&dest_path)?;
+    //         } else {
+    //             // don't use fs::copy here because it'll trigger an
+    //             // infinite loop with notify on macs
+    //             let data = std::fs::read(&cache_path)?;
+    //             std::fs::write(&dest_path, &data)?;
+    //         }
+    //     }
+    //     Ok(())
+    // }
 
     #[instrument(skip(self))]
     pub fn make_og_images(&self) -> Result<()> {

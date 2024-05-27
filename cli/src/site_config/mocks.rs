@@ -8,16 +8,17 @@ use std::path::PathBuf;
 impl SiteConfig {
     pub fn mock1() -> SiteConfig {
         // let sections: BTreeMap<String, Vec<String>> = BTreeMap::new();
-        let mut paths = BTreeMap::new();
-        paths.insert(
-            "content_root".to_string(),
-            PathBuf::from("/mock/root/content"),
-        );
-        paths.insert("output_root".to_string(), PathBuf::from("/mock/root/docs"));
-        paths.insert(
-            "errors_root".to_string(),
-            PathBuf::from("/mock/root/status/errors"),
-        );
+
+        // let mut paths = BTreeMap::new();
+        // paths.insert(
+        //     "content_root".to_string(),
+        //     PathBuf::from("/mock/root/content"),
+        // );
+        // paths.insert("output_root".to_string(), PathBuf::from("/mock/root/docs"));
+        // paths.insert(
+        //     "errors_root".to_string(),
+        //     PathBuf::from("/mock/root/status/errors"),
+        // );
 
         SiteConfig {
             base_url_raw: Some("https://www.example.com".to_string()),
@@ -65,7 +66,6 @@ impl SiteConfig {
                 "span".to_string(),
                 "strong".to_string(),
             ],
-            paths,
             project_root: Some(PathBuf::from("/mock/project/root")),
         }
     }

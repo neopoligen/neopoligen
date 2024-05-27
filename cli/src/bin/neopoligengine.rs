@@ -161,7 +161,7 @@ fn build_site(site_config: &SiteConfig) {
         let _ = builder.load_cached_pages();
         let _ = builder.load_source_files();
 
-        if let Err(e) = builder.make_images() {
+        if let Err(e) = builder.copy_raw_images() {
             event!(Level::ERROR, "{}", e);
         }
 

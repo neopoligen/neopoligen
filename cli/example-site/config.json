@@ -8,6 +8,12 @@
     "max_image_width": 1800,
     "theme": {
         "name": "neopoligen-v0.1.0",
+        "images": [
+            {
+                "template": "default", 
+                "sizes": [300, 500, 900]
+            }
+        ],
         "site_name": "Neopoligen Example Site"
       }
   }

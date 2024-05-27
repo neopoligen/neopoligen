@@ -389,7 +389,7 @@ impl Site {
     pub fn load_source_files(&mut self) {
         event!(Level::INFO, "Loading Source Files");
         self.source_files = BTreeMap::new(); // do this to clear the templates
-        let dir = &self.config.paths.get("content_root").unwrap();
+        let dir = &self.config.content_dir();
         if dir.exists() {
             WalkDir::new(dir)
                 .into_iter()
@@ -419,7 +419,7 @@ impl Site {
 
     #[instrument(skip(self))]
     pub fn load_template_test_files(&mut self) {
-        let mut dir = self.config.paths.get("theme_root").unwrap().clone();
+        let mut dir = self.config.theme_dir();
         dir.push("tests/content");
         if dir.exists() {
             WalkDir::new(dir)
@@ -465,11 +465,11 @@ impl Site {
     #[instrument(skip(self))]
     pub fn load_templates(&mut self) {
         event!(Level::INFO, "Loading Templates");
-        let mut templates_root = self.config.paths.get("themes_root").unwrap().to_path_buf();
-        templates_root.push(self.config.theme.name.clone());
-        templates_root.push("templates");
-        if templates_root.exists() {
-            WalkDir::new(templates_root.clone())
+        // let mut templates_root = self.config.paths.get("themes_root").unwrap().to_path_buf();
+        // templates_root.push(self.config.theme.name.clone());
+        // templates_root.push("templates");
+        if self.config.templates_dir().exists() {
+            WalkDir::new(self.config.templates_dir())
                 .into_iter()
                 .filter(|entry| match entry.as_ref().unwrap().path().extension() {
                     Some(ext) => ext.to_str().unwrap() == "neoj",
@@ -479,7 +479,8 @@ impl Site {
                     let path = entry.as_ref().unwrap().path().to_path_buf();
                     match fs::read_to_string(&path) {
                         Ok(content) => {
-                            let template_name = path.strip_prefix(templates_root.clone()).unwrap();
+                            let template_name =
+                                path.strip_prefix(self.config.templates_dir()).unwrap();
                             self.templates
                                 .insert(template_name.to_string_lossy().to_string(), content);
                         }
@@ -492,7 +493,7 @@ impl Site {
             event!(
                 Level::ERROR,
                 "Direcotory does not exist: {}",
-                &templates_root.display()
+                self.config.templates_dir().display()
             );
         }
     }
