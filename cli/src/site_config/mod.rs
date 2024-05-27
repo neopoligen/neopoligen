@@ -5,7 +5,7 @@ use serde::Deserialize;
 use serde::Serialize;
 // use serde_json;
 // use serde_json::Value;
-use std::collections::BTreeMap;
+// use std::collections::BTreeMap;
 use std::fs::{self, DirEntry};
 use std::io;
 use std::path::PathBuf;
@@ -13,15 +13,13 @@ use std::path::PathBuf;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SiteConfig {
     #[serde(rename = "base_url")]
-    pub base_url_raw: Option<String>,
+    pub base_url_raw: String,
 
-    #[serde(default = "default_language")]
-    pub default_language: Option<String>,
+    pub default_language: String,
 
     // #[serde(default = "empty_paths")]
     // pub paths: BTreeMap<String, PathBuf>,
     pub project_root: Option<PathBuf>,
-
     #[serde(default = "empty_sections")]
     pub sections: Sections,
 
@@ -30,15 +28,15 @@ pub struct SiteConfig {
 
     pub theme: ThemeConfig,
 
-    #[serde(default = "default_max_image_width")]
-    pub max_image_width: Option<u32>,
+    pub options: serde_json::Value, // DEPRECATED: remove when images are in place
+                                    // #[serde(default = "default_max_image_width")]
+                                    // pub max_image_width: Option<u32>,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct ThemeConfig {
     pub name: String,
-    pub images: Option<Vec<ImageConfig>>,
-    pub site_name: Option<String>,
+    pub images: Vec<ImageConfig>,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -48,12 +46,8 @@ pub struct ImageConfig {
 }
 
 impl SiteConfig {
-    pub fn base_url(&self) -> Option<String> {
-        if let Some(base_url) = &self.base_url_raw {
-            Some(base_url.trim_end_matches("/").to_string())
-        } else {
-            None
-        }
+    pub fn base_url(&self) -> String {
+        self.base_url_raw.trim_end_matches("/").to_string()
     }
     pub fn cache_db_path(&self) -> PathBuf {
         self.cache_dir().join("cache.sqlite")
@@ -174,13 +168,15 @@ fn default_language() -> Option<String> {
     Some("en".to_string())
 }
 
-fn default_max_image_width() -> Option<u32> {
-    Some(1800)
-}
+// DEPRECATED: Remove when images are in place
+// fn default_max_image_width() -> Option<u32> {
+//     Some(1800)
+// }
 
-fn empty_paths() -> BTreeMap<String, PathBuf> {
-    BTreeMap::new()
-}
+// DEPREATED: remove when all paths are in functions
+// fn empty_paths() -> BTreeMap<String, PathBuf> {
+//     BTreeMap::new()
+// }
 
 fn empty_sections() -> Sections {
     Sections {

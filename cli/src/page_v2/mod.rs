@@ -86,16 +86,16 @@ impl PageV2 {
     }
 
     pub fn og_image(&self) -> Option<String> {
-        if let (Some(base_url), Some(id)) = (&self.config.base_url(), &self.id()) {
-            Some(format!("{}/og-images/{}.jpg", base_url, id))
+        if let Some(id) = &self.id() {
+            Some(format!("{}/og-images/{}.jpg", self.config.base_url(), id))
         } else {
             None
         }
     }
 
     pub fn permalink(&self) -> Option<String> {
-        if let (Some(base_url), Some(href)) = (&self.config.base_url(), &self.href()) {
-            Some(format!("{}{}", base_url, href))
+        if let Some(href) = &self.href() {
+            Some(format!("{}{}", self.config.base_url(), href))
         } else {
             None
         }
@@ -145,7 +145,7 @@ impl PageV2 {
             None => {
                 if let Some(id) = self.id() {
                     Some(
-                        PathBuf::from(self.config.default_language.clone().unwrap())
+                        PathBuf::from(self.config.default_language.clone())
                             .join(id)
                             .join("index.html"),
                     )

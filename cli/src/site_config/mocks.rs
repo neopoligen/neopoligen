@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+use std::str::FromStr;
 
 use crate::sections::*;
 use crate::site_config::*;
@@ -21,14 +22,14 @@ impl SiteConfig {
         // );
 
         SiteConfig {
-            base_url_raw: Some("https://www.example.com".to_string()),
-            default_language: Some("en".to_string()),
-            max_image_width: Some(1800),
+            base_url_raw: "https://www.example.com".to_string(),
+            default_language: "en".to_string(),
             theme: ThemeConfig {
                 name: "mock-config-theme".to_string(),
-                images: None,
-                site_name: None,
+                images: vec![],
             },
+            options: serde_json::Value::from_str(r#"{}"#).unwrap(),
+            project_root: Some(PathBuf::from("/mock/project/root")),
             sections: Sections {
                 basic: vec![
                     "bookmark".to_string(),
@@ -66,7 +67,6 @@ impl SiteConfig {
                 "span".to_string(),
                 "strong".to_string(),
             ],
-            project_root: Some(PathBuf::from("/mock/project/root")),
         }
     }
 }

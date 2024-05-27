@@ -30,12 +30,7 @@ impl SiteV2 {
 
 impl SiteV2 {
     pub fn base_url(&self) -> Result<Value, Error> {
-        if let Some(url) = &self.config.base_url() {
-            Ok(Value::from(url))
-        } else {
-            // TODO: Make this an Error
-            Ok(Value::from(""))
-        }
+        Ok(Value::from(self.config.base_url()))
     }
 
     pub fn config(&self) -> Result<Value, Error> {
