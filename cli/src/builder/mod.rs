@@ -1,5 +1,6 @@
 pub mod mocks;
 
+use crate::image::Image;
 use crate::og_image::*;
 use crate::page_v2::PageV2;
 use crate::site_config::SiteConfig;
@@ -30,6 +31,7 @@ use walkdir::WalkDir;
 pub struct Builder {
     pub pages: BTreeMap<PathBuf, PageV2>,
     pub config: SiteConfig,
+    pub images: Vec<Image>,
     pub last_edit: Option<String>,
 }
 
@@ -39,6 +41,7 @@ impl Builder {
             pages: BTreeMap::new(),
             config,
             last_edit: None,
+            images: vec![],
         })
     }
 }
@@ -165,6 +168,18 @@ impl Builder {
             let page: String = row.get(1)?;
             let p: PageV2 = serde_json::from_str(&page.to_string())?;
             self.pages.insert(path, p);
+        }
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn load_images(&mut self) -> Result<()> {
+        event!(Level::INFO, "Loading Images");
+        for entry in WalkDir::new(self.config.image_source_dir()) {
+            let source_path = entry?.into_path();
+            //if let Ok(image) = Image::load_with_width_and_height(&source_path, &self.config.image_source_dir()) {
+            //   dbg!(image);
+            // }
         }
         Ok(())
     }
