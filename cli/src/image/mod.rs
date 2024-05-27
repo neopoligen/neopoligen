@@ -1,17 +1,18 @@
 pub mod mocks;
 
 // use anyhow::Error;
+use crate::{helpers::*, site_config::SiteConfig};
 use anyhow::Result;
-// use rimage::image::io::Reader;
-use crate::helpers::*;
+use rimage::image::io::Reader;
+use std::collections::BTreeSet;
 use std::path::PathBuf;
 
 #[derive(Clone, Debug)]
 pub struct Image {
-    pub source_root: PathBuf,
+    pub config: SiteConfig,
+    pub height: Option<u32>,
     pub source_path: PathBuf,
     pub width: Option<u32>,
-    pub height: Option<u32>,
 }
 
 impl Image {
@@ -23,16 +24,25 @@ impl Image {
         clean_for_url(&stem.to_string_lossy().to_string())
     }
 
-    // pub fn load_with_width_and_height(source_path: &PathBuf, source_root: &PathBuf) -> Result<Image> {
-    //     let img = Reader::open(&source_path)?;
-    //     let data = img.decode()?;
-    //     Ok(Image {
-    //         source_root: source_root.clone(),
-    //         source_path: source_path.clone(),
-    //         width: Some(data.width()),
-    //         height: Some(data.height()),
-    //     })
-    // }
+    pub fn load_width_and_height(&mut self) -> Result<()> {
+        let img = Reader::open(&self.source_path)?;
+        let data = img.decode()?;
+        self.width = Some(data.width());
+        self.height = Some(data.height());
+        Ok(())
+    }
+
+    pub fn output_widths(&self) -> BTreeSet<u32> {
+        let mut widths = BTreeSet::new();
+        self.config.theme.images.iter().for_each(|i| {
+            i.widths.iter().for_each(|w| {
+                if *w < self.width.unwrap() {
+                    widths.insert(w.clone());
+                }
+            });
+        });
+        widths
+    }
 
     //
 }

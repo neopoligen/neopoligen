@@ -177,9 +177,12 @@ impl Builder {
         event!(Level::INFO, "Loading Images");
         for entry in WalkDir::new(self.config.image_source_dir()) {
             let source_path = entry?.into_path();
-            //if let Ok(image) = Image::load_with_width_and_height(&source_path, &self.config.image_source_dir()) {
-            //   dbg!(image);
-            // }
+            self.images.push(Image {
+                config: self.config.clone(),
+                source_path,
+                width: None,
+                height: None,
+            });
         }
         Ok(())
     }

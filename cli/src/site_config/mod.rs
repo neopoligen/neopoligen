@@ -42,7 +42,7 @@ pub struct ThemeConfig {
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct ImageConfig {
     pub template: String,
-    pub sizes: Vec<u32>,
+    pub widths: Vec<u32>,
 }
 
 impl SiteConfig {

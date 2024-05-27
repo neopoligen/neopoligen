@@ -26,7 +26,16 @@ impl SiteConfig {
             default_language: "en".to_string(),
             theme: ThemeConfig {
                 name: "mock-config-theme".to_string(),
-                images: vec![],
+                images: vec![
+                    ImageConfig {
+                        template: "default".to_string(),
+                        widths: vec![400, 600, 3000],
+                    },
+                    ImageConfig {
+                        template: "small".to_string(),
+                        widths: vec![100, 300, 400],
+                    },
+                ],
             },
             options: serde_json::Value::from_str(r#"{}"#).unwrap(),
             project_root: Some(PathBuf::from("/mock/project/root")),

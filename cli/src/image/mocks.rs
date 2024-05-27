@@ -1,12 +1,12 @@
-use std::path::PathBuf;
-
 use crate::image::Image;
+use crate::site_config::SiteConfig;
+use std::path::PathBuf;
 
 impl Image {
     pub fn mock_1() -> Image {
         Image {
+            config: SiteConfig::mock1(),
             source_path: PathBuf::from("/mock/root/images/Some Path/Image Name.jpg"),
-            source_root: PathBuf::from("/mock/root/images"),
             width: Some(1920),
             height: Some(1080),
         }
