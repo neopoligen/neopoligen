@@ -96,6 +96,6 @@ impl SiteV2 {
     }
 
     pub fn theme(&self) -> Result<Value, Error> {
-        Ok(Value::from_serialize(&self.config.theme_options))
+        Ok(Value::from_serialize(&self.config.theme))
     }
 }

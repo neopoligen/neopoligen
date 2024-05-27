@@ -3,15 +3,14 @@ pub mod mocks;
 use crate::sections::*;
 use serde::Deserialize;
 use serde::Serialize;
-use serde_json;
-use serde_json::Value;
+// use serde_json;
+// use serde_json::Value;
 use std::collections::BTreeMap;
 use std::fs::{self, DirEntry};
 use std::io;
 use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-#[serde(tag = "type", rename_all = "lowercase")]
 pub struct SiteConfig {
     #[serde(rename = "base_url")]
     pub base_url_raw: Option<String>,
@@ -30,11 +29,23 @@ pub struct SiteConfig {
     #[serde(default = "empty_spans")]
     pub spans: Vec<String>,
 
-    pub theme: String,
-    pub theme_options: Option<Value>,
+    pub theme: ThemeConfig,
 
     #[serde(default = "default_max_image_width")]
     pub max_image_width: Option<u32>,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub struct ThemeConfig {
+    pub name: String,
+    pub images: Option<Vec<ImageConfig>>,
+    pub site_name: Option<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub struct ImageConfig {
+    pub class: String,
+    pub sizes: Vec<u32>,
 }
 
 impl SiteConfig {
@@ -88,7 +99,7 @@ impl SiteConfig {
         self.project_root
             .clone()
             .unwrap()
-            .join(PathBuf::from(format!("themes/{}", self.theme)))
+            .join(PathBuf::from(format!("themes/{}", self.theme.name)))
     }
     pub fn templates_dir(&self) -> PathBuf {
         self.theme_dir().join("templates")
@@ -106,12 +117,8 @@ impl SiteConfig {
         // self.sections.insert("table".to_string(), vec![]);
         // self.sections.insert("yaml".to_string(), vec![]);
 
-        let section_root = self
-            .paths
-            .get("theme_root")
-            .unwrap()
-            .clone()
-            .join(PathBuf::from("templates/sections"));
+        let section_root = self.theme_dir().join(PathBuf::from("templates/sections"));
+
         let section_dirs = get_dirs_in_dir(&section_root).unwrap();
         section_dirs.iter().for_each(|dir| {
             let cat_file_path = dir.join("category.txt");

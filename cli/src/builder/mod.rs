@@ -166,7 +166,7 @@ impl Builder {
     #[instrument(skip(self))]
     pub fn load_source_files(&mut self) -> Result<()> {
         event!(Level::INFO, "Loading Source Files");
-        let dir = &self.config.paths.get("content_root").unwrap();
+        let dir = &self.config.content_dir();
         WalkDir::new(dir)
             .into_iter()
             .filter(|entry| match entry.as_ref().unwrap().path().extension() {

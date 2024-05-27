@@ -306,72 +306,77 @@ fn load_site_config_file(neo_root: &PathBuf, active_site: &str) -> Result<SiteCo
                     Ok(text) => match serde_json::from_str::<SiteConfig>(text.as_str()) {
                         Ok(mut config) => {
                             config.project_root = Some(project_root.clone());
-                            config.paths.insert(
-                                "theme_root".to_string(),
-                                project_root
-                                    .join(PathBuf::from(format!("themes/{}", config.theme))),
-                            );
-                            config.paths.insert(
-                                "theme_tests_root".to_string(),
-                                project_root
-                                    .join(PathBuf::from(format!("themes/{}/tests", config.theme))),
-                            );
-                            config.paths.insert(
-                                "theme_tests_content_root".to_string(),
-                                project_root.join(PathBuf::from(format!(
-                                    "themes/{}/tests/content",
-                                    config.theme
-                                ))),
-                            );
-                            config
-                                .paths
-                                .insert("neopoligen_root".to_string(), neo_root.clone());
-                            config
-                                .paths
-                                .insert("project_root".to_string(), project_root.clone());
-                            config.paths.insert(
-                                "content_root".to_string(),
-                                project_root.join(PathBuf::from("content")),
-                            );
-                            config.paths.insert(
-                                "render_errors_root".to_string(),
-                                project_root.join(PathBuf::from("status/render-errors")),
-                            );
-                            config.paths.insert(
-                                "theme_errors_root".to_string(),
-                                project_root.join(PathBuf::from("status/theme-errors")),
-                            );
-                            config.paths.insert(
-                                "themes_root".to_string(),
-                                project_root.join(PathBuf::from("themes")),
-                            );
-                            config.paths.insert(
-                                "output_root".to_string(),
-                                project_root.join(PathBuf::from("docs")),
-                            );
-                            config.paths.insert(
-                                "status_root".to_string(),
-                                project_root.join(PathBuf::from("status")),
-                            );
-                            config.paths.insert(
-                                "files_root".to_string(),
-                                project_root.join(PathBuf::from("files")),
-                            );
-                            config.paths.insert(
-                                "images_root".to_string(),
-                                project_root.join(PathBuf::from("images")),
-                            );
-                            config.paths.insert(
-                                "mp3s_root".to_string(),
-                                project_root.join(PathBuf::from("mp3s")),
-                            );
-                            config.paths.insert(
-                                "scripts_root".to_string(),
-                                project_root.join(PathBuf::from("scripts")),
-                            );
-                            config
-                                .paths
-                                .insert("site_config_path".to_string(), site_config_path.clone());
+
+                            // DEPRECATED: Remove all these once they have been migrated
+                            // into the config loader directly as function calls
+                            // config.paths.insert(
+                            //     "theme_root".to_string(),
+                            //     project_root
+                            //         .join(PathBuf::from(format!("themes/{}", config.theme))),
+                            // );
+                            // config.paths.insert(
+                            //     "theme_tests_root".to_string(),
+                            //     project_root
+                            //         .join(PathBuf::from(format!("themes/{}/tests", config.theme))),
+                            // );
+                            // config.paths.insert(
+                            //     "theme_tests_content_root".to_string(),
+                            //     project_root.join(PathBuf::from(format!(
+                            //         "themes/{}/tests/content",
+                            //         config.theme
+                            //     ))),
+                            // );
+                            // config
+                            //     .paths
+                            //     .insert("neopoligen_root".to_string(), neo_root.clone());
+                            // config
+                            //     .paths
+                            //     .insert("project_root".to_string(), project_root.clone());
+                            // config.paths.insert(
+                            //     "content_root".to_string(),
+                            //     project_root.join(PathBuf::from("content")),
+                            // );
+                            // config.paths.insert(
+                            //     "render_errors_root".to_string(),
+                            //     project_root.join(PathBuf::from("status/render-errors")),
+                            // );
+                            // config.paths.insert(
+                            //     "theme_errors_root".to_string(),
+                            //     project_root.join(PathBuf::from("status/theme-errors")),
+                            // );
+                            // config.paths.insert(
+                            //     "themes_root".to_string(),
+                            //     project_root.join(PathBuf::from("themes")),
+                            // );
+                            // config.paths.insert(
+                            //     "output_root".to_string(),
+                            //     project_root.join(PathBuf::from("docs")),
+                            // );
+                            // config.paths.insert(
+                            //     "status_root".to_string(),
+                            //     project_root.join(PathBuf::from("status")),
+                            // );
+                            // config.paths.insert(
+                            //     "files_root".to_string(),
+                            //     project_root.join(PathBuf::from("files")),
+                            // );
+                            // config.paths.insert(
+                            //     "images_root".to_string(),
+                            //     project_root.join(PathBuf::from("images")),
+                            // );
+                            // config.paths.insert(
+                            //     "mp3s_root".to_string(),
+                            //     project_root.join(PathBuf::from("mp3s")),
+                            // );
+                            // config.paths.insert(
+                            //     "scripts_root".to_string(),
+                            //     project_root.join(PathBuf::from("scripts")),
+                            // );
+                            // config
+                            //     .paths
+                            //     .insert("site_config_path".to_string(), site_config_path.clone());
+
+                            //
                             Ok(config)
                         }
                         Err(e) => Err(format!(
@@ -467,10 +472,7 @@ async fn run_web_server(site_config: SiteConfig) {
     let livereload = LiveReloadLayer::new();
     let reloader = livereload.reloader();
     let app = Router::new()
-        .nest_service(
-            "/",
-            ServeDir::new(&site_config.paths.get("output_root").unwrap()),
-        )
+        .nest_service("/", ServeDir::new(&site_config.output_dir()))
         .layer(livereload);
     event!(Level::INFO, "Starting web server");
     let (tx, rx) = mpsc::channel(1);

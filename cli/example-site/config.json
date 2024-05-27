@@ -1,11 +1,14 @@
 {
+    "_comments": [
+        "TODO: Remove max_image with. each image will set it's own sizes"
+    ],
     "base_url": "http://localhost:1989",
     "default_language": "en",
     "input_date_formats": ["%Y-%m-%d"],
     "max_image_width": 1800,
-    "theme": "neopoligen-v0.1.0",
-    "theme_options": {
-        "site_name_for_title": "Neopoligen Example Site"
+    "theme": {
+        "name": "neopoligen-v0.1.0",
+        "site_name": "Neopoligen Example Site"
       }
   }
   

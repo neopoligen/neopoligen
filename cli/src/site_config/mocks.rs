@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 
 use crate::sections::*;
-use crate::site_config::SiteConfig;
+use crate::site_config::*;
 //use serde_json::Value;
 use std::path::PathBuf;
 
@@ -23,8 +23,11 @@ impl SiteConfig {
             base_url_raw: Some("https://www.example.com".to_string()),
             default_language: Some("en".to_string()),
             max_image_width: Some(1800),
-            theme: "mock-config-theme".to_string(),
-            theme_options: None,
+            theme: ThemeConfig {
+                name: "mock-config-theme".to_string(),
+                images: None,
+                site_name: None,
+            },
             sections: Sections {
                 basic: vec![
                     "bookmark".to_string(),
