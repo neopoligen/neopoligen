@@ -43,7 +43,7 @@ pub struct ThemeConfig {
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct ImageConfig {
     pub template: String,
-    pub widths: Vec<u32>,
+    pub max_width: u32,
 }
 
 impl SiteConfig {
@@ -77,10 +77,17 @@ impl SiteConfig {
 
     pub fn image_widths(&self) -> Vec<u32> {
         let mut tmp = BTreeSet::new();
+        // hard coded sizes for responsive images.
+        // these get added into the mix with the
+        // explicitly defined ones from the config
+        tmp.insert(100);
+        tmp.insert(300);
+        tmp.insert(500);
+        tmp.insert(750);
+        tmp.insert(1000);
+
         for image in self.theme.images.iter() {
-            for width in image.widths.iter() {
-                tmp.insert(width.clone());
-            }
+            tmp.insert(image.max_width);
         }
         itertools::sorted(tmp).collect()
     }

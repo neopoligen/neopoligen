@@ -12,7 +12,7 @@ fn base_url_remove_trialing_slash() {
 #[test]
 fn image_widths() {
     let config = SiteConfig::mock1();
-    let left = vec![100, 300, 400, 600, 3000];
+    let left = vec![100, 180, 300, 500, 750, 1000, 2400];
     let right = config.image_widths();
     assert_eq!(left, right)
 }

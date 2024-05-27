@@ -29,11 +29,11 @@ impl SiteConfig {
                 images: vec![
                     ImageConfig {
                         template: "default".to_string(),
-                        widths: vec![400, 600, 3000],
+                        max_width: 2400,
                     },
                     ImageConfig {
                         template: "small".to_string(),
-                        widths: vec![100, 300, 400],
+                        max_width: 180,
                     },
                 ],
             },

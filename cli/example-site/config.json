@@ -8,7 +8,7 @@
     "images": [
       {
         "template": "default",
-        "widths": [300, 500, 900]
+        "max_width": 900
       }
     ]
   },
