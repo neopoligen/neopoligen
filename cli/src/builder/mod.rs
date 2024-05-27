@@ -543,9 +543,9 @@ body {
     }
 
     #[instrument(skip(self))]
-    pub fn update_image_cache(&self) -> Result<()> {
+    pub fn update_image_cache(&mut self) -> Result<()> {
         event!(Level::INFO, "Updating Image Cache");
-        for image in self.images.iter() {
+        for image in self.images.iter_mut() {
             let base_dir = self.config.image_cache_dir().join(image.key()?);
             let raw_cache_path = base_dir.join(format!("raw.{}", image.extension()?));
             if cache_is_stale(&image.source_path, &raw_cache_path) {
@@ -558,7 +558,11 @@ body {
                 std::fs::write(&raw_cache_path, &data)?;
 
                 let decoder = Decoder::from_path(&image.source_path)?;
-                let i = decoder.decode()?;
+                let data = decoder.decode()?;
+                image.width = Some(data.width());
+                image.height = Some(data.height());
+
+                image.set_dimensions(self.config.image_widths())?;
                 dbg!(&image.versions);
 
                 //             let decoder = Decoder::from_path(&source_path)?;
