@@ -83,6 +83,7 @@ impl Builder {
         let mut env = Environment::new();
         env.set_debug(true);
         env.add_function("highlight_code", highlight_code);
+        env.add_function("image_path", image_path);
         env.set_syntax(
             SyntaxConfig::builder()
                 .block_delimiters("[!", "!]")
@@ -205,7 +206,8 @@ impl Builder {
             if let (Some(stem), Some(extension)) =
                 (source_path.file_stem(), source_path.extension())
             {
-                let stem = stem.to_string_lossy().to_string().to_lowercase();
+                let stem = stem.to_string_lossy().to_string();
+                event!(Level::INFO, "- Image: {}", stem);
                 if extension.to_ascii_lowercase() == "jpg"
                     || extension.to_ascii_lowercase() == "jpeg"
                     || extension.to_ascii_lowercase() == "png"
@@ -215,48 +217,32 @@ impl Builder {
                             .strip_prefix(self.config.image_source_dir())
                             .unwrap(),
                     );
-                    let dest_path = self.config.image_dest_dir().join(
-                        source_path
-                            .strip_prefix(self.config.image_source_dir())
-                            .unwrap(),
-                    );
-                    if source_path.is_dir() {
-                        fs::create_dir_all(&cache_path)?;
-                        fs::create_dir_all(&dest_path)?;
-                    } else {
-                        if is_cache_stale(&source_path, &cache_path) {
-                            // don't use fs::copy here because it'll trigger an
-                            // infinite loop with notify on macs
-                            let data = std::fs::read(&source_path)?;
-                            std::fs::write(&cache_path, &data)?;
-                            let image_dir = &cache_path.parent().unwrap().join(stem);
-                            // dbg!(image_dir);
-                            fs::create_dir_all(&image_dir)?;
-                            let decoder = Decoder::from_path(&source_path)?;
-                            let image = decoder.decode()?;
-                            let resize_width =
-                                std::cmp::min(image.width(), self.config.max_image_width.unwrap());
-                            // dbg!(resize_width);
-                            let base_image_path = image_dir.join(format!(
-                                "base.{}",
-                                extension.to_string_lossy().to_ascii_lowercase()
-                            ));
-                            if &extension.to_ascii_lowercase() == "jpg"
-                                || &extension.to_ascii_lowercase() == "jpeg"
-                            {
-                                resize_and_optimize_jpg(
-                                    &cache_path,
-                                    resize_width,
-                                    &base_image_path,
-                                )?;
-                            }
-                            if &extension.to_ascii_lowercase() == "png" {
-                                resize_and_optimize_png(
-                                    &cache_path,
-                                    resize_width,
-                                    &base_image_path,
-                                )?;
-                            }
+                    if is_cache_stale(&source_path, &cache_path) {
+                        let parent_dir = cache_path.parent().unwrap();
+                        fs::create_dir_all(&parent_dir)?;
+                        // don't use fs::copy here because it'll trigger an
+                        // infinite loop with notify on macs
+                        let data = std::fs::read(&source_path)?;
+                        std::fs::write(&cache_path, &data)?;
+                        let image_dir = &cache_path.parent().unwrap().join(stem);
+                        // dbg!(image_dir);
+                        fs::create_dir_all(&image_dir)?;
+                        let decoder = Decoder::from_path(&source_path)?;
+                        let image = decoder.decode()?;
+                        let resize_width =
+                            std::cmp::min(image.width(), self.config.max_image_width.unwrap());
+                        // dbg!(resize_width);
+                        let base_image_path = image_dir.join(format!(
+                            "base.{}",
+                            extension.to_string_lossy().to_ascii_lowercase()
+                        ));
+                        if &extension.to_ascii_lowercase() == "jpg"
+                            || &extension.to_ascii_lowercase() == "jpeg"
+                        {
+                            resize_and_optimize_jpg(&cache_path, resize_width, &base_image_path)?;
+                        }
+                        if &extension.to_ascii_lowercase() == "png" {
+                            resize_and_optimize_png(&cache_path, resize_width, &base_image_path)?;
                         }
                     }
                 }
@@ -488,6 +474,10 @@ pub fn highlight_code(args: &[Value]) -> String {
         .map(|line| format!(r#"<span class="line-marker"></span>{}"#, line))
         .collect();
     output_html.join("\n")
+}
+
+pub fn image_path(args: &[Value]) -> Option<String> {
+    Some("/images/stills/hackers/images/hackers-frame-000003471/base.jpg".to_string())
 }
 
 pub fn is_cache_stale(source_file: &PathBuf, cache_file: &PathBuf) -> bool {

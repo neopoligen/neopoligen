@@ -1,1 +1,3 @@
-[TODO: Images]
+<section>
+<img src="[@ image_path(section.flags[0]) @]" />
+
