@@ -207,6 +207,7 @@ impl Builder {
             {
                 let stem = stem.to_string_lossy().to_string().to_lowercase();
                 if extension.to_ascii_lowercase() == "jpg"
+                    || extension.to_ascii_lowercase() == "jpeg"
                     || extension.to_ascii_lowercase() == "png"
                 {
                     let cache_path = self.config.image_cache_dir().join(
@@ -229,20 +230,28 @@ impl Builder {
                             let data = std::fs::read(&source_path)?;
                             std::fs::write(&cache_path, &data)?;
                             let image_dir = &cache_path.parent().unwrap().join(stem);
-                            dbg!(image_dir);
+                            // dbg!(image_dir);
                             fs::create_dir_all(&image_dir)?;
                             let decoder = Decoder::from_path(&source_path)?;
                             let image = decoder.decode()?;
                             let resize_width =
                                 std::cmp::min(image.width(), self.config.max_image_width.unwrap());
-                            dbg!(resize_width);
-
+                            // dbg!(resize_width);
                             let base_image_path = image_dir.join(format!(
                                 "base.{}",
                                 extension.to_string_lossy().to_ascii_lowercase()
                             ));
-                            if &extension.to_ascii_lowercase() == "jpg" {
+                            if &extension.to_ascii_lowercase() == "jpg"
+                                || &extension.to_ascii_lowercase() == "jpeg"
+                            {
                                 resize_and_optimize_jpg(
+                                    &cache_path,
+                                    resize_width,
+                                    &base_image_path,
+                                )?;
+                            }
+                            if &extension.to_ascii_lowercase() == "png" {
+                                resize_and_optimize_png(
                                     &cache_path,
                                     resize_width,
                                     &base_image_path,
@@ -252,16 +261,22 @@ impl Builder {
                     }
                 }
             }
-
-            //dbg!(dest_path);
-            // let source_path = entry?.into_path();
-            // let dest_path = dest_dir.join(source_path.strip_prefix(&source_dir).unwrap());
-            // if source_path.is_dir() {
-            //     fs::create_dir_all(dest_path)?;
-            // } else {
-            //     let data = std::fs::read(source_path)?;
-            //     std::fs::write(dest_path, &data)?;
-            // }
+        }
+        for entry in WalkDir::new(self.config.image_cache_dir()) {
+            let cache_path = entry?.into_path();
+            let dest_path = self.config.image_dest_dir().join(
+                cache_path
+                    .strip_prefix(self.config.image_cache_dir())
+                    .unwrap(),
+            );
+            if cache_path.is_dir() {
+                fs::create_dir_all(&dest_path)?;
+            } else {
+                // don't use fs::copy here because it'll trigger an
+                // infinite loop with notify on macs
+                let data = std::fs::read(&cache_path)?;
+                std::fs::write(&dest_path, &data)?;
+            }
         }
         Ok(())
     }
@@ -488,6 +503,19 @@ fn resize_and_optimize_jpg(source: &PathBuf, width: u32, dest: &PathBuf) -> Resu
     let config = EncoderConfig::new(Codec::MozJpeg)
         .with_quality(90.0)
         .unwrap();
+    let file = File::create(&dest)?;
+    let encoder =
+        Encoder::new(file, DynamicImage::ImageRgba8(resized_image.into())).with_config(config);
+    encoder.encode()?;
+    Ok(())
+}
+
+fn resize_and_optimize_png(source: &PathBuf, width: u32, dest: &PathBuf) -> Result<()> {
+    let decoder = Decoder::from_path(source)?;
+    let image = decoder.decode()?;
+    let height = image.height() * width / image.width();
+    let resized_image = image.resize_to_fill(width, height, FilterType::Lanczos3);
+    let config = EncoderConfig::new(Codec::OxiPng);
     let file = File::create(&dest)?;
     let encoder =
         Encoder::new(file, DynamicImage::ImageRgba8(resized_image.into())).with_config(config);
