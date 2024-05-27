@@ -10,6 +10,7 @@ use minijinja::value::Value;
 use minijinja::Environment;
 use regex::Regex;
 use rimage::config::{Codec, EncoderConfig};
+use rimage::image::imageops::FilterType;
 use rimage::Decoder;
 use rimage::Encoder;
 use rusqlite::Connection;
@@ -197,9 +198,71 @@ impl Builder {
     }
 
     #[instrument(skip(self))]
-    pub fn make_sure_dirs_exist(&self) -> Result<()> {
-        event!(Level::INFO, "Making Sure Directories Exist");
-        let _ = fs::create_dir_all(self.config.custom_og_images_dir());
+    pub fn make_images(&mut self) -> Result<()> {
+        event!(Level::INFO, "Making Images");
+        for entry in WalkDir::new(self.config.image_source_dir()) {
+            let source_path = entry?.into_path();
+            if let (Some(stem), Some(extension)) =
+                (source_path.file_stem(), source_path.extension())
+            {
+                let stem = stem.to_string_lossy().to_string().to_lowercase();
+                if extension.to_ascii_lowercase() == "jpg"
+                    || extension.to_ascii_lowercase() == "png"
+                {
+                    let cache_path = self.config.image_cache_dir().join(
+                        source_path
+                            .strip_prefix(self.config.image_source_dir())
+                            .unwrap(),
+                    );
+                    let dest_path = self.config.image_dest_dir().join(
+                        source_path
+                            .strip_prefix(self.config.image_source_dir())
+                            .unwrap(),
+                    );
+                    if source_path.is_dir() {
+                        fs::create_dir_all(&cache_path)?;
+                        fs::create_dir_all(&dest_path)?;
+                    } else {
+                        if is_cache_stale(&source_path, &cache_path) {
+                            // don't use fs::copy here because it'll trigger an
+                            // infinite loop with notify on macs
+                            let data = std::fs::read(&source_path)?;
+                            std::fs::write(&cache_path, &data)?;
+                            let image_dir = &cache_path.parent().unwrap().join(stem);
+                            dbg!(image_dir);
+                            fs::create_dir_all(&image_dir)?;
+                            let decoder = Decoder::from_path(&source_path)?;
+                            let image = decoder.decode()?;
+                            let resize_width =
+                                std::cmp::min(image.width(), self.config.max_image_width.unwrap());
+                            dbg!(resize_width);
+
+                            let base_image_path = image_dir.join(format!(
+                                "base.{}",
+                                extension.to_string_lossy().to_ascii_lowercase()
+                            ));
+                            if &extension.to_ascii_lowercase() == "jpg" {
+                                resize_and_optimize_jpg(
+                                    &cache_path,
+                                    resize_width,
+                                    &base_image_path,
+                                )?;
+                            }
+                        }
+                    }
+                }
+            }
+
+            //dbg!(dest_path);
+            // let source_path = entry?.into_path();
+            // let dest_path = dest_dir.join(source_path.strip_prefix(&source_dir).unwrap());
+            // if source_path.is_dir() {
+            //     fs::create_dir_all(dest_path)?;
+            // } else {
+            //     let data = std::fs::read(source_path)?;
+            //     std::fs::write(dest_path, &data)?;
+            // }
+        }
         Ok(())
     }
 
@@ -210,20 +273,6 @@ impl Builder {
         let _ = fs::create_dir_all(self.config.og_images_cache_dir());
         let _ = fs::create_dir_all(self.config.og_images_dir());
         let tmp_path = self.config.tmp_dir().join("og-image.png");
-
-        let custom_og_images = get_files_with_extension_in_a_single_directory(
-            &self.config.custom_og_images_dir(),
-            "jpg",
-        );
-
-        for custom_image in custom_og_images {
-            let cache_path = self
-                .config
-                .og_images_cache_dir()
-                .join(custom_image.file_name().unwrap());
-            fs::copy(&custom_image, &cache_path)?;
-        }
-
         for p in &self.pages {
             if let (Some(id), Some(title)) = (&p.1.id(), &p.1.title_as_plain_text()) {
                 let mut make_image = false;
@@ -290,6 +339,17 @@ impl Builder {
                 let _ = std::fs::copy(&cache_path, &output_path);
             }
         }
+        let custom_og_images = get_files_with_extension_in_a_single_directory(
+            &self.config.custom_og_images_dir(),
+            "jpg",
+        );
+        for custom_image in custom_og_images {
+            let output_path = self
+                .config
+                .og_images_dir()
+                .join(custom_image.file_name().unwrap());
+            fs::copy(&custom_image, &output_path)?;
+        }
         Ok(())
     }
 
@@ -325,6 +385,15 @@ body {
         } else {
             let _ = write_file_with_mkdir(&output_path, &no_last_edit_content);
         }
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn prep_dirs(&self) -> Result<()> {
+        event!(Level::INFO, "Making Sure Directories Exist");
+        let _ = fs::create_dir_all(self.config.custom_og_images_dir());
+        let _ = fs::create_dir_all(self.config.image_cache_dir());
+        let _ = fs::create_dir_all(self.config.image_dest_dir());
         Ok(())
     }
 
@@ -404,6 +473,26 @@ pub fn highlight_code(args: &[Value]) -> String {
         .map(|line| format!(r#"<span class="line-marker"></span>{}"#, line))
         .collect();
     output_html.join("\n")
+}
+
+pub fn is_cache_stale(source_file: &PathBuf, cache_file: &PathBuf) -> bool {
+    // TODO: Actually check the cache
+    true
+}
+
+fn resize_and_optimize_jpg(source: &PathBuf, width: u32, dest: &PathBuf) -> Result<()> {
+    let decoder = Decoder::from_path(source)?;
+    let image = decoder.decode()?;
+    let height = image.height() * width / image.width();
+    let resized_image = image.resize_to_fill(width, height, FilterType::Lanczos3);
+    let config = EncoderConfig::new(Codec::MozJpeg)
+        .with_quality(90.0)
+        .unwrap();
+    let file = File::create(&dest)?;
+    let encoder =
+        Encoder::new(file, DynamicImage::ImageRgba8(resized_image.into())).with_config(config);
+    encoder.encode()?;
+    Ok(())
 }
 
 pub fn trim_empty_lines(source: &str) -> String {

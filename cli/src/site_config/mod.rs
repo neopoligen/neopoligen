@@ -5,7 +5,6 @@ use serde::Deserialize;
 use serde::Serialize;
 use serde_json;
 use serde_json::Value;
-use std::arch::aarch64;
 use std::collections::BTreeMap;
 use std::fs::{self, DirEntry};
 use std::io;
@@ -33,6 +32,9 @@ pub struct SiteConfig {
 
     pub theme: String,
     pub theme_options: Option<Value>,
+
+    #[serde(default = "default_max_image_width")]
+    pub max_image_width: Option<u32>,
 }
 
 impl SiteConfig {
@@ -52,7 +54,13 @@ impl SiteConfig {
     pub fn content_dir(&self) -> PathBuf {
         self.project_root.clone().unwrap().join("content")
     }
-    pub fn images_dir(&self) -> PathBuf {
+    pub fn image_cache_dir(&self) -> PathBuf {
+        self.cache_dir().join("images")
+    }
+    pub fn image_dest_dir(&self) -> PathBuf {
+        self.output_dir().join("images")
+    }
+    pub fn image_source_dir(&self) -> PathBuf {
         self.project_root.clone().unwrap().join("images")
     }
     pub fn og_images_dir(&self) -> PathBuf {
@@ -158,6 +166,10 @@ impl SiteConfig {
 
 fn default_language() -> Option<String> {
     Some("en".to_string())
+}
+
+fn default_max_image_width() -> Option<u32> {
+    Some(1800)
 }
 
 fn empty_paths() -> BTreeMap<String, PathBuf> {

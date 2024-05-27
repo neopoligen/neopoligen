@@ -156,10 +156,13 @@ fn build_site(site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
     if let Ok(mut builder) = Builder::new(site_config.clone()) {
         let _ = empty_dir(&site_config.output_dir());
-        let _ = builder.make_sure_dirs_exist();
+        let _ = builder.prep_dirs();
         // let _ = builder.debug_flush_cache();
         let _ = builder.load_cached_pages();
         let _ = builder.load_source_files();
+        if let Err(e) = builder.make_images() {
+            event!(Level::ERROR, "{}", e);
+        }
         let _ = builder.generate_missing_asts();
         let _ = builder.generate_page_content();
         let _ = builder.output_content_files();

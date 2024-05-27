@@ -22,6 +22,7 @@ impl SiteConfig {
         SiteConfig {
             base_url_raw: Some("https://www.example.com".to_string()),
             default_language: Some("en".to_string()),
+            max_image_width: Some(1800),
             theme: "mock-config-theme".to_string(),
             theme_options: None,
             sections: Sections {

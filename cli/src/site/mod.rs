@@ -64,7 +64,7 @@ impl Site {
 
 impl Site {
     pub fn copy_images(&self) -> Result<(), std::io::Error> {
-        let source_dir = self.config.images_dir();
+        let source_dir = self.config.image_source_dir();
         let dest_dir = self.config.output_dir().join(PathBuf::from("images"));
         for entry in WalkDir::new(&source_dir) {
             let source_path = entry?.into_path();
@@ -203,7 +203,7 @@ impl Site {
                         // helpers => helper_obj,
                         page_id => p.0
                     )) {
-                        Ok(output) => {
+                        Ok(_output) => {
                             //outputs.push((
                             //p.1.full_cache_path.clone().unwrap(),
                             //p.1.full_output_path.clone().unwrap(),
@@ -212,7 +212,7 @@ impl Site {
                             // dbg!(&p.1.rel_output_path);
                             //outputs.insert(p.0.to_string(), p.clone());
                         }
-                        Err(e) => {
+                        Err(_e) => {
                             // event!(Level::ERROR, "{}\n{:?}", p.1.source_path.display(), e);
                             //render_errors.insert(p.0, format!("{:?}", e));
                             ()
@@ -571,6 +571,8 @@ pub fn optimize_png(input: &PathBuf, output: &PathBuf) -> Result<()> {
     Ok(())
 }
 
-pub fn is_cache_stale(source_file: &PathBuf, cache_file: &PathBuf) -> bool {
+pub fn is_cache_stale(_source_file: &PathBuf, _cache_file: &PathBuf) -> bool {
+    // This is deprecated in favor of the builder and will
+    // be removed when site_v2 is in place
     true
 }
