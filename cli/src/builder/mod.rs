@@ -563,7 +563,17 @@ body {
                 image.height = Some(data.height());
 
                 image.set_dimensions(self.config.image_widths())?;
-                dbg!(&image.versions);
+
+                for version in image.versions.iter() {
+                    let version_path =
+                        base_dir.join(format!("{}.{}", version.0, image.extension()?));
+
+                    if image.extension()? == "jpg" || image.extension()? == "jpeg" {
+                        resize_and_optimize_jpg(&image.source_path, version.0, &version_path)?;
+                    }
+
+                    dbg!(version_path);
+                }
 
                 //             let decoder = Decoder::from_path(&source_path)?;
                 //             let image = decoder.decode()?;
