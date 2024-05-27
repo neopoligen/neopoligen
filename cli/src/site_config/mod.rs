@@ -3,6 +3,7 @@ pub mod mocks;
 use crate::sections::*;
 use serde::Deserialize;
 use serde::Serialize;
+use std::collections::BTreeSet;
 // use serde_json;
 // use serde_json::Value;
 // use std::collections::BTreeMap;
@@ -49,51 +50,76 @@ impl SiteConfig {
     pub fn base_url(&self) -> String {
         self.base_url_raw.trim_end_matches("/").to_string()
     }
+
     pub fn cache_db_path(&self) -> PathBuf {
         self.cache_dir().join("cache.sqlite")
     }
+
     pub fn cache_dir(&self) -> PathBuf {
         self.project_root.clone().unwrap().join("cache")
     }
+
     pub fn content_dir(&self) -> PathBuf {
         self.project_root.clone().unwrap().join("content")
     }
+
     pub fn image_cache_dir(&self) -> PathBuf {
         self.cache_dir().join("images")
     }
+
     pub fn image_dest_dir(&self) -> PathBuf {
         self.output_dir().join("images")
     }
+
     pub fn image_source_dir(&self) -> PathBuf {
         self.project_root.clone().unwrap().join("images")
     }
+
+    pub fn image_widths(&self) -> Vec<u32> {
+        let mut tmp = BTreeSet::new();
+        for image in self.theme.images.iter() {
+            for width in image.widths.iter() {
+                tmp.insert(width.clone());
+            }
+        }
+        itertools::sorted(tmp).collect()
+    }
+
     pub fn og_images_dir(&self) -> PathBuf {
         self.output_dir().clone().join("og-images")
     }
+
     pub fn og_images_cache_dir(&self) -> PathBuf {
         self.cache_dir().clone().join("og-images")
     }
+
     pub fn output_dir(&self) -> PathBuf {
         self.project_root.clone().unwrap().join("docs")
     }
+
     pub fn page_cache_dir(&self) -> PathBuf {
         self.cache_dir().join("pages")
     }
+
     pub fn custom_og_images_dir(&self) -> PathBuf {
         self.project_root.clone().unwrap().join("og-images")
     }
+
     pub fn tmp_dir(&self) -> PathBuf {
         self.cache_dir().join("tmp")
     }
+
     pub fn themes_dir(&self) -> PathBuf {
         self.project_root.clone().unwrap().join("themes")
     }
+
     pub fn theme_dir(&self) -> PathBuf {
         self.project_root
             .clone()
             .unwrap()
             .join(PathBuf::from(format!("themes/{}", self.theme.name)))
     }
+
     pub fn templates_dir(&self) -> PathBuf {
         self.theme_dir().join("templates")
     }

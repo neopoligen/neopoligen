@@ -557,10 +557,9 @@ body {
                 let data = std::fs::read(&image.source_path)?;
                 std::fs::write(&raw_cache_path, &data)?;
 
-                //
-
                 let decoder = Decoder::from_path(&image.source_path)?;
-                let image = decoder.decode()?;
+                let i = decoder.decode()?;
+                dbg!(&image.versions);
 
                 //             let decoder = Decoder::from_path(&source_path)?;
                 //             let image = decoder.decode()?;
