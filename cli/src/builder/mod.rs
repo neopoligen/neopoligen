@@ -1,5 +1,6 @@
 pub mod mocks;
 
+use crate::helpers::*;
 use crate::image::Image;
 use crate::og_image::*;
 use crate::page_v2::PageV2;
@@ -179,10 +180,10 @@ impl Builder {
             let source_path = entry?.into_path();
             if let Some(_) = source_path.extension() {
                 self.images.push(Image {
-                    config: self.config.clone(),
                     source_path,
                     width: None,
                     height: None,
+                    versions: vec![],
                 });
             }
         }
@@ -545,10 +546,43 @@ body {
     pub fn update_image_cache(&self) -> Result<()> {
         event!(Level::INFO, "Updating Image Cache");
         for image in self.images.iter() {
-            let cache_path = self.config.image_cache_dir().join(image.key()?);
-            dbg!(cache_path);
-        }
+            let base_dir = self.config.image_cache_dir().join(image.key()?);
+            let raw_cache_path = base_dir.join(format!("raw.{}", image.extension()?));
+            if cache_is_stale(&image.source_path, &raw_cache_path) {
+                let parent_dir = raw_cache_path
+                    .parent()
+                    .expect("could not get image cache parent director");
+                fs::create_dir_all(parent_dir)?;
+                // Reminder: don't fs::copy because of notify loop bug
+                let data = std::fs::read(&image.source_path)?;
+                std::fs::write(&raw_cache_path, &data)?;
 
+                //
+
+                let decoder = Decoder::from_path(&image.source_path)?;
+                let image = decoder.decode()?;
+
+                //             let decoder = Decoder::from_path(&source_path)?;
+                //             let image = decoder.decode()?;
+                //             let resize_width =
+                //                 std::cmp::min(image.width(), self.config.max_image_width.unwrap());
+                //             // dbg!(resize_width);
+                //             let base_image_path = image_dir.join(format!(
+                //                 "base.{}",
+                //                 extension.to_string_lossy().to_ascii_lowercase()
+                //             ));
+                //             if &extension.to_ascii_lowercase() == "jpg"
+                //                 || &extension.to_ascii_lowercase() == "jpeg"
+                //             {
+                //                 resize_and_optimize_jpg(&cache_path, resize_width, &base_image_path)?;
+                //             }
+
+                // let img = Reader::open(&self.source_path)?;
+                // let data = img.decode()?;
+                // self.width = Some(data.width());
+                // self.height = Some(data.height());
+            }
+        }
         Ok(())
     }
 
@@ -602,11 +636,6 @@ pub fn highlight_code(args: &[Value]) -> String {
 
 pub fn image_path(args: &[Value]) -> Option<String> {
     Some("/images/stills/hackers/images/hackers-frame-000003471/base.jpg".to_string())
-}
-
-pub fn is_cache_stale(source_file: &PathBuf, cache_file: &PathBuf) -> bool {
-    // TODO: Actually check the cache
-    true
 }
 
 fn resize_and_optimize_jpg(source: &PathBuf, width: u32, dest: &PathBuf) -> Result<()> {
