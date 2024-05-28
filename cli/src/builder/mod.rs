@@ -185,7 +185,6 @@ impl Builder {
         )?;
         let mut stmt = conn.prepare("SELECT path, data FROM image_cache")?;
         let mut rows = stmt.query([])?;
-
         while let Some(row) = rows.next()? {
             let path_string: String = row.get(0)?;
             let path = PathBuf::from(path_string);
@@ -193,7 +192,6 @@ impl Builder {
             let i: Image = serde_json::from_str(&img.to_string())?;
             self.images.insert(path, i);
         }
-
         Ok(())
     }
 
@@ -404,6 +402,26 @@ body {
     }
 
     #[instrument(skip(self))]
+    pub fn update_image_cache_db(&self) -> Result<()> {
+        event!(Level::INFO, "Updating Image Cache DB");
+        let mut conn = Connection::open(self.config.cache_db_path())?;
+        conn.execute("DROP TABLE IF EXISTS image_cache", ())?;
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS image_cache(path TEXT, data TEXT)",
+            (),
+        )?;
+        let query = "INSERT INTO image_cache(path, data) VALUES (?1, ?2)";
+        let tx = conn.transaction()?;
+        for (source_path, image) in self.images.iter() {
+            if let Ok(data) = serde_json::to_string(image) {
+                tx.execute(query, (source_path.to_string_lossy().to_string(), data))?;
+            };
+        }
+        tx.commit()?;
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn update_page_cache(&self) -> Result<()> {
         event!(Level::INFO, "Updating Page Cache");
         let mut conn = Connection::open(self.config.cache_db_path())?;
@@ -434,12 +452,12 @@ body {
     }
 
     #[instrument(skip(self))]
-    pub fn update_image_cache(&mut self) -> Result<()> {
+    pub fn generate_cache_images(&mut self) -> Result<()> {
         event!(Level::INFO, "Updating Image Cache");
         for (_, image) in self.images.iter_mut() {
             let base_dir = self.config.image_cache_dir().join(image.key()?);
             let raw_cache_path = base_dir.join(format!("raw.{}", image.extension()?));
-            if cache_is_stale(&image.source_path, &raw_cache_path) {
+            if image.width == None || cache_is_stale(&image.source_path, &raw_cache_path) {
                 let parent_dir = raw_cache_path
                     .parent()
                     .expect("could not get image cache parent director");
@@ -447,24 +465,19 @@ body {
                 // Reminder: don't fs::copy because of notify loop bug
                 let data = std::fs::read(&image.source_path)?;
                 std::fs::write(&raw_cache_path, &data)?;
-
                 let decoder = Decoder::from_path(&image.source_path)?;
                 let data = decoder.decode()?;
                 image.width = Some(data.width());
                 image.height = Some(data.height());
-
                 image.set_dimensions(self.config.image_widths())?;
-
                 for version in image.versions.iter() {
                     let version_path =
                         base_dir.join(format!("{}.{}", version.0, image.extension()?));
-
                     if image.extension()? == "jpg" || image.extension()? == "jpeg" {
                         resize_and_optimize_jpg(&image.source_path, version.0, &version_path)?;
                     } else {
                         event!(Level::ERROR, "TODO: Process png and other image types");
                     }
-
                     dbg!(version_path);
                 }
 

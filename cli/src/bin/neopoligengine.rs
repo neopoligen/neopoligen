@@ -160,8 +160,8 @@ fn build_site(site_config: &SiteConfig) {
         let _ = builder.prep_dirs();
         let _ = builder.load_source_images();
         let _ = builder.load_cached_images();
-
-        // let _ = builder.update_image_cache();
+        let _ = builder.generate_cache_images();
+        let _ = builder.update_image_cache_db();
         // let _ = builder.copy_image_cache_to_prod();
         // let _ = builder.load_cached_pages();
         // let _ = builder.load_source_files();

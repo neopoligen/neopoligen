@@ -6,7 +6,7 @@ pub fn cache_is_stale(source_path: &PathBuf, cache_path: &PathBuf) -> bool {
     if !cache_path.is_file() {
         true
     } else {
-        true
+        false
     }
 }
 
