@@ -2,12 +2,14 @@ pub mod mocks;
 
 use crate::helpers::*;
 use anyhow::Result;
+use serde::Deserialize;
+use serde::Serialize;
 use std::path::PathBuf;
 // use anyhow::Error;
 //use rimage::image::io::Reader;
 //use std::collections::BTreeSet;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Image {
     // TODO: Remove config
     // pub config: SiteConfig,

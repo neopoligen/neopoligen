@@ -186,13 +186,13 @@ impl Builder {
         let mut stmt = conn.prepare("SELECT path, data FROM image_cache")?;
         let mut rows = stmt.query([])?;
 
-        // while let Some(row) = rows.next()? {
-        //     let path_string: String = row.get(0)?;
-        //     let path = PathBuf::from(path_string);
-        //     let page: String = row.get(1)?;
-        //     let p: PageV2 = serde_json::from_str(&page.to_string())?;
-        //     self.pages.insert(path, p);
-        // }
+        while let Some(row) = rows.next()? {
+            let path_string: String = row.get(0)?;
+            let path = PathBuf::from(path_string);
+            let img: String = row.get(1)?;
+            let i: Image = serde_json::from_str(&img.to_string())?;
+            self.images.insert(path, i);
+        }
 
         Ok(())
     }
