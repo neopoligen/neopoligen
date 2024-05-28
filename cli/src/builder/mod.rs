@@ -32,7 +32,7 @@ use walkdir::WalkDir;
 pub struct Builder {
     pub pages: BTreeMap<PathBuf, PageV2>,
     pub config: SiteConfig,
-    pub images: Vec<Image>,
+    pub images: BTreeMap<PathBuf, Image>,
     pub last_edit: Option<String>,
 }
 
@@ -42,7 +42,7 @@ impl Builder {
             pages: BTreeMap::new(),
             config,
             last_edit: None,
-            images: vec![],
+            images: BTreeMap::new(),
         })
     }
 }
@@ -176,6 +176,28 @@ impl Builder {
     }
 
     #[instrument(skip(self))]
+    pub fn load_cached_images(&mut self) -> Result<()> {
+        event!(Level::INFO, "Loading Cached Images");
+        let conn = Connection::open(self.config.cache_db_path())?;
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS image_cache (path TEXT, data TEXT)",
+            (),
+        )?;
+        let mut stmt = conn.prepare("SELECT path, data FROM image_cache")?;
+        let mut rows = stmt.query([])?;
+
+        // while let Some(row) = rows.next()? {
+        //     let path_string: String = row.get(0)?;
+        //     let path = PathBuf::from(path_string);
+        //     let page: String = row.get(1)?;
+        //     let p: PageV2 = serde_json::from_str(&page.to_string())?;
+        //     self.pages.insert(path, p);
+        // }
+
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn load_cached_pages(&mut self) -> Result<()> {
         event!(Level::INFO, "Loading Cached Files");
         let conn = Connection::open(self.config.cache_db_path())?;
@@ -196,17 +218,20 @@ impl Builder {
     }
 
     #[instrument(skip(self))]
-    pub fn load_images(&mut self) -> Result<()> {
+    pub fn load_source_images(&mut self) -> Result<()> {
         event!(Level::INFO, "Loading Images");
         for entry in WalkDir::new(self.config.image_source_dir()) {
             let source_path = entry?.into_path();
             if let Some(_) = source_path.extension() {
-                self.images.push(Image {
-                    source_path,
-                    width: None,
-                    height: None,
-                    versions: vec![],
-                });
+                self.images.insert(
+                    source_path.clone(),
+                    Image {
+                        source_path,
+                        width: None,
+                        height: None,
+                        versions: vec![],
+                    },
+                );
             }
         }
         Ok(())
@@ -411,7 +436,7 @@ body {
     #[instrument(skip(self))]
     pub fn update_image_cache(&mut self) -> Result<()> {
         event!(Level::INFO, "Updating Image Cache");
-        for image in self.images.iter_mut() {
+        for (_, image) in self.images.iter_mut() {
             let base_dir = self.config.image_cache_dir().join(image.key()?);
             let raw_cache_path = base_dir.join(format!("raw.{}", image.extension()?));
             if cache_is_stale(&image.source_path, &raw_cache_path) {

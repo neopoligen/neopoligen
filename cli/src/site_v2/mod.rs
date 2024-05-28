@@ -28,10 +28,10 @@ impl SiteV2 {
     pub fn new(
         config: &SiteConfig,
         source_pages: &BTreeMap<PathBuf, PageV2>,
-        source_images: &Vec<Image>,
+        source_images: &BTreeMap<PathBuf, Image>,
     ) -> SiteV2 {
         let mut images = BTreeMap::new();
-        for image in source_images.iter() {
+        for (_source_path, image) in source_images.iter() {
             images.insert(
                 image.key().expect("key"),
                 SiteImage {
