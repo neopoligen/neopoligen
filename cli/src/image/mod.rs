@@ -5,14 +5,12 @@ use anyhow::Result;
 use serde::Deserialize;
 use serde::Serialize;
 use std::path::PathBuf;
-// use anyhow::Error;
-//use rimage::image::io::Reader;
-//use std::collections::BTreeSet;
+use xmp_toolkit::{xmp_ns, OpenFileOptions, XmpFile};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Image {
-    // TODO: Remove config
-    // pub config: SiteConfig,
+    pub alt_text: Option<String>,
+    pub alt_text_extended: Option<String>,
     pub height: Option<u32>,
     pub source_path: PathBuf,
     pub width: Option<u32>,
@@ -28,6 +26,38 @@ impl Image {
             .to_string_lossy()
             .to_string()
             .to_lowercase())
+    }
+
+    pub fn get_alt_text(&mut self) -> Result<()> {
+        let mut f = XmpFile::new()?;
+        f.open_file(
+            self.source_path.clone(),
+            OpenFileOptions::default().only_xmp().use_smart_handler(),
+        )
+        .or_else(|_err| {
+            f.open_file(
+                self.source_path.clone(),
+                OpenFileOptions::default().use_packet_scanning(),
+            )
+        })?;
+        let xmp = f.xmp().ok_or(std::fmt::Error)?;
+        if let Some((value, _actual_lang)) = xmp.localized_text(
+            xmp_ns::IPTC_CORE,
+            "AltTextAccessibility",
+            Some("en"),
+            "en-US",
+        ) {
+            self.alt_text = Some(value.value)
+        }
+        if let Some((value, _actual_lang)) = xmp.localized_text(
+            xmp_ns::IPTC_CORE,
+            "ExtDescrAccessibility",
+            Some("en"),
+            "en-US",
+        ) {
+            self.alt_text_extended = Some(value.value)
+        }
+        Ok(())
     }
 
     pub fn key(&self) -> Result<String> {

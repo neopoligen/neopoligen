@@ -38,3 +38,9 @@ pub fn clean_for_url(source: &str) -> Result<String> {
     let source = re.replace_all(&source, "");
     Ok(source.to_string())
 }
+
+pub fn safe_copy_file(source: &PathBuf, dest: &PathBuf) -> Result<()> {
+    let data = std::fs::read(source)?;
+    std::fs::write(dest, &data)?;
+    Ok(())
+}

@@ -218,6 +218,30 @@ impl Builder {
     }
 
     #[instrument(skip(self))]
+    pub fn load_mp3s(&mut self) -> Result<()> {
+        // NOTE: Right now this just copies the files into
+        // their proper place.
+        event!(Level::INFO, "Loading Mp3s");
+        for entry in WalkDir::new(self.config.mp3_source_dir()) {
+            let source_path = entry?.into_path();
+            if let Some(ext) = source_path.extension() {
+                if ext.to_ascii_lowercase() == "mp3" {
+                    if let Some(stem) = source_path.file_stem() {
+                        if let Ok(base_name) = clean_for_url(&stem.to_string_lossy().to_string()) {
+                            let dest_mp3_path = self
+                                .config
+                                .mp3_dest_dir()
+                                .join(format!("{}.mp3", base_name));
+                            let _ = safe_copy_file(&source_path, &dest_mp3_path);
+                        }
+                    }
+                }
+            }
+        }
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn load_source_images(&mut self) -> Result<()> {
         event!(Level::INFO, "Loading Images");
         for entry in WalkDir::new(self.config.image_source_dir()) {
@@ -226,10 +250,12 @@ impl Builder {
                 self.images.insert(
                     source_path.clone(),
                     Image {
-                        source_path,
-                        width: None,
+                        alt_text: None,
+                        alt_text_extended: None,
                         height: None,
+                        source_path,
                         versions: vec![],
+                        width: None,
                     },
                 );
             }
@@ -400,6 +426,7 @@ body {
         let _ = fs::create_dir_all(self.config.custom_og_images_dir());
         let _ = fs::create_dir_all(self.config.image_cache_dir());
         let _ = fs::create_dir_all(self.config.image_dest_dir());
+        let _ = fs::create_dir_all(self.config.mp3_dest_dir());
         Ok(())
     }
 
@@ -461,6 +488,7 @@ body {
             let raw_cache_path = base_dir.join(format!("raw.{}", image.extension()?));
             if image.width == None || cache_is_stale(&image.source_path, &raw_cache_path) {
                 event!(Level::INFO, "Generating Image: {}", image.key().unwrap());
+                let _ = image.get_alt_text();
                 let parent_dir = raw_cache_path
                     .parent()
                     .expect("could not get image cache parent director");

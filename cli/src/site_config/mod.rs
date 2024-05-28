@@ -90,6 +90,13 @@ impl SiteConfig {
         itertools::sorted(tmp).collect()
     }
 
+    pub fn mp3_dest_dir(&self) -> PathBuf {
+        self.output_dir().join("mp3s")
+    }
+    pub fn mp3_source_dir(&self) -> PathBuf {
+        self.project_root.clone().unwrap().join("mp3s")
+    }
+
     pub fn og_images_dir(&self) -> PathBuf {
         self.output_dir().clone().join("og-images")
     }

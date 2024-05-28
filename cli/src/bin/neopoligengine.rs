@@ -175,6 +175,7 @@ fn build_site(site_config: &SiteConfig) {
         }
         let _ = builder.make_og_images();
         let _ = builder.copy_theme_assets();
+        let _ = builder.load_mp3s();
 
         //
     }

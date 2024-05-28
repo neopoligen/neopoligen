@@ -17,6 +17,8 @@ pub struct SiteV2 {
 
 #[derive(Debug, Serialize)]
 pub struct SiteImage {
+    alt_text: Option<String>,
+    alt_text_extended: Option<String>,
     width: u32,
     height: u32,
     key: String,
@@ -37,11 +39,13 @@ impl SiteV2 {
                 images.insert(
                     image.key().expect("key"),
                     SiteImage {
-                        width: image.width.expect("width"),
-                        height: image.height.expect("height"),
+                        alt_text: image.alt_text.clone(),
+                        alt_text_extended: image.alt_text_extended.clone(),
                         extension: image.extension().expect("extension"),
+                        height: image.height.expect("height"),
                         key: image.key().expect("key"),
                         versions: image.versions.clone(),
+                        width: image.width.expect("width"),
                     },
                 );
             }

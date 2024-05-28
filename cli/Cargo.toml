@@ -46,5 +46,6 @@ tracing-appender = "0.2.3"
 tracing-subscriber = { version = "0.3.18", features = ["json"] }
 usvg = "0.41.0"
 walkdir = "2.4.0"
+xmp_toolkit = "1.7.3"
 
 

@@ -25,7 +25,22 @@ srcset="
 src="[@ image.src @]"
 style="aspect-ratio: [@ image.data.width @] / [@ image.data.height @];"
 sizes="min(90vw, [@ image.max_width @]px)"
+
+alt="
+[!- if section.attrs.alt !]
+  [@ section.attrs.alt|escape @]
+[! else !]
+  [! if image.data.alt_text !]
+    [@ image.data.alt_text|escape @]
+  [! endif !]
+  [! if image.data.alt_text and image.data.alt_text_extended !] - [! endif !]
+  [! if image.data.alt_text_extended !]
+    [@ image.data.alt_text_extended|escape @]
+  [! endif !]
+  [! endif !]
+[! endif -!]
+"
 />
-[! endif !]
+
 
 
