@@ -8,3 +8,11 @@ fn clean_for_url_basic() {
     let right = clean_for_url(source).unwrap();
     assert_eq!(left, right);
 }
+
+#[test]
+fn clean_for_url_comp_multiple_dashes() {
+    let source = "alfa--bravo--charlie";
+    let left = "alfa-bravo-charlie";
+    let right = clean_for_url(source).unwrap();
+    assert_eq!(left, right);
+}

@@ -5,6 +5,7 @@ use crate::image::Image;
 use crate::og_image::*;
 use crate::page_v2::PageV2;
 use crate::site_config::SiteConfig;
+use crate::site_v2::SiteMp3;
 use crate::site_v2::SiteV2;
 use anyhow::Result;
 use image::DynamicImage;
@@ -34,15 +35,17 @@ pub struct Builder {
     pub config: SiteConfig,
     pub images: BTreeMap<PathBuf, Image>,
     pub last_edit: Option<String>,
+    pub mp3s: BTreeMap<String, SiteMp3>,
 }
 
 impl Builder {
     pub fn new(config: SiteConfig) -> Result<Builder> {
         Ok(Builder {
-            pages: BTreeMap::new(),
             config,
-            last_edit: None,
             images: BTreeMap::new(),
+            last_edit: None,
+            mp3s: BTreeMap::new(),
+            pages: BTreeMap::new(),
         })
     }
 }
@@ -109,7 +112,12 @@ impl Builder {
     #[instrument(skip(self))]
     pub fn generate_page_content(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating Page Content");
-        let site_obj = Value::from_object(SiteV2::new(&self.config, &self.pages, &self.images));
+        let site_obj = Value::from_object(SiteV2::new(
+            &self.config,
+            &self.pages,
+            &self.images,
+            &self.mp3s,
+        ));
         let mut env = Environment::new();
         env.set_debug(true);
         env.set_lstrip_blocks(true);
@@ -227,12 +235,17 @@ impl Builder {
             if let Some(ext) = source_path.extension() {
                 if ext.to_ascii_lowercase() == "mp3" {
                     if let Some(stem) = source_path.file_stem() {
-                        if let Ok(base_name) = clean_for_url(&stem.to_string_lossy().to_string()) {
-                            let dest_mp3_path = self
-                                .config
-                                .mp3_dest_dir()
-                                .join(format!("{}.mp3", base_name));
+                        if let Ok(key) = clean_for_url(&stem.to_string_lossy().to_string()) {
+                            let dest_mp3_path =
+                                self.config.mp3_dest_dir().join(format!("{}.mp3", key));
                             let _ = safe_copy_file(&source_path, &dest_mp3_path);
+                            let _ = &self.mp3s.insert(
+                                key.to_string(),
+                                SiteMp3 {
+                                    extension: "mp3".to_string(),
+                                    key: key.clone(),
+                                },
+                            );
                         }
                     }
                 }

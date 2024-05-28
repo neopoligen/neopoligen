@@ -15,6 +15,7 @@ impl Object for SiteV2 {
             "base_url" => self.base_url(),
             "config" => self.config(),
             "get_image" => self.get_image(args),
+            "get_mp3" => self.get_mp3(args),
             "page_href" => self.page_href(args),
             "page_og_image" => self.page_og_image(args),
             "page_permalink" => self.page_permalink(args),

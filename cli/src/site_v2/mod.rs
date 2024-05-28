@@ -1,5 +1,6 @@
 pub mod object;
 
+use crate::helpers::clean_for_url;
 use crate::image::Image;
 use crate::{page_v2::PageV2, site_config::SiteConfig};
 use minijinja::value::Value;
@@ -13,6 +14,7 @@ pub struct SiteV2 {
     pub config: SiteConfig,
     pub images: BTreeMap<String, SiteImage>,
     pub pages: BTreeMap<String, PageV2>,
+    pub mp3s: BTreeMap<String, SiteMp3>,
 }
 
 #[derive(Debug, Serialize)]
@@ -26,11 +28,19 @@ pub struct SiteImage {
     versions: Vec<(u32, u32)>,
 }
 
+#[derive(Clone, Debug, Serialize)]
+pub struct SiteMp3 {
+    pub key: String,
+    pub extension: String,
+    // TODO: Add useful metadata here
+}
+
 impl SiteV2 {
     pub fn new(
         config: &SiteConfig,
         source_pages: &BTreeMap<PathBuf, PageV2>,
         source_images: &BTreeMap<PathBuf, Image>,
+        source_mp3s: &BTreeMap<String, SiteMp3>,
     ) -> SiteV2 {
         let mut images = BTreeMap::new();
         for (_source_path, image) in source_images.iter() {
@@ -57,9 +67,11 @@ impl SiteV2 {
                 pages.insert(id, p.1.clone());
             }
         });
+
         SiteV2 {
             config: config.clone(),
             images,
+            mp3s: source_mp3s.clone(),
             pages,
         }
     }
@@ -76,8 +88,20 @@ impl SiteV2 {
 
     pub fn get_image(&self, args: &[Value]) -> Result<Value, Error> {
         let key = args[0].to_string();
+        let key = clean_for_url(&key).unwrap();
         if let Some(image) = self.images.get(&key) {
             Ok(Value::from_serialize(image))
+        } else {
+            // TODO: Figure out how to pass back an error here
+            Ok(Value::from(""))
+        }
+    }
+
+    pub fn get_mp3(&self, args: &[Value]) -> Result<Value, Error> {
+        let key = args[0].to_string();
+        let key = clean_for_url(&key).unwrap();
+        if let Some(mp3) = self.mp3s.get(&key) {
+            Ok(Value::from_serialize(mp3))
         } else {
             // TODO: Figure out how to pass back an error here
             Ok(Value::from(""))
