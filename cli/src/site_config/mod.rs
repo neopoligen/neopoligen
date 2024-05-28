@@ -16,6 +16,7 @@ pub struct SiteConfig {
     #[serde(rename = "base_url")]
     pub base_url_raw: String,
 
+    #[serde(default = "hard_code_image_widths")]
     pub base_image_widths: Vec<u32>,
 
     pub default_language: String,
@@ -258,4 +259,8 @@ fn get_dirs_in_dir(dir: &PathBuf) -> io::Result<Vec<PathBuf>> {
                 }
             }),
     )
+}
+
+fn hard_code_image_widths() -> Vec<u32> {
+    vec![100, 300, 500, 750, 1000, 1500]
 }

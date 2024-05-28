@@ -157,10 +157,15 @@ header a {
   margin: 1.4rem;
 }
 
+img {
+  max-width: 100%;
+  display: block;
+}
 
 .line-numbers {
   counter-reset: lineNumber;
 }
+
 
 .line-marker {
   counter-increment: lineNumber;

@@ -112,6 +112,8 @@ impl Builder {
         let site_obj = Value::from_object(SiteV2::new(&self.config, &self.pages, &self.images));
         let mut env = Environment::new();
         env.set_debug(true);
+        env.set_lstrip_blocks(true);
+        env.set_trim_blocks(true);
         env.add_function("highlight_code", highlight_code);
         env.add_function("image_path", image_path);
         env.set_syntax(

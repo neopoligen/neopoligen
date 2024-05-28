@@ -11,7 +11,7 @@ use std::path::PathBuf;
 #[derive(Debug, Serialize)]
 pub struct SiteV2 {
     pub config: SiteConfig,
-    pub images: BTreeMap<String, Value>,
+    pub images: BTreeMap<String, SiteImage>,
     pub pages: BTreeMap<String, PageV2>,
 }
 
@@ -21,6 +21,7 @@ pub struct SiteImage {
     height: u32,
     key: String,
     extension: String,
+    versions: Vec<(u32, u32)>,
 }
 
 impl SiteV2 {
@@ -33,12 +34,13 @@ impl SiteV2 {
         for image in source_images.iter() {
             images.insert(
                 image.key().expect("key"),
-                Value::from_serialize(SiteImage {
+                SiteImage {
                     width: image.width.expect("width"),
                     height: image.height.expect("height"),
                     extension: image.extension().expect("extension"),
                     key: image.key().expect("key"),
-                }),
+                    versions: image.versions.clone(),
+                },
             );
         }
 
@@ -65,12 +67,13 @@ impl SiteV2 {
         Ok(Value::from_serialize(&self.config))
     }
 
-    pub fn image_widths(&self, args: &[Value]) -> Result<Value, Error> {
+    pub fn get_image(&self, args: &[Value]) -> Result<Value, Error> {
         let key = args[0].to_string();
-        if let Some(widths) = self.images.get(&key) {
-            Ok(Value::from_serialize(widths))
+        if let Some(image) = self.images.get(&key) {
+            Ok(Value::from_serialize(image))
         } else {
-            Ok(Value::from_serialize::<Vec<&str>>(vec![]))
+            // TODO: Figure out how to pass back an error here
+            Ok(Value::from(""))
         }
     }
 

@@ -14,7 +14,7 @@ impl Object for SiteV2 {
         match name {
             "base_url" => self.base_url(),
             "config" => self.config(),
-            "image_widths" => self.image_widths(args),
+            "get_image" => self.get_image(args),
             "page_href" => self.page_href(args),
             "page_og_image" => self.page_og_image(args),
             "page_permalink" => self.page_permalink(args),

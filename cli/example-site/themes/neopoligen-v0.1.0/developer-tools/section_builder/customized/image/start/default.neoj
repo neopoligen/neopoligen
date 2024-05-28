@@ -1,9 +1,31 @@
-<div>
-IMAGE TEST2
+[! set image = namespace() -!]
+[# TODO: pull the 900 from the config so the
+values are just set in one place #]
+[! set image.max_pixels = 2000 !]
 
+
+<div>
+<img
+
+srcset="
 [! if section.flags[0] !]
-[@ site.image_widths(section.flags[0]) @]
-<img src="/images/[@ section.flags[0] @]/raw.jpg" />
+[! set image.data = site.get_image(section.flags[0]) !]
+[! for version in image.data.versions !]
+[! if version[0] <= image.max_pixels !]
+
+[! if not loop.first !], [! endif !]
+/images/[@ section.flags[0] @]/[@ version[0] @].[@ image.data.extension @] [@ version[0] @]w
+[! set image.max_width = version[0] !]
+
+[! set image.src = "/images/" + section.flags[0] + "/" + version[0]|safe() + "." + image.data.extension !]
+[! endif !]
+[! endfor !]
+"
+
+src="[@ image.src @]"
+style="aspect-ratio: [@ image.data.width @] / [@ image.data.height @];"
+sizes="min(90vw, [@ image.max_width @]px)"
+/>
 [! endif !]
 
 
