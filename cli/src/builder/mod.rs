@@ -458,6 +458,7 @@ body {
             let base_dir = self.config.image_cache_dir().join(image.key()?);
             let raw_cache_path = base_dir.join(format!("raw.{}", image.extension()?));
             if image.width == None || cache_is_stale(&image.source_path, &raw_cache_path) {
+                event!(Level::INFO, "Generating Image: {}", image.key().unwrap());
                 let parent_dir = raw_cache_path
                     .parent()
                     .expect("could not get image cache parent director");
@@ -478,13 +479,7 @@ body {
                     } else {
                         event!(Level::ERROR, "TODO: Process png and other image types");
                     }
-                    dbg!(version_path);
                 }
-
-                // let img = Reader::open(&self.source_path)?;
-                // let data = img.decode()?;
-                // self.width = Some(data.width());
-                // self.height = Some(data.height());
             }
         }
         Ok(())
