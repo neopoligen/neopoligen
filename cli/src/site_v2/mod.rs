@@ -32,16 +32,19 @@ impl SiteV2 {
     ) -> SiteV2 {
         let mut images = BTreeMap::new();
         for (_source_path, image) in source_images.iter() {
-            images.insert(
-                image.key().expect("key"),
-                SiteImage {
-                    width: image.width.expect("width"),
-                    height: image.height.expect("height"),
-                    extension: image.extension().expect("extension"),
-                    key: image.key().expect("key"),
-                    versions: image.versions.clone(),
-                },
-            );
+            // This check makes sure thee image has data
+            if let Some(_width) = image.width {
+                images.insert(
+                    image.key().expect("key"),
+                    SiteImage {
+                        width: image.width.expect("width"),
+                        height: image.height.expect("height"),
+                        extension: image.extension().expect("extension"),
+                        key: image.key().expect("key"),
+                        versions: image.versions.clone(),
+                    },
+                );
+            }
         }
 
         let mut pages: BTreeMap<String, PageV2> = BTreeMap::new();

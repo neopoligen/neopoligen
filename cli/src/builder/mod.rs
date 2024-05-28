@@ -187,10 +187,12 @@ impl Builder {
         let mut rows = stmt.query([])?;
         while let Some(row) = rows.next()? {
             let path_string: String = row.get(0)?;
-            let path = PathBuf::from(path_string);
-            let img: String = row.get(1)?;
-            let i: Image = serde_json::from_str(&img.to_string())?;
-            self.images.insert(path, i);
+            if let Some(_) = self.images.get(&PathBuf::from(&path_string)) {
+                let path = PathBuf::from(path_string);
+                let img: String = row.get(1)?;
+                let i: Image = serde_json::from_str(&img.to_string())?;
+                self.images.insert(path, i);
+            }
         }
         Ok(())
     }
@@ -476,8 +478,14 @@ body {
                         base_dir.join(format!("{}.{}", version.0, image.extension()?));
                     if image.extension()? == "jpg" || image.extension()? == "jpeg" {
                         resize_and_optimize_jpg(&image.source_path, version.0, &version_path)?;
+                    } else if image.extension()? == "png" {
+                        resize_and_optimize_png(&image.source_path, version.0, &version_path)?;
                     } else {
-                        event!(Level::ERROR, "TODO: Process png and other image types");
+                        event!(
+                            Level::ERROR,
+                            "TODO: Process other image types: {}",
+                            &image.source_path.display()
+                        );
                     }
                 }
             }
