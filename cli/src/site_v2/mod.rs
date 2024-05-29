@@ -97,9 +97,9 @@ pub struct PageFilterAndGroup {
 
 #[derive(Debug)]
 pub struct PageFilter {
+    exclude: bool,
     r#type: PageFilterType,
     value: String,
-    exclude: bool,
 }
 
 #[derive(Debug)]
@@ -116,22 +116,55 @@ impl SiteV2 {
     }
 
     pub fn collection_by_date(&self, args: &[Value]) -> Result<Value, Error> {
-        if let Ok(filters_arg) = args[0].try_iter() {
-            let mut or_filters = PageFilterOrSet::new();
-            or_filters.and_groups = filters_arg
+        let mut or_filters = PageFilterOrSet::new();
+        if let Ok(raw_or_groups) = args[0].try_iter() {
+            or_filters.and_groups = raw_or_groups
                 .into_iter()
-                .filter_map(|f| {
-                    None
-                    // dbg!(&f);
-                    // PageFilter {
-                    //     r#type: PageFilterType::Status,
-                    //     value: "some_value".to_string(),
-                    //     exclude: false,
-                    // }
+                .filter_map(|ag| {
+                    if let Ok(and_iter) = ag.try_iter() {
+                        Some(PageFilterAndGroup {
+                            filters: and_iter
+                                .into_iter()
+                                .filter_map(|filter_string| {
+                                    let fs = filter_string.to_string();
+                                    if let Some(parts) = fs.split_once(":") {
+                                        dbg!(&parts.0);
+                                        match parts.0 {
+                                            "status" => Some(PageFilter {
+                                                exclude: false,
+                                                r#type: PageFilterType::Status,
+                                                value: parts.1.to_string(),
+                                            }),
+                                            _ => None,
+                                        }
+                                    } else {
+                                        None
+                                    }
+                                })
+                                .collect::<Vec<PageFilter>>(),
+                        })
+                    } else {
+                        None
+                    }
                 })
-                .collect::<Vec<PageFilterAndGroup>>();
-            dbg!(or_filters);
-        };
+                .collect();
+        }
+
+        dbg!(or_filters);
+
+        // let mut or_filters = PageFilterOrSet::new();
+        // or_filters.and_groups = filters_arg
+        //     .into_iter()
+        //     .filter_map(|_f| {
+        //         None
+        //         // dbg!(&f);
+        //         // PageFilter {
+        //         //     r#type: PageFilterType::Status,
+        //         //     value: "some_value".to_string(),
+        //         //     exclude: false,
+        //         // }
+        //     })
+        //     .collect::<Vec<PageFilterAndGroup>>();
         let v = vec![
             "delta123".to_string(),
             "alfa1234".to_string(),
