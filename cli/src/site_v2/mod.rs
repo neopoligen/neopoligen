@@ -7,7 +7,7 @@ use crate::page_filters::*;
 use crate::{page_v2::PageV2, site_config::SiteConfig};
 use itertools::Itertools;
 use minijinja::value::Value;
-use minijinja::Error;
+use minijinja::{filters, Error};
 use serde::Serialize;
 use std::collections::BTreeMap;
 use std::path::PathBuf;
@@ -92,19 +92,25 @@ impl SiteV2 {
                         filters: and_iter
                             .into_iter()
                             .filter_map(|filter_string| {
-                                let fs = filter_string.to_string();
-                                if let Some(parts) = fs.split_once(":") {
-                                    dbg!(&parts.0);
-                                    match parts.0 {
-                                        "status" => Some(PageFilter::Status {
-                                            exclude: false,
-                                            value: parts.1.trim().to_string(),
-                                        }),
-                                        _ => None,
-                                    }
+                                if let Some(text) = filter_string.as_str() {
+                                    PageFilter::parse(text)
                                 } else {
                                     None
                                 }
+
+                                // let fs = filter_string.to_string();
+                                // if let Some(parts) = fs.split_once(":") {
+                                //     dbg!(&parts.0);
+                                //     match parts.0 {
+                                //         "status" => Some(PageFilter::Status {
+                                //             exclude: false,
+                                //             value: parts.1.trim().to_string(),
+                                //         }),
+                                //         _ => None,
+                                //     }
+                                // } else {
+                                //     None
+                                // }
                             })
                             .collect::<Vec<PageFilter>>(),
                     })
