@@ -29,7 +29,7 @@ fn results_section_full() {
 }
 
 #[test]
-fn solo_results_section_start_end() {
+fn results_section_start_end() {
     let attrs = BTreeMap::new();
     let config = SiteConfig::mock1();
     let flags = vec![];
