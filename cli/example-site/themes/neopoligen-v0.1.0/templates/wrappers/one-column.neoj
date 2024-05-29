@@ -16,6 +16,7 @@
     [! include "includes/header.neoj" !]
     <main class="flow">
         [! block title !][! endblock !]
+        [! include "includes/page-mp3.neoj" !]
         [! block body !][! endblock !]
         [! include "includes/endmatter.neoj" !]
     </main>

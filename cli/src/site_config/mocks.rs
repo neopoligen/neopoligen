@@ -58,7 +58,7 @@ impl SiteConfig {
                 detail: vec!["detail".to_string()],
                 json: vec!["json-example".to_string()],
                 list: vec!["list".to_string()],
-                raw: vec!["code".to_string()],
+                raw: vec!["code".to_string(), "results".to_string()],
                 table: vec!["table".to_string()],
                 yaml: vec!["metadata".to_string()],
                 // sections.insert("json".to_string(), vec!["metadata".to_string()]);

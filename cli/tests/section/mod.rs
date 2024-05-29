@@ -1,10 +1,58 @@
 use neopoligengine::section::basic::basic_section_full;
-use neopoligengine::section::Section;
+use neopoligengine::section::raw::{raw_section_full, raw_section_start};
+use neopoligengine::section::{self, Section};
+use neopoligengine::sections;
 use neopoligengine::{site_config::SiteConfig, span::*};
 use nom::Parser;
 use nom_supreme::ParserExt;
 use pretty_assertions::assert_eq;
 use std::collections::BTreeMap;
+
+#[test]
+fn results_section_full() {
+    let attrs = BTreeMap::new();
+    let config = SiteConfig::mock1();
+    let flags = vec![];
+    let source = "-- results\n\nalfa bravo charlie";
+    let left = Section::Raw {
+        attrs,
+        bounds: "full".to_string(),
+        children: vec![],
+        flags,
+        text: Some("alfa bravo charlie".to_string()),
+        r#type: "results".to_string(),
+    };
+    let right = raw_section_full(source, &config.sections, &config.spans)
+        .unwrap()
+        .1;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn solo_results_section_start_end() {
+    let attrs = BTreeMap::new();
+    let config = SiteConfig::mock1();
+    let flags = vec![];
+    let source = "-- results/\n\nalfa bravo charlie\n\n-- /results";
+    let left = Section::Raw {
+        attrs,
+        bounds: "start".to_string(),
+        children: vec![Section::Basic {
+            attrs: BTreeMap::new(),
+            bounds: "end".to_string(),
+            children: vec![],
+            flags: vec![],
+            r#type: "results".to_string(),
+        }],
+        flags,
+        text: Some("alfa bravo charlie".to_string()),
+        r#type: "results".to_string(),
+    };
+    let right = raw_section_start(source, &config.sections, &config.spans)
+        .unwrap()
+        .1;
+    assert_eq!(left, right);
+}
 
 #[test]
 #[ignore]

@@ -40,7 +40,6 @@ pub fn basic_section_end<'a>(
         }
         SectionAttr::Flag { key } => flags.push(key.to_string()),
     });
-
     Ok((
         source,
         Section::Basic {
