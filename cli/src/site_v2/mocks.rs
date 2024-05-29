@@ -1,10 +1,12 @@
 use crate::page_v2::PageV2;
 use crate::site_config::SiteConfig;
 use crate::site_v2::SiteV2;
+use chrono::DateTime;
 use std::collections::BTreeMap;
 
 impl SiteV2 {
     pub fn mock1() -> SiteV2 {
+        let build_time = DateTime::from_timestamp(1431648000, 100).expect("invalid timestamp");
         let mut pages = BTreeMap::new();
         pages.insert("abcd1234".to_string(), PageV2::mock_1_with_ast());
         pages.insert("bravo123".to_string(), PageV2::mock_2_home_page());
@@ -15,6 +17,7 @@ impl SiteV2 {
         pages.insert("golf1234".to_string(), PageV2::mock_7_golf1234());
         pages.insert("hotel123".to_string(), PageV2::mock_8_hotel123());
         SiteV2 {
+            build_time,
             config: SiteConfig::mock1(),
             pages,
             images: BTreeMap::new(),

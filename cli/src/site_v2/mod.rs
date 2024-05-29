@@ -5,6 +5,7 @@ use crate::helpers::clean_for_url;
 use crate::image::Image;
 use crate::page_filters::*;
 use crate::{page_v2::PageV2, site_config::SiteConfig};
+use chrono::{DateTime, Utc};
 use itertools::Itertools;
 use minijinja::value::Value;
 use minijinja::Error;
@@ -15,6 +16,7 @@ use uuid::Uuid;
 
 #[derive(Debug, Serialize)]
 pub struct SiteV2 {
+    pub build_time: DateTime<Utc>,
     pub config: SiteConfig,
     pub images: BTreeMap<String, SiteImage>,
     pub pages: BTreeMap<String, PageV2>,
@@ -71,6 +73,7 @@ impl SiteV2 {
             }
         });
         SiteV2 {
+            build_time: Utc::now(),
             config: config.clone(),
             images,
             mp3s: source_mp3s.clone(),
@@ -81,6 +84,13 @@ impl SiteV2 {
 impl SiteV2 {
     pub fn base_url(&self) -> Result<Value, Error> {
         Ok(Value::from(self.config.base_url()))
+    }
+
+    pub fn build_time(&self) -> Result<Value, Error> {
+        Ok(Value::from(
+            self.build_time
+                .to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
+        ))
     }
 
     pub fn collection_by_date(&self, args: &[Value]) -> Result<Value, Error> {

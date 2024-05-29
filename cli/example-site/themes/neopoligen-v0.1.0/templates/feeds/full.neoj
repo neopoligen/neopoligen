@@ -4,7 +4,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>[@ config.site.theme_options.site_name|escape @]</title>
     <link href="[@ config.site.base_url @]"></link>
-  <updated>TODO: DATE</updated>
+  <updated>[@ site.site_build_time() @]</updated>
   <author>
     <name>[@ config.site.theme_options.author @]</name>
   </author>
