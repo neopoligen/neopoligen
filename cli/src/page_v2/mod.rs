@@ -38,27 +38,57 @@ impl PageV2 {
 
 impl PageV2 {
     pub fn format_created_date(&self, fmt: &str) -> Option<String> {
-        self.ast.iter().find_map(|sec_enum| {
-            if let Section::Yaml { r#type, attrs, .. } = sec_enum {
-                if r#type == "metadata" {
-                    attrs.iter().find_map(|attr| {
-                        if attr.0 == "created" {
-                            if let Ok(datetime) = get_datetime(attr.1.trim()) {
-                                Some(datetime.format(fmt).to_string())
-                            } else {
-                                None
-                            }
-                        } else {
-                            None
-                        }
-                    })
-                } else {
-                    None
-                }
+        if let Some(datetime_string) = self.get_metadata_attr("created") {
+            if let Ok(datetime) = get_datetime(&datetime_string) {
+                Some(datetime.format(fmt).to_string())
             } else {
                 None
             }
-        })
+        } else {
+            None
+        }
+    }
+
+    pub fn format_latest_date(&self, fmt: &str) -> Option<String> {
+        let updated = if let Some(datetime_string) = self.get_metadata_attr("updated") {
+            if let Ok(datetime) = get_datetime(&datetime_string) {
+                Some(datetime.format(fmt).to_string())
+            } else {
+                None
+            }
+        } else {
+            None
+        };
+
+        let created = if let Some(datetime_string) = self.get_metadata_attr("created") {
+            if let Ok(datetime) = get_datetime(&datetime_string) {
+                Some(datetime.format(fmt).to_string())
+            } else {
+                None
+            }
+        } else {
+            None
+        };
+
+        if let Some(dt) = updated {
+            Some(dt)
+        } else if let Some(dt) = created {
+            Some(dt)
+        } else {
+            None
+        }
+    }
+
+    pub fn format_updated_date(&self, fmt: &str) -> Option<String> {
+        if let Some(datetime_string) = self.get_metadata_attr("updated") {
+            if let Ok(datetime) = get_datetime(&datetime_string) {
+                Some(datetime.format(fmt).to_string())
+            } else {
+                None
+            }
+        } else {
+            None
+        }
     }
 
     pub fn generate_ast(&mut self, config: &SiteConfig) {
@@ -78,11 +108,7 @@ impl PageV2 {
                 if r#type == "metadata" {
                     attrs.iter().find_map(|attr| {
                         if attr.0 == key {
-                            if let Ok(datetime) = get_datetime(attr.1.trim()) {
-                                Some(attr.1.to_string())
-                            } else {
-                                None
-                            }
+                            Some(attr.1.trim().to_string())
                         } else {
                             None
                         }

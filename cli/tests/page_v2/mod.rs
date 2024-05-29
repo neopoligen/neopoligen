@@ -11,6 +11,30 @@ fn format_created_date_basic() {
 }
 
 #[test]
+fn format_latest_from_created() {
+    let p = PageV2::mock_1_with_ast();
+    let left = "May 2024".to_string();
+    let right = p.format_latest_date("%B %Y").unwrap();
+    assert_eq!(left, right)
+}
+
+#[test]
+fn format_latest_from_updated() {
+    let p = PageV2::mock_2_home_page();
+    let left = "October 2022".to_string();
+    let right = p.format_latest_date("%B %Y").unwrap();
+    assert_eq!(left, right)
+}
+
+#[test]
+fn format_updated_date_none() {
+    let p = PageV2::mock_1_with_ast();
+    let left = None;
+    let right = p.format_updated_date("%B %Y");
+    assert_eq!(left, right)
+}
+
+#[test]
 fn get_metadata_attr_basic() {
     let p = PageV2::mock_6_url_title_parsing();
     let left = "2024-05-20".to_string();

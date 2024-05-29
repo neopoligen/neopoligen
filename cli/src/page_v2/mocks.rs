@@ -39,7 +39,8 @@ Home Page Mock Up
 
 -- metadata
 -- id: bravo123 
--- data: 2024-05-20T10:11:12
+-- created: 2020-01-01T10:11:12
+-- updated: 2022-10-10
 -- title: Title From Metadata
 -- path: /
 "#
