@@ -52,8 +52,8 @@ fn format_date_from_created() {
 
 #[test]
 fn format_date_from_updated() {
-    let p = PageV2::mock_2_home_page();
-    let left = "October 2022".to_string();
+    let p = PageV2::mock_3_bookmark_section();
+    let left = "February 2022".to_string();
     let right = p.format_date("%B %Y").unwrap();
     assert_eq!(left, right)
 }

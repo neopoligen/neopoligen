@@ -23,7 +23,7 @@ impl Object for SiteV2 {
             "page_sections" => self.page_sections(args),
             "page_title_as_plain_text" => self.page_title_as_plain_text(args),
             // DEPRECATED: Change to collection_*
-            "get_pages_by_date" => self.get_pages_by_date(args),
+            //"get_pages_by_date" => self.get_pages_by_date(args),
             "theme" => self.theme(),
             _ => Ok(Value::from("")),
         }

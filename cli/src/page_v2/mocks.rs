@@ -39,8 +39,6 @@ Home Page Mock Up
 
 -- metadata
 -- id: bravo123 
--- created: 2020-01-01T10:11:12
--- updated: 2022-10-10
 -- title: Title From Metadata
 -- type: home-page
 -- path: /
@@ -70,6 +68,8 @@ Some text for the bookmark
 
 -- metadata
 -- id: charlie1
+-- create: 2022-01-01
+-- updated: 2022-02-02
 -- status: draft
 "#
         .trim_start()

@@ -173,23 +173,23 @@ impl SiteV2 {
         }
     }
 
-    // TODO: Change to collection_*
-    pub fn get_pages_by_date(&self, _args: &[Value]) -> Result<Value, Error> {
-        let pages = self
-            .pages
-            .iter()
-            .filter_map(|p| {
-                if let (Some(id), Some(date)) = (p.1.id(), p.1.date()) {
-                    Some((id, date))
-                } else {
-                    None
-                }
-            })
-            .sorted_by(|a, b| Ord::cmp(&b.1, &a.1))
-            .map(|i| i.0)
-            .collect::<Vec<String>>();
-        Ok(Value::from_serialize(pages))
-    }
+    // // TODO: Change to collection_*
+    // pub fn get_pages_by_date(&self, _args: &[Value]) -> Result<Value, Error> {
+    //     let pages = self
+    //         .pages
+    //         .iter()
+    //         .filter_map(|p| {
+    //             if let (Some(id), Some(date)) = (p.1.id(), p.1.date()) {
+    //                 Some((id, date))
+    //             } else {
+    //                 None
+    //             }
+    //         })
+    //         .sorted_by(|a, b| Ord::cmp(&b.1, &a.1))
+    //         .map(|i| i.0)
+    //         .collect::<Vec<String>>();
+    //     Ok(Value::from_serialize(pages))
+    // }
 
     pub fn theme(&self) -> Result<Value, Error> {
         Ok(Value::from_serialize(&self.config.theme))
