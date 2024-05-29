@@ -22,10 +22,17 @@ pub enum PageFilter {
 }
 
 impl PageFilter {
-    pub fn parse(source: &str) -> PageFilter {
-        PageFilter::Status {
-            exclude: false,
-            value: "publishd".to_string(),
+    pub fn parse(source: &str) -> Option<PageFilter> {
+        if let Some(parts) = source.split_once(":") {
+            match parts.0 {
+                "status" => Some(PageFilter::Status {
+                    exclude: false,
+                    value: parts.1.trim().to_string(),
+                }),
+                _ => None,
+            }
+        } else {
+            None
         }
     }
 }
