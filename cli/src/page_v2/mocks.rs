@@ -69,7 +69,7 @@ Home Page Mock Up
 Some text for the bookmark
 
 -- metadata
--- id: charlie3737 
+-- id: charlie1
 -- status: draft
 "#
         .trim_start()
@@ -95,7 +95,7 @@ first few words of the first section if no other
 title is found
 
 -- metadata
--- id: delta7262 
+-- id: delta123
 -- created: 2024-05-22
 -- type: short
 "#
@@ -116,7 +116,7 @@ title is found
     pub fn mock_5_no_title() -> PageV2 {
         let content = r#"
 -- metadata
--- id: echo8171 
+-- id: echo1234
 -- updated: 2023-01-01
 "#
         .trim_start()

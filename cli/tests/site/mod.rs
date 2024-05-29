@@ -6,12 +6,12 @@ use pretty_assertions::assert_eq;
 fn sort_pages_by_date() {
     let site = SiteV2::mock1();
     let left = Value::from_serialize(vec![
-        "delta7262".to_string(),
+        "delta123".to_string(),
         "alfa1234".to_string(),
         "hotel123".to_string(),
         "foxtrot1".to_string(),
         "golf1234".to_string(),
-        "echo8171".to_string(),
+        "echo1234".to_string(),
         "bravo123".to_string(),
     ]);
     let right = site.get_pages_by_date(&[]).unwrap();

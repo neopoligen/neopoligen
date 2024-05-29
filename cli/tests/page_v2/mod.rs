@@ -160,7 +160,7 @@ fn title_as_plain_text_from_first_few_words() {
 #[test]
 fn title_as_plain_text_from_id() {
     let p = PageV2::mock_5_no_title();
-    let left = "echo8171".to_string();
+    let left = "echo1234".to_string();
     let right = p.title_as_plain_text().unwrap();
     assert_eq!(left, right)
 }
