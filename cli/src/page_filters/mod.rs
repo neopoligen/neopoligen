@@ -24,11 +24,12 @@ pub enum PageFilter {
 impl PageFilter {
     pub fn parse(source: &str) -> Option<PageFilter> {
         if let Some(parts) = source.split_once(":") {
+            let (exclude, value) = match parts.1.strip_prefix("!") {
+                Some(value) => (true, value.trim().to_string()),
+                None => (false, parts.1.trim().to_string()),
+            };
             match parts.0 {
-                "status" => Some(PageFilter::Status {
-                    exclude: false,
-                    value: parts.1.trim().to_string(),
-                }),
+                "status" => Some(PageFilter::Status { exclude, value }),
                 _ => None,
             }
         } else {
