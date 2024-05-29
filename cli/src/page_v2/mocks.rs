@@ -42,6 +42,7 @@ Home Page Mock Up
 -- created: 2020-01-01T10:11:12
 -- updated: 2022-10-10
 -- title: Title From Metadata
+-- type: home-page
 -- path: /
 "#
         .trim_start()
@@ -69,6 +70,7 @@ Some text for the bookmark
 
 -- metadata
 -- id: charlie3737 
+-- status: draft
 "#
         .trim_start()
         .to_string();

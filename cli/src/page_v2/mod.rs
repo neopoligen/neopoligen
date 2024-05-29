@@ -256,6 +256,14 @@ impl PageV2 {
         }
     }
 
+    pub fn status(&self) -> Option<String> {
+        if let Some(t) = self.get_metadata_attr("status") {
+            Some(t)
+        } else {
+            Some("published".to_string())
+        }
+    }
+
     pub fn title_as_plain_text(&self) -> Option<String> {
         if let Some(title) = self.title_from_metadata() {
             Some(title)
@@ -360,6 +368,14 @@ impl PageV2 {
             }
             _ => None,
         })
+    }
+
+    pub fn r#type(&self) -> Option<String> {
+        if let Some(t) = self.get_metadata_attr("type") {
+            Some(t)
+        } else {
+            Some("post".to_string())
+        }
     }
 
     //

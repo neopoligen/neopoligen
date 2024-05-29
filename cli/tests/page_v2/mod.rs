@@ -3,6 +3,38 @@ use pretty_assertions::assert_eq;
 use std::path::PathBuf;
 
 #[test]
+fn defatul_status() {
+    let p = PageV2::mock_1_with_ast();
+    let left = "published".to_string();
+    let right = p.status().unwrap();
+    assert_eq!(left, right)
+}
+
+#[test]
+fn defatul_type() {
+    let p = PageV2::mock_1_with_ast();
+    let left = "post".to_string();
+    let right = p.r#type().unwrap();
+    assert_eq!(left, right)
+}
+
+#[test]
+fn explicit_status() {
+    let p = PageV2::mock_3_bookmark_section();
+    let left = "draft".to_string();
+    let right = p.status().unwrap();
+    assert_eq!(left, right)
+}
+
+#[test]
+fn explicit_type() {
+    let p = PageV2::mock_2_home_page();
+    let left = "home-page".to_string();
+    let right = p.r#type().unwrap();
+    assert_eq!(left, right)
+}
+
+#[test]
 fn format_created_date_basic() {
     let p = PageV2::mock_1_with_ast();
     let left = "May 2024".to_string();

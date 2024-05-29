@@ -21,5 +21,12 @@
         [! include "includes/endmatter.neoj" !]
     </main>
     [! include "includes/footer.neoj" !]
+
+    [# hard coding to my home page for now #]
+    [! if page_id == "2sjfzivl" !]
+        [! for sort_id in site.get_pages_by_date() !]
+            [@ sort_id @]
+        [! endfor !]
+    [! endif !]
 </body>
 </html>  

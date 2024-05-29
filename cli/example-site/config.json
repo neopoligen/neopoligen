@@ -12,5 +12,28 @@
   },
   "options": {
     "site_name": "Neopoligen Example Site"
-  }
+  },
+  "feeds": [
+    {
+      "name": "Alan's Feed",
+      "path": "/feed.xml",
+      "filters": [ 
+        ["status:published"]
+      ],
+    }, 
+    {
+      "name": "Alan's Shorts",
+      "shorts": "/shorts.xml",
+      "filters": [ 
+        ["status:published"], ["type:short"]
+      ],
+    },
+    {
+      "name": "Alan's Shorts",
+      "shorts": "/posts.xml",
+      "filters": [ 
+        ["status:published"], ["type:!short"]
+      ],
+    }
+  ]
 }
