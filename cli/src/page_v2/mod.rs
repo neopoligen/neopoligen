@@ -1,6 +1,7 @@
 pub mod mocks;
 
 use crate::ast::ast;
+use crate::page_filters::*;
 use crate::section::Section;
 use crate::site_config::SiteConfig;
 use crate::span::Span;
@@ -183,6 +184,35 @@ impl PageV2 {
                 None
             }
         })
+    }
+
+    pub fn passes(&self, or_set: &PageFilterOrSet) -> bool {
+        if let Some(_) = or_set.and_groups.iter().find(|ag| {
+            let mut found_include = false;
+            let mut found_exclude = false;
+            for filter in ag.filters.iter() {
+                match filter {
+                    PageFilter::Status { exclude, value } => {
+                        if *value == self.status().unwrap() {
+                            if *exclude {
+                                found_exclude = true;
+                            } else {
+                                found_include = true;
+                            }
+                        }
+                    }
+                }
+            }
+            if found_include && !found_exclude {
+                true
+            } else {
+                false
+            }
+        }) {
+            true
+        } else {
+            false
+        }
     }
 
     pub fn og_image(&self) -> Option<String> {

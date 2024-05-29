@@ -1,4 +1,4 @@
-use neopoligengine::page_v2::PageV2;
+use neopoligengine::{page_filters::PageFilterOrSet, page_v2::PageV2};
 use pretty_assertions::assert_eq;
 use std::path::PathBuf;
 
@@ -37,6 +37,10 @@ fn explicit_type() {
 #[test]
 fn filter_test_basic() {
     let p = PageV2::mock_1_with_ast();
+    let filters = PageFilterOrSet::mock1_status_published();
+    let left = true;
+    let right = p.passes(&filters);
+    assert_eq!(left, right);
 }
 
 #[test]

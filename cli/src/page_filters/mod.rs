@@ -1,3 +1,5 @@
+pub mod mocks;
+
 #[derive(Debug)]
 pub struct PageFilterOrSet {
     pub and_groups: Vec<PageFilterAndGroup>,
@@ -15,16 +17,16 @@ pub struct PageFilterAndGroup {
 }
 
 #[derive(Debug)]
-pub struct PageFilter {
-    pub exclude: bool,
-    pub r#type: PageFilterType,
-    pub value: String,
+pub enum PageFilter {
+    Status { exclude: bool, value: String }, // pub exclude: bool,
+                                             // pub r#type: PageFilterType,
+                                             // pub value: String,
 }
 
-#[derive(Debug)]
-pub enum PageFilterType {
-    RootFolder,
-    Folder,
-    Status,
-    Tag,
-}
+// #[derive(Debug)]
+// pub enum PageFilterType {
+//     RootFolder,
+//     Folder,
+//     Status,
+//     Tag,
+// }

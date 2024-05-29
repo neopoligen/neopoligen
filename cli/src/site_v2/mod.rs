@@ -97,9 +97,8 @@ impl SiteV2 {
                                     if let Some(parts) = fs.split_once(":") {
                                         dbg!(&parts.0);
                                         match parts.0 {
-                                            "status" => Some(PageFilter {
+                                            "status" => Some(PageFilter::Status {
                                                 exclude: false,
-                                                r#type: PageFilterType::Status,
                                                 value: parts.1.trim().to_string(),
                                             }),
                                             _ => None,
