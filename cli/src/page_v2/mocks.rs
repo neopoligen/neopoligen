@@ -14,7 +14,7 @@ Mock File 1 With AST
 
 -- metadata
 -- id: abcd1234
--- data: 2024-05-20T10:11:12
+-- created: 2024-05-20T10:11:12
 "#
         .trim_start()
         .to_string();
@@ -134,7 +134,7 @@ title is found
         let content = r#"
 -- metadata
 -- id: abcd1234
--- date: 2024-05-20
+-- created: 2024-05-20
 -- title: - Another ' URL 42 ~ title -
 "#
         .trim_start()

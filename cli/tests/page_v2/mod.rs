@@ -105,3 +105,11 @@ fn title_for_url_deal_with_chars_and_multi_spaces() {
     let right = p.title_for_url().unwrap();
     assert_eq!(left, right)
 }
+
+#[test]
+fn created_date_string() {
+    let p = PageV2::mock_1_with_ast();
+    let left = "May 2024".to_string();
+    let right = p.format_created_date("%B %Y").unwrap();
+    assert_eq!(left, right)
+}

@@ -1,1 +1,32 @@
-[TODO: Result from template]
+<section class="results-default-section raw-default-category-section flow
+[! if section.attrs.class !][@ ' ' @][@ section.attrs.class @][! endif !]"
+[! for attr in section.attrs !]
+[! if 
+    attr != 'afterword' and 
+    attr != 'class' and 
+    attr != 'forward' and 
+    attr != 'h1' and 
+    attr != 'h2' and 
+    attr != 'h3' and 
+    attr != 'h4' and 
+    attr != 'h5' and 
+    attr != 'h6' and 
+    attr != 'id' and 
+    attr != 'preface' and 
+    attr != 'subtitle' and 
+    attr != 'title'
+!]
+[@ attr @]="[@ section.attrs[attr] @]"
+[! endif !]
+[! endfor !]
+>
+
+
+[! include "subsections/forward.neoj" !]
+<div class="code-example-wrapper">
+<div class="code-example-wrapper-header">Results</div>
+<pre class="line-numbers"><code>[! autoescape false!][@ section.text @][! endautoescape !]</code></pre>
+</div>
+[! include "subsections/preface.neoj" !]
+[! include "subsections/content-skip-one.neoj" !]
+[! include "subsections/afterword.neoj" !]

@@ -4,6 +4,7 @@ use crate::ast::ast;
 use crate::section::Section;
 use crate::site_config::SiteConfig;
 use crate::span::Span;
+use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
 use regex::Regex;
 use serde::Deserialize;
 use serde::Serialize;
@@ -14,9 +15,9 @@ pub struct PageV2 {
     pub ast: Vec<Section>,
     //pub cached_hash: Option<String>,
     pub config: SiteConfig,
-    pub source_path: Option<PathBuf>,
-    pub source_content: Option<String>,
     pub output: Option<String>,
+    pub source_content: Option<String>,
+    pub source_path: Option<PathBuf>,
 }
 
 impl PageV2 {
@@ -27,16 +28,39 @@ impl PageV2 {
     ) -> PageV2 {
         PageV2 {
             ast: vec![],
-            //cached_hash: None,
             config,
             output: None,
-            source_path: Some(source_path),
             source_content: Some(source_content),
+            source_path: Some(source_path),
         }
     }
 }
 
 impl PageV2 {
+    pub fn format_created_date(&self, fmt: &str) -> Option<String> {
+        self.ast.iter().find_map(|sec_enum| {
+            if let Section::Yaml { r#type, attrs, .. } = sec_enum {
+                if r#type == "metadata" {
+                    attrs.iter().find_map(|attr| {
+                        if attr.0 == "created" {
+                            if let Ok(datetime) = get_datetime(attr.1.trim()) {
+                                Some(datetime.format(fmt).to_string())
+                            } else {
+                                None
+                            }
+                        } else {
+                            None
+                        }
+                    })
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        })
+    }
+
     pub fn generate_ast(&mut self, config: &SiteConfig) {
         match ast(
             &self.source_content.clone().unwrap(),
@@ -263,4 +287,13 @@ impl PageV2 {
     }
 
     //
+}
+
+fn get_datetime(source: &str) -> Result<NaiveDateTime, chrono::format::ParseError> {
+    let date = NaiveDate::parse_and_remainder(source, "%Y-%m-%d")?;
+    if let Ok(time) = NaiveTime::parse_from_str(date.1, " %H:%M:%S") {
+        Ok(date.0.and_time(time))
+    } else {
+        Ok(date.0.and_hms_opt(0, 0, 0).unwrap())
+    }
 }
