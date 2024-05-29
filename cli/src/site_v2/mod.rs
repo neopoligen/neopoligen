@@ -3,6 +3,7 @@ pub mod object;
 
 use crate::helpers::clean_for_url;
 use crate::image::Image;
+use crate::page_filters::*;
 use crate::{page_v2::PageV2, site_config::SiteConfig};
 use itertools::Itertools;
 use minijinja::value::Value;
@@ -62,14 +63,12 @@ impl SiteV2 {
                 );
             }
         }
-
         let mut pages: BTreeMap<String, PageV2> = BTreeMap::new();
         source_pages.iter().for_each(|p| {
             if let Some(id) = p.1.id() {
                 pages.insert(id, p.1.clone());
             }
         });
-
         SiteV2 {
             config: config.clone(),
             images,
@@ -78,38 +77,6 @@ impl SiteV2 {
         }
     }
 }
-
-#[derive(Debug)]
-pub struct PageFilterOrSet {
-    and_groups: Vec<PageFilterAndGroup>,
-}
-
-impl PageFilterOrSet {
-    pub fn new() -> PageFilterOrSet {
-        PageFilterOrSet { and_groups: vec![] }
-    }
-}
-
-#[derive(Debug)]
-pub struct PageFilterAndGroup {
-    pub filters: Vec<PageFilter>,
-}
-
-#[derive(Debug)]
-pub struct PageFilter {
-    exclude: bool,
-    r#type: PageFilterType,
-    value: String,
-}
-
-#[derive(Debug)]
-pub enum PageFilterType {
-    RootFolder,
-    Folder,
-    Status,
-    Tag,
-}
-
 impl SiteV2 {
     pub fn base_url(&self) -> Result<Value, Error> {
         Ok(Value::from(self.config.base_url()))
@@ -133,7 +100,7 @@ impl SiteV2 {
                                             "status" => Some(PageFilter {
                                                 exclude: false,
                                                 r#type: PageFilterType::Status,
-                                                value: parts.1.to_string(),
+                                                value: parts.1.trim().to_string(),
                                             }),
                                             _ => None,
                                         }
@@ -150,31 +117,33 @@ impl SiteV2 {
                 .collect();
         }
 
-        dbg!(or_filters);
+        //dbg!(or_filters);
 
-        // let mut or_filters = PageFilterOrSet::new();
-        // or_filters.and_groups = filters_arg
-        //     .into_iter()
-        //     .filter_map(|_f| {
-        //         None
-        //         // dbg!(&f);
-        //         // PageFilter {
-        //         //     r#type: PageFilterType::Status,
-        //         //     value: "some_value".to_string(),
-        //         //     exclude: false,
-        //         // }
-        //     })
-        //     .collect::<Vec<PageFilterAndGroup>>();
-        let v = vec![
-            "delta123".to_string(),
-            "alfa1234".to_string(),
-            "hotel123".to_string(),
-            "foxtrot1".to_string(),
-            "golf1234".to_string(),
-            "echo1234".to_string(),
-            "bravo123".to_string(),
-        ];
-        Ok(Value::from_serialize(v))
+        Ok(Value::from_serialize(
+            self.pages
+                .iter()
+                .filter(|p| {
+                    let mut include = false;
+                    if let (Some(id), Some(status)) = (p.1.id(), p.1.status()) {
+                        include = true
+                    }
+                    include
+                })
+                .sorted_by(|a, b| Ord::cmp(&b.1.date(), &a.1.date()))
+                .map(|p| p.1.id().unwrap())
+                .collect::<Vec<String>>(),
+        ))
+
+        // let v = vec![
+        //     "delta123".to_string(),
+        //     "alfa1234".to_string(),
+        //     "hotel123".to_string(),
+        //     "foxtrot1".to_string(),
+        //     "golf1234".to_string(),
+        //     "echo1234".to_string(),
+        //     "bravo123".to_string(),
+        // ];
+        // Ok(Value::from_serialize(v))
     }
 
     pub fn config(&self) -> Result<Value, Error> {

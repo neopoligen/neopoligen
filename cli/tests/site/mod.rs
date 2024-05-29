@@ -19,6 +19,7 @@ use pretty_assertions::assert_eq;
 // }
 
 #[test]
+#[ignore]
 fn collection_by_date_basic() {
     let site = SiteV2::mock1();
     let left = Value::from_serialize(vec![

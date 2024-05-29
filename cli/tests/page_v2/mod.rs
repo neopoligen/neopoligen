@@ -3,7 +3,7 @@ use pretty_assertions::assert_eq;
 use std::path::PathBuf;
 
 #[test]
-fn defatul_status() {
+fn default_status() {
     let p = PageV2::mock_1_with_ast();
     let left = "published".to_string();
     let right = p.status().unwrap();
@@ -32,6 +32,11 @@ fn explicit_type() {
     let left = "home-page".to_string();
     let right = p.r#type().unwrap();
     assert_eq!(left, right)
+}
+
+#[test]
+fn filter_test_basic() {
+    let p = PageV2::mock_1_with_ast();
 }
 
 #[test]
