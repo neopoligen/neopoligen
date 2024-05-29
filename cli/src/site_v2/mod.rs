@@ -84,37 +84,35 @@ impl SiteV2 {
 
     pub fn collection_by_date(&self, args: &[Value]) -> Result<Value, Error> {
         let mut or_filters = PageFilterOrSet::new();
-        if let Ok(raw_or_groups) = args[0].try_iter() {
-            or_filters.and_groups = raw_or_groups
-                .into_iter()
-                .filter_map(|ag| {
-                    if let Ok(and_iter) = ag.try_iter() {
-                        Some(PageFilterAndGroup {
-                            filters: and_iter
-                                .into_iter()
-                                .filter_map(|filter_string| {
-                                    let fs = filter_string.to_string();
-                                    if let Some(parts) = fs.split_once(":") {
-                                        dbg!(&parts.0);
-                                        match parts.0 {
-                                            "status" => Some(PageFilter::Status {
-                                                exclude: false,
-                                                value: parts.1.trim().to_string(),
-                                            }),
-                                            _ => None,
-                                        }
-                                    } else {
-                                        None
+        let raw_or_groups = or_filters.and_groups = args
+            .iter()
+            .filter_map(|ag| {
+                if let Ok(and_iter) = ag.try_iter() {
+                    Some(PageFilterAndGroup {
+                        filters: and_iter
+                            .into_iter()
+                            .filter_map(|filter_string| {
+                                let fs = filter_string.to_string();
+                                if let Some(parts) = fs.split_once(":") {
+                                    dbg!(&parts.0);
+                                    match parts.0 {
+                                        "status" => Some(PageFilter::Status {
+                                            exclude: false,
+                                            value: parts.1.trim().to_string(),
+                                        }),
+                                        _ => None,
                                     }
-                                })
-                                .collect::<Vec<PageFilter>>(),
-                        })
-                    } else {
-                        None
-                    }
-                })
-                .collect();
-        }
+                                } else {
+                                    None
+                                }
+                            })
+                            .collect::<Vec<PageFilter>>(),
+                    })
+                } else {
+                    None
+                }
+            })
+            .collect();
 
         //dbg!(or_filters);
 

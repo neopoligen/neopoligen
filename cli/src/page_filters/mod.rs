@@ -16,11 +16,18 @@ pub struct PageFilterAndGroup {
     pub filters: Vec<PageFilter>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum PageFilter {
-    Status { exclude: bool, value: String }, // pub exclude: bool,
-                                             // pub r#type: PageFilterType,
-                                             // pub value: String,
+    Status { exclude: bool, value: String },
+}
+
+impl PageFilter {
+    pub fn parse(source: &str) -> PageFilter {
+        PageFilter::Status {
+            exclude: false,
+            value: "publishd".to_string(),
+        }
+    }
 }
 
 // #[derive(Debug)]

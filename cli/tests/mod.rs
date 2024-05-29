@@ -3,6 +3,7 @@ pub mod builder;
 pub mod helpers;
 pub mod image;
 pub mod page;
+pub mod page_filters;
 pub mod page_v2;
 pub mod section;
 pub mod sections;
