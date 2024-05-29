@@ -72,6 +72,30 @@ impl PageV2 {
         }
     }
 
+    pub fn get_metadata_attr(&self, key: &str) -> Option<String> {
+        self.ast.iter().find_map(|sec_enum| {
+            if let Section::Yaml { r#type, attrs, .. } = sec_enum {
+                if r#type == "metadata" {
+                    attrs.iter().find_map(|attr| {
+                        if attr.0 == key {
+                            if let Ok(datetime) = get_datetime(attr.1.trim()) {
+                                Some(attr.1.to_string())
+                            } else {
+                                None
+                            }
+                        } else {
+                            None
+                        }
+                    })
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        })
+    }
+
     pub fn hash(&self) -> Option<String> {
         if let Some(content) = &self.source_content {
             Some(sha256::digest(content))

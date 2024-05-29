@@ -1,6 +1,22 @@
-use neopoligengine::{page_v2::PageV2, site_config::SiteConfig};
+use neopoligengine::page_v2::PageV2;
 use pretty_assertions::assert_eq;
 use std::path::PathBuf;
+
+#[test]
+fn format_created_date_basic() {
+    let p = PageV2::mock_1_with_ast();
+    let left = "May 2024".to_string();
+    let right = p.format_created_date("%B %Y").unwrap();
+    assert_eq!(left, right)
+}
+
+#[test]
+fn get_metadata_attr_basic() {
+    let p = PageV2::mock_6_url_title_parsing();
+    let left = "2024-05-20".to_string();
+    let right = p.get_metadata_attr("created").unwrap();
+    assert_eq!(left, right)
+}
 
 #[test]
 fn href_basic() {
@@ -9,6 +25,9 @@ fn href_basic() {
     let right = p.href().unwrap();
     assert_eq!(left, right)
 }
+
+// TODO: href when there's a metadata path that has an HTML file
+// TODO: href when there's a metadata path without an HTML file
 
 #[test]
 fn id_basic() {
@@ -103,13 +122,5 @@ fn title_for_url_deal_with_chars_and_multi_spaces() {
     let p = PageV2::mock_6_url_title_parsing();
     let left = "another-url-42-title".to_string();
     let right = p.title_for_url().unwrap();
-    assert_eq!(left, right)
-}
-
-#[test]
-fn created_date_string() {
-    let p = PageV2::mock_1_with_ast();
-    let left = "May 2024".to_string();
-    let right = p.format_created_date("%B %Y").unwrap();
     assert_eq!(left, right)
 }
