@@ -5,7 +5,7 @@ use serde::Deserialize;
 use serde::Serialize;
 use std::collections::BTreeSet;
 // use serde_json;
-// use serde_json::Value;
+use serde_json::Value;
 // use std::collections::BTreeMap;
 use std::fs::{self, DirEntry};
 use std::io;
@@ -20,23 +20,22 @@ pub struct SiteConfig {
     pub base_image_widths: Vec<u32>,
 
     pub default_language: String,
-
-    // #[serde(default = "empty_paths")]
-    // pub paths: BTreeMap<String, PathBuf>,
+    pub theme_name: String,
+    pub theme_options: Option<serde_json::Value>,
     pub project_root: Option<PathBuf>,
+
     #[serde(default = "empty_sections")]
     pub sections: Sections,
 
     #[serde(default = "empty_spans")]
     pub spans: Vec<String>,
 
+    // DEPRECATED: TODO: Move to theme name and theme options
     pub theme: ThemeConfig,
-
-    pub options: serde_json::Value, // DEPRECATED: remove when images are in place
-                                    // #[serde(default = "default_max_image_width")]
-                                    // pub max_image_width: Option<u32>,
+    //pub options: serde_json::Value,
 }
 
+// DEPRECATED: TODO: Move to theme name and theme options
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct ThemeConfig {
     pub name: String,
@@ -66,6 +65,14 @@ impl SiteConfig {
         self.project_root.clone().unwrap().join("content")
     }
 
+    pub fn feeds_dest_dir(&self) -> PathBuf {
+        self.output_dir().join("feeds")
+    }
+
+    pub fn feeds_source_dir(&self) -> PathBuf {
+        self.templates_dir().join("feeds")
+    }
+
     pub fn image_cache_dir(&self) -> PathBuf {
         self.cache_dir().join("images")
     }
@@ -83,7 +90,6 @@ impl SiteConfig {
         for w in self.base_image_widths.iter() {
             tmp.insert(*w);
         }
-
         for image in self.theme.images.iter() {
             tmp.insert(image.max_width);
         }

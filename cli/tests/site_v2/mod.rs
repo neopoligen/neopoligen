@@ -53,3 +53,11 @@ fn collection_by_title_with_date_basic() {
     // collection_by_date since pages without
     // a date aren't included in that
 }
+
+#[test]
+fn site_uuid_basic() {
+    let site = SiteV2::mock1();
+    let left = Value::from("f2379517-fef2-587f-a259-81aeb4a9b7fd".to_string());
+    let right = site.uuid().unwrap();
+    assert_eq!(left, right);
+}

@@ -189,3 +189,11 @@ fn title_for_url_deal_with_chars_and_multi_spaces() {
     let right = p.title_for_url().unwrap();
     assert_eq!(left, right)
 }
+
+#[test]
+fn uuid_basic() {
+    let p = PageV2::mock_1_with_ast();
+    let left = "82ad7694-cfb5-5a3e-b025-3f1ecae6adbc".to_string();
+    let right = p.uuid().unwrap();
+    assert_eq!(left, right)
+}

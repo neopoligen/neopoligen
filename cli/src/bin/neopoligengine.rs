@@ -167,8 +167,9 @@ fn build_site(site_config: &SiteConfig) {
         let _ = builder.load_cached_pages();
         let _ = builder.load_source_files();
         let _ = builder.generate_missing_asts();
-        let _ = builder.generate_page_content();
+        let _ = builder.generate_page_content_and_feeds();
         let _ = builder.output_content_files();
+        let _ = builder.output_feeds();
         let _ = builder.output_last_edit();
         match builder.update_page_cache() {
             Ok(_) => (),

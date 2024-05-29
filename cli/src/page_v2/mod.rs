@@ -1,4 +1,5 @@
 pub mod mocks;
+pub mod object;
 
 use crate::ast::ast;
 use crate::page_filters::*;
@@ -10,6 +11,7 @@ use regex::Regex;
 use serde::Deserialize;
 use serde::Serialize;
 use std::path::PathBuf;
+use uuid::Uuid;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct PageV2 {
@@ -409,6 +411,14 @@ impl PageV2 {
             Some(t)
         } else {
             Some("post".to_string())
+        }
+    }
+
+    pub fn uuid(&self) -> Option<String> {
+        if let Some(id) = self.id() {
+            Some(Uuid::new_v5(&Uuid::NAMESPACE_DNS, id.as_bytes()).to_string())
+        } else {
+            None
         }
     }
 

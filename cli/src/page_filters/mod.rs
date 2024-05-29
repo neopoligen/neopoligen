@@ -14,7 +14,7 @@ impl PageFilterOrSet {
     }
 
     pub fn parse(args: &[Value]) -> Option<PageFilterOrSet> {
-        // TODO: Add error handling here
+        // TODO: Error handling
         let and_groups = args
             .iter()
             .filter_map(|ag| {

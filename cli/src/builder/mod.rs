@@ -30,9 +30,15 @@ use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 
 #[derive(Clone, Debug)]
+pub struct Feed {
+    content: Option<String>,
+}
+
+#[derive(Clone, Debug)]
 pub struct Builder {
     pub pages: BTreeMap<PathBuf, PageV2>,
     pub config: SiteConfig,
+    pub feeds: BTreeMap<String, Feed>,
     pub images: BTreeMap<PathBuf, Image>,
     pub last_edit: Option<String>,
     pub mp3s: BTreeMap<String, SiteMp3>,
@@ -42,6 +48,7 @@ impl Builder {
     pub fn new(config: SiteConfig) -> Result<Builder> {
         Ok(Builder {
             config,
+            feeds: BTreeMap::new(),
             images: BTreeMap::new(),
             last_edit: None,
             mp3s: BTreeMap::new(),
@@ -94,11 +101,6 @@ impl Builder {
         Ok(())
     }
 
-    // // DEPRECATED: Remove when images are done
-    // pub fn escape_image_name(&self, source: &str) -> Option<String> {
-    //     Some(source.to_string())
-    // }
-
     #[instrument(skip(self))]
     pub fn generate_missing_asts(&mut self) -> Result<()> {
         self.pages.iter_mut().for_each(|p| {
@@ -110,7 +112,7 @@ impl Builder {
     }
 
     #[instrument(skip(self))]
-    pub fn generate_page_content(&mut self) -> Result<()> {
+    pub fn generate_page_content_and_feeds(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating Page Content");
         let site_obj = Value::from_object(SiteV2::new(
             &self.config,
@@ -153,6 +155,7 @@ impl Builder {
                     }
                 };
             });
+
         self.pages.iter_mut().for_each(|p| {
             match p.1.output {
                 Some(_) => {}
@@ -180,6 +183,42 @@ impl Builder {
                 }
             }
         });
+
+        // Feeds
+        WalkDir::new(self.config.feeds_source_dir())
+            .into_iter()
+            .filter(|entry| match entry.as_ref().unwrap().path().extension() {
+                Some(ext) => ext.to_str().unwrap() == "neoj",
+                None => false,
+            })
+            .for_each(|entry| {
+                let path = entry.as_ref().unwrap().path().to_path_buf();
+                if let Some(stem) = path.file_stem() {
+                    let stem = stem.to_string_lossy().to_string();
+                    let template_name = format!("feeds/{}.neoj", stem);
+                    if let Ok(tmpl) = env.get_template(&template_name) {
+                        match tmpl.render(context!(
+                            site => site_obj,
+                        )) {
+                            Ok(output) => {
+                                self.feeds.insert(
+                                    stem,
+                                    Feed {
+                                        content: Some(output),
+                                    },
+                                );
+                            }
+                            Err(e) => {
+                                // TODO: Provide error handling here
+                                event!(Level::ERROR, "{}", e);
+                            }
+                        }
+                    } else {
+                        // TODO: Provide error handling here
+                        event!(Level::ERROR, "Could not get template: {}", template_name);
+                    }
+                }
+            });
         Ok(())
     }
 
@@ -409,6 +448,16 @@ impl Builder {
         Ok(())
     }
 
+    pub fn output_feeds(&self) -> Result<()> {
+        for (key, feed) in self.feeds.iter() {
+            let output_path = self.config.feeds_dest_dir().join(format!("{}.xml", key));
+            if let Some(content) = &feed.content {
+                fs::write(output_path, content)?;
+            }
+        }
+        Ok(())
+    }
+
     pub fn output_last_edit(&self) -> Result<()> {
         let output_path = self.config.output_dir().join("last-edit/index.html");
         let no_last_edit_content = r#"<!DOCTYPE html>
@@ -437,6 +486,7 @@ body {
     pub fn prep_dirs(&self) -> Result<()> {
         event!(Level::INFO, "Making Sure Directories Exist");
         let _ = fs::create_dir_all(self.config.custom_og_images_dir());
+        let _ = fs::create_dir_all(self.config.feeds_dest_dir());
         let _ = fs::create_dir_all(self.config.image_cache_dir());
         let _ = fs::create_dir_all(self.config.image_dest_dir());
         let _ = fs::create_dir_all(self.config.mp3_dest_dir());

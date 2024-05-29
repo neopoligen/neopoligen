@@ -23,10 +23,14 @@
     [! include "includes/footer.neoj" !]
 
     [# hard coding to my home page for now #]
+        <ul>
     [! if page_id == "2sjfzivl" !]
-        [! for sort_id in site.get_pages_by_date() !]
-            [@ sort_id @]
+        [! for sort_id in site.collection_by_date(["status:published"]) !]
+            <li>
+                [@ site.page_title_as_plain_text(sort_id) @]
+            </li>
         [! endfor !]
     [! endif !]
+        </ul>
 </body>
 </html>  

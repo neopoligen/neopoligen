@@ -25,6 +25,8 @@ impl Object for SiteV2 {
             "page_permalink" => self.page_permalink(args),
             "page_sections" => self.page_sections(args),
             "page_title_as_plain_text" => self.page_title_as_plain_text(args),
+            "page_uuid" => self.page_uuid(args),
+            "site_uuid" => self.uuid(),
             // DEPRECATED: Change to collection_*
             //"get_pages_by_date" => self.get_pages_by_date(args),
             "theme" => self.theme(),

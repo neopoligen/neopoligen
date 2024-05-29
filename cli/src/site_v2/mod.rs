@@ -7,10 +7,11 @@ use crate::page_filters::*;
 use crate::{page_v2::PageV2, site_config::SiteConfig};
 use itertools::Itertools;
 use minijinja::value::Value;
-use minijinja::{filters, Error};
+use minijinja::Error;
 use serde::Serialize;
 use std::collections::BTreeMap;
 use std::path::PathBuf;
+use uuid::Uuid;
 
 #[derive(Debug, Serialize)]
 pub struct SiteV2 {
@@ -225,6 +226,22 @@ impl SiteV2 {
         }
     }
 
+    pub fn page_uuid(&self, args: &[Value]) -> Result<Value, Error> {
+        if let Some(page_id) = args[0].as_str() {
+            if let Some(page) = &self.pages.get(page_id) {
+                if let Some(uuid) = page.uuid() {
+                    Ok(Value::from(uuid))
+                } else {
+                    Err(std::fmt::Error.into())
+                }
+            } else {
+                Err(std::fmt::Error.into())
+            }
+        } else {
+            Err(std::fmt::Error.into())
+        }
+    }
+
     // // TODO: Change to collection_*
     // pub fn get_pages_by_date(&self, _args: &[Value]) -> Result<Value, Error> {
     //     let pages = self
@@ -245,5 +262,11 @@ impl SiteV2 {
 
     pub fn theme(&self) -> Result<Value, Error> {
         Ok(Value::from_serialize(&self.config.theme))
+    }
+
+    pub fn uuid(&self) -> Result<Value, Error> {
+        Ok(Value::from(
+            Uuid::new_v5(&Uuid::NAMESPACE_DNS, self.config.base_url().as_bytes()).to_string(),
+        ))
     }
 }

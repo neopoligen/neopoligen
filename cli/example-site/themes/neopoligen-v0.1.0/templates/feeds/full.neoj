@@ -1,0 +1,35 @@
+[!- include "includes/config.neoj" -!]
+[!- import "includes/theme.neoj" as theme -!]
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>[@ config.site.theme_options.site_name|escape @]</title>
+    <link href="[@ config.site.base_url @]"></link>
+  <updated>TODO: DATE</updated>
+  <author>
+    <name>[@ config.site.theme_options.author @]</name>
+  </author>
+  <id>urn:uuid:[@ site.site_uuid() @]</id>
+
+  <entry>
+    <title>Atom-Powered Robots Run Amok</title>
+    <link href="http://example.org/2003/12/13/atom03"/>
+    <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>
+    <updated>2003-12-13T18:30:02Z</updated>
+    <summary>Some text.</summary>
+  </entry>
+
+</feed>
+
+<!--
+    <language>[@ config.site.default_language @]</language>
+<pubDate>TODO: DATE</pubDate>
+<lastBuildDate>TODO: DATE</lastBuildDate>
+
+[! for page_id in site.collection_by_date(["status:published"]) !]
+[! if loop.index < 30 !]
+[@ site.page_title_as_plain_text(page_id) @]
+[! endif !]
+[! endfor !]
+
+-->
+

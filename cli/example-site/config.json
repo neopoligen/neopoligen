@@ -1,6 +1,14 @@
 {
   "base_url": "http://localhost:1989",
   "default_language": "en",
+  "theme_name": "neopoligen-v0.1.0",
+  "theme_options": {
+    "author": "Alan W. Smith",
+    "site_name": "Neopoligen Example Site"
+  },
+  "image_sizes": {
+    "default": 900
+  },
   "theme": {
     "name": "neopoligen-v0.1.0",
     "images": [
@@ -9,31 +17,5 @@
         "max_width": 900
       }
     ]
-  },
-  "options": {
-    "site_name": "Neopoligen Example Site"
-  },
-  "feeds": [
-    {
-      "name": "Alan's Feed",
-      "path": "/feed.xml",
-      "filters": [ 
-        ["status:published"]
-      ],
-    }, 
-    {
-      "name": "Alan's Shorts",
-      "shorts": "/shorts.xml",
-      "filters": [ 
-        ["status:published"], ["type:short"]
-      ],
-    },
-    {
-      "name": "Alan's Shorts",
-      "shorts": "/posts.xml",
-      "filters": [ 
-        ["status:published"], ["type:!short"]
-      ],
-    }
-  ]
+  }
 }
