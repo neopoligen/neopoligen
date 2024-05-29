@@ -83,41 +83,43 @@ impl SiteV2 {
     }
 
     pub fn collection_by_date(&self, args: &[Value]) -> Result<Value, Error> {
-        let mut or_filters = PageFilterOrSet::new();
+        if let Some(or_filters) = PageFilterOrSet::parse(&args) {
+            Ok(Value::from_serialize(
+                self.pages
+                    .iter()
+                    .filter(|p| p.1.passes(&or_filters))
+                    .sorted_by(|a, b| Ord::cmp(&b.1.date(), &a.1.date()))
+                    .map(|p| p.1.id().unwrap())
+                    .collect::<Vec<String>>(),
+            ))
+        } else {
+            Err(std::fmt::Error.into())
+        }
 
-        or_filters.and_groups = args
-            .iter()
-            .filter_map(|ag| {
-                if let Ok(and_iter) = ag.try_iter() {
-                    Some(PageFilterAndGroup {
-                        filters: and_iter
-                            .into_iter()
-                            .filter_map(|filter_string| {
-                                if let Some(text) = filter_string.as_str() {
-                                    PageFilter::parse(text)
-                                } else {
-                                    None
-                                }
-                            })
-                            .collect::<Vec<PageFilter>>(),
-                    })
-                } else {
-                    None
-                }
-            })
-            .collect();
-
+        // DEPRECATED: Remove when collecction_by_date is working
+        // let mut or_filters = PageFilterOrSet::new();
+        // or_filters.and_groups = args
+        //     .iter()
+        //     .filter_map(|ag| {
+        //         if let Ok(and_iter) = ag.try_iter() {
+        //             Some(PageFilterAndGroup {
+        //                 filters: and_iter
+        //                     .into_iter()
+        //                     .filter_map(|filter_string| {
+        //                         if let Some(text) = filter_string.as_str() {
+        //                             PageFilter::parse(text)
+        //                         } else {
+        //                             None
+        //                         }
+        //                     })
+        //                     .collect::<Vec<PageFilter>>(),
+        //             })
+        //         } else {
+        //             None
+        //         }
+        //     })
+        //     .collect();
         //dbg!(or_filters);
-
-        Ok(Value::from_serialize(
-            self.pages
-                .iter()
-                .filter(|p| p.1.passes(&or_filters))
-                .sorted_by(|a, b| Ord::cmp(&b.1.date(), &a.1.date()))
-                .map(|p| p.1.id().unwrap())
-                .collect::<Vec<String>>(),
-        ))
-
         // Ok(Value::from_serialize(
         //     self.pages
         //         .iter()
@@ -132,17 +134,6 @@ impl SiteV2 {
         //         .map(|p| p.1.id().unwrap())
         //         .collect::<Vec<String>>(),
         // ))
-
-        // let v = vec![
-        //     "delta123".to_string(),
-        //     "alfa1234".to_string(),
-        //     "hotel123".to_string(),
-        //     "foxtrot1".to_string(),
-        //     "golf1234".to_string(),
-        //     "echo1234".to_string(),
-        //     "bravo123".to_string(),
-        // ];
-        // Ok(Value::from_serialize(v))
     }
 
     pub fn config(&self) -> Result<Value, Error> {

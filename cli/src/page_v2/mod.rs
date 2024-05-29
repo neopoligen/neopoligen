@@ -193,10 +193,14 @@ impl PageV2 {
             for filter in ag.filters.iter() {
                 match filter {
                     PageFilter::Status { exclude, value } => {
-                        if *value == self.status().unwrap() {
-                            if *exclude {
+                        if *exclude == true {
+                            if *value == self.status().unwrap() {
                                 found_exclude = true;
                             } else {
+                                found_include = true;
+                            }
+                        } else {
+                            if *value == self.status().unwrap() {
                                 found_include = true;
                             }
                         }
