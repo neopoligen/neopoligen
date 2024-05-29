@@ -117,7 +117,9 @@ title is found
         let content = r#"
 -- metadata
 -- id: echo1234
+-- status: draft
 -- updated: 2023-01-01
+-- type: short
 "#
         .trim_start()
         .to_string();

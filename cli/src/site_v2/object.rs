@@ -14,6 +14,9 @@ impl Object for SiteV2 {
         match name {
             "base_url" => self.base_url(),
             "config" => self.config(),
+            "collection_by_date" => self.collection_by_date(args),
+            // TODO: "collection_by_title" => self.collection_by_title(args),
+            // TODO: "collection_by_title_with_date" => self.collection_by_title_with_date(args),
             "get_image" => self.get_image(args),
             "get_mp3" => self.get_mp3(args),
             "page_format_date" => self.page_format_date(args),

@@ -30,6 +30,9 @@ fn collection_by_date_basic() {
         "echo1234".to_string(),
         "bravo123".to_string(),
     ]);
+    let args = [Value::from_serialize(vec![vec!["status:published"]])];
+    let right = site.collection_by_date(&args).unwrap();
+    assert_eq!(left, right);
 }
 
 #[test]

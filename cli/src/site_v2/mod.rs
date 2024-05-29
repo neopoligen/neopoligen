@@ -79,9 +79,69 @@ impl SiteV2 {
     }
 }
 
+#[derive(Debug)]
+pub struct PageFilterOrSet {
+    and_groups: Vec<PageFilterAndGroup>,
+}
+
+impl PageFilterOrSet {
+    pub fn new() -> PageFilterOrSet {
+        PageFilterOrSet { and_groups: vec![] }
+    }
+}
+
+#[derive(Debug)]
+pub struct PageFilterAndGroup {
+    pub filters: Vec<PageFilter>,
+}
+
+#[derive(Debug)]
+pub struct PageFilter {
+    r#type: PageFilterType,
+    value: String,
+    exclude: bool,
+}
+
+#[derive(Debug)]
+pub enum PageFilterType {
+    RootFolder,
+    Folder,
+    Status,
+    Tag,
+}
+
 impl SiteV2 {
     pub fn base_url(&self) -> Result<Value, Error> {
         Ok(Value::from(self.config.base_url()))
+    }
+
+    pub fn collection_by_date(&self, args: &[Value]) -> Result<Value, Error> {
+        if let Ok(filters_arg) = args[0].try_iter() {
+            let mut or_filters = PageFilterOrSet::new();
+            or_filters.and_groups = filters_arg
+                .into_iter()
+                .filter_map(|f| {
+                    None
+                    // dbg!(&f);
+                    // PageFilter {
+                    //     r#type: PageFilterType::Status,
+                    //     value: "some_value".to_string(),
+                    //     exclude: false,
+                    // }
+                })
+                .collect::<Vec<PageFilterAndGroup>>();
+            dbg!(or_filters);
+        };
+        let v = vec![
+            "delta123".to_string(),
+            "alfa1234".to_string(),
+            "hotel123".to_string(),
+            "foxtrot1".to_string(),
+            "golf1234".to_string(),
+            "echo1234".to_string(),
+            "bravo123".to_string(),
+        ];
+        Ok(Value::from_serialize(v))
     }
 
     pub fn config(&self) -> Result<Value, Error> {
