@@ -47,9 +47,11 @@ impl SiteConfig {
                 basic: vec![
                     "bookmark".to_string(),
                     "div".to_string(),
-                    "p".to_string(),
-                    "title".to_string(),
                     "note".to_string(),
+                    "p".to_string(),
+                    "ref".to_string(),
+                    "short".to_string(),
+                    "title".to_string(),
                     "warning".to_string(),
                 ],
                 block: vec!["basic-block".to_string()],

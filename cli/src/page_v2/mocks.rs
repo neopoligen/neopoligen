@@ -13,7 +13,7 @@ impl PageV2 {
 Mock File 1 With AST
 
 -- metadata
--- id: abcd1234
+-- id: alfa1234
 -- created: 2024-05-20T10:11:12
 "#
         .trim_start()
@@ -78,7 +78,7 @@ Some text for the bookmark
             ast: vec![],
             config: SiteConfig::mock1(),
             output: None,
-            source_path: Some(PathBuf::from("/mock/root/content/sub-dir/bookmakr.neo")),
+            source_path: Some(PathBuf::from("/mock/root/content/sub-dir/bookmark.neo")),
             source_content: Some(content),
         };
         let config = SiteConfig::mock1();
@@ -88,7 +88,7 @@ Some text for the bookmark
 
     pub fn mock_4_title_from_text() -> PageV2 {
         let content = r#"
--- div 
+-- short
 
 This is to test the title that comes in from the
 first few words of the first section if no other
@@ -97,6 +97,7 @@ title is found
 -- metadata
 -- id: delta7262 
 -- created: 2024-05-22
+-- type: short
 "#
         .trim_start()
         .to_string();
@@ -116,7 +117,7 @@ title is found
         let content = r#"
 -- metadata
 -- id: echo8171 
--- updated: 2024-05-22T10:11:12
+-- updated: 2023-01-01
 "#
         .trim_start()
         .to_string();
@@ -135,8 +136,8 @@ title is found
     pub fn mock_6_url_title_parsing() -> PageV2 {
         let content = r#"
 -- metadata
--- id: abcd1234
--- created: 2024-05-20
+-- id: foxtrot1 
+-- created: 2023-01-02
 -- title: - Another ' URL 42 ~ title -
 "#
         .trim_start()
@@ -145,7 +146,82 @@ title is found
             ast: vec![],
             config: SiteConfig::mock1(),
             output: None,
-            source_path: Some(PathBuf::from("/mock/root/content/no-title.neo")),
+            source_path: Some(PathBuf::from("/mock/root/content/foxtrot1.neo")),
+            source_content: Some(content),
+        };
+        let config = SiteConfig::mock1();
+        p.generate_ast(&config);
+        p
+    }
+
+    pub fn mock_7_golf1234() -> PageV2 {
+        let content = r#"
+-- title 
+
+TODO Example 1
+
+-- todo
+
+[] alfa
+
+[] bravo
+
+-- ref 
+-- title: Golf 1234 Ref Alfa
+-- url: https://golf1234-alfa.example.com/
+
+-- ref 
+-- title: Golf 1234 Ref Bravo
+-- url: https://golf1234-bravo.example.com/
+
+-- metadata
+-- id: golf1234 
+-- created: 2022-01-02
+-- updated: 2023-01-02
+"#
+        .trim_start()
+        .to_string();
+        let mut p = PageV2 {
+            ast: vec![],
+            config: SiteConfig::mock1(),
+            output: None,
+            source_path: Some(PathBuf::from(
+                "/mock/root/content/sub-dir1/sub-dir2/golf1234.neo",
+            )),
+            source_content: Some(content),
+        };
+        let config = SiteConfig::mock1();
+        p.generate_ast(&config);
+        p
+    }
+
+    pub fn mock_8_hotel123() -> PageV2 {
+        let content = r#"
+-- title 
+
+Some Page Example
+
+-- ref 
+-- title: Hotel 123 Ref Alfa
+-- url: https://hotel123-alfa.example.com/
+
+-- ref 
+-- title: Hotel 123 Ref Bravo
+-- url: https://hotel123-bravo.example.com/
+
+-- metadata
+-- id: hotel123 
+-- created: 2023-01-03
+"#
+        .trim_start()
+        .to_string();
+        let mut p = PageV2 {
+            ast: vec![],
+            config: SiteConfig::mock1(),
+            output: None,
+            source_path: Some(PathBuf::from(
+                "/mock/root/content/sub-dir1/sub-dir2/golf1234.neo",
+            )),
             source_content: Some(content),
         };
         let config = SiteConfig::mock1();

@@ -69,7 +69,7 @@ fn format_updated_date_none() {
 #[test]
 fn get_metadata_attr_basic() {
     let p = PageV2::mock_6_url_title_parsing();
-    let left = "2024-05-20".to_string();
+    let left = "2023-01-02".to_string();
     let right = p.get_metadata_attr("created").unwrap();
     assert_eq!(left, right)
 }
@@ -77,7 +77,7 @@ fn get_metadata_attr_basic() {
 #[test]
 fn href_basic() {
     let p = PageV2::mock_6_url_title_parsing();
-    let left = "/en/abcd1234/?another-url-42-title".to_string();
+    let left = "/en/foxtrot1/?another-url-42-title".to_string();
     let right = p.href().unwrap();
     assert_eq!(left, right)
 }
@@ -88,7 +88,7 @@ fn href_basic() {
 #[test]
 fn id_basic() {
     let p = PageV2::mock_1_with_ast();
-    let left = "abcd1234".to_string();
+    let left = "alfa1234".to_string();
     let right = p.id().unwrap();
     assert_eq!(left, right)
 }
@@ -96,7 +96,7 @@ fn id_basic() {
 #[test]
 fn og_image_basic() {
     let p = PageV2::mock_1_with_ast();
-    let left = "https://www.example.com/og-images/abcd1234.jpg".to_string();
+    let left = "https://www.example.com/og-images/alfa1234.jpg".to_string();
     let right = p.og_image().unwrap();
     assert_eq!(left, right)
 }
@@ -104,7 +104,7 @@ fn og_image_basic() {
 #[test]
 fn permalink_basic() {
     let p = PageV2::mock_1_with_ast();
-    let left = "https://www.example.com/en/abcd1234/?mock-file-1-with-ast".to_string();
+    let left = "https://www.example.com/en/alfa1234/?mock-file-1-with-ast".to_string();
     let right = p.permalink().unwrap();
     assert_eq!(left, right)
 }
@@ -112,7 +112,7 @@ fn permalink_basic() {
 #[test]
 fn rel_file_path_basic() {
     let p = PageV2::mock_1_with_ast();
-    let left = PathBuf::from("en/abcd1234/index.html");
+    let left = PathBuf::from("en/alfa1234/index.html");
     let right = p.rel_file_path().unwrap();
     assert_eq!(left, right)
 }
