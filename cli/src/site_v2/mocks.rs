@@ -1,0 +1,20 @@
+use crate::page_v2::PageV2;
+use crate::site_config::SiteConfig;
+use crate::site_v2::SiteV2;
+use std::collections::BTreeMap;
+
+impl SiteV2 {
+    pub fn mock1() -> SiteV2 {
+        let mut pages = BTreeMap::new();
+        pages.insert("abcd1234".to_string(), PageV2::mock_1_with_ast());
+        pages.insert("bravo123".to_string(), PageV2::mock_2_home_page());
+        pages.insert("charlie3737".to_string(), PageV2::mock_3_bookmark_section());
+        pages.insert("delta7262 ".to_string(), PageV2::mock_4_title_from_text());
+        SiteV2 {
+            config: SiteConfig::mock1(),
+            pages,
+            images: BTreeMap::new(),
+            mp3s: BTreeMap::new(),
+        }
+    }
+}

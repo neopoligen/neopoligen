@@ -37,6 +37,34 @@ impl PageV2 {
 }
 
 impl PageV2 {
+    pub fn date(&self) -> Option<NaiveDateTime> {
+        let updated = if let Some(datetime_string) = self.get_metadata_attr("updated") {
+            if let Ok(datetime) = get_datetime(&datetime_string) {
+                Some(datetime)
+            } else {
+                None
+            }
+        } else {
+            None
+        };
+        let created = if let Some(datetime_string) = self.get_metadata_attr("created") {
+            if let Ok(datetime) = get_datetime(&datetime_string) {
+                Some(datetime)
+            } else {
+                None
+            }
+        } else {
+            None
+        };
+        if let Some(dt) = updated {
+            Some(dt)
+        } else if let Some(dt) = created {
+            Some(dt)
+        } else {
+            None
+        }
+    }
+
     pub fn format_created_date(&self, fmt: &str) -> Option<String> {
         if let Some(datetime_string) = self.get_metadata_attr("created") {
             if let Ok(datetime) = get_datetime(&datetime_string) {
@@ -49,7 +77,7 @@ impl PageV2 {
         }
     }
 
-    pub fn format_latest_date(&self, fmt: &str) -> Option<String> {
+    pub fn format_date(&self, fmt: &str) -> Option<String> {
         let updated = if let Some(datetime_string) = self.get_metadata_attr("updated") {
             if let Ok(datetime) = get_datetime(&datetime_string) {
                 Some(datetime.format(fmt).to_string())
@@ -59,7 +87,6 @@ impl PageV2 {
         } else {
             None
         };
-
         let created = if let Some(datetime_string) = self.get_metadata_attr("created") {
             if let Ok(datetime) = get_datetime(&datetime_string) {
                 Some(datetime.format(fmt).to_string())
@@ -69,7 +96,6 @@ impl PageV2 {
         } else {
             None
         };
-
         if let Some(dt) = updated {
             Some(dt)
         } else if let Some(dt) = created {

@@ -6,6 +6,7 @@
 [!- for section in site.page_sections(page_id) -!]
 [!- if section.type == "title" -!]
 [@- theme.output_section(site, page_id, section) -@]
+[@ site.page_format_date(page_id, "%B %Y") @]
 [!- endif -!]
 [!- endfor -!]
 [!- endblock -!]

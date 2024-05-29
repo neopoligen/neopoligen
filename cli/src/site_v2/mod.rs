@@ -1,8 +1,10 @@
+pub mod mocks;
 pub mod object;
 
 use crate::helpers::clean_for_url;
 use crate::image::Image;
 use crate::{page_v2::PageV2, site_config::SiteConfig};
+use itertools::Itertools;
 use minijinja::value::Value;
 use minijinja::Error;
 use serde::Serialize;
@@ -108,6 +110,16 @@ impl SiteV2 {
         }
     }
 
+    pub fn page_format_date(&self, args: &[Value]) -> Result<Value, Error> {
+        let page_id = args[0].to_string();
+        let fmt = args[1].to_string();
+        if let Some(page) = &self.pages.get(&page_id) {
+            Ok(page.format_date(&fmt).into())
+        } else {
+            Err(std::fmt::Error.into())
+        }
+    }
+
     pub fn page_href(&self, args: &[Value]) -> Result<Value, Error> {
         match &self.pages.get(&args[0].to_string()) {
             Some(page) => {
@@ -159,6 +171,25 @@ impl SiteV2 {
             Some(page) => Ok(Value::from_serialize(&page.title_as_plain_text())),
             None => Ok(Value::from("")),
         }
+    }
+
+    pub fn get_pages_by_date(&self, _args: &[Value]) -> Result<Value, Error> {
+        let pages = self
+            .pages
+            .iter()
+            .filter_map(|p| {
+                if let (Some(id), Some(date)) = (p.1.id(), p.1.date()) {
+                    Some((id, date))
+                } else {
+                    None
+                }
+            })
+            .sorted_by(|a, b| Ord::cmp(&b.1, &a.1))
+            .map(|i| i.0)
+            .collect::<Vec<String>>();
+
+        //let v = vec!["asdf".to_string()];
+        Ok(Value::from_serialize(pages))
     }
 
     pub fn theme(&self) -> Result<Value, Error> {

@@ -6,5 +6,6 @@ pub mod page;
 pub mod page_v2;
 pub mod section;
 pub mod sections;
+pub mod site;
 pub mod site_config;
 pub mod spans;

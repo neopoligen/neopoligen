@@ -16,11 +16,13 @@ impl Object for SiteV2 {
             "config" => self.config(),
             "get_image" => self.get_image(args),
             "get_mp3" => self.get_mp3(args),
+            "page_format_date" => self.page_format_date(args),
             "page_href" => self.page_href(args),
             "page_og_image" => self.page_og_image(args),
             "page_permalink" => self.page_permalink(args),
             "page_sections" => self.page_sections(args),
             "page_title_as_plain_text" => self.page_title_as_plain_text(args),
+            "get_pages_by_date" => self.get_pages_by_date(args),
             "theme" => self.theme(),
             _ => Ok(Value::from("")),
         }

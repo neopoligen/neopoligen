@@ -69,7 +69,6 @@ Some text for the bookmark
 
 -- metadata
 -- id: charlie3737 
--- data: 2024-05-21T10:11:12
 "#
         .trim_start()
         .to_string();
@@ -95,7 +94,7 @@ title is found
 
 -- metadata
 -- id: delta7262 
--- data: 2024-05-22T10:11:12
+-- created: 2024-05-22
 "#
         .trim_start()
         .to_string();
@@ -115,7 +114,7 @@ title is found
         let content = r#"
 -- metadata
 -- id: echo8171 
--- data: 2024-05-22T10:11:12
+-- updated: 2024-05-22T10:11:12
 "#
         .trim_start()
         .to_string();
