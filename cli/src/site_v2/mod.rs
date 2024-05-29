@@ -84,7 +84,7 @@ impl SiteV2 {
 
     pub fn collection_by_date(&self, args: &[Value]) -> Result<Value, Error> {
         let mut or_filters = PageFilterOrSet::new();
-        let raw_or_groups = or_filters.and_groups = args
+        or_filters.and_groups = args
             .iter()
             .filter_map(|ag| {
                 if let Ok(and_iter) = ag.try_iter() {
