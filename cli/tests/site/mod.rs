@@ -19,8 +19,7 @@ use pretty_assertions::assert_eq;
 // }
 
 #[test]
-#[ignore]
-fn collection_by_date_basic() {
+fn collection_by_date_status_published() {
     let site = SiteV2::mock1();
     let left = Value::from_serialize(vec![
         "delta123".to_string(),
@@ -28,7 +27,6 @@ fn collection_by_date_basic() {
         "hotel123".to_string(),
         "foxtrot1".to_string(),
         "golf1234".to_string(),
-        "echo1234".to_string(),
         "bravo123".to_string(),
     ]);
     let args = [Value::from_serialize(vec![vec!["status:published"]])];

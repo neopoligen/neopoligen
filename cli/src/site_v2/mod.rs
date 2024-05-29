@@ -121,17 +121,26 @@ impl SiteV2 {
         Ok(Value::from_serialize(
             self.pages
                 .iter()
-                .filter(|p| {
-                    let mut include = false;
-                    if let (Some(id), Some(status)) = (p.1.id(), p.1.status()) {
-                        include = true
-                    }
-                    include
-                })
+                .filter(|p| p.1.passes(&or_filters))
                 .sorted_by(|a, b| Ord::cmp(&b.1.date(), &a.1.date()))
                 .map(|p| p.1.id().unwrap())
                 .collect::<Vec<String>>(),
         ))
+
+        // Ok(Value::from_serialize(
+        //     self.pages
+        //         .iter()
+        //         .filter(|p| {
+        //             let mut include = false;
+        //             if let (Some(id), Some(status)) = (p.1.id(), p.1.status()) {
+        //                 include = true
+        //             }
+        //             include
+        //         })
+        //         .sorted_by(|a, b| Ord::cmp(&b.1.date(), &a.1.date()))
+        //         .map(|p| p.1.id().unwrap())
+        //         .collect::<Vec<String>>(),
+        // ))
 
         // let v = vec![
         //     "delta123".to_string(),
