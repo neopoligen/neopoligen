@@ -1,17 +1,46 @@
 pub mod mocks;
 
-#[derive(Debug)]
+use minijinja::Value;
+
+#[derive(Debug, PartialEq)]
 pub struct PageFilterOrSet {
     pub and_groups: Vec<PageFilterAndGroup>,
 }
 
 impl PageFilterOrSet {
+    // DEPRECATED: TODO: remove this in favor of .parse()
     pub fn new() -> PageFilterOrSet {
         PageFilterOrSet { and_groups: vec![] }
     }
+
+    pub fn parse(args: &[Value]) -> Option<PageFilterOrSet> {
+        // TODO: Add error handling here
+        let and_groups = args
+            .iter()
+            .filter_map(|ag| {
+                if let Ok(and_iter) = ag.try_iter() {
+                    Some(PageFilterAndGroup {
+                        filters: and_iter
+                            .into_iter()
+                            .filter_map(|filter_string| {
+                                if let Some(text) = filter_string.as_str() {
+                                    PageFilter::parse(text)
+                                } else {
+                                    None
+                                }
+                            })
+                            .collect::<Vec<PageFilter>>(),
+                    })
+                } else {
+                    None
+                }
+            })
+            .collect();
+        Some(PageFilterOrSet { and_groups })
+    }
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct PageFilterAndGroup {
     pub filters: Vec<PageFilter>,
 }
