@@ -262,6 +262,31 @@ impl PageV2 {
         }
     }
 
+    pub fn only_sections(&self, args: &[Value]) -> Result<Value, Error> {
+        let outputs: Vec<String> = args.iter().map(|arg| arg.to_string()).collect();
+        Ok(Value::from_serialize(
+            &self
+                .ast
+                .iter()
+                .filter(|section| match section {
+                    Section::Basic { r#type, .. } => outputs.contains(r#type),
+                    Section::BasicV2 { r#type, .. } => outputs.contains(r#type),
+                    Section::Block { r#type, .. } => outputs.contains(r#type),
+                    Section::Checklist { r#type, .. } => outputs.contains(r#type),
+                    Section::ChecklistItem { r#type, .. } => outputs.contains(r#type),
+                    Section::Comment { r#type, .. } => outputs.contains(r#type),
+                    Section::Generic { r#type, .. } => outputs.contains(r#type),
+                    Section::Json { r#type, .. } => outputs.contains(r#type),
+                    Section::List { r#type, .. } => outputs.contains(r#type),
+                    Section::ListItem { r#type, .. } => outputs.contains(r#type),
+                    Section::Raw { r#type, .. } => outputs.contains(r#type),
+                    Section::TagFinderInit => false,
+                    Section::Yaml { r#type, .. } => outputs.contains(r#type),
+                })
+                .collect::<Vec<_>>(),
+        ))
+    }
+
     pub fn permalink(&self) -> Option<String> {
         if let Some(href) = &self.href() {
             Some(format!("{}{}", self.config.base_url(), href))

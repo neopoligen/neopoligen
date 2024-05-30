@@ -14,7 +14,10 @@ impl Object for PageV2 {
         match name {
             "all_sections" => self.all_sections(),
             "all_sections_except" => self.all_sections_except(args),
+            "only_sections" => self.only_sections(args),
             "id" => self.id_v2(),
+            // Reminder: you can't put a default message for ``_``
+            // because it'll break if you try to loop over it.
             _ => Ok(Value::from("")),
         }
     }

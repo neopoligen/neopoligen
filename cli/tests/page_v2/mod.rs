@@ -18,9 +18,15 @@ fn all_sections_basic_result_is_ok() {
 }
 
 #[test]
-fn all_sections_except() {
+fn all_sections_except_basic_is_ok() {
     let p = PageV2::mock_1_with_ast();
     assert!(p.all_sections_except(&[Value::from("metadata")]).is_ok());
+}
+
+#[test]
+fn only_sections_basic_is_ok() {
+    let p = PageV2::mock_1_with_ast();
+    assert!(p.only_sections(&[Value::from("title")]).is_ok());
 }
 
 // #[test]

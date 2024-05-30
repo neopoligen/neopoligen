@@ -24,6 +24,7 @@ impl Object for SiteV2 {
             "page_href" => self.page_href(args),
             "page_og_image" => self.page_og_image(args),
             "page_permalink" => self.page_permalink(args),
+            // DEPRECATED: replace page_sections with page.all_sections()
             "page_sections" => self.page_sections(args),
             "page_title_as_plain_text" => self.page_title_as_plain_text(args),
             "page_uuid" => self.page_uuid(args),

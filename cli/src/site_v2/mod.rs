@@ -238,6 +238,7 @@ impl SiteV2 {
         }
     }
 
+    // DEPRECATED: TODO: replace .page_sections() with page.sections()
     pub fn page_sections(&self, args: &[Value]) -> Result<Value, Error> {
         match &self.pages.get(&args[0].to_string()) {
             Some(page) => Ok(Value::from_serialize(&page.ast)),

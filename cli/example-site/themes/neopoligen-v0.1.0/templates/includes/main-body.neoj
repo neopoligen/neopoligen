@@ -1,18 +1,9 @@
 [!- import "includes/theme.neoj" as theme -!]
 
 
-
-
-[!- for section in site.page_sections(page_id) -!]
-[!- if 
-  section.type == "forward"  or
-  section.type == "tldr" 
--!]
+[!- for section in page.only_sections("forward", "tldr") -!]
 [@- theme.output_section(site, page_id, section) -@]
-[!- endif -!]
 [!- endfor -!]
-
-
 
 [! for section in page.all_sections_except(
   "afterword", "blurb", "endnote", "footnote", "forward", 

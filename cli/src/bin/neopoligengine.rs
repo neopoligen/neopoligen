@@ -3,6 +3,7 @@ use dirs::document_dir;
 use neopoligengine::builder::Builder;
 use neopoligengine::engine_config::EngineConfig;
 use neopoligengine::file_watcher::FileWatcher;
+use neopoligengine::site_config;
 // use neopoligengine::page::Page;
 // use neopoligengine::site::Site;
 use neopoligengine::site_config::SiteConfig;
@@ -154,6 +155,7 @@ fn check_templates(site_config: &SiteConfig) {
 #[instrument(skip(site_config))]
 fn build_site(site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
+
     if let Ok(mut builder) = Builder::new(site_config.clone()) {
         let _ = builder.debug_flush_cache();
         let _ = empty_dir(&site_config.output_dir());
