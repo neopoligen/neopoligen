@@ -22,12 +22,17 @@
     </main>
     [! include "includes/footer.neoj" !]
 
+
+
     [# hard coding to my home page for now #]
         <ul>
     [! if page_id == "2sjfzivl" !]
         [! for sort_id in site.collection_by_date(["status:published"]) !]
             <li>
+                <a href="[@ site.page_permalink(sort_id) @]">
                 [@ site.page_title_as_plain_text(sort_id) @]
+                </a>
+
             </li>
         [! endfor !]
     [! endif !]

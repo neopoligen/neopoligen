@@ -2,7 +2,7 @@
 <div class="footer-line">
   <a href="/">alanwsmith.com</a>
   <a href="https://hachyderm.io/deck/@TheIdOfAlan">mastodon</a>
-  <span class="color-alfa-60">I haven't built an RSS feed yet, but it's on the list</span>
+  <a href="/feeds/full.xml">rss feed</a>
 </div>
 <div class="footer-line">
   <div class="permalink center">Permalink<br>[@ site.page_permalink(page_id) @]</div>

@@ -1,6 +1,7 @@
 [!- include "includes/config.neoj" -!]
 [!- import "includes/theme.neoj" as theme -!]
 <?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet href="/theme/xslt/feeds.xsl" type="text/xsl"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>[@ config.site.theme_options.site_name|escape @]</title>
     <link href="[@ config.site.base_url @]"></link>
@@ -14,10 +15,14 @@
 [! if loop.index < 30 !]
   <entry>
     <title>[@ site.page_title_as_plain_text(page_id) @]</title>
-    <link href="[@ site.page_permalink(page_id) @]"/>
+    <link href="[@ site.page_permalink(page_id) @]" type="text/html" rel="alternate" />
     <id>urn:uuid:[@ site.page_uuid(page_id) @]</id>
     <updated>[@ site.page_date_for_feed(page_id) @]</updated>
-    <summary>I'm still working on getting the content here</summary>
+    <content type="html">
+    Hi there! I just got my basic feed working with links. 
+    I should have the content in here within a week. For now
+    this page &lt;a href=&quot;[@ site.page_permalink(page_id) @]&quot;&gt;is here&lt;/a&gt;
+    </content>
   </entry>
 [! endif !]
 [! endfor !]
