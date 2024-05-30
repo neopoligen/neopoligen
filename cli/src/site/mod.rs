@@ -1,3 +1,6 @@
+// DEPREDATED: This is the old version of
+//  the site which can be removed when time allows
+//
 use crate::og_image::*;
 use crate::page::Page;
 use crate::site_config::SiteConfig;
@@ -172,9 +175,9 @@ impl Site {
 
     pub fn generate_content_pages(
         &mut self,
-        render_errors: &mut BTreeMap<PathBuf, String>,
+        _render_errors: &mut BTreeMap<PathBuf, String>,
     ) -> Vec<(PathBuf, PathBuf, String)> {
-        let mut outputs: Vec<(PathBuf, PathBuf, String)> = vec![];
+        let outputs: Vec<(PathBuf, PathBuf, String)> = vec![];
         let mut env = Environment::new();
         env.set_debug(true);
         env.add_function("highlight_code", highlight_code);

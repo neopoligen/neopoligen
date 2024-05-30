@@ -1,7 +1,7 @@
 use minijinja::Value;
-use neopoligengine::{page_filters::PageFilterOrSet, page_v2::PageV2};
+use neopoligengine::page_v2::PageV2;
 use pretty_assertions::assert_eq;
-use std::path::PathBuf;
+//use std::path::PathBuf;
 
 #[test]
 fn id_that_exists() {

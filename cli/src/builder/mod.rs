@@ -865,7 +865,8 @@ pub fn highlight_code(args: &[Value]) -> String {
     output_html.join("\n")
 }
 
-pub fn image_path(args: &[Value]) -> Option<String> {
+// DEPRECATED, I think. TODO: Look up where this is being used.
+pub fn image_path(_args: &[Value]) -> Option<String> {
     Some("/images/stills/hackers/images/hackers-frame-000003471/base.jpg".to_string())
 }
 
