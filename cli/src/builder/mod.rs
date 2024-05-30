@@ -38,16 +38,23 @@ pub struct Feed {
 pub struct Builder {
     pub pages: BTreeMap<PathBuf, PageV2>,
     pub config: SiteConfig,
+    pub errors: Vec<BuilderError>,
     pub feeds: BTreeMap<String, Feed>,
     pub images: BTreeMap<PathBuf, Image>,
     pub last_edit: Option<String>,
     pub mp3s: BTreeMap<String, SiteMp3>,
 }
 
+#[derive(Clone, Debug)]
+pub enum BuilderError {
+    MissingPageId { source_path: PathBuf },
+}
+
 impl Builder {
     pub fn new(config: SiteConfig) -> Result<Builder> {
         Ok(Builder {
             config,
+            errors: vec![],
             feeds: BTreeMap::new(),
             images: BTreeMap::new(),
             last_edit: None,
@@ -157,31 +164,37 @@ impl Builder {
             });
 
         self.pages.iter_mut().for_each(|p| {
-            match p.1.output {
-                Some(_) => {}
-                None => {
-                    let template_name = "pages/post/published.neoj";
-                    if let Ok(tmpl) = env.get_template(template_name) {
-                        match tmpl.render(context!(
-                            site => site_obj,
-                            page_id => p.1.id(),
-                            page => Value::from_object(p.1.clone())
-                        )) {
-                            Ok(output) => {
-                                self.last_edit = Some(output.clone());
-                                p.1.output = Some(output);
+            if let Ok(id) = p.1.id_v2() {
+                match p.1.output {
+                    Some(_) => {}
+                    None => {
+                        let template_name = "pages/post/published.neoj";
+                        if let Ok(tmpl) = env.get_template(template_name) {
+                            match tmpl.render(context!(
+                                site => site_obj,
+                                page_id => id,
+                                page => Value::from_object(p.1.clone())
+                            )) {
+                                Ok(output) => {
+                                    self.last_edit = Some(output.clone());
+                                    p.1.output = Some(output);
+                                }
+                                Err(e) => {
+                                    // TODO: Provide error handling here
+                                    event!(Level::ERROR, "{}", e);
+                                    p.1.output = None;
+                                }
                             }
-                            Err(e) => {
-                                // TODO: Provide error handling here
-                                event!(Level::ERROR, "{}", e);
-                                p.1.output = None;
-                            }
+                        } else {
+                            // TODO: Provide error handling here
+                            event!(Level::ERROR, "Could not get template: {}", template_name);
                         }
-                    } else {
-                        // TODO: Provide error handling here
-                        event!(Level::ERROR, "Could not get template: {}", template_name);
                     }
                 }
+            } else {
+                self.errors.push(BuilderError::MissingPageId {
+                    source_path: p.0.to_path_buf(),
+                })
             }
         });
 

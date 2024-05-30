@@ -180,6 +180,8 @@ fn build_site(site_config: &SiteConfig) {
         let _ = builder.make_og_images();
         let _ = builder.copy_theme_assets();
 
+        event!(Level::INFO, "Error Count: {}", builder.errors.len());
+
         //
     }
 
