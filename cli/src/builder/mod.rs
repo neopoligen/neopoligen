@@ -55,8 +55,18 @@ pub enum BuilderError {
         details: Option<String>,
         source_path: PathBuf,
     },
+    FailedThemeTest {
+        expected: Option<String>,
+        got: Option<String>,
+        details: Option<String>,
+        source_path: PathBuf,
+    },
     Generic {
         details: Option<String>,
+    },
+    InvalidThemeTest {
+        details: Option<String>,
+        source_path: PathBuf,
     },
     MissingPageId {
         details: Option<String>,
@@ -622,9 +632,7 @@ body {
 
         let _ = env.add_template_owned(
             "sections/start-theme-test/full/default.neoj",
-            r#"<!-- START_THEME_TEST -->
-
-[! include "subsections/content-full.neoj" !]"#,
+            "<!-- START_THEME_TEST -->\n\n[! include 'subsections/content-full.neoj' !]",
         );
 
         let _ = self.generate_missing_asts();
@@ -636,18 +644,35 @@ body {
                     page => Value::from_object(page.clone())
                 )) {
                     Ok(output) => {
-                        dbg!(&output);
-                        let parts = output
+                        let tests = output
                             .split("<!-- START_THEME_TEST -->")
                             .collect::<Vec<&str>>();
-                        if parts.len() == 1 {
+                        if tests.len() == 1 {
                             self.errors.push(BuilderError::NoThemeTestsFound {
                                 details: None,
                                 source_path: source_path.to_path_buf(),
                             })
                         } else {
-                            for t in parts.iter().skip(1) {
-                                dbg!(t);
+                            for t in tests.iter().skip(1) {
+                                let parts =
+                                    t.split("<!-- EXPECTED_OUTPUT -->").collect::<Vec<&str>>();
+                                if parts.len() == 3 {
+                                    let left = parts[0].replace("\n", "").replace(" ", "");
+                                    let right = parts[1].replace("\n", "").replace(" ", "");
+                                    if left != right {
+                                        self.errors.push(BuilderError::FailedThemeTest {
+                                            expected: Some(right),
+                                            got: Some(left),
+                                            details: None,
+                                            source_path: source_path.to_path_buf(),
+                                        })
+                                    }
+                                } else {
+                                    self.errors.push(BuilderError::InvalidThemeTest {
+                                        details: Some(t.to_string()),
+                                        source_path: source_path.to_path_buf(),
+                                    })
+                                }
                             }
                         }
                     }
@@ -836,7 +861,7 @@ fn resize_and_optimize_png(source: &PathBuf, width: u32, dest: &PathBuf) -> Resu
     Ok(())
 }
 
-fn simple_format_html(code: &str) -> String {
+fn format_html_for_theme_test_display(code: &str) -> String {
     let mut re = Regex::new(r"\n").unwrap();
     let output = re.replace_all(code, " ");
     re = Regex::new(r" \s+").unwrap();
