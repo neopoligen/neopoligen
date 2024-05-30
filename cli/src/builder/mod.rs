@@ -47,7 +47,25 @@ pub struct Builder {
 
 #[derive(Clone, Debug)]
 pub enum BuilderError {
-    MissingPageId { source_path: PathBuf },
+    CouldNotReadThemeTest {
+        details: Option<String>,
+        source_path: PathBuf,
+    },
+    CouldNotRenderThemeTest {
+        details: Option<String>,
+        source_path: PathBuf,
+    },
+    Generic {
+        details: Option<String>,
+    },
+    MissingPageId {
+        details: Option<String>,
+        source_path: PathBuf,
+    },
+    NoThemeTestsFound {
+        details: Option<String>,
+        source_path: PathBuf,
+    },
 }
 
 impl Builder {
@@ -193,6 +211,7 @@ impl Builder {
                 }
             } else {
                 self.errors.push(BuilderError::MissingPageId {
+                    details: None,
                     source_path: p.0.to_path_buf(),
                 })
             }
@@ -332,6 +351,8 @@ impl Builder {
     #[instrument(skip(self))]
     pub fn load_source_files(&mut self) -> Result<()> {
         event!(Level::INFO, "Loading Source Files");
+        // Reminder: clear pages to remove the template tests
+        self.pages = BTreeMap::new();
         let dir = &self.config.content_dir();
         WalkDir::new(dir)
             .into_iter()
@@ -508,6 +529,143 @@ body {
     }
 
     #[instrument(skip(self))]
+    pub fn test_theme(&mut self) -> Result<()> {
+        event!(Level::INFO, "Testing Templates");
+        // Reminder: Clear pages so order of build and test doesn't matter.
+        self.pages = BTreeMap::new();
+        // Add the testing sections to the site config
+        let mut theme_test_config = self.config.clone();
+        theme_test_config
+            .sections
+            .basic
+            .push("start-theme-test".to_string());
+        let site_obj = Value::from_object(SiteV2::new(
+            &theme_test_config,
+            &self.pages,
+            &self.images,
+            &self.mp3s,
+        ));
+        let mut env = Environment::new();
+        env.set_debug(true);
+        env.set_lstrip_blocks(true);
+        env.set_trim_blocks(true);
+        env.add_function("highlight_code", highlight_code);
+        env.add_function("image_path", image_path);
+        env.set_syntax(
+            SyntaxConfig::builder()
+                .block_delimiters("[!", "!]")
+                .variable_delimiters("[@", "@]")
+                .comment_delimiters("[#", "#]")
+                .build()
+                .unwrap(),
+        );
+        WalkDir::new(self.config.templates_dir())
+            .into_iter()
+            .filter(|entry| match entry.as_ref().unwrap().path().extension() {
+                Some(ext) => ext.to_str().unwrap() == "neoj",
+                None => false,
+            })
+            .for_each(|entry| {
+                let path = entry.as_ref().unwrap().path().to_path_buf();
+                match fs::read_to_string(&path) {
+                    Ok(content) => {
+                        let template_name = path.strip_prefix(self.config.templates_dir()).unwrap();
+                        let _ = env.add_template_owned(
+                            template_name.to_string_lossy().to_string(),
+                            content,
+                        );
+                    }
+                    Err(e) => {
+                        event!(Level::ERROR, "{}", e)
+                    }
+                };
+            });
+
+        for entry in WalkDir::new(self.config.theme_tests_dir().join("content")) {
+            let entry = entry?.path().to_path_buf();
+            if entry.is_file() {
+                if let Some(ext) = entry.extension() {
+                    if ext == "neo" {
+                        if let Ok(content) = fs::read_to_string(&entry) {
+                            self.pages.insert(
+                                entry.clone(),
+                                PageV2::new_from_filesystem(
+                                    entry.clone(),
+                                    theme_test_config.clone(),
+                                    content,
+                                ),
+                            );
+                            ()
+                        } else {
+                            self.errors.push(BuilderError::CouldNotReadThemeTest {
+                                details: None,
+                                source_path: entry,
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        let test_template_name = "theme-test.neoj";
+
+        let _ = env.add_template_owned(
+            test_template_name,
+            r#"
+[!- include "includes/config.neoj" -!]
+[!- import "includes/theme.neoj" as theme -!]
+[! for section in page.all_sections() !]
+[@- theme.output_section(site, page.id(), section) -@]
+[! endfor !]
+"#,
+        );
+
+        let _ = env.add_template_owned(
+            "sections/start-theme-test/full/default.neoj",
+            r#"<!-- START_THEME_TEST -->
+
+[! include "subsections/content-full.neoj" !]"#,
+        );
+
+        let _ = self.generate_missing_asts();
+
+        for (source_path, page) in self.pages.iter() {
+            if let Ok(tmpl) = env.get_template(test_template_name) {
+                match tmpl.render(context!(
+                    site => site_obj,
+                    page => Value::from_object(page.clone())
+                )) {
+                    Ok(output) => {
+                        dbg!(&output);
+                        let parts = output
+                            .split("<!-- START_THEME_TEST -->")
+                            .collect::<Vec<&str>>();
+                        if parts.len() == 1 {
+                            self.errors.push(BuilderError::NoThemeTestsFound {
+                                details: None,
+                                source_path: source_path.to_path_buf(),
+                            })
+                        } else {
+                            for t in parts.iter().skip(1) {
+                                dbg!(t);
+                            }
+                        }
+                    }
+                    Err(e) => self.errors.push(BuilderError::CouldNotRenderThemeTest {
+                        source_path: source_path.to_path_buf(),
+                        details: Some(e.to_string()),
+                    }),
+                }
+            } else {
+                self.errors.push(BuilderError::Generic {
+                    details: Some("Could not get internal test template".to_string()),
+                })
+            }
+        }
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn update_image_cache_db(&self) -> Result<()> {
         event!(Level::INFO, "Updating Image Cache DB");
         let mut conn = Connection::open(self.config.cache_db_path())?;
@@ -676,6 +834,34 @@ fn resize_and_optimize_png(source: &PathBuf, width: u32, dest: &PathBuf) -> Resu
         Encoder::new(file, DynamicImage::ImageRgba8(resized_image.into())).with_config(config);
     encoder.encode()?;
     Ok(())
+}
+
+fn simple_format_html(code: &str) -> String {
+    let mut re = Regex::new(r"\n").unwrap();
+    let output = re.replace_all(code, " ");
+    re = Regex::new(r" \s+").unwrap();
+    let output = re.replace_all(&output, " ");
+    re = Regex::new(r"\s+<").unwrap();
+    let output = re.replace_all(&output, "<");
+    re = Regex::new(r">\s+").unwrap();
+    let output = re.replace_all(&output, ">");
+    let parts: Vec<&str> = output.split("<").collect();
+    let mut assembler: Vec<String> = vec![];
+    let mut level = 0i8;
+    assembler.push(parts[0].to_string());
+    parts.iter().skip(1).for_each(|part| {
+        if part.starts_with("/") {
+            level -= 2;
+        }
+        for _ in 0..level {
+            assembler.push(" ".to_string());
+        }
+        assembler.push(format!("<{}\n", part));
+        if !part.starts_with("/") {
+            level += 2;
+        }
+    });
+    assembler.join("").to_string()
 }
 
 pub fn trim_empty_lines(source: &str) -> String {

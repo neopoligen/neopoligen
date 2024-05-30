@@ -157,6 +157,8 @@ fn build_site(site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
 
     if let Ok(mut builder) = Builder::new(site_config.clone()) {
+        let _ = builder.test_theme();
+
         let _ = builder.debug_flush_cache();
         let _ = empty_dir(&site_config.output_dir());
         let _ = builder.prep_dirs();
@@ -495,43 +497,15 @@ async fn run_web_server(site_config: SiteConfig) {
     }
 }
 
-fn write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
-    match path.parent() {
-        Some(parent_dir) => match fs::create_dir_all(parent_dir) {
-            Ok(_) => match fs::write(path, content) {
-                Ok(_) => Ok(()),
-                Err(e) => Err(e.to_string()),
-            },
-            Err(e) => Err(e.to_string()),
-        },
-        None => Err("Could not make directory".to_string()),
-    }
-}
-
-fn simple_format_html(code: &str) -> String {
-    let mut re = Regex::new(r"\n").unwrap();
-    let output = re.replace_all(code, " ");
-    re = Regex::new(r" \s+").unwrap();
-    let output = re.replace_all(&output, " ");
-    re = Regex::new(r"\s+<").unwrap();
-    let output = re.replace_all(&output, "<");
-    re = Regex::new(r">\s+").unwrap();
-    let output = re.replace_all(&output, ">");
-    let parts: Vec<&str> = output.split("<").collect();
-    let mut assembler: Vec<String> = vec![];
-    let mut level = 0i8;
-    assembler.push(parts[0].to_string());
-    parts.iter().skip(1).for_each(|part| {
-        if part.starts_with("/") {
-            level -= 2;
-        }
-        for _ in 0..level {
-            assembler.push(" ".to_string());
-        }
-        assembler.push(format!("<{}\n", part));
-        if !part.starts_with("/") {
-            level += 2;
-        }
-    });
-    assembler.join("").to_string()
-}
+// fn write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
+//     match path.parent() {
+//         Some(parent_dir) => match fs::create_dir_all(parent_dir) {
+//             Ok(_) => match fs::write(path, content) {
+//                 Ok(_) => Ok(()),
+//                 Err(e) => Err(e.to_string()),
+//             },
+//             Err(e) => Err(e.to_string()),
+//         },
+//         None => Err("Could not make directory".to_string()),
+//     }
+// }

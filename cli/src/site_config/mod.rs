@@ -142,6 +142,10 @@ impl SiteConfig {
         self.theme_dir().join("templates")
     }
 
+    pub fn theme_tests_dir(&self) -> PathBuf {
+        self.theme_dir().join("tests")
+    }
+
     pub fn load_sections(&mut self) {
         // // define the sections
         // self.sections.insert("basic".to_string(), vec![]);

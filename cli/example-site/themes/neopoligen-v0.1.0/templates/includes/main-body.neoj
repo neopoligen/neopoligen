@@ -1,6 +1,5 @@
 [!- import "includes/theme.neoj" as theme -!]
 
-
 [!- for section in page.only_sections("forward", "tldr") -!]
 [@- theme.output_section(site, page_id, section) -@]
 [!- endfor -!]
