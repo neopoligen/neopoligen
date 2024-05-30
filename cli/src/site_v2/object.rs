@@ -19,6 +19,7 @@ impl Object for SiteV2 {
             // TODO: "collection_by_title_with_date" => self.collection_by_title_with_date(args),
             "get_image" => self.get_image(args),
             "get_mp3" => self.get_mp3(args),
+            "page_date_for_feed" => self.page_date_for_feed(args),
             "page_format_date" => self.page_format_date(args),
             "page_href" => self.page_href(args),
             "page_og_image" => self.page_og_image(args),

@@ -46,6 +46,14 @@ fn collection_by_title_with_date_basic() {
 }
 
 #[test]
+fn page_date_basic() {
+    let site = SiteV2::mock1();
+    let left = Value::from("2024-05-20T10:11:12-04:00".to_string());
+    let right = site.page_date_for_feed(&[Value::from("alfa1234")]).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
 fn site_uuid_basic() {
     let site = SiteV2::mock1();
     let left = Value::from("f2379517-fef2-587f-a259-81aeb4a9b7fd".to_string());

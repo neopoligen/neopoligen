@@ -8,7 +8,7 @@ impl SiteV2 {
     pub fn mock1() -> SiteV2 {
         let build_time = DateTime::from_timestamp(1431648000, 100).expect("invalid timestamp");
         let mut pages = BTreeMap::new();
-        pages.insert("abcd1234".to_string(), PageV2::mock_1_with_ast());
+        pages.insert("alfa1234".to_string(), PageV2::mock_1_with_ast());
         pages.insert("bravo123".to_string(), PageV2::mock_2_home_page());
         pages.insert("charlie1".to_string(), PageV2::mock_3_bookmark_section());
         pages.insert("delta123".to_string(), PageV2::mock_4_title_from_text());

@@ -174,6 +174,21 @@ impl SiteV2 {
         }
     }
 
+    pub fn page_date_for_feed(&self, args: &[Value]) -> Result<Value, Error> {
+        let page_id = args[0].to_string();
+        if let Some(page) = &self.pages.get(&page_id) {
+            if let Ok(dt) = page.date() {
+                Ok(Value::from(
+                    dt.to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
+                ))
+            } else {
+                Err(std::fmt::Error.into())
+            }
+        } else {
+            Err(std::fmt::Error.into())
+        }
+    }
+
     pub fn page_format_date(&self, args: &[Value]) -> Result<Value, Error> {
         let page_id = args[0].to_string();
         let fmt = args[1].to_string();

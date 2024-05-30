@@ -3,6 +3,17 @@ use pretty_assertions::assert_eq;
 use std::path::PathBuf;
 
 #[test]
+fn date_basic() {
+    let p = PageV2::mock_1_with_ast();
+    let left = "2024-05-20T10:11:12-04:00".to_string();
+    let right = p
+        .date()
+        .unwrap()
+        .to_rfc3339_opts(chrono::SecondsFormat::Secs, false);
+    assert_eq!(left, right)
+}
+
+#[test]
 fn default_status() {
     let p = PageV2::mock_1_with_ast();
     let left = "published".to_string();

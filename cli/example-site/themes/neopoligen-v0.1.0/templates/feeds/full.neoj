@@ -16,8 +16,8 @@
     <title>[@ site.page_title_as_plain_text(page_id) @]</title>
     <link href="[@ site.page_permalink(page_id) @]"/>
     <id>urn:uuid:[@ site.page_uuid(page_id) @]</id>
-    <updated>2003-12-13T18:30:02Z</updated>
-    <summary>Some text.</summary>
+    <updated>[@ site.page_date_for_feed(page_id) @]</updated>
+    <summary>I'm still working on getting the content here</summary>
   </entry>
 [! endif !]
 [! endfor !]
