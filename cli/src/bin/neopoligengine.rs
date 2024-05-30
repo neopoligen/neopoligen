@@ -70,7 +70,6 @@ async fn main() {
         match load_site_config_file(&neopoligen_root, &engine_config.active_site) {
             Ok(mut site_config) => {
                 site_config.load_sections();
-                check_templates(&site_config);
                 build_site(&site_config);
                 run_web_server(site_config.clone()).await;
             }
@@ -86,79 +85,10 @@ async fn main() {
 }
 
 #[instrument(skip(site_config))]
-fn check_templates(site_config: &SiteConfig) {
-
-    // This is the old way to check template, needs to be updated
-    // to work with site_v2
-
-    //event!(Level::INFO, "Checking Templates");
-    //let mut site = Site::new(site_config.clone());
-    //let mut page_errors: Vec<Page> = vec![];
-    ////let mut render_errors: BTreeMap<PathBuf, String> = BTreeMap::new();
-    //let _ = empty_dir(&site.config.paths.get("theme_errors_root").unwrap());
-    //site.load_templates();
-    //site.load_template_test_files();
-    //site.load_template_test_template();
-    //site.parse_pages(&mut page_errors);
-    //site.find_template_errors().iter().for_each(|tt| {
-    //    let error_file_path = &site
-    //        .config
-    //        .paths
-    //        .get("theme_errors_root")
-    //        .unwrap()
-    //        .join(
-    //            &tt.page
-    //                .source_path
-    //                .strip_prefix(&site.config.paths.get("theme_tests_content_root").unwrap())
-    //                .unwrap(),
-    //        )
-    //        .with_extension("txt");
-    //    if let Some(render_error) = &tt.render_error {
-    //        let _ = write_file_with_mkdir(error_file_path, &render_error);
-    //    } else {
-    //        let error_text =
-    //            tt.template_errors
-    //                .iter()
-    //                .fold("".to_string(), |acc, (expected, got)| {
-    //                    format!(
-    //                        "{}### Expected:\n\n{}\n\n\n### Got:\n\n{}\n\n",
-    //                        acc,
-    //                        simple_format_html(expected),
-    //                        simple_format_html(got)
-    //                    )
-    //                });
-    //        let _ = write_file_with_mkdir(error_file_path, &error_text);
-    //    }
-    //});
-
-    // TODO: See if this needs to be pulled back in
-    //// render errors for templates
-    //page_errors.iter().for_each(|p| {
-    //    let error_file_path = &site
-    //        .config
-    //        .paths
-    //        .get("theme_errors_root")
-    //        .unwrap()
-    //        .join(
-    //            &p.source_path
-    //                .strip_prefix(&site.config.paths.get("content_root").unwrap())
-    //                .unwrap(),
-    //        )
-    //        .with_extension("txt");
-    //    //dbg!(error_file_path);
-    //    let _ = write_file_with_mkdir(error_file_path, &p.error.clone().unwrap().to_string());
-    //});
-
-    //TODO: add in render errors here too
-}
-
-#[instrument(skip(site_config))]
 fn build_site(site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
-
     if let Ok(mut builder) = Builder::new(site_config.clone()) {
         let _ = builder.test_theme();
-
         let _ = builder.debug_flush_cache();
         let _ = empty_dir(&site_config.output_dir());
         let _ = builder.prep_dirs();
@@ -182,83 +112,8 @@ fn build_site(site_config: &SiteConfig) {
         let _ = builder.make_og_images();
         let _ = builder.copy_theme_assets();
         let _ = builder.output_errors();
-
         event!(Level::INFO, "Error Count: {}", builder.errors.len());
-
-        //
     }
-
-    // DEPRECATED
-    // let mut site = Site::new(site_config.clone());
-    // let mut page_errors: Vec<Page> = vec![];
-    // let mut render_errors: BTreeMap<PathBuf, String> = BTreeMap::new();
-    // let _ = empty_dir(&site.config.paths.get("output_root").unwrap());
-    // let _ = empty_dir(&site.config.paths.get("render_errors_root").unwrap());
-    // site.load_templates();
-    // site.load_source_files();
-    // site.parse_pages(&mut page_errors);
-    // site.set_page_paths();
-    // site.toggle_cached_files();
-
-    // DEPRECATED
-    //event!(Level::INFO, "Generating Pages Into Cache");
-    //site.generate_content_pages(&mut render_errors)
-    //    .iter()
-    //    .for_each(|p| {
-    //        dbg!(&p.0);
-    //        //let output_pat = &site
-    //        //   .config
-    //        //  .cache_dir()
-    //        // .join(p.0.strip_prefix("/").unwrap());
-    //        let _ = write_file_with_mkdir(&p.0, &p.2);
-    //    });
-
-    // DEPRECATED
-    // event!(Level::INFO, "Publishing Cache");
-    // site.pages.iter().for_each(|p| {
-    // });
-
-    // DEPRECATED
-    //event!(Level::INFO, "Listing Page Errors");
-    //page_errors.iter().for_each(|p| {
-    //    let error_file_path = &site
-    //        .config
-    //        .paths
-    //        .get("render_errors_root")
-    //        .unwrap()
-    //        .join(
-    //            &p.source_path
-    //                .strip_prefix(&site.config.paths.get("content_root").unwrap())
-    //                .unwrap(),
-    //        )
-    //        .with_extension("txt");
-    //    //dbg!(error_file_path);
-    //    let _ = write_file_with_mkdir(error_file_path, &p.error.clone().unwrap().to_string());
-    //});
-
-    // DEPRECATED
-    // event!(Level::INFO, "Listing Render Errors");
-    // render_errors.iter().for_each(|p| {
-    //     let error_file_path = &site
-    //         .config
-    //         .paths
-    //         .get("render_errors_root")
-    //         .unwrap()
-    //         .join(
-    //             &p.0.strip_prefix(&site.config.paths.get("content_root").unwrap())
-    //                 .unwrap(),
-    //         )
-    //         .with_extension("txt");
-    //     dbg!(error_file_path);
-    //     let _ = write_file_with_mkdir(error_file_path, p.1);
-    // });
-
-    // DEPRECATED
-    // let _ = site.make_og_images();
-    // let _ = site.copy_theme_assets();
-    // let _ = site.copy_images();
-
-    //
 }
 
 fn load_engine_config_file(path: &PathBuf) -> Result<EngineConfig, String> {
@@ -468,7 +323,6 @@ async fn catch_file_changes(
 ) {
     while let Some(r) = rx.recv().await {
         dbg!(r);
-        check_templates(&site_config);
         build_site(&site_config);
         event!(Level::INFO, "Reloading Browser");
         reloader.reload();
