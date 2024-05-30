@@ -3,11 +3,11 @@ use dirs::document_dir;
 use neopoligengine::builder::Builder;
 use neopoligengine::engine_config::EngineConfig;
 use neopoligengine::file_watcher::FileWatcher;
-use neopoligengine::site_config;
+// use neopoligengine::site_config;
 // use neopoligengine::page::Page;
 // use neopoligengine::site::Site;
 use neopoligengine::site_config::SiteConfig;
-use regex::Regex;
+// use regex::Regex;
 use std::fs;
 use std::path::PathBuf;
 use tokio::sync::mpsc;
@@ -181,6 +181,7 @@ fn build_site(site_config: &SiteConfig) {
         }
         let _ = builder.make_og_images();
         let _ = builder.copy_theme_assets();
+        let _ = builder.output_errors();
 
         event!(Level::INFO, "Error Count: {}", builder.errors.len());
 

@@ -781,6 +781,42 @@ body {
         Ok(())
     }
 
+    pub fn output_errors(&self) -> Result<()> {
+        for error in self.errors.iter() {
+            match error {
+                BuilderError::CouldNotReadThemeTest {
+                    details: _,
+                    source_path: _,
+                } => {}
+                BuilderError::CouldNotRenderThemeTest {
+                    details: _,
+                    source_path: _,
+                } => {}
+                BuilderError::FailedThemeTest {
+                    expected: _,
+                    got: _,
+                    details: _,
+                    source_path: _,
+                } => {}
+                BuilderError::Generic { details: _ } => {}
+                BuilderError::InvalidThemeTest {
+                    details: _,
+                    source_path: _,
+                } => {}
+                BuilderError::MissingPageId {
+                    details: _,
+                    source_path: _,
+                } => {}
+                BuilderError::NoThemeTestsFound {
+                    details: _,
+                    source_path: _,
+                } => {}
+            }
+            dbg!(&error);
+        }
+        Ok(())
+    }
+
     //
 }
 

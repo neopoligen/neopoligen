@@ -107,12 +107,6 @@ customElements.define('neo-admin',
         button.innerHTML = `Design Mode: ${this.designModeStatus}`
       }
       this.ownerDocument.designMode = this.designModeStatus
-      this.ownerDocument.querySelector("header").innerHTML = "asdf"
-
-
-      // this.ownerDocument.designMode = "on"
-
     }
-
 })
 
