@@ -5,7 +5,7 @@ use serde::Deserialize;
 use serde::Serialize;
 use std::collections::BTreeSet;
 // use serde_json;
-use serde_json::Value;
+// use serde_json::Value;
 // use std::collections::BTreeMap;
 use std::fs::{self, DirEntry};
 use std::io;
@@ -211,20 +211,6 @@ impl SiteConfig {
         });
     }
 }
-
-fn default_language() -> Option<String> {
-    Some("en".to_string())
-}
-
-// DEPRECATED: Remove when images are in place
-// fn default_max_image_width() -> Option<u32> {
-//     Some(1800)
-// }
-
-// DEPREATED: remove when all paths are in functions
-// fn empty_paths() -> BTreeMap<String, PathBuf> {
-//     BTreeMap::new()
-// }
 
 fn empty_sections() -> Sections {
     Sections {
