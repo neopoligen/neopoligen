@@ -98,8 +98,9 @@ impl SiteV2 {
             Ok(Value::from_serialize(
                 self.pages
                     .iter()
+                    .filter(|p| p.1.date().is_ok())
                     .filter(|p| p.1.passes(&or_filters))
-                    .sorted_by(|a, b| Ord::cmp(&b.1.date(), &a.1.date()))
+                    .sorted_by(|a, b| Ord::cmp(&b.1.date().unwrap(), &a.1.date().unwrap()))
                     .map(|p| p.1.id().unwrap())
                     .collect::<Vec<String>>(),
             ))

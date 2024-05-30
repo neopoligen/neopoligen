@@ -17,9 +17,8 @@ fn collection_by_date_status_published() {
         "delta123".to_string(),
         "alfa1234".to_string(),
         "hotel123".to_string(),
-        "foxtrot1".to_string(),
         "golf1234".to_string(),
-        "bravo123".to_string(),
+        "foxtrot1".to_string(),
     ]);
     let args = [Value::from_serialize(vec!["status:published"])];
     let right = site.collection_by_date(&args).unwrap();

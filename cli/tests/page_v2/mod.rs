@@ -35,6 +35,14 @@ fn explicit_type() {
 }
 
 #[test]
+fn feed_date_basic() {
+    let p = PageV2::mock_1_with_ast();
+    let left = "2024-05-20T10:11:12-04:00".to_string();
+    let right = p.feed_date().unwrap();
+    assert_eq!(left, right)
+}
+
+#[test]
 fn filter_test_basic() {
     let p = PageV2::mock_1_with_ast();
     let filters = PageFilterOrSet::mock1_status_published();
@@ -78,7 +86,7 @@ fn format_updated_date_none() {
 #[test]
 fn get_metadata_attr_basic() {
     let p = PageV2::mock_6_url_title_parsing();
-    let left = "2023-01-02".to_string();
+    let left = "2023-01-02T14:15:16-04:00".to_string();
     let right = p.get_metadata_attr("created").unwrap();
     assert_eq!(left, right)
 }
@@ -197,3 +205,252 @@ fn uuid_basic() {
     let right = p.uuid().unwrap();
     assert_eq!(left, right)
 }
+
+// The below tests are from the original page instance
+//
+// use neopoligengine::span::Span;
+// use neopoligengine::{page::Page, site_config::SiteConfig};
+// use pretty_assertions::assert_eq;
+// use std::collections::BTreeMap;
+// use std::path::PathBuf;
+
+// DEPRECATED: Remove when this is moved to page_v2
+// #[test]
+// fn href_basic() {
+//     let source_text = r#"
+// -- metadata
+// -- id: abcd1234
+// -- date: 2024-05-20
+// -- title: Foxtrot Href Test
+// "#
+//     .trim_start()
+//     .to_string();
+//     let source_path = PathBuf::from("/mock/root/content/test-page.neo");
+//     let config = SiteConfig::mock1();
+//     let page = Page::new(source_text, source_path, &config);
+//     let expect = "/en/abcd1234/?foxtrot-href-test".to_string();
+//     let got = page.href.unwrap();
+//     assert_eq!(expect, got);
+// }
+
+// DEPRECATED: Remove when this is moved to page_v2
+// #[test]
+// fn href_from_path() {
+//     let source_text = r#"
+// -- metadata
+// -- id: abcd1234
+// -- date: 2024-05-20
+// -- path: /
+// -- title: This Should Not Be In The URL
+// "#
+//     .trim_start()
+//     .to_string();
+//     let source_path = PathBuf::from("/mock/root/content/test-page.neo");
+//     let config = SiteConfig::mock1();
+//     let page = Page::new(source_text, source_path, &config);
+//     let expect = "/".to_string();
+//     let got = page.href.unwrap();
+//     assert_eq!(expect, got);
+// }
+
+// DEPRECATED: Remove when this is moved to page_v2
+// #[test]
+// fn plain_text_from_spans_basic() {
+//     let spans = vec![
+//         Span::WordPart {
+//             text: "alfa".to_string(),
+//             r#type: "word-part".to_string(),
+//         },
+//         Span::Space {
+//             text: " ".to_string(),
+//             r#type: "space".to_string(),
+//         },
+//         Span::WordPart {
+//             text: "bravo".to_string(),
+//             r#type: "word-part".to_string(),
+//         },
+//     ];
+//     let expect = "alfa bravo".to_string();
+//     let got = Page::plain_text_from_spans(&spans).unwrap();
+//     assert_eq!(expect, got);
+// }
+
+// DEPRECATED: Remove when this is moved to page_v2
+// #[test]
+// fn plain_text_from_spans_recursive() {
+//     let spans = vec![
+//         Span::WordPart {
+//             text: "charlie".to_string(),
+//             r#type: "word-part".to_string(),
+//         },
+//         Span::Space {
+//             text: " ".to_string(),
+//             r#type: "space".to_string(),
+//         },
+//         Span::KnownSpan {
+//             attrs: BTreeMap::new(),
+//             flags: vec![],
+//             spans: vec![Span::WordPart {
+//                 text: "delta".to_string(),
+//                 r#type: "word-part".to_string(),
+//             }],
+//             r#type: "span".to_string(),
+//         },
+//     ];
+//     let expect = "charlie delta".to_string();
+//     let got = Page::plain_text_from_spans(&spans).unwrap();
+//     assert_eq!(expect, got);
+// }
+
+// DEPRECATED: Remove when this is moved to page_v2
+// #[test]
+// fn plain_text_from_spans_with_empty_vec_returns_none() {
+//     let spans = vec![];
+//     let expect = None;
+//     let got = Page::plain_text_from_spans(&spans);
+//     assert_eq!(expect, got);
+// }
+
+// DEPRECATED: Remove when this is moved to page_v2
+// #[test]
+// fn title_for_url_basic() {
+//     let source_text = r#"
+// -- metadata
+// -- id: abcd1234
+// -- date: 2024-05-20
+// -- title: Title For URL
+// "#
+//     .trim_start()
+//     .to_string();
+//     let source_path = PathBuf::from("/mock/root/content/test-page.neo");
+//     let config = SiteConfig::mock1();
+//     let page = Page::new(source_text, source_path, &config);
+//     let expect = "title-for-url".to_string();
+//     let got = page.title_for_url.unwrap();
+//     assert_eq!(expect, got);
+// }
+
+// DEPRECATED: Remove when this is moved to page_v2
+// #[test]
+// fn title_for_url_deal_with_chars_and_multi_spaces() {
+//     let source_text = r#"
+// -- metadata
+// -- id: abcd1234
+// -- date: 2024-05-20
+// -- title: - Another ' URL 42 ~ title -
+// "#
+//     .trim_start()
+//     .to_string();
+//     let source_path = PathBuf::from("/mock/root/content/test-page.neo");
+//     let config = SiteConfig::mock1();
+//     let page = Page::new(source_text, source_path, &config);
+//     let expect = "another-url-42-title".to_string();
+//     let got = page.title_for_url.unwrap();
+//     assert_eq!(expect, got);
+// }
+
+// DEPRECATED: Remove when this is moved to page_v2
+// #[test]
+// fn title_from_metadata() {
+//     let source_text = r#"
+// -- metadata
+// -- id: abcd1234
+// -- date: 2024-05-20
+// -- title: Alfa Title
+// "#
+//     .trim_start()
+//     .to_string();
+//     let source_path = PathBuf::from("/mock/root/content/test-page.neo");
+//     let config = SiteConfig::mock1();
+//     let page = Page::new(source_text, source_path, &config);
+//     let expect = "Alfa Title".to_string();
+//     let got = page.title_as_plain_text.unwrap();
+//     assert_eq!(expect, got);
+// }
+
+// DEPRECATED: Remove when this is moved to page_v2
+// #[test]
+// fn title_from_title_section() {
+//     let source_text = r#"
+// -- title
+
+// Bravo <<em|Title>>
+
+// -- metadata
+// -- id: abcd1234
+// -- date: 2024-05-20
+// "#
+//     .trim_start()
+//     .to_string();
+//     let source_path = PathBuf::from("/mock/root/content/test-page.neo");
+//     let config = SiteConfig::mock1();
+//     let page = Page::new(source_text, source_path, &config);
+//     let expect = "Bravo Title".to_string();
+//     let got = page.title_as_plain_text.unwrap();
+//     assert_eq!(expect, got);
+// }
+
+// DEPRECATED: Remove when this is moved to page_v2
+// #[test]
+// fn title_from_any_section() {
+//     let source_text = r#"
+// -- p
+// -- title: Charlie Title
+
+// Some content
+
+// -- metadata
+// -- id: abcd1234
+// -- date: 2024-05-20
+// "#
+//     .trim_start()
+//     .to_string();
+//     let source_path = PathBuf::from("/mock/root/content/test-page.neo");
+//     let config = SiteConfig::mock1();
+//     let page = Page::new(source_text, source_path, &config);
+//     let expect = "Charlie Title".to_string();
+//     let got = page.title_as_plain_text.unwrap();
+//     assert_eq!(expect, got);
+// }
+
+// DEPRECATED: Remove when this is moved to page_v2
+// #[test]
+// fn title_from_first_few_words() {
+//     let source_text = r#"
+// -- p
+
+// This is the <<em|first>> few words from a paragraph
+// section that will end up being in the title. But,
+// only part of them. Not the full paragraph.
+
+// -- metadata
+// -- id: abcd1234
+// -- date: 2024-05-20
+// "#
+//     .trim_start()
+//     .to_string();
+//     let source_path = PathBuf::from("/mock/root/content/test-page.neo");
+//     let config = SiteConfig::mock1();
+//     let page = Page::new(source_text, source_path, &config);
+//     let expect = "This is the first few words from a paragraph".to_string();
+//     let got = page.title_as_plain_text.unwrap();
+//     assert_eq!(expect, got);
+// }
+
+// DEPRECATED: Remove when this is moved to page_v2
+// #[test]
+// fn title_from_id() {
+//     let source_text = r#"
+// -- metadata
+// -- id: abcd1234
+// -- date: 2024-05-20
+// "#
+//     .trim_start()
+//     .to_string();
+//     let source_path = PathBuf::from("/mock/root/content/test-page.neo");
+//     let config = SiteConfig::mock1();
+//     let page = Page::new(source_text, source_path, &config);
+//     let expect = "abcd1234".to_string();
+//     let got = page.title_as_plain_text.unwrap();
+//     assert_eq!(expect, got);
+// }

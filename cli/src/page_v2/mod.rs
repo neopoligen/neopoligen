@@ -6,7 +6,9 @@ use crate::page_filters::*;
 use crate::section::Section;
 use crate::site_config::SiteConfig;
 use crate::span::Span;
-use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
+use anyhow::Result;
+use chrono::DateTime;
+use chrono::FixedOffset;
 use regex::Regex;
 use serde::Deserialize;
 use serde::Serialize;
@@ -40,38 +42,38 @@ impl PageV2 {
 }
 
 impl PageV2 {
-    pub fn date(&self) -> Option<NaiveDateTime> {
-        let updated = if let Some(datetime_string) = self.get_metadata_attr("updated") {
-            if let Ok(datetime) = get_datetime(&datetime_string) {
-                Some(datetime)
+    pub fn date(&self) -> Result<DateTime<FixedOffset>> {
+        if let Some(dt) = self.get_metadata_attr("updated") {
+            Ok(DateTime::parse_from_rfc3339(&dt)?)
+        } else if let Some(dt) = self.get_metadata_attr("created") {
+            Ok(DateTime::parse_from_rfc3339(&dt)?)
+        } else {
+            Err(std::fmt::Error.into())
+        }
+    }
+
+    pub fn feed_date(&self) -> Option<String> {
+        if let Some(dt) = self.get_metadata_attr("updated") {
+            if let Some(parsed) = DateTime::parse_from_rfc3339(&dt).ok() {
+                Some(parsed.to_rfc3339_opts(chrono::SecondsFormat::Secs, true))
             } else {
                 None
             }
-        } else {
-            None
-        };
-        let created = if let Some(datetime_string) = self.get_metadata_attr("created") {
-            if let Ok(datetime) = get_datetime(&datetime_string) {
-                Some(datetime)
+        } else if let Some(dt) = self.get_metadata_attr("created") {
+            if let Some(parsed) = DateTime::parse_from_rfc3339(&dt).ok() {
+                Some(parsed.to_rfc3339_opts(chrono::SecondsFormat::Secs, true))
             } else {
                 None
             }
-        } else {
-            None
-        };
-        if let Some(dt) = updated {
-            Some(dt)
-        } else if let Some(dt) = created {
-            Some(dt)
         } else {
             None
         }
     }
 
     pub fn format_created_date(&self, fmt: &str) -> Option<String> {
-        if let Some(datetime_string) = self.get_metadata_attr("created") {
-            if let Ok(datetime) = get_datetime(&datetime_string) {
-                Some(datetime.format(fmt).to_string())
+        if let Some(dt) = self.get_metadata_attr("created") {
+            if let Some(parsed) = DateTime::parse_from_rfc3339(&dt).ok() {
+                Some(parsed.format(&fmt).to_string())
             } else {
                 None
             }
@@ -81,37 +83,27 @@ impl PageV2 {
     }
 
     pub fn format_date(&self, fmt: &str) -> Option<String> {
-        let updated = if let Some(datetime_string) = self.get_metadata_attr("updated") {
-            if let Ok(datetime) = get_datetime(&datetime_string) {
-                Some(datetime.format(fmt).to_string())
+        if let Some(dt) = self.get_metadata_attr("updated") {
+            if let Some(parsed) = DateTime::parse_from_rfc3339(&dt).ok() {
+                Some(parsed.format(&fmt).to_string())
             } else {
                 None
             }
-        } else {
-            None
-        };
-        let created = if let Some(datetime_string) = self.get_metadata_attr("created") {
-            if let Ok(datetime) = get_datetime(&datetime_string) {
-                Some(datetime.format(fmt).to_string())
+        } else if let Some(dt) = self.get_metadata_attr("created") {
+            if let Some(parsed) = DateTime::parse_from_rfc3339(&dt).ok() {
+                Some(parsed.format(&fmt).to_string())
             } else {
                 None
             }
-        } else {
-            None
-        };
-        if let Some(dt) = updated {
-            Some(dt)
-        } else if let Some(dt) = created {
-            Some(dt)
         } else {
             None
         }
     }
 
     pub fn format_updated_date(&self, fmt: &str) -> Option<String> {
-        if let Some(datetime_string) = self.get_metadata_attr("updated") {
-            if let Ok(datetime) = get_datetime(&datetime_string) {
-                Some(datetime.format(fmt).to_string())
+        if let Some(dt) = self.get_metadata_attr("updated") {
+            if let Some(parsed) = DateTime::parse_from_rfc3339(&dt).ok() {
+                Some(parsed.format(&fmt).to_string())
             } else {
                 None
             }
@@ -425,11 +417,11 @@ impl PageV2 {
     //
 }
 
-fn get_datetime(source: &str) -> Result<NaiveDateTime, chrono::format::ParseError> {
-    let date = NaiveDate::parse_and_remainder(source, "%Y-%m-%d")?;
-    if let Ok(time) = NaiveTime::parse_from_str(date.1, " %H:%M:%S") {
-        Ok(date.0.and_time(time))
-    } else {
-        Ok(date.0.and_hms_opt(0, 0, 0).unwrap())
-    }
-}
+// fn get_datetime(source: &str) -> Result<NaiveDateTime, chrono::format::ParseError> {
+//     let date = NaiveDate::parse_and_remainder(source, "%Y-%m-%d")?;
+//     if let Ok(time) = NaiveTime::parse_from_str(date.1, " %H:%M:%S") {
+//         Ok(date.0.and_time(time))
+//     } else {
+//         Ok(date.0.and_hms_opt(0, 0, 0).unwrap())
+//     }
+// }

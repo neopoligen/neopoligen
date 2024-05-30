@@ -14,7 +14,7 @@ Mock File 1 With AST
 
 -- metadata
 -- id: alfa1234
--- created: 2024-05-20T10:11:12
+-- created: 2024-05-20T10:11:12-04:00
 "#
         .trim_start()
         .to_string();
@@ -68,8 +68,8 @@ Some text for the bookmark
 
 -- metadata
 -- id: charlie1
--- create: 2022-01-01
--- updated: 2022-02-02
+-- created: 2022-01-01T12:23:34-04:00
+-- updated: 2022-02-02T02:03:04-04:00
 -- status: draft
 "#
         .trim_start()
@@ -96,7 +96,7 @@ title is found
 
 -- metadata
 -- id: delta123
--- created: 2024-05-22
+-- created: 2024-05-22T16:37:12-04:00
 -- type: short
 "#
         .trim_start()
@@ -118,7 +118,7 @@ title is found
 -- metadata
 -- id: echo1234
 -- status: draft
--- updated: 2023-01-01
+-- updated: 2023-01-01T12:13:24-04:00
 -- type: short
 "#
         .trim_start()
@@ -139,7 +139,7 @@ title is found
         let content = r#"
 -- metadata
 -- id: foxtrot1 
--- created: 2023-01-02
+-- created: 2023-01-02T14:15:16-04:00
 -- title: - Another ' URL 42 ~ title -
 "#
         .trim_start()
@@ -178,8 +178,8 @@ TODO Example 1
 
 -- metadata
 -- id: golf1234 
--- created: 2022-01-02
--- updated: 2023-01-02
+-- created: 2022-01-02T12:23:34-04:00
+-- updated: 2023-01-02T14:23:32-04:00
 "#
         .trim_start()
         .to_string();
@@ -213,7 +213,7 @@ Some Page Example
 
 -- metadata
 -- id: hotel123 
--- created: 2023-01-03
+-- created: 2023-01-03T07:08:08-04:00
 "#
         .trim_start()
         .to_string();
