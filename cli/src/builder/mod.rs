@@ -19,6 +19,7 @@ use rimage::image::imageops::FilterType;
 use rimage::Decoder;
 use rimage::Encoder;
 use rusqlite::Connection;
+use serde::Serialize;
 use serde_json;
 use std::collections::BTreeMap;
 use std::fs::File;
@@ -45,7 +46,7 @@ pub struct Builder {
     pub mp3s: BTreeMap<String, SiteMp3>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
 pub enum BuilderError {
     CouldNotReadThemeTest {
         details: Option<String>,
@@ -782,6 +783,44 @@ body {
     }
 
     pub fn output_errors(&self) -> Result<()> {
+        let mut env = Environment::new();
+        env.set_debug(true);
+        env.set_lstrip_blocks(true);
+        env.set_trim_blocks(true);
+        env.set_syntax(
+            SyntaxConfig::builder()
+                .block_delimiters("[!", "!]")
+                .variable_delimiters("[@", "@]")
+                .comment_delimiters("[#", "#]")
+                .build()
+                .unwrap(),
+        );
+
+        let _ = env.add_template_owned(
+            "error",
+            r#"
+<!DOCTYPE html>
+<html><head><style>
+body { background-color: #111; color: #aaa; }
+</style></head>
+<body>
+</body>
+</html>
+        "#,
+        );
+
+        if let Ok(tmpl) = env.get_template("error") {
+            match tmpl.render(context!(
+                errors => Value::from_serialize(&self.errors)
+            )) {
+                Ok(output) => {
+                    let status_path = self.config.status_dir().join("index.html");
+                    let _ = fs::write(status_path, output);
+                }
+                Err(_e) => {}
+            }
+        }
+
         for error in self.errors.iter() {
             match error {
                 BuilderError::CouldNotReadThemeTest {
@@ -898,7 +937,7 @@ fn resize_and_optimize_png(source: &PathBuf, width: u32, dest: &PathBuf) -> Resu
     Ok(())
 }
 
-fn format_html_for_theme_test_display(code: &str) -> String {
+fn _format_html_for_theme_test_display(code: &str) -> String {
     let mut re = Regex::new(r"\n").unwrap();
     let output = re.replace_all(code, " ");
     re = Regex::new(r" \s+").unwrap();

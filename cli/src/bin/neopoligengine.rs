@@ -335,6 +335,7 @@ async fn run_web_server(site_config: SiteConfig) {
     let reloader = livereload.reloader();
     let app = Router::new()
         .nest_service("/", ServeDir::new(&site_config.output_dir()))
+        .nest_service("/neo-status", ServeDir::new(&site_config.status_dir()))
         .layer(livereload);
     event!(Level::INFO, "Starting web server");
     let (tx, rx) = mpsc::channel(1);

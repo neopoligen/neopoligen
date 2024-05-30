@@ -65,6 +65,10 @@ impl SiteConfig {
         self.project_root.clone().unwrap().join("content")
     }
 
+    pub fn custom_og_images_dir(&self) -> PathBuf {
+        self.project_root.clone().unwrap().join("og-images")
+    }
+
     pub fn feeds_dest_dir(&self) -> PathBuf {
         self.output_dir().join("feeds")
     }
@@ -119,8 +123,8 @@ impl SiteConfig {
         self.cache_dir().join("pages")
     }
 
-    pub fn custom_og_images_dir(&self) -> PathBuf {
-        self.project_root.clone().unwrap().join("og-images")
+    pub fn status_dir(&self) -> PathBuf {
+        self.project_root.clone().unwrap().join("status")
     }
 
     pub fn tmp_dir(&self) -> PathBuf {
