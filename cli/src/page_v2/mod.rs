@@ -45,6 +45,35 @@ impl PageV2 {
 }
 
 impl PageV2 {
+    pub fn all_sections(&self) -> Result<Value, Error> {
+        Ok(Value::from_serialize(&self.ast))
+    }
+
+    pub fn all_sections_except(&self, args: &[Value]) -> Result<Value, Error> {
+        let skips: Vec<String> = args.iter().map(|arg| arg.to_string()).collect();
+        Ok(Value::from_serialize(
+            &self
+                .ast
+                .iter()
+                .filter(|section| match section {
+                    Section::Basic { r#type, .. } => !skips.contains(r#type),
+                    Section::BasicV2 { r#type, .. } => !skips.contains(r#type),
+                    Section::Block { r#type, .. } => !skips.contains(r#type),
+                    Section::Checklist { r#type, .. } => !skips.contains(r#type),
+                    Section::ChecklistItem { r#type, .. } => !skips.contains(r#type),
+                    Section::Comment { r#type, .. } => !skips.contains(r#type),
+                    Section::Generic { r#type, .. } => !skips.contains(r#type),
+                    Section::Json { r#type, .. } => !skips.contains(r#type),
+                    Section::List { r#type, .. } => !skips.contains(r#type),
+                    Section::ListItem { r#type, .. } => !skips.contains(r#type),
+                    Section::Raw { r#type, .. } => !skips.contains(r#type),
+                    Section::TagFinderInit => false,
+                    Section::Yaml { r#type, .. } => !skips.contains(r#type),
+                })
+                .collect::<Vec<_>>(),
+        ))
+    }
+
     pub fn date(&self) -> Result<DateTime<FixedOffset>> {
         if let Some(dt) = self.get_metadata_attr("updated") {
             Ok(DateTime::parse_from_rfc3339(&dt)?)
@@ -163,7 +192,7 @@ impl PageV2 {
         }
     }
 
-    pub fn id_dev(&self) -> Result<Value, Error> {
+    pub fn id_v2(&self) -> Result<Value, Error> {
         if let Some(id) = self.get_metadata_attr("id") {
             Ok(Value::from(id))
         } else {
@@ -171,7 +200,7 @@ impl PageV2 {
         }
     }
 
-    // DEPRECATED: TODO: Move .id_dev() into .id()
+    // DEPRECATED: TODO: switch to .id_v2()
     pub fn id(&self) -> Option<String> {
         self.ast.iter().find_map(|sec_enum| {
             if let Section::Yaml { r#type, attrs, .. } = sec_enum {

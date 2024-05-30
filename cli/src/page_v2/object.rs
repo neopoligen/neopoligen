@@ -9,10 +9,12 @@ impl Object for PageV2 {
         self: &Arc<PageV2>,
         _state: &minijinja::State,
         name: &str,
-        _args: &[Value],
+        args: &[Value],
     ) -> Result<Value, Error> {
         match name {
-            "id" => self.id_dev(),
+            "all_sections" => self.all_sections(),
+            "all_sections_except" => self.all_sections_except(args),
+            "id" => self.id_v2(),
             _ => Ok(Value::from("")),
         }
     }

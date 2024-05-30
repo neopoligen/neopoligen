@@ -1,5 +1,8 @@
 [!- import "includes/theme.neoj" as theme -!]
 
+
+
+
 [!- for section in site.page_sections(page_id) -!]
 [!- if 
   section.type == "forward"  or
@@ -9,18 +12,12 @@
 [!- endif -!]
 [!- endfor -!]
 
-[!- for section in site.page_sections(page_id) -!]
-[!- if 
-  section.type != "afterword" and
-  section.type != "blurb" and
-  section.type != "endnote" and
-  section.type != "footnote" and
-  section.type != "forward" and
-  section.type != "metadata" and
-  section.type != "ref" and
-  section.type != "tldr" and
-  section.type != "title" 
-  -!]
+
+
+[! for section in page.all_sections_except(
+  "afterword", "blurb", "endnote", "footnote", "forward", 
+  "metadata", "ref", "tldr", "title") 
+!]
 [@- theme.output_section(site, page_id, section) -@]
-[!- endif -!]
-[!- endfor -!]
+[! endfor !]
+
