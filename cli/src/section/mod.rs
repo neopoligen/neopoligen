@@ -35,6 +35,14 @@ use nom_supreme::parser_ext::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::BTreeMap;
+use std::collections::BTreeSet;
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[serde(tag = "kind", rename_all = "lowercase")]
+pub struct SectionAttrForList {
+    key: String,
+    value: String,
+}
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "kind", rename_all = "lowercase")]
@@ -44,6 +52,15 @@ pub enum Section {
         bounds: String,
         children: Vec<Section>,
         flags: Vec<String>,
+        r#type: String,
+    },
+
+    // TODO: Figure out how you want to handle keeping
+    // the attrs split
+    BasicV2 {
+        attrs: Vec<SectionAttr>,
+        bounds: String,
+        children: Vec<Section>,
         r#type: String,
     },
     Block {

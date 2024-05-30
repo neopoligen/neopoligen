@@ -9,6 +9,9 @@ use crate::span::Span;
 use anyhow::Result;
 use chrono::DateTime;
 use chrono::FixedOffset;
+use minijinja::value::Value;
+use minijinja::Error;
+use minijinja::ErrorKind;
 use regex::Regex;
 use serde::Deserialize;
 use serde::Serialize;
@@ -160,6 +163,15 @@ impl PageV2 {
         }
     }
 
+    pub fn id_dev(&self) -> Result<Value, Error> {
+        if let Some(id) = self.get_metadata_attr("id") {
+            Ok(Value::from(id))
+        } else {
+            Err(Error::new(ErrorKind::CannotUnpack, "could not get page id"))
+        }
+    }
+
+    // DEPRECATED: TODO: Move .id_dev() into .id()
     pub fn id(&self) -> Option<String> {
         self.ast.iter().find_map(|sec_enum| {
             if let Section::Yaml { r#type, attrs, .. } = sec_enum {

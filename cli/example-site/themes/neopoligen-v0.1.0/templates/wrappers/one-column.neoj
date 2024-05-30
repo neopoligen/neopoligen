@@ -13,6 +13,7 @@
 
 </head>
 <body class="one-column">
+        -- [@ page.id() @] --
     [! include "includes/header.neoj" !]
     <main class="flow">
         [! block title !][! endblock !]
@@ -21,8 +22,6 @@
         [! include "includes/endmatter.neoj" !]
     </main>
     [! include "includes/footer.neoj" !]
-
-
 
     [# hard coding to my home page for now #]
         <ul>

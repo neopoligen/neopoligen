@@ -1,12 +1,74 @@
-use neopoligengine::section::basic::basic_section_full;
-use neopoligengine::section::raw::{raw_section_full, raw_section_start};
-use neopoligengine::section::{self, Section};
-use neopoligengine::sections;
-use neopoligengine::{site_config::SiteConfig, span::*};
+use neopoligengine::section::basic::*;
+use neopoligengine::section::raw::*;
+use neopoligengine::section::Section;
+use neopoligengine::site_config::SiteConfig;
+use neopoligengine::span::Span;
 use nom::Parser;
 use nom_supreme::ParserExt;
 use pretty_assertions::assert_eq;
 use std::collections::BTreeMap;
+
+#[test]
+fn basic_section_full_with_no_attrs() {
+    let attrs = vec![];
+    let bounds = "full".to_string();
+    let children = vec![Section::Block {
+        bounds: "full".to_string(),
+        spans: vec![Span::WordPart {
+            text: "alfa".to_string(),
+            r#type: "wordpart".to_string(),
+        }],
+        r#type: "basic-block".to_string(),
+    }];
+    let r#type = "title".to_string();
+    //
+    let config = SiteConfig::mock1();
+    let source = "-- title\n\nalfa\n\n-- div...";
+    let left = (
+        "-- div...",
+        Section::BasicV2 {
+            attrs,
+            bounds,
+            children,
+            r#type,
+        },
+    );
+    let right = basic_section_full_v2(source, &config.sections, &config.spans).unwrap();
+    assert_eq!(left, right);
+}
+
+// #[test]
+// fn basic_section_full_with_attrs() {
+//     let attrs = BTreeMap::new();
+//     let attr_list = vec![];
+//     let bounds = "full".to_string();
+//     let children = vec![Section::Block {
+//         bounds: "full".to_string(),
+//         spans: vec![Span::WordPart {
+//             text: "alfa".to_string(),
+//             r#type: "wordpart".to_string(),
+//         }],
+//         r#type: "basic-block".to_string(),
+//     }];
+//     let mut flags = BTreeSet::new();
+//     flags.insert("flag".to_string());
+//     let r#type = "title".to_string();
+//     let config = SiteConfig::mock1();
+//     let source = "-- title\n-- flag\n-- key: value1\n\nalfa\n\n-- div...";
+//     let left = (
+//         "-- div...",
+//         Section::BasicDev {
+//             attrs,
+//             attr_list,
+//             bounds,
+//             children,
+//             flags,
+//             r#type,
+//         },
+//     );
+//     let right = basic_section_full_dev(source, &config.sections, &config.spans).unwrap();
+//     assert_eq!(left, right);
+// }
 
 #[test]
 fn results_section_full() {

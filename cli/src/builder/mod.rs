@@ -164,7 +164,8 @@ impl Builder {
                     if let Ok(tmpl) = env.get_template(template_name) {
                         match tmpl.render(context!(
                             site => site_obj,
-                            page_id => p.1.id()
+                            page_id => p.1.id(),
+                            page => Value::from_object(p.1.clone())
                         )) {
                             Ok(output) => {
                                 self.last_edit = Some(output.clone());
