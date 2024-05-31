@@ -1020,7 +1020,7 @@ pub fn get_files_with_extension_in_a_single_directory(
 //     trimmed_front.trim_end().to_string()
 // }
 
-fn write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
+fn _write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
     match path.parent() {
         Some(parent_dir) => match fs::create_dir_all(parent_dir) {
             Ok(_) => match fs::write(path, content) {

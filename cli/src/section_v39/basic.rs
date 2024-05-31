@@ -13,7 +13,7 @@ use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 use std::collections::BTreeMap;
 
-pub fn basic_section_full<'a>(
+pub fn basic_section_full_v39<'a>(
     source: &'a str,
     sections: &'a Sections,
     spans: &'a Vec<String>,
@@ -29,6 +29,7 @@ pub fn basic_section_full<'a>(
     let (source, children) = many0(|src| block_of_anything_v39(src, &spans))
         .context("")
         .parse(source)?;
+
     let section = SectionV39 {
         attrs,
         bounds: SectionV39Bounds::Full,

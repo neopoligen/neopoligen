@@ -37,7 +37,7 @@ fn basic_section_basic_test() {
                             },
                         ],
                     },
-                    r#type: "block".to_string(),
+                    r#type: "block-of-text".to_string(),
                 }],
             },
             r#type: "title".to_string(),

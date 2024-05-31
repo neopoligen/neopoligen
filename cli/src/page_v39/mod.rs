@@ -1,6 +1,6 @@
 pub mod mocks;
 
-use crate::ast_v39::ast;
+use crate::ast_v39::parse;
 use crate::section_v39::{SectionV39, SectionV39Kind};
 use crate::site_config::SiteConfig;
 use anyhow::Result;
@@ -36,7 +36,7 @@ impl PageV39 {
 
 impl PageV39 {
     pub fn generate_ast(&mut self) -> Result<()> {
-        if let Ok(a) = ast(
+        if let Ok(a) = parse(
             &self.source_content.as_ref().unwrap(),
             &self.config.sections,
             &self.config.spans,
@@ -46,10 +46,14 @@ impl PageV39 {
         Ok(())
     }
 
-    pub fn get_metadata(&self, _target: &str) -> Result<String> {
+    pub fn get_metadata_attr(&self, _target: &str) -> Result<String> {
         self.ast.as_ref().unwrap().iter().find_map(|section| {
+            // dbg!(&section);
             match &section.kind {
-                //SectionV39Kind::Yaml
+                SectionV39Kind::Yaml {} => {
+                    dbg!("YAML--------------------------------------------");
+                    //        dbg!(&section.attrs);
+                }
                 _ => {}
             }
             // dbg!(&section.kind);
@@ -59,7 +63,7 @@ impl PageV39 {
     }
 
     pub fn id(&self) -> Result<String> {
-        let id = self.get_metadata("id")?;
+        let id = self.get_metadata_attr("id")?;
         Ok(id)
     }
 

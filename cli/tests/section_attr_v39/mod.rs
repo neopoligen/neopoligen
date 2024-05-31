@@ -1,4 +1,4 @@
-use neopoligengine::section_attr_v39::{self, *};
+use neopoligengine::section_attr_v39::*;
 use pretty_assertions::assert_eq;
 
 #[test]

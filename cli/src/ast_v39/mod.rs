@@ -46,7 +46,7 @@ use nom_supreme::parser_ext::ParserExt;
 //     }
 // }
 
-pub fn ast<'a>(
+pub fn parse<'a>(
     source: &'a str,
     sections: &'a Sections,
     spans: &'a Vec<String>,

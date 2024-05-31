@@ -30,6 +30,14 @@ pub enum SpanV39Kind {
     WordPart { text: String },
 }
 
+pub fn span_v39<'a>(
+    source: &'a str,
+    _spans: &'a Vec<String>,
+) -> IResult<&'a str, SpanV39, ErrorTree<&'a str>> {
+    let (source, span) = alt((word_part, space))(source)?;
+    Ok((source, span))
+}
+
 // TODO: Needs test
 pub fn empty_until_newline_or_eof<'a>(
     source: &'a str,
@@ -43,6 +51,8 @@ pub fn empty_until_newline_or_eof<'a>(
     Ok((source, ""))
 }
 
+// DEPRECATED: Replace with empty_until_newline_or_eof so there's just one
+// thing that's needed
 pub fn line_ending_or_eof(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
     let (source, result) = alt((line_ending, eof))(source)?;
     Ok((source, result))
@@ -76,16 +86,8 @@ pub fn space(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
     ))
 }
 
-pub fn span_v39<'a>(
-    source: &'a str,
-    _spans: &'a Vec<String>,
-) -> IResult<&'a str, SpanV39, ErrorTree<&'a str>> {
-    let (source, span) = alt((word_part, space))(source)?;
-    Ok((source, span))
-}
-
 pub fn word_part(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
-    let (source, text) = is_not(" ").context("").parse(source)?;
+    let (source, text) = is_not(" \n\t").context("").parse(source)?;
     Ok((
         source,
         SpanV39 {

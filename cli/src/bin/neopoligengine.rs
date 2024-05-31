@@ -154,18 +154,18 @@ fn load_engine_config_file(path: &PathBuf) -> Result<EngineConfig, String> {
     }
 }
 
-fn empty_dir(dir: &PathBuf) -> std::io::Result<()> {
-    for entry in dir.read_dir()? {
-        let entry = entry?;
-        let path = entry.path();
-        if path.is_dir() {
-            fs::remove_dir_all(path)?;
-        } else {
-            fs::remove_file(path)?;
-        }
-    }
-    Ok(())
-}
+// fn empty_dir(dir: &PathBuf) -> std::io::Result<()> {
+//     for entry in dir.read_dir()? {
+//         let entry = entry?;
+//         let path = entry.path();
+//         if path.is_dir() {
+//             fs::remove_dir_all(path)?;
+//         } else {
+//             fs::remove_file(path)?;
+//         }
+//     }
+//     Ok(())
+// }
 
 // todo. move paths, to dir function calls
 fn load_site_config_file(neo_root: &PathBuf, active_site: &str) -> Result<SiteConfig, String> {

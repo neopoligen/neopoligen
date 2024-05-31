@@ -12,7 +12,7 @@ use crate::section_v39::basic::*;
 // use crate::section_v39::json::*;
 // use crate::section_v39::list::*;
 // use crate::section_v39::raw::*;
-// use crate::section_v39::yaml::*;
+use crate::section_v39::yaml::*;
 use crate::sections::*;
 use crate::span_v39::*;
 use nom::branch::alt;
@@ -71,7 +71,7 @@ pub fn start_or_full_section_v39<'a>(
     spans: &'a Vec<String>,
 ) -> IResult<&'a str, SectionV39, ErrorTree<&'a str>> {
     let (source, results) = alt((
-        |src| basic_section_full(src, &sections, &spans),
+        |src| basic_section_full_v39(src, &sections, &spans),
         // |src| basic_section_start(src, &sections, &spans),
         // |src| checklist_section_full(src, &sections, &spans),
         // |src| checklist_section_start(src, &sections, &spans),
@@ -83,7 +83,7 @@ pub fn start_or_full_section_v39<'a>(
         // |src| list_section_start(src, &sections, &spans),
         // |src| raw_section_full(src, &sections, &spans),
         // |src| raw_section_start(src, &sections, &spans),
-        // |src| yaml_section_full(src, &sections, &spans),
+        |src| yaml_section_full_v39(src, &sections, &spans),
         // |src| yaml_section_start(src, &sections, &spans),
         // // make sure generic is last
         // |src| generic_section_full(src, &sections, &spans),

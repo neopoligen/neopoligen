@@ -48,3 +48,19 @@ fn word_part_basic() {
     let right = span_v39(source, &config.spans).unwrap();
     assert_eq!(left, right);
 }
+
+#[test]
+fn word_part_not_line_ending() {
+    let config = SiteConfig::mock1();
+    let source = "alfa\n";
+    let left = (
+        "\n",
+        SpanV39 {
+            kind: SpanV39Kind::WordPart {
+                text: "alfa".to_string(),
+            },
+        },
+    );
+    let right = span_v39(source, &config.spans).unwrap();
+    assert_eq!(left, right);
+}
