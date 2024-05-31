@@ -34,10 +34,8 @@ pub fn basic_section_full<'a>(
     let section = SectionV39 {
         attrs,
         bounds: SectionV39Bounds::Full,
-        kind: SectionV39Kind::Basic {
-            children,
-            r#type: r#type.to_string(),
-        },
+        kind: SectionV39Kind::Basic { children },
+        r#type: r#type.to_string(),
     };
     Ok((source, section))
 

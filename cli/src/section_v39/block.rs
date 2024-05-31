@@ -31,6 +31,7 @@ pub fn block_of_anything_v39<'a>(
             attrs: vec![],
             bounds: SectionV39Bounds::Full,
             kind: SectionV39Kind::Block { spans },
+            r#type: "block".to_string(),
         },
     ))
 }

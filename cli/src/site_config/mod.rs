@@ -1,15 +1,16 @@
 pub mod mocks;
 
 use crate::sections::*;
+use anyhow::Result;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::BTreeSet;
-// use serde_json;
-// use serde_json::Value;
-// use std::collections::BTreeMap;
 use std::fs::{self, DirEntry};
 use std::io;
 use std::path::PathBuf;
+// use serde_json;
+// use serde_json::Value;
+// use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SiteConfig {
@@ -67,6 +68,10 @@ impl SiteConfig {
 
     pub fn custom_og_images_dir(&self) -> PathBuf {
         self.project_root.clone().unwrap().join("og-images")
+    }
+
+    pub fn default_language(&self) -> Result<String> {
+        Ok(self.default_language.clone())
     }
 
     pub fn feeds_dest_dir(&self) -> PathBuf {

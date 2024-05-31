@@ -2,6 +2,7 @@
 
 pub mod basic;
 pub mod block;
+pub mod yaml;
 
 use crate::section_attr_v39::SectionAttrV39;
 use crate::section_v39::basic::*;
@@ -39,6 +40,7 @@ pub struct SectionV39 {
     pub attrs: Vec<SectionAttrV39>,
     pub bounds: SectionV39Bounds,
     pub kind: SectionV39Kind,
+    pub r#type: String,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -52,11 +54,13 @@ pub enum SectionV39Bounds {
 pub enum SectionV39Kind {
     Basic {
         children: Vec<SectionV39>,
-        r#type: String,
     },
     Block {
         spans: Vec<SpanV39>,
+        // TODO: Add this in
+        //   r#type: String,
     },
+    Yaml {},
 }
 
 pub fn empty_until_newline_or_eof<'a>(

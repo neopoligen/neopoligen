@@ -1,3 +1,5 @@
+pub mod yaml;
+
 use neopoligengine::{
     // section_attr_v39::SectionAttrV39Kind,
     section_v39::*,
@@ -38,9 +40,10 @@ fn basic_section_basic_test() {
                             },
                         ],
                     },
+                    r#type: "block".to_string(),
                 }],
-                r#type: "title".to_string(),
             },
+            r#type: "title".to_string(),
         },
     );
     let right = start_or_full_section_v39(source, &config.sections, &config.spans).unwrap();

@@ -74,8 +74,8 @@ impl Builder {
     #[instrument(skip(self))]
     pub fn generate_page_content(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating Page Content");
-        for (_, page) in self.pages.iter_mut() {
-            dbg!(&page);
+        for (_, _page) in self.pages.iter_mut() {
+            // dbg!(&page);
             ()
         }
         Ok(())

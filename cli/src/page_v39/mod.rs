@@ -1,7 +1,7 @@
 pub mod mocks;
 
 use crate::ast_v39::ast;
-use crate::section_v39::SectionV39;
+use crate::section_v39::{SectionV39, SectionV39Kind};
 use crate::site_config::SiteConfig;
 use anyhow::Result;
 use std::fs;
@@ -46,7 +46,26 @@ impl PageV39 {
         Ok(())
     }
 
+    pub fn get_metadata(&self, _target: &str) -> Result<String> {
+        self.ast.as_ref().unwrap().iter().find_map(|section| {
+            match &section.kind {
+                //SectionV39Kind::Yaml
+                _ => {}
+            }
+            // dbg!(&section.kind);
+            None::<String>
+        });
+        Ok("20240101alfa".to_string())
+    }
+
+    pub fn id(&self) -> Result<String> {
+        let id = self.get_metadata("id")?;
+        Ok(id)
+    }
+
     pub fn rel_output_path(&self) -> Result<PathBuf> {
-        Ok(PathBuf::from("en/20240101alfa/index.html"))
+        let lang = self.config.default_language()?;
+        let id = self.id()?;
+        Ok(PathBuf::from(format!("{}/{}/index.html", lang, id)))
     }
 }
