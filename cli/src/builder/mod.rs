@@ -123,6 +123,30 @@ impl Builder {
     }
 
     #[instrument(skip(self))]
+    pub fn output_errors(&self) -> Result<()> {
+        // This is just a tmp output to get things going
+        event!(Level::INFO, "Outputting Error Pages");
+        let error_path = self.config.status_dir().join("index.html");
+        let mut tmp = String::from("");
+        for (_, page) in self.pages.iter() {
+            if page.errors.len() > 0 {
+                for error in page.errors.iter() {
+                    tmp.push_str(&error.to_string())
+                }
+
+                // if let (Ok(rel_output_path), Some(output_content)) =
+                //     (page.rel_output_path(), page.output_content.clone())
+                // {
+                //     let output_path = self.config.output_dir().join(rel_output_path);
+                //     let _ = write_file_with_mkdir(&output_path, &output_content);
+                // }
+            }
+        }
+        let _ = write_file_with_mkdir(&error_path, &tmp);
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn output_pages(&self) -> Result<()> {
         event!(Level::INFO, "Outputting Pages");
         for (_, page) in self.pages.iter() {
@@ -133,8 +157,6 @@ impl Builder {
                     let output_path = self.config.output_dir().join(rel_output_path);
                     let _ = write_file_with_mkdir(&output_path, &output_content);
                 }
-            } else {
-                dbg!("ERROR");
             }
         }
         Ok(())
