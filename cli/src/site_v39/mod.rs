@@ -1,0 +1,1 @@
+pub struct SiteV39 {}

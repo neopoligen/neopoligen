@@ -88,32 +88,40 @@ async fn main() {
 fn build_site(site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
     if let Ok(mut builder) = Builder::new(site_config.clone()) {
-        let _ = builder.test_theme();
-        // let _ = builder.debug_flush_cache();
-        let _ = empty_dir(&site_config.output_dir());
-        let _ = empty_dir(&site_config.status_dir());
-        let _ = builder.prep_dirs();
-        let _ = builder.load_source_images();
-        let _ = builder.load_cached_images();
-        let _ = builder.generate_cache_images();
-        let _ = builder.update_image_cache_db();
-        let _ = builder.copy_image_cache_to_prod();
-        let _ = builder.load_mp3s();
-        let _ = builder.load_cached_pages();
+        // This is v39
         let _ = builder.load_source_files();
         let _ = builder.generate_missing_asts();
-        let _ = builder.generate_page_content_and_feeds();
-        let _ = builder.output_content_files();
-        let _ = builder.output_feeds();
-        let _ = builder.output_last_edit();
-        match builder.update_page_cache() {
-            Ok(_) => (),
-            Err(e) => println!("{:?}", e),
-        }
-        let _ = builder.make_og_images();
-        let _ = builder.copy_theme_assets();
-        let _ = builder.output_issues();
-        event!(Level::INFO, "Issues: {}", builder.issues.len());
+
+        // This is the v38 order of things which wasn't
+        // necessarily optimized. It's here now just
+        // for a reference reminder:
+        //
+        // let _ = builder.test_theme();
+        // // let _ = builder.debug_flush_cache();
+        // let _ = empty_dir(&site_config.output_dir());
+        // let _ = empty_dir(&site_config.status_dir());
+        // let _ = builder.prep_dirs();
+        // let _ = builder.load_source_images();
+        // let _ = builder.load_cached_images();
+        // let _ = builder.generate_cache_images();
+        // let _ = builder.update_image_cache_db();
+        // let _ = builder.copy_image_cache_to_prod();
+        // let _ = builder.load_mp3s();
+        // let _ = builder.load_cached_pages();
+        // let _ = builder.load_source_files();
+        // let _ = builder.generate_missing_asts();
+        // let _ = builder.generate_page_content_and_feeds();
+        // let _ = builder.output_content_files();
+        // let _ = builder.output_feeds();
+        // let _ = builder.output_last_edit();
+        // match builder.update_page_cache() {
+        //     Ok(_) => (),
+        //     Err(e) => println!("{:?}", e),
+        // }
+        // let _ = builder.make_og_images();
+        // let _ = builder.copy_theme_assets();
+        // let _ = builder.output_issues();
+        // event!(Level::INFO, "Issues: {}", builder.issues.len());
     }
 }
 

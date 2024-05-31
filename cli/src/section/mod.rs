@@ -1,3 +1,6 @@
+// DEPRECATED: everything in src/section will go when
+// src/section_v39 is done
+
 pub mod basic;
 pub mod checklist;
 pub mod comment;
@@ -238,6 +241,7 @@ pub fn start_or_full_section<'a>(
     Ok((source, results))
 }
 
+// DEPRECATED: Use the one in _v39
 pub fn tag_finder<'a>(
     source: &'a str,
     section: &Vec<String>,
