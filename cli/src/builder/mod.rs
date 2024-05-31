@@ -72,6 +72,18 @@ impl Builder<'_> {
     }
 
     #[instrument(skip(self))]
+    pub fn generate_page_content(&mut self) -> Result<()> {
+        event!(Level::INFO, "Generating Pages");
+
+        for (_, page) in self.pages.iter_mut() {
+            dbg!(&page);
+
+            ()
+        }
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn load_source_files(&mut self) -> Result<()> {
         event!(Level::INFO, "Loading Source Files");
         // Reminder: clear pages to remove the template tests
