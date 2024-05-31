@@ -1,6 +1,7 @@
 pub mod mocks;
 
 use crate::ast_v39::parse;
+use crate::neo_error::NeoError;
 use crate::section_attr_v39::SectionAttrV39Kind;
 use crate::section_v39::{SectionV39, SectionV39Kind};
 use crate::site_config::SiteConfig;
@@ -13,7 +14,7 @@ use std::time::SystemTime;
 pub struct PageV39 {
     pub ast: Option<Vec<SectionV39>>,
     pub config: SiteConfig,
-    pub errors: Vec<PageV39Error>,
+    pub errors: Vec<NeoError>,
     pub fs_modified: Option<SystemTime>,
     pub output_content: Option<String>,
     pub source_content: Option<String>,
@@ -56,13 +57,7 @@ impl PageV39 {
             &self.config.spans,
         ) {
             Ok(sections) => self.ast = Some(sections),
-            Err(_e) => (), // self.errors.push({
-                           // dbg!(&e);
-                           // PageV39Error {
-                           // details: Some(e.to_string()),
-                           // kind: PageV39ErrorKind::ParserError {},
-                           // }
-                           // })
+            Err(e) => self.errors.push(e),
         }
         Ok(())
     }

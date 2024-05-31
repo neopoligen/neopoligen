@@ -20,7 +20,6 @@ fn rel_output_path_basic() {
 
 #[test]
 fn error_on_invalid_ast() {
-    let mut p = PageV39::mock_invalid_ast_1();
-    let _ = p.generate_ast();
-    dbg!(p);
+    let p = PageV39::mock_invalid_ast_1();
+    assert_eq!(p.errors.len(), 1);
 }

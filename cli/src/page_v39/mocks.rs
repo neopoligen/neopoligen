@@ -21,7 +21,7 @@ impl PageV39 {
             errors: vec![],
             fs_modified: None,
             output_content: None,
-            source_content: Some("-- title\n\nAlfa Bravo\n\n-- metadata\n--".to_string()),
+            source_content: Some("-- title\n\nAlfa Bravo\n\n-- metadata\n--\n".to_string()),
         };
         let _ = p.generate_ast();
         p
