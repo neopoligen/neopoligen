@@ -39,7 +39,6 @@ fn collection_by_date_type_post() {
     let site = SiteV2::mock1();
     let left = Value::from_serialize(vec![
         "alfa1234".to_string(),
-        "hotel123".to_string(),
         "golf1234".to_string(),
         "foxtrot1".to_string(),
         "charlie1".to_string(),
@@ -52,8 +51,25 @@ fn collection_by_date_type_post() {
 #[test]
 fn collection_by_date_type_not_post() {
     let site = SiteV2::mock1();
-    let left = Value::from_serialize(vec!["delta123".to_string(), "echo1234".to_string()]);
+    let left = Value::from_serialize(vec![
+        "delta123".to_string(),
+        "hotel123".to_string(),
+        "echo1234".to_string(),
+    ]);
     let args = [Value::from_serialize(vec!["type:!post"])];
+    let right = site.collection_by_date(&args).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn collection_by_date_multiple_types() {
+    let site = SiteV2::mock1();
+    let left = Value::from_serialize(vec![
+        "delta123".to_string(),
+        "hotel123".to_string(),
+        "echo1234".to_string(),
+    ]);
+    let args = [Value::from_serialize(vec!["type:short", "type:db"])];
     let right = site.collection_by_date(&args).unwrap();
     assert_eq!(left, right);
 }

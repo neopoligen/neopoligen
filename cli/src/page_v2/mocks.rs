@@ -214,6 +214,7 @@ Some Page Example
 -- metadata
 -- id: hotel123 
 -- created: 2023-01-03T07:08:08-04:00
+-- type: db
 "#
         .trim_start()
         .to_string();
