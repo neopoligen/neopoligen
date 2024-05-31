@@ -36,6 +36,9 @@ use serde::Deserialize;
 use serde::Serialize;
 use std::collections::BTreeMap;
 
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub struct SectionV2 {}
+
 // #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 // #[serde(tag = "kind", rename_all = "lowercase")]
 // pub struct SectionAttrForList {

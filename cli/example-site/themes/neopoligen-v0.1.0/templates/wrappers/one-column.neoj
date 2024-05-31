@@ -13,18 +13,17 @@
 
 </head>
 <body class="one-column">
-        -- [@ page.id() @] --
     [! include "includes/header.neoj" !]
     <main class="flow">
         [! block title !][! endblock !]
         [! include "includes/page-mp3.neoj" !]
         [! block body !][! endblock !]
         [! include "includes/endmatter.neoj" !]
+    </main>
 
     [# hard coding link to my home page for now #]
     [! if page_id == "2sjfzivl" !]
         <div class="tmp-home-page-links">
-
             <div>
                 <h4>Published</h4>
                 <ul>
@@ -66,7 +65,6 @@
         </div>
     [! endif !]
 
-    </main>
 
     [! include "includes/footer.neoj" !]
 

@@ -106,6 +106,11 @@ fn page_date_basic() {
 }
 
 #[test]
+fn section_collection_basic() {
+    let site = SiteV2::mock1();
+}
+
+#[test]
 fn site_uuid_basic() {
     let site = SiteV2::mock1();
     let left = Value::from("f2379517-fef2-587f-a259-81aeb4a9b7fd".to_string());
