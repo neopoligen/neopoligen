@@ -189,10 +189,11 @@ impl Builder {
                     }
                 }
             } else {
-                // self.issues.push(BuildIssue::MissingPageId {
-                //     details: None,
-                //     source_path: p.0.to_path_buf(),
-                // })
+                self.issues.push(BuildIssue {
+                    kind: BuildIssueKind::MissingPageId {},
+                    details: None,
+                    source_path: Some(p.0.to_path_buf()),
+                })
             }
         });
 
@@ -576,10 +577,11 @@ body {
                             );
                             ()
                         } else {
-                            // self.issues.push(BuildIssue::CouldNotReadThemeTest {
-                            //     details: None,
-                            //     source_path: entry,
-                            // });
+                            self.issues.push(BuildIssue {
+                                kind: BuildIssueKind::CouldNotReadThemeTest {},
+                                details: None,
+                                source_path: Some(entry),
+                            });
                         }
                     }
                 }
@@ -617,10 +619,11 @@ body {
                             .split("<!-- START_THEME_TEST -->")
                             .collect::<Vec<&str>>();
                         if tests.len() == 1 {
-                            // self.issues.push(BuildIssue::NoThemeTestsFound {
-                            //     details: None,
-                            //     source_path: source_path.to_path_buf(),
-                            // })
+                            self.issues.push(BuildIssue {
+                                kind: BuildIssueKind::NoThemeTestsFound {},
+                                details: None,
+                                source_path: Some(source_path.to_path_buf()),
+                            })
                         } else {
                             for t in tests.iter().skip(1) {
                                 let parts =
@@ -639,25 +642,26 @@ body {
                                         })
                                     }
                                 } else {
-                                    // self.issues.push(BuildIssue::InvalidThemeTest {
-                                    //     details: Some(t.to_string()),
-                                    //     source_path: source_path.to_path_buf(),
-                                    // })
+                                    self.issues.push(BuildIssue {
+                                        details: Some(t.to_string()),
+                                        kind: BuildIssueKind::InvalidThemeTest {},
+                                        source_path: Some(source_path.to_path_buf()),
+                                    })
                                 }
                             }
                         }
                     }
                     Err(e) => self.issues.push(BuildIssue {
                         details: Some(e.to_string()),
-                        source_path: Some(source_path.to_path_buf()),
                         kind: BuildIssueKind::CouldNotRenderThemeTest {},
+                        source_path: Some(source_path.to_path_buf()),
                     }),
                 }
             } else {
                 self.issues.push(BuildIssue {
-                    source_path: Some(source_path.to_path_buf()),
                     details: Some("Could not get internal test template".to_string()),
                     kind: BuildIssueKind::Generic {},
+                    source_path: Some(source_path.to_path_buf()),
                 })
             }
         }
