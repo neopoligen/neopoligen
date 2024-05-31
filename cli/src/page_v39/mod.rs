@@ -1,6 +1,7 @@
 pub mod mocks;
 
 use crate::ast_v39::parse;
+use crate::section_attr_v39::SectionAttrV39Kind;
 use crate::section_v39::{SectionV39, SectionV39Kind};
 use crate::site_config::SiteConfig;
 use anyhow::Result;
@@ -46,20 +47,30 @@ impl PageV39 {
         Ok(())
     }
 
-    pub fn get_metadata_attr(&self, _target: &str) -> Result<String> {
-        self.ast.as_ref().unwrap().iter().find_map(|section| {
-            // dbg!(&section);
-            match &section.kind {
-                SectionV39Kind::Yaml {} => {
-                    dbg!("YAML--------------------------------------------");
-                    //        dbg!(&section.attrs);
-                }
-                _ => {}
-            }
-            // dbg!(&section.kind);
-            None::<String>
-        });
-        Ok("20240101alfa".to_string())
+    pub fn get_metadata_attr(&self, target: &str) -> Result<String> {
+        let response = self
+            .ast
+            .as_ref()
+            .unwrap()
+            .iter()
+            .find_map(|section| match &section.kind {
+                SectionV39Kind::Yaml {} => section.attrs.iter().find_map(|attr| match &attr.kind {
+                    SectionAttrV39Kind::KeyValue { key, value } => {
+                        if key == target {
+                            Some(value)
+                        } else {
+                            None
+                        }
+                    }
+                    _ => None,
+                }),
+                _ => None,
+            })
+            .ok_or(minijinja::Error::new(
+                minijinja::ErrorKind::CannotUnpack,
+                format!("could not get metadata field: {}", target),
+            ))?;
+        Ok(response.to_string())
     }
 
     pub fn id(&self) -> Result<String> {
