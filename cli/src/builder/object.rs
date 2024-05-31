@@ -9,7 +9,7 @@ impl Object for Builder {
         self: &Arc<Builder>,
         _state: &minijinja::State,
         name: &str,
-        args: &[Value],
+        _args: &[Value],
     ) -> Result<Value, Error> {
         match name {
             "page_errors" => Ok(Value::from_serialize(self.page_errors())),

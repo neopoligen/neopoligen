@@ -1,6 +1,6 @@
 use serde::Serialize;
 use std::fmt;
-use std::path::PathBuf;
+// use std::path::PathBuf;
 
 // Currently Deprecated as of site_v2, but something to
 // look back into for better error handling
@@ -16,6 +16,7 @@ pub enum NeoErrorKind {
     MissingIdError {
         source: String,
     },
+    NoAst {},
     ParserError {
         line: usize,
         column: usize,
@@ -31,6 +32,9 @@ pub enum NeoErrorKind {
 impl fmt::Display for NeoError {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         match &self.kind {
+            NeoErrorKind::NoAst {} => {
+                fmt.write_str("No ast")?;
+            }
             NeoErrorKind::ParserError {
                 line,
                 column,

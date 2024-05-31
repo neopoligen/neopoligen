@@ -13,6 +13,7 @@ use crate::page_v39::PageV39;
 use crate::site_config::SiteConfig;
 use crate::site_v2::SiteMp3;
 use crate::site_v2::SiteV2;
+use crate::site_v39::SiteV39;
 use anyhow::Result;
 use image::DynamicImage;
 use minijinja::context;
@@ -75,9 +76,75 @@ impl Builder {
     #[instrument(skip(self))]
     pub fn generate_page_content(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating Page Content");
-        for (_, page) in self.pages.iter_mut() {
-            page.output_content = Some("this is the content".to_string());
-        }
+        let site = Value::from_object(SiteV39::new(&self.pages));
+        let mut env = Environment::new();
+        env.set_debug(true);
+        env.set_lstrip_blocks(true);
+        env.set_trim_blocks(true);
+        env.set_syntax(
+            SyntaxConfig::builder()
+                .block_delimiters("[!", "!]")
+                .variable_delimiters("[@", "@]")
+                .comment_delimiters("[#", "#]")
+                .build()
+                .unwrap(),
+        );
+        WalkDir::new(self.config.templates_dir())
+            .into_iter()
+            .filter(|entry| match entry.as_ref().unwrap().path().extension() {
+                Some(ext) => ext.to_str().unwrap() == "neoj",
+                None => false,
+            })
+            .for_each(|entry| {
+                let path = entry.as_ref().unwrap().path().to_path_buf();
+                match fs::read_to_string(&path) {
+                    Ok(content) => {
+                        let template_name = path.strip_prefix(self.config.templates_dir()).unwrap();
+                        let _ = env.add_template_owned(
+                            template_name.to_string_lossy().to_string(),
+                            content,
+                        );
+                    }
+                    Err(e) => {
+                        event!(Level::ERROR, "{}", e)
+                    }
+                };
+            });
+        self.pages.iter_mut().for_each(|p| {
+            if let Ok(_) = p.1.id() {
+                match p.1.output_content {
+                    Some(_) => {}
+                    None => {
+                        let template_name = "pages/post/published.neoj";
+                        if let Ok(tmpl) = env.get_template(template_name) {
+                            match tmpl.render(context!(
+                                site => site,
+                                page => Value::from_object(p.1.clone())
+                            )) {
+                                Ok(output) => {
+                                    self.last_edit = Some(output.clone());
+                                    p.1.output_content = Some(output);
+                                }
+                                Err(e) => {
+                                    // TODO: Provide error handling here
+                                    event!(Level::ERROR, "{}", e);
+                                    p.1.output_content = None;
+                                }
+                            }
+                        } else {
+                            // TODO: Provide error handling here
+                            event!(Level::ERROR, "Could not get template: {}", template_name);
+                        }
+                    }
+                }
+            } else {
+                self.issues.push(BuildIssue {
+                    kind: BuildIssueKind::MissingPageId {},
+                    details: None,
+                    source_path: Some(p.0.to_path_buf()),
+                })
+            }
+        });
         Ok(())
     }
 
@@ -138,7 +205,6 @@ impl Builder {
                 .build()
                 .unwrap(),
         );
-
         let template_name = "basic-status-page.neoj";
         let _ = env.add_template_owned(
             template_name,
@@ -158,7 +224,6 @@ body { background-color: #111; color: #aaa; }
 </ul>
 </body></html>"#,
         );
-
         if let Ok(tmpl) = env.get_template(template_name) {
             match tmpl.render(context!(
             builder => Value::from_object(self.clone())
@@ -176,6 +241,44 @@ body { background-color: #111; color: #aaa; }
     #[instrument(skip(self))]
     pub fn output_pages(&self) -> Result<()> {
         event!(Level::INFO, "Outputting Pages");
+
+        // self.pages.iter_mut().for_each(|p| {
+        //     if let Ok(id) = p.1.id_v2() {
+        //         match p.1.output {
+        //             Some(_) => {}
+        //             None => {
+        //                 let template_name = "pages/post/published.neoj";
+        //                 if let Ok(tmpl) = env.get_template(template_name) {
+        //                     match tmpl.render(context!(
+        //                         site => site_obj,
+        //                         page_id => id,
+        //                         page => Value::from_object(p.1.clone())
+        //                     )) {
+        //                         Ok(output) => {
+        //                             self.last_edit = Some(output.clone());
+        //                             p.1.output = Some(output);
+        //                         }
+        //                         Err(e) => {
+        //                             // TODO: Provide error handling here
+        //                             event!(Level::ERROR, "{}", e);
+        //                             p.1.output = None;
+        //                         }
+        //                     }
+        //                 } else {
+        //                     // TODO: Provide error handling here
+        //                     event!(Level::ERROR, "Could not get template: {}", template_name);
+        //                 }
+        //             }
+        //         }
+        //     } else {
+        //         self.issues.push(BuildIssue {
+        //             kind: BuildIssueKind::MissingPageId {},
+        //             details: None,
+        //             source_path: Some(p.0.to_path_buf()),
+        //         })
+        //     }
+        // });
+
         for (_, page) in self.pages.iter() {
             if page.errors.len() == 0 {
                 if let (Ok(rel_output_path), Some(output_content)) =
@@ -186,6 +289,7 @@ body { background-color: #111; color: #aaa; }
                 }
             }
         }
+
         Ok(())
     }
 

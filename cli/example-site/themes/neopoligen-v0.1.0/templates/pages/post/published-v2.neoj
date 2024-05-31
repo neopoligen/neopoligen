@@ -1,0 +1,17 @@
+[!- extends "wrappers/one-column.neoj" -!]
+[!- include "includes/config.neoj" -!]
+[!- import "includes/theme.neoj" as theme -!]
+
+[!- block title -!]
+[!- for section in site.page_sections(page_id) -!]
+[!- if section.type == "title" -!]
+[@- theme.output_section(site, page_id, section) -@]
+[@ site.page_format_date(page_id, "%B %Y") @]
+[!- endif -!]
+[!- endfor -!]
+[!- endblock -!]
+
+[!- block body -!]
+[!- include "includes/main-body.neoj" -!]
+[!- endblock -!]
+

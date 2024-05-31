@@ -1,11 +1,13 @@
 pub mod mocks;
+pub mod object;
 
 use crate::ast_v39::parse;
-use crate::neo_error::NeoError;
+use crate::neo_error::{NeoError, NeoErrorKind};
 use crate::section_attr_v39::SectionAttrV39Kind;
 use crate::section_v39::{SectionV39, SectionV39Kind};
 use crate::site_config::SiteConfig;
 use anyhow::Result;
+use minijinja::ErrorKind;
 use serde::Serialize;
 use std::fs;
 use std::path::PathBuf;
@@ -66,10 +68,11 @@ impl PageV39 {
     }
 
     pub fn get_metadata_attr(&self, target: &str) -> Result<String> {
-        let response = self
-            .ast
-            .as_ref()
-            .unwrap()
+        let ast = self.ast.clone().ok_or(minijinja::Error::new(
+            minijinja::ErrorKind::CannotUnpack,
+            "can't get ast".to_string(),
+        ))?;
+        let response = ast
             .iter()
             .find_map(|section| match &section.kind {
                 SectionV39Kind::Yaml {} => section.attrs.iter().find_map(|attr| match &attr.kind {
