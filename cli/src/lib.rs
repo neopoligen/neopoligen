@@ -1,5 +1,6 @@
 pub mod ast;
 pub mod block;
+pub mod build_issue;
 pub mod builder;
 pub mod engine_config;
 pub mod error;

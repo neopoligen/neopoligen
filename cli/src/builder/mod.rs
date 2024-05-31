@@ -1,5 +1,7 @@
 pub mod mocks;
+pub mod object;
 
+use crate::build_issue::*;
 use crate::helpers::*;
 use crate::image::Image;
 use crate::og_image::*;
@@ -19,7 +21,6 @@ use rimage::image::imageops::FilterType;
 use rimage::Decoder;
 use rimage::Encoder;
 use rusqlite::Connection;
-use serde::Serialize;
 use serde_json;
 use std::collections::BTreeMap;
 use std::fs::File;
@@ -39,51 +40,18 @@ pub struct Feed {
 pub struct Builder {
     pub pages: BTreeMap<PathBuf, PageV2>,
     pub config: SiteConfig,
-    pub errors: Vec<BuilderError>,
+    pub issues: Vec<BuildIssue>,
     pub feeds: BTreeMap<String, Feed>,
     pub images: BTreeMap<PathBuf, Image>,
     pub last_edit: Option<String>,
     pub mp3s: BTreeMap<String, SiteMp3>,
 }
 
-#[derive(Clone, Debug, Serialize)]
-pub enum BuilderError {
-    CouldNotReadThemeTest {
-        details: Option<String>,
-        source_path: PathBuf,
-    },
-    CouldNotRenderThemeTest {
-        details: Option<String>,
-        source_path: PathBuf,
-    },
-    FailedThemeTest {
-        expected: Option<String>,
-        got: Option<String>,
-        details: Option<String>,
-        source_path: PathBuf,
-    },
-    Generic {
-        details: Option<String>,
-    },
-    InvalidThemeTest {
-        details: Option<String>,
-        source_path: PathBuf,
-    },
-    MissingPageId {
-        details: Option<String>,
-        source_path: PathBuf,
-    },
-    NoThemeTestsFound {
-        details: Option<String>,
-        source_path: PathBuf,
-    },
-}
-
 impl Builder {
     pub fn new(config: SiteConfig) -> Result<Builder> {
         Ok(Builder {
             config,
-            errors: vec![],
+            issues: vec![],
             feeds: BTreeMap::new(),
             images: BTreeMap::new(),
             last_edit: None,
@@ -221,10 +189,10 @@ impl Builder {
                     }
                 }
             } else {
-                self.errors.push(BuilderError::MissingPageId {
-                    details: None,
-                    source_path: p.0.to_path_buf(),
-                })
+                // self.issues.push(BuildIssue::MissingPageId {
+                //     details: None,
+                //     source_path: p.0.to_path_buf(),
+                // })
             }
         });
 
@@ -608,10 +576,10 @@ body {
                             );
                             ()
                         } else {
-                            self.errors.push(BuilderError::CouldNotReadThemeTest {
-                                details: None,
-                                source_path: entry,
-                            });
+                            // self.issues.push(BuildIssue::CouldNotReadThemeTest {
+                            //     details: None,
+                            //     source_path: entry,
+                            // });
                         }
                     }
                 }
@@ -649,10 +617,10 @@ body {
                             .split("<!-- START_THEME_TEST -->")
                             .collect::<Vec<&str>>();
                         if tests.len() == 1 {
-                            self.errors.push(BuilderError::NoThemeTestsFound {
-                                details: None,
-                                source_path: source_path.to_path_buf(),
-                            })
+                            // self.issues.push(BuildIssue::NoThemeTestsFound {
+                            //     details: None,
+                            //     source_path: source_path.to_path_buf(),
+                            // })
                         } else {
                             for t in tests.iter().skip(1) {
                                 let parts =
@@ -661,30 +629,35 @@ body {
                                     let left = parts[0].replace("\n", "").replace(" ", "");
                                     let right = parts[1].replace("\n", "").replace(" ", "");
                                     if left != right {
-                                        self.errors.push(BuilderError::FailedThemeTest {
-                                            expected: Some(right),
-                                            got: Some(left),
+                                        self.issues.push(BuildIssue {
                                             details: None,
-                                            source_path: source_path.to_path_buf(),
+                                            source_path: Some(source_path.to_path_buf()),
+                                            kind: BuildIssueKind::FailedThemeTest {
+                                                expected: Some(parts[1].to_string()),
+                                                got: Some(parts[0].to_string()),
+                                            },
                                         })
                                     }
                                 } else {
-                                    self.errors.push(BuilderError::InvalidThemeTest {
-                                        details: Some(t.to_string()),
-                                        source_path: source_path.to_path_buf(),
-                                    })
+                                    // self.issues.push(BuildIssue::InvalidThemeTest {
+                                    //     details: Some(t.to_string()),
+                                    //     source_path: source_path.to_path_buf(),
+                                    // })
                                 }
                             }
                         }
                     }
-                    Err(e) => self.errors.push(BuilderError::CouldNotRenderThemeTest {
-                        source_path: source_path.to_path_buf(),
+                    Err(e) => self.issues.push(BuildIssue {
                         details: Some(e.to_string()),
+                        source_path: Some(source_path.to_path_buf()),
+                        kind: BuildIssueKind::CouldNotRenderThemeTest {},
                     }),
                 }
             } else {
-                self.errors.push(BuilderError::Generic {
+                self.issues.push(BuildIssue {
+                    source_path: Some(source_path.to_path_buf()),
                     details: Some("Could not get internal test template".to_string()),
+                    kind: BuildIssueKind::Generic {},
                 })
             }
         }
@@ -782,8 +755,13 @@ body {
         Ok(())
     }
 
-    pub fn output_errors(&self) -> Result<()> {
+    #[instrument(skip(self))]
+    pub fn output_issues(&self) -> Result<()> {
         let mut env = Environment::new();
+        env.add_function(
+            "format_html_for_theme_test_display",
+            format_html_for_theme_test_display,
+        );
         env.set_debug(true);
         env.set_lstrip_blocks(true);
         env.set_trim_blocks(true);
@@ -797,6 +775,28 @@ body {
         );
 
         let _ = env.add_template_owned(
+            "error-to-do.neoj",
+            r#"
+<h2>Error To Handle: [@ issue.kind().kind @]</h2>
+            "#,
+        );
+
+        let _ = env.add_template_owned(
+            "failedthemetest.neoj",
+            r#"
+<h2>Theme Test Issue: [@ issue.file_name() @]</h2>
+<h3>Expected</h3>
+<pre>
+[@ format_html_for_theme_test_display(issue.expected())|escape @]
+</pre>
+<h3>Got</h3>
+<pre>
+[@ format_html_for_theme_test_display(issue.got())|escape @]
+</pre>
+"#,
+        );
+
+        let _ = env.add_template_owned(
             "error",
             r#"
 <!DOCTYPE html>
@@ -804,6 +804,18 @@ body {
 body { background-color: #111; color: #aaa; }
 </style></head>
 <body>
+<header>
+<a href="/">Home</a>
+</header>
+<main>
+<ul>
+[! for issue in builder.issues() !]
+<li>
+[! include issue.kind().kind + ".neoj" "error-to-do.neoj" !]
+[! endfor !]
+</li>
+</ul>
+</main>
 </body>
 </html>
         "#,
@@ -811,48 +823,18 @@ body { background-color: #111; color: #aaa; }
 
         if let Ok(tmpl) = env.get_template("error") {
             match tmpl.render(context!(
-                errors => Value::from_serialize(&self.errors)
+            builder => Value::from_object(self.clone())
             )) {
                 Ok(output) => {
                     let status_path = self.config.status_dir().join("index.html");
                     let _ = fs::write(status_path, output);
                 }
-                Err(_e) => {}
+                Err(e) => {
+                    event!(Level::ERROR, "Stauts report error: {}", e);
+                }
             }
         }
 
-        for error in self.errors.iter() {
-            match error {
-                BuilderError::CouldNotReadThemeTest {
-                    details: _,
-                    source_path: _,
-                } => {}
-                BuilderError::CouldNotRenderThemeTest {
-                    details: _,
-                    source_path: _,
-                } => {}
-                BuilderError::FailedThemeTest {
-                    expected: _,
-                    got: _,
-                    details: _,
-                    source_path: _,
-                } => {}
-                BuilderError::Generic { details: _ } => {}
-                BuilderError::InvalidThemeTest {
-                    details: _,
-                    source_path: _,
-                } => {}
-                BuilderError::MissingPageId {
-                    details: _,
-                    source_path: _,
-                } => {}
-                BuilderError::NoThemeTestsFound {
-                    details: _,
-                    source_path: _,
-                } => {}
-            }
-            dbg!(&error);
-        }
         Ok(())
     }
 
@@ -937,7 +919,7 @@ fn resize_and_optimize_png(source: &PathBuf, width: u32, dest: &PathBuf) -> Resu
     Ok(())
 }
 
-fn _format_html_for_theme_test_display(code: &str) -> String {
+fn format_html_for_theme_test_display(code: &str) -> String {
     let mut re = Regex::new(r"\n").unwrap();
     let output = re.replace_all(code, " ");
     re = Regex::new(r" \s+").unwrap();

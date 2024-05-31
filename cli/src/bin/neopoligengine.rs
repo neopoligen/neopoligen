@@ -111,8 +111,8 @@ fn build_site(site_config: &SiteConfig) {
         }
         let _ = builder.make_og_images();
         let _ = builder.copy_theme_assets();
-        let _ = builder.output_errors();
-        event!(Level::INFO, "Error Count: {}", builder.errors.len());
+        let _ = builder.output_issues();
+        event!(Level::INFO, "Issues: {}", builder.issues.len());
     }
 }
 
