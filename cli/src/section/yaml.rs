@@ -71,12 +71,12 @@ pub fn yaml_section_full<'a>(
     let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
     // dbg!(&source);
     // dbg!("a-----------");
-    let (source, _) = multispace0
-        .context("")
-        .parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
     // dbg!("-----------");
     // dbg!(&source);
-    let (source, text) = alt((take_until("\n--"), rest, eof)).context("").parse(source)?;
+    let (source, text) = alt((take_until("\n--"), rest, eof))
+        .context("")
+        .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let mut attrs: BTreeMap<String, String> = BTreeMap::new();
     let mut flags: Vec<String> = vec![];

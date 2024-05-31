@@ -52,14 +52,8 @@ pub enum SectionV39Bounds {
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum SectionV39Kind {
-    Basic {
-        children: Vec<SectionV39>,
-    },
-    Block {
-        spans: Vec<SpanV39>,
-        // TODO: Add this in
-        //   r#type: String,
-    },
+    Basic { children: Vec<SectionV39> },
+    Block { spans: Vec<SpanV39> },
     Yaml {},
 }
 
