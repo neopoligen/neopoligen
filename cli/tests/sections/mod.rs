@@ -21,6 +21,7 @@ fn code_followed_by_result() {
             attrs: BTreeMap::new(),
             children: vec![Section::Basic {
                 attrs: BTreeMap::new(),
+                attr_list: vec![],
                 bounds: "end".to_string(),
                 children: vec![],
                 flags: vec![],

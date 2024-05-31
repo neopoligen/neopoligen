@@ -45,6 +45,7 @@ pub fn raw_section_end<'a>(
         source,
         Section::Basic {
             attrs,
+            attr_list: vec![],
             bounds: "end".to_string(),
             children,
             flags,

@@ -36,18 +36,19 @@ use serde::Deserialize;
 use serde::Serialize;
 use std::collections::BTreeMap;
 
-#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-#[serde(tag = "kind", rename_all = "lowercase")]
-pub struct SectionAttrForList {
-    key: String,
-    value: String,
-}
+// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+// #[serde(tag = "kind", rename_all = "lowercase")]
+// pub struct SectionAttrForList {
+//     pub key: String,
+//     pub value: String,
+// }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "kind", rename_all = "lowercase")]
 pub enum Section {
     Basic {
         attrs: BTreeMap<String, String>,
+        attr_list: Vec<SectionAttr>,
         bounds: String,
         children: Vec<Section>,
         flags: Vec<String>,

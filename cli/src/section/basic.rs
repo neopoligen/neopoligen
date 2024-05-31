@@ -44,6 +44,7 @@ pub fn basic_section_end<'a>(
         source,
         Section::Basic {
             attrs,
+            attr_list: vec![],
             bounds: "end".to_string(),
             children,
             flags,
@@ -86,6 +87,7 @@ pub fn basic_section_full<'a>(
         source,
         Section::Basic {
             attrs,
+            attr_list: raw_attrs,
             bounds: "full".to_string(),
             children,
             flags,
@@ -135,6 +137,7 @@ pub fn basic_section_start<'a>(
         source,
         Section::Basic {
             attrs,
+            attr_list: vec![],
             bounds: "start".to_string(),
             children,
             flags,
