@@ -191,12 +191,17 @@ body { background-color: #111; color: #aaa; }
 
     #[instrument(skip(self))]
     pub fn page_errors(&self) -> Vec<(String, NeoError)> {
+        // Reminder: This only gets the first error on a page
+        // for now.
         event!(Level::INFO, "Making Sure Directories Exist");
         self.pages
             .iter()
             .filter_map(|(_, p)| {
                 if p.errors.len() > 0 {
-                    Some(("ADD name here".to_string(), p.errors[0].clone()))
+                    Some((
+                        p.rel_source_path().unwrap().to_string_lossy().to_string(),
+                        p.errors[0].clone(),
+                    ))
                 } else {
                     None
                 }

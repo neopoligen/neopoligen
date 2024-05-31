@@ -19,6 +19,7 @@ pub struct PageV39 {
     pub fs_modified: Option<SystemTime>,
     pub output_content: Option<String>,
     pub source_content: Option<String>,
+    pub source_path: Option<PathBuf>,
 }
 
 // #[derive(Clone, Debug)]
@@ -38,7 +39,7 @@ impl PageV39 {
         config: SiteConfig,
         source_content: String,
     ) -> Result<PageV39> {
-        let fs_modified = fs::metadata(source_path)?.modified()?;
+        let fs_modified = fs::metadata(&source_path)?.modified()?;
         Ok(PageV39 {
             ast: None,
             config,
@@ -46,6 +47,7 @@ impl PageV39 {
             fs_modified: Some(fs_modified),
             output_content: None,
             source_content: Some(source_content),
+            source_path: Some(source_path),
         })
     }
 }
@@ -98,5 +100,11 @@ impl PageV39 {
         let lang = self.config.default_language()?;
         let id = self.id()?;
         Ok(PathBuf::from(format!("{}/{}/index.html", lang, id)))
+    }
+
+    pub fn rel_source_path(&self) -> Result<PathBuf> {
+        let response = &self.source_path.clone().unwrap();
+        let response = response.strip_prefix(self.config.content_dir())?;
+        Ok(response.to_path_buf())
     }
 }
