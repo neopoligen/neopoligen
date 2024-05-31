@@ -1,5 +1,5 @@
 use neopoligengine::{
-    section_attr_v39::SectionAttrV39Kind,
+    // section_attr_v39::SectionAttrV39Kind,
     section_v39::*,
     site_config::SiteConfig,
     span_v39::{SpanV39, SpanV39Kind},
@@ -20,9 +20,17 @@ fn basic_section_basic_test() {
                     attrs: vec![],
                     bounds: SectionV39Bounds::Full,
                     kind: SectionV39Kind::Block {
-                        spans: vec![SpanV39 {
-                            kind: SpanV39Kind::WordPart { text: "Hello" },
-                        }],
+                        spans: vec![
+                            SpanV39 {
+                                kind: SpanV39Kind::WordPart { text: "Hello" },
+                            },
+                            SpanV39 {
+                                kind: SpanV39Kind::Space { text: " " },
+                            },
+                            SpanV39 {
+                                kind: SpanV39Kind::WordPart { text: "World" },
+                            },
+                        ],
                     },
                 }],
                 r#type: "title".to_string(),

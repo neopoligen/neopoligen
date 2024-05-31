@@ -25,17 +25,34 @@ pub struct SpanV39<'a> {
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum SpanV39Kind<'a> {
+    Space { text: &'a str },
     WordPart { text: &'a str },
+}
+
+pub fn space(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
+    let (source, text) = space1.context("").parse(source)?;
+    Ok((
+        source,
+        SpanV39 {
+            kind: SpanV39Kind::Space { text },
+        },
+    ))
 }
 
 pub fn span_v39<'a>(
     source: &'a str,
     _spans: &'a Vec<String>,
 ) -> IResult<&'a str, SpanV39<'a>, ErrorTree<&'a str>> {
+    let (source, span) = alt((word_part, space))(source)?;
+    Ok((source, span))
+}
+
+pub fn word_part(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
+    let (source, text) = is_not(" ").context("").parse(source)?;
     Ok((
         source,
         SpanV39 {
-            kind: SpanV39Kind::WordPart { text: "asdf" },
+            kind: SpanV39Kind::WordPart { text },
         },
     ))
 }

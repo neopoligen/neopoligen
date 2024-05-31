@@ -1,6 +1,7 @@
 #![allow(unused_imports)]
 
 pub mod basic;
+pub mod block;
 
 use crate::section_attr_v39::SectionAttrV39;
 use crate::section_v39::basic::*;
