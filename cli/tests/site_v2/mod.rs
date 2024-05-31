@@ -26,7 +26,6 @@ fn collection_by_date_status_published() {
 }
 
 #[test]
-#[ignore]
 fn collection_by_date_status_not_published() {
     let site = SiteV2::mock1();
     let left = Value::from_serialize(vec!["echo1234".to_string(), "charlie1".to_string()]);
@@ -36,7 +35,6 @@ fn collection_by_date_status_not_published() {
 }
 
 #[test]
-#[ignore]
 fn collection_by_date_type_post() {
     let site = SiteV2::mock1();
     let left = Value::from_serialize(vec![
@@ -51,7 +49,6 @@ fn collection_by_date_type_post() {
 }
 
 #[test]
-#[ignore]
 fn collection_by_date_type_not_post() {
     let site = SiteV2::mock1();
     let left = Value::from_serialize(vec![
@@ -65,7 +62,6 @@ fn collection_by_date_type_not_post() {
 }
 
 #[test]
-#[ignore]
 fn collection_by_date_multiple_types_in_and_should_return_nothing() {
     let site = SiteV2::mock1();
     let left = Value::from_serialize::<Vec<String>>(vec![]);
@@ -75,7 +71,6 @@ fn collection_by_date_multiple_types_in_and_should_return_nothing() {
 }
 
 #[test]
-#[ignore]
 fn collection_by_date_multiple_types_in_or_should_return_something() {
     let site = SiteV2::mock1();
     let left = Value::from_serialize(vec![

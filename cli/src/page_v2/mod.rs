@@ -230,23 +230,43 @@ impl PageV2 {
                 let mut hit_exclude = 0;
                 for item in ag.filters.iter() {
                     match &item.kind {
+                        // TODO: I think you can refactor this to just add
+                        // one each time and match the lenght directly
                         PageFilterV2Kind::Status { value_to_match } => {
                             if let Ok(target) = self.status_v2() {
-                                if value_to_match == target.as_str().unwrap() {
-                                    if item.exclude_request == true {
+                                if item.exclude_request {
+                                    if value_to_match == target.as_str().unwrap() {
                                         hit_exclude += 1;
                                     } else {
+                                        hit_include += 1;
+                                    }
+                                } else {
+                                    if value_to_match == target.as_str().unwrap() {
                                         hit_include += 1;
                                     }
                                 }
                             }
                         }
-                        PageFilterV2Kind::Type { value_to_match } => {}
+                        PageFilterV2Kind::Type { value_to_match } => {
+                            if let Ok(target) = self.type_v2() {
+                                if item.exclude_request {
+                                    if value_to_match == target.as_str().unwrap() {
+                                        hit_exclude += 1;
+                                    } else {
+                                        hit_include += 1;
+                                    }
+                                } else {
+                                    if value_to_match == target.as_str().unwrap() {
+                                        hit_include += 1;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
                 if hit_exclude > 0 {
                     false
-                } else if hit_include == 0 {
+                } else if hit_include < ag.filters.len() {
                     false
                 } else {
                     true
