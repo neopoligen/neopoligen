@@ -1,5 +1,6 @@
 #![allow(unused_imports)]
 
+use crate::span_v39::*;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
@@ -42,7 +43,7 @@ pub fn section_key_value_attr_39<'a>(
     let (source, key) = is_not(": \n").context("").parse(source)?;
     let (source, _) = tag(":").context("").parse(source)?;
     let (source, value) = not_line_ending.context("").parse(source)?;
-    let (source, _) = line_ending.context("").parse(source)?;
+    let (source, _) = line_ending_or_eof.context("").parse(source)?;
     Ok((
         source,
         SectionAttrV39 {

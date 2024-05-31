@@ -7,6 +7,7 @@ use nom::character::complete::line_ending;
 use nom::character::complete::multispace0;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
+use nom::combinator::eof;
 use nom::combinator::not;
 use nom::multi::many0;
 use nom::sequence::tuple;
@@ -27,6 +28,11 @@ pub struct SpanV39 {
 pub enum SpanV39Kind {
     Space { text: String },
     WordPart { text: String },
+}
+
+pub fn line_ending_or_eof(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
+    let (source, result) = alt((line_ending, eof))(source)?;
+    Ok((source, result))
 }
 
 pub fn space(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
