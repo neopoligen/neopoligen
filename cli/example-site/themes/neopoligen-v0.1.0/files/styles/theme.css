@@ -223,6 +223,11 @@ img {
     color: var(--color-alfa);
 }
 
+.tmp-home-page-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
 .title-section h1 {
   border-bottom: 1px solid var(--color-charlie);
 }

@@ -12,6 +12,7 @@ use chrono::FixedOffset;
 use minijinja::value::Value;
 use minijinja::Error;
 use minijinja::ErrorKind;
+use nom::combinator::value;
 use regex::Regex;
 use serde::Deserialize;
 use serde::Serialize;
@@ -221,53 +222,99 @@ impl PageV2 {
     }
 
     pub fn passes(&self, or_set: &PageFilterOrSet) -> bool {
-        if let Some(_) = or_set.and_groups.iter().find(|ag| {
-            let mut found_include = false;
-            let mut found_exclude = false;
-            for filter in ag.filters.iter() {
-                match filter {
-                    PageFilter::Status { exclude, value } => {
-                        if *exclude == true {
-                            if *value == self.status().unwrap() {
-                                found_exclude = true;
-                            } else {
-                                found_include = true;
-                            }
-                        } else {
-                            if *value == self.status().unwrap() {
-                                found_include = true;
-                            }
-                        }
-                    }
-
-                    PageFilter::Type { exclude, value } => {
-                        if let Ok(t) = self.type_v2() {
-                            let t = t.to_string();
-                            if *exclude == true {
-                                if *value == t {
-                                    found_exclude = true;
-                                } else {
-                                    found_include = true;
-                                }
-                            } else {
-                                if *value == t {
-                                    found_include = true;
+        if or_set
+            .and_groups
+            .iter()
+            .filter(|ag| {
+                let mut hit_include = 0;
+                let mut hit_exclude = 0;
+                for item in ag.filters.iter() {
+                    match &item.kind {
+                        PageFilterV2Kind::Status { value_to_match } => {
+                            if let Ok(target) = self.status_v2() {
+                                if value_to_match == target.as_str().unwrap() {
+                                    if item.exclude_request == true {
+                                        hit_exclude += 1;
+                                    } else {
+                                        hit_include += 1;
+                                    }
                                 }
                             }
                         }
+                        PageFilterV2Kind::Type { value_to_match } => {}
                     }
                 }
-            }
-            if found_include && !found_exclude {
-                true
-            } else {
-                false
-            }
-        }) {
+                if hit_exclude > 0 {
+                    false
+                } else if hit_include == 0 {
+                    false
+                } else {
+                    true
+                }
+            })
+            .collect::<Vec<_>>()
+            .len()
+            > 0
+        {
             true
         } else {
             false
         }
+
+        //if let Some(_) = or_set.and_groups.iter().find(|ag| {
+        //let mut found_include = false;
+        //let mut found_exclude = false;
+
+        // for filter in ag.filters.iter() {
+        //     match filter {
+        //         PageFilter::Status { exclude, value } => {
+        //             if *exclude == true {
+        //                 if *value == self.status().unwrap() {
+        //                     found_exclude = true;
+        //                 } else {
+        //                     found_include = true;
+        //                 }
+        //             } else {
+        //                 if *value == self.status().unwrap() {
+        //                     found_include = true;
+        //                 }
+        //             }
+        //         }
+        //         PageFilter::Type { exclude, value } => {
+        //             if let Ok(t) = self.type_v2() {
+        //                 let t = t.to_string();
+        //                 if *exclude == true {
+        //                     if *value == t {
+        //                         found_exclude = true;
+        //                     } else {
+        //                         found_include = true;
+        //                     }
+        //                 } else {
+        //                     if *value == t {
+        //                         found_include = true;
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+        // if found_include && !found_exclude {
+        //     true
+        // } else {
+        //     false
+        // }
+
+        //false
+
+        ////
+        //}) {
+        //true
+        //} else {
+        //false
+        //}
+
+        //
     }
 
     pub fn og_image(&self) -> Option<String> {
@@ -370,6 +417,14 @@ impl PageV2 {
             Some(t)
         } else {
             Some("published".to_string())
+        }
+    }
+
+    pub fn status_v2(&self) -> Result<Value, Error> {
+        if let Some(t) = self.get_metadata_attr("status") {
+            Ok(Value::from(t))
+        } else {
+            Ok(Value::from("published"))
         }
     }
 

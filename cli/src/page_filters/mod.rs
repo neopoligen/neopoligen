@@ -24,12 +24,12 @@ impl PageFilterOrSet {
                             .into_iter()
                             .filter_map(|filter_string| {
                                 if let Some(text) = filter_string.as_str() {
-                                    PageFilter::parse(text)
+                                    PageFilterV2::parse(text)
                                 } else {
                                     None
                                 }
                             })
-                            .collect::<Vec<PageFilter>>(),
+                            .collect::<Vec<PageFilterV2>>(),
                     })
                 } else {
                     None
@@ -42,7 +42,7 @@ impl PageFilterOrSet {
 
 #[derive(Debug, PartialEq)]
 pub struct PageFilterAndGroup {
-    pub filters: Vec<PageFilter>,
+    pub filters: Vec<PageFilterV2>,
 }
 
 #[derive(Debug, PartialEq)]
@@ -51,16 +51,38 @@ pub enum PageFilter {
     Type { exclude: bool, value: String },
 }
 
-impl PageFilter {
-    pub fn parse(source: &str) -> Option<PageFilter> {
+#[derive(Debug, PartialEq)]
+pub struct PageFilterV2 {
+    pub exclude_request: bool,
+    pub kind: PageFilterV2Kind,
+}
+
+#[derive(Debug, PartialEq)]
+pub enum PageFilterV2Kind {
+    Status { value_to_match: String },
+    Type { value_to_match: String },
+}
+
+impl PageFilterV2 {
+    pub fn parse(source: &str) -> Option<PageFilterV2> {
         if let Some(parts) = source.split_once(":") {
             let (exclude, value) = match parts.1.strip_prefix("!") {
                 Some(value) => (true, value.trim().to_string()),
                 None => (false, parts.1.trim().to_string()),
             };
             match parts.0 {
-                "status" => Some(PageFilter::Status { exclude, value }),
-                "type" => Some(PageFilter::Type { exclude, value }),
+                "status" => Some(PageFilterV2 {
+                    exclude_request: exclude,
+                    kind: PageFilterV2Kind::Status {
+                        value_to_match: value,
+                    },
+                }),
+                "type" => Some(PageFilterV2 {
+                    exclude_request: exclude,
+                    kind: PageFilterV2Kind::Type {
+                        value_to_match: value,
+                    },
+                }),
                 _ => None,
             }
         } else {
@@ -68,6 +90,25 @@ impl PageFilter {
         }
     }
 }
+
+// // DEPRECATED: Move to PageFilterV2
+// impl PageFilter {
+//     pub fn parse(source: &str) -> Option<PageFilter> {
+//         if let Some(parts) = source.split_once(":") {
+//             let (exclude, value) = match parts.1.strip_prefix("!") {
+//                 Some(value) => (true, value.trim().to_string()),
+//                 None => (false, parts.1.trim().to_string()),
+//             };
+//             match parts.0 {
+//                 "status" => Some(PageFilter::Status { exclude, value }),
+//                 "type" => Some(PageFilter::Type { exclude, value }),
+//                 _ => None,
+//             }
+//         } else {
+//             None
+//         }
+//     }
+// }
 
 // #[derive(Debug)]
 // pub enum PageFilterType {

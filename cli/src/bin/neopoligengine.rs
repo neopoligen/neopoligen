@@ -89,7 +89,7 @@ fn build_site(site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
     if let Ok(mut builder) = Builder::new(site_config.clone()) {
         let _ = builder.test_theme();
-        let _ = builder.debug_flush_cache();
+        // let _ = builder.debug_flush_cache();
         let _ = empty_dir(&site_config.output_dir());
         let _ = empty_dir(&site_config.status_dir());
         let _ = builder.prep_dirs();
