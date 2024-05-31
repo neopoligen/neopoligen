@@ -57,7 +57,6 @@ impl PageV2 {
                 .iter()
                 .filter(|section| match section {
                     Section::Basic { r#type, .. } => !skips.contains(r#type),
-                    Section::BasicV2 { r#type, .. } => !skips.contains(r#type),
                     Section::Block { r#type, .. } => !skips.contains(r#type),
                     Section::Checklist { r#type, .. } => !skips.contains(r#type),
                     Section::ChecklistItem { r#type, .. } => !skips.contains(r#type),
@@ -270,7 +269,6 @@ impl PageV2 {
                 .iter()
                 .filter(|section| match section {
                     Section::Basic { r#type, .. } => outputs.contains(r#type),
-                    Section::BasicV2 { r#type, .. } => outputs.contains(r#type),
                     Section::Block { r#type, .. } => outputs.contains(r#type),
                     Section::Checklist { r#type, .. } => outputs.contains(r#type),
                     Section::ChecklistItem { r#type, .. } => outputs.contains(r#type),

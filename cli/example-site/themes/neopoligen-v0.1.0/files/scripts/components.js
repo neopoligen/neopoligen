@@ -89,7 +89,8 @@ customElements.define('neo-admin',
     templateContent() {
       const content = `
 <header>
-  <button class="design-mode-button">Design Mode</button>
+  <button class="design-mode-button">Design Mode</button> 
+<a href="/neo-status/">Status</a>
 </header>`
         return content
     }

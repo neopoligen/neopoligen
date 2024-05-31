@@ -52,33 +52,6 @@ pub fn basic_section_end<'a>(
     ))
 }
 
-pub fn basic_section_full_v2<'a>(
-    source: &'a str,
-    sections: &'a Sections,
-    spans: &'a Vec<String>,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, r#type) = (|src| tag_finder(src, &sections.basic))
-        .context("")
-        .parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-    let (source, attrs) = many0(section_attr).context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = many0(|src| block_of_anything(src, &spans))
-        .context("")
-        .parse(source)?;
-    Ok((
-        source,
-        Section::BasicV2 {
-            attrs,
-            bounds: "full".to_string(),
-            children,
-            r#type: r#type.to_string(),
-        },
-    ))
-}
-
 pub fn basic_section_full<'a>(
     source: &'a str,
     sections: &'a Sections,

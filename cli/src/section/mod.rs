@@ -53,15 +53,6 @@ pub enum Section {
         flags: Vec<String>,
         r#type: String,
     },
-
-    // TODO: Figure out how you want to handle keeping
-    // the attrs split
-    BasicV2 {
-        attrs: Vec<SectionAttr>,
-        bounds: String,
-        children: Vec<Section>,
-        r#type: String,
-    },
     Block {
         bounds: String,
         spans: Vec<Span>,
