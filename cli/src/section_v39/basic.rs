@@ -36,6 +36,7 @@ pub fn basic_section_full<'a>(
         attrs,
         bounds: SectionV39Bounds::Full,
         kind: SectionV39Kind::Basic { children },
+        //kind: SectionV39Kind::Basic { children: vec![] },
         r#type: r#type.to_string(),
     };
     Ok((source, section))

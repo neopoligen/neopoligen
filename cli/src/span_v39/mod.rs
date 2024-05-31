@@ -35,7 +35,7 @@ pub fn empty_until_newline_or_eof<'a>(
     source: &'a str,
 ) -> IResult<&'a str, &'a str, ErrorTree<&'a str>> {
     let (source, _) = alt((
-        tuple((space0, newline_v39.map(|_| ""))),
+        tuple((space0, line_ending)),
         tuple((multispace0, eof.map(|_| ""))),
     ))
     .context("")

@@ -6,7 +6,6 @@ use neopoligengine::{
 use pretty_assertions::assert_eq;
 
 #[test]
-#[ignore]
 fn basic_section_basic_test() {
     let config = SiteConfig::mock1();
     let source = "-- title\n\nHello World";
