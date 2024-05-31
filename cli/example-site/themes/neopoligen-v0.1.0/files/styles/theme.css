@@ -21,11 +21,18 @@ a:focus {
   color: var(--color-foxtrot);
 }
 
+blockquote {
+  margin: 1.3rem;
+  padding: 1.3rem;
+  border: 1px solid var(--color-charlie-40);
+  border-radius: 0.3rem;
+}
+
 body { 
   background-color: var(--color-base);
   color: var(--color-bravo); 
   font-size: var(--size-base);
-  line-height: 1.5; 
+  line-height: 1.6; 
   font-family: 'Inter';
 }
 
@@ -157,10 +164,15 @@ header a {
   margin: 1.4rem;
 }
 
+img {
+  max-width: 100%;
+  display: block;
+}
 
 .line-numbers {
   counter-reset: lineNumber;
 }
+
 
 .line-marker {
   counter-increment: lineNumber;
@@ -209,6 +221,11 @@ header a {
     font-size: var(--size-5);
     font-weight: 700;
     color: var(--color-alfa);
+}
+
+.tmp-home-page-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .title-section h1 {

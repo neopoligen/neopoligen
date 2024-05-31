@@ -1,3 +1,6 @@
+// DEPREDATED: This is the old version of
+//  the site which can be removed when time allows
+//
 use crate::og_image::*;
 use crate::page::Page;
 use crate::site_config::SiteConfig;
@@ -64,7 +67,7 @@ impl Site {
 
 impl Site {
     pub fn copy_images(&self) -> Result<(), std::io::Error> {
-        let source_dir = self.config.images_dir();
+        let source_dir = self.config.image_source_dir();
         let dest_dir = self.config.output_dir().join(PathBuf::from("images"));
         for entry in WalkDir::new(&source_dir) {
             let source_path = entry?.into_path();
@@ -172,9 +175,9 @@ impl Site {
 
     pub fn generate_content_pages(
         &mut self,
-        render_errors: &mut BTreeMap<PathBuf, String>,
+        _render_errors: &mut BTreeMap<PathBuf, String>,
     ) -> Vec<(PathBuf, PathBuf, String)> {
-        let mut outputs: Vec<(PathBuf, PathBuf, String)> = vec![];
+        let outputs: Vec<(PathBuf, PathBuf, String)> = vec![];
         let mut env = Environment::new();
         env.set_debug(true);
         env.add_function("highlight_code", highlight_code);
@@ -203,7 +206,7 @@ impl Site {
                         // helpers => helper_obj,
                         page_id => p.0
                     )) {
-                        Ok(output) => {
+                        Ok(_output) => {
                             //outputs.push((
                             //p.1.full_cache_path.clone().unwrap(),
                             //p.1.full_output_path.clone().unwrap(),
@@ -212,7 +215,7 @@ impl Site {
                             // dbg!(&p.1.rel_output_path);
                             //outputs.insert(p.0.to_string(), p.clone());
                         }
-                        Err(e) => {
+                        Err(_e) => {
                             // event!(Level::ERROR, "{}\n{:?}", p.1.source_path.display(), e);
                             //render_errors.insert(p.0, format!("{:?}", e));
                             ()
@@ -389,7 +392,7 @@ impl Site {
     pub fn load_source_files(&mut self) {
         event!(Level::INFO, "Loading Source Files");
         self.source_files = BTreeMap::new(); // do this to clear the templates
-        let dir = &self.config.paths.get("content_root").unwrap();
+        let dir = &self.config.content_dir();
         if dir.exists() {
             WalkDir::new(dir)
                 .into_iter()
@@ -419,7 +422,7 @@ impl Site {
 
     #[instrument(skip(self))]
     pub fn load_template_test_files(&mut self) {
-        let mut dir = self.config.paths.get("theme_root").unwrap().clone();
+        let mut dir = self.config.theme_dir();
         dir.push("tests/content");
         if dir.exists() {
             WalkDir::new(dir)
@@ -465,11 +468,11 @@ impl Site {
     #[instrument(skip(self))]
     pub fn load_templates(&mut self) {
         event!(Level::INFO, "Loading Templates");
-        let mut templates_root = self.config.paths.get("themes_root").unwrap().to_path_buf();
-        templates_root.push(self.config.theme.clone());
-        templates_root.push("templates");
-        if templates_root.exists() {
-            WalkDir::new(templates_root.clone())
+        // let mut templates_root = self.config.paths.get("themes_root").unwrap().to_path_buf();
+        // templates_root.push(self.config.theme.name.clone());
+        // templates_root.push("templates");
+        if self.config.templates_dir().exists() {
+            WalkDir::new(self.config.templates_dir())
                 .into_iter()
                 .filter(|entry| match entry.as_ref().unwrap().path().extension() {
                     Some(ext) => ext.to_str().unwrap() == "neoj",
@@ -479,7 +482,8 @@ impl Site {
                     let path = entry.as_ref().unwrap().path().to_path_buf();
                     match fs::read_to_string(&path) {
                         Ok(content) => {
-                            let template_name = path.strip_prefix(templates_root.clone()).unwrap();
+                            let template_name =
+                                path.strip_prefix(self.config.templates_dir()).unwrap();
                             self.templates
                                 .insert(template_name.to_string_lossy().to_string(), content);
                         }
@@ -492,7 +496,7 @@ impl Site {
             event!(
                 Level::ERROR,
                 "Direcotory does not exist: {}",
-                &templates_root.display()
+                self.config.templates_dir().display()
             );
         }
     }
@@ -571,6 +575,8 @@ pub fn optimize_png(input: &PathBuf, output: &PathBuf) -> Result<()> {
     Ok(())
 }
 
-pub fn is_cache_stale(source_file: &PathBuf, cache_file: &PathBuf) -> bool {
+pub fn is_cache_stale(_source_file: &PathBuf, _cache_file: &PathBuf) -> bool {
+    // This is deprecated in favor of the builder and will
+    // be removed when site_v2 is in place
     true
 }

@@ -1,6 +1,9 @@
 use serde::Serialize;
 use std::fmt;
 
+// Currently Deprecated as of site_v2, but something to
+// look back into for better error handling
+
 #[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct Error {
     pub kind: ErrorKind,

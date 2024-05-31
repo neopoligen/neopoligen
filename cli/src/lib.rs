@@ -1,11 +1,15 @@
 pub mod ast;
 pub mod block;
+pub mod build_issue;
 pub mod builder;
 pub mod engine_config;
 pub mod error;
 pub mod file_watcher;
+pub mod helpers;
+pub mod image;
 pub mod og_image;
 pub mod page;
+pub mod page_filters;
 pub mod page_v2;
 pub mod section;
 pub mod sections;

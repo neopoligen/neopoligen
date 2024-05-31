@@ -1,17 +1,23 @@
 [!- import "includes/theme.neoj" as theme -!]
 
-<meta property="og:title" content="[@ site.pages[page_id].title_as_plain_text @]">
+<meta property="og:title" content="[@ site.page_title_as_plain_text(page_id) @]">
 <meta property="og:type" content="article">
-<meta property="og:url" content="[@ site.config.base_url @][@ site.pages[page_id].href @]">
-<meta property="og:image" content="[@ site.config.base_url @]/og-images/[@ page_id @].png">
+<meta property="og:url" content="[@ site.page_permalink(page_id) @]">
+<meta property="og:image" content="[@ site.page_og_image(page_id) @]">
+[#
 <meta property="og:description" content="[@ config.theme.default_og_description @]">
+#]
 <meta property="og:image:width"" content="1200">
 <meta property="og:image:height"" content="630">
 
 <meta name="twitter:card" content="summary_large_image">
+[#
 <meta property="twitter:domain" content="[@ site.config.domain @]">
-<meta property="twitter:url" content="[@ site.config.base_url @][@ site.pages[page_id].href @]">
-<meta name="twitter:title" content="[@ site.pages[page_id].title_as_plain_text @]">
+#]
+<meta property="twitter:url" content="[@ site.page_permalink(page_id) @]">
+<meta name="twitter:title" content="[@ site.page_title_as_plain_text(page_id) @]">
+[#
 <meta name="twitter:description" content="[@ config.theme.default_og_description @]">
-<meta name="twitter:image" content="[@ site.config.base_url @]/og-images/[@ page_id @].png">
+#]
+<meta name="twitter:image" content="[@ site.page_og_image(page_id) @]">
 

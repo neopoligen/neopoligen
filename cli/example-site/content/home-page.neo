@@ -2,179 +2,21 @@
 
 Welcome To The Neopoligen Cookbook
 
+testing
 
--- html/
--- template: show
+the quick brrown fox
 
-<div class="code-wrapper-example">
-<pre class="line-nums-example"><code><span class="line-num-example"></span><span class="source python"><span class="comment line number-sign python"><span class="punctuation definition comment python">#</span>!/usr/bin/env python3
-<span class="line-num-example"></span></span>
-<span class="line-num-example"></span><span class="meta qualified-name python"><span class="meta generic-name python">names</span></span> <span class="keyword operator assignment python">=</span> <span class="meta structure list python"><span class="punctuation section list begin python">[</span><span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Alfa<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Bravo<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Charlie<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Delta<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Echo<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> 
-<span class="line-num-example"></span>	<span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Foxtrot<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Golf<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Hotel<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">India<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Juliett<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> 
-<span class="line-num-example"></span>	<span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Kilo<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Lima<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Mike<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">November<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Oscar<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> 
-<span class="line-num-example"></span>	<span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Papa<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Quebec<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Romeo<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Sierra<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Tango<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> 
-<span class="line-num-example"></span>	<span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Uniform<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Victor<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Whiskey<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Xray<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> <span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Yankee<span class="punctuation definition string end python">'</span></span></span><span class="punctuation separator list python">,</span> 
-<span class="line-num-example"></span>	<span class="meta string python"><span class="string quoted single python"><span class="punctuation definition string begin python">'</span></span></span><span class="meta string python"><span class="string quoted single python">Zulu<span class="punctuation definition string end python">'</span></span></span><span class="punctuation section list end python">]</span></span>
-<span class="line-num-example"></span>
-<span class="line-num-example"></span><span class="meta statement for python"><span class="keyword control flow for python">for</span> <span class="meta generic-name python">name</span> <span class="meta statement for python"><span class="keyword control flow for in python">in</span></span></span><span class="meta statement for python"> <span class="meta qualified-name python"><span class="meta generic-name python">names</span></span><span class="punctuation section block for python">:</span></span>
-<span class="line-num-example"></span>	<span class="meta function-call python"><span class="meta qualified-name python"><span class="support function builtin python">print</span></span><span class="punctuation section arguments begin python">(</span><span class="meta function-call arguments python"><span class="storage type string python">f</span><span class="meta string interpolated python"><span class="string quoted double python"><span class="punctuation definition string begin python">"</span></span></span><span class="meta string interpolated python"><span class="string quoted double python">- &lt;&lt;link|</span><span class="meta interpolation python"><span class="punctuation section interpolation begin python">{</span><span class="source python embedded"><span class="meta function-call python"><span class="meta qualified-name python"><span class="meta generic-name python">name</span><span class="punctuation accessor dot python">.</span></span><span class="meta qualified-name python"><span class="variable function python">lower</span></span><span class="punctuation section arguments begin python">(</span><span class="punctuation section arguments end python">)</span></span><span class="meta item-access python"><span class="punctuation section brackets begin python">[</span></span><span class="meta item-access arguments python"><span class="constant numeric integer decimal python">0</span></span><span class="meta item-access python"><span class="punctuation section brackets end python">]</span></span></span></span><span class="meta interpolation python"><span class="punctuation section interpolation end python">}</span></span><span class="string quoted double python">.alanwsmith.com|https://</span><span class="meta interpolation python"><span class="punctuation section interpolation begin python">{</span><span class="source python embedded"><span class="meta function-call python"><span class="meta qualified-name python"><span class="meta generic-name python">name</span><span class="punctuation accessor dot python">.</span></span><span class="meta qualified-name python"><span class="variable function python">lower</span></span><span class="punctuation section arguments begin python">(</span><span class="punctuation section arguments end python">)</span></span><span class="meta item-access python"><span class="punctuation section brackets begin python">[</span></span><span class="meta item-access arguments python"><span class="constant numeric integer decimal python">0</span></span><span class="meta item-access python"><span class="punctuation section brackets end python">]</span></span></span></span><span class="meta interpolation python"><span class="punctuation section interpolation end python">}</span></span><span class="string quoted double python">.alanwsmith.com&gt;&gt;<span class="punctuation definition string end python">"</span></span></span></span><span class="punctuation section arguments end python">)</span></span>
-<span class="line-num-example"></span>	<span class="meta function-call python"><span class="meta qualified-name python"><span class="support function builtin python">print</span></span><span class="punctuation section arguments begin python">(</span><span class="punctuation section arguments end python">)</span></span></span></code></pre>
-</div>
+-- image
+-- test-image-alfa
 
--- /html
+-- image
+-- example-fish
 
--- css
-
-.code-wrapper-example {
-    background-color: #333;
-    border-radius: 0.4rem;
-}
-
-.code-wrapper-example pre {
-    font-size: 0.8rem;
-    background-color: #111;
-    white-space: pre-wrap; 
-    overflow-wrap: break-word;
-    padding-inline: 2ch;
-    padding-block: 1.3ch;
-    margin-left: 5.7ch;
-    border-top-right-radius: 0.4rem;
-    border-bottom-right-radius: 0.4rem;
-}
-
-.line-nums-example {
-  counter-reset: line;
-}
-
-.line-num-example {
-  counter-increment: line;
-}
-
-.line-num-example:before {
-    content: counter(line);
-    color: goldenrod;
-    padding-right: 2.7ch;
-    text-align: end;
-    width: 7.5ch;
-    display: inline-block;
-    margin-left: -7.5ch;
-}
-
-
-
--- ref
--- url: https://sylvaindurand.org/using-css-to-add-line-numbering/
-
-An example that requires adding code elements to every line
-
-
--- ref
--- title: syntect highlighting library
-
-TKTKTKT: Add link
-
-
-
--- metadata
--- date: 2023-10-17 14:50:12
--- id: 2wu3ps6n
--- type: css 
--- status: scratch 
-
-
-
-
-
-
-
-
-
-
-
-This site is an example of some things
-you can do with Neopoligen
-
--- code/
--- python
-
-#!/usr/bin/env python3
-
-names = ['Alfa', 'Bravo', 'Charlie', 'Delta', 
-    'Echo', 'Foxtrot', 'Golf', 'Hotel', 'India', 
-    'Juliet', 'Kilo', 'Lima', 'Mike', 
-    'November', 'Oscar', 'Papa', 'Quebec', 
-    'Romeo', 'Sierra', 'Tango', 'Uniform', 
-    'Victor', 'Whiskey', 'Xray', 'Yankee', 
-	'Zulu']
-
-for name in names:
-	print(f"- <<link|{name.lower()[0]}.alanwsmith.com|https://{name.lower()[0]}.alanwsmith.com>>")
-	print()
-
--- /code
-
-
-
--- html/
--- template: show
-
-<em>ping</em>
-
--- /html
-
-
--- h2
-
-This is an h2
-
--- list
-
-- code: ``this is code|class: green``
-
-- strong: **this is strong**
-
-- strong2: <<strong|test 2|class: green>>
-
-- em: <<em|some em>>
-
-- em2: __more em__
-
-- em3: __more em|class: green__
-
-- strikethrough: ~~strikethrough~~
-
-- strikethrough2: ~~strikethrough|class: green~~
-
-- footnote^^1^^
-
-
--- todo
-
-[] alfa
-
-[] bravo
-
-
--- footnote/
--- title: Some footnote 5
--- id: 1
-
-this is the content of the footnote
-
-and another paragraph
-
--- list/
-
-- a
-
-- b
-
--- /list
-
--- /footnote
-
-asdf
+-- image
+-- switch-open
 
 -- metadata
 -- id: 2sjfzivl
 -- path: /
+-- type: home-page
+

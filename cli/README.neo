@@ -11,6 +11,13 @@ Errors to handle
 
 problems like this: ``whtie-space: pre-wrap;|css` `wrap the text
 
+-- todo
+
+[] Warn if duplicate image names are used
+
+[] Clear images from cache that have been deleted
+
+[] Clear pages from cache that have been deleted
 
 
 -- metadata

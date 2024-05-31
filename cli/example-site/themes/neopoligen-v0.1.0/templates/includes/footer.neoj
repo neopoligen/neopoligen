@@ -2,16 +2,18 @@
 <div class="footer-line">
   <a href="/">alanwsmith.com</a>
   <a href="https://hachyderm.io/deck/@TheIdOfAlan">mastodon</a>
-  <span class="color-alfa-60">I haven't built an RSS feed yet, but it's on the list</span>
+  <a href="/feeds/full.xml">rss feed</a>
 </div>
 <div class="footer-line">
-  <div class="permalink center">Permalink<br>[@ site.config.base_url @][@ site.pages[page_id].href @]</div>
+  <div class="permalink center">Permalink<br>[@ site.page_permalink(page_id) @]</div>
+  <div>Debugging -  Page Type: [@ page.type() @]</div>
 </div>
+
 
 [! if config.debug == true !]
 <code-block2>
 <pre slot="the-code">
-[@ site.pages[page_id].ast|tojson(true) @]
+[@ site.page_sections(page_id)|tojson(true) @]
 </pre>
 </code-block2>
 [! endif !]

@@ -7,6 +7,6 @@
 
 <link rel="stylesheet" href="/theme/styles/lite-yt-embed.css" />
 
-[! for section in site.pages[page_id].ast !]
+[! for section in site.page_sections(page_id)!]
 [@ theme.output_css(site, page_id, section) @]
 [! endfor !]

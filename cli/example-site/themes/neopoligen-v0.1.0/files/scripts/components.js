@@ -52,3 +52,62 @@ customElements.define('code-block2',
   }
 )
 
+
+customElements.define('neo-admin', 
+  class extends HTMLElement {    
+    constructor() {
+      super()
+      this.attachShadow({ mode: 'open' })
+    }
+
+    connectedCallback() {
+      const domain = window.location.origin
+      if (domain === "http://localhost:1989") {
+        const template = this.ownerDocument.createElement('template') 
+        template.innerHTML = this.templateContent()
+        this.shadowRoot.appendChild(template.content.cloneNode(true))
+
+        let designModeButton = this.shadowRoot.querySelector(".design-mode-button")
+        this.designModeStatus = localStorage.getItem("designMode")
+        if (this.designModeStatus) {
+          designModeButton.innerHTML = `Design Mode: ${this.designModeStatus}`
+        } else {
+          this.designModeStatus = "off"
+          designModeButton.innerHTML = `Design Mode: off`
+        }
+        if (designModeButton) {
+          designModeButton.addEventListener(
+            "click", 
+            (event) => {
+              this.toggleDesignMode.call(this)
+            }
+          )
+        }
+      }
+    }
+
+    templateContent() {
+      const content = `
+<header>
+  <button class="design-mode-button">Design Mode</button> 
+<a href="/neo-status/">Status</a>
+</header>`
+        return content
+    }
+
+    toggleDesignMode(event) {
+      console.log("asdf")
+      if (this.designModeStatus === "off") {
+        this.designModeStatus = "on"
+      } else {
+        this.designModeStatus = "off"
+      }
+      console.log(this.designModeStatus)
+      let button = this.shadowRoot.querySelector(".design-mode-button")
+      if (button) {
+        button.innerHTML = `Design Mode: ${this.designModeStatus}`
+      }
+      this.ownerDocument.designMode = this.designModeStatus
+    }
+})
+

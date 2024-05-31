@@ -24,6 +24,7 @@
 
 [! include "subsections/forward.neoj" !]
 <div class="code-example-wrapper">
+<div class="code-example-wrapper-header">Code</div>
 <pre class="line-numbers"><code>[! autoescape false!]
 [!- if section.flags[0] !]
 [@ highlight_code(section.text, section.flags[0]) @]

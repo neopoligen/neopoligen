@@ -1,22 +1,22 @@
-[! set config = namespace() -!]
-[! set config.theme_name = site.config.theme -!]
-[! set config.theme = site.config.theme_options -!]
+[!- set config = namespace() -!]
+[!- set config.site = site.config() -!]
 
-[# TODO handle: debug-#]
-[! set config.debug = false -!]
+[#- TODO handle: debug-#]
+[!- set config.debug = false -!]
 
-[# TODO handle: no-css -#]
-[! set config.use_css = true -!]
+[#- TODO handle: no-css -#]
+[!- set config.use_css = true -!]
 
-[# TODO handle: no-javascript -#]
-[! set config.use_javascript = true -!]
+[#- TODO handle: no-javascript -#]
+[!- set config.use_javascript = true -!]
 
-[# TODO handle: no-header -#]
-[! set config.show_header = true -!]
+[#- TODO handle: no-header -#]
+[!- set config.show_header = true -!]
 
-[# TODO handle: no-footer -#]
-[! set config.show_footer = true -!]
+[#- TODO handle: no-footer -#]
+[!- set config.show_footer = true -!]
 
+[#-
 [! for section in site.pages[page_id].ast !]
   [! if section.type == "metadata" !]
     [! for flag in section.flags !]
@@ -32,5 +32,5 @@
     [! endfor !]
   [! endif !]
 [! endfor !]
-
+-#]
 

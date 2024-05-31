@@ -11,20 +11,20 @@ use std::path::PathBuf;
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub struct Page {
-    pub ast: Option<Vec<Section>>,
-    pub do_render: bool,
-    pub error: Option<Error>,
-    pub folders: Vec<String>,
-    pub full_output_path: Option<PathBuf>,
-    pub full_cache_path: Option<PathBuf>,
-    pub href: Option<String>,
-    pub id: Option<String>,
-    pub rel_output_path: Option<PathBuf>,
-    pub source_path: PathBuf,
-    pub source_text: String,
-    pub tags: Vec<String>,
-    pub title_as_plain_text: Option<String>,
-    pub title_for_url: Option<String>,
+    pub ast: Option<Vec<Section>>,           // Migration DONE
+    pub do_render: bool,                     // Migration N/A
+    pub error: Option<Error>,                // TODO
+    pub folders: Vec<String>,                // TODO
+    pub full_output_path: Option<PathBuf>,   // Migration N/A
+    pub full_cache_path: Option<PathBuf>,    // Migration N/A
+    pub href: Option<String>,                // Migration DONE
+    pub id: Option<String>,                  // Migration DONE
+    pub rel_output_path: Option<PathBuf>,    // Migration DONE
+    pub source_path: PathBuf,                // Migration DONE
+    pub source_text: String,                 // Migration DONE
+    pub tags: Vec<String>,                   // TODO
+    pub title_as_plain_text: Option<String>, // Migration DONE
+    pub title_for_url: Option<String>,       // Migration DONE
 }
 
 impl Page {
