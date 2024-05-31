@@ -1,7 +1,7 @@
 use crate::section_v39::SectionV39;
 use crate::section_v39::SectionV39Bounds;
 use crate::section_v39::SectionV39Kind;
-use crate::span_v39::span_v39;
+use crate::span_v39::*;
 use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;
 use nom::combinator::eof;

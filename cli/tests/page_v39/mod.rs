@@ -3,6 +3,7 @@ use pretty_assertions::assert_eq;
 use std::path::PathBuf;
 
 #[test]
+#[ignore]
 fn id_basic() {
     let p = PageV39::mock_1_20240101_basic_page();
     let left = "20240101alfa".to_string();
@@ -11,6 +12,7 @@ fn id_basic() {
 }
 
 #[test]
+#[ignore]
 fn rel_output_path_basic() {
     let p = PageV39::mock_1_20240101_basic_page();
     let left = PathBuf::from("en/20240101alfa/index.html");

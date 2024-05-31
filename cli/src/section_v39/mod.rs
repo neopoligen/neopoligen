@@ -14,8 +14,7 @@ use crate::section_v39::basic::*;
 // use crate::section_v39::raw::*;
 // use crate::section_v39::yaml::*;
 use crate::sections::*;
-use crate::span::*;
-use crate::span_v39::SpanV39;
+use crate::span_v39::*;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
@@ -55,18 +54,6 @@ pub enum SectionV39Kind {
     Basic { children: Vec<SectionV39> },
     Block { spans: Vec<SpanV39> },
     Yaml {},
-}
-
-pub fn empty_until_newline_or_eof<'a>(
-    source: &'a str,
-) -> IResult<&'a str, &'a str, ErrorTree<&'a str>> {
-    let (source, _) = alt((
-        tuple((space0, newline.map(|_| ""))),
-        tuple((multispace0, eof.map(|_| ""))),
-    ))
-    .context("")
-    .parse(source)?;
-    Ok((source, ""))
 }
 
 pub fn initial_error<'a>() -> IResult<&'a str, &'a str, ErrorTree<&'a str>> {

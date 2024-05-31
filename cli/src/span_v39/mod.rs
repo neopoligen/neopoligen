@@ -30,9 +30,38 @@ pub enum SpanV39Kind {
     WordPart { text: String },
 }
 
+// TODO: Needs test
+pub fn empty_until_newline_or_eof<'a>(
+    source: &'a str,
+) -> IResult<&'a str, &'a str, ErrorTree<&'a str>> {
+    let (source, _) = alt((
+        tuple((space0, newline_v39.map(|_| ""))),
+        tuple((multispace0, eof.map(|_| ""))),
+    ))
+    .context("")
+    .parse(source)?;
+    Ok((source, ""))
+}
+
 pub fn line_ending_or_eof(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
     let (source, result) = alt((line_ending, eof))(source)?;
     Ok((source, result))
+}
+
+// TODO: Needs test
+pub fn newline_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
+    let (source, _text) = tuple((space0, line_ending)).context("").parse(source)?;
+    let (source, _) = not(tuple((space0, line_ending)))
+        .context("")
+        .parse(source)?;
+    Ok((
+        source,
+        SpanV39 {
+            kind: SpanV39Kind::Space {
+                text: " ".to_string(),
+            },
+        },
+    ))
 }
 
 pub fn space(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {

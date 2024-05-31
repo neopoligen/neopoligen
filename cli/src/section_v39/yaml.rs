@@ -1,6 +1,7 @@
 use crate::section_attr_v39::*;
 use crate::section_v39::block::*;
 use crate::section_v39::*;
+use crate::span_v39::*;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;
@@ -22,7 +23,7 @@ pub fn yaml_section_full_v39<'a>(
         .parse(source)?;
     let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
     let (source, attrs) = many0(section_attr_v39).context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
+    // let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
 
     //
     Ok((
@@ -31,15 +32,10 @@ pub fn yaml_section_full_v39<'a>(
             attrs,
             bounds: SectionV39Bounds::Full,
             kind: SectionV39Kind::Yaml {},
-            r#type: "metadata".to_string(),
+            r#type: r#type.to_string(),
         },
     ))
 }
-//     // dbg!(&source);
-//     let (source, raw_attrs) = many0(section_attr).context("").parse(source)?;
-//     // dbg!(&source);
-//     // dbg!(&source);
-//     // dbg!("a-----------");
 //     let (source, _) = multispace0
 //         .context("")
 //         .parse(source)?;
