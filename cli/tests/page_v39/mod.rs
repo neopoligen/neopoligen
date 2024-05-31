@@ -17,3 +17,10 @@ fn rel_output_path_basic() {
     let right = p.rel_output_path().unwrap();
     assert_eq!(left, right);
 }
+
+#[test]
+fn error_on_invalid_ast() {
+    let mut p = PageV39::mock_invalid_ast_1();
+    let _ = p.generate_ast();
+    dbg!(p);
+}

@@ -5,12 +5,12 @@ use std::fmt;
 // look back into for better error handling
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
-pub struct Error {
-    pub kind: ErrorKind,
+pub struct NeoError {
+    pub kind: NeoErrorKind,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
-pub enum ErrorKind {
+pub enum NeoErrorKind {
     MissingIdError {
         source: String,
     },
@@ -26,10 +26,10 @@ pub enum ErrorKind {
     },
 }
 
-impl fmt::Display for Error {
+impl fmt::Display for NeoError {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         match &self.kind {
-            ErrorKind::ParserError {
+            NeoErrorKind::ParserError {
                 line,
                 column,
                 remainder,
@@ -48,11 +48,11 @@ impl fmt::Display for Error {
                 fmt.write_str("\n")?;
                 fmt.write_str(remainder.as_str())?;
             }
-            ErrorKind::MissingIdError { source } => {
+            NeoErrorKind::MissingIdError { source } => {
                 fmt.write_str("Missing ID\n\n")?;
                 fmt.write_str(source.as_str())?;
             }
-            ErrorKind::RenderTemplate { message } => {
+            NeoErrorKind::RenderTemplate { message } => {
                 fmt.write_str("Problem Rending Template\n\n")?;
                 fmt.write_str(message.as_str())?;
             }

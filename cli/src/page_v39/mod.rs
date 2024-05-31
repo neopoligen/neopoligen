@@ -13,9 +13,21 @@ use std::time::SystemTime;
 pub struct PageV39 {
     pub ast: Option<Vec<SectionV39>>,
     pub config: SiteConfig,
+    pub errors: Vec<PageV39Error>,
     pub fs_modified: Option<SystemTime>,
     pub output_content: Option<String>,
     pub source_content: Option<String>,
+}
+
+#[derive(Clone, Debug)]
+pub struct PageV39Error {
+    kind: PageV39ErrorKind,
+    details: Option<String>,
+}
+
+#[derive(Clone, Debug)]
+pub enum PageV39ErrorKind {
+    ParserError {},
 }
 
 impl PageV39 {
@@ -28,6 +40,7 @@ impl PageV39 {
         Ok(PageV39 {
             ast: None,
             config,
+            errors: vec![],
             fs_modified: Some(fs_modified),
             output_content: None,
             source_content: Some(source_content),
@@ -37,12 +50,19 @@ impl PageV39 {
 
 impl PageV39 {
     pub fn generate_ast(&mut self) -> Result<()> {
-        if let Ok(a) = parse(
+        match parse(
             &self.source_content.as_ref().unwrap(),
             &self.config.sections,
             &self.config.spans,
         ) {
-            self.ast = Some(a);
+            Ok(sections) => self.ast = Some(sections),
+            Err(_e) => (), // self.errors.push({
+                           // dbg!(&e);
+                           // PageV39Error {
+                           // details: Some(e.to_string()),
+                           // kind: PageV39ErrorKind::ParserError {},
+                           // }
+                           // })
         }
         Ok(())
     }

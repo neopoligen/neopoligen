@@ -1,6 +1,6 @@
 pub mod mocks;
 
-use crate::error::*;
+use crate::neo_error::*;
 use crate::section::*;
 use crate::sections::*;
 use nom::multi::many1;
@@ -50,7 +50,7 @@ pub fn ast<'a>(
     source: &'a str,
     sections: &'a Sections,
     spans: &'a Vec<String>,
-) -> Result<Vec<Section>, Error> {
+) -> Result<Vec<Section>, NeoError> {
     match final_parser(|src| do_parse(src, &sections, &spans))(source) {
         Ok(data) => Ok(data),
         Err(e) => Err(get_error(source, &e)),
@@ -68,12 +68,12 @@ fn do_parse<'a>(
     Ok((source, result))
 }
 
-fn get_error(content: &str, tree: &ErrorTree<&str>) -> Error {
+fn get_error(content: &str, tree: &ErrorTree<&str>) -> NeoError {
     match tree {
         GenericErrorTree::Base { location, kind } => {
             let details = Location::recreate_context(content, location);
-            Error {
-                kind: ErrorKind::ParserError {
+            NeoError {
+                kind: NeoErrorKind::ParserError {
                     line: details.line,
                     column: details.column,
                     source: content.to_string(),
@@ -85,8 +85,8 @@ fn get_error(content: &str, tree: &ErrorTree<&str>) -> Error {
         GenericErrorTree::Stack { contexts, .. } => {
             let context = contexts[0];
             let details = Location::recreate_context(content, context.0);
-            Error {
-                kind: ErrorKind::ParserError {
+            NeoError {
+                kind: NeoErrorKind::ParserError {
                     line: details.line,
                     column: details.column,
                     source: content.to_string(),
