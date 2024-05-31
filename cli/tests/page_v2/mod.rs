@@ -29,6 +29,22 @@ fn only_sections_basic_is_ok() {
     assert!(p.only_sections(&[Value::from("title")]).is_ok());
 }
 
+#[test]
+fn type_default_when_no_metadata() {
+    let p = PageV2::mock_1_with_ast();
+    let left = Value::from("post".to_string());
+    let right = p.type_v2().unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn type_from_metadata() {
+    let p = PageV2::mock_2_home_page();
+    let left = Value::from("home-page".to_string());
+    let right = p.type_v2().unwrap();
+    assert_eq!(left, right);
+}
+
 // #[test]
 // fn date_basic() {
 //     let p = PageV2::mock_1_with_ast();

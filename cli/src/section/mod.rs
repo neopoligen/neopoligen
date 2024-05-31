@@ -61,6 +61,8 @@ pub enum Section {
     },
     Checklist {
         attrs: BTreeMap<String, String>,
+        // TODO
+        // attr_list: Vec<SectionAttr>,
         r#type: String,
         children: Vec<Section>,
         flags: Vec<String>,
@@ -74,6 +76,9 @@ pub enum Section {
         r#type: String,
     },
     Comment {
+        // TODO
+        // attrs: BTreeMap<String, String>,
+        // attr_list: Vec<SectionAttr>,
         bounds: String,
         r#type: String,
         text: Option<String>,
@@ -81,6 +86,8 @@ pub enum Section {
     },
     Generic {
         attrs: BTreeMap<String, String>,
+        // TODO
+        // attr_list: Vec<SectionAttr>,
         bounds: String,
         children: Vec<Section>,
         flags: Vec<String>,
@@ -88,6 +95,8 @@ pub enum Section {
     },
     Json {
         attrs: BTreeMap<String, String>,
+        // TODO
+        // attr_list: Vec<SectionAttr>,
         bounds: String,
         r#type: String,
         data: Option<String>,
@@ -96,6 +105,8 @@ pub enum Section {
     },
     List {
         attrs: BTreeMap<String, String>,
+        // TODO
+        // attr_list: Vec<SectionAttr>,
         bounds: String,
         children: Vec<Section>,
         flags: Vec<String>,
@@ -108,6 +119,8 @@ pub enum Section {
     },
     Raw {
         attrs: BTreeMap<String, String>,
+        // TODO
+        // attr_list: Vec<SectionAttr>,
         bounds: String,
         children: Vec<Section>,
         flags: Vec<String>,
@@ -117,6 +130,8 @@ pub enum Section {
     TagFinderInit,
     Yaml {
         attrs: BTreeMap<String, String>,
+        // TODO
+        // attr_list: Vec<SectionAttr>,
         bounds: String,
         children: Vec<Section>,
         data: Option<String>,

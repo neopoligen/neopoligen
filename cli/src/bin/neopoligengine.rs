@@ -91,6 +91,7 @@ fn build_site(site_config: &SiteConfig) {
         let _ = builder.test_theme();
         let _ = builder.debug_flush_cache();
         let _ = empty_dir(&site_config.output_dir());
+        let _ = empty_dir(&site_config.status_dir());
         let _ = builder.prep_dirs();
         let _ = builder.load_source_images();
         let _ = builder.load_cached_images();

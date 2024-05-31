@@ -815,7 +815,10 @@ body { background-color: #111; color: #aaa; }
 <ul>
 [! for issue in builder.issues() !]
 <li>
-[! include issue.kind().kind + ".neoj" "error-to-do.neoj" !]
+<div>Kind> [@ issue.kind().kind @]</div>
+<div>
+[! include issue.kind().kind + ".neoj" "error-to-do.neoj" ignore missing !]
+</div>
 [! endfor !]
 </li>
 </ul>

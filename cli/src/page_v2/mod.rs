@@ -462,6 +462,14 @@ impl PageV2 {
         })
     }
 
+    pub fn type_v2(&self) -> Result<Value, Error> {
+        if let Some(t) = self.get_metadata_attr("type") {
+            Ok(Value::from(t))
+        } else {
+            Ok(Value::from("post".to_string()))
+        }
+    }
+
     pub fn r#type(&self) -> Option<String> {
         if let Some(t) = self.get_metadata_attr("type") {
             Some(t)
