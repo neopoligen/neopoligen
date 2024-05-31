@@ -6,7 +6,11 @@ This is a title
 
 -- expected-output/
 
-This is a title
+<section class="title-section basic-default-category-section flow">
+  <div class="page-heading">
+    <h1>This is a title</h1>
+  </div>
+</section>
 
 -- /expected-output
 
