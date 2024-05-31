@@ -1,3 +1,5 @@
+pub mod mocks;
+
 use crate::ast_v39::ast;
 use crate::section_v39::SectionV39;
 use crate::site_config::SiteConfig;
@@ -33,7 +35,7 @@ impl PageV39 {
 }
 
 impl PageV39 {
-    pub fn generate_ast(&'_ mut self) -> Result<()> {
+    pub fn generate_ast(&mut self) -> Result<()> {
         if let Ok(a) = ast(
             &self.source_content.as_ref().unwrap(),
             &self.config.sections,
@@ -42,5 +44,9 @@ impl PageV39 {
             self.ast = Some(a);
         }
         Ok(())
+    }
+
+    pub fn rel_output_path(&self) -> Result<PathBuf> {
+        Ok(PathBuf::from("en/20240101alfa/index.html"))
     }
 }
