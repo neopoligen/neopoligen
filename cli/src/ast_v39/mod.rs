@@ -50,7 +50,7 @@ pub fn ast<'a>(
     source: &'a str,
     sections: &'a Sections,
     spans: &'a Vec<String>,
-) -> Result<Vec<SectionV39<'a>>, Error> {
+) -> Result<Vec<SectionV39>, Error> {
     match final_parser(|src| do_parse(src, &sections, &spans))(source) {
         Ok(data) => Ok(data),
         Err(e) => Err(get_error(source, &e)),
@@ -61,7 +61,7 @@ fn do_parse<'a>(
     source: &'a str,
     sections: &'a Sections,
     spans: &'a Vec<String>,
-) -> IResult<&'a str, Vec<SectionV39<'a>>, ErrorTree<&'a str>> {
+) -> IResult<&'a str, Vec<SectionV39>, ErrorTree<&'a str>> {
     let (source, result) = many1(|src| start_or_full_section_v39(src, &sections, spans))
         .context("page")
         .parse(source)?;

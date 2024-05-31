@@ -35,10 +35,10 @@ use serde::Serialize;
 use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct SectionV39<'a> {
+pub struct SectionV39 {
     pub attrs: Vec<SectionAttrV39>,
     pub bounds: SectionV39Bounds,
-    pub kind: SectionV39Kind<'a>,
+    pub kind: SectionV39Kind,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -49,13 +49,13 @@ pub enum SectionV39Bounds {
 }
 
 #[derive(Clone, Debug, PartialEq)]
-pub enum SectionV39Kind<'a> {
+pub enum SectionV39Kind {
     Basic {
-        children: Vec<SectionV39<'a>>,
+        children: Vec<SectionV39>,
         r#type: String,
     },
     Block {
-        spans: Vec<SpanV39<'a>>,
+        spans: Vec<SpanV39>,
     },
 }
 
@@ -84,7 +84,7 @@ pub fn start_or_full_section_v39<'a>(
     source: &'a str,
     sections: &'a Sections,
     spans: &'a Vec<String>,
-) -> IResult<&'a str, SectionV39<'a>, ErrorTree<&'a str>> {
+) -> IResult<&'a str, SectionV39, ErrorTree<&'a str>> {
     let (source, results) = alt((
         |src| basic_section_full(src, &sections, &spans),
         // |src| basic_section_start(src, &sections, &spans),

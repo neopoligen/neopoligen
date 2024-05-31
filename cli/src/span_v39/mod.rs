@@ -19,14 +19,14 @@ use serde::Serialize;
 use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct SpanV39<'a> {
-    pub kind: SpanV39Kind<'a>,
+pub struct SpanV39 {
+    pub kind: SpanV39Kind,
 }
 
 #[derive(Clone, Debug, PartialEq)]
-pub enum SpanV39Kind<'a> {
-    Space { text: &'a str },
-    WordPart { text: &'a str },
+pub enum SpanV39Kind {
+    Space { text: String },
+    WordPart { text: String },
 }
 
 pub fn space(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
@@ -34,7 +34,9 @@ pub fn space(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
     Ok((
         source,
         SpanV39 {
-            kind: SpanV39Kind::Space { text },
+            kind: SpanV39Kind::Space {
+                text: text.to_string(),
+            },
         },
     ))
 }
@@ -42,7 +44,7 @@ pub fn space(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
 pub fn span_v39<'a>(
     source: &'a str,
     _spans: &'a Vec<String>,
-) -> IResult<&'a str, SpanV39<'a>, ErrorTree<&'a str>> {
+) -> IResult<&'a str, SpanV39, ErrorTree<&'a str>> {
     let (source, span) = alt((word_part, space))(source)?;
     Ok((source, span))
 }
@@ -52,7 +54,9 @@ pub fn word_part(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
     Ok((
         source,
         SpanV39 {
-            kind: SpanV39Kind::WordPart { text },
+            kind: SpanV39Kind::WordPart {
+                text: text.to_string(),
+            },
         },
     ))
 }

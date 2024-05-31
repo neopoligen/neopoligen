@@ -18,7 +18,7 @@ pub struct BlockV39 {}
 pub fn block_of_anything_v39<'a>(
     source: &'a str,
     spans: &'a Vec<String>,
-) -> IResult<&'a str, SectionV39<'a>, ErrorTree<&'a str>> {
+) -> IResult<&'a str, SectionV39, ErrorTree<&'a str>> {
     let (source, _) = not(eof).context("").parse(source)?;
     let (source, _) = not(tag("--")).context("").parse(source)?;
     let (source, spans) = many0(|src| span_v39(src, spans))

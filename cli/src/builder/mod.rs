@@ -35,8 +35,8 @@ use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 
 #[derive(Clone, Debug)]
-pub struct Builder<'a> {
-    pub pages: BTreeMap<PathBuf, PageV39<'a>>,
+pub struct Builder {
+    pub pages: BTreeMap<PathBuf, PageV39>,
     pub config: SiteConfig,
     pub issues: Vec<BuildIssue>,
     pub feeds: BTreeMap<String, Feed>,
@@ -45,8 +45,8 @@ pub struct Builder<'a> {
     pub mp3s: BTreeMap<String, SiteMp3>,
 }
 
-impl Builder<'_> {
-    pub fn new(config: SiteConfig) -> Result<Builder<'static>> {
+impl Builder {
+    pub fn new(config: SiteConfig) -> Result<Builder> {
         Ok(Builder {
             config,
             issues: vec![],
@@ -59,7 +59,7 @@ impl Builder<'_> {
     }
 }
 
-impl Builder<'_> {
+impl Builder {
     #[instrument(skip(self))]
     pub fn generate_missing_asts(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating ASTs");
@@ -73,11 +73,9 @@ impl Builder<'_> {
 
     #[instrument(skip(self))]
     pub fn generate_page_content(&mut self) -> Result<()> {
-        event!(Level::INFO, "Generating Pages");
-
+        event!(Level::INFO, "Generating Page Content");
         for (_, page) in self.pages.iter_mut() {
             dbg!(&page);
-
             ()
         }
         Ok(())
