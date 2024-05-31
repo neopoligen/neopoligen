@@ -8,7 +8,7 @@ impl PageV39 {
             errors: vec![],
             fs_modified: None,
             output_content: None,
-            source_content: Some("-- title\n\nAlfa Bravo\n\n-- metadata\n-- id: 20240101alfa\n-- created: 2024-05-31T12:25:52-04:00".to_string()),
+            source_content: Some("-- title\n\nAlfa Bravo\n\n-- metadata\n-- id: 20240101alfa\n-- created: 2024-05-31T12:25:52-04:00\n\n".to_string()),
         };
         let _ = p.generate_ast();
         p

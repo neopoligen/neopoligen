@@ -93,6 +93,7 @@ fn build_site(site_config: &SiteConfig) {
         let _ = builder.load_source_files();
         let _ = builder.generate_missing_asts();
         let _ = builder.generate_page_content();
+        let _ = builder.output_pages();
 
         // This is the v38 order of things which wasn't
         // necessarily optimized. It's here now just

@@ -20,11 +20,11 @@ pub struct PageV39 {
     pub source_content: Option<String>,
 }
 
-#[derive(Clone, Debug)]
-pub struct PageV39Error {
-    kind: PageV39ErrorKind,
-    details: Option<String>,
-}
+// #[derive(Clone, Debug)]
+// pub struct PageV39Error {
+//     kind: PageV39ErrorKind,
+//     details: Option<String>,
+// }
 
 #[derive(Clone, Debug)]
 pub enum PageV39ErrorKind {

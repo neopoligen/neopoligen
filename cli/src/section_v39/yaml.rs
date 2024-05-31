@@ -4,8 +4,11 @@ use crate::section_v39::*;
 use crate::span_v39::*;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
+use nom::bytes::complete::take_until;
 use nom::character::complete::multispace0;
+use nom::combinator::rest;
 use nom::multi::many0;
+use nom::multi::many1;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -23,9 +26,13 @@ pub fn yaml_section_full_v39<'a>(
         .parse(source)?;
     let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
     let (source, attrs) = many0(section_attr_v39).context("").parse(source)?;
-    // let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-
-    //
+    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
+    let (source, text) = alt((take_until("\n--"), rest, eof))
+        .context("")
+        .parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
+    // TODO: convert text to data.
     Ok((
         source,
         SectionV39 {

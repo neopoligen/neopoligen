@@ -75,8 +75,7 @@ impl Builder {
     pub fn generate_page_content(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating Page Content");
         for (_, page) in self.pages.iter_mut() {
-            // dbg!(&page);
-            ()
+            page.output_content = Some("this is the content".to_string());
         }
         Ok(())
     }
@@ -120,6 +119,24 @@ impl Builder {
                     }
                 }
             });
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn output_pages(&self) -> Result<()> {
+        event!(Level::INFO, "Outputting Pages");
+        for (_, page) in self.pages.iter() {
+            if page.errors.len() == 0 {
+                if let (Ok(rel_output_path), Some(output_content)) =
+                    (page.rel_output_path(), page.output_content.clone())
+                {
+                    let output_path = self.config.output_dir().join(rel_output_path);
+                    let _ = write_file_with_mkdir(&output_path, &output_content);
+                }
+            } else {
+                dbg!("ERROR");
+            }
+        }
         Ok(())
     }
 
@@ -1020,7 +1037,7 @@ pub fn get_files_with_extension_in_a_single_directory(
 //     trimmed_front.trim_end().to_string()
 // }
 
-fn _write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
+fn write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
     match path.parent() {
         Some(parent_dir) => match fs::create_dir_all(parent_dir) {
             Ok(_) => match fs::write(path, content) {
