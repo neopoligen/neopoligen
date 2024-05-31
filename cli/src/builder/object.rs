@@ -12,7 +12,7 @@ impl Object for Builder {
         args: &[Value],
     ) -> Result<Value, Error> {
         match name {
-            "issues" => self.issues(args),
+            "page_errors" => Ok(Value::from_serialize(self.page_errors())),
             _ => Ok(Value::from("[Error: called non-existing function")),
         }
     }

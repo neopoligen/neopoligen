@@ -34,7 +34,7 @@ use serde::Deserialize;
 use serde::Serialize;
 use std::collections::BTreeMap;
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct SectionV39 {
     pub attrs: Vec<SectionAttrV39>,
     pub bounds: SectionV39Bounds,
@@ -42,14 +42,14 @@ pub struct SectionV39 {
     pub r#type: String,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize)]
 pub enum SectionV39Bounds {
     Full,
     Start,
     End,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize)]
 pub enum SectionV39Kind {
     Basic { children: Vec<SectionV39> },
     Block { spans: Vec<SpanV39> },

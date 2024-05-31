@@ -15,13 +15,14 @@ use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
+use serde::Serialize;
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct SectionAttrV39 {
     pub kind: SectionAttrV39Kind,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize)]
 pub enum SectionAttrV39Kind {
     KeyValue { key: String, value: String },
     Flag { flag: String },

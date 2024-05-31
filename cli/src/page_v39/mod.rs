@@ -6,11 +6,12 @@ use crate::section_attr_v39::SectionAttrV39Kind;
 use crate::section_v39::{SectionV39, SectionV39Kind};
 use crate::site_config::SiteConfig;
 use anyhow::Result;
+use serde::Serialize;
 use std::fs;
 use std::path::PathBuf;
 use std::time::SystemTime;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
 pub struct PageV39 {
     pub ast: Option<Vec<SectionV39>>,
     pub config: SiteConfig,
@@ -26,10 +27,10 @@ pub struct PageV39 {
 //     details: Option<String>,
 // }
 
-#[derive(Clone, Debug)]
-pub enum PageV39ErrorKind {
-    ParserError {},
-}
+// #[derive(Clone, Debug)]
+// pub enum PageV39ErrorKind {
+//     ParserError {},
+// }
 
 impl PageV39 {
     pub fn new_from_fs(

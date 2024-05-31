@@ -1,11 +1,13 @@
 use serde::Serialize;
 use std::fmt;
+use std::path::PathBuf;
 
 // Currently Deprecated as of site_v2, but something to
 // look back into for better error handling
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct NeoError {
+    //pub source_path: Option<PathBuf>,
     pub kind: NeoErrorKind,
 }
 

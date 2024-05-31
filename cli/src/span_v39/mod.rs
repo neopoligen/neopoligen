@@ -19,12 +19,12 @@ use serde::Deserialize;
 use serde::Serialize;
 use std::collections::BTreeMap;
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct SpanV39 {
     pub kind: SpanV39Kind,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize)]
 pub enum SpanV39Kind {
     Space { text: String },
     WordPart { text: String },

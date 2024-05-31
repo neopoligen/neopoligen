@@ -7,6 +7,7 @@ use crate::build_issue::*;
 use crate::feed::Feed;
 use crate::helpers::*;
 use crate::image::Image;
+use crate::neo_error::NeoError;
 use crate::og_image::*;
 use crate::page_v39::PageV39;
 use crate::site_config::SiteConfig;
@@ -124,25 +125,51 @@ impl Builder {
 
     #[instrument(skip(self))]
     pub fn output_errors(&self) -> Result<()> {
-        // This is just a tmp output to get things going
         event!(Level::INFO, "Outputting Error Pages");
-        let error_path = self.config.status_dir().join("index.html");
-        let mut tmp = String::from("");
-        for (_, page) in self.pages.iter() {
-            if page.errors.len() > 0 {
-                for error in page.errors.iter() {
-                    tmp.push_str(&error.to_string())
-                }
+        let mut env = Environment::new();
+        env.set_debug(true);
+        env.set_lstrip_blocks(true);
+        env.set_trim_blocks(true);
+        env.set_syntax(
+            SyntaxConfig::builder()
+                .block_delimiters("[!", "!]")
+                .variable_delimiters("[@", "@]")
+                .comment_delimiters("[#", "#]")
+                .build()
+                .unwrap(),
+        );
 
-                // if let (Ok(rel_output_path), Some(output_content)) =
-                //     (page.rel_output_path(), page.output_content.clone())
-                // {
-                //     let output_path = self.config.output_dir().join(rel_output_path);
-                //     let _ = write_file_with_mkdir(&output_path, &output_content);
-                // }
+        let template_name = "basic-status-page.neoj";
+        let _ = env.add_template_owned(
+            template_name,
+            r#"<!DOCTYPE html>
+<html><head>
+<style>
+body { background-color: #111; color: #aaa; }
+</style>
+</head><body>
+<ul>
+[! for page_error in builder.page_errors() !]
+<li>
+<h3>[@ page_error[0] @]</h3>
+<div>[@ page_error[1] @]</div>
+</li>
+[! endfor !]
+</ul>
+</body></html>"#,
+        );
+
+        if let Ok(tmpl) = env.get_template(template_name) {
+            match tmpl.render(context!(
+            builder => Value::from_object(self.clone())
+            )) {
+                Ok(output) => {
+                    let error_path = self.config.status_dir().join("index.html");
+                    let _ = write_file_with_mkdir(&error_path, &output);
+                }
+                Err(_e) => {}
             }
         }
-        let _ = write_file_with_mkdir(&error_path, &tmp);
         Ok(())
     }
 
@@ -160,6 +187,21 @@ impl Builder {
             }
         }
         Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn page_errors(&self) -> Vec<(String, NeoError)> {
+        event!(Level::INFO, "Making Sure Directories Exist");
+        self.pages
+            .iter()
+            .filter_map(|(_, p)| {
+                if p.errors.len() > 0 {
+                    Some(("ADD name here".to_string(), p.errors[0].clone()))
+                } else {
+                    None
+                }
+            })
+            .collect()
     }
 
     #[instrument(skip(self))]
