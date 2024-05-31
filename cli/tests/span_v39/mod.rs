@@ -8,7 +8,9 @@ fn word_part_basic() {
     let left = (
         " ",
         SpanV39 {
-            kind: SpanV39Kind::WordPart { text: "alfa" },
+            kind: SpanV39Kind::WordPart {
+                text: "alfa".to_string(),
+            },
         },
     );
     let right = span_v39(source, &config.spans).unwrap();
@@ -22,7 +24,9 @@ fn space_basic() {
     let left = (
         "",
         SpanV39 {
-            kind: SpanV39Kind::Space { text: " " },
+            kind: SpanV39Kind::Space {
+                text: " ".to_string(),
+            },
         },
     );
     let right = span_v39(source, &config.spans).unwrap();

@@ -22,13 +22,19 @@ fn basic_section_basic_test() {
                     kind: SectionV39Kind::Block {
                         spans: vec![
                             SpanV39 {
-                                kind: SpanV39Kind::WordPart { text: "Hello" },
+                                kind: SpanV39Kind::WordPart {
+                                    text: "Hello".to_string(),
+                                },
                             },
                             SpanV39 {
-                                kind: SpanV39Kind::Space { text: " " },
+                                kind: SpanV39Kind::Space {
+                                    text: " ".to_string(),
+                                },
                             },
                             SpanV39 {
-                                kind: SpanV39Kind::WordPart { text: "World" },
+                                kind: SpanV39Kind::WordPart {
+                                    text: "World".to_string(),
+                                },
                             },
                         ],
                     },
