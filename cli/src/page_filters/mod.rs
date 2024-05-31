@@ -48,6 +48,7 @@ pub struct PageFilterAndGroup {
 #[derive(Debug, PartialEq)]
 pub enum PageFilter {
     Status { exclude: bool, value: String },
+    Type { exclude: bool, value: String },
 }
 
 impl PageFilter {
@@ -59,6 +60,7 @@ impl PageFilter {
             };
             match parts.0 {
                 "status" => Some(PageFilter::Status { exclude, value }),
+                "type" => Some(PageFilter::Type { exclude, value }),
                 _ => None,
             }
         } else {

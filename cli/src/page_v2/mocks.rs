@@ -40,7 +40,7 @@ Home Page Mock Up
 -- metadata
 -- id: bravo123 
 -- title: Title From Metadata
--- type: home-page
+-- type: home-page 
 -- path: /
 "#
         .trim_start()

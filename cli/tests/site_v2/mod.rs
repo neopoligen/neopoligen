@@ -35,6 +35,30 @@ fn collection_by_date_status_not_published() {
 }
 
 #[test]
+fn collection_by_date_type_post() {
+    let site = SiteV2::mock1();
+    let left = Value::from_serialize(vec![
+        "alfa1234".to_string(),
+        "hotel123".to_string(),
+        "golf1234".to_string(),
+        "foxtrot1".to_string(),
+        "charlie1".to_string(),
+    ]);
+    let args = [Value::from_serialize(vec!["type:post"])];
+    let right = site.collection_by_date(&args).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn collection_by_date_type_not_post() {
+    let site = SiteV2::mock1();
+    let left = Value::from_serialize(vec!["delta123".to_string(), "echo1234".to_string()]);
+    let args = [Value::from_serialize(vec!["type:!post"])];
+    let right = site.collection_by_date(&args).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
 fn collection_by_title_with_date_basic() {
     // to _with_date so the values returned match
     // what you'd get from collection_by_date.

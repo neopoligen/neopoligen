@@ -239,6 +239,23 @@ impl PageV2 {
                             }
                         }
                     }
+
+                    PageFilter::Type { exclude, value } => {
+                        if let Ok(t) = self.type_v2() {
+                            let t = t.to_string();
+                            if *exclude == true {
+                                if *value == t {
+                                    found_exclude = true;
+                                } else {
+                                    found_include = true;
+                                }
+                            } else {
+                                if *value == t {
+                                    found_include = true;
+                                }
+                            }
+                        }
+                    }
                 }
             }
             if found_include && !found_exclude {
