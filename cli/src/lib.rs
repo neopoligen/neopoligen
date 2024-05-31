@@ -1,6 +1,7 @@
 pub mod ast;
 pub mod ast_v39;
 pub mod block;
+pub mod block_v39;
 pub mod build_issue;
 pub mod builder;
 pub mod engine_config;
@@ -22,4 +23,5 @@ pub mod site;
 pub mod site_config;
 pub mod site_v2;
 pub mod span;
+pub mod span_v39;
 pub mod template_test;

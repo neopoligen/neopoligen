@@ -4,9 +4,9 @@ use minijinja::Error;
 use std::fmt::Display;
 use std::sync::Arc;
 
-impl Object for Builder {
+impl Object for Builder<'static> {
     fn call_method(
-        self: &Arc<Builder>,
+        self: &Arc<Builder<'static>>,
         _state: &minijinja::State,
         name: &str,
         args: &[Value],
@@ -18,7 +18,7 @@ impl Object for Builder {
     }
 }
 
-impl Builder {
+impl Builder<'_> {
     pub fn issues(&self, _args: &[Value]) -> Result<Value, Error> {
         Ok(Value::from_serialize(
             &self
@@ -30,7 +30,7 @@ impl Builder {
     }
 }
 
-impl Display for Builder {
+impl Display for Builder<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "builder")
     }

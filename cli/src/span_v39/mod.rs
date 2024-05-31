@@ -1,0 +1,41 @@
+#![allow(unused_imports)]
+
+use nom::branch::alt;
+use nom::bytes::complete::is_not;
+use nom::bytes::complete::tag;
+use nom::character::complete::line_ending;
+use nom::character::complete::multispace0;
+use nom::character::complete::space0;
+use nom::character::complete::space1;
+use nom::combinator::not;
+use nom::multi::many0;
+use nom::sequence::tuple;
+use nom::IResult;
+use nom::Parser;
+use nom_supreme::error::ErrorTree;
+use nom_supreme::parser_ext::ParserExt;
+use serde::Deserialize;
+use serde::Serialize;
+use std::collections::BTreeMap;
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct SpanV39<'a> {
+    pub kind: SpanV39Kind<'a>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum SpanV39Kind<'a> {
+    WordPart { text: &'a str },
+}
+
+pub fn span_v39<'a>(
+    source: &'a str,
+    _spans: &'a Vec<String>,
+) -> IResult<&'a str, SpanV39<'a>, ErrorTree<&'a str>> {
+    Ok((
+        source,
+        SpanV39 {
+            kind: SpanV39Kind::WordPart { text: "asdf" },
+        },
+    ))
+}

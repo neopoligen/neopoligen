@@ -8,7 +8,6 @@ use crate::feed::Feed;
 use crate::helpers::*;
 use crate::image::Image;
 use crate::og_image::*;
-//use crate::page_v2::PageV2;
 use crate::page_v39::PageV39;
 use crate::site_config::SiteConfig;
 use crate::site_v2::SiteMp3;
@@ -36,8 +35,8 @@ use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 
 #[derive(Clone, Debug)]
-pub struct Builder {
-    pub pages: BTreeMap<PathBuf, PageV39>,
+pub struct Builder<'a> {
+    pub pages: BTreeMap<PathBuf, PageV39<'a>>,
     pub config: SiteConfig,
     pub issues: Vec<BuildIssue>,
     pub feeds: BTreeMap<String, Feed>,
@@ -46,8 +45,8 @@ pub struct Builder {
     pub mp3s: BTreeMap<String, SiteMp3>,
 }
 
-impl Builder {
-    pub fn new(config: SiteConfig) -> Result<Builder> {
+impl Builder<'_> {
+    pub fn new(config: SiteConfig) -> Result<Builder<'static>> {
         Ok(Builder {
             config,
             issues: vec![],
@@ -60,7 +59,7 @@ impl Builder {
     }
 }
 
-impl Builder {
+impl Builder<'_> {
     #[instrument(skip(self))]
     pub fn generate_missing_asts(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating ASTs");
@@ -69,13 +68,6 @@ impl Builder {
                 page.generate_ast()?;
             }
         }
-
-        // self.pages.iter_mut().for_each(|p| {
-        //     if p.1.ast.len() == 0 {
-        //         p.1.generate_ast(&self.config);
-        //     }
-        // });
-
         Ok(())
     }
 
@@ -101,7 +93,8 @@ impl Builder {
                             content,
                         ) {
                             Ok(page) => {
-                                dbg!(page);
+                                self.pages.insert(source_path, page);
+                                ()
                             }
                             Err(e) => {
                                 self.issues.push(BuildIssue {

@@ -2,6 +2,7 @@
 
 pub mod basic;
 
+use crate::section_attr_v39::SectionAttrV39;
 use crate::section_v39::basic::*;
 // use crate::section_v39::checklist::*;
 // use crate::section_v39::comment::*;
@@ -12,6 +13,7 @@ use crate::section_v39::basic::*;
 // use crate::section_v39::yaml::*;
 use crate::sections::*;
 use crate::span::*;
+use crate::span_v39::SpanV39;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
@@ -32,7 +34,29 @@ use serde::Serialize;
 use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct SectionV39 {}
+pub struct SectionV39<'a> {
+    pub attrs: Vec<SectionAttrV39>,
+    pub bounds: SectionV39Bounds,
+    pub kind: SectionV39Kind<'a>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum SectionV39Bounds {
+    Full,
+    Start,
+    End,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum SectionV39Kind<'a> {
+    Basic {
+        children: Vec<SectionV39<'a>>,
+        r#type: String,
+    },
+    Block {
+        spans: Vec<SpanV39<'a>>,
+    },
+}
 
 pub fn empty_until_newline_or_eof<'a>(
     source: &'a str,
@@ -59,7 +83,7 @@ pub fn start_or_full_section_v39<'a>(
     source: &'a str,
     sections: &'a Sections,
     spans: &'a Vec<String>,
-) -> IResult<&'a str, SectionV39, ErrorTree<&'a str>> {
+) -> IResult<&'a str, SectionV39<'a>, ErrorTree<&'a str>> {
     let (source, results) = alt((
         |src| basic_section_full(src, &sections, &spans),
         // |src| basic_section_start(src, &sections, &spans),
