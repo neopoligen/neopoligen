@@ -91,8 +91,11 @@ impl PageV39 {
     }
 
     pub fn rel_output_path(&self) -> Option<PathBuf> {
-        if let Some(path_override) = self.get_metadata_attr("path") {
-            Some(PathBuf::from(format!("{}/index.html", path_override)))
+        // TODO: Reminder: Put output path check in the builder
+        // to prevent files from being written outside the
+        // output root.
+        if let Some(override_path) = self.get_metadata_attr("path") {
+            self.rel_output_path_scrubber(&override_path)
         } else {
             if let (Ok(lang), Some(id)) = (self.config.default_language(), self.id()) {
                 Some(PathBuf::from(format!("{}/{}/index.html", lang, id)))
@@ -103,15 +106,16 @@ impl PageV39 {
     }
 
     pub fn rel_output_path_scrubber(&self, source: &str) -> Option<PathBuf> {
-        // TODO: Add measures in here to keep from moving outside
-        // the document root. Also add them in the output function
-        // in the builder itself.
-
-        if let Some(initial_string) = source.strip_prefix("/") {
-            if initial_string == "" {
+        if let Some(scrubbed_string) = source.strip_prefix("/") {
+            if scrubbed_string == "" {
                 Some(PathBuf::from("index.html"))
             } else {
-                Some(PathBuf::from(format!("{}/index.html", initial_string)))
+                let p = PathBuf::from(scrubbed_string);
+                if let Some(_) = p.extension() {
+                    Some(p)
+                } else {
+                    Some(p.join("index.html"))
+                }
             }
         } else {
             None

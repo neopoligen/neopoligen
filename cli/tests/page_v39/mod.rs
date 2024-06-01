@@ -68,6 +68,15 @@ fn rel_output_path_scrubber_with_dir_name() {
 }
 
 #[test]
+fn rel_output_path_scrubber_with_file_name() {
+    let p = PageV39::mock_1_20240101_basic_page();
+    let source = "/bravo.txt";
+    let left = PathBuf::from("bravo.txt");
+    let right = p.rel_output_path_scrubber(source).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
 fn status_defaults_to_published() {
     let p = PageV39::mock_1_20240101_basic_page();
     let left = "published".to_string();
