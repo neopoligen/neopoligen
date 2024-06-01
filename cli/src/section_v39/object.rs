@@ -12,7 +12,7 @@ impl Object for SectionV39 {
         _args: &[Value],
     ) -> Result<Value, Error> {
         match name {
-            "ping" => self.ping(),
+            "template" => self.template(),
             "type" => Ok(Value::from(&self.r#type)),
             _ => Ok(Value::from("[Error: called non-existing function")),
         }

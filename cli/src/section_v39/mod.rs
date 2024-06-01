@@ -7,6 +7,7 @@ pub mod object;
 pub mod yaml;
 
 use crate::section_attr_v39::SectionAttrV39;
+use crate::section_attr_v39::SectionAttrV39Kind;
 use crate::section_v39::basic::*;
 // use crate::section_v39::checklist::*;
 // use crate::section_v39::comment::*;
@@ -65,15 +66,20 @@ impl SectionV39 {
         &self.r#type
     }
     pub fn template(&self) -> Result<Value, Error> {
-        if let Some(attr) = self.attrs.iter().find_map(|attr| Some("asdf")) {
+        if let Some(attr) = self.attrs.iter().find_map(|attr| match &attr.kind {
+            SectionAttrV39Kind::KeyValue { key, value } => {
+                if key == "template" {
+                    Some(value)
+                } else {
+                    None
+                }
+            }
+            _ => None,
+        }) {
             Ok(Value::from(attr))
         } else {
             Ok(Value::from("default"))
         }
-    }
-
-    pub fn ping(&self) -> Result<Value, Error> {
-        Ok(Value::from("HERE"))
     }
 }
 
