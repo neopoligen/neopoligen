@@ -55,9 +55,8 @@ impl PageV39 {
 }
 
 impl PageV39 {
-    pub fn all_sections(self) -> Result<Vec<SectionV39>> {
-        Ok(vec![])
-        //        Ok(self.ast.unwrap().iter().map(|section| section).collect())
+    pub fn all_sections(&self) -> Result<&Vec<SectionV39>> {
+        Ok(&self.ast.as_ref().unwrap())
     }
 
     pub fn generate_ast(&mut self) -> Result<()> {
