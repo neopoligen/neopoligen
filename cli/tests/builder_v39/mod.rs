@@ -3,6 +3,6 @@ use neopoligengine::builder_v39::BuilderV39;
 
 #[test]
 fn config_getter() {
-    // let builder = BuilderV39::mock1();
-    // assert!(builder.config().is_some());
+    let builder = BuilderV39::mock1();
+    assert!(builder.config().is_some());
 }

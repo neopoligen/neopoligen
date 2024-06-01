@@ -58,6 +58,10 @@ impl BuilderV39 {
 }
 
 impl BuilderV39 {
+    pub fn config(&self) -> Option<SiteConfig> {
+        Some(self.config.clone())
+    }
+
     #[instrument(skip(self))]
     pub fn generate_missing_asts(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating ASTs");

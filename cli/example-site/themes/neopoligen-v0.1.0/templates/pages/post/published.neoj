@@ -26,8 +26,4 @@ body {
       <div>Page status: [@ page.status() @]</div>
     </div>
 
-    <h2>Site Config</h2>
-    <pre>[@ site.config()|tojson(true) @]</pre>
-    
-    
 </body>
