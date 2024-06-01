@@ -62,6 +62,14 @@ pub enum SectionV39Kind {
 }
 
 impl SectionV39 {
+    pub fn bounds(&self) -> Option<String> {
+        match self.bounds {
+            SectionV39Bounds::Full => Some("full".to_string()),
+            SectionV39Bounds::Start => Some("start".to_string()),
+            SectionV39Bounds::End => Some("end".to_string()),
+        }
+    }
+
     pub fn get_attr(&self, target_key: &str) -> Option<String> {
         let tokens = self
             .attrs

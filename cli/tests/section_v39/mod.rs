@@ -6,7 +6,7 @@ use neopoligengine::section_v39::*;
 use pretty_assertions::assert_eq;
 
 #[test]
-fn section_basic_test() {
+fn basic_test() {
     let section = SectionV39::mock1_basic_full();
     let left = "title";
     let right = section.r#type();
@@ -14,7 +14,15 @@ fn section_basic_test() {
 }
 
 #[test]
-fn section_default_template() {
+fn bound_test() {
+    let section = SectionV39::mock1_basic_full();
+    let left = "full";
+    let right = section.bounds().unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn default_template() {
     let section = SectionV39::mock1_basic_full();
     let left = Value::from("default");
     let right = section.template().unwrap();
@@ -22,7 +30,7 @@ fn section_default_template() {
 }
 
 #[test]
-fn section_get_attr_none_when_no_key() {
+fn get_attr_none_when_no_key() {
     let section = SectionV39::mock1_basic_full();
     let left = None;
     let right = section.get_attr("invalid_key");
@@ -30,7 +38,7 @@ fn section_get_attr_none_when_no_key() {
 }
 
 #[test]
-fn section_get_attr_single_key() {
+fn get_attr_single_key() {
     let section = SectionV39::mock2_basic_full_attrs();
     let left = Some("show".to_string());
     let right = section.get_attr("template");
@@ -38,7 +46,7 @@ fn section_get_attr_single_key() {
 }
 
 #[test]
-fn section_get_attr_multiple_of_same_key() {
+fn get_attr_multiple_of_same_key() {
     let section = SectionV39::mock2_basic_full_attrs();
     let left = Some("line 1 line 2".to_string());
     let right = section.get_attr("alt");
@@ -46,7 +54,7 @@ fn section_get_attr_multiple_of_same_key() {
 }
 
 #[test]
-fn section_template() {
+fn template_basic() {
     let section = SectionV39::mock2_basic_full_attrs();
     let left = Value::from("show");
     let right = section.template().unwrap();
