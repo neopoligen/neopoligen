@@ -234,6 +234,8 @@ impl Builder {
 body { background-color: #111; color: #aaa; }
 </style>
 </head><body>
+<h1>Site Status</h1>
+<h2>Issues</h2>
 <ul>
 [! for page_error in builder.page_errors() !]
 <li>
