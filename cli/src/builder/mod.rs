@@ -110,30 +110,49 @@ impl Builder {
                     }
                 };
             });
-        self.pages.iter_mut().for_each(|p| {
-            if let Some(_) = p.1.id() {
-                match p.1.output_content {
+        self.pages.iter_mut().for_each(|(source_path, page)| {
+            if let Some(_) = page.id() {
+                match page.output_content {
                     Some(_) => {}
                     None => {
-                        let template_name = "pages/post/published.neoj";
-                        if let Ok(tmpl) = env.get_template(template_name) {
+                        let template_patterns = vec![
+                            format!(
+                                "pages/{}/{}.neoj",
+                                page.r#type().unwrap(),
+                                page.status().unwrap()
+                            ),
+                            format!("pages/{}/published.neoj", page.r#type().unwrap()),
+                            format!("pages/post/{}.neoj", page.status().unwrap()),
+                        ];
+
+                        if let Some(tmpl) = template_patterns.iter().find_map(|template_name| {
+                            if let Ok(t) = env.get_template(&template_name) {
+                                Some(t)
+                            } else {
+                                None
+                            }
+                        }) {
                             match tmpl.render(context!(
                                 site => site,
-                                page => Value::from_object(p.1.clone())
+                                page => Value::from_object(page.clone())
                             )) {
                                 Ok(output) => {
                                     self.last_edit = Some(output.clone());
-                                    p.1.output_content = Some(output);
+                                    page.output_content = Some(output);
                                 }
                                 Err(e) => {
                                     // TODO: Provide error handling here
                                     event!(Level::ERROR, "{}", e);
-                                    p.1.output_content = None;
+                                    page.output_content = None;
                                 }
                             }
                         } else {
-                            // TODO: Provide error handling here
-                            event!(Level::ERROR, "Could not get template: {}", template_name);
+                            // TODO: Send this to the error list
+                            event!(
+                                Level::ERROR,
+                                "Could not get template for page: {}",
+                                page.id().unwrap()
+                            );
                         }
                     }
                 }
@@ -141,7 +160,7 @@ impl Builder {
                 self.issues.push(BuildIssue {
                     kind: BuildIssueKind::MissingPageId {},
                     details: None,
-                    source_path: Some(p.0.to_path_buf()),
+                    source_path: Some(source_path.to_path_buf()),
                 })
             }
         });

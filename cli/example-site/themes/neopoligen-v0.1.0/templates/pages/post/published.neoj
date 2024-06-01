@@ -18,7 +18,7 @@ body {
     [! endfor !]
     </ul>
 
-    <h4>Debugging</h4>
+    <h4>Debug Items</h4>
     <div class="debug-wrapper">
       <div>Page type: [@ page.type() @]</div>
       <div>Page status: [@ page.status() @]</div>
