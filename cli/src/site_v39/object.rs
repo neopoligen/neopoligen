@@ -12,6 +12,7 @@ impl Object for SiteV39 {
         _args: &[Value],
     ) -> Result<Value, Error> {
         match name {
+            "config" => Ok(Value::from_serialize(self.config())),
             _ => Ok(Value::from("[Error: called non-existing function")),
         }
     }

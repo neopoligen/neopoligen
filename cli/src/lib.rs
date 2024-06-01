@@ -3,7 +3,7 @@ pub mod ast_v39;
 pub mod block;
 pub mod block_v39;
 pub mod build_issue;
-pub mod builder;
+pub mod builder_v39;
 pub mod engine_config;
 pub mod feed;
 pub mod file_watcher;

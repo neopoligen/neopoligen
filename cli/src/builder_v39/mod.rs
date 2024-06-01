@@ -37,31 +37,27 @@ use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 
 #[derive(Clone, Debug)]
-pub struct Builder {
+pub struct BuilderV39 {
     pub pages: BTreeMap<PathBuf, PageV39>,
     pub config: SiteConfig,
     pub issues: Vec<BuildIssue>,
-    pub feeds: BTreeMap<String, Feed>,
-    pub images: BTreeMap<PathBuf, Image>,
-    pub last_edit: Option<String>,
-    pub mp3s: BTreeMap<String, SiteMp3>,
+    // pub feeds: BTreeMap<String, Feed>,
+    // pub images: BTreeMap<PathBuf, Image>,
+    // pub last_edit: Option<String>,
+    // pub mp3s: BTreeMap<String, SiteMp3>,
 }
 
-impl Builder {
-    pub fn new(config: SiteConfig) -> Result<Builder> {
-        Ok(Builder {
+impl BuilderV39 {
+    pub fn new(config: SiteConfig) -> Result<BuilderV39> {
+        Ok(BuilderV39 {
             config,
             issues: vec![],
-            feeds: BTreeMap::new(),
-            images: BTreeMap::new(),
-            last_edit: None,
-            mp3s: BTreeMap::new(),
             pages: BTreeMap::new(),
         })
     }
 }
 
-impl Builder {
+impl BuilderV39 {
     #[instrument(skip(self))]
     pub fn generate_missing_asts(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating ASTs");
@@ -138,7 +134,7 @@ impl Builder {
                                 page => Value::from_object(page.clone())
                             )) {
                                 Ok(output) => {
-                                    self.last_edit = Some(output.clone());
+                                    // self.last_edit = Some(output.clone());
                                     page.output_content = Some(output);
                                 }
                                 Err(e) => {

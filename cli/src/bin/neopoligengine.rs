@@ -1,6 +1,6 @@
 use axum::Router;
 use dirs::document_dir;
-use neopoligengine::builder::Builder;
+use neopoligengine::builder_v39::BuilderV39;
 use neopoligengine::engine_config::EngineConfig;
 use neopoligengine::file_watcher::FileWatcher;
 // use neopoligengine::site_config;
@@ -87,14 +87,14 @@ async fn main() {
 #[instrument(skip(site_config))]
 fn build_site(site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
-    if let Ok(mut builder) = Builder::new(site_config.clone()) {
+    if let Ok(mut builder) = BuilderV39::new(site_config.clone()) {
         // This is v39
         let _ = builder.prep_dirs();
         let _ = builder.load_source_files();
         let _ = builder.generate_missing_asts();
         let _ = builder.generate_page_content();
         let _ = builder.output_pages();
-        let _ = builder.output_errors();
+        let _ = builder.output_status();
 
         // This is the v38 order of things which wasn't
         // necessarily optimized. It's here now just
