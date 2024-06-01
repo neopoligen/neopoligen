@@ -14,6 +14,7 @@ impl Object for BuilderV39 {
         match name {
             "config" => Ok(Value::from_serialize(self.config())),
             "issues" => Ok(Value::from_serialize(self.issues())),
+            "theme_issues" => Ok(Value::from_serialize(self.theme_issues())),
             "page_errors" => Ok(Value::from_serialize(self.page_errors())),
             _ => Ok(Value::from("[Error: called non-existing function")),
         }

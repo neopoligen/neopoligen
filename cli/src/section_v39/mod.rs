@@ -4,6 +4,7 @@ pub mod basic;
 pub mod block;
 pub mod mocks;
 pub mod object;
+pub mod raw;
 pub mod yaml;
 
 use crate::section_attr_v39::SectionAttrV39;
@@ -14,7 +15,7 @@ use crate::section_v39::basic::*;
 // use crate::section_v39::generic::*;
 // use crate::section_v39::json::*;
 // use crate::section_v39::list::*;
-// use crate::section_v39::raw::*;
+use crate::section_v39::raw::*;
 use crate::section_v39::yaml::*;
 use crate::sections::*;
 use crate::span_v39::*;
@@ -58,6 +59,7 @@ pub enum SectionV39Bounds {
 pub enum SectionV39Kind {
     Basic { children: Vec<SectionV39> },
     Block { spans: Vec<SpanV39> },
+    Raw { text: Option<String> },
     Yaml {},
 }
 

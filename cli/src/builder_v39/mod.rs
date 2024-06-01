@@ -43,6 +43,7 @@ pub struct BuilderV39 {
     pub pages: BTreeMap<PathBuf, PageV39>,
     pub config: SiteConfig,
     pub issues: Vec<NeoErrorV39>,
+    pub theme_issues: Vec<NeoErrorV39>,
     // pub feeds: BTreeMap<String, Feed>,
     // pub images: BTreeMap<PathBuf, Image>,
     // pub last_edit: Option<String>,
@@ -55,6 +56,7 @@ impl BuilderV39 {
             config,
             issues: vec![],
             pages: BTreeMap::new(),
+            theme_issues: vec![],
         })
     }
 }
@@ -108,6 +110,7 @@ impl BuilderV39 {
                         ) {
                             Ok(_) => {}
                             Err(e) => self.issues.push(NeoErrorV39::Generic {
+                                source_path: None,
                                 details: e.to_string(),
                             }),
                         };
@@ -151,7 +154,7 @@ impl BuilderV39 {
                                     let mut err = &err as &dyn std::error::Error;
                                     //let mut v = vec![];
                                     while let Some(next_err) = err.source() {
-                                        dbg!(&next_err);
+                                        //dbg!(&next_err);
                                         self.issues.push(NeoErrorV39::MiniJinjaError {
                                             source_path: Some(source_path.clone()),
                                             details: next_err.to_string(),
@@ -217,7 +220,6 @@ impl BuilderV39 {
                             }
                             Err(_e) => {
                                 // TODO: Switch this to NeoError
-
                                 // self.issues.push(BuildIssue {
                                 //     source_path: Some(source_path.clone()),
                                 //     kind: BuildIssueKind::Generic {},
@@ -259,7 +261,7 @@ body { background-color: #111; color: #aaa; }
 </style>
 </head><body>
 <h1>Site Status</h1>
-<h2>Issues</h2>
+<h2>Page Issues</h2>
 <ul>
 [! for issue in builder.issues() !]
 <li>[@ issue @]</li>
@@ -271,6 +273,12 @@ body { background-color: #111; color: #aaa; }
 <h3>[@ page_error[0] @]</h3>
 <div>[@ page_error[1] @]</div>
 </li>
+[! endfor !]
+</ul>
+<h2>Theme Issues</h2>
+<ul>
+[! for theme_issue in builder.theme_issues() !]
+<li>[@ theme_issue @]</li>
 [! endfor !]
 </ul>
 <h2>Builder Config</h2>
@@ -307,6 +315,7 @@ body { background-color: #111; color: #aaa; }
         Ok(())
     }
 
+    // DEPRECATED: maybe, clean these up and consolidate where it makes sense
     #[instrument(skip(self))]
     pub fn page_errors(&self) -> Vec<(String, NeoError)> {
         // Reminder: This only gets the first error on a page
@@ -336,6 +345,192 @@ body { background-color: #111; color: #aaa; }
         let _ = fs::create_dir_all(self.config.image_dest_dir());
         let _ = fs::create_dir_all(self.config.mp3_dest_dir());
         Ok(())
+    }
+
+    pub fn test_theme(&mut self) -> Result<()> {
+        event!(Level::INFO, "Testing Theme");
+        let mut pages: BTreeMap<PathBuf, PageV39> = BTreeMap::new();
+        let dir = &self.config.theme_tests_dir();
+        WalkDir::new(dir)
+            .into_iter()
+            .filter(|entry| match entry.as_ref().unwrap().path().extension() {
+                Some(ext) => ext.to_str().unwrap() == "neo",
+                None => false,
+            })
+            .for_each(|entry| {
+                let source_path = entry.as_ref().unwrap().path().to_path_buf();
+                match fs::read_to_string(&source_path) {
+                    Ok(content) => {
+                        match PageV39::new_from_fs(
+                            source_path.clone(),
+                            self.config.clone(),
+                            content,
+                        ) {
+                            Ok(page) => {
+                                pages.insert(source_path, page);
+                                ()
+                            }
+                            Err(e) => {
+                                self.theme_issues.push(NeoErrorV39::Generic {
+                                    source_path: Some(source_path.clone()),
+                                    details: e.to_string(),
+                                });
+                                // TODO: Switch this to NeoError
+                                // self.issues.push(BuildIssue {
+                                //     source_path: Some(source_path.clone()),
+                                //     kind: BuildIssueKind::Generic {},
+                                //     details: Some(e.to_string()),
+                                // });
+                            }
+                        }
+                    }
+                    Err(e) => {
+                        self.theme_issues.push(NeoErrorV39::Generic {
+                            source_path: Some(source_path.clone()),
+                            details: e.to_string(),
+                        });
+                        event!(Level::ERROR, "{}", e)
+                    }
+                }
+            });
+        let site = Value::from_object(SiteV39::new(self.config.clone(), &pages.clone()));
+        let mut env = Environment::new();
+        env.set_debug(true);
+        env.set_lstrip_blocks(true);
+        env.set_trim_blocks(true);
+        env.set_syntax(
+            SyntaxConfig::builder()
+                .block_delimiters("[!", "!]")
+                .variable_delimiters("[@", "@]")
+                .comment_delimiters("[#", "#]")
+                .build()
+                .unwrap(),
+        );
+        WalkDir::new(self.config.templates_dir())
+            .into_iter()
+            .filter(|entry| match entry.as_ref().unwrap().path().extension() {
+                Some(ext) => ext.to_str().unwrap() == "neoj",
+                None => false,
+            })
+            .for_each(|entry| {
+                let path = entry.as_ref().unwrap().path().to_path_buf();
+                match fs::read_to_string(&path) {
+                    Ok(content) => {
+                        let template_name = path.strip_prefix(self.config.templates_dir()).unwrap();
+                        match env.add_template_owned(
+                            template_name.to_string_lossy().to_string(),
+                            content,
+                        ) {
+                            Ok(_) => {}
+                            Err(e) => {
+                                self.theme_issues.push(NeoErrorV39::Generic {
+                                    source_path: None,
+                                    details: e.to_string(),
+                                });
+                            } // self.issues.push(NeoErrorV39::Generic {
+                              // details: e.to_string(),
+                              // }
+                              //),
+                        };
+                    }
+                    Err(e) => {
+                        self.theme_issues.push(NeoErrorV39::Generic {
+                            source_path: None,
+                            details: e.to_string(),
+                        });
+                        // TODO: Copy error into issues list
+                        event!(Level::ERROR, "{}", e)
+                    }
+                };
+            });
+        pages.iter_mut().for_each(|(source_path, page)| {
+            let _ = page.generate_ast();
+            // dbg!(&page.ast);
+            if let Some(_) = page.id() {
+                match page.output_content {
+                    Some(_) => {}
+                    None => {
+                        let template_patterns = vec![
+                            format!(
+                                "pages/{}/{}.neoj",
+                                page.r#type().unwrap(),
+                                page.status().unwrap()
+                            ),
+                            format!("pages/{}/published.neoj", page.r#type().unwrap()),
+                            format!("pages/post/{}.neoj", page.status().unwrap()),
+                            format!("pages/post/published.neoj"),
+                        ];
+                        if let Some(tmpl) = template_patterns.iter().find_map(|template_name| {
+                            if let Ok(t) = env.get_template(&template_name) {
+                                Some(t)
+                            } else {
+                                None
+                            }
+                        }) {
+                            match tmpl.render(context!(
+                                site => site,
+                                page => Value::from_object(page.clone())
+                            )) {
+                                Ok(output) => {
+                                    dbg!("TODO: Test theme here");
+                                    //dbg!(output);
+                                    //page.output_content = Some(output);
+                                }
+                                Err(err) => {
+                                    self.theme_issues.push(NeoErrorV39::Generic {
+                                        source_path: None,
+                                        details: err.to_string(),
+                                    });
+
+                                    //let mut err = &err as &dyn std::error::Error;
+                                    ////let mut v = vec![];
+                                    //while let Some(next_err) = err.source() {
+                                    //    dbg!(&next_err);
+                                    //    self.issues.push(NeoErrorV39::MiniJinjaError {
+                                    //        source_path: Some(source_path.clone()),
+                                    //        details: next_err.to_string(),
+                                    //    });
+                                    //    err = next_err;
+                                    //}
+                                    // page.output_content = None;
+                                }
+                            }
+                        } else {
+                            self.theme_issues.push(NeoErrorV39::Generic {
+                                source_path: None,
+                                details: "could not get template for page".to_string(),
+                            });
+                            // // TODO: Send this to the error list
+                            // event!(
+                            //     Level::ERROR,
+                            //     "Could not get template for page: {}",
+                            //     page.id().unwrap()
+                            // );
+                            //
+                        }
+                    }
+                }
+            } else {
+                self.theme_issues.push(NeoErrorV39::Generic {
+                    source_path: Some(source_path.clone()),
+                    details: "build issue".to_string(),
+                });
+                // TODO: Switch this to a NeoError
+                // self.issues.push(BuildIssue {
+                //     kind: BuildIssueKind::MissingPageId {},
+                //     details: None,
+                //     source_path: Some(source_path.to_path_buf()),
+                // })
+            }
+        });
+        Ok(())
+    }
+
+    pub fn theme_issues(&self) -> Vec<Value> {
+        self.theme_issues
+            .iter()
+            .map(|e| Value::from_serialize(e))
+            .collect()
     }
 
     // pub fn copy_image_cache_to_prod(&self) -> Result<()> {

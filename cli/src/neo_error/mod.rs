@@ -11,7 +11,10 @@ use thiserror::Error;
 #[serde(rename_all = "lowercase", tag = "kind")]
 pub enum NeoErrorV39 {
     #[error("error: {details:?}")]
-    Generic { details: String },
+    Generic {
+        source_path: Option<PathBuf>,
+        details: String,
+    },
 
     #[error("minijinja error")]
     MiniJinjaError {

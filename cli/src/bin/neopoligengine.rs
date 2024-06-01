@@ -89,6 +89,7 @@ fn build_site(site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
     if let Ok(mut builder) = BuilderV39::new(site_config.clone()) {
         // This is v39
+        let _ = builder.test_theme();
         let _ = builder.prep_dirs();
         let _ = builder.load_source_files();
         let _ = builder.generate_missing_asts();
