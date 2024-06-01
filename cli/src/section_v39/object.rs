@@ -17,6 +17,7 @@ impl Object for SectionV39 {
             "ping" => Ok(Value::from(self.ping())),
             "template" => Ok(Value::from(self.template())),
             "template_list" => Ok(Value::from_serialize(self.template_list())),
+            "text" => Ok(Value::from(self.text())),
             "type" => Ok(Value::from(&self.r#type)),
             _ => Ok(Value::from("[Error: called non-existing function")),
         }

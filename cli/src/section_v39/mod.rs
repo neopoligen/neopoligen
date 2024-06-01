@@ -119,10 +119,6 @@ impl SectionV39 {
         Some("PINGPINGPINGPINGPINGPINGPINGPINGPINGPINGPINGPING".to_string())
     }
 
-    pub fn r#type(&self) -> &String {
-        &self.r#type
-    }
-
     pub fn template(&self) -> Option<String> {
         if let Some(template) = self.attrs.iter().find_map(|attr| match &attr.kind {
             SectionAttrV39Kind::KeyValue { key, value } => {
@@ -166,6 +162,23 @@ impl SectionV39 {
             self.bounds().unwrap()
         ));
         templates
+    }
+
+    pub fn text(&self) -> Option<String> {
+        match &self.kind {
+            SectionV39Kind::Raw { text, .. } => {
+                if let Some(t) = text {
+                    Some(t.to_string())
+                } else {
+                    None
+                }
+            }
+            _ => None,
+        }
+    }
+
+    pub fn r#type(&self) -> &String {
+        &self.r#type
     }
 }
 

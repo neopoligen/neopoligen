@@ -451,6 +451,7 @@ body { background-color: #111; color: #aaa; }
             r#"
 [!- include 'includes/theme.neoj' -!]
 <!-- EXPECTED_OUTPUT -->
+[@ section.text() @]
 [! for child in section.children() !]
 [@ theme.output_section(site, page_id, child) @]
 [! endfor !]
