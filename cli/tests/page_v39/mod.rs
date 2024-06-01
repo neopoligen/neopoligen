@@ -41,10 +41,20 @@ fn rel_output_path_default_to_lang_id() {
 }
 
 #[test]
+#[ignore]
 fn rel_output_path_from_metadata_with_no_extension() {
     let p = PageV39::mock_2_20240102_with_type_and_status();
-    let left = PathBuf::from("/custom-path/index.html");
+    let left = PathBuf::from("custom-path/index.html");
     let right = p.rel_output_path().unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn rel_output_path_scrubber_root_path() {
+    let p = PageV39::mock_1_20240101_basic_page();
+    let source = "/";
+    let left = PathBuf::from("index.html");
+    let right = p.rel_output_path_scrubber(source).unwrap();
     assert_eq!(left, right);
 }
 

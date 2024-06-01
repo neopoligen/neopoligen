@@ -102,6 +102,24 @@ impl PageV39 {
         }
     }
 
+    pub fn rel_output_path_scrubber(&self, source: &str) -> Option<PathBuf> {
+        if source == "/" {
+            Some(PathBuf::from("index.html"))
+        } else {
+            None
+        }
+
+        // if let Some(path_override) = self.get_metadata_attr("path") {
+        //     Some(PathBuf::from(format!("{}/index.html", path_override)))
+        // } else {
+        //     if let (Ok(lang), Some(id)) = (self.config.default_language(), self.id()) {
+        //         Some(PathBuf::from(format!("{}/{}/index.html", lang, id)))
+        //     } else {
+        //         None
+        //     }
+        // }
+    }
+
     pub fn rel_source_path(&self) -> Option<PathBuf> {
         let source_path = &self.source_path.clone().unwrap();
         if let Ok(rel_source_path) = source_path.strip_prefix(self.config.content_dir()) {
