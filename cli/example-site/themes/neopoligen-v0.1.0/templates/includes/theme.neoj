@@ -3,3 +3,8 @@
 [# TODO: get the specific list of section classes
 based off config #]
 [! endmacro !]
+
+[#############################################################################]
+[! macro output_section(site, page_id, section) !]
+[! include section.template_list() ignore missing !]
+[! endmacro !]

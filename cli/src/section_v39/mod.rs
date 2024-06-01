@@ -79,6 +79,20 @@ impl SectionV39 {
         }
     }
 
+    pub fn children(&self) -> Result<Value, minijinja::Error> {
+        if let Some(children) = match &self.kind {
+            SectionV39Kind::Basic { children } => Some(children),
+            SectionV39Kind::Raw { children, .. } => Some(children),
+            _ => None,
+        } {
+            Ok(Value::make_object_iterable(children.clone(), |child| {
+                Box::new(child.iter().cloned().map(Value::from_object))
+            }))
+        } else {
+            Ok(Value::from_serialize::<Vec<Value>>(vec![]))
+        }
+    }
+
     pub fn get_attr(&self, target_key: &str) -> Option<String> {
         let tokens = self
             .attrs
@@ -99,6 +113,10 @@ impl SectionV39 {
         } else {
             None
         }
+    }
+
+    pub fn ping(&self) -> Option<String> {
+        Some("PINGPINGPINGPINGPINGPINGPINGPINGPINGPINGPINGPING".to_string())
     }
 
     pub fn r#type(&self) -> &String {

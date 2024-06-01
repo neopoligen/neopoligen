@@ -13,6 +13,8 @@ impl Object for SectionV39 {
     ) -> Result<Value, Error> {
         match name {
             "bounds" => Ok(Value::from(self.bounds())),
+            "children" => self.children(),
+            "ping" => Ok(Value::from(self.ping())),
             "template" => Ok(Value::from(self.template())),
             "template_list" => Ok(Value::from_serialize(self.template_list())),
             "type" => Ok(Value::from(&self.r#type)),

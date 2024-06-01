@@ -448,12 +448,26 @@ body { background-color: #111; color: #aaa; }
 
         let _ = env.add_template_owned(
             "sections/expected-output/start/default.neoj",
-            "<!-- EXPECTED_OUTPUT -->".to_string(),
+            r#"
+[!- include 'includes/theme.neoj' -!]
+<!-- EXPECTED_OUTPUT -->
+[! for child in section.children() !]
+[@ theme.output_section(site, page_id, child) @]
+[! endfor !]
+"#
+            .to_string(),
         );
 
         let _ = env.add_template_owned(
             "sections/expected-output/end/default.neoj",
-            "<!-- EXPECTED_OUTPUT -->".to_string(),
+            r#"
+[!- include 'includes/theme.neoj' -!]
+<!-- EXPECTED_OUTPUT -->
+[! for child in section.children() !]
+[@ theme.output_section(site, page_id, child) @]
+[! endfor !]
+"#
+            .to_string(),
         );
 
         pages.iter_mut().for_each(|(source_path, page)| {
