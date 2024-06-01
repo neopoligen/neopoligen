@@ -17,4 +17,10 @@ body {
       </li>
     [! endfor !]
     </ul>
+
+    <h4>Debug</h4>
+    <div class="debug-wrapper">
+      <div>Page type: [@ page.type() @]</div>
+      <div>Page status: [@ page.status() @]</div>
+    </div>
 </body>

@@ -8,7 +8,21 @@ impl PageV39 {
             errors: vec![],
             fs_modified: None,
             output_content: None,
-            source_content: Some("-- title\n\nAlfa Bravo\n\n-- metadata\n-- id: 20240101alfa\n-- created: 2024-05-31T12:25:52-04:00\n\n".to_string()),
+            source_content: Some("-- title\n\nAlfa Bravo\n\n-- metadata\n-- id: 20240101alfa1234\n-- created: 2024-01-01T10:10:10-04:00\n\n".to_string()),
+            source_path: None,
+        };
+        let _ = p.generate_ast();
+        p
+    }
+
+    pub fn mock_2_20240102_with_type_and_status() -> PageV39 {
+        let mut p = PageV39 {
+            ast: None,
+            config: SiteConfig::mock1(),
+            errors: vec![],
+            fs_modified: None,
+            output_content: None,
+            source_content: Some("-- title\n\nCharlie Delta\n\n-- metadata\n-- id: 20240102bravo123\n-- created: 2024-01-02T10:10:10-04:00\n-- type: example\n-- status: draft".to_string()),
             source_path: None,
         };
         let _ = p.generate_ast();

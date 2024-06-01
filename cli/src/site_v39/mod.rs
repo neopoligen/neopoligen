@@ -13,10 +13,8 @@ impl SiteV39 {
     pub fn new(source_pages: &BTreeMap<PathBuf, PageV39>) -> SiteV39 {
         let mut pages = BTreeMap::new();
         for (_, page) in source_pages.iter() {
-            if let Some(_) = page.ast {
-                if let Ok(id) = page.id() {
-                    pages.insert(id, page.clone());
-                }
+            if let Some(id) = page.id() {
+                pages.insert(id, page.clone());
             }
         }
         SiteV39 { pages }

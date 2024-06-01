@@ -24,17 +24,6 @@ pub struct PageV39 {
     pub source_path: Option<PathBuf>,
 }
 
-// #[derive(Clone, Debug)]
-// pub struct PageV39Error {
-//     kind: PageV39ErrorKind,
-//     details: Option<String>,
-// }
-
-// #[derive(Clone, Debug)]
-// pub enum PageV39ErrorKind {
-//     ParserError {},
-// }
-
 impl PageV39 {
     pub fn new_from_fs(
         source_path: PathBuf,
@@ -74,18 +63,13 @@ impl PageV39 {
         Ok(())
     }
 
-    pub fn get_metadata_attr(&self, target: &str) -> Result<String> {
-        let ast = self.ast.clone().ok_or(minijinja::Error::new(
-            minijinja::ErrorKind::CannotUnpack,
-            "can't get ast".to_string(),
-        ))?;
-        let response = ast
-            .iter()
-            .find_map(|section| match &section.kind {
+    pub fn get_metadata_attr(&self, target: &str) -> Option<String> {
+        if let Some(ast) = &self.ast {
+            ast.iter().find_map(|section| match &section.kind {
                 SectionV39Kind::Yaml {} => section.attrs.iter().find_map(|attr| match &attr.kind {
                     SectionAttrV39Kind::KeyValue { key, value } => {
                         if key == target {
-                            Some(value)
+                            Some(value.to_string())
                         } else {
                             None
                         }
@@ -94,27 +78,30 @@ impl PageV39 {
                 }),
                 _ => None,
             })
-            .ok_or(minijinja::Error::new(
-                minijinja::ErrorKind::CannotUnpack,
-                format!("could not get metadata field: {}", target),
-            ))?;
-        Ok(response.to_string())
+        } else {
+            None
+        }
     }
 
-    pub fn id(&self) -> Result<String> {
-        let id = self.get_metadata_attr("id")?;
-        Ok(id)
+    pub fn id(&self) -> Option<String> {
+        self.get_metadata_attr("id")
     }
 
-    pub fn rel_output_path(&self) -> Result<PathBuf> {
-        let lang = self.config.default_language()?;
-        let id = self.id()?;
-        Ok(PathBuf::from(format!("{}/{}/index.html", lang, id)))
+    pub fn rel_output_path(&self) -> Option<PathBuf> {
+        if let (Ok(lang), Some(id)) = (self.config.default_language(), self.id()) {
+            Some(PathBuf::from(format!("{}/{}/index.html", lang, id)))
+        } else {
+            None
+        }
     }
 
     pub fn rel_source_path(&self) -> Result<PathBuf> {
         let response = &self.source_path.clone().unwrap();
         let response = response.strip_prefix(self.config.content_dir())?;
         Ok(response.to_path_buf())
+    }
+
+    pub fn r#type(&self) -> Option<String> {
+        Some("post".to_string())
     }
 }

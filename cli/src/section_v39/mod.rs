@@ -62,9 +62,32 @@ pub enum SectionV39Kind {
 }
 
 impl SectionV39 {
+    pub fn get_attr(&self, target_key: &str) -> Option<String> {
+        let tokens = self
+            .attrs
+            .iter()
+            .filter_map(|attr| match &attr.kind {
+                SectionAttrV39Kind::KeyValue { key, value } => {
+                    if key == target_key {
+                        Some(value.clone())
+                    } else {
+                        None
+                    }
+                }
+                _ => None,
+            })
+            .collect::<Vec<String>>();
+        if tokens.len() > 0 {
+            Some(tokens.join(" "))
+        } else {
+            None
+        }
+    }
+
     pub fn r#type(&self) -> &String {
         &self.r#type
     }
+
     pub fn template(&self) -> Result<Value, Error> {
         if let Some(attr) = self.attrs.iter().find_map(|attr| match &attr.kind {
             SectionAttrV39Kind::KeyValue { key, value } => {

@@ -111,7 +111,7 @@ impl Builder {
                 };
             });
         self.pages.iter_mut().for_each(|p| {
-            if let Ok(_) = p.1.id() {
+            if let Some(_) = p.1.id() {
                 match p.1.output_content {
                     Some(_) => {}
                     None => {
@@ -243,7 +243,7 @@ body { background-color: #111; color: #aaa; }
         event!(Level::INFO, "Outputting Pages");
         for (_, page) in self.pages.iter() {
             if page.errors.len() == 0 {
-                if let (Ok(rel_output_path), Some(output_content)) =
+                if let (Some(rel_output_path), Some(output_content)) =
                     (page.rel_output_path(), page.output_content.clone())
                 {
                     let output_path = self.config.output_dir().join(rel_output_path);
