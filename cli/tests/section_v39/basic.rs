@@ -1,3 +1,4 @@
+use neopoligengine::section_v39::basic::*;
 use neopoligengine::{
     section_attr_v39::{SectionAttrV39, SectionAttrV39Kind},
     section_v39::*,
@@ -92,5 +93,55 @@ fn basic_section_full_with_attrs() {
         },
     );
     let right = start_or_full_section_v39(source, &config.sections, &config.spans).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn basic_section_start_end_core_test() {
+    let config = SiteConfig::mock1();
+    let source = "-- note/\n\nHello World\n\n-- /note";
+    let left = (
+        "",
+        SectionV39 {
+            attrs: vec![],
+            bounds: SectionV39Bounds::Start,
+            kind: SectionV39Kind::Basic {
+                children: vec![
+                    SectionV39 {
+                        attrs: vec![],
+                        bounds: SectionV39Bounds::Full,
+                        kind: SectionV39Kind::Block {
+                            spans: vec![
+                                SpanV39 {
+                                    kind: SpanV39Kind::WordPart {
+                                        text: "Hello".to_string(),
+                                    },
+                                },
+                                SpanV39 {
+                                    kind: SpanV39Kind::Space {
+                                        text: " ".to_string(),
+                                    },
+                                },
+                                SpanV39 {
+                                    kind: SpanV39Kind::WordPart {
+                                        text: "World".to_string(),
+                                    },
+                                },
+                            ],
+                        },
+                        r#type: "block-of-text".to_string(),
+                    },
+                    SectionV39 {
+                        attrs: vec![],
+                        bounds: SectionV39Bounds::End,
+                        kind: SectionV39Kind::Basic { children: vec![] },
+                        r#type: "note".to_string(),
+                    },
+                ],
+            },
+            r#type: "note".to_string(),
+        },
+    );
+    let right = basic_section_start_v39(source, &config.sections, &config.spans).unwrap();
     assert_eq!(left, right);
 }
