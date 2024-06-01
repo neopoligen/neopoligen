@@ -45,7 +45,49 @@ fn basic_section_full_core_test() {
             r#type: "title".to_string(),
         },
     );
-    let right = start_or_full_section_v39(source, &config.sections, &config.spans).unwrap();
+    let right = basic_section_full_v39(source, &config.sections, &config.spans).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn basic_section_full_core_test_with_following_section() {
+    let config = SiteConfig::mock1();
+    let source = "-- title\n\nHello World\n\n-- div";
+    let left = (
+        "-- div",
+        SectionV39 {
+            attrs: vec![],
+            bounds: SectionV39Bounds::Full,
+            kind: SectionV39Kind::Basic {
+                children: vec![SectionV39 {
+                    attrs: vec![],
+                    bounds: SectionV39Bounds::Full,
+                    kind: SectionV39Kind::Block {
+                        spans: vec![
+                            SpanV39 {
+                                kind: SpanV39Kind::WordPart {
+                                    text: "Hello".to_string(),
+                                },
+                            },
+                            SpanV39 {
+                                kind: SpanV39Kind::Space {
+                                    text: " ".to_string(),
+                                },
+                            },
+                            SpanV39 {
+                                kind: SpanV39Kind::WordPart {
+                                    text: "World".to_string(),
+                                },
+                            },
+                        ],
+                    },
+                    r#type: "block-of-text".to_string(),
+                }],
+            },
+            r#type: "title".to_string(),
+        },
+    );
+    let right = basic_section_full_v39(source, &config.sections, &config.spans).unwrap();
     assert_eq!(left, right);
 }
 

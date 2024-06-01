@@ -1,3 +1,5 @@
+pub mod integration;
+
 use neopoligengine::page_v39::PageV39;
 use pretty_assertions::assert_eq;
 use std::path::PathBuf;

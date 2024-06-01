@@ -351,6 +351,15 @@ body { background-color: #111; color: #aaa; }
         event!(Level::INFO, "Testing Theme");
         let mut pages: BTreeMap<PathBuf, PageV39> = BTreeMap::new();
         let dir = &self.config.theme_tests_dir();
+        let mut theme_test_config = self.config.clone();
+        theme_test_config
+            .sections
+            .basic
+            .push("start-theme-test".to_string());
+        theme_test_config
+            .sections
+            .raw
+            .push("expected-output".to_string());
         WalkDir::new(dir)
             .into_iter()
             .filter(|entry| match entry.as_ref().unwrap().path().extension() {
@@ -363,7 +372,7 @@ body { background-color: #111; color: #aaa; }
                     Ok(content) => {
                         match PageV39::new_from_fs(
                             source_path.clone(),
-                            self.config.clone(),
+                            theme_test_config.clone(),
                             content,
                         ) {
                             Ok(page) => {
@@ -375,12 +384,6 @@ body { background-color: #111; color: #aaa; }
                                     source_path: Some(source_path.clone()),
                                     details: e.to_string(),
                                 });
-                                // TODO: Switch this to NeoError
-                                // self.issues.push(BuildIssue {
-                                //     source_path: Some(source_path.clone()),
-                                //     kind: BuildIssueKind::Generic {},
-                                //     details: Some(e.to_string()),
-                                // });
                             }
                         }
                     }
@@ -389,11 +392,10 @@ body { background-color: #111; color: #aaa; }
                             source_path: Some(source_path.clone()),
                             details: e.to_string(),
                         });
-                        event!(Level::ERROR, "{}", e)
                     }
                 }
             });
-        let site = Value::from_object(SiteV39::new(self.config.clone(), &pages.clone()));
+        let site = Value::from_object(SiteV39::new(theme_test_config, &pages.clone()));
         let mut env = Environment::new();
         env.set_debug(true);
         env.set_lstrip_blocks(true);
@@ -427,10 +429,7 @@ body { background-color: #111; color: #aaa; }
                                     source_path: None,
                                     details: e.to_string(),
                                 });
-                            } // self.issues.push(NeoErrorV39::Generic {
-                              // details: e.to_string(),
-                              // }
-                              //),
+                            }
                         };
                     }
                     Err(e) => {
@@ -438,89 +437,111 @@ body { background-color: #111; color: #aaa; }
                             source_path: None,
                             details: e.to_string(),
                         });
-                        // TODO: Copy error into issues list
-                        event!(Level::ERROR, "{}", e)
                     }
                 };
             });
+
+        let _ = env.add_template_owned(
+            "sections/start-theme-test/full/default.neoj",
+            "<!-- START_THEME_TEST -->".to_string(),
+        );
+
+        let _ = env.add_template_owned(
+            "sections/expected-output/start/default.neoj",
+            "<!-- EXPECTED_OUTPUT -->".to_string(),
+        );
+
+        let _ = env.add_template_owned(
+            "sections/expected-output/end/default.neoj",
+            "<!-- EXPECTED_OUTPUT -->".to_string(),
+        );
+
         pages.iter_mut().for_each(|(source_path, page)| {
             let _ = page.generate_ast();
-            // dbg!(&page.ast);
-            if let Some(_) = page.id() {
-                match page.output_content {
-                    Some(_) => {}
-                    None => {
-                        let template_patterns = vec![
-                            format!(
-                                "pages/{}/{}.neoj",
-                                page.r#type().unwrap(),
-                                page.status().unwrap()
-                            ),
-                            format!("pages/{}/published.neoj", page.r#type().unwrap()),
-                            format!("pages/post/{}.neoj", page.status().unwrap()),
-                            format!("pages/post/published.neoj"),
-                        ];
-                        if let Some(tmpl) = template_patterns.iter().find_map(|template_name| {
-                            if let Ok(t) = env.get_template(&template_name) {
-                                Some(t)
-                            } else {
-                                None
-                            }
-                        }) {
-                            match tmpl.render(context!(
-                                site => site,
-                                page => Value::from_object(page.clone())
-                            )) {
-                                Ok(output) => {
-                                    dbg!("TODO: Test theme here");
-                                    //dbg!(output);
-                                    //page.output_content = Some(output);
-                                }
-                                Err(err) => {
-                                    self.theme_issues.push(NeoErrorV39::Generic {
-                                        source_path: None,
-                                        details: err.to_string(),
-                                    });
-
-                                    //let mut err = &err as &dyn std::error::Error;
-                                    ////let mut v = vec![];
-                                    //while let Some(next_err) = err.source() {
-                                    //    dbg!(&next_err);
-                                    //    self.issues.push(NeoErrorV39::MiniJinjaError {
-                                    //        source_path: Some(source_path.clone()),
-                                    //        details: next_err.to_string(),
-                                    //    });
-                                    //    err = next_err;
-                                    //}
-                                    // page.output_content = None;
-                                }
-                            }
-                        } else {
-                            self.theme_issues.push(NeoErrorV39::Generic {
-                                source_path: None,
-                                details: "could not get template for page".to_string(),
-                            });
-                            // // TODO: Send this to the error list
-                            // event!(
-                            //     Level::ERROR,
-                            //     "Could not get template for page: {}",
-                            //     page.id().unwrap()
-                            // );
-                            //
-                        }
-                    }
+            if page.errors.len() > 0 {
+                for err in page.errors.iter() {
+                    self.theme_issues.push(NeoErrorV39::MiniJinjaError {
+                        source_path: Some(source_path.clone()),
+                        details: err.to_string(),
+                    });
                 }
             } else {
-                self.theme_issues.push(NeoErrorV39::Generic {
-                    source_path: Some(source_path.clone()),
-                    details: "build issue".to_string(),
-                });
-                // TODO: Switch this to a NeoError
-                // self.issues.push(BuildIssue {
-                //     kind: BuildIssueKind::MissingPageId {},
-                //     details: None,
-                //     source_path: Some(source_path.to_path_buf()),
-                // })
+                // dbg!(&page.ast);
+                if let Some(_) = page.id() {
+                    match page.output_content {
+                        Some(_) => {}
+                        None => {
+                            let template_patterns = vec![
+                                format!(
+                                    "pages/{}/{}.neoj",
+                                    page.r#type().unwrap(),
+                                    page.status().unwrap()
+                                ),
+                                format!("pages/{}/published.neoj", page.r#type().unwrap()),
+                                format!("pages/post/{}.neoj", page.status().unwrap()),
+                                format!("pages/post/published.neoj"),
+                            ];
+                            if let Some(tmpl) = template_patterns.iter().find_map(|template_name| {
+                                if let Ok(t) = env.get_template(&template_name) {
+                                    Some(t)
+                                } else {
+                                    None
+                                }
+                            }) {
+                                match tmpl.render(context!(
+                                    site => site,
+                                    page => Value::from_object(page.clone())
+                                )) {
+                                    Ok(output) => {
+                                        dbg!("TODO: Test theme here");
+                                        dbg!(output);
+                                        //page.output_content = Some(output);
+                                    }
+                                    Err(err) => {
+                                        self.theme_issues.push(NeoErrorV39::Generic {
+                                            source_path: None,
+                                            details: err.to_string(),
+                                        });
+                                        //let mut err = &err as &dyn std::error::Error;
+                                        ////let mut v = vec![];
+                                        //while let Some(next_err) = err.source() {
+                                        //    dbg!(&next_err);
+                                        //    self.issues.push(NeoErrorV39::MiniJinjaError {
+                                        //        source_path: Some(source_path.clone()),
+                                        //        details: next_err.to_string(),
+                                        //    });
+                                        //    err = next_err;
+                                        //}
+                                        // page.output_content = None;
+                                    }
+                                }
+                            } else {
+                                self.theme_issues.push(NeoErrorV39::Generic {
+                                    source_path: None,
+                                    details: "could not get template for page".to_string(),
+                                });
+                                // // TODO: Send this to the error list
+                                // event!(
+                                //     Level::ERROR,
+                                //     "Could not get template for page: {}",
+                                //     page.id().unwrap()
+                                // );
+                                //
+                            }
+                        }
+                    }
+                } else {
+                    self.theme_issues.push(NeoErrorV39::MissingId {
+                        source_path: Some(source_path.clone()),
+                        details: "Could not get ID for file".to_string(),
+                    });
+                    // TODO: Switch this to a NeoError
+                    // self.issues.push(BuildIssue {
+                    //     kind: BuildIssueKind::MissingPageId {},
+                    //     details: None,
+                    //     source_path: Some(source_path.to_path_buf()),
+                    // })
+                }
             }
         });
         Ok(())

@@ -29,6 +29,44 @@ impl PageV39 {
         p
     }
 
+    pub fn mock_3_integration_alfa() -> PageV39 {
+        let mut p = PageV39 {
+            ast: None,
+            config: SiteConfig::mock1(),
+            errors: vec![],
+            fs_modified: None,
+            output_content: None,
+            source_content: Some(
+                r#"-- start-theme-test
+
+this is some test
+
+-- title
+
+Alfa Bravo
+
+-- code/
+
+ping
+
+-- /code
+
+
+
+
+-- metadata
+-- created: 2024-05-30T12:12:11-04:00
+-- updated: 2024-05-30T12:12:11-04:00
+-- id: 2hc65pgj
+            "#
+                .to_string(),
+            ),
+            source_path: None,
+        };
+        let _ = p.generate_ast();
+        p
+    }
+
     pub fn mock_invalid_ast_1() -> PageV39 {
         let mut p = PageV39 {
             ast: None,

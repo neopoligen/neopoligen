@@ -21,6 +21,13 @@ pub enum NeoErrorV39 {
         source_path: Option<PathBuf>,
         details: String,
     },
+
+    #[error("missing id")]
+    MissingId {
+        source_path: Option<PathBuf>,
+        details: String,
+    },
+
     #[error("unknown data store error")]
     Unknown,
 }

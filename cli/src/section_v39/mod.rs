@@ -176,8 +176,8 @@ pub fn start_or_full_section_v39<'a>(
         // |src| json_section_start(src, &sections, &spans),
         // |src| list_section_full(src, &sections, &spans),
         // |src| list_section_start(src, &sections, &spans),
-        // |src| raw_section_full(src, &sections, &spans),
-        // |src| raw_section_start(src, &sections, &spans),
+        |src| raw_section_full_v39(src, &sections, &spans),
+        |src| raw_section_start_v39(src, &sections, &spans),
         |src| yaml_section_full_v39(src, &sections, &spans),
         // |src| yaml_section_start(src, &sections, &spans),
         // // make sure generic is last
