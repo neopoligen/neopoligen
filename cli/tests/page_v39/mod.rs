@@ -59,6 +59,15 @@ fn rel_output_path_scrubber_root_path() {
 }
 
 #[test]
+fn rel_output_path_scrubber_with_dir_name() {
+    let p = PageV39::mock_1_20240101_basic_page();
+    let source = "/alfa-path";
+    let left = PathBuf::from("alfa-path/index.html");
+    let right = p.rel_output_path_scrubber(source).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
 fn status_defaults_to_published() {
     let p = PageV39::mock_1_20240101_basic_page();
     let left = "published".to_string();

@@ -103,21 +103,19 @@ impl PageV39 {
     }
 
     pub fn rel_output_path_scrubber(&self, source: &str) -> Option<PathBuf> {
-        if source == "/" {
-            Some(PathBuf::from("index.html"))
+        // TODO: Add measures in here to keep from moving outside
+        // the document root. Also add them in the output function
+        // in the builder itself.
+
+        if let Some(initial_string) = source.strip_prefix("/") {
+            if initial_string == "" {
+                Some(PathBuf::from("index.html"))
+            } else {
+                Some(PathBuf::from(format!("{}/index.html", initial_string)))
+            }
         } else {
             None
         }
-
-        // if let Some(path_override) = self.get_metadata_attr("path") {
-        //     Some(PathBuf::from(format!("{}/index.html", path_override)))
-        // } else {
-        //     if let (Ok(lang), Some(id)) = (self.config.default_language(), self.id()) {
-        //         Some(PathBuf::from(format!("{}/{}/index.html", lang, id)))
-        //     } else {
-        //         None
-        //     }
-        // }
     }
 
     pub fn rel_source_path(&self) -> Option<PathBuf> {
