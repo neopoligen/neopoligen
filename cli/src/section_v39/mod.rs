@@ -117,7 +117,8 @@ impl SectionV39 {
         let mut templates = vec![];
         if self.template().unwrap().as_str() == "default" {
             templates.push(format!(
-                "sections/generic/{}/default.neoj",
+                "sections/{}/{}/default.neoj",
+                self.r#type,
                 self.bounds().unwrap()
             ));
         } else {

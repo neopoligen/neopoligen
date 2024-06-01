@@ -125,7 +125,6 @@ impl BuilderV39 {
                             format!("pages/post/{}.neoj", page.status().unwrap()),
                             format!("pages/post/published.neoj"),
                         ];
-
                         if let Some(tmpl) = template_patterns.iter().find_map(|template_name| {
                             if let Ok(t) = env.get_template(&template_name) {
                                 Some(t)

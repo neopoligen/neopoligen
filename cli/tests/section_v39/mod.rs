@@ -61,7 +61,18 @@ fn template_override() {
 }
 
 #[test]
-fn template_list() {
+fn template_list_default() {
+    let section = SectionV39::mock1_basic_full();
+    let left = vec![
+        "sections/title/full/default.neoj".to_string(),
+        "sections/generic/full/default.neoj".to_string(),
+    ];
+    let right = section.template_list();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn template_list_with_override() {
     let section = SectionV39::mock2_basic_full_attrs();
     let left = vec![
         "sections/title/full/show.neoj".to_string(),
