@@ -1,44 +1,5 @@
 [#############################################################################]
-[! macro output_css(site, page_id, section) !]
-[! if section.type == "css" !]
-<style>
-[@ section.text @]
-</style>
-[! endif !]
-[! for child in section.children !]
-[@ output_css(site, page_id, child) @]
-[! endfor !]
+[! macro section_classes(section) !]
+[# TODO: get the specific list of section classes
+based off config #]
 [! endmacro !]
-
-[#############################################################################]
-[! macro output_section(site, page_id, section) !]
-[! if section.kind == "generic" !]
-    [! include "sections/generic/" + section.bounds + "/default.neoj" ignore missing !]
-[! else !]
-  [! if section.attrs and section.attrs.template !]
-    [! include 
-      [ 
-      "sections/" + section.type + "/" + section.bounds + "/" + section.attrs.template + ".neoj",
-      "sections/" + section.type + "/" + section.bounds + "/" + "default" + ".neoj" 
-      ]
-      ignore missing
-    !]
-  [! else !]
-    [! include "sections/" + section.type + "/" + section.bounds + "/default.neoj" ignore missing !]
-  [! endif !]
-[! endif !]
-[! endmacro !]
-
-
-[#############################################################################]
-[!- macro output_span(site, page_id, span) -!]
-[!- include "spans/" + span.type + ".neoj" ignore missing -!]
-[!- endmacro -!]
-
-
-[#############################################################################]
-[!- macro view_section_as_json(site, page_id, section) -!]
-<pre>
-[@- section|tojson(true) -@]
-</pre>
-[!- endmacro -!]

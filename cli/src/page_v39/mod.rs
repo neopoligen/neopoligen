@@ -91,10 +91,14 @@ impl PageV39 {
     }
 
     pub fn rel_output_path(&self) -> Option<PathBuf> {
-        if let (Ok(lang), Some(id)) = (self.config.default_language(), self.id()) {
-            Some(PathBuf::from(format!("{}/{}/index.html", lang, id)))
+        if let Some(path_override) = self.get_metadata_attr("path") {
+            Some(PathBuf::from(format!("{}/index.html", path_override)))
         } else {
-            None
+            if let (Ok(lang), Some(id)) = (self.config.default_language(), self.id()) {
+                Some(PathBuf::from(format!("{}/{}/index.html", lang, id)))
+            } else {
+                None
+            }
         }
     }
 

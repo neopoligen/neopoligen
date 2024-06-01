@@ -1,26 +1,8 @@
 [!- import "includes/theme.neoj" as theme -!]
 
-<section class="SECTIONTYPE-default-section basic-default-category-section flow
-[!- if section.attrs.class -!][@ ' ' @][@ section.attrs.class @][!- endif -!]
-"
-[!- for attr in section.attrs -!]
-[!- if 
-    attr != 'afterword' and 
-    attr != 'class' and 
-    attr != 'forward' and 
-    attr != 'h1' and 
-    attr != 'h2' and 
-    attr != 'h3' and 
-    attr != 'h4' and 
-    attr != 'h5' and 
-    attr != 'h6' and 
-    attr != 'preface' and 
-    attr != 'subtitle' and 
-    attr != 'title' 
-!]
-[@ attr @]="[@ section.attrs[attr] @]"
-[!- endif -!]
-[!- endfor -!]
+<section 
+    class="[@ section.classes('SECTIONTYPE-default-section basic-default-category-section flow' @]"
+    [@ theme.section_attrs(section) @]
 >
 
 [!- include "subsections/forward.neoj" -!]

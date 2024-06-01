@@ -22,7 +22,7 @@ impl PageV39 {
             errors: vec![],
             fs_modified: None,
             output_content: None,
-            source_content: Some("-- title\n\nCharlie Delta\n\n-- metadata\n-- id: 20240102bravo123\n-- created: 2024-01-02T10:10:10-04:00\n-- type: example\n-- status: draft".to_string()),
+            source_content: Some("-- title\n\nCharlie Delta\n\n-- metadata\n-- id: 20240102bravo123\n-- created: 2024-01-02T10:10:10-04:00\n-- type: example\n-- status: draft\n-- path: /custom-path".to_string()),
             source_path: None,
         };
         let _ = p.generate_ast();
