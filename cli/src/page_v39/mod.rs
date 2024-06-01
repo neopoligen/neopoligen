@@ -108,6 +108,18 @@ impl PageV39 {
     }
 
     pub fn r#type(&self) -> Option<String> {
-        Some("post".to_string())
+        if let Some(t) = self.get_metadata_attr("type") {
+            Some(t)
+        } else {
+            Some("post".to_string())
+        }
+    }
+
+    pub fn status(&self) -> Option<String> {
+        if let Some(t) = self.get_metadata_attr("status") {
+            Some(t)
+        } else {
+            Some("published".to_string())
+        }
     }
 }

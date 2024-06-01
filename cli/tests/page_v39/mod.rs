@@ -41,6 +41,22 @@ fn rel_output_path_basic() {
 }
 
 #[test]
+fn status_defaults_to_published() {
+    let p = PageV39::mock_1_20240101_basic_page();
+    let left = "published".to_string();
+    let right = p.status().unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn status_from_metadata() {
+    let p = PageV39::mock_2_20240102_with_type_and_status();
+    let left = "draft".to_string();
+    let right = p.status().unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
 fn type_defaults_to_post() {
     let p = PageV39::mock_1_20240101_basic_page();
     let left = "post".to_string();
@@ -49,9 +65,8 @@ fn type_defaults_to_post() {
 }
 
 #[test]
-#[ignore]
 fn type_from_metadata() {
-    let p = PageV39::mock_1_20240101_basic_page();
+    let p = PageV39::mock_2_20240102_with_type_and_status();
     let left = "example".to_string();
     let right = p.r#type().unwrap();
     assert_eq!(left, right);

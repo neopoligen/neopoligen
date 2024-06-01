@@ -13,6 +13,7 @@ impl Object for PageV39 {
     ) -> Result<Value, Error> {
         match name {
             "all_sections" => self.all_sections(),
+            "status" => Ok(Value::from(self.status())),
             "type" => Ok(Value::from(self.r#type())),
             _ => Ok(Value::from("[ERROR: Called non-existant function]")),
         }
