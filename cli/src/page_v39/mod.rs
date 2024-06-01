@@ -64,6 +64,9 @@ impl PageV39 {
     }
 
     pub fn get_metadata_attr(&self, target: &str) -> Option<String> {
+        // Reminder: This only gets the first instance of the target attr
+        // TODO: update so multiple instances of the same attr key
+        // are joined like they are in section
         if let Some(ast) = &self.ast {
             ast.iter().find_map(|section| match &section.kind {
                 SectionV39Kind::Yaml {} => section.attrs.iter().find_map(|attr| match &attr.kind {
@@ -95,10 +98,13 @@ impl PageV39 {
         }
     }
 
-    pub fn rel_source_path(&self) -> Result<PathBuf> {
-        let response = &self.source_path.clone().unwrap();
-        let response = response.strip_prefix(self.config.content_dir())?;
-        Ok(response.to_path_buf())
+    pub fn rel_source_path(&self) -> Option<PathBuf> {
+        let source_path = &self.source_path.clone().unwrap();
+        if let Ok(rel_source_path) = source_path.strip_prefix(self.config.content_dir()) {
+            Some(rel_source_path.to_path_buf())
+        } else {
+            None
+        }
     }
 
     pub fn r#type(&self) -> Option<String> {
