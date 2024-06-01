@@ -96,20 +96,20 @@ impl SectionV39 {
         &self.r#type
     }
 
-    pub fn template(&self) -> Result<Value, Error> {
-        if let Some(attr) = self.attrs.iter().find_map(|attr| match &attr.kind {
+    pub fn template(&self) -> Option<String> {
+        if let Some(template) = self.attrs.iter().find_map(|attr| match &attr.kind {
             SectionAttrV39Kind::KeyValue { key, value } => {
                 if key == "template" {
-                    Some(value)
+                    Some(value.to_string())
                 } else {
                     None
                 }
             }
             _ => None,
         }) {
-            Ok(Value::from(attr))
+            Some(template)
         } else {
-            Ok(Value::from("default"))
+            Some("default".to_string())
         }
     }
 }

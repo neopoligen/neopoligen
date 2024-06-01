@@ -1,7 +1,6 @@
 pub mod basic;
 pub mod yaml;
 
-use minijinja::Value;
 use neopoligengine::section_v39::*;
 use pretty_assertions::assert_eq;
 
@@ -18,14 +17,6 @@ fn bound_test() {
     let section = SectionV39::mock1_basic_full();
     let left = "full";
     let right = section.bounds().unwrap();
-    assert_eq!(left, right);
-}
-
-#[test]
-fn default_template() {
-    let section = SectionV39::mock1_basic_full();
-    let left = Value::from("default");
-    let right = section.template().unwrap();
     assert_eq!(left, right);
 }
 
@@ -54,9 +45,17 @@ fn get_attr_multiple_of_same_key() {
 }
 
 #[test]
-fn template_basic() {
+fn template_default() {
+    let section = SectionV39::mock1_basic_full();
+    let left = "default".to_string();
+    let right = section.template().unwrap();
+    assert_eq!(left, right);
+}
+#[test]
+
+fn template_override() {
     let section = SectionV39::mock2_basic_full_attrs();
-    let left = Value::from("show");
+    let left = "show".to_string();
     let right = section.template().unwrap();
     assert_eq!(left, right);
 }

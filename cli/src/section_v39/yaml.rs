@@ -28,7 +28,7 @@ pub fn yaml_section_full_v39<'a>(
     let (source, attrs) = many0(section_attr_v39).context("").parse(source)?;
     let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, text) = alt((take_until("\n--"), rest, eof))
+    let (source, _text) = alt((take_until("\n--"), rest, eof))
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
