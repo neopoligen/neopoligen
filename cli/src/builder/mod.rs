@@ -241,44 +241,6 @@ body { background-color: #111; color: #aaa; }
     #[instrument(skip(self))]
     pub fn output_pages(&self) -> Result<()> {
         event!(Level::INFO, "Outputting Pages");
-
-        // self.pages.iter_mut().for_each(|p| {
-        //     if let Ok(id) = p.1.id_v2() {
-        //         match p.1.output {
-        //             Some(_) => {}
-        //             None => {
-        //                 let template_name = "pages/post/published.neoj";
-        //                 if let Ok(tmpl) = env.get_template(template_name) {
-        //                     match tmpl.render(context!(
-        //                         site => site_obj,
-        //                         page_id => id,
-        //                         page => Value::from_object(p.1.clone())
-        //                     )) {
-        //                         Ok(output) => {
-        //                             self.last_edit = Some(output.clone());
-        //                             p.1.output = Some(output);
-        //                         }
-        //                         Err(e) => {
-        //                             // TODO: Provide error handling here
-        //                             event!(Level::ERROR, "{}", e);
-        //                             p.1.output = None;
-        //                         }
-        //                     }
-        //                 } else {
-        //                     // TODO: Provide error handling here
-        //                     event!(Level::ERROR, "Could not get template: {}", template_name);
-        //                 }
-        //             }
-        //         }
-        //     } else {
-        //         self.issues.push(BuildIssue {
-        //             kind: BuildIssueKind::MissingPageId {},
-        //             details: None,
-        //             source_path: Some(p.0.to_path_buf()),
-        //         })
-        //     }
-        // });
-
         for (_, page) in self.pages.iter() {
             if page.errors.len() == 0 {
                 if let (Ok(rel_output_path), Some(output_content)) =
@@ -289,7 +251,6 @@ body { background-color: #111; color: #aaa; }
                 }
             }
         }
-
         Ok(())
     }
 

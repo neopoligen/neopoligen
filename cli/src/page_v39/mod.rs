@@ -2,12 +2,12 @@ pub mod mocks;
 pub mod object;
 
 use crate::ast_v39::parse;
-use crate::neo_error::{NeoError, NeoErrorKind};
+use crate::neo_error::NeoError;
 use crate::section_attr_v39::SectionAttrV39Kind;
 use crate::section_v39::{SectionV39, SectionV39Kind};
 use crate::site_config::SiteConfig;
 use anyhow::Result;
-use minijinja::ErrorKind;
+// use minijinja::Value;
 use serde::Serialize;
 use std::fs;
 use std::path::PathBuf;
@@ -55,6 +55,11 @@ impl PageV39 {
 }
 
 impl PageV39 {
+    pub fn all_sections(self) -> Result<Vec<SectionV39>> {
+        Ok(vec![])
+        //        Ok(self.ast.unwrap().iter().map(|section| section).collect())
+    }
+
     pub fn generate_ast(&mut self) -> Result<()> {
         match parse(
             &self.source_content.as_ref().unwrap(),
