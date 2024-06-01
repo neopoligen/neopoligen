@@ -7,7 +7,7 @@ use crate::section_attr_v39::SectionAttrV39Kind;
 use crate::section_v39::{SectionV39, SectionV39Kind};
 use crate::site_config::SiteConfig;
 use anyhow::Result;
-// use minijinja::Value;
+use minijinja::Value;
 use serde::Serialize;
 use std::fs;
 use std::path::PathBuf;
@@ -55,8 +55,11 @@ impl PageV39 {
 }
 
 impl PageV39 {
-    pub fn all_sections(&self) -> Result<&Vec<SectionV39>> {
-        Ok(&self.ast.as_ref().unwrap())
+    pub fn all_sections(&self) -> Result<Value, minijinja::Error> {
+        Ok(Value::make_object_iterable(
+            self.ast.clone().unwrap(),
+            |sections| Box::new(sections.iter().cloned().map(Value::from_object)),
+        ))
     }
 
     pub fn generate_ast(&mut self) -> Result<()> {

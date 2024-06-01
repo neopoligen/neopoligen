@@ -9,5 +9,7 @@ body {
 </style>
 </head>
 <body>
-This is the stuff
+    [! for section in page.all_sections() !]
+      [@ section.type() @] 
+    [! endfor !]
 </body>

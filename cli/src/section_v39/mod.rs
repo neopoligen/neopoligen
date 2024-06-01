@@ -2,6 +2,8 @@
 
 pub mod basic;
 pub mod block;
+pub mod mocks;
+pub mod object;
 pub mod yaml;
 
 use crate::section_attr_v39::SectionAttrV39;
@@ -15,6 +17,7 @@ use crate::section_v39::basic::*;
 use crate::section_v39::yaml::*;
 use crate::sections::*;
 use crate::span_v39::*;
+use minijinja::Value;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
@@ -54,6 +57,15 @@ pub enum SectionV39Kind {
     Basic { children: Vec<SectionV39> },
     Block { spans: Vec<SpanV39> },
     Yaml {},
+}
+
+impl SectionV39 {
+    pub fn r#type(&self) -> &String {
+        &self.r#type
+    }
+    pub fn ping(&self) -> Result<Value, minijinja::Error> {
+        Ok(Value::from("HERE"))
+    }
 }
 
 pub fn initial_error<'a>() -> IResult<&'a str, &'a str, ErrorTree<&'a str>> {
