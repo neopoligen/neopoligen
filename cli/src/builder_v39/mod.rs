@@ -8,6 +8,7 @@ use crate::feed::Feed;
 use crate::helpers::*;
 use crate::image::Image;
 use crate::neo_error::NeoError;
+use crate::neo_error::NeoErrorV39;
 use crate::og_image::*;
 use crate::page_v39::PageV39;
 use crate::site_config::SiteConfig;
@@ -28,6 +29,7 @@ use rimage::Encoder;
 use rusqlite::Connection;
 use serde_json;
 use std::collections::BTreeMap;
+use std::error::Error;
 use std::fs::File;
 use std::{fs, path::PathBuf};
 use syntect::html::{ClassStyle, ClassedHTMLGenerator};
@@ -40,7 +42,7 @@ use walkdir::WalkDir;
 pub struct BuilderV39 {
     pub pages: BTreeMap<PathBuf, PageV39>,
     pub config: SiteConfig,
-    pub issues: Vec<BuildIssue>,
+    pub issues: Vec<NeoErrorV39>,
     // pub feeds: BTreeMap<String, Feed>,
     // pub images: BTreeMap<PathBuf, Image>,
     // pub last_edit: Option<String>,
@@ -106,6 +108,7 @@ impl BuilderV39 {
                         );
                     }
                     Err(e) => {
+                        // TODO: Copy error into issues list
                         event!(Level::ERROR, "{}", e)
                     }
                 };
@@ -137,12 +140,18 @@ impl BuilderV39 {
                                 page => Value::from_object(page.clone())
                             )) {
                                 Ok(output) => {
-                                    // self.last_edit = Some(output.clone());
                                     page.output_content = Some(output);
                                 }
-                                Err(e) => {
-                                    // TODO: Provide error handling here
-                                    event!(Level::ERROR, "{}", e);
+                                Err(err) => {
+                                    let mut err = &err as &dyn std::error::Error;
+                                    //let mut v = vec![];
+                                    while let Some(next_err) = err.source() {
+                                        self.issues.push(NeoErrorV39::MiniJinjaError {
+                                            source_path: Some(source_path.clone()),
+                                            details: next_err.to_string(),
+                                        });
+                                        err = next_err;
+                                    }
                                     page.output_content = None;
                                 }
                             }
@@ -157,14 +166,22 @@ impl BuilderV39 {
                     }
                 }
             } else {
-                self.issues.push(BuildIssue {
-                    kind: BuildIssueKind::MissingPageId {},
-                    details: None,
-                    source_path: Some(source_path.to_path_buf()),
-                })
+                // TODO: Switch this to a NeoError
+                // self.issues.push(BuildIssue {
+                //     kind: BuildIssueKind::MissingPageId {},
+                //     details: None,
+                //     source_path: Some(source_path.to_path_buf()),
+                // })
             }
         });
         Ok(())
+    }
+
+    pub fn issues(&self) -> Vec<Value> {
+        self.issues
+            .iter()
+            .map(|e| Value::from_serialize(e))
+            .collect()
     }
 
     #[instrument(skip(self))]
@@ -192,12 +209,14 @@ impl BuilderV39 {
                                 self.pages.insert(source_path, page);
                                 ()
                             }
-                            Err(e) => {
-                                self.issues.push(BuildIssue {
-                                    source_path: Some(source_path.clone()),
-                                    kind: BuildIssueKind::Generic {},
-                                    details: Some(e.to_string()),
-                                });
+                            Err(_e) => {
+                                // TODO: Switch this to NeoError
+
+                                // self.issues.push(BuildIssue {
+                                //     source_path: Some(source_path.clone()),
+                                //     kind: BuildIssueKind::Generic {},
+                                //     details: Some(e.to_string()),
+                                // });
                             }
                         }
                     }
@@ -235,6 +254,11 @@ body { background-color: #111; color: #aaa; }
 </head><body>
 <h1>Site Status</h1>
 <h2>Issues</h2>
+<ul>
+[! for issue in builder.issues() !]
+<li>[@ issue @]</li>
+[! endfor !]
+</ul>
 <ul>
 [! for page_error in builder.page_errors() !]
 <li>

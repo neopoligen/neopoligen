@@ -16,6 +16,9 @@ body {
         <div>Type: [@ section.type() @] </div>
         <div>Template: [@ section.template() @]</div>
         <div>Template List: [@ section.template_list() @]</div>
+        <div>
+          [! include section.template_list() ignore missing !]
+        </div>
       </li>
     [! endfor !]
     </ul>

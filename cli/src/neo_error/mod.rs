@@ -1,9 +1,26 @@
+use minijinja::value::{Object, Value};
 use serde::Serialize;
+// use std::error::Error;
 use std::fmt;
-// use std::path::PathBuf;
+use std::fmt::Display;
+use std::path::PathBuf;
+use std::sync::Arc;
+use thiserror::Error;
 
-// Currently Deprecated as of site_v2, but something to
-// look back into for better error handling
+#[derive(Clone, Debug, Error, Serialize)]
+#[serde(rename_all = "lowercase", tag = "kind")]
+pub enum NeoErrorV39 {
+    #[error("error: {detail:?}")]
+    Generic { detail: String },
+
+    #[error("minijinja error")]
+    MiniJinjaError {
+        source_path: Option<PathBuf>,
+        details: String,
+    },
+    #[error("unknown data store error")]
+    Unknown,
+}
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct NeoError {
@@ -29,7 +46,7 @@ pub enum NeoErrorKind {
     },
 }
 
-impl fmt::Display for NeoError {
+impl Display for NeoError {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         match &self.kind {
             NeoErrorKind::NoAst {} => {
@@ -66,3 +83,35 @@ impl fmt::Display for NeoError {
         Ok(())
     }
 }
+
+impl Object for NeoErrorV39 {
+    fn call_method(
+        self: &Arc<NeoErrorV39>,
+        _state: &minijinja::State,
+        name: &str,
+        _args: &[Value],
+    ) -> Result<Value, minijinja::Error> {
+        match name {
+            _ => Ok(Value::from("[Error: called non-existing function")),
+        }
+    }
+}
+
+impl Object for NeoError {
+    fn call_method(
+        self: &Arc<NeoError>,
+        _state: &minijinja::State,
+        name: &str,
+        _args: &[Value],
+    ) -> Result<Value, minijinja::Error> {
+        match name {
+            _ => Ok(Value::from("[Error: called non-existing function")),
+        }
+    }
+}
+
+// impl Display for NeoError {
+//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+//         write!(f, "builder_issue")
+//     }
+// }

@@ -134,7 +134,6 @@ impl SectionV39 {
                 self.bounds().unwrap()
             ));
         }
-
         templates.push(format!(
             "sections/generic/{}/default.neoj",
             self.bounds().unwrap()
