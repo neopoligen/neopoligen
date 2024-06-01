@@ -10,8 +10,8 @@ use thiserror::Error;
 #[derive(Clone, Debug, Error, Serialize)]
 #[serde(rename_all = "lowercase", tag = "kind")]
 pub enum NeoErrorV39 {
-    #[error("error: {detail:?}")]
-    Generic { detail: String },
+    #[error("error: {details:?}")]
+    Generic { details: String },
 
     #[error("minijinja error")]
     MiniJinjaError {

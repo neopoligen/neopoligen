@@ -102,10 +102,15 @@ impl BuilderV39 {
                 match fs::read_to_string(&path) {
                     Ok(content) => {
                         let template_name = path.strip_prefix(self.config.templates_dir()).unwrap();
-                        let _ = env.add_template_owned(
+                        match env.add_template_owned(
                             template_name.to_string_lossy().to_string(),
                             content,
-                        );
+                        ) {
+                            Ok(_) => {}
+                            Err(e) => self.issues.push(NeoErrorV39::Generic {
+                                details: e.to_string(),
+                            }),
+                        };
                     }
                     Err(e) => {
                         // TODO: Copy error into issues list
@@ -146,6 +151,7 @@ impl BuilderV39 {
                                     let mut err = &err as &dyn std::error::Error;
                                     //let mut v = vec![];
                                     while let Some(next_err) = err.source() {
+                                        dbg!(&next_err);
                                         self.issues.push(NeoErrorV39::MiniJinjaError {
                                             source_path: Some(source_path.clone()),
                                             details: next_err.to_string(),
