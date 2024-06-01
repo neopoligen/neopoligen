@@ -71,30 +71,3 @@ pub fn raw_section_start_v39<'a>(
     };
     Ok((source, section))
 }
-
-//     let mut attrs: BTreeMap<String, String> = BTreeMap::new();
-//     let mut flags: Vec<String> = vec![];
-//     raw_attrs.iter().for_each(|attr| match attr {
-//         SectionAttr::KeyValue { key, value } => {
-//             if attrs.contains_key(key) {
-//                 let to_update = attrs.get_mut(key).unwrap();
-//                 to_update.push_str(" ");
-//                 to_update.push_str(value);
-//             } else {
-//                 attrs.insert(key.to_string(), value.to_string());
-//             }
-//         }
-//         SectionAttr::Flag { key } => flags.push(key.to_string()),
-//     });
-//     Ok((
-//         source,
-//         Section::Raw {
-//             attrs,
-//             bounds: "start".to_string(),
-//             children: vec![end_section],
-//             flags,
-//             r#type: r#type.to_string(),
-//             text: Some(text.trim_end().to_string()),
-//         },
-//     ))
-// }
