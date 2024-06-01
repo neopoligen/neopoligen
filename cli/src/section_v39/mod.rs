@@ -17,6 +17,7 @@ use crate::section_v39::basic::*;
 use crate::section_v39::yaml::*;
 use crate::sections::*;
 use crate::span_v39::*;
+use minijinja::Error;
 use minijinja::Value;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
@@ -63,7 +64,15 @@ impl SectionV39 {
     pub fn r#type(&self) -> &String {
         &self.r#type
     }
-    pub fn ping(&self) -> Result<Value, minijinja::Error> {
+    pub fn template(&self) -> Result<Value, Error> {
+        if let Some(attr) = self.attrs.iter().find_map(|attr| Some("asdf")) {
+            Ok(Value::from(attr))
+        } else {
+            Ok(Value::from("default"))
+        }
+    }
+
+    pub fn ping(&self) -> Result<Value, Error> {
         Ok(Value::from("HERE"))
     }
 }
