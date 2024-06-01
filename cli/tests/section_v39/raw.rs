@@ -3,18 +3,22 @@ use neopoligengine::{
     section_attr_v39::{SectionAttrV39, SectionAttrV39Kind},
     section_v39::*,
     site_config::SiteConfig,
-    span_v39::{SpanV39, SpanV39Kind},
 };
 use pretty_assertions::assert_eq;
 
 #[test]
 fn raw_section_full_core_test() {
     let config = SiteConfig::mock1();
-    let source = "-- code\n\nHello World";
+    let source = "-- code\n-- class: green\n\nHello World";
     let left = (
         "",
         SectionV39 {
-            attrs: vec![],
+            attrs: vec![SectionAttrV39 {
+                kind: SectionAttrV39Kind::KeyValue {
+                    key: "class".to_string(),
+                    value: "green".to_string(),
+                },
+            }],
             bounds: SectionV39Bounds::Full,
             kind: SectionV39Kind::Raw {
                 text: Some("Hello World".to_string()),
