@@ -1,0 +1,12 @@
+[!- import "includes/theme.neoj" as theme -!]
+
+<section 
+    class="[@ section.classes('ref-default-section basic-default-category-section flow' @]"
+    [@ theme.section_attrs(section) @]
+>
+
+[!- include "subsections/forward.neoj" -!]
+[!- include "subsections/headings.neoj" -!]
+[!- include "subsections/preface.neoj" -!]
+[!- include "subsections/content-full.neoj" -!]
+[!- include "subsections/afterword.neoj" -!]

@@ -123,6 +123,7 @@ impl Builder {
                             ),
                             format!("pages/{}/published.neoj", page.r#type().unwrap()),
                             format!("pages/post/{}.neoj", page.status().unwrap()),
+                            format!("pages/post/published.neoj"),
                         ];
 
                         if let Some(tmpl) = template_patterns.iter().find_map(|template_name| {
