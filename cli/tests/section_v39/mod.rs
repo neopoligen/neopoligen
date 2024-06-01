@@ -51,11 +51,23 @@ fn template_default() {
     let right = section.template().unwrap();
     assert_eq!(left, right);
 }
-#[test]
 
+#[test]
 fn template_override() {
     let section = SectionV39::mock2_basic_full_attrs();
     let left = "show".to_string();
     let right = section.template().unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn template_list() {
+    let section = SectionV39::mock2_basic_full_attrs();
+    let left = vec![
+        "sections/title/full/show.neoj".to_string(),
+        "sections/title/full/default.neoj".to_string(),
+        "sections/generic/full/default.neoj".to_string(),
+    ];
+    let right = section.template_list();
     assert_eq!(left, right);
 }

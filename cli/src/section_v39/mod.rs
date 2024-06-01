@@ -112,6 +112,34 @@ impl SectionV39 {
             Some("default".to_string())
         }
     }
+
+    pub fn template_list(&self) -> Vec<String> {
+        let mut templates = vec![];
+        if self.template().unwrap().as_str() == "default" {
+            templates.push(format!(
+                "sections/generic/{}/default.neoj",
+                self.bounds().unwrap()
+            ));
+        } else {
+            templates.push(format!(
+                "sections/{}/{}/{}.neoj",
+                self.r#type,
+                self.bounds().unwrap(),
+                self.template().unwrap()
+            ));
+            templates.push(format!(
+                "sections/{}/{}/default.neoj",
+                self.r#type,
+                self.bounds().unwrap()
+            ));
+        }
+
+        templates.push(format!(
+            "sections/generic/{}/default.neoj",
+            self.bounds().unwrap()
+        ));
+        templates
+    }
 }
 
 pub fn initial_error<'a>() -> IResult<&'a str, &'a str, ErrorTree<&'a str>> {

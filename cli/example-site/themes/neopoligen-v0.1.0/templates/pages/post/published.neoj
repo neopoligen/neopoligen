@@ -9,11 +9,13 @@ body {
 </style>
 </head>
 <body>
+
     <ul>
     [! for section in page.all_sections() !]
       <li>
-      [@ section.type() @] 
-      [@ section.template() @] 
+        <div>Type: [@ section.type() @] </div>
+        <div>Template: [@ section.template() @]</div>
+        <div>Template List: [@ section.template_list() @]</div>
       </li>
     [! endfor !]
     </ul>

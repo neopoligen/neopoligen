@@ -14,6 +14,7 @@ impl Object for SectionV39 {
         match name {
             "bounds" => Ok(Value::from(self.bounds())),
             "template" => Ok(Value::from(self.template())),
+            "template_list" => Ok(Value::from_serialize(self.template_list())),
             "type" => Ok(Value::from(&self.r#type)),
             _ => Ok(Value::from("[Error: called non-existing function")),
         }
