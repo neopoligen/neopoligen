@@ -471,22 +471,6 @@ body { background-color: #111; color: #aaa; }
 [! for child in section.children() !]
 [@ theme.output_section(site, page_id, child) @]
 [! endfor !]
-<!-- SHOW_CODE -->
-Target: 
-<pre>[@ section.text()|escape @]</pre>
-Got: 
-<div class="show-code-area"></div>
-<!-- TODO: Move this js so it only loads once -->
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const in_blocks = document.querySelectorAll(".theme-test-area")
-    const out_blocks = document.querySelectorAll(".show-code-area")
-    in_blocks.forEach((in_block, block_index) => {
-        //console.log(in_block.innerHTML)
-        out_blocks[block_index].innerText = in_block.innerHTML
-    })
-}) 
-</script>
 "#
             .to_string(),
         );
@@ -502,7 +486,6 @@ document.addEventListener("DOMContentLoaded", () => {
             .to_string(),
         );
         pages.iter_mut().for_each(|(source_path, page)| {
-            let mut page_report: Vec<(bool, String, String)> = vec![];
             let _ = page.generate_ast();
             if page.errors.len() > 0 {
                 for err in page.errors.iter() {
@@ -668,7 +651,6 @@ body { background-color: #111; color: #aaa; }
 <body>
 <header><a href="/">Home Page</a> - <a href="/neo-status/">Neopoligen Status</a></header>
 <h1>Theme Test Report</h1>
-
 [! for item in payload.items() !]
 <h2>[@ item.status() @] - Test</h2>
 <h3>Expected</h3>
@@ -676,10 +658,6 @@ body { background-color: #111; color: #aaa; }
 <h3>Got</h3>
 [@ item.got() @]
 [! endfor !]
-
-
-
-
 </body>
 </html>
         "#
