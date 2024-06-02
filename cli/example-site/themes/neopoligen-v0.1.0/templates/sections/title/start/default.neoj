@@ -1,5 +1,4 @@
 [! import "includes/theme.neoj" as theme !]
-
 [! include "subsections/forward.neoj" !]
 
 [! for child in section.children() !]
