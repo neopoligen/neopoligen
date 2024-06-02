@@ -20,28 +20,18 @@ use serde::Serialize;
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct SpanShorthandTokenV39 {
+    pub source_text: String,
+    pub parsed_text: String,
     pub kind: SpanShorthandTokenV39Kind,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(rename_all = "lowercase", tag = "type")]
 pub enum SpanShorthandTokenV39Kind {
-    EscapedBacktick {
-        source_text: String,
-        parsed_text: String,
-    },
-    EscapedPipe {
-        source_text: String,
-        parsed_text: String,
-    },
-    EscapedSlash {
-        source_text: String,
-        parsed_text: String,
-    },
-    WordPart {
-        source_text: String,
-        parsed_text: String,
-    },
+    EscapedBacktick,
+    EscapedPipe,
+    EscapedSlash,
+    WordPart,
 }
 
 pub fn shorthand_token_escaped_backtick_v39(
@@ -50,10 +40,9 @@ pub fn shorthand_token_escaped_backtick_v39(
     let (source, the_escape) = tag("\\").context("").parse(source)?;
     let (source, text) = tag("`").context("").parse(source)?;
     let token = SpanShorthandTokenV39 {
-        kind: SpanShorthandTokenV39Kind::EscapedBacktick {
-            source_text: format!("{}{}", the_escape, text),
-            parsed_text: format!("{}", text),
-        },
+        source_text: format!("{}{}", the_escape, text),
+        parsed_text: format!("{}", text),
+        kind: SpanShorthandTokenV39Kind::EscapedBacktick,
     };
     Ok((source, token))
 }
@@ -64,10 +53,9 @@ pub fn shorthand_token_escaped_pipe_v39(
     let (source, the_escape) = tag("\\").context("").parse(source)?;
     let (source, text) = tag("|").context("").parse(source)?;
     let token = SpanShorthandTokenV39 {
-        kind: SpanShorthandTokenV39Kind::EscapedPipe {
-            source_text: format!("{}{}", the_escape, text),
-            parsed_text: format!("{}", text),
-        },
+        source_text: format!("{}{}", the_escape, text),
+        parsed_text: format!("{}", text),
+        kind: SpanShorthandTokenV39Kind::EscapedPipe,
     };
     Ok((source, token))
 }
@@ -78,10 +66,9 @@ pub fn shorthand_token_escaped_slash_v39(
     let (source, the_escape) = tag("\\").context("").parse(source)?;
     let (source, text) = tag("\\").context("").parse(source)?;
     let token = SpanShorthandTokenV39 {
-        kind: SpanShorthandTokenV39Kind::EscapedSlash {
-            source_text: format!("{}{}", the_escape, text),
-            parsed_text: format!("{}", text),
-        },
+        source_text: format!("{}{}", the_escape, text),
+        parsed_text: format!("{}", text),
+        kind: SpanShorthandTokenV39Kind::EscapedSlash,
     };
     Ok((source, token))
 }

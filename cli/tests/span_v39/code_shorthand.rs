@@ -94,7 +94,7 @@ fn flag_attr_for_code_basic_end_at_block() {
 }
 
 #[test]
-fn flag_attr_for_code_with_pipe_escape() {
+fn solo_flag_attr_for_code_with_pipe_escape() {
     let source = "|rust\\|here``";
     let left = (
         "``",
@@ -115,10 +115,9 @@ fn token_for_code_shorthand_word_part() {
     let left = (
         "``",
         SpanShorthandTokenV39 {
-            kind: SpanShorthandTokenV39Kind::WordPart {
-                source_text: "alfa".to_string(),
-                parsed_text: "alfa".to_string(),
-            },
+            source_text: "alfa".to_string(),
+            parsed_text: "alfa".to_string(),
+            kind: SpanShorthandTokenV39Kind::WordPart,
         },
     );
     let right = code_shorthand_token_word_part_v39(source).unwrap();

@@ -4,6 +4,7 @@ watchexec\
   --project-origin .\
   -w "../cli"\
   --workdir "../cli"\
+  -c\
   -r\
   -e rs,neo\
   "bash -c 'cargo test solo -- --nocapture'"

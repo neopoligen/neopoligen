@@ -7,10 +7,9 @@ fn shorthand_token_escaped_backtick_basic() {
     let left = (
         "``",
         SpanShorthandTokenV39 {
-            kind: SpanShorthandTokenV39Kind::EscapedBacktick {
-                source_text: "\\`".to_string(),
-                parsed_text: "`".to_string(),
-            },
+            source_text: "\\`".to_string(),
+            parsed_text: "`".to_string(),
+            kind: SpanShorthandTokenV39Kind::EscapedBacktick,
         },
     );
     let right = shorthand_token_escaped_backtick_v39(source).unwrap();
@@ -23,10 +22,9 @@ fn shorthand_token_escaped_pipe_basic() {
     let left = (
         "",
         SpanShorthandTokenV39 {
-            kind: SpanShorthandTokenV39Kind::EscapedPipe {
-                source_text: "\\|".to_string(),
-                parsed_text: "|".to_string(),
-            },
+            source_text: "\\|".to_string(),
+            parsed_text: "|".to_string(),
+            kind: SpanShorthandTokenV39Kind::EscapedPipe,
         },
     );
     let right = shorthand_token_escaped_pipe_v39(source).unwrap();
@@ -39,10 +37,9 @@ fn shorthand_token_escaped_slash_basic() {
     let left = (
         "",
         SpanShorthandTokenV39 {
-            kind: SpanShorthandTokenV39Kind::EscapedSlash {
-                source_text: "\\\\".to_string(),
-                parsed_text: "\\".to_string(),
-            },
+            source_text: "\\\\".to_string(),
+            parsed_text: "\\".to_string(),
+            kind: SpanShorthandTokenV39Kind::EscapedSlash,
         },
     );
     let right = shorthand_token_escaped_slash_v39(source).unwrap();
