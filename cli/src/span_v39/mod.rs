@@ -1,3 +1,5 @@
+pub mod code_shorthand;
+
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
@@ -82,23 +84,6 @@ pub fn backtick_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
         SpanV39 {
             kind: SpanV39Kind::Backtick {
                 source_text: "`".to_string(),
-            },
-        },
-    ))
-}
-
-pub fn code_shorthand_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
-    let (source, _) = tag("``").context("").parse(source)?;
-    let (source, text) = is_not("`").context("").parse(source)?;
-    let (source, _) = tag("``").context("").parse(source)?;
-    let attrs = vec![];
-    Ok((
-        source,
-        SpanV39 {
-            kind: SpanV39Kind::CodeShorthand {
-                attrs,
-                source_text: "``code``".to_string(),
-                parsed_text: text.to_string(),
             },
         },
     ))

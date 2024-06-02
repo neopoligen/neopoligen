@@ -2,7 +2,7 @@ use serde::Serialize;
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct SpanAttrV39 {
-    kind: SpanAttrV39Kind,
+    pub kind: SpanAttrV39Kind,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
