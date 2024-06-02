@@ -25,7 +25,6 @@ fn code_shorthand_basic() {
 }
 
 #[test]
-#[ignore]
 fn code_shorthand_with_flag_attr() {
     let source = "``code|rust``";
     let left = (
@@ -53,7 +52,7 @@ fn flag_attr_for_code_basic_end_at_block() {
         "``",
         SpanAttrV39 {
             kind: SpanAttrV39Kind::Flag {
-                key: "ust".to_string(),
+                key: "rust".to_string(),
             },
         },
     );
