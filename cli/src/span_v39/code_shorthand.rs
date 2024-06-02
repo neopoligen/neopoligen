@@ -44,43 +44,53 @@ pub fn code_shorthand_attr_v39(source: &str) -> IResult<&str, SpanAttrV39, Error
 }
 
 pub fn code_shorthand_flag_attr_v39(source: &str) -> IResult<&str, SpanAttrV39, ErrorTree<&str>> {
-    let (source, _) = tag("|").context("").parse(source)?;
-    let (source, text) = is_not("`|").context("").parse(source)?;
-    let attr = SpanAttrV39 {
-        kind: SpanAttrV39Kind::Flag {
-            source_text: format!("|{}", text),
-            key: text.to_string(),
-        },
-    };
-    Ok((source, attr))
+    code_shorthand_flag_attr_v39_dev(source)
+
+    // let (source, _) = tag("|").context("").parse(source)?;
+    // let (source, text) = is_not("`|").context("").parse(source)?;
+    // let attr = SpanAttrV39 {
+    //     kind: SpanAttrV39Kind::Flag {
+    //         source_text: format!("|{}", text),
+    //         key: text.to_string(),
+    //     },
+    // };
+    // Ok((source, attr))
+
+    //
 }
 
 pub fn code_shorthand_flag_attr_v39_dev(
     source: &str,
 ) -> IResult<&str, SpanAttrV39, ErrorTree<&str>> {
-    let (source, _) = tag("|").context("").parse(source)?;
-    let (_source, words) = many1(code_shorthand_token_v39).context("").parse(source)?;
-
-    let source_text = words.iter().map(|word| {});
-
-    dbg!("----------------------------------------", &words);
+    let (source, the_tag) = tag("|").context("").parse(source)?;
+    let (source, words) = many1(code_shorthand_token_v39).context("").parse(source)?;
+    let source_text = words
+        .iter()
+        .map(|word| word.source_text.clone())
+        .collect::<Vec<String>>()
+        .join("");
+    let key = words
+        .iter()
+        .map(|word| word.parsed_text.clone())
+        .collect::<Vec<String>>()
+        .join("");
     let attr = SpanAttrV39 {
         kind: SpanAttrV39Kind::Flag {
-            source_text: format!("|rust\\|here"),
-            key: format!("rust|here"),
+            source_text: format!("{}{}", the_tag, source_text),
+            key,
         },
     };
-    Ok(("``", attr))
+    Ok((source, attr))
 }
 
 pub fn code_shorthand_token_v39(
     source: &str,
 ) -> IResult<&str, SpanShorthandTokenV39, ErrorTree<&str>> {
     let (source, token) = alt((
-        code_shorthand_token_word_part_v39,
         shorthand_token_escaped_pipe_v39,
         shorthand_token_escaped_slash_v39,
         shorthand_token_escaped_backtick_v39,
+        code_shorthand_token_word_part_v39,
     ))
     .context("")
     .parse(source)?;

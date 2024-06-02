@@ -48,7 +48,7 @@ fn code_shorthand_with_flag_attr() {
 }
 
 #[test]
-fn code_shorthand_with_mutiple_flag_attrs() {
+fn code_shorthand_with_multiple_flag_attrs() {
     let source = "``code|rust|hidden``";
     let left = (
         "",
@@ -94,7 +94,7 @@ fn flag_attr_for_code_basic_end_at_block() {
 }
 
 #[test]
-fn solo_flag_attr_for_code_with_pipe_escape() {
+fn flag_attr_for_code_with_pipe_escape() {
     let source = "|rust\\|here``";
     let left = (
         "``",
