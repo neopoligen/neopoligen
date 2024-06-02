@@ -322,3 +322,26 @@ fn code_shorthand_key_value_attrs_basic_key_value_attr() {
     let right = code_shorthand_key_value_attr_v39(source).unwrap();
     assert_eq!(left, right);
 }
+
+#[test]
+fn code_shorthand_basic_with_key_value() {
+    let source = "``ping|class: blue``";
+    let left = (
+        "",
+        SpanV39 {
+            source_text: "``ping|class: blue``".to_string(),
+            parsed_text: "ping".to_string(),
+            kind: SpanV39Kind::CodeShorthand {
+                attrs: vec![SpanAttrV39 {
+                    kind: SpanAttrV39Kind::KeyValue {
+                        source_text: "|class: blue".to_string(),
+                        key: "class".to_string(),
+                        value: "blue".to_string(),
+                    },
+                }],
+            },
+        },
+    );
+    let right = code_shorthand_v39(source).unwrap();
+    assert_eq!(left, right);
+}

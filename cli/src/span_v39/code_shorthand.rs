@@ -42,9 +42,12 @@ pub fn code_shorthand_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str
 }
 
 pub fn code_shorthand_attr_v39(source: &str) -> IResult<&str, SpanAttrV39, ErrorTree<&str>> {
-    let (source, attr) = alt((code_shorthand_flag_attr_v39,))
-        .context("")
-        .parse(source)?;
+    let (source, attr) = alt((
+        code_shorthand_key_value_attr_v39,
+        code_shorthand_flag_attr_v39,
+    ))
+    .context("")
+    .parse(source)?;
     Ok((source, attr))
 }
 
