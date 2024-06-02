@@ -31,16 +31,9 @@ pub enum SpanV39Kind {
     WordPart { text: String },
 }
 
-pub fn span_v39<'a>(
-    source: &'a str,
-    _spans: &'a Vec<String>,
-) -> IResult<&'a str, SpanV39, ErrorTree<&'a str>> {
-    let (source, span) = alt((word_part, space))(source)?;
-    Ok((source, span))
-}
-
-// TODO: Needs test
-pub fn empty_until_newline_or_eof<'a>(
+// Reminder: This doesn't output a span for content
+// it's only for the structure of the file
+pub fn structure_empty_until_newline_or_eof<'a>(
     source: &'a str,
 ) -> IResult<&'a str, &'a str, ErrorTree<&'a str>> {
     let (source, _) = alt((
@@ -52,12 +45,13 @@ pub fn empty_until_newline_or_eof<'a>(
     Ok((source, ""))
 }
 
-// // DEPRECATED: Replace with empty_until_newline_or_eof so there's just one
-// // thing that's needed
-// pub fn line_ending_or_eof(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
-//     let (source, result) = alt((line_ending, eof))(source)?;
-//     Ok((source, result))
-// }
+pub fn span_v39<'a>(
+    source: &'a str,
+    _spans: &'a Vec<String>,
+) -> IResult<&'a str, SpanV39, ErrorTree<&'a str>> {
+    let (source, span) = alt((word_part, space))(source)?;
+    Ok((source, span))
+}
 
 // TODO: Needs test
 pub fn newline_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {

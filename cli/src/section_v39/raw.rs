@@ -24,9 +24,13 @@ pub fn raw_section_full_v39<'a>(
     let (source, r#type) = (|src| tag_finder(src, &sections.raw))
         .context("")
         .parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
     let (source, attrs) = many0(section_attr_v39).context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
     let (source, text) = alt((take_until("\n--"), rest)).context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let section = SectionV39 {
@@ -52,9 +56,13 @@ pub fn raw_section_start_v39<'a>(
         .parse(source)?;
     let end_key = format!("-- /{}", r#type);
     let (source, _) = tag("/").context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
     let (source, attrs) = many0(section_attr_v39).context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
     let (source, text) = take_until(end_key.as_str()).context("").parse(source)?;
     let (source, end_section) = basic_section_end_v39(source, spans, r#type)?;
     let (source, _) = multispace0.context("").parse(source)?;

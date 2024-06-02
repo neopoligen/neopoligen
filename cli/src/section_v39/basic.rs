@@ -21,9 +21,13 @@ pub fn basic_section_end_v39<'a>(
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, _) = tag("/").context("").parse(source)?;
     let (source, r#type) = tag(key).context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
     let (source, attrs) = many0(section_attr_v39).context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, children) = many0(|src| block_of_end_content_v39(src, &spans))
         .context("")
@@ -46,9 +50,13 @@ pub fn basic_section_full_v39<'a>(
     let (source, r#type) = (|src| tag_finder(src, &sections.basic))
         .context("")
         .parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
     let (source, attrs) = many0(section_attr_v39).context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, children) = many0(|src| block_of_anything_v39(src, &spans))
         .context("")
@@ -72,9 +80,13 @@ pub fn basic_section_start_v39<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = tag("/").context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
     let (source, attrs) = many0(section_attr_v39).context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, mut children) = many0(alt((
         |src| block_of_anything_v39(src, &spans),

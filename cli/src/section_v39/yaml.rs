@@ -24,9 +24,13 @@ pub fn yaml_section_full_v39<'a>(
     let (source, r#type) = (|src| tag_finder(src, &sections.yaml))
         .context("")
         .parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
     let (source, attrs) = many0(section_attr_v39).context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, _text) = alt((take_until("\n--"), rest, eof))
         .context("")
@@ -87,11 +91,11 @@ pub fn yaml_section_full_v39<'a>(
 //     let (source, r#type) = (|src| tag_finder(src, &sections.yaml))
 //         .context("")
 //         .parse(source)?;
-//     let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
+//     let (source, _) = structure_empty_until_newline_or_eof.context("").parse(source)?;
 //     // dbg!(&source);
 //     let (source, raw_attrs) = many0(section_attr).context("").parse(source)?;
 //     // dbg!(&source);
-//     let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
+//     let (source, _) = structure_empty_until_newline_or_eof.context("").parse(source)?;
 //     // dbg!(&source);
 //     // dbg!("a-----------");
 //     let (source, _) = multispace0
