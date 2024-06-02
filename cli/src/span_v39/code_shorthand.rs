@@ -65,10 +65,8 @@ pub fn code_shorthand_flag_attr_v39(source: &str) -> IResult<&str, SpanAttrV39, 
         .collect::<Vec<String>>()
         .join("");
     let attr = SpanAttrV39 {
-        kind: SpanAttrV39Kind::Flag {
-            source_text: format!("{}{}", the_tag, source_text),
-            key,
-        },
+        source_text: format!("{}{}", the_tag, source_text),
+        kind: SpanAttrV39Kind::Flag { key },
     };
     Ok((source, attr))
 }
@@ -119,8 +117,8 @@ pub fn code_shorthand_key_value_attr_v39(
         .join("");
     let source_text = initial_source.replace(source, "").to_string();
     let attr = SpanAttrV39 {
+        source_text,
         kind: SpanAttrV39Kind::KeyValue {
-            source_text,
             key: key.to_string(),
             value,
         },

@@ -97,8 +97,8 @@ fn code_shorthand_with_flag_attr() {
             parsed_text: "code".to_string(),
             kind: SpanV39Kind::CodeShorthand {
                 attrs: vec![SpanAttrV39 {
+                    source_text: "|rust".to_string(),
                     kind: SpanAttrV39Kind::Flag {
-                        source_text: "|rust".to_string(),
                         key: "rust".to_string(),
                     },
                 }],
@@ -120,15 +120,15 @@ fn code_shorthand_with_multiple_flag_attrs() {
             kind: SpanV39Kind::CodeShorthand {
                 attrs: vec![
                     SpanAttrV39 {
+                        source_text: "|rust".to_string(),
                         kind: SpanAttrV39Kind::Flag {
                             key: "rust".to_string(),
-                            source_text: "|rust".to_string(),
                         },
                     },
                     SpanAttrV39 {
+                        source_text: "|hidden".to_string(),
                         kind: SpanAttrV39Kind::Flag {
                             key: "hidden".to_string(),
-                            source_text: "|hidden".to_string(),
                         },
                     },
                 ],
@@ -145,9 +145,9 @@ fn flag_attr_for_code_basic_end_at_block() {
     let left = (
         "``",
         SpanAttrV39 {
+            source_text: "|rust".to_string(),
             kind: SpanAttrV39Kind::Flag {
                 key: "rust".to_string(),
-                source_text: "|rust".to_string(),
             },
         },
     );
@@ -161,9 +161,9 @@ fn flag_attr_for_code_with_escaped_colon() {
     let left = (
         "``",
         SpanAttrV39 {
+            source_text: "|rust\\:".to_string(),
             kind: SpanAttrV39Kind::Flag {
                 key: "rust:".to_string(),
-                source_text: "|rust\\:".to_string(),
             },
         },
     );
@@ -177,9 +177,9 @@ fn flag_attr_for_code_url() {
     let left = (
         "``",
         SpanAttrV39 {
+            source_text: "|https://www.example.com".to_string(),
             kind: SpanAttrV39Kind::Flag {
                 key: "https://www.example.com".to_string(),
-                source_text: "|https://www.example.com".to_string(),
             },
         },
     );
@@ -193,9 +193,9 @@ fn flag_attr_for_code_with_pipe_escape() {
     let left = (
         "``",
         SpanAttrV39 {
+            source_text: "|rust\\|here".to_string(),
             kind: SpanAttrV39Kind::Flag {
                 key: "rust|here".to_string(),
-                source_text: "|rust\\|here".to_string(),
             },
         },
     );
@@ -344,8 +344,8 @@ fn code_shorthand_key_value_attrs_basic_key_value_attr() {
     let left = (
         "",
         SpanAttrV39 {
+            source_text: "|class: green".to_string(),
             kind: SpanAttrV39Kind::KeyValue {
-                source_text: "|class: green".to_string(),
                 key: "class".to_string(),
                 value: "green".to_string(),
             },
@@ -365,8 +365,8 @@ fn code_shorthand_basic_with_key_value() {
             parsed_text: "ping".to_string(),
             kind: SpanV39Kind::CodeShorthand {
                 attrs: vec![SpanAttrV39 {
+                    source_text: "|class: blue".to_string(),
                     kind: SpanAttrV39Kind::KeyValue {
-                        source_text: "|class: blue".to_string(),
                         key: "class".to_string(),
                         value: "blue".to_string(),
                     },
