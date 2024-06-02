@@ -4,6 +4,51 @@ use neopoligengine::span_v39::*;
 use pretty_assertions::assert_eq;
 
 #[test]
+fn backtick_at_eof() {
+    let source = "`";
+    let left = (
+        "",
+        SpanV39 {
+            kind: SpanV39Kind::Backtick {
+                text: "`".to_string(),
+            },
+        },
+    );
+    let right = backtick_v39(source).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn backtick_at_infront_of_another_character() {
+    let source = "`x";
+    let left = (
+        "x",
+        SpanV39 {
+            kind: SpanV39Kind::Backtick {
+                text: "`".to_string(),
+            },
+        },
+    );
+    let right = backtick_v39(source).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn backtick_at_infront_of_space() {
+    let source = "` ";
+    let left = (
+        " ",
+        SpanV39 {
+            kind: SpanV39Kind::Backtick {
+                text: "`".to_string(),
+            },
+        },
+    );
+    let right = backtick_v39(source).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
 fn newline_basic() {
     let source = "\n";
     let left = (

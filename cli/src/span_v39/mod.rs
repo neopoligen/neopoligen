@@ -1,6 +1,6 @@
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
-//use nom::bytes::complete::tag;
+use nom::bytes::complete::tag;
 use nom::character::complete::line_ending;
 use nom::character::complete::multispace0;
 use nom::character::complete::space0;
@@ -23,6 +23,7 @@ pub struct SpanV39 {
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(rename_all = "lowercase", tag = "type")]
 pub enum SpanV39Kind {
+    Backtick { text: String },
     Space { text: String },
     WordPart { text: String },
 }
@@ -45,11 +46,23 @@ pub fn span_v39<'a>(
     source: &'a str,
     _spans: &'a Vec<String>,
 ) -> IResult<&'a str, SpanV39, ErrorTree<&'a str>> {
-    let (source, span) = alt((word_part_v39, space_v39, newline_v39))(source)?;
+    let (source, span) = alt((word_part_v39, space_v39, newline_v39, backtick_v39))(source)?;
     Ok((source, span))
 }
 
-// TODO: Needs test
+pub fn backtick_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
+    let (source, _) = tag("`").context("").parse(source)?;
+    let (source, _) = not(tag("`")).context("").parse(source)?;
+    Ok((
+        source,
+        SpanV39 {
+            kind: SpanV39Kind::Backtick {
+                text: "`".to_string(),
+            },
+        },
+    ))
+}
+
 pub fn newline_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
     let (source, _text) = tuple((space0, line_ending)).context("").parse(source)?;
     let (source, _) = not(tuple((space0, line_ending)))
@@ -78,7 +91,7 @@ pub fn space_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
 }
 
 pub fn word_part_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
-    let (source, text) = is_not(" \n\t").context("").parse(source)?;
+    let (source, text) = is_not(" \n\t`").context("").parse(source)?;
     Ok((
         source,
         SpanV39 {

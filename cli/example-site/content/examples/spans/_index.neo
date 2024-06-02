@@ -1,0 +1,53 @@
+-- title
+
+Spans
+
+"Spans" refers to spans of text in your 
+files that you want to do something with. 
+
+There are two types of spans:
+
+Named spans that use ``<<`` and ``>>`` 
+
+And, shorthand spans that use other characters. 
+
+
+
+Named Span: <<em|named em span>>
+
+Code: ``this is code``
+
+Emphasis: __the is em__
+
+Strong: **this is strong**
+
+Link: [[this is a link|https://www.example.com/]]
+
+Footnote: ^^1^^
+
+HTML: ((<span>HTML</span>))
+
+Strikethrough ~~strikethrough~~
+
+Classes On Span ::green|this is green text::
+
+iLink: @@alfa1234#allow_for_comment|some text@@
+
+titled link: !!alfa1234#allow for comment here!!
+
+unicode or html entity: &&quot&&
+
+image: %%image_name%%
+
+Marked text: $$marked text$$
+
+
+
+
+-- metadata
+-- created: 2024-06-02T00:31:47-04:00
+-- updated: 2024-06-02T00:31:47-04:00
+-- id: 2hjchixl
+-- type: post
+-- status: draft
+
