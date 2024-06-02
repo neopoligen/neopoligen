@@ -23,6 +23,7 @@ pub struct SectionAttrV39 {
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
+#[serde(tag = "kind", rename_all = "lowercase")]
 pub enum SectionAttrV39Kind {
     KeyValue { key: String, value: String },
     Flag { flag: String },
