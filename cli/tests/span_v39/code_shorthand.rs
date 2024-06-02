@@ -7,10 +7,12 @@ use pretty_assertions::assert_eq;
 #[test]
 fn code_shorthand_basic() {
     let source = "``code``";
+    let attrs = vec![];
     let left = (
         "",
         SpanV39 {
             kind: SpanV39Kind::CodeShorthand{
+                attrs,
                 source_text: "``code``".to_string(),
                 parsed_text: "code".to_string(),
             },

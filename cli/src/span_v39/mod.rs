@@ -14,6 +14,8 @@ use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 use serde::Serialize;
 
+use crate::span_attr_v39::SpanAttrV39;
+
 #[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct SpanV39 {
     pub kind: SpanV39Kind,
@@ -26,6 +28,7 @@ pub enum SpanV39Kind {
         source_text: String,
     },
     CodeShorthand {
+        attrs: Vec<SpanAttrV39>,
         source_text: String,
         parsed_text: String,
     },
@@ -88,10 +91,12 @@ pub fn code_shorthand_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str
     let (source, _) = tag("``").context("").parse(source)?;
     let (source, text) = is_not("`").context("").parse(source)?;
     let (source, _) = tag("``").context("").parse(source)?;
+    let attrs = vec![];
     Ok((
         source,
         SpanV39 {
             kind: SpanV39Kind::CodeShorthand {
+                attrs,
                 source_text: "``code``".to_string(),
                 parsed_text: text.to_string(),
             },
