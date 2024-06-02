@@ -7,6 +7,7 @@ fn word_part_basic() {
     let left = (
         " ",
         SpanV39 {
+            attrs: vec![],
             source_text: "alfa".to_string(),
             parsed_text: "alfa".to_string(),
             kind: SpanV39Kind::WordPart,
@@ -22,6 +23,7 @@ fn word_part_not_line_ending() {
     let left = (
         "\n",
         SpanV39 {
+            attrs: vec![],
             source_text: "alfa".to_string(),
             parsed_text: "alfa".to_string(),
             kind: SpanV39Kind::WordPart,

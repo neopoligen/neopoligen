@@ -10,6 +10,7 @@ fn escaped_backtick() {
     let left = (
         "",
         SpanV39 {
+            attrs: vec![],
             source_text: "\\`".to_string(),
             parsed_text: "`".to_string(),
             kind: SpanV39Kind::EscapedBacktick,
@@ -25,6 +26,7 @@ fn backtick_at_eof() {
     let left = (
         "",
         SpanV39 {
+            attrs: vec![],
             source_text: "`".to_string(),
             parsed_text: "`".to_string(),
             kind: SpanV39Kind::Backtick,
@@ -40,6 +42,7 @@ fn backtick_at_infront_of_another_character() {
     let left = (
         "x",
         SpanV39 {
+            attrs: vec![],
             source_text: "`".to_string(),
             parsed_text: "`".to_string(),
             kind: SpanV39Kind::Backtick {},
@@ -55,6 +58,7 @@ fn backtick_at_infront_of_space() {
     let left = (
         " ",
         SpanV39 {
+            attrs: vec![],
             source_text: "`".to_string(),
             parsed_text: "`".to_string(),
             kind: SpanV39Kind::Backtick {},
@@ -72,16 +76,19 @@ fn backtick_in_text() {
         "",
         vec![
             SpanV39 {
+                attrs: vec![],
                 source_text: "alfa".to_string(),
                 parsed_text: "alfa".to_string(),
                 kind: SpanV39Kind::WordPart {},
             },
             SpanV39 {
+                attrs: vec![],
                 source_text: "`".to_string(),
                 parsed_text: "`".to_string(),
                 kind: SpanV39Kind::Backtick,
             },
             SpanV39 {
+                attrs: vec![],
                 source_text: "bravo".to_string(),
                 parsed_text: "bravo".to_string(),
                 kind: SpanV39Kind::WordPart {},
@@ -102,11 +109,13 @@ fn escaped_backtick_followed_by_single() {
         "",
         vec![
             SpanV39 {
+                attrs: vec![],
                 source_text: "\\`".to_string(),
                 parsed_text: "`".to_string(),
                 kind: SpanV39Kind::EscapedBacktick,
             },
             SpanV39 {
+                attrs: vec![],
                 source_text: "`".to_string(),
                 parsed_text: "`".to_string(),
                 kind: SpanV39Kind::Backtick,

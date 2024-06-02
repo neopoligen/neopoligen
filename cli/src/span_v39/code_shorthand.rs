@@ -34,9 +34,10 @@ pub fn code_shorthand_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str
     Ok((
         source,
         SpanV39 {
+            attrs,
             source_text,
             parsed_text,
-            kind: SpanV39Kind::CodeShorthand { attrs },
+            kind: SpanV39Kind::CodeShorthand,
         },
     ))
 }

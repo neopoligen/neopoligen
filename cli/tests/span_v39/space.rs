@@ -10,6 +10,7 @@ fn space_basic() {
     let left = (
         "",
         SpanV39 {
+            attrs: vec![],
             source_text: " ".to_string(),
             parsed_text: " ".to_string(),
             kind: SpanV39Kind::Space,
@@ -25,6 +26,7 @@ fn space_multiple() {
     let left = (
         "",
         SpanV39 {
+            attrs: vec![],
             source_text: "    ".to_string(),
             parsed_text: " ".to_string(),
             kind: SpanV39Kind::Space,
@@ -42,16 +44,19 @@ fn space_in_words() {
         "",
         vec![
             SpanV39 {
+                attrs: vec![],
                 source_text: "alfa".to_string(),
                 parsed_text: "alfa".to_string(),
                 kind: SpanV39Kind::WordPart,
             },
             SpanV39 {
+                attrs: vec![],
                 source_text: "   ".to_string(),
                 parsed_text: " ".to_string(),
                 kind: SpanV39Kind::Space,
             },
             SpanV39 {
+                attrs: vec![],
                 source_text: "bravo".to_string(),
                 parsed_text: "bravo".to_string(),
                 kind: SpanV39Kind::WordPart,

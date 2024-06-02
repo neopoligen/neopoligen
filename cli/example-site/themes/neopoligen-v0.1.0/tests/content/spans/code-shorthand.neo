@@ -2,12 +2,12 @@
 
 -- p
 
-alfa ``bravo``
+basic shorthand: ``alfa``
+
 
 -- expected-output/
 
-<p>alfa <code>bravo</code></p>
-
+<p>basic shorthand: <code>alfa</code></p>
 
 -- /expected-output
 

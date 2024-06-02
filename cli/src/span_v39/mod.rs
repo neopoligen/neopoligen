@@ -1,8 +1,10 @@
 pub mod code_shorthand;
+pub mod mocks;
 pub mod object;
 
 use self::code_shorthand::code_shorthand_v39;
 use crate::span_attr_v39::SpanAttrV39;
+use minijinja::Value;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
@@ -22,6 +24,7 @@ use serde::Serialize;
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct SpanV39 {
+    pub attrs: Vec<SpanAttrV39>,
     pub kind: SpanV39Kind,
     pub parsed_text: String,
     pub source_text: String,
@@ -31,7 +34,7 @@ pub struct SpanV39 {
 #[serde(rename_all = "lowercase", tag = "type")]
 pub enum SpanV39Kind {
     Backtick,
-    CodeShorthand { attrs: Vec<SpanAttrV39> },
+    CodeShorthand,
     EscapedBacktick,
     Newline,
     Space,
@@ -39,6 +42,10 @@ pub enum SpanV39Kind {
 }
 
 impl SpanV39 {
+    pub fn classes(&self, args: &[Value]) -> Option<String> {
+        Some(format!(r#" class="green""#))
+    }
+
     pub fn parsed_text(&self) -> Option<String> {
         Some(self.parsed_text.clone())
     }
@@ -95,6 +102,7 @@ pub fn backtick_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
     Ok((
         source,
         SpanV39 {
+            attrs: vec![],
             source_text,
             parsed_text: "`".to_string(),
             kind: SpanV39Kind::Backtick,
@@ -110,6 +118,7 @@ pub fn escaped_backtick_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&s
     Ok((
         source,
         SpanV39 {
+            attrs: vec![],
             source_text: "\\`".to_string(),
             parsed_text: "`".to_string(),
             kind: SpanV39Kind::EscapedBacktick,
@@ -126,6 +135,7 @@ pub fn newline_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
     Ok((
         source,
         SpanV39 {
+            attrs: vec![],
             source_text,
             parsed_text: "\n".to_string(),
             kind: SpanV39Kind::Newline,
@@ -140,6 +150,7 @@ pub fn space_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
     Ok((
         source,
         SpanV39 {
+            attrs: vec![],
             source_text,
             parsed_text: " ".to_string(),
             kind: SpanV39Kind::Space,
@@ -154,6 +165,7 @@ pub fn word_part_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
     Ok((
         source,
         SpanV39 {
+            attrs: vec![],
             source_text,
             parsed_text: text.to_string(),
             kind: SpanV39Kind::WordPart,

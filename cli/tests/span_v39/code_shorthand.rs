@@ -10,13 +10,13 @@ use pretty_assertions::assert_eq;
 #[test]
 fn code_shorthand_basic() {
     let source = "``ping``";
-    let attrs = vec![];
     let left = (
         "",
         SpanV39 {
+            attrs: vec![],
             source_text: "``ping``".to_string(),
             parsed_text: "ping".to_string(),
-            kind: SpanV39Kind::CodeShorthand { attrs },
+            kind: SpanV39Kind::CodeShorthand,
         },
     );
     let right = code_shorthand_v39(source).unwrap();
@@ -26,13 +26,13 @@ fn code_shorthand_basic() {
 #[test]
 fn code_shorthand_with_escaped_pipe() {
     let source = "``ping\\|ping``";
-    let attrs = vec![];
     let left = (
         "",
         SpanV39 {
+            attrs: vec![],
             source_text: "``ping\\|ping``".to_string(),
             parsed_text: "ping|ping".to_string(),
-            kind: SpanV39Kind::CodeShorthand { attrs },
+            kind: SpanV39Kind::CodeShorthand,
         },
     );
     let right = code_shorthand_v39(source).unwrap();
@@ -42,13 +42,13 @@ fn code_shorthand_with_escaped_pipe() {
 #[test]
 fn code_shorthand_with_escaped_backslash() {
     let source = "``ping\\\\ping``";
-    let attrs = vec![];
     let left = (
         "",
         SpanV39 {
+            attrs: vec![],
             source_text: "``ping\\\\ping``".to_string(),
             parsed_text: "ping\\ping".to_string(),
-            kind: SpanV39Kind::CodeShorthand { attrs },
+            kind: SpanV39Kind::CodeShorthand,
         },
     );
     let right = code_shorthand_v39(source).unwrap();
@@ -58,13 +58,13 @@ fn code_shorthand_with_escaped_backslash() {
 #[test]
 fn code_shorthand_with_escaped_backtick() {
     let source = "``ping\\`ping``";
-    let attrs = vec![];
     let left = (
         "",
         SpanV39 {
+            attrs: vec![],
             source_text: "``ping\\`ping``".to_string(),
             parsed_text: "ping`ping".to_string(),
-            kind: SpanV39Kind::CodeShorthand { attrs },
+            kind: SpanV39Kind::CodeShorthand,
         },
     );
     let right = code_shorthand_v39(source).unwrap();
@@ -74,13 +74,13 @@ fn code_shorthand_with_escaped_backtick() {
 #[test]
 fn code_shorthand_with_single_backslash() {
     let source = "``ping\\ping``";
-    let attrs = vec![];
     let left = (
         "",
         SpanV39 {
+            attrs: vec![],
             source_text: "``ping\\ping``".to_string(),
             parsed_text: "ping\\ping".to_string(),
-            kind: SpanV39Kind::CodeShorthand { attrs },
+            kind: SpanV39Kind::CodeShorthand,
         },
     );
     let right = code_shorthand_v39(source).unwrap();
@@ -93,16 +93,15 @@ fn code_shorthand_with_flag_attr() {
     let left = (
         "",
         SpanV39 {
+            attrs: vec![SpanAttrV39 {
+                source_text: "|rust".to_string(),
+                kind: SpanAttrV39Kind::Flag {
+                    value: "rust".to_string(),
+                },
+            }],
             source_text: "``code|rust``".to_string(),
             parsed_text: "code".to_string(),
-            kind: SpanV39Kind::CodeShorthand {
-                attrs: vec![SpanAttrV39 {
-                    source_text: "|rust".to_string(),
-                    kind: SpanAttrV39Kind::Flag {
-                        value: "rust".to_string(),
-                    },
-                }],
-            },
+            kind: SpanV39Kind::CodeShorthand {},
         },
     );
     let right = code_shorthand_v39(source).unwrap();
@@ -115,24 +114,23 @@ fn code_shorthand_with_multiple_flag_attrs() {
     let left = (
         "",
         SpanV39 {
+            attrs: vec![
+                SpanAttrV39 {
+                    source_text: "|rust".to_string(),
+                    kind: SpanAttrV39Kind::Flag {
+                        value: "rust".to_string(),
+                    },
+                },
+                SpanAttrV39 {
+                    source_text: "|hidden".to_string(),
+                    kind: SpanAttrV39Kind::Flag {
+                        value: "hidden".to_string(),
+                    },
+                },
+            ],
             source_text: "``code|rust|hidden``".to_string(),
             parsed_text: "code".to_string(),
-            kind: SpanV39Kind::CodeShorthand {
-                attrs: vec![
-                    SpanAttrV39 {
-                        source_text: "|rust".to_string(),
-                        kind: SpanAttrV39Kind::Flag {
-                            value: "rust".to_string(),
-                        },
-                    },
-                    SpanAttrV39 {
-                        source_text: "|hidden".to_string(),
-                        kind: SpanAttrV39Kind::Flag {
-                            value: "hidden".to_string(),
-                        },
-                    },
-                ],
-            },
+            kind: SpanV39Kind::CodeShorthand,
         },
     );
     let right = code_shorthand_v39(source).unwrap();
@@ -226,26 +224,31 @@ fn integration_1_basic() {
         "",
         vec![
             SpanV39 {
+                attrs: vec![],
                 kind: SpanV39Kind::WordPart,
                 parsed_text: "alfa".to_string(),
                 source_text: "alfa".to_string(),
             },
             SpanV39 {
+                attrs: vec![],
                 kind: SpanV39Kind::Space,
                 parsed_text: " ".to_string(),
                 source_text: " ".to_string(),
             },
             SpanV39 {
-                kind: SpanV39Kind::CodeShorthand { attrs: vec![] },
+                attrs: vec![],
+                kind: SpanV39Kind::CodeShorthand,
                 parsed_text: "bravo".to_string(),
                 source_text: "``bravo``".to_string(),
             },
             SpanV39 {
+                attrs: vec![],
                 kind: SpanV39Kind::Space,
                 parsed_text: " ".to_string(),
                 source_text: " ".to_string(),
             },
             SpanV39 {
+                attrs: vec![],
                 kind: SpanV39Kind::WordPart,
                 parsed_text: "charlie".to_string(),
                 source_text: "charlie".to_string(),
@@ -266,26 +269,31 @@ fn integration_2_escaped_pipe() {
         "",
         vec![
             SpanV39 {
+                attrs: vec![],
                 kind: SpanV39Kind::WordPart,
                 parsed_text: "alfa".to_string(),
                 source_text: "alfa".to_string(),
             },
             SpanV39 {
+                attrs: vec![],
                 kind: SpanV39Kind::Space,
                 parsed_text: " ".to_string(),
                 source_text: " ".to_string(),
             },
             SpanV39 {
-                kind: SpanV39Kind::CodeShorthand { attrs: vec![] },
+                attrs: vec![],
+                kind: SpanV39Kind::CodeShorthand,
                 parsed_text: "bravo|delta".to_string(),
                 source_text: "``bravo\\|delta``".to_string(),
             },
             SpanV39 {
+                attrs: vec![],
                 kind: SpanV39Kind::Space,
                 parsed_text: " ".to_string(),
                 source_text: " ".to_string(),
             },
             SpanV39 {
+                attrs: vec![],
                 kind: SpanV39Kind::WordPart,
                 parsed_text: "charlie".to_string(),
                 source_text: "charlie".to_string(),
@@ -306,26 +314,31 @@ fn integration_2_escaped_single_backtick() {
         "",
         vec![
             SpanV39 {
+                attrs: vec![],
                 kind: SpanV39Kind::WordPart,
                 parsed_text: "alfa".to_string(),
                 source_text: "alfa".to_string(),
             },
             SpanV39 {
+                attrs: vec![],
                 kind: SpanV39Kind::Space,
                 parsed_text: " ".to_string(),
                 source_text: " ".to_string(),
             },
             SpanV39 {
-                kind: SpanV39Kind::CodeShorthand { attrs: vec![] },
+                attrs: vec![],
+                kind: SpanV39Kind::CodeShorthand,
                 parsed_text: "bravo`delta".to_string(),
                 source_text: "``bravo`delta``".to_string(),
             },
             SpanV39 {
+                attrs: vec![],
                 kind: SpanV39Kind::Space,
                 parsed_text: " ".to_string(),
                 source_text: " ".to_string(),
             },
             SpanV39 {
+                attrs: vec![],
                 kind: SpanV39Kind::WordPart,
                 parsed_text: "charlie".to_string(),
                 source_text: "charlie".to_string(),
@@ -361,17 +374,16 @@ fn code_shorthand_basic_with_key_value() {
     let left = (
         "",
         SpanV39 {
+            attrs: vec![SpanAttrV39 {
+                source_text: "|class: blue".to_string(),
+                kind: SpanAttrV39Kind::KeyValue {
+                    key: "class".to_string(),
+                    value: "blue".to_string(),
+                },
+            }],
             source_text: "``ping|class: blue``".to_string(),
             parsed_text: "ping".to_string(),
-            kind: SpanV39Kind::CodeShorthand {
-                attrs: vec![SpanAttrV39 {
-                    source_text: "|class: blue".to_string(),
-                    kind: SpanAttrV39Kind::KeyValue {
-                        key: "class".to_string(),
-                        value: "blue".to_string(),
-                    },
-                }],
-            },
+            kind: SpanV39Kind::CodeShorthand {},
         },
     );
     let right = code_shorthand_v39(source).unwrap();

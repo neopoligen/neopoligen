@@ -1,1 +1,6 @@
-<code>[@- span.parsed_text() -@]</code>
+<code
+
+>
+
+[@ span.classes("strong") @]
+[@- span.parsed_text() -@]</code>

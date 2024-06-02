@@ -10,6 +10,7 @@ fn newline_basic() {
     let left = (
         "",
         SpanV39 {
+            attrs: vec![],
             source_text: "\n".to_string(),
             parsed_text: "\n".to_string(),
             kind: SpanV39Kind::Newline,
@@ -27,16 +28,19 @@ fn newline_in_words() {
         "",
         vec![
             SpanV39 {
+                attrs: vec![],
                 source_text: "alfa".to_string(),
                 parsed_text: "alfa".to_string(),
                 kind: SpanV39Kind::WordPart {},
             },
             SpanV39 {
+                attrs: vec![],
                 source_text: "\n".to_string(),
                 parsed_text: "\n".to_string(),
                 kind: SpanV39Kind::Newline {},
             },
             SpanV39 {
+                attrs: vec![],
                 source_text: "bravo".to_string(),
                 parsed_text: "bravo".to_string(),
                 kind: SpanV39Kind::WordPart {},

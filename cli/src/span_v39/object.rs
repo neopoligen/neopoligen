@@ -9,9 +9,10 @@ impl Object for SpanV39 {
         self: &Arc<SpanV39>,
         _state: &minijinja::State,
         name: &str,
-        _args: &[Value],
+        args: &[Value],
     ) -> Result<Value, Error> {
         match name {
+            "classes" => Ok(Value::from(self.classes(args))),
             "parsed_text" => Ok(Value::from(self.parsed_text())),
             "template_list" => Ok(Value::from_serialize(self.template_list())),
             _ => Ok(Value::from("[Error: called non-existing function")),
