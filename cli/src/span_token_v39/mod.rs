@@ -16,6 +16,10 @@ pub enum SpanTokenV39Kind {
         source_text: String,
         parsed_text: String,
     },
+    EscapedSlash {
+        source_text: String,
+        parsed_text: String,
+    },
     WordPart {
         source_text: String,
         parsed_text: String,

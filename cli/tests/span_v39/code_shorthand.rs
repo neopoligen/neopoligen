@@ -156,3 +156,19 @@ fn token_for_code_shorthand_escaped_pipe() {
     let right = code_shorthand_token_escaped_pipe_v39(source).unwrap();
     assert_eq!(left, right);
 }
+
+#[test]
+fn token_for_code_shorthand_escaped_slash() {
+    let source = "\\\\";
+    let left = (
+        "",
+        SpanTokenV39 {
+            kind: SpanTokenV39Kind::EscapedSlash {
+                source_text: "\\\\".to_string(),
+                parsed_text: "\\".to_string(),
+            },
+        },
+    );
+    let right = code_shorthand_token_escaped_slash_v39(source).unwrap();
+    assert_eq!(left, right);
+}

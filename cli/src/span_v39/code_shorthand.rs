@@ -117,6 +117,20 @@ pub fn code_shorthand_token_escaped_pipe_v39(
     Ok((source, token))
 }
 
+pub fn code_shorthand_token_escaped_slash_v39(
+    source: &str,
+) -> IResult<&str, SpanTokenV39, ErrorTree<&str>> {
+    let (source, the_escape) = tag("\\").context("").parse(source)?;
+    let (source, text) = tag("\\").context("").parse(source)?;
+    let token = SpanTokenV39 {
+        kind: SpanTokenV39Kind::EscapedSlash {
+            source_text: format!("{}{}", the_escape, text),
+            parsed_text: format!("{}", text),
+        },
+    };
+    Ok((source, token))
+}
+
 // pub fn code_shorthand_key_value_attr_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
 //     Ok((source, "".to_string()))
 // }
