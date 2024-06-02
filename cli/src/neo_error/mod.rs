@@ -28,6 +28,14 @@ pub enum NeoErrorV39 {
         details: String,
     },
 
+    #[error("theme test error")]
+    ThemeTestError {
+        source_path: Option<PathBuf>,
+        details: String,
+        expected: String,
+        got: String,
+    },
+
     #[error("unknown data store error")]
     Unknown,
 }

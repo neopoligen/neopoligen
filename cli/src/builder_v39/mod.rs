@@ -278,7 +278,17 @@ body { background-color: #111; color: #aaa; }
 <h2>Theme Issues</h2>
 <ul>
 [! for theme_issue in builder.theme_issues() !]
+[! if theme_issue.kind == "themetesterror" !]
+<li>
+<h4>Theme Test Error</h4>
+<h5>Expected-</h5>
+<div><pre>[@ theme_issue.expected|escape @]</pre></div>
+<h5>Got</h5>
+<div><pre>[@ theme_issue.got|escape @]</pre></div>
+</li>
+[! else !]
 <li>[@ theme_issue @]</li>
+[! endif !]
 [! endfor !]
 </ul>
 <h2>Builder Config</h2>
@@ -440,16 +450,15 @@ body { background-color: #111; color: #aaa; }
                     }
                 };
             });
-
         let _ = env.add_template_owned(
             "sections/start-theme-test/full/default.neoj",
-            "<!-- START_THEME_TEST -->".to_string(),
+            r#"<!-- START_THEME_TEST -->"#.to_string(),
         );
 
         let _ = env.add_template_owned(
             "sections/expected-output/start/default.neoj",
             r#"
-[!- include 'includes/theme.neoj' -!]
+[!- import 'includes/theme.neoj' as theme -!]
 <!-- EXPECTED_OUTPUT -->
 [@ section.text() @]
 [! for child in section.children() !]
@@ -458,11 +467,10 @@ body { background-color: #111; color: #aaa; }
 "#
             .to_string(),
         );
-
         let _ = env.add_template_owned(
             "sections/expected-output/end/default.neoj",
             r#"
-[!- include 'includes/theme.neoj' -!]
+[!- import 'includes/theme.neoj' as theme -!]
 <!-- EXPECTED_OUTPUT -->
 [! for child in section.children() !]
 [@ theme.output_section(site, page_id, child) @]
@@ -470,7 +478,6 @@ body { background-color: #111; color: #aaa; }
 "#
             .to_string(),
         );
-
         pages.iter_mut().for_each(|(source_path, page)| {
             let _ = page.generate_ast();
             if page.errors.len() > 0 {
@@ -508,14 +515,71 @@ body { background-color: #111; color: #aaa; }
                                     page => Value::from_object(page.clone())
                                 )) {
                                     Ok(output) => {
-                                        dbg!("TODO: Test theme here");
-                                        dbg!(output);
+                                        dbg!(&output);
+                                        let tests = output
+                                            .split("<!-- START_THEME_TEST -->")
+                                            .collect::<Vec<&str>>();
+                                        if tests.len() == 1 {
+                                            // self.issues.push(BuildIssue {
+                                            //     kind: BuildIssueKind::NoThemeTestsFound {},
+                                            //     details: None,
+                                            //     source_path: Some(source_path.to_path_buf()),
+                                            // })
+                                        } else {
+                                            for t in tests.iter().skip(1) {
+                                                let parts = t
+                                                    .split("<!-- EXPECTED_OUTPUT -->")
+                                                    .collect::<Vec<&str>>();
+                                                if parts.len() == 3 {
+                                                    let left =
+                                                        parts[0].replace("\n", "").replace(" ", "");
+                                                    let right =
+                                                        parts[1].replace("\n", "").replace(" ", "");
+                                                    dbg!(&left);
+                                                    if left != right {
+                                                        let error = NeoErrorV39::ThemeTestError {
+                                                            source_path: None,
+                                                            details:
+                                                                "test theme didn't match target"
+                                                                    .to_string(),
+                                                            expected:
+                                                                format_html_for_theme_test_display(
+                                                                    &left,
+                                                                ),
+                                                            got: format_html_for_theme_test_display(
+                                                                &right,
+                                                            ),
+                                                        };
+                                                        self.theme_issues.push(error);
+                                                        // self.issues.push(BuildIssue {
+                                                        //     details: None,
+                                                        //     source_path: Some(source_path.to_path_buf()),
+                                                        //     kind: BuildIssueKind::FailedThemeTest {
+                                                        //         expected: Some(parts[1].to_string()),
+                                                        //         got: Some(parts[0].to_string()),
+                                                        //     },
+                                                        // })
+                                                    }
+                                                } else {
+                                                    // self.issues.push(BuildIssue {
+                                                    //     details: Some(t.to_string()),
+                                                    //     kind: BuildIssueKind::InvalidThemeTest {},
+                                                    //     source_path: Some(source_path.to_path_buf()),
+                                                    // })
+                                                }
+                                            }
+                                        }
+                                        //
                                         //page.output_content = Some(output);
                                     }
                                     Err(err) => {
+                                        dbg!(&err);
                                         self.theme_issues.push(NeoErrorV39::Generic {
                                             source_path: None,
-                                            details: err.to_string(),
+                                            details: format!(
+                                                "could not do this:{}",
+                                                err.to_string()
+                                            ),
                                         });
                                         //let mut err = &err as &dyn std::error::Error;
                                         ////let mut v = vec![];
@@ -533,15 +597,8 @@ body { background-color: #111; color: #aaa; }
                             } else {
                                 self.theme_issues.push(NeoErrorV39::Generic {
                                     source_path: None,
-                                    details: "could not get template for page".to_string(),
+                                    details: "Could not get template for page".to_string(),
                                 });
-                                // // TODO: Send this to the error list
-                                // event!(
-                                //     Level::ERROR,
-                                //     "Could not get template for page: {}",
-                                //     page.id().unwrap()
-                                // );
-                                //
                             }
                         }
                     }
@@ -1411,33 +1468,33 @@ pub fn get_files_with_extension_in_a_single_directory(
 //     Ok(())
 // }
 
-// fn format_html_for_theme_test_display(code: &str) -> String {
-//     let mut re = Regex::new(r"\n").unwrap();
-//     let output = re.replace_all(code, " ");
-//     re = Regex::new(r" \s+").unwrap();
-//     let output = re.replace_all(&output, " ");
-//     re = Regex::new(r"\s+<").unwrap();
-//     let output = re.replace_all(&output, "<");
-//     re = Regex::new(r">\s+").unwrap();
-//     let output = re.replace_all(&output, ">");
-//     let parts: Vec<&str> = output.split("<").collect();
-//     let mut assembler: Vec<String> = vec![];
-//     let mut level = 0i8;
-//     assembler.push(parts[0].to_string());
-//     parts.iter().skip(1).for_each(|part| {
-//         if part.starts_with("/") {
-//             level -= 2;
-//         }
-//         for _ in 0..level {
-//             assembler.push(" ".to_string());
-//         }
-//         assembler.push(format!("<{}\n", part));
-//         if !part.starts_with("/") {
-//             level += 2;
-//         }
-//     });
-//     assembler.join("").to_string()
-// }
+fn format_html_for_theme_test_display(code: &str) -> String {
+    let mut re = Regex::new(r"\n").unwrap();
+    let output = re.replace_all(code, " ");
+    re = Regex::new(r" \s+").unwrap();
+    let output = re.replace_all(&output, " ");
+    re = Regex::new(r"\s+<").unwrap();
+    let output = re.replace_all(&output, "<");
+    re = Regex::new(r">\s+").unwrap();
+    let output = re.replace_all(&output, ">");
+    let parts: Vec<&str> = output.split("<").collect();
+    let mut assembler: Vec<String> = vec![];
+    let mut level = 0i8;
+    assembler.push(parts[0].to_string());
+    parts.iter().skip(1).for_each(|part| {
+        if part.starts_with("/") {
+            level -= 2;
+        }
+        for _ in 0..level {
+            assembler.push(" ".to_string());
+        }
+        assembler.push(format!("<{}\n", part));
+        if !part.starts_with("/") {
+            level += 2;
+        }
+    });
+    assembler.join("").to_string()
+}
 
 // pub fn trim_empty_lines(source: &str) -> String {
 //     let re = Regex::new(r"\S").unwrap();

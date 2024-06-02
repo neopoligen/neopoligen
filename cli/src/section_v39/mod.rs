@@ -89,7 +89,8 @@ impl SectionV39 {
                 Box::new(child.iter().cloned().map(Value::from_object))
             }))
         } else {
-            Ok(Value::from_serialize::<Vec<Value>>(vec![]))
+            Ok(Value::from(None::<String>))
+            //Ok(Value::from_serialize::<Vec<Value>>(vec![]))
         }
     }
 
