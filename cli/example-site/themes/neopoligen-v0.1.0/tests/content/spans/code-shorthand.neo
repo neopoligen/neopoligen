@@ -1,12 +1,12 @@
 -- start-theme-test 
 
--- p
+-- naked
 
 ``alfa``
 
 -- expected-output/
 
-<p><code>alfa</code></p>
+<code>alfa</code>
 
 -- /expected-output
 
@@ -14,13 +14,13 @@
 
 -- start-theme-test 
 
--- p
+-- naked
 
-``alfa``
+``alfa|class: blue``
 
 -- expected-output/
 
-<p>basic shorthand: <code>alfa</code></p>
+<code class="blue">alfa</code>
 
 -- /expected-output
 

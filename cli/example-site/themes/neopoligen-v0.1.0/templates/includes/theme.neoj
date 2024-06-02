@@ -20,6 +20,7 @@ based off config #]
 [! macro span_classes(span, extras="") !]
 [! for c in span.classes(extras) !]
 [! if loop.first !]
+[@- ' ' -@]
 class="
 [! endif !]
 [@ c @]

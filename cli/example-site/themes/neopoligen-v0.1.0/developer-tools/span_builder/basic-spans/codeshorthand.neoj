@@ -1,9 +1,6 @@
 [! import "includes/theme.neoj" as theme !]
-<code
-
+<code 
+[@ theme.span_classes(span) -@]
 >
-
-
-[@ theme.span_classes(span) @]
 
 [@- span.parsed_text() -@]</code>
