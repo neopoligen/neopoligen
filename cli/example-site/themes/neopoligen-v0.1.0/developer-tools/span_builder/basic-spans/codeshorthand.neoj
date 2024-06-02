@@ -2,5 +2,14 @@
 
 >
 
-[@ span.classes("strong") @]
+[! for c in span.classes() !]
+[! if loop.first !]
+class="
+[! endif !]
+[@ c @]
+[! if loop.last !]
+"
+[! endif !]
+[! endfor !]
+
 [@- span.parsed_text() -@]</code>

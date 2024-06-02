@@ -4,6 +4,7 @@ pub mod object;
 
 use self::code_shorthand::code_shorthand_v39;
 use crate::span_attr_v39::SpanAttrV39;
+use crate::span_attr_v39::SpanAttrV39Kind;
 use minijinja::Value;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
@@ -42,8 +43,22 @@ pub enum SpanV39Kind {
 }
 
 impl SpanV39 {
-    pub fn classes(&self, args: &[Value]) -> Option<String> {
-        Some(format!(r#" class="green""#))
+    pub fn classes(&self, args: &[Value]) -> Vec<String> {
+        let class_list = self
+            .attrs
+            .iter()
+            .filter_map(|attr| match &attr.kind {
+                SpanAttrV39Kind::KeyValue { key, value } => {
+                    if key == "class" {
+                        Some(value.to_string())
+                    } else {
+                        None
+                    }
+                }
+                _ => None,
+            })
+            .collect::<Vec<String>>();
+        class_list
     }
 
     pub fn parsed_text(&self) -> Option<String> {

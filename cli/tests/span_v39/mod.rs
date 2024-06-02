@@ -12,7 +12,7 @@ use pretty_assertions::assert_eq;
 #[test]
 fn classes_test() {
     let span = SpanV39::mock1_code_shorthand_with_attrs();
-    let left = r#" class="green""#;
-    let right = span.classes(&[Value::from(None::<String>)]).unwrap();
+    let left = vec!["green"];
+    let right = span.classes(&[Value::from(None::<String>)]);
     assert_eq!(left, right);
 }
