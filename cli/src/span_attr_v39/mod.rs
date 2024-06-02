@@ -2,6 +2,7 @@ use serde::Serialize;
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct SpanAttrV39 {
+    // TODO: Move source text up here
     pub kind: SpanAttrV39Kind,
 }
 

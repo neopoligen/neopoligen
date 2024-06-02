@@ -97,14 +97,28 @@ pub fn code_shorthand_token_word_part_v39(
     };
     Ok((source, token))
 }
+
 pub fn code_shorthand_key_value_attr_v39(
     source: &str,
 ) -> IResult<&str, SpanAttrV39, ErrorTree<&str>> {
+    let initial_source = source;
+    let (source, _) = tag("|").context("").parse(source)?;
+    // TODO: allow for spaces here
+    let (source, key) = is_not(" :|`").context("").parse(source)?;
+    let (source, _) = tag(":").context("").parse(source)?;
+    let (source, _) = space1.context("").parse(source)?;
+    let (source, tokens) = many1(code_shorthand_token_v39).context("").parse(source)?;
+    let value = tokens
+        .iter()
+        .map(|word| word.parsed_text.clone())
+        .collect::<Vec<String>>()
+        .join("");
+    let source_text = initial_source.replace(source, "").to_string();
     let attr = SpanAttrV39 {
         kind: SpanAttrV39Kind::KeyValue {
-            source_text: "asdf".to_string(),
-            key: "class".to_string(),
-            value: "green".to_string(),
+            source_text,
+            key: key.to_string(),
+            value,
         },
     };
     Ok((source, attr))

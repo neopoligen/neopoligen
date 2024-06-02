@@ -307,9 +307,8 @@ fn integration_2_escaped_single_backtick() {
 }
 
 #[test]
-#[ignore]
 fn code_shorthand_key_value_attrs_basic_key_value_attr() {
-    let source = "``|class: green``";
+    let source = "|class: green";
     let left = (
         "",
         SpanAttrV39 {
