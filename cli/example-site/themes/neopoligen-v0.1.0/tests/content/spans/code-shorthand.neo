@@ -2,8 +2,21 @@
 
 -- p
 
-basic shorthand: ``alfa``
+``alfa``
 
+-- expected-output/
+
+<p><code>alfa</code></p>
+
+-- /expected-output
+
+
+
+-- start-theme-test 
+
+-- p
+
+``alfa``
 
 -- expected-output/
 

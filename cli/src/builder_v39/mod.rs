@@ -465,7 +465,6 @@ body { background-color: #111; color: #aaa; }
             "sections/expected-output/start/default.neoj",
             r#"
 [!- import 'includes/theme.neoj' as theme -!]
-</div>
 <!-- EXPECTED_OUTPUT -->
 [@ section.text() @]
 [! for child in section.children() !]
@@ -646,13 +645,33 @@ body { background-color: #111; color: #aaa; }
             r#"
 <!DOCTYPE html>
 <html><head><style>
+*, 
+*::before, 
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
 body { background-color: #111; color: #aaa; }
+.items {
+display: flex;
+gap: 40px;
+}
+.passed {
+color: green;
+}
+.failed {
+color: red;
+}
 </style></head>
 <body>
 <header><a href="/">Home Page</a> - <a href="/neo-status/">Neopoligen Status</a></header>
 <h1>Theme Test Report</h1>
+<div class="items">
 [! for item in payload.items() !]
-<h2>[@ item.status() @] - Test</h2>
+<div>
+<h2 class="[@ item.status() @]">[@ item.status() @] - Test</h2>
 <h3>Expected</h3>
 <pre>[! autoescape true !]
 [@ item.expected() @]
@@ -661,7 +680,9 @@ body { background-color: #111; color: #aaa; }
 <pre>[! autoescape true !]
 [@ item.got() @]
 [! endautoescape !]
+</div>
 [! endfor !]
+</div>
 </body>
 </html>
         "#

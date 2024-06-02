@@ -37,7 +37,7 @@ impl ThemeTestItemV39 {
     pub fn status(&self) -> Option<String> {
         if self.parts().len() == 3 {
             let left = self.parts()[1].replace("\n", "").replace(" ", "");
-            let right = self.parts()[1].replace("\n", "").replace(" ", "");
+            let right = self.parts()[0].replace("\n", "").replace(" ", "");
             if left == right {
                 Some("passed".to_string())
             } else {
