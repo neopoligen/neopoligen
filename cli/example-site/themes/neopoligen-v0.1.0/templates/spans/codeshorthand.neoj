@@ -3,4 +3,6 @@
 [@ theme.span_classes(span) -@]
 >
 
+[@ theme.span_attrs(span) -@]
+
 [@- span.parsed_text() -@]</code>

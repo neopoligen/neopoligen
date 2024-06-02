@@ -43,6 +43,18 @@ pub enum SpanV39Kind {
 }
 
 impl SpanV39 {
+    pub fn attrs(&self) -> Result<Value, minijinja::Error> {
+        Ok(Value::make_object_iterable(
+            self.attrs.clone(),
+            |attr_set| {
+                Box::new(attr_set.iter().cloned().filter_map(|attr| match attr.kind {
+                    SpanAttrV39Kind::KeyValue { .. } => Some(Value::from_object(attr)),
+                    _ => None,
+                }))
+            },
+        ))
+    }
+
     pub fn classes(&self, args: &[Value]) -> Vec<String> {
         let mut class_list: Vec<String> = args
             .iter()

@@ -1,4 +1,6 @@
 
+
+
 [#############################################################################]
 [! macro output_section(site, page_id, section) !]
 [! include section.template_list() ignore missing !]
@@ -15,6 +17,15 @@
 based off config #]
 [! endmacro !]
 
+[#############################################################################]
+[! macro span_attrs(span) !]
+[! for attr in span.attrs() !]
+---
+[#
+[@- ' ' - @][@ attr.key() @]=""
+#]
+[! endfor !]
+[! endmacro !]
 
 [#############################################################################]
 [! macro span_classes(span, extras="") !]
