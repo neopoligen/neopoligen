@@ -8,9 +8,10 @@ Charlie delta
 
 -- expected-output/
 
-<section>
-  Alfa Bravo XXX
-</section>
+<hgroupclass="page-heading">
+  <h1>Alfa Bravo</h1>
+</hgroup>
+<p>Charlie delta</p>
 
 -- /expected-output
 
