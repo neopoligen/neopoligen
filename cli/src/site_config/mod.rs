@@ -151,7 +151,11 @@ impl SiteConfig {
         self.theme_dir().join("templates")
     }
 
-    pub fn theme_tests_dir(&self) -> PathBuf {
+    pub fn theme_tests_dest_dir(&self) -> PathBuf {
+        self.status_dir().join("theme-tests")
+    }
+
+    pub fn theme_tests_source_dir(&self) -> PathBuf {
         self.theme_dir().join("tests")
     }
 

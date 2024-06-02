@@ -43,7 +43,7 @@ pub enum SpanV39Kind {
 }
 
 impl SpanV39 {
-    pub fn classes(&self, args: &[Value]) -> Vec<String> {
+    pub fn classes(&self, _args: &[Value]) -> Vec<String> {
         let class_list = self
             .attrs
             .iter()

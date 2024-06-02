@@ -354,13 +354,14 @@ body { background-color: #111; color: #aaa; }
         let _ = fs::create_dir_all(self.config.image_cache_dir());
         let _ = fs::create_dir_all(self.config.image_dest_dir());
         let _ = fs::create_dir_all(self.config.mp3_dest_dir());
+        let _ = fs::create_dir_all(self.config.theme_tests_dest_dir());
         Ok(())
     }
 
     pub fn test_theme(&mut self) -> Result<()> {
         event!(Level::INFO, "Testing Theme");
         let mut pages: BTreeMap<PathBuf, PageV39> = BTreeMap::new();
-        let dir = &self.config.theme_tests_dir();
+        let dir = &self.config.theme_tests_source_dir();
         let mut theme_test_config = self.config.clone();
         theme_test_config
             .sections
@@ -478,7 +479,9 @@ body { background-color: #111; color: #aaa; }
 "#
             .to_string(),
         );
-
+        // TODO: Set this up so it does separate loops to
+        // generate the content and then to render the reports
+        // and then to output the results
         pages.iter_mut().for_each(|(source_path, page)| {
             let _ = page.generate_ast();
             if page.errors.len() > 0 {
@@ -516,6 +519,7 @@ body { background-color: #111; color: #aaa; }
                                     page => Value::from_object(page.clone())
                                 )) {
                                     Ok(output) => {
+                                        page.output_content = Some(output.clone());
                                         //dbg!(&output);
                                         let tests = output
                                             .split("<!-- START_THEME_TEST -->")
@@ -617,6 +621,21 @@ body { background-color: #111; color: #aaa; }
                 }
             }
         });
+
+        for (_, page) in pages.iter() {
+            if let Some(id) = page.id() {
+                let report_path = self
+                    .config
+                    .theme_tests_dest_dir()
+                    .join(format!("{}/index.html", id));
+                //dbg!(report_path);
+                //dbg!(&page.output_content);
+                if let Some(content) = &page.output_content {
+                    let _ = write_file_with_mkdir(&report_path, &content);
+                }
+            }
+        }
+
         Ok(())
     }
 
