@@ -40,7 +40,7 @@ fn code_shorthand_with_escaped_pipe() {
 }
 
 #[test]
-fn code_shorthand_with_escaped_slash() {
+fn code_shorthand_with_escaped_backslash() {
     let source = "``ping\\\\ping``";
     let attrs = vec![];
     let left = (
@@ -63,6 +63,38 @@ fn code_shorthand_with_escaped_backtick() {
         "",
         SpanV39 {
             source_text: "``ping\\`ping``".to_string(),
+            parsed_text: "ping`ping".to_string(),
+            kind: SpanV39Kind::CodeShorthand { attrs },
+        },
+    );
+    let right = code_shorthand_v39_dev(source).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn code_shorthand_with_single_backslash() {
+    let source = "``ping\\ping``";
+    let attrs = vec![];
+    let left = (
+        "",
+        SpanV39 {
+            source_text: "``ping\\ping``".to_string(),
+            parsed_text: "ping\\ping".to_string(),
+            kind: SpanV39Kind::CodeShorthand { attrs },
+        },
+    );
+    let right = code_shorthand_v39_dev(source).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn code_shorthand_with_single_backtick() {
+    let source = "``ping`ping``";
+    let attrs = vec![];
+    let left = (
+        "",
+        SpanV39 {
+            source_text: "``ping`ping``".to_string(),
             parsed_text: "ping`ping".to_string(),
             kind: SpanV39Kind::CodeShorthand { attrs },
         },
