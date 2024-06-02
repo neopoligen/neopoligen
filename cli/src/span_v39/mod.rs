@@ -49,7 +49,7 @@ pub fn span_v39<'a>(
     source: &'a str,
     _spans: &'a Vec<String>,
 ) -> IResult<&'a str, SpanV39, ErrorTree<&'a str>> {
-    let (source, span) = alt((word_part, space))(source)?;
+    let (source, span) = alt((word_part_v39, space_v39))(source)?;
     Ok((source, span))
 }
 
@@ -69,7 +69,7 @@ pub fn newline_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
     ))
 }
 
-pub fn space(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
+pub fn space_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
     let (source, text) = space1.context("").parse(source)?;
     Ok((
         source,
@@ -81,7 +81,7 @@ pub fn space(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
     ))
 }
 
-pub fn word_part(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
+pub fn word_part_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
     let (source, text) = is_not(" \n\t").context("").parse(source)?;
     Ok((
         source,
