@@ -187,7 +187,7 @@ fn token_for_code_shorthand_word_part() {
 }
 
 #[test]
-fn integration_1() {
+fn integration_1_basic() {
     let config = SiteConfig::mock1();
     let source = "alfa ``bravo`` charlie";
     let left = (
@@ -227,7 +227,7 @@ fn integration_1() {
 }
 
 #[test]
-fn integration_2() {
+fn integration_2_escaped_pipe() {
     let config = SiteConfig::mock1();
     let source = r#"alfa ``bravo\|delta`` charlie"#;
     let left = (
@@ -263,5 +263,63 @@ fn integration_2() {
     let right = many1(|src| span_v39(src, &config.spans))
         .parse(source)
         .unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn integration_2_escaped_single_backtick() {
+    let config = SiteConfig::mock1();
+    let source = r#"alfa ``bravo`delta`` charlie"#;
+    let left = (
+        "",
+        vec![
+            SpanV39 {
+                kind: SpanV39Kind::WordPart,
+                parsed_text: "alfa".to_string(),
+                source_text: "alfa".to_string(),
+            },
+            SpanV39 {
+                kind: SpanV39Kind::Space,
+                parsed_text: " ".to_string(),
+                source_text: " ".to_string(),
+            },
+            SpanV39 {
+                kind: SpanV39Kind::CodeShorthand { attrs: vec![] },
+                parsed_text: "bravo`delta".to_string(),
+                source_text: "``bravo`delta``".to_string(),
+            },
+            SpanV39 {
+                kind: SpanV39Kind::Space,
+                parsed_text: " ".to_string(),
+                source_text: " ".to_string(),
+            },
+            SpanV39 {
+                kind: SpanV39Kind::WordPart,
+                parsed_text: "charlie".to_string(),
+                source_text: "charlie".to_string(),
+            },
+        ],
+    );
+    let right = many1(|src| span_v39(src, &config.spans))
+        .parse(source)
+        .unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+#[ignore]
+fn code_shorthand_key_value_attrs_basic_key_value_attr() {
+    let source = "``|class: green``";
+    let left = (
+        "",
+        SpanAttrV39 {
+            kind: SpanAttrV39Kind::KeyValue {
+                source_text: "|class: green".to_string(),
+                key: "class".to_string(),
+                value: "green".to_string(),
+            },
+        },
+    );
+    let right = code_shorthand_key_value_attr_v39(source).unwrap();
     assert_eq!(left, right);
 }

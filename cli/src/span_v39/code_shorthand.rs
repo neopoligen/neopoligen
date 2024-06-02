@@ -79,6 +79,7 @@ pub fn code_shorthand_token_v39(
         shorthand_token_escaped_backtick_v39,
         code_shorthand_token_word_part_v39,
         shorthand_token_single_backslash_v39,
+        shorthand_token_single_backtick_v39,
     ))
     .context("")
     .parse(source)?;
@@ -96,6 +97,15 @@ pub fn code_shorthand_token_word_part_v39(
     };
     Ok((source, token))
 }
-// pub fn code_shorthand_key_value_attr_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
-//     Ok((source, "".to_string()))
-// }
+pub fn code_shorthand_key_value_attr_v39(
+    source: &str,
+) -> IResult<&str, SpanAttrV39, ErrorTree<&str>> {
+    let attr = SpanAttrV39 {
+        kind: SpanAttrV39Kind::KeyValue {
+            source_text: "asdf".to_string(),
+            key: "class".to_string(),
+            value: "green".to_string(),
+        },
+    };
+    Ok((source, attr))
+}

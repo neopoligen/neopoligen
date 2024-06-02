@@ -1,5 +1,7 @@
 pub mod code_shorthand;
 
+use self::code_shorthand::code_shorthand_v39;
+use crate::span_attr_v39::SpanAttrV39;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
@@ -16,10 +18,6 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 use serde::Serialize;
-
-use crate::span_attr_v39::SpanAttrV39;
-
-use self::code_shorthand::code_shorthand_v39;
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct SpanV39 {
