@@ -1,5 +1,7 @@
 pub mod code_shorthand;
 pub mod integration;
+pub mod newline;
+pub mod space;
 
 use neopoligengine::span_v39::*;
 use pretty_assertions::assert_eq;
@@ -25,21 +27,6 @@ fn structure_empty_until_newline_or_eof_at_eof() {
     let source = "";
     let left = ("", "");
     let right = structure_empty_until_newline_or_eof(source).unwrap();
-    assert_eq!(left, right);
-}
-
-#[test]
-fn space_basic() {
-    let source = " ";
-    let left = (
-        "",
-        SpanV39 {
-            kind: SpanV39Kind::Space {
-                text: " ".to_string(),
-            },
-        },
-    );
-    let right = space_v39(source).unwrap();
     assert_eq!(left, right);
 }
 

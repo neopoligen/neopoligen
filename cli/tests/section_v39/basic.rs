@@ -29,7 +29,7 @@ fn basic_section_full_core_test() {
                             },
                             SpanV39 {
                                 kind: SpanV39Kind::Space {
-                                    text: " ".to_string(),
+                                    source_text: " ".to_string(),
                                 },
                             },
                             SpanV39 {
@@ -71,7 +71,7 @@ fn basic_section_full_core_test_with_following_section() {
                             },
                             SpanV39 {
                                 kind: SpanV39Kind::Space {
-                                    text: " ".to_string(),
+                                    source_text: " ".to_string(),
                                 },
                             },
                             SpanV39 {
@@ -118,7 +118,7 @@ fn basic_section_full_with_attrs() {
                             },
                             SpanV39 {
                                 kind: SpanV39Kind::Space {
-                                    text: " ".to_string(),
+                                    source_text: " ".to_string(),
                                 },
                             },
                             SpanV39 {
@@ -161,7 +161,7 @@ fn basic_section_start_end_core_test() {
                                 },
                                 SpanV39 {
                                     kind: SpanV39Kind::Space {
-                                        text: " ".to_string(),
+                                        source_text: " ".to_string(),
                                     },
                                 },
                                 SpanV39 {

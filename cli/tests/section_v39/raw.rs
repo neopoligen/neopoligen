@@ -103,7 +103,7 @@ fn raw_section_start_no_attrs_with_more_stuff() {
                                     },
                                     SpanV39 {
                                         kind: SpanV39Kind::Space {
-                                            text: " ".to_string(),
+                                            source_text: " ".to_string(),
                                         },
                                     },
                                     SpanV39 {

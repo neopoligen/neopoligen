@@ -25,7 +25,7 @@ pub struct SpanV39 {
 pub enum SpanV39Kind {
     Backtick { source_text: String },
     Newline { source_text: String },
-    Space { text: String },
+    Space { source_text: String },
     WordPart { text: String },
 }
 
@@ -85,7 +85,7 @@ pub fn space_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
         source,
         SpanV39 {
             kind: SpanV39Kind::Space {
-                text: text.to_string(),
+                source_text: text.to_string(),
             },
         },
     ))
