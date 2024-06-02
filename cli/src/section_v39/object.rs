@@ -15,6 +15,7 @@ impl Object for SectionV39 {
             "bounds" => Ok(Value::from(self.bounds())),
             "children" => self.children(),
             "ping" => Ok(Value::from(self.ping())),
+            "spans" => self.spans(),
             "template" => Ok(Value::from(self.template())),
             "template_list" => Ok(Value::from_serialize(self.template_list())),
             "text" => Ok(Value::from(self.text())),

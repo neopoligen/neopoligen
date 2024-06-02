@@ -8,3 +8,9 @@ based off config #]
 [! macro output_section(site, page_id, section) !]
 [! include section.template_list() ignore missing !]
 [! endmacro !]
+
+[#############################################################################]
+[! macro output_span(site, page_id, span) !]
+[! include ["spans/" + span.kind.type + ".neoj"] ignore missing!]
+[! endmacro !]
+

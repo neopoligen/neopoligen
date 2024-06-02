@@ -25,6 +25,7 @@ pub struct SpanV39 {
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
+#[serde(rename_all = "lowercase", tag = "type")]
 pub enum SpanV39Kind {
     Space { text: String },
     WordPart { text: String },

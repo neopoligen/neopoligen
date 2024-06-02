@@ -116,7 +116,20 @@ impl SectionV39 {
     }
 
     pub fn ping(&self) -> Option<String> {
-        Some("PINGPINGPINGPINGPINGPINGPINGPINGPINGPINGPINGPING".to_string())
+        Some("PING-PING-PING".to_string())
+    }
+
+    pub fn spans(&self) -> Result<Value, minijinja::Error> {
+        if let Some(spans) = match &self.kind {
+            SectionV39Kind::Block { spans } => Some(spans),
+            _ => None,
+        } {
+            Ok(Value::make_object_iterable(spans.clone(), |span| {
+                Box::new(span.iter().cloned().map(Value::from_serialize))
+            }))
+        } else {
+            Ok(Value::from_serialize::<Vec<Value>>(vec![]))
+        }
     }
 
     pub fn template(&self) -> Option<String> {

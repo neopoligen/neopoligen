@@ -1,3 +1,20 @@
-<div class="title-default-section">
-THIS IS THE TITLE
+[! import "includes/theme.neoj" as theme !]
+<div class="title-default-section basic-category flow">
+[! include "subsections/forward.neoj" !]
+
+[! for child in section.children() !]
+[! if loop.first !]
+<div class="page-heading">
+<h1>
+[! for span in child.spans() !]
+    [@ theme.output_span(site, page_id, span) @]
+[! endfor !]
+</h1>
+</div>
+[! endif !]
+[! endfor !]
+
+[! include "subsections/preface.neoj" !]
+[! include "subsections/content-skip-one.neoj" !]
+[! include "subsections/afterword.neoj" !]
 

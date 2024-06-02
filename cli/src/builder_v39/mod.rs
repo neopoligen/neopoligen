@@ -478,6 +478,7 @@ body { background-color: #111; color: #aaa; }
 "#
             .to_string(),
         );
+
         pages.iter_mut().for_each(|(source_path, page)| {
             let _ = page.generate_ast();
             if page.errors.len() > 0 {
@@ -515,7 +516,7 @@ body { background-color: #111; color: #aaa; }
                                     page => Value::from_object(page.clone())
                                 )) {
                                     Ok(output) => {
-                                        dbg!(&output);
+                                        //dbg!(&output);
                                         let tests = output
                                             .split("<!-- START_THEME_TEST -->")
                                             .collect::<Vec<&str>>();
@@ -535,7 +536,7 @@ body { background-color: #111; color: #aaa; }
                                                         parts[0].replace("\n", "").replace(" ", "");
                                                     let right =
                                                         parts[1].replace("\n", "").replace(" ", "");
-                                                    dbg!(&left);
+                                                    //dbg!(&left);
                                                     if left != right {
                                                         let error = NeoErrorV39::ThemeTestError {
                                                             source_path: None,
