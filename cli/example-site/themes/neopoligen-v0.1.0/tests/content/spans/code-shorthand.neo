@@ -26,6 +26,23 @@
 
 
 
+
+-- start-theme-test
+
+-- naked
+
+``alfa|id: bravo``
+
+-- expected-output/
+
+<code id="bravo">alfa</code>
+
+-- /expected-output
+
+
+
+
+
 -- metadata
 -- created: 2024-06-02T14:18:57-04:00
 -- updated: 2024-06-02T14:18:57-04:00

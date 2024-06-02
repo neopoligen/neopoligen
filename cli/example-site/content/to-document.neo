@@ -7,6 +7,14 @@ To Document
 
 - Using ``naked`` for theme testings
 
+- calling class to get specific classes for spans
+
+- calling attrs on a span to get everything that's not 
+filtered in the template. 
+
+
+
+
 
 
 -- metadata
