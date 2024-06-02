@@ -23,6 +23,7 @@ pub struct SpanV39 {
 #[serde(rename_all = "lowercase", tag = "type")]
 pub enum SpanV39Kind {
     Backtick { source_text: String },
+    EscapedBacktick { source_text: String },
     Newline { source_text: String },
     Space { source_text: String },
     WordPart { source_text: String },
@@ -46,7 +47,13 @@ pub fn span_v39<'a>(
     source: &'a str,
     _spans: &'a Vec<String>,
 ) -> IResult<&'a str, SpanV39, ErrorTree<&'a str>> {
-    let (source, span) = alt((word_part_v39, space_v39, newline_v39, backtick_v39))(source)?;
+    let (source, span) = alt((
+        escaped_backtick_v39,
+        backtick_v39,
+        word_part_v39,
+        space_v39,
+        newline_v39,
+    ))(source)?;
     Ok((source, span))
 }
 
@@ -63,6 +70,17 @@ pub fn backtick_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
     ))
 }
 
+pub fn escaped_backtick_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
+    let (source, text) = tag("\\`").context("").parse(source)?;
+    Ok((
+        source,
+        SpanV39 {
+            kind: SpanV39Kind::EscapedBacktick {
+                source_text: text.to_string(),
+            },
+        },
+    ))
+}
 pub fn newline_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
     let (source, text) = tuple((space0, line_ending)).context("").parse(source)?;
     let (source, _) = not(tuple((space0, line_ending)))
