@@ -1,4 +1,6 @@
 use nom::bytes::complete::tag;
+use nom::combinator::not;
+use nom::sequence::pair;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -31,6 +33,7 @@ pub enum SpanShorthandTokenV39Kind {
     EscapedBacktick,
     EscapedPipe,
     EscapedSlash,
+    SingleBacktick,
     WordPart,
 }
 
@@ -71,6 +74,20 @@ pub fn shorthand_token_escaped_slash_v39(
         source_text: format!("{}{}", the_escape, text),
         parsed_text: format!("{}", text),
         kind: SpanShorthandTokenV39Kind::EscapedSlash,
+    };
+    Ok((source, token))
+}
+
+pub fn shorthand_token_single_backtick_v39(
+    source: &str,
+) -> IResult<&str, SpanShorthandTokenV39, ErrorTree<&str>> {
+    let initial_source = source;
+    let (source, _) = pair(tag("`"), not(tag("`"))).context("").parse(source)?;
+    let source_text = initial_source.replace(source, "").to_string();
+    let token = SpanShorthandTokenV39 {
+        source_text,
+        parsed_text: "`".to_string(),
+        kind: SpanShorthandTokenV39Kind::SingleBacktick,
     };
     Ok((source, token))
 }
