@@ -52,12 +52,12 @@ pub fn empty_until_newline_or_eof<'a>(
     Ok((source, ""))
 }
 
-// DEPRECATED: Replace with empty_until_newline_or_eof so there's just one
-// thing that's needed
-pub fn line_ending_or_eof(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
-    let (source, result) = alt((line_ending, eof))(source)?;
-    Ok((source, result))
-}
+// // DEPRECATED: Replace with empty_until_newline_or_eof so there's just one
+// // thing that's needed
+// pub fn line_ending_or_eof(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
+//     let (source, result) = alt((line_ending, eof))(source)?;
+//     Ok((source, result))
+// }
 
 // TODO: Needs test
 pub fn newline_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {

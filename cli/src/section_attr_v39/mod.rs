@@ -43,7 +43,7 @@ pub fn section_key_value_attr_39<'a>(
     let (source, key) = is_not(": \n").context("").parse(source)?;
     let (source, _) = tag(":").context("").parse(source)?;
     let (source, value) = not_line_ending.context("").parse(source)?;
-    let (source, _) = line_ending_or_eof.context("").parse(source)?;
+    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
     Ok((
         source,
         SectionAttrV39 {
@@ -61,7 +61,7 @@ pub fn section_flag_attr_v39<'a>(
     let (source, _) = tag("--").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
     let (source, key) = is_not(":\n").context("").parse(source)?;
-    let (source, _) = line_ending_or_eof.context("").parse(source)?;
+    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
     Ok((
         source,
         SectionAttrV39 {
