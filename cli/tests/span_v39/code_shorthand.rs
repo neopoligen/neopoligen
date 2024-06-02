@@ -35,7 +35,7 @@ fn code_shorthand_with_escaped_pipe() {
             kind: SpanV39Kind::CodeShorthand { attrs },
         },
     );
-    let right = code_shorthand_v39_dev(source).unwrap();
+    let right = code_shorthand_v39(source).unwrap();
     assert_eq!(left, right);
 }
 
@@ -51,7 +51,7 @@ fn code_shorthand_with_escaped_backslash() {
             kind: SpanV39Kind::CodeShorthand { attrs },
         },
     );
-    let right = code_shorthand_v39_dev(source).unwrap();
+    let right = code_shorthand_v39(source).unwrap();
     assert_eq!(left, right);
 }
 
@@ -67,7 +67,7 @@ fn code_shorthand_with_escaped_backtick() {
             kind: SpanV39Kind::CodeShorthand { attrs },
         },
     );
-    let right = code_shorthand_v39_dev(source).unwrap();
+    let right = code_shorthand_v39(source).unwrap();
     assert_eq!(left, right);
 }
 
@@ -83,23 +83,7 @@ fn code_shorthand_with_single_backslash() {
             kind: SpanV39Kind::CodeShorthand { attrs },
         },
     );
-    let right = code_shorthand_v39_dev(source).unwrap();
-    assert_eq!(left, right);
-}
-
-#[test]
-fn code_shorthand_with_single_backtick() {
-    let source = "``ping`ping``";
-    let attrs = vec![];
-    let left = (
-        "",
-        SpanV39 {
-            source_text: "``ping`ping``".to_string(),
-            parsed_text: "ping`ping".to_string(),
-            kind: SpanV39Kind::CodeShorthand { attrs },
-        },
-    );
-    let right = code_shorthand_v39_dev(source).unwrap();
+    let right = code_shorthand_v39(source).unwrap();
     assert_eq!(left, right);
 }
 
@@ -223,6 +207,46 @@ fn integration_1() {
                 kind: SpanV39Kind::CodeShorthand { attrs: vec![] },
                 parsed_text: "bravo".to_string(),
                 source_text: "``bravo``".to_string(),
+            },
+            SpanV39 {
+                kind: SpanV39Kind::Space,
+                parsed_text: " ".to_string(),
+                source_text: " ".to_string(),
+            },
+            SpanV39 {
+                kind: SpanV39Kind::WordPart,
+                parsed_text: "charlie".to_string(),
+                source_text: "charlie".to_string(),
+            },
+        ],
+    );
+    let right = many1(|src| span_v39(src, &config.spans))
+        .parse(source)
+        .unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn integration_2() {
+    let config = SiteConfig::mock1();
+    let source = r#"alfa ``bravo\|delta`` charlie"#;
+    let left = (
+        "",
+        vec![
+            SpanV39 {
+                kind: SpanV39Kind::WordPart,
+                parsed_text: "alfa".to_string(),
+                source_text: "alfa".to_string(),
+            },
+            SpanV39 {
+                kind: SpanV39Kind::Space,
+                parsed_text: " ".to_string(),
+                source_text: " ".to_string(),
+            },
+            SpanV39 {
+                kind: SpanV39Kind::CodeShorthand { attrs: vec![] },
+                parsed_text: "bravo|delta".to_string(),
+                source_text: "``bravo\\|delta``".to_string(),
             },
             SpanV39 {
                 kind: SpanV39Kind::Space,

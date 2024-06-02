@@ -19,7 +19,7 @@ use nom_supreme::parser_ext::ParserExt;
 // use nom::sequence::tuple;
 // use serde::Serialize;
 
-pub fn code_shorthand_v39_dev(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
+pub fn code_shorthand_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
     let initial_source = source;
     let (source, _) = tag("``").context("").parse(source)?;
     let (source, tokens) = many1(code_shorthand_token_v39).context("").parse(source)?;
@@ -36,23 +36,6 @@ pub fn code_shorthand_v39_dev(source: &str) -> IResult<&str, SpanV39, ErrorTree<
         SpanV39 {
             source_text,
             parsed_text,
-            kind: SpanV39Kind::CodeShorthand { attrs },
-        },
-    ))
-}
-
-pub fn code_shorthand_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
-    let initial_source = source;
-    let (source, _) = tag("``").context("").parse(source)?;
-    let (source, text) = is_not("`|").context("").parse(source)?;
-    let (source, attrs) = many0(code_shorthand_attr_v39).context("").parse(source)?;
-    let (source, _) = tag("``").context("").parse(source)?;
-    let source_text = initial_source.replace(source, "").to_string();
-    Ok((
-        source,
-        SpanV39 {
-            source_text,
-            parsed_text: text.to_string(),
             kind: SpanV39Kind::CodeShorthand { attrs },
         },
     ))
@@ -94,9 +77,8 @@ pub fn code_shorthand_token_v39(
         shorthand_token_escaped_pipe_v39,
         shorthand_token_escaped_backslash_v39,
         shorthand_token_escaped_backtick_v39,
-        shorthand_token_single_backtick_v39,
-        shorthand_token_single_backslash_v39,
         code_shorthand_token_word_part_v39,
+        shorthand_token_single_backslash_v39,
     ))
     .context("")
     .parse(source)?;
