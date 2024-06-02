@@ -23,7 +23,7 @@ pub struct SpanV39 {
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(rename_all = "lowercase", tag = "type")]
 pub enum SpanV39Kind {
-    Backtick { text: String },
+    Backtick { source_text: String },
     Space { text: String },
     WordPart { text: String },
 }
@@ -57,7 +57,7 @@ pub fn backtick_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
         source,
         SpanV39 {
             kind: SpanV39Kind::Backtick {
-                text: "`".to_string(),
+                source_text: "`".to_string(),
             },
         },
     ))

@@ -9,11 +9,25 @@ There are two types of spans:
 
 Named spans that use ``<<`` and ``>>`` 
 
-And, shorthand spans that use other characters. 
-
-
-
 Named Span: <<em|named em span>>
+
+And, shorthand spans that use other characters:
+
+Link: [[this is a link|https://www.example.com/]]
+
+HTML: ((<span>HTML</span>))
+
+Classes On Span {{green|this is green text}}
+
+iLink: @@alfa1234#allow_for_comment|some text@@
+
+titled link: !!alfa1234#allow for comment here!!
+
+image: ::image_name::
+
+Footnote: ^^1^^
+
+unicode or html entity: &&quot&&
 
 Code: ``this is code``
 
@@ -21,27 +35,9 @@ Emphasis: __the is em__
 
 Strong: **this is strong**
 
-Link: [[this is a link|https://www.example.com/]]
-
-Footnote: ^^1^^
-
-HTML: ((<span>HTML</span>))
-
 Strikethrough ~~strikethrough~~
 
-Classes On Span ::green|this is green text::
-
-iLink: @@alfa1234#allow_for_comment|some text@@
-
-titled link: !!alfa1234#allow for comment here!!
-
-unicode or html entity: &&quot&&
-
-image: %%image_name%%
-
-Marked text: $$marked text$$
-
-
+Marked text: %%marked text%%
 
 
 -- metadata
