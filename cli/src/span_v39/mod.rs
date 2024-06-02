@@ -22,11 +22,25 @@ pub struct SpanV39 {
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(rename_all = "lowercase", tag = "type")]
 pub enum SpanV39Kind {
-    Backtick { source_text: String },
-    EscapedBacktick { source_text: String },
-    Newline { source_text: String },
-    Space { source_text: String },
-    WordPart { source_text: String },
+    Backtick {
+        source_text: String,
+    },
+    CodeShorthand {
+        source_text: String,
+        parsed_text: String,
+    },
+    EscapedBacktick {
+        source_text: String,
+    },
+    Newline {
+        source_text: String,
+    },
+    Space {
+        source_text: String,
+    },
+    WordPart {
+        source_text: String,
+    },
 }
 
 // Reminder: This doesn't output a span for content
@@ -65,6 +79,21 @@ pub fn backtick_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
         SpanV39 {
             kind: SpanV39Kind::Backtick {
                 source_text: "`".to_string(),
+            },
+        },
+    ))
+}
+
+pub fn code_shorthand_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
+    let (source, _) = tag("``").context("").parse(source)?;
+    let (source, text) = is_not("`").context("").parse(source)?;
+    let (source, _) = tag("``").context("").parse(source)?;
+    Ok((
+        source,
+        SpanV39 {
+            kind: SpanV39Kind::CodeShorthand {
+                source_text: "``code``".to_string(),
+                parsed_text: text.to_string(),
             },
         },
     ))

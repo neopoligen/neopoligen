@@ -39,6 +39,11 @@ Strikethrough ~~strikethrough~~
 
 Marked text: %%marked text%%
 
+NOTE: Nesting doesn't work with shorthand
+
+NOTE: Nesting does work with named spans
+
+
 
 -- metadata
 -- created: 2024-06-02T00:31:47-04:00
