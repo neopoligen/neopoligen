@@ -99,7 +99,7 @@ fn code_shorthand_with_flag_attr() {
                 attrs: vec![SpanAttrV39 {
                     source_text: "|rust".to_string(),
                     kind: SpanAttrV39Kind::Flag {
-                        key: "rust".to_string(),
+                        value: "rust".to_string(),
                     },
                 }],
             },
@@ -122,13 +122,13 @@ fn code_shorthand_with_multiple_flag_attrs() {
                     SpanAttrV39 {
                         source_text: "|rust".to_string(),
                         kind: SpanAttrV39Kind::Flag {
-                            key: "rust".to_string(),
+                            value: "rust".to_string(),
                         },
                     },
                     SpanAttrV39 {
                         source_text: "|hidden".to_string(),
                         kind: SpanAttrV39Kind::Flag {
-                            key: "hidden".to_string(),
+                            value: "hidden".to_string(),
                         },
                     },
                 ],
@@ -147,7 +147,7 @@ fn flag_attr_for_code_basic_end_at_block() {
         SpanAttrV39 {
             source_text: "|rust".to_string(),
             kind: SpanAttrV39Kind::Flag {
-                key: "rust".to_string(),
+                value: "rust".to_string(),
             },
         },
     );
@@ -163,7 +163,7 @@ fn flag_attr_for_code_with_escaped_colon() {
         SpanAttrV39 {
             source_text: "|rust\\:".to_string(),
             kind: SpanAttrV39Kind::Flag {
-                key: "rust:".to_string(),
+                value: "rust:".to_string(),
             },
         },
     );
@@ -179,7 +179,7 @@ fn flag_attr_for_code_url() {
         SpanAttrV39 {
             source_text: "|https://www.example.com".to_string(),
             kind: SpanAttrV39Kind::Flag {
-                key: "https://www.example.com".to_string(),
+                value: "https://www.example.com".to_string(),
             },
         },
     );
@@ -195,7 +195,7 @@ fn flag_attr_for_code_with_pipe_escape() {
         SpanAttrV39 {
             source_text: "|rust\\|here".to_string(),
             kind: SpanAttrV39Kind::Flag {
-                key: "rust|here".to_string(),
+                value: "rust|here".to_string(),
             },
         },
     );

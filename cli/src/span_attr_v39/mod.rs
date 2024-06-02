@@ -10,5 +10,5 @@ pub struct SpanAttrV39 {
 #[serde(tag = "kind", rename_all = "lowercase")]
 pub enum SpanAttrV39Kind {
     KeyValue { key: String, value: String },
-    Flag { key: String },
+    Flag { value: String },
 }

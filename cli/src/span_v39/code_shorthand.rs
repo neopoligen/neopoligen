@@ -59,14 +59,14 @@ pub fn code_shorthand_flag_attr_v39(source: &str) -> IResult<&str, SpanAttrV39, 
         .map(|word| word.source_text.clone())
         .collect::<Vec<String>>()
         .join("");
-    let key = words
+    let value = words
         .iter()
         .map(|word| word.parsed_text.clone())
         .collect::<Vec<String>>()
         .join("");
     let attr = SpanAttrV39 {
         source_text: format!("{}{}", the_tag, source_text),
-        kind: SpanAttrV39Kind::Flag { key },
+        kind: SpanAttrV39Kind::Flag { value },
     };
     Ok((source, attr))
 }
