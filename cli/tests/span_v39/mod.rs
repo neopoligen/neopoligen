@@ -1,4 +1,6 @@
-use neopoligengine::{site_config::SiteConfig, span_v39::*};
+pub mod integration;
+
+use neopoligengine::span_v39::*;
 use pretty_assertions::assert_eq;
 
 #[test]
