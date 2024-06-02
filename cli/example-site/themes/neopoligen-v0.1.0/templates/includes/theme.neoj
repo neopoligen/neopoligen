@@ -1,8 +1,3 @@
-[#############################################################################]
-[! macro section_classes(section) !]
-[# TODO: get the specific list of section classes
-based off config #]
-[! endmacro !]
 
 [#############################################################################]
 [! macro output_section(site, page_id, section) !]
@@ -13,4 +8,25 @@ based off config #]
 [! macro output_span(site, page_id, span) !]
 [! include span.template_list() ignore missing !]
 [! endmacro !]
+
+[#############################################################################]
+[! macro section_classes(section) !]
+[# TODO: get the specific list of section classes
+based off config #]
+[! endmacro !]
+
+
+[#############################################################################]
+[! macro span_classes(span) !]
+[! for c in span.classes() !]
+[! if loop.first !]
+class="
+[! endif !]
+[@ c @]
+[! if loop.last !]
+"
+[! endif !]
+[! endfor !]
+[! endmacro !]
+
 

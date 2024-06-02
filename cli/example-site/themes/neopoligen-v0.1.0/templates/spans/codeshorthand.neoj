@@ -1,15 +1,8 @@
+[! import "includes/theme.neoj" as theme !]
 <code
 
 >
 
-[! for c in span.classes() !]
-[! if loop.first !]
-class="
-[! endif !]
-[@ c @]
-[! if loop.last !]
-"
-[! endif !]
-[! endfor !]
 
+[@ theme.span_classes(span) @]
 [@- span.parsed_text() -@]</code>
