@@ -44,24 +44,6 @@ pub fn code_shorthand_attr_v39(source: &str) -> IResult<&str, SpanAttrV39, Error
 }
 
 pub fn code_shorthand_flag_attr_v39(source: &str) -> IResult<&str, SpanAttrV39, ErrorTree<&str>> {
-    code_shorthand_flag_attr_v39_dev(source)
-
-    // let (source, _) = tag("|").context("").parse(source)?;
-    // let (source, text) = is_not("`|").context("").parse(source)?;
-    // let attr = SpanAttrV39 {
-    //     kind: SpanAttrV39Kind::Flag {
-    //         source_text: format!("|{}", text),
-    //         key: text.to_string(),
-    //     },
-    // };
-    // Ok((source, attr))
-
-    //
-}
-
-pub fn code_shorthand_flag_attr_v39_dev(
-    source: &str,
-) -> IResult<&str, SpanAttrV39, ErrorTree<&str>> {
     let (source, the_tag) = tag("|").context("").parse(source)?;
     let (source, words) = many1(code_shorthand_token_v39).context("").parse(source)?;
     let source_text = words

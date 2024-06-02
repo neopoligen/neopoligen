@@ -105,7 +105,7 @@ fn flag_attr_for_code_with_pipe_escape() {
             },
         },
     );
-    let right = code_shorthand_flag_attr_v39_dev(source).unwrap();
+    let right = code_shorthand_flag_attr_v39(source).unwrap();
     assert_eq!(left, right);
 }
 
