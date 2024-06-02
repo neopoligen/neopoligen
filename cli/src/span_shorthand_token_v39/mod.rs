@@ -32,6 +32,7 @@ pub struct SpanShorthandTokenV39 {
 pub enum SpanShorthandTokenV39Kind {
     EscapedBackslash,
     EscapedBacktick,
+    EscapedColon,
     EscapedPipe,
     SingleBacktick,
     SingleBackslash,
@@ -49,6 +50,21 @@ pub fn shorthand_token_escaped_backtick_v39(
         source_text,
         parsed_text: "`".to_string(),
         kind: SpanShorthandTokenV39Kind::EscapedBacktick,
+    };
+    Ok((source, token))
+}
+
+pub fn shorthand_token_escaped_colon_v39(
+    source: &str,
+) -> IResult<&str, SpanShorthandTokenV39, ErrorTree<&str>> {
+    let initial_source = source;
+    let (source, _) = tag("\\").context("").parse(source)?;
+    let (source, _) = tag(":").context("").parse(source)?;
+    let source_text = initial_source.replace(source, "").to_string();
+    let token = SpanShorthandTokenV39 {
+        source_text,
+        parsed_text: ":".to_string(),
+        kind: SpanShorthandTokenV39Kind::EscapedColon,
     };
     Ok((source, token))
 }

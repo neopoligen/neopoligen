@@ -80,6 +80,7 @@ pub fn code_shorthand_token_v39(
         shorthand_token_escaped_pipe_v39,
         shorthand_token_escaped_backslash_v39,
         shorthand_token_escaped_backtick_v39,
+        shorthand_token_escaped_colon_v39,
         code_shorthand_token_word_part_v39,
         shorthand_token_single_backslash_v39,
         shorthand_token_single_backtick_v39,

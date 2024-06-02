@@ -17,6 +17,21 @@ fn shorthand_token_escaped_backtick_basic() {
 }
 
 #[test]
+fn shorthand_token_escaped_colon_basic() {
+    let source = "\\:";
+    let left = (
+        "",
+        SpanShorthandTokenV39 {
+            source_text: "\\:".to_string(),
+            parsed_text: ":".to_string(),
+            kind: SpanShorthandTokenV39Kind::EscapedColon,
+        },
+    );
+    let right = shorthand_token_escaped_colon_v39(source).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
 fn shorthand_token_escaped_pipe_basic() {
     let source = "\\|";
     let left = (
