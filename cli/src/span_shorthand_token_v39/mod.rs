@@ -34,6 +34,7 @@ pub enum SpanShorthandTokenV39Kind {
     EscapedPipe,
     EscapedSlash,
     SingleBacktick,
+    SingleBackslash,
     WordPart,
 }
 
@@ -88,6 +89,20 @@ pub fn shorthand_token_single_backtick_v39(
         source_text,
         parsed_text: "`".to_string(),
         kind: SpanShorthandTokenV39Kind::SingleBacktick,
+    };
+    Ok((source, token))
+}
+
+pub fn shorthand_token_single_backslash_v39(
+    source: &str,
+) -> IResult<&str, SpanShorthandTokenV39, ErrorTree<&str>> {
+    let initial_source = source;
+    let (source, _) = pair(tag("\\"), not(tag("\\"))).context("").parse(source)?;
+    let source_text = initial_source.replace(source, "").to_string();
+    let token = SpanShorthandTokenV39 {
+        source_text,
+        parsed_text: "\\".to_string(),
+        kind: SpanShorthandTokenV39Kind::SingleBackslash,
     };
     Ok((source, token))
 }

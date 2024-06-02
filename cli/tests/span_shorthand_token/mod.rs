@@ -60,3 +60,18 @@ fn shorthand_token_single_backtick_test() {
     let right = shorthand_token_single_backtick_v39(source).unwrap();
     assert_eq!(left, right);
 }
+
+#[test]
+fn shorthand_token_single_backslash_test() {
+    let source = "\\ ";
+    let left = (
+        " ",
+        SpanShorthandTokenV39 {
+            source_text: "\\".to_string(),
+            parsed_text: "\\".to_string(),
+            kind: SpanShorthandTokenV39Kind::SingleBackslash,
+        },
+    );
+    let right = shorthand_token_single_backslash_v39(source).unwrap();
+    assert_eq!(left, right);
+}
