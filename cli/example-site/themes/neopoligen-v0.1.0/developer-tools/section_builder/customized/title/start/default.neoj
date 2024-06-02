@@ -1,5 +1,5 @@
 [! import "includes/theme.neoj" as theme !]
-<div class="title-default-section basic-category flow">
+
 [! include "subsections/forward.neoj" !]
 
 [! for child in section.children() !]
