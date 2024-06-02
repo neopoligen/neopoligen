@@ -44,7 +44,16 @@ pub enum SpanV39Kind {
 
 impl SpanV39 {
     pub fn classes(&self, args: &[Value]) -> Vec<String> {
-        let mut class_list: Vec<String> = args.iter().map(|arg| arg.to_string()).collect();
+        let mut class_list: Vec<String> = args
+            .iter()
+            .filter_map(|arg| {
+                if arg.as_str() != Some("") {
+                    Some(arg.to_string())
+                } else {
+                    None
+                }
+            })
+            .collect();
         self.attrs.iter().for_each(|attr| match &attr.kind {
             SpanAttrV39Kind::KeyValue { key, value } => {
                 if key == "class" {
