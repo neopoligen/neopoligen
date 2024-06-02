@@ -453,18 +453,41 @@ body { background-color: #111; color: #aaa; }
             });
         let _ = env.add_template_owned(
             "sections/start-theme-test/full/default.neoj",
-            r#"<!-- START_THEME_TEST -->"#.to_string(),
+            r#"<h2>Theme Test</h2>
+<div class="theme-test-area">
+<!-- START_THEME_TEST -->
+"#
+            .to_string(),
         );
 
         let _ = env.add_template_owned(
             "sections/expected-output/start/default.neoj",
             r#"
 [!- import 'includes/theme.neoj' as theme -!]
+</div>
 <!-- EXPECTED_OUTPUT -->
 [@ section.text() @]
 [! for child in section.children() !]
 [@ theme.output_section(site, page_id, child) @]
 [! endfor !]
+<!-- SHOW_CODE -->
+Target: 
+<pre>[@ section.text()|escape @]</pre>
+Got: 
+<div class="show-code-area"></div>
+<!-- TODO: Move this js so it only loads once -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const in_blocks = document.querySelectorAll(".theme-test-area")
+    const out_blocks = document.querySelectorAll(".show-code-area")
+    in_blocks.forEach((in_block, block_index) => {
+        //console.log(in_block.innerHTML)
+        out_blocks[block_index].innerText = in_block.innerHTML
+    })
+}) 
+
+</script>
+
 "#
             .to_string(),
         );
@@ -628,8 +651,6 @@ body { background-color: #111; color: #aaa; }
                     .config
                     .theme_tests_dest_dir()
                     .join(format!("{}/index.html", id));
-                //dbg!(report_path);
-                //dbg!(&page.output_content);
                 if let Some(content) = &page.output_content {
                     let _ = write_file_with_mkdir(&report_path, &content);
                 }
