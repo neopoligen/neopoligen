@@ -9,15 +9,15 @@ use pretty_assertions::assert_eq;
 
 #[test]
 fn code_shorthand_basic() {
-    let source = "``code``";
+    let source = "``ping``";
     let attrs = vec![];
     let left = (
         "",
         SpanV39 {
             kind: SpanV39Kind::CodeShorthand {
                 attrs,
-                source_text: "``code``".to_string(),
-                parsed_text: "code".to_string(),
+                source_text: "``ping``".to_string(),
+                parsed_text: "ping".to_string(),
             },
         },
     );
@@ -38,7 +38,7 @@ fn code_shorthand_with_flag_attr() {
                         key: "rust".to_string(),
                     },
                 }],
-                source_text: "``code``".to_string(),
+                source_text: "``code|rust``".to_string(),
                 parsed_text: "code".to_string(),
             },
         },
@@ -68,7 +68,7 @@ fn code_shorthand_with_multiple_flag_attrs() {
                         },
                     },
                 ],
-                source_text: "``code``".to_string(),
+                source_text: "``code|rust|hidden``".to_string(),
                 parsed_text: "code".to_string(),
             },
         },
