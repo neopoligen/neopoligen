@@ -10,9 +10,9 @@ fn escaped_backtick() {
     let left = (
         "",
         SpanV39 {
-            kind: SpanV39Kind::EscapedBacktick {
-                source_text: "\\`".to_string(),
-            },
+            source_text: "\\`".to_string(),
+            parsed_text: "`".to_string(),
+            kind: SpanV39Kind::EscapedBacktick,
         },
     );
     let right = escaped_backtick_v39(source).unwrap();
@@ -25,9 +25,9 @@ fn backtick_at_eof() {
     let left = (
         "",
         SpanV39 {
-            kind: SpanV39Kind::Backtick {
-                source_text: "`".to_string(),
-            },
+            source_text: "`".to_string(),
+            parsed_text: "`".to_string(),
+            kind: SpanV39Kind::Backtick,
         },
     );
     let right = backtick_v39(source).unwrap();
@@ -40,9 +40,9 @@ fn backtick_at_infront_of_another_character() {
     let left = (
         "x",
         SpanV39 {
-            kind: SpanV39Kind::Backtick {
-                source_text: "`".to_string(),
-            },
+            source_text: "`".to_string(),
+            parsed_text: "`".to_string(),
+            kind: SpanV39Kind::Backtick {},
         },
     );
     let right = backtick_v39(source).unwrap();
@@ -55,9 +55,9 @@ fn backtick_at_infront_of_space() {
     let left = (
         " ",
         SpanV39 {
-            kind: SpanV39Kind::Backtick {
-                source_text: "`".to_string(),
-            },
+            source_text: "`".to_string(),
+            parsed_text: "`".to_string(),
+            kind: SpanV39Kind::Backtick {},
         },
     );
     let right = backtick_v39(source).unwrap();
@@ -72,19 +72,19 @@ fn backtick_in_text() {
         "",
         vec![
             SpanV39 {
-                kind: SpanV39Kind::WordPart {
-                    source_text: "alfa".to_string(),
-                },
+                source_text: "alfa".to_string(),
+                parsed_text: "alfa".to_string(),
+                kind: SpanV39Kind::WordPart {},
             },
             SpanV39 {
-                kind: SpanV39Kind::Backtick {
-                    source_text: "`".to_string(),
-                },
+                source_text: "`".to_string(),
+                parsed_text: "`".to_string(),
+                kind: SpanV39Kind::Backtick,
             },
             SpanV39 {
-                kind: SpanV39Kind::WordPart {
-                    source_text: "bravo".to_string(),
-                },
+                source_text: "bravo".to_string(),
+                parsed_text: "bravo".to_string(),
+                kind: SpanV39Kind::WordPart {},
             },
         ],
     );
@@ -102,14 +102,14 @@ fn escaped_backtick_followed_by_single() {
         "",
         vec![
             SpanV39 {
-                kind: SpanV39Kind::EscapedBacktick {
-                    source_text: "\\`".to_string(),
-                },
+                source_text: "\\`".to_string(),
+                parsed_text: "`".to_string(),
+                kind: SpanV39Kind::EscapedBacktick,
             },
             SpanV39 {
-                kind: SpanV39Kind::Backtick {
-                    source_text: "`".to_string(),
-                },
+                source_text: "`".to_string(),
+                parsed_text: "`".to_string(),
+                kind: SpanV39Kind::Backtick,
             },
         ],
     );

@@ -9,6 +9,7 @@ use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::eof;
 use nom::combinator::not;
+use nom::sequence::pair;
 use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
@@ -21,31 +22,19 @@ use crate::span_attr_v39::SpanAttrV39;
 #[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct SpanV39 {
     pub kind: SpanV39Kind,
+    pub parsed_text: String,
+    pub source_text: String,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(rename_all = "lowercase", tag = "type")]
 pub enum SpanV39Kind {
-    Backtick {
-        source_text: String,
-    },
-    CodeShorthand {
-        attrs: Vec<SpanAttrV39>,
-        source_text: String,
-        parsed_text: String,
-    },
-    EscapedBacktick {
-        source_text: String,
-    },
-    Newline {
-        source_text: String,
-    },
-    Space {
-        source_text: String,
-    },
-    WordPart {
-        source_text: String,
-    },
+    Backtick,
+    CodeShorthand { attrs: Vec<SpanAttrV39> },
+    EscapedBacktick,
+    Newline,
+    Space,
+    WordPart,
 }
 
 // Reminder: This doesn't output a span for content
@@ -77,64 +66,74 @@ pub fn span_v39<'a>(
 }
 
 pub fn backtick_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
-    let (source, _) = tag("`").context("").parse(source)?;
-    let (source, _) = not(tag("`")).context("").parse(source)?;
+    let initial_source = source;
+    let (source, _) = pair(tag("`"), not(tag("`"))).context("").parse(source)?;
+    let source_text = initial_source.replace(source, "").to_string();
     Ok((
         source,
         SpanV39 {
-            kind: SpanV39Kind::Backtick {
-                source_text: "`".to_string(),
-            },
+            source_text,
+            parsed_text: "`".to_string(),
+            kind: SpanV39Kind::Backtick,
         },
     ))
 }
 
 pub fn escaped_backtick_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
-    let (source, text) = tag("\\`").context("").parse(source)?;
+    // Reminder: not doing the source/replace here because the
+    // escape is captured by the slash. There's certainly
+    // a way around that, but this is fine
+    let (source, _) = pair(tag("\\"), tag("`")).context("").parse(source)?;
     Ok((
         source,
         SpanV39 {
-            kind: SpanV39Kind::EscapedBacktick {
-                source_text: text.to_string(),
-            },
+            source_text: "\\`".to_string(),
+            parsed_text: "`".to_string(),
+            kind: SpanV39Kind::EscapedBacktick,
         },
     ))
 }
 pub fn newline_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
-    let (source, text) = tuple((space0, line_ending)).context("").parse(source)?;
+    let initial_source = source;
+    let (source, _) = tuple((space0, line_ending)).context("").parse(source)?;
     let (source, _) = not(tuple((space0, line_ending)))
         .context("")
         .parse(source)?;
+    let source_text = initial_source.replace(source, "").to_string();
     Ok((
         source,
         SpanV39 {
-            kind: SpanV39Kind::Newline {
-                source_text: format!("{}{}", text.0, text.1),
-            },
+            source_text,
+            parsed_text: "\n".to_string(),
+            kind: SpanV39Kind::Newline,
         },
     ))
 }
 
 pub fn space_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
-    let (source, text) = space1.context("").parse(source)?;
+    let initial_source = source;
+    let (source, _) = space1.context("").parse(source)?;
+    let source_text = initial_source.replace(source, "").to_string();
     Ok((
         source,
         SpanV39 {
-            kind: SpanV39Kind::Space {
-                source_text: text.to_string(),
-            },
+            source_text,
+            parsed_text: " ".to_string(),
+            kind: SpanV39Kind::Space,
         },
     ))
 }
 
 pub fn word_part_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
+    let initial_source = source;
     let (source, text) = is_not(" \n\t`").context("").parse(source)?;
+    let source_text = initial_source.replace(source, "").to_string();
     Ok((
         source,
         SpanV39 {
-            kind: SpanV39Kind::WordPart {
-                source_text: text.to_string(),
-            },
+            source_text,
+            parsed_text: text.to_string(),
+            kind: SpanV39Kind::WordPart,
         },
     ))
 }

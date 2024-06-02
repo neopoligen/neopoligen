@@ -10,9 +10,24 @@ fn space_basic() {
     let left = (
         "",
         SpanV39 {
-            kind: SpanV39Kind::Space {
-                source_text: " ".to_string(),
-            },
+            source_text: " ".to_string(),
+            parsed_text: " ".to_string(),
+            kind: SpanV39Kind::Space,
+        },
+    );
+    let right = space_v39(source).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn space_multiple() {
+    let source = "    ";
+    let left = (
+        "",
+        SpanV39 {
+            source_text: "    ".to_string(),
+            parsed_text: " ".to_string(),
+            kind: SpanV39Kind::Space,
         },
     );
     let right = space_v39(source).unwrap();
@@ -22,24 +37,24 @@ fn space_basic() {
 #[test]
 fn space_in_words() {
     let config = SiteConfig::mock1();
-    let source = "alfa bravo";
+    let source = "alfa   bravo";
     let left = (
         "",
         vec![
             SpanV39 {
-                kind: SpanV39Kind::WordPart {
-                    source_text: "alfa".to_string(),
-                },
+                source_text: "alfa".to_string(),
+                parsed_text: "alfa".to_string(),
+                kind: SpanV39Kind::WordPart,
             },
             SpanV39 {
-                kind: SpanV39Kind::Space {
-                    source_text: " ".to_string(),
-                },
+                source_text: "   ".to_string(),
+                parsed_text: " ".to_string(),
+                kind: SpanV39Kind::Space,
             },
             SpanV39 {
-                kind: SpanV39Kind::WordPart {
-                    source_text: "bravo".to_string(),
-                },
+                source_text: "bravo".to_string(),
+                parsed_text: "bravo".to_string(),
+                kind: SpanV39Kind::WordPart,
             },
         ],
     );

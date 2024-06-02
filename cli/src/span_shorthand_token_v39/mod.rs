@@ -37,11 +37,13 @@ pub enum SpanShorthandTokenV39Kind {
 pub fn shorthand_token_escaped_backtick_v39(
     source: &str,
 ) -> IResult<&str, SpanShorthandTokenV39, ErrorTree<&str>> {
-    let (source, the_escape) = tag("\\").context("").parse(source)?;
-    let (source, text) = tag("`").context("").parse(source)?;
+    let initial_source = source;
+    let (source, _) = tag("\\").context("").parse(source)?;
+    let (source, _) = tag("`").context("").parse(source)?;
+    let source_text = initial_source.replace(source, "").to_string();
     let token = SpanShorthandTokenV39 {
-        source_text: format!("{}{}", the_escape, text),
-        parsed_text: format!("{}", text),
+        source_text,
+        parsed_text: "`".to_string(),
         kind: SpanShorthandTokenV39Kind::EscapedBacktick,
     };
     Ok((source, token))

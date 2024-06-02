@@ -1,7 +1,4 @@
-//use neopoligengine::site_config::SiteConfig;
 use neopoligengine::span_v39::*;
-// use nom::multi::many1;
-// use nom::Parser;
 use pretty_assertions::assert_eq;
 
 #[test]
@@ -10,9 +7,9 @@ fn word_part_basic() {
     let left = (
         " ",
         SpanV39 {
-            kind: SpanV39Kind::WordPart {
-                source_text: "alfa".to_string(),
-            },
+            source_text: "alfa".to_string(),
+            parsed_text: "alfa".to_string(),
+            kind: SpanV39Kind::WordPart,
         },
     );
     let right = word_part_v39(source).unwrap();
@@ -25,9 +22,9 @@ fn word_part_not_line_ending() {
     let left = (
         "\n",
         SpanV39 {
-            kind: SpanV39Kind::WordPart {
-                source_text: "alfa".to_string(),
-            },
+            source_text: "alfa".to_string(),
+            parsed_text: "alfa".to_string(),
+            kind: SpanV39Kind::WordPart,
         },
     );
     let right = word_part_v39(source).unwrap();

@@ -23,19 +23,19 @@ fn basic_section_full_core_test() {
                     kind: SectionV39Kind::Block {
                         spans: vec![
                             SpanV39 {
-                                kind: SpanV39Kind::WordPart {
-                                    source_text: "Hello".to_string(),
-                                },
+                                source_text: "Hello".to_string(),
+                                parsed_text: "Hello".to_string(),
+                                kind: SpanV39Kind::WordPart,
                             },
                             SpanV39 {
-                                kind: SpanV39Kind::Space {
-                                    source_text: " ".to_string(),
-                                },
+                                source_text: " ".to_string(),
+                                parsed_text: " ".to_string(),
+                                kind: SpanV39Kind::Space,
                             },
                             SpanV39 {
-                                kind: SpanV39Kind::WordPart {
-                                    source_text: "World".to_string(),
-                                },
+                                source_text: "World".to_string(),
+                                parsed_text: "World".to_string(),
+                                kind: SpanV39Kind::WordPart,
                             },
                         ],
                     },
@@ -65,19 +65,19 @@ fn basic_section_full_core_test_with_following_section() {
                     kind: SectionV39Kind::Block {
                         spans: vec![
                             SpanV39 {
-                                kind: SpanV39Kind::WordPart {
-                                    source_text: "Hello".to_string(),
-                                },
+                                source_text: "Hello".to_string(),
+                                parsed_text: "Hello".to_string(),
+                                kind: SpanV39Kind::WordPart,
                             },
                             SpanV39 {
-                                kind: SpanV39Kind::Space {
-                                    source_text: " ".to_string(),
-                                },
+                                source_text: " ".to_string(),
+                                parsed_text: " ".to_string(),
+                                kind: SpanV39Kind::Space,
                             },
                             SpanV39 {
-                                kind: SpanV39Kind::WordPart {
-                                    source_text: "World".to_string(),
-                                },
+                                source_text: "World".to_string(),
+                                parsed_text: "World".to_string(),
+                                kind: SpanV39Kind::WordPart,
                             },
                         ],
                     },
@@ -112,19 +112,19 @@ fn basic_section_full_with_attrs() {
                     kind: SectionV39Kind::Block {
                         spans: vec![
                             SpanV39 {
-                                kind: SpanV39Kind::WordPart {
-                                    source_text: "alfa".to_string(),
-                                },
+                                source_text: "alfa".to_string(),
+                                parsed_text: "alfa".to_string(),
+                                kind: SpanV39Kind::WordPart,
                             },
                             SpanV39 {
-                                kind: SpanV39Kind::Space {
-                                    source_text: " ".to_string(),
-                                },
+                                source_text: " ".to_string(),
+                                parsed_text: " ".to_string(),
+                                kind: SpanV39Kind::Space,
                             },
                             SpanV39 {
-                                kind: SpanV39Kind::WordPart {
-                                    source_text: "bravo".to_string(),
-                                },
+                                source_text: "bravo".to_string(),
+                                parsed_text: "bravo".to_string(),
+                                kind: SpanV39Kind::WordPart,
                             },
                         ],
                     },
@@ -155,19 +155,19 @@ fn basic_section_start_end_core_test() {
                         kind: SectionV39Kind::Block {
                             spans: vec![
                                 SpanV39 {
-                                    kind: SpanV39Kind::WordPart {
-                                        source_text: "Hello".to_string(),
-                                    },
+                                    source_text: "Hello".to_string(),
+                                    parsed_text: "Hello".to_string(),
+                                    kind: SpanV39Kind::WordPart {},
                                 },
                                 SpanV39 {
-                                    kind: SpanV39Kind::Space {
-                                        source_text: " ".to_string(),
-                                    },
+                                    source_text: " ".to_string(),
+                                    parsed_text: " ".to_string(),
+                                    kind: SpanV39Kind::Space {},
                                 },
                                 SpanV39 {
-                                    kind: SpanV39Kind::WordPart {
-                                        source_text: "World".to_string(),
-                                    },
+                                    source_text: "World".to_string(),
+                                    parsed_text: "World".to_string(),
+                                    kind: SpanV39Kind::WordPart {},
                                 },
                             ],
                         },

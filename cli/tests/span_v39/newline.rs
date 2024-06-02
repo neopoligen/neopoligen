@@ -10,9 +10,9 @@ fn newline_basic() {
     let left = (
         "",
         SpanV39 {
-            kind: SpanV39Kind::Newline {
-                source_text: "\n".to_string(),
-            },
+            source_text: "\n".to_string(),
+            parsed_text: "\n".to_string(),
+            kind: SpanV39Kind::Newline,
         },
     );
     let right = newline_v39(source).unwrap();
@@ -27,19 +27,19 @@ fn newline_in_words() {
         "",
         vec![
             SpanV39 {
-                kind: SpanV39Kind::WordPart {
-                    source_text: "alfa".to_string(),
-                },
+                source_text: "alfa".to_string(),
+                parsed_text: "alfa".to_string(),
+                kind: SpanV39Kind::WordPart {},
             },
             SpanV39 {
-                kind: SpanV39Kind::Newline {
-                    source_text: "\n".to_string(),
-                },
+                source_text: "\n".to_string(),
+                parsed_text: "\n".to_string(),
+                kind: SpanV39Kind::Newline {},
             },
             SpanV39 {
-                kind: SpanV39Kind::WordPart {
-                    source_text: "bravo".to_string(),
-                },
+                source_text: "bravo".to_string(),
+                parsed_text: "bravo".to_string(),
+                kind: SpanV39Kind::WordPart {},
             },
         ],
     );

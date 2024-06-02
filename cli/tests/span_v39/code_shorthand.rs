@@ -14,11 +14,9 @@ fn code_shorthand_basic() {
     let left = (
         "",
         SpanV39 {
-            kind: SpanV39Kind::CodeShorthand {
-                attrs,
-                source_text: "``ping``".to_string(),
-                parsed_text: "ping".to_string(),
-            },
+            source_text: "``ping``".to_string(),
+            parsed_text: "ping".to_string(),
+            kind: SpanV39Kind::CodeShorthand { attrs },
         },
     );
     let right = code_shorthand_v39(source).unwrap();
@@ -31,6 +29,8 @@ fn code_shorthand_with_flag_attr() {
     let left = (
         "",
         SpanV39 {
+            source_text: "``code|rust``".to_string(),
+            parsed_text: "code".to_string(),
             kind: SpanV39Kind::CodeShorthand {
                 attrs: vec![SpanAttrV39 {
                     kind: SpanAttrV39Kind::Flag {
@@ -38,8 +38,6 @@ fn code_shorthand_with_flag_attr() {
                         key: "rust".to_string(),
                     },
                 }],
-                source_text: "``code|rust``".to_string(),
-                parsed_text: "code".to_string(),
             },
         },
     );
@@ -53,6 +51,8 @@ fn code_shorthand_with_multiple_flag_attrs() {
     let left = (
         "",
         SpanV39 {
+            source_text: "``code|rust|hidden``".to_string(),
+            parsed_text: "code".to_string(),
             kind: SpanV39Kind::CodeShorthand {
                 attrs: vec![
                     SpanAttrV39 {
@@ -68,8 +68,6 @@ fn code_shorthand_with_multiple_flag_attrs() {
                         },
                     },
                 ],
-                source_text: "``code|rust|hidden``".to_string(),
-                parsed_text: "code".to_string(),
             },
         },
     );

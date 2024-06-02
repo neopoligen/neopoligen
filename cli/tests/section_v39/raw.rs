@@ -97,19 +97,19 @@ fn raw_section_start_no_attrs_with_more_stuff() {
                             kind: SectionV39Kind::Block {
                                 spans: vec![
                                     SpanV39 {
-                                        kind: SpanV39Kind::WordPart {
-                                            source_text: "more".to_string(),
-                                        },
+                                        source_text: "more".to_string(),
+                                        parsed_text: "more".to_string(),
+                                        kind: SpanV39Kind::WordPart,
                                     },
                                     SpanV39 {
-                                        kind: SpanV39Kind::Space {
-                                            source_text: " ".to_string(),
-                                        },
+                                        source_text: " ".to_string(),
+                                        parsed_text: " ".to_string(),
+                                        kind: SpanV39Kind::Space {},
                                     },
                                     SpanV39 {
-                                        kind: SpanV39Kind::WordPart {
-                                            source_text: "lines".to_string(),
-                                        },
+                                        source_text: "lines".to_string(),
+                                        parsed_text: "lines".to_string(),
+                                        kind: SpanV39Kind::WordPart {},
                                     },
                                 ],
                             },
