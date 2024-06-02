@@ -19,6 +19,8 @@ use serde::Serialize;
 
 use crate::span_attr_v39::SpanAttrV39;
 
+use self::code_shorthand::code_shorthand_v39;
+
 #[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct SpanV39 {
     pub kind: SpanV39Kind,
@@ -56,6 +58,7 @@ pub fn span_v39<'a>(
     _spans: &'a Vec<String>,
 ) -> IResult<&'a str, SpanV39, ErrorTree<&'a str>> {
     let (source, span) = alt((
+        code_shorthand_v39,
         escaped_backtick_v39,
         backtick_v39,
         word_part_v39,

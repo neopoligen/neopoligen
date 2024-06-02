@@ -7,43 +7,6 @@ files that you want to do something with.
 
 There are two types of spans:
 
-Named spans that use ``<<`` and ``>>`` 
-
-Named Span: <<em|named em span>>
-
-And, shorthand spans that use other characters:
-
-Link: [[this is a link|https://www.example.com/]]
-
-HTML: ((<span>HTML</span>))
-
-Classes On Span {{green|this is green text}}
-
-iLink: @@alfa1234#allow_for_comment|some text@@
-
-titled link: !!alfa1234#allow for comment here!!
-
-image: ::image_name::
-
-Footnote: ^^1^^
-
-unicode or html entity: &&quot&&
-
-Code: ``this is code``
-
-Emphasis: __the is em__
-
-Strong: **this is strong**
-
-Strikethrough ~~strikethrough~~
-
-Marked text: %%marked text%%
-
-NOTE: Nesting doesn't work with shorthand
-
-NOTE: Nesting does work with named spans
-
-
 
 -- metadata
 -- created: 2024-06-02T00:31:47-04:00
