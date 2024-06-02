@@ -172,6 +172,22 @@ fn flag_attr_for_code_with_escaped_colon() {
 }
 
 #[test]
+fn flag_attr_for_code_url() {
+    let source = "|https://www.example.com``";
+    let left = (
+        "``",
+        SpanAttrV39 {
+            kind: SpanAttrV39Kind::Flag {
+                key: "https://www.example.com".to_string(),
+                source_text: "|https://www.example.com".to_string(),
+            },
+        },
+    );
+    let right = code_shorthand_flag_attr_v39(source).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
 fn flag_attr_for_code_with_pipe_escape() {
     let source = "|rust\\|here``";
     let left = (
