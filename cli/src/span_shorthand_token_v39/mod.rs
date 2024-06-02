@@ -30,9 +30,9 @@ pub struct SpanShorthandTokenV39 {
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(rename_all = "lowercase", tag = "type")]
 pub enum SpanShorthandTokenV39Kind {
+    EscapedBackslash,
     EscapedBacktick,
     EscapedPipe,
-    EscapedSlash,
     SingleBacktick,
     SingleBackslash,
     WordPart,
@@ -66,7 +66,7 @@ pub fn shorthand_token_escaped_pipe_v39(
     Ok((source, token))
 }
 
-pub fn shorthand_token_escaped_slash_v39(
+pub fn shorthand_token_escaped_backslash_v39(
     source: &str,
 ) -> IResult<&str, SpanShorthandTokenV39, ErrorTree<&str>> {
     let (source, the_escape) = tag("\\").context("").parse(source)?;
@@ -74,7 +74,7 @@ pub fn shorthand_token_escaped_slash_v39(
     let token = SpanShorthandTokenV39 {
         source_text: format!("{}{}", the_escape, text),
         parsed_text: format!("{}", text),
-        kind: SpanShorthandTokenV39Kind::EscapedSlash,
+        kind: SpanShorthandTokenV39Kind::EscapedBackslash,
     };
     Ok((source, token))
 }

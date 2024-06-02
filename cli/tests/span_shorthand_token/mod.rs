@@ -32,17 +32,17 @@ fn shorthand_token_escaped_pipe_basic() {
 }
 
 #[test]
-fn shorthand_token_escaped_slash_basic() {
+fn shorthand_token_escaped_backslash_basic() {
     let source = "\\\\";
     let left = (
         "",
         SpanShorthandTokenV39 {
             source_text: "\\\\".to_string(),
             parsed_text: "\\".to_string(),
-            kind: SpanShorthandTokenV39Kind::EscapedSlash,
+            kind: SpanShorthandTokenV39Kind::EscapedBackslash,
         },
     );
-    let right = shorthand_token_escaped_slash_v39(source).unwrap();
+    let right = shorthand_token_escaped_backslash_v39(source).unwrap();
     assert_eq!(left, right);
 }
 

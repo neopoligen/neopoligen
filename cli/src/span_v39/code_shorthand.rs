@@ -92,7 +92,7 @@ pub fn code_shorthand_token_v39(
 ) -> IResult<&str, SpanShorthandTokenV39, ErrorTree<&str>> {
     let (source, token) = alt((
         shorthand_token_escaped_pipe_v39,
-        shorthand_token_escaped_slash_v39,
+        shorthand_token_escaped_backslash_v39,
         shorthand_token_escaped_backtick_v39,
         code_shorthand_token_word_part_v39,
     ))
