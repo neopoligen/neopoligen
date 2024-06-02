@@ -20,10 +20,11 @@ based off config #]
 [#############################################################################]
 [! macro span_attrs(span) !]
 [! for attr in span.attrs() !]
----
-[#
-[@- ' ' - @][@ attr.key() @]=""
-#]
+[! set key = attr.key() !]
+[! if key != "class" !]
+[@- ' ' @]
+[@ attr.key() @]="[@ attr.value() @]"
+[! endif !]
 [! endfor !]
 [! endmacro !]
 

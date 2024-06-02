@@ -12,6 +12,8 @@ impl Object for SpanAttrV39 {
         _args: &[Value],
     ) -> Result<Value, Error> {
         match name {
+            "key" => Ok(Value::from(self.key())),
+            "value" => Ok(Value::from(self.value())),
             _ => Ok(Value::from("[Error: called non-existing function")),
         }
     }
