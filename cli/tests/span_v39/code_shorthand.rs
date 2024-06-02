@@ -34,7 +34,7 @@ fn code_shorthand_with_flag_attr() {
             kind: SpanV39Kind::CodeShorthand {
                 attrs: vec![SpanAttrV39 {
                     kind: SpanAttrV39Kind::Flag {
-                        flag: "rust".to_string(),
+                        key: "rust".to_string(),
                     },
                 }],
                 source_text: "``code``".to_string(),
@@ -43,5 +43,20 @@ fn code_shorthand_with_flag_attr() {
         },
     );
     let right = code_shorthand_v39(source).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn flag_attr_for_code_basic_end_at_block() {
+    let source = "|rust``";
+    let left = (
+        "``",
+        SpanAttrV39 {
+            kind: SpanAttrV39Kind::Flag {
+                key: "ust".to_string(),
+            },
+        },
+    );
+    let right = code_shorthand_flag_attr_v39(source).unwrap();
     assert_eq!(left, right);
 }

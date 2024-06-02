@@ -1,3 +1,4 @@
+use crate::span_attr_v39::SpanAttrV39Kind;
 use crate::span_v39::*;
 // use nom::branch::alt;
 use nom::bytes::complete::is_not;
@@ -31,3 +32,21 @@ pub fn code_shorthand_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str
         },
     ))
 }
+
+// pub fn code_shorthand_attr_v39(source: &str) -> IResult<&str, , ErrorTree<&str>> {
+//     Ok((source, "".to_string()))
+// }
+
+pub fn code_shorthand_flag_attr_v39(source: &str) -> IResult<&str, SpanAttrV39, ErrorTree<&str>> {
+    let (source, _) = tag("|rust").context("").parse(source)?;
+    let attr = SpanAttrV39 {
+        kind: SpanAttrV39Kind::Flag {
+            key: "rust".to_string(),
+        },
+    };
+    Ok((source, attr))
+}
+
+// pub fn code_shorthand_key_value_attr_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
+//     Ok((source, "".to_string()))
+// }
