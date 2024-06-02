@@ -654,9 +654,13 @@ body { background-color: #111; color: #aaa; }
 [! for item in payload.items() !]
 <h2>[@ item.status() @] - Test</h2>
 <h3>Expected</h3>
+<pre>[! autoescape true !]
 [@ item.expected() @]
+[! endautoescape !]
 <h3>Got</h3>
+<pre>[! autoescape true !]
 [@ item.got() @]
+[! endautoescape !]
 [! endfor !]
 </body>
 </html>
@@ -1547,33 +1551,33 @@ pub fn get_files_with_extension_in_a_single_directory(
 //     Ok(())
 // }
 
-fn format_html_for_theme_test_display(code: &str) -> String {
-    let mut re = Regex::new(r"\n").unwrap();
-    let output = re.replace_all(code, " ");
-    re = Regex::new(r" \s+").unwrap();
-    let output = re.replace_all(&output, " ");
-    re = Regex::new(r"\s+<").unwrap();
-    let output = re.replace_all(&output, "<");
-    re = Regex::new(r">\s+").unwrap();
-    let output = re.replace_all(&output, ">");
-    let parts: Vec<&str> = output.split("<").collect();
-    let mut assembler: Vec<String> = vec![];
-    let mut level = 0i8;
-    assembler.push(parts[0].to_string());
-    parts.iter().skip(1).for_each(|part| {
-        if part.starts_with("/") {
-            level -= 2;
-        }
-        for _ in 0..level {
-            assembler.push(" ".to_string());
-        }
-        assembler.push(format!("<{}\n", part));
-        if !part.starts_with("/") {
-            level += 2;
-        }
-    });
-    assembler.join("").to_string()
-}
+// fn format_html_for_theme_test_display(code: &str) -> String {
+//     let mut re = Regex::new(r"\n").unwrap();
+//     let output = re.replace_all(code, " ");
+//     re = Regex::new(r" \s+").unwrap();
+//     let output = re.replace_all(&output, " ");
+//     re = Regex::new(r"\s+<").unwrap();
+//     let output = re.replace_all(&output, "<");
+//     re = Regex::new(r">\s+").unwrap();
+//     let output = re.replace_all(&output, ">");
+//     let parts: Vec<&str> = output.split("<").collect();
+//     let mut assembler: Vec<String> = vec![];
+//     let mut level = 0i8;
+//     assembler.push(parts[0].to_string());
+//     parts.iter().skip(1).for_each(|part| {
+//         if part.starts_with("/") {
+//             level -= 2;
+//         }
+//         for _ in 0..level {
+//             assembler.push(" ".to_string());
+//         }
+//         assembler.push(format!("<{}\n", part));
+//         if !part.starts_with("/") {
+//             level += 2;
+//         }
+//     });
+//     assembler.join("").to_string()
+// }
 
 // pub fn trim_empty_lines(source: &str) -> String {
 //     let re = Regex::new(r"\S").unwrap();

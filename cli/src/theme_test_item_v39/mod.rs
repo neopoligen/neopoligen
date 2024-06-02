@@ -1,5 +1,6 @@
 pub mod object;
 
+use regex::Regex;
 use serde::Serialize;
 
 #[derive(Debug, Clone, PartialEq, Serialize)]
@@ -19,21 +20,59 @@ impl ThemeTestItemV39 {
 
     pub fn expected(&self) -> Option<String> {
         if self.parts().len() > 1 {
-            Some(self.parts()[0].clone())
+            Some(format_html_for_theme_test_display(&self.parts()[1]).clone())
         } else {
-            Some("NO EXPECTED VALUE WAS FOUND".to_string())
+            None
         }
     }
 
     pub fn got(&self) -> Option<String> {
         if self.parts().len() > 1 {
-            Some(self.parts()[1].clone())
+            Some(format_html_for_theme_test_display(&self.parts()[0]).clone())
         } else {
-            Some("NO GOT VALUE WAS FOUND".to_string())
+            None
         }
     }
 
     pub fn status(&self) -> Option<String> {
-        Some("TODO: status here".to_string())
+        if self.parts().len() == 3 {
+            let left = self.parts()[1].replace("\n", "").replace(" ", "");
+            let right = self.parts()[1].replace("\n", "").replace(" ", "");
+            if left == right {
+                Some("passed".to_string())
+            } else {
+                Some("failed".to_string())
+            }
+        } else {
+            Some("failed".to_string())
+        }
     }
+}
+
+fn format_html_for_theme_test_display(code: &str) -> String {
+    let mut re = Regex::new(r"\n").unwrap();
+    let output = re.replace_all(code, " ");
+    re = Regex::new(r" \s+").unwrap();
+    let output = re.replace_all(&output, " ");
+    re = Regex::new(r"\s+<").unwrap();
+    let output = re.replace_all(&output, "<");
+    re = Regex::new(r">\s+").unwrap();
+    let output = re.replace_all(&output, ">");
+    let parts: Vec<&str> = output.split("<").collect();
+    let mut assembler: Vec<String> = vec![];
+    let mut level = 0i8;
+    assembler.push(parts[0].to_string());
+    parts.iter().skip(1).for_each(|part| {
+        if part.starts_with("/") {
+            level -= 2;
+        }
+        for _ in 0..level {
+            assembler.push(" ".to_string());
+        }
+        assembler.push(format!("<{}\n", part));
+        if !part.starts_with("/") {
+            level += 2;
+        }
+    });
+    assembler.join("").to_string()
 }
