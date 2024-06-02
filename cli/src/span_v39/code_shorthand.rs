@@ -19,6 +19,28 @@ use nom_supreme::parser_ext::ParserExt;
 // use nom::sequence::tuple;
 // use serde::Serialize;
 
+pub fn code_shorthand_v39_dev(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
+    let initial_source = source;
+    let (source, _) = tag("``").context("").parse(source)?;
+    let (source, tokens) = many1(code_shorthand_token_v39).context("").parse(source)?;
+    let (source, attrs) = many0(code_shorthand_attr_v39).context("").parse(source)?;
+    let (source, _) = tag("``").context("").parse(source)?;
+    let source_text = initial_source.replace(source, "").to_string();
+    let parsed_text = tokens
+        .iter()
+        .map(|word| word.parsed_text.clone())
+        .collect::<Vec<String>>()
+        .join("");
+    Ok((
+        source,
+        SpanV39 {
+            source_text,
+            parsed_text,
+            kind: SpanV39Kind::CodeShorthand { attrs },
+        },
+    ))
+}
+
 pub fn code_shorthand_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
     let initial_source = source;
     let (source, _) = tag("``").context("").parse(source)?;

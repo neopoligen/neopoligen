@@ -24,6 +24,22 @@ fn code_shorthand_basic() {
 }
 
 #[test]
+fn solo_code_shorthand_with_escaped_pipe() {
+    let source = "``ping\\|ping``";
+    let attrs = vec![];
+    let left = (
+        "",
+        SpanV39 {
+            source_text: "``ping\\|ping``".to_string(),
+            parsed_text: "ping|ping".to_string(),
+            kind: SpanV39Kind::CodeShorthand { attrs },
+        },
+    );
+    let right = code_shorthand_v39_dev(source).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
 fn code_shorthand_with_flag_attr() {
     let source = "``code|rust``";
     let left = (
