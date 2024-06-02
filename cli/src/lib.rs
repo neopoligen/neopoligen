@@ -25,5 +25,6 @@ pub mod site_v2;
 pub mod site_v39;
 pub mod span;
 pub mod span_attr_v39;
+pub mod span_token_v39;
 pub mod span_v39;
 pub mod template_test;

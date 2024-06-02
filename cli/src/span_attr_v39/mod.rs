@@ -8,6 +8,13 @@ pub struct SpanAttrV39 {
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(tag = "kind", rename_all = "lowercase")]
 pub enum SpanAttrV39Kind {
-    KeyValue { key: String, value: String },
-    Flag { key: String },
+    KeyValue {
+        source_text: String,
+        key: String,
+        value: String,
+    },
+    Flag {
+        source_text: String,
+        key: String,
+    },
 }
