@@ -28,3 +28,5 @@ pub mod span_attr_v39;
 pub mod span_shorthand_token_v39;
 pub mod span_v39;
 pub mod template_test;
+pub mod theme_test_item_v39;
+pub mod theme_test_v39;

@@ -13,7 +13,7 @@ use std::fs;
 use std::path::PathBuf;
 use std::time::SystemTime;
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct PageV39 {
     pub ast: Option<Vec<SectionV39>>,
     pub config: SiteConfig,

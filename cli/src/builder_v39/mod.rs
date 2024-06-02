@@ -15,6 +15,7 @@ use crate::site_config::SiteConfig;
 use crate::site_v2::SiteMp3;
 use crate::site_v2::SiteV2;
 use crate::site_v39::SiteV39;
+use crate::theme_test_v39::ThemeTestV39;
 use anyhow::Result;
 use image::DynamicImage;
 use minijinja::context;
@@ -363,6 +364,7 @@ body { background-color: #111; color: #aaa; }
         let mut pages: BTreeMap<PathBuf, PageV39> = BTreeMap::new();
         let dir = &self.config.theme_tests_source_dir();
         let mut theme_test_config = self.config.clone();
+        let mut theme_tests: Vec<ThemeTestV39> = vec![];
         theme_test_config
             .sections
             .basic
@@ -459,7 +461,6 @@ body { background-color: #111; color: #aaa; }
 "#
             .to_string(),
         );
-
         let _ = env.add_template_owned(
             "sections/expected-output/start/default.neoj",
             r#"
@@ -485,9 +486,7 @@ document.addEventListener("DOMContentLoaded", () => {
         out_blocks[block_index].innerText = in_block.innerHTML
     })
 }) 
-
 </script>
-
 "#
             .to_string(),
         );
@@ -502,10 +501,8 @@ document.addEventListener("DOMContentLoaded", () => {
 "#
             .to_string(),
         );
-        // TODO: Set this up so it does separate loops to
-        // generate the content and then to render the reports
-        // and then to output the results
         pages.iter_mut().for_each(|(source_path, page)| {
+            let mut page_report: Vec<(bool, String, String)> = vec![];
             let _ = page.generate_ast();
             if page.errors.len() > 0 {
                 for err in page.errors.iter() {
@@ -543,65 +540,80 @@ document.addEventListener("DOMContentLoaded", () => {
                                 )) {
                                     Ok(output) => {
                                         page.output_content = Some(output.clone());
+                                        theme_tests.push(ThemeTestV39 { page: page.clone() });
                                         //dbg!(&output);
-                                        let tests = output
-                                            .split("<!-- START_THEME_TEST -->")
-                                            .collect::<Vec<&str>>();
-                                        if tests.len() == 1 {
-                                            // self.issues.push(BuildIssue {
-                                            //     kind: BuildIssueKind::NoThemeTestsFound {},
-                                            //     details: None,
-                                            //     source_path: Some(source_path.to_path_buf()),
-                                            // })
-                                        } else {
-                                            for t in tests.iter().skip(1) {
-                                                let parts = t
-                                                    .split("<!-- EXPECTED_OUTPUT -->")
-                                                    .collect::<Vec<&str>>();
-                                                if parts.len() == 3 {
-                                                    let left =
-                                                        parts[0].replace("\n", "").replace(" ", "");
-                                                    let right =
-                                                        parts[1].replace("\n", "").replace(" ", "");
-                                                    //dbg!(&left);
-                                                    if left != right {
-                                                        let error = NeoErrorV39::ThemeTestError {
-                                                            source_path: None,
-                                                            details:
-                                                                "test theme didn't match target"
-                                                                    .to_string(),
-                                                            expected:
-                                                                format_html_for_theme_test_display(
-                                                                    &left,
-                                                                ),
-                                                            got: format_html_for_theme_test_display(
-                                                                &right,
-                                                            ),
-                                                        };
-                                                        self.theme_issues.push(error);
-                                                        // self.issues.push(BuildIssue {
-                                                        //     details: None,
-                                                        //     source_path: Some(source_path.to_path_buf()),
-                                                        //     kind: BuildIssueKind::FailedThemeTest {
-                                                        //         expected: Some(parts[1].to_string()),
-                                                        //         got: Some(parts[0].to_string()),
-                                                        //     },
-                                                        // })
-                                                    }
-                                                } else {
-                                                    // self.issues.push(BuildIssue {
-                                                    //     details: Some(t.to_string()),
-                                                    //     kind: BuildIssueKind::InvalidThemeTest {},
-                                                    //     source_path: Some(source_path.to_path_buf()),
-                                                    // })
-                                                }
-                                            }
-                                        }
+
+                                        //let tests = output
+                                        //    .split("<!-- START_THEME_TEST -->")
+                                        //    .collect::<Vec<&str>>();
+                                        //if tests.len() == 1 {
+                                        //    // self.issues.push(BuildIssue {
+                                        //    //     kind: BuildIssueKind::NoThemeTestsFound {},
+                                        //    //     details: None,
+                                        //    //     source_path: Some(source_path.to_path_buf()),
+                                        //    // })
+                                        //} else {
+                                        //    for t in tests.iter().skip(1) {
+                                        //        let parts = t
+                                        //            .split("<!-- EXPECTED_OUTPUT -->")
+                                        //            .collect::<Vec<&str>>();
+                                        //        if parts.len() == 3 {
+                                        //            let left =
+                                        //                parts[0].replace("\n", "").replace(" ", "");
+                                        //            let right =
+                                        //                parts[1].replace("\n", "").replace(" ", "");
+                                        //            //dbg!(&left);
+                                        //            if left != right {
+                                        //                page_report.push((
+                                        //                    false,
+                                        //                    left.clone(),
+                                        //                    right.clone(),
+                                        //                ));
+                                        //                let error = NeoErrorV39::ThemeTestError {
+                                        //                    source_path: None,
+                                        //                    details:
+                                        //                        "test theme didn't match target"
+                                        //                            .to_string(),
+                                        //                    expected:
+                                        //                        format_html_for_theme_test_display(
+                                        //                            &left,
+                                        //                        ),
+                                        //                    got: format_html_for_theme_test_display(
+                                        //                        &right,
+                                        //                    ),
+                                        //                };
+                                        //                self.theme_issues.push(error);
+                                        //                // self.issues.push(BuildIssue {
+                                        //                //     details: None,
+                                        //                //     source_path: Some(source_path.to_path_buf()),
+                                        //                //     kind: BuildIssueKind::FailedThemeTest {
+                                        //                //         expected: Some(parts[1].to_string()),
+                                        //                //         got: Some(parts[0].to_string()),
+                                        //                //     },
+                                        //                // })
+                                        //            } else {
+                                        //                page_report.push((
+                                        //                    true,
+                                        //                    left.clone(),
+                                        //                    right.clone(),
+                                        //                ));
+                                        //            }
+                                        //        } else {
+                                        //            // self.issues.push(BuildIssue {
+                                        //            //     details: Some(t.to_string()),
+                                        //            //     kind: BuildIssueKind::InvalidThemeTest {},
+                                        //            //     source_path: Some(source_path.to_path_buf()),
+                                        //            // })
+                                        //        }
+                                        //    }
+                                        //}
+
                                         //
                                         //page.output_content = Some(output);
                                     }
                                     Err(err) => {
-                                        dbg!(&err);
+                                        dbg!("TODO: Add this error to theme tests", &err);
+
                                         self.theme_issues.push(NeoErrorV39::Generic {
                                             source_path: None,
                                             details: format!(
@@ -609,6 +621,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                                 err.to_string()
                                             ),
                                         });
+
                                         //let mut err = &err as &dyn std::error::Error;
                                         ////let mut v = vec![];
                                         //while let Some(next_err) = err.source() {
@@ -645,17 +658,64 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        for (_, page) in pages.iter() {
-            if let Some(id) = page.id() {
-                let report_path = self
-                    .config
-                    .theme_tests_dest_dir()
-                    .join(format!("{}/index.html", id));
-                if let Some(content) = &page.output_content {
+        let _ = env.add_template_owned(
+            "theme-test-report.neoj",
+            r#"
+<!DOCTYPE html>
+<html><head><style>
+body { background-color: #111; color: #aaa; }
+</style></head>
+<body>
+<header><a href="/">Home Page</a> - <a href="/neo-status/">Neopoligen Status</a></header>
+<h1>Theme Test Report</h1>
+
+[! for item in payload.items() !]
+<h2>[@ item.status() @] - Test</h2>
+<h3>Expected</h3>
+[@ item.expected() @]
+<h3>Got</h3>
+[@ item.got() @]
+[! endfor !]
+
+
+
+
+</body>
+</html>
+        "#
+            .to_string(),
+        );
+        let report_tmpl = env.get_template("theme-test-report.neoj").unwrap();
+
+        for theme_test in theme_tests.iter() {
+            let report_path = self
+                .config
+                .theme_tests_dest_dir()
+                .join(format!("{}/index.html", theme_test.output_name().unwrap()));
+            match report_tmpl.render(context!(
+                payload => Value::from_object(theme_test.clone())
+            )) {
+                Ok(content) => {
                     let _ = write_file_with_mkdir(&report_path, &content);
                 }
+                Err(e) => {
+                    dbg!(e);
+                    ()
+                }
             }
+            dbg!(report_path);
         }
+
+        // for (_, page) in pages.iter() {
+        //     if let Some(id) = page.id() {
+        //         let report_path = self
+        //             .config
+        //             .theme_tests_dest_dir()
+        //             .join(format!("{}/index.html", id));
+        //         if let Some(content) = &page.output_content {
+        //         }
+        //     }
+        // }
 
         Ok(())
     }
