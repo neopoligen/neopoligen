@@ -4,4 +4,5 @@ pub mod page_v39;
 pub mod section_attr_v39;
 pub mod section_v39;
 pub mod site_v39;
+pub mod span_shorthand_token;
 pub mod span_v39;

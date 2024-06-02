@@ -1,11 +1,11 @@
-// use neopoligengine::site_config::SiteConfig;
 use neopoligengine::span_attr_v39::*;
-use neopoligengine::span_shorthand_token_v39::{SpanShorthandTokenV39, SpanShorthandTokenV39Kind};
+use neopoligengine::span_shorthand_token_v39::*;
 use neopoligengine::span_v39::code_shorthand::*;
 use neopoligengine::span_v39::*;
+use pretty_assertions::assert_eq;
+// use neopoligengine::site_config::SiteConfig;
 // use nom::multi::many1;
 // use nom::Parser;
-use pretty_assertions::assert_eq;
 
 #[test]
 fn code_shorthand_basic() {
@@ -137,7 +137,7 @@ fn token_for_code_shorthand_escaped_backtick() {
             },
         },
     );
-    let right = code_shorthand_token_escaped_backtick_v39(source).unwrap();
+    let right = shorthand_token_escaped_backtick_v39(source).unwrap();
     assert_eq!(left, right);
 }
 
@@ -153,7 +153,7 @@ fn token_for_code_shorthand_escaped_pipe() {
             },
         },
     );
-    let right = code_shorthand_token_escaped_pipe_v39(source).unwrap();
+    let right = shorthand_token_escaped_pipe_v39(source).unwrap();
     assert_eq!(left, right);
 }
 
@@ -169,6 +169,6 @@ fn token_for_code_shorthand_escaped_slash() {
             },
         },
     );
-    let right = code_shorthand_token_escaped_slash_v39(source).unwrap();
+    let right = shorthand_token_escaped_slash_v39(source).unwrap();
     assert_eq!(left, right);
 }

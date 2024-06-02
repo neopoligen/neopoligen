@@ -1,6 +1,5 @@
 use crate::span_attr_v39::SpanAttrV39Kind;
-use crate::span_shorthand_token_v39::SpanShorthandTokenV39;
-use crate::span_shorthand_token_v39::SpanShorthandTokenV39Kind;
+use crate::span_shorthand_token_v39::*;
 use crate::span_v39::*;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
@@ -90,49 +89,6 @@ pub fn code_shorthand_token_word_part_v39(
     };
     Ok(("``", token))
 }
-
-pub fn code_shorthand_token_escaped_backtick_v39(
-    source: &str,
-) -> IResult<&str, SpanShorthandTokenV39, ErrorTree<&str>> {
-    let (source, the_escape) = tag("\\").context("").parse(source)?;
-    let (source, text) = tag("`").context("").parse(source)?;
-    let token = SpanShorthandTokenV39 {
-        kind: SpanShorthandTokenV39Kind::EscapedBacktick {
-            source_text: format!("{}{}", the_escape, text),
-            parsed_text: format!("{}", text),
-        },
-    };
-    Ok((source, token))
-}
-
-pub fn code_shorthand_token_escaped_pipe_v39(
-    source: &str,
-) -> IResult<&str, SpanShorthandTokenV39, ErrorTree<&str>> {
-    let (source, the_escape) = tag("\\").context("").parse(source)?;
-    let (source, text) = tag("|").context("").parse(source)?;
-    let token = SpanShorthandTokenV39 {
-        kind: SpanShorthandTokenV39Kind::EscapedPipe {
-            source_text: format!("{}{}", the_escape, text),
-            parsed_text: format!("{}", text),
-        },
-    };
-    Ok((source, token))
-}
-
-pub fn code_shorthand_token_escaped_slash_v39(
-    source: &str,
-) -> IResult<&str, SpanShorthandTokenV39, ErrorTree<&str>> {
-    let (source, the_escape) = tag("\\").context("").parse(source)?;
-    let (source, text) = tag("\\").context("").parse(source)?;
-    let token = SpanShorthandTokenV39 {
-        kind: SpanShorthandTokenV39Kind::EscapedSlash {
-            source_text: format!("{}{}", the_escape, text),
-            parsed_text: format!("{}", text),
-        },
-    };
-    Ok((source, token))
-}
-
 // pub fn code_shorthand_key_value_attr_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
 //     Ok((source, "".to_string()))
 // }
