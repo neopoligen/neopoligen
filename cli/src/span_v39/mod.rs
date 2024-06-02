@@ -45,7 +45,7 @@ pub fn span_v39<'a>(
     source: &'a str,
     _spans: &'a Vec<String>,
 ) -> IResult<&'a str, SpanV39, ErrorTree<&'a str>> {
-    let (source, span) = alt((word_part_v39, space_v39))(source)?;
+    let (source, span) = alt((word_part_v39, space_v39, newline_v39))(source)?;
     Ok((source, span))
 }
 

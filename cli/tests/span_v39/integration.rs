@@ -33,3 +33,33 @@ fn int_1() {
         .unwrap();
     assert_eq!(left, right);
 }
+
+#[test]
+fn int_2() {
+    let config = SiteConfig::mock1();
+    let source = "alfa\nbravo";
+    let left = (
+        "",
+        vec![
+            SpanV39 {
+                kind: SpanV39Kind::WordPart {
+                    text: "alfa".to_string(),
+                },
+            },
+            SpanV39 {
+                kind: SpanV39Kind::Space {
+                    text: " ".to_string(),
+                },
+            },
+            SpanV39 {
+                kind: SpanV39Kind::WordPart {
+                    text: "bravo".to_string(),
+                },
+            },
+        ],
+    );
+    let right = many1(|src| span_v39(src, &config.spans))
+        .parse(source)
+        .unwrap();
+    assert_eq!(left, right);
+}
