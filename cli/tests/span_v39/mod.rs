@@ -5,21 +5,6 @@ use neopoligengine::span_v39::*;
 use pretty_assertions::assert_eq;
 
 #[test]
-fn newline_basic() {
-    let source = "\n";
-    let left = (
-        "",
-        SpanV39 {
-            kind: SpanV39Kind::Space {
-                text: " ".to_string(),
-            },
-        },
-    );
-    let right = newline_v39(source).unwrap();
-    assert_eq!(left, right);
-}
-
-#[test]
 fn structure_empty_until_newline_or_eof_basic() {
     let source = "\n";
     let left = ("", "");

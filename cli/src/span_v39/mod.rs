@@ -24,6 +24,7 @@ pub struct SpanV39 {
 #[serde(rename_all = "lowercase", tag = "type")]
 pub enum SpanV39Kind {
     Backtick { source_text: String },
+    Newline { source_text: String },
     Space { text: String },
     WordPart { text: String },
 }
@@ -64,15 +65,15 @@ pub fn backtick_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
 }
 
 pub fn newline_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
-    let (source, _text) = tuple((space0, line_ending)).context("").parse(source)?;
+    let (source, text) = tuple((space0, line_ending)).context("").parse(source)?;
     let (source, _) = not(tuple((space0, line_ending)))
         .context("")
         .parse(source)?;
     Ok((
         source,
         SpanV39 {
-            kind: SpanV39Kind::Space {
-                text: " ".to_string(),
+            kind: SpanV39Kind::Newline {
+                source_text: format!("{}{}", text.0, text.1),
             },
         },
     ))
