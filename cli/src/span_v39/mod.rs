@@ -1,4 +1,5 @@
 pub mod code_shorthand;
+pub mod object;
 
 use self::code_shorthand::code_shorthand_v39;
 use crate::span_attr_v39::SpanAttrV39;
@@ -35,6 +36,27 @@ pub enum SpanV39Kind {
     Newline,
     Space,
     WordPart,
+}
+
+impl SpanV39 {
+    pub fn parsed_text(&self) -> Option<String> {
+        Some(self.parsed_text.clone())
+    }
+
+    pub fn r#type(&self) -> Option<String> {
+        match self.kind {
+            SpanV39Kind::Backtick => Some("backtick".to_string()),
+            SpanV39Kind::CodeShorthand { .. } => Some("codeshorthand".to_string()),
+            SpanV39Kind::EscapedBacktick => Some("escapedbacktick".to_string()),
+            SpanV39Kind::Newline => Some("newline".to_string()),
+            SpanV39Kind::Space => Some("space".to_string()),
+            SpanV39Kind::WordPart => Some("wordpart".to_string()),
+        }
+    }
+
+    pub fn template_list(&self) -> Vec<String> {
+        vec![format!("spans/{}.neoj", self.r#type().unwrap())]
+    }
 }
 
 // Reminder: This doesn't output a span for content

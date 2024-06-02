@@ -125,7 +125,7 @@ impl SectionV39 {
             _ => None,
         } {
             Ok(Value::make_object_iterable(spans.clone(), |span| {
-                Box::new(span.iter().cloned().map(Value::from_serialize))
+                Box::new(span.iter().cloned().map(Value::from_object))
             }))
         } else {
             Ok(Value::from_serialize::<Vec<Value>>(vec![]))

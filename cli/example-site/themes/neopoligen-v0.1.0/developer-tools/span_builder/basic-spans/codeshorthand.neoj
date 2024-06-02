@@ -1,1 +1,1 @@
-<code>[@- span.parsed_text -@]</code>
+<code>[@- span.parsed_text() -@]</code>

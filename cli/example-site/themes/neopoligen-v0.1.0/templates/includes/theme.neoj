@@ -11,6 +11,6 @@ based off config #]
 
 [#############################################################################]
 [! macro output_span(site, page_id, span) !]
-[! include ["spans/" + span.kind.type + ".neoj"] ignore missing!]
+[! include span.template_list() ignore missing !]
 [! endmacro !]
 
