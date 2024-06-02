@@ -2,6 +2,21 @@ use neopoligengine::{site_config::SiteConfig, span_v39::*};
 use pretty_assertions::assert_eq;
 
 #[test]
+fn newline_basic() {
+    let source = "\n";
+    let left = (
+        "",
+        SpanV39 {
+            kind: SpanV39Kind::Space {
+                text: " ".to_string(),
+            },
+        },
+    );
+    let right = newline_v39(source).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
 fn structure_empty_until_newline_or_eof_basic() {
     let source = "\n";
     let left = ("", "");
@@ -27,7 +42,6 @@ fn structure_empty_until_newline_or_eof_at_eof() {
 
 #[test]
 fn space_basic() {
-    let config = SiteConfig::mock1();
     let source = " ";
     let left = (
         "",
@@ -37,13 +51,12 @@ fn space_basic() {
             },
         },
     );
-    let right = span_v39(source, &config.spans).unwrap();
+    let right = space_v39(source).unwrap();
     assert_eq!(left, right);
 }
 
 #[test]
 fn word_part_basic() {
-    let config = SiteConfig::mock1();
     let source = "alfa ";
     let left = (
         " ",
@@ -53,13 +66,12 @@ fn word_part_basic() {
             },
         },
     );
-    let right = span_v39(source, &config.spans).unwrap();
+    let right = word_part_v39(source).unwrap();
     assert_eq!(left, right);
 }
 
 #[test]
 fn word_part_not_line_ending() {
-    let config = SiteConfig::mock1();
     let source = "alfa\n";
     let left = (
         "\n",
@@ -69,6 +81,6 @@ fn word_part_not_line_ending() {
             },
         },
     );
-    let right = span_v39(source, &config.spans).unwrap();
+    let right = word_part_v39(source).unwrap();
     assert_eq!(left, right);
 }
