@@ -98,7 +98,7 @@ fn raw_section_start_no_attrs_with_more_stuff() {
                                 spans: vec![
                                     SpanV39 {
                                         kind: SpanV39Kind::WordPart {
-                                            text: "more".to_string(),
+                                            source_text: "more".to_string(),
                                         },
                                     },
                                     SpanV39 {
@@ -108,7 +108,7 @@ fn raw_section_start_no_attrs_with_more_stuff() {
                                     },
                                     SpanV39 {
                                         kind: SpanV39Kind::WordPart {
-                                            text: "lines".to_string(),
+                                            source_text: "lines".to_string(),
                                         },
                                     },
                                 ],

@@ -23,7 +23,7 @@ fn ast_basic_test() {
                     kind: SectionV39Kind::Block {
                         spans: vec![SpanV39 {
                             kind: SpanV39Kind::WordPart {
-                                text: "alfa".to_string(),
+                                source_text: "alfa".to_string(),
                             },
                         }],
                     },

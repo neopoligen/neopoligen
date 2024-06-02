@@ -7,7 +7,6 @@ use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::eof;
 use nom::combinator::not;
-//use nom::multi::many0;
 use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
@@ -26,7 +25,7 @@ pub enum SpanV39Kind {
     Backtick { source_text: String },
     Newline { source_text: String },
     Space { source_text: String },
-    WordPart { text: String },
+    WordPart { source_text: String },
 }
 
 // Reminder: This doesn't output a span for content
@@ -97,7 +96,7 @@ pub fn word_part_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
         source,
         SpanV39 {
             kind: SpanV39Kind::WordPart {
-                text: text.to_string(),
+                source_text: text.to_string(),
             },
         },
     ))

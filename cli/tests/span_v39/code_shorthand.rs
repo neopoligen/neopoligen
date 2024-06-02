@@ -58,7 +58,7 @@ fn backtick_in_text() {
         vec![
             SpanV39 {
                 kind: SpanV39Kind::WordPart {
-                    text: "alfa".to_string(),
+                    source_text: "alfa".to_string(),
                 },
             },
             SpanV39 {
@@ -68,7 +68,7 @@ fn backtick_in_text() {
             },
             SpanV39 {
                 kind: SpanV39Kind::WordPart {
-                    text: "bravo".to_string(),
+                    source_text: "bravo".to_string(),
                 },
             },
         ],
