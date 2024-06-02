@@ -1,13 +1,13 @@
 use serde::Serialize;
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
-pub struct SpanTokenV39 {
-    pub kind: SpanTokenV39Kind,
+pub struct SpanShorthandTokenV39 {
+    pub kind: SpanShorthandTokenV39Kind,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(rename_all = "lowercase", tag = "type")]
-pub enum SpanTokenV39Kind {
+pub enum SpanShorthandTokenV39Kind {
     EscapedBacktick {
         source_text: String,
         parsed_text: String,

@@ -1,6 +1,6 @@
 // use neopoligengine::site_config::SiteConfig;
 use neopoligengine::span_attr_v39::*;
-use neopoligengine::span_token_v39::{SpanTokenV39, SpanTokenV39Kind};
+use neopoligengine::span_shorthand_token_v39::{SpanShorthandTokenV39, SpanShorthandTokenV39Kind};
 use neopoligengine::span_v39::code_shorthand::*;
 use neopoligengine::span_v39::*;
 // use nom::multi::many1;
@@ -114,8 +114,8 @@ fn token_for_code_shorthand_word_part() {
     let source = "alfa``";
     let left = (
         "``",
-        SpanTokenV39 {
-            kind: SpanTokenV39Kind::WordPart {
+        SpanShorthandTokenV39 {
+            kind: SpanShorthandTokenV39Kind::WordPart {
                 source_text: "alfa".to_string(),
                 parsed_text: "alfa".to_string(),
             },
@@ -130,8 +130,8 @@ fn token_for_code_shorthand_escaped_backtick() {
     let source = "\\```";
     let left = (
         "``",
-        SpanTokenV39 {
-            kind: SpanTokenV39Kind::EscapedBacktick {
+        SpanShorthandTokenV39 {
+            kind: SpanShorthandTokenV39Kind::EscapedBacktick {
                 source_text: "\\`".to_string(),
                 parsed_text: "`".to_string(),
             },
@@ -146,8 +146,8 @@ fn token_for_code_shorthand_escaped_pipe() {
     let source = "\\|";
     let left = (
         "",
-        SpanTokenV39 {
-            kind: SpanTokenV39Kind::EscapedPipe {
+        SpanShorthandTokenV39 {
+            kind: SpanShorthandTokenV39Kind::EscapedPipe {
                 source_text: "\\|".to_string(),
                 parsed_text: "|".to_string(),
             },
@@ -162,8 +162,8 @@ fn token_for_code_shorthand_escaped_slash() {
     let source = "\\\\";
     let left = (
         "",
-        SpanTokenV39 {
-            kind: SpanTokenV39Kind::EscapedSlash {
+        SpanShorthandTokenV39 {
+            kind: SpanShorthandTokenV39Kind::EscapedSlash {
                 source_text: "\\\\".to_string(),
                 parsed_text: "\\".to_string(),
             },
