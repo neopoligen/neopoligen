@@ -22,6 +22,7 @@ fn ast_basic_test() {
                     bounds: SectionV39Bounds::Full,
                     kind: SectionV39Kind::Block {
                         spans: vec![SpanV39 {
+                            attrs: vec![],
                             source_text: "alfa".to_string(),
                             parsed_text: "alfa".to_string(),
                             kind: SpanV39Kind::WordPart,
