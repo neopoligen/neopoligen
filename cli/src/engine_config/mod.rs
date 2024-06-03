@@ -1,4 +1,5 @@
 use anyhow::Result;
+use dirs::document_dir;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use std::fs;
@@ -7,6 +8,8 @@ use std::path::PathBuf;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct EngineConfig {
     pub active_site: String,
+    #[serde(default = "default_sites_dir")]
+    pub sites_dir: PathBuf,
 }
 
 impl EngineConfig {
@@ -15,4 +18,8 @@ impl EngineConfig {
         let config = serde_json::from_str::<EngineConfig>(&text)?;
         Ok(config)
     }
+}
+
+fn default_sites_dir() -> PathBuf {
+    document_dir().unwrap().join("Neopoligen")
 }

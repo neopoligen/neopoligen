@@ -61,15 +61,26 @@ async fn main() {
         Err(_) => engine_config_dir.join(PathBuf::from(format!("config.json"))),
     };
 
-    if let Ok(engine_config) = EngineConfig::new_from_file(&engine_config_path) {}
+    match EngineConfig::new_from_file(&engine_config_path) {
+        Ok(engine_config) => {
+            event!(
+                Level::INFO,
+                "Loaded Engine Config: {}",
+                engine_config_path.display()
+            );
+            event!(Level::INFO, "Active site: {}", &engine_config.active_site);
+            let livereload = LiveReloadLayer::new();
+            let reloader = livereload.reloader();
+            //build_site(engine_config.clone(), &reloader);
+            run_web_server(engine_config.clone(), reloader).await;
+        }
+        Err(e) => {
+            dbg!(e);
+            ()
+        }
+    }
 
     // if let Ok(engine_config) = load_engine_config_file(&engine_config_path) {
-    //     event!(
-    //         Level::INFO,
-    //         "Loaded config: {}",
-    //         engine_config_path.display()
-    //     );
-    //     event!(Level::INFO, "Active site: {}", &engine_config.active_site);
     //     match load_site_config_file(&neopoligen_root, &engine_config.active_site) {
     //         Ok(mut site_config) => {
     //             site_config.load_sections();
@@ -85,8 +96,28 @@ async fn main() {
     //         engine_config_path.display()
     //     );
     // }
-
     //
+}
+
+#[instrument(skip(engine_config, reloader))]
+async fn run_web_server(engine_config: EngineConfig, reloader: Reloader) {
+
+    // let app = Router::new()
+    //     .nest_service("/", ServeDir::new(&site_config.output_dir()))
+    //     .nest_service("/neo-status", ServeDir::new(&site_config.status_dir()))
+    //     .layer(livereload);
+    // event!(Level::INFO, "Starting web server");
+    // let (tx, rx) = mpsc::channel(1);
+    // let _theme_watcher = FileWatcher::new(&site_config.theme_dir(), tx.clone()).await;
+    // let _content_watcher = FileWatcher::new(&site_config.content_dir(), tx.clone()).await;
+    // tokio::spawn(async move {
+    //     catch_file_changes(reloader, site_config, rx).await;
+    // });
+    // if let Ok(listener) = tokio::net::TcpListener::bind("localhost:1989").await {
+    //     if (axum::serve(listener, app).await).is_ok() {
+    //         // Server is going at this point
+    //     }
+    // }
 }
 
 // #[instrument(skip(site_config))]
@@ -199,6 +230,8 @@ async fn main() {
 //     }
 // }
 
+// DEPRECATED: This is the reference copy that can be
+// delete when the server set up is done
 // #[instrument(skip(site_config))]
 // async fn run_web_server(site_config: SiteConfig) {
 //     let livereload = LiveReloadLayer::new();
