@@ -119,8 +119,9 @@ async fn catch_file_changes(
 fn build_site(engine_config: &EngineConfig, reloader: &Reloader) {
     event!(Level::INFO, "Building Site");
     match Builder::new_from_engine_config(engine_config) {
-        Ok(builder) => {
-            builder.todo("load_source_files");
+        Ok(mut builder) => {
+            let _ = builder.load_pages_from_fs();
+            dbg!(builder);
 
             // builder.todo("load_cached_files");
             // builder.todo("generate_section_asts");

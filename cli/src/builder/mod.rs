@@ -1,14 +1,19 @@
 use std::fs;
 
+use crate::neo_error::NeoError;
+use crate::source_page::SourcePage;
 use crate::{engine_config::EngineConfig, site_config::SiteConfig};
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use tracing::{event, instrument, Level};
+use walkdir::WalkDir;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Builder {
     config: Option<SiteConfig>,
+    errors: Vec<NeoError>,
+    pages: Vec<SourcePage>,
 }
 
 impl Builder {
@@ -23,12 +28,33 @@ impl Builder {
         config.load_sections();
         let b = Builder {
             config: Some(config),
+            errors: vec![],
+            pages: vec![],
         };
         Ok(b)
     }
 }
 
 impl Builder {
+    #[instrument(skip(self))]
+    pub fn load_pages_from_fs(&mut self) -> Result<()> {
+        event!(Level::INFO, "Loading Source Content Files");
+        for entry in WalkDir::new(&self.config.as_ref().unwrap().content_source_dir()) {
+            let path = entry?.path().to_path_buf();
+            if path.is_file() {
+                if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
+                    if ext.to_ascii_lowercase() == "neo"
+                        && !filename.to_str().unwrap().starts_with(".")
+                    {
+                        let page = SourcePage::new_from_source_path(&path)?;
+                        self.pages.push(page);
+                    }
+                }
+            }
+        }
+        Ok(())
+    }
+
     #[instrument(skip(self, thing))]
     pub fn todo(&self, thing: &str) {
         event!(Level::INFO, "TODO: {}", thing);
