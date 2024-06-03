@@ -8,6 +8,7 @@ use std::path::PathBuf;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct EngineConfig {
     pub active_site: String,
+    pub port: usize,
     #[serde(default = "default_sites_dir")]
     pub sites_dir: PathBuf,
 }

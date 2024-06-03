@@ -7,6 +7,8 @@ use serde::Serialize;
 use std::fs::{self, DirEntry};
 use std::io;
 use std::path::PathBuf;
+
+use crate::engine_config::EngineConfig;
 // use serde_json;
 // use serde_json::Value;
 // use std::collections::BTreeMap;
@@ -39,6 +41,17 @@ pub struct ConfigSections {
     pub raw: Vec<String>,
     pub table: Vec<String>,
     pub yaml: Vec<String>,
+}
+
+impl SiteConfig {
+    pub fn new_from_engine_config(engine_config: &EngineConfig) -> Result<SiteConfig> {
+        let site_config_path = engine_config
+            .sites_dir
+            .join(engine_config.active_site.as_str());
+        let text = fs::read_to_string(site_config_path)?;
+        let config = serde_json::from_str::<SiteConfig>(&text)?;
+        Ok(config)
+    }
 }
 
 // #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
