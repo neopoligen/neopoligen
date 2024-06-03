@@ -1,5 +1,3 @@
-[TODO: youtube]
-[!- if section.children -!]
-[!- include "sections/p/full/default.neoj" -!]
-[!- endif -!]
-
+[! for child in section.children() !]
+[@ theme.output_section(site, page_id, child) @]
+[! endfor !]

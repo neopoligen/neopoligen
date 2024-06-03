@@ -9,10 +9,10 @@ impl Object for Builder {
         self: &Arc<Builder>,
         _state: &minijinja::State,
         name: &str,
-        args: &[Value],
+        _args: &[Value],
     ) -> Result<Value, Error> {
         match name {
-            "issues" => self.issues(args),
+            "page_errors" => Ok(Value::from_serialize(self.page_errors())),
             _ => Ok(Value::from("[Error: called non-existing function")),
         }
     }
@@ -31,7 +31,7 @@ impl Builder {
 }
 
 impl Display for Builder {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "builder")
     }
 }

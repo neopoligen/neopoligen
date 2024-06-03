@@ -1,44 +1,52 @@
 [#############################################################################]
-[! macro output_css(site, page_id, section) !]
-[! if section.type == "css" !]
-<style>
-[@ section.text @]
-</style>
+[! macro output_section(site, page_id, section) !]
+
+wwwwxxxx----------------------
+[#
+[! set tmp = "pages/" + section.type + "/" + section.bounds + "/" + section.template ".neoj" !]
+#]
+[! set tmp = "pages/" + section.type + "/" + section.bounds.type !]
+[@ tmp @]
+
+<pre>
+[@ section|tojson(true) @]
+</pre>
+[! endmacro !]
+
+[#############################################################################]
+[! macro output_span(site, page_id, span) !]
+[! include span.template_list() ignore missing !]
+[! endmacro !]
+
+[#############################################################################]
+[! macro section_classes(section) !]
+[# TODO: get the specific list of section classes
+based off config #]
+[! endmacro !]
+
+[#############################################################################]
+[! macro span_attrs(span) !]
+[! for attr in span.attrs() !]
+[! set key = attr.key() !]
+[! if key != "class" !]
+[@- ' ' @]
+[@ attr.key() @]="[@ attr.value() @]"
 [! endif !]
-[! for child in section.children !]
-[@ output_css(site, page_id, child) @]
 [! endfor !]
 [! endmacro !]
 
 [#############################################################################]
-[! macro output_section(site, page_id, section) !]
-[! if section.kind == "generic" !]
-    [! include "sections/generic/" + section.bounds + "/default.neoj" ignore missing !]
-[! else !]
-  [! if section.attrs and section.attrs.template !]
-    [! include 
-      [ 
-      "sections/" + section.type + "/" + section.bounds + "/" + section.attrs.template + ".neoj",
-      "sections/" + section.type + "/" + section.bounds + "/" + "default" + ".neoj" 
-      ]
-      ignore missing
-    !]
-  [! else !]
-    [! include "sections/" + section.type + "/" + section.bounds + "/default.neoj" ignore missing !]
-  [! endif !]
+[! macro span_classes(span, extras="") !]
+[! for c in span.classes(extras) !]
+[! if loop.first !]
+[@- ' ' -@]
+class="
 [! endif !]
+[@ c @]
+[! if loop.last !]
+"
+[! endif !]
+[! endfor !]
 [! endmacro !]
 
 
-[#############################################################################]
-[!- macro output_span(site, page_id, span) -!]
-[!- include "spans/" + span.type + ".neoj" ignore missing -!]
-[!- endmacro -!]
-
-
-[#############################################################################]
-[!- macro view_section_as_json(site, page_id, section) -!]
-<pre>
-[@- section|tojson(true) -@]
-</pre>
-[!- endmacro -!]

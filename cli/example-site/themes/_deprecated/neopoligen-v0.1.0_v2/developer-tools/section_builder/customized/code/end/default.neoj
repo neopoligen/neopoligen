@@ -1,0 +1,7 @@
+</section>
+
+[!- if section.children -!]
+[! for child in section.children !]
+[TODO: code end section]
+[! endfor !]
+[!- endif -!]

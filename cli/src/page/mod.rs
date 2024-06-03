@@ -1,6 +1,6 @@
 // use crate::page_error::PageError;
 use crate::ast::ast;
-use crate::error::*;
+use crate::neo_error::*;
 use crate::section::*;
 use crate::site_config::SiteConfig;
 use crate::span::Span;
@@ -13,7 +13,7 @@ use std::path::PathBuf;
 pub struct Page {
     pub ast: Option<Vec<Section>>,           // Migration DONE
     pub do_render: bool,                     // Migration N/A
-    pub error: Option<Error>,                // TODO
+    pub error: Option<NeoError>,             // TODO
     pub folders: Vec<String>,                // TODO
     pub full_output_path: Option<PathBuf>,   // Migration N/A
     pub full_cache_path: Option<PathBuf>,    // Migration N/A
@@ -129,7 +129,7 @@ impl Page {
     //
 }
 
-fn get_page_id(ast: &Vec<Section>, source_text: &str) -> Result<String, Error> {
+fn get_page_id(ast: &Vec<Section>, source_text: &str) -> Result<String, NeoError> {
     match ast.iter().find_map(|sec_enum| {
         // dbg!(&sec_enum);
         if let Section::Yaml { r#type, attrs, .. } = sec_enum {
@@ -149,8 +149,8 @@ fn get_page_id(ast: &Vec<Section>, source_text: &str) -> Result<String, Error> {
         }
     }) {
         Some(v) => Ok(v),
-        None => Err(Error {
-            kind: ErrorKind::MissingIdError {
+        None => Err(NeoError {
+            kind: NeoErrorKind::MissingIdError {
                 source: source_text.to_string(),
             },
         }),

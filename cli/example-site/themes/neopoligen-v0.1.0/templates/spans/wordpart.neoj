@@ -1,1 +1,2 @@
-[@- span.text -@]
+[@- span.parsed_text() -@]
+

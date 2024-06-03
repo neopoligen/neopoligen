@@ -2,15 +2,16 @@
 
 -- title
 
-This is a title
+Alfa Bravo
+
+Charlie delta
 
 -- expected-output/
 
-<section class="title-section basic-default-category-section flow">
-  <div class="page-heading">
-    <h1>This is a title</h1>
-  </div>
-</section>
+<hgroupclass="page-heading">
+  <h1>Alfa Bravo</h1>
+</hgroup>
+<p>Charlie delta</p>
 
 -- /expected-output
 

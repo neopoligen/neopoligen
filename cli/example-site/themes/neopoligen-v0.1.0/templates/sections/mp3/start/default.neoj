@@ -1,10 +1,7 @@
-[! set mp3 = namespace() -!]
+[! import "includes/theme.neoj" as theme !]
+[! include "subsections/forward.neoj" !]
+[! include "subsections/preface.neoj" !]
+[! include "subsections/content-full.neoj" !]
+[! include "subsections/afterword.neoj" !]
 
-<div>
-[! if section.flags[0] !]
-[! set mp3.data = site.get_mp3(section.flags[0]) !]
-<audio controls src="/mp3s/[@ mp3.data.key @].mp3"></audio>
-[! if mp3.key !]
-[@ mp3.key @]
-[! endif !]
-[! endif !]
+

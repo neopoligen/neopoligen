@@ -1,6 +1,6 @@
 use axum::Router;
 use dirs::document_dir;
-use neopoligengine::builder::Builder;
+use neopoligengine::builder_v39::BuilderV39;
 use neopoligengine::engine_config::EngineConfig;
 use neopoligengine::file_watcher::FileWatcher;
 // use neopoligengine::site_config;
@@ -87,33 +87,46 @@ async fn main() {
 #[instrument(skip(site_config))]
 fn build_site(site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
-    if let Ok(mut builder) = Builder::new(site_config.clone()) {
+    if let Ok(mut builder) = BuilderV39::new(site_config.clone()) {
+        // This is v39
         let _ = builder.test_theme();
-        // let _ = builder.debug_flush_cache();
-        let _ = empty_dir(&site_config.output_dir());
-        let _ = empty_dir(&site_config.status_dir());
         let _ = builder.prep_dirs();
-        let _ = builder.load_source_images();
-        let _ = builder.load_cached_images();
-        let _ = builder.generate_cache_images();
-        let _ = builder.update_image_cache_db();
-        let _ = builder.copy_image_cache_to_prod();
-        let _ = builder.load_mp3s();
-        let _ = builder.load_cached_pages();
         let _ = builder.load_source_files();
         let _ = builder.generate_missing_asts();
-        let _ = builder.generate_page_content_and_feeds();
-        let _ = builder.output_content_files();
-        let _ = builder.output_feeds();
-        let _ = builder.output_last_edit();
-        match builder.update_page_cache() {
-            Ok(_) => (),
-            Err(e) => println!("{:?}", e),
-        }
-        let _ = builder.make_og_images();
-        let _ = builder.copy_theme_assets();
-        let _ = builder.output_issues();
-        event!(Level::INFO, "Issues: {}", builder.issues.len());
+        let _ = builder.generate_page_content();
+        let _ = builder.output_pages();
+        let _ = builder.output_status();
+
+        // This is the v38 order of things which wasn't
+        // necessarily optimized. It's here now just
+        // for a reference reminder:
+        //
+        // let _ = builder.test_theme();
+        // // let _ = builder.debug_flush_cache();
+        // let _ = empty_dir(&site_config.output_dir());
+        // let _ = empty_dir(&site_config.status_dir());
+        // let _ = builder.prep_dirs();
+        // let _ = builder.load_source_images();
+        // let _ = builder.load_cached_images();
+        // let _ = builder.generate_cache_images();
+        // let _ = builder.update_image_cache_db();
+        // let _ = builder.copy_image_cache_to_prod();
+        // let _ = builder.load_mp3s();
+        // let _ = builder.load_cached_pages();
+        // let _ = builder.load_source_files();
+        // let _ = builder.generate_missing_asts();
+        // let _ = builder.generate_page_content_and_feeds();
+        // let _ = builder.output_content_files();
+        // let _ = builder.output_feeds();
+        // let _ = builder.output_last_edit();
+        // match builder.update_page_cache() {
+        //     Ok(_) => (),
+        //     Err(e) => println!("{:?}", e),
+        // }
+        // let _ = builder.make_og_images();
+        // let _ = builder.copy_theme_assets();
+        // let _ = builder.output_issues();
+        // event!(Level::INFO, "Issues: {}", builder.issues.len());
     }
 }
 
@@ -144,18 +157,18 @@ fn load_engine_config_file(path: &PathBuf) -> Result<EngineConfig, String> {
     }
 }
 
-fn empty_dir(dir: &PathBuf) -> std::io::Result<()> {
-    for entry in dir.read_dir()? {
-        let entry = entry?;
-        let path = entry.path();
-        if path.is_dir() {
-            fs::remove_dir_all(path)?;
-        } else {
-            fs::remove_file(path)?;
-        }
-    }
-    Ok(())
-}
+// fn empty_dir(dir: &PathBuf) -> std::io::Result<()> {
+//     for entry in dir.read_dir()? {
+//         let entry = entry?;
+//         let path = entry.path();
+//         if path.is_dir() {
+//             fs::remove_dir_all(path)?;
+//         } else {
+//             fs::remove_file(path)?;
+//         }
+//     }
+//     Ok(())
+// }
 
 // todo. move paths, to dir function calls
 fn load_site_config_file(neo_root: &PathBuf, active_site: &str) -> Result<SiteConfig, String> {

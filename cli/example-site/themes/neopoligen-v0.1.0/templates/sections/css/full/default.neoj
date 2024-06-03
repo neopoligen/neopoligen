@@ -1,1 +1,2 @@
-[#- No visible output by default -#]
+[!- include "sections/css/start/default.neoj" -!]
+</section>

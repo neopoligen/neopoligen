@@ -1,3 +1,5 @@
+// DEPRECATED: TODO: Remove in favor of theme_test_v39
+//
 use crate::page::*;
 use serde::Serialize;
 

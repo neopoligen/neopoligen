@@ -1,2 +1,4 @@
-</div>
-[!- include "sections/p/full/default.neoj" -!]
+[! import "includes/theme.neoj" as theme !]
+[! for child in section.children() !]
+[@ theme.output_section(site, page_id, child) @]
+[! endfor !]

@@ -56,6 +56,7 @@ impl SiteConfig {
                     "p".to_string(),
                     "ref".to_string(),
                     "short".to_string(),
+                    "start-theme-test".to_string(),
                     "title".to_string(),
                     "warning".to_string(),
                 ],
@@ -65,7 +66,11 @@ impl SiteConfig {
                 detail: vec!["detail".to_string()],
                 json: vec!["json-example".to_string()],
                 list: vec!["list".to_string()],
-                raw: vec!["code".to_string(), "results".to_string()],
+                raw: vec![
+                    "code".to_string(),
+                    "results".to_string(),
+                    "expected-output".to_string(),
+                ],
                 table: vec!["table".to_string()],
                 yaml: vec!["metadata".to_string()],
                 // sections.insert("json".to_string(), vec!["metadata".to_string()]);

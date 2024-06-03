@@ -1,17 +1,22 @@
-[!- extends "wrappers/one-column.neoj" -!]
-[!- include "includes/config.neoj" -!]
-[!- import "includes/theme.neoj" as theme -!]
+[! import "includes/theme.neoj" as theme !]
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  background-color: #111;
+  color: #aaa;
+}
+</style>
+</head>
+<body>
 
-[!- block title -!]
-[!- for section in site.page_sections(page_id) -!]
-[!- if section.type == "title" -!]
-[@- theme.output_section(site, page_id, section) -@]
-[@ site.page_format_date(page_id, "%B %Y") @]
-[!- endif -!]
-[!- endfor -!]
-[!- endblock -!]
+    [@ page @]
 
-[!- block body -!]
-[!- include "includes/main-body.neoj" -!]
-[!- endblock -!]
+    [#
+[! for section in page.ast !]
+[@ theme.output_section(site, page_id, section) @]
+[! endfor !]
+    #]
 
+</body>

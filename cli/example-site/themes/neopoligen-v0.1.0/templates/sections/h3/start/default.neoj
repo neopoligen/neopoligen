@@ -1,42 +1,7 @@
-[!- import "includes/theme.neoj" as theme -!]
-
-<section class="h3-section basic-default-category-section flow
-[! if section.attrs.class !][@ ' ' @][@ section.attrs.class @][! endif !]"
-[! for attr in section.attrs !]
-[! if 
-    attr != 'afterword' and 
-    attr != 'class' and 
-    attr != 'forward' and 
-    attr != 'h1' and 
-    attr != 'h2' and 
-    attr != 'h3' and 
-    attr != 'h4' and 
-    attr != 'h5' and 
-    attr != 'h6' and 
-    attr != 'id' and 
-    attr != 'preface' and 
-    attr != 'subtitle' and 
-    attr != 'title' 
-!]
-[@ attr @]="[@ section.attrs[attr] @]"
-[! endif !]
-[! endfor !]
->
-
-
+[! import "includes/theme.neoj" as theme !]
 [! include "subsections/forward.neoj" !]
-
-[! for child in section.children !]
-[! if loop.first !]
-<h3>
-[! for span in child.spans !]
-    [@ theme.output_span(site, page_id, span) @]
-[! endfor !]
-</h3>
-[! endif !]
-[! endfor !]
-
-
 [! include "subsections/preface.neoj" !]
-[! include "subsections/content-skip-one.neoj" !]
+[! include "subsections/content-full.neoj" !]
 [! include "subsections/afterword.neoj" !]
+
+
