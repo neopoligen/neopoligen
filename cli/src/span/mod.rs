@@ -4,9 +4,11 @@
 // pub mod object;
 // pub mod tokens;
 
+pub mod code_shorthand;
 pub mod escaped_backtick;
 pub mod single_backtick;
 
+use crate::span::code_shorthand::*;
 use crate::span::escaped_backtick::*;
 use crate::span::single_backtick::*;
 use crate::span_attr::*;
@@ -66,7 +68,7 @@ pub fn span<'a>(
     _spans: &'a Vec<String>,
 ) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
     let (source, span) = alt((
-        //code_shorthand,
+        code_shorthand,
         // link_shorthand,
         escaped_backtick,
         single_backtick,
