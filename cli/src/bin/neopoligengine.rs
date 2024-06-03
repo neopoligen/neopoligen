@@ -122,7 +122,7 @@ fn build_site(engine_config: &EngineConfig, reloader: &Reloader) {
         Ok(mut builder) => {
             let _ = builder.load_pages_from_fs();
             builder.generate_missing_asts();
-            builder.tmp_output_errors();
+            let _ = builder.tmp_output_errors();
 
             // builder.todo("update_file_cache");
             // builder.todo("generate_payloads");

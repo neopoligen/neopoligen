@@ -5,8 +5,11 @@ pub mod file_watcher;
 pub mod helpers;
 pub mod neo_error;
 pub mod section;
+pub mod section_attr;
 pub mod site_config;
 pub mod source_page;
+pub mod span;
+pub mod span_attr;
 
 // pub mod ast;
 // pub mod ast_v39;

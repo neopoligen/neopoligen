@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct NeoError {
