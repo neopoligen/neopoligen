@@ -6,11 +6,8 @@ This is a starter site that lays out all
 the files and folders you need to 
 get started.
 
-``code``
 
-``code|rust``
-
-``println!("asdf");|rust|class: green``
+Link: [[this is a link|https://www.example.com/]]
 
 
 -- metadata

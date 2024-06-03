@@ -1,4 +1,5 @@
 pub mod code_shorthand;
+pub mod link_shorthand;
 pub mod mocks;
 pub mod object;
 
@@ -37,6 +38,7 @@ pub enum SpanV39Kind {
     Backtick,
     CodeShorthand,
     EscapedBacktick,
+    LinkShorthand,
     Newline,
     Space,
     WordPart,
@@ -98,6 +100,7 @@ impl SpanV39 {
             SpanV39Kind::Backtick => Some("backtick".to_string()),
             SpanV39Kind::CodeShorthand { .. } => Some("codeshorthand".to_string()),
             SpanV39Kind::EscapedBacktick => Some("escapedbacktick".to_string()),
+            SpanV39Kind::LinkShorthand { .. } => Some("linkshorthand".to_string()),
             SpanV39Kind::Newline => Some("newline".to_string()),
             SpanV39Kind::Space => Some("space".to_string()),
             SpanV39Kind::WordPart => Some("wordpart".to_string()),

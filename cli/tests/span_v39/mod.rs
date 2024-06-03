@@ -1,12 +1,13 @@
 pub mod backtick;
 pub mod code_shorthand;
+pub mod link_shorthand;
 pub mod newline;
 pub mod space;
 pub mod structure;
 pub mod word_part;
 
 use minijinja::Value;
-use neopoligengine::span_attr_v39::*;
+//use neopoligengine::span_attr_v39::*;
 use neopoligengine::span_v39::SpanV39;
 use pretty_assertions::assert_eq;
 
