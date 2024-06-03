@@ -14,7 +14,6 @@ fn status_check() {
 }
 
 #[test]
-#[ignore]
 fn template_list_check() {
     let p = PageV39::mock_1_20240101_basic_page();
     let left = vec!["pages/post/published.neoj".to_string()];

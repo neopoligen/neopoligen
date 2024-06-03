@@ -10,9 +10,9 @@ body {
 </head>
 <body>
 
-[@ page @]
 
 [! for section in page.ast !]
+    [@ section @]
 [# include section.template_list() ignore missing #]
 [! endfor !]
 

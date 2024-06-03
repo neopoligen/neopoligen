@@ -85,9 +85,9 @@ impl PageV39 {
             Err(e) => self.errors.push(e),
         }
         // Prep all the necessary fields
-        self.prep_template_list();
         self.prep_type();
         self.prep_status();
+        self.prep_template_list();
         Ok(())
     }
 
@@ -128,18 +128,20 @@ impl PageV39 {
         }
     }
 
-    pub fn prep_template_list(&self) {
+    pub fn prep_template_list(&mut self) {
+        if let (Some(_t), Some(_status)) = (&self.r#type, &self.status) {
+            self.template_list
+                .push(format!("pages/post/published.neoj"));
 
-        // let template_patterns = vec![
-        //     format!(
-        //         "pages/{}/{}.neoj",
-        //         page.r#type().unwrap(),
-        //         page.status().unwrap()
-        //     ),
-        //     format!("pages/{}/published.neoj", page.r#type().unwrap()),
-        //     format!("pages/post/{}.neoj", page.status().unwrap()),
-        //     format!("pages/post/published.neoj"),
-        // ];
+            // TODO: Add these when you make sure that they
+            // don't already match
+            // self.template_list = vec![
+            //     format!("pages/{}/{}.neoj", t, status),
+            //     format!("pages/{}/published.neoj", t),
+            //     format!("pages/post/{}.neoj", status),
+            //     format!("pages/post/published.neoj"),
+            // ];
+        }
     }
 
     pub fn prep_type(&mut self) {
