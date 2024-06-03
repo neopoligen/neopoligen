@@ -1,11 +1,12 @@
+use crate::span::escaped_pipe::*;
 use crate::span::*;
-use crate::span_attr::SpanAttrKind;
+// use crate::span_attr::SpanAttrKind;
 // use crate::span_shorthand_token::*;
 use nom::branch::alt;
-use nom::bytes::complete::is_not;
+// use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::multi::many0;
-use nom::multi::many1;
+// use nom::multi::many1;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -45,23 +46,8 @@ pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
 }
 
 pub fn code_shorthand_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let (source, span) = alt((code_shorthand_wordpart,)).context("").parse(source)?;
+    let (source, span) = alt((wordpart, escaped_pipe)).context("").parse(source)?;
     Ok((source, span))
-}
-
-pub fn code_shorthand_wordpart(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let initial_source = source;
-    let (source, wordpart) = is_not("`").context("").parse(source)?;
-    let source_text = initial_source.replace(source, "");
-    Ok((
-        source,
-        Span {
-            attrs: vec![],
-            kind: SpanKind::WordPart,
-            parsed_text: wordpart.to_string(),
-            source_text: source_text.to_string(),
-        },
-    ))
 }
 
 // pub fn code_shorthand_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
@@ -147,16 +133,6 @@ mod test {
     use super::*;
     use pretty_assertions::assert_eq;
 
-    //
-    // use neopoligengine::site_config::SiteConfig;
-    // use neopoligengine::span::code_shorthand::*;
-    // use neopoligengine::span::*;
-    // use neopoligengine::span_attr::*;
-    // use neopoligengine::span_shorthand_token::*;
-    // use nom::multi::many1;
-    // use nom::Parser;
-    // use pretty_assertions::assert_eq;
-
     #[test]
     fn code_shorthand_basic() {
         let source = "``ping``";
@@ -173,21 +149,21 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // fn code_shorthand_with_escaped_pipe() {
-    //     let source = "``ping\\|ping``";
-    //     let left = (
-    //         "",
-    //         Span {
-    //             attrs: vec![],
-    //             source_text: "``ping\\|ping``".to_string(),
-    //             parsed_text: "ping|ping".to_string(),
-    //             kind: SpanKind::CodeShorthand,
-    //         },
-    //     );
-    //     let right = code_shorthand(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn code_shorthand_with_escaped_pipe() {
+        let source = "``ping\\|ping``";
+        let left = (
+            "",
+            Span {
+                attrs: vec![],
+                source_text: "``ping\\|ping``".to_string(),
+                parsed_text: "ping|ping".to_string(),
+                kind: SpanKind::CodeShorthand,
+            },
+        );
+        let right = code_shorthand(source).unwrap();
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // fn code_shorthand_with_escaped_backslash() {

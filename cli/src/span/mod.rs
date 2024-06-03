@@ -6,6 +6,7 @@
 
 pub mod code_shorthand;
 pub mod escaped_backtick;
+pub mod escaped_pipe;
 pub mod single_backtick;
 
 use crate::span::code_shorthand::*;
@@ -43,6 +44,7 @@ pub enum SpanKind {
     SingleBacktick,
     CodeShorthand,
     EscapedBacktick,
+    EscapedPipe,
     LinkShorthand,
     Newline,
     Space,
@@ -72,7 +74,7 @@ pub fn span<'a>(
         // link_shorthand,
         escaped_backtick,
         single_backtick,
-        word_part,
+        wordpart,
         space,
         newline,
     ))(source)?;
@@ -115,9 +117,9 @@ pub fn space(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
 }
 
 // TODO: Move to own file with tests
-pub fn word_part(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+pub fn wordpart(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let initial_source = source;
-    let (source, text) = is_not(" \n\t[]`").context("").parse(source)?;
+    let (source, text) = is_not(" \\`|\n\t").context("").parse(source)?;
     let source_text = initial_source.replace(source, "").to_string();
     Ok((
         source,
