@@ -26,7 +26,6 @@ pub fn single_backtick(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
 mod test {
     use super::*;
     use pretty_assertions::assert_eq;
-
     #[test]
     fn backtick_at_eof() {
         let source = "`";

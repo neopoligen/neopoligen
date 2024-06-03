@@ -1,14 +1,16 @@
 pub mod code_shorthand;
+pub mod colon;
+pub mod colon_not_followed_by_space;
 pub mod escaped_backslash;
 pub mod escaped_backtick;
-pub mod escaped_colon;
 pub mod escaped_pipe;
 pub mod single_backtick;
 
 use crate::span::code_shorthand::*;
+use crate::span::colon::*;
+use crate::span::colon_not_followed_by_space::*;
 use crate::span::escaped_backslash::*;
 use crate::span::escaped_backtick::*;
-use crate::span::escaped_colon::*;
 use crate::span::escaped_pipe::*;
 use crate::span::single_backtick::*;
 use crate::span_attr::*;
@@ -39,14 +41,16 @@ pub struct Span {
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(rename_all = "lowercase", tag = "type")]
 pub enum SpanKind {
-    SingleBacktick,
     CodeShorthand,
+    Colon,
+    ColonNotFollowedBySpace,
     EscapedBacktick,
     EscapedBackslash,
     EscapedColon,
     EscapedPipe,
     LinkShorthand,
     Newline,
+    SingleBacktick,
     Space,
     WordPart,
 }
@@ -69,50 +73,65 @@ pub fn span<'a>(
     source: &'a str,
     _spans: &'a Vec<String>,
 ) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    let (source, span) = alt((code_shorthand, span_base, space, newline))
+        .context("")
+        .parse(source)?;
+    Ok((source, span))
+}
+
+pub fn span_base<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    // Reminder, don't put spaces in here so these can
+    // be used for keys. Also, don't put colon in here
+    // since that's also part of the key process
     let (source, span) = alt((
-        code_shorthand,
-        // link_shorthand,
+        escaped_pipe,
         escaped_backtick,
         escaped_backslash,
-        escaped_colon,
-        escaped_pipe,
         single_backtick,
         wordpart,
-        space,
-        newline,
     ))(source)?;
+    Ok((source, span))
+}
+
+pub fn span_for_shorthand_flag<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    let (source, span) = alt((span_base, space, newline, colon_not_followed_by_space))(source)?;
     Ok((source, span))
 }
 
 pub fn span_for_shorthand_text<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
-    let (source, span) = alt((
-        escaped_pipe,
-        escaped_backtick,
-        escaped_backslash,
-        escaped_colon,
-        single_backtick,
-        wordpart,
-        space,
-        newline,
-    ))(source)?;
+    let (source, span) = alt((span_base, space, newline, colon))(source)?;
     Ok((source, span))
 }
 
-pub fn span_without_shorthands_or_single_pipe<'a>(
+pub fn span_for_shorthand_attr_key<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
-    let (source, span) = alt((
-        escaped_pipe,
-        escaped_backtick,
-        escaped_backslash,
-        escaped_colon,
-        single_backtick,
-        wordpart,
-        space,
-        newline,
-    ))(source)?;
+    let (source, span) = alt((span_base,))(source)?;
     Ok((source, span))
 }
+
+pub fn span_for_shorthand_attr_value<'a>(
+    source: &'a str,
+) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    let (source, span) = alt((span_base, colon))(source)?;
+    Ok((source, span))
+}
+
+// pub fn span_without_shorthands_or_single_pipe<'a>(
+//     source: &'a str,
+// ) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+//     let (source, span) = alt((
+//         escaped_pipe,
+//         escaped_backtick,
+//         escaped_backslash,
+//         escaped_colon,
+//         single_backtick,
+//         wordpart,
+//         space,
+//         newline,
+//     ))(source)?;
+//     Ok((source, span))
+// }
 
 // TODO: Move to own file with tests
 pub fn newline(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
@@ -152,7 +171,7 @@ pub fn space(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
 // TODO: Move to own file with tests
 pub fn wordpart(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let initial_source = source;
-    let (source, text) = is_not(" \\`|\n\t").context("").parse(source)?;
+    let (source, text) = is_not(" \\`|:\n\t").context("").parse(source)?;
     let source_text = initial_source.replace(source, "").to_string();
     Ok((
         source,
@@ -164,4 +183,5 @@ pub fn wordpart(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         },
     ))
 }
+
 

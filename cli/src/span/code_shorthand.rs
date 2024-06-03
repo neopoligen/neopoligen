@@ -1,5 +1,5 @@
-use crate::span::escaped_backslash::*;
-use crate::span::escaped_pipe::*;
+//use crate::span::escaped_backslash::*;
+//use crate::span::escaped_pipe::*;
 use crate::span::*;
 // use crate::span_attr::SpanAttrKind;
 // use crate::span_shorthand_token::*;
@@ -54,9 +54,7 @@ pub fn code_shorthand_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&s
 
 pub fn code_shorthand_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let (source, the_tag) = tag("|").context("").parse(source)?;
-    let (source, words) = many1(span_without_shorthands_or_single_pipe)
-        .context("")
-        .parse(source)?;
+    let (source, words) = many1(span_for_shorthand_flag).context("").parse(source)?;
     let source_text = words
         .iter()
         .map(|word| word.source_text.clone())
@@ -78,10 +76,11 @@ pub fn code_shorthand_key_value_attr(source: &str) -> IResult<&str, SpanAttr, Er
     let initial_source = source;
     let (source, _) = tag("|").context("").parse(source)?;
     // TODO: allow for spaces here
+    // TODO: Move this to span_for_shorthand_attr_key
     let (source, key) = is_not(" :|`").context("").parse(source)?;
     let (source, _) = tag(":").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
-    let (source, tokens) = many1(span_without_shorthands_or_single_pipe)
+    let (source, tokens) = many1(span_for_shorthand_attr_value)
         .context("")
         .parse(source)?;
     let value = tokens
@@ -235,36 +234,20 @@ mod test {
     }
 
     #[test]
-    fn flag_attr_for_code_with_escaped_colon() {
-        let source = "|rust\\:``";
+    fn flag_attr_for_code_url() {
+        let source = "|https://www.example.com``";
         let left = (
             "``",
             SpanAttr {
-                source_text: "|rust\\:".to_string(),
+                source_text: "|https://www.example.com".to_string(),
                 kind: SpanAttrKind::Flag {
-                    value: "rust:".to_string(),
+                    value: "https://www.example.com".to_string(),
                 },
             },
         );
         let right = code_shorthand_flag_attr(source).unwrap();
         assert_eq!(left, right);
     }
-
-    // #[test]
-    // fn flag_attr_for_code_url() {
-    //     let source = "|https://www.example.com``";
-    //     let left = (
-    //         "``",
-    //         SpanAttr {
-    //             source_text: "|https://www.example.com".to_string(),
-    //             kind: SpanAttrKind::Flag {
-    //                 value: "https://www.example.com".to_string(),
-    //             },
-    //         },
-    //     );
-    //     let right = code_shorthand_flag_attr(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
 
     // #[test]
     // fn flag_attr_for_code_with_pipe_escape() {
