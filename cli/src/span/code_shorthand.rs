@@ -249,202 +249,184 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // fn flag_attr_for_code_with_pipe_escape() {
-    //     let source = "|rust\\|here``";
-    //     let left = (
-    //         "``",
-    //         SpanAttr {
-    //             source_text: "|rust\\|here".to_string(),
-    //             kind: SpanAttrKind::Flag {
-    //                 value: "rust|here".to_string(),
-    //             },
-    //         },
-    //     );
-    //     let right = code_shorthand_flag_attr(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn flag_attr_for_code_with_pipe_escape() {
+        let source = "|rust\\|here``";
+        let left = (
+            "``",
+            SpanAttr {
+                source_text: "|rust\\|here".to_string(),
+                kind: SpanAttrKind::Flag {
+                    value: "rust|here".to_string(),
+                },
+            },
+        );
+        let right = code_shorthand_flag_attr(source).unwrap();
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // fn token_for_code_shorthand_word_part() {
-    //     let source = "alfa``";
-    //     let left = (
-    //         "``",
-    //         SpanShorthandToken {
-    //             kind: SpanShorthandTokenKind::WordPart,
-    //             parsed_text: "alfa".to_string(),
-    //             source_text: "alfa".to_string(),
-    //         },
-    //     );
-    //     let right = code_shorthand_token_word_part(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn integration_1_basic() {
+        let source = "alfa ``bravo`` charlie";
+        let left = (
+            "",
+            vec![
+                Span {
+                    attrs: vec![],
+                    kind: SpanKind::WordPart,
+                    parsed_text: "alfa".to_string(),
+                    source_text: "alfa".to_string(),
+                },
+                Span {
+                    attrs: vec![],
+                    kind: SpanKind::Space,
+                    parsed_text: " ".to_string(),
+                    source_text: " ".to_string(),
+                },
+                Span {
+                    attrs: vec![],
+                    kind: SpanKind::CodeShorthand,
+                    parsed_text: "bravo".to_string(),
+                    source_text: "``bravo``".to_string(),
+                },
+                Span {
+                    attrs: vec![],
+                    kind: SpanKind::Space,
+                    parsed_text: " ".to_string(),
+                    source_text: " ".to_string(),
+                },
+                Span {
+                    attrs: vec![],
+                    kind: SpanKind::WordPart,
+                    parsed_text: "charlie".to_string(),
+                    source_text: "charlie".to_string(),
+                },
+            ],
+        );
+        let right = many1(span).parse(source).unwrap();
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // fn integration_1_basic() {
-    //     let config = SiteConfig::mock1();
-    //     let source = "alfa ``bravo`` charlie";
-    //     let left = (
-    //         "",
-    //         vec![
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::WordPart,
-    //                 parsed_text: "alfa".to_string(),
-    //                 source_text: "alfa".to_string(),
-    //             },
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::Space,
-    //                 parsed_text: " ".to_string(),
-    //                 source_text: " ".to_string(),
-    //             },
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::CodeShorthand,
-    //                 parsed_text: "bravo".to_string(),
-    //                 source_text: "``bravo``".to_string(),
-    //             },
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::Space,
-    //                 parsed_text: " ".to_string(),
-    //                 source_text: " ".to_string(),
-    //             },
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::WordPart,
-    //                 parsed_text: "charlie".to_string(),
-    //                 source_text: "charlie".to_string(),
-    //             },
-    //         ],
-    //     );
-    //     let right = many1(|src| span(src, &config.spans)).parse(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn integration_2_escaped_pipe() {
+        let source = r#"alfa ``bravo\|delta`` charlie"#;
+        let left = (
+            "",
+            vec![
+                Span {
+                    attrs: vec![],
+                    kind: SpanKind::WordPart,
+                    parsed_text: "alfa".to_string(),
+                    source_text: "alfa".to_string(),
+                },
+                Span {
+                    attrs: vec![],
+                    kind: SpanKind::Space,
+                    parsed_text: " ".to_string(),
+                    source_text: " ".to_string(),
+                },
+                Span {
+                    attrs: vec![],
+                    kind: SpanKind::CodeShorthand,
+                    parsed_text: "bravo|delta".to_string(),
+                    source_text: "``bravo\\|delta``".to_string(),
+                },
+                Span {
+                    attrs: vec![],
+                    kind: SpanKind::Space,
+                    parsed_text: " ".to_string(),
+                    source_text: " ".to_string(),
+                },
+                Span {
+                    attrs: vec![],
+                    kind: SpanKind::WordPart,
+                    parsed_text: "charlie".to_string(),
+                    source_text: "charlie".to_string(),
+                },
+            ],
+        );
+        let right = many1(span).parse(source).unwrap();
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // fn integration_2_escaped_pipe() {
-    //     let config = SiteConfig::mock1();
-    //     let source = r#"alfa ``bravo\|delta`` charlie"#;
-    //     let left = (
-    //         "",
-    //         vec![
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::WordPart,
-    //                 parsed_text: "alfa".to_string(),
-    //                 source_text: "alfa".to_string(),
-    //             },
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::Space,
-    //                 parsed_text: " ".to_string(),
-    //                 source_text: " ".to_string(),
-    //             },
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::CodeShorthand,
-    //                 parsed_text: "bravo|delta".to_string(),
-    //                 source_text: "``bravo\\|delta``".to_string(),
-    //             },
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::Space,
-    //                 parsed_text: " ".to_string(),
-    //                 source_text: " ".to_string(),
-    //             },
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::WordPart,
-    //                 parsed_text: "charlie".to_string(),
-    //                 source_text: "charlie".to_string(),
-    //             },
-    //         ],
-    //     );
-    //     let right = many1(|src| span(src, &config.spans)).parse(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn integration_2_escaped_single_backtick() {
+        let source = r#"alfa ``bravo`delta`` charlie"#;
+        let left = (
+            "",
+            vec![
+                Span {
+                    attrs: vec![],
+                    kind: SpanKind::WordPart,
+                    parsed_text: "alfa".to_string(),
+                    source_text: "alfa".to_string(),
+                },
+                Span {
+                    attrs: vec![],
+                    kind: SpanKind::Space,
+                    parsed_text: " ".to_string(),
+                    source_text: " ".to_string(),
+                },
+                Span {
+                    attrs: vec![],
+                    kind: SpanKind::CodeShorthand,
+                    parsed_text: "bravo`delta".to_string(),
+                    source_text: "``bravo`delta``".to_string(),
+                },
+                Span {
+                    attrs: vec![],
+                    kind: SpanKind::Space,
+                    parsed_text: " ".to_string(),
+                    source_text: " ".to_string(),
+                },
+                Span {
+                    attrs: vec![],
+                    kind: SpanKind::WordPart,
+                    parsed_text: "charlie".to_string(),
+                    source_text: "charlie".to_string(),
+                },
+            ],
+        );
+        let right = many1(span).parse(source).unwrap();
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // fn integration_2_escaped_single_backtick() {
-    //     let config = SiteConfig::mock1();
-    //     let source = r#"alfa ``bravo`delta`` charlie"#;
-    //     let left = (
-    //         "",
-    //         vec![
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::WordPart,
-    //                 parsed_text: "alfa".to_string(),
-    //                 source_text: "alfa".to_string(),
-    //             },
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::Space,
-    //                 parsed_text: " ".to_string(),
-    //                 source_text: " ".to_string(),
-    //             },
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::CodeShorthand,
-    //                 parsed_text: "bravo`delta".to_string(),
-    //                 source_text: "``bravo`delta``".to_string(),
-    //             },
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::Space,
-    //                 parsed_text: " ".to_string(),
-    //                 source_text: " ".to_string(),
-    //             },
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::WordPart,
-    //                 parsed_text: "charlie".to_string(),
-    //                 source_text: "charlie".to_string(),
-    //             },
-    //         ],
-    //     );
-    //     let right = many1(|src| span(src, &config.spans)).parse(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn code_shorthand_key_value_attrs_basic_key_value_attr() {
+        let source = "|class: green";
+        let left = (
+            "",
+            SpanAttr {
+                source_text: "|class: green".to_string(),
+                kind: SpanAttrKind::KeyValue {
+                    key: "class".to_string(),
+                    value: "green".to_string(),
+                },
+            },
+        );
+        let right = code_shorthand_key_value_attr(source).unwrap();
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // fn code_shorthand_key_value_attrs_basic_key_value_attr() {
-    //     let source = "|class: green";
-    //     let left = (
-    //         "",
-    //         SpanAttr {
-    //             source_text: "|class: green".to_string(),
-    //             kind: SpanAttrKind::KeyValue {
-    //                 key: "class".to_string(),
-    //                 value: "green".to_string(),
-    //             },
-    //         },
-    //     );
-    //     let right = code_shorthand_key_value_attr(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
-
-    // #[test]
-    // fn code_shorthand_basic_with_key_value() {
-    //     let source = "``ping|class: blue``";
-    //     let left = (
-    //         "",
-    //         Span {
-    //             attrs: vec![SpanAttr {
-    //                 source_text: "|class: blue".to_string(),
-    //                 kind: SpanAttrKind::KeyValue {
-    //                     key: "class".to_string(),
-    //                     value: "blue".to_string(),
-    //                 },
-    //             }],
-    //             source_text: "``ping|class: blue``".to_string(),
-    //             parsed_text: "ping".to_string(),
-    //             kind: SpanKind::CodeShorthand {},
-    //         },
-    //     );
-    //     let right = code_shorthand(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn code_shorthand_basic_with_key_value() {
+        let source = "``ping|class: blue``";
+        let left = (
+            "",
+            Span {
+                attrs: vec![SpanAttr {
+                    source_text: "|class: blue".to_string(),
+                    kind: SpanAttrKind::KeyValue {
+                        key: "class".to_string(),
+                        value: "blue".to_string(),
+                    },
+                }],
+                source_text: "``ping|class: blue``".to_string(),
+                parsed_text: "ping".to_string(),
+                kind: SpanKind::CodeShorthand {},
+            },
+        );
+        let right = code_shorthand(source).unwrap();
+        assert_eq!(left, right);
+    }
 }

@@ -69,11 +69,8 @@ pub fn structure_empty_until_newline_or_eof<'a>(
     Ok((source, ""))
 }
 
-pub fn span<'a>(
-    source: &'a str,
-    _spans: &'a Vec<String>,
-) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
-    let (source, span) = alt((code_shorthand, span_base, space, newline))
+pub fn span<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    let (source, span) = alt((code_shorthand, span_base, space, newline, colon))
         .context("")
         .parse(source)?;
     Ok((source, span))
@@ -84,9 +81,9 @@ pub fn span_base<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a st
     // be used for keys. Also, don't put colon in here
     // since that's also part of the key process
     let (source, span) = alt((
-        escaped_pipe,
-        escaped_backtick,
         escaped_backslash,
+        escaped_backtick,
+        escaped_pipe,
         single_backtick,
         wordpart,
     ))(source)?;
