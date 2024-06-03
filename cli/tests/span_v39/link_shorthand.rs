@@ -1,6 +1,5 @@
 use neopoligengine::site_config::SiteConfig;
 use neopoligengine::span_attr_v39::*;
-use neopoligengine::span_shorthand_token_v39::*;
 use neopoligengine::span_v39::link_shorthand::*;
 use neopoligengine::span_v39::*;
 use nom::multi::many1;
