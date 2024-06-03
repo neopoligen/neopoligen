@@ -4,10 +4,14 @@
 // pub mod object;
 // pub mod tokens;
 
+pub mod escaped_backtick;
+pub mod single_backtick;
+
+use crate::span::escaped_backtick::*;
+use crate::span::single_backtick::*;
 use crate::span_attr::*;
 // use crate::span::code_shorthand::code_shorthand;
 // use crate::span::link_shorthand::link_shorthand;
-use minijinja::Value;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
@@ -36,7 +40,7 @@ pub struct Span {
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(rename_all = "lowercase", tag = "type")]
 pub enum SpanKind {
-    Backtick,
+    SingleBacktick,
     CodeShorthand,
     EscapedBacktick,
     LinkShorthand,
@@ -67,7 +71,7 @@ pub fn span<'a>(
         //code_shorthand,
         // link_shorthand,
         escaped_backtick,
-        backtick,
+        single_backtick,
         word_part,
         space,
         newline,
@@ -75,36 +79,6 @@ pub fn span<'a>(
     Ok((source, span))
 }
 
-pub fn backtick(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let initial_source = source;
-    let (source, _) = pair(tag("`"), not(tag("`"))).context("").parse(source)?;
-    let source_text = initial_source.replace(source, "").to_string();
-    Ok((
-        source,
-        Span {
-            attrs: vec![],
-            source_text,
-            parsed_text: "`".to_string(),
-            kind: SpanKind::Backtick,
-        },
-    ))
-}
-
-pub fn escaped_backtick(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    // Reminder: not doing the source/replace here because the
-    // escape is captured by the slash. There's certainly
-    // a way around that, but this is fine
-    let (source, _) = pair(tag("\\"), tag("`")).context("").parse(source)?;
-    Ok((
-        source,
-        Span {
-            attrs: vec![],
-            source_text: "\\`".to_string(),
-            parsed_text: "`".to_string(),
-            kind: SpanKind::EscapedBacktick,
-        },
-    ))
-}
 pub fn newline(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let initial_source = source;
     let (source, _) = tuple((space0, line_ending)).context("").parse(source)?;
