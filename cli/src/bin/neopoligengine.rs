@@ -110,7 +110,7 @@ async fn catch_file_changes(
     engine_config: EngineConfig,
     mut rx: mpsc::Receiver<Vec<PathBuf>>,
 ) {
-    while let Some(r) = rx.recv().await {
+    while let Some(_) = rx.recv().await {
         build_site(&engine_config, &reloader);
     }
 }
@@ -118,35 +118,40 @@ async fn catch_file_changes(
 #[instrument(skip(engine_config, reloader))]
 fn build_site(engine_config: &EngineConfig, reloader: &Reloader) {
     event!(Level::INFO, "Building Site");
+    match Builder::new_from_engine_config(engine_config) {
+        Ok(builder) => {
+            builder.todo("load_source_files");
 
-    reloader.reload();
-
-    // if let Ok(mut builder) = Builder::new(site_config.clone()) {
-    //     builder.todo("load_source_files");
-    //     builder.todo("load_cached_files");
-    //     builder.todo("generate_section_asts");
-    //     builder.todo("update_file_cache");
-    //     builder.todo("generate_payloads");
-    //     builder.todo("generate_site_object");
-    //     builder.todo("load_templates");
-    //     builder.todo("generate_page_output");
-    //     builder.todo("generated_last_edit_page");
-    //     builder.todo("empty_output_dirs");
-    //     builder.todo("prep_output_dirs");
-    //     builder.todo("output_pages");
-    //     builder.todo("deploy_theme_file_assets");
-    //     builder.todo("deploy_images");
-    //     builder.todo("deploy_og_images");
-    //     builder.todo("deploy_gifs");
-    //     builder.todo("deploy_mp3s");
-    //     builder.todo("deploy_svgs");
-    //     builder.todo("generate_feeds");
-    //     builder.todo("load_theme_test_files");
-    //     builder.todo("load_theme_test_templates");
-    //     builder.todo("test_theme");
-    //     builder.todo("update_status");
-    //     builder.todo("reload_browser");
-    // }
+            // builder.todo("load_cached_files");
+            // builder.todo("generate_section_asts");
+            // builder.todo("update_file_cache");
+            // builder.todo("generate_payloads");
+            // builder.todo("generate_site_object");
+            // builder.todo("load_templates");
+            // builder.todo("generate_page_output");
+            // builder.todo("generated_last_edit_page");
+            // builder.todo("empty_output_dirs");
+            // builder.todo("prep_output_dirs");
+            // builder.todo("output_pages");
+            // builder.todo("deploy_theme_file_assets");
+            // builder.todo("deploy_images");
+            // builder.todo("deploy_og_images");
+            // builder.todo("deploy_gifs");
+            // builder.todo("deploy_mp3s");
+            // builder.todo("deploy_svgs");
+            // builder.todo("generate_feeds");
+            // builder.todo("load_theme_test_files");
+            // builder.todo("load_theme_test_templates");
+            // builder.todo("test_theme");
+            // builder.todo("update_status");
+            // builder.todo("reload_browser");
+            event!(Level::INFO, "Reloading Browser");
+            reloader.reload();
+        }
+        Err(e) => {
+            event!(Level::ERROR, "Could not make builder: {:?}", e);
+        }
+    }
 
     //
 }
