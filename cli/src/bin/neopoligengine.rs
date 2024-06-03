@@ -121,10 +121,8 @@ fn build_site(engine_config: &EngineConfig, reloader: &Reloader) {
     match Builder::new_from_engine_config(engine_config) {
         Ok(mut builder) => {
             let _ = builder.load_pages_from_fs();
-            dbg!(builder);
+            builder.generate_missing_asts();
 
-            // builder.todo("load_cached_files");
-            // builder.todo("generate_section_asts");
             // builder.todo("update_file_cache");
             // builder.todo("generate_payloads");
             // builder.todo("generate_site_object");

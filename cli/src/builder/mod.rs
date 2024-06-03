@@ -37,6 +37,15 @@ impl Builder {
 
 impl Builder {
     #[instrument(skip(self))]
+    pub fn generate_missing_asts(&mut self) {
+        self.pages.iter_mut().for_each(|page| {
+            if let Err(e) = page.generate_ast() {
+                dbg!(e);
+            }
+        })
+    }
+
+    #[instrument(skip(self))]
     pub fn load_pages_from_fs(&mut self) -> Result<()> {
         event!(Level::INFO, "Loading Source Content Files");
         for entry in WalkDir::new(&self.config.as_ref().unwrap().content_source_dir()) {

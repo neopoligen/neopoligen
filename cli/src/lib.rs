@@ -2,6 +2,7 @@ pub mod builder;
 pub mod engine_config;
 pub mod file_watcher;
 pub mod neo_error;
+pub mod section;
 pub mod site_config;
 pub mod source_page;
 
