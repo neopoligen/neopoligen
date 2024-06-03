@@ -2,6 +2,7 @@
 
 pub mod basic;
 pub mod block;
+pub mod yaml;
 
 //use crate::section_attr::SectionAttrV39;
 //use crate::section_attr::SectionAttrV39Kind;
@@ -15,6 +16,7 @@ pub mod block;
 // use crate::section::yaml::*;
 // use crate::span::*;
 use crate::section::basic::*;
+use crate::section::yaml::*;
 use crate::section_attr::SectionAttr;
 use crate::site_config::ConfigSections;
 use crate::span::*;
@@ -74,9 +76,12 @@ pub fn start_or_full_section<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, section) = alt((|src| basic_section_full(src, &sections),))
-        .context("")
-        .parse(source)?;
+    let (source, section) = alt((
+        |src| basic_section_full(src, &sections),
+        |src| yaml_section_full(src, &sections),
+    ))
+    .context("")
+    .parse(source)?;
     Ok((source, section))
 }
 
