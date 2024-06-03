@@ -10,7 +10,7 @@ get started.
 
 ``code|rust``
 
-``code|rust|class: green``
+``println!("asdf");|rust|class: green``
 
 
 -- metadata

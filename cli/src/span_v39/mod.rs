@@ -77,6 +77,18 @@ impl SpanV39 {
         class_list
     }
 
+    pub fn flags(&self) -> Result<Value, minijinja::Error> {
+        Ok(Value::make_object_iterable(
+            self.attrs.clone(),
+            |attr_set| {
+                Box::new(attr_set.iter().cloned().filter_map(|attr| match attr.kind {
+                    SpanAttrV39Kind::Flag { .. } => Some(Value::from_object(attr)),
+                    _ => None,
+                }))
+            },
+        ))
+    }
+
     pub fn parsed_text(&self) -> Option<String> {
         Some(self.parsed_text.clone())
     }

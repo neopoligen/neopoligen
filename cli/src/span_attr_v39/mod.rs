@@ -26,7 +26,7 @@ impl SpanAttrV39 {
     pub fn value(&self) -> Option<String> {
         match &self.kind {
             SpanAttrV39Kind::KeyValue { value, .. } => Some(value.to_string()),
-            _ => None,
+            SpanAttrV39Kind::Flag { value, .. } => Some(value.to_string()),
         }
     }
 }

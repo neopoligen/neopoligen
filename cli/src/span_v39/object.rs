@@ -14,6 +14,7 @@ impl Object for SpanV39 {
         match name {
             "attrs" => self.attrs(),
             "classes" => Ok(Value::from(self.classes(args))),
+            "flags" => self.flags(),
             "parsed_text" => Ok(Value::from(self.parsed_text())),
             "template_list" => Ok(Value::from_serialize(self.template_list())),
             _ => Ok(Value::from("[Error: called non-existing function")),

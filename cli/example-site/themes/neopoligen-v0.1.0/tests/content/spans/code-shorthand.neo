@@ -6,7 +6,10 @@
 
 -- expected-output/
 
-<code>alfa</code>
+<code >
+  <span class="text plain">alfa
+  </span>
+</code>
 
 -- /expected-output
 
@@ -20,7 +23,11 @@
 
 -- expected-output/
 
-<code class="blue">alfa</code>
+<code class="blue">
+  <span class="text plain">alfa
+  </span>
+</code>
+
 
 -- /expected-output
 
@@ -35,12 +42,48 @@
 
 -- expected-output/
 
-<code id="bravo">alfa</code>
+<code id="bravo">
+  <span class="text plain">alfa
+  </span>
+</code>
 
 -- /expected-output
 
 
 
+
+-- start-theme-test
+
+-- naked
+
+``println!("alfa")|rust|id: tango``
+
+-- expected-output/
+
+<code id="tango" >
+  <span class="source rust">
+    <span class="support macro rust">println!
+    </span>
+    <span class="meta group rust">
+      <span class="punctuation section group begin rust">(
+      </span>
+    </span>
+    <span class="meta group rust">
+      <span class="string quoted double rust">
+        <span class="punctuation definition string begin rust">&quot;
+        </span>alfa
+        <span class="punctuation definition string end rust">&quot;
+        </span>
+      </span>
+    </span>
+    <span class="meta group rust">
+      <span class="punctuation section group end rust">)
+      </span>
+    </span>
+  </span>
+</code>
+
+-- /expected-output
 
 
 -- metadata

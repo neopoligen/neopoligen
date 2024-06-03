@@ -2,4 +2,13 @@
 <code 
 [@ theme.span_classes(span) -@]
 [@ theme.span_attrs(span) -@]
->[@- span.parsed_text() -@]</code>
+>
+[! set ns = namespace() !]
+[! set ns.lang = "txt" !]
+[! for flag in span.flags() !]
+[! if loop.first !]
+[! set ns.lang = flag.value() !]
+[! endif !]
+[! endfor !]
+[@- highlight_span(span.parsed_text(), ns.lang) -@]
+</code>

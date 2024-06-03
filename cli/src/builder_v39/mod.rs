@@ -86,6 +86,7 @@ impl BuilderV39 {
         env.set_debug(true);
         env.set_lstrip_blocks(true);
         env.set_trim_blocks(true);
+        env.add_function("highlight_span", highlight_span);
         env.set_syntax(
             SyntaxConfig::builder()
                 .block_delimiters("[!", "!]")
@@ -244,6 +245,7 @@ impl BuilderV39 {
         env.set_debug(true);
         env.set_lstrip_blocks(true);
         env.set_trim_blocks(true);
+        env.add_function("highlight_span", highlight_span);
         env.set_syntax(
             SyntaxConfig::builder()
                 .block_delimiters("[!", "!]")
@@ -413,6 +415,7 @@ body { background-color: #111; color: #aaa; }
         env.set_debug(true);
         env.set_lstrip_blocks(true);
         env.set_trim_blocks(true);
+        env.add_function("highlight_span", highlight_span);
         env.set_syntax(
             SyntaxConfig::builder()
                 .block_delimiters("[!", "!]")
@@ -1517,6 +1520,26 @@ pub fn get_files_with_extension_in_a_single_directory(
             Err(_) => Some(p.as_ref().unwrap().path()),
         })
         .collect()
+}
+
+pub fn highlight_span(args: &[Value]) -> String {
+    let code = args[0].to_string();
+    let lang = args[1].to_string();
+    let syntax_set = SyntaxSet::load_defaults_newlines();
+    let syntax = syntax_set
+        .find_syntax_by_token(&lang)
+        .unwrap_or_else(|| syntax_set.find_syntax_plain_text());
+    let mut html_generator =
+        ClassedHTMLGenerator::new_with_class_style(syntax, &syntax_set, ClassStyle::Spaced);
+    for line in LinesWithEndings::from(&code) {
+        let _ = html_generator.parse_html_for_line_which_includes_newline(line);
+    }
+    let initial_html = html_generator.finalize();
+    let output_html: Vec<_> = initial_html
+        .lines()
+        .map(|line| format!(r#"{}"#, line))
+        .collect();
+    output_html.join("\n")
 }
 
 // pub fn highlight_code(args: &[Value]) -> String {
