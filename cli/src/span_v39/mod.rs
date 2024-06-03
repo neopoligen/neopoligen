@@ -2,6 +2,7 @@ pub mod code_shorthand;
 pub mod link_shorthand;
 pub mod mocks;
 pub mod object;
+pub mod tokens;
 
 use self::code_shorthand::code_shorthand_v39;
 use crate::span_attr_v39::SpanAttrV39;
@@ -206,7 +207,7 @@ pub fn space_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
 
 pub fn word_part_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
     let initial_source = source;
-    let (source, text) = is_not(" \n\t`").context("").parse(source)?;
+    let (source, text) = is_not(" \n\t]`").context("").parse(source)?;
     let source_text = initial_source.replace(source, "").to_string();
     Ok((
         source,

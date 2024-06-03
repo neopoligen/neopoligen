@@ -4,6 +4,7 @@ pub mod link_shorthand;
 pub mod newline;
 pub mod space;
 pub mod structure;
+pub mod tokens;
 pub mod word_part;
 
 use minijinja::Value;
