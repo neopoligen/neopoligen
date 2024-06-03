@@ -1,13 +1,10 @@
-#![allow(unused_imports)]
 use axum::Router;
 use dirs::config_dir;
 use dirs::data_local_dir;
-use dirs::document_dir;
 use neopoligengine::builder::Builder;
 use neopoligengine::engine_config::EngineConfig;
 use neopoligengine::file_watcher::FileWatcher;
 use neopoligengine::site_config::SiteConfig;
-use std::fs;
 use std::path::PathBuf;
 use tokio::sync::mpsc;
 use tower_http::services::ServeDir;
@@ -123,6 +120,7 @@ fn build_site(engine_config: &EngineConfig, reloader: &Reloader) {
             let _ = builder.load_pages_from_fs();
             builder.generate_missing_asts();
             builder.generate_payloads();
+            let _ = builder.output_pages();
 
             let _ = builder.tmp_output_errors();
 

@@ -58,7 +58,6 @@ impl Builder {
             if let Some(id) = page.id() {
                 let mut p = PagePayload::new_from_id(&id);
                 p.rel_file_path = page.rel_file_path();
-
                 self.payloads.push(p);
             } else {
                 self.errors.push(NeoError {
@@ -89,6 +88,49 @@ impl Builder {
                     }
                 }
             }
+        }
+        Ok(())
+    }
+
+    pub fn output_pages(&self) -> Result<()> {
+        let mut env = Environment::new();
+        env.set_syntax(
+            SyntaxConfig::builder()
+                .block_delimiters("[!", "!]")
+                .variable_delimiters("[@", "@]")
+                .comment_delimiters("[#", "#]")
+                .build()
+                .unwrap(),
+        );
+        let _ = env.add_template_owned(
+            "tmp-template",
+            r#"
+<!DOCTYPE html>
+<html><head><style> 
+body { background-color: #111; color: #aaa; } 
+</style></head><body><h1>Page</h1>
+[@ page @]
+</body></html>"#
+                .to_string(),
+        );
+
+        for page in self.payloads.iter() {
+            let output_path = self
+                .config
+                .as_ref()
+                .unwrap()
+                .output_dest_dir()
+                .join(page.rel_file_path.as_ref().unwrap());
+            let tmpl = env.get_template("tmp-template").unwrap();
+            match tmpl.render(context!(
+                page => Value::from_serialize(&page)
+            )) {
+                Ok(output) => {
+                    let _ = write_file_with_mkdir(&output_path, &output);
+                }
+                Err(_) => (),
+            }
+            ()
         }
         Ok(())
     }
