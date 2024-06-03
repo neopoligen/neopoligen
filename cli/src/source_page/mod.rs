@@ -2,7 +2,8 @@ pub mod mocks;
 
 use crate::ast::parse_ast;
 use crate::neo_error::{NeoError, NeoErrorKind};
-use crate::section::Section;
+use crate::section::{Section, SectionKind};
+use crate::section_attr::SectionAttrKind;
 use crate::site_config::SiteConfig;
 use serde::{Deserialize, Serialize};
 use std::fs;
@@ -57,9 +58,46 @@ impl SourcePage {
     }
 
     pub fn id(&self) -> Option<String> {
-        None
+        self.get_metadata_item("id")
+    }
+
+    pub fn get_metadata_item(&self, target: &str) -> Option<String> {
+        if let Some(ast) = &self.ast {
+            ast.iter().find_map(|section| match &section.kind {
+                SectionKind::Yaml {} => {
+                    if section.r#type.as_str() == "metadata" {
+                        section.attrs.iter().find_map(|attr| match &attr.kind {
+                            SectionAttrKind::KeyValue { key, value } => {
+                                if key.as_str() == target {
+                                    Some(value.to_string())
+                                } else {
+                                    None
+                                }
+                            }
+                            _ => None,
+                        })
+                    } else {
+                        None
+                    }
+                }
+                _ => None,
+            })
+        } else {
+            None
+        }
     }
 }
 
 #[cfg(test)]
-mod test {}
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn solo_id_check() {
+        let p = SourcePage::mock1_20240101_alfa1234_minimal();
+        let left = "20240101_alfa1234".to_string();
+        let right = p.id().unwrap();
+        assert_eq!(left, right);
+    }
+}

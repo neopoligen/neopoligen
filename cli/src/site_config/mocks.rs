@@ -9,7 +9,7 @@ use crate::site_config::*;
 impl SiteConfig {
     pub fn mock1_basic() -> SiteConfig {
         let sections = ConfigSections {
-            basic: vec![],
+            basic: vec!["title".to_string()],
             block: vec![],
             checklist: vec![],
             list: vec![],
@@ -18,7 +18,7 @@ impl SiteConfig {
             json: vec![],
             raw: vec![],
             table: vec![],
-            yaml: vec![],
+            yaml: vec!["metadata".to_string()],
         };
         let config = SiteConfig {
             default_language: "en".to_string(),
