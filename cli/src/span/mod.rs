@@ -1,9 +1,3 @@
-// pub mod code_shorthand;
-// pub mod link_shorthand;
-// pub mod mocks;
-// pub mod object;
-// pub mod tokens;
-
 pub mod code_shorthand;
 pub mod escaped_backslash;
 pub mod escaped_backtick;
@@ -16,7 +10,6 @@ use crate::span::escaped_backtick::*;
 use crate::span::escaped_pipe::*;
 use crate::span::single_backtick::*;
 use crate::span_attr::*;
-// use crate::span::code_shorthand::code_shorthand;
 // use crate::span::link_shorthand::link_shorthand;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
@@ -86,7 +79,9 @@ pub fn span<'a>(
     Ok((source, span))
 }
 
-pub fn span_without_shorthands<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+pub fn span_without_shorthands_or_single_pipe<'a>(
+    source: &'a str,
+) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
     let (source, span) = alt((
         escaped_pipe,
         escaped_backtick,

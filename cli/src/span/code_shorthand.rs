@@ -7,7 +7,7 @@ use nom::branch::alt;
 // use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::multi::many0;
-// use nom::multi::many1;
+use nom::multi::many1;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -24,9 +24,10 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let initial_source = source;
     let (source, _) = tag("``").context("").parse(source)?;
-    let (source, parts) = many0(span_without_shorthands).context("").parse(source)?;
-    //let (source, tokens) = many1(code_shorthand_token).context("").parse(source)?;
-    //let (source, attrs) = many0(code_shorthand_attr).context("").parse(source)?;
+    let (source, parts) = many0(span_without_shorthands_or_single_pipe)
+        .context("")
+        .parse(source)?;
+    let (source, attrs) = many0(code_shorthand_attr).context("").parse(source)?;
     let (source, _) = tag("``").context("").parse(source)?;
     let source_text = initial_source.replace(source, "").to_string();
     let parsed_text = parts
@@ -34,7 +35,6 @@ pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         .map(|word| word.parsed_text.clone())
         .collect::<Vec<String>>()
         .join("");
-    let attrs = vec![];
     Ok((
         source,
         Span {
@@ -46,39 +46,35 @@ pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     ))
 }
 
-// pub fn code_shorthand_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-//     let (source, span) = alt((wordpart, escaped_pipe, escaped_backslash, escaped_backtick))
-//         .context("")
-//         .parse(source)?;
-//     Ok((source, span))
-// }
+pub fn code_shorthand_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
+    let (source, attr) = alt((code_shorthand_flag_attr,))
+        //let (source, attr) = alt((code_shorthand_key_value_attr, code_shorthand_flag_attr))
+        .context("")
+        .parse(source)?;
+    Ok((source, attr))
+}
 
-// pub fn code_shorthand_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-//     let (source, attr) = alt((code_shorthand_key_value_attr, code_shorthand_flag_attr))
-//         .context("")
-//         .parse(source)?;
-//     Ok((source, attr))
-// }
-
-// pub fn code_shorthand_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-//     let (source, the_tag) = tag("|").context("").parse(source)?;
-//     let (source, words) = many1(code_shorthand_token).context("").parse(source)?;
-//     let source_text = words
-//         .iter()
-//         .map(|word| word.source_text.clone())
-//         .collect::<Vec<String>>()
-//         .join("");
-//     let value = words
-//         .iter()
-//         .map(|word| word.parsed_text.clone())
-//         .collect::<Vec<String>>()
-//         .join("");
-//     let attr = SpanAttr {
-//         source_text: format!("{}{}", the_tag, source_text),
-//         kind: SpanAttrKind::Flag { value },
-//     };
-//     Ok((source, attr))
-// }
+pub fn code_shorthand_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
+    let (source, the_tag) = tag("|").context("").parse(source)?;
+    let (source, words) = many1(span_without_shorthands_or_single_pipe)
+        .context("")
+        .parse(source)?;
+    let source_text = words
+        .iter()
+        .map(|word| word.source_text.clone())
+        .collect::<Vec<String>>()
+        .join("");
+    let value = words
+        .iter()
+        .map(|word| word.parsed_text.clone())
+        .collect::<Vec<String>>()
+        .join("");
+    let attr = SpanAttr {
+        source_text: format!("{}{}", the_tag, source_text),
+        kind: SpanAttrKind::Flag { value },
+    };
+    Ok((source, attr))
+}
 
 // pub fn code_shorthand_token(source: &str) -> IResult<&str, SpanShorthandToken, ErrorTree<&str>> {
 //     let (source, token) = alt((
@@ -135,7 +131,6 @@ pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
 mod test {
     use super::*;
     use pretty_assertions::assert_eq;
-
     #[test]
     fn code_shorthand_basic() {
         let source = "``ping``";
@@ -200,42 +195,26 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // fn code_shorthand_with_single_backslash() {
-    //     let source = "``ping\\ping``";
-    //     let left = (
-    //         "",
-    //         Span {
-    //             attrs: vec![],
-    //             source_text: "``ping\\ping``".to_string(),
-    //             parsed_text: "ping\\ping".to_string(),
-    //             kind: SpanKind::CodeShorthand,
-    //         },
-    //     );
-    //     let right = code_shorthand(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
-
-    // #[test]
-    // fn code_shorthand_with_flag_attr() {
-    //     let source = "``code|rust``";
-    //     let left = (
-    //         "",
-    //         Span {
-    //             attrs: vec![SpanAttr {
-    //                 source_text: "|rust".to_string(),
-    //                 kind: SpanAttrKind::Flag {
-    //                     value: "rust".to_string(),
-    //                 },
-    //             }],
-    //             source_text: "``code|rust``".to_string(),
-    //             parsed_text: "code".to_string(),
-    //             kind: SpanKind::CodeShorthand {},
-    //         },
-    //     );
-    //     let right = code_shorthand(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn code_shorthand_with_flag_attr() {
+        let source = "``code|rust``";
+        let left = (
+            "",
+            Span {
+                attrs: vec![SpanAttr {
+                    source_text: "|rust".to_string(),
+                    kind: SpanAttrKind::Flag {
+                        value: "rust".to_string(),
+                    },
+                }],
+                source_text: "``code|rust``".to_string(),
+                parsed_text: "code".to_string(),
+                kind: SpanKind::CodeShorthand {},
+            },
+        );
+        let right = code_shorthand(source).unwrap();
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // fn code_shorthand_with_multiple_flag_attrs() {
