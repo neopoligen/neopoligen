@@ -88,6 +88,10 @@ impl SourcePage {
         self.get_metadata_item("id")
     }
 
+    pub fn page_type(&self) -> Option<String> {
+        Some("post".to_string())
+    }
+
     pub fn rel_file_path(&self) -> Option<PathBuf> {
         if let Some(path) = self.get_metadata_item("path") {
             Some(scrub_rel_file_path(&path).expect("get rel file path"))
@@ -98,6 +102,14 @@ impl SourcePage {
                 self.id().unwrap()
             )))
         }
+    }
+
+    pub fn status(&self) -> Option<String> {
+        Some("published".to_string())
+    }
+
+    pub fn template_list(&self) -> Vec<String> {
+        vec!["pages/post/published.neoj".to_string()]
     }
 }
 
@@ -127,9 +139,25 @@ mod test {
     }
 
     #[test]
+    fn page_type_default() {
+        let p = SourcePage::mock1_20240101_alfa1234_minimal();
+        let left = "post".to_string();
+        let right = p.page_type().unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
     fn rel_file_path_default() {
         let p = SourcePage::mock1_20240101_alfa1234_minimal();
         let left = PathBuf::from("en/20240101_alfa1234/index.html");
+        let right = p.rel_file_path().unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn rel_file_path_for_home_page() {
+        let p = SourcePage::mock1_20240102_bravo123_home_page_path();
+        let left = PathBuf::from("index.html");
         let right = p.rel_file_path().unwrap();
         assert_eq!(left, right);
     }
@@ -159,10 +187,18 @@ mod test {
     }
 
     #[test]
-    fn rel_file_path_for_home_page() {
-        let p = SourcePage::mock1_20240102_bravo123_home_page_path();
-        let left = PathBuf::from("index.html");
-        let right = p.rel_file_path().unwrap();
+    fn status_default() {
+        let p = SourcePage::mock1_20240101_alfa1234_minimal();
+        let left = "published".to_string();
+        let right = p.status().unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn template_list_default() {
+        let p = SourcePage::mock1_20240101_alfa1234_minimal();
+        let left = vec!["pages/post/published.neoj".to_string()];
+        let right = p.template_list();
         assert_eq!(left, right);
     }
 }

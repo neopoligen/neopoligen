@@ -58,6 +58,7 @@ impl Builder {
             if let Some(id) = page.id() {
                 let mut p = PagePayload::new_from_id(&id);
                 p.rel_file_path = page.rel_file_path();
+                p.template_list = page.template_list();
                 self.payloads.push(p);
             } else {
                 self.errors.push(NeoError {
