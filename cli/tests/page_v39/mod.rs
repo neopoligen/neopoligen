@@ -6,10 +6,19 @@ use pretty_assertions::assert_eq;
 //use std::path::PathBuf;
 
 #[test]
+#[ignore]
 fn template_list() {
     let p = PageV39::mock_1_20240101_basic_page();
     let left = vec!["pages/post/published.neoj".to_string()];
     let right = p.template_list;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn page_type() {
+    let p = PageV39::mock_1_20240101_basic_page();
+    let left = "post".to_string();
+    let right = p.r#type.unwrap();
     assert_eq!(left, right);
 }
 

@@ -23,6 +23,7 @@ pub struct PageV39 {
     pub source_content: Option<String>,
     pub source_path: Option<PathBuf>,
     pub template_list: Vec<String>,
+    pub r#type: Option<String>,
 }
 
 impl PageV39 {
@@ -41,6 +42,21 @@ impl PageV39 {
             source_content: Some(source_content),
             source_path: Some(source_path),
             template_list: vec![],
+            r#type: None,
+        })
+    }
+
+    pub fn new_from_string(config: SiteConfig, source_content: String) -> Result<PageV39> {
+        Ok(PageV39 {
+            ast: None,
+            config,
+            errors: vec![],
+            fs_modified: None,
+            output_content: None,
+            source_content: Some(source_content),
+            source_path: None,
+            template_list: vec![],
+            r#type: None,
         })
     }
 }
@@ -63,7 +79,9 @@ impl PageV39 {
             Ok(sections) => self.ast = Some(sections),
             Err(e) => self.errors.push(e),
         }
-        // Populate all the necessary fields
+        // Prepall the necessary fields
+        self.prep_template_list();
+        self.prep_type();
         Ok(())
     }
 
@@ -94,6 +112,28 @@ impl PageV39 {
     // DEPRECATED PROBABLY IN FAVOR OF KEYS
     pub fn id(&self) -> Option<String> {
         self.get_metadata_attr("id")
+    }
+
+    pub fn prep_template_list(&self) {
+
+        // let template_patterns = vec![
+        //     format!(
+        //         "pages/{}/{}.neoj",
+        //         page.r#type().unwrap(),
+        //         page.status().unwrap()
+        //     ),
+        //     format!("pages/{}/published.neoj", page.r#type().unwrap()),
+        //     format!("pages/post/{}.neoj", page.status().unwrap()),
+        //     format!("pages/post/published.neoj"),
+        // ];
+    }
+
+    pub fn prep_type(&mut self) {
+        if let Some(t) = self.get_metadata_attr("type") {
+            self.r#type = Some(t);
+        } else {
+            self.r#type = Some("post".to_string());
+        }
     }
 
     // DEPRECATED PROBABLY IN FAVOR OF KEYS
