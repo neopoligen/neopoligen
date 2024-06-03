@@ -140,9 +140,9 @@ impl SiteConfig {
     //     self.cache_dir().join("pages")
     // }
 
-    // pub fn status_dir(&self) -> PathBuf {
-    //     self.project_dir().join("status")
-    // }
+    pub fn status_dest_dir(&self) -> PathBuf {
+        self.project_dir().join("status")
+    }
 
     // pub fn tmp_dir(&self) -> PathBuf {
     //     self.cache_dir().join("tmp")
