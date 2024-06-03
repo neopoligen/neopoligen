@@ -1,0 +1,23 @@
+-- title
+
+Span: input 
+
+-- subtitle
+
+The Input (Form Input) Span
+
+-- p
+
+Basic Example: 
+
+<<input|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<input|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- id: 2bqpjsut
+

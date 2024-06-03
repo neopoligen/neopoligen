@@ -1,0 +1,3 @@
+#!/bin/bash
+
+watchexec -e rs,neojinja ./build_sections.rs

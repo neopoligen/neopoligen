@@ -1,0 +1,19 @@
+[!- import "macros.neojinja" as theme -!]
+[! set ns = namespace(count = 0)!]
+[! for section in site.pages[page_id].ast !]
+    [! if section.content.type == "endnote" !]
+        [! if ns.count == 0 !]
+        <section 
+    [@ theme.section_attrs(site, page_id, section, ["endnotes_default_section", "standard_section", "flow"]) -@]
+>
+            <h2>Endnotes</h2>
+            <ul class="flow">
+            [! set ns.count = ns.count + 1 !]
+        [! endif !]
+        <li>[@ theme.output_payload(site, page_id, section) -@]</li>
+    [! endif !]
+[! endfor !]
+[! if ns.count > 0 !]
+</ul>
+</section>
+[! endif !]

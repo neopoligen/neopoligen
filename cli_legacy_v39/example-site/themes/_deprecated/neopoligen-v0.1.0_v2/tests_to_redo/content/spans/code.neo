@@ -1,0 +1,53 @@
+-- title
+
+code span test
+
+
+-- start-template-test
+
+``this is code``
+
+-- expected-output/
+
+<p>
+    <code>this is code</code>
+</p>
+
+-- /expected-output
+
+
+
+-- start-template-test
+
+``this is code|class: green``
+
+-- expected-output/
+
+<p>
+    <code class="green">this is code</code>
+</p>
+
+-- /expected-output
+
+
+
+-- start-template-test
+
+``this is code|flag-attr``
+
+-- expected-output/
+
+<p>
+    <code flag-attr>this is code</code>
+</p>
+
+-- /expected-output
+
+
+
+-- metadata
+-- date: 2024-05-18 13:44:05
+-- id: 2genmwgg
+
+
+

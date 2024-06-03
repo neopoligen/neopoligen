@@ -1,0 +1,22 @@
+[! import "includes/theme.neoj" as theme !]
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  background-color: #111;
+  color: #aaa;
+}
+</style>
+</head>
+<body>
+
+    [@ page @]
+
+    [#
+[! for section in page.ast !]
+[@ theme.output_section(site, page_id, section) @]
+[! endfor !]
+    #]
+
+</body>

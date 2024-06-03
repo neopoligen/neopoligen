@@ -1,0 +1,21 @@
+{
+  "base_url": "http://localhost:1989",
+  "default_language": "en",
+  "theme_name": "neopoligen-v0.1.0",
+  "theme_options": {
+    "author": "Alan W. Smith",
+    "site_name": "Neopoligen Example Site"
+  },
+  "image_sizes": {
+    "default": 900
+  },
+  "theme": {
+    "name": "neopoligen-v0.1.0",
+    "images": [
+      {
+        "template": "default",
+        "max_width": 900
+      }
+    ]
+  }
+}

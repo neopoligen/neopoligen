@@ -1,3 +1,4 @@
+[! include "includes/config.neoj" !]
 [! import "includes/theme.neoj" as theme !]
 <!DOCTYPE html>
 <html>
@@ -11,12 +12,6 @@ body {
 </head>
 <body>
 
-    [@ page @]
-
-    [#
-[! for section in page.ast !]
-[@ theme.output_section(site, page_id, section) @]
-[! endfor !]
-    #]
+[@ page @]
 
 </body>

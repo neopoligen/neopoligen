@@ -1,0 +1,61 @@
+-- title
+
+Default "standard" Section Type Test
+
+-- start-template-test
+
+-- p
+
+This is some default standards text
+
+It ends up in side p tags
+
+
+-- expected-output
+
+<section class="p_default_section standard_section flow ">
+    <div class="content_subsection flow">
+        <p>This is some default standards text</p>
+        <p>It ends up in side p tags</p>
+    </div>
+</section>
+ 
+
+-- start-template-test
+
+-- p
+-- title: This is a title
+-- subtitle: This is a subtitle
+-- forward: This is a forward
+-- preface: This is a preface
+-- afterword: This is an afterword
+-- class: green blue
+-- id: example_id
+-- data-ping: one ping
+-- data-ping: on two lines
+
+
+This is a standard section with
+basic attributes
+
+
+-- expected-output
+
+<section id="example_id" class="p_default_section standard_section flow green blue" data-ping="one ping on two lines">
+    <div class="forward_subsection flow">This is a forward</div>
+    <div class="heading_subsection">
+        <h2 class="title_subsection">This is a title</h2>
+        <div class="subtitle_subsection">This is a subtitle</div>
+    </div>
+    <div class="preface_subsection flow">This is a preface</div>
+    <div class="content_subsection flow">
+        <p>This is a standard section with basic attributes</p>
+    </div>
+    <div class="afterword_subsection flow">This is an afterword</div>
+</section>
+
+
+
+-- metadata
+-- id: 2fvde7ps
+

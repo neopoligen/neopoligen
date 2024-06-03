@@ -1,0 +1,23 @@
+-- title
+
+Span: iframe 
+
+-- subtitle
+
+The Inline Frame Span
+
+-- p
+
+Basic Example: 
+
+<<iframe|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<iframe|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- id: 2bqpjb3e
+

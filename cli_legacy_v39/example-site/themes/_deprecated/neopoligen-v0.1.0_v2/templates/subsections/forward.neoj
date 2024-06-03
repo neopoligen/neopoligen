@@ -1,0 +1,3 @@
+[! if section.attrs.forward !]
+<div class="section-forward">[@ section.attrs.forward @]</div>
+[! endif !]

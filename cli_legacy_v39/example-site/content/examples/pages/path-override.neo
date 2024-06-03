@@ -1,0 +1,22 @@
+-- title
+
+Override the file location with metadata path attribute
+
+in ``-- metadata``
+
+using ``-- path: /`` does the home page
+
+using ``-- path: /some-path``
+
+or, using ``-- path: /path-with-extension.txt``
+
+
+
+-- metadata
+-- created: 2024-06-01T11:00:13-04:00
+-- updated: 2024-06-01T11:00:13-04:00
+-- id: 2hhbabpk
+-- type: examples 
+-- status: scratch
+
+

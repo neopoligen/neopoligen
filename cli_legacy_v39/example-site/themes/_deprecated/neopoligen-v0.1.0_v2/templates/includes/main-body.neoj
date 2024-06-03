@@ -1,0 +1,13 @@
+[!- import "includes/theme.neoj" as theme -!]
+
+[!- for section in page.only_sections("forward", "tldr") -!]
+[@- theme.output_section(site, page_id, section) -@]
+[!- endfor -!]
+
+[! for section in page.all_sections_except(
+  "afterword", "blurb", "endnote", "footnote", "forward", 
+  "metadata", "ref", "tldr", "title") 
+!]
+[@- theme.output_section(site, page_id, section) -@]
+[! endfor !]
+

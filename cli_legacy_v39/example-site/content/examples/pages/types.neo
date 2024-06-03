@@ -1,0 +1,22 @@
+-- title
+
+Page types
+
+Default to ``post``
+
+Can override in `-- metadata`` with ``-- type`` attribute:
+
+e.g. ``-- type: examples``
+
+When rendinging if the requested type template can't be found
+the page defaults back to ``post``
+
+
+-- metadata
+-- created: 2024-06-01T11:04:28-04:00
+-- updated: 2024-06-01T11:04:28-04:00
+-- id: 2hhc6xxr
+-- type: examples 
+-- status: scratch 
+
+

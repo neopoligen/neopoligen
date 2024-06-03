@@ -1,7 +1,1 @@
-[! for child in section.children() !]
-<p>
-[! for span in child.spans() !]
-    [@ theme.output_span(site, page_id, span) @]
-[! endfor !]
-</p>
-[! endfor !]
+[TODO: Content Full]

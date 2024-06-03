@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>[@ site.theme().site_name_for_title @]</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+[! include "includes/head-og-metadata.neoj" !]
+[! include "includes/head-favicons.neoj" !]
+[! include "includes/head-extras.neoj" !]
+[! include "includes/head-javascript.neoj" !]
+[! include "includes/head-css.neoj" !]
+
+</head>
+<body class="one-column">
+    [! include "includes/header.neoj" !]
+    <main class="flow">
+        [! block title !][! endblock !]
+        [! include "includes/page-mp3.neoj" !]
+        [! block body !][! endblock !]
+        [! include "includes/endmatter.neoj" !]
+    </main>
+
+    [# hard coding link to my home page for now #]
+    [! if page_id == "2sjfzivl" !]
+        <div class="tmp-home-page-links">
+            <div>
+                <h4>Published</h4>
+                <ul>
+                    [! for sort_id in site.collection_by_date(["status:published", "type:post"]) !]
+                        <li>
+                            <a href="[@ site.page_permalink(sort_id) @]">
+                            [@ site.page_title_as_plain_text(sort_id) @]
+                            </a>
+                        </li>
+                    [! endfor !]
+                </ul>
+            </div>
+
+            <div>
+                <h4>Drafts</h4>
+                <ul>
+                    [! for sort_id in site.collection_by_date(["status:draft", "type:post"]) !]
+                        <li>
+                            <a href="[@ site.page_permalink(sort_id) @]">
+                            [@ site.page_title_as_plain_text(sort_id) @]
+                            </a>
+                        </li>
+                    [! endfor !]
+                </ul>
+            </div>
+
+            <div>
+                <h4>Scratch Notes</h4>
+                <ul>
+                    [! for sort_id in site.collection_by_date(["status:scratch", "type:post"]) !]
+                        <li>
+                            <a href="[@ site.page_permalink(sort_id) @]">
+                            [@ site.page_title_as_plain_text(sort_id) @]
+                            </a>
+                        </li>
+                    [! endfor !]
+                </ul>
+            </div>
+        </div>
+    [! endif !]
+
+
+    [! include "includes/footer.neoj" !]
+
+</body>
+</html>  
