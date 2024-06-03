@@ -57,10 +57,6 @@ impl SourcePage {
         Ok(())
     }
 
-    pub fn id(&self) -> Option<String> {
-        self.get_metadata_item("id")
-    }
-
     pub fn get_metadata_item(&self, target: &str) -> Option<String> {
         if let Some(ast) = &self.ast {
             ast.iter().find_map(|section| match &section.kind {
@@ -86,6 +82,18 @@ impl SourcePage {
             None
         }
     }
+
+    pub fn id(&self) -> Option<String> {
+        self.get_metadata_item("id")
+    }
+
+    pub fn rel_file_path(&self) -> Option<PathBuf> {
+        Some(PathBuf::from(format!(
+            "{}/{}/index.html",
+            self.config.as_ref().unwrap().default_language,
+            self.id().unwrap()
+        )))
+    }
 }
 
 #[cfg(test)]
@@ -94,10 +102,18 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn solo_id_check() {
+    fn id_check() {
         let p = SourcePage::mock1_20240101_alfa1234_minimal();
         let left = "20240101_alfa1234".to_string();
         let right = p.id().unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn rel_file_path_default() {
+        let p = SourcePage::mock1_20240101_alfa1234_minimal();
+        let left = PathBuf::from("en/20240101_alfa1234/index.html");
+        let right = p.rel_file_path().unwrap();
         assert_eq!(left, right);
     }
 }

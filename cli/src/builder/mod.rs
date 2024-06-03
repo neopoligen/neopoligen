@@ -56,7 +56,9 @@ impl Builder {
     pub fn generate_payloads(&mut self) {
         self.source_pages.iter_mut().for_each(|page| {
             if let Some(id) = page.id() {
-                let p = PagePayload::new_from_id(&id);
+                let mut p = PagePayload::new_from_id(&id);
+                p.rel_file_path = page.rel_file_path();
+
                 self.payloads.push(p);
             } else {
                 self.errors.push(NeoError {
