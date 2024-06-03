@@ -8,10 +8,10 @@ use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SourcePage {
-    ast: Option<Vec<Section>>,
-    config: Option<SiteConfig>,
-    source_content: Option<String>,
-    source_path: Option<PathBuf>,
+    pub ast: Option<Vec<Section>>,
+    pub config: Option<SiteConfig>,
+    pub source_content: Option<String>,
+    pub source_path: Option<PathBuf>,
 }
 
 impl SourcePage {
@@ -41,5 +41,9 @@ impl SourcePage {
         )?;
         self.ast = Some(ast);
         Ok(())
+    }
+
+    pub fn id(&self) -> Option<String> {
+        None
     }
 }

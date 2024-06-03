@@ -1,4 +1,7 @@
 use serde::{Deserialize, Serialize};
+use std::path::PathBuf;
+
+use crate::source_page;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct NeoError {
@@ -8,6 +11,10 @@ pub struct NeoError {
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum NeoErrorKind {
+    FileError {
+        source_path: PathBuf,
+        msg: String,
+    },
     ForwardError {
         msg: String,
     },
@@ -23,6 +30,12 @@ pub enum NeoErrorKind {
 impl std::fmt::Display for NeoError {
     fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
         match &self.kind {
+            NeoErrorKind::FileError { source_path, msg } => {
+                fmt.write_str("FileError: ")?;
+                fmt.write_str(source_path.display().to_string().as_str())?;
+                fmt.write_str("\n")?;
+                fmt.write_str(msg.as_str())?;
+            }
             NeoErrorKind::ForwardError { msg } => {
                 fmt.write_str(msg.as_str())?;
             }

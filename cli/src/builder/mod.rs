@@ -1,7 +1,8 @@
 use std::fs;
 
 use crate::helpers::*;
-use crate::neo_error::NeoError;
+use crate::neo_error::{NeoError, NeoErrorKind};
+use crate::page_payload::PagePayload;
 use crate::source_page::SourcePage;
 use crate::{engine_config::EngineConfig, site_config::SiteConfig};
 use anyhow::Result;
@@ -17,7 +18,8 @@ use walkdir::WalkDir;
 pub struct Builder {
     config: Option<SiteConfig>,
     errors: Vec<NeoError>,
-    pages: Vec<SourcePage>,
+    source_pages: Vec<SourcePage>,
+    payloads: Vec<PagePayload>,
 }
 
 impl Builder {
@@ -33,7 +35,8 @@ impl Builder {
         let b = Builder {
             config: Some(config),
             errors: vec![],
-            pages: vec![],
+            source_pages: vec![],
+            payloads: vec![],
         };
         Ok(b)
     }
@@ -42,9 +45,26 @@ impl Builder {
 impl Builder {
     #[instrument(skip(self))]
     pub fn generate_missing_asts(&mut self) {
-        self.pages.iter_mut().for_each(|page| {
+        self.source_pages.iter_mut().for_each(|page| {
             if let Err(e) = page.generate_ast() {
                 self.errors.push(e);
+            }
+        })
+    }
+
+    #[instrument(skip(self))]
+    pub fn generate_payloads(&mut self) {
+        self.source_pages.iter_mut().for_each(|page| {
+            if let Some(id) = page.id() {
+                let p = PagePayload::new_from_id(&id);
+                self.payloads.push(p);
+            } else {
+                self.errors.push(NeoError {
+                    kind: NeoErrorKind::FileError {
+                        source_path: page.source_path.clone().unwrap(),
+                        msg: "Could not get ID for file".to_string(),
+                    },
+                })
             }
         })
     }
@@ -63,7 +83,7 @@ impl Builder {
                             &path,
                             self.config.as_ref().unwrap().clone(),
                         )?;
-                        self.pages.push(page);
+                        self.source_pages.push(page);
                     }
                 }
             }
@@ -115,4 +135,3 @@ body { background-color: #111; color: #aaa; }
         event!(Level::INFO, "TODO: {}", thing);
     }
 }
-
