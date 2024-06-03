@@ -74,195 +74,180 @@ fn link_shorthand_with_escaped_backtick() {
     assert_eq!(left, right);
 }
 
-// #[test]
-// fn link_shorthand_with_single_backslash() {
-//     let source = "``ping\\ping``";
-//     let left = (
-//         "",
-//         SpanV39 {
-//             attrs: vec![],
-//             source_text: "``ping\\ping``".to_string(),
-//             parsed_text: "ping\\ping".to_string(),
-//             kind: SpanV39Kind::LinkShorthand,
-//         },
-//     );
-//     let right = link_shorthand_v39(source).unwrap();
-//     assert_eq!(left, right);
-// }
+#[test]
+fn link_shorthand_with_single_backslash() {
+    let source = "[[ping\\ping]]";
+    let left = (
+        "",
+        SpanV39 {
+            attrs: vec![],
+            source_text: "[[ping\\ping]]".to_string(),
+            parsed_text: "ping\\ping".to_string(),
+            kind: SpanV39Kind::LinkShorthand,
+        },
+    );
+    let right = link_shorthand_v39(source).unwrap();
+    assert_eq!(left, right);
+}
 
-// #[test]
-// fn link_shorthand_with_flag_attr() {
-//     let source = "``code|rust``";
-//     let left = (
-//         "",
-//         SpanV39 {
-//             attrs: vec![SpanAttrV39 {
-//                 source_text: "|rust".to_string(),
-//                 kind: SpanAttrV39Kind::Flag {
-//                     value: "rust".to_string(),
-//                 },
-//             }],
-//             source_text: "``code|rust``".to_string(),
-//             parsed_text: "code".to_string(),
-//             kind: SpanV39Kind::LinkShorthand {},
-//         },
-//     );
-//     let right = link_shorthand_v39(source).unwrap();
-//     assert_eq!(left, right);
-// }
+#[test]
+fn link_shorthand_with_flag_attr() {
+    let source = "[[code|rust]]";
+    let left = (
+        "",
+        SpanV39 {
+            attrs: vec![SpanAttrV39 {
+                source_text: "|rust".to_string(),
+                kind: SpanAttrV39Kind::Flag {
+                    value: "rust".to_string(),
+                },
+            }],
+            source_text: "[[code|rust]]".to_string(),
+            parsed_text: "code".to_string(),
+            kind: SpanV39Kind::LinkShorthand {},
+        },
+    );
+    let right = link_shorthand_v39(source).unwrap();
+    assert_eq!(left, right);
+}
 
-// #[test]
-// fn link_shorthand_with_multiple_flag_attrs() {
-//     let source = "``code|rust|hidden``";
-//     let left = (
-//         "",
-//         SpanV39 {
-//             attrs: vec![
-//                 SpanAttrV39 {
-//                     source_text: "|rust".to_string(),
-//                     kind: SpanAttrV39Kind::Flag {
-//                         value: "rust".to_string(),
-//                     },
-//                 },
-//                 SpanAttrV39 {
-//                     source_text: "|hidden".to_string(),
-//                     kind: SpanAttrV39Kind::Flag {
-//                         value: "hidden".to_string(),
-//                     },
-//                 },
-//             ],
-//             source_text: "``code|rust|hidden``".to_string(),
-//             parsed_text: "code".to_string(),
-//             kind: SpanV39Kind::LinkShorthand,
-//         },
-//     );
-//     let right = link_shorthand_v39(source).unwrap();
-//     assert_eq!(left, right);
-// }
+#[test]
+fn link_shorthand_with_multiple_flag_attrs() {
+    let source = "[[code|rust|hidden]]";
+    let left = (
+        "",
+        SpanV39 {
+            attrs: vec![
+                SpanAttrV39 {
+                    source_text: "|rust".to_string(),
+                    kind: SpanAttrV39Kind::Flag {
+                        value: "rust".to_string(),
+                    },
+                },
+                SpanAttrV39 {
+                    source_text: "|hidden".to_string(),
+                    kind: SpanAttrV39Kind::Flag {
+                        value: "hidden".to_string(),
+                    },
+                },
+            ],
+            source_text: "[[code|rust|hidden]]".to_string(),
+            parsed_text: "code".to_string(),
+            kind: SpanV39Kind::LinkShorthand,
+        },
+    );
+    let right = link_shorthand_v39(source).unwrap();
+    assert_eq!(left, right);
+}
 
-// #[test]
-// fn flag_attr_for_code_basic_end_at_block() {
-//     let source = "|rust``";
-//     let left = (
-//         "``",
-//         SpanAttrV39 {
-//             source_text: "|rust".to_string(),
-//             kind: SpanAttrV39Kind::Flag {
-//                 value: "rust".to_string(),
-//             },
-//         },
-//     );
-//     let right = link_shorthand_flag_attr_v39(source).unwrap();
-//     assert_eq!(left, right);
-// }
+#[test]
+fn flag_attr_for_code_basic_end_at_block() {
+    let source = "|rust]]";
+    let left = (
+        "]]",
+        SpanAttrV39 {
+            source_text: "|rust".to_string(),
+            kind: SpanAttrV39Kind::Flag {
+                value: "rust".to_string(),
+            },
+        },
+    );
+    let right = link_shorthand_flag_attr_v39(source).unwrap();
+    assert_eq!(left, right);
+}
 
-// #[test]
-// fn flag_attr_for_code_with_escaped_colon() {
-//     let source = "|rust\\:``";
-//     let left = (
-//         "``",
-//         SpanAttrV39 {
-//             source_text: "|rust\\:".to_string(),
-//             kind: SpanAttrV39Kind::Flag {
-//                 value: "rust:".to_string(),
-//             },
-//         },
-//     );
-//     let right = link_shorthand_flag_attr_v39(source).unwrap();
-//     assert_eq!(left, right);
-// }
+#[test]
+fn flag_attr_for_code_with_escaped_colon() {
+    let source = "|rust\\:]]";
+    let left = (
+        "]]",
+        SpanAttrV39 {
+            source_text: "|rust\\:".to_string(),
+            kind: SpanAttrV39Kind::Flag {
+                value: "rust:".to_string(),
+            },
+        },
+    );
+    let right = link_shorthand_flag_attr_v39(source).unwrap();
+    assert_eq!(left, right);
+}
 
-// #[test]
-// fn flag_attr_for_code_url() {
-//     let source = "|https://www.example.com``";
-//     let left = (
-//         "``",
-//         SpanAttrV39 {
-//             source_text: "|https://www.example.com".to_string(),
-//             kind: SpanAttrV39Kind::Flag {
-//                 value: "https://www.example.com".to_string(),
-//             },
-//         },
-//     );
-//     let right = link_shorthand_flag_attr_v39(source).unwrap();
-//     assert_eq!(left, right);
-// }
+#[test]
+fn flag_attr_for_code_url() {
+    let source = "|https://www.example.com]]";
+    let left = (
+        "]]",
+        SpanAttrV39 {
+            source_text: "|https://www.example.com".to_string(),
+            kind: SpanAttrV39Kind::Flag {
+                value: "https://www.example.com".to_string(),
+            },
+        },
+    );
+    let right = link_shorthand_flag_attr_v39(source).unwrap();
+    assert_eq!(left, right);
+}
 
-// #[test]
-// fn flag_attr_for_code_with_pipe_escape() {
-//     let source = "|rust\\|here``";
-//     let left = (
-//         "``",
-//         SpanAttrV39 {
-//             source_text: "|rust\\|here".to_string(),
-//             kind: SpanAttrV39Kind::Flag {
-//                 value: "rust|here".to_string(),
-//             },
-//         },
-//     );
-//     let right = link_shorthand_flag_attr_v39(source).unwrap();
-//     assert_eq!(left, right);
-// }
+#[test]
+fn flag_attr_for_code_with_pipe_escape() {
+    let source = "|rust\\|here]]";
+    let left = (
+        "]]",
+        SpanAttrV39 {
+            source_text: "|rust\\|here".to_string(),
+            kind: SpanAttrV39Kind::Flag {
+                value: "rust|here".to_string(),
+            },
+        },
+    );
+    let right = link_shorthand_flag_attr_v39(source).unwrap();
+    assert_eq!(left, right);
+}
 
-// #[test]
-// fn token_for_link_shorthand_word_part() {
-//     let source = "alfa``";
-//     let left = (
-//         "``",
-//         SpanShorthandTokenV39 {
-//             kind: SpanShorthandTokenV39Kind::WordPart,
-//             parsed_text: "alfa".to_string(),
-//             source_text: "alfa".to_string(),
-//         },
-//     );
-//     let right = link_shorthand_token_word_part_v39(source).unwrap();
-//     assert_eq!(left, right);
-// }
-
-// #[test]
-// fn integration_1_basic() {
-//     let config = SiteConfig::mock1();
-//     let source = "alfa ``bravo`` charlie";
-//     let left = (
-//         "",
-//         vec![
-//             SpanV39 {
-//                 attrs: vec![],
-//                 kind: SpanV39Kind::WordPart,
-//                 parsed_text: "alfa".to_string(),
-//                 source_text: "alfa".to_string(),
-//             },
-//             SpanV39 {
-//                 attrs: vec![],
-//                 kind: SpanV39Kind::Space,
-//                 parsed_text: " ".to_string(),
-//                 source_text: " ".to_string(),
-//             },
-//             SpanV39 {
-//                 attrs: vec![],
-//                 kind: SpanV39Kind::LinkShorthand,
-//                 parsed_text: "bravo".to_string(),
-//                 source_text: "``bravo``".to_string(),
-//             },
-//             SpanV39 {
-//                 attrs: vec![],
-//                 kind: SpanV39Kind::Space,
-//                 parsed_text: " ".to_string(),
-//                 source_text: " ".to_string(),
-//             },
-//             SpanV39 {
-//                 attrs: vec![],
-//                 kind: SpanV39Kind::WordPart,
-//                 parsed_text: "charlie".to_string(),
-//                 source_text: "charlie".to_string(),
-//             },
-//         ],
-//     );
-//     let right = many1(|src| span_v39(src, &config.spans))
-//         .parse(source)
-//         .unwrap();
-//     assert_eq!(left, right);
-// }
+#[test]
+fn integration_1_basic() {
+    let config = SiteConfig::mock1();
+    let source = "alfa [[bravo]] charlie";
+    let left = (
+        "",
+        vec![
+            SpanV39 {
+                attrs: vec![],
+                kind: SpanV39Kind::WordPart,
+                parsed_text: "alfa".to_string(),
+                source_text: "alfa".to_string(),
+            },
+            SpanV39 {
+                attrs: vec![],
+                kind: SpanV39Kind::Space,
+                parsed_text: " ".to_string(),
+                source_text: " ".to_string(),
+            },
+            SpanV39 {
+                attrs: vec![],
+                kind: SpanV39Kind::LinkShorthand,
+                parsed_text: "bravo".to_string(),
+                source_text: "[[bravo]]".to_string(),
+            },
+            SpanV39 {
+                attrs: vec![],
+                kind: SpanV39Kind::Space,
+                parsed_text: " ".to_string(),
+                source_text: " ".to_string(),
+            },
+            SpanV39 {
+                attrs: vec![],
+                kind: SpanV39Kind::WordPart,
+                parsed_text: "charlie".to_string(),
+                source_text: "charlie".to_string(),
+            },
+        ],
+    );
+    let right = many1(|src| span_v39(src, &config.spans))
+        .parse(source)
+        .unwrap();
+    assert_eq!(left, right);
+}
 
 #[test]
 fn integration_2_escaped_pipe() {
