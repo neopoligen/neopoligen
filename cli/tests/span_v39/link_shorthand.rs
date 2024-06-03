@@ -264,53 +264,52 @@ fn link_shorthand_with_escaped_backtick() {
 //     assert_eq!(left, right);
 // }
 
-// #[test]
-// fn integration_2_escaped_pipe() {
-//     let config = SiteConfig::mock1();
-//     let source = r#"alfa ``bravo\|delta`` charlie"#;
-//     let left = (
-//         "",
-//         vec![
-//             SpanV39 {
-//                 attrs: vec![],
-//                 kind: SpanV39Kind::WordPart,
-//                 parsed_text: "alfa".to_string(),
-//                 source_text: "alfa".to_string(),
-//             },
-//             SpanV39 {
-//                 attrs: vec![],
-//                 kind: SpanV39Kind::Space,
-//                 parsed_text: " ".to_string(),
-//                 source_text: " ".to_string(),
-//             },
-//             SpanV39 {
-//                 attrs: vec![],
-//                 kind: SpanV39Kind::LinkShorthand,
-//                 parsed_text: "bravo|delta".to_string(),
-//                 source_text: "``bravo\\|delta``".to_string(),
-//             },
-//             SpanV39 {
-//                 attrs: vec![],
-//                 kind: SpanV39Kind::Space,
-//                 parsed_text: " ".to_string(),
-//                 source_text: " ".to_string(),
-//             },
-//             SpanV39 {
-//                 attrs: vec![],
-//                 kind: SpanV39Kind::WordPart,
-//                 parsed_text: "charlie".to_string(),
-//                 source_text: "charlie".to_string(),
-//             },
-//         ],
-//     );
-//     let right = many1(|src| span_v39(src, &config.spans))
-//         .parse(source)
-//         .unwrap();
-//     assert_eq!(left, right);
-// }
+#[test]
+fn integration_2_escaped_pipe() {
+    let config = SiteConfig::mock1();
+    let source = r#"alfa [[bravo\|delta]] charlie"#;
+    let left = (
+        "",
+        vec![
+            SpanV39 {
+                attrs: vec![],
+                kind: SpanV39Kind::WordPart,
+                parsed_text: "alfa".to_string(),
+                source_text: "alfa".to_string(),
+            },
+            SpanV39 {
+                attrs: vec![],
+                kind: SpanV39Kind::Space,
+                parsed_text: " ".to_string(),
+                source_text: " ".to_string(),
+            },
+            SpanV39 {
+                attrs: vec![],
+                kind: SpanV39Kind::LinkShorthand,
+                parsed_text: "bravo|delta".to_string(),
+                source_text: "[[bravo\\|delta]]".to_string(),
+            },
+            SpanV39 {
+                attrs: vec![],
+                kind: SpanV39Kind::Space,
+                parsed_text: " ".to_string(),
+                source_text: " ".to_string(),
+            },
+            SpanV39 {
+                attrs: vec![],
+                kind: SpanV39Kind::WordPart,
+                parsed_text: "charlie".to_string(),
+                source_text: "charlie".to_string(),
+            },
+        ],
+    );
+    let right = many1(|src| span_v39(src, &config.spans))
+        .parse(source)
+        .unwrap();
+    assert_eq!(left, right);
+}
 
 #[test]
-#[ignore]
 fn integration_2_escaped_single_backtick() {
     let config = SiteConfig::mock1();
     let source = r#"alfa [[bravo`delta]] charlie"#;

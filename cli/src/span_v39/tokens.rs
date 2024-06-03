@@ -25,6 +25,8 @@ pub enum SpanTokenV39Kind {
     EscapedPipe,
     SingleBacktick,
     SingleBackslash,
+    SingleCloseBracket,
+    SingleOpenBracket,
     WordPart,
 }
 
@@ -126,6 +128,32 @@ pub fn token_single_backslash_v39(source: &str) -> IResult<&str, SpanTokenV39, E
         source_text,
         parsed_text: "\\".to_string(),
         kind: SpanTokenV39Kind::SingleBackslash,
+    };
+    Ok((source, token))
+}
+
+pub fn token_single_close_bracket_v39(
+    source: &str,
+) -> IResult<&str, SpanTokenV39, ErrorTree<&str>> {
+    let initial_source = source;
+    let (source, _) = pair(tag("]"), not(tag("]"))).context("").parse(source)?;
+    let source_text = initial_source.replace(source, "").to_string();
+    let token = SpanTokenV39 {
+        source_text,
+        parsed_text: "]".to_string(),
+        kind: SpanTokenV39Kind::SingleCloseBracket,
+    };
+    Ok((source, token))
+}
+
+pub fn token_single_open_bracket_v39(source: &str) -> IResult<&str, SpanTokenV39, ErrorTree<&str>> {
+    let initial_source = source;
+    let (source, _) = pair(tag("["), not(tag("["))).context("").parse(source)?;
+    let source_text = initial_source.replace(source, "").to_string();
+    let token = SpanTokenV39 {
+        source_text,
+        parsed_text: "[".to_string(),
+        kind: SpanTokenV39Kind::SingleOpenBracket,
     };
     Ok((source, token))
 }

@@ -12,7 +12,7 @@ fn escaped_close_bracket_basic() {
             kind: SpanTokenV39Kind::EscapedCloseBracket,
         },
     );
-    let right = token_escaped_open_bracket_v39(source).unwrap();
+    let right = token_escaped_close_bracket_v39(source).unwrap();
     assert_eq!(left, right);
 }
 
@@ -28,6 +28,36 @@ fn escaped_open_bracket_basic() {
         },
     );
     let right = token_escaped_open_bracket_v39(source).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn single_close_bracket_basic() {
+    let source = "]x";
+    let left = (
+        "x",
+        SpanTokenV39 {
+            source_text: "]".to_string(),
+            parsed_text: "]".to_string(),
+            kind: SpanTokenV39Kind::SingleCloseBracket,
+        },
+    );
+    let right = token_single_close_bracket_v39(source).unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn single_open_bracket_basic() {
+    let source = "[x";
+    let left = (
+        "x",
+        SpanTokenV39 {
+            source_text: "[".to_string(),
+            parsed_text: "[".to_string(),
+            kind: SpanTokenV39Kind::SingleOpenBracket,
+        },
+    );
+    let right = token_single_open_bracket_v39(source).unwrap();
     assert_eq!(left, right);
 }
 

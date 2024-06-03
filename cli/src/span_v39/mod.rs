@@ -4,9 +4,10 @@ pub mod mocks;
 pub mod object;
 pub mod tokens;
 
-use self::code_shorthand::code_shorthand_v39;
 use crate::span_attr_v39::SpanAttrV39;
 use crate::span_attr_v39::SpanAttrV39Kind;
+use crate::span_v39::code_shorthand::code_shorthand_v39;
+use crate::span_v39::link_shorthand::link_shorthand_v39;
 use minijinja::Value;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
@@ -133,6 +134,7 @@ pub fn span_v39<'a>(
 ) -> IResult<&'a str, SpanV39, ErrorTree<&'a str>> {
     let (source, span) = alt((
         code_shorthand_v39,
+        link_shorthand_v39,
         escaped_backtick_v39,
         backtick_v39,
         word_part_v39,
@@ -207,7 +209,7 @@ pub fn space_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
 
 pub fn word_part_v39(source: &str) -> IResult<&str, SpanV39, ErrorTree<&str>> {
     let initial_source = source;
-    let (source, text) = is_not(" \n\t]`").context("").parse(source)?;
+    let (source, text) = is_not(" \n\t[]`").context("").parse(source)?;
     let source_text = initial_source.replace(source, "").to_string();
     Ok((
         source,
