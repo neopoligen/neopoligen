@@ -5,9 +5,9 @@ use crate::neo_error::NeoError;
 use crate::source_page::SourcePage;
 use crate::{engine_config::EngineConfig, site_config::SiteConfig};
 use anyhow::Result;
-use minijinja::context;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
+use minijinja::{context, Value};
 use serde::{Deserialize, Serialize};
 use serde_json;
 use tracing::{event, instrument, Level};
@@ -88,11 +88,18 @@ impl Builder {
 <html><head><style> 
 body { background-color: #111; color: #aaa; } 
 </style></head><body><h1>Status</h1>
+<ul>
+[! for error in errors !]
+<li>[@ errors @]</li>
+[! endfor !]
+</ul>
 </body></html>
         "#,
         )?;
         let tmpl = env.get_template("tmp_status")?;
-        let output = tmpl.render(context!())?;
+        let output = tmpl.render(context!(
+            errors => Value::from_serialize(&self.errors)
+        ))?;
         let status_path = self
             .config
             .as_ref()
