@@ -22,6 +22,7 @@ pub struct PageV39 {
     pub output_content: Option<String>,
     pub source_content: Option<String>,
     pub source_path: Option<PathBuf>,
+    pub status: Option<String>,
     pub template_list: Vec<String>,
     pub r#type: Option<String>,
 }
@@ -41,6 +42,7 @@ impl PageV39 {
             output_content: None,
             source_content: Some(source_content),
             source_path: Some(source_path),
+            status: None,
             template_list: vec![],
             r#type: None,
         })
@@ -55,6 +57,7 @@ impl PageV39 {
             output_content: None,
             source_content: Some(source_content),
             source_path: None,
+            status: None,
             template_list: vec![],
             r#type: None,
         };
@@ -84,6 +87,7 @@ impl PageV39 {
         // Prep all the necessary fields
         self.prep_template_list();
         self.prep_type();
+        self.prep_status();
         Ok(())
     }
 
@@ -114,6 +118,14 @@ impl PageV39 {
     // DEPRECATED PROBABLY IN FAVOR OF KEYS
     pub fn id(&self) -> Option<String> {
         self.get_metadata_attr("id")
+    }
+
+    pub fn prep_status(&mut self) {
+        if let Some(status) = self.get_metadata_attr("status") {
+            self.r#status = Some(status);
+        } else {
+            self.status = Some("published".to_string());
+        }
     }
 
     pub fn prep_template_list(&self) {
