@@ -1,9 +1,13 @@
 use std::fs;
 
+use crate::helpers::*;
 use crate::neo_error::NeoError;
 use crate::source_page::SourcePage;
 use crate::{engine_config::EngineConfig, site_config::SiteConfig};
 use anyhow::Result;
+use minijinja::context;
+use minijinja::syntax::SyntaxConfig;
+use minijinja::Environment;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use tracing::{event, instrument, Level};
@@ -64,6 +68,38 @@ impl Builder {
                 }
             }
         }
+        Ok(())
+    }
+
+    pub fn tmp_output_errors(&self) -> Result<()> {
+        let mut env = Environment::new();
+        env.set_syntax(
+            SyntaxConfig::builder()
+                .block_delimiters("[!", "!]")
+                .variable_delimiters("[@", "@]")
+                .comment_delimiters("[#", "#]")
+                .build()
+                .unwrap(),
+        );
+        env.add_template_owned(
+            "tmp_status",
+            r#"
+<!DOCTYPE html>
+<html><head><style> 
+body { background-color: #111; color: #aaa; } 
+</style></head><body><h1>Status</h1>
+</body></html>
+        "#,
+        )?;
+        let tmpl = env.get_template("tmp_status")?;
+        let output = tmpl.render(context!())?;
+        let status_path = self
+            .config
+            .as_ref()
+            .unwrap()
+            .status_dest_dir()
+            .join("index.html");
+        let _ = write_file_with_mkdir(&status_path, &output);
         Ok(())
     }
 
