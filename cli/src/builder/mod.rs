@@ -40,7 +40,7 @@ impl Builder {
     pub fn generate_missing_asts(&mut self) {
         self.pages.iter_mut().for_each(|page| {
             if let Err(e) = page.generate_ast() {
-                dbg!(e);
+                self.errors.push(e);
             }
         })
     }
