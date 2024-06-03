@@ -1,9 +1,16 @@
-
-
-
 [#############################################################################]
 [! macro output_section(site, page_id, section) !]
-[! include section.template_list() ignore missing !]
+
+wwwwxxxx----------------------
+[#
+[! set tmp = "pages/" + section.type + "/" + section.bounds + "/" + section.template ".neoj" !]
+#]
+[! set tmp = "pages/" + section.type + "/" + section.bounds.type !]
+[@ tmp @]
+
+<pre>
+[@ section|tojson(true) @]
+</pre>
 [! endmacro !]
 
 [#############################################################################]

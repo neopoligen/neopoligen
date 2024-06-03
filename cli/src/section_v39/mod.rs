@@ -50,6 +50,7 @@ pub struct SectionV39 {
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
+#[serde(tag = "type", rename_all = "lowercase")]
 pub enum SectionV39Bounds {
     Full,
     Start,
@@ -57,6 +58,7 @@ pub enum SectionV39Bounds {
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
+#[serde(tag = "type", rename_all = "lowercase")]
 pub enum SectionV39Kind {
     Basic {
         children: Vec<SectionV39>,

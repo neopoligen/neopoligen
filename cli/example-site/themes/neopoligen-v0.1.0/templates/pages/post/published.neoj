@@ -1,3 +1,4 @@
+[! import "includes/theme.neoj" as theme !]
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,10 +11,12 @@ body {
 </head>
 <body>
 
+    [@ page @]
 
+    [#
 [! for section in page.ast !]
-    [@ section.details @]
-[# include section.template_list() ignore missing #]
+[@ theme.output_section(site, page_id, section) @]
 [! endfor !]
+    #]
 
 </body>

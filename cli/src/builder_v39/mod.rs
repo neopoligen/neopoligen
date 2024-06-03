@@ -147,7 +147,9 @@ impl BuilderV39 {
                         }) {
                             match tmpl.render(context!(
                                 site => site,
-                                page => Value::from_serialize(&page)
+                                //page => Value::from_serialize(&page)
+                                page => Value::from_serialize(&page.payload)
+
                             )) {
                                 Ok(output) => {
                                     page.output_content = Some(output);

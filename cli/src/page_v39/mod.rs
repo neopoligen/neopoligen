@@ -128,6 +128,7 @@ impl PageV39 {
     pub fn generate_payload(&mut self) -> Result<()> {
         let mut p = PagePayload::new();
         p.id = self.get_metadata_attr("id");
+        p.status = self.get_status();
         self.payload = Some(p);
         Ok(())
     }
@@ -156,11 +157,20 @@ impl PageV39 {
         }
     }
 
+    pub fn get_status(&self) -> Option<String> {
+        if let Some(status) = self.get_metadata_attr("status") {
+            Some(status)
+        } else {
+            Some("published".to_string())
+        }
+    }
+
     // DEPRECATED PROBABLY IN FAVOR OF KEYS
     pub fn id(&self) -> Option<String> {
         self.get_metadata_attr("id")
     }
 
+    // DEPRECATED in favor of get_status
     pub fn prep_status(&mut self) {
         if let Some(status) = self.get_metadata_attr("status") {
             self.r#status = Some(status);
