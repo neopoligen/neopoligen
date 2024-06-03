@@ -16,6 +16,7 @@ fn raw_section_full_core_test_no_attrs() {
         SectionV39 {
             attrs: vec![],
             bounds: SectionV39Bounds::Full,
+            details: None,
             kind: SectionV39Kind::Raw {
                 children: vec![],
                 text: Some("Hello World".to_string()),
@@ -41,6 +42,7 @@ fn raw_section_full_core_test_with_attrs() {
                 },
             }],
             bounds: SectionV39Bounds::Full,
+            details: None,
             kind: SectionV39Kind::Raw {
                 children: vec![],
                 text: Some("Hello World".to_string()),
@@ -61,10 +63,12 @@ fn raw_section_start_no_attrs() {
         SectionV39 {
             attrs: vec![],
             bounds: SectionV39Bounds::Start,
+            details: None,
             kind: SectionV39Kind::Raw {
                 children: vec![SectionV39 {
                     attrs: vec![],
                     bounds: SectionV39Bounds::End,
+                    details: None,
                     kind: SectionV39Kind::Basic { children: vec![] },
                     r#type: "code".to_string(),
                 }],
@@ -86,14 +90,17 @@ fn raw_section_start_no_attrs_with_more_stuff() {
         SectionV39 {
             attrs: vec![],
             bounds: SectionV39Bounds::Start,
+            details: None,
             kind: SectionV39Kind::Raw {
                 children: vec![SectionV39 {
                     attrs: vec![],
                     bounds: SectionV39Bounds::End,
+                    details: None,
                     kind: SectionV39Kind::Basic {
                         children: vec![SectionV39 {
                             attrs: vec![],
                             bounds: SectionV39Bounds::Full,
+                            details: None,
                             kind: SectionV39Kind::Block {
                                 spans: vec![
                                     SpanV39 {

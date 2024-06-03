@@ -16,10 +16,12 @@ fn basic_section_full_core_test() {
         SectionV39 {
             attrs: vec![],
             bounds: SectionV39Bounds::Full,
+            details: None,
             kind: SectionV39Kind::Basic {
                 children: vec![SectionV39 {
                     attrs: vec![],
                     bounds: SectionV39Bounds::Full,
+                    details: None,
                     kind: SectionV39Kind::Block {
                         spans: vec![
                             SpanV39 {
@@ -61,10 +63,12 @@ fn basic_section_full_core_test_with_following_section() {
         SectionV39 {
             attrs: vec![],
             bounds: SectionV39Bounds::Full,
+            details: None,
             kind: SectionV39Kind::Basic {
                 children: vec![SectionV39 {
                     attrs: vec![],
                     bounds: SectionV39Bounds::Full,
+                    details: None,
                     kind: SectionV39Kind::Block {
                         spans: vec![
                             SpanV39 {
@@ -104,6 +108,7 @@ fn basic_section_full_with_attrs() {
     let left = (
         "",
         SectionV39 {
+            details: None,
             attrs: vec![SectionAttrV39 {
                 kind: SectionAttrV39Kind::KeyValue {
                     key: "class".to_string(),
@@ -115,6 +120,7 @@ fn basic_section_full_with_attrs() {
                 children: vec![SectionV39 {
                     attrs: vec![],
                     bounds: SectionV39Bounds::Full,
+                    details: None,
                     kind: SectionV39Kind::Block {
                         spans: vec![
                             SpanV39 {
@@ -156,11 +162,13 @@ fn basic_section_start_end_core_test() {
         SectionV39 {
             attrs: vec![],
             bounds: SectionV39Bounds::Start,
+            details: None,
             kind: SectionV39Kind::Basic {
                 children: vec![
                     SectionV39 {
                         attrs: vec![],
                         bounds: SectionV39Bounds::Full,
+                        details: None,
                         kind: SectionV39Kind::Block {
                             spans: vec![
                                 SpanV39 {
@@ -188,6 +196,7 @@ fn basic_section_start_end_core_test() {
                     SectionV39 {
                         attrs: vec![],
                         bounds: SectionV39Bounds::End,
+                        details: None,
                         kind: SectionV39Kind::Basic { children: vec![] },
                         r#type: "note".to_string(),
                     },

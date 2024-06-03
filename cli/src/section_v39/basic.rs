@@ -35,6 +35,7 @@ pub fn basic_section_end_v39<'a>(
     let section = SectionV39 {
         attrs,
         bounds: SectionV39Bounds::End,
+        details: None,
         kind: SectionV39Kind::Basic { children },
         r#type: r#type.to_string(),
     };
@@ -64,6 +65,7 @@ pub fn basic_section_full_v39<'a>(
     let section = SectionV39 {
         attrs,
         bounds: SectionV39Bounds::Full,
+        details: None,
         kind: SectionV39Kind::Basic { children },
         r#type: r#type.to_string(),
     };
@@ -99,6 +101,7 @@ pub fn basic_section_start_v39<'a>(
     let section = SectionV39 {
         attrs,
         bounds: SectionV39Bounds::Start,
+        details: None,
         kind: SectionV39Kind::Basic { children },
         r#type: r#type.to_string(),
     };

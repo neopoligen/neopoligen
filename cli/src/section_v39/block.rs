@@ -30,6 +30,7 @@ pub fn block_of_anything_v39<'a>(
         SectionV39 {
             attrs: vec![],
             bounds: SectionV39Bounds::Full,
+            details: None,
             kind: SectionV39Kind::Block { spans },
             r#type: "block-of-text".to_string(),
         },
@@ -52,6 +53,7 @@ pub fn block_of_end_content_v39<'a>(
         SectionV39 {
             attrs: vec![],
             bounds: SectionV39Bounds::Full,
+            details: None,
             kind: SectionV39Kind::Block { spans },
             r#type: "block-of-text".to_string(),
         },

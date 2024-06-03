@@ -42,6 +42,7 @@ pub fn yaml_section_full_v39<'a>(
         SectionV39 {
             attrs,
             bounds: SectionV39Bounds::Full,
+            details: None,
             kind: SectionV39Kind::Yaml {},
             r#type: r#type.to_string(),
         },

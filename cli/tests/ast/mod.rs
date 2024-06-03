@@ -16,10 +16,12 @@ fn ast_basic_test() {
         SectionV39 {
             attrs: vec![],
             bounds: SectionV39Bounds::Full,
+            details: None,
             kind: SectionV39Kind::Basic {
                 children: vec![SectionV39 {
                     attrs: vec![],
                     bounds: SectionV39Bounds::Full,
+                    details: None,
                     kind: SectionV39Kind::Block {
                         spans: vec![SpanV39 {
                             attrs: vec![],
@@ -34,6 +36,7 @@ fn ast_basic_test() {
             r#type: "title".to_string(),
         },
         SectionV39 {
+            details: None,
             attrs: vec![
                 SectionAttrV39 {
                     kind: SectionAttrV39Kind::KeyValue {

@@ -25,6 +25,7 @@ fn yaml_basic() {
                 },
             ],
             bounds: SectionV39Bounds::Full,
+            details: None,
             kind: SectionV39Kind::Yaml {},
             r#type: "metadata".to_string(),
         },

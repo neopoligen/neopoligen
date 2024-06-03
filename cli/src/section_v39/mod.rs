@@ -46,6 +46,7 @@ pub struct SectionV39 {
     pub bounds: SectionV39Bounds,
     pub kind: SectionV39Kind,
     pub r#type: String,
+    pub details: Option<SectionV39Details>,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
@@ -68,6 +69,11 @@ pub enum SectionV39Kind {
         text: Option<String>,
     },
     Yaml {},
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize)]
+pub struct SectionV39Details {
+    pub template_list: Vec<String>,
 }
 
 impl SectionV39 {

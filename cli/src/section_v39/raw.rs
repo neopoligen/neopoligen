@@ -36,6 +36,7 @@ pub fn raw_section_full_v39<'a>(
     let section = SectionV39 {
         attrs,
         bounds: SectionV39Bounds::Full,
+        details: None,
         kind: SectionV39Kind::Raw {
             children: vec![],
             text: Some(text.to_string()),
@@ -71,6 +72,7 @@ pub fn raw_section_start_v39<'a>(
     let section = SectionV39 {
         attrs,
         bounds: SectionV39Bounds::Start,
+        details: None,
         kind: SectionV39Kind::Raw {
             children,
             text: Some(text.trim_end().to_string()),
