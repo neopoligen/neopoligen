@@ -5,6 +5,7 @@ use crate::neo_error::{NeoError, NeoErrorKind};
 use crate::section::{Section, SectionKind};
 use crate::section_attr::SectionAttrKind;
 use crate::site_config::SiteConfig;
+use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
@@ -88,11 +89,27 @@ impl SourcePage {
     }
 
     pub fn rel_file_path(&self) -> Option<PathBuf> {
-        Some(PathBuf::from(format!(
-            "{}/{}/index.html",
-            self.config.as_ref().unwrap().default_language,
-            self.id().unwrap()
-        )))
+        if let Some(path) = self.get_metadata_item("path") {
+            Some(scrub_rel_file_path(&path).expect("get rel file path"))
+        } else {
+            Some(PathBuf::from(format!(
+                "{}/{}/index.html",
+                self.config.as_ref().unwrap().default_language,
+                self.id().unwrap()
+            )))
+        }
+    }
+}
+
+fn scrub_rel_file_path(source: &str) -> Result<PathBuf> {
+    let mut pb = PathBuf::from(source);
+    if pb.starts_with("/") {
+        pb = pb.strip_prefix("/")?.to_path_buf();
+    }
+    if let Some(_) = pb.extension() {
+        Ok(pb)
+    } else {
+        Ok(pb.join("index.html"))
     }
 }
 
@@ -113,6 +130,38 @@ mod test {
     fn rel_file_path_default() {
         let p = SourcePage::mock1_20240101_alfa1234_minimal();
         let left = PathBuf::from("en/20240101_alfa1234/index.html");
+        let right = p.rel_file_path().unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn scrub_rel_file_path_home_page() {
+        let source = "/";
+        let left = PathBuf::from("index.html");
+        let right = scrub_rel_file_path(source).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn scrub_rel_file_path_sub_paths() {
+        let source = "/some/path";
+        let left = PathBuf::from("some/path/index.html");
+        let right = scrub_rel_file_path(source).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn scrub_rel_file_path_dont_overwirte_file() {
+        let source = "a/path.txt";
+        let left = PathBuf::from("a/path.txt");
+        let right = scrub_rel_file_path(source).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn rel_file_path_for_home_page() {
+        let p = SourcePage::mock1_20240102_bravo123_home_page_path();
+        let left = PathBuf::from("index.html");
         let right = p.rel_file_path().unwrap();
         assert_eq!(left, right);
     }
