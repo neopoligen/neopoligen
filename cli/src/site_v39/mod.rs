@@ -3,10 +3,11 @@ pub mod object;
 
 use crate::page_v39::PageV39;
 use crate::site_config::SiteConfig;
+use serde::Serialize;
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct SiteV39 {
     pub config: SiteConfig,
     pub pages: BTreeMap<String, PageV39>,

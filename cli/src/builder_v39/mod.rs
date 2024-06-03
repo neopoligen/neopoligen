@@ -81,7 +81,7 @@ impl BuilderV39 {
     #[instrument(skip(self))]
     pub fn generate_page_content(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating Page Content");
-        let site = Value::from_object(SiteV39::new(self.config.clone(), &self.pages));
+        let site = Value::from_serialize(SiteV39::new(self.config.clone(), &self.pages));
         let mut env = Environment::new();
         env.set_debug(true);
         env.set_lstrip_blocks(true);
@@ -147,7 +147,7 @@ impl BuilderV39 {
                         }) {
                             match tmpl.render(context!(
                                 site => site,
-                                page => Value::from_object(page.clone())
+                                page => Value::from_serialize(&page)
                             )) {
                                 Ok(output) => {
                                     page.output_content = Some(output);
@@ -521,7 +521,7 @@ body { background-color: #111; color: #aaa; }
                             }) {
                                 match tmpl.render(context!(
                                     site => site,
-                                    page => Value::from_object(page.clone())
+                                    page => Value::from_serialize(&page)
                                 )) {
                                     Ok(output) => {
                                         page.output_content = Some(output.clone());

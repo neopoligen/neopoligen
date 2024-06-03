@@ -6,9 +6,6 @@ use nom::multi::many1;
 use nom::Parser;
 use pretty_assertions::assert_eq;
 
-// These tests were copied from the link_shorthand
-// tests. Use them for the base.
-
 #[test]
 fn link_shorthand_basic() {
     let source = "[[ping]]";

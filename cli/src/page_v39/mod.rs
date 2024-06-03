@@ -22,6 +22,7 @@ pub struct PageV39 {
     pub output_content: Option<String>,
     pub source_content: Option<String>,
     pub source_path: Option<PathBuf>,
+    pub template_list: Vec<String>,
 }
 
 impl PageV39 {
@@ -39,11 +40,13 @@ impl PageV39 {
             output_content: None,
             source_content: Some(source_content),
             source_path: Some(source_path),
+            template_list: vec![],
         })
     }
 }
 
 impl PageV39 {
+    // DEPRECATED PROBABLY IN FAVOR OF KEYS
     pub fn all_sections(&self) -> Result<Value, minijinja::Error> {
         Ok(Value::make_object_iterable(
             self.ast.clone().unwrap(),
@@ -60,9 +63,11 @@ impl PageV39 {
             Ok(sections) => self.ast = Some(sections),
             Err(e) => self.errors.push(e),
         }
+        // Populate all the necessary fields
         Ok(())
     }
 
+    // DEPRECATED PROBABLY IN FAVOR OF KEYS
     pub fn get_metadata_attr(&self, target: &str) -> Option<String> {
         // Reminder: This only gets the first instance of the target attr
         // TODO: update so multiple instances of the same attr key
@@ -86,10 +91,12 @@ impl PageV39 {
         }
     }
 
+    // DEPRECATED PROBABLY IN FAVOR OF KEYS
     pub fn id(&self) -> Option<String> {
         self.get_metadata_attr("id")
     }
 
+    // DEPRECATED PROBABLY IN FAVOR OF KEYS
     pub fn rel_output_path(&self) -> Option<PathBuf> {
         // TODO: Reminder: Put output path check in the builder
         // to prevent files from being written outside the
@@ -122,6 +129,7 @@ impl PageV39 {
         }
     }
 
+    // DEPRECATED PROBABLY IN FAVOR OF KEYS
     pub fn rel_source_path(&self) -> Option<PathBuf> {
         let source_path = &self.source_path.clone().unwrap();
         if let Ok(rel_source_path) = source_path.strip_prefix(self.config.content_dir()) {
@@ -131,6 +139,7 @@ impl PageV39 {
         }
     }
 
+    // DEPRECATED PROBABLY IN FAVOR OF KEYS
     pub fn r#type(&self) -> Option<String> {
         if let Some(t) = self.get_metadata_attr("type") {
             Some(t)
@@ -139,6 +148,7 @@ impl PageV39 {
         }
     }
 
+    // DEPRECATED PROBABLY IN FAVOR OF KEYS
     pub fn status(&self) -> Option<String> {
         if let Some(t) = self.get_metadata_attr("status") {
             Some(t)
@@ -146,4 +156,6 @@ impl PageV39 {
             Some("published".to_string())
         }
     }
+
+    //
 }

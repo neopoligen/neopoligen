@@ -10,14 +10,10 @@ body {
 </head>
 <body>
 
-[! for section in page.all_sections() !]
-[! include section.template_list() ignore missing !]
-[! endfor !]
+[@ page @]
 
-    <h4>Debug Items</h4>
-    <div class="debug-wrapper">
-      <div>Page type: [@ page.type() @]</div>
-      <div>Page status: [@ page.status() @]</div>
-    </div>
+[! for section in page.ast !]
+[# include section.template_list() ignore missing #]
+[! endfor !]
 
 </body>
