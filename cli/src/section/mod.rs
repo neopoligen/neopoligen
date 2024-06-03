@@ -5,17 +5,6 @@ pub mod block;
 pub mod raw;
 pub mod yaml;
 
-//use crate::section_attr::SectionAttrV39;
-//use crate::section_attr::SectionAttrV39Kind;
-//use crate::section::basic::*;
-// use crate::section::checklist::*;
-// use crate::section::comment::*;
-// use crate::section::generic::*;
-// use crate::section::json::*;
-// use crate::section::list::*;
-// use crate::section::raw::*;
-// use crate::section::yaml::*;
-// use crate::span::*;
 use crate::section::basic::*;
 use crate::section::raw::*;
 use crate::section::yaml::*;
