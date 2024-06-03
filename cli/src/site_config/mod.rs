@@ -22,8 +22,6 @@ pub struct SiteConfig {
     pub theme_options: Option<serde_json::Value>,
     #[serde(default = "empty_sections")]
     pub sections: ConfigSections,
-    #[serde(default = "empty_spans")]
-    pub spans: Vec<String>,
     // Reminder: This isn't expected to come from the
     // JSON file. The process sets it internally
     pub project_root: Option<PathBuf>,
@@ -45,11 +43,14 @@ pub struct ConfigSections {
 
 impl SiteConfig {
     pub fn new_from_engine_config(engine_config: &EngineConfig) -> Result<SiteConfig> {
-        let site_config_path = engine_config
+        let project_root = engine_config
             .sites_dir
             .join(engine_config.active_site.as_str());
-        let text = fs::read_to_string(site_config_path)?;
-        let config = serde_json::from_str::<SiteConfig>(&text)?;
+        let config_path = project_root.join("config.json");
+        let text = fs::read_to_string(config_path)?;
+        let mut config = serde_json::from_str::<SiteConfig>(&text)?;
+        config.project_root = Some(project_root.clone());
+        config.load_sections();
         Ok(config)
     }
 }
@@ -243,9 +244,9 @@ fn empty_sections() -> ConfigSections {
     }
 }
 
-fn empty_spans() -> Vec<String> {
-    vec![]
-}
+// fn empty_spans() -> Vec<String> {
+//     vec![]
+// }
 
 fn get_dirs_in_dir(dir: &PathBuf) -> io::Result<Vec<PathBuf>> {
     Result::from_iter(

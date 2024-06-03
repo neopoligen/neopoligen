@@ -101,7 +101,19 @@ async fn main() {
 
 #[instrument(skip(engine_config, reloader))]
 async fn run_web_server(engine_config: EngineConfig, reloader: Reloader) {
-    let site_config = SiteConfig::new_from_engine_config(&engine_config);
+    match SiteConfig::new_from_engine_config(&engine_config) {
+        Ok(site_config) => {
+            dbg!(site_config);
+            ()
+        }
+        Err(e) => {
+            event!(
+                Level::ERROR,
+                "Could not load site config for web server: {:?}",
+                e
+            );
+        }
+    }
 
     // let app = Router::new()
     //     .nest_service("/", ServeDir::new(&site_config.output_dir()))
