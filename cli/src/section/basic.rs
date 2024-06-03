@@ -70,7 +70,6 @@ pub fn basic_section_full<'a>(
 pub fn basic_section_start<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
-    spans: &'a Vec<String>,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder(src, &sections.basic))

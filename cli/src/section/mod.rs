@@ -14,6 +14,7 @@ pub mod block;
 // use crate::section::raw::*;
 // use crate::section::yaml::*;
 // use crate::span::*;
+use crate::section::basic::*;
 use crate::section_attr::SectionAttr;
 use crate::site_config::ConfigSections;
 use crate::span::*;
@@ -73,15 +74,10 @@ pub fn start_or_full_section<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    Ok((
-        source,
-        Section {
-            attrs: vec![],
-            bounds: SectionBounds::Full,
-            kind: SectionKind::Block { spans: vec![] },
-            r#type: "title".to_string(),
-        },
-    ))
+    let (source, section) = alt((|src| basic_section_full(src, &sections),))
+        .context("")
+        .parse(source)?;
+    Ok((source, section))
 }
 
 pub fn initial_error<'a>() -> IResult<&'a str, &'a str, ErrorTree<&'a str>> {
