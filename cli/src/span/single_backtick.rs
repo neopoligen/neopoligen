@@ -21,3 +21,47 @@ pub fn single_backtick(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         },
     ))
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn backtick_at_eof() {
+        let source = "`";
+        let left = (
+            "",
+            Span {
+                attrs: vec![],
+                source_text: "`".to_string(),
+                parsed_text: "`".to_string(),
+                kind: SpanKind::SingleBacktick,
+            },
+        );
+        let right = single_backtick(source).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn backtick_at_infront_of_another_character() {
+        let source = "`x";
+        let left = (
+            "x",
+            Span {
+                attrs: vec![],
+                source_text: "`".to_string(),
+                parsed_text: "`".to_string(),
+                kind: SpanKind::SingleBacktick {},
+            },
+        );
+        let right = single_backtick(source).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn dont_capture_two_backtickts() {
+        let source = "``";
+        assert!(single_backtick(source).is_err());
+    }
+}

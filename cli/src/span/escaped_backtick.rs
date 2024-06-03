@@ -22,3 +22,27 @@ pub fn escaped_backtick(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         },
     ))
 }
+
+#[cfg(test)]
+
+mod test {
+
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn escaped_backtick_check() {
+        let source = "\\`";
+        let left = (
+            "",
+            Span {
+                attrs: vec![],
+                source_text: "\\`".to_string(),
+                parsed_text: "`".to_string(),
+                kind: SpanKind::EscapedBacktick,
+            },
+        );
+        let right = escaped_backtick(source).unwrap();
+        assert_eq!(left, right);
+    }
+}

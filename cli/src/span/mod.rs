@@ -14,14 +14,12 @@ use crate::span_attr::*;
 // use crate::span::link_shorthand::link_shorthand;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
-use nom::bytes::complete::tag;
 use nom::character::complete::line_ending;
 use nom::character::complete::multispace0;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::eof;
 use nom::combinator::not;
-use nom::sequence::pair;
 use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
@@ -79,6 +77,7 @@ pub fn span<'a>(
     Ok((source, span))
 }
 
+// TODO: Move to own file with tests
 pub fn newline(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let initial_source = source;
     let (source, _) = tuple((space0, line_ending)).context("").parse(source)?;
@@ -97,6 +96,7 @@ pub fn newline(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     ))
 }
 
+// TODO: Move to own file with tests
 pub fn space(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let initial_source = source;
     let (source, _) = space1.context("").parse(source)?;
@@ -112,6 +112,7 @@ pub fn space(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     ))
 }
 
+// TODO: Move to own file with tests
 pub fn word_part(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let initial_source = source;
     let (source, text) = is_not(" \n\t[]`").context("").parse(source)?;
