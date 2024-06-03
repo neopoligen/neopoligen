@@ -21,12 +21,8 @@ use tracing_subscriber::prelude::*;
 #[tokio::main]
 #[instrument]
 async fn main() {
-    // let mut neopoligen_root = document_dir().unwrap();
-    // neopoligen_root.push("Neopoligen");
-
     let log_root = data_local_dir().unwrap().join("Neopoligen");
     let log_basename = "neopoligen-log.txt";
-
     let file_appender = tracing_appender::rolling::never(log_root, log_basename);
     let (file_writer, _guard) = tracing_appender::non_blocking(file_appender);
     let file_layer_format = tracing_subscriber::fmt::format().json();
@@ -34,7 +30,6 @@ async fn main() {
         .event_format(file_layer_format)
         .with_writer(file_writer)
         .json();
-
     let stdout_format = tracing_subscriber::fmt::format()
         .without_time()
         .with_target(false)
@@ -43,19 +38,16 @@ async fn main() {
         .with_ansi(false)
         .with_line_number(false)
         .with_file(false);
-
     let stdout_layer = fmt::Layer::default()
         .event_format(stdout_format)
         .with_writer(std::io::stdout)
         .with_filter(filter::LevelFilter::INFO);
-
     let subscriber = tracing_subscriber::Registry::default()
         .with(file_layer)
         .with(stdout_layer);
     tracing::subscriber::set_global_default(subscriber).expect("unable to set global subscriber");
 
     let engine_config_dir = config_dir().unwrap().join("Neopoligen");
-
     let engine_config_path = match std::env::var("NEOENV") {
         Ok(val) => engine_config_dir.join(PathBuf::from(format!("config-{}.json", val))),
         Err(_) => engine_config_dir.join(PathBuf::from(format!("config.json"))),
@@ -69,10 +61,7 @@ async fn main() {
                 engine_config_path.display()
             );
             event!(Level::INFO, "Active site: {}", &engine_config.active_site);
-            let livereload = LiveReloadLayer::new();
-            let reloader = livereload.reloader();
-            //build_site(engine_config.clone(), &reloader);
-            run_web_server(engine_config.clone(), livereload, reloader).await;
+            run_web_server(engine_config.clone()).await;
         }
         Err(e) => {
             dbg!(e);
@@ -99,13 +88,12 @@ async fn main() {
     //
 }
 
-#[instrument(skip(engine_config, livereload, reloader))]
-async fn run_web_server(
-    engine_config: EngineConfig,
-    livereload: LiveReloadLayer,
-    reloader: Reloader,
-) {
+#[instrument(skip(engine_config))]
+async fn run_web_server(engine_config: EngineConfig) {
     event!(Level::INFO, "Starting web server");
+    let livereload = LiveReloadLayer::new();
+    let reloader = livereload.reloader();
+    build_site(&engine_config, &reloader);
     match SiteConfig::new_from_engine_config(&engine_config) {
         Ok(site_config) => {
             let app = Router::new()
@@ -116,9 +104,9 @@ async fn run_web_server(
             let _theme_watcher = FileWatcher::new(&site_config.theme_dir(), tx.clone()).await;
             let _content_watcher =
                 FileWatcher::new(&site_config.content_source_dir(), tx.clone()).await;
-            //tokio::spawn(async move {
-            //   catch_file_changes(reloader, site_config, rx).await;
-            // });
+            tokio::spawn(async move {
+                catch_file_changes(reloader, engine_config.clone(), rx).await;
+            });
             if let Ok(listener) = tokio::net::TcpListener::bind("localhost:1989").await {
                 if (axum::serve(listener, app).await).is_ok() {
                     // Server is going at this point
@@ -135,36 +123,52 @@ async fn run_web_server(
     }
 }
 
-// #[instrument(skip(site_config))]
-// fn build_site(site_config: &SiteConfig) {
-//     event!(Level::INFO, "Building Site");
-//     if let Ok(mut builder) = Builder::new(site_config.clone()) {
-//         builder.todo("load_source_files");
-//         builder.todo("load_cached_files");
-//         builder.todo("generate_section_asts");
-//         builder.todo("update_file_cache");
-//         builder.todo("generate_payloads");
-//         builder.todo("generate_site_object");
-//         builder.todo("load_templates");
-//         builder.todo("generate_page_output");
-//         builder.todo("generated_last_edit_page");
-//         builder.todo("empty_output_dirs");
-//         builder.todo("prep_output_dirs");
-//         builder.todo("output_pages");
-//         builder.todo("deploy_theme_file_assets");
-//         builder.todo("deploy_images");
-//         builder.todo("deploy_og_images");
-//         builder.todo("deploy_gifs");
-//         builder.todo("deploy_mp3s");
-//         builder.todo("deploy_svgs");
-//         builder.todo("generate_feeds");
-//         builder.todo("load_theme_test_files");
-//         builder.todo("load_theme_test_templates");
-//         builder.todo("test_theme");
-//         builder.todo("update_status");
-//         builder.todo("reload_browser");
-//     }
-// }
+#[instrument(skip(reloader, engine_config, rx))]
+async fn catch_file_changes(
+    reloader: Reloader,
+    engine_config: EngineConfig,
+    mut rx: mpsc::Receiver<Vec<PathBuf>>,
+) {
+    while let Some(r) = rx.recv().await {
+        build_site(&engine_config, &reloader);
+    }
+}
+
+#[instrument(skip(engine_config, reloader))]
+fn build_site(engine_config: &EngineConfig, reloader: &Reloader) {
+    event!(Level::INFO, "Building Site");
+
+    reloader.reload();
+
+    // if let Ok(mut builder) = Builder::new(site_config.clone()) {
+    //     builder.todo("load_source_files");
+    //     builder.todo("load_cached_files");
+    //     builder.todo("generate_section_asts");
+    //     builder.todo("update_file_cache");
+    //     builder.todo("generate_payloads");
+    //     builder.todo("generate_site_object");
+    //     builder.todo("load_templates");
+    //     builder.todo("generate_page_output");
+    //     builder.todo("generated_last_edit_page");
+    //     builder.todo("empty_output_dirs");
+    //     builder.todo("prep_output_dirs");
+    //     builder.todo("output_pages");
+    //     builder.todo("deploy_theme_file_assets");
+    //     builder.todo("deploy_images");
+    //     builder.todo("deploy_og_images");
+    //     builder.todo("deploy_gifs");
+    //     builder.todo("deploy_mp3s");
+    //     builder.todo("deploy_svgs");
+    //     builder.todo("generate_feeds");
+    //     builder.todo("load_theme_test_files");
+    //     builder.todo("load_theme_test_templates");
+    //     builder.todo("test_theme");
+    //     builder.todo("update_status");
+    //     builder.todo("reload_browser");
+    // }
+
+    //
+}
 
 // fn load_engine_config_file(path: &PathBuf) -> Result<EngineConfig, String> {
 //     match path.try_exists() {
@@ -228,20 +232,6 @@ async fn run_web_server(
 //             }
 //         }
 //         Err(e) => Err(format!("{}", e)),
-//     }
-// }
-
-// #[instrument(skip(reloader, site_config, rx))]
-// async fn catch_file_changes(
-//     reloader: Reloader,
-//     site_config: SiteConfig,
-//     mut rx: mpsc::Receiver<Vec<PathBuf>>,
-// ) {
-//     while let Some(r) = rx.recv().await {
-//         dbg!(r);
-//         build_site(&site_config);
-//         event!(Level::INFO, "Reloading Browser");
-//         reloader.reload();
 //     }
 // }
 
