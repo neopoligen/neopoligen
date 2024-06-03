@@ -1,12 +1,14 @@
 pub mod code_shorthand;
 pub mod escaped_backslash;
 pub mod escaped_backtick;
+pub mod escaped_colon;
 pub mod escaped_pipe;
 pub mod single_backtick;
 
 use crate::span::code_shorthand::*;
 use crate::span::escaped_backslash::*;
 use crate::span::escaped_backtick::*;
+use crate::span::escaped_colon::*;
 use crate::span::escaped_pipe::*;
 use crate::span::single_backtick::*;
 use crate::span_attr::*;
@@ -41,6 +43,7 @@ pub enum SpanKind {
     CodeShorthand,
     EscapedBacktick,
     EscapedBackslash,
+    EscapedColon,
     EscapedPipe,
     LinkShorthand,
     Newline,
@@ -71,6 +74,22 @@ pub fn span<'a>(
         // link_shorthand,
         escaped_backtick,
         escaped_backslash,
+        escaped_colon,
+        escaped_pipe,
+        single_backtick,
+        wordpart,
+        space,
+        newline,
+    ))(source)?;
+    Ok((source, span))
+}
+
+pub fn span_for_shorthand_text<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    let (source, span) = alt((
+        escaped_pipe,
+        escaped_backtick,
+        escaped_backslash,
+        escaped_colon,
         single_backtick,
         wordpart,
         space,
@@ -86,6 +105,7 @@ pub fn span_without_shorthands_or_single_pipe<'a>(
         escaped_pipe,
         escaped_backtick,
         escaped_backslash,
+        escaped_colon,
         single_backtick,
         wordpart,
         space,

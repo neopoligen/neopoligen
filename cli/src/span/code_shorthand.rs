@@ -24,9 +24,7 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let initial_source = source;
     let (source, _) = tag("``").context("").parse(source)?;
-    let (source, parts) = many0(span_without_shorthands_or_single_pipe)
-        .context("")
-        .parse(source)?;
+    let (source, parts) = many0(span_for_shorthand_text).context("").parse(source)?;
     let (source, attrs) = many0(code_shorthand_attr).context("").parse(source)?;
     let (source, _) = tag("``").context("").parse(source)?;
     let source_text = initial_source.replace(source, "").to_string();
@@ -47,8 +45,8 @@ pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
 }
 
 pub fn code_shorthand_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-    let (source, attr) = alt((code_shorthand_flag_attr,))
-        //let (source, attr) = alt((code_shorthand_key_value_attr, code_shorthand_flag_attr))
+    // let (source, attr) = alt((code_shorthand_flag_attr,))
+    let (source, attr) = alt((code_shorthand_key_value_attr, code_shorthand_flag_attr))
         .context("")
         .parse(source)?;
     Ok((source, attr))
@@ -76,56 +74,31 @@ pub fn code_shorthand_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTr
     Ok((source, attr))
 }
 
-// pub fn code_shorthand_token(source: &str) -> IResult<&str, SpanShorthandToken, ErrorTree<&str>> {
-//     let (source, token) = alt((
-//         // shorthand_token_escaped_pipe,
-//         // shorthand_token_escaped_backslash,
-//         // shorthand_token_escaped_backtick,
-//         // shorthand_token_escaped_colon,
-//         code_shorthand_token_word_part,
-//         // shorthand_token_single_backslash,
-//         // shorthand_token_single_backtick,
-//     ))
-//     .context("")
-//     .parse(source)?;
-//     Ok((source, token))
-// }
-
-// pub fn code_shorthand_token_word_part(
-//     source: &str,
-// ) -> IResult<&str, SpanShorthandToken, ErrorTree<&str>> {
-//     let (source, text) = is_not("\\`|").context("").parse(source)?;
-//     let token = SpanShorthandToken {
-//         source_text: text.to_string(),
-//         parsed_text: text.to_string(),
-//         kind: SpanShorthandTokenKind::WordPart,
-//     };
-//     Ok((source, token))
-// }
-
-// pub fn code_shorthand_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-//     let initial_source = source;
-//     let (source, _) = tag("|").context("").parse(source)?;
-//     // TODO: allow for spaces here
-//     let (source, key) = is_not(" :|`").context("").parse(source)?;
-//     let (source, _) = tag(":").context("").parse(source)?;
-//     let (source, _) = space1.context("").parse(source)?;
-//     let (source, tokens) = many1(code_shorthand_token).context("").parse(source)?;
-//     let value = tokens
-//         .iter()
-//         .map(|word| word.parsed_text.clone())
-//         .collect::<Vec<String>>()
-//         .join("");
-//     let source_text = initial_source.replace(source, "").to_string();
-//     let attr = SpanAttr {
-//         source_text,
-//         kind: SpanAttrKind::KeyValue {
-//             key: key.to_string(),
-//             value,
-//         },
-//     };
-//     Ok((source, attr))
-// }
+pub fn code_shorthand_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
+    let initial_source = source;
+    let (source, _) = tag("|").context("").parse(source)?;
+    // TODO: allow for spaces here
+    let (source, key) = is_not(" :|`").context("").parse(source)?;
+    let (source, _) = tag(":").context("").parse(source)?;
+    let (source, _) = space1.context("").parse(source)?;
+    let (source, tokens) = many1(span_without_shorthands_or_single_pipe)
+        .context("")
+        .parse(source)?;
+    let value = tokens
+        .iter()
+        .map(|word| word.parsed_text.clone())
+        .collect::<Vec<String>>()
+        .join("");
+    let source_text = initial_source.replace(source, "").to_string();
+    let attr = SpanAttr {
+        source_text,
+        kind: SpanAttrKind::KeyValue {
+            key: key.to_string(),
+            value,
+        },
+    };
+    Ok((source, attr))
+}
 
 #[cfg(test)]
 mod test {
@@ -216,66 +189,66 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // fn code_shorthand_with_multiple_flag_attrs() {
-    //     let source = "``code|rust|hidden``";
-    //     let left = (
-    //         "",
-    //         Span {
-    //             attrs: vec![
-    //                 SpanAttr {
-    //                     source_text: "|rust".to_string(),
-    //                     kind: SpanAttrKind::Flag {
-    //                         value: "rust".to_string(),
-    //                     },
-    //                 },
-    //                 SpanAttr {
-    //                     source_text: "|hidden".to_string(),
-    //                     kind: SpanAttrKind::Flag {
-    //                         value: "hidden".to_string(),
-    //                     },
-    //                 },
-    //             ],
-    //             source_text: "``code|rust|hidden``".to_string(),
-    //             parsed_text: "code".to_string(),
-    //             kind: SpanKind::CodeShorthand,
-    //         },
-    //     );
-    //     let right = code_shorthand(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn code_shorthand_with_multiple_flag_attrs() {
+        let source = "``code|rust|hidden``";
+        let left = (
+            "",
+            Span {
+                attrs: vec![
+                    SpanAttr {
+                        source_text: "|rust".to_string(),
+                        kind: SpanAttrKind::Flag {
+                            value: "rust".to_string(),
+                        },
+                    },
+                    SpanAttr {
+                        source_text: "|hidden".to_string(),
+                        kind: SpanAttrKind::Flag {
+                            value: "hidden".to_string(),
+                        },
+                    },
+                ],
+                source_text: "``code|rust|hidden``".to_string(),
+                parsed_text: "code".to_string(),
+                kind: SpanKind::CodeShorthand,
+            },
+        );
+        let right = code_shorthand(source).unwrap();
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // fn flag_attr_for_code_basic_end_at_block() {
-    //     let source = "|rust``";
-    //     let left = (
-    //         "``",
-    //         SpanAttr {
-    //             source_text: "|rust".to_string(),
-    //             kind: SpanAttrKind::Flag {
-    //                 value: "rust".to_string(),
-    //             },
-    //         },
-    //     );
-    //     let right = code_shorthand_flag_attr(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn flag_attr_for_code_basic_end_at_block() {
+        let source = "|rust``";
+        let left = (
+            "``",
+            SpanAttr {
+                source_text: "|rust".to_string(),
+                kind: SpanAttrKind::Flag {
+                    value: "rust".to_string(),
+                },
+            },
+        );
+        let right = code_shorthand_flag_attr(source).unwrap();
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // fn flag_attr_for_code_with_escaped_colon() {
-    //     let source = "|rust\\:``";
-    //     let left = (
-    //         "``",
-    //         SpanAttr {
-    //             source_text: "|rust\\:".to_string(),
-    //             kind: SpanAttrKind::Flag {
-    //                 value: "rust:".to_string(),
-    //             },
-    //         },
-    //     );
-    //     let right = code_shorthand_flag_attr(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn flag_attr_for_code_with_escaped_colon() {
+        let source = "|rust\\:``";
+        let left = (
+            "``",
+            SpanAttr {
+                source_text: "|rust\\:".to_string(),
+                kind: SpanAttrKind::Flag {
+                    value: "rust:".to_string(),
+                },
+            },
+        );
+        let right = code_shorthand_flag_attr(source).unwrap();
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // fn flag_attr_for_code_url() {
