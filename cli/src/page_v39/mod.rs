@@ -47,7 +47,7 @@ impl PageV39 {
     }
 
     pub fn new_from_string(config: SiteConfig, source_content: String) -> Result<PageV39> {
-        Ok(PageV39 {
+        let mut page = PageV39 {
             ast: None,
             config,
             errors: vec![],
@@ -57,7 +57,9 @@ impl PageV39 {
             source_path: None,
             template_list: vec![],
             r#type: None,
-        })
+        };
+        let _ = page.generate_ast();
+        Ok(page)
     }
 }
 
@@ -79,7 +81,7 @@ impl PageV39 {
             Ok(sections) => self.ast = Some(sections),
             Err(e) => self.errors.push(e),
         }
-        // Prepall the necessary fields
+        // Prep all the necessary fields
         self.prep_template_list();
         self.prep_type();
         Ok(())
