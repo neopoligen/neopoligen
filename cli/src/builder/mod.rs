@@ -55,7 +55,10 @@ impl Builder {
                     if ext.to_ascii_lowercase() == "neo"
                         && !filename.to_str().unwrap().starts_with(".")
                     {
-                        let page = SourcePage::new_from_source_path(&path)?;
+                        let page = SourcePage::new_from_source_path(
+                            &path,
+                            self.config.as_ref().unwrap().clone(),
+                        )?;
                         self.pages.push(page);
                     }
                 }

@@ -1,3 +1,4 @@
+pub mod ast;
 pub mod builder;
 pub mod engine_config;
 pub mod file_watcher;
