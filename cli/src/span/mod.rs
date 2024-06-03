@@ -28,9 +28,9 @@ use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Span {
     pub attrs: Vec<SpanAttr>,
     pub kind: SpanKind,
@@ -38,7 +38,7 @@ pub struct Span {
     pub source_text: String,
 }
 
-#[derive(Clone, Debug, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(rename_all = "lowercase", tag = "type")]
 pub enum SpanKind {
     CodeShorthand,
@@ -180,5 +180,3 @@ pub fn wordpart(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         },
     ))
 }
-
-

@@ -22,7 +22,7 @@ fn do_parse<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
 ) -> IResult<&'a str, Vec<Section>, ErrorTree<&'a str>> {
-    let (source, result) = many1(|src| start_or_full_section_v39(src, &sections))
+    let (source, result) = many1(|src| start_or_full_section(src, &sections))
         .context("page")
         .parse(source)?;
     Ok((source, result))

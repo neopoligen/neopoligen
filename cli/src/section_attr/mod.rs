@@ -22,8 +22,8 @@ pub enum SectionAttrKind {
     Flag { flag: String },
 }
 
-pub fn section_attr_v39<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
-    let (source, attr) = alt((section_key_value_attr_39, section_flag_attr_v39))(source)?;
+pub fn section_attr<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
+    let (source, attr) = alt((section_key_value_attr_39, section_flag_attr))(source)?;
     Ok((source, attr))
 }
 
@@ -49,9 +49,7 @@ pub fn section_key_value_attr_39<'a>(
     ))
 }
 
-pub fn section_flag_attr_v39<'a>(
-    source: &'a str,
-) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
+pub fn section_flag_attr<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
     let (source, _) = tag("--").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
     let (source, key) = is_not(":\n").context("").parse(source)?;
