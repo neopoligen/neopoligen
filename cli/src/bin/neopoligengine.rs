@@ -46,13 +46,11 @@ async fn main() {
         .with(file_layer)
         .with(stdout_layer);
     tracing::subscriber::set_global_default(subscriber).expect("unable to set global subscriber");
-
     let engine_config_dir = config_dir().unwrap().join("Neopoligen");
     let engine_config_path = match std::env::var("NEOENV") {
         Ok(val) => engine_config_dir.join(PathBuf::from(format!("config-{}.json", val))),
         Err(_) => engine_config_dir.join(PathBuf::from(format!("config.json"))),
     };
-
     match EngineConfig::new_from_file(&engine_config_path) {
         Ok(engine_config) => {
             event!(
@@ -68,24 +66,6 @@ async fn main() {
             ()
         }
     }
-
-    // if let Ok(engine_config) = load_engine_config_file(&engine_config_path) {
-    //     match load_site_config_file(&neopoligen_root, &engine_config.active_site) {
-    //         Ok(mut site_config) => {
-    //             site_config.load_sections();
-    //             build_site(&site_config);
-    //             run_web_server(site_config.clone()).await;
-    //         }
-    //         Err(e) => println!("{}", e),
-    //     }
-    // } else {
-    //     event!(
-    //         Level::ERROR,
-    //         "Could not load engine file: {}",
-    //         engine_config_path.display()
-    //     );
-    // }
-    //
 }
 
 #[instrument(skip(engine_config))]
@@ -96,6 +76,7 @@ async fn run_web_server(engine_config: EngineConfig) {
     build_site(&engine_config, &reloader);
     match SiteConfig::new_from_engine_config(&engine_config) {
         Ok(site_config) => {
+            let localhost_domain = format!("localhost:{}", engine_config.port);
             let app = Router::new()
                 .nest_service("/", ServeDir::new(&site_config.output_dest_dir()))
                 .nest_service("/neo-status", ServeDir::new(&site_config.status_dest_dir()))
@@ -107,7 +88,7 @@ async fn run_web_server(engine_config: EngineConfig) {
             tokio::spawn(async move {
                 catch_file_changes(reloader, engine_config.clone(), rx).await;
             });
-            if let Ok(listener) = tokio::net::TcpListener::bind("localhost:1989").await {
+            if let Ok(listener) = tokio::net::TcpListener::bind(localhost_domain).await {
                 if (axum::serve(listener, app).await).is_ok() {
                     // Server is going at this point
                 }
