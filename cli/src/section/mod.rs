@@ -2,6 +2,7 @@
 
 pub mod basic;
 pub mod block;
+pub mod raw;
 pub mod yaml;
 
 //use crate::section_attr::SectionAttrV39;
@@ -16,6 +17,7 @@ pub mod yaml;
 // use crate::section::yaml::*;
 // use crate::span::*;
 use crate::section::basic::*;
+use crate::section::raw::*;
 use crate::section::yaml::*;
 use crate::section_attr::SectionAttr;
 use crate::site_config::ConfigSections;
