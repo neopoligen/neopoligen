@@ -1,3 +1,4 @@
+use crate::span::escaped_backslash::*;
 use crate::span::escaped_pipe::*;
 use crate::span::*;
 // use crate::span_attr::SpanAttrKind;
@@ -23,7 +24,7 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let initial_source = source;
     let (source, _) = tag("``").context("").parse(source)?;
-    let (source, parts) = many0(code_shorthand_span).context("").parse(source)?;
+    let (source, parts) = many0(span_without_shorthands).context("").parse(source)?;
     //let (source, tokens) = many1(code_shorthand_token).context("").parse(source)?;
     //let (source, attrs) = many0(code_shorthand_attr).context("").parse(source)?;
     let (source, _) = tag("``").context("").parse(source)?;
@@ -45,10 +46,12 @@ pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     ))
 }
 
-pub fn code_shorthand_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let (source, span) = alt((wordpart, escaped_pipe)).context("").parse(source)?;
-    Ok((source, span))
-}
+// pub fn code_shorthand_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+//     let (source, span) = alt((wordpart, escaped_pipe, escaped_backslash, escaped_backtick))
+//         .context("")
+//         .parse(source)?;
+//     Ok((source, span))
+// }
 
 // pub fn code_shorthand_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
 //     let (source, attr) = alt((code_shorthand_key_value_attr, code_shorthand_flag_attr))
@@ -165,37 +168,37 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // fn code_shorthand_with_escaped_backslash() {
-    //     let source = "``ping\\\\ping``";
-    //     let left = (
-    //         "",
-    //         Span {
-    //             attrs: vec![],
-    //             source_text: "``ping\\\\ping``".to_string(),
-    //             parsed_text: "ping\\ping".to_string(),
-    //             kind: SpanKind::CodeShorthand,
-    //         },
-    //     );
-    //     let right = code_shorthand(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn code_shorthand_with_escaped_backslash() {
+        let source = "``ping\\\\ping``";
+        let left = (
+            "",
+            Span {
+                attrs: vec![],
+                source_text: "``ping\\\\ping``".to_string(),
+                parsed_text: "ping\\ping".to_string(),
+                kind: SpanKind::CodeShorthand,
+            },
+        );
+        let right = code_shorthand(source).unwrap();
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // fn code_shorthand_with_escaped_backtick() {
-    //     let source = "``ping\\`ping``";
-    //     let left = (
-    //         "",
-    //         Span {
-    //             attrs: vec![],
-    //             source_text: "``ping\\`ping``".to_string(),
-    //             parsed_text: "ping`ping".to_string(),
-    //             kind: SpanKind::CodeShorthand,
-    //         },
-    //     );
-    //     let right = code_shorthand(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn code_shorthand_with_escaped_backtick() {
+        let source = "``ping\\`ping``";
+        let left = (
+            "",
+            Span {
+                attrs: vec![],
+                source_text: "``ping\\`ping``".to_string(),
+                parsed_text: "ping`ping".to_string(),
+                kind: SpanKind::CodeShorthand,
+            },
+        );
+        let right = code_shorthand(source).unwrap();
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // fn code_shorthand_with_single_backslash() {
