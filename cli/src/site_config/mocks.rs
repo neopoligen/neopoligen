@@ -7,6 +7,30 @@ use crate::site_config::*;
 // use std::path::PathBuf;
 
 impl SiteConfig {
+    pub fn mock1_basic() -> SiteConfig {
+        let sections = ConfigSections {
+            basic: vec![],
+            block: vec![],
+            checklist: vec![],
+            list: vec![],
+            comment: vec![],
+            detail: vec![],
+            json: vec![],
+            raw: vec![],
+            table: vec![],
+            yaml: vec![],
+        };
+        let config = SiteConfig {
+            default_language: "en".to_string(),
+            base_url_raw: "testsite.localhost:1999".to_string(),
+            project_root: Some(PathBuf::from("/test/mocks")),
+            sections,
+            theme_name: "test-theme".to_string(),
+            theme_options: None,
+        };
+        config
+    }
+
     // TODO Make mocks by calling SiteConfig::new____ soemthing
 
     // pub fn mock1() -> SiteConfig {

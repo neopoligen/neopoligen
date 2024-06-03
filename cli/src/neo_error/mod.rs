@@ -1,8 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
-use crate::source_page;
-
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct NeoError {
     pub kind: NeoErrorKind,

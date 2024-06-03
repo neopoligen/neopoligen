@@ -1,6 +1,5 @@
 use crate::span::*;
 use nom::bytes::complete::tag;
-use nom::sequence::pair;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;

@@ -1,3 +1,5 @@
+pub mod mocks;
+
 use crate::ast::parse_ast;
 use crate::neo_error::{NeoError, NeoErrorKind};
 use crate::section::Section;
@@ -31,6 +33,17 @@ impl SourcePage {
             }),
         }
     }
+
+    pub fn new_mock_from_str(source: &str) -> SourcePage {
+        let mut p = SourcePage {
+            ast: None,
+            config: Some(SiteConfig::mock1_basic()),
+            source_content: Some(source.to_string()),
+            source_path: Some(PathBuf::from("/test/mocks/content/mock-file.neo")),
+        };
+        let _ = p.generate_ast();
+        p
+    }
 }
 
 impl SourcePage {
@@ -47,3 +60,6 @@ impl SourcePage {
         None
     }
 }
+
+#[cfg(test)]
+mod test {}
