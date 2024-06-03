@@ -14,6 +14,23 @@ use std::path::PathBuf;
 use std::time::SystemTime;
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
+pub struct PagePayload {
+    pub id: Option<String>,
+    pub status: Option<String>,
+    pub r#type: Option<String>,
+}
+
+impl PagePayload {
+    pub fn new() -> PagePayload {
+        PagePayload {
+            id: None,
+            status: None,
+            r#type: None,
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct PageV39 {
     pub ast: Option<Vec<SectionV39>>,
     pub config: SiteConfig,
@@ -22,9 +39,13 @@ pub struct PageV39 {
     pub output_content: Option<String>,
     pub source_content: Option<String>,
     pub source_path: Option<PathBuf>,
+    // DEPRECATE: status in favor of payload
     pub status: Option<String>,
+    // DEPRECATE: template_list in favor of payload
     pub template_list: Vec<String>,
+    // DEPRECATE: type in favor of payload
     pub r#type: Option<String>,
+    pub payload: Option<PagePayload>,
 }
 
 impl PageV39 {
@@ -45,6 +66,7 @@ impl PageV39 {
             status: None,
             template_list: vec![],
             r#type: None,
+            payload: None,
         })
     }
 
@@ -60,8 +82,10 @@ impl PageV39 {
             status: None,
             template_list: vec![],
             r#type: None,
+            payload: None,
         };
         let _ = page.generate_ast();
+        let _ = page.generate_payload();
         Ok(page)
     }
 }
@@ -84,10 +108,27 @@ impl PageV39 {
             Ok(sections) => self.ast = Some(sections),
             Err(e) => self.errors.push(e),
         }
-        // Prep all the necessary fields
-        self.prep_type();
-        self.prep_status();
-        self.prep_template_list();
+        //// update details in sections
+        //self.ast.unwrap().iter().for_each(|section| {
+        //    match &section.kind {
+        //        SectionV39Kind::Basic { children } => {},
+        //        SectionV39Kind::Block { spans } => {},
+        //        SectionV39Kind::Raw { children , text } = {},
+        //        SectionV39Kind::Yaml {  } => {}
+        //    }
+        //    //section.
+        //});
+        // // Prep all the necessary fields
+        // self.prep_type();
+        // self.prep_status();
+        // self.prep_template_list();
+        Ok(())
+    }
+
+    pub fn generate_payload(&mut self) -> Result<()> {
+        let mut p = PagePayload::new();
+        p.id = self.get_metadata_attr("id");
+        self.payload = Some(p);
         Ok(())
     }
 

@@ -12,7 +12,7 @@ body {
 
 
 [! for section in page.ast !]
-    [@ section @]
+    [@ section.details @]
 [# include section.template_list() ignore missing #]
 [! endfor !]
 

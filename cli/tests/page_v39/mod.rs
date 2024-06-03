@@ -5,29 +5,37 @@ use neopoligengine::page_v39::PageV39;
 use pretty_assertions::assert_eq;
 //use std::path::PathBuf;
 
-#[test]
-fn status_check() {
-    let p = PageV39::mock_1_20240101_basic_page();
-    let left = "published".to_string();
-    let right = p.status.unwrap();
-    assert_eq!(left, right);
-}
+// #[test]
+// fn check_payload_1() {
+//     let p = PageV39::mock_1_20240101_basic_page();
+//     let left = "published".to_string();
+//     let right = p.status.unwrap();
+//     assert_eq!(left, right);
+// }
 
-#[test]
-fn template_list_check() {
-    let p = PageV39::mock_1_20240101_basic_page();
-    let left = vec!["pages/post/published.neoj".to_string()];
-    let right = p.template_list;
-    assert_eq!(left, right);
-}
+// #[test]
+// fn status_check() {
+//     let p = PageV39::mock_1_20240101_basic_page();
+//     let left = "published".to_string();
+//     let right = p.status.unwrap();
+//     assert_eq!(left, right);
+// }
 
-#[test]
-fn type_check() {
-    let p = PageV39::mock_1_20240101_basic_page();
-    let left = "post".to_string();
-    let right = p.r#type.unwrap();
-    assert_eq!(left, right);
-}
+// #[test]
+// fn template_list_check() {
+//     let p = PageV39::mock_1_20240101_basic_page();
+//     let left = vec!["pages/post/published.neoj".to_string()];
+//     let right = p.template_list;
+//     assert_eq!(left, right);
+// }
+
+// #[test]
+// fn type_check() {
+//     let p = PageV39::mock_1_20240101_basic_page();
+//     let left = "post".to_string();
+//     let right = p.r#type.unwrap();
+//     assert_eq!(left, right);
+// }
 
 // NOTE: Tests that are commented out are from when
 // things were done with funcions. Backing off that
