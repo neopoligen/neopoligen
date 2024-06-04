@@ -47,3 +47,19 @@ pub fn block_of_end_content<'a>(source: &'a str) -> IResult<&'a str, Section, Er
         },
     ))
 }
+
+pub fn block_of_list_content<'a>(source: &'a str) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let (source, _) = not(eof).context("").parse(source)?;
+    let (source, _) = not(tag("-")).context("").parse(source)?;
+    let (source, spans) = many0(span).context("").parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
+    Ok((
+        source,
+        Section {
+            attrs: vec![],
+            bounds: SectionBounds::Full,
+            kind: SectionKind::Block { spans },
+            r#type: "block-of-text".to_string(),
+        },
+    ))
+}

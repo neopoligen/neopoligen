@@ -1,5 +1,7 @@
 pub mod basic;
 pub mod block;
+pub mod list;
+pub mod list_item;
 pub mod mocks;
 pub mod raw;
 pub mod yaml;
@@ -43,6 +45,12 @@ pub enum SectionKind {
     },
     Block {
         spans: Vec<Span>,
+    },
+    List {
+        children: Vec<Section>,
+    },
+    ListItem {
+        children: Vec<Section>,
     },
     Raw {
         children: Vec<Section>,
