@@ -8,5 +8,5 @@
 
 [#############################################################################]
 [! macro output_span(site, page_id, span) !]
-span
+[! include span.template_list ignore missing !]
 [! endmacro !]

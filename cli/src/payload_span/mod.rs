@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PayloadSpan {
     pub attrs: Vec<PayloadSpanAttr>,
+    pub classes: Vec<String>,
     pub flags: Vec<String>,
     pub kind: String,
     pub parsed_text: String,
@@ -30,11 +31,15 @@ impl PayloadSpan {
         };
         PayloadSpan {
             attrs: vec![],
+            classes: vec![],
             flags: vec![],
             kind: kind.clone(),
             parsed_text: span.parsed_text.clone().to_string(),
             source_text: span.source_text.clone().to_string(),
-            template_list: vec![format!("spans/{}.neoj", kind.clone())],
+            template_list: vec![
+                format!("spans/{}.neoj", kind.clone()),
+                format!("spans/generic.neoj"),
+            ],
         }
     }
 }
@@ -54,7 +59,10 @@ mod test {
     #[test]
     fn template_list_check() {
         let payload_span = PayloadSpan::new_from_span(&Span::mock1_basic_wordpard());
-        let left = vec!["spans/wordpart.neoj".to_string()];
+        let left = vec![
+            "spans/wordpart.neoj".to_string(),
+            "spans/generic.neoj".to_string(),
+        ];
         let right = payload_span.template_list;
         assert_eq!(left, right);
     }
