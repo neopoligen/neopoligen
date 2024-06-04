@@ -70,6 +70,7 @@ impl Builder {
     pub fn generate_missing_asts(&mut self) {
         event!(Level::INFO, "Generating Missing ASTs");
         self.source_pages.iter_mut().for_each(|page| {
+            dbg!(&page.source_path);
             if let Err(e) = page.generate_ast() {
                 self.errors.push(e);
             }

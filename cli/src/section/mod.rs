@@ -4,10 +4,12 @@ pub mod list;
 pub mod list_item;
 pub mod mocks;
 pub mod raw;
+pub mod unknown;
 pub mod yaml;
 
 use crate::section::basic::*;
 use crate::section::raw::*;
+use crate::section::unknown::*;
 use crate::section::yaml::*;
 use crate::section_attr::SectionAttr;
 use crate::section_attr::SectionAttrKind;
@@ -57,6 +59,9 @@ pub enum SectionKind {
         children: Vec<Section>,
         text: Option<String>,
     },
+    Unknown {
+        children: Vec<Section>,
+    },
     Yaml {},
 }
 
@@ -95,6 +100,9 @@ pub fn start_or_full_section<'a>(
         |src| raw_section_full(src, &sections),
         //|src| yaml_section_start(src, &sections),
         |src| yaml_section_full(src, &sections),
+        // Reminder: do unknown last since it slurps
+        // everything it can
+        |src| unknown_section_full(src, &sections),
     ))
     .context("")
     .parse(source)?;
