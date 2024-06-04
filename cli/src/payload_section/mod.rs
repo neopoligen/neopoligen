@@ -196,6 +196,24 @@ mod test {
     }
 
     #[test]
+    #[ignore]
+    fn todo_check_data_from_json() {
+        // TODO
+    }
+
+    #[test]
+    #[ignore]
+    fn todo_check_data_from_yaml() {
+        // TODO
+    }
+
+    #[test]
+    #[ignore]
+    fn todo_check_text_from_raw_section() {
+        // TODO
+    }
+
+    #[test]
     fn bounds_check() {
         let section = Section::mock1_basic_title_section_no_attrs();
         let left = "full";
