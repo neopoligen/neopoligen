@@ -36,38 +36,25 @@ impl PayloadSection {
             SectionBounds::Start => "start".to_string(),
         };
 
-        //         let mut template_list = vec![];
-        //         if let Some(template) = section.get_attr("template") {
-        //             template_list.push(format!(
-        //                 "sections/{}/{}/{}.neoj",
-        //                 section.r#type, bounds, template
-        //             ));
-        //         }
-        //         template_list.push(format!(
-        //             "sections/{}/{}/default.neoj",
-        //             section.r#type, bounds
-        //         ));
-        //         template_list.push(format!("sections/generic/{}/default.neoj", bounds));
-        //         PayloadSection {
-        //             attrs,
-        //             bounds: section.bounds.clone(),
-        //             kind: section.kind.clone(),
-        //             template_list,
-        //             r#type: section.r#type.clone(),
-        //         }
-        //     })
-        //     .collect::<Vec<PayloadSection>>()
-
+        let mut template_list = vec![];
+        if let Some(template) = section.get_attr("template") {
+            template_list.push(format!(
+                "sections/{}/{}/{}.neoj",
+                section.r#type, bounds, template
+            ));
+        }
+        template_list.push(format!(
+            "sections/{}/{}/default.neoj",
+            section.r#type, bounds
+        ));
+        template_list.push(format!("sections/generic/{}/default.neoj", bounds));
         PayloadSection {
             attrs,
             bounds: "full".to_string(),
             children: vec![],
             flags: vec![],
             r#type: "title".to_string(),
-            template_list: vec![
-                "sections/title/full/default.neoj".to_string(),
-                "sections/generic/full/default.neoj".to_string(),
-            ],
+            template_list,
         }
     }
 }
@@ -89,6 +76,31 @@ mod test {
         let section = Section::mock2_div_with_title_and_template_attrs();
         let left = "Title From Attr";
         let right = &PayloadSection::new_from_section(&section).attrs[0].value;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn template_list_check() {
+        let payload_section =
+            PayloadSection::new_from_section(&Section::mock1_basic_title_section_no_attrs());
+        let left = vec![
+            "sections/title/full/default.neoj".to_string(),
+            "sections/generic/full/default.neoj".to_string(),
+        ];
+        let right = payload_section.template_list;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn section_template_list_from_attr() {
+        let payload_section =
+            PayloadSection::new_from_section(&Section::mock2_div_with_title_and_template_attrs());
+        let left = vec![
+            "sections/div/full/template-from-attr.neoj".to_string(),
+            "sections/div/full/default.neoj".to_string(),
+            "sections/generic/full/default.neoj".to_string(),
+        ];
+        let right = payload_section.template_list;
         assert_eq!(left, right);
     }
 

@@ -121,19 +121,6 @@ impl SourcePage {
             })
             .collect::<Vec<PayloadSection>>()
 
-        //         let mut template_list = vec![];
-        //         if let Some(template) = section.get_attr("template") {
-        //             template_list.push(format!(
-        //                 "sections/{}/{}/{}.neoj",
-        //                 section.r#type, bounds, template
-        //             ));
-        //         }
-        //         template_list.push(format!(
-        //             "sections/{}/{}/default.neoj",
-        //             section.r#type, bounds
-        //         ));
-        //         template_list.push(format!("sections/generic/{}/default.neoj", bounds));
-        //         PayloadSection {
         //             attrs,
         //             bounds: section.bounds.clone(),
         //             kind: section.kind.clone(),
@@ -168,15 +155,15 @@ fn scrub_rel_file_path(source: &str) -> Result<PathBuf> {
 #[cfg(test)]
 mod test {
 
-    // use super::*;
-    // use pretty_assertions::assert_eq;
-    // #[test]
-    // fn id_check() {
-    //     let p = SourcePage::mock1_20240101_alfa1234_minimal();
-    //     let left = "20240101_alfa1234".to_string();
-    //     let right = p.id().unwrap();
-    //     assert_eq!(left, right);
-    // }
+    use super::*;
+    use pretty_assertions::assert_eq;
+    #[test]
+    fn id_check() {
+        let p = SourcePage::mock1_20240101_alfa1234_minimal();
+        let left = "20240101_alfa1234".to_string();
+        let right = p.id().unwrap();
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // fn rel_file_path_default() {
@@ -223,29 +210,6 @@ mod test {
     //     let p = SourcePage::mock1_20240101_alfa1234_minimal();
     //     let left = 2;
     //     let right = p.sections().len();
-    //     assert_eq!(left, right);
-    // }
-
-    // #[test]
-    // fn section_template_list_from_attr() {
-    //     let p = SourcePage::mock3_20240103_charlie1_title_in_div_section_and_template();
-    //     let left = &vec![
-    //         "sections/div/full/attr-template.neoj".to_string(),
-    //         "sections/div/full/default.neoj".to_string(),
-    //         "sections/generic/full/default.neoj".to_string(),
-    //     ];
-    //     let right = &p.sections()[0].template_list;
-    //     assert_eq!(left, right);
-    // }
-
-    // #[test]
-    // fn section_template_list_check() {
-    //     let p = SourcePage::mock1_20240101_alfa1234_minimal();
-    //     let left = &vec![
-    //         "sections/title/full/default.neoj".to_string(),
-    //         "sections/generic/full/default.neoj".to_string(),
-    //     ];
-    //     let right = &p.sections()[0].template_list;
     //     assert_eq!(left, right);
     // }
 
