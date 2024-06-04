@@ -1,4 +1,3 @@
-use crate::section::block::*;
 use crate::section::*;
 use crate::section_attr::*;
 use crate::span::*;
@@ -12,7 +11,6 @@ use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-use std::collections::BTreeMap;
 
 pub fn raw_section_full<'a>(
     source: &'a str,

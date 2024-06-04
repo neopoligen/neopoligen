@@ -3,7 +3,7 @@ pub mod mocks;
 use crate::ast::parse_ast;
 use crate::neo_error::{NeoError, NeoErrorKind};
 use crate::payload_section::PayloadSection;
-use crate::section::{Section, SectionKind};
+use crate::section::{Section, SectionBounds, SectionKind};
 use crate::section_attr::SectionAttrKind;
 use crate::site_config::SiteConfig;
 use anyhow::Result;
@@ -113,7 +113,24 @@ impl SourcePage {
             .as_ref()
             .unwrap()
             .iter()
-            .map(|section| PayloadSection {})
+            .map(|section| {
+                let bounds = match section.bounds {
+                    SectionBounds::End => "end",
+                    SectionBounds::Full => "full",
+                    SectionBounds::Start => "start",
+                };
+                let template_list = vec![format!(
+                    "sections/{}/{}/default.neoj",
+                    section.r#type, bounds
+                )];
+                PayloadSection {
+                    attrs: section.attrs.clone(),
+                    bounds: section.bounds.clone(),
+                    kind: section.kind.clone(),
+                    template_list,
+                    r#type: section.r#type.clone(),
+                }
+            })
             .collect::<Vec<PayloadSection>>()
     }
 
@@ -169,7 +186,7 @@ mod test {
 
     #[test]
     fn rel_file_path_for_home_page() {
-        let p = SourcePage::mock1_20240102_bravo123_home_page_path();
+        let p = SourcePage::mock2_20240102_bravo123_home_page_path();
         let left = PathBuf::from("index.html");
         let right = p.rel_file_path().unwrap();
         assert_eq!(left, right);
@@ -207,13 +224,13 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // fn sections_make_template_list() {
-    //     let p = SourcePage::mock1_20240101_alfa1234_minimal();
-    //     let left = vec!["sections/title/full/default.neoj".to_string()];
-    //     let right = p.sections()[0].template_list;
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn section_template_list_check() {
+        let p = SourcePage::mock1_20240101_alfa1234_minimal();
+        let left = vec!["sections/title/full/default.neoj".to_string()];
+        let right = p.sections()[0].template_list.clone();
+        assert_eq!(left, right);
+    }
 
     #[test]
     fn status_default() {

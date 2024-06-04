@@ -10,7 +10,6 @@ use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-use std::collections::BTreeMap;
 
 pub fn basic_section_end<'a>(
     source: &'a str,

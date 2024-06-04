@@ -1,4 +1,3 @@
-use crate::section::block::*;
 use crate::section::*;
 use crate::section_attr::*;
 use crate::span::*;
@@ -8,12 +7,10 @@ use nom::bytes::complete::take_until;
 use nom::character::complete::multispace0;
 use nom::combinator::rest;
 use nom::multi::many0;
-use nom::multi::many1;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-use std::collections::BTreeMap;
 
 pub fn yaml_section_full<'a>(
     source: &'a str,
