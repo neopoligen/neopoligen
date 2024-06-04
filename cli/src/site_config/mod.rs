@@ -201,7 +201,6 @@ impl SiteConfig {
 
     pub fn load_sections(&mut self) {
         let section_root = self.theme_dir().join(PathBuf::from("templates/sections"));
-        dbg!(&section_root);
         let section_dirs = get_dirs_in_dir(&section_root).unwrap();
         section_dirs.iter().for_each(|dir| {
             let cat_file_path = dir.join("category.txt");
