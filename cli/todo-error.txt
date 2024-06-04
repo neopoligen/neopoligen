@@ -1,0 +1,1008 @@
+TODO: Figure out why the below file hung during 
+processing: 
+
+
+-- title
+
+Component Library Test
+
+This is where I'm checking to make sure the various components of the site
+work as expected. (Still very much
+a work in progress)
+
+
+-- section/
+-- title: Article Start Section [x]
+-- class: exampleSection
+
+
+-- article/
+-- title: Article Section Romeo Lima
+-- id: romeo_lima
+-- class: example_alfa 
+-- type: post
+-- tag: example
+
+Article start text
+
+-- /section
+
+
+
+-- section/
+-- title: Article End Section [x]
+-- class: exampleSection
+
+-- /article
+-- type: post
+-- tag: example
+
+Post article output
+
+-- /section
+
+
+
+-- section/
+-- title: Aside [x]
+-- class: exampleSection
+
+-- aside
+-- title: Aside Section Foxtrot Kilo
+-- id: foxtrot_kilo 
+-- class: example_alfa
+-- type: post
+-- tag: example 
+
+Charlie delta echo 
+
+-- /section
+
+
+
+-- section/
+-- title: Blockquote [x]
+-- class: exampleSection
+
+-- blockquote 
+-- title: Blockquote Example Title
+-- by: Alfa Bravo
+-- source: Charlie Delta
+-- url: https://example.com/
+-- class: alfa
+-- id: blockquoteExample
+-- type: post
+-- tag: example
+
+Sierra tango bravo
+
+-- /section
+
+
+
+-- section/
+-- title: Bookmark [x]
+-- class: exampleSection
+
+-- bookmark
+-- neoexample
+-- title: Alfa Bravo
+-- url: https://www.example.com/
+-- type: post
+-- tag: example
+
+Charlie delta echo
+
+Foxtrot golf hotel
+
+-- /section
+
+
+
+-- section/
+-- title: Checklist [x]
+-- class: exampleSection
+
+-- checklist
+-- title: CHECKLIST TITLE
+-- class: alfa
+-- id: checklistExampleId
+-- type: post
+-- tag: example 
+
+This is some prelude text
+
+[] Checklist Item 1
+
+[] Checklist Item 2
+
+-- /section
+
+
+
+-- section/
+-- title: Code [x]
+-- class: exampleSection
+
+-- code
+-- javascript
+-- title: This is a title for Code
+-- class: alfa
+-- id: codeExampleId
+-- type: post
+-- tag: example 
+
+console.log("hello, world")
+
+-- /section
+
+
+
+-- section/
+-- title: CSS [x]
+-- class: exampleSection
+
+-- css
+-- title: CSS Section
+-- type: post
+-- tag: example 
+
+body { xcolor: goldenrod; }
+
+-- /section
+
+
+
+
+-- section/
+-- title: Div Start Section [x]
+-- class: exampleSection
+
+-- div/
+-- title: Div Start Section Romeo Lima
+-- id: divStartExample 
+-- class: example_alfa
+-- type: post
+-- tag: example
+
+Div start text
+
+-- /section
+
+
+-- section/
+-- title: Div End Section [x]
+-- class: exampleSection
+
+-- /div
+-- type: post
+-- tag: example
+
+Div end text
+
+-- /section
+
+
+-- section/
+-- title: Footnote [x]
+-- class: exampleSection
+
+-- footnote
+-- id: alfa_footnote
+-- type: post
+-- tag: example
+
+This is a footnote
+
+
+-- /section
+
+
+
+
+-- section/
+-- title: H1 [x]
+-- class: exampleSection
+
+-- h1 
+-- type: post
+-- tag: example 
+
+Alfa Bravo 
+
+This is paragraph content
+
+-- /section
+
+
+
+-- section/
+-- title: H2 [x]
+-- class: exampleSection
+
+-- h2 
+-- type: post
+-- tag: example 
+
+Charlie Delta
+
+This is paragraph content
+
+-- /section
+
+
+-- section/
+-- title: H3 [x]
+-- class: exampleSection
+
+-- h3
+-- type: post
+-- tag: example 
+
+Echo Foxtrot
+
+This is paragraph content
+
+-- /section
+
+
+-- section/
+-- title: H4 [x]
+-- class: exampleSection
+
+-- h4
+-- type: post
+-- tag: example 
+
+Victor Hotel
+
+This is paragraph content
+
+-- /section
+
+
+-- section/
+-- title: H5 [x]
+-- class: exampleSection
+
+-- h5
+-- type: post
+-- tag: example 
+
+India Juliette 
+
+This is paragraph content
+
+-- /section
+
+
+-- section/
+-- title: H6 [x]
+-- class: exampleSection
+
+-- h6
+-- type: post
+-- tag: example 
+
+Kilo Lima 
+
+This is paragraph content
+
+-- /section
+
+
+
+-- section/
+-- title: hr [x]
+-- class: exampleSection
+
+-- hr
+-- type: post
+-- tag: example
+
+hr section after line
+
+-- /section
+
+
+
+-- section/
+-- title: html [x]
+-- class: exampleSection
+
+
+-- html
+-- title: This is a title for HTML 
+-- class: alfa
+-- id: htmlExampleId
+-- type: post
+-- tag: example 
+
+This is <strong>HTML</strong>
+
+-- /section
+
+
+
+-- section/
+-- title: image [x]
+-- class: exampleSection
+
+-- image
+-- hackers-frame-000010397
+-- type: post
+-- tag: example
+
+Example alt text 
+
+-- /section
+
+
+
+-- section/
+-- title: list [x]
+-- class: exampleSection
+
+-- list
+-- title: LIST TITLE
+-- class: alfa
+-- id: listExampleId
+-- type: post
+-- tag: example 
+
+This is some prelude text
+
+- List Item 1
+
+- List Item 2
+
+
+
+-- /section
+
+
+
+-- section/
+-- title: Note [x]
+-- class: exampleSection
+
+-- note
+-- title: NOTE SAMPLE TITLE
+-- class: alfa
+-- id: noteExampleId
+-- type: post
+-- tag: example 
+
+This is a note
+
+-- /section
+
+
+-- section/
+-- title: Notes [x]
+-- class: exampleSection
+
+-- notes 
+-- title: NOTES TITLE
+-- class: alfa
+-- id: notesExampleId
+-- type: post
+-- tag: example
+
+This is some prelude text
+
+- Note 1
+
+- Note 2
+
+
+-- /section
+
+
+
+
+-- section/
+-- title: Ordered List [x]
+-- class: exampleSection
+
+-- olist 
+-- title: Orderd List Title
+-- class: alfa
+-- id: olistExampleId
+-- type: post
+-- tag: example 
+
+This is some prelude text
+
+- Note 1
+
+- Note 2
+
+
+-- /section
+
+
+-- section/
+-- title: Paragraph [x]
+-- class: exampleSection
+
+-- p
+-- title: P SAMPLE TITLE
+-- class: alfa
+-- id: pExampleId
+-- type: post
+-- tag: example 
+
+This is a paragraph section
+
+-- /section
+
+
+-- section/
+-- title: Pre [x]
+-- class: exampleSection
+
+-- pre 
+-- title: This is a title for Pre
+-- class: alfa
+-- id: codeExampleId
+-- type: post
+-- tag: example 
+
+This is some pre 
+formatted text
+
+
+-- /section
+
+
+
+-- section/
+-- title: Reference [x]
+-- class: exampleSection
+
+-- ref
+-- id: someid
+-- class: someClass
+-- title: Some Title
+-- subtitle: - some subtitle
+-- url: https://www.example.com
+-- type: post
+-- tag: example
+
+This is some ref data
+
+
+-- /section
+
+
+
+-- section/
+-- title: Results Start [x]
+-- class: exampleSection
+
+-- results/
+-- type: post
+-- tag: example 
+-- title: This is a title for Results 
+-- class: alfa
+-- id: resultsStartExampleId
+
+Results Content 
+
+-- /results
+
+-- comment
+
+The above close "/results" is necessary
+to prevent the parser from skipping
+to the next section in the example
+
+-- /section
+
+
+-- section/
+-- title: Results End [x]
+-- class: exampleSection
+
+-- /results
+-- type: post
+-- tag: example 
+
+Results end stuff 
+
+-- /section
+
+
+
+-- section/
+-- title: Script [x]
+-- class: exampleSection
+
+-- javascript 
+-- title: Script Section
+-- type: post
+-- tag: example 
+
+console.log("here")
+
+
+-- /section
+
+
+
+-- section/
+-- title: SectionStart [x]
+-- class: exampleSection
+
+
+-- section/
+-- title: Example Section
+-- type: post
+-- tag: example
+
+
+-- /section
+-- type: post
+-- tag: blank
+
+-- comment
+
+The above close "/section" is necessary
+to prevent the parser from skipping
+to the next section in the example
+
+-- /section
+
+
+-- section/
+-- title: SectionEnd [x]
+-- class: exampleSection
+
+NOTE: This one is a hack example 
+because sections are used in the
+page itself
+
+-- code/
+
+-- /section
+-- type: post
+-- tag: example
+
+-- /code
+
+
+This is post section content
+
+-- /section
+
+
+
+-- section/
+-- title: Subtitle [x]
+-- class: exampleSection
+
+
+(maintained in page templates)
+
+
+-- /section
+
+
+-- section/
+-- title: Title [x]
+-- class: exampleSection
+
+
+(maintained in page templates)
+
+-- /section
+
+
+-- section/
+-- title: TLDR start/end [x]
+-- class: exampleSection
+
+-- tldr/
+-- type: post
+-- tag: example
+
+This is some TLDR stuff
+
+-- /tldr
+
+
+-- /section
+
+
+
+-- section/
+-- title: TODO [x]
+-- class: exampleSection
+
+-- todo
+-- type: post
+-- tag: example
+
+[] item 1
+
+[x] item 2
+
+
+-- /section
+
+
+
+-- section/
+-- title: Vimeo [x]
+-- class: exampleSection
+
+-- vimeo 
+-- 495935333
+-- type: post
+-- tag: example
+
+-- /section
+
+
+
+-- section/
+-- title: Warning []
+-- class: exampleSection
+
+
+-- warning
+-- title: WARNING SAMPLE TITLE
+-- class: alfa
+-- id: warningExampleId
+-- type: post
+-- tag: default
+
+-- warning
+-- type: post
+-- tag: example
+
+This is a warning section
+
+-- /section
+
+
+-- section/
+-- title: Warnings []
+-- class: exampleSection
+
+-- warnings
+-- type: post
+-- tag: example
+
+- warning 1
+
+- warning 2
+
+-- /section
+
+
+
+-- section/
+-- title: YouTube [x]
+-- class: exampleSection
+
+-- youtube
+-- _YUzQa_1RCE
+-- type: post
+-- tag: example
+
+
+
+
+-- /section
+
+
+-- h2
+
+Metadata Sections
+
+The sections don't have direct output 
+on the page
+
+
+
+
+
+-- section/
+-- class: exampleSection
+
+-- todo
+
+[x] Categories Section 
+
+Categories is a metadata section there is
+no real display for it
+
+-- /section
+
+
+-- section/
+-- title: Comment [x]
+-- class: exampleSection
+
+The comment section has no output
+
+-- /section
+
+
+
+-- section/
+-- class: exampleSection
+
+-- todo
+
+[x] groups Section
+
+Groups are metadata and have no section
+output
+
+-- /section
+
+
+
+-- section/
+-- class: exampleSection
+
+-- todo
+
+[x]  metadata Section
+
+-- p
+
+Attributes are metadata. They
+can be used on the site but
+don't correspond to any given
+output directly  
+
+-- /section
+
+
+
+-- h2
+
+Phase 2 Section
+
+These are sections that will be done later
+
+-- section/
+-- class: exampleSection
+
+-- todo
+
+[] Audio Section
+
+-- /section
+
+
+
+
+-- section/
+-- class: exampleSection
+
+-- todo
+
+[] Blurb Section
+
+This blurb section will be used for
+incoming link content on other
+pages
+
+-- /section
+
+
+
+-- section/
+-- class: exampleSection
+
+-- todo
+
+[] Canvas Section 
+
+-- /section
+
+
+
+
+-- section/
+-- class: exampleSection
+
+-- todo
+
+[] Data Section
+
+-- /section
+
+
+
+
+-- section/
+-- class: exampleSection
+
+-- todo
+
+[] Details Section 
+
+-- /section
+
+
+-- section/
+-- class: exampleSection
+
+-- todo
+
+[] Dlist Section
+
+-- /section
+
+
+
+
+
+-- section/
+-- class: exampleSection
+
+-- todo
+
+[] ext (External Call) Section
+
+-- /section
+
+
+
+
+-- section/
+-- class: exampleSection
+
+-- todo
+
+[] Head Section
+
+-- /section
+
+
+
+-- section/
+-- class: exampleSection
+
+-- todo
+
+[] images Section
+
+-- /section
+
+
+-- section/
+-- class: exampleSection
+
+-- todo
+
+[] menu Section
+
+-- /section
+
+
+
+-- section/
+-- class: exampleSection
+
+-- todo
+
+[] nav Section
+
+-- /section
+
+
+
+-- section/
+-- class: exampleSection
+
+-- todo
+
+[] object Section
+
+-- /section
+
+
+
+-- section/
+-- class: exampleSection
+
+-- todo
+
+[] table Section
+
+-- /section
+
+
+
+
+
+-- section/
+-- class: exampleSection
+
+-- todo
+
+[] textarea Section
+
+-- /section
+
+
+
+-- section/
+-- class: exampleSection
+
+-- todo
+
+[] widget Section
+
+-- /section
+
+
+
+
+
+-- css/
+-- title: CSS On This Page
+-- show
+
+.exampleSection > .sectionTitle {
+  border-bottom: 1px solid green;
+  font-size: 2.1rem;
+  background-color: #444;
+  padding: 1rem;
+}
+
+.exampleHeader {
+  border: 1px solid green;
+  background-color: blue;
+  padding: 1rem;
+}
+
+.exampleSection 
+
+  border: 1px solid blue;
+  border-radius: var(--main-border-radius-base);
+  margin-bottom: 3.2rem;
+  .sectionTitle {
+    background-color: var(--main-clr-primary-base);
+    color: var(--main-clr-secondary-base);
+    border-top-left-radius: var(--main-border-radius-inside);
+    border-top-right-radius: var(--main-border-radius-inside);
+    padding-top: 0.3rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+  }
+  .neoExampleTitle {
+    padding-left: 1rem;
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--main-clr-primary-base);
+  }
+  .neoExampleArea {
+    padding: 0.7rem;
+  }
+}
+
+
+-- /css
+
+
+-- categories
+-- CSS 
+-- Site
+
+-- metadata
+-- created: 2023-08-13T18:06:00-04:00
+-- id: 2twqcam2
+-- site: aws
+-- type: post
+-- status: draft 
+
+
+Í
