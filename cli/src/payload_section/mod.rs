@@ -13,6 +13,7 @@ pub struct PayloadSection {
     pub attrs: Vec<PayloadSectionAttr>,
     pub bounds: String,
     pub children: Vec<PayloadSection>,
+    pub classes: Vec<String>,
     pub created: Option<String>,
     pub data: Option<Value>,
     pub flags: Vec<String>,
@@ -31,7 +32,7 @@ impl PayloadSection {
             .iter()
             .filter_map(|attr| match &attr.kind {
                 SectionAttrKind::KeyValue { key, value } => {
-                    if key.as_str() != "tag" {
+                    if key.as_str() != "tag" && key.as_str() != "class" {
                         Some(PayloadSectionAttr {
                             key: key.to_string(),
                             value: value.to_string(),
@@ -48,6 +49,21 @@ impl PayloadSection {
             SectionBounds::Full => "full".to_string(),
             SectionBounds::Start => "start".to_string(),
         };
+        let classes = section
+            .attrs
+            .iter()
+            .filter_map(|attr| match &attr.kind {
+                SectionAttrKind::KeyValue { key, value } => {
+                    if key.as_str() == "class" {
+                        Some(value.split(" ").map(|s| s.to_string()))
+                    } else {
+                        None
+                    }
+                }
+                _ => None,
+            })
+            .flatten()
+            .collect::<Vec<String>>();
         let flags = section
             .attrs
             .iter()
@@ -105,6 +121,7 @@ impl PayloadSection {
             attrs,
             bounds,
             children,
+            classes,
             created: None,
             data: None,
             flags,
@@ -135,6 +152,28 @@ mod test {
         let section = Section::mock1_basic_title_section_no_attrs();
         let left = "full";
         let right = &PayloadSection::new_from_section(&section).bounds;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn classes_work() {
+        let payload_section =
+            PayloadSection::new_from_section(&Section::mock4_youtube_with_tags_and_classes());
+        let left: Vec<String> = vec![
+            "class1".to_string(),
+            "class2".to_string(),
+            "class3".to_string(),
+        ];
+        let right = payload_section.classes;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn classes_dont_show_up_in_attrs() {
+        let payload_section =
+            PayloadSection::new_from_section(&Section::mock4_youtube_with_tags_and_classes());
+        let left: Vec<PayloadSectionAttr> = vec![];
+        let right = payload_section.attrs;
         assert_eq!(left, right);
     }
 
@@ -173,15 +212,17 @@ mod test {
 
     #[test]
     fn tags_work() {
-        let payload_section = PayloadSection::new_from_section(&Section::mock4_youtube_with_tags());
+        let payload_section =
+            PayloadSection::new_from_section(&Section::mock4_youtube_with_tags_and_classes());
         let left = vec!["minecraft".to_string(), "how-to".to_string()];
         let right = payload_section.tags;
         assert_eq!(left, right);
     }
 
     #[test]
-    fn tags_dont_show_up_in_attres() {
-        let payload_section = PayloadSection::new_from_section(&Section::mock4_youtube_with_tags());
+    fn tags_dont_show_up_in_attrs() {
+        let payload_section =
+            PayloadSection::new_from_section(&Section::mock4_youtube_with_tags_and_classes());
         let left: Vec<PayloadSectionAttr> = vec![];
         let right = payload_section.attrs;
         assert_eq!(left, right);
@@ -189,14 +230,12 @@ mod test {
 
     #[test]
     fn flags_work() {
-        let payload_section = PayloadSection::new_from_section(&Section::mock4_youtube_with_tags());
+        let payload_section =
+            PayloadSection::new_from_section(&Section::mock4_youtube_with_tags_and_classes());
         let left = vec!["NPJ1qQraMZI".to_string()];
         let right = payload_section.flags;
         assert_eq!(left, right);
     }
-
-    #[test]
-    fn flags_dont_show_up_in_attrs() {}
 
     //
 }

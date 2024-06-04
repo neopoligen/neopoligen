@@ -20,9 +20,9 @@ impl Section {
         start_or_full_section(source, &config.sections).unwrap().1
     }
 
-    pub fn mock4_youtube_with_tags() -> Section {
+    pub fn mock4_youtube_with_tags_and_classes() -> Section {
         let config = SiteConfig::mock1_basic();
-        let source = "-- youtube\n-- NPJ1qQraMZI\n-- tag: minecraft\n-- tag: how-to";
+        let source = "-- youtube\n-- NPJ1qQraMZI\n-- tag: minecraft\n-- tag: how-to\n-- class: class1 class2\n-- class: class3";
         start_or_full_section(source, &config.sections).unwrap().1
     }
 }
