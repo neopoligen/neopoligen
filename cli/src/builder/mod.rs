@@ -1,7 +1,5 @@
-use std::fs;
-
 use crate::helpers::*;
-use crate::neo_error::{NeoError, NeoErrorKind};
+use crate::neo_error::NeoError;
 use crate::page_payload::PagePayload;
 use crate::source_page::SourcePage;
 use crate::{engine_config::EngineConfig, site_config::SiteConfig};
@@ -12,6 +10,7 @@ use minijinja::{context, Value};
 use serde::{Deserialize, Serialize};
 use serde_json;
 use std::collections::BTreeMap;
+use std::fs;
 use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 

@@ -32,10 +32,10 @@ impl Section {
         start_or_full_section(source, &config.sections).unwrap().1
     }
 
-    pub fn mock6_div_with_created_and_updated() -> Section {
+    pub fn mock6_div_with_created_and_updated_and_status() -> Section {
         let config = SiteConfig::mock1_basic();
         let source =
-            "-- div\n-- created: 2024-01-01T00:00:00-04:00\n-- updated: 2024-01-02T00:00:00-04:00";
+            "-- div\n-- created: 2024-01-01T00:00:00-04:00\n-- updated: 2024-01-02T00:00:00-04:00\n-- status: section-status-example";
         start_or_full_section(source, &config.sections).unwrap().1
     }
 }

@@ -34,7 +34,7 @@ impl PagePayload {
     pub fn new_from_source_page(source: &SourcePage) -> Result<PagePayload, NeoError> {
         if let Some(id) = source.id() {
             let mut p = PagePayload {
-                id: "asdf".to_string(),
+                id,
                 r#type: None,
                 rel_file_path: None,
                 sections: vec![],
@@ -56,5 +56,32 @@ impl PagePayload {
                 },
             })
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    #[test]
+    #[ignore]
+    fn add_page_tags_to_sections() {
+        // TODO
+    }
+
+    #[test]
+    #[ignore]
+    fn add_section_tags_to_page() {
+        // TODO
+    }
+
+    #[test]
+    #[ignore]
+    fn add_page_created_and_updated_to_sections() {
+        // TODO
+    }
+
+    #[test]
+    #[ignore]
+    fn add_page_status_to_sections() {
+        // TODO
     }
 }

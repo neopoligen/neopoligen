@@ -19,6 +19,7 @@ pub struct PayloadSection {
     pub flags: Vec<String>,
     pub id: Option<String>,
     pub spans: Vec<PayloadSpan>,
+    pub status: Option<String>,
     pub tags: Vec<String>,
     pub text: Option<String>,
     pub r#type: String,
@@ -36,6 +37,7 @@ impl PayloadSection {
                     if key.as_str() != "tag"
                         && key.as_str() != "class"
                         && key.as_str() != "created"
+                        && key.as_str() != "status"
                         && key.as_str() != "updated"
                     {
                         Some(PayloadSectionAttr {
@@ -90,6 +92,16 @@ impl PayloadSection {
         let id = section.attrs.iter().find_map(|attr| match &attr.kind {
             SectionAttrKind::KeyValue { key, value } => {
                 if key.as_str() == "id" {
+                    Some(value.clone())
+                } else {
+                    None
+                }
+            }
+            _ => None,
+        });
+        let status = section.attrs.iter().find_map(|attr| match &attr.kind {
+            SectionAttrKind::KeyValue { key, value } => {
+                if key.as_str() == "status" {
                     Some(value.clone())
                 } else {
                     None
@@ -161,6 +173,7 @@ impl PayloadSection {
             flags,
             id,
             spans,
+            status,
             tags,
             text,
             r#type: section.r#type.clone(),
@@ -214,7 +227,7 @@ mod test {
 
     #[test]
     fn created_check() {
-        let section = Section::mock6_div_with_created_and_updated();
+        let section = Section::mock6_div_with_created_and_updated_and_status();
         let left = "2024-01-01T00:00:00-04:00";
         let right = &PayloadSection::new_from_section(&section).created.unwrap();
         assert_eq!(left, right);
@@ -222,8 +235,9 @@ mod test {
 
     #[test]
     fn created_dont_show_up_in_attrs() {
-        let payload_section =
-            PayloadSection::new_from_section(&Section::mock6_div_with_created_and_updated());
+        let payload_section = PayloadSection::new_from_section(
+            &Section::mock6_div_with_created_and_updated_and_status(),
+        );
         let left: Vec<PayloadSectionAttr> = vec![];
         let right = payload_section.attrs;
         assert_eq!(left, right);
@@ -256,6 +270,24 @@ mod test {
             "sections/generic/full/default.neoj".to_string(),
         ];
         let right = payload_section.template_list;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn status_check() {
+        let section = Section::mock6_div_with_created_and_updated_and_status();
+        let left = "section-status-example";
+        let right = &PayloadSection::new_from_section(&section).status.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn status_does_not_show_up_in_attrs() {
+        let payload_section = PayloadSection::new_from_section(
+            &Section::mock6_div_with_created_and_updated_and_status(),
+        );
+        let left: Vec<PayloadSectionAttr> = vec![];
+        let right = payload_section.attrs;
         assert_eq!(left, right);
     }
 
@@ -299,7 +331,7 @@ mod test {
 
     #[test]
     fn updated_check() {
-        let section = Section::mock6_div_with_created_and_updated();
+        let section = Section::mock6_div_with_created_and_updated_and_status();
         let left = "2024-01-02T00:00:00-04:00";
         let right = &PayloadSection::new_from_section(&section).updated.unwrap();
         assert_eq!(left, right);
@@ -307,8 +339,9 @@ mod test {
 
     #[test]
     fn updated_dont_show_up_in_attrs() {
-        let payload_section =
-            PayloadSection::new_from_section(&Section::mock6_div_with_created_and_updated());
+        let payload_section = PayloadSection::new_from_section(
+            &Section::mock6_div_with_created_and_updated_and_status(),
+        );
         let left: Vec<PayloadSectionAttr> = vec![];
         let right = payload_section.attrs;
         assert_eq!(left, right);
