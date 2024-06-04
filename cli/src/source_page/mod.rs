@@ -2,6 +2,7 @@ pub mod mocks;
 
 use crate::ast::parse_ast;
 use crate::neo_error::{NeoError, NeoErrorKind};
+use crate::payload_section::PayloadSection;
 use crate::section::{Section, SectionKind};
 use crate::section_attr::SectionAttrKind;
 use crate::site_config::SiteConfig;
@@ -107,6 +108,15 @@ impl SourcePage {
         }
     }
 
+    pub fn sections(&self) -> Vec<PayloadSection> {
+        self.ast
+            .as_ref()
+            .unwrap()
+            .iter()
+            .map(|section| PayloadSection {})
+            .collect::<Vec<PayloadSection>>()
+    }
+
     pub fn status(&self) -> Option<String> {
         Some("published".to_string())
     }
@@ -188,6 +198,22 @@ mod test {
         let right = scrub_rel_file_path(source).unwrap();
         assert_eq!(left, right);
     }
+
+    #[test]
+    fn sections_basic() {
+        let p = SourcePage::mock1_20240101_alfa1234_minimal();
+        let left = 2;
+        let right = p.sections().len();
+        assert_eq!(left, right);
+    }
+
+    // #[test]
+    // fn sections_make_template_list() {
+    //     let p = SourcePage::mock1_20240101_alfa1234_minimal();
+    //     let left = vec!["sections/title/full/default.neoj".to_string()];
+    //     let right = p.sections()[0].template_list;
+    //     assert_eq!(left, right);
+    // }
 
     #[test]
     fn status_default() {

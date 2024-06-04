@@ -1,14 +1,14 @@
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
-use crate::section::Section;
+use crate::payload_section::PayloadSection;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PagePayload {
     pub id: String,
     pub rel_file_path: Option<PathBuf>,
     pub r#type: Option<String>,
-    pub sections: Vec<Section>,
+    pub sections: Vec<PayloadSection>,
     pub status: Option<String>,
     pub template_list: Vec<String>,
     pub used_template: Option<String>,

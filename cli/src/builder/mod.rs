@@ -71,7 +71,7 @@ impl Builder {
                 p.template_list = page.template_list();
                 p.status = page.status();
                 p.r#type = page.r#type();
-                p.sections = page.ast.clone().unwrap();
+                p.sections = page.sections();
                 self.payloads.push(p);
             } else {
                 self.errors.push(NeoError {
