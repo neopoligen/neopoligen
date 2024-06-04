@@ -120,8 +120,9 @@ fn build_site(engine_config: &EngineConfig, reloader: &Reloader) {
             let _ = builder.load_pages_from_fs();
             builder.generate_missing_asts();
             builder.generate_payloads();
+            let _ = builder.load_templates();
+            let _ = builder.empty_output_dirs();
             let _ = builder.output_pages();
-
             let _ = builder.tmp_output_errors();
 
             // builder.todo("update_file_cache");

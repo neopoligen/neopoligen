@@ -24,12 +24,15 @@ impl SourcePage {
         config: SiteConfig,
     ) -> Result<SourcePage, NeoError> {
         match fs::read_to_string(path) {
-            Ok(content) => Ok(SourcePage {
-                ast: None,
-                config: Some(config),
-                source_content: Some(content),
-                source_path: Some(path.clone()),
-            }),
+            Ok(content) => {
+                let p = SourcePage {
+                    ast: None,
+                    config: Some(config),
+                    source_content: Some(content),
+                    source_path: Some(path.clone()),
+                };
+                Ok(p)
+            }
             Err(e) => Err(NeoError {
                 kind: NeoErrorKind::ForwardError { msg: e.to_string() },
             }),

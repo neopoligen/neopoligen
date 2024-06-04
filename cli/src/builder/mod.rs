@@ -11,6 +11,7 @@ use minijinja::Environment;
 use minijinja::{context, Value};
 use serde::{Deserialize, Serialize};
 use serde_json;
+use std::collections::BTreeMap;
 use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 
@@ -20,6 +21,7 @@ pub struct Builder {
     errors: Vec<NeoError>,
     source_pages: Vec<SourcePage>,
     payloads: Vec<PagePayload>,
+    templates: BTreeMap<String, String>,
 }
 
 impl Builder {
@@ -37,12 +39,20 @@ impl Builder {
             errors: vec![],
             source_pages: vec![],
             payloads: vec![],
+            templates: BTreeMap::new(),
         };
         Ok(b)
     }
 }
 
 impl Builder {
+    #[instrument(skip(self))]
+    pub fn empty_output_dirs(&self) {
+        event!(Level::DEBUG, "Emptying output dirs");
+        let _ = empty_dir(&self.config.as_ref().unwrap().status_dest_dir());
+        let _ = empty_dir(&self.config.as_ref().unwrap().output_dest_dir());
+    }
+
     #[instrument(skip(self))]
     pub fn generate_missing_asts(&mut self) {
         self.source_pages.iter_mut().for_each(|page| {
@@ -81,11 +91,45 @@ impl Builder {
                     if ext.to_ascii_lowercase() == "neo"
                         && !filename.to_str().unwrap().starts_with(".")
                     {
-                        let page = SourcePage::new_from_source_path(
+                        let mut page = SourcePage::new_from_source_path(
                             &path,
                             self.config.as_ref().unwrap().clone(),
                         )?;
-                        self.source_pages.push(page);
+                        match page.generate_ast() {
+                            Ok(()) => self.source_pages.push(page),
+                            Err(e) => {
+                                dbg!(e);
+                                ()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn load_templates(&mut self) -> Result<()> {
+        event!(Level::INFO, "Loading Templates");
+        for entry in WalkDir::new(&self.config.as_ref().unwrap().templates_dir()) {
+            let path = entry?.path().to_path_buf();
+            if path.is_file() {
+                if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
+                    if ext.to_ascii_lowercase() == "neoj"
+                        && !filename.to_str().unwrap().starts_with(".")
+                    {
+                        let template_name =
+                            &path.strip_prefix(&self.config.as_ref().unwrap().templates_dir());
+                        let content = fs::read_to_string(&path)?;
+                        self.templates.insert(
+                            template_name
+                                .as_ref()
+                                .unwrap()
+                                .to_string_lossy()
+                                .to_string(),
+                            content,
+                        );
                     }
                 }
             }
@@ -103,18 +147,15 @@ impl Builder {
                 .build()
                 .unwrap(),
         );
-        let _ = env.add_template_owned(
-            "tmp-template",
-            r#"
-<!DOCTYPE html>
-<html><head><style> 
-body { background-color: #111; color: #aaa; } 
-</style></head><body><h1>Page</h1>
-[@ page @]
-</body></html>"#
-                .to_string(),
-        );
-
+        for (id, data) in self.templates.iter() {
+            match env.add_template_owned(id, data) {
+                Ok(_) => {}
+                Err(e) => {
+                    dbg!(e);
+                    {}
+                }
+            }
+        }
         for page in self.payloads.iter() {
             let output_path = self
                 .config
@@ -122,16 +163,27 @@ body { background-color: #111; color: #aaa; }
                 .unwrap()
                 .output_dest_dir()
                 .join(page.rel_file_path.as_ref().unwrap());
-            let tmpl = env.get_template("tmp-template").unwrap();
-            match tmpl.render(context!(
-                page => Value::from_serialize(&page)
-            )) {
-                Ok(output) => {
-                    let _ = write_file_with_mkdir(&output_path, &output);
+            if let Some(template) = page.template_list.iter().find_map(|name| {
+                if let Ok(tmpl) = env.get_template(name) {
+                    Some(tmpl)
+                } else {
+                    None
                 }
-                Err(_) => (),
-            }
-            ()
+            }) {
+                match template.render(context!(
+                    page => Value::from_serialize(&page)
+                )) {
+                    Ok(output) => {
+                        let _ = write_file_with_mkdir(&output_path, &output);
+                    }
+                    Err(e) => {
+                        dbg!(e);
+                        ()
+                    }
+                };
+            } else {
+                event!(Level::ERROR, "Could not find template");
+            };
         }
         Ok(())
     }
@@ -155,7 +207,7 @@ body { background-color: #111; color: #aaa; }
 </style></head><body><h1>Status</h1>
 <ul>
 [! for error in errors !]
-<li>[@ errors @]</li>
+<li><pre>[@ errors|tojson(true) @]</pre></li>
 [! endfor !]
 </ul>
 </body></html>
