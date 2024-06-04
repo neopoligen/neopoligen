@@ -1,8 +1,8 @@
-use crate::section::block::*;
+use crate::section::list_item::*;
 use crate::section::*;
 use crate::section_attr::*;
 use crate::span::*;
-use nom::branch::alt;
+// use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;
 use nom::multi::many0;
@@ -26,12 +26,17 @@ pub fn list_section_full<'a>(
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
         .parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
+    let (source, children) = many0(|src| list_item_full(src, sections))
+        .context("")
+        .parse(source)?;
+
     Ok((
         source,
         Section {
             attrs,
             bounds: SectionBounds::Full,
-            kind: SectionKind::List { children: vec![] },
+            kind: SectionKind::List { children },
             r#type: r#type.to_string(),
         },
     ))
@@ -42,9 +47,7 @@ mod test {
     use super::*;
     use crate::site_config::SiteConfig;
     use pretty_assertions::assert_eq;
-
     #[test]
-    #[ignore]
     fn solo_basic_list() {
         let source = "-- list\n\n- alfa";
         let config = SiteConfig::mock1_basic();
@@ -53,7 +56,28 @@ mod test {
             Section {
                 attrs: vec![],
                 bounds: SectionBounds::Full,
-                kind: SectionKind::List { children: vec![] },
+                kind: SectionKind::List {
+                    children: vec![Section {
+                        attrs: vec![],
+                        bounds: SectionBounds::Full,
+                        kind: SectionKind::ListItem {
+                            children: vec![Section {
+                                attrs: vec![],
+                                bounds: SectionBounds::Full,
+                                kind: SectionKind::Block {
+                                    spans: vec![Span {
+                                        attrs: vec![],
+                                        kind: SpanKind::WordPart,
+                                        parsed_text: "alfa".to_string(),
+                                        source_text: "alfa".to_string(),
+                                    }],
+                                },
+                                r#type: "block-of-text".to_string(),
+                            }],
+                        },
+                        r#type: "list-item".to_string(),
+                    }],
+                },
                 r#type: "list".to_string(),
             },
         );
