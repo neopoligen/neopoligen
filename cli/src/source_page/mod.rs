@@ -91,7 +91,7 @@ impl SourcePage {
         self.get_metadata_item("id")
     }
 
-    pub fn page_type(&self) -> Option<String> {
+    pub fn r#type(&self) -> Option<String> {
         Some("post".to_string())
     }
 
@@ -142,10 +142,10 @@ mod test {
     }
 
     #[test]
-    fn page_type_default() {
+    fn type_default() {
         let p = SourcePage::mock1_20240101_alfa1234_minimal();
         let left = "post".to_string();
-        let right = p.page_type().unwrap();
+        let right = p.r#type().unwrap();
         assert_eq!(left, right);
     }
 

@@ -69,6 +69,8 @@ impl Builder {
                 let mut p = PagePayload::new_from_id(&id);
                 p.rel_file_path = page.rel_file_path();
                 p.template_list = page.template_list();
+                p.status = page.status();
+                p.r#type = page.r#type();
                 self.payloads.push(p);
             } else {
                 self.errors.push(NeoError {
@@ -137,7 +139,7 @@ impl Builder {
         Ok(())
     }
 
-    pub fn output_pages(&self) -> Result<()> {
+    pub fn output_pages(&mut self) -> Result<()> {
         let mut env = Environment::new();
         env.set_syntax(
             SyntaxConfig::builder()
@@ -156,7 +158,7 @@ impl Builder {
                 }
             }
         }
-        for page in self.payloads.iter() {
+        for page in self.payloads.iter_mut() {
             let output_path = self
                 .config
                 .as_ref()
@@ -165,6 +167,7 @@ impl Builder {
                 .join(page.rel_file_path.as_ref().unwrap());
             if let Some(template) = page.template_list.iter().find_map(|name| {
                 if let Ok(tmpl) = env.get_template(name) {
+                    page.used_template = Some(name.clone());
                     Some(tmpl)
                 } else {
                     None
