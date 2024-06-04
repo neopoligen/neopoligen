@@ -31,4 +31,11 @@ impl Section {
         let source = "-- div\n-- id: attr-id";
         start_or_full_section(source, &config.sections).unwrap().1
     }
+
+    pub fn mock6_div_with_created_and_updated() -> Section {
+        let config = SiteConfig::mock1_basic();
+        let source =
+            "-- div\n-- created: 2024-01-01T00:00:00-04:00\n-- updated: 2024-01-02T00:00:00-04:00";
+        start_or_full_section(source, &config.sections).unwrap().1
+    }
 }

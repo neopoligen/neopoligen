@@ -14,6 +14,7 @@ impl SiteConfig {
                 "div".to_string(),
                 "image".to_string(),
                 "p".to_string(),
+                "short".to_string(),
                 "title".to_string(),
                 "youtube".to_string(),
             ],

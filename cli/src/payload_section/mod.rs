@@ -33,7 +33,11 @@ impl PayloadSection {
             .iter()
             .filter_map(|attr| match &attr.kind {
                 SectionAttrKind::KeyValue { key, value } => {
-                    if key.as_str() != "tag" && key.as_str() != "class" {
+                    if key.as_str() != "tag"
+                        && key.as_str() != "class"
+                        && key.as_str() != "created"
+                        && key.as_str() != "updated"
+                    {
                         Some(PayloadSectionAttr {
                             key: key.to_string(),
                             value: value.to_string(),
@@ -65,6 +69,16 @@ impl PayloadSection {
             })
             .flatten()
             .collect::<Vec<String>>();
+        let created = section.attrs.iter().find_map(|attr| match &attr.kind {
+            SectionAttrKind::KeyValue { key, value } => {
+                if key.as_str() == "created" {
+                    Some(value.clone())
+                } else {
+                    None
+                }
+            }
+            _ => None,
+        });
         let flags = section
             .attrs
             .iter()
@@ -127,21 +141,31 @@ impl PayloadSection {
             SectionKind::Raw { text, .. } => text.clone(),
             _ => None,
         };
+        let updated = section.attrs.iter().find_map(|attr| match &attr.kind {
+            SectionAttrKind::KeyValue { key, value } => {
+                if key.as_str() == "updated" {
+                    Some(value.clone())
+                } else {
+                    None
+                }
+            }
+            _ => None,
+        });
         PayloadSection {
             attrs,
             bounds,
             children,
             classes,
-            created: None,
+            created,
             data: None,
             flags,
             id,
             spans,
             tags,
             text,
-            r#type: "title".to_string(),
+            r#type: section.r#type.clone(),
             template_list,
-            updated: None,
+            updated,
         }
     }
 }
@@ -183,6 +207,23 @@ mod test {
     fn classes_dont_show_up_in_attrs() {
         let payload_section =
             PayloadSection::new_from_section(&Section::mock4_youtube_with_tags_and_classes());
+        let left: Vec<PayloadSectionAttr> = vec![];
+        let right = payload_section.attrs;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn created_check() {
+        let section = Section::mock6_div_with_created_and_updated();
+        let left = "2024-01-01T00:00:00-04:00";
+        let right = &PayloadSection::new_from_section(&section).created.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn created_dont_show_up_in_attrs() {
+        let payload_section =
+            PayloadSection::new_from_section(&Section::mock6_div_with_created_and_updated());
         let left: Vec<PayloadSectionAttr> = vec![];
         let right = payload_section.attrs;
         assert_eq!(left, right);
@@ -253,6 +294,23 @@ mod test {
         let section = Section::mock1_basic_title_section_no_attrs();
         let left = "title".to_string();
         let right = PayloadSection::new_from_section(&section).r#type;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn updated_check() {
+        let section = Section::mock6_div_with_created_and_updated();
+        let left = "2024-01-02T00:00:00-04:00";
+        let right = &PayloadSection::new_from_section(&section).updated.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn updated_dont_show_up_in_attrs() {
+        let payload_section =
+            PayloadSection::new_from_section(&Section::mock6_div_with_created_and_updated());
+        let left: Vec<PayloadSectionAttr> = vec![];
+        let right = payload_section.attrs;
         assert_eq!(left, right);
     }
 

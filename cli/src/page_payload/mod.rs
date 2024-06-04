@@ -1,7 +1,11 @@
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
-use crate::payload_section::PayloadSection;
+use crate::{
+    neo_error::{NeoError, NeoErrorKind},
+    payload_section::PayloadSection,
+    source_page::SourcePage,
+};
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PagePayload {
@@ -15,15 +19,42 @@ pub struct PagePayload {
 }
 
 impl PagePayload {
-    pub fn new_from_id(id: &str) -> PagePayload {
-        PagePayload {
-            id: id.to_string(),
-            r#type: None,
-            rel_file_path: None,
-            sections: vec![],
-            status: None,
-            template_list: vec![],
-            used_template: None,
+    // pub fn new_from_id(id: &str) -> PagePayload {
+    //     PagePayload {
+    //         id: id.to_string(),
+    //         r#type: None,
+    //         rel_file_path: None,
+    //         sections: vec![],
+    //         status: None,
+    //         template_list: vec![],
+    //         used_template: None,
+    //     }
+    // }
+
+    pub fn new_from_source_page(source: &SourcePage) -> Result<PagePayload, NeoError> {
+        if let Some(id) = source.id() {
+            let mut p = PagePayload {
+                id: "asdf".to_string(),
+                r#type: None,
+                rel_file_path: None,
+                sections: vec![],
+                status: None,
+                template_list: vec![],
+                used_template: None,
+            };
+            p.rel_file_path = source.rel_file_path();
+            p.template_list = source.template_list();
+            p.status = source.status();
+            p.r#type = source.r#type();
+            p.sections = source.sections();
+            Ok(p)
+        } else {
+            Err(NeoError {
+                kind: NeoErrorKind::GenericErrorWithSourcePath {
+                    source_path: source.source_path.clone().expect("get source path"),
+                    msg: "could not get id for file".to_string(),
+                },
+            })
         }
     }
 }

@@ -64,24 +64,39 @@ impl Builder {
 
     #[instrument(skip(self))]
     pub fn generate_payloads(&mut self) {
-        self.source_pages.iter_mut().for_each(|page| {
-            if let Some(id) = page.id() {
-                let mut p = PagePayload::new_from_id(&id);
-                p.rel_file_path = page.rel_file_path();
-                p.template_list = page.template_list();
-                p.status = page.status();
-                p.r#type = page.r#type();
-                p.sections = page.sections();
-                self.payloads.push(p);
-            } else {
-                self.errors.push(NeoError {
-                    kind: NeoErrorKind::FileError {
-                        source_path: page.source_path.clone().unwrap(),
-                        msg: "Could not get ID for file".to_string(),
-                    },
-                })
-            }
-        })
+        self.payloads = self
+            .source_pages
+            .iter()
+            .filter_map(|page| {
+                match PagePayload::new_from_source_page(&page) {
+                    Ok(p) => Some(p),
+                    Err(_) => {
+                        event!(
+                            Level::ERROR,
+                            "Page load error: TODO: make this a better message"
+                        );
+                        None
+                    }
+                }
+
+                // if let Some(id) = page.id() {
+                //     let mut p = PagePayload::new_from_id(&id);
+                //     p.rel_file_path = page.rel_file_path();
+                //     p.template_list = page.template_list();
+                //     p.status = page.status();
+                //     p.r#type = page.r#type();
+                //     p.sections = page.sections();
+                //     self.payloads.push(p);
+                // } else {
+                //     self.errors.push(NeoError {
+                //         kind: NeoErrorKind::FileError {
+                //             source_path: page.source_path.clone().unwrap(),
+                //             msg: "Could not get ID for file".to_string(),
+                //         },
+                //     })
+                // }
+            })
+            .collect()
     }
 
     #[instrument(skip(self))]
