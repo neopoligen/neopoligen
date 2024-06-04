@@ -1,10 +1,5 @@
-//use crate::span::escaped_backslash::*;
-//use crate::span::escaped_pipe::*;
 use crate::span::*;
-// use crate::span_attr::SpanAttrKind;
-// use crate::span_shorthand_token::*;
 use nom::branch::alt;
-// use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::multi::many0;
 use nom::multi::many1;
@@ -12,14 +7,6 @@ use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-// use nom::character::complete::line_ending;
-// use nom::character::complete::multispace0;
-// use nom::character::complete::space0;
-// use nom::character::complete::space1;
-// use nom::combinator::eof;
-// use nom::combinator::not;
-// use nom::sequence::tuple;
-// use serde::Serialize;
 
 pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let initial_source = source;
@@ -29,19 +16,14 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, parts) = many0(span_for_shorthand_text).context("").parse(source)?;
-    // let (source, attrs) = many0(code_shorthand_attr).context("").parse(source)?;
-    // let (source, _) = tag(">>").context("").parse(source)?;
-
-    // let source_text = initial_source.replace(source, "").to_string();
-    // let parsed_text = parts
-    //     .iter()
-    //     .map(|word| word.parsed_text.clone())
-    //     .collect::<Vec<String>>()
-    //     .join("");
-
-    let attrs = vec![];
-    let source_text = "asdf".to_string();
-    let parsed_text = "asdf".to_string();
+    let (source, attrs) = many0(code_shorthand_attr).context("").parse(source)?;
+    let (source, _) = tag(">>").context("").parse(source)?;
+    let source_text = initial_source.replace(source, "").to_string();
+    let parsed_text = parts
+        .iter()
+        .map(|word| word.parsed_text.clone())
+        .collect::<Vec<String>>()
+        .join("");
     Ok((
         source,
         Span {
@@ -56,7 +38,6 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
 }
 
 pub fn named_span_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-    // let (source, attr) = alt((flag_attr,))
     let (source, attr) = alt((named_span_key_value_attr, named_span_flag_attr))
         .context("")
         .parse(source)?;

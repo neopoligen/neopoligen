@@ -54,13 +54,13 @@ mod test {
                 kind: SpanKind::SingleGreaterThan {},
             },
         );
-        let right = single_backtick(source).unwrap();
+        let right = single_greaterthan(source).unwrap();
         assert_eq!(left, right);
     }
 
     #[test]
-    fn dont_capture_two_backtickts() {
-        let source = "``";
-        assert!(single_backtick(source).is_err());
+    fn dont_capture_two_greaterthans() {
+        let source = ">>";
+        assert!(single_greaterthan(source).is_err());
     }
 }
