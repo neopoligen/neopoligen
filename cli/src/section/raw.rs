@@ -1,5 +1,6 @@
 use crate::section::*;
 use crate::section_attr::*;
+use crate::site_config::SiteConfig;
 use crate::span::*;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
@@ -74,4 +75,96 @@ pub fn raw_section_start<'a>(
         r#type: r#type.to_string(),
     };
     Ok((source, section))
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+    #[test]
+    fn basic_star_end() {
+        let source = "-- code/\n\nsome code\n\n-- /code\n\n";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "",
+            Section {
+                attrs: vec![],
+                bounds: SectionBounds::Start,
+                kind: SectionKind::Raw {
+                    children: vec![Section {
+                        attrs: vec![],
+                        bounds: SectionBounds::End,
+                        kind: SectionKind::Basic { children: vec![] },
+                        r#type: "code".to_string(),
+                    }],
+                    text: Some("some code".to_string()),
+                },
+                r#type: "code".to_string(),
+            },
+        );
+        let right = raw_section_start(source, &config.sections).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn basic_star_end_with_attrs() {
+        let source = "-- code/\n-- bash\n-- class: alfa\n\nsome code\n\n-- /code\n\n";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "",
+            Section {
+                attrs: vec![
+                    SectionAttr {
+                        kind: SectionAttrKind::Flag {
+                            flag: "bash".to_string(),
+                        },
+                    },
+                    SectionAttr {
+                        kind: SectionAttrKind::KeyValue {
+                            key: "class".to_string(),
+                            value: "alfa".to_string(),
+                        },
+                    },
+                ],
+                bounds: SectionBounds::Start,
+                kind: SectionKind::Raw {
+                    children: vec![Section {
+                        attrs: vec![],
+                        bounds: SectionBounds::End,
+                        kind: SectionKind::Basic { children: vec![] },
+                        r#type: "code".to_string(),
+                    }],
+                    text: Some("some code".to_string()),
+                },
+                r#type: "code".to_string(),
+            },
+        );
+        let right = raw_section_start(source, &config.sections).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn somewith_with_dashes_in_it() {
+        let source = "-- code/\n\nalfa -- not here\n\n-- /code\n\n";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "",
+            Section {
+                attrs: vec![],
+                bounds: SectionBounds::Start,
+                kind: SectionKind::Raw {
+                    children: vec![Section {
+                        attrs: vec![],
+                        bounds: SectionBounds::End,
+                        kind: SectionKind::Basic { children: vec![] },
+                        r#type: "code".to_string(),
+                    }],
+                    text: Some("alfa -- not here".to_string()),
+                },
+                r#type: "code".to_string(),
+            },
+        );
+        let right = raw_section_start(source, &config.sections).unwrap();
+        assert_eq!(left, right);
+    }
 }

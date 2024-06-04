@@ -102,7 +102,84 @@ pub fn basic_section_start<'a>(
 
 #[cfg(test)]
 mod test {
+    use super::*;
+    use crate::site_config::SiteConfig;
+    use pretty_assertions::assert_eq;
     #[test]
-    #[ignore]
-    fn to_move_test_in_here() {}
+    fn basic_full_test() {
+        let source = "-- title\n\nHello World";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "",
+            Section {
+                attrs: vec![],
+                bounds: SectionBounds::Full,
+                kind: SectionKind::Basic {
+                    children: vec![Section {
+                        attrs: vec![],
+                        bounds: SectionBounds::Full,
+                        kind: SectionKind::Block {
+                            spans: vec![
+                                Span {
+                                    attrs: vec![],
+                                    kind: SpanKind::WordPart,
+                                    parsed_text: "Hello".to_string(),
+                                    source_text: "Hello".to_string(),
+                                },
+                                Span {
+                                    attrs: vec![],
+                                    kind: SpanKind::Space,
+                                    parsed_text: " ".to_string(),
+                                    source_text: " ".to_string(),
+                                },
+                                Span {
+                                    attrs: vec![],
+                                    kind: SpanKind::WordPart,
+                                    parsed_text: "World".to_string(),
+                                    source_text: "World".to_string(),
+                                },
+                            ],
+                        },
+                        r#type: "block-of-text".to_string(),
+                    }],
+                },
+                r#type: "title".to_string(),
+            },
+        );
+        let right = basic_section_full(source, &config.sections).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn basic_with_code_shorthand() {
+        let source = "-- title\n\n``code shorthand``";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "",
+            Section {
+                attrs: vec![],
+                bounds: SectionBounds::Full,
+                kind: SectionKind::Basic {
+                    children: vec![Section {
+                        attrs: vec![],
+                        bounds: SectionBounds::Full,
+                        kind: SectionKind::Block {
+                            spans: vec![Span {
+                                attrs: vec![],
+                                kind: SpanKind::CodeShorthand,
+                                parsed_text: "code shorthand".to_string(),
+                                source_text: "``code shorthand``".to_string(),
+                            }],
+                        },
+                        r#type: "block-of-text".to_string(),
+                    }],
+                },
+                r#type: "title".to_string(),
+            },
+        );
+        let right = basic_section_full(source, &config.sections).unwrap();
+        assert_eq!(left, right);
+    }
+
+    //
 }
