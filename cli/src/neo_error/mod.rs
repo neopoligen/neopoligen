@@ -23,6 +23,10 @@ pub enum NeoErrorKind {
     ForwardError {
         msg: String,
     },
+    ForwardErrorWithSourcePath {
+        source_path: PathBuf,
+        msg: String,
+    },
     MissingThemeDirectory {
         path: PathBuf,
     },
@@ -58,6 +62,12 @@ impl std::fmt::Display for NeoError {
                 fmt.write_str(msg.as_str())?;
             }
             NeoErrorKind::ForwardError { msg } => {
+                fmt.write_str(msg.as_str())?;
+            }
+            NeoErrorKind::ForwardErrorWithSourcePath { source_path, msg } => {
+                fmt.write_str("Path: ")?;
+                fmt.write_str(source_path.display().to_string().as_str())?;
+                fmt.write_str("\n")?;
                 fmt.write_str(msg.as_str())?;
             }
             NeoErrorKind::ParserError {

@@ -135,7 +135,7 @@ pub fn tag_finder<'a>(
 #[cfg(test)]
 mod test {
     use super::*;
-    //use crate::site_config::SiteConfig;
+    use crate::site_config::SiteConfig;
     use pretty_assertions::assert_eq;
     #[test]
     fn get_attr_is_none_if_it_does_not_exist() {
@@ -161,37 +161,37 @@ mod test {
         assert_eq!(left, right);
     }
 
-    //    #[test]
-    //    fn misc_test() {
-    //        //let source = "-- code/\n-- bash\n\nmkdir new_app\ncd new_app\nnpm init\nnpm install --save-dev jest\n\n-- /code\n\n-- p\n\n(There will be a bunch of questions after the ``npm init`` to go through)\n\n\n-- categories\n-- JavaScript\n-- Test Driven Development\n\n-- metadata\n-- created: 2022-05-14T01:32:16-04:00\n-- id: 298t2vqn\n-- status: scratch\n-- type: post\n-- SCRUBBED_NEO: false\n-- site: aws\n";
-    //        let source = "-- code/\n\nmkdir\n\n-- /code\n\n";
-    //        let config = SiteConfig::mock1_basic();
-    //        let left = (
-    //            "",
-    //            Section {
-    //                attrs: vec![],
-    //                bounds: SectionBounds::Full,
-    //                kind: SectionKind::Basic {
-    //                    children: vec![Section {
-    //                        attrs: vec![],
-    //                        bounds: SectionBounds::Full,
-    //                        kind: SectionKind::Block {
-    //                            spans: vec![Span {
-    //                                attrs: vec![],
-    //                                kind: SpanKind::CodeShorthand,
-    //                                parsed_text: "code shorthand".to_string(),
-    //                                source_text: "``code shorthand``".to_string(),
-    //                            }],
-    //                        },
-    //                        r#type: "block-of-text".to_string(),
-    //                    }],
-    //                },
-    //                r#type: "title".to_string(),
-    //            },
-    //        );
-    //        let right = start_or_full_section(source, &config.sections).unwrap();
-    //        assert_eq!(left, right);
-    //    }
+    #[test]
+    #[ignore]
+    fn misc_test() {
+        let source = include_str!("_test_file.neo");
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "",
+            Section {
+                attrs: vec![],
+                bounds: SectionBounds::Full,
+                kind: SectionKind::Basic {
+                    children: vec![Section {
+                        attrs: vec![],
+                        bounds: SectionBounds::Full,
+                        kind: SectionKind::Block {
+                            spans: vec![Span {
+                                attrs: vec![],
+                                kind: SpanKind::CodeShorthand,
+                                parsed_text: "code shorthand".to_string(),
+                                source_text: "``code shorthand``".to_string(),
+                            }],
+                        },
+                        r#type: "block-of-text".to_string(),
+                    }],
+                },
+                r#type: "title".to_string(),
+            },
+        );
+        let right = start_or_full_section(source, &config.sections).unwrap();
+        assert_eq!(left, right);
+    }
 
     //
 }

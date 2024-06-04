@@ -35,7 +35,10 @@ impl SourcePage {
                 Ok(p)
             }
             Err(e) => Err(NeoError {
-                kind: NeoErrorKind::ForwardError { msg: e.to_string() },
+                kind: NeoErrorKind::ForwardErrorWithSourcePath {
+                    source_path: path.clone(),
+                    msg: e.to_string(),
+                },
             }),
         }
     }

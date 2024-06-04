@@ -22,12 +22,15 @@ impl PayloadSpan {
             SpanKind::EscapedBackslash => "escapedbackslash".to_string(),
             SpanKind::EscapedBacktick => "escapedbacktick".to_string(),
             SpanKind::EscapedColon => "escapedcolon".to_string(),
+            SpanKind::EscapedGreaterThan => "escapedgreaterthan".to_string(),
             SpanKind::EscapedPipe => "escapedpipe".to_string(),
             SpanKind::LinkShorthand => "linkshorthand".to_string(),
             SpanKind::Newline => "newline".to_string(),
             SpanKind::SingleBacktick => "singlebacktick".to_string(),
+            SpanKind::SingleGreaterThan => "singlegreaterthan".to_string(),
             SpanKind::Space => "space".to_string(),
             SpanKind::WordPart => "wordpart".to_string(),
+            SpanKind::NamedSpan { name } => name.to_string(),
         };
         PayloadSpan {
             attrs: vec![],

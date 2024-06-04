@@ -70,7 +70,7 @@ impl Builder {
     pub fn generate_missing_asts(&mut self) {
         event!(Level::INFO, "Generating Missing ASTs");
         self.source_pages.iter_mut().for_each(|page| {
-            dbg!(&page.source_path);
+            // dbg!(&page.source_path);
             if let Err(e) = page.generate_ast() {
                 self.errors.push(e);
             }
@@ -233,7 +233,22 @@ impl Builder {
 <html><head><style> 
 body { background-color: #111; color: #aaa; } 
 </style></head><body><h1>Status</h1>
-[@ errors @]
+<ul>
+[! for error in errors !]
+<li>
+
+[! if error.type == "parsererror" !]
+
+[! endif !]
+
+
+[@ error.source_path @]
+[@ error.msg @]
+<hr />
+[@ error @]
+</li>
+[! endfor !]
+</ul>
 </body></html>
         "#,
         )?;

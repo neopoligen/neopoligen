@@ -3,19 +3,26 @@ pub mod colon;
 pub mod colon_not_followed_by_space;
 pub mod escaped_backslash;
 pub mod escaped_backtick;
+pub mod escaped_greaterthan;
 pub mod escaped_pipe;
 pub mod mocks;
+pub mod named_span;
 pub mod single_backtick;
+pub mod single_greaterthan;
+pub mod wordpart;
 
 use crate::span::code_shorthand::*;
 use crate::span::colon::*;
 use crate::span::colon_not_followed_by_space::*;
 use crate::span::escaped_backslash::*;
 use crate::span::escaped_backtick::*;
+use crate::span::escaped_greaterthan::*;
 use crate::span::escaped_pipe::*;
+use crate::span::named_span::*;
 use crate::span::single_backtick::*;
+use crate::span::single_greaterthan::*;
+use crate::span::wordpart::*;
 use crate::span_attr::*;
-// use crate::span::link_shorthand::link_shorthand;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::character::complete::line_ending;
@@ -48,10 +55,13 @@ pub enum SpanKind {
     EscapedBacktick,
     EscapedBackslash,
     EscapedColon,
+    EscapedGreaterThan,
     EscapedPipe,
     LinkShorthand,
+    NamedSpan { name: String },
     Newline,
     SingleBacktick,
+    SingleGreaterThan,
     Space,
     WordPart,
 }
@@ -166,18 +176,18 @@ pub fn space(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     ))
 }
 
-// TODO: Move to own file with tests
-pub fn wordpart(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let initial_source = source;
-    let (source, text) = is_not(" \\`|:\n\t").context("").parse(source)?;
-    let source_text = initial_source.replace(source, "").to_string();
-    Ok((
-        source,
-        Span {
-            attrs: vec![],
-            source_text,
-            parsed_text: text.to_string(),
-            kind: SpanKind::WordPart,
-        },
-    ))
-}
+// // TODO: Move to own file with tests
+// pub fn wordpart(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+//     let initial_source = source;
+//     let (source, text) = is_not(" \\`|:\n\t").context("").parse(source)?;
+//     let source_text = initial_source.replace(source, "").to_string();
+//     Ok((
+//         source,
+//         Span {
+//             attrs: vec![],
+//             source_text,
+//             parsed_text: text.to_string(),
+//             kind: SpanKind::WordPart,
+//         },
+//     ))
+// }
