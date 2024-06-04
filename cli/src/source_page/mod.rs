@@ -5,7 +5,7 @@ use crate::neo_error::{NeoError, NeoErrorKind};
 use crate::payload_section::PayloadSection;
 use crate::payload_section_attr::PayloadSectionAttr;
 use crate::section::{Section, SectionBounds, SectionKind};
-use crate::section_attr::{SectionAttr, SectionAttrKind};
+use crate::section_attr::SectionAttrKind;
 use crate::site_config::SiteConfig;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
@@ -142,6 +142,7 @@ impl SourcePage {
                     "sections/{}/{}/default.neoj",
                     section.r#type, bounds
                 ));
+                template_list.push(format!("sections/generic/{}/default.neoj", bounds));
                 PayloadSection {
                     attrs,
                     bounds: section.bounds.clone(),
@@ -240,6 +241,7 @@ mod test {
         let left = &vec![
             "sections/div/full/attr-template.neoj".to_string(),
             "sections/div/full/default.neoj".to_string(),
+            "sections/generic/full/default.neoj".to_string(),
         ];
         let right = &p.sections()[0].template_list;
         assert_eq!(left, right);
@@ -248,7 +250,10 @@ mod test {
     #[test]
     fn section_template_list_check() {
         let p = SourcePage::mock1_20240101_alfa1234_minimal();
-        let left = &vec!["sections/title/full/default.neoj".to_string()];
+        let left = &vec![
+            "sections/title/full/default.neoj".to_string(),
+            "sections/generic/full/default.neoj".to_string(),
+        ];
         let right = &p.sections()[0].template_list;
         assert_eq!(left, right);
     }
