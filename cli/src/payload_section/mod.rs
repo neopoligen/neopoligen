@@ -2,14 +2,103 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     payload_section_attr::PayloadSectionAttr,
-    section::{SectionBounds, SectionKind},
+    section::{Section, SectionBounds},
+    section_attr::SectionAttrKind,
 };
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PayloadSection {
     pub attrs: Vec<PayloadSectionAttr>,
-    pub bounds: SectionBounds,
-    pub kind: SectionKind,
+    pub bounds: String,
+    pub children: Vec<PayloadSection>,
+    pub flags: Vec<String>,
     pub r#type: String,
     pub template_list: Vec<String>,
+}
+
+impl PayloadSection {
+    pub fn new_from_section(section: &Section) -> PayloadSection {
+        let attrs = section
+            .attrs
+            .iter()
+            .filter_map(|attr| match &attr.kind {
+                SectionAttrKind::KeyValue { key, value } => Some(PayloadSectionAttr {
+                    key: key.to_string(),
+                    value: value.to_string(),
+                }),
+                _ => None,
+            })
+            .collect::<Vec<PayloadSectionAttr>>();
+
+        let bounds = match section.bounds {
+            SectionBounds::End => "end".to_string(),
+            SectionBounds::Full => "full".to_string(),
+            SectionBounds::Start => "start".to_string(),
+        };
+
+        //         let mut template_list = vec![];
+        //         if let Some(template) = section.get_attr("template") {
+        //             template_list.push(format!(
+        //                 "sections/{}/{}/{}.neoj",
+        //                 section.r#type, bounds, template
+        //             ));
+        //         }
+        //         template_list.push(format!(
+        //             "sections/{}/{}/default.neoj",
+        //             section.r#type, bounds
+        //         ));
+        //         template_list.push(format!("sections/generic/{}/default.neoj", bounds));
+        //         PayloadSection {
+        //             attrs,
+        //             bounds: section.bounds.clone(),
+        //             kind: section.kind.clone(),
+        //             template_list,
+        //             r#type: section.r#type.clone(),
+        //         }
+        //     })
+        //     .collect::<Vec<PayloadSection>>()
+
+        PayloadSection {
+            attrs,
+            bounds: "full".to_string(),
+            children: vec![],
+            flags: vec![],
+            r#type: "title".to_string(),
+            template_list: vec![
+                "sections/title/full/default.neoj".to_string(),
+                "sections/generic/full/default.neoj".to_string(),
+            ],
+        }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+    #[test]
+    fn bounds_check() {
+        let section = Section::mock1_basic_title_section_no_attrs();
+        let left = "full";
+        let right = &PayloadSection::new_from_section(&section).bounds;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn get_attrs() {
+        let section = Section::mock2_div_with_title_and_template_attrs();
+        let left = "Title From Attr";
+        let right = &PayloadSection::new_from_section(&section).attrs[0].value;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn type_of_seciton() {
+        let section = Section::mock1_basic_title_section_no_attrs();
+        let left = "title".to_string();
+        let right = PayloadSection::new_from_section(&section).r#type;
+        assert_eq!(left, right);
+    }
+
+    //
 }

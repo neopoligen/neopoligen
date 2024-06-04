@@ -1,5 +1,4 @@
 [#############################################################################]
 [! macro output_section(site, page_id, section) !]
-<h3>Section:</h3>
-[@ section @]
+[! include section.template_list ignore missing !]
 [! endmacro !]
