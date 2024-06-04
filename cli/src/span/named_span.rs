@@ -114,21 +114,23 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // fn with_escaped_pipe() {
-    //     let source = "``ping\\|ping``";
-    //     let left = (
-    //         "",
-    //         Span {
-    //             attrs: vec![],
-    //             source_text: "``ping\\|ping``".to_string(),
-    //             parsed_text: "ping|ping".to_string(),
-    //             kind: SpanKind::CodeShorthand,
-    //         },
-    //     );
-    //     let right = code_shorthand(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn with_escaped_pipe() {
+        let source = "<<alfa|ping\\|ping>>";
+        let left = (
+            "",
+            Span {
+                attrs: vec![],
+                source_text: "<<alfa|ping\\|ping>>".to_string(),
+                parsed_text: "ping|ping".to_string(),
+                kind: SpanKind::NamedSpan {
+                    name: "alfa".to_string(),
+                },
+            },
+        );
+        let right = named_span(source).unwrap();
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // fn with_escaped_backslash() {
@@ -162,26 +164,28 @@ mod test {
     //     assert_eq!(left, right);
     // }
 
-    // #[test]
-    // fn with_flag_attr() {
-    //     let source = "``code|rust``";
-    //     let left = (
-    //         "",
-    //         Span {
-    //             attrs: vec![SpanAttr {
-    //                 source_text: "|rust".to_string(),
-    //                 kind: SpanAttrKind::Flag {
-    //                     value: "rust".to_string(),
-    //                 },
-    //             }],
-    //             source_text: "``code|rust``".to_string(),
-    //             parsed_text: "code".to_string(),
-    //             kind: SpanKind::CodeShorthand {},
-    //         },
-    //     );
-    //     let right = code_shorthand(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn with_flag_attr() {
+        let source = "<<code|something|rust>>";
+        let left = (
+            "",
+            Span {
+                attrs: vec![SpanAttr {
+                    source_text: "|rust".to_string(),
+                    kind: SpanAttrKind::Flag {
+                        value: "rust".to_string(),
+                    },
+                }],
+                source_text: "<<code|something|rust>>".to_string(),
+                parsed_text: "something".to_string(),
+                kind: SpanKind::NamedSpan {
+                    name: "code".to_string(),
+                },
+            },
+        );
+        let right = named_span(source).unwrap();
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // fn with_multiple_flag_attrs() {

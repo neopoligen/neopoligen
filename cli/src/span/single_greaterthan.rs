@@ -27,7 +27,7 @@ mod test {
     use super::*;
     use pretty_assertions::assert_eq;
     #[test]
-    fn solo_backtick_at_eof() {
+    fn backtick_at_eof() {
         let source = ">";
         let left = (
             "",
@@ -43,7 +43,7 @@ mod test {
     }
 
     #[test]
-    fn solo_backtick_at_infront_of_another_character() {
+    fn backtick_at_infront_of_another_character() {
         let source = ">x";
         let left = (
             "x",
