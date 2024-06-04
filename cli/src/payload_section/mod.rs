@@ -178,14 +178,24 @@ mod test {
     }
 
     #[test]
-    fn template_list_check() {
+    fn flags_work() {
         let payload_section =
-            PayloadSection::new_from_section(&Section::mock1_basic_title_section_no_attrs());
-        let left = vec![
-            "sections/title/full/default.neoj".to_string(),
-            "sections/generic/full/default.neoj".to_string(),
+            PayloadSection::new_from_section(&Section::mock4_youtube_with_tags_and_classes());
+        let left = vec!["NPJ1qQraMZI".to_string()];
+        let right = payload_section.flags;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn id_check() {
+        let payload_section =
+            PayloadSection::new_from_section(&Section::mock4_youtube_with_tags_and_classes());
+        let left: Vec<String> = vec![
+            "class1".to_string(),
+            "class2".to_string(),
+            "class3".to_string(),
         ];
-        let right = payload_section.template_list;
+        let right = payload_section.classes;
         assert_eq!(left, right);
     }
 
@@ -199,14 +209,6 @@ mod test {
             "sections/generic/full/default.neoj".to_string(),
         ];
         let right = payload_section.template_list;
-        assert_eq!(left, right);
-    }
-
-    #[test]
-    fn type_of_seciton() {
-        let section = Section::mock1_basic_title_section_no_attrs();
-        let left = "title".to_string();
-        let right = PayloadSection::new_from_section(&section).r#type;
         assert_eq!(left, right);
     }
 
@@ -229,11 +231,22 @@ mod test {
     }
 
     #[test]
-    fn flags_work() {
+    fn template_list_check() {
         let payload_section =
-            PayloadSection::new_from_section(&Section::mock4_youtube_with_tags_and_classes());
-        let left = vec!["NPJ1qQraMZI".to_string()];
-        let right = payload_section.flags;
+            PayloadSection::new_from_section(&Section::mock1_basic_title_section_no_attrs());
+        let left = vec![
+            "sections/title/full/default.neoj".to_string(),
+            "sections/generic/full/default.neoj".to_string(),
+        ];
+        let right = payload_section.template_list;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn type_of_seciton() {
+        let section = Section::mock1_basic_title_section_no_attrs();
+        let left = "title".to_string();
+        let right = PayloadSection::new_from_section(&section).r#type;
         assert_eq!(left, right);
     }
 
