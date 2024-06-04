@@ -4,6 +4,7 @@ use crate::{
     payload_section_attr::PayloadSectionAttr,
     section::{Section, SectionBounds, SectionKind},
     section_attr::SectionAttrKind,
+    span::Span,
 };
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -13,7 +14,9 @@ pub struct PayloadSection {
     pub children: Vec<PayloadSection>,
     pub created: Option<String>,
     pub flags: Vec<String>,
+    pub spans: Vec<Span>,
     pub tags: Vec<String>,
+    pub text: Option<String>,
     pub r#type: String,
     pub template_list: Vec<String>,
     pub updated: Option<String>,
@@ -57,13 +60,20 @@ impl PayloadSection {
             _ => vec![],
         };
 
+        let spans = match &section.kind {
+            SectionKind::Block { spans } => spans.clone(),
+            _ => vec![],
+        };
+
         PayloadSection {
             attrs,
             bounds,
             children,
             created: None,
             flags: vec![],
+            spans,
             tags: vec![],
+            text: None,
             r#type: "title".to_string(),
             template_list,
             updated: None,
