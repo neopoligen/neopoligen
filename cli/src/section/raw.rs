@@ -1,7 +1,5 @@
 use crate::section::*;
 use crate::section_attr::*;
-use crate::site_config::SiteConfig;
-use crate::span::*;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::bytes::complete::take_until;
@@ -16,7 +14,6 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn raw_section_full<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
-    _spans: &'a Vec<String>,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder(src, &sections.raw))
@@ -80,6 +77,7 @@ pub fn raw_section_start<'a>(
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::site_config::SiteConfig;
     use pretty_assertions::assert_eq;
     #[test]
     fn basic_star_end() {
@@ -167,4 +165,6 @@ mod test {
         let right = raw_section_start(source, &config.sections).unwrap();
         assert_eq!(left, right);
     }
+
+    //
 }
