@@ -30,10 +30,16 @@ impl PayloadSection {
             .attrs
             .iter()
             .filter_map(|attr| match &attr.kind {
-                SectionAttrKind::KeyValue { key, value } => Some(PayloadSectionAttr {
-                    key: key.to_string(),
-                    value: value.to_string(),
-                }),
+                SectionAttrKind::KeyValue { key, value } => {
+                    if key.as_str() != "tag" {
+                        Some(PayloadSectionAttr {
+                            key: key.to_string(),
+                            value: value.to_string(),
+                        })
+                    } else {
+                        None
+                    }
+                }
                 _ => None,
             })
             .collect::<Vec<PayloadSectionAttr>>();
@@ -165,7 +171,12 @@ mod test {
     }
 
     #[test]
-    fn tags_dont_show_up_in_attres() {}
+    fn tags_dont_show_up_in_attres() {
+        let payload_section = PayloadSection::new_from_section(&Section::mock4_youtube_with_tags());
+        let left: Vec<PayloadSectionAttr> = vec![];
+        let right = payload_section.attrs;
+        assert_eq!(left, right);
+    }
 
     #[test]
     fn flags_work() {}
