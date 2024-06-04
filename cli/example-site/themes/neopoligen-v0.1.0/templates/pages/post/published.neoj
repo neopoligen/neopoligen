@@ -13,11 +13,9 @@ body {
 <body><h1>Here</h1>
 
 <div>
-<ul>
 [! for section in page.sections !]
 [@ theme.output_section("", "", section) @]
 [! endfor !]
-</ul>
 </div>
 
 
