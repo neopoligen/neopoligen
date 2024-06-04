@@ -5,3 +5,8 @@
 [! include section.template_list ignore missing !]
 </li>
 [! endmacro !]
+
+[#############################################################################]
+[! macro output_span(site, page_id, span) !]
+span
+[! endmacro !]

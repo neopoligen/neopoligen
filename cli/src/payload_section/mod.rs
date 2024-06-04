@@ -1,10 +1,11 @@
+use minijinja::Value;
 use serde::{Deserialize, Serialize};
 
 use crate::{
     payload_section_attr::PayloadSectionAttr,
+    payload_span::PayloadSpan,
     section::{Section, SectionBounds, SectionKind},
     section_attr::SectionAttrKind,
-    span::Span,
 };
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -13,8 +14,9 @@ pub struct PayloadSection {
     pub bounds: String,
     pub children: Vec<PayloadSection>,
     pub created: Option<String>,
+    pub data: Option<Value>,
     pub flags: Vec<String>,
-    pub spans: Vec<Span>,
+    pub spans: Vec<PayloadSpan>,
     pub tags: Vec<String>,
     pub text: Option<String>,
     pub r#type: String,
@@ -61,8 +63,16 @@ impl PayloadSection {
         };
 
         let spans = match &section.kind {
-            SectionKind::Block { spans } => spans.clone(),
+            SectionKind::Block { spans } => spans
+                .iter()
+                .map(|span| PayloadSpan::new_from_span(&span))
+                .collect::<Vec<PayloadSpan>>(),
             _ => vec![],
+        };
+
+        let text = match &section.kind {
+            SectionKind::Raw { text, .. } => text.clone(),
+            _ => None,
         };
 
         PayloadSection {
@@ -70,10 +80,11 @@ impl PayloadSection {
             bounds,
             children,
             created: None,
+            data: None,
             flags: vec![],
             spans,
             tags: vec![],
-            text: None,
+            text,
             r#type: "title".to_string(),
             template_list,
             updated: None,
