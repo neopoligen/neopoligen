@@ -111,7 +111,8 @@ impl SourcePage {
     }
 
     pub fn sections(&self) -> Vec<PayloadSection> {
-        self.ast
+        let sections = self
+            .ast
             .as_ref()
             .unwrap()
             .iter()
@@ -119,16 +120,8 @@ impl SourcePage {
                 let p = PayloadSection::new_from_section(&section);
                 p
             })
-            .collect::<Vec<PayloadSection>>()
-
-        //             attrs,
-        //             bounds: section.bounds.clone(),
-        //             kind: section.kind.clone(),
-        //             template_list,
-        //             r#type: section.r#type.clone(),
-        //         }
-        //     })
-        //     .collect::<Vec<PayloadSection>>()
+            .collect::<Vec<PayloadSection>>();
+        sections
     }
 
     pub fn status(&self) -> Option<String> {
@@ -165,85 +158,85 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // fn rel_file_path_default() {
-    //     let p = SourcePage::mock1_20240101_alfa1234_minimal();
-    //     let left = PathBuf::from("en/20240101_alfa1234/index.html");
-    //     let right = p.rel_file_path().unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn rel_file_path_default() {
+        let p = SourcePage::mock1_20240101_alfa1234_minimal();
+        let left = PathBuf::from("en/20240101_alfa1234/index.html");
+        let right = p.rel_file_path().unwrap();
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // fn rel_file_path_for_home_page() {
-    //     let p = SourcePage::mock2_20240102_bravo123_home_page_path();
-    //     let left = PathBuf::from("index.html");
-    //     let right = p.rel_file_path().unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn rel_file_path_for_home_page() {
+        let p = SourcePage::mock2_20240102_bravo123_home_page_path();
+        let left = PathBuf::from("index.html");
+        let right = p.rel_file_path().unwrap();
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // fn scrub_rel_file_path_home_page() {
-    //     let source = "/";
-    //     let left = PathBuf::from("index.html");
-    //     let right = scrub_rel_file_path(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn scrub_rel_file_path_home_page() {
+        let source = "/";
+        let left = PathBuf::from("index.html");
+        let right = scrub_rel_file_path(source).unwrap();
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // fn scrub_rel_file_path_sub_paths() {
-    //     let source = "/some/path";
-    //     let left = PathBuf::from("some/path/index.html");
-    //     let right = scrub_rel_file_path(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn scrub_rel_file_path_sub_paths() {
+        let source = "/some/path";
+        let left = PathBuf::from("some/path/index.html");
+        let right = scrub_rel_file_path(source).unwrap();
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // fn scrub_rel_file_path_dont_overwirte_file() {
-    //     let source = "a/path.txt";
-    //     let left = PathBuf::from("a/path.txt");
-    //     let right = scrub_rel_file_path(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn scrub_rel_file_path_dont_overwirte_file() {
+        let source = "a/path.txt";
+        let left = PathBuf::from("a/path.txt");
+        let right = scrub_rel_file_path(source).unwrap();
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // fn sections_basic() {
-    //     let p = SourcePage::mock1_20240101_alfa1234_minimal();
-    //     let left = 2;
-    //     let right = p.sections().len();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn sections_basic() {
+        let p = SourcePage::mock1_20240101_alfa1234_minimal();
+        let left = 2;
+        let right = p.sections().len();
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // fn status_default() {
-    //     let p = SourcePage::mock1_20240101_alfa1234_minimal();
-    //     let left = "published".to_string();
-    //     let right = p.status().unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn status_default() {
+        let p = SourcePage::mock1_20240101_alfa1234_minimal();
+        let left = "published".to_string();
+        let right = p.status().unwrap();
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // fn template_list_default() {
-    //     let p = SourcePage::mock1_20240101_alfa1234_minimal();
-    //     let left = vec!["pages/post/published.neoj".to_string()];
-    //     let right = p.template_list();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn template_list_default() {
+        let p = SourcePage::mock1_20240101_alfa1234_minimal();
+        let left = vec!["pages/post/published.neoj".to_string()];
+        let right = p.template_list();
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // fn type_default() {
-    //     let p = SourcePage::mock1_20240101_alfa1234_minimal();
-    //     let left = "post".to_string();
-    //     let right = p.r#type().unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn type_default() {
+        let p = SourcePage::mock1_20240101_alfa1234_minimal();
+        let left = "post".to_string();
+        let right = p.r#type().unwrap();
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // fn update_attrs() {
-    //     let p = SourcePage::mock3_20240103_charlie1_title_in_div_section_and_template();
-    //     let left = "Charlie Title From Section".to_string();
-    //     let right = p.sections()[0].attrs[0].value.clone();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn update_attrs() {
+        let p = SourcePage::mock3_20240103_charlie1_title_in_div_section_and_template();
+        let left = "Charlie Title From Section".to_string();
+        let right = p.sections()[0].attrs[0].value.clone();
+        assert_eq!(left, right);
+    }
 
     //
 }

@@ -1,4 +1,7 @@
 [#############################################################################]
 [! macro output_section(site, page_id, section) !]
+<li>
+<h3>Section</h3>
 [! include section.template_list ignore missing !]
+</li>
 [! endmacro !]

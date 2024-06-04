@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     payload_section_attr::PayloadSectionAttr,
-    section::{Section, SectionBounds},
+    section::{Section, SectionBounds, SectionKind},
     section_attr::SectionAttrKind,
 };
 
@@ -11,9 +11,12 @@ pub struct PayloadSection {
     pub attrs: Vec<PayloadSectionAttr>,
     pub bounds: String,
     pub children: Vec<PayloadSection>,
+    pub created: Option<String>,
     pub flags: Vec<String>,
+    pub tags: Vec<String>,
     pub r#type: String,
     pub template_list: Vec<String>,
+    pub updated: Option<String>,
 }
 
 impl PayloadSection {
@@ -29,13 +32,11 @@ impl PayloadSection {
                 _ => None,
             })
             .collect::<Vec<PayloadSectionAttr>>();
-
         let bounds = match section.bounds {
             SectionBounds::End => "end".to_string(),
             SectionBounds::Full => "full".to_string(),
             SectionBounds::Start => "start".to_string(),
         };
-
         let mut template_list = vec![];
         if let Some(template) = section.get_attr("template") {
             template_list.push(format!(
@@ -48,13 +49,24 @@ impl PayloadSection {
             section.r#type, bounds
         ));
         template_list.push(format!("sections/generic/{}/default.neoj", bounds));
+        let children = match &section.kind {
+            SectionKind::Basic { children } => children
+                .iter()
+                .map(|child| PayloadSection::new_from_section(child))
+                .collect(),
+            _ => vec![],
+        };
+
         PayloadSection {
             attrs,
-            bounds: "full".to_string(),
-            children: vec![],
+            bounds,
+            children,
+            created: None,
             flags: vec![],
+            tags: vec![],
             r#type: "title".to_string(),
             template_list,
+            updated: None,
         }
     }
 }
