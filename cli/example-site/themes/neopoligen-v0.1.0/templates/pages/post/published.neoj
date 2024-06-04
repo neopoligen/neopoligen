@@ -12,6 +12,16 @@ body {
 </head>
 <body><h1>Here</h1>
 
+<div>
+[! for section in page.sections !]
+[@ theme.output_section("", "", section) @]
+[! endfor !]
+</div>
+
+
+<div>
 [@ page @]
+</div>
+
 
 </body>
