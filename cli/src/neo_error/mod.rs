@@ -23,6 +23,9 @@ pub enum NeoErrorKind {
     ForwardError {
         msg: String,
     },
+    MissingThemeDirectory {
+        path: PathBuf,
+    },
     ParserError {
         line: usize,
         column: usize,
@@ -35,6 +38,10 @@ pub enum NeoErrorKind {
 impl std::fmt::Display for NeoError {
     fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
         match &self.kind {
+            NeoErrorKind::MissingThemeDirectory { path } => {
+                fmt.write_str("Missing theme directory: ")?;
+                fmt.write_str(path.display().to_string().as_str())?;
+            }
             NeoErrorKind::GenericErrorWithoutSourcePath { msg } => {
                 fmt.write_str(msg.as_str())?;
             }

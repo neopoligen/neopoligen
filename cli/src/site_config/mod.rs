@@ -9,6 +9,8 @@ use std::io;
 use std::path::PathBuf;
 
 use crate::engine_config::EngineConfig;
+use crate::neo_error::NeoError;
+use crate::neo_error::NeoErrorKind;
 // use serde_json;
 // use serde_json::Value;
 // use std::collections::BTreeMap;
@@ -42,16 +44,38 @@ pub struct ConfigSections {
 }
 
 impl SiteConfig {
-    pub fn new_from_engine_config(engine_config: &EngineConfig) -> Result<SiteConfig> {
+    pub fn new_from_engine_config(engine_config: &EngineConfig) -> Result<SiteConfig, NeoError> {
         let project_root = engine_config
             .sites_dir
             .join(engine_config.active_site.as_str());
         let config_path = project_root.join("config.json");
-        let text = fs::read_to_string(config_path)?;
-        let mut config = serde_json::from_str::<SiteConfig>(&text)?;
-        config.project_root = Some(project_root.clone());
-        config.load_sections();
-        Ok(config)
+        match fs::read_to_string(&config_path) {
+            Ok(text) => match serde_json::from_str::<SiteConfig>(&text) {
+                Ok(mut config) => {
+                    config.project_root = Some(project_root.clone());
+                    if !config.theme_dir().is_dir() {
+                        Err(NeoError {
+                            kind: NeoErrorKind::MissingThemeDirectory {
+                                path: config.theme_dir().clone(),
+                            },
+                        })
+                    } else {
+                        config.load_sections();
+                        Ok(config)
+                    }
+                }
+                Err(_e) => Err(NeoError {
+                    kind: NeoErrorKind::GenericErrorWithoutSourcePath {
+                        msg: format!("Could not load config: {}", config_path.display()),
+                    },
+                }),
+            },
+            Err(_) => Err(NeoError {
+                kind: NeoErrorKind::GenericErrorWithoutSourcePath {
+                    msg: format!("Could not load config: {}", config_path.display()),
+                },
+            }),
+        }
     }
 }
 
@@ -177,6 +201,7 @@ impl SiteConfig {
 
     pub fn load_sections(&mut self) {
         let section_root = self.theme_dir().join(PathBuf::from("templates/sections"));
+        dbg!(&section_root);
         let section_dirs = get_dirs_in_dir(&section_root).unwrap();
         section_dirs.iter().for_each(|dir| {
             let cat_file_path = dir.join("category.txt");

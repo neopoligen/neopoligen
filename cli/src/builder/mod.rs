@@ -1,5 +1,5 @@
 use crate::helpers::*;
-use crate::neo_error::NeoError;
+use crate::neo_error::{NeoError, NeoErrorKind};
 use crate::page_payload::PagePayload;
 use crate::source_page::SourcePage;
 use crate::{engine_config::EngineConfig, site_config::SiteConfig};
@@ -24,23 +24,37 @@ pub struct Builder {
 }
 
 impl Builder {
-    pub fn new_from_engine_config(engine_config: &EngineConfig) -> Result<Builder> {
+    pub fn new_from_engine_config(engine_config: &EngineConfig) -> Result<Builder, NeoError> {
         let project_root = engine_config
             .sites_dir
             .join(engine_config.active_site.as_str());
         let config_path = project_root.join("admin").join("config.json");
-        let text = fs::read_to_string(config_path)?;
-        let mut config = serde_json::from_str::<SiteConfig>(&text)?;
-        config.project_root = Some(project_root);
-        config.load_sections();
-        let b = Builder {
-            config: Some(config),
-            errors: vec![],
-            source_pages: vec![],
-            payloads: vec![],
-            templates: BTreeMap::new(),
-        };
-        Ok(b)
+        match fs::read_to_string(config_path) {
+            Ok(text) => match serde_json::from_str::<SiteConfig>(&text) {
+                Ok(mut config) => {
+                    config.project_root = Some(project_root);
+                    config.load_sections();
+                    let b = Builder {
+                        config: Some(config),
+                        errors: vec![],
+                        source_pages: vec![],
+                        payloads: vec![],
+                        templates: BTreeMap::new(),
+                    };
+                    Ok(b)
+                }
+                Err(e) => Err(NeoError {
+                    kind: NeoErrorKind::GenericErrorWithoutSourcePath {
+                        msg: format!("could not load admin/config.json file: {}", e),
+                    },
+                }),
+            },
+            Err(e) => Err(NeoError {
+                kind: NeoErrorKind::GenericErrorWithoutSourcePath {
+                    msg: format!("could not load admin/config.json file: {}", e),
+                },
+            }),
+        }
     }
 }
 
@@ -96,7 +110,8 @@ impl Builder {
                         match page.generate_ast() {
                             Ok(()) => self.source_pages.push(page),
                             Err(e) => {
-                                dbg!(e);
+                                // dbg!("OUTPUT ERROR HERE");
+                                //dbg!(e);
                                 ()
                             }
                         }
