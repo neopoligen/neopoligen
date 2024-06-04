@@ -1,13 +1,13 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
+    payload_section_attr::PayloadSectionAttr,
     section::{SectionBounds, SectionKind},
-    section_attr::SectionAttr,
 };
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PayloadSection {
-    pub attrs: Vec<SectionAttr>,
+    pub attrs: Vec<PayloadSectionAttr>,
     pub bounds: SectionBounds,
     pub kind: SectionKind,
     pub r#type: String,

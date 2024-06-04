@@ -6,6 +6,7 @@ pub mod helpers;
 pub mod neo_error;
 pub mod page_payload;
 pub mod payload_section;
+pub mod payload_section_attr;
 pub mod section;
 pub mod section_attr;
 pub mod site_config;

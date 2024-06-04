@@ -1,6 +1,5 @@
-use crate::{section::Section, site_config::SiteConfig};
-
 use super::start_or_full_section;
+use crate::{section::Section, site_config::SiteConfig};
 
 impl Section {
     pub fn mock1_basic_title_section_no_attrs() -> Section {

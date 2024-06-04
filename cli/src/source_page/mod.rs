@@ -3,8 +3,9 @@ pub mod mocks;
 use crate::ast::parse_ast;
 use crate::neo_error::{NeoError, NeoErrorKind};
 use crate::payload_section::PayloadSection;
+use crate::payload_section_attr::PayloadSectionAttr;
 use crate::section::{Section, SectionBounds, SectionKind};
-use crate::section_attr::SectionAttrKind;
+use crate::section_attr::{SectionAttr, SectionAttrKind};
 use crate::site_config::SiteConfig;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
@@ -114,6 +115,17 @@ impl SourcePage {
             .unwrap()
             .iter()
             .map(|section| {
+                let attrs = section
+                    .attrs
+                    .iter()
+                    .filter_map(|attr| match &attr.kind {
+                        SectionAttrKind::KeyValue { key, value } => Some(PayloadSectionAttr {
+                            key: key.to_string(),
+                            value: value.to_string(),
+                        }),
+                        _ => None,
+                    })
+                    .collect::<Vec<PayloadSectionAttr>>();
                 let bounds = match section.bounds {
                     SectionBounds::End => "end",
                     SectionBounds::Full => "full",
@@ -124,7 +136,7 @@ impl SourcePage {
                     section.r#type, bounds
                 )];
                 PayloadSection {
-                    attrs: section.attrs.clone(),
+                    attrs,
                     bounds: section.bounds.clone(),
                     kind: section.kind.clone(),
                     template_list,
@@ -165,14 +177,6 @@ mod test {
         let p = SourcePage::mock1_20240101_alfa1234_minimal();
         let left = "20240101_alfa1234".to_string();
         let right = p.id().unwrap();
-        assert_eq!(left, right);
-    }
-
-    #[test]
-    fn type_default() {
-        let p = SourcePage::mock1_20240101_alfa1234_minimal();
-        let left = "post".to_string();
-        let right = p.r#type().unwrap();
         assert_eq!(left, right);
     }
 
@@ -245,6 +249,22 @@ mod test {
         let p = SourcePage::mock1_20240101_alfa1234_minimal();
         let left = vec!["pages/post/published.neoj".to_string()];
         let right = p.template_list();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn type_default() {
+        let p = SourcePage::mock1_20240101_alfa1234_minimal();
+        let left = "post".to_string();
+        let right = p.r#type().unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn update_attrs() {
+        let p = SourcePage::mock3_20240103_charlie1_title_in_div_section_and_template();
+        let left = "Charlie Title From Section".to_string();
+        let right = p.sections()[0].attrs[0].value.clone();
         assert_eq!(left, right);
     }
 }
