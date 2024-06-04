@@ -61,7 +61,20 @@ impl PayloadSection {
                 .collect(),
             _ => vec![],
         };
-
+        let tags = section
+            .attrs
+            .iter()
+            .filter_map(|attr| match &attr.kind {
+                SectionAttrKind::KeyValue { key, value } => {
+                    if key.as_str() == "tag" {
+                        Some(value.to_string())
+                    } else {
+                        None
+                    }
+                }
+                _ => None,
+            })
+            .collect::<Vec<String>>();
         let spans = match &section.kind {
             SectionKind::Block { spans } => spans
                 .iter()
@@ -69,12 +82,10 @@ impl PayloadSection {
                 .collect::<Vec<PayloadSpan>>(),
             _ => vec![],
         };
-
         let text = match &section.kind {
             SectionKind::Raw { text, .. } => text.clone(),
             _ => None,
         };
-
         PayloadSection {
             attrs,
             bounds,
@@ -83,7 +94,7 @@ impl PayloadSection {
             data: None,
             flags: vec![],
             spans,
-            tags: vec![],
+            tags,
             text,
             r#type: "title".to_string(),
             template_list,
@@ -97,18 +108,18 @@ mod test {
     use super::*;
     use pretty_assertions::assert_eq;
     #[test]
-    fn bounds_check() {
-        let section = Section::mock1_basic_title_section_no_attrs();
-        let left = "full";
-        let right = &PayloadSection::new_from_section(&section).bounds;
+    fn attrs_check() {
+        let section = Section::mock2_div_with_title_and_template_attrs();
+        let left = "Title From Attr";
+        let right = &PayloadSection::new_from_section(&section).attrs[0].value;
         assert_eq!(left, right);
     }
 
     #[test]
-    fn get_attrs() {
-        let section = Section::mock2_div_with_title_and_template_attrs();
-        let left = "Title From Attr";
-        let right = &PayloadSection::new_from_section(&section).attrs[0].value;
+    fn bounds_check() {
+        let section = Section::mock1_basic_title_section_no_attrs();
+        let left = "full";
+        let right = &PayloadSection::new_from_section(&section).bounds;
         assert_eq!(left, right);
     }
 
@@ -144,6 +155,23 @@ mod test {
         let right = PayloadSection::new_from_section(&section).r#type;
         assert_eq!(left, right);
     }
+
+    #[test]
+    fn tags_work() {
+        let payload_section = PayloadSection::new_from_section(&Section::mock4_youtube_with_tags());
+        let left = vec!["minecraft".to_string(), "how-to".to_string()];
+        let right = payload_section.tags;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn tags_dont_show_up_in_attres() {}
+
+    #[test]
+    fn flags_work() {}
+
+    #[test]
+    fn flags_dont_show_up_in_attrs() {}
 
     //
 }

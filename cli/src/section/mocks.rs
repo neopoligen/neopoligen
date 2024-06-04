@@ -19,5 +19,10 @@ impl Section {
         let source = "-- image\n-- some-image-name\n-- alt: alfa bravo\n-- alt: charlie delta";
         start_or_full_section(source, &config.sections).unwrap().1
     }
-}
 
+    pub fn mock4_youtube_with_tags() -> Section {
+        let config = SiteConfig::mock1_basic();
+        let source = "-- youtube\n-- NPJ1qQraMZI\n-- tag: minecraft\n-- tag: how-to";
+        start_or_full_section(source, &config.sections).unwrap().1
+    }
+}

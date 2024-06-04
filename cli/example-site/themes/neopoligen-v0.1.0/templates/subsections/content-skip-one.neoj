@@ -1,9 +1,7 @@
 [! for child in section.children !]
 [! if not loop.first !]
-<p>
-[! for span in child.spans !]
+<p>[! for span in child.spans !]
     [@ theme.output_span(site, page_id, span) @]
-[! endfor !]
-</p>
+[! endfor !]</p>
 [! endif !]
 [! endfor !]
