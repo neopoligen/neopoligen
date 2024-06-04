@@ -25,4 +25,10 @@ impl Section {
         let source = "-- youtube\n-- NPJ1qQraMZI\n-- tag: minecraft\n-- tag: how-to\n-- class: class1 class2\n-- class: class3";
         start_or_full_section(source, &config.sections).unwrap().1
     }
+
+    pub fn mock5_div_with_id() -> Section {
+        let config = SiteConfig::mock1_basic();
+        let source = "-- div\n-- id: attr-id";
+        start_or_full_section(source, &config.sections).unwrap().1
+    }
 }

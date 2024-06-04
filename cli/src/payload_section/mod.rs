@@ -17,6 +17,7 @@ pub struct PayloadSection {
     pub created: Option<String>,
     pub data: Option<Value>,
     pub flags: Vec<String>,
+    pub id: Option<String>,
     pub spans: Vec<PayloadSpan>,
     pub tags: Vec<String>,
     pub text: Option<String>,
@@ -72,7 +73,16 @@ impl PayloadSection {
                 _ => None,
             })
             .collect::<Vec<String>>();
-
+        let id = section.attrs.iter().find_map(|attr| match &attr.kind {
+            SectionAttrKind::KeyValue { key, value } => {
+                if key.as_str() == "id" {
+                    Some(value.clone())
+                } else {
+                    None
+                }
+            }
+            _ => None,
+        });
         let mut template_list = vec![];
         if let Some(template) = section.get_attr("template") {
             template_list.push(format!(
@@ -125,6 +135,7 @@ impl PayloadSection {
             created: None,
             data: None,
             flags,
+            id,
             spans,
             tags,
             text,
@@ -188,14 +199,9 @@ mod test {
 
     #[test]
     fn id_check() {
-        let payload_section =
-            PayloadSection::new_from_section(&Section::mock4_youtube_with_tags_and_classes());
-        let left: Vec<String> = vec![
-            "class1".to_string(),
-            "class2".to_string(),
-            "class3".to_string(),
-        ];
-        let right = payload_section.classes;
+        let payload_section = PayloadSection::new_from_section(&Section::mock5_div_with_id());
+        let left = "attr-id";
+        let right = payload_section.id.unwrap();
         assert_eq!(left, right);
     }
 
