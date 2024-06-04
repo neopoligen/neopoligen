@@ -9,14 +9,27 @@ use crate::site_config::*;
 impl SiteConfig {
     pub fn mock1_basic() -> SiteConfig {
         let sections = ConfigSections {
-            basic: vec!["title".to_string()],
+            basic: vec![
+                "bookmark".to_string(),
+                "div".to_string(),
+                "image".to_string(),
+                "p".to_string(),
+                "title".to_string(),
+                "youtube".to_string(),
+            ],
             block: vec![],
-            checklist: vec![],
-            list: vec![],
-            comment: vec![],
+            checklist: vec!["checklist".to_string(), "todo".to_string()],
+            list: vec!["list".to_string(), "notes".to_string()],
+            comment: vec!["comment".to_string()],
             detail: vec![],
             json: vec![],
-            raw: vec![],
+            raw: vec![
+                "code".to_string(),
+                "css".to_string(),
+                "html".to_string(),
+                "javascript".to_string(),
+                "pre".to_string(),
+            ],
             table: vec![],
             yaml: vec!["metadata".to_string()],
         };
