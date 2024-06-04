@@ -68,6 +68,7 @@ impl Builder {
 
     #[instrument(skip(self))]
     pub fn generate_missing_asts(&mut self) {
+        event!(Level::INFO, "Generating Missing ASTs");
         self.source_pages.iter_mut().for_each(|page| {
             if let Err(e) = page.generate_ast() {
                 self.errors.push(e);
@@ -103,18 +104,28 @@ impl Builder {
                     if ext.to_ascii_lowercase() == "neo"
                         && !filename.to_str().unwrap().starts_with(".")
                     {
-                        let mut page = SourcePage::new_from_source_path(
+                        match SourcePage::new_from_source_path(
                             &path,
                             self.config.as_ref().unwrap().clone(),
-                        )?;
-                        match page.generate_ast() {
-                            Ok(()) => self.source_pages.push(page),
-                            Err(e) => {
-                                // dbg!("OUTPUT ERROR HERE");
-                                //dbg!(e);
+                        ) {
+                            Ok(p) => {
+                                self.source_pages.push(p);
+                            }
+                            Err(_e) => {
+                                dbg!("TODO: hoist page could not load error");
                                 ()
                             }
                         }
+
+                        // match page.generate_ast() {
+                        //     Ok(()) => self.source_pages.push(page),
+                        //     Err(e) => self.errors.push(NeoError {
+                        //         kind: NeoErrorKind::GenericErrorWithSourcePath {
+                        //             source_path: path.clone(),
+                        //             msg: e.to_string(),
+                        //         },
+                        //     }),
+                        // }
                     }
                 }
             }
@@ -202,7 +213,9 @@ impl Builder {
         Ok(())
     }
 
+    #[instrument(skip(self))]
     pub fn tmp_output_errors(&self) -> Result<()> {
+        event!(Level::INFO, "Outputting errors");
         let mut env = Environment::new();
         env.set_syntax(
             SyntaxConfig::builder()
@@ -219,11 +232,7 @@ impl Builder {
 <html><head><style> 
 body { background-color: #111; color: #aaa; } 
 </style></head><body><h1>Status</h1>
-<ul>
-[! for error in errors !]
-<li><pre>[@ errors|tojson(true) @]</pre></li>
-[! endfor !]
-</ul>
+[@ errors @]
 </body></html>
         "#,
         )?;

@@ -117,14 +117,13 @@ fn build_site(engine_config: &EngineConfig, reloader: &Reloader) {
     event!(Level::INFO, "Building Site");
     match Builder::new_from_engine_config(engine_config) {
         Ok(mut builder) => {
-            // let _ = builder.load_pages_from_fs();
-
-            // builder.generate_missing_asts();
+            builder.load_pages_from_fs().unwrap();
+            builder.generate_missing_asts();
             // builder.generate_payloads();
             // let _ = builder.load_templates();
             // let _ = builder.empty_output_dirs();
             // let _ = builder.output_pages();
-            // let _ = builder.tmp_output_errors();
+            builder.tmp_output_errors().unwrap();
 
             // builder.todo("update_file_cache");
             // builder.todo("generate_site_object");
