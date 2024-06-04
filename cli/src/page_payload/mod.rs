@@ -19,18 +19,6 @@ pub struct PagePayload {
 }
 
 impl PagePayload {
-    // pub fn new_from_id(id: &str) -> PagePayload {
-    //     PagePayload {
-    //         id: id.to_string(),
-    //         r#type: None,
-    //         rel_file_path: None,
-    //         sections: vec![],
-    //         status: None,
-    //         template_list: vec![],
-    //         used_template: None,
-    //     }
-    // }
-
     pub fn new_from_source_page(source: &SourcePage) -> Result<PagePayload, NeoError> {
         if let Some(id) = source.id() {
             let mut p = PagePayload {
