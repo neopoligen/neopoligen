@@ -4,6 +4,7 @@ pub mod colon_not_followed_by_space;
 pub mod escaped_backslash;
 pub mod escaped_backtick;
 pub mod escaped_pipe;
+pub mod mocks;
 pub mod single_backtick;
 
 use crate::span::code_shorthand::*;
