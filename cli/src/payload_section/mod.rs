@@ -48,6 +48,15 @@ impl PayloadSection {
             SectionBounds::Full => "full".to_string(),
             SectionBounds::Start => "start".to_string(),
         };
+        let flags = section
+            .attrs
+            .iter()
+            .filter_map(|attr| match &attr.kind {
+                SectionAttrKind::Flag { flag } => Some(flag.to_string()),
+                _ => None,
+            })
+            .collect::<Vec<String>>();
+
         let mut template_list = vec![];
         if let Some(template) = section.get_attr("template") {
             template_list.push(format!(
@@ -98,7 +107,7 @@ impl PayloadSection {
             children,
             created: None,
             data: None,
-            flags: vec![],
+            flags,
             spans,
             tags,
             text,
@@ -179,7 +188,12 @@ mod test {
     }
 
     #[test]
-    fn flags_work() {}
+    fn flags_work() {
+        let payload_section = PayloadSection::new_from_section(&Section::mock4_youtube_with_tags());
+        let left = vec!["NPJ1qQraMZI".to_string()];
+        let right = payload_section.flags;
+        assert_eq!(left, right);
+    }
 
     #[test]
     fn flags_dont_show_up_in_attrs() {}
