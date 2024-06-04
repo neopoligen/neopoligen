@@ -48,7 +48,7 @@ impl SiteConfig {
         let project_root = engine_config
             .sites_dir
             .join(engine_config.active_site.as_str());
-        let config_path = project_root.join("config.json");
+        let config_path = project_root.join("admin").join("config.json");
         match fs::read_to_string(&config_path) {
             Ok(text) => match serde_json::from_str::<SiteConfig>(&text) {
                 Ok(mut config) => {
