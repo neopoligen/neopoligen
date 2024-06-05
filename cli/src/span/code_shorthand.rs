@@ -77,6 +77,7 @@ pub fn code_shorthand_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTr
         escaped_pipe,
         escaped_greaterthan,
         escaped_backslash,
+        non_escape_backslash,
     )))
     .context("")
     .parse(source)?;
@@ -159,14 +160,43 @@ mod test {
     use pretty_assertions::assert_eq;
     use rstest::rstest;
     #[rstest]
-    #[case("``alfa-bravo``", "", "hyphen in text")]
-    #[case("``alfa\\\\bravo``", "", "escaped backslash in text")]
-    #[case("``alfa\\bravo``", "", "non-escaped backslash in text")]
-    #[case("``gap|css``", "", "pipe for attr")]
-    #[case("``margin: 0|css``", "", "colon in text")]
-    fn run_test(#[case] input: &str, #[case] left: &str, #[case] _description: &str) {
-        let right = code_shorthand(input).unwrap().0;
-        assert_eq!(left, right, "asdf");
+    #[case("``alfa``", 0, "single word")]
+    #[case("``alfa bravo``", 0, "space in text")]
+    #[case("``alfa-bravo``", 0, "hyphen in text")]
+    #[case("``alfa`bravo``", 0, "single backtick in text")]
+    #[case("``alfa\\bravo``", 0, "non-escaped backslash in text")]
+    #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
+    #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]
+    #[case("``alfa\\\\bravo``", 0, "escaped backslash in text")]
+    #[case("``alfa:bravo``", 0, "colon in text")]
+    #[case("``alfa: bravo``", 0, "colon in text before space")]
+    #[case("``alfa :bravo``", 0, "colon in text after space")]
+    #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]
+    #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
+    #[case("``alfa|bravo``", 1, "single flag attr")]
+    #[case("``alfa|bravo charlie``", 1, "space in flag")]
+    #[case("``alfa|bravo`charlie``", 1, "single backtick in flag")]
+    #[case("``alfa|bravo\ncharlie``", 1, "newline in flag")]
+    #[case("``alfa|bravo\\charlie``", 1, "non-escaped baskslash in flag")]
+    #[case("``alfa|bravo\\|charlie``", 1, "escaped pipe in flag")]
+    #[case("``alfa|bravo\\`charlie``", 1, "escaped backtick in flag")]
+    #[case("``alfa|bravo\\\\charlie``", 1, "escaped baskslash in flag")]
+    #[case("``alfa|bravo|charlie``", 2, "two flag attrs")]
+    #[case("``alfa|bravo: charlie``", 1, "single key value attr")]
+    #[case("``alfa|bravo: charlie|delta: echo``", 2, "single key value attr")]
+    #[case("``\nalfa\n|\nbravo\n``", 1, "newlines in shorthand")]
+    #[case(
+        "``\nalfa\n|\nbravo\n|\ncharlie\n``",
+        2,
+        "newlines in shorthand multiple attrs"
+    )]
+    fn run_test(#[case] input: &str, #[case] attrs: usize, #[case] _description: &str) {
+        let (remainder, span) = code_shorthand(input).unwrap();
+        assert_eq!(remainder, "");
+        assert_eq!(span.attrs.len(), attrs);
+
+        //let right = code_shorthand(input).unwrap().0;
+        //assert_eq!(left, right, "asdf");
     }
 
     #[rstest]
