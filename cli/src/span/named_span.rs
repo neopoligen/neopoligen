@@ -2,6 +2,8 @@ use crate::span::escaped_colon::*;
 use crate::span::*;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
+use nom::character::complete::alpha1;
+use nom::character::complete::digit1;
 use nom::multi::many0;
 use nom::multi::many1;
 use nom::IResult;
@@ -13,20 +15,23 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let initial_source = source;
     let (source, _) = tag("<<").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, type_parts) = many1(alt((wordpart,))).context("").parse(source)?;
+    let (source, type_parts) = many1(alt((alpha1, digit1, tag("-"))))
+        .context("")
+        .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, spans) = many0(alt((
         wordpart,
-        space,
         newline,
+        space,
         colon,
         hyphen,
         single_lessthan,
         single_greaterthan,
         single_backtick,
         escaped_backtick,
+        escaped_colon,
         escaped_pipe,
         escaped_greaterthan,
         escaped_backslash,
@@ -44,7 +49,7 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         .join("");
     let r#type = type_parts
         .iter()
-        .map(|p| p.parsed_text.clone())
+        .map(|p| p.to_string())
         .collect::<Vec<String>>()
         .join("");
     Ok((
@@ -173,11 +178,12 @@ mod test {
     #[rstest]
     #[case("<<alfa|bravo>>", 0, "single word")]
     #[case("<<alfa|bravo charlie>>", 0, "space in text")]
-    #[case("<<alfa|bravo\ncharlie>>", 0, "newline in text")]
     #[case("<<alfa|bravo-charlie>>", 0, "hyphen in text")]
     #[case("<<alfa|bravo`charlie>>", 0, "single backtick in text")]
+    #[case("<<alfa|bravo\ncharlie>>", 0, "newline in text")]
     #[case("<<alfa|bravo\\charlie>>", 0, "non-escaped backslash in text")]
     #[case("<<alfa|bravo\\`charlie>>", 0, "escaped backtick in text")]
+    #[case("<<alfa|bravo\\:charlie>>", 0, "escaped colon in text")]
     #[case("<<alfa|bravo\\|charlie>>", 0, "escaped pipe in text")]
     #[case("<<alfa|bravo\\\\charlie>>", 0, "escaped baskslash in text")]
     #[case("<<alfa|bravo:charlie>>", 0, "colon in text surrounded")]
@@ -189,10 +195,13 @@ mod test {
     #[case("<<alfa|bravo|charlie`delta>>", 1, "single backtick in flag")]
     #[case("<<alfa|bravo|charlie\ndelta>>", 1, "newline in flag")]
     #[case("<<alfa|bravo|charlie\\delta>>", 1, "non-escaped backslash in flag")]
-    #[case("<<alfa|bravo|charlie\\|delta>>", 1, "escaped pipe in flag")]
     #[case("<<alfa|bravo|charlie\\`delta>>", 1, "escaped backtick in flag")]
     #[case("<<alfa|bravo|charlie\\:delta>>", 1, "escaped colon in flag")]
+    #[case("<<alfa|bravo|charlie\\|delta>>", 1, "escaped pipe in flag")]
     #[case("<<alfa|bravo|charlie\\\\delta>>", 1, "escaped backslash in flag")]
+    #[case("<<alfa-bravo|charlie>>", 0, "hyphen in name")]
+    //#[case("<<alfa|<<bravo|charlie>>>>", 0, "nested")]
+
     // #[case("<<alfa|bravo|charlie``", 2, "two flag attrs")]
     // #[case("<<alfa|bravo: charlie>>", 1, "single key value attr")]
     // #[case("<<alfa|bravo: charlie|delta: echo>>", 2, "single key value attr")]
