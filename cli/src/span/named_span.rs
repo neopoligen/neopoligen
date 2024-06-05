@@ -27,6 +27,7 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         space,
         colon,
         hyphen,
+        named_span,
         single_lessthan,
         single_greaterthan,
         single_backtick,
@@ -176,45 +177,55 @@ mod test {
     use rstest::rstest;
 
     #[rstest]
-    #[case("<<alfa|bravo>>", 0, "single word")]
-    #[case("<<alfa|bravo charlie>>", 0, "space in text")]
-    #[case("<<alfa|bravo-charlie>>", 0, "hyphen in text")]
-    #[case("<<alfa|bravo`charlie>>", 0, "single backtick in text")]
-    #[case("<<alfa|bravo\ncharlie>>", 0, "newline in text")]
-    #[case("<<alfa|bravo\\charlie>>", 0, "non-escaped backslash in text")]
-    #[case("<<alfa|bravo\\`charlie>>", 0, "escaped backtick in text")]
-    #[case("<<alfa|bravo\\:charlie>>", 0, "escaped colon in text")]
-    #[case("<<alfa|bravo\\|charlie>>", 0, "escaped pipe in text")]
-    #[case("<<alfa|bravo\\\\charlie>>", 0, "escaped baskslash in text")]
-    #[case("<<alfa|bravo:charlie>>", 0, "colon in text surrounded")]
-    #[case("<<alfa|bravo: charlie>>", 0, "colon in text before space")]
-    #[case("<<alfa|bravo :charlie>>", 0, "colon in text after space")]
-    #[case("<<alfa|bravo : charlie>>", 0, "colon in text floating")]
-    #[case("<<alfa|bravo|charlie>>", 1, "single flag")]
-    #[case("<<alfa|bravo|charlie delta>>", 1, "space in flag ")]
-    #[case("<<alfa|bravo|charlie`delta>>", 1, "single backtick in flag")]
-    #[case("<<alfa|bravo|charlie\ndelta>>", 1, "newline in flag")]
-    #[case("<<alfa|bravo|charlie\\delta>>", 1, "non-escaped backslash in flag")]
-    #[case("<<alfa|bravo|charlie\\`delta>>", 1, "escaped backtick in flag")]
-    #[case("<<alfa|bravo|charlie\\:delta>>", 1, "escaped colon in flag")]
-    #[case("<<alfa|bravo|charlie\\|delta>>", 1, "escaped pipe in flag")]
-    #[case("<<alfa|bravo|charlie\\\\delta>>", 1, "escaped backslash in flag")]
-    #[case("<<alfa-bravo|charlie>>", 0, "hyphen in name")]
-    //#[case("<<alfa|<<bravo|charlie>>>>", 0, "nested")]
+    #[case("<<alfa|bravo>>", 0, "single word", true)]
+    #[case("<<alfa|bravo charlie>>", 0, "space in text", true)]
+    #[case("<<alfa|bravo-charlie>>", 0, "hyphen in text", true)]
+    #[case("<<alfa|bravo`charlie>>", 0, "single backtick in text", true)]
+    #[case("<<alfa|bravo\ncharlie>>", 0, "newline in text", true)]
+    #[case("<<alfa|bravo\\charlie>>", 0, "non-escaped backslash in text", true)]
+    #[case("<<alfa|bravo\\`charlie>>", 0, "escaped backtick in text", true)]
+    #[case("<<alfa|bravo\\:charlie>>", 0, "escaped colon in text", true)]
+    #[case("<<alfa|bravo\\|charlie>>", 0, "escaped pipe in text", true)]
+    #[case("<<alfa|bravo\\\\charlie>>", 0, "escaped baskslash in text", true)]
+    #[case("<<alfa|bravo:charlie>>", 0, "colon in text surrounded", true)]
+    #[case("<<alfa|bravo: charlie>>", 0, "colon in text before space", true)]
+    #[case("<<alfa|bravo :charlie>>", 0, "colon in text after space", true)]
+    #[case("<<alfa|bravo : charlie>>", 0, "colon in text floating", true)]
+    #[case("<<alfa|bravo|charlie>>", 1, "single flag", true)]
+    #[case("<<alfa|bravo|charlie delta>>", 1, "space in flag ", true)]
+    #[case("<<alfa|bravo|charlie`delta>>", 1, "single backtick in flag", true)]
+    #[case("<<alfa|bravo|charlie\ndelta>>", 1, "newline in flag", true)]
+    #[case(
+        "<<alfa|bravo|charlie\\delta>>",
+        1,
+        "non-escaped backslash in flag",
+        true
+    )]
+    #[case("<<alfa|bravo|charlie\\`delta>>", 1, "escaped backtick in flag", true)]
+    #[case("<<alfa|bravo|charlie\\:delta>>", 1, "escaped colon in flag", true)]
+    #[case("<<alfa|bravo|charlie\\|delta>>", 1, "escaped pipe in flag", true)]
+    #[case(
+        "<<alfa|bravo|charlie\\\\delta>>",
+        1,
+        "escaped backslash in flag",
+        true
+    )]
+    #[case("<<alfa-bravo|charlie>>", 0, "hyphen in name", true)]
+    #[case("<<alfa|<<bravo|clarlie>>>>", 0, "nested span", true)]
 
-    // #[case("<<alfa|bravo|charlie``", 2, "two flag attrs")]
-    // #[case("<<alfa|bravo: charlie>>", 1, "single key value attr")]
-    // #[case("<<alfa|bravo: charlie|delta: echo>>", 2, "single key value attr")]
-    // #[case("<<\nalfa\n|\nbravo\n>>", 1, "newlines in shorthand")]
-    // #[case(
-    //     "``\nalfa\n|\nbravo\n|\ncharlie\n``",
-    // 2,
-    // "newlines in shorthand multiple attrs"
-    // )]
-    fn run_test(#[case] input: &str, #[case] attrs: usize, #[case] _description: &str) {
-        let (remainder, span) = named_span(input).unwrap();
-        assert_eq!(remainder, "");
-        assert_eq!(span.attrs.len(), attrs);
+    fn run_test(
+        #[case] input: &str,
+        #[case] attrs: usize,
+        #[case] _description: &str,
+        #[case] should_be_valid: bool,
+    ) {
+        if should_be_valid {
+            let (remainder, span) = named_span(input).unwrap();
+            assert_eq!(remainder, "");
+            assert_eq!(span.attrs.len(), attrs);
+        } else {
+            assert!(named_span(input).is_err());
+        }
     }
 
     #[test]
