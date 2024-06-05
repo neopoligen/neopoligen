@@ -84,10 +84,23 @@ impl Builder {
             .iter()
             .filter_map(|page| match PagePayload::new_from_source_page(&page) {
                 Ok(p) => Some(p),
-                Err(_) => {
+                Err(e) => {
+                    if let Some(source_path) = &page.source_path {
+                        self.errors.push(NeoError {
+                            kind: NeoErrorKind::ForwardErrorWithSourcePath {
+                                source_path: source_path.clone(),
+                                msg: e.to_string(),
+                            },
+                        });
+                    } else {
+                        self.errors.push(NeoError {
+                            kind: NeoErrorKind::ForwardError { msg: e.to_string() },
+                        });
+                    }
                     event!(
                         Level::ERROR,
-                        "Page load error: TODO: make this a better message"
+                        "Page load error: TODO: make this a better message: {}",
+                        e.to_string()
                     );
                     None
                 }
@@ -164,6 +177,8 @@ impl Builder {
 
     pub fn output_pages(&mut self) -> Result<()> {
         let mut env = Environment::new();
+        env.add_function("highlight_code", highlight_code);
+        env.add_function("highlight_span", highlight_span);
         env.set_syntax(
             SyntaxConfig::builder()
                 .block_delimiters("[!", "!]")
@@ -232,7 +247,9 @@ impl Builder {
 <!DOCTYPE html>
 <html><head><style> 
 body { background-color: #111; color: #aaa; } 
-</style></head><body><h1>Status</h1>
+</style></head><body>
+<header><a href="/">Home</a></header>
+<h1>Status</h1>
 <ul>
 [! for error in errors !]
 <li>
