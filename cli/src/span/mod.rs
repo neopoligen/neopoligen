@@ -1,4 +1,5 @@
 pub mod code_shorthand;
+pub mod code_shorthand_single_pipe;
 pub mod colon;
 pub mod colon_not_followed_by_space;
 pub mod escaped_backslash;
@@ -19,6 +20,7 @@ pub mod single_lessthan;
 pub mod wordpart;
 
 use crate::span::code_shorthand::*;
+use crate::span::code_shorthand_single_pipe::*;
 use crate::span::colon::*;
 use crate::span::colon_not_followed_by_space::*;
 use crate::span::escaped_backslash::*;

@@ -2,6 +2,7 @@ use crate::section::Section;
 use crate::section::SectionBounds;
 use crate::section::SectionKind;
 use crate::span::code_shorthand::code_shorthand;
+use crate::span::code_shorthand_single_pipe::*;
 use crate::span::colon::*;
 use crate::span::escaped_backslash::*;
 use crate::span::escaped_backtick::*;
@@ -37,6 +38,7 @@ pub fn block_of_anything<'a>(source: &'a str) -> IResult<&'a str, Section, Error
         wordpart,
         space,
         newline,
+        code_shorthand_single_pipe,
         code_shorthand,
         named_span,
         hyphen,
@@ -74,6 +76,7 @@ pub fn block_of_end_content<'a>(source: &'a str) -> IResult<&'a str, Section, Er
         space,
         newline,
         code_shorthand,
+        code_shorthand_single_pipe,
         named_span,
         hyphen,
         pipe,
@@ -109,6 +112,7 @@ pub fn block_of_list_content<'a>(source: &'a str) -> IResult<&'a str, Section, E
         space,
         newline,
         code_shorthand,
+        code_shorthand_single_pipe,
         named_span,
         hyphen,
         pipe,

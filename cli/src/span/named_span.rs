@@ -212,7 +212,6 @@ mod test {
     )]
     #[case("<<alfa-bravo|charlie>>", 0, "hyphen in name", true)]
     #[case("<<alfa|<<bravo|clarlie>>>>", 0, "nested span", true)]
-
     fn run_test(
         #[case] input: &str,
         #[case] attrs: usize,

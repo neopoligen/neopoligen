@@ -13,6 +13,7 @@ to escape the following character.
 
 [] Note that you can nest named spans, but not shorthands, 
 
+[] Document the code shorthand single pipe <<code|``\|``>>
 
 
 -- metadata
