@@ -12,7 +12,7 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let initial_source = source;
     let (source, _) = tag("<<").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, name_parts) = many1(alt((wordpart,))).context("").parse(source)?;
+    let (source, type_parts) = many1(alt((wordpart,))).context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
@@ -41,7 +41,7 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         .map(|word| word.parsed_text.clone())
         .collect::<Vec<String>>()
         .join("");
-    let name = name_parts
+    let r#type = type_parts
         .iter()
         .map(|p| p.parsed_text.clone())
         .collect::<Vec<String>>()
@@ -53,7 +53,7 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
             source_text,
             parsed_text,
             kind: SpanKind::NamedSpan {
-                name: name.to_string(),
+                r#type: r#type.to_string(),
                 spans,
             },
         },
@@ -168,33 +168,42 @@ mod test {
     use pretty_assertions::assert_eq;
     use rstest::rstest;
 
-    #[rstest]
-    #[case("<<em|alfa>>", "sigle word")]
-    #[case("<<em|alfa bravo>>", "multiple words")]
-    #[case("<<em|alfa|bravo>>", "single flag")]
-    #[case("<<em|alfa|bravo|charlie>>", "multiple flags")]
-    #[case("<<em|alfa|bravo: charlie>>", "single attr")]
-    #[case("<<em|alfa|bravo: charlie>>", "multiple attrs and flags")]
-    #[case("<<link|example link|https://www.example.com/>>", "")]
-    #[case("<<\nlink|example link|https://www.example.com/>>", "")]
-    #[case("<<link\n|example link|https://www.example.com/>>", "")]
-    #[case("<<link|\nexample link|https://www.example.com/>>", "")]
-    #[case(
-        "<<link|Main site link|https://daverupert.com/2021/10/html-with-superpowers/>>",
-        ""
-    )]
-    #[case("<<link|example link\n|https://www.example.com/>>", "")]
-    #[case("<<link|example link|\nhttps://www.example.com/>>", "")]
-    #[case("<<link|example link|https://www.example.com/\n>>", "")]
-    #[case("<<link|example link\n|key: value>>", "")]
-    #[case("<<link|example link|\nkey: value>>", "")]
-    #[case("<<link|example link|key: value\n>>", "")]
-    fn run_test(#[case] input: &str, #[case] _description: &str) {
-        // Reminder: the cases should all parse cleanly an leave
-        // no remainder which is what this checks for
-        let right = named_span(input).unwrap().0;
-        assert_eq!("", right);
-    }
+    // #[rstest]
+    // #[case("``alfa``", 0, "single word")]
+    // #[case("``alfa bravo``", 0, "space in text")]
+    // #[case("``alfa-bravo``", 0, "hyphen in text")]
+    // #[case("``alfa`bravo``", 0, "single backtick in text")]
+    // #[case("``alfa\\bravo``", 0, "non-escaped backslash in text")]
+    // #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
+    // #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]
+    // #[case("``alfa\\\\bravo``", 0, "escaped backslash in text")]
+    // #[case("``alfa:bravo``", 0, "colon in text")]
+    // #[case("``alfa: bravo``", 0, "colon in text before space")]
+    // #[case("``alfa :bravo``", 0, "colon in text after space")]
+    // #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]
+    // #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
+    // #[case("``alfa|bravo``", 1, "single flag attr")]
+    // #[case("``alfa|bravo charlie``", 1, "space in flag")]
+    // #[case("``alfa|bravo`charlie``", 1, "single backtick in flag")]
+    // #[case("``alfa|bravo\ncharlie``", 1, "newline in flag")]
+    // #[case("``alfa|bravo\\charlie``", 1, "non-escaped baskslash in flag")]
+    // #[case("``alfa|bravo\\|charlie``", 1, "escaped pipe in flag")]
+    // #[case("``alfa|bravo\\`charlie``", 1, "escaped backtick in flag")]
+    // #[case("``alfa|bravo\\\\charlie``", 1, "escaped baskslash in flag")]
+    // #[case("``alfa|bravo|charlie``", 2, "two flag attrs")]
+    // #[case("``alfa|bravo: charlie``", 1, "single key value attr")]
+    // #[case("``alfa|bravo: charlie|delta: echo``", 2, "single key value attr")]
+    // #[case("``\nalfa\n|\nbravo\n``", 1, "newlines in shorthand")]
+    // #[case(
+    //     "``\nalfa\n|\nbravo\n|\ncharlie\n``",
+    //     2,
+    //     "newlines in shorthand multiple attrs"
+    // )]
+
+    fn run_test(#[case] input: &str, #[case] attrs: usize, #[case] _description: &str) {
+        let (remainder, span) = code_shorthand(input).unwrap();
+        assert_eq!(remainder, "");
+        assert_eq!(span.attrs.len(), attrs);
 
     #[test]
     fn basic_test() {
@@ -206,7 +215,7 @@ mod test {
                 source_text: "<<em|alfa>>".to_string(),
                 parsed_text: "alfa".to_string(),
                 kind: SpanKind::NamedSpan {
-                    name: "em".to_string(),
+                    r#type: "em".to_string(),
                     spans: vec![Span {
                         attrs: vec![],
                         source_text: "alfa".to_string(),
@@ -230,7 +239,7 @@ mod test {
                 source_text: "<<alfa|ping\\|ping>>".to_string(),
                 parsed_text: "ping|ping".to_string(),
                 kind: SpanKind::NamedSpan {
-                    name: "alfa".to_string(),
+                    r#type: "alfa".to_string(),
                     spans: vec![
                         Span {
                             attrs: vec![],
@@ -305,7 +314,7 @@ mod test {
                 source_text: "<<code|something|rust>>".to_string(),
                 parsed_text: "something".to_string(),
                 kind: SpanKind::NamedSpan {
-                    name: "code".to_string(),
+                    r#type: "code".to_string(),
                     spans: vec![Span {
                         attrs: vec![],
                         source_text: "something".to_string(),

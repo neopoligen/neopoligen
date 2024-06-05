@@ -55,7 +55,7 @@ pub struct Span {
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-#[serde(rename_all = "lowercase", tag = "type")]
+#[serde(rename_all = "lowercase", tag = "kind")]
 pub enum SpanKind {
     CodeShorthand,
     Colon,
@@ -67,7 +67,7 @@ pub enum SpanKind {
     EscapedPipe,
     Hyphen,
     LinkShorthand,
-    NamedSpan { name: String, spans: Vec<Span> },
+    NamedSpan { r#type: String, spans: Vec<Span> },
     Newline,
     NonEscapeBackslash,
     Pipe,

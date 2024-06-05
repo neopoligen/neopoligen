@@ -33,7 +33,7 @@ impl PayloadSpan {
             SpanKind::SingleLessThan => "singlelessthan".to_string(),
             SpanKind::Space => "space".to_string(),
             SpanKind::WordPart => "wordpart".to_string(),
-            SpanKind::NamedSpan { name, .. } => name.to_string(),
+            SpanKind::NamedSpan { r#type, .. } => r#type.to_string(),
             SpanKind::Pipe => "pipe".to_string(),
         };
         PayloadSpan {
