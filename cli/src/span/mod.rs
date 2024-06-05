@@ -6,7 +6,9 @@ pub mod escaped_backtick;
 pub mod escaped_colon;
 pub mod escaped_greaterthan;
 pub mod escaped_pipe;
+pub mod greaterthan;
 pub mod hyphen;
+pub mod lessthan;
 pub mod mocks;
 pub mod named_span;
 pub mod non_escape_backslash;
@@ -23,7 +25,9 @@ use crate::span::escaped_backslash::*;
 use crate::span::escaped_backtick::*;
 use crate::span::escaped_greaterthan::*;
 use crate::span::escaped_pipe::*;
+use crate::span::greaterthan::*;
 use crate::span::hyphen::*;
+use crate::span::lessthan::*;
 use crate::span::named_span::*;
 use crate::span::non_escape_backslash::*;
 use crate::span::pipe::*;
@@ -66,7 +70,9 @@ pub enum SpanKind {
     EscapedColon,
     EscapedGreaterThan,
     EscapedPipe,
+    GreaterThan,
     Hyphen,
+    LessThan,
     LinkShorthand,
     NamedSpan { r#type: String, spans: Vec<Span> },
     Newline,

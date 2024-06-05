@@ -108,12 +108,72 @@ mod test {
     use rstest::rstest;
 
     #[rstest]
-    #[case("-- /css\n\n- alfa", "css", "line starts with hyphen")]
-    fn run_test(#[case] input: &str, #[case] end: &str, #[case] _description: &str) {
-        let right = basic_section_end(input, end).unwrap().0;
-        assert_eq!("", right);
+    #[case(
+        "basic section full test",
+        "-- div\n\nalfa bravo",
+        "",
+        "full",
+        "",
+        true
+    )]
+    #[case(
+        "stop at next section",
+        "-- div\n\nalfa bravo\n\n-- div",
+        "-- div",
+        "full",
+        "",
+        true
+    )]
+    #[case(
+        "check and attribute",
+        "-- div\n-- id: charlie\n\nalfa bravo\n\n-- div",
+        "-- div",
+        "full",
+        "",
+        true
+    )]
+    #[case(
+        "test empty section with an attribute",
+        "-- div\n-- id: charlie\n\n\n-- div",
+        "-- div",
+        "full",
+        "",
+        true
+    )]
+    #[case(
+        "test empty section at eof",
+        "-- div\n-- id: charlie",
+        "",
+        "full",
+        "",
+        true
+    )]
+
+    fn solo_basic_fixture(
+        #[case] _description: &str,
+        #[case] source: &str,
+        #[case] remainder: &str,
+        #[case] bounds: &str,
+        #[case] _end_tag: &str,
+        #[case] should_pass: bool,
+    ) {
+        let config = SiteConfig::mock1_basic();
+        if should_pass {
+            if bounds == "full" {
+                assert_eq!(
+                    remainder,
+                    basic_section_full(source, &config.sections).unwrap().0
+                );
+            }
+        }
     }
 
+    // #[rstest]
+    // #[case("-- /css\n\n- alfa", "css", "line starts with hyphen")]
+    // fn run_test(#[case] input: &str, #[case] end: &str, #[case] _description: &str) {
+    //     let right = basic_section_end(input, end).unwrap().0;
+    //     assert_eq!("", right);
+    // }
     #[test]
     fn basic_full_test() {
         let source = "-- title\n\nHello World";

@@ -25,6 +25,8 @@ pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         escaped_greaterthan,
         escaped_backslash,
         non_escape_backslash,
+        greaterthan,
+        lessthan,
     )))
     .context("")
     .parse(source)?;
@@ -190,7 +192,12 @@ mod test {
         2,
         "newlines in shorthand multiple attrs"
     )]
-    fn run_test(#[case] input: &str, #[case] attrs: usize, #[case] _description: &str) {
+    #[case("``Result<(), Box<dyn std::error::Error>>``", 0, "rust example")]
+    fn code_shorhand_fixture(
+        #[case] input: &str,
+        #[case] attrs: usize,
+        #[case] _description: &str,
+    ) {
         let (remainder, span) = code_shorthand(input).unwrap();
         assert_eq!(remainder, "");
         assert_eq!(span.attrs.len(), attrs);
