@@ -80,8 +80,8 @@ pub fn structure_empty_until_newline_or_eof<'a>(
     Ok((source, ""))
 }
 
-pub fn span<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
-    let (source, span) = alt((code_shorthand, span_base, space, newline, colon))
+pub fn span_for_body_text<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    let (source, span) = alt((span_base, code_shorthand, named_span))
         .context("")
         .parse(source)?;
     Ok((source, span))
@@ -92,11 +92,16 @@ pub fn span_base<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a st
     // be used for keys. Also, don't put colon in here
     // since that's also part of the key process
     let (source, span) = alt((
+        wordpart,
+        space,
+        newline,
+        single_greaterthan,
+        single_backtick,
+        colon,
         escaped_backslash,
         escaped_backtick,
+        escaped_greaterthan,
         escaped_pipe,
-        single_backtick,
-        wordpart,
     ))(source)?;
     Ok((source, span))
 }
@@ -176,18 +181,17 @@ pub fn space(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     ))
 }
 
-// // TODO: Move to own file with tests
-// pub fn wordpart(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-//     let initial_source = source;
-//     let (source, text) = is_not(" \\`|:\n\t").context("").parse(source)?;
-//     let source_text = initial_source.replace(source, "").to_string();
-//     Ok((
-//         source,
-//         Span {
-//             attrs: vec![],
-//             source_text,
-//             parsed_text: text.to_string(),
-//             kind: SpanKind::WordPart,
-//         },
-//     ))
-// }
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+    use rstest::rstest;
+    #[rstest]
+    #[case("a", "")]
+    #[case("b", "")]
+    #[case(":", "")]
+    fn run_test(#[case] input: &str, #[case] left: &str) {
+        let right = span_for_body_text(input).unwrap().0;
+        assert_eq!(left, right);
+    }
+}

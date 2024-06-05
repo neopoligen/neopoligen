@@ -30,7 +30,6 @@ pub fn list_section_full<'a>(
     let (source, children) = many0(|src| list_item_full(src, sections))
         .context("")
         .parse(source)?;
-
     Ok((
         source,
         Section {
@@ -48,7 +47,7 @@ mod test {
     use crate::site_config::SiteConfig;
     use pretty_assertions::assert_eq;
     #[test]
-    fn solo_basic_list() {
+    fn basic_list() {
         let source = "-- list\n\n- alfa";
         let config = SiteConfig::mock1_basic();
         let left = (

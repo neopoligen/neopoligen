@@ -8,6 +8,7 @@ pub mod unknown;
 pub mod yaml;
 
 use crate::section::basic::*;
+use crate::section::list::*;
 use crate::section::raw::*;
 use crate::section::unknown::*;
 use crate::section::yaml::*;
@@ -18,6 +19,7 @@ use crate::span::*;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::combinator::eof;
+use nom::multi::many1;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -96,6 +98,8 @@ pub fn start_or_full_section<'a>(
     let (source, section) = alt((
         |src| basic_section_start(src, &sections),
         |src| basic_section_full(src, &sections),
+        // |src| list_section_start(src, &sections),
+        |src| list_section_full(src, &sections),
         |src| raw_section_start(src, &sections),
         |src| raw_section_full(src, &sections),
         //|src| yaml_section_start(src, &sections),
@@ -162,34 +166,13 @@ mod test {
     }
 
     #[test]
-    #[ignore]
     fn misc_test() {
-        let source = include_str!("_test_file.neo");
+        let source = include_str!("test_files/integration-1.neo");
         let config = SiteConfig::mock1_basic();
-        let left = (
-            "",
-            Section {
-                attrs: vec![],
-                bounds: SectionBounds::Full,
-                kind: SectionKind::Basic {
-                    children: vec![Section {
-                        attrs: vec![],
-                        bounds: SectionBounds::Full,
-                        kind: SectionKind::Block {
-                            spans: vec![Span {
-                                attrs: vec![],
-                                kind: SpanKind::CodeShorthand,
-                                parsed_text: "code shorthand".to_string(),
-                                source_text: "``code shorthand``".to_string(),
-                            }],
-                        },
-                        r#type: "block-of-text".to_string(),
-                    }],
-                },
-                r#type: "title".to_string(),
-            },
-        );
-        let right = start_or_full_section(source, &config.sections).unwrap();
+        let left = "";
+        let right = many1(|src| start_or_full_section(src, &config.sections))(source)
+            .unwrap()
+            .0;
         assert_eq!(left, right);
     }
 

@@ -31,7 +31,7 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
             source_text,
             parsed_text,
             kind: SpanKind::NamedSpan {
-                name: name.to_string(),
+                name: name.trim().to_string(),
             },
         },
     ))
@@ -45,7 +45,9 @@ pub fn named_span_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>>
 }
 
 pub fn named_span_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
+    let (source, _) = multispace0.context("").parse(source)?;
     let (source, the_tag) = tag("|").context("").parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
     let (source, words) = many1(span_for_shorthand_flag).context("").parse(source)?;
     let source_text = words
         .iter()
@@ -95,6 +97,22 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorT
 mod test {
     use super::*;
     use pretty_assertions::assert_eq;
+    use rstest::rstest;
+    #[rstest]
+    #[case("<<link|example link|https://www.example.com/>>", "")]
+    #[case("<<\nlink|example link|https://www.example.com/>>", "")]
+    #[case("<<link\n|example link|https://www.example.com/>>", "")]
+    #[case("<<link|\nexample link|https://www.example.com/>>", "")]
+    #[case("<<link|example link\n|https://www.example.com/>>", "")]
+    #[case("<<link|example link|\nhttps://www.example.com/>>", "")]
+    #[case("<<link|example link|https://www.example.com/\n>>", "")]
+    #[case("<<link|example link\n|key: value>>", "")]
+    #[case("<<link|example link|\nkey: value>>", "")]
+    #[case("<<link|example link|key: value\n>>", "")]
+    fn run_test(#[case] input: &str, #[case] left: &str) {
+        let right = named_span(input).unwrap().0;
+        assert_eq!(left, right);
+    }
 
     #[test]
     fn solo_basic_test() {

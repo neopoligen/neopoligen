@@ -1,10 +1,5 @@
-//use crate::span::escaped_backslash::*;
-//use crate::span::escaped_pipe::*;
 use crate::span::*;
-// use crate::span_attr::SpanAttrKind;
-// use crate::span_shorthand_token::*;
 use nom::branch::alt;
-// use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::multi::many0;
 use nom::multi::many1;
@@ -12,14 +7,6 @@ use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-// use nom::character::complete::line_ending;
-// use nom::character::complete::multispace0;
-// use nom::character::complete::space0;
-// use nom::character::complete::space1;
-// use nom::combinator::eof;
-// use nom::combinator::not;
-// use nom::sequence::tuple;
-// use serde::Serialize;
 
 pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let initial_source = source;
@@ -45,7 +32,6 @@ pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
 }
 
 pub fn code_shorthand_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-    // let (source, attr) = alt((code_shorthand_flag_attr,))
     let (source, attr) = alt((code_shorthand_key_value_attr, code_shorthand_flag_attr))
         .context("")
         .parse(source)?;
@@ -54,6 +40,7 @@ pub fn code_shorthand_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&s
 
 pub fn code_shorthand_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let (source, the_tag) = tag("|").context("").parse(source)?;
+    // TODO: Allow spaces here
     let (source, words) = many1(span_for_shorthand_flag).context("").parse(source)?;
     let source_text = words
         .iter()
@@ -75,8 +62,7 @@ pub fn code_shorthand_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTr
 pub fn code_shorthand_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let initial_source = source;
     let (source, _) = tag("|").context("").parse(source)?;
-    // TODO: allow for spaces here
-    // TODO: Move this to span_for_shorthand_attr_key
+    // TODO: Allow spaces here
     let (source, key) = is_not(" :|`").context("").parse(source)?;
     let (source, _) = tag(":").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
@@ -303,7 +289,7 @@ mod test {
                 },
             ],
         );
-        let right = many1(span).parse(source).unwrap();
+        let right = many1(span_for_body_text).parse(source).unwrap();
         assert_eq!(left, right);
     }
 
@@ -345,7 +331,7 @@ mod test {
                 },
             ],
         );
-        let right = many1(span).parse(source).unwrap();
+        let right = many1(span_for_body_text).parse(source).unwrap();
         assert_eq!(left, right);
     }
 
@@ -387,7 +373,7 @@ mod test {
                 },
             ],
         );
-        let right = many1(span).parse(source).unwrap();
+        let right = many1(span_for_body_text).parse(source).unwrap();
         assert_eq!(left, right);
     }
 
@@ -429,4 +415,6 @@ mod test {
         let right = code_shorthand(source).unwrap();
         assert_eq!(left, right);
     }
+
+    //
 }

@@ -70,7 +70,11 @@ impl Builder {
     pub fn generate_missing_asts(&mut self) {
         event!(Level::INFO, "Generating Missing ASTs");
         self.source_pages.iter_mut().for_each(|page| {
-            // dbg!(&page.source_path);
+            event!(
+                Level::INFO,
+                "Generating: {}",
+                page.source_path.as_ref().unwrap().display()
+            );
             if let Err(e) = page.generate_ast() {
                 self.errors.push(e);
             }
@@ -86,16 +90,24 @@ impl Builder {
                 Ok(p) => Some(p),
                 Err(e) => {
                     if let Some(source_path) = &page.source_path {
-                        self.errors.push(NeoError {
-                            kind: NeoErrorKind::ForwardErrorWithSourcePath {
-                                source_path: source_path.clone(),
-                                msg: e.to_string(),
-                            },
-                        });
+                        dbg!("--------------------------------");
+
+                        //self.errors.push(NeoError {
+                        //    kind: NeoErrorKind::ForwardErrorWithSourcePath {
+                        //        source_path: source_path.clone(),
+                        //        //msg: e.to_string(),
+                        //        msg: "ERROR HERE".to_string(),
+                        //    },
+                        //});
                     } else {
-                        self.errors.push(NeoError {
-                            kind: NeoErrorKind::ForwardError { msg: e.to_string() },
-                        });
+                        dbg!("--------------------------------");
+
+                        // self.errors.push(NeoError {
+                        //     // kind: NeoErrorKind::ForwardError { msg: e.to_string() },
+                        //     kind: NeoErrorKind::ForwardError {
+                        //         msg: "ERROR HERE".to_string(),
+                        //     },
+                        // });
                     }
                     event!(
                         Level::ERROR,
@@ -241,6 +253,9 @@ impl Builder {
                 .build()
                 .unwrap(),
         );
+        env.set_debug(true);
+        env.set_lstrip_blocks(true);
+        env.set_trim_blocks(true);
         env.add_template_owned(
             "tmp_status",
             r#"
@@ -253,16 +268,7 @@ body { background-color: #111; color: #aaa; }
 <ul>
 [! for error in errors !]
 <li>
-
-[! if error.type == "parsererror" !]
-
-[! endif !]
-
-
-[@ error.source_path @]
-[@ error.msg @]
-<hr />
-[@ error @]
+[@ error|escape @]
 </li>
 [! endfor !]
 </ul>
