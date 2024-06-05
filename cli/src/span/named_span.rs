@@ -168,42 +168,42 @@ mod test {
     use pretty_assertions::assert_eq;
     use rstest::rstest;
 
-    // #[rstest]
-    // #[case("``alfa``", 0, "single word")]
-    // #[case("``alfa bravo``", 0, "space in text")]
-    // #[case("``alfa-bravo``", 0, "hyphen in text")]
-    // #[case("``alfa`bravo``", 0, "single backtick in text")]
-    // #[case("``alfa\\bravo``", 0, "non-escaped backslash in text")]
-    // #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
-    // #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]
-    // #[case("``alfa\\\\bravo``", 0, "escaped backslash in text")]
-    // #[case("``alfa:bravo``", 0, "colon in text")]
-    // #[case("``alfa: bravo``", 0, "colon in text before space")]
-    // #[case("``alfa :bravo``", 0, "colon in text after space")]
-    // #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]
-    // #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
-    // #[case("``alfa|bravo``", 1, "single flag attr")]
-    // #[case("``alfa|bravo charlie``", 1, "space in flag")]
-    // #[case("``alfa|bravo`charlie``", 1, "single backtick in flag")]
-    // #[case("``alfa|bravo\ncharlie``", 1, "newline in flag")]
-    // #[case("``alfa|bravo\\charlie``", 1, "non-escaped baskslash in flag")]
-    // #[case("``alfa|bravo\\|charlie``", 1, "escaped pipe in flag")]
-    // #[case("``alfa|bravo\\`charlie``", 1, "escaped backtick in flag")]
-    // #[case("``alfa|bravo\\\\charlie``", 1, "escaped baskslash in flag")]
-    // #[case("``alfa|bravo|charlie``", 2, "two flag attrs")]
-    // #[case("``alfa|bravo: charlie``", 1, "single key value attr")]
-    // #[case("``alfa|bravo: charlie|delta: echo``", 2, "single key value attr")]
-    // #[case("``\nalfa\n|\nbravo\n``", 1, "newlines in shorthand")]
+    #[rstest]
+    #[case("<<alfa|bravo>>", 0, "single word")]
+    // #[case("<<alfa bravo>>", 0, "space in text")]
+    // #[case("<<alfa-bravo>>", 0, "hyphen in text")]
+    // #[case("<<alfa`bravo>>", 0, "single backtick in text")]
+    // #[case("<<alfa\\bravo>>", 0, "non-escaped backslash in text")]
+    // #[case("<<alfa\\`bravo>>", 0, "escaped backtick in text")]
+    // #[case("<<alfa\\|bravo>>", 0, "escaped pipe in text")]
+    // #[case("<<alfa\\\\bravo>>", 0, "escaped backslash in text")]
+    // #[case("<<alfa:bravo>>", 0, "colon in text")]
+    // #[case("<<alfa: bravo>>", 0, "colon in text before space")]
+    // #[case("<<alfa :bravo>>", 0, "colon in text after space")]
+    // #[case("<<alfa\\|bravo>>", 0, "escaped pipe in text")]
+    // #[case("<<alfa\\`bravo>>", 0, "escaped backtick in text")]
+    // #[case("<<alfa|bravo>>", 1, "single flag attr")]
+    // #[case("<<alfa|bravo charlie>>", 1, "space in flag")]
+    // #[case("<<alfa|bravo`charlie>>", 1, "single backtick in flag")]
+    // #[case("<<alfa|bravo\ncharlie>>", 1, "newline in flag")]
+    // #[case("<<alfa|bravo\\charlie>>", 1, "non-escaped baskslash in flag")]
+    // #[case("<<alfa|bravo\\|charlie>>", 1, "escaped pipe in flag")]
+    // #[case("<<alfa|bravo\\`charlie>>", 1, "escaped backtick in flag")]
+    // #[case("<<alfa|bravo\\\\charlie>>", 1, "escaped baskslash in flag")]
+    // #[case("<<alfa|bravo|charlie``", 2, "two flag attrs")]
+    // #[case("<<alfa|bravo: charlie>>", 1, "single key value attr")]
+    // #[case("<<alfa|bravo: charlie|delta: echo>>", 2, "single key value attr")]
+    // #[case("<<\nalfa\n|\nbravo\n>>", 1, "newlines in shorthand")]
     // #[case(
     //     "``\nalfa\n|\nbravo\n|\ncharlie\n``",
-    //     2,
-    //     "newlines in shorthand multiple attrs"
+    // 2,
+    // "newlines in shorthand multiple attrs"
     // )]
-
     fn run_test(#[case] input: &str, #[case] attrs: usize, #[case] _description: &str) {
-        let (remainder, span) = code_shorthand(input).unwrap();
+        let (remainder, span) = named_span(input).unwrap();
         assert_eq!(remainder, "");
         assert_eq!(span.attrs.len(), attrs);
+    }
 
     #[test]
     fn basic_test() {
