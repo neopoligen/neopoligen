@@ -2,6 +2,13 @@
 
 TODO List
 
+- Document how backslashes work for escaping. i.e. you 
+can use them as normal unless they are in front of specific
+escaped characters, then you need to add an extra backslash if
+you want to use the backslash or leave it off if you want
+to escape the following character. 
+
+
 
 -- metadata
 -- updated: 2024-06-03T18:27:52-04:00

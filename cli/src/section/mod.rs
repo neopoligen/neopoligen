@@ -174,6 +174,7 @@ mod test {
         let right = many1(|src| start_or_full_section(src, &config.sections))(source)
             .unwrap()
             .0;
+        dbg!(&right);
         assert_eq!(left, right);
     }
 

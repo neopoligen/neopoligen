@@ -1,12 +1,16 @@
 use crate::section::Section;
 use crate::section::SectionBounds;
 use crate::section::SectionKind;
+use crate::span::code_shorthand::code_shorthand;
 use crate::span::colon::*;
 use crate::span::escaped_backslash::*;
 use crate::span::escaped_backtick::*;
 use crate::span::escaped_greaterthan::*;
 use crate::span::escaped_pipe::*;
+use crate::span::hyphen::*;
 use crate::span::named_span::*;
+use crate::span::non_escape_backslash::*;
+use crate::span::pipe::*;
 use crate::span::single_backtick::*;
 use crate::span::single_greaterthan::*;
 use crate::span::single_lessthan::*;
@@ -23,8 +27,6 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
-use self::code_shorthand::code_shorthand;
-
 #[derive(Clone, Debug, PartialEq)]
 pub struct Block {}
 
@@ -37,6 +39,8 @@ pub fn block_of_anything<'a>(source: &'a str) -> IResult<&'a str, Section, Error
         newline,
         code_shorthand,
         named_span,
+        hyphen,
+        pipe,
         colon,
         single_lessthan,
         single_greaterthan,
@@ -45,6 +49,7 @@ pub fn block_of_anything<'a>(source: &'a str) -> IResult<&'a str, Section, Error
         escaped_pipe,
         escaped_greaterthan,
         escaped_backslash,
+        non_escape_backslash,
     )))
     .context("")
     .parse(source)?;
@@ -62,11 +67,28 @@ pub fn block_of_anything<'a>(source: &'a str) -> IResult<&'a str, Section, Error
 
 pub fn block_of_end_content<'a>(source: &'a str) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = not(eof).context("").parse(source)?;
-    let (source, _) = not(tag("-")).context("").parse(source)?;
+    let (source, _) = not(tag("--")).context("").parse(source)?;
     let (source, _) = not(tag("[")).context("").parse(source)?;
-    let (source, spans) = many1(|src| span_for_body_text(src))
-        .context("")
-        .parse(source)?;
+    let (source, spans) = many1(alt((
+        wordpart,
+        space,
+        newline,
+        code_shorthand,
+        named_span,
+        hyphen,
+        pipe,
+        colon,
+        single_lessthan,
+        single_greaterthan,
+        single_backtick,
+        escaped_backtick,
+        escaped_pipe,
+        escaped_greaterthan,
+        escaped_backslash,
+        non_escape_backslash,
+    )))
+    .context("")
+    .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     Ok((
         source,
@@ -82,7 +104,26 @@ pub fn block_of_end_content<'a>(source: &'a str) -> IResult<&'a str, Section, Er
 pub fn block_of_list_content<'a>(source: &'a str) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = not(eof).context("").parse(source)?;
     let (source, _) = not(tag("-")).context("").parse(source)?;
-    let (source, spans) = many1(span_for_body_text).context("").parse(source)?;
+    let (source, spans) = many1(alt((
+        wordpart,
+        space,
+        newline,
+        code_shorthand,
+        named_span,
+        hyphen,
+        pipe,
+        colon,
+        single_lessthan,
+        single_greaterthan,
+        single_backtick,
+        escaped_backtick,
+        escaped_pipe,
+        escaped_greaterthan,
+        escaped_backslash,
+        non_escape_backslash,
+    )))
+    .context("")
+    .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     Ok((
         source,
@@ -93,4 +134,18 @@ pub fn block_of_list_content<'a>(source: &'a str) -> IResult<&'a str, Section, E
             r#type: "block-of-text".to_string(),
         },
     ))
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+    use rstest::rstest;
+    #[rstest]
+    #[case("alfa | bravo", "")]
+    #[case("alfa - bravo", "")]
+    fn run_test(#[case] input: &str, #[case] left: &str) {
+        let right = block_of_anything(input).unwrap().0;
+        assert_eq!(left, right);
+    }
 }

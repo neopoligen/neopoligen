@@ -16,11 +16,12 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, parts) = many0(alt((
+    let (source, spans) = many0(alt((
         wordpart,
         space,
         newline,
         colon,
+        hyphen,
         single_lessthan,
         single_greaterthan,
         single_backtick,
@@ -28,13 +29,14 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         escaped_pipe,
         escaped_greaterthan,
         escaped_backslash,
+        non_escape_backslash,
     )))
     .context("")
     .parse(source)?;
     let (source, attrs) = many0(named_span_attr).context("").parse(source)?;
     let (source, _) = tag(">>").context("").parse(source)?;
     let source_text = initial_source.replace(source, "").to_string();
-    let parsed_text = parts
+    let parsed_text = spans
         .iter()
         .map(|word| word.parsed_text.clone())
         .collect::<Vec<String>>()
@@ -52,6 +54,7 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
             parsed_text,
             kind: SpanKind::NamedSpan {
                 name: name.to_string(),
+                spans,
             },
         },
     ))
@@ -71,6 +74,7 @@ pub fn named_span_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&
         wordpart,
         colon,
         newline,
+        hyphen,
         single_lessthan,
         single_greaterthan,
         single_backtick,
@@ -78,6 +82,7 @@ pub fn named_span_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&
         escaped_pipe,
         escaped_greaterthan,
         escaped_backslash,
+        non_escape_backslash,
     )))
     .context("")
     .parse(source)?;
@@ -106,6 +111,7 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorT
     // TODO: Move this to span_for_shorthand_attr_key
     let (source, key_parts) = many1(alt((
         wordpart,
+        hyphen,
         single_lessthan,
         single_greaterthan,
         single_backtick,
@@ -113,6 +119,7 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorT
         escaped_pipe,
         escaped_greaterthan,
         escaped_backslash,
+        non_escape_backslash,
     )))
     .context("")
     .parse(source)?;
@@ -121,6 +128,7 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorT
     let (source, tokens) = many1(alt((
         wordpart,
         colon,
+        hyphen,
         newline,
         single_lessthan,
         single_greaterthan,
@@ -129,6 +137,7 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorT
         escaped_pipe,
         escaped_greaterthan,
         escaped_backslash,
+        non_escape_backslash,
     )))
     .context("")
     .parse(source)?;
@@ -160,6 +169,12 @@ mod test {
     use rstest::rstest;
 
     #[rstest]
+    #[case("<<em|alfa>>", "sigle word")]
+    #[case("<<em|alfa bravo>>", "multiple words")]
+    #[case("<<em|alfa|bravo>>", "single flag")]
+    #[case("<<em|alfa|bravo|charlie>>", "multiple flags")]
+    #[case("<<em|alfa|bravo: charlie>>", "single attr")]
+    #[case("<<em|alfa|bravo: charlie>>", "multiple attrs and flags")]
     #[case("<<link|example link|https://www.example.com/>>", "")]
     #[case("<<\nlink|example link|https://www.example.com/>>", "")]
     #[case("<<link\n|example link|https://www.example.com/>>", "")]
@@ -174,9 +189,11 @@ mod test {
     #[case("<<link|example link\n|key: value>>", "")]
     #[case("<<link|example link|\nkey: value>>", "")]
     #[case("<<link|example link|key: value\n>>", "")]
-    fn run_test(#[case] input: &str, #[case] left: &str) {
+    fn run_test(#[case] input: &str, #[case] _description: &str) {
+        // Reminder: the cases should all parse cleanly an leave
+        // no remainder which is what this checks for
         let right = named_span(input).unwrap().0;
-        assert_eq!(left, right);
+        assert_eq!("", right);
     }
 
     #[test]
@@ -190,6 +207,12 @@ mod test {
                 parsed_text: "alfa".to_string(),
                 kind: SpanKind::NamedSpan {
                     name: "em".to_string(),
+                    spans: vec![Span {
+                        attrs: vec![],
+                        source_text: "alfa".to_string(),
+                        parsed_text: "alfa".to_string(),
+                        kind: SpanKind::WordPart,
+                    }],
                 },
             },
         );
@@ -208,6 +231,26 @@ mod test {
                 parsed_text: "ping|ping".to_string(),
                 kind: SpanKind::NamedSpan {
                     name: "alfa".to_string(),
+                    spans: vec![
+                        Span {
+                            attrs: vec![],
+                            source_text: "ping".to_string(),
+                            parsed_text: "ping".to_string(),
+                            kind: SpanKind::WordPart,
+                        },
+                        Span {
+                            attrs: vec![],
+                            source_text: "\\|".to_string(),
+                            parsed_text: "|".to_string(),
+                            kind: SpanKind::EscapedPipe,
+                        },
+                        Span {
+                            attrs: vec![],
+                            source_text: "ping".to_string(),
+                            parsed_text: "ping".to_string(),
+                            kind: SpanKind::WordPart,
+                        },
+                    ],
                 },
             },
         );
@@ -263,6 +306,12 @@ mod test {
                 parsed_text: "something".to_string(),
                 kind: SpanKind::NamedSpan {
                     name: "code".to_string(),
+                    spans: vec![Span {
+                        attrs: vec![],
+                        source_text: "something".to_string(),
+                        parsed_text: "something".to_string(),
+                        kind: SpanKind::WordPart,
+                    }],
                 },
             },
         );

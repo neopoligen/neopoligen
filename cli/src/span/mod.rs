@@ -5,8 +5,11 @@ pub mod escaped_backslash;
 pub mod escaped_backtick;
 pub mod escaped_greaterthan;
 pub mod escaped_pipe;
+pub mod hyphen;
 pub mod mocks;
 pub mod named_span;
+pub mod non_escape_backslash;
+pub mod pipe;
 pub mod single_backtick;
 pub mod single_greaterthan;
 pub mod single_lessthan;
@@ -19,7 +22,10 @@ use crate::span::escaped_backslash::*;
 use crate::span::escaped_backtick::*;
 use crate::span::escaped_greaterthan::*;
 use crate::span::escaped_pipe::*;
+use crate::span::hyphen::*;
 use crate::span::named_span::*;
+use crate::span::non_escape_backslash::*;
+use crate::span::pipe::*;
 use crate::span::single_backtick::*;
 use crate::span::single_greaterthan::*;
 use crate::span::single_lessthan::*;
@@ -59,9 +65,12 @@ pub enum SpanKind {
     EscapedColon,
     EscapedGreaterThan,
     EscapedPipe,
+    Hyphen,
     LinkShorthand,
-    NamedSpan { name: String },
+    NamedSpan { name: String, spans: Vec<Span> },
     Newline,
+    NonEscapeBackslash,
+    Pipe,
     SingleBacktick,
     SingleGreaterThan,
     SingleLessThan,

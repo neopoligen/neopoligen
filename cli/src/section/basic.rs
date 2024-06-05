@@ -105,6 +105,15 @@ mod test {
     use super::*;
     use crate::site_config::SiteConfig;
     use pretty_assertions::assert_eq;
+    use rstest::rstest;
+
+    #[rstest]
+    #[case("-- /css\n\n- alfa", "css", "line starts with hyphen")]
+    fn run_test(#[case] input: &str, #[case] end: &str, #[case] _description: &str) {
+        let right = basic_section_end(input, end).unwrap().0;
+        assert_eq!("", right);
+    }
+
     #[test]
     fn basic_full_test() {
         let source = "-- title\n\nHello World";

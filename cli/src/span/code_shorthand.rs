@@ -15,6 +15,7 @@ pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         wordpart,
         space,
         newline,
+        hyphen,
         colon,
         single_lessthan,
         single_greaterthan,
@@ -23,6 +24,7 @@ pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         escaped_pipe,
         escaped_greaterthan,
         escaped_backslash,
+        non_escape_backslash,
     )))
     .context("")
     .parse(source)?;
@@ -67,6 +69,7 @@ pub fn code_shorthand_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTr
         space,
         newline,
         colon,
+        hyphen,
         single_lessthan,
         single_greaterthan,
         single_backtick,
@@ -98,14 +101,9 @@ pub fn code_shorthand_key_value_attr(source: &str) -> IResult<&str, SpanAttr, Er
     let initial_source = source;
     let (source, _) = tag("|").context("").parse(source)?;
     // TODO: Allow spaces here
-    let (source, key) = is_not(" :|`").context("").parse(source)?;
-    let (source, _) = tag(":").context("").parse(source)?;
-    let (source, _) = space1.context("").parse(source)?;
-    let (source, tokens) = many1(alt((
+    let (source, key_parts) = many1(alt((
         wordpart,
-        space,
-        newline,
-        colon,
+        hyphen,
         single_lessthan,
         single_greaterthan,
         single_backtick,
@@ -116,6 +114,29 @@ pub fn code_shorthand_key_value_attr(source: &str) -> IResult<&str, SpanAttr, Er
     )))
     .context("")
     .parse(source)?;
+    let (source, _) = tag(":").context("").parse(source)?;
+    let (source, _) = space1.context("").parse(source)?;
+    let (source, tokens) = many1(alt((
+        wordpart,
+        space,
+        newline,
+        colon,
+        hyphen,
+        single_lessthan,
+        single_greaterthan,
+        single_backtick,
+        escaped_backtick,
+        escaped_pipe,
+        escaped_greaterthan,
+        escaped_backslash,
+    )))
+    .context("")
+    .parse(source)?;
+    let key = key_parts
+        .iter()
+        .map(|p| p.parsed_text.clone())
+        .collect::<Vec<String>>()
+        .join(" ");
     let value = tokens
         .iter()
         .map(|word| word.parsed_text.clone())
@@ -136,6 +157,24 @@ pub fn code_shorthand_key_value_attr(source: &str) -> IResult<&str, SpanAttr, Er
 mod test {
     use super::*;
     use pretty_assertions::assert_eq;
+    use rstest::rstest;
+    #[rstest]
+    #[case("``alfa-bravo``", "", "hyphen in text")]
+    #[case("``alfa\\\\bravo``", "", "escaped backslash in text")]
+    #[case("``alfa\\bravo``", "", "non-escaped backslash in text")]
+    #[case("``gap|css``", "", "pipe for attr")]
+    #[case("``margin: 0|css``", "", "colon in text")]
+    fn run_test(#[case] input: &str, #[case] left: &str, #[case] _description: &str) {
+        let right = code_shorthand(input).unwrap().0;
+        assert_eq!(left, right, "asdf");
+    }
+
+    #[rstest]
+    #[case("``\\``", "can't have a single backslash at the end of code text")]
+    fn error_cases(#[case] input: &str, #[case] _desc: &str) {
+        assert!(code_shorthand(input).is_err());
+    }
+
     #[test]
     fn code_shorthand_basic() {
         let source = "``ping``";
