@@ -44,7 +44,7 @@ use nom_supreme::parser_ext::ParserExt;
 // TODO: Move to own file with tests
 pub fn wordpart(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let initial_source = source;
-    let (source, text) = is_not(" \\`|:<>\n\t").context("").parse(source)?;
+    let (source, text) = is_not("\n\\`|:<>").context("").parse(source)?;
     let source_text = initial_source.replace(source, "").to_string();
     Ok((
         source,

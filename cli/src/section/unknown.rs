@@ -18,6 +18,7 @@ pub fn unknown_section_full<'a>(
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = is_not(" \n").context("").parse(source)?;
+    dbg!(r#type);
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
         .parse(source)?;
@@ -64,26 +65,12 @@ mod test {
                         attrs: vec![],
                         bounds: SectionBounds::Full,
                         kind: SectionKind::Block {
-                            spans: vec![
-                                Span {
-                                    attrs: vec![],
-                                    kind: SpanKind::WordPart,
-                                    parsed_text: "Hello".to_string(),
-                                    source_text: "Hello".to_string(),
-                                },
-                                Span {
-                                    attrs: vec![],
-                                    kind: SpanKind::Space,
-                                    parsed_text: " ".to_string(),
-                                    source_text: " ".to_string(),
-                                },
-                                Span {
-                                    attrs: vec![],
-                                    kind: SpanKind::WordPart,
-                                    parsed_text: "World".to_string(),
-                                    source_text: "World".to_string(),
-                                },
-                            ],
+                            spans: vec![Span {
+                                attrs: vec![],
+                                kind: SpanKind::WordPart,
+                                parsed_text: "Hello World".to_string(),
+                                source_text: "Hello World".to_string(),
+                            }],
                         },
                         r#type: "block-of-text".to_string(),
                     }],

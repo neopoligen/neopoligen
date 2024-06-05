@@ -307,14 +307,8 @@ mod test {
                 Span {
                     attrs: vec![],
                     kind: SpanKind::WordPart,
-                    parsed_text: "alfa".to_string(),
-                    source_text: "alfa".to_string(),
-                },
-                Span {
-                    attrs: vec![],
-                    kind: SpanKind::Space,
-                    parsed_text: " ".to_string(),
-                    source_text: " ".to_string(),
+                    parsed_text: "alfa ".to_string(),
+                    source_text: "alfa ".to_string(),
                 },
                 Span {
                     attrs: vec![],
@@ -324,15 +318,9 @@ mod test {
                 },
                 Span {
                     attrs: vec![],
-                    kind: SpanKind::Space,
-                    parsed_text: " ".to_string(),
-                    source_text: " ".to_string(),
-                },
-                Span {
-                    attrs: vec![],
                     kind: SpanKind::WordPart,
-                    parsed_text: "charlie".to_string(),
-                    source_text: "charlie".to_string(),
+                    parsed_text: " charlie".to_string(),
+                    source_text: " charlie".to_string(),
                 },
             ],
         );
@@ -349,14 +337,8 @@ mod test {
                 Span {
                     attrs: vec![],
                     kind: SpanKind::WordPart,
-                    parsed_text: "alfa".to_string(),
-                    source_text: "alfa".to_string(),
-                },
-                Span {
-                    attrs: vec![],
-                    kind: SpanKind::Space,
-                    parsed_text: " ".to_string(),
-                    source_text: " ".to_string(),
+                    parsed_text: "alfa ".to_string(),
+                    source_text: "alfa ".to_string(),
                 },
                 Span {
                     attrs: vec![],
@@ -366,15 +348,9 @@ mod test {
                 },
                 Span {
                     attrs: vec![],
-                    kind: SpanKind::Space,
-                    parsed_text: " ".to_string(),
-                    source_text: " ".to_string(),
-                },
-                Span {
-                    attrs: vec![],
                     kind: SpanKind::WordPart,
-                    parsed_text: "charlie".to_string(),
-                    source_text: "charlie".to_string(),
+                    parsed_text: " charlie".to_string(),
+                    source_text: " charlie".to_string(),
                 },
             ],
         );
@@ -391,14 +367,8 @@ mod test {
                 Span {
                     attrs: vec![],
                     kind: SpanKind::WordPart,
-                    parsed_text: "alfa".to_string(),
-                    source_text: "alfa".to_string(),
-                },
-                Span {
-                    attrs: vec![],
-                    kind: SpanKind::Space,
-                    parsed_text: " ".to_string(),
-                    source_text: " ".to_string(),
+                    parsed_text: "alfa ".to_string(),
+                    source_text: "alfa ".to_string(),
                 },
                 Span {
                     attrs: vec![],
@@ -408,15 +378,9 @@ mod test {
                 },
                 Span {
                     attrs: vec![],
-                    kind: SpanKind::Space,
-                    parsed_text: " ".to_string(),
-                    source_text: " ".to_string(),
-                },
-                Span {
-                    attrs: vec![],
                     kind: SpanKind::WordPart,
-                    parsed_text: "charlie".to_string(),
-                    source_text: "charlie".to_string(),
+                    parsed_text: " charlie".to_string(),
+                    source_text: " charlie".to_string(),
                 },
             ],
         );

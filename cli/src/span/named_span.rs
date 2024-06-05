@@ -248,7 +248,7 @@ mod test {
     // }
 
     #[test]
-    fn solo_with_flag_attr() {
+    fn with_flag_attr() {
         let source = "<<code|something|rust>>";
         let left = (
             "",

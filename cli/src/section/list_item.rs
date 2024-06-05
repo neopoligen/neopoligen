@@ -34,7 +34,7 @@ mod test {
     use crate::site_config::SiteConfig;
     use pretty_assertions::assert_eq;
     #[test]
-    fn solo_basic_list_item() {
+    fn basic_list_item() {
         let source = "- alfa\n\n";
         let config = SiteConfig::mock1_basic();
         let left = (

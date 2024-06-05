@@ -166,9 +166,9 @@ mod test {
     }
 
     #[test]
-    #[ignore]
-    fn misc_test() {
-        let source = include_str!("test_files/integration-1.neo");
+    fn solo_misc_test() {
+        // let source = include_str!("test_files/integration-1.neo");
+        let source = include_str!("test_files/to-speed-check.neo");
         let config = SiteConfig::mock1_basic();
         let left = "";
         let right = many1(|src| start_or_full_section(src, &config.sections))(source)
