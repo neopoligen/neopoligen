@@ -15,7 +15,7 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let initial_source = source;
     let (source, _) = tag("<<").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, type_parts) = many1(alt((alpha1, digit1, tag("-"))))
+    let (source, type_parts) = many1(alt((alpha1, digit1, tag("-"), tag("_"))))
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
