@@ -194,9 +194,6 @@ mod test {
         let (remainder, span) = code_shorthand(input).unwrap();
         assert_eq!(remainder, "");
         assert_eq!(span.attrs.len(), attrs);
-
-        //let right = code_shorthand(input).unwrap().0;
-        //assert_eq!(left, right, "asdf");
     }
 
     #[rstest]
