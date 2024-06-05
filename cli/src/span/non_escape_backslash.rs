@@ -13,6 +13,7 @@ pub fn non_escape_backslash(source: &str) -> IResult<&str, Span, ErrorTree<&str>
     let (source, _) = not(tag("|")).context("").parse(source)?;
     let (source, _) = not(tag(">")).context("").parse(source)?;
     let (source, _) = not(tag("`")).context("").parse(source)?;
+    let (source, _) = not(tag(":")).context("").parse(source)?;
     let source_text = initial_source.replace(source, "").to_string();
     Ok((
         source,
@@ -28,12 +29,14 @@ pub fn non_escape_backslash(source: &str) -> IResult<&str, Span, ErrorTree<&str>
 #[cfg(test)]
 mod test {
     use super::*;
-    use pretty_assertions::assert_eq;
     use rstest::rstest;
     #[rstest]
-    #[case("\\x", "x")]
-    fn run_test(#[case] input: &str, #[case] left: &str) {
-        let right = non_escape_backslash(input).unwrap().0;
-        assert_eq!(left, right);
+    #[case("\\:", "")]
+    #[case("\\>", "")]
+    #[case("\\|", "")]
+    #[case("\\<", "")]
+    #[case("\\`", "")]
+    fn run_test(#[case] input: &str, #[case] _description: &str) {
+        assert!(non_escape_backslash(input).is_err());
     }
 }

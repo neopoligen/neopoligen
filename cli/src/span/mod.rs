@@ -3,6 +3,7 @@ pub mod colon;
 pub mod colon_not_followed_by_space;
 pub mod escaped_backslash;
 pub mod escaped_backtick;
+pub mod escaped_colon;
 pub mod escaped_greaterthan;
 pub mod escaped_pipe;
 pub mod hyphen;

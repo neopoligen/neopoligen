@@ -1,3 +1,4 @@
+use crate::span::escaped_colon::*;
 use crate::span::*;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
@@ -79,6 +80,7 @@ pub fn named_span_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&
         single_greaterthan,
         single_backtick,
         escaped_backtick,
+        escaped_colon,
         escaped_pipe,
         escaped_greaterthan,
         escaped_backslash,
@@ -170,26 +172,27 @@ mod test {
 
     #[rstest]
     #[case("<<alfa|bravo>>", 0, "single word")]
-    // #[case("<<alfa bravo>>", 0, "space in text")]
-    // #[case("<<alfa-bravo>>", 0, "hyphen in text")]
-    // #[case("<<alfa`bravo>>", 0, "single backtick in text")]
-    // #[case("<<alfa\\bravo>>", 0, "non-escaped backslash in text")]
-    // #[case("<<alfa\\`bravo>>", 0, "escaped backtick in text")]
-    // #[case("<<alfa\\|bravo>>", 0, "escaped pipe in text")]
-    // #[case("<<alfa\\\\bravo>>", 0, "escaped backslash in text")]
-    // #[case("<<alfa:bravo>>", 0, "colon in text")]
-    // #[case("<<alfa: bravo>>", 0, "colon in text before space")]
-    // #[case("<<alfa :bravo>>", 0, "colon in text after space")]
-    // #[case("<<alfa\\|bravo>>", 0, "escaped pipe in text")]
-    // #[case("<<alfa\\`bravo>>", 0, "escaped backtick in text")]
-    // #[case("<<alfa|bravo>>", 1, "single flag attr")]
-    // #[case("<<alfa|bravo charlie>>", 1, "space in flag")]
-    // #[case("<<alfa|bravo`charlie>>", 1, "single backtick in flag")]
-    // #[case("<<alfa|bravo\ncharlie>>", 1, "newline in flag")]
-    // #[case("<<alfa|bravo\\charlie>>", 1, "non-escaped baskslash in flag")]
-    // #[case("<<alfa|bravo\\|charlie>>", 1, "escaped pipe in flag")]
-    // #[case("<<alfa|bravo\\`charlie>>", 1, "escaped backtick in flag")]
-    // #[case("<<alfa|bravo\\\\charlie>>", 1, "escaped baskslash in flag")]
+    #[case("<<alfa|bravo charlie>>", 0, "space in text")]
+    #[case("<<alfa|bravo\ncharlie>>", 0, "newline in text")]
+    #[case("<<alfa|bravo-charlie>>", 0, "hyphen in text")]
+    #[case("<<alfa|bravo`charlie>>", 0, "single backtick in text")]
+    #[case("<<alfa|bravo\\charlie>>", 0, "non-escaped backslash in text")]
+    #[case("<<alfa|bravo\\`charlie>>", 0, "escaped backtick in text")]
+    #[case("<<alfa|bravo\\|charlie>>", 0, "escaped pipe in text")]
+    #[case("<<alfa|bravo\\\\charlie>>", 0, "escaped baskslash in text")]
+    #[case("<<alfa|bravo:charlie>>", 0, "colon in text surrounded")]
+    #[case("<<alfa|bravo: charlie>>", 0, "colon in text before space")]
+    #[case("<<alfa|bravo :charlie>>", 0, "colon in text after space")]
+    #[case("<<alfa|bravo : charlie>>", 0, "colon in text floating")]
+    #[case("<<alfa|bravo|charlie>>", 1, "single flag")]
+    #[case("<<alfa|bravo|charlie delta>>", 1, "space in flag ")]
+    #[case("<<alfa|bravo|charlie`delta>>", 1, "single backtick in flag")]
+    #[case("<<alfa|bravo|charlie\ndelta>>", 1, "newline in flag")]
+    #[case("<<alfa|bravo|charlie\\delta>>", 1, "non-escaped backslash in flag")]
+    #[case("<<alfa|bravo|charlie\\|delta>>", 1, "escaped pipe in flag")]
+    #[case("<<alfa|bravo|charlie\\`delta>>", 1, "escaped backtick in flag")]
+    #[case("<<alfa|bravo|charlie\\:delta>>", 1, "escaped colon in flag")]
+    #[case("<<alfa|bravo|charlie\\\\delta>>", 1, "escaped backslash in flag")]
     // #[case("<<alfa|bravo|charlie``", 2, "two flag attrs")]
     // #[case("<<alfa|bravo: charlie>>", 1, "single key value attr")]
     // #[case("<<alfa|bravo: charlie|delta: echo>>", 2, "single key value attr")]
