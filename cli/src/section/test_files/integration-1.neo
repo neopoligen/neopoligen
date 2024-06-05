@@ -16,9 +16,136 @@ full file parses.
 - Single : is fine
 
 
--- metadata
--- created: 2024-06-04T21:03:23-04:00
--- updated: 2024-06-04T21:03:23-04:00
--- id: 2hrgjqnf
 
+-- title
+
+Review: HTML with Superpowers
+
+-- youtube
+-- id: fehbksz1
+
+
+-- notes
+
+- A talk on web components from Dave Rupert (Oct. 2021)
+
+- Web components let you make your own elements
+
+- They're encapsulated which makes them like Lego blocks
+
+- Originally pitched in 2011, but took a long time to get out. 
+
+- A set of web standards instead of being a 
+custom designed framework (like angular, react, etc...) 
+
+- Made up of four standards: 
+
+- HTML <template>
+
+- Custom Elements
+
+- Shadow DOM
+
+- ES Modules (originally HTML Imports but Mozilla killed that
+approach)
+
+- Custom elements have to have a hyphen in them e.g. 
+``custom-element``
+
+- Shadow DOM is what provides encapsulation which is what
+lets the custom element from unintentionally effecting or having an effect
+on stuff outside it
+
+- Mozilla killed HTML Imports which are not ES Modules
+
+- Have a google stat saying 12% of pages loaded in chrome use
+web components
+
+- Reasons they don't get used as much: 
+
+- Designed at a low level like for framework authors
+
+- Not truly supported fully until 2020 which edge got it
+
+- Move slower because they are standards based, but that
+means they are much more likely to work in 5-10 years. 
+
+- Posits that web components are more like writing regular
+ol' html than dealing with all the modern framework stuff
+
+- Shows to Google Labs "two-up" component for comparing 
+two images
+
+- The ``<slot>`` elements inside web components are how
+you pull date in from the main page call.
+
+- Web components are great for progressive enhancement
+
+- Sharing components means we can share accessible ones
+that are framework independent and don't require build
+systems
+
+- You can put core html tags inside the custom
+elements and they'll render as is if the component
+fails to fire for some reason. 
+
+- Shows a 3D model viewer where you just drop in the
+component and the link to your .glb file. 
+
+- Piercing the shadow dom. There's a shadow boundary 
+where somethings go through the boundary and some don't.
+Can be confusing to figure out what's what.
+
+- There's a list of inheritable styles that cross the
+boundary. Other styles don't.
+
+- Most of the ones that do are text and font things
+
+- Custom CSS variables *do** get passed. These are a 
+great way to add a styling API if you are authoring
+the component
+
+- There are also Named Shadow Parts. 
+
+- Named Shadow Parts are setup with a ``name`` attribute
+in the HTML that's in the slog of the component. This
+turns it into a ``part`` that a css selector can hit
+
+-- code
+-- css
+
+custom-alert::part(button) {
+  background: pink;
+}  
+
+-- list
+
+- Every component has a life cycle
+
+- (Those are all libraries though, which I'm 
+not as big a fan of because it puts your code
+on someone else's foundation)
+
+- I'm assuming it saves you some significant
+effort to use one of the libraries, but I'm 
+unclear how much
+
+- There's a `::slotted(*)``css`` selector inside
+the Lit library. Not sure if that's for web
+components in general or Lit specifically. 
+
+- Make sure to do lots of testing if you're
+using form controls. There are gotchas hiding
+in there.
+
+- ElementInternals is helping with the form 
+stuff along with formdata
+
+- Possibility that if we get good custom elements
+they eventually become native elements
+
+
+-- list
+
+- <<link|Main site link|https://daverupert.com/2021/10/html-with-superpowers/>>
 

@@ -1,12 +1,8 @@
 use crate::section::block::*;
 use crate::section::*;
-// use crate::section_attr::*;
-// use crate::span::*;
-// use nom::branch::alt;
 use nom::bytes::complete::tag;
-// use nom::character::complete::multispace0;
 use nom::character::complete::space1;
-use nom::multi::many0;
+use nom::multi::many1;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -18,7 +14,7 @@ pub fn list_item_full<'a>(
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
-    let (source, children) = many0(|src| block_of_list_content(src))
+    let (source, children) = many1(|src| block_of_list_content(src))
         .context("")
         .parse(source)?;
     Ok((

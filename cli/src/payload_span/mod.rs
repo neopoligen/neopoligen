@@ -28,6 +28,7 @@ impl PayloadSpan {
             SpanKind::Newline => "newline".to_string(),
             SpanKind::SingleBacktick => "singlebacktick".to_string(),
             SpanKind::SingleGreaterThan => "singlegreaterthan".to_string(),
+            SpanKind::SingleLessThan => "singlelessthan".to_string(),
             SpanKind::Space => "space".to_string(),
             SpanKind::WordPart => "wordpart".to_string(),
             SpanKind::NamedSpan { name } => name.to_string(),

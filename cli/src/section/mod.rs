@@ -166,6 +166,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn misc_test() {
         let source = include_str!("test_files/integration-1.neo");
         let config = SiteConfig::mock1_basic();

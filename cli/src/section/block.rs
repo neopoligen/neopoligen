@@ -6,7 +6,7 @@ use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;
 use nom::combinator::eof;
 use nom::combinator::not;
-use nom::multi::many0;
+use nom::multi::many1;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -18,7 +18,7 @@ pub struct Block {}
 pub fn block_of_anything<'a>(source: &'a str) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = not(eof).context("").parse(source)?;
     let (source, _) = not(tag("--")).context("").parse(source)?;
-    let (source, spans) = many0(span_for_body_text).context("").parse(source)?;
+    let (source, spans) = many1(span_for_body_text).context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     Ok((
         source,
@@ -35,7 +35,7 @@ pub fn block_of_end_content<'a>(source: &'a str) -> IResult<&'a str, Section, Er
     let (source, _) = not(eof).context("").parse(source)?;
     let (source, _) = not(tag("-")).context("").parse(source)?;
     let (source, _) = not(tag("[")).context("").parse(source)?;
-    let (source, spans) = many0(|src| span_for_body_text(src))
+    let (source, spans) = many1(|src| span_for_body_text(src))
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
@@ -53,7 +53,7 @@ pub fn block_of_end_content<'a>(source: &'a str) -> IResult<&'a str, Section, Er
 pub fn block_of_list_content<'a>(source: &'a str) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = not(eof).context("").parse(source)?;
     let (source, _) = not(tag("-")).context("").parse(source)?;
-    let (source, spans) = many0(span_for_body_text).context("").parse(source)?;
+    let (source, spans) = many1(span_for_body_text).context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     Ok((
         source,

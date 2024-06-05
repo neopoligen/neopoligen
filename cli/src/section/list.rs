@@ -27,7 +27,7 @@ pub fn list_section_full<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = many0(|src| list_item_full(src, sections))
+    let (source, children) = many1(|src| list_item_full(src, sections))
         .context("")
         .parse(source)?;
     Ok((
@@ -83,4 +83,15 @@ mod test {
         let right = list_section_full(source, &config.sections).unwrap();
         assert_eq!(left, right);
     }
+
+    #[test]
+    fn link_check() {
+        let config = SiteConfig::mock1_basic();
+        let source = "-- list\n\n- <<link|Main site link|https://daverupert.com/2021/10/html-with-superpowers/>>";
+        let left = "";
+        let right = list_section_full(source, &config.sections).unwrap().0;
+        assert_eq!(left, right);
+    }
+
+    //
 }

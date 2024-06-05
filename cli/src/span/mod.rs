@@ -9,6 +9,7 @@ pub mod mocks;
 pub mod named_span;
 pub mod single_backtick;
 pub mod single_greaterthan;
+pub mod single_lessthan;
 pub mod wordpart;
 
 use crate::span::code_shorthand::*;
@@ -21,6 +22,7 @@ use crate::span::escaped_pipe::*;
 use crate::span::named_span::*;
 use crate::span::single_backtick::*;
 use crate::span::single_greaterthan::*;
+use crate::span::single_lessthan::*;
 use crate::span::wordpart::*;
 use crate::span_attr::*;
 use nom::branch::alt;
@@ -62,6 +64,7 @@ pub enum SpanKind {
     Newline,
     SingleBacktick,
     SingleGreaterThan,
+    SingleLessThan,
     Space,
     WordPart,
 }
@@ -81,7 +84,7 @@ pub fn structure_empty_until_newline_or_eof<'a>(
 }
 
 pub fn span_for_body_text<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
-    let (source, span) = alt((span_base, code_shorthand, named_span))
+    let (source, span) = alt((wordpart, span_base, code_shorthand, named_span))
         .context("")
         .parse(source)?;
     Ok((source, span))
@@ -92,11 +95,11 @@ pub fn span_base<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a st
     // be used for keys. Also, don't put colon in here
     // since that's also part of the key process
     let (source, span) = alt((
-        wordpart,
         space,
         newline,
         single_greaterthan,
         single_backtick,
+        single_lessthan,
         colon,
         escaped_backslash,
         escaped_backtick,
@@ -190,6 +193,7 @@ mod test {
     #[case("a", "")]
     #[case("b", "")]
     #[case(":", "")]
+    #[case("<<link|Main link|asdf>>", "")]
     fn run_test(#[case] input: &str, #[case] left: &str) {
         let right = span_for_body_text(input).unwrap().0;
         assert_eq!(left, right);

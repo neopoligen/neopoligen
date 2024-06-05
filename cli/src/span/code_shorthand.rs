@@ -11,7 +11,21 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let initial_source = source;
     let (source, _) = tag("``").context("").parse(source)?;
-    let (source, parts) = many0(span_for_shorthand_text).context("").parse(source)?;
+    let (source, parts) = many1(alt((
+        wordpart,
+        space,
+        newline,
+        colon,
+        single_lessthan,
+        single_greaterthan,
+        single_backtick,
+        escaped_backtick,
+        escaped_pipe,
+        escaped_greaterthan,
+        escaped_backslash,
+    )))
+    .context("")
+    .parse(source)?;
     let (source, attrs) = many0(code_shorthand_attr).context("").parse(source)?;
     let (source, _) = tag("``").context("").parse(source)?;
     let source_text = initial_source.replace(source, "").to_string();
@@ -31,6 +45,13 @@ pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     ))
 }
 
+// pub fn code_shorthand_text(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+//     let (source, span) = alt((wordpart, space, newline, single_backtick, escaped_pipe))
+//         .context("")
+//         .parse(source)?;
+//     Ok((source, span))
+// }
+
 pub fn code_shorthand_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let (source, attr) = alt((code_shorthand_key_value_attr, code_shorthand_flag_attr))
         .context("")
@@ -41,7 +62,21 @@ pub fn code_shorthand_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&s
 pub fn code_shorthand_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let (source, the_tag) = tag("|").context("").parse(source)?;
     // TODO: Allow spaces here
-    let (source, words) = many1(span_for_shorthand_flag).context("").parse(source)?;
+    let (source, words) = many1(alt((
+        wordpart,
+        space,
+        newline,
+        colon,
+        single_lessthan,
+        single_greaterthan,
+        single_backtick,
+        escaped_backtick,
+        escaped_pipe,
+        escaped_greaterthan,
+        escaped_backslash,
+    )))
+    .context("")
+    .parse(source)?;
     let source_text = words
         .iter()
         .map(|word| word.source_text.clone())
@@ -66,9 +101,21 @@ pub fn code_shorthand_key_value_attr(source: &str) -> IResult<&str, SpanAttr, Er
     let (source, key) = is_not(" :|`").context("").parse(source)?;
     let (source, _) = tag(":").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
-    let (source, tokens) = many1(span_for_shorthand_attr_value)
-        .context("")
-        .parse(source)?;
+    let (source, tokens) = many1(alt((
+        wordpart,
+        space,
+        newline,
+        colon,
+        single_lessthan,
+        single_greaterthan,
+        single_backtick,
+        escaped_backtick,
+        escaped_pipe,
+        escaped_greaterthan,
+        escaped_backslash,
+    )))
+    .context("")
+    .parse(source)?;
     let value = tokens
         .iter()
         .map(|word| word.parsed_text.clone())

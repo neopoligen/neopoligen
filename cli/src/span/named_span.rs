@@ -12,16 +12,36 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let initial_source = source;
     let (source, _) = tag("<<").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, name) = is_not(" |>").context("").parse(source)?;
+    let (source, name_parts) = many1(alt((wordpart,))).context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, _) = tag("|").context("").parse(source)?;
-    let (source, parts) = many0(span_for_shorthand_text).context("").parse(source)?;
-    let (source, attrs) = many0(code_shorthand_attr).context("").parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
+    let (source, parts) = many0(alt((
+        wordpart,
+        space,
+        newline,
+        colon,
+        single_lessthan,
+        single_greaterthan,
+        single_backtick,
+        escaped_backtick,
+        escaped_pipe,
+        escaped_greaterthan,
+        escaped_backslash,
+    )))
+    .context("")
+    .parse(source)?;
+    let (source, attrs) = many0(named_span_attr).context("").parse(source)?;
     let (source, _) = tag(">>").context("").parse(source)?;
     let source_text = initial_source.replace(source, "").to_string();
     let parsed_text = parts
         .iter()
         .map(|word| word.parsed_text.clone())
+        .collect::<Vec<String>>()
+        .join("");
+    let name = name_parts
+        .iter()
+        .map(|p| p.parsed_text.clone())
         .collect::<Vec<String>>()
         .join("");
     Ok((
@@ -31,7 +51,7 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
             source_text,
             parsed_text,
             kind: SpanKind::NamedSpan {
-                name: name.trim().to_string(),
+                name: name.to_string(),
             },
         },
     ))
@@ -45,10 +65,22 @@ pub fn named_span_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>>
 }
 
 pub fn named_span_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-    let (source, _) = multispace0.context("").parse(source)?;
     let (source, the_tag) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, words) = many1(span_for_shorthand_flag).context("").parse(source)?;
+    let (source, words) = many1(alt((
+        wordpart,
+        colon,
+        newline,
+        single_lessthan,
+        single_greaterthan,
+        single_backtick,
+        escaped_backtick,
+        escaped_pipe,
+        escaped_greaterthan,
+        escaped_backslash,
+    )))
+    .context("")
+    .parse(source)?;
     let source_text = words
         .iter()
         .map(|word| word.source_text.clone())
@@ -69,20 +101,48 @@ pub fn named_span_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&
 pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let initial_source = source;
     let (source, _) = tag("|").context("").parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
     // TODO: allow for spaces here
     // TODO: Move this to span_for_shorthand_attr_key
-    let (source, key) = is_not(" :|`").context("").parse(source)?;
+    let (source, key_parts) = many1(alt((
+        wordpart,
+        single_lessthan,
+        single_greaterthan,
+        single_backtick,
+        escaped_backtick,
+        escaped_pipe,
+        escaped_greaterthan,
+        escaped_backslash,
+    )))
+    .context("")
+    .parse(source)?;
     let (source, _) = tag(":").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
-    let (source, tokens) = many1(span_for_shorthand_attr_value)
-        .context("")
-        .parse(source)?;
+    let (source, tokens) = many1(alt((
+        wordpart,
+        colon,
+        newline,
+        single_lessthan,
+        single_greaterthan,
+        single_backtick,
+        escaped_backtick,
+        escaped_pipe,
+        escaped_greaterthan,
+        escaped_backslash,
+    )))
+    .context("")
+    .parse(source)?;
     let value = tokens
         .iter()
         .map(|word| word.parsed_text.clone())
         .collect::<Vec<String>>()
         .join("");
     let source_text = initial_source.replace(source, "").to_string();
+    let key = key_parts
+        .iter()
+        .map(|p| p.parsed_text.clone())
+        .collect::<Vec<String>>()
+        .join(" ");
     let attr = SpanAttr {
         source_text,
         kind: SpanAttrKind::KeyValue {
@@ -98,11 +158,16 @@ mod test {
     use super::*;
     use pretty_assertions::assert_eq;
     use rstest::rstest;
+
     #[rstest]
     #[case("<<link|example link|https://www.example.com/>>", "")]
     #[case("<<\nlink|example link|https://www.example.com/>>", "")]
     #[case("<<link\n|example link|https://www.example.com/>>", "")]
     #[case("<<link|\nexample link|https://www.example.com/>>", "")]
+    #[case(
+        "<<link|Main site link|https://daverupert.com/2021/10/html-with-superpowers/>>",
+        ""
+    )]
     #[case("<<link|example link\n|https://www.example.com/>>", "")]
     #[case("<<link|example link|\nhttps://www.example.com/>>", "")]
     #[case("<<link|example link|https://www.example.com/\n>>", "")]
@@ -115,7 +180,7 @@ mod test {
     }
 
     #[test]
-    fn solo_basic_test() {
+    fn basic_test() {
         let source = "<<em|alfa>>";
         let left = (
             "",
@@ -183,7 +248,7 @@ mod test {
     // }
 
     #[test]
-    fn with_flag_attr() {
+    fn solo_with_flag_attr() {
         let source = "<<code|something|rust>>";
         let left = (
             "",
