@@ -9,6 +9,9 @@ use std::collections::BTreeMap;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PayloadSpan {
     ///
+    /// TODO: aria-*
+    ///
+    ///
     /// TODO: attr_string
     ///
     /// TODO: The full output string for all attributes
@@ -109,7 +112,11 @@ impl PayloadSpan {
         let mut attrs_unescaped: BTreeMap<String, String> = BTreeMap::new();
         span.attrs.iter().for_each(|attr| match &attr.kind {
             SpanAttrKind::KeyValue { key, value } => {
-                if key.ne("class") && key.ne("id") && !key.starts_with("data-") {
+                if key.ne("class")
+                    && key.ne("id")
+                    && !key.starts_with("data-")
+                    && config.span_attrs.contains(key)
+                {
                     attrs.insert(
                         key.to_string(),
                         html_escape::encode_double_quoted_attribute(value).to_string(),
@@ -129,6 +136,24 @@ impl PayloadSpan {
                         classes.push(html_escape::encode_double_quoted_attribute(part).to_string());
                         classes_unescaped.push(part.to_string());
                     });
+                }
+            }
+            _ => {}
+        });
+        let mut custom_attrs: BTreeMap<String, String> = BTreeMap::new();
+        let mut custom_attrs_unescaped: BTreeMap<String, String> = BTreeMap::new();
+        span.attrs.iter().for_each(|attr| match &attr.kind {
+            SpanAttrKind::KeyValue { key, value } => {
+                if key.ne("class")
+                    && key.ne("id")
+                    && !key.starts_with("data-")
+                    && !config.span_attrs.contains(key)
+                {
+                    custom_attrs.insert(
+                        key.to_string(),
+                        html_escape::encode_double_quoted_attribute(value).to_string(),
+                    );
+                    custom_attrs_unescaped.insert(key.to_string(), value.to_string());
                 }
             }
             _ => {}
@@ -226,8 +251,8 @@ impl PayloadSpan {
             attrs_unescaped,
             classes,
             classes_unescaped,
-            custom_attrs: BTreeMap::new(),
-            custom_attrs_unescaped: BTreeMap::new(),
+            custom_attrs,
+            custom_attrs_unescaped,
             data,
             data_unescaped,
             first_flag,
@@ -299,6 +324,26 @@ mod test {
                 "cha&quot;rlie".to_string()
             ],
             ps.classes
+        );
+    }
+
+    #[test]
+    fn custom_attrs_check() {
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs(), &config);
+        assert_eq!(
+            r#"custom&quot;value"#,
+            ps.custom_attrs.get("custom-key").unwrap()
+        );
+    }
+
+    #[test]
+    fn custom_unescaped_attrs_check() {
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs(), &config);
+        assert_eq!(
+            r#"custom"value"#,
+            ps.custom_attrs_unescaped.get("custom-key").unwrap()
         );
     }
 

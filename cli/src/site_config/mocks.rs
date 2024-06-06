@@ -39,12 +39,14 @@ impl SiteConfig {
             base_url_raw: "testsite.localhost:1999".to_string(),
             project_root: Some(PathBuf::from("/test/mocks")),
             section_attrs: vec![
+                "alt".to_string(),
                 "autofocus".to_string(),
                 "hidden".to_string(),
                 "rel".to_string(),
             ],
             sections,
             span_attrs: vec![
+                "alt".to_string(),
                 "autofocus".to_string(),
                 "hidden".to_string(),
                 "rel".to_string(),
