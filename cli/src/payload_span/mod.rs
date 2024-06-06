@@ -12,6 +12,9 @@ pub struct PayloadSpan {
     /// TODO: aria-*
     ///
     ///
+    pub aria: BTreeMap<String, String>,
+    pub aria_unescaped: BTreeMap<String, String>,
+
     /// TODO: attr_string
     ///
     /// TODO: The full output string for all attributes
@@ -24,6 +27,7 @@ pub struct PayloadSpan {
     /// i.e. make this the single thing that can be called in
     /// most circumstances
     pub attr_string: Option<String>,
+
     ///
     /// IN_PROGRESS: attrs
     ///
@@ -45,62 +49,79 @@ pub struct PayloadSpan {
     /// TODO: Figure out if other HTML elements should be
     /// escaped
     pub attrs: BTreeMap<String, String>,
+
     ///
     /// IN_PROGRESS: attrs_unescaped
     ///
     /// Same as ``attrs`` above, but the HTML characters are
     /// not escaped
     pub attrs_unescaped: BTreeMap<String, String>,
+
     ///
     /// NEEDS_DOCS: classes
-    pub classes: Vec<String>, // combined classes
-    pub classes_unescaped: Vec<String>, // combined classes
+    pub classes: Vec<String>,
+
+    pub classes_unescaped: Vec<String>,
+
     ///
     /// TODO: custom_attrs
     ///
     /// Any key/value attributes that aren't defined in the
     /// config file. Quotes are escaped into ``&quot;``
     pub custom_attrs: BTreeMap<String, String>,
+
     ///
     /// TODO: custom_attrs_unescaped
     ///
     /// Same as custom_attrs, but quotes are not
     /// escaped into ``&quot;``
     pub custom_attrs_unescaped: BTreeMap<String, String>,
+
     ///
     /// TODO: data
     pub data: BTreeMap<String, String>,
+
     ///
     /// TODO: data_unescaped
     pub data_unescaped: BTreeMap<String, String>,
+
     ///
     /// NEEDS_DOCS: first_flag
     pub first_flag: Option<String>,
+
     ///
     /// TODO: first_flag_unescaped
     pub first_flag_unescaped: Option<String>,
+
     ///
     /// IN_PROGRESS: flags
     ///
     /// TODO: Add escaping
-    pub flags: Vec<String>, // All the flags
+    pub flags: Vec<String>,
+
     ///
     /// TODO: flats_unescaped
     pub flags_unescaped: Vec<String>,
+
     ///
     /// NEEDS_DOCS: id
     pub id: Option<String>,
+
     /// TODO: id
-    pub id_unescaped: Option<String>, //
+    pub id_unescaped: Option<String>,
+    //
     ///
     /// NEEDS_DOCS: kind
     pub kind: String,
+
     ///
     /// NEEDS_DOCS: parsed_text
     pub parsed_text: String,
+
     ///
     /// NEEDS_DOCS: source_text
     pub source_text: String,
+
     ///
     /// NEEDS_DOCS: template_list
     pub template_list: Vec<String>,
@@ -108,6 +129,22 @@ pub struct PayloadSpan {
 
 impl PayloadSpan {
     pub fn new_from_span(span: &Span, config: &SiteConfig) -> PayloadSpan {
+        let mut aria: BTreeMap<String, String> = BTreeMap::new();
+        let mut aria_unescaped: BTreeMap<String, String> = BTreeMap::new();
+        span.attrs.iter().for_each(|attr| match &attr.kind {
+            SpanAttrKind::KeyValue { key, value } => {
+                if key.starts_with("aria-") {
+                    let key_parts = key.split_once("-").unwrap();
+                    aria.insert(
+                        key_parts.1.to_string(),
+                        html_escape::encode_double_quoted_attribute(value).to_string(),
+                    );
+                    aria_unescaped.insert(key_parts.1.to_string(), value.to_string());
+                }
+            }
+            _ => {}
+        });
+
         let mut attrs: BTreeMap<String, String> = BTreeMap::new();
         let mut attrs_unescaped: BTreeMap<String, String> = BTreeMap::new();
         span.attrs.iter().for_each(|attr| match &attr.kind {
@@ -126,6 +163,7 @@ impl PayloadSpan {
             }
             _ => {}
         });
+
         let mut classes: Vec<String> = vec![];
         let mut classes_unescaped: Vec<String> = vec![];
         span.attrs.iter().for_each(|attr| match &attr.kind {
@@ -140,6 +178,7 @@ impl PayloadSpan {
             }
             _ => {}
         });
+
         let mut custom_attrs: BTreeMap<String, String> = BTreeMap::new();
         let mut custom_attrs_unescaped: BTreeMap<String, String> = BTreeMap::new();
         span.attrs.iter().for_each(|attr| match &attr.kind {
@@ -158,6 +197,7 @@ impl PayloadSpan {
             }
             _ => {}
         });
+
         let mut data: BTreeMap<String, String> = BTreeMap::new();
         let mut data_unescaped: BTreeMap<String, String> = BTreeMap::new();
         span.attrs.iter().for_each(|attr| match &attr.kind {
@@ -173,6 +213,7 @@ impl PayloadSpan {
             }
             _ => {}
         });
+
         let flags = span
             .attrs
             .iter()
@@ -183,6 +224,7 @@ impl PayloadSpan {
                 _ => None,
             })
             .collect::<Vec<String>>();
+
         let flags_unescaped = span
             .attrs
             .iter()
@@ -191,16 +233,19 @@ impl PayloadSpan {
                 _ => None,
             })
             .collect::<Vec<String>>();
+
         let first_flag = if flags.len() > 0 {
             Some(flags[0].clone())
         } else {
             None
         };
+
         let first_flag_unescaped = if flags_unescaped.len() > 0 {
             Some(flags_unescaped[0].clone())
         } else {
             None
         };
+
         let id = span.attrs.iter().find_map(|attr| match &attr.kind {
             SpanAttrKind::KeyValue { key, value } => {
                 if key.as_str() == "id" {
@@ -211,6 +256,7 @@ impl PayloadSpan {
             }
             _ => None,
         });
+
         let id_unescaped = span.attrs.iter().find_map(|attr| match &attr.kind {
             SpanAttrKind::KeyValue { key, value } => {
                 if key.as_str() == "id" {
@@ -221,6 +267,7 @@ impl PayloadSpan {
             }
             _ => None,
         });
+
         let kind = match &span.kind {
             SpanKind::CodeShorthand => "codeshorthand".to_string(),
             SpanKind::Colon => "colon".to_string(),
@@ -246,6 +293,8 @@ impl PayloadSpan {
         };
 
         PayloadSpan {
+            aria,
+            aria_unescaped,
             attr_string: None, // TODO
             attrs,
             attrs_unescaped,
@@ -276,6 +325,20 @@ impl PayloadSpan {
 mod test {
     use super::*;
     use pretty_assertions::assert_eq;
+
+    #[test]
+    fn aria_check() {
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs(), &config);
+        assert_eq!(r#"del&quot;ta"#, ps.aria.get("valuenow").unwrap());
+    }
+
+    #[test]
+    fn aria_unescaped_check() {
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs(), &config);
+        assert_eq!(r#"del"ta"#, ps.aria_unescaped.get("valuenow").unwrap());
+    }
 
     #[test]
     fn attrs_check() {
