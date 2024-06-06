@@ -16,6 +16,7 @@ use crate::section_attr::SectionAttr;
 use crate::section_attr::SectionAttrKind;
 use crate::site_config::ConfigSections;
 use crate::span::*;
+use minijinja::Value;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::combinator::eof;
@@ -50,6 +51,16 @@ pub enum SectionKind {
     },
     Block {
         spans: Vec<Span>,
+    },
+    Checklist {
+        children: Vec<Section>,
+    },
+    ChecklistItem {
+        children: Vec<Section>,
+    },
+    Json {
+        data: Value,
+        children: Vec<Section>,
     },
     List {
         children: Vec<Section>,

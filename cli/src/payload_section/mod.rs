@@ -60,6 +60,7 @@ impl PayloadSection {
             SectionBounds::Full => "full".to_string(),
             SectionBounds::Start => "start".to_string(),
         };
+
         let classes = section
             .attrs
             .iter()
@@ -75,6 +76,7 @@ impl PayloadSection {
             })
             .flatten()
             .collect::<Vec<String>>();
+
         let created = section.attrs.iter().find_map(|attr| match &attr.kind {
             SectionAttrKind::KeyValue { key, value } => {
                 if key.as_str() == "created" {
@@ -85,6 +87,7 @@ impl PayloadSection {
             }
             _ => None,
         });
+
         let flags = section
             .attrs
             .iter()
@@ -93,6 +96,7 @@ impl PayloadSection {
                 _ => None,
             })
             .collect::<Vec<String>>();
+
         let id = section.attrs.iter().find_map(|attr| match &attr.kind {
             SectionAttrKind::KeyValue { key, value } => {
                 if key.as_str() == "id" {
@@ -103,15 +107,20 @@ impl PayloadSection {
             }
             _ => None,
         });
+
         let kind = Some(match &section.kind {
             SectionKind::Basic { .. } => "basic".to_string(),
             SectionKind::Block { .. } => "block".to_string(),
+            SectionKind::Checklist { .. } => "checklist".to_string(),
+            SectionKind::ChecklistItem { .. } => "checklist-item".to_string(),
+            SectionKind::Json { .. } => "json".to_string(),
             SectionKind::List { .. } => "list".to_string(),
             SectionKind::ListItem { .. } => "listitem".to_string(),
             SectionKind::Raw { .. } => "raw".to_string(),
             SectionKind::Unknown { .. } => "unknown".to_string(),
             SectionKind::Yaml { .. } => "yaml".to_string(),
         });
+
         let status = section.attrs.iter().find_map(|attr| match &attr.kind {
             SectionAttrKind::KeyValue { key, value } => {
                 if key.as_str() == "status" {
@@ -122,25 +131,50 @@ impl PayloadSection {
             }
             _ => None,
         });
+
         let mut template_list = vec![];
+
         if let Some(template) = section.get_attr("template") {
             template_list.push(format!(
-                "sections/{}/{}/{}.neoj",
-                section.r#type, bounds, template
+                "sections/{}/{}/{}/{}.neoj",
+                kind.as_ref().unwrap(),
+                section.r#type,
+                bounds,
+                template
             ));
         }
         template_list.push(format!(
-            "sections/{}/{}/default.neoj",
-            section.r#type, bounds
+            "sections/{}/{}/{}/default.neoj",
+            kind.as_ref().unwrap(),
+            section.r#type,
+            bounds
         ));
-        template_list.push(format!("sections/generic/{}/default.neoj", bounds));
+        template_list.push(format!(
+            "sections/{}/_generic/{}/default.neoj",
+            kind.as_ref().unwrap(),
+            bounds
+        ));
+        template_list.push(format!("sections/unknown/_generic/{}/default.neoj", bounds));
+
         let children = match &section.kind {
             SectionKind::Basic { children } => children
                 .iter()
                 .map(|child| PayloadSection::new_from_section(child, config))
                 .collect(),
             SectionKind::Block { .. } => vec![],
+            SectionKind::Checklist { children } => children
+                .iter()
+                .map(|child| PayloadSection::new_from_section(child, config))
+                .collect(),
+            SectionKind::ChecklistItem { children } => children
+                .iter()
+                .map(|child| PayloadSection::new_from_section(child, config))
+                .collect(),
             SectionKind::List { children } => children
+                .iter()
+                .map(|child| PayloadSection::new_from_section(child, config))
+                .collect(),
+            SectionKind::Json { children, .. } => children
                 .iter()
                 .map(|child| PayloadSection::new_from_section(child, config))
                 .collect(),
@@ -331,9 +365,10 @@ mod test {
             &config,
         );
         let left = vec![
-            "sections/div/full/template-from-attr.neoj".to_string(),
-            "sections/div/full/default.neoj".to_string(),
-            "sections/generic/full/default.neoj".to_string(),
+            "sections/basic/div/full/template-from-attr.neoj".to_string(),
+            "sections/basic/div/full/default.neoj".to_string(),
+            "sections/basic/_generic/full/default.neoj".to_string(),
+            "sections/unknown/_generic/full/default.neoj".to_string(),
         ];
         let right = payload_section.template_list;
         assert_eq!(left, right);
@@ -389,8 +424,9 @@ mod test {
             &config,
         );
         let left = vec![
-            "sections/title/full/default.neoj".to_string(),
-            "sections/generic/full/default.neoj".to_string(),
+            "sections/basic/title/full/default.neoj".to_string(),
+            "sections/basic/_generic/full/default.neoj".to_string(),
+            "sections/unknown/_generic/full/default.neoj".to_string(),
         ];
         let right = payload_section.template_list;
         assert_eq!(left, right);
