@@ -123,6 +123,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
             let _ = builder.load_templates();
             let _ = builder.empty_output_dirs();
             let _ = builder.output_pages();
+            let _ = builder.test_theme();
             builder.tmp_output_errors().unwrap();
             // builder.todo("update_file_cache");
             // builder.todo("generate_site_object");

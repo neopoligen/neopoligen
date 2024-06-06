@@ -349,6 +349,12 @@ impl Builder {
     }
 
     #[instrument(skip(self))]
+    pub fn test_theme(&self) -> Result<()> {
+        event!(Level::INFO, "Testing Theme");
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn tmp_output_errors(&self) -> Result<()> {
         event!(Level::INFO, "Outputting errors");
         let mut env = Environment::new();

@@ -5,6 +5,7 @@ use std::path::PathBuf;
 use syntect::html::{ClassStyle, ClassedHTMLGenerator};
 use syntect::parsing::SyntaxSet;
 use syntect::util::LinesWithEndings;
+use walkdir::WalkDir;
 
 pub fn empty_dir(dir: &PathBuf) -> std::io::Result<()> {
     for entry in dir.read_dir()? {
@@ -40,6 +41,34 @@ pub fn get_files_with_extension_in_a_single_directory(
         .filter_map(|p| match p.as_ref().unwrap().path().strip_prefix(".") {
             Ok(_) => None,
             Err(_) => Some(p.as_ref().unwrap().path()),
+        })
+        .collect()
+}
+
+pub fn get_neo_files_in_dir_recursively(dir: &PathBuf) -> Vec<PathBuf> {
+    WalkDir::new(dir)
+        .into_iter()
+        .filter_map(|entry| {
+            if let Ok(entry) = entry {
+                let path = entry.path().to_path_buf();
+                if path.is_file() {
+                    if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
+                        if ext.to_ascii_lowercase() == "neo"
+                            && !filename.to_str().unwrap().starts_with(".")
+                        {
+                            Some(path.clone())
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
         })
         .collect()
 }
