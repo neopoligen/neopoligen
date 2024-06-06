@@ -18,6 +18,7 @@ pub struct PayloadSection {
     pub data: Option<Value>,
     pub flags: Vec<String>,
     pub id: Option<String>,
+    pub kind: Option<String>,
     pub spans: Vec<PayloadSpan>,
     pub status: Option<String>,
     pub tags: Vec<String>,
@@ -99,6 +100,15 @@ impl PayloadSection {
             }
             _ => None,
         });
+        let kind = Some(match &section.kind {
+            SectionKind::Basic { .. } => "basic".to_string(),
+            SectionKind::Block { .. } => "block".to_string(),
+            SectionKind::List { .. } => "list".to_string(),
+            SectionKind::ListItem { .. } => "listitem".to_string(),
+            SectionKind::Raw { .. } => "raw".to_string(),
+            SectionKind::Unknown { .. } => "unknown".to_string(),
+            SectionKind::Yaml { .. } => "yaml".to_string(),
+        });
         let status = section.attrs.iter().find_map(|attr| match &attr.kind {
             SectionAttrKind::KeyValue { key, value } => {
                 if key.as_str() == "status" {
@@ -126,8 +136,26 @@ impl PayloadSection {
                 .iter()
                 .map(|child| PayloadSection::new_from_section(child))
                 .collect(),
-            _ => vec![],
+            SectionKind::Block { .. } => vec![],
+            SectionKind::List { children } => children
+                .iter()
+                .map(|child| PayloadSection::new_from_section(child))
+                .collect(),
+            SectionKind::ListItem { children } => children
+                .iter()
+                .map(|child| PayloadSection::new_from_section(child))
+                .collect(),
+            SectionKind::Raw { children, .. } => children
+                .iter()
+                .map(|child| PayloadSection::new_from_section(child))
+                .collect(),
+            SectionKind::Unknown { children } => children
+                .iter()
+                .map(|child| PayloadSection::new_from_section(child))
+                .collect(),
+            SectionKind::Yaml { .. } => vec![],
         };
+
         let tags = section
             .attrs
             .iter()
@@ -172,6 +200,7 @@ impl PayloadSection {
             data: None,
             flags,
             id,
+            kind,
             spans,
             status,
             tags,

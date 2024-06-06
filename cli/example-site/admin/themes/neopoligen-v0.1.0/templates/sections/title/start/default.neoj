@@ -18,9 +18,3 @@
 [! include "subsections/afterword.neoj" !]
 
 
-<h5>Debug Section</h5>
-<div>
-[@ section @]
-</div>
-
-

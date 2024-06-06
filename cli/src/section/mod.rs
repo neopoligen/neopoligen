@@ -64,7 +64,10 @@ pub enum SectionKind {
     Unknown {
         children: Vec<Section>,
     },
-    Yaml {},
+    Yaml {
+        // TODO: Add children here since
+        // the -- /yaml end sections can have them
+    },
 }
 
 impl Section {

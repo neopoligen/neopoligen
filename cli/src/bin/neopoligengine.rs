@@ -79,9 +79,9 @@ async fn run_web_server(engine_config: EngineConfig) {
                 .nest_service("/neo-status", ServeDir::new(&site_config.status_dest_dir()))
                 .layer(livereload);
             let (tx, rx) = mpsc::channel(1);
-            let _theme_watcher = FileWatcher::new(&site_config.theme_dir(), tx.clone()).await;
             let _content_watcher =
                 FileWatcher::new(&site_config.content_source_dir(), tx.clone()).await;
+            let _theme_watcher = FileWatcher::new(&site_config.theme_dir(), tx.clone()).await;
             tokio::spawn(async move {
                 catch_file_changes(reloader, engine_config.clone(), rx).await;
             });

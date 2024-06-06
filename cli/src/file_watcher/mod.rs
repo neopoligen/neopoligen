@@ -13,7 +13,7 @@ impl FileWatcher {
     pub async fn new(path: &PathBuf, tx: mpsc::Sender<Vec<PathBuf>>) -> FileWatcher {
         let rt = Handle::current();
         let mut debouncer = new_debouncer(
-            Duration::from_millis(300),
+            Duration::from_millis(400),
             None,
             move |result: DebounceEventResult| match result {
                 Ok(events) => {
