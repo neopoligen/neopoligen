@@ -21,7 +21,7 @@ pub struct Builder {
     config: Option<SiteConfig>,
     errors: Vec<NeoError>,
     source_pages: BTreeMap<PathBuf, SourcePage>,
-    payloads: Vec<PagePayload>,
+    payloads: BTreeMap<String, PagePayload>,
     templates: BTreeMap<String, String>,
 }
 
@@ -40,7 +40,7 @@ impl Builder {
                         config: Some(config),
                         errors: vec![],
                         source_pages: BTreeMap::new(),
-                        payloads: vec![],
+                        payloads: BTreeMap::new(),
                         templates: BTreeMap::new(),
                     };
                     Ok(b)
@@ -85,11 +85,19 @@ impl Builder {
 
     #[instrument(skip(self))]
     pub fn generate_payloads(&mut self) {
-        self.payloads = self
-            .source_pages
-            .iter()
-            .filter_map(|(_, page)| match PagePayload::new_from_source_page(&page) {
-                Ok(p) => Some(p),
+        self.payloads = BTreeMap::new();
+        self.source_pages.iter().for_each(|(_, page)| {
+            match PagePayload::new_from_source_page(&page) {
+                Ok(p) => match page.id() {
+                    Some(id) => {
+                        self.payloads.insert(id, p);
+                        ()
+                    }
+                    None => {
+                        dbg!("TODO: Mark ERROR for missing page ID");
+                        ()
+                    }
+                },
                 Err(e) => {
                     if let Some(source_path) = &page.source_path {
                         //dbg!("--------------------------------");
@@ -114,10 +122,9 @@ impl Builder {
                         "Page load error: TODO: make this a better message: {}",
                         e.to_string()
                     );
-                    None
                 }
-            })
-            .collect()
+            }
+        });
     }
 
     #[instrument(skip(self))]
@@ -222,12 +229,12 @@ impl Builder {
             match env.add_template_owned(id, data) {
                 Ok(_) => {}
                 Err(e) => {
-                    // dbg!(e);
+                    dbg!(e);
                     {}
                 }
             }
         }
-        for page in self.payloads.iter_mut() {
+        for (_, page) in self.payloads.iter_mut() {
             let output_path = self
                 .config
                 .as_ref()
@@ -249,7 +256,7 @@ impl Builder {
                         let _ = write_file_with_mkdir(&output_path, &output);
                     }
                     Err(e) => {
-                        //dbg!(e);
+                        dbg!(e);
                         ()
                     }
                 };
