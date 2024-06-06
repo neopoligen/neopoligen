@@ -19,6 +19,7 @@ use walkdir::WalkDir;
 
 
 fn main() {
+
     let output_dir = PathBuf::from("../../templates/sections");
     let bounds = vec!["full", "start", "end"];
     let config_dir = PathBuf::from("lists");

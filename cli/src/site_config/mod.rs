@@ -48,7 +48,7 @@ impl SiteConfig {
         let project_root = engine_config
             .sites_dir
             .join(engine_config.active_site.as_str());
-        let config_path = project_root.join("_admin").join("config.json");
+        let config_path = project_root.join("admin").join("config.json");
         match fs::read_to_string(&config_path) {
             Ok(text) => match serde_json::from_str::<SiteConfig>(&text) {
                 Ok(mut config) => {
@@ -87,7 +87,7 @@ impl SiteConfig {
 
 impl SiteConfig {
     pub fn admin_dir(&self) -> PathBuf {
-        self.project_dir().join("_admin")
+        self.project_dir().join("admin")
     }
 
     pub fn base_url(&self) -> String {
@@ -103,7 +103,7 @@ impl SiteConfig {
     }
 
     pub fn content_source_dir(&self) -> PathBuf {
-        self.project_dir().join("content")
+        self.project_dir().join("source")
     }
 
     pub fn default_language(&self) -> Result<String> {

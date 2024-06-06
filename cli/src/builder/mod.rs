@@ -29,7 +29,7 @@ impl Builder {
         let project_root = engine_config
             .sites_dir
             .join(engine_config.active_site.as_str());
-        let config_path = project_root.join("_admin").join("config.json");
+        let config_path = project_root.join("admin").join("config.json");
         match fs::read_to_string(config_path) {
             Ok(text) => match serde_json::from_str::<SiteConfig>(&text) {
                 Ok(mut config) => {
@@ -248,6 +248,7 @@ impl Builder {
 
     #[instrument(skip(self))]
     pub fn prep_output_dirs(&self) -> Result<()> {
+        fs::create_dir_all(self.config.as_ref().unwrap().cache_dir())?;
         Ok(())
     }
 
