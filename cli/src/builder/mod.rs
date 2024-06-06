@@ -13,11 +13,13 @@ use serde_json;
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
+use std::time::UNIX_EPOCH;
 use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Builder {
+    cache_buffer: BTreeMap<PathBuf, SourcePage>,
     config: Option<SiteConfig>,
     errors: Vec<NeoError>,
     source_pages: BTreeMap<PathBuf, SourcePage>,
@@ -37,6 +39,7 @@ impl Builder {
                     config.project_root = Some(project_root);
                     config.load_sections();
                     let b = Builder {
+                        cache_buffer: BTreeMap::new(),
                         config: Some(config),
                         errors: vec![],
                         source_pages: BTreeMap::new(),
@@ -138,11 +141,11 @@ impl Builder {
         let mut stmt = conn.prepare("SELECT path, page_object FROM page_archive")?;
         let mut rows = stmt.query([])?;
         while let Some(row) = rows.next()? {
-            //let path_string: String = row.get(0)?;
-            //let path = PathBuf::from(path_string);
-            //         let page: String = row.get(1)?;
-            //         let p: PageV2 = serde_json::from_str(&page.to_string())?;
-            //         self.pages.insert(path, p);
+            let path_string: String = row.get(0)?;
+            let path = PathBuf::from(path_string);
+            let page: String = row.get(1)?;
+            let p: SourcePage = serde_json::from_str(&page.to_string())?;
+            self.cache_buffer.insert(path, p);
         }
         Ok(())
     }
@@ -157,27 +160,47 @@ impl Builder {
                     if ext.to_ascii_lowercase() == "neo"
                         && !filename.to_str().unwrap().starts_with(".")
                     {
-                        match SourcePage::new_from_source_path(
-                            &path,
-                            self.config.as_ref().unwrap().clone(),
-                        ) {
-                            Ok(p) => {
-                                self.source_pages.insert(path.clone(), p);
+                        if let Some(cached_page) = self.cache_buffer.get(&path) {
+                            let updated = fs::metadata(&path)
+                                .unwrap()
+                                .modified()
+                                .unwrap()
+                                .duration_since(UNIX_EPOCH)
+                                .unwrap()
+                                .as_secs();
+                            if cached_page.updated.unwrap() == updated {
+                                let mut updated_cached_page = cached_page.clone();
+                                updated_cached_page.config =
+                                    Some(self.config.as_ref().unwrap().clone());
+                                self.source_pages.insert(path.clone(), updated_cached_page);
+                            } else {
+                                match SourcePage::new_from_source_path(
+                                    &path,
+                                    self.config.as_ref().unwrap().clone(),
+                                ) {
+                                    Ok(p) => {
+                                        self.source_pages.insert(path.clone(), p);
+                                    }
+                                    Err(_e) => {
+                                        dbg!("TODO: hoist page could not load error");
+                                        ()
+                                    }
+                                }
                             }
-                            Err(_e) => {
-                                dbg!("TODO: hoist page could not load error");
-                                ()
+                        } else {
+                            match SourcePage::new_from_source_path(
+                                &path,
+                                self.config.as_ref().unwrap().clone(),
+                            ) {
+                                Ok(p) => {
+                                    self.source_pages.insert(path.clone(), p);
+                                }
+                                Err(_e) => {
+                                    dbg!("TODO: hoist page could not load error");
+                                    ()
+                                }
                             }
                         }
-                        // match page.generate_ast() {
-                        //     Ok(()) => self.source_pages.push(page),
-                        //     Err(e) => self.errors.push(NeoError {
-                        //         kind: NeoErrorKind::GenericErrorWithSourcePath {
-                        //             source_path: path.clone(),
-                        //             msg: e.to_string(),
-                        //         },
-                        //     }),
-                        // }
                     }
                 }
             }
@@ -287,7 +310,6 @@ impl Builder {
         for (_, p) in self.source_pages.iter() {
             match serde_json::to_string(p) {
                 Ok(page_object) => {
-                    dbg!(&page_object);
                     match tx.execute(
                         query,
                         (
