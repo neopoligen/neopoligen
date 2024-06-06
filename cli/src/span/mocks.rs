@@ -13,4 +13,10 @@ impl Span {
             .unwrap()
             .1
     }
+
+    pub fn mock3_named_image() -> Span {
+        named_span(r#"<<image|alfa1234|alt: This is "some quoted" alt text>>"#)
+            .unwrap()
+            .1
+    }
 }

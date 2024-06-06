@@ -6,12 +6,22 @@ use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PayloadSpan {
-    pub attrs: BTreeMap<String, String>,
-    pub classes: Vec<String>,
+    // TODO: Escape everything that needs it
+    pub attrs: BTreeMap<String, String>, // allowed attrs from the config (minus id, classes, data-
+    pub attrs_unescaped: BTreeMap<String, String>, // allowed attrs from the config (minus id, classes, data-
+    pub classes: Vec<String>,                      // combined classes
+    pub classes_unescaped: Vec<String>,            // combined classes
     pub class_string: Option<String>, // TODO: output ``class="the classes"`` as an entire string
-    pub first_flag: Option<String>,
-    pub flags: Vec<String>,
-    pub id: Option<String>,
+    pub custom_attrs: BTreeMap<String, String>, // any attrs that are not defined in the config
+    pub custom_attrs_unescaped: BTreeMap<String, String>, // any attrs that are not defined in the config
+    pub data: BTreeMap<String, String>,
+    pub data_unescaped: BTreeMap<String, String>,
+    pub first_flag: Option<String>,           // first flag passed in
+    pub first_flag_unescaped: Option<String>, // first flag passed in
+    pub flags: Vec<String>,                   // All the flags
+    pub flags_unescaped: Vec<String>,         // non-html escaped versions of the flags
+    pub id: Option<String>,                   //
+    pub id_unescaped: Option<String>,         //
     pub id_string: Option<String>,
     pub kind: String,
     pub parsed_text: String,
@@ -22,10 +32,12 @@ pub struct PayloadSpan {
 impl PayloadSpan {
     pub fn new_from_span(span: &Span) -> PayloadSpan {
         let mut attrs: BTreeMap<String, String> = BTreeMap::new();
+        let mut attrs_unescaped: BTreeMap<String, String> = BTreeMap::new();
         span.attrs.iter().for_each(|attr| match &attr.kind {
             SpanAttrKind::KeyValue { key, value } => {
                 if key.ne("class") && key.ne("id") && !key.starts_with("data-") {
-                    attrs.insert(key.to_string(), value.to_string());
+                    attrs.insert(key.to_string(), value.replace(r#"""#, "&quot;").to_string());
+                    attrs_unescaped.insert(key.to_string(), value.to_string());
                 }
             }
             _ => {}
@@ -89,12 +101,21 @@ impl PayloadSpan {
 
         PayloadSpan {
             attrs,
-            classes: vec![],    // TODO
-            class_string: None, // TODO
+            attrs_unescaped,
+            class_string: None,        // TODO
+            classes: vec![],           // TODO
+            classes_unescaped: vec![], // TODO
+            custom_attrs: BTreeMap::new(),
+            custom_attrs_unescaped: BTreeMap::new(),
+            data: BTreeMap::new(),
+            data_unescaped: BTreeMap::new(),
             first_flag,
+            first_flag_unescaped: None,
             flags,
+            flags_unescaped: vec![],
             id,
             id_string,
+            id_unescaped: None,
             kind: kind.clone(),
             parsed_text: span.parsed_text.clone().to_string(),
             source_text: span.source_text.clone().to_string(),
@@ -115,6 +136,24 @@ mod test {
     fn attrs_check() {
         let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs());
         assert_eq!("nofollow", ps.attrs.get("rel").unwrap());
+    }
+
+    #[test]
+    fn attrs_are_quote_escaped() {
+        let ps = PayloadSpan::new_from_span(&Span::mock3_named_image());
+        assert_eq!(
+            r#"This is &quot;some quoted&quot; alt text"#,
+            ps.attrs.get("alt").unwrap()
+        );
+    }
+
+    #[test]
+    fn attrs_unescaped_does_not_have_quotes_escaped() {
+        let ps = PayloadSpan::new_from_span(&Span::mock3_named_image());
+        assert_eq!(
+            r#"This is "some quoted" alt text"#,
+            ps.attrs_unescaped.get("alt").unwrap()
+        );
     }
 
     #[test]
