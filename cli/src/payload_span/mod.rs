@@ -8,7 +8,22 @@ use syntect::html;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PayloadSpan {
-    /// attrs
+    //
+    /// TODO: attr_string
+    ///
+    /// TODO: The full output string for all attributes
+    /// with their key/value pairs used as ``[@ span.attrs_string @]``
+    /// which outputs both key/value attrs and flags
+    /// (e.g. ``<<button|some text|form: some_form|hidden>>`` outputs:
+    /// ``form="some_form" hidden"),
+    ///
+    /// TODO: Include output for class, id, and data too.
+    /// i.e. make this the single thing that can be called in
+    /// most circumstances
+    ///
+    pub attr_string: Option<String>,
+    //
+    /// attrs (In Progress)
     ///
     /// key/value attributes (i.e. not flags)
     ///
@@ -29,48 +44,60 @@ pub struct PayloadSpan {
     /// escaped
     ///
     pub attrs: BTreeMap<String, String>,
-
-    /// attrs_string
-    ///
-    /// TODO: The full output string for all attributes
-    /// with their key/value pairs used as ``[@ span.attrs_string @]``
-    /// which outputs both key/value attrs and flags
-    /// (e.g. ``<<button|some text|form: some_form|hidden>>`` outputs:
-    /// ``form="some_form" hidden")
-    pub attrs_string: Option<String>,
-
-    /// attrs_unescaped
+    //
+    /// attrs_unescaped (In Progress)
     ///
     /// Same as ``attrs`` above, but the HTML characters are
     /// not escaped
+    ///
     pub attrs_unescaped: BTreeMap<String, String>,
     //
-    /// classes
+    /// classes (Done)
+    ///
+    /// TODO: Add documentation
     ///
     pub classes: Vec<String>, // combined classes
     pub classes_unescaped: Vec<String>, // combined classes
-    pub class_string: Option<String>,   // TODO: output ``class="the classes"`` as an entire string
     //
-    /// custom_attrs
+    /// TODO: custom_attrs
     ///
     /// Any key/value attributes that aren't defined in the
     /// config file. Quotes are escaped into ``&quot;``
     pub custom_attrs: BTreeMap<String, String>,
     //
-    /// custom_attrs_unescaped
+    /// TODO: custom_attrs_unescaped
     ///
     /// Same as custom_attrs, but quotes are not
     /// escaped into ``&quot;``
+    ///
     pub custom_attrs_unescaped: BTreeMap<String, String>, // any attrs that are not defined in the config
+    //
+    /// TODO: data
+    ///
     pub data: BTreeMap<String, String>,
+    //
+    /// TODO: data_unescaped
+    ///
     pub data_unescaped: BTreeMap<String, String>,
-    pub first_flag: Option<String>,           // first flag passed in
+    //
+    /// first_flag (Done)
+    ///
+    pub first_flag: Option<String>, // first flag passed in
+    //
+    /// TODO: first_flag_unescaped
+    ///
     pub first_flag_unescaped: Option<String>, // first flag passed in
-    pub flags: Vec<String>,                   // All the flags
-    pub flags_unescaped: Vec<String>,         // non-html escaped versions of the flags
-    pub id: Option<String>,                   // quote escaped
-    pub id_unescaped: Option<String>,         //
-    pub id_string: Option<String>,            // outputs full ``id="the_id"`` string
+    //
+    /// flags: (In Progress)
+    ///
+    /// TODO: Add escaping
+    ///
+    pub flags: Vec<String>, // All the flags
+    //
+    /// TODO: flats_unescaped
+    pub flags_unescaped: Vec<String>, // non-html escaped versions of the flags
+    pub id: Option<String>,           // quote escaped
+    pub id_unescaped: Option<String>, //
     pub kind: String,
     pub parsed_text: String,
     pub source_text: String,
@@ -131,16 +158,6 @@ impl PayloadSpan {
             }
             _ => None,
         });
-        let id_string = span.attrs.iter().find_map(|attr| match &attr.kind {
-            SpanAttrKind::KeyValue { key, value } => {
-                if key.as_str() == "id" {
-                    Some(format!(r#"id="{}""#, value.clone()))
-                } else {
-                    None
-                }
-            }
-            _ => None,
-        });
         let kind = match &span.kind {
             SpanKind::CodeShorthand => "codeshorthand".to_string(),
             SpanKind::Colon => "colon".to_string(),
@@ -166,10 +183,9 @@ impl PayloadSpan {
         };
 
         PayloadSpan {
+            attr_string: None, // TODO
             attrs,
             attrs_unescaped,
-            attrs_string: None, // TODO
-            class_string: None, // TODO
             classes,
             classes_unescaped,
             custom_attrs: BTreeMap::new(),
@@ -181,7 +197,6 @@ impl PayloadSpan {
             flags,
             flags_unescaped: vec![],
             id,
-            id_string,
             id_unescaped: None,
             kind: kind.clone(),
             parsed_text: span.parsed_text.clone().to_string(),
@@ -260,13 +275,6 @@ mod test {
     fn id_check() {
         let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs());
         assert_eq!("bravo", ps.id.unwrap());
-        assert_eq!(r#"id="bravo""#, ps.id_string.unwrap());
-    }
-
-    #[test]
-    fn id_string_check() {
-        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs());
-        assert_eq!(r#"id="bravo""#, ps.id_string.unwrap());
     }
 
     #[test]
