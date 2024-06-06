@@ -10,6 +10,7 @@ use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
+use std::time::UNIX_EPOCH;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SourcePage {
@@ -17,9 +18,38 @@ pub struct SourcePage {
     pub config: Option<SiteConfig>,
     pub source_content: Option<String>,
     pub source_path: Option<PathBuf>,
+    pub updated: Option<u64>,
 }
 
 impl SourcePage {
+    pub fn new_from_cache(path: &PathBuf, config: SiteConfig) -> Result<SourcePage, NeoError> {
+        match fs::read_to_string(path) {
+            Ok(content) => {
+                let updated = fs::metadata(path)
+                    .unwrap()
+                    .modified()
+                    .unwrap()
+                    .duration_since(UNIX_EPOCH)
+                    .unwrap()
+                    .as_secs();
+                let p = SourcePage {
+                    ast: None,
+                    config: Some(config),
+                    source_content: Some(content),
+                    source_path: Some(path.clone()),
+                    updated: Some(updated),
+                };
+                Ok(p)
+            }
+            Err(e) => Err(NeoError {
+                kind: NeoErrorKind::ForwardErrorWithSourcePath {
+                    source_path: path.clone(),
+                    msg: e.to_string(),
+                },
+            }),
+        }
+    }
+
     pub fn new_from_source_path(
         path: &PathBuf,
         config: SiteConfig,
@@ -31,6 +61,7 @@ impl SourcePage {
                     config: Some(config),
                     source_content: Some(content),
                     source_path: Some(path.clone()),
+                    updated: None,
                 };
                 Ok(p)
             }
@@ -49,6 +80,7 @@ impl SourcePage {
             config: Some(SiteConfig::mock1_basic()),
             source_content: Some(source.to_string()),
             source_path: Some(PathBuf::from("/test/mocks/content/mock-file.neo")),
+            updated: None,
         };
         let _ = p.generate_ast();
         p

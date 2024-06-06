@@ -12,6 +12,7 @@ use serde::{Deserialize, Serialize};
 use serde_json;
 use std::collections::BTreeMap;
 use std::fs;
+use std::path::PathBuf;
 use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 
@@ -19,7 +20,7 @@ use walkdir::WalkDir;
 pub struct Builder {
     config: Option<SiteConfig>,
     errors: Vec<NeoError>,
-    source_pages: Vec<SourcePage>,
+    source_pages: BTreeMap<PathBuf, SourcePage>,
     payloads: Vec<PagePayload>,
     templates: BTreeMap<String, String>,
 }
@@ -38,7 +39,7 @@ impl Builder {
                     let b = Builder {
                         config: Some(config),
                         errors: vec![],
-                        source_pages: vec![],
+                        source_pages: BTreeMap::new(),
                         payloads: vec![],
                         templates: BTreeMap::new(),
                     };
@@ -70,7 +71,7 @@ impl Builder {
     #[instrument(skip(self))]
     pub fn generate_missing_asts(&mut self) {
         event!(Level::INFO, "Generating Missing ASTs");
-        self.source_pages.iter_mut().for_each(|page| {
+        self.source_pages.iter_mut().for_each(|(_, page)| {
             // event!(
             //     Level::INFO,
             //     "Generating: {}",
@@ -87,7 +88,7 @@ impl Builder {
         self.payloads = self
             .source_pages
             .iter()
-            .filter_map(|page| match PagePayload::new_from_source_page(&page) {
+            .filter_map(|(_, page)| match PagePayload::new_from_source_page(&page) {
                 Ok(p) => Some(p),
                 Err(e) => {
                     if let Some(source_path) = &page.source_path {
@@ -123,6 +124,19 @@ impl Builder {
     pub fn load_pages_from_cache(&mut self) -> Result<()> {
         event!(Level::INFO, "Loading Cached Files");
         let conn = Connection::open(self.config.as_ref().unwrap().cache_db_path())?;
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS page_archive (path TEXT, updated INTEGER, content TEXT, ast TEXT)",
+            (),
+        )?;
+        let mut stmt = conn.prepare("SELECT path, updated, content, ast FROM page_archive")?;
+        let mut rows = stmt.query([])?;
+        while let Some(row) = rows.next()? {
+            let path_string: String = row.get(0)?;
+            let path = PathBuf::from(path_string);
+            //         let page: String = row.get(1)?;
+            //         let p: PageV2 = serde_json::from_str(&page.to_string())?;
+            //         self.pages.insert(path, p);
+        }
         Ok(())
     }
 
@@ -141,7 +155,7 @@ impl Builder {
                             self.config.as_ref().unwrap().clone(),
                         ) {
                             Ok(p) => {
-                                self.source_pages.push(p);
+                                self.source_pages.insert(path.clone(), p);
                             }
                             Err(_e) => {
                                 dbg!("TODO: hoist page could not load error");
