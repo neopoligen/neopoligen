@@ -292,14 +292,14 @@ impl PayloadSpan {
             SpanKind::Pipe => "pipe".to_string(),
         };
 
-        PayloadSpan {
+        let mut ps = PayloadSpan {
             aria,
             aria_unescaped,
-            attr_string: None, // TODO
+            attr_string: None,
             attrs,
             attrs_unescaped,
-            classes,
-            classes_unescaped,
+            classes: PayloadSpan::get_classes(&span),
+            classes_unescaped: PayloadSpan::get_classes_unescaped(&span),
             custom_attrs,
             custom_attrs_unescaped,
             data,
@@ -317,8 +317,75 @@ impl PayloadSpan {
                 format!("spans/{}.neoj", kind.clone()),
                 format!("spans/generic.neoj"),
             ],
+        };
+        ps.update_attr_string();
+        ps
+    }
+}
+
+impl PayloadSpan {
+    pub fn update_attr_string(&mut self) {
+        let mut attr_string = "".to_string();
+        if let Some(id) = &self.id {
+            attr_string.push_str(format!(r#" id="{}""#, id).as_str());
+        }
+
+        if self.classes.len() > 0 {
+            attr_string.push_str(r#" class=""#);
+            attr_string.push_str(self.classes.join(" ").as_str());
+            attr_string.push_str(r#"""#);
+        };
+
+        if self.aria.len() > 0 {
+            self.aria.iter().for_each(|(key, value)| {
+                attr_string.push_str(format!(r#" aria-{}="{}""#, key, value).as_str());
+            });
+        };
+
+        if self.data.len() > 0 {
+            self.data.iter().for_each(|(key, value)| {
+                attr_string.push_str(format!(r#" data-{}="{}""#, key, value).as_str());
+            });
+        };
+
+        if attr_string.ne("") {
+            self.attr_string = Some(attr_string)
         }
     }
+
+    pub fn get_classes(span: &Span) -> Vec<String> {
+        let mut classes: Vec<String> = vec![];
+        span.attrs.iter().for_each(|attr| match &attr.kind {
+            SpanAttrKind::KeyValue { key, value } => {
+                if key.eq("class") {
+                    let parts = value.split(" ").collect::<Vec<&str>>();
+                    parts.iter().for_each(|part| {
+                        classes.push(html_escape::encode_double_quoted_attribute(part).to_string());
+                    });
+                }
+            }
+            _ => {}
+        });
+        classes
+    }
+
+    pub fn get_classes_unescaped(span: &Span) -> Vec<String> {
+        let mut classes_unescaped: Vec<String> = vec![];
+        span.attrs.iter().for_each(|attr| match &attr.kind {
+            SpanAttrKind::KeyValue { key, value } => {
+                if key.eq("class") {
+                    let parts = value.split(" ").collect::<Vec<&str>>();
+                    parts.iter().for_each(|part| {
+                        classes_unescaped.push(part.to_string());
+                    });
+                }
+            }
+            _ => {}
+        });
+        classes_unescaped
+    }
+
+    //
 }
 
 #[cfg(test)]
@@ -338,6 +405,16 @@ mod test {
         let config = SiteConfig::mock1_basic();
         let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs(), &config);
         assert_eq!(r#"del"ta"#, ps.aria_unescaped.get("valuenow").unwrap());
+    }
+
+    #[test]
+    fn attr_string() {
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs(), &config);
+        assert_eq!(
+            r#" id="bravo" class="green blue red" aria-valuenow="del&quot;ta" data-ping="bra&quot;vo""#,
+            ps.attr_string.unwrap()
+        );
     }
 
     #[test]
