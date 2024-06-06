@@ -80,7 +80,7 @@ async fn run_web_server(engine_config: EngineConfig, site_config: SiteConfig) {
     event!(Level::INFO, "Starting web server");
     let livereload = LiveReloadLayer::new();
     let reloader = livereload.reloader();
-    build_site(&engine_config, &reloader, &site_config);
+    build_site(&reloader, &site_config);
     match SiteConfig::new_from_engine_config(&engine_config) {
         Ok(site_config) => {
             let localhost_domain = format!("localhost:{}", engine_config.port);
@@ -119,12 +119,12 @@ async fn catch_file_changes(
     site_config: &SiteConfig,
 ) {
     while let Some(_) = rx.recv().await {
-        build_site(&engine_config, &reloader, site_config);
+        build_site(&reloader, site_config);
     }
 }
 
-#[instrument(skip(_engine_config, reloader, site_config))]
-fn build_site(_engine_config: &EngineConfig, reloader: &Reloader, site_config: &SiteConfig) {
+#[instrument(skip(reloader, site_config))]
+fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
 
     match Builder::new_from_site_config(site_config) {
