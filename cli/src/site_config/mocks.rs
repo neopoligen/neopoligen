@@ -38,9 +38,17 @@ impl SiteConfig {
             default_language: "en".to_string(),
             base_url_raw: "testsite.localhost:1999".to_string(),
             project_root: Some(PathBuf::from("/test/mocks")),
-            section_attrs: vec![],
+            section_attrs: vec![
+                "autofocus".to_string(),
+                "hidden".to_string(),
+                "rel".to_string(),
+            ],
             sections,
-            span_attrs: vec![],
+            span_attrs: vec![
+                "autofocus".to_string(),
+                "hidden".to_string(),
+                "rel".to_string(),
+            ],
             theme_name: "test-theme".to_string(),
             theme_options: None,
         };

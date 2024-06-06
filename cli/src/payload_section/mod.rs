@@ -6,6 +6,7 @@ use crate::{
     payload_span::PayloadSpan,
     section::{Section, SectionBounds, SectionKind},
     section_attr::SectionAttrKind,
+    site_config::SiteConfig,
 };
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -29,7 +30,7 @@ pub struct PayloadSection {
 }
 
 impl PayloadSection {
-    pub fn new_from_section(section: &Section) -> PayloadSection {
+    pub fn new_from_section(section: &Section, config: &SiteConfig) -> PayloadSection {
         // TODO: Convert to BTreeMap
         // let attrs = section
         //     .attrs
@@ -136,24 +137,24 @@ impl PayloadSection {
         let children = match &section.kind {
             SectionKind::Basic { children } => children
                 .iter()
-                .map(|child| PayloadSection::new_from_section(child))
+                .map(|child| PayloadSection::new_from_section(child, config))
                 .collect(),
             SectionKind::Block { .. } => vec![],
             SectionKind::List { children } => children
                 .iter()
-                .map(|child| PayloadSection::new_from_section(child))
+                .map(|child| PayloadSection::new_from_section(child, config))
                 .collect(),
             SectionKind::ListItem { children } => children
                 .iter()
-                .map(|child| PayloadSection::new_from_section(child))
+                .map(|child| PayloadSection::new_from_section(child, config))
                 .collect(),
             SectionKind::Raw { children, .. } => children
                 .iter()
-                .map(|child| PayloadSection::new_from_section(child))
+                .map(|child| PayloadSection::new_from_section(child, config))
                 .collect(),
             SectionKind::Unknown { children } => children
                 .iter()
-                .map(|child| PayloadSection::new_from_section(child))
+                .map(|child| PayloadSection::new_from_section(child, config))
                 .collect(),
             SectionKind::Yaml { .. } => vec![],
         };
@@ -175,7 +176,7 @@ impl PayloadSection {
         let spans = match &section.kind {
             SectionKind::Block { spans } => spans
                 .iter()
-                .map(|span| PayloadSpan::new_from_span(&span))
+                .map(|span| PayloadSpan::new_from_span(&span, config))
                 .collect::<Vec<PayloadSpan>>(),
             _ => vec![],
         };
@@ -247,16 +248,20 @@ mod test {
 
     #[test]
     fn bounds_check() {
+        let config = SiteConfig::mock1_basic();
         let section = Section::mock1_basic_title_section_no_attrs();
         let left = "full";
-        let right = &PayloadSection::new_from_section(&section).bounds;
+        let right = &PayloadSection::new_from_section(&section, &config).bounds;
         assert_eq!(left, right);
     }
 
     #[test]
     fn classes_work() {
-        let payload_section =
-            PayloadSection::new_from_section(&Section::mock4_youtube_with_tags_and_classes());
+        let config = SiteConfig::mock1_basic();
+        let payload_section = PayloadSection::new_from_section(
+            &Section::mock4_youtube_with_tags_and_classes(),
+            &config,
+        );
         let left: Vec<String> = vec![
             "class1".to_string(),
             "class2".to_string(),
@@ -277,9 +282,12 @@ mod test {
 
     #[test]
     fn created_check() {
+        let config = SiteConfig::mock1_basic();
         let section = Section::mock6_div_with_created_and_updated_and_status();
         let left = "2024-01-01T00:00:00-04:00";
-        let right = &PayloadSection::new_from_section(&section).created.unwrap();
+        let right = &PayloadSection::new_from_section(&section, &config)
+            .created
+            .unwrap();
         assert_eq!(left, right);
     }
 
@@ -295,8 +303,11 @@ mod test {
 
     #[test]
     fn flags_work() {
-        let payload_section =
-            PayloadSection::new_from_section(&Section::mock4_youtube_with_tags_and_classes());
+        let config = SiteConfig::mock1_basic();
+        let payload_section = PayloadSection::new_from_section(
+            &Section::mock4_youtube_with_tags_and_classes(),
+            &config,
+        );
         let left = vec!["NPJ1qQraMZI".to_string()];
         let right = payload_section.flags;
         assert_eq!(left, right);
@@ -304,7 +315,9 @@ mod test {
 
     #[test]
     fn id_check() {
-        let payload_section = PayloadSection::new_from_section(&Section::mock5_div_with_id());
+        let config = SiteConfig::mock1_basic();
+        let payload_section =
+            PayloadSection::new_from_section(&Section::mock5_div_with_id(), &config);
         let left = "attr-id";
         let right = payload_section.id.unwrap();
         assert_eq!(left, right);
@@ -312,8 +325,11 @@ mod test {
 
     #[test]
     fn section_template_list_from_attr() {
-        let payload_section =
-            PayloadSection::new_from_section(&Section::mock2_div_with_title_and_template_attrs());
+        let config = SiteConfig::mock1_basic();
+        let payload_section = PayloadSection::new_from_section(
+            &Section::mock2_div_with_title_and_template_attrs(),
+            &config,
+        );
         let left = vec![
             "sections/div/full/template-from-attr.neoj".to_string(),
             "sections/div/full/default.neoj".to_string(),
@@ -325,9 +341,12 @@ mod test {
 
     #[test]
     fn status_check() {
+        let config = SiteConfig::mock1_basic();
         let section = Section::mock6_div_with_created_and_updated_and_status();
         let left = "section-status-example";
-        let right = &PayloadSection::new_from_section(&section).status.unwrap();
+        let right = &PayloadSection::new_from_section(&section, &config)
+            .status
+            .unwrap();
         assert_eq!(left, right);
     }
 
@@ -343,8 +362,11 @@ mod test {
 
     #[test]
     fn tags_work() {
-        let payload_section =
-            PayloadSection::new_from_section(&Section::mock4_youtube_with_tags_and_classes());
+        let config = SiteConfig::mock1_basic();
+        let payload_section = PayloadSection::new_from_section(
+            &Section::mock4_youtube_with_tags_and_classes(),
+            &config,
+        );
         let left = vec!["minecraft".to_string(), "how-to".to_string()];
         let right = payload_section.tags;
         assert_eq!(left, right);
@@ -361,8 +383,11 @@ mod test {
 
     #[test]
     fn template_list_check() {
-        let payload_section =
-            PayloadSection::new_from_section(&Section::mock1_basic_title_section_no_attrs());
+        let config = SiteConfig::mock1_basic();
+        let payload_section = PayloadSection::new_from_section(
+            &Section::mock1_basic_title_section_no_attrs(),
+            &config,
+        );
         let left = vec![
             "sections/title/full/default.neoj".to_string(),
             "sections/generic/full/default.neoj".to_string(),
@@ -373,17 +398,21 @@ mod test {
 
     #[test]
     fn type_of_seciton() {
+        let config = SiteConfig::mock1_basic();
         let section = Section::mock1_basic_title_section_no_attrs();
         let left = "title".to_string();
-        let right = PayloadSection::new_from_section(&section).r#type;
+        let right = PayloadSection::new_from_section(&section, &config).r#type;
         assert_eq!(left, right);
     }
 
     #[test]
     fn updated_check() {
+        let config = SiteConfig::mock1_basic();
         let section = Section::mock6_div_with_created_and_updated_and_status();
         let left = "2024-01-02T00:00:00-04:00";
-        let right = &PayloadSection::new_from_section(&section).updated.unwrap();
+        let right = &PayloadSection::new_from_section(&section, &config)
+            .updated
+            .unwrap();
         assert_eq!(left, right);
     }
 

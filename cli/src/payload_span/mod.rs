@@ -1,3 +1,4 @@
+use crate::site_config::SiteConfig;
 use crate::span::Span;
 use crate::span::SpanKind;
 use crate::span_attr::SpanAttrKind;
@@ -103,7 +104,7 @@ pub struct PayloadSpan {
 }
 
 impl PayloadSpan {
-    pub fn new_from_span(span: &Span) -> PayloadSpan {
+    pub fn new_from_span(span: &Span, config: &SiteConfig) -> PayloadSpan {
         let mut attrs: BTreeMap<String, String> = BTreeMap::new();
         let mut attrs_unescaped: BTreeMap<String, String> = BTreeMap::new();
         span.attrs.iter().for_each(|attr| match &attr.kind {
@@ -253,13 +254,15 @@ mod test {
 
     #[test]
     fn attrs_check() {
-        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs());
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs(), &config);
         assert_eq!("nofollow", ps.attrs.get("rel").unwrap());
     }
 
     #[test]
     fn attrs_are_quote_escaped() {
-        let ps = PayloadSpan::new_from_span(&Span::mock3_named_image());
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock3_named_image(), &config);
         assert_eq!(
             r#"This is &quot;some quoted&quot; alt text"#,
             ps.attrs.get("alt").unwrap()
@@ -268,7 +271,8 @@ mod test {
 
     #[test]
     fn attrs_unescaped_does_not_have_quotes_escaped() {
-        let ps = PayloadSpan::new_from_span(&Span::mock3_named_image());
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock3_named_image(), &config);
         assert_eq!(
             r#"This is "some quoted" alt text"#,
             ps.attrs_unescaped.get("alt").unwrap()
@@ -277,7 +281,8 @@ mod test {
 
     #[test]
     fn basic_check() {
-        let payload_span = PayloadSpan::new_from_span(&Span::mock1_basic_wordpard());
+        let config = SiteConfig::mock1_basic();
+        let payload_span = PayloadSpan::new_from_span(&Span::mock1_basic_wordpard(), &config);
         let left = "alfa";
         let right = payload_span.parsed_text;
         assert_eq!(left, right);
@@ -285,7 +290,8 @@ mod test {
 
     #[test]
     fn classes_check() {
-        let ps = PayloadSpan::new_from_span(&Span::mock4_class_test());
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock4_class_test(), &config);
         assert_eq!(
             vec![
                 "alfa".to_string(),
@@ -298,55 +304,64 @@ mod test {
 
     #[test]
     fn data_check() {
-        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs());
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs(), &config);
         assert_eq!(r#"bra&quot;vo"#, ps.data.get("ping").unwrap());
     }
 
     #[test]
     fn data_unescpaed_check() {
-        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs());
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs(), &config);
         assert_eq!(r#"bra"vo"#, ps.data_unescaped.get("ping").unwrap());
     }
 
     #[test]
     fn flags_check() {
-        let ps = PayloadSpan::new_from_span(&Span::mock5_flag_with_quote_in_it());
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock5_flag_with_quote_in_it(), &config);
         assert_eq!(vec!["fox&quot;trot".to_string()], ps.flags);
     }
 
     #[test]
     fn flags_unescaped_check() {
-        let ps = PayloadSpan::new_from_span(&Span::mock5_flag_with_quote_in_it());
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock5_flag_with_quote_in_it(), &config);
         assert_eq!(vec![r#"fox"trot"#.to_string()], ps.flags_unescaped);
     }
 
     #[test]
     fn first_flag_check() {
-        let ps = PayloadSpan::new_from_span(&Span::mock5_flag_with_quote_in_it());
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock5_flag_with_quote_in_it(), &config);
         assert_eq!("fox&quot;trot", ps.first_flag.unwrap());
     }
 
     #[test]
     fn first_flag_unescaped_check() {
-        let ps = PayloadSpan::new_from_span(&Span::mock5_flag_with_quote_in_it());
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock5_flag_with_quote_in_it(), &config);
         assert_eq!(r#"fox"trot"#, ps.first_flag_unescaped.unwrap());
     }
 
     #[test]
     fn id_check() {
-        let ps = PayloadSpan::new_from_span(&Span::mock6_id_with_qutoe_in_t());
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock6_id_with_qutoe_in_t(), &config);
         assert_eq!(r#"fox&quot;trot"#, ps.id.unwrap());
     }
 
     #[test]
     fn id_unescaped_check() {
-        let ps = PayloadSpan::new_from_span(&Span::mock6_id_with_qutoe_in_t());
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock6_id_with_qutoe_in_t(), &config);
         assert_eq!(r#"fox"trot"#, ps.id_unescaped.unwrap());
     }
 
     #[test]
     fn template_list_check() {
-        let payload_span = PayloadSpan::new_from_span(&Span::mock1_basic_wordpard());
+        let config = SiteConfig::mock1_basic();
+        let payload_span = PayloadSpan::new_from_span(&Span::mock1_basic_wordpard(), &config);
         let left = vec![
             "spans/wordpart.neoj".to_string(),
             "spans/generic.neoj".to_string(),

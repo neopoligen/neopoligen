@@ -159,7 +159,7 @@ impl SourcePage {
             .unwrap()
             .iter()
             .map(|section| {
-                let p = PayloadSection::new_from_section(&section);
+                let p = PayloadSection::new_from_section(&section, &self.config.as_ref().unwrap());
                 p
             })
             .collect::<Vec<PayloadSection>>();
