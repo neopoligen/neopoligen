@@ -1,11 +1,12 @@
+use crate::span::Span;
 use crate::span::SpanKind;
 use crate::span_attr::SpanAttrKind;
-use crate::{payload_span_attr::PayloadSpanAttr, span::Span};
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PayloadSpan {
-    pub attrs: Vec<PayloadSpanAttr>,
+    pub attrs: BTreeMap<String, String>,
     pub classes: Vec<String>,
     pub class_string: Option<String>, // TODO: output ``class="the classes"`` as an entire string
     pub first_flag: Option<String>,
@@ -20,6 +21,8 @@ pub struct PayloadSpan {
 
 impl PayloadSpan {
     pub fn new_from_span(span: &Span) -> PayloadSpan {
+        let attrs: BTreeMap<String, String> = BTreeMap::new();
+
         let flags = span
             .attrs
             .iter()
@@ -33,6 +36,27 @@ impl PayloadSpan {
         } else {
             None
         };
+        let id = span.attrs.iter().find_map(|attr| match &attr.kind {
+            SpanAttrKind::KeyValue { key, value } => {
+                if key.as_str() == "id" {
+                    Some(value.clone())
+                } else {
+                    None
+                }
+            }
+            _ => None,
+        });
+        let id_string = span.attrs.iter().find_map(|attr| match &attr.kind {
+            SpanAttrKind::KeyValue { key, value } => {
+                if key.as_str() == "id" {
+                    Some(format!(r#"id="{}""#, value.clone()))
+                } else {
+                    None
+                }
+            }
+            _ => None,
+        });
+
         let kind = match &span.kind {
             SpanKind::CodeShorthand => "codeshorthand".to_string(),
             SpanKind::Colon => "colon".to_string(),
@@ -57,13 +81,13 @@ impl PayloadSpan {
             SpanKind::Pipe => "pipe".to_string(),
         };
         PayloadSpan {
-            attrs: vec![],
+            attrs: BTreeMap::new(),
             classes: vec![],
             class_string: None, // TODO
             first_flag,         // TODO
             flags,
-            id: None,        // TODO
-            id_string: None, // TODO
+            id,
+            id_string,
             kind: kind.clone(),
             parsed_text: span.parsed_text.clone().to_string(),
             source_text: span.source_text.clone().to_string(),
@@ -103,5 +127,7 @@ mod test {
         let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs());
         assert_eq!(vec!["https://www.example.com/".to_string()], ps.flags);
         assert_eq!("https://www.example.com/", ps.first_flag.unwrap());
+        assert_eq!("bravo", ps.id.unwrap());
+        assert_eq!(r#"id="bravo""#, ps.id_string.unwrap());
     }
 }

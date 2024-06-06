@@ -9,7 +9,7 @@ impl Span {
     }
 
     pub fn mock2_named_link_with_flag_and_attrs() -> Span {
-        named_span("<<link|alfa|https://www.example.com/|class: green|id: bravo>>")
+        named_span("<<link|alfa|https://www.example.com/|class: green|id: bravo|data-ping: bravo>>")
             .unwrap()
             .1
     }

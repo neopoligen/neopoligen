@@ -15,6 +15,13 @@ to escape the following character.
 
 [] Document the code shorthand single pipe <<code|``\|``>>
 
+[] show to use ``[@ span.class_string @]|neoj`` and 
+``[@ span.id_string @]|neoj`` to get the class and id strings
+for spans if they exist otherwise they are blank. Also,
+note that classes and ids don't get included in the 
+rest of the attrs so you don't have to filter them out. 
+
+
 
 -- metadata
 -- updated: 2024-06-03T18:27:52-04:00
