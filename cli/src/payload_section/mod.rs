@@ -115,7 +115,7 @@ impl PayloadSection {
             SectionKind::ChecklistItem { .. } => "checklist-item".to_string(),
             SectionKind::Json { .. } => "json".to_string(),
             SectionKind::List { .. } => "list".to_string(),
-            SectionKind::ListItem { .. } => "listitem".to_string(),
+            SectionKind::ListItem { .. } => "list-item".to_string(),
             SectionKind::Raw { .. } => "raw".to_string(),
             SectionKind::Unknown { .. } => "unknown".to_string(),
             SectionKind::Yaml { .. } => "yaml".to_string(),
