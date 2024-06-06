@@ -75,13 +75,10 @@ impl Builder {
     pub fn generate_missing_asts(&mut self) {
         event!(Level::INFO, "Generating Missing ASTs");
         self.source_pages.iter_mut().for_each(|(_, page)| {
-            // event!(
-            //     Level::INFO,
-            //     "Generating: {}",
-            //     page.source_path.as_ref().unwrap().display()
-            // );
-            if let Err(e) = page.generate_ast() {
-                self.errors.push(e);
+            if let None = page.ast {
+                if let Err(e) = page.generate_ast() {
+                    self.errors.push(e);
+                }
             }
         })
     }
@@ -236,7 +233,9 @@ impl Builder {
         Ok(())
     }
 
+    #[instrument(skip(self))]
     pub fn output_pages(&mut self) -> Result<()> {
+        event!(Level::INFO, "Outputting pages");
         let mut env = Environment::new();
         env.add_function("highlight_code", highlight_code);
         env.add_function("highlight_span", highlight_span);
