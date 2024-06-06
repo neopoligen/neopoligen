@@ -59,7 +59,7 @@ async fn main() {
             event!(Level::INFO, "Active site: {}", &engine_config.active_site);
             match SiteConfig::new_from_engine_config(&engine_config) {
                 Ok(site_config) => {
-                    run_web_server(engine_config.clone(), site_config).await;
+                    run_web_server(site_config).await;
                 }
                 Err(_e) => {
                     dbg!("TODO: site config error mesage");
@@ -74,47 +74,51 @@ async fn main() {
     }
 }
 
-#[instrument(skip(engine_config, site_config))]
+#[instrument(skip(site_config))]
 // TODO: Remove engine_config and just use site_config
-async fn run_web_server(engine_config: EngineConfig, site_config: SiteConfig) {
+async fn run_web_server(site_config: SiteConfig) {
     event!(Level::INFO, "Starting web server");
     let livereload = LiveReloadLayer::new();
     let reloader = livereload.reloader();
     build_site(&reloader, &site_config);
-    match SiteConfig::new_from_engine_config(&engine_config) {
-        Ok(site_config) => {
-            let localhost_domain = format!("localhost:{}", engine_config.port);
-            let app = Router::new()
-                .nest_service("/", ServeDir::new(&site_config.output_dest_dir()))
-                .nest_service("/neo-status", ServeDir::new(&site_config.status_dest_dir()))
-                .layer(livereload);
-            let (tx, rx) = mpsc::channel(1);
-            let _content_watcher =
-                FileWatcher::new(&site_config.content_source_dir(), tx.clone()).await;
-            let _theme_watcher = FileWatcher::new(&site_config.theme_dir(), tx.clone()).await;
-            tokio::spawn(async move {
-                catch_file_changes(reloader, engine_config.clone(), rx, &site_config).await;
-            });
-            if let Ok(listener) = tokio::net::TcpListener::bind(localhost_domain).await {
-                if (axum::serve(listener, app).await).is_ok() {
-                    // Server is going at this point
-                }
-            }
-        }
-        Err(e) => {
-            event!(
-                Level::ERROR,
-                "Could not load site config for web server: {:?}",
-                e
-            );
-        }
-    }
+    // TODO: Just use the site_config here
+    //
+
+    // match SiteConfig::new_from_engine_config(&engine_config) {
+    //     Ok(site_config) => {
+    //         let localhost_domain = format!("localhost:{}", engine_config.port);
+    //         let app = Router::new()
+    //             .nest_service("/", ServeDir::new(&site_config.output_dest_dir()))
+    //             .nest_service("/neo-status", ServeDir::new(&site_config.status_dest_dir()))
+    //             .layer(livereload);
+    //         let (tx, rx) = mpsc::channel(1);
+    //         let _content_watcher =
+    //             FileWatcher::new(&site_config.content_source_dir(), tx.clone()).await;
+    //         let _theme_watcher = FileWatcher::new(&site_config.theme_dir(), tx.clone()).await;
+    //         tokio::spawn(async move {
+    //             catch_file_changes(reloader, rx, &site_config).await;
+    //         });
+    //         if let Ok(listener) = tokio::net::TcpListener::bind(localhost_domain).await {
+    //             if (axum::serve(listener, app).await).is_ok() {
+    //                 // Server is going at this point
+    //             }
+    //         }
+    //     }
+    //     Err(e) => {
+    //         event!(
+    //             Level::ERROR,
+    //             "Could not load site config for web server: {:?}",
+    //             e
+    //         );
+    //     }
+    // }
+
+    //
 }
 
-#[instrument(skip(reloader, engine_config, rx))]
+#[instrument(skip(reloader, rx))]
 async fn catch_file_changes(
     reloader: Reloader,
-    engine_config: EngineConfig,
     mut rx: mpsc::Receiver<Vec<PathBuf>>,
     site_config: &SiteConfig,
 ) {
