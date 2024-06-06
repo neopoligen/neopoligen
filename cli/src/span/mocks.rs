@@ -9,7 +9,7 @@ impl Span {
     }
 
     pub fn mock2_named_link_with_flag_and_attrs() -> Span {
-        named_span("<<link|alfa|https://www.example.com/|class: green|id: bravo|data-ping: bravo|rel: nofollow>>")
+        named_span(r#"<<link|alfa|https://www.example.com/|class: green|id: bravo|data-ping: bra"vo|rel: nofollow|autofocus>>"#)
             .unwrap()
             .1
     }
@@ -24,5 +24,13 @@ impl Span {
         named_span(r#"<<em|sample|class: alfa bravo|class: cha"rlie>>"#)
             .unwrap()
             .1
+    }
+
+    pub fn mock5_flag_with_quote_in_it() -> Span {
+        named_span(r#"<<em|sample|fox"trot>>"#).unwrap().1
+    }
+
+    pub fn mock6_id_with_qutoe_in_t() -> Span {
+        named_span(r#"<<em|sample|id: fox"trot>>"#).unwrap().1
     }
 }

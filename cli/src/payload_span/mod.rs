@@ -4,11 +4,10 @@ use crate::span_attr::SpanAttrKind;
 use html_escape;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
-use syntect::html;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PayloadSpan {
-    //
+    ///
     /// TODO: attr_string
     ///
     /// TODO: The full output string for all attributes
@@ -20,10 +19,9 @@ pub struct PayloadSpan {
     /// TODO: Include output for class, id, and data too.
     /// i.e. make this the single thing that can be called in
     /// most circumstances
-    ///
     pub attr_string: Option<String>,
-    //
-    /// attrs (In Progress)
+    ///
+    /// IN_PROGRESS: attrs
     ///
     /// key/value attributes (i.e. not flags)
     ///
@@ -42,65 +40,65 @@ pub struct PayloadSpan {
     ///
     /// TODO: Figure out if other HTML elements should be
     /// escaped
-    ///
     pub attrs: BTreeMap<String, String>,
-    //
-    /// attrs_unescaped (In Progress)
+    ///
+    /// IN_PROGRESS: attrs_unescaped
     ///
     /// Same as ``attrs`` above, but the HTML characters are
     /// not escaped
-    ///
     pub attrs_unescaped: BTreeMap<String, String>,
-    //
-    /// classes (Done)
     ///
-    /// TODO: Add documentation
-    ///
+    /// NEEDS_DOCS: classes
     pub classes: Vec<String>, // combined classes
     pub classes_unescaped: Vec<String>, // combined classes
-    //
+    ///
     /// TODO: custom_attrs
     ///
     /// Any key/value attributes that aren't defined in the
     /// config file. Quotes are escaped into ``&quot;``
     pub custom_attrs: BTreeMap<String, String>,
-    //
+    ///
     /// TODO: custom_attrs_unescaped
     ///
     /// Same as custom_attrs, but quotes are not
     /// escaped into ``&quot;``
+    pub custom_attrs_unescaped: BTreeMap<String, String>,
     ///
-    pub custom_attrs_unescaped: BTreeMap<String, String>, // any attrs that are not defined in the config
-    //
     /// TODO: data
-    ///
     pub data: BTreeMap<String, String>,
-    //
+    ///
     /// TODO: data_unescaped
-    ///
     pub data_unescaped: BTreeMap<String, String>,
-    //
-    /// first_flag (Done)
     ///
-    pub first_flag: Option<String>, // first flag passed in
-    //
+    /// NEEDS_DOCS: first_flag
+    pub first_flag: Option<String>,
+    ///
     /// TODO: first_flag_unescaped
+    pub first_flag_unescaped: Option<String>,
     ///
-    pub first_flag_unescaped: Option<String>, // first flag passed in
-    //
-    /// flags: (In Progress)
+    /// IN_PROGRESS: flags
     ///
     /// TODO: Add escaping
-    ///
     pub flags: Vec<String>, // All the flags
-    //
+    ///
     /// TODO: flats_unescaped
-    pub flags_unescaped: Vec<String>, // non-html escaped versions of the flags
-    pub id: Option<String>,           // quote escaped
+    pub flags_unescaped: Vec<String>,
+    ///
+    /// NEEDS_DOCS: id
+    pub id: Option<String>,
+    /// TODO: id
     pub id_unescaped: Option<String>, //
+    ///
+    /// NEEDS_DOCS: kind
     pub kind: String,
+    ///
+    /// NEEDS_DOCS: parsed_text
     pub parsed_text: String,
+    ///
+    /// NEEDS_DOCS: source_text
     pub source_text: String,
+    ///
+    /// NEEDS_DOCS: template_list
     pub template_list: Vec<String>,
 }
 
@@ -134,8 +132,32 @@ impl PayloadSpan {
             }
             _ => {}
         });
-
+        let mut data: BTreeMap<String, String> = BTreeMap::new();
+        let mut data_unescaped: BTreeMap<String, String> = BTreeMap::new();
+        span.attrs.iter().for_each(|attr| match &attr.kind {
+            SpanAttrKind::KeyValue { key, value } => {
+                if key.starts_with("data-") {
+                    let key_parts = key.split_once("-").unwrap();
+                    data.insert(
+                        key_parts.1.to_string(),
+                        html_escape::encode_double_quoted_attribute(value).to_string(),
+                    );
+                    data_unescaped.insert(key_parts.1.to_string(), value.to_string());
+                }
+            }
+            _ => {}
+        });
         let flags = span
+            .attrs
+            .iter()
+            .filter_map(|attr| match &attr.kind {
+                SpanAttrKind::Flag { value } => {
+                    Some(html_escape::encode_double_quoted_attribute(value).to_string())
+                }
+                _ => None,
+            })
+            .collect::<Vec<String>>();
+        let flags_unescaped = span
             .attrs
             .iter()
             .filter_map(|attr| match &attr.kind {
@@ -148,10 +170,25 @@ impl PayloadSpan {
         } else {
             None
         };
+        let first_flag_unescaped = if flags_unescaped.len() > 0 {
+            Some(flags_unescaped[0].clone())
+        } else {
+            None
+        };
         let id = span.attrs.iter().find_map(|attr| match &attr.kind {
             SpanAttrKind::KeyValue { key, value } => {
                 if key.as_str() == "id" {
-                    Some(value.clone())
+                    Some(html_escape::encode_double_quoted_attribute(value).to_string())
+                } else {
+                    None
+                }
+            }
+            _ => None,
+        });
+        let id_unescaped = span.attrs.iter().find_map(|attr| match &attr.kind {
+            SpanAttrKind::KeyValue { key, value } => {
+                if key.as_str() == "id" {
+                    Some(value.to_string())
                 } else {
                     None
                 }
@@ -190,14 +227,14 @@ impl PayloadSpan {
             classes_unescaped,
             custom_attrs: BTreeMap::new(),
             custom_attrs_unescaped: BTreeMap::new(),
-            data: BTreeMap::new(),
-            data_unescaped: BTreeMap::new(),
+            data,
+            data_unescaped,
             first_flag,
-            first_flag_unescaped: None,
+            first_flag_unescaped,
             flags,
-            flags_unescaped: vec![],
+            flags_unescaped,
             id,
-            id_unescaped: None,
+            id_unescaped,
             kind: kind.clone(),
             parsed_text: span.parsed_text.clone().to_string(),
             source_text: span.source_text.clone().to_string(),
@@ -260,21 +297,51 @@ mod test {
     }
 
     #[test]
-    fn flags_check() {
+    fn data_check() {
         let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs());
-        assert_eq!(vec!["https://www.example.com/".to_string()], ps.flags);
+        assert_eq!(r#"bra&quot;vo"#, ps.data.get("ping").unwrap());
+    }
+
+    #[test]
+    fn data_unescpaed_check() {
+        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs());
+        assert_eq!(r#"bra"vo"#, ps.data_unescaped.get("ping").unwrap());
+    }
+
+    #[test]
+    fn flags_check() {
+        let ps = PayloadSpan::new_from_span(&Span::mock5_flag_with_quote_in_it());
+        assert_eq!(vec!["fox&quot;trot".to_string()], ps.flags);
+    }
+
+    #[test]
+    fn flags_unescaped_check() {
+        let ps = PayloadSpan::new_from_span(&Span::mock5_flag_with_quote_in_it());
+        assert_eq!(vec![r#"fox"trot"#.to_string()], ps.flags_unescaped);
     }
 
     #[test]
     fn first_flag_check() {
-        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs());
-        assert_eq!("https://www.example.com/", ps.first_flag.unwrap());
+        let ps = PayloadSpan::new_from_span(&Span::mock5_flag_with_quote_in_it());
+        assert_eq!("fox&quot;trot", ps.first_flag.unwrap());
+    }
+
+    #[test]
+    fn first_flag_unescaped_check() {
+        let ps = PayloadSpan::new_from_span(&Span::mock5_flag_with_quote_in_it());
+        assert_eq!(r#"fox"trot"#, ps.first_flag_unescaped.unwrap());
     }
 
     #[test]
     fn id_check() {
-        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs());
-        assert_eq!("bravo", ps.id.unwrap());
+        let ps = PayloadSpan::new_from_span(&Span::mock6_id_with_qutoe_in_t());
+        assert_eq!(r#"fox&quot;trot"#, ps.id.unwrap());
+    }
+
+    #[test]
+    fn id_unescaped_check() {
+        let ps = PayloadSpan::new_from_span(&Span::mock6_id_with_qutoe_in_t());
+        assert_eq!(r#"fox"trot"#, ps.id_unescaped.unwrap());
     }
 
     #[test]

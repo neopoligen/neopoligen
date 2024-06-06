@@ -1,19 +1,14 @@
 pub mod mocks;
 
-use anyhow::Result;
-use serde::Deserialize;
-use serde::Serialize;
-// use std::collections::BTreeSet;
-use std::fs::{self, DirEntry};
-use std::io;
-use std::path::PathBuf;
-
 use crate::engine_config::EngineConfig;
 use crate::neo_error::NeoError;
 use crate::neo_error::NeoErrorKind;
-// use serde_json;
-// use serde_json::Value;
-// use std::collections::BTreeMap;
+use anyhow::Result;
+use serde::Deserialize;
+use serde::Serialize;
+use std::fs::{self, DirEntry};
+use std::io;
+use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SiteConfig {
@@ -27,6 +22,22 @@ pub struct SiteConfig {
     // Reminder: This isn't expected to come from the
     // JSON file. The process sets it internally
     pub project_root: Option<PathBuf>,
+    ///
+    /// section_attrs
+    ///
+    /// The key/value and flag attrs to include
+    /// in the defatul ``attr_string`` for sections
+    ///
+    /// TODO: Load this from admin/attrs/section.txt
+    #[serde(default = "empty_vec")]
+    pub section_attrs: Vec<String>,
+    /// span_attrs
+    /// The key value and flag attrs to include
+    /// in the default ``attr_string`` for spans
+    ///
+    /// TODO: Load this from admin/attrs/span.txt
+    #[serde(default = "empty_vec")]
+    pub span_attrs: Vec<String>,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -267,6 +278,10 @@ fn empty_sections() -> ConfigSections {
         table: vec![],
         yaml: vec![],
     }
+}
+
+fn empty_vec() -> Vec<String> {
+    vec![]
 }
 
 // fn empty_spans() -> Vec<String> {
