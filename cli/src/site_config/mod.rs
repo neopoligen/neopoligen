@@ -239,7 +239,29 @@ impl SiteConfig {
         }
     }
 
-    pub fn load_span_attrs(&mut self) {}
+    pub fn load_span_attrs(&mut self) {
+        let span_attrs_path = self.admin_dir().join("attrs").join("spans.txt");
+        match fs::read_to_string(span_attrs_path) {
+            Ok(data) => {
+                let re = Regex::new(r"^\s*$").unwrap();
+                self.span_attrs = data
+                    .lines()
+                    .filter_map(|line| {
+                        if !re.is_match(line) {
+                            Some(line.to_string())
+                        } else {
+                            None
+                        }
+                    })
+                    .unique()
+                    .collect::<Vec<String>>();
+            }
+            Err(_e) => {
+                dbg!("TODO: Add error message on missing seciton attrs");
+                ()
+            }
+        }
+    }
 
     pub fn load_sections(&mut self) {
         let section_root = self.theme_dir().join(PathBuf::from("templates/sections"));
