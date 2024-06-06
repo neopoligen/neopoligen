@@ -112,7 +112,6 @@ async fn catch_file_changes(
 #[instrument(skip(reloader, site_config))]
 fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
-
     match Builder::new_from_site_config(site_config) {
         Ok(mut builder) => {
             let _ = builder.prep_output_dirs();
@@ -125,7 +124,6 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
             let _ = builder.empty_output_dirs();
             let _ = builder.output_pages();
             builder.tmp_output_errors().unwrap();
-
             // builder.todo("update_file_cache");
             // builder.todo("generate_site_object");
             // builder.todo("load_templates");
@@ -149,53 +147,10 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
             event!(Level::INFO, "Reloading Browser");
             reloader.reload();
         }
-
         Err(e) => {
             event!(Level::ERROR, "Could not make builder: {:?}", e);
         }
     }
-
-    // match Builder::new_from_engine_config(engine_config) {
-    //     Ok(mut builder) => {
-    //         let _ = builder.prep_output_dirs();
-    //         builder.load_pages_from_cache().unwrap();
-    //         builder.load_pages_from_fs().unwrap();
-    //         builder.generate_missing_asts();
-    //         let _ = builder.save_asts_to_cache();
-    //         builder.generate_payloads();
-    //         let _ = builder.load_templates();
-    //         let _ = builder.empty_output_dirs();
-    //         let _ = builder.output_pages();
-    //         builder.tmp_output_errors().unwrap();
-    //         // builder.todo("update_file_cache");
-    //         // builder.todo("generate_site_object");
-    //         // builder.todo("load_templates");
-    //         // builder.todo("generate_page_output");
-    //         // builder.todo("generated_last_edit_page");
-    //         // builder.todo("empty_output_dirs");
-    //         // builder.todo("prep_output_dirs");
-    //         // builder.todo("output_pages");
-    //         // builder.todo("deploy_theme_file_assets");
-    //         // builder.todo("deploy_images");
-    //         // builder.todo("deploy_og_images");
-    //         // builder.todo("deploy_gifs");
-    //         // builder.todo("deploy_mp3s");
-    //         // builder.todo("deploy_svgs");
-    //         // builder.todo("generate_feeds");
-    //         // builder.todo("load_theme_test_files");
-    //         // builder.todo("load_theme_test_templates");
-    //         // builder.todo("test_theme");
-    //         // builder.todo("update_status");
-    //         // builder.todo("reload_browser");
-    //         event!(Level::INFO, "Reloading Browser");
-    //         reloader.reload();
-    //     }
-    //     Err(e) => {
-    //         event!(Level::ERROR, "Could not make builder: {:?}", e);
-    //     }
-    // }
-
-    //
 }
 
 // fn load_engine_config_file(path: &PathBuf) -> Result<EngineConfig, String> {
