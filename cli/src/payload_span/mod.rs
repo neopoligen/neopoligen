@@ -1,4 +1,5 @@
 use crate::span::SpanKind;
+use crate::span_attr::SpanAttrKind;
 use crate::{payload_span_attr::PayloadSpanAttr, span::Span};
 use serde::{Deserialize, Serialize};
 
@@ -6,7 +7,11 @@ use serde::{Deserialize, Serialize};
 pub struct PayloadSpan {
     pub attrs: Vec<PayloadSpanAttr>,
     pub classes: Vec<String>,
+    pub class_string: Option<String>, // TODO: output ``class="the classes"`` as an entire string
+    pub first_flag: Option<String>,
     pub flags: Vec<String>,
+    pub id: Option<String>,
+    pub id_string: Option<String>,
     pub kind: String,
     pub parsed_text: String,
     pub source_text: String,
@@ -15,6 +20,19 @@ pub struct PayloadSpan {
 
 impl PayloadSpan {
     pub fn new_from_span(span: &Span) -> PayloadSpan {
+        let flags = span
+            .attrs
+            .iter()
+            .filter_map(|attr| match &attr.kind {
+                SpanAttrKind::Flag { value } => Some(value.to_string()),
+                _ => None,
+            })
+            .collect::<Vec<String>>();
+        let first_flag = if flags.len() > 0 {
+            Some(flags[0].clone())
+        } else {
+            None
+        };
         let kind = match &span.kind {
             SpanKind::CodeShorthand => "codeshorthand".to_string(),
             SpanKind::Colon => "colon".to_string(),
@@ -41,7 +59,11 @@ impl PayloadSpan {
         PayloadSpan {
             attrs: vec![],
             classes: vec![],
-            flags: vec![],
+            class_string: None, // TODO
+            first_flag,         // TODO
+            flags,
+            id: None,        // TODO
+            id_string: None, // TODO
             kind: kind.clone(),
             parsed_text: span.parsed_text.clone().to_string(),
             source_text: span.source_text.clone().to_string(),
@@ -74,5 +96,12 @@ mod test {
         ];
         let right = payload_span.template_list;
         assert_eq!(left, right);
+    }
+
+    #[test]
+    fn span_attrs() {
+        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs());
+        assert_eq!(vec!["https://www.example.com/".to_string()], ps.flags);
+        assert_eq!("https://www.example.com/", ps.first_flag.unwrap());
     }
 }
