@@ -98,7 +98,7 @@ async fn run_web_server(engine_config: EngineConfig, site_config: SiteConfig) {
     }
 }
 
-#[instrument(skip(reloader, rx))]
+#[instrument(skip(reloader, rx, site_config))]
 async fn catch_file_changes(
     reloader: Reloader,
     mut rx: mpsc::Receiver<Vec<PathBuf>>,
