@@ -21,8 +21,15 @@ pub struct PayloadSpan {
 
 impl PayloadSpan {
     pub fn new_from_span(span: &Span) -> PayloadSpan {
-        let attrs: BTreeMap<String, String> = BTreeMap::new();
-
+        let mut attrs: BTreeMap<String, String> = BTreeMap::new();
+        span.attrs.iter().for_each(|attr| match &attr.kind {
+            SpanAttrKind::KeyValue { key, value } => {
+                if key.ne("class") && key.ne("id") && !key.starts_with("data-") {
+                    attrs.insert(key.to_string(), value.to_string());
+                }
+            }
+            _ => {}
+        });
         let flags = span
             .attrs
             .iter()
@@ -56,7 +63,6 @@ impl PayloadSpan {
             }
             _ => None,
         });
-
         let kind = match &span.kind {
             SpanKind::CodeShorthand => "codeshorthand".to_string(),
             SpanKind::Colon => "colon".to_string(),
@@ -80,11 +86,12 @@ impl PayloadSpan {
             SpanKind::NamedSpan { r#type, .. } => r#type.to_string(),
             SpanKind::Pipe => "pipe".to_string(),
         };
+
         PayloadSpan {
-            attrs: BTreeMap::new(),
-            classes: vec![],
+            attrs,
+            classes: vec![],    // TODO
             class_string: None, // TODO
-            first_flag,         // TODO
+            first_flag,
             flags,
             id,
             id_string,
@@ -103,12 +110,44 @@ impl PayloadSpan {
 mod test {
     use super::*;
     use pretty_assertions::assert_eq;
+
+    #[test]
+    fn attrs_check() {
+        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs());
+        assert_eq!("nofollow", ps.attrs.get("rel").unwrap());
+    }
+
     #[test]
     fn basic_check() {
         let payload_span = PayloadSpan::new_from_span(&Span::mock1_basic_wordpard());
         let left = "alfa";
         let right = payload_span.parsed_text;
         assert_eq!(left, right);
+    }
+
+    #[test]
+    fn flags_check() {
+        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs());
+        assert_eq!(vec!["https://www.example.com/".to_string()], ps.flags);
+    }
+
+    #[test]
+    fn first_flag_check() {
+        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs());
+        assert_eq!("https://www.example.com/", ps.first_flag.unwrap());
+    }
+
+    #[test]
+    fn id_check() {
+        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs());
+        assert_eq!("bravo", ps.id.unwrap());
+        assert_eq!(r#"id="bravo""#, ps.id_string.unwrap());
+    }
+
+    #[test]
+    fn id_string_check() {
+        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs());
+        assert_eq!(r#"id="bravo""#, ps.id_string.unwrap());
     }
 
     #[test]
@@ -122,12 +161,5 @@ mod test {
         assert_eq!(left, right);
     }
 
-    #[test]
-    fn span_attrs() {
-        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs());
-        assert_eq!(vec!["https://www.example.com/".to_string()], ps.flags);
-        assert_eq!("https://www.example.com/", ps.first_flag.unwrap());
-        assert_eq!("bravo", ps.id.unwrap());
-        assert_eq!(r#"id="bravo""#, ps.id_string.unwrap());
-    }
+    //
 }

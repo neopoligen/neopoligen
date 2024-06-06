@@ -1,6 +1,8 @@
 use crate::span::*;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
+use nom::character::complete::alpha1;
+use nom::character::complete::digit1;
 use nom::multi::many0;
 use nom::multi::many1;
 use nom::IResult;
@@ -103,20 +105,9 @@ pub fn code_shorthand_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTr
 pub fn code_shorthand_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let initial_source = source;
     let (source, _) = tag("|").context("").parse(source)?;
-    // TODO: Allow spaces here
-    let (source, key_parts) = many1(alt((
-        wordpart,
-        hyphen,
-        single_lessthan,
-        single_greaterthan,
-        single_backtick,
-        escaped_backtick,
-        escaped_pipe,
-        escaped_greaterthan,
-        escaped_backslash,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, key_parts) = many1(alt((alpha1, digit1, tag("-"), tag("_"))))
+        .context("")
+        .parse(source)?;
     let (source, _) = tag(":").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
     let (source, tokens) = many1(alt((
@@ -137,9 +128,9 @@ pub fn code_shorthand_key_value_attr(source: &str) -> IResult<&str, SpanAttr, Er
     .parse(source)?;
     let key = key_parts
         .iter()
-        .map(|p| p.parsed_text.clone())
+        .map(|p| p.to_string())
         .collect::<Vec<String>>()
-        .join(" ");
+        .join("");
     let value = tokens
         .iter()
         .map(|word| word.parsed_text.clone())

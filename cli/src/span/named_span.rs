@@ -117,20 +117,9 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorT
     let (source, _) = multispace0.context("").parse(source)?;
     // TODO: allow for spaces here
     // TODO: Move this to span_for_shorthand_attr_key
-    let (source, key_parts) = many1(alt((
-        wordpart,
-        hyphen,
-        single_lessthan,
-        single_greaterthan,
-        single_backtick,
-        escaped_backtick,
-        escaped_pipe,
-        escaped_greaterthan,
-        escaped_backslash,
-        non_escape_backslash,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, key_parts) = many1(alt((alpha1, digit1, tag("-"), tag("_"))))
+        .context("")
+        .parse(source)?;
     let (source, _) = tag(":").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
     let (source, tokens) = many1(alt((
@@ -157,9 +146,9 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorT
     let source_text = initial_source.replace(source, "").to_string();
     let key = key_parts
         .iter()
-        .map(|p| p.parsed_text.clone())
+        .map(|p| p.to_string())
         .collect::<Vec<String>>()
-        .join(" ");
+        .join("");
     let attr = SpanAttr {
         source_text,
         kind: SpanAttrKind::KeyValue {
@@ -225,6 +214,36 @@ mod test {
         } else {
             assert!(named_span(input).is_err());
         }
+    }
+
+    #[test]
+    fn attr_with_hyphen() {
+        let source = "<<em|alfa|data-ping: bravo>>";
+        let left = (
+            "",
+            Span {
+                attrs: vec![SpanAttr {
+                    source_text: "|data-ping: bravo".to_string(),
+                    kind: SpanAttrKind::KeyValue {
+                        key: "data-ping".to_string(),
+                        value: "bravo".to_string(),
+                    },
+                }],
+                source_text: "<<em|alfa|data-ping: bravo>>".to_string(),
+                parsed_text: "alfa".to_string(),
+                kind: SpanKind::NamedSpan {
+                    r#type: "em".to_string(),
+                    spans: vec![Span {
+                        attrs: vec![],
+                        source_text: "alfa".to_string(),
+                        parsed_text: "alfa".to_string(),
+                        kind: SpanKind::WordPart,
+                    }],
+                },
+            },
+        );
+        let right = named_span(source).unwrap();
+        assert_eq!(left, right);
     }
 
     #[test]
