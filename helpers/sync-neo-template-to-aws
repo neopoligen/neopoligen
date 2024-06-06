@@ -5,4 +5,4 @@ watchexec\
   -w "../cli/example-site"\
   --workdir "../cli/example-site/themes"\
   -e xsl,js,css,neo,neoj\
-  "rsync -av ./neopoligen-v0.1.0 ~/Documents/Neopoligen/alanwsmith.com/themes/"
+  "rsync -av ./neopoligen-v0.1.0 ~/Documents/Neopoligen/alanwsmith.com/_admin/themes/"

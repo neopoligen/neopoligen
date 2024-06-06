@@ -117,6 +117,8 @@ fn build_site(engine_config: &EngineConfig, reloader: &Reloader) {
     event!(Level::INFO, "Building Site");
     match Builder::new_from_engine_config(engine_config) {
         Ok(mut builder) => {
+            let _ = builder.prep_output_dirs();
+            builder.load_pages_from_cache().unwrap();
             builder.load_pages_from_fs().unwrap();
             builder.generate_missing_asts();
             builder.generate_payloads();

@@ -48,7 +48,7 @@ impl SiteConfig {
         let project_root = engine_config
             .sites_dir
             .join(engine_config.active_site.as_str());
-        let config_path = project_root.join("admin").join("config.json");
+        let config_path = project_root.join("_admin").join("config.json");
         match fs::read_to_string(&config_path) {
             Ok(text) => match serde_json::from_str::<SiteConfig>(&text) {
                 Ok(mut config) => {
@@ -86,17 +86,21 @@ impl SiteConfig {
 // }
 
 impl SiteConfig {
+    pub fn admin_dir(&self) -> PathBuf {
+        self.project_dir().join("_admin")
+    }
+
     pub fn base_url(&self) -> String {
         self.base_url_raw.trim_end_matches("/").to_string()
     }
 
-    // pub fn cache_db_path(&self) -> PathBuf {
-    //     self.cache_root_dir().join("cache.sqlite")
-    // }
+    pub fn cache_db_path(&self) -> PathBuf {
+        self.cache_dir().join("cache.sqlite")
+    }
 
-    // pub fn cache_root_dir(&self) -> PathBuf {
-    //     self.project_dir().join("cache")
-    // }
+    pub fn cache_dir(&self) -> PathBuf {
+        self.admin_dir().join("cache")
+    }
 
     pub fn content_source_dir(&self) -> PathBuf {
         self.project_dir().join("content")
@@ -165,7 +169,7 @@ impl SiteConfig {
     // }
 
     pub fn status_dest_dir(&self) -> PathBuf {
-        self.project_dir().join("status")
+        self.admin_dir().join("status")
     }
 
     // pub fn tmp_dir(&self) -> PathBuf {
@@ -173,14 +177,11 @@ impl SiteConfig {
     // }
 
     pub fn themes_dir(&self) -> PathBuf {
-        self.project_dir().join("themes")
+        self.admin_dir().join("themes")
     }
 
     pub fn theme_dir(&self) -> PathBuf {
-        self.project_root
-            .clone()
-            .unwrap()
-            .join(PathBuf::from(format!("themes/{}", self.theme_name)))
+        self.themes_dir().join(self.theme_name.clone())
     }
 
     pub fn templates_dir(&self) -> PathBuf {

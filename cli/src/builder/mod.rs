@@ -7,6 +7,7 @@ use anyhow::Result;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
 use minijinja::{context, Value};
+use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use std::collections::BTreeMap;
@@ -28,7 +29,7 @@ impl Builder {
         let project_root = engine_config
             .sites_dir
             .join(engine_config.active_site.as_str());
-        let config_path = project_root.join("admin").join("config.json");
+        let config_path = project_root.join("_admin").join("config.json");
         match fs::read_to_string(config_path) {
             Ok(text) => match serde_json::from_str::<SiteConfig>(&text) {
                 Ok(mut config) => {
@@ -70,11 +71,11 @@ impl Builder {
     pub fn generate_missing_asts(&mut self) {
         event!(Level::INFO, "Generating Missing ASTs");
         self.source_pages.iter_mut().for_each(|page| {
-            event!(
-                Level::INFO,
-                "Generating: {}",
-                page.source_path.as_ref().unwrap().display()
-            );
+            // event!(
+            //     Level::INFO,
+            //     "Generating: {}",
+            //     page.source_path.as_ref().unwrap().display()
+            // );
             if let Err(e) = page.generate_ast() {
                 self.errors.push(e);
             }
@@ -90,24 +91,22 @@ impl Builder {
                 Ok(p) => Some(p),
                 Err(e) => {
                     if let Some(source_path) = &page.source_path {
-                        dbg!("--------------------------------");
-
-                        //self.errors.push(NeoError {
-                        //    kind: NeoErrorKind::ForwardErrorWithSourcePath {
-                        //        source_path: source_path.clone(),
-                        //        //msg: e.to_string(),
-                        //        msg: "ERROR HERE".to_string(),
-                        //    },
-                        //});
+                        //dbg!("--------------------------------");
+                        self.errors.push(NeoError {
+                            kind: NeoErrorKind::ForwardErrorWithSourcePath {
+                                source_path: source_path.clone(),
+                                //msg: e.to_string(),
+                                msg: "ERROR HERE".to_string(),
+                            },
+                        });
                     } else {
-                        dbg!("--------------------------------");
-
-                        // self.errors.push(NeoError {
-                        //     // kind: NeoErrorKind::ForwardError { msg: e.to_string() },
-                        //     kind: NeoErrorKind::ForwardError {
-                        //         msg: "ERROR HERE".to_string(),
-                        //     },
-                        // });
+                        //dbg!("--------------------------------");
+                        self.errors.push(NeoError {
+                            // kind: NeoErrorKind::ForwardError { msg: e.to_string() },
+                            kind: NeoErrorKind::ForwardError {
+                                msg: "ERROR HERE".to_string(),
+                            },
+                        });
                     }
                     event!(
                         Level::ERROR,
@@ -118,6 +117,13 @@ impl Builder {
                 }
             })
             .collect()
+    }
+
+    #[instrument(skip(self))]
+    pub fn load_pages_from_cache(&mut self) -> Result<()> {
+        event!(Level::INFO, "Loading Cached Files");
+        let conn = Connection::open(self.config.as_ref().unwrap().cache_db_path())?;
+        Ok(())
     }
 
     #[instrument(skip(self))]
@@ -142,7 +148,6 @@ impl Builder {
                                 ()
                             }
                         }
-
                         // match page.generate_ast() {
                         //     Ok(()) => self.source_pages.push(page),
                         //     Err(e) => self.errors.push(NeoError {
@@ -203,7 +208,7 @@ impl Builder {
             match env.add_template_owned(id, data) {
                 Ok(_) => {}
                 Err(e) => {
-                    dbg!(e);
+                    // dbg!(e);
                     {}
                 }
             }
@@ -230,7 +235,7 @@ impl Builder {
                         let _ = write_file_with_mkdir(&output_path, &output);
                     }
                     Err(e) => {
-                        dbg!(e);
+                        //dbg!(e);
                         ()
                     }
                 };
@@ -238,6 +243,11 @@ impl Builder {
                 event!(Level::ERROR, "Could not find template");
             };
         }
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn prep_output_dirs(&self) -> Result<()> {
         Ok(())
     }
 
