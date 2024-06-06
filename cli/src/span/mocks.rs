@@ -19,4 +19,10 @@ impl Span {
             .unwrap()
             .1
     }
+
+    pub fn mock4_class_test() -> Span {
+        named_span(r#"<<em|sample|class: alfa bravo|class: cha"rlie>>"#)
+            .unwrap()
+            .1
+    }
 }

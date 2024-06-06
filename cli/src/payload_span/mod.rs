@@ -1,18 +1,66 @@
 use crate::span::Span;
 use crate::span::SpanKind;
 use crate::span_attr::SpanAttrKind;
+use html_escape;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
+use syntect::html;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PayloadSpan {
-    // TODO: Escape everything that needs it
-    pub attrs: BTreeMap<String, String>, // allowed attrs from the config (minus id, classes, data-
-    pub attrs_unescaped: BTreeMap<String, String>, // allowed attrs from the config (minus id, classes, data-
-    pub classes: Vec<String>,                      // combined classes
-    pub classes_unescaped: Vec<String>,            // combined classes
-    pub class_string: Option<String>, // TODO: output ``class="the classes"`` as an entire string
-    pub custom_attrs: BTreeMap<String, String>, // any attrs that are not defined in the config
+    /// attrs
+    ///
+    /// key/value attributes (i.e. not flags)
+    ///
+    /// TODO: pull in the attributes
+    /// config file to clear list them.
+    ///
+    /// Does not include: class, data, or id. Those are handled
+    /// independently.
+    ///
+    /// TODO: Multiple entires with the same key are combined into
+    /// a single output here with their values separated by
+    /// a space
+    ///
+    /// TODO: Characters are HTML escaped. TODO: List the
+    /// specific characters
+    ///
+    /// TODO: Figure out if other HTML elements should be
+    /// escaped
+    ///
+    pub attrs: BTreeMap<String, String>,
+
+    /// attrs_string
+    ///
+    /// TODO: The full output string for all attributes
+    /// with their key/value pairs used as ``[@ span.attrs_string @]``
+    /// which outputs both key/value attrs and flags
+    /// (e.g. ``<<button|some text|form: some_form|hidden>>`` outputs:
+    /// ``form="some_form" hidden")
+    pub attrs_string: Option<String>,
+
+    /// attrs_unescaped
+    ///
+    /// Same as ``attrs`` above, but the HTML characters are
+    /// not escaped
+    pub attrs_unescaped: BTreeMap<String, String>,
+    //
+    /// classes
+    ///
+    pub classes: Vec<String>, // combined classes
+    pub classes_unescaped: Vec<String>, // combined classes
+    pub class_string: Option<String>,   // TODO: output ``class="the classes"`` as an entire string
+    //
+    /// custom_attrs
+    ///
+    /// Any key/value attributes that aren't defined in the
+    /// config file. Quotes are escaped into ``&quot;``
+    pub custom_attrs: BTreeMap<String, String>,
+    //
+    /// custom_attrs_unescaped
+    ///
+    /// Same as custom_attrs, but quotes are not
+    /// escaped into ``&quot;``
     pub custom_attrs_unescaped: BTreeMap<String, String>, // any attrs that are not defined in the config
     pub data: BTreeMap<String, String>,
     pub data_unescaped: BTreeMap<String, String>,
@@ -20,9 +68,9 @@ pub struct PayloadSpan {
     pub first_flag_unescaped: Option<String>, // first flag passed in
     pub flags: Vec<String>,                   // All the flags
     pub flags_unescaped: Vec<String>,         // non-html escaped versions of the flags
-    pub id: Option<String>,                   //
+    pub id: Option<String>,                   // quote escaped
     pub id_unescaped: Option<String>,         //
-    pub id_string: Option<String>,
+    pub id_string: Option<String>,            // outputs full ``id="the_id"`` string
     pub kind: String,
     pub parsed_text: String,
     pub source_text: String,
@@ -36,12 +84,30 @@ impl PayloadSpan {
         span.attrs.iter().for_each(|attr| match &attr.kind {
             SpanAttrKind::KeyValue { key, value } => {
                 if key.ne("class") && key.ne("id") && !key.starts_with("data-") {
-                    attrs.insert(key.to_string(), value.replace(r#"""#, "&quot;").to_string());
+                    attrs.insert(
+                        key.to_string(),
+                        html_escape::encode_double_quoted_attribute(value).to_string(),
+                    );
                     attrs_unescaped.insert(key.to_string(), value.to_string());
                 }
             }
             _ => {}
         });
+        let mut classes: Vec<String> = vec![];
+        let mut classes_unescaped: Vec<String> = vec![];
+        span.attrs.iter().for_each(|attr| match &attr.kind {
+            SpanAttrKind::KeyValue { key, value } => {
+                if key.eq("class") {
+                    let parts = value.split(" ").collect::<Vec<&str>>();
+                    parts.iter().for_each(|part| {
+                        classes.push(html_escape::encode_double_quoted_attribute(part).to_string());
+                        classes_unescaped.push(part.to_string());
+                    });
+                }
+            }
+            _ => {}
+        });
+
         let flags = span
             .attrs
             .iter()
@@ -102,9 +168,10 @@ impl PayloadSpan {
         PayloadSpan {
             attrs,
             attrs_unescaped,
-            class_string: None,        // TODO
-            classes: vec![],           // TODO
-            classes_unescaped: vec![], // TODO
+            attrs_string: None, // TODO
+            class_string: None, // TODO
+            classes,
+            classes_unescaped,
             custom_attrs: BTreeMap::new(),
             custom_attrs_unescaped: BTreeMap::new(),
             data: BTreeMap::new(),
@@ -162,6 +229,19 @@ mod test {
         let left = "alfa";
         let right = payload_span.parsed_text;
         assert_eq!(left, right);
+    }
+
+    #[test]
+    fn classes_check() {
+        let ps = PayloadSpan::new_from_span(&Span::mock4_class_test());
+        assert_eq!(
+            vec![
+                "alfa".to_string(),
+                "bravo".to_string(),
+                "cha&quot;rlie".to_string()
+            ],
+            ps.classes
+        );
     }
 
     #[test]
