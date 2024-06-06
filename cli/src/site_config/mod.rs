@@ -4,6 +4,8 @@ use crate::engine_config::EngineConfig;
 use crate::neo_error::NeoError;
 use crate::neo_error::NeoErrorKind;
 use anyhow::Result;
+use itertools::Itertools;
+use regex::Regex;
 use serde::Deserialize;
 use serde::Serialize;
 use std::fs::{self, DirEntry};
@@ -72,6 +74,8 @@ impl SiteConfig {
                         })
                     } else {
                         config.load_sections();
+                        config.load_section_attrs();
+                        config.load_span_attrs();
                         Ok(config)
                     }
                 }
@@ -210,6 +214,32 @@ impl SiteConfig {
     pub fn project_dir(&self) -> PathBuf {
         self.project_root.clone().unwrap()
     }
+
+    pub fn load_section_attrs(&mut self) {
+        let section_attrs_path = self.admin_dir().join("attrs").join("sections.txt");
+        match fs::read_to_string(section_attrs_path) {
+            Ok(data) => {
+                let re = Regex::new(r"^\s*$").unwrap();
+                self.section_attrs = data
+                    .lines()
+                    .filter_map(|line| {
+                        if !re.is_match(line) {
+                            Some(line.to_string())
+                        } else {
+                            None
+                        }
+                    })
+                    .unique()
+                    .collect::<Vec<String>>();
+            }
+            Err(_e) => {
+                dbg!("TODO: Add error message on missing seciton attrs");
+                ()
+            }
+        }
+    }
+
+    pub fn load_span_attrs(&mut self) {}
 
     pub fn load_sections(&mut self) {
         let section_root = self.theme_dir().join(PathBuf::from("templates/sections"));

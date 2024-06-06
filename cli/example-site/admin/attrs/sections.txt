@@ -1,18 +1,3 @@
-# NOTE: This hasn't been implemented yet
-#
-# GOAL: This file is use to define which attributes
-# show up under ``attrs`` and ``custom_attrs``
-# in section. Anything here will show up under
-# ``attrs``. Anything that's not in this file
-# shows up under ``custom_attrs``. The reason
-# for this is to make use of ``.attrs_string``
-# in spans to output all the ``attrs``
-# directly.  NOTE that "title" is not in this
-# list since that's used as part of the 
-# default templates
-#
-# TODO: Add this functionality
-
 abbr
 accept
 accept-charset

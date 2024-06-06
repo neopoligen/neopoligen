@@ -55,8 +55,17 @@ async fn main() {
                 "Loaded Engine Config: {}",
                 engine_config_path.display()
             );
+
             event!(Level::INFO, "Active site: {}", &engine_config.active_site);
-            run_web_server(engine_config.clone()).await;
+            match SiteConfig::new_from_engine_config(&engine_config) {
+                Ok(site_config) => {
+                    run_web_server(engine_config.clone(), site_config).await;
+                }
+                Err(_e) => {
+                    dbg!("TODO: site config error mesage");
+                    ()
+                }
+            }
         }
         Err(e) => {
             dbg!(e);
@@ -65,12 +74,13 @@ async fn main() {
     }
 }
 
-#[instrument(skip(engine_config))]
-async fn run_web_server(engine_config: EngineConfig) {
+#[instrument(skip(engine_config, site_config))]
+// TODO: Remove engine_config and just use site_config
+async fn run_web_server(engine_config: EngineConfig, site_config: SiteConfig) {
     event!(Level::INFO, "Starting web server");
     let livereload = LiveReloadLayer::new();
     let reloader = livereload.reloader();
-    build_site(&engine_config, &reloader);
+    build_site(&engine_config, &reloader, &site_config);
     match SiteConfig::new_from_engine_config(&engine_config) {
         Ok(site_config) => {
             let localhost_domain = format!("localhost:{}", engine_config.port);
@@ -83,7 +93,7 @@ async fn run_web_server(engine_config: EngineConfig) {
                 FileWatcher::new(&site_config.content_source_dir(), tx.clone()).await;
             let _theme_watcher = FileWatcher::new(&site_config.theme_dir(), tx.clone()).await;
             tokio::spawn(async move {
-                catch_file_changes(reloader, engine_config.clone(), rx).await;
+                catch_file_changes(reloader, engine_config.clone(), rx, &site_config).await;
             });
             if let Ok(listener) = tokio::net::TcpListener::bind(localhost_domain).await {
                 if (axum::serve(listener, app).await).is_ok() {
@@ -106,16 +116,18 @@ async fn catch_file_changes(
     reloader: Reloader,
     engine_config: EngineConfig,
     mut rx: mpsc::Receiver<Vec<PathBuf>>,
+    site_config: &SiteConfig,
 ) {
     while let Some(_) = rx.recv().await {
-        build_site(&engine_config, &reloader);
+        build_site(&engine_config, &reloader, site_config);
     }
 }
 
-#[instrument(skip(engine_config, reloader))]
-fn build_site(engine_config: &EngineConfig, reloader: &Reloader) {
+#[instrument(skip(_engine_config, reloader, site_config))]
+fn build_site(_engine_config: &EngineConfig, reloader: &Reloader, site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
-    match Builder::new_from_engine_config(engine_config) {
+
+    match Builder::new_from_site_config(site_config) {
         Ok(mut builder) => {
             let _ = builder.prep_output_dirs();
             builder.load_pages_from_cache().unwrap();
@@ -151,10 +163,51 @@ fn build_site(engine_config: &EngineConfig, reloader: &Reloader) {
             event!(Level::INFO, "Reloading Browser");
             reloader.reload();
         }
+
         Err(e) => {
             event!(Level::ERROR, "Could not make builder: {:?}", e);
         }
     }
+
+    // match Builder::new_from_engine_config(engine_config) {
+    //     Ok(mut builder) => {
+    //         let _ = builder.prep_output_dirs();
+    //         builder.load_pages_from_cache().unwrap();
+    //         builder.load_pages_from_fs().unwrap();
+    //         builder.generate_missing_asts();
+    //         let _ = builder.save_asts_to_cache();
+    //         builder.generate_payloads();
+    //         let _ = builder.load_templates();
+    //         let _ = builder.empty_output_dirs();
+    //         let _ = builder.output_pages();
+    //         builder.tmp_output_errors().unwrap();
+    //         // builder.todo("update_file_cache");
+    //         // builder.todo("generate_site_object");
+    //         // builder.todo("load_templates");
+    //         // builder.todo("generate_page_output");
+    //         // builder.todo("generated_last_edit_page");
+    //         // builder.todo("empty_output_dirs");
+    //         // builder.todo("prep_output_dirs");
+    //         // builder.todo("output_pages");
+    //         // builder.todo("deploy_theme_file_assets");
+    //         // builder.todo("deploy_images");
+    //         // builder.todo("deploy_og_images");
+    //         // builder.todo("deploy_gifs");
+    //         // builder.todo("deploy_mp3s");
+    //         // builder.todo("deploy_svgs");
+    //         // builder.todo("generate_feeds");
+    //         // builder.todo("load_theme_test_files");
+    //         // builder.todo("load_theme_test_templates");
+    //         // builder.todo("test_theme");
+    //         // builder.todo("update_status");
+    //         // builder.todo("reload_browser");
+    //         event!(Level::INFO, "Reloading Browser");
+    //         reloader.reload();
+    //     }
+    //     Err(e) => {
+    //         event!(Level::ERROR, "Could not make builder: {:?}", e);
+    //     }
+    // }
 
     //
 }

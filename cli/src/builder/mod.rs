@@ -20,7 +20,7 @@ use walkdir::WalkDir;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Builder {
     cache_buffer: BTreeMap<PathBuf, SourcePage>,
-    config: Option<SiteConfig>,
+    pub config: Option<SiteConfig>,
     errors: Vec<NeoError>,
     source_pages: BTreeMap<PathBuf, SourcePage>,
     payloads: BTreeMap<String, PagePayload>,
@@ -28,39 +28,54 @@ pub struct Builder {
 }
 
 impl Builder {
-    pub fn new_from_engine_config(engine_config: &EngineConfig) -> Result<Builder, NeoError> {
-        let project_root = engine_config
-            .sites_dir
-            .join(engine_config.active_site.as_str());
-        let config_path = project_root.join("admin").join("config.json");
-        match fs::read_to_string(config_path) {
-            Ok(text) => match serde_json::from_str::<SiteConfig>(&text) {
-                Ok(mut config) => {
-                    config.project_root = Some(project_root);
-                    config.load_sections();
-                    let b = Builder {
-                        cache_buffer: BTreeMap::new(),
-                        config: Some(config),
-                        errors: vec![],
-                        source_pages: BTreeMap::new(),
-                        payloads: BTreeMap::new(),
-                        templates: BTreeMap::new(),
-                    };
-                    Ok(b)
-                }
-                Err(e) => Err(NeoError {
-                    kind: NeoErrorKind::GenericErrorWithoutSourcePath {
-                        msg: format!("could not load admin/config.json file: {}", e),
-                    },
-                }),
-            },
-            Err(e) => Err(NeoError {
-                kind: NeoErrorKind::GenericErrorWithoutSourcePath {
-                    msg: format!("could not load admin/config.json file: {}", e),
-                },
-            }),
-        }
+    pub fn new_from_site_config(site_config: &SiteConfig) -> Result<Builder, NeoError> {
+        let b = Builder {
+            cache_buffer: BTreeMap::new(),
+            config: Some(site_config.clone()),
+            errors: vec![],
+            source_pages: BTreeMap::new(),
+            payloads: BTreeMap::new(),
+            templates: BTreeMap::new(),
+        };
+        Ok(b)
     }
+
+    // // DEPRECATED: Remove this when new_from_site_config is working
+    // pub fn new_from_engine_config(engine_config: &EngineConfig) -> Result<Builder, NeoError> {
+    //     let project_root = engine_config
+    //         .sites_dir
+    //         .join(engine_config.active_site.as_str());
+    //     let config_path = project_root.join("admin").join("config.json");
+    //     match fs::read_to_string(config_path) {
+    //         Ok(text) => match serde_json::from_str::<SiteConfig>(&text) {
+    //             Ok(mut config) => {
+    //                 config.project_root = Some(project_root);
+    //                 config.load_sections();
+    //                 let b = Builder {
+    //                     cache_buffer: BTreeMap::new(),
+    //                     config: Some(config),
+    //                     errors: vec![],
+    //                     source_pages: BTreeMap::new(),
+    //                     payloads: BTreeMap::new(),
+    //                     templates: BTreeMap::new(),
+    //                 };
+    //                 Ok(b)
+    //             }
+    //             Err(e) => Err(NeoError {
+    //                 kind: NeoErrorKind::GenericErrorWithoutSourcePath {
+    //                     msg: format!("could not load admin/config.json file: {}", e),
+    //                 },
+    //             }),
+    //         },
+    //         Err(e) => Err(NeoError {
+    //             kind: NeoErrorKind::GenericErrorWithoutSourcePath {
+    //                 msg: format!("could not load admin/config.json file: {}", e),
+    //             },
+    //         }),
+    //     }
+    // }
+
+    //
 }
 
 impl Builder {
