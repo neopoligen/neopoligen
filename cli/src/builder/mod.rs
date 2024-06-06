@@ -132,14 +132,14 @@ impl Builder {
         event!(Level::INFO, "Loading Cached Files");
         let conn = Connection::open(self.config.as_ref().unwrap().cache_db_path())?;
         conn.execute(
-            "CREATE TABLE IF NOT EXISTS page_archive (path TEXT, updated INTEGER, content TEXT, ast TEXT)",
+            "CREATE TABLE IF NOT EXISTS page_archive (path TEXT, page_object Text)",
             (),
         )?;
-        let mut stmt = conn.prepare("SELECT path, updated, content, ast FROM page_archive")?;
+        let mut stmt = conn.prepare("SELECT path, page_object FROM page_archive")?;
         let mut rows = stmt.query([])?;
         while let Some(row) = rows.next()? {
-            let path_string: String = row.get(0)?;
-            let path = PathBuf::from(path_string);
+            //let path_string: String = row.get(0)?;
+            //let path = PathBuf::from(path_string);
             //         let page: String = row.get(1)?;
             //         let p: PageV2 = serde_json::from_str(&page.to_string())?;
             //         self.pages.insert(path, p);
@@ -270,6 +270,45 @@ impl Builder {
     #[instrument(skip(self))]
     pub fn prep_output_dirs(&self) -> Result<()> {
         fs::create_dir_all(self.config.as_ref().unwrap().cache_dir())?;
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn save_asts_to_cache(&self) -> Result<()> {
+        event!(Level::INFO, "Saving ASTs to Cache");
+        let mut conn = Connection::open(self.config.as_ref().unwrap().cache_db_path())?;
+        conn.execute("DROP TABLE IF EXISTS page_archive", ())?;
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS page_archive (path TEXT, page_object TEXT)",
+            (),
+        )?;
+        let query = "INSERT INTO page_archive(path, page_object) VALUES (?1, ?2)";
+        let tx = conn.transaction()?;
+        for (_, p) in self.source_pages.iter() {
+            match serde_json::to_string(p) {
+                Ok(page_object) => {
+                    dbg!(&page_object);
+                    match tx.execute(
+                        query,
+                        (
+                            p.source_path.clone().unwrap().to_string_lossy().to_string(),
+                            page_object.clone(),
+                        ),
+                    ) {
+                        Ok(_) => {}
+                        Err(e) => {
+                            dbg!(e);
+                            ()
+                        }
+                    }
+                }
+                Err(e) => {
+                    dbg!(e);
+                    ()
+                }
+            }
+        }
+        tx.commit()?;
         Ok(())
     }
 

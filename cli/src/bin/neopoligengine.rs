@@ -121,6 +121,7 @@ fn build_site(engine_config: &EngineConfig, reloader: &Reloader) {
             builder.load_pages_from_cache().unwrap();
             builder.load_pages_from_fs().unwrap();
             builder.generate_missing_asts();
+            let _ = builder.save_asts_to_cache();
             builder.generate_payloads();
             let _ = builder.load_templates();
             let _ = builder.empty_output_dirs();
