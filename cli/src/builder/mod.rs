@@ -506,7 +506,6 @@ impl Builder {
                                 let got_compare = got.replace("\n", "").replace(" ", "");
                                 let expected_compare = expected.replace("\n", "").replace(" ", "");
                                 if got_compare != expected_compare {
-                                    dbg!("------------------------");
                                     self.errors.push(NeoError {
                                         kind: NeoErrorKind::ThemeTestError {
                                             source_path: PathBuf::from(""),
@@ -517,8 +516,6 @@ impl Builder {
                                 }
                             }
                         });
-                        ()
-                        // let _ = write_file_with_mkdir(&output_path, &output);
                     }
                     Err(e) => {
                         dbg!(e);
