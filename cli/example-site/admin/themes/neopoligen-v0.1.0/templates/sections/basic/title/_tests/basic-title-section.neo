@@ -1,15 +1,6 @@
--- start-theme-test
-
 -- title
 
 Hello World
-
--- expected-output/
-
-<h1>Hello World</h1>
-
--- /expected-output
-
 
 
 -- metadata

@@ -264,55 +264,97 @@ impl SiteConfig {
     }
 
     pub fn load_sections(&mut self) {
-        let section_root = self.theme_dir().join(PathBuf::from("templates/sections"));
-        let section_dirs = get_dirs_in_dir(&section_root).unwrap();
-        section_dirs.iter().for_each(|dir| {
-            let cat_file_path = dir.join("category.txt");
-            if cat_file_path.exists() {
-                if let Ok(cat_raw) = fs::read_to_string(cat_file_path) {
-                    if let Some(basename) = dir.file_name() {
-                        if let Some(name) = cat_raw.lines().nth(0) {
-                            if name == "basic" {
-                                self.sections
-                                    .basic
-                                    .push(basename.to_string_lossy().to_string())
-                            } else if name == "checklist" {
-                                self.sections
-                                    .checklist
-                                    .push(basename.to_string_lossy().to_string())
-                            } else if name == "comment" {
-                                self.sections
-                                    .comment
-                                    .push(basename.to_string_lossy().to_string())
-                            } else if name == "detail" {
-                                self.sections
-                                    .detail
-                                    .push(basename.to_string_lossy().to_string())
-                            } else if name == "json" {
-                                self.sections
-                                    .json
-                                    .push(basename.to_string_lossy().to_string())
-                            } else if name == "list" {
-                                self.sections
-                                    .list
-                                    .push(basename.to_string_lossy().to_string())
-                            } else if name == "raw" {
-                                self.sections
-                                    .raw
-                                    .push(basename.to_string_lossy().to_string())
-                            } else if name == "table" {
-                                self.sections
-                                    .table
-                                    .push(basename.to_string_lossy().to_string())
-                            } else if name == "yaml" {
-                                self.sections
-                                    .yaml
-                                    .push(basename.to_string_lossy().to_string())
-                            }
-                        }
-                    };
+        let section_root = self.templates_dir().join("sections");
+        let section_categories = [
+            "basic",
+            "block",
+            "checklist",
+            "checklist-item",
+            "json",
+            "list",
+            "list-item",
+            "raw",
+            "yaml",
+        ];
+        section_categories.iter().for_each(|category| {
+            let category_dir = section_root.join(category);
+            let section_dirs = get_dirs_in_dir(&category_dir).unwrap();
+            section_dirs.iter().for_each(|section_dir| {
+                let section_name = section_dir
+                    .file_stem()
+                    .unwrap()
+                    .to_string_lossy()
+                    .to_string();
+                if section_name.as_str().ne("_generic") && !section_name.starts_with(".") {
+                    if category.eq_ignore_ascii_case("basic") {
+                        self.sections.basic.push(section_name);
+                    } else if category.eq_ignore_ascii_case("block") {
+                        self.sections.yaml.push(section_name);
+                    } else if category.eq_ignore_ascii_case("checklist") {
+                        self.sections.yaml.push(section_name);
+                    } else if category.eq_ignore_ascii_case("checklist-item") {
+                        self.sections.yaml.push(section_name);
+                    } else if category.eq_ignore_ascii_case("json") {
+                        self.sections.yaml.push(section_name);
+                    } else if category.eq_ignore_ascii_case("list") {
+                        self.sections.yaml.push(section_name);
+                    } else if category.eq_ignore_ascii_case("list-item") {
+                        self.sections.yaml.push(section_name);
+                    } else if category.eq_ignore_ascii_case("raw") {
+                        self.sections.yaml.push(section_name);
+                    } else if category.eq_ignore_ascii_case("yaml") {
+                        self.sections.yaml.push(section_name);
+                    }
                 }
-            }
+            });
+            //  let section_category = dir.file_stem().unwrap().to_string_lossy().to_string();
+
+            //     let cat_file_path = dir.join("category.txt");
+            //     if cat_file_path.exists() {
+            //         if let Ok(cat_raw) = fs::read_to_string(cat_file_path) {
+            //             if let Some(basename) = dir.file_name() {
+            //                 if let Some(name) = cat_raw.lines().nth(0) {
+            //                     if name == "basic" {
+            //                         self.sections
+            //                             .basic
+            //                             .push(basename.to_string_lossy().to_string())
+            //                     } else if name == "checklist" {
+            //                         self.sections
+            //                             .checklist
+            //                             .push(basename.to_string_lossy().to_string())
+            //                     } else if name == "comment" {
+            //                         self.sections
+            //                             .comment
+            //                             .push(basename.to_string_lossy().to_string())
+            //                     } else if name == "detail" {
+            //                         self.sections
+            //                             .detail
+            //                             .push(basename.to_string_lossy().to_string())
+            //                     } else if name == "json" {
+            //                         self.sections
+            //                             .json
+            //                             .push(basename.to_string_lossy().to_string())
+            //                     } else if name == "list" {
+            //                         self.sections
+            //                             .list
+            //                             .push(basename.to_string_lossy().to_string())
+            //                     } else if name == "raw" {
+            //                         self.sections
+            //                             .raw
+            //                             .push(basename.to_string_lossy().to_string())
+            //                     } else if name == "table" {
+            //                         self.sections
+            //                             .table
+            //                             .push(basename.to_string_lossy().to_string())
+            //                     } else if name == "yaml" {
+            //                         self.sections
+            //                             .yaml
+            //                             .push(basename.to_string_lossy().to_string())
+            //                     }
+            //                 }
+            //             };
+            //         }
+            //     }
         });
     }
 }

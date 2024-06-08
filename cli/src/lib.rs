@@ -15,3 +15,4 @@ pub mod site_config;
 pub mod source_page;
 pub mod span;
 pub mod span_attr;
+pub mod theme_test;

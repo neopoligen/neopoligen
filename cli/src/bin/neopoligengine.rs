@@ -114,16 +114,23 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
     match Builder::new_from_site_config(site_config) {
         Ok(mut builder) => {
+            // Prep
             let _ = builder.prep_output_dirs();
-            builder.load_pages_from_cache().unwrap();
-            builder.load_pages_from_fs().unwrap();
-            builder.generate_missing_asts();
-            let _ = builder.save_asts_to_cache();
-            builder.generate_payloads();
             let _ = builder.load_templates();
-            let _ = builder.empty_output_dirs();
-            let _ = builder.output_pages();
+            // Site
+            // builder.load_pages_from_cache().unwrap();
+            // builder.load_pages_from_fs().unwrap();
+            // builder.generate_missing_asts();
+            // let _ = builder.save_asts_to_cache();
+            // builder.generate_payloads();
+            // let _ = builder.empty_output_dirs();
+            // let _ = builder.output_pages();
+            // Theme Test
+            builder.load_theme_test_pages().unwrap();
+            builder.generate_missing_asts();
+            builder.generate_payloads();
             let _ = builder.test_theme();
+            // Errors
             builder.tmp_output_errors().unwrap();
             // builder.todo("update_file_cache");
             // builder.todo("generate_site_object");

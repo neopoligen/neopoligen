@@ -3,6 +3,7 @@ use crate::neo_error::{NeoError, NeoErrorKind};
 use crate::page_payload::PagePayload;
 use crate::site_config::SiteConfig;
 use crate::source_page::SourcePage;
+use crate::theme_test::ThemeTest;
 use anyhow::Result;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
@@ -25,6 +26,7 @@ pub struct Builder {
     source_pages: BTreeMap<PathBuf, SourcePage>,
     payloads: BTreeMap<String, PagePayload>,
     templates: BTreeMap<String, String>,
+    pub theme_test_source_pages: BTreeMap<PathBuf, ThemeTest>,
 }
 
 impl Builder {
@@ -36,6 +38,7 @@ impl Builder {
             source_pages: BTreeMap::new(),
             payloads: BTreeMap::new(),
             templates: BTreeMap::new(),
+            theme_test_source_pages: BTreeMap::new(),
         };
         Ok(b)
     }
@@ -102,6 +105,7 @@ impl Builder {
     pub fn generate_payloads(&mut self) {
         self.payloads = BTreeMap::new();
         self.source_pages.iter().for_each(|(_, page)| {
+            // dbg!(&page);
             // TODO: Clean this section up so it only gets the id once
             if let Some(_id) = &page.id() {
                 match PagePayload::new_from_source_page(&page) {
@@ -259,6 +263,66 @@ impl Builder {
     }
 
     #[instrument(skip(self))]
+    pub fn load_theme_test_pages(&mut self) -> Result<()> {
+        event!(Level::INFO, "Loading Theme Test Pages");
+        // Reminder: clear the original pages
+        self.source_pages = BTreeMap::new();
+        for entry in WalkDir::new(&self.config.as_ref().unwrap().templates_dir()) {
+            let path = entry?.path().to_path_buf();
+            if path.is_file() {
+                if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
+                    if ext.to_ascii_lowercase() == "neo"
+                        && !filename.to_str().unwrap().starts_with(".")
+                    {
+                        if let Some(cached_page) = self.cache_buffer.get(&path) {
+                            let updated = fs::metadata(&path)
+                                .unwrap()
+                                .modified()
+                                .unwrap()
+                                .duration_since(UNIX_EPOCH)
+                                .unwrap()
+                                .as_secs();
+                            if cached_page.updated.unwrap() == updated {
+                                let mut updated_cached_page = cached_page.clone();
+                                updated_cached_page.config =
+                                    Some(self.config.as_ref().unwrap().clone());
+                                self.source_pages.insert(path.clone(), updated_cached_page);
+                            } else {
+                                match SourcePage::new_from_source_path(
+                                    &path,
+                                    self.config.as_ref().unwrap().clone(),
+                                ) {
+                                    Ok(p) => {
+                                        self.source_pages.insert(path.clone(), p);
+                                    }
+                                    Err(_e) => {
+                                        dbg!("TODO: hoist page could not load error");
+                                        ()
+                                    }
+                                }
+                            }
+                        } else {
+                            match SourcePage::new_from_source_path(
+                                &path,
+                                self.config.as_ref().unwrap().clone(),
+                            ) {
+                                Ok(p) => {
+                                    self.source_pages.insert(path.clone(), p);
+                                }
+                                Err(_e) => {
+                                    dbg!("TODO: hoist page could not load error");
+                                    ()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn output_pages(&mut self) -> Result<()> {
         event!(Level::INFO, "Outputting pages");
         let mut env = Environment::new();
@@ -359,12 +423,55 @@ impl Builder {
     }
 
     #[instrument(skip(self))]
-    pub fn test_theme(&self) -> Result<()> {
-        event!(Level::INFO, "Testing Theme");
-        let theme_test_page_paths =
-            get_neo_files_in_dir_recursively(&self.config.as_ref().unwrap().theme_dir());
-        dbg!(theme_test_page_paths);
-
+    pub fn test_theme(&mut self) -> Result<()> {
+        let mut env = Environment::new();
+        env.add_function("highlight_code", highlight_code);
+        env.add_function("highlight_span", highlight_span);
+        // TODO: Add start-test-template and expected-output templates
+        // TODO: Update "pages/post/published.neoj" for theme test
+        env.set_syntax(
+            SyntaxConfig::builder()
+                .block_delimiters("[!", "!]")
+                .variable_delimiters("[@", "@]")
+                .comment_delimiters("[#", "#]")
+                .build()
+                .unwrap(),
+        );
+        for (id, data) in self.templates.iter() {
+            match env.add_template_owned(id, data) {
+                Ok(_) => {}
+                Err(e) => {
+                    dbg!(e);
+                    {}
+                }
+            }
+        }
+        for (_, page) in self.payloads.iter_mut() {
+            if let Some(template) = page.template_list.iter().find_map(|name| {
+                if let Ok(tmpl) = env.get_template(name) {
+                    page.used_template = Some(name.clone());
+                    Some(tmpl)
+                } else {
+                    None
+                }
+            }) {
+                match template.render(context!(
+                    page => Value::from_serialize(&page)
+                )) {
+                    Ok(output) => {
+                        dbg!(output);
+                        ()
+                        // let _ = write_file_with_mkdir(&output_path, &output);
+                    }
+                    Err(e) => {
+                        dbg!(e);
+                        ()
+                    }
+                };
+            } else {
+                event!(Level::ERROR, "Could not find template");
+            };
+        }
         Ok(())
     }
 
