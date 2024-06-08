@@ -460,9 +460,28 @@ impl Builder {
         .unwrap();
         env.add_template_owned(
             "sections/basic/start-theme-test/full/default.neoj",
-            "<!-- START_THEME_TEST -->".to_string(),
+            r#"<!-- START_THEME_TEST -->"#.to_string(),
         )
         .unwrap();
+        env.add_template_owned(
+            "sections/raw/expected-output/start/default.neoj",
+            r#"
+[! import "includes/theme.neoj" as theme !]
+<!-- EXPECTED_OUTPUT -->
+[@ section.text @]
+[! for child in section.children !]
+[@ theme.output_section("", "", child) @]
+[! endfor !]
+"#
+            .to_string(),
+        )
+        .unwrap();
+        env.add_template_owned(
+            "sections/basic/expected-output/end/default.neoj",
+            "<!-- EXPECTED_OUTPUT -->".to_string(),
+        )
+        .unwrap();
+
         for (_, page) in self.payloads.iter_mut() {
             if let Some(template) = page.template_list.iter().find_map(|name| {
                 if let Ok(tmpl) = env.get_template(name) {
@@ -476,7 +495,28 @@ impl Builder {
                     page => Value::from_serialize(&page)
                 )) {
                     Ok(output) => {
-                        dbg!(output);
+                        let tests = output
+                            .split("<!-- START_THEME_TEST -->")
+                            .collect::<Vec<&str>>();
+                        tests.iter().skip(1).for_each(|t| {
+                            let parts = t.split("<!-- EXPECTED_OUTPUT -->").collect::<Vec<&str>>();
+                            if parts.len() == 3 {
+                                let got = format_html_for_theme_test_display(parts[0]);
+                                let expected = format_html_for_theme_test_display(parts[1]);
+                                let got_compare = got.replace("\n", "").replace(" ", "");
+                                let expected_compare = expected.replace("\n", "").replace(" ", "");
+                                if got_compare != expected_compare {
+                                    dbg!("------------------------");
+                                    self.errors.push(NeoError {
+                                        kind: NeoErrorKind::ThemeTestError {
+                                            source_path: PathBuf::from(""),
+                                            expected: expected.to_string(),
+                                            got: got.to_string(),
+                                        },
+                                    })
+                                }
+                            }
+                        });
                         ()
                         // let _ = write_file_with_mkdir(&output_path, &output);
                     }
@@ -554,5 +594,11 @@ body { background-color: #111; color: #aaa; }
             .sections
             .basic
             .push("start-theme-test".to_string());
+        self.config
+            .as_mut()
+            .unwrap()
+            .sections
+            .raw
+            .push("expected-output".to_string());
     }
 }

@@ -37,6 +37,11 @@ pub enum NeoErrorKind {
         source: String,
         message: String,
     },
+    ThemeTestError {
+        source_path: PathBuf,
+        expected: String,
+        got: String,
+    },
 }
 
 impl std::fmt::Display for NeoError {
@@ -69,6 +74,10 @@ impl std::fmt::Display for NeoError {
                 fmt.write_str(source_path.display().to_string().as_str())?;
                 fmt.write_str("\n")?;
                 fmt.write_str(msg.as_str())?;
+            }
+            NeoErrorKind::ThemeTestError { source_path, .. } => {
+                fmt.write_str("Path: ")?;
+                fmt.write_str(source_path.display().to_string().as_str())?;
             }
             NeoErrorKind::ParserError {
                 line,
