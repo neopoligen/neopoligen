@@ -126,6 +126,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
             // let _ = builder.empty_output_dirs();
             // let _ = builder.output_pages();
             // Theme Test
+            builder.update_config_for_theme_test();
             builder.load_theme_test_pages().unwrap();
             builder.generate_missing_asts();
             builder.generate_payloads();

@@ -446,6 +446,23 @@ impl Builder {
                 }
             }
         }
+        env.add_template_owned(
+            "pages/post/published.neoj",
+            r#"
+[! include "includes/config.neoj" !]
+[! import "includes/theme.neoj" as theme !]
+[! for section in page.sections !]
+[@ theme.output_section("", "", section) @]
+[! endfor !]
+"#
+            .to_string(),
+        )
+        .unwrap();
+        env.add_template_owned(
+            "sections/basic/start-theme-test/full/default.neoj",
+            "<!-- START_THEME_TEST -->".to_string(),
+        )
+        .unwrap();
         for (_, page) in self.payloads.iter_mut() {
             if let Some(template) = page.template_list.iter().find_map(|name| {
                 if let Ok(tmpl) = env.get_template(name) {
@@ -526,5 +543,16 @@ body { background-color: #111; color: #aaa; }
     #[instrument(skip(self, thing))]
     pub fn todo(&self, thing: &str) {
         event!(Level::INFO, "TODO: {}", thing);
+    }
+
+    #[instrument(skip(self))]
+    pub fn update_config_for_theme_test(&mut self) {
+        event!(Level::INFO, "Updeating config for theme test");
+        self.config
+            .as_mut()
+            .unwrap()
+            .sections
+            .basic
+            .push("start-theme-test".to_string());
     }
 }
