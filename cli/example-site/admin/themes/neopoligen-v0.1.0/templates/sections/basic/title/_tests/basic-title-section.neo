@@ -2,12 +2,14 @@
 
 -- title
 
-Hello Worldx
+Hello World
 
 
 -- expected-output/
 
+<hgroup>
 <h1>Hello World</h1>
+</hgroup>
 
 -- /expected-output
 

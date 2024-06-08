@@ -17,7 +17,7 @@ pub fn unknown_section_full<'a>(
     _sections: &'a ConfigSections,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, r#type) = is_not(" \n").context("").parse(source)?;
+    let (source, r#type) = is_not(" /\n").context("").parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
         .parse(source)?;

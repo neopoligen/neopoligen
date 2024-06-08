@@ -425,6 +425,8 @@ impl Builder {
     #[instrument(skip(self))]
     pub fn test_theme(&mut self) -> Result<()> {
         let mut env = Environment::new();
+        env.set_lstrip_blocks(true);
+        env.set_trim_blocks(true);
         env.add_function("highlight_code", highlight_code);
         env.add_function("highlight_span", highlight_span);
         // TODO: Add start-test-template and expected-output templates
@@ -508,9 +510,10 @@ impl Builder {
                                 if got_compare != expected_compare {
                                     self.errors.push(NeoError {
                                         kind: NeoErrorKind::ThemeTestError {
-                                            source_path: PathBuf::from(""),
+                                            ast: page.ast.as_ref().unwrap().clone(),
                                             expected: expected.to_string(),
                                             got: got.to_string(),
+                                            source_path: PathBuf::from(""),
                                         },
                                     })
                                 }
@@ -556,7 +559,26 @@ body { background-color: #111; color: #aaa; }
 <ul>
 [! for error in errors !]
 <li>
-[@ error|escape @]
+[! if error.kind.type == "themetesterror" !]
+    <h2>Theme Test Error</h2>
+    <h3>Expected</h3>
+    <pre>
+    [@ error.kind.expected|escape @]
+    </pre>
+    <h3>Got</h3>
+    <pre>
+    [@ error.kind.got|escape @]
+    </pre>
+    <h3>Sections</h3>
+    <pre>
+    [@ error.kind.ast|tojson(true)@]
+    </pre>
+[! else !]
+    <h2>[@ error.type @]</h2>
+    <pre>
+    [@ error|escape @]
+    </pre>
+[! endif !]
 </li>
 [! endfor !]
 </ul>

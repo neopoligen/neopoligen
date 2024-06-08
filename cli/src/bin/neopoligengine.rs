@@ -118,13 +118,13 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
             let _ = builder.prep_output_dirs();
             let _ = builder.load_templates();
             // Site
-            // builder.load_pages_from_cache().unwrap();
-            // builder.load_pages_from_fs().unwrap();
-            // builder.generate_missing_asts();
-            // let _ = builder.save_asts_to_cache();
-            // builder.generate_payloads();
-            // let _ = builder.empty_output_dirs();
-            // let _ = builder.output_pages();
+            builder.load_pages_from_cache().unwrap();
+            builder.load_pages_from_fs().unwrap();
+            builder.generate_missing_asts();
+            let _ = builder.save_asts_to_cache();
+            builder.generate_payloads();
+            let _ = builder.empty_output_dirs();
+            let _ = builder.output_pages();
             // Theme Test
             builder.update_config_for_theme_test();
             builder.load_theme_test_pages().unwrap();

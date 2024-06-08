@@ -1,0 +1,27 @@
+-- start-theme-test
+
+-- title/
+
+alfa bravo
+
+-- /title
+
+
+-- expected-output/
+
+<hgroup>
+<h1>alfa bravo</h1>
+</hgroup>
+
+-- /expected-output
+
+
+
+-- metadata
+-- created: 2024-06-08T16:44:58-04:00
+-- updated: 2024-06-08T16:44:58-04:00
+-- id: 2hc3nv31
+-- type: post
+-- status: draft
+
+

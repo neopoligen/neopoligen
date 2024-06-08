@@ -2,6 +2,20 @@
 
 TODO List
 
+-- todo
+-- title: Sections To Do
+
+[] todo
+
+[] list
+
+[x] title
+
+[] h1-h6
+
+[] image
+
+
 
 -- todo 
 
@@ -21,6 +35,7 @@ for spans if they exist otherwise they are blank. Also,
 note that classes and ids don't get included in the 
 rest of the attrs so you don't have to filter them out. 
 
+[] _generic for the sections
 
 
 -- metadata
