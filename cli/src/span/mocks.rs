@@ -1,6 +1,7 @@
 use crate::span::Span;
 
 use super::named_span;
+use super::span_for_body_text;
 use super::wordpart;
 
 impl Span {
@@ -32,5 +33,11 @@ impl Span {
 
     pub fn mock6_id_with_qutoe_in_t() -> Span {
         named_span(r#"<<em|sample|id: fox"trot>>"#).unwrap().1
+    }
+
+    pub fn mock7_nested_spans() -> Span {
+        span_for_body_text(r#"<<em|alfa <<strong|bravo>> charlie>>"#)
+            .unwrap()
+            .1
     }
 }

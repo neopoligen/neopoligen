@@ -43,11 +43,11 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let (source, attrs) = many0(named_span_attr).context("").parse(source)?;
     let (source, _) = tag(">>").context("").parse(source)?;
     let source_text = initial_source.replace(source, "").to_string();
-    let parsed_text = spans
-        .iter()
-        .map(|word| word.parsed_text.clone())
-        .collect::<Vec<String>>()
-        .join("");
+    // let parsed_text = spans
+    //     .iter()
+    //     .map(|word| word.parsed_text.clone())
+    //     .collect::<Vec<String>>()
+    //     .join("");
     let r#type = type_parts
         .iter()
         .map(|p| p.to_string())
@@ -58,7 +58,7 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         Span {
             attrs,
             source_text,
-            parsed_text,
+            parsed_text: "".to_string(),
             kind: SpanKind::NamedSpan {
                 r#type: r#type.to_string(),
                 spans,
@@ -230,7 +230,7 @@ mod test {
                     },
                 }],
                 source_text: "<<em|alfa|data-ping: bravo>>".to_string(),
-                parsed_text: "alfa".to_string(),
+                parsed_text: "".to_string(),
                 kind: SpanKind::NamedSpan {
                     r#type: "em".to_string(),
                     spans: vec![Span {
@@ -254,7 +254,7 @@ mod test {
             Span {
                 attrs: vec![],
                 source_text: "<<em|alfa>>".to_string(),
-                parsed_text: "alfa".to_string(),
+                parsed_text: "".to_string(),
                 kind: SpanKind::NamedSpan {
                     r#type: "em".to_string(),
                     spans: vec![Span {
@@ -278,7 +278,7 @@ mod test {
             Span {
                 attrs: vec![],
                 source_text: "<<alfa|ping\\|ping>>".to_string(),
-                parsed_text: "ping|ping".to_string(),
+                parsed_text: "".to_string(),
                 kind: SpanKind::NamedSpan {
                     r#type: "alfa".to_string(),
                     spans: vec![
@@ -353,7 +353,7 @@ mod test {
                     },
                 }],
                 source_text: "<<code|something|rust>>".to_string(),
-                parsed_text: "something".to_string(),
+                parsed_text: "".to_string(),
                 kind: SpanKind::NamedSpan {
                     r#type: "code".to_string(),
                     spans: vec![Span {

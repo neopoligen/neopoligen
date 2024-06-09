@@ -82,6 +82,9 @@ pub enum SectionKind {
 }
 
 impl Section {
+    // DEPRECATED: I think this isn't needed and can be
+    // removed when PayloadSection is working and pulling
+    // data for itself
     pub fn get_attr(&self, target: &str) -> Option<String> {
         let attrs = self
             .attrs
@@ -152,48 +155,57 @@ pub fn tag_finder<'a>(
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use crate::site_config::SiteConfig;
-    use pretty_assertions::assert_eq;
-    #[test]
-    fn get_attr_is_none_if_it_does_not_exist() {
-        let section = Section::mock1_basic_title_section_no_attrs();
-        let left = section.get_attr("key_that_does_not_exist");
-        let right = None;
-        assert_eq!(left, right);
-    }
+    // use super::*;
+    // use crate::site_config::SiteConfig;
+    // use pretty_assertions::assert_eq;
 
-    #[test]
-    #[ignore]
-    fn get_attr_that_does_exist() {
-        let section = Section::mock2_div_with_title_and_template_attrs();
-        let left = section.get_attr("template");
-        let right = Some("template-from-attr".to_string());
-        assert_eq!(left, right);
-    }
+    // // DEPRECATED: TODO: All attr processing will be done
+    // // in PayloadSection
+    // #[test]
+    // fn get_attr_is_none_if_it_does_not_exist() {
+    //     let section = Section::mock1_basic_title_section_no_attrs();
+    //     let left = section.get_attr("key_that_does_not_exist");
+    //     let right = None;
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn get_attr_combined_attrs_with_the_same_key() {
-        let section = Section::mock3_image_with_flag_and_multiple_attrs_with_same_key();
-        let left = section.get_attr("alt");
-        let right = Some("alfa bravo charlie delta".to_string());
-        assert_eq!(left, right);
-    }
+    // // DEPRECATED: TODO: All attr processing will be done
+    // // in PayloadSection
+    // #[test]
+    // #[ignore]
+    // fn get_attr_that_does_exist() {
+    //     let section = Section::mock2_div_with_title_and_template_attrs();
+    //     let left = section.get_attr("template");
+    //     let right = Some("template-from-attr".to_string());
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn misc_test() {
-        // let source = include_str!("test_files/integration-1.neo");
-        let source = include_str!("test_files/to-speed-check.neo");
-        let config = SiteConfig::mock1_basic();
-        let left = "";
-        let right = many1(|src| start_or_full_section(src, &config.sections))(source)
-            .unwrap()
-            .0;
-        dbg!(&right);
-        assert_eq!(left, right);
-    }
+    // // DEPRECATED: TODO: All attr processing will be done
+    // // in PayloadSection
+    // #[test]
+    // #[ignore]
+    // fn get_attr_combined_attrs_with_the_same_key() {
+    //     let section = Section::mock3_image_with_flag_and_multiple_attrs_with_same_key();
+    //     let left = section.get_attr("alt");
+    //     let right = Some("alfa bravo charlie delta".to_string());
+    //     assert_eq!(left, right);
+    // }
+
+    // // DEPRECATED: TODO: All attr processing will be done
+    // // in PayloadSection
+    // #[test]
+    // #[ignore]
+    // fn misc_test() {
+    //     // let source = include_str!("test_files/integration-1.neo");
+    //     let source = include_str!("test_files/to-speed-check.neo");
+    //     let config = SiteConfig::mock1_basic();
+    //     let left = "";
+    //     let right = many1(|src| start_or_full_section(src, &config.sections))(source)
+    //         .unwrap()
+    //         .0;
+    //     dbg!(&right);
+    //     assert_eq!(left, right);
+    // }
 
     //
 }

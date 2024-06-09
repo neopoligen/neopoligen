@@ -11,19 +11,19 @@ use crate::{
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PayloadSection {
-    pub attrs: BTreeMap<String, Vec<PayloadSpan>>,
+    pub attrs: Option<BTreeMap<String, Vec<PayloadSpan>>>,
     pub bounds: String,
-    pub children: Vec<PayloadSection>,
-    pub classes: Vec<String>,
+    pub children: Option<Vec<PayloadSection>>,
+    pub classes: Option<Vec<String>>,
     pub created: Option<String>,
     pub data: Option<Value>,
-    pub flags: Vec<String>,
+    pub flags: Option<Vec<String>>,
     pub id: Option<String>,
     pub kind: Option<String>,
-    pub spans: Vec<PayloadSpan>,
+    pub spans: Option<Vec<PayloadSpan>>,
     pub status: Option<String>,
     pub subtitle: Option<Vec<PayloadSpan>>,
-    pub tags: Vec<String>,
+    pub tags: Option<Vec<String>>,
     pub text: Option<String>,
     pub title: Option<Vec<PayloadSpan>>,
     pub r#type: String,
@@ -33,7 +33,7 @@ pub struct PayloadSection {
 
 impl PayloadSection {
     pub fn new_from_section(section: &Section, config: &SiteConfig) -> PayloadSection {
-        let mut attrs = BTreeMap::new();
+        let attrs = BTreeMap::new();
 
         // section.attrs.iter().for_each(|attr| match &attr.kind {
         //     SectionAttrKind::KeyValue { key, value } => {
@@ -232,19 +232,27 @@ impl PayloadSection {
         });
 
         PayloadSection {
-            attrs,
+            attrs: if attrs.len() == 0 { None } else { Some(attrs) },
             bounds,
-            children,
-            classes,
+            children: if children.len() == 0 {
+                None
+            } else {
+                Some(children)
+            },
+            classes: if classes.len() == 0 {
+                None
+            } else {
+                Some(classes)
+            },
             created,
             data: None, // TODO
-            flags,
+            flags: if flags.len() == 0 { None } else { Some(flags) },
             id,
             kind,
-            spans,
+            spans: if spans.len() == 0 { None } else { Some(spans) },
             status,
             subtitle: None, // TODO
-            tags,
+            tags: if tags.len() == 0 { None } else { Some(tags) },
             text,
             title: None, // TODO
             r#type: section.r#type.clone(),
@@ -313,22 +321,22 @@ mod test {
         assert_eq!(left, right);
     }
 
-    #[test]
-    #[ignore]
-    fn classes_work() {
-        let config = SiteConfig::mock1_basic();
-        let payload_section = PayloadSection::new_from_section(
-            &Section::mock4_youtube_with_tags_and_classes(),
-            &config,
-        );
-        let left: Vec<String> = vec![
-            "class1".to_string(),
-            "class2".to_string(),
-            "class3".to_string(),
-        ];
-        let right = payload_section.classes;
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn classes_work() {
+    //     let config = SiteConfig::mock1_basic();
+    //     let payload_section = PayloadSection::new_from_section(
+    //         &Section::mock4_youtube_with_tags_and_classes(),
+    //         &config,
+    //     );
+    //     let left: Vec<String> = vec![
+    //         "class1".to_string(),
+    //         "class2".to_string(),
+    //         "class3".to_string(),
+    //     ];
+    //     let right = payload_section.classes;
+    //     assert_eq!(left, right);
+    // }
 
     // #[test]
     // fn classes_dont_show_up_in_attrs() {
@@ -361,18 +369,18 @@ mod test {
     //     assert_eq!(left, right);
     // }
 
-    #[test]
-    #[ignore]
-    fn flags_work() {
-        let config = SiteConfig::mock1_basic();
-        let payload_section = PayloadSection::new_from_section(
-            &Section::mock4_youtube_with_tags_and_classes(),
-            &config,
-        );
-        let left = vec!["NPJ1qQraMZI".to_string()];
-        let right = payload_section.flags;
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn flags_work() {
+    //     let config = SiteConfig::mock1_basic();
+    //     let payload_section = PayloadSection::new_from_section(
+    //         &Section::mock4_youtube_with_tags_and_classes(),
+    //         &config,
+    //     );
+    //     let left = vec!["NPJ1qQraMZI".to_string()];
+    //     let right = payload_section.flags;
+    //     assert_eq!(left, right);
+    // }
 
     #[test]
     #[ignore]
@@ -437,18 +445,18 @@ mod test {
         assert_eq!(left, right)
     }
 
-    #[test]
-    #[ignore]
-    fn tags_work() {
-        let config = SiteConfig::mock1_basic();
-        let payload_section = PayloadSection::new_from_section(
-            &Section::mock4_youtube_with_tags_and_classes(),
-            &config,
-        );
-        let left = vec!["minecraft".to_string(), "how-to".to_string()];
-        let right = payload_section.tags;
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn tags_work() {
+    //     let config = SiteConfig::mock1_basic();
+    //     let payload_section = PayloadSection::new_from_section(
+    //         &Section::mock4_youtube_with_tags_and_classes(),
+    //         &config,
+    //     );
+    //     let left = vec!["minecraft".to_string(), "how-to".to_string()];
+    //     let right = payload_section.tags;
+    //     assert_eq!(left, right);
+    // }
 
     // #[test]
     // fn tags_dont_show_up_in_attrs() {

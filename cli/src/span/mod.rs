@@ -216,4 +216,47 @@ mod test {
         let right = span_for_body_text(input).unwrap().0;
         assert_eq!(left, right);
     }
+
+    #[test]
+    fn nested_span() {
+        let source = "<<em|delta <<strong|echo>> foxtrot>>";
+        let left = Span {
+            attrs: vec![],
+            source_text: "<<em|delta <<strong|echo>> foxtrot>>".to_string(),
+            parsed_text: "".to_string(),
+            kind: SpanKind::NamedSpan {
+                r#type: "em".to_string(),
+                spans: vec![
+                    Span {
+                        attrs: vec![],
+                        kind: SpanKind::WordPart,
+                        parsed_text: "delta ".to_string(),
+                        source_text: "delta ".to_string(),
+                    },
+                    Span {
+                        attrs: vec![],
+                        parsed_text: "".to_string(),
+                        source_text: "<<strong|echo>>".to_string(),
+                        kind: SpanKind::NamedSpan {
+                            r#type: "strong".to_string(),
+                            spans: vec![Span {
+                                attrs: vec![],
+                                kind: SpanKind::WordPart,
+                                parsed_text: "echo".to_string(),
+                                source_text: "echo".to_string(),
+                            }],
+                        },
+                    },
+                    Span {
+                        attrs: vec![],
+                        kind: SpanKind::WordPart,
+                        parsed_text: " foxtrot".to_string(),
+                        source_text: " foxtrot".to_string(),
+                    },
+                ],
+            },
+        };
+        let right = span_for_body_text(source).unwrap().1;
+        assert_eq!(left, right);
+    }
 }
