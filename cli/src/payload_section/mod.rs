@@ -33,7 +33,7 @@ pub struct PayloadSection {
 
 impl PayloadSection {
     pub fn new_from_section(section: &Section, config: &SiteConfig) -> PayloadSection {
-        let mut attrs = BTreeMap::new();
+        let mut attrs: BTreeMap<String, Vec<PayloadSpan>> = BTreeMap::new();
 
         section.attrs.iter().for_each(|attr| match &attr.kind {
             SectionAttrKind::KeyValueSpans { key, spans } => {
@@ -48,14 +48,25 @@ impl PayloadSection {
                     && key.as_str() != "title"
                     && key.as_str() != "updated"
                 {
-                    //    attrs.insert(key.clone(), value.clone());
-                    attrs.insert(
-                        "alt".to_string(),
-                        spans
-                            .iter()
-                            .map(|span| PayloadSpan::new_from_span(span, config))
-                            .collect(),
-                    );
+                    match attrs.get(key) {
+                        Some(cur) => {
+                            let mut new_attrs = cur.clone();
+                            new_attrs.push(PayloadSpan::new_space());
+                            spans.iter().for_each(|span| {
+                                new_attrs.push(PayloadSpan::new_from_span(span, config))
+                            });
+                            attrs.insert("alt".to_string(), new_attrs);
+                        }
+                        None => {
+                            attrs.insert(
+                                "alt".to_string(),
+                                spans
+                                    .iter()
+                                    .map(|span| PayloadSpan::new_from_span(span, config))
+                                    .collect(),
+                            );
+                        }
+                    };
                 }
             }
             _ => (),
@@ -280,28 +291,83 @@ mod test {
             &Section::mock3_image_with_flag_and_multiple_attrs_with_same_key(),
             &SiteConfig::mock1_basic(),
         );
-        let left = &vec![PayloadSpan {
-            aria: None,
-            aria_unescaped: None,
-            attr_string: None,
-            attrs: None,
-            attrs_unescaped: None,
-            classes: None,
-            classes_unescaped: None,
-            custom_attrs: None,
-            custom_attrs_unescaped: None,
-            data: None,
-            data_unescaped: None,
-            first_flag: None,
-            first_flag_unescaped: None,
-            flags: None,
-            flags_unescaped: None,
-            id: None,
-            id_unescaped: None,
-            kind: "wordpart".to_string(),
-            parsed_text: "asdf".to_string(),
-            template_list: vec![],
-        }];
+        let left = &vec![
+            PayloadSpan {
+                aria: None,
+                aria_unescaped: None,
+                attr_string: None,
+                attrs: None,
+                attrs_unescaped: None,
+                classes: None,
+                classes_unescaped: None,
+                custom_attrs: None,
+                custom_attrs_unescaped: None,
+                data: None,
+                data_unescaped: None,
+                first_flag: None,
+                first_flag_unescaped: None,
+                flags: None,
+                flags_unescaped: None,
+                id: None,
+                id_unescaped: None,
+                kind: "wordpart".to_string(),
+                parsed_text: "alfa bravo".to_string(),
+                template_list: vec![
+                    "spans/wordpart.neoj".to_string(),
+                    "spans/generic.neoj".to_string(),
+                ],
+            },
+            PayloadSpan {
+                aria: None,
+                aria_unescaped: None,
+                attr_string: None,
+                attrs: None,
+                attrs_unescaped: None,
+                classes: None,
+                classes_unescaped: None,
+                custom_attrs: None,
+                custom_attrs_unescaped: None,
+                data: None,
+                data_unescaped: None,
+                first_flag: None,
+                first_flag_unescaped: None,
+                flags: None,
+                flags_unescaped: None,
+                id: None,
+                id_unescaped: None,
+                kind: "space".to_string(),
+                parsed_text: " ".to_string(),
+                template_list: vec![
+                    "spans/space.neoj".to_string(),
+                    "spans/generic.neoj".to_string(),
+                ],
+            },
+            PayloadSpan {
+                aria: None,
+                aria_unescaped: None,
+                attr_string: None,
+                attrs: None,
+                attrs_unescaped: None,
+                classes: None,
+                classes_unescaped: None,
+                custom_attrs: None,
+                custom_attrs_unescaped: None,
+                data: None,
+                data_unescaped: None,
+                first_flag: None,
+                first_flag_unescaped: None,
+                flags: None,
+                flags_unescaped: None,
+                id: None,
+                id_unescaped: None,
+                kind: "wordpart".to_string(),
+                parsed_text: "charlie delta".to_string(),
+                template_list: vec![
+                    "spans/wordpart.neoj".to_string(),
+                    "spans/generic.neoj".to_string(),
+                ],
+            },
+        ];
         let right = ps.attrs.as_ref().unwrap().get("alt").unwrap();
         assert_eq!(left, right);
     }

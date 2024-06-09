@@ -1,4 +1,4 @@
-use crate::{payload_section::PayloadSection, section::Section};
+use crate::payload_section::PayloadSection;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 

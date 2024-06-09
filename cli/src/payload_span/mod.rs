@@ -340,6 +340,34 @@ impl PayloadSpan {
         ps.update_attr_string();
         ps
     }
+
+    pub fn new_space() -> PayloadSpan {
+        PayloadSpan {
+            aria: None,
+            aria_unescaped: None,
+            attrs: None,
+            attrs_unescaped: None,
+            attr_string: None,
+            classes: None,
+            classes_unescaped: None,
+            custom_attrs: None,
+            custom_attrs_unescaped: None,
+            data: None,
+            data_unescaped: None,
+            first_flag: None,
+            first_flag_unescaped: None,
+            flags: None,
+            flags_unescaped: None,
+            id: None,
+            id_unescaped: None,
+            kind: "space".to_string(),
+            parsed_text: " ".to_string(),
+            template_list: vec![
+                "spans/space.neoj".to_string(),
+                "spans/generic.neoj".to_string(),
+            ],
+        }
+    }
 }
 
 impl PayloadSpan {
