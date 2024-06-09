@@ -104,6 +104,7 @@ impl SourcePage {
         Ok(())
     }
 
+    // DEPRECATED: TODO: Move into PagePayload
     pub fn get_metadata_item(&self, target: &str) -> Option<String> {
         // TODO: Join this as a string and make a version
         // that provides individual access as well
@@ -132,14 +133,17 @@ impl SourcePage {
         }
     }
 
+    // DEPRECATED: TODO: Move into PagePayload
     pub fn id(&self) -> Option<String> {
         self.get_metadata_item("id")
     }
 
+    // DEPRECATED: TODO: Move into PagePayload
     pub fn r#type(&self) -> Option<String> {
         Some("post".to_string())
     }
 
+    // DEPRECATED: TODO: Move into PagePayload
     pub fn rel_file_path(&self) -> Option<PathBuf> {
         if let Some(path) = self.get_metadata_item("path") {
             Some(scrub_rel_file_path(&path).expect("get rel file path"))
@@ -152,6 +156,7 @@ impl SourcePage {
         }
     }
 
+    // DEPRECATED: TODO: Move into PagePayload
     pub fn sections(&self) -> Vec<PayloadSection> {
         let sections = self
             .ast
@@ -166,10 +171,12 @@ impl SourcePage {
         sections
     }
 
+    // DEPRECATED: TODO: Move into PagePayload
     pub fn status(&self) -> Option<String> {
         Some("published".to_string())
     }
 
+    // DEPRECATED: TODO: Move into PagePayload
     pub fn template_list(&self) -> Vec<String> {
         vec!["pages/post/published.neoj".to_string()]
     }

@@ -27,7 +27,7 @@ to escape the following character.
 
 [] Note that you can nest named spans, but not shorthands, 
 
-[] Document the code shorthand single pipe <<code|``\|``>>
+[] Document the code shorthand single pipe ``\|``
 
 [] show to use ``[@ span.class_string @]|neoj`` and 
 ``[@ span.id_string @]|neoj`` to get the class and id strings

@@ -125,55 +125,45 @@ impl Builder {
     #[instrument(skip(self))]
     pub fn generate_payloads(&mut self) {
         self.payloads = BTreeMap::new();
-        self.source_pages.iter().for_each(|(_, page)| {
-            // dbg!(&page);
-            // TODO: Clean this section up so it only gets the id once
-            if let Some(_id) = &page.id() {
-                match PagePayload::new_from_source_page(&page) {
-                    Ok(p) => match page.id() {
-                        Some(id) => {
-                            self.payloads.insert(id, p);
-                            ()
-                        }
-                        None => {
-                            dbg!("TODO: Mark ERROR for missing page ID");
-                            ()
-                        }
-                    },
-                    Err(e) => {
-                        if let Some(source_path) = &page.source_path {
-                            //dbg!("--------------------------------");
-                            self.errors.push(NeoError {
-                                kind: NeoErrorKind::ForwardErrorWithSourcePath {
-                                    source_path: source_path.clone(),
-                                    //msg: e.to_string(),
-                                    msg: format!("Could not get file id: {}", e),
-                                },
-                            });
-                        } else {
-                            //dbg!("--------------------------------");
-                            self.errors.push(NeoError {
-                                // kind: NeoErrorKind::ForwardError { msg: e.to_string() },
-                                kind: NeoErrorKind::ForwardError {
-                                    msg: "ERROR HERE".to_string(),
-                                },
-                            });
-                        }
-                        event!(
-                            Level::ERROR,
-                            "Page load error: TODO: make this a better message: {}",
-                            e.to_string()
-                        );
-                    }
-                }
-            } else {
-                self.errors.push(NeoError {
-                    kind: NeoErrorKind::GenericErrorWithSourcePath {
-                        source_path: page.source_path.as_ref().unwrap().clone(),
-                        msg: "Could not get Id from source path".to_string(),
-                    },
-                });
-            }
+        self.source_pages.iter().for_each(|(source_path, page)| {
+
+            //match PagePayload::new_from_source_page(&page) {
+            //    Ok(p) => match p.id {
+            //        Some(id) => {
+            //            self.payloads.insert(id, p);
+            //            ()
+            //        }
+            //        None => {
+            //            dbg!("TODO: Mark ERROR for missing page ID");
+            //            ()
+            //        }
+            //    },
+            //    Err(e) => {
+            //        if let Some(source_path) = &page.source_path {
+            //            //dbg!("--------------------------------");
+            //            self.errors.push(NeoError {
+            //                kind: NeoErrorKind::ForwardErrorWithSourcePath {
+            //                    source_path: source_path.clone(),
+            //                    //msg: e.to_string(),
+            //                    msg: format!("Could not get file id: {}", e),
+            //                },
+            //            });
+            //        } else {
+            //            //dbg!("--------------------------------");
+            //            self.errors.push(NeoError {
+            //                // kind: NeoErrorKind::ForwardError { msg: e.to_string() },
+            //                kind: NeoErrorKind::ForwardError {
+            //                    msg: "ERROR HERE".to_string(),
+            //                },
+            //            });
+            //        }
+            //        event!(
+            //            Level::ERROR,
+            //            "Page load error: TODO: make this a better message: {}",
+            //            e.to_string()
+            //        );
+            //    }
+            //}
         });
     }
 
