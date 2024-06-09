@@ -196,58 +196,66 @@ fn scrub_rel_file_path(source: &str) -> Result<PathBuf> {
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use pretty_assertions::assert_eq;
-    #[test]
-    #[ignore]
-    fn id_check() {
-        let p = SourcePage::mock1_20240101_alfa1234_minimal();
-        let left = "20240101_alfa1234".to_string();
-        let right = p.id().unwrap();
-        assert_eq!(left, right);
-    }
 
-    #[test]
-    #[ignore]
-    fn rel_file_path_default() {
-        let p = SourcePage::mock1_20240101_alfa1234_minimal();
-        let left = PathBuf::from("en/20240101_alfa1234/index.html");
-        let right = p.rel_file_path().unwrap();
-        assert_eq!(left, right);
-    }
+    // use super::*;
+    // use pretty_assertions::assert_eq;
 
-    #[test]
-    #[ignore]
-    fn rel_file_path_for_home_page() {
-        let p = SourcePage::mock2_20240102_bravo123_home_page_path();
-        let left = PathBuf::from("index.html");
-        let right = p.rel_file_path().unwrap();
-        assert_eq!(left, right);
-    }
+    // DEPRECATED: remove when pagepayload is working
+    // #[test]
+    // #[ignore]
+    // fn id_check() {
+    //     let p = SourcePage::mock1_20240101_alfa1234_minimal();
+    //     let left = "20240101_alfa1234".to_string();
+    //     let right = p.id().unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    fn scrub_rel_file_path_home_page() {
-        let source = "/";
-        let left = PathBuf::from("index.html");
-        let right = scrub_rel_file_path(source).unwrap();
-        assert_eq!(left, right);
-    }
+    // DEPRECATED: remove when pagepayload is working
+    // #[test]
+    // #[ignore]
+    // fn rel_file_path_default() {
+    //     let p = SourcePage::mock1_20240101_alfa1234_minimal();
+    //     let left = PathBuf::from("en/20240101_alfa1234/index.html");
+    //     let right = p.rel_file_path().unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    fn scrub_rel_file_path_sub_paths() {
-        let source = "/some/path";
-        let left = PathBuf::from("some/path/index.html");
-        let right = scrub_rel_file_path(source).unwrap();
-        assert_eq!(left, right);
-    }
+    // DEPRECATED: remove when pagepayload is working
+    // #[test]
+    // #[ignore]
+    // fn rel_file_path_for_home_page() {
+    //     let p = SourcePage::mock2_20240102_bravo123_home_page_path();
+    //     let left = PathBuf::from("index.html");
+    //     let right = p.rel_file_path().unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    fn scrub_rel_file_path_dont_overwirte_file() {
-        let source = "a/path.txt";
-        let left = PathBuf::from("a/path.txt");
-        let right = scrub_rel_file_path(source).unwrap();
-        assert_eq!(left, right);
-    }
+    // DEPRECATED: remove when pagepayload is working
+    // #[test]
+    // fn scrub_rel_file_path_home_page() {
+    //     let source = "/";
+    //     let left = PathBuf::from("index.html");
+    //     let right = scrub_rel_file_path(source).unwrap();
+    //     assert_eq!(left, right);
+    // }
+
+    // DEPRECATED: remove when pagepayload is working
+    // #[test]
+    // fn scrub_rel_file_path_sub_paths() {
+    //     let source = "/some/path";
+    //     let left = PathBuf::from("some/path/index.html");
+    //     let right = scrub_rel_file_path(source).unwrap();
+    //     assert_eq!(left, right);
+    // }
+
+    // DEPRECATED: remove when pagepayload is working
+    // #[test]
+    // fn scrub_rel_file_path_dont_overwirte_file() {
+    //     let source = "a/path.txt";
+    //     let left = PathBuf::from("a/path.txt");
+    //     let right = scrub_rel_file_path(source).unwrap();
+    //     assert_eq!(left, right);
+    // }
 
     // DEPRECATED: remove when pagepayload is working
     // #[test]
@@ -259,30 +267,34 @@ mod test {
     //     assert_eq!(left, right);
     // }
 
-    #[test]
-    fn status_default() {
-        let p = SourcePage::mock1_20240101_alfa1234_minimal();
-        let left = "published".to_string();
-        let right = p.status().unwrap();
-        assert_eq!(left, right);
-    }
+    // DEPRECATED: remove when pagepayload is working
+    // #[test]
+    // fn status_default() {
+    //     let p = SourcePage::mock1_20240101_alfa1234_minimal();
+    //     let left = "published".to_string();
+    //     let right = p.status().unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    fn template_list_default() {
-        let p = SourcePage::mock1_20240101_alfa1234_minimal();
-        let left = vec!["pages/post/published.neoj".to_string()];
-        let right = p.template_list();
-        assert_eq!(left, right);
-    }
+    // DEPRECATED: remove when pagepayload is working
+    // #[test]
+    // fn template_list_default() {
+    //     let p = SourcePage::mock1_20240101_alfa1234_minimal();
+    //     let left = vec!["pages/post/published.neoj".to_string()];
+    //     let right = p.template_list();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    fn type_default() {
-        let p = SourcePage::mock1_20240101_alfa1234_minimal();
-        let left = "post".to_string();
-        let right = p.r#type().unwrap();
-        assert_eq!(left, right);
-    }
+    // DEPRECATED: remove when pagepayload is working
+    // #[test]
+    // fn type_default() {
+    //     let p = SourcePage::mock1_20240101_alfa1234_minimal();
+    //     let left = "post".to_string();
+    //     let right = p.r#type().unwrap();
+    //     assert_eq!(left, right);
+    // }
 
+    // DEPRECATED: remove when pagepayload is working
     // TODO: Convert to BTreeMap
     // #[test]
     // fn update_attrs() {

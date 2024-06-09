@@ -1,3 +1,5 @@
+use crate::payload_span::PayloadSpan;
+use crate::span::*;
 use minijinja::Value;
 use regex::Regex;
 use std::fs;
@@ -18,6 +20,46 @@ pub fn empty_dir(dir: &PathBuf) -> std::io::Result<()> {
         }
     }
     Ok(())
+}
+
+pub fn flatten_payload_spans(spans: &Vec<PayloadSpan>) -> String {
+    spans
+        .iter()
+        .map(|span| flatten_payload_parsed_text(span))
+        .collect::<Vec<String>>()
+        .join("")
+}
+
+pub fn flatten_payload_parsed_text(span: &PayloadSpan) -> String {
+    span.parsed_text.clone()
+
+    // match &span.kind {
+    //     SpanKind::NamedSpan { spans, .. } => spans
+    //         .iter()
+    //         .map(|span| flatten_parsed_text(span))
+    //         .collect::<Vec<String>>()
+    //         .join(""),
+    //     _ => span.parsed_text.clone(),
+    // }
+}
+
+pub fn flatten_spans(spans: &Vec<Span>) -> String {
+    spans
+        .iter()
+        .map(|span| flatten_parsed_text(span))
+        .collect::<Vec<String>>()
+        .join("")
+}
+
+pub fn flatten_parsed_text(span: &Span) -> String {
+    match &span.kind {
+        SpanKind::NamedSpan { spans, .. } => spans
+            .iter()
+            .map(|span| flatten_parsed_text(span))
+            .collect::<Vec<String>>()
+            .join(""),
+        _ => span.parsed_text.clone(),
+    }
 }
 
 pub fn format_html_for_theme_test_display(code: &str) -> String {

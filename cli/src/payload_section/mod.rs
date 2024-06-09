@@ -1,3 +1,4 @@
+use crate::helpers::*;
 use crate::span::{Span, SpanKind};
 use minijinja::Value;
 use serde::{Deserialize, Serialize};
@@ -55,11 +56,11 @@ impl PayloadSection {
                             spans.iter().for_each(|span| {
                                 new_attrs.push(PayloadSpan::new_from_span(span, config))
                             });
-                            attrs.insert("alt".to_string(), new_attrs);
+                            attrs.insert(key.clone(), new_attrs);
                         }
                         None => {
                             attrs.insert(
-                                "alt".to_string(),
+                                key.clone(),
                                 spans
                                     .iter()
                                     .map(|span| PayloadSpan::new_from_span(span, config))
@@ -277,25 +278,6 @@ impl PayloadSection {
             template_list,
             updated,
         }
-    }
-}
-
-fn flatten_spans(spans: &Vec<Span>) -> String {
-    spans
-        .iter()
-        .map(|span| flatten_parsed_text(span))
-        .collect::<Vec<String>>()
-        .join("")
-}
-
-fn flatten_parsed_text(span: &Span) -> String {
-    match &span.kind {
-        SpanKind::NamedSpan { spans, .. } => spans
-            .iter()
-            .map(|span| flatten_parsed_text(span))
-            .collect::<Vec<String>>()
-            .join(""),
-        _ => span.parsed_text.clone(),
     }
 }
 
@@ -620,15 +602,14 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // #[ignore]
-    // fn type_of_section() {
-    //     let config = SiteConfig::mock1_basic();
-    //     let section = Section::mock1_basic_title_section_no_attrs();
-    //     let left = "title".to_string();
-    //     let right = PayloadSection::new_from_section(&section, &config).r#type;
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn type_of_section() {
+        let config = SiteConfig::mock1_basic();
+        let section = Section::mock1_basic_title_section_no_attrs();
+        let left = "title".to_string();
+        let right = PayloadSection::new_from_section(&section, &config).r#type;
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // #[ignore]

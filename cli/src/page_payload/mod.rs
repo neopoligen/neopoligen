@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
 use crate::{
+    helpers::{flatten_payload_spans, flatten_spans},
     neo_error::{NeoError, NeoErrorKind},
     payload_section::PayloadSection,
     payload_span::PayloadSpan,
@@ -49,7 +50,7 @@ impl PagePayload {
         };
 
         p.get_id();
-        // p.get_type();
+        p.get_type();
 
         match p.id {
             Some(_) => Ok(p),
@@ -99,7 +100,21 @@ impl PagePayload {
     }
 
     pub fn get_type(&mut self) {
-        self.r#type = Some("post".to_string())
+        self.sections.iter().for_each(|section| {
+            if section.r#type == "metadata" {
+                section
+                    .attrs
+                    .as_ref()
+                    .unwrap()
+                    .iter()
+                    .for_each(|(key, spans)| {
+                        if key.eq("type") {
+                            self.r#type = Some(flatten_payload_spans(&spans.clone()));
+                        }
+                    });
+                // self.id = section.id.clone()
+            }
+        });
     }
 }
 
@@ -129,6 +144,18 @@ mod test {
         )
         .unwrap();
         let left = "post".to_string();
+        let right = p.r#type.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_type_custom_check() {
+        let p = PagePayload::new_from_source_page(
+            &PathBuf::from("/test/mocks/source/filename.neo"),
+            &SourcePage::mock4_20240104_delta123_type_and_status(),
+        )
+        .unwrap();
+        let left = "custom-type".to_string();
         let right = p.r#type.unwrap();
         assert_eq!(left, right);
     }

@@ -45,6 +45,8 @@ rest of the attrs so you don't have to filter them out.
 "id", don't. They are pulled out into strings directly. 
 
 
+[] "title" show up as their own things in sections
+instead of being included in the attributes. 
 
 -- metadata
 -- updated: 2024-06-03T18:27:52-04:00

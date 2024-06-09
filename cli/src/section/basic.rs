@@ -149,7 +149,7 @@ mod test {
         true
     )]
 
-    fn solo_basic_fixture(
+    fn basic_fixture(
         #[case] _description: &str,
         #[case] source: &str,
         #[case] remainder: &str,
