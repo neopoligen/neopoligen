@@ -154,13 +154,7 @@ impl PayloadSection {
         let id = section.attrs.iter().find_map(|attr| match &attr.kind {
             SectionAttrKind::KeyValueSpans { key, spans } => {
                 if key.as_str() == "id" {
-                    Some(
-                        spans
-                            .iter()
-                            .map(|span| span.parsed_text.to_string())
-                            .collect::<Vec<String>>()
-                            .join(""),
-                    )
+                    Some(flatten_spans(spans))
                 } else {
                     None
                 }
@@ -286,9 +280,21 @@ impl PayloadSection {
     }
 }
 
+fn flatten_spans(spans: &Vec<Span>) -> String {
+    spans
+        .iter()
+        .map(|span| flatten_parsed_text(span))
+        .collect::<Vec<String>>()
+        .join("")
+}
+
 fn flatten_parsed_text(span: &Span) -> String {
     match &span.kind {
-        SpanKind::NamedSpan { spans, .. } => "some text".to_string(),
+        SpanKind::NamedSpan { spans, .. } => spans
+            .iter()
+            .map(|span| flatten_parsed_text(span))
+            .collect::<Vec<String>>()
+            .join(""),
         _ => span.parsed_text.clone(),
     }
 }
@@ -307,6 +313,27 @@ mod test {
             kind: SpanKind::WordPart,
         };
         let left = "some text".to_string();
+        let right = flatten_parsed_text(&span);
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn flatten_parsed_text_from_named_span() {
+        let span = Span {
+            attrs: vec![],
+            parsed_text: "".to_string(),
+            source_text: "DEPRECATED".to_string(),
+            kind: SpanKind::NamedSpan {
+                spans: vec![Span {
+                    attrs: vec![],
+                    kind: SpanKind::WordPart,
+                    parsed_text: "alfa".to_string(),
+                    source_text: "DEPRECATED".to_string(),
+                }],
+                r#type: "em".to_string(),
+            },
+        };
+        let left = "alfa".to_string();
         let right = flatten_parsed_text(&span);
         assert_eq!(left, right);
     }
