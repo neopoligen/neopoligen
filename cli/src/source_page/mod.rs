@@ -156,20 +156,20 @@ impl SourcePage {
         }
     }
 
-    // DEPRECATED: TODO: Move into PagePayload
-    pub fn sections(&self) -> Vec<PayloadSection> {
-        let sections = self
-            .ast
-            .as_ref()
-            .unwrap()
-            .iter()
-            .map(|section| {
-                let p = PayloadSection::new_from_section(&section, &self.config.as_ref().unwrap());
-                p
-            })
-            .collect::<Vec<PayloadSection>>();
-        sections
-    }
+    // // DEPRECATED: TODO: Move into PagePayload
+    // pub fn sections(&self) -> Vec<PayloadSection> {
+    //     let sections = self
+    //         .ast
+    //         .as_ref()
+    //         .unwrap()
+    //         .iter()
+    //         .map(|section| {
+    //             let p = PayloadSection::new_from_section(&section, &self.config.as_ref().unwrap());
+    //             p
+    //         })
+    //         .collect::<Vec<PayloadSection>>();
+    //     sections
+    // }
 
     // DEPRECATED: TODO: Move into PagePayload
     pub fn status(&self) -> Option<String> {
@@ -249,14 +249,15 @@ mod test {
         assert_eq!(left, right);
     }
 
-    #[test]
-    #[ignore]
-    fn sections_basic() {
-        let p = SourcePage::mock1_20240101_alfa1234_minimal();
-        let left = 2;
-        let right = p.sections().len();
-        assert_eq!(left, right);
-    }
+    // DEPRECATED: remove when pagepayload is working
+    // #[test]
+    // #[ignore]
+    // fn sections_basic() {
+    //     let p = SourcePage::mock1_20240101_alfa1234_minimal();
+    //     let left = 2;
+    //     let right = p.sections().len();
+    //     assert_eq!(left, right);
+    // }
 
     #[test]
     fn status_default() {

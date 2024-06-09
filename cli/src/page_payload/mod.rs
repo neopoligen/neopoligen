@@ -38,7 +38,7 @@ impl PagePayload {
             .collect::<Vec<PayloadSection>>();
         let mut p = PagePayload {
             id: None,
-            r#type: None,
+            r#type: Some("post".to_string()),
             rel_file_path: None,
             sections,
             source_path: Some(source_path.clone()),
@@ -49,6 +49,7 @@ impl PagePayload {
         };
 
         p.get_id();
+        // p.get_type();
 
         match p.id {
             Some(_) => Ok(p),
@@ -96,6 +97,10 @@ impl PagePayload {
             }
         });
     }
+
+    pub fn get_type(&mut self) {
+        self.r#type = Some("post".to_string())
+    }
 }
 
 #[cfg(test)]
@@ -117,26 +122,40 @@ mod test {
     }
 
     #[test]
-    #[ignore]
-    fn add_page_tags_to_sections() {
-        // TODO
+    fn type_default_check() {
+        let p = PagePayload::new_from_source_page(
+            &PathBuf::from("/test/mocks/source/filename.neo"),
+            &SourcePage::mock1_20240101_alfa1234_minimal(),
+        )
+        .unwrap();
+        let left = "post".to_string();
+        let right = p.r#type.unwrap();
+        assert_eq!(left, right);
     }
 
-    #[test]
-    #[ignore]
-    fn add_section_tags_to_page() {
-        // TODO
-    }
+    // #[test]
+    // #[ignore]
+    // fn add_page_tags_to_sections() {
+    //     // TODO
+    // }
 
-    #[test]
-    #[ignore]
-    fn add_page_created_and_updated_to_sections() {
-        // TODO
-    }
+    // #[test]
+    // #[ignore]
+    // fn add_section_tags_to_page() {
+    //     // TODO
+    // }
 
-    #[test]
-    #[ignore]
-    fn add_page_status_to_sections() {
-        // TODO
-    }
+    // #[test]
+    // #[ignore]
+    // fn add_page_created_and_updated_to_sections() {
+    //     // TODO
+    // }
+
+    // #[test]
+    // #[ignore]
+    // fn add_page_status_to_sections() {
+    //     // TODO
+    // }
+
+    //
 }
