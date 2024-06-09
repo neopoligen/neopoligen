@@ -33,26 +33,33 @@ pub struct PayloadSection {
 
 impl PayloadSection {
     pub fn new_from_section(section: &Section, config: &SiteConfig) -> PayloadSection {
-        let attrs = BTreeMap::new();
+        let mut attrs = BTreeMap::new();
 
-        // section.attrs.iter().for_each(|attr| match &attr.kind {
-        //     SectionAttrKind::KeyValue { key, value } => {
-        //         if key.as_str() != "class"
-        //             && key.as_str() != "created"
-        //             && key.as_str() != "data"
-        //             && key.as_str() != "id"
-        //             && key.as_str() != "status"
-        //             && key.as_str() != "subtitle"
-        //             && key.as_str() != "tag"
-        //             && key.as_str() != "template"
-        //             && key.as_str() != "title"
-        //             && key.as_str() != "updated"
-        //         {
-        //             attrs.insert(key.clone(), value.clone());
-        //         }
-        //     }
-        //     _ => (),
-        // });
+        section.attrs.iter().for_each(|attr| match &attr.kind {
+            SectionAttrKind::KeyValueSpans { key, spans } => {
+                if key.as_str() != "class"
+                    && key.as_str() != "created"
+                    && key.as_str() != "data"
+                    && key.as_str() != "id"
+                    && key.as_str() != "status"
+                    && key.as_str() != "subtitle"
+                    && key.as_str() != "tag"
+                    && key.as_str() != "template"
+                    && key.as_str() != "title"
+                    && key.as_str() != "updated"
+                {
+                    //    attrs.insert(key.clone(), value.clone());
+                    attrs.insert(
+                        "alt".to_string(),
+                        spans
+                            .iter()
+                            .map(|span| PayloadSpan::new_from_span(span, config))
+                            .collect(),
+                    );
+                }
+            }
+            _ => (),
+        });
 
         let bounds = match section.bounds {
             SectionBounds::End => "end".to_string(),
@@ -267,26 +274,37 @@ mod test {
     use super::*;
     use pretty_assertions::assert_eq;
 
-    // #[test]
-    // fn attrs_check() {
-    //     let ps = PayloadSection::new_from_section(
-    //         &Section::mock3_image_with_flag_and_multiple_attrs_with_same_key(),
-    //         &SiteConfig::mock1_basic(),
-    //     );
-    //     let left = vec![PayloadSpan {
-    //         aria: None,
-    //         aria_unescaped: None,
-    //         attr_string: None,
-    //         attrs: vec![],
-    //         attrs_unescaped: vec![],
-    //         classes: vec![],
-    //         classes_unescaped: vec![],
-    //         custom_attrs: vec![],
-    //         custom_attrs_unescaped: vec![],
-    //     }];
-    //     let right = ps.attrs.get("alt").unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn attrs_check() {
+        let ps = PayloadSection::new_from_section(
+            &Section::mock3_image_with_flag_and_multiple_attrs_with_same_key(),
+            &SiteConfig::mock1_basic(),
+        );
+        let left = &vec![PayloadSpan {
+            aria: None,
+            aria_unescaped: None,
+            attr_string: None,
+            attrs: None,
+            attrs_unescaped: None,
+            classes: None,
+            classes_unescaped: None,
+            custom_attrs: None,
+            custom_attrs_unescaped: None,
+            data: None,
+            data_unescaped: None,
+            first_flag: None,
+            first_flag_unescaped: None,
+            flags: None,
+            flags_unescaped: None,
+            id: None,
+            id_unescaped: None,
+            kind: "wordpart".to_string(),
+            parsed_text: "asdf".to_string(),
+            template_list: vec![],
+        }];
+        let right = ps.attrs.as_ref().unwrap().get("alt").unwrap();
+        assert_eq!(left, right);
+    }
 
     #[test]
     #[ignore]

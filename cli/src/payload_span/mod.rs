@@ -48,14 +48,14 @@ pub struct PayloadSpan {
     ///
     /// TODO: Figure out if other HTML elements should be
     /// escaped
-    pub attrs: BTreeMap<String, String>,
+    pub attrs: Option<BTreeMap<String, String>>,
 
     ///
     /// IN_PROGRESS: attrs_unescaped
     ///
     /// Same as ``attrs`` above, but the HTML characters are
     /// not escaped
-    pub attrs_unescaped: BTreeMap<String, String>,
+    pub attrs_unescaped: Option<BTreeMap<String, String>>,
 
     ///
     /// NEEDS_DOCS: classes
@@ -97,11 +97,11 @@ pub struct PayloadSpan {
     /// IN_PROGRESS: flags
     ///
     /// TODO: Add escaping
-    pub flags: Vec<String>,
+    pub flags: Option<Vec<String>>,
 
     ///
     /// TODO: flats_unescaped
-    pub flags_unescaped: Vec<String>,
+    pub flags_unescaped: Option<Vec<String>>,
 
     ///
     /// NEEDS_DOCS: id
@@ -117,10 +117,6 @@ pub struct PayloadSpan {
     ///
     /// NEEDS_DOCS: parsed_text
     pub parsed_text: String,
-
-    ///
-    /// NEEDS_DOCS: source_text
-    pub source_text: String,
 
     ///
     /// NEEDS_DOCS: template_list
@@ -300,8 +296,12 @@ impl PayloadSpan {
                 Some(aria_unescaped)
             },
             attr_string: None,
-            attrs,
-            attrs_unescaped,
+            attrs: if attrs.len() == 0 { None } else { Some(attrs) },
+            attrs_unescaped: if attrs_unescaped.len() == 0 {
+                None
+            } else {
+                Some(attrs_unescaped)
+            },
             classes: PayloadSpan::get_classes(&span),
             classes_unescaped: PayloadSpan::get_classes_unescaped(&span),
             custom_attrs: if custom_attrs.len() == 0 {
@@ -322,13 +322,16 @@ impl PayloadSpan {
             },
             first_flag,
             first_flag_unescaped,
-            flags,
-            flags_unescaped,
+            flags: if flags.len() == 0 { None } else { Some(flags) },
+            flags_unescaped: if flags_unescaped.len() == 0 {
+                None
+            } else {
+                Some(flags_unescaped)
+            },
             id,
             id_unescaped,
             kind: kind.clone(),
             parsed_text: span.parsed_text.clone().to_string(),
-            source_text: span.source_text.clone().to_string(),
             template_list: vec![
                 format!("spans/{}.neoj", kind.clone()),
                 format!("spans/generic.neoj"),

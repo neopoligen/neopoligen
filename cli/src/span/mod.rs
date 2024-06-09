@@ -58,6 +58,8 @@ pub struct Span {
     pub attrs: Vec<SpanAttr>,
     pub kind: SpanKind,
     pub parsed_text: String,
+    // DEPRECATED: Don't use source_text. Remove it when
+    // you have the time to go through all the tests
     pub source_text: String,
 }
 
