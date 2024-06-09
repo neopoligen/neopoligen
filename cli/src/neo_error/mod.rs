@@ -32,6 +32,7 @@ pub enum NeoErrorKind {
         path: PathBuf,
     },
     ParserError {
+        source_path: Option<PathBuf>,
         line: usize,
         column: usize,
         remainder: String,

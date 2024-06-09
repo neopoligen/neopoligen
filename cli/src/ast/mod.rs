@@ -35,6 +35,7 @@ fn get_error(content: &str, tree: &ErrorTree<&str>) -> NeoError {
 
             NeoError {
                 kind: NeoErrorKind::ParserError {
+                    source_path: None,
                     line: details.line,
                     column: details.column,
                     source: content.to_string(),
@@ -51,6 +52,7 @@ fn get_error(content: &str, tree: &ErrorTree<&str>) -> NeoError {
 
             NeoError {
                 kind: NeoErrorKind::ParserError {
+                    source_path: None,
                     line: details.line,
                     column: details.column,
                     source: content.to_string(),

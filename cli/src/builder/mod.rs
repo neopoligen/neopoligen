@@ -92,10 +92,31 @@ impl Builder {
     #[instrument(skip(self))]
     pub fn generate_missing_asts(&mut self) {
         event!(Level::INFO, "Generating Missing ASTs");
-        self.source_pages.iter_mut().for_each(|(_, page)| {
+        self.source_pages.iter_mut().for_each(|(sp, page)| {
             if let None = page.ast {
                 if let Err(e) = page.generate_ast() {
-                    self.errors.push(e);
+                    self.errors.push(match e.kind {
+                        NeoErrorKind::ParserError {
+                            line,
+                            column,
+                            remainder,
+                            source,
+                            message,
+                            ..
+                        } => NeoError {
+                            kind: NeoErrorKind::ParserError {
+                                source_path: Some(sp.clone()),
+                                line,
+                                column,
+                                remainder,
+                                source,
+                                message,
+                            },
+                        },
+                        _ => e,
+                    })
+                    // e.source_path = PathBuf::from("asdf");
+                    //self.errors.push(e);
                 }
             }
         })
@@ -559,6 +580,9 @@ body { background-color: #111; color: #aaa; }
 <ul>
 [! for error in errors !]
 <li>
+[! if error.kind.source_path !]<h4>Path: [@ error.kind.source_path @]</h4>[! endif !]
+
+
 [! if error.kind.type == "themetesterror" !]
     <h2>Theme Test Error</h2>
     <h3>Expected</h3>
