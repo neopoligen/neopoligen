@@ -11,6 +11,10 @@ use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
 
+use self::colon::colon;
+use self::escaped_pipe::escaped_pipe;
+use self::hyphen::hyphen;
+use self::pipe::pipe;
 use self::wordpart::wordpart;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -45,7 +49,9 @@ pub fn section_key_value_attr<'a>(
     let (source, _) = tag(":").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
     // TODO: Add all the different span types that are allowed here
-    let (source, spans) = many1(alt((wordpart, space))).context("").parse(source)?;
+    let (source, spans) = many1(alt((wordpart, space, hyphen, colon, escaped_pipe, pipe)))
+        .context("")
+        .parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
         .parse(source)?;
@@ -104,6 +110,23 @@ pub fn section_flag_attr<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, E
 mod test {
     use super::*;
     use pretty_assertions::assert_eq;
+    use rstest::rstest;
+    #[rstest]
+    // TODO: Add all the rest of the possible options here
+    #[case("basic key value test", "-- key: value", true)]
+    #[case("colon and hyphen", "-- created: 2024-06-09T14:28:09-04:00", true)]
+    #[case("pipe", "-- key: some | thing", true)]
+    #[case("escaped pipe", "-- key: some \\| thing", true)]
+    fn section_attr_basci_fixture(
+        #[case] _description: &str,
+        #[case] source: &str,
+        #[case] should_pass: bool,
+    ) {
+        if should_pass {
+            assert_eq!("", section_attr(source).unwrap().0);
+        }
+    }
+
     #[test]
     fn key_value_spans_basic() {
         let source = "-- key: value";

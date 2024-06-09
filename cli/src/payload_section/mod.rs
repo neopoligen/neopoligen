@@ -1,3 +1,4 @@
+use crate::span::{Span, SpanKind};
 use minijinja::Value;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -42,7 +43,6 @@ impl PayloadSection {
                     && key.as_str() != "data"
                     && key.as_str() != "id"
                     && key.as_str() != "status"
-                    && key.as_str() != "subtitle"
                     && key.as_str() != "tag"
                     && key.as_str() != "template"
                     && key.as_str() != "title"
@@ -152,9 +152,15 @@ impl PayloadSection {
             .collect::<Vec<String>>();
 
         let id = section.attrs.iter().find_map(|attr| match &attr.kind {
-            SectionAttrKind::KeyValue { key, value } => {
+            SectionAttrKind::KeyValueSpans { key, spans } => {
                 if key.as_str() == "id" {
-                    Some(value.clone())
+                    Some(
+                        spans
+                            .iter()
+                            .map(|span| span.parsed_text.to_string())
+                            .collect::<Vec<String>>()
+                            .join(""),
+                    )
                 } else {
                     None
                 }
@@ -280,13 +286,33 @@ impl PayloadSection {
     }
 }
 
+fn flatten_parsed_text(span: &Span) -> String {
+    match &span.kind {
+        SpanKind::NamedSpan { spans, .. } => "some text".to_string(),
+        _ => span.parsed_text.clone(),
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn attrs_check() {
+    fn flatten_parsed_text_basic() {
+        let span = Span {
+            attrs: vec![],
+            parsed_text: "some text".to_string(),
+            source_text: "some text".to_string(),
+            kind: SpanKind::WordPart,
+        };
+        let left = "some text".to_string();
+        let right = flatten_parsed_text(&span);
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn attrs_basic_check() {
         let ps = PayloadSection::new_from_section(
             &Section::mock3_image_with_flag_and_multiple_attrs_with_same_key(),
             &SiteConfig::mock1_basic(),
@@ -372,29 +398,29 @@ mod test {
         assert_eq!(left, right);
     }
 
-    #[test]
-    #[ignore]
-    fn todo_check_template_is_not_in_attrs() {
-        // TODO
-    }
+    // #[test]
+    // #[ignore]
+    // fn todo_check_template_is_not_in_attrs() {
+    //     // TODO
+    // }
 
-    #[test]
-    #[ignore]
-    fn todo_check_data_from_json() {
-        // TODO
-    }
+    // #[test]
+    // #[ignore]
+    // fn todo_check_data_from_json() {
+    //     // TODO
+    // }
 
-    #[test]
-    #[ignore]
-    fn todo_check_data_from_yaml() {
-        // TODO
-    }
+    // #[test]
+    // #[ignore]
+    // fn todo_check_data_from_yaml() {
+    //     // TODO
+    // }
 
-    #[test]
-    #[ignore]
-    fn todo_check_text_from_raw_section() {
-        // TODO
-    }
+    // #[test]
+    // #[ignore]
+    // fn todo_check_text_from_raw_section() {
+    //     // TODO
+    // }
 
     #[test]
     fn bounds_check() {
@@ -431,17 +457,17 @@ mod test {
     //     assert_eq!(left, right);
     // }
 
-    #[test]
-    #[ignore]
-    fn created_check() {
-        let config = SiteConfig::mock1_basic();
-        let section = Section::mock6_div_with_created_and_updated_and_status();
-        let left = "2024-01-01T00:00:00-04:00";
-        let right = &PayloadSection::new_from_section(&section, &config)
-            .created
-            .unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn created_check() {
+    //     let config = SiteConfig::mock1_basic();
+    //     let section = Section::mock6_div_with_created_and_updated_and_status();
+    //     let left = "2024-01-01T00:00:00-04:00";
+    //     let right = &PayloadSection::new_from_section(&section, &config)
+    //         .created
+    //         .unwrap();
+    //     assert_eq!(left, right);
+    // }
 
     // #[test]
     // fn created_dont_show_up_in_attrs() {
@@ -467,8 +493,7 @@ mod test {
     // }
 
     #[test]
-    #[ignore]
-    fn id_check() {
+    fn id_basic_check() {
         let config = SiteConfig::mock1_basic();
         let payload_section =
             PayloadSection::new_from_section(&Section::mock5_div_with_id(), &config);
@@ -477,35 +502,35 @@ mod test {
         assert_eq!(left, right);
     }
 
-    #[test]
-    #[ignore]
-    fn section_template_list_from_attr() {
-        let config = SiteConfig::mock1_basic();
-        let payload_section = PayloadSection::new_from_section(
-            &Section::mock2_div_with_title_and_template_attrs(),
-            &config,
-        );
-        let left = vec![
-            "sections/basic/div/full/template-from-attr.neoj".to_string(),
-            "sections/basic/div/full/default.neoj".to_string(),
-            "sections/basic/_generic/full/default.neoj".to_string(),
-            "sections/unknown/_generic/full/default.neoj".to_string(),
-        ];
-        let right = payload_section.template_list;
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn section_template_list_from_attr() {
+    //     let config = SiteConfig::mock1_basic();
+    //     let payload_section = PayloadSection::new_from_section(
+    //         &Section::mock2_div_with_title_and_template_attrs(),
+    //         &config,
+    //     );
+    //     let left = vec![
+    //         "sections/basic/div/full/template-from-attr.neoj".to_string(),
+    //         "sections/basic/div/full/default.neoj".to_string(),
+    //         "sections/basic/_generic/full/default.neoj".to_string(),
+    //         "sections/unknown/_generic/full/default.neoj".to_string(),
+    //     ];
+    //     let right = payload_section.template_list;
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn status_check() {
-        let config = SiteConfig::mock1_basic();
-        let section = Section::mock6_div_with_created_and_updated_and_status();
-        let left = "section-status-example";
-        let right = &PayloadSection::new_from_section(&section, &config)
-            .status
-            .unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn status_check() {
+    //     let config = SiteConfig::mock1_basic();
+    //     let section = Section::mock6_div_with_created_and_updated_and_status();
+    //     let left = "section-status-example";
+    //     let right = &PayloadSection::new_from_section(&section, &config)
+    //         .status
+    //         .unwrap();
+    //     assert_eq!(left, right);
+    // }
 
     // #[test]
     // fn status_does_not_show_up_in_attrs() {
@@ -517,17 +542,17 @@ mod test {
     //     assert_eq!(left, right);
     // }
 
-    #[test]
-    #[ignore]
-    fn subtitle_basic_check() {
-        let ps = PayloadSection::new_from_section(
-            &Section::mock7_div_with_title_and_subtitle(),
-            &SiteConfig::mock1_basic(),
-        );
-        let left: Vec<PayloadSpan> = vec![];
-        let right = ps.subtitle.unwrap();
-        assert_eq!(left, right)
-    }
+    // #[test]
+    // #[ignore]
+    // fn subtitle_basic_check() {
+    //     let ps = PayloadSection::new_from_section(
+    //         &Section::mock7_div_with_title_and_subtitle(),
+    //         &SiteConfig::mock1_basic(),
+    //     );
+    //     let left: Vec<PayloadSpan> = vec![];
+    //     let right = ps.subtitle.unwrap();
+    //     assert_eq!(left, right)
+    // }
 
     // #[test]
     // #[ignore]
@@ -568,27 +593,27 @@ mod test {
         assert_eq!(left, right);
     }
 
-    #[test]
-    #[ignore]
-    fn type_of_seciton() {
-        let config = SiteConfig::mock1_basic();
-        let section = Section::mock1_basic_title_section_no_attrs();
-        let left = "title".to_string();
-        let right = PayloadSection::new_from_section(&section, &config).r#type;
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn type_of_section() {
+    //     let config = SiteConfig::mock1_basic();
+    //     let section = Section::mock1_basic_title_section_no_attrs();
+    //     let left = "title".to_string();
+    //     let right = PayloadSection::new_from_section(&section, &config).r#type;
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn updated_check() {
-        let config = SiteConfig::mock1_basic();
-        let section = Section::mock6_div_with_created_and_updated_and_status();
-        let left = "2024-01-02T00:00:00-04:00";
-        let right = &PayloadSection::new_from_section(&section, &config)
-            .updated
-            .unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn updated_check() {
+    //     let config = SiteConfig::mock1_basic();
+    //     let section = Section::mock6_div_with_created_and_updated_and_status();
+    //     let left = "2024-01-02T00:00:00-04:00";
+    //     let right = &PayloadSection::new_from_section(&section, &config)
+    //         .updated
+    //         .unwrap();
+    //     assert_eq!(left, right);
+    // }
 
     // #[test]
     // fn updated_dont_show_up_in_attrs() {

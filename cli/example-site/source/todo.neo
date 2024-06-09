@@ -38,6 +38,14 @@ rest of the attrs so you don't have to filter them out.
 [] _generic for the sections
 
 
+-- todo 
+-- title: Documentation Notes
+
+[] Note that general attrs have spans, but things like
+"id", don't. They are pulled out into strings directly. 
+
+
+
 -- metadata
 -- updated: 2024-06-03T18:27:52-04:00
 -- id: 2ho8hakd
