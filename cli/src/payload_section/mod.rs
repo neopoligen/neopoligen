@@ -60,6 +60,43 @@ impl PayloadSection {
             SectionBounds::Start => "start".to_string(),
         };
 
+        let children = match &section.kind {
+            SectionKind::Basic { children } => children
+                .iter()
+                .map(|child| PayloadSection::new_from_section(child, config))
+                .collect(),
+            SectionKind::Block { .. } => vec![],
+            SectionKind::Checklist { children } => children
+                .iter()
+                .map(|child| PayloadSection::new_from_section(child, config))
+                .collect(),
+            SectionKind::ChecklistItem { children } => children
+                .iter()
+                .map(|child| PayloadSection::new_from_section(child, config))
+                .collect(),
+            SectionKind::List { children } => children
+                .iter()
+                .map(|child| PayloadSection::new_from_section(child, config))
+                .collect(),
+            SectionKind::Json { children, .. } => children
+                .iter()
+                .map(|child| PayloadSection::new_from_section(child, config))
+                .collect(),
+            SectionKind::ListItem { children } => children
+                .iter()
+                .map(|child| PayloadSection::new_from_section(child, config))
+                .collect(),
+            SectionKind::Raw { children, .. } => children
+                .iter()
+                .map(|child| PayloadSection::new_from_section(child, config))
+                .collect(),
+            SectionKind::Unknown { children } => children
+                .iter()
+                .map(|child| PayloadSection::new_from_section(child, config))
+                .collect(),
+            SectionKind::Yaml { .. } => vec![],
+        };
+
         let classes = section
             .attrs
             .iter()
@@ -154,43 +191,6 @@ impl PayloadSection {
             bounds
         ));
         template_list.push(format!("sections/unknown/_generic/{}/default.neoj", bounds));
-
-        let children = match &section.kind {
-            SectionKind::Basic { children } => children
-                .iter()
-                .map(|child| PayloadSection::new_from_section(child, config))
-                .collect(),
-            SectionKind::Block { .. } => vec![],
-            SectionKind::Checklist { children } => children
-                .iter()
-                .map(|child| PayloadSection::new_from_section(child, config))
-                .collect(),
-            SectionKind::ChecklistItem { children } => children
-                .iter()
-                .map(|child| PayloadSection::new_from_section(child, config))
-                .collect(),
-            SectionKind::List { children } => children
-                .iter()
-                .map(|child| PayloadSection::new_from_section(child, config))
-                .collect(),
-            SectionKind::Json { children, .. } => children
-                .iter()
-                .map(|child| PayloadSection::new_from_section(child, config))
-                .collect(),
-            SectionKind::ListItem { children } => children
-                .iter()
-                .map(|child| PayloadSection::new_from_section(child, config))
-                .collect(),
-            SectionKind::Raw { children, .. } => children
-                .iter()
-                .map(|child| PayloadSection::new_from_section(child, config))
-                .collect(),
-            SectionKind::Unknown { children } => children
-                .iter()
-                .map(|child| PayloadSection::new_from_section(child, config))
-                .collect(),
-            SectionKind::Yaml { .. } => vec![],
-        };
 
         let tags = section
             .attrs
