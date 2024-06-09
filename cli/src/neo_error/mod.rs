@@ -1,4 +1,4 @@
-use crate::section::Section;
+use crate::{payload_section::PayloadSection, section::Section};
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
@@ -39,9 +39,9 @@ pub enum NeoErrorKind {
         message: String,
     },
     ThemeTestError {
-        ast: Vec<Section>,
         expected: String,
         got: String,
+        sections: Vec<PayloadSection>,
         source_path: PathBuf,
     },
 }

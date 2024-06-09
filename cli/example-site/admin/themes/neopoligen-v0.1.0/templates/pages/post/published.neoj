@@ -12,12 +12,14 @@ body {
 </head>
 <body>
 
-<div>
+<header></header>
+<main>
 [! for section in page.sections !]
 [@ theme.output_section("", "", section) @]
 [! endfor !]
-</div>
+</main>
 
+<footer></footer>
 
 <h3>Page</h3>
 <div>

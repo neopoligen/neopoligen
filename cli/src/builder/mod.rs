@@ -510,9 +510,9 @@ impl Builder {
                                 if got_compare != expected_compare {
                                     self.errors.push(NeoError {
                                         kind: NeoErrorKind::ThemeTestError {
-                                            ast: page.ast.as_ref().unwrap().clone(),
                                             expected: expected.to_string(),
                                             got: got.to_string(),
+                                            sections: page.sections.clone(),
                                             source_path: PathBuf::from(""),
                                         },
                                     })
@@ -571,7 +571,7 @@ body { background-color: #111; color: #aaa; }
     </pre>
     <h3>Sections</h3>
     <pre>
-    [@ error.kind.ast|tojson(true)@]
+    [@ error.kind.sections|tojson(true)@]
     </pre>
 [! else !]
     <h2>[@ error.type @]</h2>

@@ -1,0 +1,29 @@
+-- start-theme-test
+
+-- title
+-- subtitle: This is a subtitle
+
+Hello World
+
+The quick brown fox
+
+-- expected-output/
+
+<hgroup>
+<h1>Hello World</h1>
+<div class="subtitle">This is a subtitle</div>
+</hgroup>
+
+<p>The quick brown fox</p>
+
+-- /expected-output
+
+
+
+-- metadata
+-- created: 2024-06-08T17:23:00-04:00
+-- updated: 2024-06-08T17:23:00-04:00
+-- id: 2hc80gyt
+-- type: post
+-- status: draft
+

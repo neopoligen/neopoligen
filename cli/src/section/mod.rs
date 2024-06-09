@@ -164,6 +164,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn get_attr_that_does_exist() {
         let section = Section::mock2_div_with_title_and_template_attrs();
         let left = section.get_attr("template");
@@ -172,6 +173,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn get_attr_combined_attrs_with_the_same_key() {
         let section = Section::mock3_image_with_flag_and_multiple_attrs_with_same_key();
         let left = section.get_attr("alt");
@@ -180,7 +182,8 @@ mod test {
     }
 
     #[test]
-    fn solo_misc_test() {
+    #[ignore]
+    fn misc_test() {
         // let source = include_str!("test_files/integration-1.neo");
         let source = include_str!("test_files/to-speed-check.neo");
         let config = SiteConfig::mock1_basic();

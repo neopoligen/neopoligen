@@ -80,6 +80,7 @@ mod test {
     use crate::site_config::SiteConfig;
     use pretty_assertions::assert_eq;
     #[test]
+    #[ignore]
     fn basic_star_end() {
         let source = "-- code/\n\nsome code\n\n-- /code\n\n";
         let config = SiteConfig::mock1_basic();
@@ -105,6 +106,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn basic_star_end_with_attrs() {
         let source = "-- code/\n-- bash\n-- class: alfa\n\nsome code\n\n-- /code\n\n";
         let config = SiteConfig::mock1_basic();

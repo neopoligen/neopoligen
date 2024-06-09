@@ -4,19 +4,19 @@ use std::path::PathBuf;
 use crate::{
     neo_error::{NeoError, NeoErrorKind},
     payload_section::PayloadSection,
-    section::Section,
+    payload_span::PayloadSpan,
     source_page::SourcePage,
 };
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PagePayload {
-    pub ast: Option<Vec<Section>>,
     pub id: String,
     pub rel_file_path: Option<PathBuf>,
     pub r#type: Option<String>,
     pub sections: Vec<PayloadSection>,
     pub status: Option<String>,
     pub template_list: Vec<String>,
+    pub title: Vec<PayloadSpan>,
     pub used_template: Option<String>,
 }
 
@@ -24,13 +24,13 @@ impl PagePayload {
     pub fn new_from_source_page(source: &SourcePage) -> Result<PagePayload, NeoError> {
         if let Some(id) = source.id() {
             let mut p = PagePayload {
-                ast: source.ast.clone(),
                 id,
                 r#type: None,
                 rel_file_path: None,
                 sections: vec![],
                 status: None,
                 template_list: vec![],
+                title: vec![], // TODO: Add title spans
                 used_template: None,
             };
             p.rel_file_path = source.rel_file_path();
