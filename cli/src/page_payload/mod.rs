@@ -43,7 +43,7 @@ impl PagePayload {
             rel_file_path: None,
             sections,
             source_path: Some(source_path.clone()),
-            status: None,
+            status: Some("published".to_string()),
             template_list: vec![],
             title: vec![], // TODO: Add title spans
             used_template: None,
@@ -132,6 +132,18 @@ mod test {
         .unwrap();
         let left = "20240101_alfa1234".to_string();
         let right = p.id.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn status_default_check() {
+        let p = PagePayload::new_from_source_page(
+            &PathBuf::from("/test/mocks/source/filename.neo"),
+            &SourcePage::mock1_20240101_alfa1234_minimal(),
+        )
+        .unwrap();
+        let left = "published".to_string();
+        let right = p.status.unwrap();
         assert_eq!(left, right);
     }
 
