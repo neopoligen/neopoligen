@@ -1,3 +1,4 @@
+use crate::neo_error::{NeoError, NeoErrorKind};
 use crate::payload_span::PayloadSpan;
 use crate::span::*;
 use minijinja::Value;
@@ -173,6 +174,27 @@ pub fn highlight_span(args: &[Value]) -> String {
         .map(|line| format!(r#"{}"#, line))
         .collect();
     output_html.join("\n")
+}
+
+pub fn scrub_rel_file_path(source: &str) -> Result<PathBuf, NeoError> {
+    let pb = PathBuf::from(source);
+    let pb = if pb.starts_with("/") {
+        match pb.strip_prefix("/") {
+            Ok(p) => p.to_path_buf(),
+            Err(e) => {
+                return Err(NeoError {
+                    kind: NeoErrorKind::GenericErrorWithoutSourcePath { msg: e.to_string() },
+                })
+            }
+        }
+    } else {
+        pb.to_path_buf()
+    };
+    if let Some(_) = pb.extension() {
+        Ok(pb)
+    } else {
+        Ok(pb.join("index.html"))
+    }
 }
 
 pub fn trim_empty_lines(source: &str) -> String {

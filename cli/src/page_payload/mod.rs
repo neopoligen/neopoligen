@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use tracing::{event, instrument, Level};
 
 use crate::{
-    helpers::flatten_payload_spans,
+    helpers::*,
     neo_error::{NeoError, NeoErrorKind},
     payload_section::PayloadSection,
     payload_span::PayloadSpan,
@@ -164,6 +164,26 @@ impl PagePayload {
             self.language.as_ref().unwrap(),
             self.id.as_ref().unwrap()
         )));
+        // update again if there's a metadata path
+        // TODO: Make this all happen in one go
+        // at some point instead of two passes
+        self.sections.iter().for_each(|section| {
+            if section.r#type == "metadata" {
+                match &section.attrs {
+                    Some(attrs) => {
+                        attrs.iter().for_each(|(key, spans)| {
+                            if key.eq("path") {
+                                self.rel_file_path = Some(
+                                    scrub_rel_file_path(&flatten_payload_spans(&spans.clone()))
+                                        .expect("get filepath"),
+                                );
+                            }
+                        });
+                    }
+                    None => {}
+                }
+            }
+        });
     }
 
     pub fn get_status(&mut self) {
@@ -243,6 +263,19 @@ mod test {
         )
         .unwrap();
         let left = PathBuf::from("en/20240101_alfa1234/index.html");
+        let right = p.rel_file_path.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn rel_file_path_home_page() {
+        let p = PagePayload::new_from_source_page(
+            &PathBuf::from("/test/mocks/source/filename.neo"),
+            &SourcePage::mock2_20240102_bravo123_home_page_path(),
+            ThemeTestOrPage::Page,
+        )
+        .unwrap();
+        let left = PathBuf::from("index.html");
         let right = p.rel_file_path.unwrap();
         assert_eq!(left, right);
     }

@@ -182,6 +182,8 @@ impl SourcePage {
     }
 }
 
+// DEPRECATED: Moved into helpers. delete when everything
+// is ready in page_payload setup
 fn scrub_rel_file_path(source: &str) -> Result<PathBuf> {
     let mut pb = PathBuf::from(source);
     if pb.starts_with("/") {
