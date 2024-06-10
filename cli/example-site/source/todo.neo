@@ -48,6 +48,10 @@ rest of the attrs so you don't have to filter them out.
 [] "title" show up as their own things in sections
 instead of being included in the attributes. 
 
+
+[] Default template vec with fallback to pages/post/published.
+for pages. 
+
 -- metadata
 -- updated: 2024-06-03T18:27:52-04:00
 -- id: 2ho8hakd

@@ -80,6 +80,7 @@ impl PagePayload {
                 p.get_language(&source);
                 p.get_type();
                 p.get_status();
+                p.get_template_list();
                 p.get_rel_source_path(&source);
                 p.get_rel_file_path();
                 Ok(p)
@@ -174,6 +175,11 @@ impl PagePayload {
                 }
             }
         });
+    }
+
+    pub fn get_template_list(&mut self) {
+        self.template_list
+            .push("pages/post/published.neoj".to_string());
     }
 
     pub fn get_type(&mut self) {
@@ -290,6 +296,19 @@ mod test {
         .unwrap();
         let left = "published".to_string();
         let right = p.status.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn template_list_default_check() {
+        let p = PagePayload::new_from_source_page(
+            &PathBuf::from("/test/mocks/source/filename.neo"),
+            &SourcePage::mock1_20240101_alfa1234_minimal(),
+            ThemeTestOrPage::Page,
+        )
+        .unwrap();
+        let left = vec!["pages/post/published.neoj".to_string()];
+        let right = p.template_list;
         assert_eq!(left, right);
     }
 
