@@ -12,6 +12,7 @@ use crate::{
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PagePayload {
     pub id: Option<String>,
+    pub lang: Option<String>,
     pub rel_file_path: Option<PathBuf>,
     pub r#type: Option<String>,
     pub sections: Vec<PayloadSection>,
@@ -39,6 +40,7 @@ impl PagePayload {
             .collect::<Vec<PayloadSection>>();
         let mut p = PagePayload {
             id: None,
+            lang: None,
             r#type: Some("post".to_string()),
             rel_file_path: None,
             sections,
@@ -50,11 +52,14 @@ impl PagePayload {
         };
 
         p.get_id();
-        p.get_type();
-        p.get_status();
 
         match p.id {
-            Some(_) => Ok(p),
+            Some(_) => {
+                p.get_type();
+                p.get_status();
+                p.get_rel_file_path();
+                Ok(p)
+            }
             None => Err(NeoError {
                 kind: NeoErrorKind::GenericErrorWithSourcePath {
                     source_path: source_path.clone(),
@@ -98,6 +103,13 @@ impl PagePayload {
                 self.id = section.id.clone();
             }
         });
+    }
+
+    pub fn get_rel_file_path(&mut self) {
+        self.rel_file_path = Some(PathBuf::from(format!(
+            "en/{}/index.html",
+            self.id.as_ref().unwrap()
+        )));
     }
 
     pub fn get_status(&mut self) {
@@ -146,6 +158,18 @@ mod test {
         .unwrap();
         let left = "20240101_alfa1234".to_string();
         let right = p.id.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn rel_file_path_default() {
+        let p = PagePayload::new_from_source_page(
+            &PathBuf::from("/test/mocks/source/filename.neo"),
+            &SourcePage::mock1_20240101_alfa1234_minimal(),
+        )
+        .unwrap();
+        let left = PathBuf::from("en/20240101_alfa1234/index.html");
+        let right = p.rel_file_path.unwrap();
         assert_eq!(left, right);
     }
 
