@@ -4,6 +4,7 @@ use dirs::data_local_dir;
 use neopoligengine::builder::Builder;
 use neopoligengine::engine_config::EngineConfig;
 use neopoligengine::file_watcher::FileWatcher;
+use neopoligengine::page_payload::ThemeTestOrPage;
 use neopoligengine::site_config::SiteConfig;
 use std::path::PathBuf;
 use tokio::sync::mpsc;
@@ -122,14 +123,14 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
             builder.load_pages_from_fs().unwrap();
             builder.generate_missing_asts();
             let _ = builder.save_asts_to_cache();
-            builder.generate_payloads();
+            builder.generate_payloads(ThemeTestOrPage::Page);
             let _ = builder.empty_output_dirs();
             let _ = builder.output_pages();
             // Theme Test
             builder.update_config_for_theme_test();
             builder.load_theme_test_pages().unwrap();
             builder.generate_missing_asts();
-            builder.generate_payloads();
+            builder.generate_payloads(ThemeTestOrPage::ThemeTest);
             let _ = builder.test_theme();
             // Errors
             builder.tmp_output_errors().unwrap();

@@ -1,9 +1,9 @@
 use crate::helpers::*;
 use crate::neo_error::{NeoError, NeoErrorKind};
-use crate::page_payload::PagePayload;
+use crate::page_payload::{PagePayload, ThemeTestOrPage};
 use crate::site_config::SiteConfig;
 use crate::source_page::SourcePage;
-use crate::theme_test::ThemeTest;
+use crate::theme_test::ThemeTest; // this might be deprecated
 use anyhow::Result;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
@@ -123,10 +123,11 @@ impl Builder {
     }
 
     #[instrument(skip(self))]
-    pub fn generate_payloads(&mut self) {
+    pub fn generate_payloads(&mut self, theme_test_or_page: ThemeTestOrPage) {
         self.payloads = BTreeMap::new();
         self.source_pages.iter().for_each(|(source_path, page)| {
-            match PagePayload::new_from_source_page(&source_path, &page) {
+            match PagePayload::new_from_source_page(&source_path, &page, theme_test_or_page.clone())
+            {
                 Ok(p) => {
                     self.payloads.insert(p.id.as_ref().unwrap().to_string(), p);
                     ()
@@ -557,7 +558,7 @@ impl Builder {
             } else {
                 self.errors.push(NeoError {
                     kind: NeoErrorKind::CouldNotFindPageTemplate {
-                        source_path: None,
+                        rel_source_path: page.rel_source_path.clone(),
                         msg: None,
                         template_list: Some(page.template_list.clone()),
                     },
@@ -595,6 +596,8 @@ body { background-color: #111; color: #aaa; }
 [! for error in errors !]
 <li>
 [! if error.kind.source_path !]<h4>Path: [@ error.kind.source_path @]</h4>[! endif !]
+[! if error.kind.rel_source_path !]<h4>File Path: [@ error.kind.rel_source_path @]</h4>[! endif !]
+
 [! if error.kind.type == "themetesterror" !]
     <h2>Theme Test Error</h2>
     <h3>Expected</h3>

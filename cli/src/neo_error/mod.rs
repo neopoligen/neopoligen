@@ -11,7 +11,7 @@ pub struct NeoError {
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum NeoErrorKind {
     CouldNotFindPageTemplate {
-        source_path: Option<PathBuf>,
+        rel_source_path: Option<PathBuf>,
         msg: Option<String>,
         template_list: Option<Vec<String>>,
     },

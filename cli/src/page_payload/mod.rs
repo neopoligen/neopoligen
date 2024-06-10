@@ -22,14 +22,30 @@ pub struct PagePayload {
     pub source_path: Option<PathBuf>,
     pub status: Option<String>,
     pub template_list: Vec<String>,
+    /// theme_test_or_page
+    /// the same builder is used for the main page output
+    /// and the theme tests so that template work the same
+    /// way. This flag is used to help ensure you know
+    /// what part of the process things are in. This is
+    /// specifically used to make an update for the
+    /// rel_source_path based off the content dir
+    pub theme_test_or_page: ThemeTestOrPage,
     pub title: Vec<PayloadSpan>,
     pub used_template: Option<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[serde(tag = "kind", rename_all = "lowercase")]
+pub enum ThemeTestOrPage {
+    ThemeTest,
+    Page,
 }
 
 impl PagePayload {
     pub fn new_from_source_page(
         source_path: &PathBuf,
         source: &SourcePage,
+        theme_test_or_page: ThemeTestOrPage,
     ) -> Result<PagePayload, NeoError> {
         let sections = source
             .ast
@@ -50,6 +66,7 @@ impl PagePayload {
             sections,
             source_path: Some(source_path.clone()),
             status: Some("published".to_string()),
+            theme_test_or_page,
             template_list: vec![],
             title: vec![], // TODO: Add title spans
             used_template: None,
@@ -118,9 +135,24 @@ impl PagePayload {
 
     pub fn get_rel_source_path(&mut self, source: &SourcePage) {
         let sp = self.source_path.clone().unwrap();
-        match sp.strip_prefix(source.config.as_ref().unwrap().content_source_dir()) {
-            Ok(p) => self.rel_source_path = Some(p.to_path_buf()),
-            Err(_) => {}
+        match self.theme_test_or_page {
+            ThemeTestOrPage::Page => {
+                match sp.strip_prefix(source.config.as_ref().unwrap().content_source_dir()) {
+                    Ok(p) => self.rel_source_path = Some(p.to_path_buf()),
+                    Err(e) => {
+                        dbg!(e);
+                    }
+                }
+            }
+            ThemeTestOrPage::ThemeTest => {
+                dbg!(source.config.as_ref().unwrap().theme_dir());
+                match sp.strip_prefix(source.config.as_ref().unwrap().theme_dir()) {
+                    Ok(p) => self.rel_source_path = Some(p.to_path_buf()),
+                    Err(e) => {
+                        dbg!(e);
+                    }
+                }
+            }
         }
     }
 
@@ -174,6 +206,7 @@ mod test {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
             &SourcePage::mock1_20240101_alfa1234_minimal(),
+            ThemeTestOrPage::Page,
         )
         .unwrap();
         let left = "20240101_alfa1234".to_string();
@@ -186,6 +219,7 @@ mod test {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
             &SourcePage::mock1_20240101_alfa1234_minimal(),
+            ThemeTestOrPage::Page,
         )
         .unwrap();
         let left = "en".to_string();
@@ -198,6 +232,7 @@ mod test {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
             &SourcePage::mock1_20240101_alfa1234_minimal(),
+            ThemeTestOrPage::Page,
         )
         .unwrap();
         let left = PathBuf::from("en/20240101_alfa1234/index.html");
@@ -206,13 +241,27 @@ mod test {
     }
 
     #[test]
-    fn rel_source_path_check() {
+    fn rel_source_path_check_for_page() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/subdir/filename.neo"),
             &SourcePage::mock1_20240101_alfa1234_minimal(),
+            ThemeTestOrPage::Page,
         )
         .unwrap();
         let left = PathBuf::from("subdir/filename.neo");
+        let right = p.rel_source_path.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn rel_source_path_check_for_theme_test() {
+        let p = PagePayload::new_from_source_page(
+            &PathBuf::from("/test/mocks/admin/themes/test-theme/templates/filename.neo"),
+            &SourcePage::mock1_20240101_alfa1234_minimal(),
+            ThemeTestOrPage::ThemeTest,
+        )
+        .unwrap();
+        let left = PathBuf::from("templates/filename.neo");
         let right = p.rel_source_path.unwrap();
         assert_eq!(left, right);
     }
@@ -222,6 +271,7 @@ mod test {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
             &SourcePage::mock4_20240104_delta123_type_and_status(),
+            ThemeTestOrPage::Page,
         )
         .unwrap();
         let left = "custom-status".to_string();
@@ -234,6 +284,7 @@ mod test {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
             &SourcePage::mock1_20240101_alfa1234_minimal(),
+            ThemeTestOrPage::Page,
         )
         .unwrap();
         let left = "published".to_string();
@@ -246,6 +297,7 @@ mod test {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
             &SourcePage::mock1_20240101_alfa1234_minimal(),
+            ThemeTestOrPage::Page,
         )
         .unwrap();
         let left = "post".to_string();
@@ -258,6 +310,7 @@ mod test {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
             &SourcePage::mock4_20240104_delta123_type_and_status(),
+            ThemeTestOrPage::Page,
         )
         .unwrap();
         let left = "custom-type".to_string();
