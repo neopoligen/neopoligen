@@ -530,7 +530,7 @@ mod test {
     // }
 
     #[test]
-    fn solo_status_check() {
+    fn status_check() {
         let config = SiteConfig::mock1_basic();
         let section = Section::mock6_div_with_created_and_updated_and_status();
         let left = "section-status-example";

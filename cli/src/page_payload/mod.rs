@@ -150,7 +150,7 @@ mod test {
     }
 
     #[test]
-    fn solo_status_custom_check() {
+    fn status_custom_check() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
             &SourcePage::mock4_20240104_delta123_type_and_status(),
