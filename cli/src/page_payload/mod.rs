@@ -62,9 +62,10 @@ impl PagePayload {
                 Ok(p)
             }
             None => Err(NeoError {
-                kind: NeoErrorKind::GenericErrorWithSourcePath {
+                kind: NeoErrorKind::GenericErrorWithSourcePathAndPayloadSections {
                     source_path: source_path.clone(),
-                    msg: "Could not get id when making pay pageload".to_string(),
+                    msg: "Could not get id when making page payload".to_string(),
+                    sections: Some(p.sections.clone()),
                 },
             }),
         }

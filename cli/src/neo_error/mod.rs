@@ -1,4 +1,4 @@
-use crate::payload_section::PayloadSection;
+use crate::{payload_section::PayloadSection, section::Section};
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
@@ -16,6 +16,16 @@ pub enum NeoErrorKind {
     GenericErrorWithSourcePath {
         source_path: PathBuf,
         msg: String,
+    },
+    GenericErrorWithSourcePathAndAst {
+        source_path: PathBuf,
+        msg: String,
+        ast: Option<Vec<Section>>,
+    },
+    GenericErrorWithSourcePathAndPayloadSections {
+        source_path: PathBuf,
+        msg: String,
+        sections: Option<Vec<PayloadSection>>,
     },
     FileError {
         source_path: PathBuf,
@@ -58,6 +68,22 @@ impl std::fmt::Display for NeoError {
                 fmt.write_str(msg.as_str())?;
             }
             NeoErrorKind::GenericErrorWithSourcePath { source_path, msg } => {
+                fmt.write_str("FileError: ")?;
+                fmt.write_str(source_path.display().to_string().as_str())?;
+                fmt.write_str("\n")?;
+                fmt.write_str(msg.as_str())?;
+            }
+            NeoErrorKind::GenericErrorWithSourcePathAndAst {
+                source_path, msg, ..
+            } => {
+                fmt.write_str("FileError: ")?;
+                fmt.write_str(source_path.display().to_string().as_str())?;
+                fmt.write_str("\n")?;
+                fmt.write_str(msg.as_str())?;
+            }
+            NeoErrorKind::GenericErrorWithSourcePathAndPayloadSections {
+                source_path, msg, ..
+            } => {
                 fmt.write_str("FileError: ")?;
                 fmt.write_str(source_path.display().to_string().as_str())?;
                 fmt.write_str("\n")?;

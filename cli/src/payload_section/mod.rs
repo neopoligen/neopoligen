@@ -36,7 +36,6 @@ pub struct PayloadSection {
 impl PayloadSection {
     pub fn new_from_section(section: &Section, config: &SiteConfig) -> PayloadSection {
         let mut attrs: BTreeMap<String, Vec<PayloadSpan>> = BTreeMap::new();
-
         section.attrs.iter().for_each(|attr| match &attr.kind {
             SectionAttrKind::KeyValueSpans { key, spans } => {
                 if key.as_str() != "class"
@@ -507,6 +506,16 @@ mod test {
         let payload_section =
             PayloadSection::new_from_section(&Section::mock5_div_with_id(), &config);
         let left = "attr-id";
+        let right = payload_section.id.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn id_metadata_check() {
+        let config = SiteConfig::mock1_basic();
+        let payload_section =
+            PayloadSection::new_from_section(&Section::mock8_metadata_basic(), &config);
+        let left = "id_from_metadata";
         let right = payload_section.id.unwrap();
         assert_eq!(left, right);
     }

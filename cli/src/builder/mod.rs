@@ -126,6 +126,17 @@ impl Builder {
     pub fn generate_payloads(&mut self) {
         self.payloads = BTreeMap::new();
         self.source_pages.iter().for_each(|(source_path, page)| {
+            match PagePayload::new_from_source_page(&source_path, &page) {
+                Ok(p) => {
+                    self.payloads.insert(p.id.as_ref().unwrap().to_string(), p);
+                    ()
+                }
+                Err(e) => {
+                    self.errors.push(e);
+                    ()
+                }
+            };
+            ()
 
             //match PagePayload::new_from_source_page(&page) {
             //    Ok(p) => match p.id {
@@ -164,6 +175,8 @@ impl Builder {
             //        );
             //    }
             //}
+
+            //
         });
     }
 
@@ -363,28 +376,33 @@ impl Builder {
                 .unwrap()
                 .output_dest_dir()
                 .join(page.rel_file_path.as_ref().unwrap());
-            if let Some(template) = page.template_list.iter().find_map(|name| {
-                if let Ok(tmpl) = env.get_template(name) {
-                    page.used_template = Some(name.clone());
-                    Some(tmpl)
-                } else {
-                    None
-                }
-            }) {
-                match template.render(context!(
-                    page => Value::from_serialize(&page)
-                )) {
-                    Ok(output) => {
-                        let _ = write_file_with_mkdir(&output_path, &output);
-                    }
-                    Err(e) => {
-                        dbg!(e);
-                        ()
-                    }
-                };
-            } else {
-                event!(Level::ERROR, "Could not find template");
-            };
+
+            dbg!(output_path);
+
+            // if let Some(template) = page.template_list.iter().find_map(|name| {
+            //     if let Ok(tmpl) = env.get_template(name) {
+            //         page.used_template = Some(name.clone());
+            //         Some(tmpl)
+            //     } else {
+            //         None
+            //     }
+            // }) {
+            //     match template.render(context!(
+            //         page => Value::from_serialize(&page)
+            //     )) {
+            //         Ok(output) => {
+            //             let _ = write_file_with_mkdir(&output_path, &output);
+            //         }
+            //         Err(e) => {
+            //             dbg!(e);
+            //             ()
+            //         }
+            //     };
+            // } else {
+            //     event!(Level::ERROR, "Could not find template");
+            // };
+
+            //
         }
         Ok(())
     }
@@ -571,8 +589,6 @@ body { background-color: #111; color: #aaa; }
 [! for error in errors !]
 <li>
 [! if error.kind.source_path !]<h4>Path: [@ error.kind.source_path @]</h4>[! endif !]
-
-
 [! if error.kind.type == "themetesterror" !]
     <h2>Theme Test Error</h2>
     <h3>Expected</h3>
@@ -588,9 +604,9 @@ body { background-color: #111; color: #aaa; }
     [@ error.kind.sections|tojson(true)@]
     </pre>
 [! else !]
-    <h2>[@ error.type @]</h2>
+    <h2>[@ error.kind.type @]</h2>
     <pre>
-    [@ error|escape @]
+    [@ error|tojson(true)@]
     </pre>
 [! endif !]
 </li>

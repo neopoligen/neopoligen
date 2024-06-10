@@ -44,4 +44,10 @@ impl Section {
         let source = "-- div\n-- title: Title From Attr\n-- subtitle: Subtitle From Attr\n\nWhiskey tango\n\n";
         start_or_full_section(source, &config.sections).unwrap().1
     }
+
+    pub fn mock8_metadata_basic() -> Section {
+        let config = SiteConfig::mock1_basic();
+        let source = "-- metadata\n-- created: 2024-06-10T15:03:01-04:00\n-- id: id_from_metadata";
+        start_or_full_section(source, &config.sections).unwrap().1
+    }
 }
