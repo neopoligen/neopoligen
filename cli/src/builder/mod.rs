@@ -587,6 +587,10 @@ impl Builder {
         env.set_lstrip_blocks(true);
         env.set_trim_blocks(true);
         let _ = env.add_template(
+            "themetesterror",
+            include_str!("../error_templates/themetesterror.neoj"),
+        );
+        let _ = env.add_template(
             "parsererror",
             include_str!("../error_templates/parsererror.neoj"),
         );
@@ -600,18 +604,15 @@ body { background-color: #111; color: #aaa; }
 </style></head><body>
 <header><a href="/">Home</a></header>
 <h1>Status</h1>
-<h2>Config</h2>
-<pre>[@ config|tojson(true) @]</pre>
-
 <h2>Errors</h2>
 <ul>
 [! for error in errors !]
-
 <li>
+[@ error.kind.type @] - 
 [! include [error.kind.type, "_todo"] !]
+[#
 [! if error.kind.source_path !]<h4>Path: [@ error.kind.source_path @]</h4>[! endif !]
 [! if error.kind.rel_source_path !]<h4>File Path: [@ error.kind.rel_source_path @]</h4>[! endif !]
-
 [! if error.kind.type == "themetesterror" !]
     <h2>Theme Test Error</h2>
     <h3>Expected</h3>
@@ -629,14 +630,14 @@ body { background-color: #111; color: #aaa; }
 [! else !]
     <h2>[@ error.kind.type @]</h2>
     <pre>
-    [#
-    [@ error|tojson(true)@]
-    #]
     </pre>
 [! endif !]
+#]
 </li>
 [! endfor !]
 </ul>
+<h2>Config</h2>
+<pre>[@ config|tojson(true) @]</pre>
 </body></html>
         "#,
         )?;
