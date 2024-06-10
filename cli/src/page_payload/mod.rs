@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
+use tracing::{event, instrument, Level};
 
 use crate::{
     helpers::flatten_payload_spans,
@@ -133,6 +134,7 @@ impl PagePayload {
         self.language = Some(source.config.as_ref().unwrap().default_language.clone());
     }
 
+    #[instrument(skip(self, source))]
     pub fn get_rel_source_path(&mut self, source: &SourcePage) {
         let sp = self.source_path.clone().unwrap();
         match self.theme_test_or_page {
@@ -140,16 +142,15 @@ impl PagePayload {
                 match sp.strip_prefix(source.config.as_ref().unwrap().content_source_dir()) {
                     Ok(p) => self.rel_source_path = Some(p.to_path_buf()),
                     Err(e) => {
-                        dbg!(e);
+                        event!(Level::ERROR, "get_rel_source_path ERROR: {}", e);
                     }
                 }
             }
             ThemeTestOrPage::ThemeTest => {
-                dbg!(source.config.as_ref().unwrap().theme_dir());
                 match sp.strip_prefix(source.config.as_ref().unwrap().theme_dir()) {
                     Ok(p) => self.rel_source_path = Some(p.to_path_buf()),
                     Err(e) => {
-                        dbg!(e);
+                        event!(Level::ERROR, "get_rel_source_path ERROR: {}", e);
                     }
                 }
             }

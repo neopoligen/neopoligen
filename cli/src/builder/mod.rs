@@ -377,31 +377,34 @@ impl Builder {
                 .unwrap()
                 .output_dest_dir()
                 .join(page.rel_file_path.as_ref().unwrap());
-
-            dbg!(output_path);
-
-            // if let Some(template) = page.template_list.iter().find_map(|name| {
-            //     if let Ok(tmpl) = env.get_template(name) {
-            //         page.used_template = Some(name.clone());
-            //         Some(tmpl)
-            //     } else {
-            //         None
-            //     }
-            // }) {
-            //     match template.render(context!(
-            //         page => Value::from_serialize(&page)
-            //     )) {
-            //         Ok(output) => {
-            //             let _ = write_file_with_mkdir(&output_path, &output);
-            //         }
-            //         Err(e) => {
-            //             dbg!(e);
-            //             ()
-            //         }
-            //     };
-            // } else {
-            //     event!(Level::ERROR, "Could not find template");
-            // };
+            if let Some(template) = page.template_list.iter().find_map(|name| {
+                if let Ok(tmpl) = env.get_template(name) {
+                    page.used_template = Some(name.clone());
+                    Some(tmpl)
+                } else {
+                    None
+                }
+            }) {
+                match template.render(context!(
+                    page => Value::from_serialize(&page)
+                )) {
+                    Ok(output) => {
+                        let _ = write_file_with_mkdir(&output_path, &output);
+                    }
+                    Err(e) => {
+                        dbg!(e);
+                        ()
+                    }
+                };
+            } else {
+                self.errors.push(NeoError {
+                    kind: NeoErrorKind::CouldNotFindPageTemplate {
+                        rel_source_path: page.rel_source_path.clone(),
+                        msg: None,
+                        template_list: Some(page.template_list.clone()),
+                    },
+                });
+            };
 
             //
         }

@@ -50,4 +50,6 @@ impl Section {
         let source = "-- metadata\n-- created: 2024-06-10T15:03:01-04:00\n-- id: id_from_metadata";
         start_or_full_section(source, &config.sections).unwrap().1
     }
+
+    //
 }
