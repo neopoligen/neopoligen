@@ -1,1 +1,9 @@
-THIS IS A PARSER ERROR
+<h3>Parser Error</h3>
+<div>Path: [@ error.kind.source_path @]</div>
+<div>Message: [@ error.kind.message @]</div>
+<div>Column: [@ error.kind.column @] - Line: [@ error.kind.line @]</div>
+<div>Remainder:
+<pre>
+[@ error.kind.remainder @]
+</pre>
+</div>

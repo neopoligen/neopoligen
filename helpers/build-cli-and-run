@@ -6,6 +6,6 @@ watchexec\
   --workdir "../cli"\
   -c\
   -r\
-  -e rs,neo\
+  -e rs,neo,neoj\
   "bash -c 'cd ../cli && cargo build --release --target aarch64-apple-darwin && cd target/aarch64-apple-darwin/release && mv neopoligengine neopoligengine-aarch64-apple-darwin && ./neopoligengine-aarch64-apple-darwin'"
 

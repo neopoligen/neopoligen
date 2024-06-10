@@ -289,19 +289,19 @@ impl SiteConfig {
                     if category.eq_ignore_ascii_case("basic") {
                         self.sections.basic.push(section_name);
                     } else if category.eq_ignore_ascii_case("block") {
-                        self.sections.yaml.push(section_name);
+                        self.sections.block.push(section_name);
                     } else if category.eq_ignore_ascii_case("checklist") {
-                        self.sections.yaml.push(section_name);
-                    } else if category.eq_ignore_ascii_case("checklist-item") {
-                        self.sections.yaml.push(section_name);
+                        self.sections.checklist.push(section_name);
+                    // } else if category.eq_ignore_ascii_case("checklist-item") {
+                    //     self.sections.checklistitem.push(section_name);
                     } else if category.eq_ignore_ascii_case("json") {
-                        self.sections.yaml.push(section_name);
+                        self.sections.json.push(section_name);
                     } else if category.eq_ignore_ascii_case("list") {
-                        self.sections.yaml.push(section_name);
-                    } else if category.eq_ignore_ascii_case("list-item") {
-                        self.sections.yaml.push(section_name);
+                        self.sections.list.push(section_name);
+                    // } else if category.eq_ignore_ascii_case("list-item") {
+                    //     self.sections.listitem.push(section_name);
                     } else if category.eq_ignore_ascii_case("raw") {
-                        self.sections.yaml.push(section_name);
+                        self.sections.raw.push(section_name);
                     } else if category.eq_ignore_ascii_case("yaml") {
                         self.sections.yaml.push(section_name);
                     }

@@ -600,8 +600,13 @@ body { background-color: #111; color: #aaa; }
 </style></head><body>
 <header><a href="/">Home</a></header>
 <h1>Status</h1>
+<h2>Config</h2>
+<pre>[@ config|tojson(true) @]</pre>
+
+<h2>Errors</h2>
 <ul>
 [! for error in errors !]
+
 <li>
 [! include [error.kind.type, "_todo"] !]
 [! if error.kind.source_path !]<h4>Path: [@ error.kind.source_path @]</h4>[! endif !]
@@ -637,6 +642,7 @@ body { background-color: #111; color: #aaa; }
         )?;
         let tmpl = env.get_template("tmp_status")?;
         let output = tmpl.render(context!(
+            config => Value::from_serialize(&self.config),
             errors => Value::from_serialize(&self.errors)
         ))?;
         let status_path = self
