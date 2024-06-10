@@ -112,7 +112,8 @@ impl PagePayload {
 
     pub fn get_rel_file_path(&mut self) {
         self.rel_file_path = Some(PathBuf::from(format!(
-            "en/{}/index.html",
+            "{}/{}/index.html",
+            self.language.as_ref().unwrap(),
             self.id.as_ref().unwrap()
         )));
     }
