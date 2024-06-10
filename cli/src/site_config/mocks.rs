@@ -20,9 +20,10 @@ impl SiteConfig {
             ],
             block: vec![],
             checklist: vec!["checklist".to_string(), "todo".to_string()],
+            checklist_item: vec!["checklist-item".to_string()],
             list: vec!["list".to_string(), "notes".to_string()],
+            list_item: vec!["list-item".to_string()],
             comment: vec!["comment".to_string()],
-            detail: vec![],
             json: vec![],
             raw: vec![
                 "code".to_string(),
@@ -31,7 +32,6 @@ impl SiteConfig {
                 "javascript".to_string(),
                 "pre".to_string(),
             ],
-            table: vec![],
             yaml: vec!["metadata".to_string()],
         };
         let config = SiteConfig {

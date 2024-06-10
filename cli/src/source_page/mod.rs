@@ -199,17 +199,8 @@ fn scrub_rel_file_path(source: &str) -> Result<PathBuf> {
 #[cfg(test)]
 mod test {
 
-    use super::*;
-    use pretty_assertions::assert_eq;
-
-    #[test]
-    fn solo_id_check() {
-        let p = SourcePage::mock5_20240105_echo1234_code_section();
-        dbg!(p);
-        //let left = "20240105_echo1234".to_string();
-        //let right = p.id().unwrap();
-        //assert_eq!(left, right);
-    }
+    // use super::*;
+    // use pretty_assertions::assert_eq;
 
     // DEPRECATED: remove when pagepayload is working
     // #[test]
