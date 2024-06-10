@@ -555,7 +555,13 @@ impl Builder {
                     }
                 };
             } else {
-                event!(Level::ERROR, "Could not find template");
+                self.errors.push(NeoError {
+                    kind: NeoErrorKind::CouldNotFindPageTemplate {
+                        source_path: None,
+                        msg: None,
+                        template_list: Some(page.template_list.clone()),
+                    },
+                });
             };
         }
         Ok(())

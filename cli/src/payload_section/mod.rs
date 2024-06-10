@@ -1,5 +1,4 @@
 use crate::helpers::*;
-use crate::span::{Span, SpanKind};
 use minijinja::Value;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -283,6 +282,7 @@ impl PayloadSection {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::span::{Span, SpanKind};
     use pretty_assertions::assert_eq;
 
     #[test]

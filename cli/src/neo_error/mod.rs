@@ -10,6 +10,11 @@ pub struct NeoError {
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum NeoErrorKind {
+    CouldNotFindPageTemplate {
+        source_path: Option<PathBuf>,
+        msg: Option<String>,
+        template_list: Option<Vec<String>>,
+    },
     GenericErrorWithoutSourcePath {
         msg: String,
     },
@@ -60,6 +65,9 @@ pub enum NeoErrorKind {
 impl std::fmt::Display for NeoError {
     fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
         match &self.kind {
+            NeoErrorKind::CouldNotFindPageTemplate { .. } => {
+                fmt.write_str("Could not find page template")?;
+            }
             NeoErrorKind::MissingThemeDirectory { path } => {
                 fmt.write_str("Missing theme directory: ")?;
                 fmt.write_str(path.display().to_string().as_str())?;
