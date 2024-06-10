@@ -13,9 +13,12 @@ use crate::{
 pub struct PagePayload {
     pub id: Option<String>,
     pub language: Option<String>,
+    // TODO: Rename rel_file_path to rel_dest_path;
     pub rel_file_path: Option<PathBuf>,
+    pub rel_source_path: Option<PathBuf>,
     pub r#type: Option<String>,
     pub sections: Vec<PayloadSection>,
+    // DEPRECATED: Remove source path and replace with rel_source_path
     pub source_path: Option<PathBuf>,
     pub status: Option<String>,
     pub template_list: Vec<String>,
@@ -41,6 +44,7 @@ impl PagePayload {
         let mut p = PagePayload {
             id: None,
             language: None,
+            rel_source_path: None,
             r#type: Some("post".to_string()),
             rel_file_path: None,
             sections,
@@ -58,6 +62,7 @@ impl PagePayload {
                 p.get_language(&source);
                 p.get_type();
                 p.get_status();
+                p.get_rel_source_path(&source);
                 p.get_rel_file_path();
                 Ok(p)
             }
@@ -109,6 +114,14 @@ impl PagePayload {
 
     pub fn get_language(&mut self, source: &SourcePage) {
         self.language = Some(source.config.as_ref().unwrap().default_language.clone());
+    }
+
+    pub fn get_rel_source_path(&mut self, source: &SourcePage) {
+        let sp = self.source_path.clone().unwrap();
+        match sp.strip_prefix(source.config.as_ref().unwrap().content_source_dir()) {
+            Ok(p) => self.rel_source_path = Some(p.to_path_buf()),
+            Err(_) => {}
+        }
     }
 
     pub fn get_rel_file_path(&mut self) {
@@ -189,6 +202,18 @@ mod test {
         .unwrap();
         let left = PathBuf::from("en/20240101_alfa1234/index.html");
         let right = p.rel_file_path.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn rel_source_path_check() {
+        let p = PagePayload::new_from_source_page(
+            &PathBuf::from("/test/mocks/source/subdir/filename.neo"),
+            &SourcePage::mock1_20240101_alfa1234_minimal(),
+        )
+        .unwrap();
+        let left = PathBuf::from("subdir/filename.neo");
+        let right = p.rel_source_path.unwrap();
         assert_eq!(left, right);
     }
 
