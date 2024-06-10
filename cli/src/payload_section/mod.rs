@@ -177,9 +177,9 @@ impl PayloadSection {
         });
 
         let status = section.attrs.iter().find_map(|attr| match &attr.kind {
-            SectionAttrKind::KeyValue { key, value } => {
+            SectionAttrKind::KeyValueSpans { key, spans } => {
                 if key.as_str() == "status" {
-                    Some(value.clone())
+                    Some(flatten_spans(spans))
                 } else {
                     None
                 }
@@ -529,17 +529,16 @@ mod test {
     //     assert_eq!(left, right);
     // }
 
-    // #[test]
-    // #[ignore]
-    // fn status_check() {
-    //     let config = SiteConfig::mock1_basic();
-    //     let section = Section::mock6_div_with_created_and_updated_and_status();
-    //     let left = "section-status-example";
-    //     let right = &PayloadSection::new_from_section(&section, &config)
-    //         .status
-    //         .unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn solo_status_check() {
+        let config = SiteConfig::mock1_basic();
+        let section = Section::mock6_div_with_created_and_updated_and_status();
+        let left = "section-status-example";
+        let right = &PayloadSection::new_from_section(&section, &config)
+            .status
+            .unwrap();
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // fn status_does_not_show_up_in_attrs() {

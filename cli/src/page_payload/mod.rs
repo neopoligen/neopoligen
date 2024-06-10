@@ -51,6 +51,7 @@ impl PagePayload {
 
         p.get_id();
         p.get_type();
+        p.get_status();
 
         match p.id {
             Some(_) => Ok(p),
@@ -99,6 +100,17 @@ impl PagePayload {
         });
     }
 
+    pub fn get_status(&mut self) {
+        self.sections.iter().for_each(|section| {
+            if section.r#type == "metadata" {
+                match &section.status {
+                    Some(s) => self.status = Some(s.to_string()),
+                    None => {}
+                }
+            }
+        });
+    }
+
     pub fn get_type(&mut self) {
         self.sections.iter().for_each(|section| {
             if section.r#type == "metadata" {
@@ -115,6 +127,8 @@ impl PagePayload {
             }
         });
     }
+
+    //
 }
 
 #[cfg(test)]
@@ -132,6 +146,18 @@ mod test {
         .unwrap();
         let left = "20240101_alfa1234".to_string();
         let right = p.id.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_status_custom_check() {
+        let p = PagePayload::new_from_source_page(
+            &PathBuf::from("/test/mocks/source/filename.neo"),
+            &SourcePage::mock4_20240104_delta123_type_and_status(),
+        )
+        .unwrap();
+        let left = "custom-status".to_string();
+        let right = p.status.unwrap();
         assert_eq!(left, right);
     }
 
