@@ -30,17 +30,9 @@ pub fn flatten_payload_spans(spans: &Vec<PayloadSpan>) -> String {
         .join("")
 }
 
+// TODO: Deal with nestings
 pub fn flatten_payload_parsed_text(span: &PayloadSpan) -> String {
     span.parsed_text.clone()
-
-    // match &span.kind {
-    //     SpanKind::NamedSpan { spans, .. } => spans
-    //         .iter()
-    //         .map(|span| flatten_parsed_text(span))
-    //         .collect::<Vec<String>>()
-    //         .join(""),
-    //     _ => span.parsed_text.clone(),
-    // }
 }
 
 pub fn flatten_spans(spans: &Vec<Span>) -> String {

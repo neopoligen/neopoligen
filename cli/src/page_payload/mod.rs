@@ -94,7 +94,7 @@ impl PagePayload {
     pub fn get_id(&mut self) {
         self.sections.iter().for_each(|section| {
             if section.r#type == "metadata" {
-                self.id = section.id.clone()
+                self.id = section.id.clone();
             }
         });
     }
@@ -102,17 +102,16 @@ impl PagePayload {
     pub fn get_type(&mut self) {
         self.sections.iter().for_each(|section| {
             if section.r#type == "metadata" {
-                section
-                    .attrs
-                    .as_ref()
-                    .unwrap()
-                    .iter()
-                    .for_each(|(key, spans)| {
-                        if key.eq("type") {
-                            self.r#type = Some(flatten_payload_spans(&spans.clone()));
-                        }
-                    });
-                // self.id = section.id.clone()
+                match &section.attrs {
+                    Some(attrs) => {
+                        attrs.iter().for_each(|(key, spans)| {
+                            if key.eq("type") {
+                                self.r#type = Some(flatten_payload_spans(&spans.clone()));
+                            }
+                        });
+                    }
+                    None => {}
+                }
             }
         });
     }
@@ -149,7 +148,7 @@ mod test {
     }
 
     #[test]
-    fn solo_type_custom_check() {
+    fn type_custom_check() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
             &SourcePage::mock4_20240104_delta123_type_and_status(),
