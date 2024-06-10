@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
 use crate::{
-    helpers::{flatten_payload_spans, flatten_spans},
+    helpers::flatten_payload_spans,
     neo_error::{NeoError, NeoErrorKind},
     payload_section::PayloadSection,
     payload_span::PayloadSpan,
