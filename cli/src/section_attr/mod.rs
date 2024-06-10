@@ -30,10 +30,10 @@ pub enum SectionAttrKind {
     Flag { flag: String },
 }
 
-pub fn section_attr_old<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
-    let (source, attr) = alt((section_key_value_attr_39, section_flag_attr))(source)?;
-    Ok((source, attr))
-}
+// pub fn section_attr_old<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
+//     let (source, attr) = alt((section_key_value_attr_39, section_flag_attr))(source)?;
+//     Ok((source, attr))
+// }
 
 pub fn section_attr<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
     let (source, attr) = alt((section_key_value_attr, section_flag_attr))(source)?;
@@ -66,28 +66,28 @@ pub fn section_key_value_attr<'a>(
     ))
 }
 
-// DEPRECATED: Replace with keyvaluespans version
-pub fn section_key_value_attr_39<'a>(
-    source: &'a str,
-) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
-    let (source, _) = tag("--").context("").parse(source)?;
-    let (source, _) = space1.context("").parse(source)?;
-    let (source, key) = is_not(": \n").context("").parse(source)?;
-    let (source, _) = tag(":").context("").parse(source)?;
-    let (source, value) = not_line_ending.context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
-    Ok((
-        source,
-        SectionAttr {
-            kind: SectionAttrKind::KeyValue {
-                key: key.trim().to_string(),
-                value: value.trim().to_string(),
-            },
-        },
-    ))
-}
+// // DEPRECATED: Replace with keyvaluespans version
+// pub fn section_key_value_attr_39<'a>(
+//     source: &'a str,
+// ) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
+//     let (source, _) = tag("--").context("").parse(source)?;
+//     let (source, _) = space1.context("").parse(source)?;
+//     let (source, key) = is_not(": \n").context("").parse(source)?;
+//     let (source, _) = tag(":").context("").parse(source)?;
+//     let (source, value) = not_line_ending.context("").parse(source)?;
+//     let (source, _) = structure_empty_until_newline_or_eof
+//         .context("")
+//         .parse(source)?;
+//     Ok((
+//         source,
+//         SectionAttr {
+//             kind: SectionAttrKind::KeyValue {
+//                 key: key.trim().to_string(),
+//                 value: value.trim().to_string(),
+//             },
+//         },
+//     ))
+// }
 
 pub fn section_flag_attr<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
     let (source, _) = tag("--").context("").parse(source)?;
@@ -117,6 +117,8 @@ mod test {
     #[case("colon and hyphen", "-- created: 2024-06-09T14:28:09-04:00", true)]
     #[case("pipe", "-- key: some | thing", true)]
     #[case("escaped pipe", "-- key: some \\| thing", true)]
+    #[case("path with slash", "-- path: /", true)]
+    #[case("type with hyphen", "-- type: home-page", true)]
     fn section_attr_basci_fixture(
         #[case] _description: &str,
         #[case] source: &str,
