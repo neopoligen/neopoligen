@@ -12,7 +12,7 @@ use crate::{
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PagePayload {
     pub id: Option<String>,
-    pub lang: Option<String>,
+    pub language: Option<String>,
     pub rel_file_path: Option<PathBuf>,
     pub r#type: Option<String>,
     pub sections: Vec<PayloadSection>,
@@ -40,7 +40,7 @@ impl PagePayload {
             .collect::<Vec<PayloadSection>>();
         let mut p = PagePayload {
             id: None,
-            lang: None,
+            language: None,
             r#type: Some("post".to_string()),
             rel_file_path: None,
             sections,
@@ -55,6 +55,7 @@ impl PagePayload {
 
         match p.id {
             Some(_) => {
+                p.get_language(&source);
                 p.get_type();
                 p.get_status();
                 p.get_rel_file_path();
@@ -103,6 +104,10 @@ impl PagePayload {
                 self.id = section.id.clone();
             }
         });
+    }
+
+    pub fn get_language(&mut self, source: &SourcePage) {
+        self.language = Some(source.config.as_ref().unwrap().default_language.clone());
     }
 
     pub fn get_rel_file_path(&mut self) {
@@ -158,6 +163,18 @@ mod test {
         .unwrap();
         let left = "20240101_alfa1234".to_string();
         let right = p.id.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn language_basic_check() {
+        let p = PagePayload::new_from_source_page(
+            &PathBuf::from("/test/mocks/source/filename.neo"),
+            &SourcePage::mock1_20240101_alfa1234_minimal(),
+        )
+        .unwrap();
+        let left = "en".to_string();
+        let right = p.language.unwrap();
         assert_eq!(left, right);
     }
 
