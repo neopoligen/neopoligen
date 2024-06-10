@@ -48,77 +48,64 @@ impl PagePayload {
         source: &SourcePage,
         theme_test_or_page: ThemeTestOrPage,
     ) -> Result<PagePayload, NeoError> {
-        let sections = source
-            .ast
-            .as_ref()
-            .unwrap()
-            .iter()
-            .map(|section| {
-                let p = PayloadSection::new_from_section(&section, source.config.as_ref().unwrap());
-                p
-            })
-            .collect::<Vec<PayloadSection>>();
-        let mut p = PagePayload {
-            id: None,
-            language: None,
-            rel_source_path: None,
-            r#type: Some("post".to_string()),
-            rel_file_path: None,
-            sections,
-            source_path: Some(source_path.clone()),
-            status: Some("published".to_string()),
-            theme_test_or_page,
-            template_list: vec![],
-            title: vec![], // TODO: Add title spans
-            used_template: None,
-        };
+        match &source.ast {
+            Some(_ast) => {
+                let sections = source
+                    .ast
+                    .as_ref()
+                    .unwrap()
+                    .iter()
+                    .map(|section| {
+                        let p = PayloadSection::new_from_section(
+                            &section,
+                            source.config.as_ref().unwrap(),
+                        );
+                        p
+                    })
+                    .collect::<Vec<PayloadSection>>();
+                let mut p = PagePayload {
+                    id: None,
+                    language: None,
+                    rel_source_path: None,
+                    r#type: Some("post".to_string()),
+                    rel_file_path: None,
+                    sections,
+                    source_path: Some(source_path.clone()),
+                    status: Some("published".to_string()),
+                    theme_test_or_page,
+                    template_list: vec![],
+                    title: vec![], // TODO: Add title spans
+                    used_template: None,
+                };
 
-        p.get_id();
+                p.get_id();
 
-        match p.id {
-            Some(_) => {
-                p.get_language(&source);
-                p.get_type();
-                p.get_status();
-                p.get_template_list();
-                p.get_rel_source_path(&source);
-                p.get_rel_file_path();
-                Ok(p)
+                match p.id {
+                    Some(_) => {
+                        p.get_language(&source);
+                        p.get_type();
+                        p.get_status();
+                        p.get_template_list();
+                        p.get_rel_source_path(&source);
+                        p.get_rel_file_path();
+                        Ok(p)
+                    }
+                    None => Err(NeoError {
+                        kind: NeoErrorKind::GenericErrorWithSourcePathAndPayloadSections {
+                            source_path: source_path.clone(),
+                            msg: "Could not get id when making page payload".to_string(),
+                            sections: Some(p.sections.clone()),
+                        },
+                    }),
+                }
             }
             None => Err(NeoError {
-                kind: NeoErrorKind::GenericErrorWithSourcePathAndPayloadSections {
+                kind: NeoErrorKind::ForwardErrorWithSourcePath {
                     source_path: source_path.clone(),
-                    msg: "Could not get id when making page payload".to_string(),
-                    sections: Some(p.sections.clone()),
+                    msg: "No AST available".to_string(),
                 },
             }),
         }
-
-        // if let Some(id) = source.id() {
-        //     let mut p = PagePayload {
-        //         id,
-        //         r#type: None,
-        //         rel_file_path: None,
-        //         sections: vec![],
-        //         status: None,
-        //         template_list: vec![],
-        //         title: vec![], // TODO: Add title spans
-        //         used_template: None,
-        //     };
-        //     p.rel_file_path = source.rel_file_path();
-        //     p.template_list = source.template_list();
-        //     p.status = source.status();
-        //     p.r#type = source.r#type();
-        //     p.sections = source.sections();
-        //     Ok(p)
-        // } else {
-        //     Err(NeoError {
-        //         kind: NeoErrorKind::GenericErrorWithSourcePath {
-        //             source_path: source.source_path.clone().expect("get source path"),
-        //             msg: "could not get id for file".to_string(),
-        //         },
-        //     })
-        // }
     }
 }
 

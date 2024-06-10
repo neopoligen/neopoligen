@@ -586,6 +586,11 @@ impl Builder {
         env.set_debug(true);
         env.set_lstrip_blocks(true);
         env.set_trim_blocks(true);
+        let _ = env.add_template(
+            "parsererror",
+            include_str!("../error_templates/parsererror.neoj"),
+        );
+        let _ = env.add_template("_todo", include_str!("../error_templates/_todo.neoj"));
         env.add_template_owned(
             "tmp_status",
             r#"
@@ -598,6 +603,7 @@ body { background-color: #111; color: #aaa; }
 <ul>
 [! for error in errors !]
 <li>
+[! include [error.kind.type, "_todo"] !]
 [! if error.kind.source_path !]<h4>Path: [@ error.kind.source_path @]</h4>[! endif !]
 [! if error.kind.rel_source_path !]<h4>File Path: [@ error.kind.rel_source_path @]</h4>[! endif !]
 
@@ -618,7 +624,9 @@ body { background-color: #111; color: #aaa; }
 [! else !]
     <h2>[@ error.kind.type @]</h2>
     <pre>
+    [#
     [@ error|tojson(true)@]
+    #]
     </pre>
 [! endif !]
 </li>
