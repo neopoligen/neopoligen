@@ -270,7 +270,7 @@ mod test {
     #[test]
     fn rel_source_path_check_for_page() {
         let p = PagePayload::new_from_source_page(
-            &PathBuf::from("/test/mocks/source/subdir/filename.neo"),
+            &PathBuf::from("/test/mocks/content/subdir/filename.neo"),
             &SourcePage::mock1_20240101_alfa1234_minimal(),
             ThemeTestOrPage::Page,
         )
@@ -283,7 +283,7 @@ mod test {
     #[test]
     fn rel_source_path_check_for_theme_test() {
         let p = PagePayload::new_from_source_page(
-            &PathBuf::from("/test/mocks/admin/themes/test-theme/templates/filename.neo"),
+            &PathBuf::from("/test/mocks/themes/test-theme/templates/filename.neo"),
             &SourcePage::mock1_20240101_alfa1234_minimal(),
             ThemeTestOrPage::ThemeTest,
         )
