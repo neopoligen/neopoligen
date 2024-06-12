@@ -203,11 +203,11 @@ impl PayloadSection {
             bounds
         ));
         template_list.push(format!(
-            "sections/{}/_generic/{}/default.neoj",
+            "sections/{}/generic/{}/default.neoj",
             kind.as_ref().unwrap(),
             bounds
         ));
-        template_list.push(format!("sections/unknown/_generic/{}/default.neoj", bounds));
+        template_list.push(format!("sections/unknown/generic/{}/default.neoj", bounds));
 
         let tags = section
             .attrs
@@ -349,7 +349,7 @@ mod test {
                 parsed_text: "alfa bravo".to_string(),
                 template_list: vec![
                     "spans/wordpart.neoj".to_string(),
-                    "spans/_generic.neoj".to_string(),
+                    "spans/generic.neoj".to_string(),
                 ],
             },
             PayloadSpan {
@@ -375,7 +375,7 @@ mod test {
                 parsed_text: " ".to_string(),
                 template_list: vec![
                     "spans/space.neoj".to_string(),
-                    "spans/_generic.neoj".to_string(),
+                    "spans/generic.neoj".to_string(),
                 ],
             },
             PayloadSpan {
@@ -401,7 +401,7 @@ mod test {
                 parsed_text: "charlie delta".to_string(),
                 template_list: vec![
                     "spans/wordpart.neoj".to_string(),
-                    "spans/_generic.neoj".to_string(),
+                    "spans/generic.neoj".to_string(),
                 ],
             },
         ];
@@ -597,7 +597,6 @@ mod test {
     // }
 
     #[test]
-    #[ignore]
     fn template_list_check() {
         let config = SiteConfig::mock1_basic();
         let payload_section = PayloadSection::new_from_section(
@@ -606,8 +605,8 @@ mod test {
         );
         let left = vec![
             "sections/basic/title/full/default.neoj".to_string(),
-            "sections/basic/_generic/full/default.neoj".to_string(),
-            "sections/unknown/_generic/full/default.neoj".to_string(),
+            "sections/basic/generic/full/default.neoj".to_string(),
+            "sections/unknown/generic/full/default.neoj".to_string(),
         ];
         let right = payload_section.template_list;
         assert_eq!(left, right);
