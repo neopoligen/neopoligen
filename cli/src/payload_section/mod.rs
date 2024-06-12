@@ -305,7 +305,7 @@ mod test {
             parsed_text: "".to_string(),
             source_text: "DEPRECATED".to_string(),
             kind: SpanKind::NamedSpan {
-                spans: vec![Span {
+                children: vec![Span {
                     attrs: vec![],
                     kind: SpanKind::WordPart,
                     parsed_text: "alfa".to_string(),
@@ -332,6 +332,7 @@ mod test {
                 attr_string: None,
                 attrs: None,
                 attrs_unescaped: None,
+                children: None,
                 classes: None,
                 classes_unescaped: None,
                 custom_attrs: None,
@@ -357,6 +358,7 @@ mod test {
                 attr_string: None,
                 attrs: None,
                 attrs_unescaped: None,
+                children: None,
                 classes: None,
                 classes_unescaped: None,
                 custom_attrs: None,
@@ -382,6 +384,7 @@ mod test {
                 attr_string: None,
                 attrs: None,
                 attrs_unescaped: None,
+                children: None,
                 classes: None,
                 classes_unescaped: None,
                 custom_attrs: None,

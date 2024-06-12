@@ -46,7 +46,7 @@ pub fn flatten_spans(spans: &Vec<Span>) -> String {
 
 pub fn flatten_parsed_text(span: &Span) -> String {
     match &span.kind {
-        SpanKind::NamedSpan { spans, .. } => spans
+        SpanKind::NamedSpan { children, .. } => children
             .iter()
             .map(|span| flatten_parsed_text(span))
             .collect::<Vec<String>>()

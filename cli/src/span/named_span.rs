@@ -21,7 +21,7 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, spans) = many0(alt((
+    let (source, children) = many0(alt((
         wordpart,
         newline,
         space,
@@ -61,7 +61,7 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
             parsed_text: "".to_string(),
             kind: SpanKind::NamedSpan {
                 r#type: r#type.to_string(),
-                spans,
+                children,
             },
         },
     ))
@@ -239,7 +239,7 @@ mod test {
                 parsed_text: "".to_string(),
                 kind: SpanKind::NamedSpan {
                     r#type: "em".to_string(),
-                    spans: vec![Span {
+                    children: vec![Span {
                         attrs: vec![],
                         source_text: "alfa".to_string(),
                         parsed_text: "alfa".to_string(),
@@ -263,7 +263,7 @@ mod test {
                 parsed_text: "".to_string(),
                 kind: SpanKind::NamedSpan {
                     r#type: "em".to_string(),
-                    spans: vec![Span {
+                    children: vec![Span {
                         attrs: vec![],
                         source_text: "alfa".to_string(),
                         parsed_text: "alfa".to_string(),
@@ -287,7 +287,7 @@ mod test {
                 parsed_text: "".to_string(),
                 kind: SpanKind::NamedSpan {
                     r#type: "alfa".to_string(),
-                    spans: vec![
+                    children: vec![
                         Span {
                             attrs: vec![],
                             source_text: "ping".to_string(),
@@ -362,7 +362,7 @@ mod test {
                 parsed_text: "".to_string(),
                 kind: SpanKind::NamedSpan {
                     r#type: "code".to_string(),
-                    spans: vec![Span {
+                    children: vec![Span {
                         attrs: vec![],
                         source_text: "something".to_string(),
                         parsed_text: "something".to_string(),

@@ -1,1 +1,8 @@
-[TODO: list full default]
+[! import "includes/theme.neoj" as theme !]
+<ul>
+[! for child in section.children !]
+<li><pre>[@ child|tojson(true) @]</pre></li>
+[@ theme.output_section("", "", child) @]
+[! endfor !]
+</ul>
+

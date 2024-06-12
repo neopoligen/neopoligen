@@ -58,6 +58,11 @@ pub struct PayloadSpan {
     pub attrs_unescaped: Option<BTreeMap<String, String>>,
 
     ///
+    /// children
+    /// For spans that have child spans
+    pub children: Option<Vec<PayloadSpan>>,
+
+    ///
     /// NEEDS_DOCS: classes
     pub classes: Option<Vec<String>>,
 
@@ -159,6 +164,8 @@ impl PayloadSpan {
             }
             _ => {}
         });
+
+        let children = None;
 
         let mut classes: Vec<String> = vec![];
         let mut classes_unescaped: Vec<String> = vec![];
@@ -302,6 +309,7 @@ impl PayloadSpan {
             } else {
                 Some(attrs_unescaped)
             },
+            children,
             classes: PayloadSpan::get_classes(&span),
             classes_unescaped: PayloadSpan::get_classes_unescaped(&span),
             custom_attrs: if custom_attrs.len() == 0 {
@@ -348,6 +356,7 @@ impl PayloadSpan {
             attrs: None,
             attrs_unescaped: None,
             attr_string: None,
+            children: None,
             classes: None,
             classes_unescaped: None,
             custom_attrs: None,
@@ -445,8 +454,16 @@ impl PayloadSpan {
 
 #[cfg(test)]
 mod test {
-    //use super::*;
-    //use pretty_assertions::assert_eq;
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    #[ignore]
+    fn nested_spans_test() {
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock7_nested_spans(), &config);
+        assert_eq!(3, ps.children.unwrap().len());
+    }
 
     // #[test]
     // fn aria_check() {

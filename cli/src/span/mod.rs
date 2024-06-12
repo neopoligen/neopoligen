@@ -78,7 +78,7 @@ pub enum SpanKind {
     Hyphen,
     LessThan,
     LinkShorthand,
-    NamedSpan { r#type: String, spans: Vec<Span> },
+    NamedSpan { r#type: String, children: Vec<Span> },
     Newline,
     NonEscapeBackslash,
     Pipe,
@@ -228,7 +228,7 @@ mod test {
             parsed_text: "".to_string(),
             kind: SpanKind::NamedSpan {
                 r#type: "em".to_string(),
-                spans: vec![
+                children: vec![
                     Span {
                         attrs: vec![],
                         kind: SpanKind::WordPart,
@@ -241,7 +241,7 @@ mod test {
                         source_text: "<<strong|echo>>".to_string(),
                         kind: SpanKind::NamedSpan {
                             r#type: "strong".to_string(),
-                            spans: vec![Span {
+                            children: vec![Span {
                                 attrs: vec![],
                                 kind: SpanKind::WordPart,
                                 parsed_text: "echo".to_string(),
