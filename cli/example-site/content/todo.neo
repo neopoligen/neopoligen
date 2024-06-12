@@ -47,6 +47,9 @@ it instead of panicing.
 
 [] Make sure all the span types have explicit templates
 
+[] Test code shorthand blocks will all the characters
+that wordpart excludes to make sure they work. 
+
 -- todo 
 -- title: Documentation Notes
 

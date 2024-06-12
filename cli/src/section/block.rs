@@ -1,6 +1,7 @@
 use crate::section::Section;
 use crate::section::SectionBounds;
 use crate::section::SectionKind;
+use crate::span::pipe::*;
 use crate::span::*;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
@@ -19,7 +20,7 @@ pub struct Block {}
 pub fn block_of_anything<'a>(source: &'a str) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = not(eof).context("").parse(source)?;
     let (source, _) = not(tag("--")).context("").parse(source)?;
-    let (source, spans) = many1(alt((base_span_for_all_text,)))
+    let (source, spans) = many1(alt((base_span_for_all_text, pipe)))
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
@@ -76,27 +77,16 @@ mod test {
     use super::*;
     use pretty_assertions::assert_eq;
     use rstest::rstest;
-    #[rstest]
-    #[case("alfa bravo", "")]
-    #[case("alfa - bravo", "- bravo")]
-    #[case("- alfa", " alfa")]
-    #[case("_ alfa", " alfa")]
-    #[case("__em shorthand__", "")]
-    #[case("``code shorthand_with single underscore``", "")]
-    fn base_span_for_all_blocks_fixture(#[case] input: &str, #[case] remainder: &str) {
-        let got = base_span_for_all_text(input).unwrap().0;
-        assert_eq!(remainder, got);
-    }
 
-    // #[rstest]
-    // #[case("alfa | bravo", "")]
-    // #[case("alfa - bravo", "")]
-    // #[case(
-    //     "<<link|Perl|https://en.wikipedia.org/wiki/Perl>> on my own, though, is well",
-    //     ""
-    // )]
-    // fn run_test(#[case] input: &str, #[case] left: &str) {
-    //     let right = block_of_anything(input).unwrap().0;
-    //     assert_eq!(left, right);
-    // }
+    #[rstest]
+    #[case("alfa | bravo", "")]
+    #[case("alfa - bravo", "")]
+    #[case(
+        "<<link|Perl|https://en.wikipedia.org/wiki/Perl>> on my own, though, is well",
+        ""
+    )]
+    fn run_test(#[case] input: &str, #[case] left: &str) {
+        let right = block_of_anything(input).unwrap().0;
+        assert_eq!(left, right);
+    }
 }
