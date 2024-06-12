@@ -1,0 +1,4 @@
+[! import "includes/theme.neoj" as theme !]
+[! for span in section.spans !]
+[@ theme.output_span("", "", span) @]
+[!- endfor -!]

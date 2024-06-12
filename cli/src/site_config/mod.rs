@@ -120,7 +120,7 @@ impl SiteConfig {
     }
 
     pub fn content_source_dir(&self) -> PathBuf {
-        self.project_dir().join("source")
+        self.project_dir().join("content")
     }
 
     pub fn default_language(&self) -> Result<String> {
@@ -194,16 +194,16 @@ impl SiteConfig {
     // }
 
     pub fn themes_dir(&self) -> PathBuf {
-        self.admin_dir().join("themes")
+        self.project_dir().join("themes")
     }
 
     pub fn theme_dir(&self) -> PathBuf {
         self.themes_dir().join(self.theme_name.clone())
     }
 
-    pub fn templates_dir(&self) -> PathBuf {
-        self.theme_dir().join("templates")
-    }
+    // pub fn templates_dir(&self) -> PathBuf {
+    //     self.theme_dir().join("templates")
+    // }
 
     // pub fn theme_tests_dest_dir(&self) -> PathBuf {
     //     self.status_dir().join("theme-tests")
@@ -266,7 +266,8 @@ impl SiteConfig {
     }
 
     pub fn load_sections(&mut self) {
-        let section_root = self.templates_dir().join("sections");
+        let section_root = self.theme_dir().join("sections");
+        //let section_root = self.templates_dir().join("sections");
         let section_categories = [
             "basic",
             "block",
@@ -288,7 +289,7 @@ impl SiteConfig {
                     .unwrap()
                     .to_string_lossy()
                     .to_string();
-                if section_name.as_str().ne("_generic") && !section_name.starts_with(".") {
+                if section_name.as_str().ne("generic") && !section_name.starts_with(".") {
                     if category.eq_ignore_ascii_case("basic") {
                         self.sections.basic.push(section_name);
                     } else if category.eq_ignore_ascii_case("block") {

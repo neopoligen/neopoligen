@@ -62,9 +62,8 @@ async fn main() {
                 Ok(site_config) => {
                     run_web_server(engine_config.clone(), site_config).await;
                 }
-                Err(_e) => {
-                    dbg!("TODO: site config error mesage");
-                    ()
+                Err(e) => {
+                    event!(Level::ERROR, "Could not load site config: {}", e);
                 }
             }
         }

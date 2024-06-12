@@ -262,7 +262,8 @@ impl Builder {
     #[instrument(skip(self))]
     pub fn load_templates(&mut self) -> Result<()> {
         event!(Level::INFO, "Loading Templates");
-        for entry in WalkDir::new(&self.config.as_ref().unwrap().templates_dir()) {
+        for entry in WalkDir::new(&self.config.as_ref().unwrap().theme_dir()) {
+            //for entry in WalkDir::new(&self.config.as_ref().unwrap().templates_dir()) {
             let path = entry?.path().to_path_buf();
             if path.is_file() {
                 if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
@@ -270,7 +271,8 @@ impl Builder {
                         && !filename.to_str().unwrap().starts_with(".")
                     {
                         let template_name =
-                            &path.strip_prefix(&self.config.as_ref().unwrap().templates_dir());
+                            &path.strip_prefix(&self.config.as_ref().unwrap().theme_dir());
+                        //&path.strip_prefix(&self.config.as_ref().unwrap().templates_dir());
                         let content = fs::read_to_string(&path)?;
                         self.templates.insert(
                             template_name
@@ -292,7 +294,8 @@ impl Builder {
         event!(Level::INFO, "Loading Theme Test Pages");
         // Reminder: clear the original pages
         self.source_pages = BTreeMap::new();
-        for entry in WalkDir::new(&self.config.as_ref().unwrap().templates_dir()) {
+        // for entry in WalkDir::new(&self.config.as_ref().unwrap().templates_dir()) {
+        for entry in WalkDir::new(&self.config.as_ref().unwrap().theme_dir()) {
             let path = entry?.path().to_path_buf();
             if path.is_file() {
                 if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {

@@ -45,7 +45,7 @@ attr: ``-- title: Stack Overflow: Explanation of <script type="text/template">..
 [] If an AST from the cache is invalid, drop it and regenerate
 it instead of panicing. 
 
-
+[] Make sure all the span types have explicit templates
 
 -- todo 
 -- title: Documentation Notes
@@ -60,6 +60,9 @@ instead of being included in the attributes.
 
 [] Default template vec with fallback to pages/post/published.
 for pages. 
+
+[] Write up the "basic/naked" section that doesn't wrap the 
+content in anything
 
 
 -- metadata
