@@ -1,5 +1,4 @@
 [! import "includes/theme.neoj" as theme !]
-<hgroup>
 [! for child in section.children !]
   [! if loop.first !]
     <h1>

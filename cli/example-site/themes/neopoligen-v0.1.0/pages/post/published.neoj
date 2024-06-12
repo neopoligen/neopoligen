@@ -1,23 +1,9 @@
-[! include "includes/config.neoj" !]
-[! import "includes/theme.neoj" as theme !]
-<!DOCTYPE html>
-<html>
-<head>
-<style>
-body {
-  background-color: #111;
-  color: #aaa;
-}
-</style>
-</head>
-<body>
+[!- extends "wrappers/one-column.neoj" -!]
+[!- include "includes/config.neoj" -!]
+[!- import "includes/theme.neoj" as theme -!]
 
-<header></header>
-<main>
-[! for section in page.sections !]
-[@ theme.output_section("", "", section) @]
-[! endfor !]
-</main>
-
-<footer></footer>
-</body>
+[!- block body -!]
+[!- for section in page.sections -!]
+[@- theme.output_section("", "", section) -@]
+[!- endfor -!]
+[!- endblock -!]

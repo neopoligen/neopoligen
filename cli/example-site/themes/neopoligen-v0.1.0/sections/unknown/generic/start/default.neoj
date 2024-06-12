@@ -1,2 +1,2 @@
-Unknown Start Section
-
+[! import "includes/theme.neoj" as theme !]
+[! include "subsections/content-full.neoj" !]
