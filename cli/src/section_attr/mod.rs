@@ -1,8 +1,13 @@
+use crate::span::colon::colon;
+use crate::span::escaped_pipe::escaped_pipe;
+use crate::span::hyphen::hyphen;
+use crate::span::pipe::pipe;
+use crate::span::single_underscore::single_underscore;
+use crate::span::wordpart::wordpart;
 use crate::span::*;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
-// use nom::character::complete::not_line_ending;
 use nom::character::complete::space1;
 use nom::multi::many1;
 use nom::IResult;
@@ -10,12 +15,6 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
-
-use self::colon::colon;
-use self::escaped_pipe::escaped_pipe;
-use self::hyphen::hyphen;
-use self::pipe::pipe;
-use self::wordpart::wordpart;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SectionAttr {
@@ -49,9 +48,17 @@ pub fn section_key_value_attr<'a>(
     let (source, _) = tag(":").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
     // TODO: Add all the different span types that are allowed here
-    let (source, spans) = many1(alt((wordpart, space, hyphen, colon, escaped_pipe, pipe)))
-        .context("")
-        .parse(source)?;
+    let (source, spans) = many1(alt((
+        wordpart,
+        space,
+        hyphen,
+        colon,
+        escaped_pipe,
+        pipe,
+        single_underscore,
+    )))
+    .context("")
+    .parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
         .parse(source)?;
@@ -154,6 +161,18 @@ mod test {
     }
 
     #[test]
+    fn flag_attr_with_colons_in_it() {
+        let source = "-- https://www.example.com";
+        assert!(section_flag_attr(source).is_ok());
+    }
+
+    #[test]
+    fn flag_attr_with_hyphen_init() {
+        let source = "-- https://www.exa-mple.com";
+        assert!(section_flag_attr(source).is_ok());
+    }
+
+    #[test]
     fn key_value_spans_basic() {
         let source = "-- key: value";
         let left = SectionAttr {
@@ -172,14 +191,66 @@ mod test {
     }
 
     #[test]
-    fn flag_attr_with_colons_in_it() {
-        let source = "-- https://www.example.com";
-        assert!(section_flag_attr(source).is_ok());
+    fn key_value_with_hyphen() {
+        let source = "-- key: alfa-bravo";
+        let left = SectionAttr {
+            kind: SectionAttrKind::KeyValueSpans {
+                key: "key".to_string(),
+                spans: vec![
+                    Span {
+                        attrs: vec![],
+                        kind: SpanKind::WordPart {},
+                        parsed_text: "alfa".to_string(),
+                        source_text: "alfa".to_string(),
+                    },
+                    Span {
+                        attrs: vec![],
+                        kind: SpanKind::Hyphen {},
+                        parsed_text: "-".to_string(),
+                        source_text: "-".to_string(),
+                    },
+                    Span {
+                        attrs: vec![],
+                        kind: SpanKind::WordPart {},
+                        parsed_text: "bravo".to_string(),
+                        source_text: "bravo".to_string(),
+                    },
+                ],
+            },
+        };
+        let right = section_attr(source).unwrap().1;
+        assert_eq!(left, right);
     }
 
     #[test]
-    fn flag_attr_with_hyphen_init() {
-        let source = "-- https://www.exa-mple.com";
-        assert!(section_flag_attr(source).is_ok());
+    fn key_value_with_single_underscore() {
+        let source = "-- key: alfa_bravo";
+        let left = SectionAttr {
+            kind: SectionAttrKind::KeyValueSpans {
+                key: "key".to_string(),
+                spans: vec![
+                    Span {
+                        attrs: vec![],
+                        kind: SpanKind::WordPart {},
+                        parsed_text: "alfa".to_string(),
+                        source_text: "alfa".to_string(),
+                    },
+                    Span {
+                        attrs: vec![],
+                        kind: SpanKind::SingleUnderscore {},
+                        parsed_text: "_".to_string(),
+                        source_text: "_".to_string(),
+                    },
+                    Span {
+                        attrs: vec![],
+                        kind: SpanKind::WordPart {},
+                        parsed_text: "bravo".to_string(),
+                        source_text: "bravo".to_string(),
+                    },
+                ],
+            },
+        };
+        let right = section_attr(source).unwrap().1;
+        assert_eq!(left, right);
     }
 }
