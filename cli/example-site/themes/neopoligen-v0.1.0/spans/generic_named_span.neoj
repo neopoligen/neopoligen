@@ -1,1 +1,5 @@
-GENERIC NAMED SPAN
+[! import "includes/theme.neoj" as theme !]
+<[@ span.type @]>[!- for child in span.children -!]
+[@ theme.output_span(site, page_id, child) @]
+[!- endfor -!]</[@ span.type @]>
+
