@@ -60,7 +60,7 @@ pub struct PayloadSpan {
     ///
     /// children
     /// For spans that have child spans
-    pub children: Option<Vec<PayloadSpan>>,
+    pub children: Vec<PayloadSpan>,
 
     ///
     /// NEEDS_DOCS: classes
@@ -165,7 +165,13 @@ impl PayloadSpan {
             _ => {}
         });
 
-        let children = None;
+        let children = match &span.kind {
+            SpanKind::NamedSpan { children, .. } => children
+                .iter()
+                .map(|child| PayloadSpan::new_from_span(child, &config))
+                .collect(),
+            _ => vec![],
+        };
 
         let mut classes: Vec<String> = vec![];
         let mut classes_unescaped: Vec<String> = vec![];
@@ -356,7 +362,7 @@ impl PayloadSpan {
             attrs: None,
             attrs_unescaped: None,
             attr_string: None,
-            children: None,
+            children: vec![],
             classes: None,
             classes_unescaped: None,
             custom_attrs: None,
@@ -458,11 +464,10 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
-    #[ignore]
     fn nested_spans_test() {
         let config = SiteConfig::mock1_basic();
         let ps = PayloadSpan::new_from_span(&Span::mock7_nested_spans(), &config);
-        assert_eq!(3, ps.children.unwrap().len());
+        assert_eq!(3, ps.children.len());
     }
 
     // #[test]
