@@ -348,7 +348,7 @@ impl PayloadSpan {
             parsed_text: span.parsed_text.clone().to_string(),
             template_list: vec![
                 format!("spans/{}.neoj", kind.clone()),
-                format!("spans/generic.neoj"),
+                format!("spans/_generic.neoj"),
             ],
         };
         ps.update_attr_string();
@@ -379,7 +379,7 @@ impl PayloadSpan {
             parsed_text: " ".to_string(),
             template_list: vec![
                 "spans/space.neoj".to_string(),
-                "spans/generic.neoj".to_string(),
+                "spans/_generic.neoj".to_string(),
             ],
         }
     }
@@ -629,7 +629,7 @@ mod test {
         let payload_span = PayloadSpan::new_from_span(&Span::mock1_basic_wordpard(), &config);
         let left = vec![
             "spans/wordpart.neoj".to_string(),
-            "spans/generic.neoj".to_string(),
+            "spans/_generic.neoj".to_string(),
         ];
         let right = payload_span.template_list;
         assert_eq!(left, right);

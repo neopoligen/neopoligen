@@ -349,7 +349,7 @@ mod test {
                 parsed_text: "alfa bravo".to_string(),
                 template_list: vec![
                     "spans/wordpart.neoj".to_string(),
-                    "spans/generic.neoj".to_string(),
+                    "spans/_generic.neoj".to_string(),
                 ],
             },
             PayloadSpan {
@@ -375,7 +375,7 @@ mod test {
                 parsed_text: " ".to_string(),
                 template_list: vec![
                     "spans/space.neoj".to_string(),
-                    "spans/generic.neoj".to_string(),
+                    "spans/_generic.neoj".to_string(),
                 ],
             },
             PayloadSpan {
@@ -401,7 +401,7 @@ mod test {
                 parsed_text: "charlie delta".to_string(),
                 template_list: vec![
                     "spans/wordpart.neoj".to_string(),
-                    "spans/generic.neoj".to_string(),
+                    "spans/_generic.neoj".to_string(),
                 ],
             },
         ];
