@@ -470,22 +470,22 @@ mod test {
         assert_eq!(3, ps.children.len());
     }
 
-    // #[test]
-    // fn aria_check() {
-    //     let config = SiteConfig::mock1_basic();
-    //     let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs(), &config);
-    //     assert_eq!(r#"del&quot;ta"#, ps.aria.unwrap().get("valuenow").unwrap());
-    // }
+    #[test]
+    fn aria_check() {
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs(), &config);
+        assert_eq!(r#"del&quot;ta"#, ps.aria.unwrap().get("valuenow").unwrap());
+    }
 
-    // #[test]
-    // fn aria_unescaped_check() {
-    //     let config = SiteConfig::mock1_basic();
-    //     let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs(), &config);
-    //     assert_eq!(
-    //         r#"del"ta"#,
-    //         ps.aria_unescaped.unwrap().get("valuenow").unwrap()
-    //     );
-    // }
+    #[test]
+    fn aria_unescaped_check() {
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs(), &config);
+        assert_eq!(
+            r#"del"ta"#,
+            ps.aria_unescaped.unwrap().get("valuenow").unwrap()
+        );
+    }
 
     // #[test]
     // fn attr_string() {
@@ -524,14 +524,14 @@ mod test {
     //     );
     // }
 
-    // #[test]
-    // fn basic_check() {
-    //     let config = SiteConfig::mock1_basic();
-    //     let payload_span = PayloadSpan::new_from_span(&Span::mock1_basic_wordpard(), &config);
-    //     let left = "alfa";
-    //     let right = payload_span.parsed_text;
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn basic_check() {
+        let config = SiteConfig::mock1_basic();
+        let payload_span = PayloadSpan::new_from_span(&Span::mock1_basic_wordpard(), &config);
+        let left = "alfa";
+        let right = payload_span.parsed_text;
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // fn classes_check() {
@@ -609,31 +609,31 @@ mod test {
     //     assert_eq!(r#"fox"trot"#, ps.first_flag_unescaped.unwrap());
     // }
 
-    // #[test]
-    // fn id_check() {
-    //     let config = SiteConfig::mock1_basic();
-    //     let ps = PayloadSpan::new_from_span(&Span::mock6_id_with_qutoe_in_t(), &config);
-    //     assert_eq!(r#"fox&quot;trot"#, ps.id.unwrap());
-    // }
+    #[test]
+    fn id_check() {
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock6_id_with_qutoe_in_t(), &config);
+        assert_eq!(r#"fox&quot;trot"#, ps.id.unwrap());
+    }
 
-    // #[test]
-    // fn id_unescaped_check() {
-    //     let config = SiteConfig::mock1_basic();
-    //     let ps = PayloadSpan::new_from_span(&Span::mock6_id_with_qutoe_in_t(), &config);
-    //     assert_eq!(r#"fox"trot"#, ps.id_unescaped.unwrap());
-    // }
+    #[test]
+    fn id_unescaped_check() {
+        let config = SiteConfig::mock1_basic();
+        let ps = PayloadSpan::new_from_span(&Span::mock6_id_with_qutoe_in_t(), &config);
+        assert_eq!(r#"fox"trot"#, ps.id_unescaped.unwrap());
+    }
 
-    // #[test]
-    // fn template_list_check() {
-    //     let config = SiteConfig::mock1_basic();
-    //     let payload_span = PayloadSpan::new_from_span(&Span::mock1_basic_wordpard(), &config);
-    //     let left = vec![
-    //         "spans/wordpart.neoj".to_string(),
-    //         "spans/generic.neoj".to_string(),
-    //     ];
-    //     let right = payload_span.template_list;
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn template_list_check() {
+        let config = SiteConfig::mock1_basic();
+        let payload_span = PayloadSpan::new_from_span(&Span::mock1_basic_wordpard(), &config);
+        let left = vec![
+            "spans/wordpart.neoj".to_string(),
+            "spans/generic.neoj".to_string(),
+        ];
+        let right = payload_span.template_list;
+        assert_eq!(left, right);
+    }
 
     //
 }
