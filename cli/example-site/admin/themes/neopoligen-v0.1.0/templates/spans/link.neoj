@@ -1,1 +1,6 @@
-<a href="[@ span.first_flag @]">[@ span.parsed_text @]</a>
+[! import "includes/theme.neoj" as theme !]
+<a href="[@ span.first_flag @]">
+  [!- for child in span.children -!]
+    [@- theme.output_span("", "", child) -@]
+  [!- endfor -!]
+</a>

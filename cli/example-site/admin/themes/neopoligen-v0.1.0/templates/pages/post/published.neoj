@@ -20,11 +20,4 @@ body {
 </main>
 
 <footer></footer>
-
-<h3>Page</h3>
-<div>
-[@ page @]
-</div>
-
-
 </body>

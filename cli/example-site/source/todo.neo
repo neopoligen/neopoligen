@@ -42,6 +42,10 @@ attr: ``-- title: Stack Overflow: Explanation of <script type="text/template">..
 
 [] Deal with backticks in key value sections. 
 
+[] If an AST from the cache is invalid, drop it and regenerate
+it instead of panicing. 
+
+
 
 -- todo 
 -- title: Documentation Notes
