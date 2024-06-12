@@ -131,6 +131,10 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
             builder.generate_missing_asts();
             builder.generate_payloads(ThemeTestOrPage::ThemeTest);
             let _ = builder.test_theme();
+            // Other Files
+
+            let _ = builder.deploy_theme_files();
+
             // Errors
             builder.tmp_output_errors().unwrap();
             // builder.todo("update_file_cache");

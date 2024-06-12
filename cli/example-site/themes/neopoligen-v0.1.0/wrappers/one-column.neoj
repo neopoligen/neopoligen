@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="/theme/styles/variables.css" />
+<link rel="stylesheet" href="/theme/styles/theme.css" />
+</head>
+<body>
+<header><a href="/">Home</a></header>
+<main>
+[! block body !][! endblock !]
+</main>
+<footer></footer>
+</body>
+
