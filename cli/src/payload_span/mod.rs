@@ -126,6 +126,10 @@ pub struct PayloadSpan {
     ///
     /// NEEDS_DOCS: template_list
     pub template_list: Vec<String>,
+
+    ///
+    /// NEEDS_DOCS: type
+    pub r#type: String,
 }
 
 impl PayloadSpan {
@@ -278,6 +282,11 @@ impl PayloadSpan {
         });
 
         let kind = match &span.kind {
+            SpanKind::NamedSpan { .. } => "named".to_string(),
+            _ => "basic".to_string(),
+        };
+
+        let r#type = match &span.kind {
             SpanKind::CodeShorthand => "codeshorthand".to_string(),
             SpanKind::Colon => "colon".to_string(),
             SpanKind::ColonNotFollowedBySpace => "colonnotfollowedbyspace".to_string(),
@@ -347,9 +356,10 @@ impl PayloadSpan {
             kind: kind.clone(),
             parsed_text: span.parsed_text.clone().to_string(),
             template_list: vec![
-                format!("spans/{}.neoj", kind.clone()),
+                format!("spans/{}.neoj", r#type.clone()),
                 format!("spans/generic.neoj"),
             ],
+            r#type: r#type.clone(),
         };
         ps.update_attr_string();
         ps
@@ -375,7 +385,8 @@ impl PayloadSpan {
             flags_unescaped: None,
             id: None,
             id_unescaped: None,
-            kind: "space".to_string(),
+            kind: "basic".to_string(),
+            r#type: "space".to_string(),
             parsed_text: " ".to_string(),
             template_list: vec![
                 "spans/space.neoj".to_string(),

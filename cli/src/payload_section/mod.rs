@@ -345,7 +345,8 @@ mod test {
                 flags_unescaped: None,
                 id: None,
                 id_unescaped: None,
-                kind: "wordpart".to_string(),
+                kind: "basic".to_string(),
+                r#type: "wordpart".to_string(),
                 parsed_text: "alfa bravo".to_string(),
                 template_list: vec![
                     "spans/wordpart.neoj".to_string(),
@@ -371,7 +372,8 @@ mod test {
                 flags_unescaped: None,
                 id: None,
                 id_unescaped: None,
-                kind: "space".to_string(),
+                kind: "basic".to_string(),
+                r#type: "space".to_string(),
                 parsed_text: " ".to_string(),
                 template_list: vec![
                     "spans/space.neoj".to_string(),
@@ -397,7 +399,8 @@ mod test {
                 flags_unescaped: None,
                 id: None,
                 id_unescaped: None,
-                kind: "wordpart".to_string(),
+                kind: "basic".to_string(),
+                r#type: "wordpart".to_string(),
                 parsed_text: "charlie delta".to_string(),
                 template_list: vec![
                     "spans/wordpart.neoj".to_string(),
