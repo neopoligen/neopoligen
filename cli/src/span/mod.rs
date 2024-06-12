@@ -35,9 +35,9 @@ use crate::span::escaped_colon::*;
 use crate::span::escaped_greaterthan::*;
 use crate::span::escaped_pipe::*;
 use crate::span::escaped_underscore::*;
-use crate::span::greaterthan::*;
+// use crate::span::greaterthan::*;
 use crate::span::hyphen::*;
-use crate::span::lessthan::*;
+// use crate::span::lessthan::*;
 use crate::span::more_than_two_underscores::*;
 use crate::span::named_span::*;
 use crate::span::non_escape_backslash::*;
@@ -104,7 +104,7 @@ pub enum SpanKind {
 }
 
 pub fn base_span_for_all_text<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
-    let (source, span) = alt((
+    let (source, span) = alt((alt((
         wordpart,
         space,
         newline,
@@ -125,7 +125,7 @@ pub fn base_span_for_all_text<'a>(source: &'a str) -> IResult<&'a str, Span, Err
         escaped_backslash,
         non_escape_backslash,
         more_than_two_underscores,
-    ))
+    )),))
     .context("")
     .parse(source)?;
     Ok((source, span))
