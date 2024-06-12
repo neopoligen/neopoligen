@@ -357,7 +357,7 @@ impl PayloadSpan {
             parsed_text: span.parsed_text.clone().to_string(),
             template_list: vec![
                 format!("spans/{}.neoj", r#type.clone()),
-                format!("spans/generic_basic_span.neoj"),
+                format!("spans/generic_{}_span.neoj", kind.clone()),
             ],
             r#type: r#type.clone(),
         };
@@ -635,12 +635,25 @@ mod test {
     }
 
     #[test]
-    fn template_list_check_basic() {
+    fn template_list_check_basic_span() {
         let config = SiteConfig::mock1_basic();
         let payload_span = PayloadSpan::new_from_span(&Span::mock1_basic_wordpard(), &config);
         let left = vec![
             "spans/wordpart.neoj".to_string(),
             "spans/generic_basic_span.neoj".to_string(),
+        ];
+        let right = payload_span.template_list;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn template_list_check_named_span() {
+        let config = SiteConfig::mock1_basic();
+        let payload_span =
+            PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs(), &config);
+        let left = vec![
+            "spans/link.neoj".to_string(),
+            "spans/generic_named_span.neoj".to_string(),
         ];
         let right = payload_span.template_list;
         assert_eq!(left, right);
