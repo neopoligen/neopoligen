@@ -1,4 +1,5 @@
 use crate::span::colon::colon;
+use crate::span::double_underscore::double_underscore;
 use crate::span::escaped_pipe::escaped_pipe;
 use crate::span::hyphen::hyphen;
 use crate::span::pipe::pipe;
@@ -100,9 +101,15 @@ pub fn section_flag_attr<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, E
     // -- https://www.example.com/
     let (source, _) = tag("--").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
-    let (source, parts) = many1(alt((wordpart, colon, hyphen)))
-        .context("")
-        .parse(source)?;
+    let (source, parts) = many1(alt((
+        wordpart,
+        colon,
+        hyphen,
+        single_underscore,
+        double_underscore,
+    )))
+    .context("")
+    .parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
         .parse(source)?;
@@ -150,6 +157,7 @@ mod test {
     #[case("escaped pipe", "-- key: some \\| thing", true)]
     #[case("path with slash", "-- path: /", true)]
     #[case("type with hyphen", "-- type: home-page", true)]
+    #[case("flag with doulbe underscore", "-- alfa__bravo", true)]
     fn section_attr_basci_fixture(
         #[case] _description: &str,
         #[case] source: &str,
@@ -167,8 +175,14 @@ mod test {
     }
 
     #[test]
-    fn flag_attr_with_hyphen_init() {
+    fn flag_attr_with_hyphen() {
         let source = "-- https://www.exa-mple.com";
+        assert!(section_flag_attr(source).is_ok());
+    }
+
+    #[test]
+    fn flag_attr_with_single_underscore() {
+        let source = "-- alfa_bravo";
         assert!(section_flag_attr(source).is_ok());
     }
 

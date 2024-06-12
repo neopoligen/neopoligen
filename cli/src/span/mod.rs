@@ -2,6 +2,7 @@ pub mod code_shorthand;
 pub mod code_shorthand_single_pipe;
 pub mod colon;
 pub mod colon_not_followed_by_space;
+pub mod double_underscore;
 pub mod em_shorthand;
 pub mod escaped_backslash;
 pub mod escaped_backtick;
@@ -13,6 +14,7 @@ pub mod greaterthan;
 pub mod hyphen;
 pub mod lessthan;
 pub mod mocks;
+pub mod more_than_two_underscores;
 pub mod named_span;
 pub mod non_escape_backslash;
 pub mod pipe;
@@ -23,21 +25,22 @@ pub mod single_underscore;
 pub mod wordpart;
 
 use crate::span::code_shorthand::*;
-// use crate::span::em_shorthand::*;
-// use crate::span::code_shorthand_single_pipe::*;
+use crate::span::code_shorthand_single_pipe::*;
 use crate::span::colon::*;
 use crate::span::colon_not_followed_by_space::*;
+use crate::span::em_shorthand::*;
 use crate::span::escaped_backslash::*;
 use crate::span::escaped_backtick::*;
+use crate::span::escaped_colon::*;
 use crate::span::escaped_greaterthan::*;
 use crate::span::escaped_pipe::*;
 use crate::span::escaped_underscore::*;
 use crate::span::greaterthan::*;
 use crate::span::hyphen::*;
 use crate::span::lessthan::*;
+use crate::span::more_than_two_underscores::*;
 use crate::span::named_span::*;
 use crate::span::non_escape_backslash::*;
-// use crate::span::pipe::*;
 use crate::span::single_backtick::*;
 use crate::span::single_greaterthan::*;
 use crate::span::single_lessthan::*;
@@ -75,6 +78,7 @@ pub enum SpanKind {
     CodeShorthand,
     Colon,
     ColonNotFollowedBySpace,
+    DoubleUnderscore,
     EmShorthand,
     EscapedBacktick,
     EscapedBackslash,
@@ -86,6 +90,7 @@ pub enum SpanKind {
     Hyphen,
     LessThan,
     LinkShorthand,
+    MoreThanTwoUnderscores,
     NamedSpan { r#type: String, children: Vec<Span> },
     Newline,
     NonEscapeBackslash,
@@ -96,6 +101,34 @@ pub enum SpanKind {
     SingleLessThan,
     Space,
     WordPart,
+}
+
+pub fn base_span_for_all_text<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    let (source, span) = alt((
+        wordpart,
+        space,
+        newline,
+        code_shorthand_single_pipe,
+        code_shorthand,
+        em_shorthand,
+        named_span,
+        hyphen,
+        colon,
+        single_lessthan,
+        single_greaterthan,
+        single_backtick,
+        single_underscore,
+        escaped_backtick,
+        escaped_colon,
+        escaped_pipe,
+        escaped_greaterthan,
+        escaped_backslash,
+        non_escape_backslash,
+        more_than_two_underscores,
+    ))
+    .context("")
+    .parse(source)?;
+    Ok((source, span))
 }
 
 // Reminder: This doesn't output a span for content
@@ -112,6 +145,7 @@ pub fn structure_empty_until_newline_or_eof<'a>(
     Ok((source, ""))
 }
 
+// DEPRECATED: replace with base_span_for_all_blocks
 pub fn span_for_body_text<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
     let (source, span) = alt((wordpart, span_base, code_shorthand, named_span))
         .context("")
@@ -119,6 +153,7 @@ pub fn span_for_body_text<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTr
     Ok((source, span))
 }
 
+// DEPRECATED: use the individual base span types
 pub fn span_base<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
     // Reminder, don't put spaces in here so these can
     // be used for keys. Also, don't put colon in here
@@ -138,16 +173,19 @@ pub fn span_base<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a st
     Ok((source, span))
 }
 
+// DEPRECATED: make and use base_span_for_shorthand_flag
 pub fn span_for_shorthand_flag<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
     let (source, span) = alt((span_base, space, newline, colon_not_followed_by_space))(source)?;
     Ok((source, span))
 }
 
+// DEPRECATED: make and use base_span_for_shorthand_text
 pub fn span_for_shorthand_text<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
     let (source, span) = alt((span_base, space, newline, colon))(source)?;
     Ok((source, span))
 }
 
+// DEPRECATED: make and use base_span_for_shorthand_key_value_key
 pub fn span_for_shorthand_attr_key<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
@@ -155,6 +193,7 @@ pub fn span_for_shorthand_attr_key<'a>(
     Ok((source, span))
 }
 
+// DEPRECATED: make and use base_span_for_shorthand_key_value_value
 pub fn span_for_shorthand_attr_value<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
@@ -218,13 +257,22 @@ mod test {
     use super::*;
     use pretty_assertions::assert_eq;
     use rstest::rstest;
+
     #[rstest]
     #[case("a", "")]
     #[case("b", "")]
     #[case(":", "")]
-    #[case("<<link|Main link|asdf>>", "")]
+    #[case("<<alfa|bravo>>", "")]
+    #[case("<<alfa-bravo|charlie>>", "")]
+    #[case("<<alfa_bravo|charlie>>", "")]
+    #[case("<<alfa|bravo-charlie>>", "")]
+    #[case("<<alfa|bravo_charlie>>", "")]
+    #[case("<<alfa|bravo|charlie>>", "")]
+    #[case("<<alfa|bravo|charlie-delta>>", "")]
+    #[case("<<alfa|bravo|charlie_delta>>", "")]
+    #[case("______", "")]
     fn run_test(#[case] input: &str, #[case] left: &str) {
-        let right = span_for_body_text(input).unwrap().0;
+        let right = base_span_for_all_text(input).unwrap().0;
         assert_eq!(left, right);
     }
 

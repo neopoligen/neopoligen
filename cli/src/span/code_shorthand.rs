@@ -22,6 +22,7 @@ pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         single_lessthan,
         single_greaterthan,
         single_backtick,
+        single_underscore,
         escaped_backtick,
         escaped_pipe,
         escaped_greaterthan,
@@ -157,6 +158,7 @@ mod test {
     #[case("``alfa bravo``", 0, "space in text")]
     #[case("``alfa-bravo``", 0, "hyphen in text")]
     #[case("``alfa`bravo``", 0, "single backtick in text")]
+    #[case("``alfa_bravo``", 0, "with single underscore")]
     #[case("``alfa\\bravo``", 0, "non-escaped backslash in text")]
     #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
     #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]

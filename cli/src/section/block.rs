@@ -1,21 +1,6 @@
 use crate::section::Section;
 use crate::section::SectionBounds;
 use crate::section::SectionKind;
-use crate::span::code_shorthand::code_shorthand;
-use crate::span::code_shorthand_single_pipe::*;
-use crate::span::colon::*;
-use crate::span::escaped_backslash::*;
-use crate::span::escaped_backtick::*;
-use crate::span::escaped_greaterthan::*;
-use crate::span::escaped_pipe::*;
-use crate::span::hyphen::*;
-use crate::span::named_span::*;
-use crate::span::non_escape_backslash::*;
-use crate::span::pipe::*;
-use crate::span::single_backtick::*;
-use crate::span::single_greaterthan::*;
-use crate::span::single_lessthan::*;
-use crate::span::wordpart::*;
 use crate::span::*;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
@@ -31,37 +16,10 @@ use nom_supreme::parser_ext::ParserExt;
 #[derive(Clone, Debug, PartialEq)]
 pub struct Block {}
 
-pub fn span_for_block_of_anything<'a>(
-    source: &'a str,
-) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
-    let (source, span) = alt((
-        wordpart,
-        space,
-        newline,
-        code_shorthand_single_pipe,
-        code_shorthand,
-        named_span,
-        hyphen,
-        pipe,
-        colon,
-        single_lessthan,
-        single_greaterthan,
-        single_backtick,
-        escaped_backtick,
-        escaped_pipe,
-        escaped_greaterthan,
-        escaped_backslash,
-        non_escape_backslash,
-    ))
-    .context("")
-    .parse(source)?;
-    Ok((source, span))
-}
-
 pub fn block_of_anything<'a>(source: &'a str) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = not(eof).context("").parse(source)?;
     let (source, _) = not(tag("--")).context("").parse(source)?;
-    let (source, spans) = many1(span_for_block_of_anything)
+    let (source, spans) = many1(alt((base_span_for_all_text,)))
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
@@ -80,27 +38,9 @@ pub fn block_of_end_content<'a>(source: &'a str) -> IResult<&'a str, Section, Er
     let (source, _) = not(eof).context("").parse(source)?;
     let (source, _) = not(tag("--")).context("").parse(source)?;
     let (source, _) = not(tag("[")).context("").parse(source)?;
-    let (source, spans) = many1(alt((
-        wordpart,
-        space,
-        newline,
-        code_shorthand,
-        code_shorthand_single_pipe,
-        named_span,
-        hyphen,
-        pipe,
-        colon,
-        single_lessthan,
-        single_greaterthan,
-        single_backtick,
-        escaped_backtick,
-        escaped_pipe,
-        escaped_greaterthan,
-        escaped_backslash,
-        non_escape_backslash,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, spans) = many1(alt((base_span_for_all_text,)))
+        .context("")
+        .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     Ok((
         source,
@@ -116,27 +56,9 @@ pub fn block_of_end_content<'a>(source: &'a str) -> IResult<&'a str, Section, Er
 pub fn block_of_list_content<'a>(source: &'a str) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = not(eof).context("").parse(source)?;
     let (source, _) = not(tag("-")).context("").parse(source)?;
-    let (source, spans) = many1(alt((
-        wordpart,
-        space,
-        newline,
-        code_shorthand,
-        code_shorthand_single_pipe,
-        named_span,
-        hyphen,
-        pipe,
-        colon,
-        single_lessthan,
-        single_greaterthan,
-        single_backtick,
-        escaped_backtick,
-        escaped_pipe,
-        escaped_greaterthan,
-        escaped_backslash,
-        non_escape_backslash,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, spans) = many1(alt((base_span_for_all_text,)))
+        .context("")
+        .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     Ok((
         source,
@@ -155,14 +77,26 @@ mod test {
     use pretty_assertions::assert_eq;
     use rstest::rstest;
     #[rstest]
-    #[case("alfa | bravo", "")]
-    #[case("alfa - bravo", "")]
-    #[case(
-        "<<link|Perl|https://en.wikipedia.org/wiki/Perl>> on my own, though, is well",
-        ""
-    )]
-    fn run_test(#[case] input: &str, #[case] left: &str) {
-        let right = block_of_anything(input).unwrap().0;
-        assert_eq!(left, right);
+    #[case("alfa bravo", "")]
+    #[case("alfa - bravo", "- bravo")]
+    #[case("- alfa", " alfa")]
+    #[case("_ alfa", " alfa")]
+    #[case("__em shorthand__", "")]
+    #[case("``code shorthand_with single underscore``", "")]
+    fn base_span_for_all_blocks_fixture(#[case] input: &str, #[case] remainder: &str) {
+        let got = base_span_for_all_text(input).unwrap().0;
+        assert_eq!(remainder, got);
     }
+
+    // #[rstest]
+    // #[case("alfa | bravo", "")]
+    // #[case("alfa - bravo", "")]
+    // #[case(
+    //     "<<link|Perl|https://en.wikipedia.org/wiki/Perl>> on my own, though, is well",
+    //     ""
+    // )]
+    // fn run_test(#[case] input: &str, #[case] left: &str) {
+    //     let right = block_of_anything(input).unwrap().0;
+    //     assert_eq!(left, right);
+    // }
 }

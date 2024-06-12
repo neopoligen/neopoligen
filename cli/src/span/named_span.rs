@@ -21,25 +21,9 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = many0(alt((
-        wordpart,
-        newline,
-        space,
-        colon,
-        hyphen,
-        named_span,
-        single_lessthan,
-        single_greaterthan,
-        single_backtick,
-        escaped_backtick,
-        escaped_colon,
-        escaped_pipe,
-        escaped_greaterthan,
-        escaped_backslash,
-        non_escape_backslash,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, children) = many0(alt((base_span_for_all_text,)))
+        .context("")
+        .parse(source)?;
     let (source, attrs) = many0(named_span_attr).context("").parse(source)?;
     let (source, _) = tag(">>").context("").parse(source)?;
     let source_text = initial_source.replace(source, "").to_string();
@@ -77,23 +61,9 @@ pub fn named_span_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>>
 pub fn named_span_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let (source, the_tag) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, words) = many1(alt((
-        wordpart,
-        colon,
-        newline,
-        hyphen,
-        single_lessthan,
-        single_greaterthan,
-        single_backtick,
-        escaped_backtick,
-        escaped_colon,
-        escaped_pipe,
-        escaped_greaterthan,
-        escaped_backslash,
-        non_escape_backslash,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, words) = many1(alt((base_span_for_all_text,)))
+        .context("")
+        .parse(source)?;
     let source_text = words
         .iter()
         .map(|word| word.source_text.clone())

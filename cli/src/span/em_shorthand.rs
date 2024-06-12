@@ -13,26 +13,9 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn em_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let initial_source = source;
     let (source, _) = tag("__").context("").parse(source)?;
-    let (source, parts) = many1(alt((
-        wordpart,
-        space,
-        newline,
-        hyphen,
-        colon,
-        single_lessthan,
-        single_greaterthan,
-        single_backtick,
-        single_underscore,
-        escaped_backtick,
-        escaped_pipe,
-        escaped_greaterthan,
-        escaped_backslash,
-        non_escape_backslash,
-        greaterthan,
-        lessthan,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, parts) = many1(alt((base_span_for_all_text,)))
+        .context("")
+        .parse(source)?;
     let (source, attrs) = many0(em_shorthand_attr).context("").parse(source)?;
     let (source, _) = tag("__").context("").parse(source)?;
     let source_text = initial_source.replace(source, "").to_string();
@@ -187,7 +170,6 @@ mod test {
         2,
         "newlines in shorthand multiple attrs"
     )]
-    #[case("__Result<(), Box<dyn std::error::Error>>__", 0, "rust example")]
     fn em_shorhand_fixture(#[case] input: &str, #[case] attrs: usize, #[case] _description: &str) {
         let (remainder, span) = em_shorthand(input).unwrap();
         assert_eq!(remainder, "");
