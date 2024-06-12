@@ -123,6 +123,7 @@ pub fn start_or_full_section<'a>(
         |src| yaml_section_full(src, &sections),
         // Reminder: do unknown last since it slurps
         // everything it can
+        |src| unknown_section_start(src, &sections),
         |src| unknown_section_full(src, &sections),
     ))
     .context("")
