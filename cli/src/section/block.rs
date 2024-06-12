@@ -31,10 +31,10 @@ use nom_supreme::parser_ext::ParserExt;
 #[derive(Clone, Debug, PartialEq)]
 pub struct Block {}
 
-pub fn block_of_anything<'a>(source: &'a str) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, _) = not(eof).context("").parse(source)?;
-    let (source, _) = not(tag("--")).context("").parse(source)?;
-    let (source, spans) = many1(alt((
+pub fn span_for_block_of_anything<'a>(
+    source: &'a str,
+) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    let (source, span) = alt((
         wordpart,
         space,
         newline,
@@ -52,9 +52,18 @@ pub fn block_of_anything<'a>(source: &'a str) -> IResult<&'a str, Section, Error
         escaped_greaterthan,
         escaped_backslash,
         non_escape_backslash,
-    )))
+    ))
     .context("")
     .parse(source)?;
+    Ok((source, span))
+}
+
+pub fn block_of_anything<'a>(source: &'a str) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let (source, _) = not(eof).context("").parse(source)?;
+    let (source, _) = not(tag("--")).context("").parse(source)?;
+    let (source, spans) = many1(span_for_block_of_anything)
+        .context("")
+        .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     Ok((
         source,
@@ -148,6 +157,10 @@ mod test {
     #[rstest]
     #[case("alfa | bravo", "")]
     #[case("alfa - bravo", "")]
+    #[case(
+        "<<link|Perl|https://en.wikipedia.org/wiki/Perl>> on my own, though, is well",
+        ""
+    )]
     fn run_test(#[case] input: &str, #[case] left: &str) {
         let right = block_of_anything(input).unwrap().0;
         assert_eq!(left, right);

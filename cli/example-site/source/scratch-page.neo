@@ -1,12 +1,48 @@
+
 -- title
 
 Combine Two vecs In Rust
 
 -- code/
+-- rust
 
-asdf
+fn main() {
+  let mut alfa = vec!["a".to_string(), "b".to_string(), "c".to_string()];
+  let mut bravo = vec!["d".to_string(), "e".to_string(), "f".to_string()];
+
+  alfa.append(&mut bravo);
+
+  dbg!(alfa);
+  dbg!(bravo);
+}
 
 -- /code
+
+-- results/
+
+[_active_nvim_run:7:3] alfa = [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+]
+[_active_nvim_run:8:3] bravo = []
+
+-- /results
+
+
+-- notes
+
+- There's also ``.extend()`` which can be used with references
+for things that implement copy. TODO is to make an 
+example with that.
+
+
+-- ref
+-- url: https://stackoverflow.com/a/56490417/102401
+
 
 -- metadata
 -- created: 2024-05-09T11:51:56-04:00

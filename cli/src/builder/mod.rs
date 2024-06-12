@@ -617,11 +617,15 @@ body { background-color: #111; color: #aaa; }
     <h2>Theme Test Error</h2>
     <h3>Expected</h3>
     <pre>
-    [@ error.kind.expected|escape @]
+    [! autoescape true !]
+    [@ error.kind.expected@]
+    [! endautoescape !]
     </pre>
     <h3>Got</h3>
     <pre>
-    [@ error.kind.got|escape @]
+    [! autoescape true !]
+    [@ error.kind.got @]
+    [! endautoescape !]
     </pre>
     <h3>Sections</h3>
     <pre>

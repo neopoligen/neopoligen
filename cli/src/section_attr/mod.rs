@@ -2,7 +2,7 @@ use crate::span::*;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
-use nom::character::complete::not_line_ending;
+// use nom::character::complete::not_line_ending;
 use nom::character::complete::space1;
 use nom::multi::many1;
 use nom::IResult;
@@ -90,6 +90,31 @@ pub fn section_key_value_attr<'a>(
 // }
 
 pub fn section_flag_attr<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
+    // -- https://www.example.com/
+    let (source, _) = tag("--").context("").parse(source)?;
+    let (source, _) = space1.context("").parse(source)?;
+    let (source, parts) = many1(alt((wordpart, colon, hyphen)))
+        .context("")
+        .parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
+    let flag = parts
+        .iter()
+        .map(|part| part.parsed_text.to_string())
+        .collect::<Vec<String>>()
+        .join("");
+    Ok((
+        source,
+        SectionAttr {
+            kind: SectionAttrKind::Flag { flag },
+        },
+    ))
+}
+
+pub fn section_flag_attr_old<'a>(
+    source: &'a str,
+) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
     let (source, _) = tag("--").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
     let (source, key) = is_not(":\n").context("").parse(source)?;
@@ -105,7 +130,6 @@ pub fn section_flag_attr<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, E
         },
     ))
 }
-
 #[cfg(test)]
 mod test {
     use super::*;
@@ -145,5 +169,17 @@ mod test {
         };
         let right = section_attr(source).unwrap().1;
         assert_eq!(left, right);
+    }
+
+    #[test]
+    fn flag_attr_with_colons_in_it() {
+        let source = "-- https://www.example.com";
+        assert!(section_flag_attr(source).is_ok());
+    }
+
+    #[test]
+    fn flag_attr_with_hyphen_init() {
+        let source = "-- https://www.exa-mple.com";
+        assert!(section_flag_attr(source).is_ok());
     }
 }
