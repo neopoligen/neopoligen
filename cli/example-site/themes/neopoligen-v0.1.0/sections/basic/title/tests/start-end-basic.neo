@@ -10,7 +10,7 @@ alfa bravo
 -- expected-output/
 
 <hgroup>
-<h1>alfa bravo</h1>
+<h1 class="page-title">alfa bravo</h1>
 </hgroup>
 
 -- /expected-output

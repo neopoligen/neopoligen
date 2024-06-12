@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="[@ site.config.default_language @]">
 <head>
+<title>[# TODO: Add page title #]</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="/theme/styles/variables.css" />
 <link rel="stylesheet" href="/theme/styles/theme.css" />
 </head>

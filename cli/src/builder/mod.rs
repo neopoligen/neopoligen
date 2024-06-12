@@ -1,6 +1,7 @@
 use crate::helpers::*;
 use crate::neo_error::{NeoError, NeoErrorKind};
 use crate::page_payload::{PagePayload, ThemeTestOrPage};
+use crate::site::Site;
 use crate::site_config::SiteConfig;
 use crate::source_page::SourcePage;
 use crate::theme_test::ThemeTest; // this might be deprecated
@@ -314,7 +315,6 @@ impl Builder {
         event!(Level::INFO, "Loading Theme Test Pages");
         // Reminder: clear the original pages
         self.source_pages = BTreeMap::new();
-        // for entry in WalkDir::new(&self.config.as_ref().unwrap().templates_dir()) {
         for entry in WalkDir::new(&self.config.as_ref().unwrap().theme_dir()) {
             let path = entry?.path().to_path_buf();
             if path.is_file() {
@@ -393,6 +393,11 @@ impl Builder {
                 }
             }
         }
+        let site = Value::from_serialize(Site::new_from_payloads(
+            self.config.as_ref().unwrap().clone(),
+            &self.payloads,
+        ));
+
         for (_, page) in self.payloads.iter_mut() {
             let output_path = self
                 .config
@@ -409,7 +414,9 @@ impl Builder {
                 }
             }) {
                 match template.render(context!(
-                    page => Value::from_serialize(&page)
+                    page => Value::from_serialize(&page),
+                site=> &site,
+
                 )) {
                     Ok(output) => {
                         let _ = write_file_with_mkdir(&output_path, &output);
@@ -569,7 +576,7 @@ impl Builder {
                                             expected: expected.to_string(),
                                             got: got.to_string(),
                                             sections: page.sections.clone(),
-                                            source_path: PathBuf::from(""),
+                                            source_path: page.source_path.as_ref().unwrap().clone(),
                                         },
                                     })
                                 }
@@ -631,7 +638,6 @@ body { background-color: #111; color: #aaa; }
 <ul>
 [! for error in errors !]
 <li>
-[@ error.kind.type @] - 
 [! include [error.kind.type, "_todo"] !]
 [#
 [! if error.kind.source_path !]<h4>Path: [@ error.kind.source_path @]</h4>[! endif !]

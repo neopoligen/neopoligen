@@ -1,7 +1,8 @@
 [! import "includes/theme.neoj" as theme !]
+<hgroup>
 [! for child in section.children !]
   [! if loop.first !]
-    <h1>
+    <h1 class="page-title">
     [! for span in child.spans !]
       [@ theme.output_span("", "", span) @]
     [! endfor !]

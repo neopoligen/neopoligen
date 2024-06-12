@@ -11,6 +11,7 @@ pub mod payload_span;
 pub mod payload_span_attr;
 pub mod section;
 pub mod section_attr;
+pub mod site;
 pub mod site_config;
 pub mod source_page;
 pub mod span;

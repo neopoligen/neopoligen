@@ -1,6 +1,7 @@
 use crate::neo_error::*;
 use crate::section::*;
 use crate::site_config::ConfigSections;
+use nom::character::complete::multispace0;
 use nom::multi::many1;
 use nom::IResult;
 use nom::Parser;
@@ -22,6 +23,7 @@ fn do_parse<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
 ) -> IResult<&'a str, Vec<Section>, ErrorTree<&'a str>> {
+    let (source, _) = multispace0(source)?;
     let (source, result) = many1(|src| start_or_full_section(src, &sections))
         .context("page")
         .parse(source)?;
