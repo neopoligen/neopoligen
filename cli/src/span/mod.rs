@@ -2,11 +2,13 @@ pub mod code_shorthand;
 pub mod code_shorthand_single_pipe;
 pub mod colon;
 pub mod colon_not_followed_by_space;
+pub mod em_shorthand;
 pub mod escaped_backslash;
 pub mod escaped_backtick;
 pub mod escaped_colon;
 pub mod escaped_greaterthan;
 pub mod escaped_pipe;
+pub mod escaped_underscore;
 pub mod greaterthan;
 pub mod hyphen;
 pub mod lessthan;
@@ -17,9 +19,11 @@ pub mod pipe;
 pub mod single_backtick;
 pub mod single_greaterthan;
 pub mod single_lessthan;
+pub mod single_underscore;
 pub mod wordpart;
 
 use crate::span::code_shorthand::*;
+// use crate::span::em_shorthand::*;
 // use crate::span::code_shorthand_single_pipe::*;
 use crate::span::colon::*;
 use crate::span::colon_not_followed_by_space::*;
@@ -27,6 +31,7 @@ use crate::span::escaped_backslash::*;
 use crate::span::escaped_backtick::*;
 use crate::span::escaped_greaterthan::*;
 use crate::span::escaped_pipe::*;
+use crate::span::escaped_underscore::*;
 use crate::span::greaterthan::*;
 use crate::span::hyphen::*;
 use crate::span::lessthan::*;
@@ -36,6 +41,7 @@ use crate::span::non_escape_backslash::*;
 use crate::span::single_backtick::*;
 use crate::span::single_greaterthan::*;
 use crate::span::single_lessthan::*;
+use crate::span::single_underscore::*;
 use crate::span::wordpart::*;
 use crate::span_attr::*;
 use nom::branch::alt;
@@ -69,11 +75,13 @@ pub enum SpanKind {
     CodeShorthand,
     Colon,
     ColonNotFollowedBySpace,
+    EmShorthand,
     EscapedBacktick,
     EscapedBackslash,
     EscapedColon,
     EscapedGreaterThan,
     EscapedPipe,
+    EscapedUnderscore,
     GreaterThan,
     Hyphen,
     LessThan,
@@ -83,6 +91,7 @@ pub enum SpanKind {
     NonEscapeBackslash,
     Pipe,
     SingleBacktick,
+    SingleUnderscore,
     SingleGreaterThan,
     SingleLessThan,
     Space,

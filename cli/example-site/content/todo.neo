@@ -57,13 +57,15 @@ it instead of panicing.
 [] "title" show up as their own things in sections
 instead of being included in the attributes. 
 
-
 [] Default template vec with fallback to pages/post/published.
 for pages. 
 
 [] Write up the "basic/naked" section that doesn't wrap the 
 content in anything
 
+[] Document how you only need span templates for things
+that you need to change from the default that comes in 
+from parsed_text
 
 -- metadata
 -- updated: 2024-06-03T18:27:52-04:00
