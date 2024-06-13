@@ -8,8 +8,8 @@ Alfa Bravo Charlie
 
 -- expected-output/
 
-<section class="h5-section flow">
-<hgroup class="alfa bravo charlie">
+<section class="alfa bravo charlie h5-section flow">
+<hgroup>
   <h5 class="section-heading">
     Alfa Bravo Charlie
   </h5>
@@ -22,4 +22,4 @@ Alfa Bravo Charlie
 
 -- metadata
 -- updated: 2024-06-12T21:29:27-04:00
--- id: 2hnut7u3
+-- id: 2hnut7u3_h5

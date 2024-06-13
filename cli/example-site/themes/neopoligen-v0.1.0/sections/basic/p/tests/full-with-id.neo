@@ -1,20 +1,19 @@
 -- start-theme-test 
 
--- h1
+-- p
 -- id: some-id 
 
-Alfa Bravo Charlie
+Alfa bravo charlie 
+
+Delta echo foxtrot
+
 
 -- expected-output/
 
-<section class="h1-section flow">
-<hgroup id="some-id">
-  <h1 class="section-heading">
-    Alfa Bravo Charlie
-  </h1>
-</hgroup>
+<section class="p-section flow" id="some-id">
+<p>Alfa bravo charlie</p>
+<p>Delta echo foxtrot</p>
 </section>
-
 
 -- /expected-output
 
@@ -22,6 +21,6 @@ Alfa Bravo Charlie
 
 -- metadata
 -- updated: 2024-06-12T21:57:46-04:00
--- id: 2hnxudf2
+-- id: 2hnxudf_p
 
 

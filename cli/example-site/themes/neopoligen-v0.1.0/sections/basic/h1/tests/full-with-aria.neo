@@ -8,8 +8,8 @@ Alfa Bravo Charlie
 
 -- expected-output/
 
-<section class="h1-section flow">
-<hgroup aria-description="this is some aria text">
+<section class="h1-section flow" aria-description="this is some aria text">
+<hgroup>
   <h1 class="section-heading">
     Alfa Bravo Charlie
   </h1>
@@ -22,4 +22,4 @@ Alfa Bravo Charlie
 
 -- metadata
 -- updated: 2024-06-12T20:45:27-04:00
--- id: 2hnp7qp2
+-- id: 2hnp7qp2_h1

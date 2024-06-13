@@ -7,8 +7,8 @@ This Is The Page Title
 
 -- expected-output/
 
-<section class="title-section flow">
-<hgroup id="some-id">
+<section class="title-section flow" id="some-id">
+<hgroup>
   <h1 class="page-title">
     This Is The Page Title
   </h1>
@@ -22,6 +22,6 @@ This Is The Page Title
 
 -- metadata
 -- updated: 2024-06-12T21:57:46-04:00
--- id: 2hnxudfo
+-- id: 2hnxudfo_title
 
 

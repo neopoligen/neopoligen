@@ -1,7 +1,9 @@
 [! import "includes/theme.neoj" as theme !]
 
-<section class="h4-section flow">
-<hgroup [@- section.attr_string @]>
+<section
+    [@- theme.section_classes(section, "h4-section flow") -@] 
+    [@- section.attr_string -@]>
+<hgroup>
 [! for child in section.children !]
   [! if loop.first !]
     <h4 class="section-heading">

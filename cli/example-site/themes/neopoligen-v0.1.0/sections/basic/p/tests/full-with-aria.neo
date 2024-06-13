@@ -1,25 +1,24 @@
 -- start-theme-test 
 
--- h1
+-- p
 -- aria-description: this is some 
 -- aria-description: aria text 
 
-Alfa Bravo Charlie
+Alfa bravo charlie 
+
+Delta echo foxtrot
+
 
 -- expected-output/
 
-<section class="h1-section flow">
-<hgroup aria-description="this is some aria text">
-  <h1 class="section-heading">
-    Alfa Bravo Charlie
-  </h1>
-</hgroup>
+<section class="p-section flow" aria-description="this is some aria text">
+<p>Alfa bravo charlie</p>
+<p>Delta echo foxtrot</p>
 </section>
-
 
 -- /expected-output
 
 
 -- metadata
 -- updated: 2024-06-12T20:45:27-04:00
--- id: 2hnp7qp2
+-- id: 2hnp7qp_p

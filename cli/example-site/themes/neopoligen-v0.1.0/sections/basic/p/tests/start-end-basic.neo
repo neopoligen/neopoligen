@@ -1,27 +1,25 @@
 -- start-theme-test
 
--- h1/
+-- p/
 
-Alfa Bravo 
+Alfa bravo charlie 
 
-charlie delta
+Delta echo foxtrot
 
--- /h1
+-- /p
 
-echo foxtrot
+Golf hotel india
 
 
 -- expected-output/
 
-<section class="h1-section flow">
-<hgroup>
-<h1 class="section-heading">Alfa Bravo</h1>
-</hgroup>
-<p>charlie delta</p>
+<section class="p-section flow">
+<p>Alfa bravo charlie</p>
+<p>Delta echo foxtrot</p>
 </section>
 
 <section class="p-section flow">
-<p>echo foxtrot</p>
+<p>Golf hotel india</p>
 </section>
 
 
@@ -30,8 +28,7 @@ echo foxtrot
 
 
 -- metadata
--- created: 2024-06-08T16:44:58-04:00
 -- updated: 2024-06-08T16:44:58-04:00
--- id: 2hc3nv32
+-- id: 2hc3nv3_p
 
 

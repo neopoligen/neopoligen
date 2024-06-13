@@ -17,7 +17,7 @@ pub struct PayloadSection {
     pub attrs: BTreeMap<String, Vec<PayloadSpan>>,
     pub bounds: String,
     pub children: Vec<PayloadSection>,
-    pub classes: Vec<String>,
+    pub classes: Option<String>,
     pub created: Option<String>,
     pub data: BTreeMap<String, String>,
     pub flags: Vec<String>,
@@ -137,7 +137,7 @@ impl PayloadSection {
             SectionKind::Yaml { .. } => vec![],
         };
 
-        let classes = section
+        let tmp_classes = section
             .attrs
             .iter()
             .filter_map(|attr| match &attr.kind {
@@ -157,7 +157,14 @@ impl PayloadSection {
                 _ => None,
             })
             .flatten()
-            .collect::<Vec<String>>();
+            .collect::<Vec<String>>()
+            .join(" ");
+
+        let classes = if tmp_classes.ne("") {
+            Some(tmp_classes)
+        } else {
+            None
+        };
 
         let created = section.attrs.iter().find_map(|attr| match &attr.kind {
             SectionAttrKind::KeyValue { key, value } => {
@@ -584,12 +591,8 @@ mod test {
             &Section::mock4_youtube_with_tags_and_classes(),
             &config,
         );
-        let left: Vec<String> = vec![
-            "class1".to_string(),
-            "class2".to_string(),
-            "class3".to_string(),
-        ];
-        let right = payload_section.classes;
+        let left = "class1 class2 class3".to_string();
+        let right = payload_section.classes.unwrap();
         assert_eq!(left, right);
     }
 
