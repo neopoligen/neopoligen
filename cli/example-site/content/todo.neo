@@ -70,6 +70,12 @@ content in anything
 that you need to change from the default that comes in 
 from parsed_text
 
+[] Documnet how the attr_string includes: aria, data, class, 
+id, and all the valid attributes from the config file. 
+
+[] Document that flags are always strings, (as opposed to 
+keyvalue attrs whose values are spans)
+
 -- metadata
 -- updated: 2024-06-03T18:27:52-04:00
 -- id: 2ho8hakd

@@ -1,5 +1,5 @@
 use crate::helpers::*;
-use minijinja::Value;
+// use minijinja::Value;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
@@ -15,15 +15,13 @@ pub struct PayloadSection {
     pub aria: BTreeMap<String, String>,
     pub attr_string: Option<String>,
     // TODO: Remove option from attrs
-    pub attrs: Option<BTreeMap<String, Vec<PayloadSpan>>>,
+    pub attrs: BTreeMap<String, Vec<PayloadSpan>>,
     pub bounds: String,
     pub children: Option<Vec<PayloadSection>>,
     pub classes: Vec<String>,
     pub created: Option<String>,
-    pub custom_attrs: Option<BTreeMap<String, String>>,
     pub data: BTreeMap<String, String>,
     pub flags: Vec<String>,
-    pub flags_as_spans: Vec<PayloadSpan>,
     pub id: Option<String>,
     pub kind: Option<String>,
     pub spans: Option<Vec<PayloadSpan>>,
@@ -205,16 +203,6 @@ impl PayloadSection {
             })
             .collect::<Vec<String>>();
 
-        // TODO Map these to payload spans
-        // let flags_as_spans = section
-        //     .attrs
-        //     .iter()
-        //     .filter_map(|attr| match &attr.kind {
-        //         SectionAttrKind::FlagSpans { spans } => Some(spans),
-        //         _ => None,
-        //     })
-        //     .collect::<Vec<>>();
-
         let id = section.attrs.iter().find_map(|attr| match &attr.kind {
             SectionAttrKind::KeyValueSpans { key, spans } => {
                 if key.as_str() == "id" {
@@ -333,7 +321,7 @@ impl PayloadSection {
         let mut ps = PayloadSection {
             aria,
             attr_string: None,
-            attrs: if attrs.len() == 0 { None } else { Some(attrs) },
+            attrs,
             bounds,
             children: if children.len() == 0 {
                 None
@@ -342,10 +330,8 @@ impl PayloadSection {
             },
             classes,
             created,
-            custom_attrs: None,
             data, // TODO
             flags,
-            flags_as_spans: vec![], // TODO
             id,
             kind,
             spans: if spans.len() == 0 { None } else { Some(spans) },
@@ -538,7 +524,7 @@ mod test {
                 ],
             },
         ];
-        let right = ps.attrs.as_ref().unwrap().get("alt").unwrap();
+        let right = ps.attrs.get("alt").unwrap();
         assert_eq!(left, right);
     }
 

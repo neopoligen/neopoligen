@@ -63,5 +63,11 @@ impl Section {
         start_or_full_section(source, &config.sections).unwrap().1
     }
 
+    pub fn mock10_attr_and_custom_attr_test() -> Section {
+        let config = SiteConfig::mock1_basic();
+        let source = "-- div\n-- src: valid-attr-src\n-- url: custom-attr-url\n\nalfa bravo";
+        start_or_full_section(source, &config.sections).unwrap().1
+    }
+
     //
 }

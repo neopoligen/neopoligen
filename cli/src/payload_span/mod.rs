@@ -13,6 +13,7 @@ pub struct PayloadSpan {
     ///
     ///
     pub aria: Option<BTreeMap<String, String>>,
+    // DEPRECATE: Just use aria
     pub aria_unescaped: Option<BTreeMap<String, String>>,
 
     /// TODO: attr_string
@@ -55,6 +56,7 @@ pub struct PayloadSpan {
     ///
     /// Same as ``attrs`` above, but the HTML characters are
     /// not escaped
+    // TODO: Rename to "_as_spans"
     pub attrs_unescaped: Option<BTreeMap<String, String>>,
 
     ///
@@ -66,20 +68,14 @@ pub struct PayloadSpan {
     /// NEEDS_DOCS: classes
     pub classes: Option<Vec<String>>,
 
+    // TODO: Rename to "_as_spans"
     pub classes_unescaped: Option<Vec<String>>,
 
     ///
-    /// TODO: custom_attrs
-    ///
-    /// Any key/value attributes that aren't defined in the
-    /// config file. Quotes are escaped into ``&quot;``
+    /// DEPRECATED: custom_attrs
+    /// TODO: Remove this and just use filtering on the
+    /// attr_string for the output
     pub custom_attrs: Option<BTreeMap<String, String>>,
-
-    ///
-    /// TODO: custom_attrs_unescaped
-    ///
-    /// Same as custom_attrs, but quotes are not
-    /// escaped into ``&quot;``
     pub custom_attrs_unescaped: Option<BTreeMap<String, String>>,
 
     ///

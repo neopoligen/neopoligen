@@ -156,19 +156,14 @@ impl PagePayload {
         // at some point instead of two passes
         self.sections.iter().for_each(|section| {
             if section.r#type == "metadata" {
-                match &section.attrs {
-                    Some(attrs) => {
-                        attrs.iter().for_each(|(key, spans)| {
-                            if key.eq("path") {
-                                self.rel_file_path = Some(
-                                    scrub_rel_file_path(&flatten_payload_spans(&spans.clone()))
-                                        .expect("get filepath"),
-                                );
-                            }
-                        });
+                let _ = &section.attrs.iter().for_each(|(key, spans)| {
+                    if key.eq("path") {
+                        self.rel_file_path = Some(
+                            scrub_rel_file_path(&flatten_payload_spans(&spans.clone()))
+                                .expect("get filepath"),
+                        );
                     }
-                    None => {}
-                }
+                });
             }
         });
     }
@@ -192,16 +187,11 @@ impl PagePayload {
     pub fn get_type(&mut self) {
         self.sections.iter().for_each(|section| {
             if section.r#type == "metadata" {
-                match &section.attrs {
-                    Some(attrs) => {
-                        attrs.iter().for_each(|(key, spans)| {
-                            if key.eq("type") {
-                                self.r#type = Some(flatten_payload_spans(&spans.clone()));
-                            }
-                        });
+                let _ = &section.attrs.iter().for_each(|(key, spans)| {
+                    if key.eq("type") {
+                        self.r#type = Some(flatten_payload_spans(&spans.clone()));
                     }
-                    None => {}
-                }
+                });
             }
         });
     }
