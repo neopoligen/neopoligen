@@ -16,7 +16,6 @@ pub fn more_than_two_carets(source: &str) -> IResult<&str, Span, ErrorTree<&str>
         source,
         Span {
             attrs: vec![],
-            source_text: parsed_text.to_string(),
             parsed_text: parsed_text.to_string(),
             kind: SpanKind::MoreThanTwoCarets,
         },
@@ -29,17 +28,16 @@ mod test {
     use pretty_assertions::assert_eq;
     #[test]
     fn basic_check() {
-        let source = "___";
+        let source = "^^^";
         let left = (
             "",
             Span {
                 attrs: vec![],
-                source_text: "___".to_string(),
-                parsed_text: "___".to_string(),
-                kind: SpanKind::MoreThanTwoUnderscores,
+                parsed_text: "^^^".to_string(),
+                kind: SpanKind::MoreThanTwoCarets,
             },
         );
-        let right = more_than_two_underscores(source).unwrap();
+        let right = more_than_two_carets(source).unwrap();
         assert_eq!(left, right);
     }
 }

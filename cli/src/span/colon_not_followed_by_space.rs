@@ -15,7 +15,6 @@ pub fn colon_not_followed_by_space(source: &str) -> IResult<&str, Span, ErrorTre
         source,
         Span {
             attrs: vec![],
-            source_text: ":".to_string(),
             parsed_text: ":".to_string(),
             kind: SpanKind::ColonNotFollowedBySpace,
         },
@@ -33,7 +32,6 @@ mod test {
             "x",
             Span {
                 attrs: vec![],
-                source_text: ":".to_string(),
                 parsed_text: ":".to_string(),
                 kind: SpanKind::ColonNotFollowedBySpace,
             },

@@ -15,7 +15,6 @@ pub fn escaped_underscore(source: &str) -> IResult<&str, Span, ErrorTree<&str>> 
         source,
         Span {
             attrs: vec![],
-            source_text: "\\_".to_string(),
             parsed_text: "_".to_string(),
             kind: SpanKind::EscapedUnderscore,
         },
@@ -33,7 +32,6 @@ mod test {
             "",
             Span {
                 attrs: vec![],
-                source_text: "\\_".to_string(),
                 parsed_text: "_".to_string(),
                 kind: SpanKind::EscapedUnderscore,
             },

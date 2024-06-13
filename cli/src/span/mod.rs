@@ -72,9 +72,6 @@ pub struct Span {
     pub attrs: Vec<SpanAttr>,
     pub kind: SpanKind,
     pub parsed_text: String,
-    // DEPRECATED: Don't use source_text. Remove it when
-    // you have the time to go through all the tests
-    pub source_text: String,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -242,17 +239,14 @@ pub fn span_for_shorthand_attr_value<'a>(
 
 // TODO: Move to own file with tests
 pub fn newline(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let initial_source = source;
     let (source, _) = tuple((space0, line_ending)).context("").parse(source)?;
     let (source, _) = not(tuple((space0, line_ending)))
         .context("")
         .parse(source)?;
-    let source_text = initial_source.replace(source, "").to_string();
     Ok((
         source,
         Span {
             attrs: vec![],
-            source_text,
             parsed_text: "\n".to_string(),
             kind: SpanKind::Newline,
         },
@@ -261,14 +255,11 @@ pub fn newline(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
 
 // TODO: Move to own file with tests
 pub fn space(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let initial_source = source;
     let (source, _) = space1.context("").parse(source)?;
-    let source_text = initial_source.replace(source, "").to_string();
     Ok((
         source,
         Span {
             attrs: vec![],
-            source_text,
             parsed_text: " ".to_string(),
             kind: SpanKind::Space,
         },
@@ -307,7 +298,6 @@ mod test {
         let source = "<<em|delta <<strong|echo>> foxtrot>>";
         let left = Span {
             attrs: vec![],
-            source_text: "<<em|delta <<strong|echo>> foxtrot>>".to_string(),
             parsed_text: "".to_string(),
             kind: SpanKind::NamedSpan {
                 r#type: "em".to_string(),
@@ -316,19 +306,16 @@ mod test {
                         attrs: vec![],
                         kind: SpanKind::WordPart,
                         parsed_text: "delta ".to_string(),
-                        source_text: "delta ".to_string(),
                     },
                     Span {
                         attrs: vec![],
                         parsed_text: "".to_string(),
-                        source_text: "<<strong|echo>>".to_string(),
                         kind: SpanKind::NamedSpan {
                             r#type: "strong".to_string(),
                             children: vec![Span {
                                 attrs: vec![],
                                 kind: SpanKind::WordPart,
                                 parsed_text: "echo".to_string(),
-                                source_text: "echo".to_string(),
                             }],
                         },
                     },
@@ -336,7 +323,6 @@ mod test {
                         attrs: vec![],
                         kind: SpanKind::WordPart,
                         parsed_text: " foxtrot".to_string(),
-                        source_text: " foxtrot".to_string(),
                     },
                 ],
             },

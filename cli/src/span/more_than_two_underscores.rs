@@ -19,7 +19,6 @@ pub fn more_than_two_underscores(source: &str) -> IResult<&str, Span, ErrorTree<
         source,
         Span {
             attrs: vec![],
-            source_text: parsed_text.to_string(),
             parsed_text: parsed_text.to_string(),
             kind: SpanKind::MoreThanTwoUnderscores,
         },
@@ -37,7 +36,6 @@ mod test {
             "",
             Span {
                 attrs: vec![],
-                source_text: "___".to_string(),
                 parsed_text: "___".to_string(),
                 kind: SpanKind::MoreThanTwoUnderscores,
             },

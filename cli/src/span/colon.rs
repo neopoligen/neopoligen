@@ -14,7 +14,6 @@ pub fn colon(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         source,
         Span {
             attrs: vec![],
-            source_text: ":".to_string(),
             parsed_text: ":".to_string(),
             kind: SpanKind::Colon,
         },
@@ -32,7 +31,6 @@ mod test {
             "",
             Span {
                 attrs: vec![],
-                source_text: ":".to_string(),
                 parsed_text: ":".to_string(),
                 kind: SpanKind::Colon,
             },

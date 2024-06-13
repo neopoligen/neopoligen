@@ -2,7 +2,6 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SpanAttr {
-    pub source_text: String,
     pub kind: SpanAttrKind,
 }
 

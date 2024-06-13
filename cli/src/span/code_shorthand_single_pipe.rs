@@ -14,7 +14,6 @@ pub fn code_shorthand_single_pipe(source: &str) -> IResult<&str, Span, ErrorTree
         source,
         Span {
             attrs: vec![],
-            source_text: "``|``".to_string(),
             parsed_text: "|".to_string(),
             kind: SpanKind::CodeShorthand,
         },
@@ -32,7 +31,6 @@ mod test {
             "",
             Span {
                 attrs: vec![],
-                source_text: "``|``".to_string(),
                 parsed_text: "|".to_string(),
                 kind: SpanKind::CodeShorthand,
             },

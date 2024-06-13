@@ -45,25 +45,29 @@ use rstest::rstest;
 #[case(40, r#"^^alfa bravo|https://www.example.com/^^"#, 1, 0)]
 
 fn generated_shorthand_base_cases(
-    #[case] _number: usize, 
-    #[case] source: &str, 
-    #[case] flag_count: usize, 
-    #[case] kv_count: usize
-    ) {
+    #[case] _number: usize,
+    #[case] source: &str,
+    #[case] flag_count: usize,
+    #[case] kv_count: usize,
+) {
     let span = shorthand(source).unwrap().1;
-    let kv = span.attrs.iter().filter_map(|attr|{
-        match &attr.kind {
+    let kv = span
+        .attrs
+        .iter()
+        .filter_map(|attr| match &attr.kind {
             SpanAttrKind::KeyValue { .. } => Some(()),
-            _ => None
-        }
-    }).collect::<Vec<()>>();
-    let flags = span.attrs.iter().filter_map(|attr|{
-        match &attr.kind {
+            _ => None,
+        })
+        .collect::<Vec<()>>();
+    let flags = span
+        .attrs
+        .iter()
+        .filter_map(|attr| match &attr.kind {
             SpanAttrKind::Flag { .. } => Some(()),
-            _ => None
-        }
-    }).collect::<Vec<()>>();
+            _ => None,
+        })
+        .collect::<Vec<()>>();
     assert_eq!(kv.len(), kv_count);
     assert_eq!(flags.len(), flag_count);
 }
-    
+

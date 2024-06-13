@@ -12,7 +12,6 @@ use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
 pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let initial_source = source;
     let (source, _) = tag("<<").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, type_parts) = many1(alt((alpha1, digit1, tag("-"), tag("_"))))
@@ -26,12 +25,6 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         .parse(source)?;
     let (source, attrs) = many0(named_span_attr).context("").parse(source)?;
     let (source, _) = tag(">>").context("").parse(source)?;
-    let source_text = initial_source.replace(source, "").to_string();
-    // let parsed_text = spans
-    //     .iter()
-    //     .map(|word| word.parsed_text.clone())
-    //     .collect::<Vec<String>>()
-    //     .join("");
     let r#type = type_parts
         .iter()
         .map(|p| p.to_string())
@@ -41,7 +34,6 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         source,
         Span {
             attrs,
-            source_text,
             parsed_text: "".to_string(),
             kind: SpanKind::NamedSpan {
                 r#type: r#type.to_string(),
@@ -59,30 +51,23 @@ pub fn named_span_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>>
 }
 
 pub fn named_span_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-    let (source, the_tag) = tag("|").context("").parse(source)?;
+    let (source, _) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, words) = many1(alt((base_span_for_all_text,)))
         .context("")
         .parse(source)?;
-    let source_text = words
-        .iter()
-        .map(|word| word.source_text.clone())
-        .collect::<Vec<String>>()
-        .join("");
     let value = words
         .iter()
         .map(|word| word.parsed_text.clone())
         .collect::<Vec<String>>()
         .join("");
     let attr = SpanAttr {
-        source_text: format!("{}{}", the_tag, source_text),
         kind: SpanAttrKind::Flag { value },
     };
     Ok((source, attr))
 }
 
 pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-    let initial_source = source;
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     // TODO: allow for spaces here
@@ -112,14 +97,12 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorT
         .map(|word| word.parsed_text.clone())
         .collect::<Vec<String>>()
         .join("");
-    let source_text = initial_source.replace(source, "").to_string();
     let key = key_parts
         .iter()
         .map(|p| p.to_string())
         .collect::<Vec<String>>()
         .join("");
     let attr = SpanAttr {
-        source_text,
         kind: SpanAttrKind::KeyValue {
             key: key.to_string(),
             value,
@@ -191,19 +174,16 @@ mod test {
             "",
             Span {
                 attrs: vec![SpanAttr {
-                    source_text: "|data-ping: bravo".to_string(),
                     kind: SpanAttrKind::KeyValue {
                         key: "data-ping".to_string(),
                         value: "bravo".to_string(),
                     },
                 }],
-                source_text: "<<em|alfa|data-ping: bravo>>".to_string(),
                 parsed_text: "".to_string(),
                 kind: SpanKind::NamedSpan {
                     r#type: "em".to_string(),
                     children: vec![Span {
                         attrs: vec![],
-                        source_text: "alfa".to_string(),
                         parsed_text: "alfa".to_string(),
                         kind: SpanKind::WordPart,
                     }],
@@ -221,13 +201,11 @@ mod test {
             "",
             Span {
                 attrs: vec![],
-                source_text: "<<em|alfa>>".to_string(),
                 parsed_text: "".to_string(),
                 kind: SpanKind::NamedSpan {
                     r#type: "em".to_string(),
                     children: vec![Span {
                         attrs: vec![],
-                        source_text: "alfa".to_string(),
                         parsed_text: "alfa".to_string(),
                         kind: SpanKind::WordPart,
                     }],
@@ -245,26 +223,22 @@ mod test {
             "",
             Span {
                 attrs: vec![],
-                source_text: "<<alfa|ping\\|ping>>".to_string(),
                 parsed_text: "".to_string(),
                 kind: SpanKind::NamedSpan {
                     r#type: "alfa".to_string(),
                     children: vec![
                         Span {
                             attrs: vec![],
-                            source_text: "ping".to_string(),
                             parsed_text: "ping".to_string(),
                             kind: SpanKind::WordPart,
                         },
                         Span {
                             attrs: vec![],
-                            source_text: "\\|".to_string(),
                             parsed_text: "|".to_string(),
                             kind: SpanKind::EscapedPipe,
                         },
                         Span {
                             attrs: vec![],
-                            source_text: "ping".to_string(),
                             parsed_text: "ping".to_string(),
                             kind: SpanKind::WordPart,
                         },
@@ -315,18 +289,15 @@ mod test {
             "",
             Span {
                 attrs: vec![SpanAttr {
-                    source_text: "|rust".to_string(),
                     kind: SpanAttrKind::Flag {
                         value: "rust".to_string(),
                     },
                 }],
-                source_text: "<<code|something|rust>>".to_string(),
                 parsed_text: "".to_string(),
                 kind: SpanKind::NamedSpan {
                     r#type: "code".to_string(),
                     children: vec![Span {
                         attrs: vec![],
-                        source_text: "something".to_string(),
                         parsed_text: "something".to_string(),
                         kind: SpanKind::WordPart,
                     }],

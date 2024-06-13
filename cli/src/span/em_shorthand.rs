@@ -11,14 +11,12 @@ use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
 pub fn em_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let initial_source = source;
     let (source, _) = tag("__").context("").parse(source)?;
     let (source, parts) = many1(alt((base_span_for_all_text,)))
         .context("")
         .parse(source)?;
     let (source, attrs) = many0(em_shorthand_attr).context("").parse(source)?;
     let (source, _) = tag("__").context("").parse(source)?;
-    let source_text = initial_source.replace(source, "").to_string();
     let parsed_text = parts
         .iter()
         .map(|word| word.parsed_text.clone())
@@ -28,7 +26,6 @@ pub fn em_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
         source,
         Span {
             attrs,
-            source_text,
             parsed_text,
             kind: SpanKind::EmShorthand,
         },
@@ -50,7 +47,7 @@ pub fn em_shorthand_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str
 }
 
 pub fn em_shorthand_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-    let (source, the_tag) = tag("|").context("").parse(source)?;
+    let (source, _) = tag("|").context("").parse(source)?;
     // TODO: Allow spaces here
     let (source, words) = many1(alt((
         wordpart,
@@ -70,25 +67,18 @@ pub fn em_shorthand_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree
     )))
     .context("")
     .parse(source)?;
-    let source_text = words
-        .iter()
-        .map(|word| word.source_text.clone())
-        .collect::<Vec<String>>()
-        .join("");
     let value = words
         .iter()
         .map(|word| word.parsed_text.clone())
         .collect::<Vec<String>>()
         .join("");
     let attr = SpanAttr {
-        source_text: format!("{}{}", the_tag, source_text),
         kind: SpanAttrKind::Flag { value },
     };
     Ok((source, attr))
 }
 
 pub fn em_shorthand_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-    let initial_source = source;
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, key_parts) = many1(alt((alpha1, digit1, tag("-"))))
         .context("")
@@ -121,9 +111,7 @@ pub fn em_shorthand_key_value_attr(source: &str) -> IResult<&str, SpanAttr, Erro
         .map(|word| word.parsed_text.clone())
         .collect::<Vec<String>>()
         .join("");
-    let source_text = initial_source.replace(source, "").to_string();
     let attr = SpanAttr {
-        source_text,
         kind: SpanAttrKind::KeyValue {
             key: key.to_string(),
             value,
