@@ -1,0 +1,24 @@
+[! import "includes/theme.neoj" as theme !]
+
+<section class="h3-section flow">
+<hgroup [@- section.attr_string @]>
+[! for child in section.children !]
+  [! if loop.first !]
+    <h3 class="section-heading">
+    [! for span in child.spans !]
+      [@ theme.output_span("", "", span) @]
+    [! endfor !]
+    </h3>
+    [! if section.attrs.subtitle !]
+      <p class="section-subtitle">
+      [! for span in section.attrs.subtitle !]
+        [@ theme.output_span("", "", span) @]
+      [! endfor !]
+      </p>
+    [! endif !]
+  [! endif !]
+[! endfor !]
+</hgroup>
+
+
+[! include "subsections/content-skip-one.neoj" !]
