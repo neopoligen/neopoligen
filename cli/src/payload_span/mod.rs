@@ -311,7 +311,7 @@ impl PayloadSpan {
             SpanKind::SingleLessThan => "single-lessthan".to_string(),
             SpanKind::SingleUnderscore => "single-underscore".to_string(),
             SpanKind::Space => "space".to_string(),
-            SpanKind::WordPart => "word-part".to_string(),
+            SpanKind::WordPart => "wordpart".to_string(),
             SpanKind::NamedSpan { r#type, .. } => r#type.to_string(),
             SpanKind::Pipe => "pipe".to_string(),
         };
@@ -363,7 +363,7 @@ impl PayloadSpan {
             parsed_text: span.parsed_text.clone().to_string(),
             template_list: vec![
                 format!("spans/{}.neoj", r#type.clone()),
-                format!("spans/generic_{}_span.neoj", kind.clone()),
+                format!("spans/generic-{}-span.neoj", kind.clone()),
             ],
             r#type: r#type.clone(),
         };
@@ -396,7 +396,7 @@ impl PayloadSpan {
             parsed_text: " ".to_string(),
             template_list: vec![
                 "spans/space.neoj".to_string(),
-                "spans/generic_basic_span.neoj".to_string(),
+                "spans/generic-basic-span.neoj".to_string(),
             ],
         }
     }
@@ -646,7 +646,7 @@ mod test {
         let payload_span = PayloadSpan::new_from_span(&Span::mock1_basic_wordpard(), &config);
         let left = vec![
             "spans/wordpart.neoj".to_string(),
-            "spans/generic_basic_span.neoj".to_string(),
+            "spans/generic-basic-span.neoj".to_string(),
         ];
         let right = payload_span.template_list;
         assert_eq!(left, right);
@@ -659,7 +659,7 @@ mod test {
             PayloadSpan::new_from_span(&Span::mock2_named_link_with_flag_and_attrs(), &config);
         let left = vec![
             "spans/link.neoj".to_string(),
-            "spans/generic_named_span.neoj".to_string(),
+            "spans/generic-named-span.neoj".to_string(),
         ];
         let right = payload_span.template_list;
         assert_eq!(left, right);
