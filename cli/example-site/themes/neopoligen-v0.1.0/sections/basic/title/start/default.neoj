@@ -1,5 +1,5 @@
 [! import "includes/theme.neoj" as theme !]
-<hgroup>
+<hgroup [@ section.attr_string @]>
 [! for child in section.children !]
   [! if loop.first !]
     <h1 class="page-title">
@@ -17,8 +17,5 @@
   [! endif !]
 [! endfor !]
 </hgroup>
-
-
-[@ section @]
 
 [! include "subsections/content-skip-one.neoj" !]
