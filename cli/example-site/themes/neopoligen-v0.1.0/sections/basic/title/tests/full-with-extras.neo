@@ -2,6 +2,7 @@
 
 -- title
 -- subtitle: This is a subtitle
+-- subtitle: across two lines of attrs
 
 This Is The Page Title
 
@@ -12,7 +13,7 @@ This Is The Page Title
     This Is The Page Title
   </h1>
   <div class="page-subtitle">
-    This is a subtitle
+    This is a subtitle across two lines of attrs
   </div>
 </hgroup>
 
