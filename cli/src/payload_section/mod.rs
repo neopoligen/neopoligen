@@ -198,7 +198,7 @@ impl PayloadSection {
             .attrs
             .iter()
             .filter_map(|attr| match &attr.kind {
-                SectionAttrKind::FlagSpans { spans } => Some(flatten_spans(spans)),
+                SectionAttrKind::Flag { flag } => Some(flag.to_string()),
                 _ => None,
             })
             .collect::<Vec<String>>();

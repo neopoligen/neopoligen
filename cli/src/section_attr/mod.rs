@@ -28,9 +28,7 @@ pub enum SectionAttrKind {
     // DEPRECATED: TODO: Remove KeyValue in favor of KeyValueSpans
     KeyValue { key: String, value: String },
     KeyValueSpans { key: String, spans: Vec<Span> },
-    // DEPRECATED: TODO: Remove Flag in favor of FlagSpans
     Flag { flag: String },
-    FlagSpans { spans: Vec<Span> },
 }
 
 // pub fn section_attr_old<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
