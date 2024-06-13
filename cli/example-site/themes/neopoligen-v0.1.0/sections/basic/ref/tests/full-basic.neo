@@ -4,12 +4,21 @@
 -- title: Some Reference
 -- url: https://www.example.com/
 
+Some Text
 
 -- expected-output/
 
-<li>
-<p>Alfa bravo charlie</p>
-<p>Delta echo foxtrot</p>
+<li class="footnote-ref">
+  <div>&bullet;
+  </div>
+  <div class="flow">
+    <a href="https://www.example.com/">Some Reference
+    </a>
+    <p>Some Text
+    </p>
+  </div>
+  <div>
+  </div>
 </li>
 
 -- /expected-output

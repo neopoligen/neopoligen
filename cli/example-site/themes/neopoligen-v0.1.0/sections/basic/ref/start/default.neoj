@@ -4,18 +4,19 @@
     <a href="#fnref-[@- section.id @]-link">[@- section.id -@]</a>
   </div>
 [!- else -!]
-  <div>&middot;</div>
+  <div>&bullet;</div>
 [!- endif -!]
 
-<div>
-[#
-[!- if section.attrs.url -!][@- section.attrs.url -@][!- endif -!]
-#]
+<div class="flow">
+[!- if section.attrs.url -!]<a href="[@- section.attrs.url -@]">[!- endif -!]
+[!- if section.attrs.title -!][@- section.attrs.title -@][!- endif -!]
+[!- if section.attrs.url -!]</a>[!- endif -!]
+[!- include "subsections/content-all-blocks.neoj" -!]
 </div>
 
 [!- if section.id -!]
   <div>
-    <a href="#fnref-[@- section.id @]-link">^</a>
+    <a href="#fnref-[@- section.id @]-link">&#x2934;</a>
   </div>
 [!- else -!]
   <div></div>

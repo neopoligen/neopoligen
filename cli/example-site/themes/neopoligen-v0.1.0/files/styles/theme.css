@@ -47,7 +47,8 @@ footer {
 
 .footnote-ref {
   display: grid;
-  grid-template-columns: 4ch 1fr 4ch;
+  grid-template-columns: 2ch 1fr 4ch;
+  gap: 20px;
 }
 
 .green {
