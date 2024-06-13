@@ -153,7 +153,6 @@ impl PayloadSection {
             .filter_map(|attr| match &attr.kind {
                 SectionAttrKind::KeyValueSpans { key, spans } => {
                     if key.to_lowercase() == "class" {
-                        //let x = flatten_spans(spans);
                         Some(
                             flatten_spans(spans)
                                 .clone()
@@ -169,21 +168,6 @@ impl PayloadSection {
             })
             .flatten()
             .collect::<Vec<String>>();
-        // let classes = section
-        //     .attrs
-        //     .iter()
-        //     .filter_map(|attr| match &attr.kind {
-        //         SectionAttrKind::KeyValue { key, value } => {
-        //             if key.as_str() == "class" {
-        //                 Some(value.split(" ").map(|s| s.to_string()))
-        //             } else {
-        //                 None
-        //             }
-        //         }
-        //         _ => None,
-        //     })
-        //     .flatten()
-        //     .collect::<Vec<String>>();
 
         let created = section.attrs.iter().find_map(|attr| match &attr.kind {
             SectionAttrKind::KeyValue { key, value } => {
@@ -364,6 +348,11 @@ impl PayloadSection {
                 attr_string.push_str(format!(r#" aria-{}="{}""#, key, value).as_str());
             });
         }
+
+        if self.classes.len() > 0 {
+            attr_string.push_str(format!(r#" class="{}""#, self.classes.join(" ")).as_str());
+        }
+
         self.attr_string = Some(attr_string);
     }
 }
@@ -393,6 +382,17 @@ mod test {
             &SiteConfig::mock1_basic(),
         );
         let left = r#" aria-description="alfa bravo charlie delta""#;
+        let right = ps.attr_string.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn attr_string_with_classes() {
+        let ps = PayloadSection::new_from_section(
+            &Section::mock4_youtube_with_tags_and_classes(),
+            &SiteConfig::mock1_basic(),
+        );
+        let left = r#" class="class1 class2 class3""#;
         let right = ps.attr_string.unwrap();
         assert_eq!(left, right);
     }
