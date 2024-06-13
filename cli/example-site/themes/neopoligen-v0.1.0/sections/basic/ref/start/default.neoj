@@ -1,0 +1,22 @@
+<li class="footnote-ref">
+[!- if section.id -!]
+  <div id="fnref-[@- section.id -@]-text">
+    <a href="#fnref-[@- section.id @]-link">[@- section.id -@]</a>
+  </div>
+[!- else -!]
+  <div>&middot;</div>
+[!- endif -!]
+
+
+<div>
+
+This is the content
+</div>
+
+[!- if section.id -!]
+  <div>
+    <a href="#fnref-[@- section.id @]-link">^</a>
+  </div>
+[!- else -!]
+  <div></div>
+[!- endif -!]

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="[@ site.config.default_language @]">
+<html lang="[@- site.config.default_language -@]">
 <head>
 <title>[# TODO: Add page title #]</title>
 <meta charset="UTF-8" />
@@ -10,7 +10,8 @@
 <body>
 <header><a href="/">Home</a></header>
 <main>
-[! block body !][! endblock !]
+[!- block body -!][!- endblock -!]
+[!- block endmatter -!][!- endblock -!]
 </main>
 <footer></footer>
 </body>

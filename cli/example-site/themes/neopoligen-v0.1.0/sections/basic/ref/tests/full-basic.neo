@@ -1,0 +1,21 @@
+-- start-theme-test
+
+-- ref
+-- title: Some Reference
+-- url: https://www.example.com/
+
+
+-- expected-output/
+
+<li>
+<p>Alfa bravo charlie</p>
+<p>Delta echo foxtrot</p>
+</li>
+
+-- /expected-output
+
+
+-- metadata
+-- updated: 2024-06-13T10:26:15-04:00
+-- id: 2hpqwixw
+

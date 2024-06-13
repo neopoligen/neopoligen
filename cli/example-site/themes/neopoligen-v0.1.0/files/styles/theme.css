@@ -40,13 +40,14 @@ body {
   margin-top: var(--flow-space, 1em);
 }
 
-.flow-2 > :where(:not(:first-child)) {
-  margin-top: 1.5em;
-}
-
 footer {
   max-width: 64ch;
   margin: auto;
+}
+
+.footnote-ref {
+  display: grid;
+  grid-template-columns: 4ch 1fr 4ch;
 }
 
 .green {
