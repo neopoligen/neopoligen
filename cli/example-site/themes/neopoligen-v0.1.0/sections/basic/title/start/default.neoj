@@ -7,9 +7,9 @@
       [@ theme.output_span("", "", span) @]
     [! endfor !]
     </h1>
-    [! if section.subtitle !]
+    [! if section.attrs.subtitle !]
       <div class="page-subtitle">
-      [! for span in section.subtitle !]
+      [! for span in section.attrs.subtitle !]
         [@ theme.output_span("", "", span) @]
       [! endfor !]
       </div>

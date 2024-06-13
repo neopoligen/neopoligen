@@ -14,9 +14,9 @@ use crate::{
 pub struct PayloadSection {
     pub aria: BTreeMap<String, String>,
     pub attr_string: Option<String>,
-    // TODO: Remove option from attrs
     pub attrs: BTreeMap<String, Vec<PayloadSpan>>,
     pub bounds: String,
+    // TODO Remove option from children
     pub children: Option<Vec<PayloadSection>>,
     pub classes: Vec<String>,
     pub created: Option<String>,
@@ -24,9 +24,9 @@ pub struct PayloadSection {
     pub flags: Vec<String>,
     pub id: Option<String>,
     pub kind: Option<String>,
+    // TODO: Remove option from spans
     pub spans: Option<Vec<PayloadSpan>>,
     pub status: Option<String>,
-    pub subtitle: Option<Vec<PayloadSpan>>,
     pub tags: Option<Vec<String>>,
     pub text: Option<String>,
     pub title: Option<Vec<PayloadSpan>>,
@@ -71,7 +71,6 @@ impl PayloadSection {
                     && key.as_str() != "template"
                     && key.as_str() != "title"
                     && key.as_str() != "updated"
-                    && key.as_str() != "subtitle"
                 {
                     match attrs.get(key) {
                         Some(cur) => {
@@ -246,24 +245,6 @@ impl PayloadSection {
             _ => vec![],
         };
 
-        let mut subtitle_spans: Vec<PayloadSpan> = vec![];
-        section.attrs.iter().for_each(|attr| match &attr.kind {
-            SectionAttrKind::KeyValueSpans { key, spans } => {
-                if key.eq("subtitle") {
-                    spans.iter().for_each(|span| {
-                        subtitle_spans.push(PayloadSpan::new_from_span(span, config))
-                    })
-                }
-            }
-            _ => {}
-        });
-
-        let subtitle = if subtitle_spans.len() > 0 {
-            Some(subtitle_spans)
-        } else {
-            None
-        };
-
         let mut template_list = vec![];
         if let Some(template) = section.get_attr("template") {
             template_list.push(format!(
@@ -336,7 +317,6 @@ impl PayloadSection {
             kind,
             spans: if spans.len() == 0 { None } else { Some(spans) },
             status,
-            subtitle,
             tags: if tags.len() == 0 { None } else { Some(tags) },
             text,
             title: None, // TODO
@@ -725,15 +705,6 @@ mod test {
     //     let right = payload_section.attrs;
     //     assert_eq!(left, right);
     // }
-
-    #[test]
-    fn subtitle_basic_check() {
-        let ps = PayloadSection::new_from_section(
-            &Section::mock7_div_with_title_and_subtitle(),
-            &SiteConfig::mock1_basic(),
-        );
-        assert_eq!(ps.subtitle.unwrap().len(), 2);
-    }
 
     // #[test]
     // #[ignore]
