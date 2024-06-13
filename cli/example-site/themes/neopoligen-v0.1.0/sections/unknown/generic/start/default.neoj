@@ -1,2 +1,2 @@
 [! import "includes/theme.neoj" as theme !]
-[! include "subsections/content-full.neoj" !]
+[! include "subsections/content-all-blocks.neoj" !]

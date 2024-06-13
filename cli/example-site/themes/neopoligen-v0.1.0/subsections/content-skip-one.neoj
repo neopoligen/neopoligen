@@ -1,5 +1,0 @@
-[! for child in section.children !]
-[! if not loop.first !]
-    [@ theme.output_section(site, page_id, child) @]
-[! endif !]
-[! endfor !]

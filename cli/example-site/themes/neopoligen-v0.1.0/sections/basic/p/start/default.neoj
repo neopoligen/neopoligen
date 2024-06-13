@@ -4,5 +4,5 @@
     [@- theme.section_classes(section, "p-section flow") -@] 
     [@- section.attr_string -@]>
 
-[! include "subsections/content-full.neoj" !]
+[! include "subsections/content-all-blocks.neoj" !]
 
