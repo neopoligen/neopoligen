@@ -335,10 +335,6 @@ impl PayloadSection {
             attr_string.push_str(format!(r#" aria-{}="{}""#, key, value).as_str());
         });
 
-        if self.classes.len() > 0 {
-            attr_string.push_str(format!(r#" class="{}""#, self.classes.join(" ").trim()).as_str());
-        }
-
         let _ = &self.data.iter().for_each(|(key, value)| {
             attr_string.push_str(format!(r#" data-{}="{}""#, key, value).as_str());
         });
@@ -376,16 +372,16 @@ mod test {
         assert_eq!(left, right);
     }
 
-    #[test]
-    fn attr_string_with_classes() {
-        let ps = PayloadSection::new_from_section(
-            &Section::mock4_youtube_with_tags_and_classes(),
-            &SiteConfig::mock1_basic(),
-        );
-        let left = r#" class="class1 class2 class3""#;
-        let right = ps.attr_string.unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // fn attr_string_with_classes() {
+    //     let ps = PayloadSection::new_from_section(
+    //         &Section::mock4_youtube_with_tags_and_classes(),
+    //         &SiteConfig::mock1_basic(),
+    //     );
+    //     let left = r#" class="class1 class2 class3""#;
+    //     let right = ps.attr_string.unwrap();
+    //     assert_eq!(left, right);
+    // }
 
     #[test]
     fn attr_string_with_data() {
