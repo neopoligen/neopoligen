@@ -3,13 +3,13 @@
 <hgroup [@- section.attr_string @]>
 [! for child in section.children !]
   [! if loop.first !]
-    <h1 class="page-title">
+    <h1 class="section-heading">
     [! for span in child.spans !]
       [@ theme.output_span("", "", span) @]
     [! endfor !]
     </h1>
     [! if section.attrs.subtitle !]
-      <p class="page-subtitle">
+      <p class="section-subtitle">
       [! for span in section.attrs.subtitle !]
         [@ theme.output_span("", "", span) @]
       [! endfor !]

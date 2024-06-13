@@ -1,18 +1,18 @@
 -- start-theme-test 
 
--- title
+-- h1
 -- subtitle: This is a subtitle
 -- subtitle: across two lines of attrs
 
-This Is The Page Title
+Alfa Bravo Charlie
 
 -- expected-output/
 
 <hgroup>
-  <h1 class="page-title">
-    This Is The Page Title
+  <h1 class="section-heading">
+    Alfa Bravo Charlie
   </h1>
-  <p class="page-subtitle">
+  <p class="section-subtitle">
     This is a subtitle across two lines of attrs
   </p>
 </hgroup>
@@ -25,6 +25,6 @@ This Is The Page Title
 
 -- metadata
 -- updated: 2024-06-12T19:51:48-04:00
--- id: 2hniaxad
+-- id: 2hniaxa2
 
 

@@ -1,0 +1,25 @@
+-- start-theme-test
+
+-- h1/
+
+Alfa Bravo Charlie
+
+-- /h1
+
+
+-- expected-output/
+
+<hgroup>
+<h1 class="section-heading">Alfa Bravo Charlie</h1>
+</hgroup>
+
+-- /expected-output
+
+
+
+-- metadata
+-- created: 2024-06-08T16:44:58-04:00
+-- updated: 2024-06-08T16:44:58-04:00
+-- id: 2hc3nv32
+
+
