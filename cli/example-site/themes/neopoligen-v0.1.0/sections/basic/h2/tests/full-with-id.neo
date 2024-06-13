@@ -1,17 +1,17 @@
 -- start-theme-test 
 
--- h1
+-- h2
 -- id: some-id 
 
 Alfa Bravo Charlie
 
 -- expected-output/
 
-<section class="h1-section flow">
+<section class="h2-section flow">
 <hgroup id="some-id">
-  <h1 class="section-heading">
+  <h2 class="section-heading">
     Alfa Bravo Charlie
-  </h1>
+  </h2>
 </hgroup>
 </section>
 
@@ -22,6 +22,6 @@ Alfa Bravo Charlie
 
 -- metadata
 -- updated: 2024-06-12T21:57:46-04:00
--- id: 2hnxudf2
+-- id: 2hnxudf3
 
 

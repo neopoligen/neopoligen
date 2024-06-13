@@ -9,9 +9,11 @@ Alfa Bravo Charlie
 
 -- expected-output/
 
+<section class="h1-section flow">
 <hgroup>
 <h1 class="section-heading">Alfa Bravo Charlie</h1>
 </hgroup>
+</section>
 
 -- /expected-output
 

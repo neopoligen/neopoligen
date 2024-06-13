@@ -6,9 +6,11 @@ Hello World
 
 -- expected-output/
 
+<section class="title-section flow">
 <hgroup>
 <h1 class="page-title">Hello World</h1>
 </hgroup>
+</section>
 
 -- /expected-output
 

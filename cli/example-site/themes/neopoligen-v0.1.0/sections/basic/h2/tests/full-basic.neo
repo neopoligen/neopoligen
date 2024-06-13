@@ -1,14 +1,14 @@
 -- start-theme-test
 
--- h1
+-- h2
 
 Alfa Bravo Charlie
 
 -- expected-output/
 
-<section class="h1-section flow">
+<section class="h2-section flow">
 <hgroup>
-<h1 class="section-heading">Alfa Bravo Charlie</h1>
+<h2 class="section-heading">Alfa Bravo Charlie</h2>
 </hgroup>
 </section>
 
@@ -18,5 +18,5 @@ Alfa Bravo Charlie
 -- metadata
 -- created: 2024-06-06T15:03:16-04:00
 -- updated: 2024-06-06T15:03:16-04:00
--- id: 2hwclom2
+-- id: 2hwclom3
 

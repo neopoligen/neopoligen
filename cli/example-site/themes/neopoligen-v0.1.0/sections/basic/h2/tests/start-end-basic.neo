@@ -1,17 +1,17 @@
 -- start-theme-test
 
--- title/
+-- h2/
 
-alfa bravo
+Alfa Bravo Charlie
 
--- /title
+-- /h2
 
 
 -- expected-output/
 
-<section class="title-section flow">
+<section class="h2-section flow">
 <hgroup>
-<h1 class="page-title">alfa bravo</h1>
+<h2 class="section-heading">Alfa Bravo Charlie</h2>
 </hgroup>
 </section>
 
@@ -22,6 +22,7 @@ alfa bravo
 -- metadata
 -- created: 2024-06-08T16:44:58-04:00
 -- updated: 2024-06-08T16:44:58-04:00
--- id: 2hc3nv31
+-- id: 2hc3nv33
+
 
 

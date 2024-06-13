@@ -7,11 +7,13 @@ This Is The Page Title
 
 -- expected-output/
 
+<section class="title-section flow">
 <hgroup id="some-id">
   <h1 class="page-title">
     This Is The Page Title
   </h1>
 </hgroup>
+</section>
 
 
 -- /expected-output

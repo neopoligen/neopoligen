@@ -8,6 +8,7 @@ This Is The Page Title
 
 -- expected-output/
 
+<section class="title-section flow">
 <hgroup>
   <h1 class="page-title">
     This Is The Page Title
@@ -16,6 +17,7 @@ This Is The Page Title
     This is a subtitle across two lines of attrs
   </p>
 </hgroup>
+</section>
 
 
 -- /expected-output

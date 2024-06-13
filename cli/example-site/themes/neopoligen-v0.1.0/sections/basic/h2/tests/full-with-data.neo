@@ -1,18 +1,18 @@
 -- start-theme-test 
 
--- title
+-- h2
 -- data-info: alfa bravo 
 -- data-info: charlie 
 
-This Is The Page Title
+Alfa Bravo Charlie
 
 -- expected-output/
 
-<section class="title-section flow">
+<section class="h2-section flow">
 <hgroup data-info="alfa bravo charlie">
-  <h1 class="page-title">
-    This Is The Page Title
-  </h1>
+  <h2 class="section-heading">
+    Alfa Bravo Charlie
+  </h2>
 </hgroup>
 </section>
 
@@ -22,6 +22,6 @@ This Is The Page Title
 
 -- metadata
 -- updated: 2024-06-12T21:43:41-04:00
--- id: 2hnwcuhc
+-- id: 2hnwcuh3
 
 
