@@ -1,6 +1,6 @@
 -- start-theme-test
 
--- naked
+-- no-wrapper 
 
 <<em|some text>>
 

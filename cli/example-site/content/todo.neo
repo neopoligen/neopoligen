@@ -76,6 +76,10 @@ id, and all the valid attributes from the config file.
 [] Document that flags are always strings, (as opposed to 
 keyvalue attrs whose values are spans)
 
+[] Note that attr_string does not have classes on it. 
+Thats so you can add classes in with the templates 
+easier
+
 -- metadata
 -- updated: 2024-06-03T18:27:52-04:00
 -- id: 2ho8hakd
