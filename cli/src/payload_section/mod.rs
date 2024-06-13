@@ -350,7 +350,7 @@ impl PayloadSection {
         }
 
         if self.classes.len() > 0 {
-            attr_string.push_str(format!(r#" class="{}""#, self.classes.join(" ")).as_str());
+            attr_string.push_str(format!(r#" class="{}""#, self.classes.join(" ").trim()).as_str());
         }
 
         self.attr_string = Some(attr_string);

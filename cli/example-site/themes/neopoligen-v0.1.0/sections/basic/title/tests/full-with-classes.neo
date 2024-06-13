@@ -1,0 +1,23 @@
+-- start-theme-test 
+
+-- title
+-- class: alfa bravo 
+-- class: charlie 
+
+This Is The Page Title
+
+-- expected-output/
+
+<hgroup class="alfa bravo charlie">
+  <h1 class="page-title">
+    This Is The Page Title
+  </h1>
+</hgroup>
+
+
+-- /expected-output
+
+
+-- metadata
+-- updated: 2024-06-12T21:29:27-04:00
+-- id: 2hnut7uz
