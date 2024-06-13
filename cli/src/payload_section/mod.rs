@@ -21,7 +21,7 @@ pub struct PayloadSection {
     pub classes: Vec<String>,
     pub created: Option<String>,
     pub custom_attrs: Option<BTreeMap<String, String>>,
-    pub data: Option<BTreeMap<String, String>>,
+    pub data: BTreeMap<String, String>,
     pub first_flag: Option<String>,
     pub flags: Option<Vec<String>>,
     pub id: Option<String>,
@@ -59,12 +59,6 @@ impl PayloadSection {
             }
             _ => {}
         });
-
-        // let aria = if aria_attrs.len() > 0 {
-        //     Some(aria_attrs)
-        // } else {
-        //     None
-        // };
 
         let mut attrs: BTreeMap<String, Vec<PayloadSpan>> = BTreeMap::new();
         section.attrs.iter().for_each(|attr| match &attr.kind {
@@ -179,6 +173,27 @@ impl PayloadSection {
                 }
             }
             _ => None,
+        });
+
+        let mut data: BTreeMap<String, String> = BTreeMap::new();
+        section.attrs.iter().for_each(|attr| match &attr.kind {
+            SectionAttrKind::KeyValueSpans { key, spans } => {
+                if key.starts_with("data-") {
+                    let single_key = key.strip_prefix("data-").unwrap();
+                    match data.get(single_key) {
+                        Some(current) => {
+                            data.insert(
+                                single_key.to_string(),
+                                format!("{} {}", current, flatten_spans(spans)),
+                            );
+                        }
+                        None => {
+                            data.insert(single_key.to_string(), flatten_spans(spans));
+                        }
+                    }
+                }
+            }
+            _ => {}
         });
 
         let flags = section
@@ -321,7 +336,7 @@ impl PayloadSection {
             classes,
             created,
             custom_attrs: None,
-            data: None, // TODO
+            data, // TODO
             flags: if flags.len() == 0 { None } else { Some(flags) },
             first_flag: None,
             id,
@@ -344,6 +359,7 @@ impl PayloadSection {
 impl PayloadSection {
     pub fn make_attr_string(&mut self) {
         let mut attr_string = String::from("");
+
         let _ = &self.aria.iter().for_each(|(key, value)| {
             attr_string.push_str(format!(r#" aria-{}="{}""#, key, value).as_str());
         });
@@ -351,6 +367,10 @@ impl PayloadSection {
         if self.classes.len() > 0 {
             attr_string.push_str(format!(r#" class="{}""#, self.classes.join(" ").trim()).as_str());
         }
+
+        let _ = &self.data.iter().for_each(|(key, value)| {
+            attr_string.push_str(format!(r#" data-{}="{}""#, key, value).as_str());
+        });
 
         self.attr_string = Some(attr_string);
     }
@@ -393,6 +413,29 @@ mod test {
         );
         let left = r#" class="class1 class2 class3""#;
         let right = ps.attr_string.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn attr_string_with_data() {
+        let ps = PayloadSection::new_from_section(
+            &Section::mock9_aria_data(),
+            &SiteConfig::mock1_basic(),
+        );
+        let left = r#" aria-description="alfa bravo charlie delta""#;
+        let right = ps.attr_string.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn data_values_basic() {
+        let ps = PayloadSection::new_from_section(
+            &Section::mock10_data_attrs(),
+            &SiteConfig::mock1_basic(),
+        );
+        let left = "alfa bravo charlie delta";
+        let r1 = ps.data;
+        let right = r1.get("test").unwrap();
         assert_eq!(left, right);
     }
 

@@ -57,5 +57,11 @@ impl Section {
         start_or_full_section(source, &config.sections).unwrap().1
     }
 
+    pub fn mock10_data_attrs() -> Section {
+        let config = SiteConfig::mock1_basic();
+        let source = "-- div\n-- data-test: alfa bravo\n-- data-test: charlie delta\n\nalfa bravo";
+        start_or_full_section(source, &config.sections).unwrap().1
+    }
+
     //
 }
