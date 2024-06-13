@@ -60,11 +60,23 @@ fn make_shorthand_base_cases(token_set: Vec<(&str, &str)>) -> Vec<String> {
 fn shorthand_base_cases(start_token: &str, end_token: &str) -> Vec<(String, usize, usize)> {
     // format: string, number of expected flags, number of expected key/values
     let base = vec![
-        ("alfa bravo", 0, 0),
-        ("alfa-bravo", 0, 0),
-        ("alfa_bravo", 0, 0),
-        ("alfa`bravo", 0, 0),
-        ("alfa:bravo", 0, 0),
+        (r#"alfa bravo"#, 0, 0),
+        (r#"alfa`bravo"#, 0, 0),
+        (r#"alfa-bravo"#, 0, 0),
+        (r#"alfa_bravo"#, 0, 0),
+        (r#"alfa:bravo"#, 0, 0),
+        (r#"alfa<bravo"#, 0, 0),
+        (r#"alfa>bravo"#, 0, 0),
+        (r#"alfa^bravo"#, 0, 0),
+        (r#"alfa\\|bravo"#, 0, 0),
+        (r#"alfa\\``bravo"#, 0, 0),
+        (r#"alfa\\-bravo"#, 0, 0),
+        (r#"alfa\\_bravo"#, 0, 0),
+        (r#"alfa\\--bravo"#, 0, 0),
+        (r#"alfa\\__bravo"#, 0, 0),
+        (r#"alfa\\:bravo"#, 0, 0),
+        (r#"alfa\\::bravo"#, 0, 0),
+        (r#"alfa\\\\bravo"#, 0, 0),
     ];
     base.iter()
         .map(|(s, f, kv)| {
@@ -75,16 +87,6 @@ fn shorthand_base_cases(start_token: &str, end_token: &str) -> Vec<(String, usiz
             )
         })
         .collect()
-
-    // alfa_bravo
-    // alfa`bravo
-    // alfa:bravo
-    // alfa\\|bravo
-    // alfa\\-bravo
-    // alfa\\_bravo
-    // alfa\\`bravo
-    // alfa\\:bravo
-    // alfa\\\\bravo
 
     // #[case("``alfa|bravo``", 1, "single flag attr")]
     // #[case("``alfa|bravo charlie``", 1, "space in flag")]
@@ -103,6 +105,7 @@ fn shorthand_base_cases(start_token: &str, end_token: &str) -> Vec<(String, usiz
 
 fn tmpl() -> String {
     r#"use neopoligengine::span::*;
+use neopoligengine::span_attr::*;
 use rstest::rstest;
 
 #[rstest]
@@ -115,7 +118,20 @@ fn generated_shorthand_base_cases(
     #[case] kv_count: usize
     ) {
     let span = shorthand(source).unwrap().1;
-    
+    let kv = span.attrs.iter().filter_map(|attr|{
+        match &attr.kind {
+            SpanAttrKind::KeyValue { .. } => Some(()),
+            _ => None
+        }
+    }).collect::<Vec<()>>();
+    let flags = span.attrs.iter().filter_map(|attr|{
+        match &attr.kind {
+            SpanAttrKind::Flag { .. } => Some(()),
+            _ => None
+        }
+    }).collect::<Vec<()>>();
+    assert_eq!(kv.len(), kv_count);
+    assert_eq!(flags.len(), flag_count);
 }
     "#
     .to_string()

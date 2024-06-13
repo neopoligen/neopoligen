@@ -9,6 +9,7 @@ pub mod escaped_backtick;
 pub mod escaped_caret;
 pub mod escaped_colon;
 pub mod escaped_greaterthan;
+pub mod escaped_hyphen;
 pub mod escaped_pipe;
 pub mod escaped_underscore;
 pub mod footnote_shorthand;
@@ -16,6 +17,7 @@ pub mod greaterthan;
 pub mod hyphen;
 pub mod lessthan;
 pub mod mocks;
+pub mod more_than_two_carets;
 pub mod more_than_two_underscores;
 pub mod named_span;
 pub mod pipe;
@@ -33,12 +35,15 @@ use crate::span::colon_not_followed_by_space::*;
 use crate::span::em_shorthand::*;
 use crate::span::escaped_backslash::*;
 use crate::span::escaped_backtick::*;
+use crate::span::escaped_caret::*;
 use crate::span::escaped_colon::*;
 use crate::span::escaped_greaterthan::*;
+use crate::span::escaped_hyphen::*;
 use crate::span::escaped_pipe::*;
 use crate::span::escaped_underscore::*;
 use crate::span::footnote_shorthand::*;
 use crate::span::hyphen::*;
+use crate::span::more_than_two_carets::*;
 use crate::span::more_than_two_underscores::*;
 use crate::span::named_span::*;
 use crate::span::single_backtick::*;
@@ -49,7 +54,6 @@ use crate::span::single_underscore::*;
 use crate::span::wordpart::*;
 use crate::span_attr::*;
 use nom::branch::alt;
-// use nom::bytes::complete::is_not;
 use nom::character::complete::line_ending;
 use nom::character::complete::multispace0;
 use nom::character::complete::space0;
@@ -86,6 +90,7 @@ pub enum SpanKind {
     EscapedCaret,
     EscapedColon,
     EscapedGreaterThan,
+    EscapedHyphen,
     EscapedPipe,
     EscapedUnderscore,
     FootnoteShorthand,
@@ -94,6 +99,7 @@ pub enum SpanKind {
     LessThan,
     LinkShorthand,
     MoreThanTwoUnderscores,
+    MoreThanTwoCarets,
     NamedSpan { r#type: String, children: Vec<Span> },
     Newline,
     Pipe,
@@ -107,32 +113,42 @@ pub enum SpanKind {
 }
 
 pub fn shorthand<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
-    let (source, span) = alt((named_span, code_shorthand, em_shorthand, footnote_shorthand))
+    let (source, span) = alt((code_shorthand, em_shorthand, footnote_shorthand))
         .context("")
         .parse(source)?;
     Ok((source, span))
 }
 
 pub fn base_span_for_all_text<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
-    let (source, span) = alt((alt((
-        wordpart,
-        space,
-        newline,
-        shorthand,
-        code_shorthand_single_pipe,
-        hyphen,
-        colon,
-        single_lessthan,
-        single_greaterthan,
-        single_backtick,
-        single_underscore,
-        escaped_backtick,
-        escaped_colon,
-        escaped_pipe,
-        escaped_greaterthan,
-        escaped_backslash,
-        more_than_two_underscores,
-    )),))
+    let (source, span) = alt((
+        alt((
+            wordpart,
+            space,
+            newline,
+            shorthand,
+            named_span,
+            code_shorthand_single_pipe,
+            hyphen,
+            colon,
+            single_caret,
+            single_lessthan,
+            single_greaterthan,
+            single_backtick,
+            single_underscore,
+        )),
+        alt((
+            escaped_backslash,
+            escaped_backtick,
+            escaped_caret,
+            escaped_colon,
+            escaped_hyphen,
+            escaped_greaterthan,
+            escaped_pipe,
+            escaped_underscore,
+            more_than_two_underscores,
+            more_than_two_carets,
+        )),
+    ))
     .context("")
     .parse(source)?;
     Ok((source, span))
@@ -278,6 +294,9 @@ mod test {
     #[case("<<alfa|bravo|charlie-delta>>", "")]
     #[case("<<alfa|bravo|charlie_delta>>", "")]
     #[case("______", "")]
+    #[case("^", "")]
+    #[case("\\^", "")]
+    #[case("^^^", "")]
     fn run_test(#[case] input: &str, #[case] left: &str) {
         let right = base_span_for_all_text(input).unwrap().0;
         assert_eq!(left, right);
