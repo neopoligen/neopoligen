@@ -1,1 +1,5 @@
-[@ span @]
+<sup><a 
+    href="#footnote-[@- span.parsed_text -@]"
+    id="footnote-[@- span.parsed_text -@]-ref"
+    >[@- span.parsed_text -@]</a></sup>
+
