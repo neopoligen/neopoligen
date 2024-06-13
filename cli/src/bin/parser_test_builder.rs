@@ -52,7 +52,14 @@ fn make_shorthand_base_cases(token_set: Vec<(&str, &str)>) -> Vec<String> {
         .flatten()
         .enumerate()
         .map(|(index, (source, flags, kv))| {
-            format!(r#"#[case({}, "{}", {}, {})]"#, index + 1, source, flags, kv)
+            format!(
+                r#"#[case({}, r#"{}"{}, {}, {})]"#,
+                index + 1,
+                source,
+                "#",
+                flags,
+                kv
+            )
         })
         .collect::<Vec<String>>()
 }
@@ -60,6 +67,7 @@ fn make_shorthand_base_cases(token_set: Vec<(&str, &str)>) -> Vec<String> {
 fn shorthand_base_cases(start_token: &str, end_token: &str) -> Vec<(String, usize, usize)> {
     // format: string, number of expected flags, number of expected key/values
     let base = vec![
+        // text basics
         (r#"alfa bravo"#, 0, 0),
         (r#"alfa`bravo"#, 0, 0),
         (r#"alfa-bravo"#, 0, 0),
@@ -68,15 +76,19 @@ fn shorthand_base_cases(start_token: &str, end_token: &str) -> Vec<(String, usiz
         (r#"alfa<bravo"#, 0, 0),
         (r#"alfa>bravo"#, 0, 0),
         (r#"alfa^bravo"#, 0, 0),
-        (r#"alfa\\|bravo"#, 0, 0),
-        (r#"alfa\\``bravo"#, 0, 0),
-        (r#"alfa\\-bravo"#, 0, 0),
-        (r#"alfa\\_bravo"#, 0, 0),
-        (r#"alfa\\--bravo"#, 0, 0),
-        (r#"alfa\\__bravo"#, 0, 0),
-        (r#"alfa\\:bravo"#, 0, 0),
-        (r#"alfa\\::bravo"#, 0, 0),
-        (r#"alfa\\\\bravo"#, 0, 0),
+        (r#"alfa\|bravo"#, 0, 0),
+        (r#"alfa\``bravo"#, 0, 0),
+        (r#"alfa\-bravo"#, 0, 0),
+        (r#"alfa\_bravo"#, 0, 0),
+        (r#"alfa\--bravo"#, 0, 0),
+        (r#"alfa\__bravo"#, 0, 0),
+        (r#"alfa\:bravo"#, 0, 0),
+        (r#"alfa\::bravo"#, 0, 0),
+        (r#"alfa\\bravo"#, 0, 0),
+        // flag tests
+        (r#"alfa bravo|charlie"#, 1, 0),
+        (r#"alfa bravo|charlie|delta"#, 2, 0),
+        (r#"alfa bravo|https://www.example.com/"#, 1, 0),
     ];
     base.iter()
         .map(|(s, f, kv)| {
