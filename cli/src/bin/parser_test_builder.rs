@@ -51,40 +51,54 @@ fn make_shorthand_base_cases(token_set: Vec<(&str, &str)>) -> Vec<String> {
         .map(|(start, end)| shorthand_base_cases(start, end))
         .flatten()
         .enumerate()
-        .map(|(index, value)| format!(r#"#[case({}, "{}")]"#, index + 1, value))
+        .map(|(index, (source, flags, kv))| {
+            format!(r#"#[case({}, "{}", {}, {})]"#, index + 1, source, flags, kv)
+        })
         .collect::<Vec<String>>()
 }
 
-fn shorthand_base_cases(start_token: &str, end_token: &str) -> Vec<String> {
-    let source = r#"alfa
-alfa bravo
-alfa-bravo
-alfa_bravo
-alfa`bravo
-alfa:bravo
-
-
-    #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
-    #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]
-    #[case("``alfa\\\\bravo``", 0, "escaped backslash in text")]
-    #[case("``alfa:bravo``", 0, "colon in text")]
-    #[case("``alfa: bravo``", 0, "colon in text before space")]
-    #[case("``alfa :bravo``", 0, "colon in text after space")]
-    #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]
-    #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
-    #[case("``alfa|bravo``", 1, "single flag attr")]
-    #[case("``alfa|bravo charlie``", 1, "space in flag")]
-    #[case("``alfa|bravo`charlie``", 1, "single backtick in flag")]
-    #[case("``alfa|bravo\ncharlie``", 1, "newline in flag")]
-    #[case("``alfa|bravo\\charlie``", 1, "non-escaped baskslash in flag")]
-    #[case("``alfa|bravo\\|charlie``", 1, "escaped pipe in flag")]
-    #[case("``alfa|bravo\\`charlie``", 1, "escaped backtick in flag")]
-
-"#;
-    source
-        .lines()
-        .map(|line| format!("{}{}{}", start_token, line, end_token))
+fn shorthand_base_cases(start_token: &str, end_token: &str) -> Vec<(String, usize, usize)> {
+    // format: string, number of expected flags, number of expected key/values
+    let base = vec![
+        ("alfa bravo", 0, 0),
+        ("alfa-bravo", 0, 0),
+        ("alfa_bravo", 0, 0),
+        ("alfa`bravo", 0, 0),
+        ("alfa:bravo", 0, 0),
+    ];
+    base.iter()
+        .map(|(s, f, kv)| {
+            (
+                format!("{}{}{}", start_token, s, end_token),
+                f.clone(),
+                kv.clone(),
+            )
+        })
         .collect()
+
+    // alfa_bravo
+    // alfa`bravo
+    // alfa:bravo
+    // alfa\\|bravo
+    // alfa\\-bravo
+    // alfa\\_bravo
+    // alfa\\`bravo
+    // alfa\\:bravo
+    // alfa\\\\bravo
+
+    // #[case("``alfa|bravo``", 1, "single flag attr")]
+    // #[case("``alfa|bravo charlie``", 1, "space in flag")]
+    // #[case("``alfa|bravo`charlie``", 1, "single backtick in flag")]
+    // #[case("``alfa|bravo\ncharlie``", 1, "newline in flag")]
+    // #[case("``alfa|bravo\\charlie``", 1, "non-escaped baskslash in flag")]
+    // #[case("``alfa|bravo\\|charlie``", 1, "escaped pipe in flag")]
+    // #[case("``alfa|bravo\\`charlie``", 1, "escaped backtick in flag")]
+
+    // "#;
+    //     source
+    //         .lines()
+    //         .map(|line| format!("{}{}{}", start_token, line, end_token))
+    //         .collect()
 }
 
 fn tmpl() -> String {
@@ -94,8 +108,14 @@ use rstest::rstest;
 #[rstest]
 [! for case in shorthand_base_cases !][@ case @]
 [! endfor !]
-fn generated_shorthand_base_cases(#[case] number: usize, #[case] source: &str) {
-    assert!(base_span_for_all_text(source).is_ok());
+fn generated_shorthand_base_cases(
+    #[case] _number: usize, 
+    #[case] source: &str, 
+    #[case] flag_count: usize, 
+    #[case] kv_count: usize
+    ) {
+    let span = shorthand(source).unwrap().1;
+    
 }
     "#
     .to_string()

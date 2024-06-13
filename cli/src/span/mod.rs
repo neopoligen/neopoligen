@@ -6,6 +6,7 @@ pub mod double_underscore;
 pub mod em_shorthand;
 pub mod escaped_backslash;
 pub mod escaped_backtick;
+pub mod escaped_caret;
 pub mod escaped_colon;
 pub mod escaped_greaterthan;
 pub mod escaped_pipe;
@@ -19,6 +20,7 @@ pub mod more_than_two_underscores;
 pub mod named_span;
 pub mod pipe;
 pub mod single_backtick;
+pub mod single_caret;
 pub mod single_greaterthan;
 pub mod single_lessthan;
 pub mod single_underscore;
@@ -35,12 +37,12 @@ use crate::span::escaped_colon::*;
 use crate::span::escaped_greaterthan::*;
 use crate::span::escaped_pipe::*;
 use crate::span::escaped_underscore::*;
-// use crate::span::greaterthan::*;
+use crate::span::footnote_shorthand::*;
 use crate::span::hyphen::*;
-// use crate::span::lessthan::*;
 use crate::span::more_than_two_underscores::*;
 use crate::span::named_span::*;
 use crate::span::single_backtick::*;
+use crate::span::single_caret::*;
 use crate::span::single_greaterthan::*;
 use crate::span::single_lessthan::*;
 use crate::span::single_underscore::*;
@@ -81,6 +83,7 @@ pub enum SpanKind {
     EmShorthand,
     EscapedBacktick,
     EscapedBackslash,
+    EscapedCaret,
     EscapedColon,
     EscapedGreaterThan,
     EscapedPipe,
@@ -95,6 +98,7 @@ pub enum SpanKind {
     Newline,
     Pipe,
     SingleBacktick,
+    SingleCaret,
     SingleUnderscore,
     SingleGreaterThan,
     SingleLessThan,
@@ -102,15 +106,20 @@ pub enum SpanKind {
     WordPart,
 }
 
+pub fn shorthand<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    let (source, span) = alt((named_span, code_shorthand, em_shorthand, footnote_shorthand))
+        .context("")
+        .parse(source)?;
+    Ok((source, span))
+}
+
 pub fn base_span_for_all_text<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
     let (source, span) = alt((alt((
         wordpart,
         space,
         newline,
+        shorthand,
         code_shorthand_single_pipe,
-        code_shorthand,
-        em_shorthand,
-        named_span,
         hyphen,
         colon,
         single_lessthan,
