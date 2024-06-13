@@ -10,6 +10,7 @@ pub mod escaped_colon;
 pub mod escaped_greaterthan;
 pub mod escaped_pipe;
 pub mod escaped_underscore;
+pub mod footnote_shorthand;
 pub mod greaterthan;
 pub mod hyphen;
 pub mod lessthan;
@@ -86,6 +87,7 @@ pub enum SpanKind {
     EscapedGreaterThan,
     EscapedPipe,
     EscapedUnderscore,
+    FootnoteShorthand,
     GreaterThan,
     Hyphen,
     LessThan,

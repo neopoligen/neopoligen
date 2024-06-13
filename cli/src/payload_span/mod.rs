@@ -283,6 +283,7 @@ impl PayloadSpan {
         };
 
         let r#type = match &span.kind {
+            // TODO: Rename these to have underscores for snake_case
             SpanKind::CodeShorthand => "codeshorthand".to_string(),
             SpanKind::Colon => "colon".to_string(),
             SpanKind::ColonNotFollowedBySpace => "colonnotfollowedbyspace".to_string(),
@@ -294,6 +295,7 @@ impl PayloadSpan {
             SpanKind::EscapedGreaterThan => "escapedgreaterthan".to_string(),
             SpanKind::EscapedPipe => "escapedpipe".to_string(),
             SpanKind::EscapedUnderscore => "escapedunderscore".to_string(),
+            SpanKind::FootnoteShorthand => "footnote_shorthand".to_string(),
             SpanKind::GreaterThan => "greaterthan".to_string(),
             SpanKind::Hyphen => "hyphen".to_string(),
             SpanKind::LessThan => "lessthan".to_string(),
