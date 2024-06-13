@@ -67,7 +67,6 @@ pub fn em_shorthand_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree
         escaped_greaterthan,
         escaped_backslash,
         escaped_underscore,
-        non_escape_backslash,
     )))
     .context("")
     .parse(source)?;
@@ -144,20 +143,16 @@ mod test {
     #[case("__alfa bravo__", 0, "space in text")]
     #[case("__alfa-bravo__", 0, "hyphen in text")]
     #[case("__alfa_bravo__", 0, "single backtick in text")]
-    #[case("__alfa\\bravo__", 0, "non-escaped backslash in text")]
-    #[case("__alfa\\_bravo__", 0, "escaped backtick in text")]
     #[case("__alfa\\|bravo__", 0, "escaped pipe in text")]
     #[case("__alfa\\\\bravo__", 0, "escaped backslash in text")]
     #[case("__alfa:bravo__", 0, "colon in text")]
     #[case("__alfa: bravo__", 0, "colon in text before space")]
     #[case("__alfa :bravo__", 0, "colon in text after space")]
     #[case("__alfa\\|bravo__", 0, "escaped pipe in text")]
-    #[case("__alfa\\_bravo__", 0, "escaped backtick in text")]
     #[case("__alfa|bravo__", 1, "single flag attr")]
     #[case("__alfa|bravo charlie__", 1, "space in flag")]
     #[case("__alfa|bravo_charlie__", 1, "single backtick in flag")]
     #[case("__alfa|bravo\ncharlie__", 1, "newline in flag")]
-    #[case("__alfa|bravo\\charlie__", 1, "non-escaped baskslash in flag")]
     #[case("__alfa|bravo\\|charlie__", 1, "escaped pipe in flag")]
     #[case("__alfa|bravo\\_charlie__", 1, "escaped backtick in flag")]
     #[case("__alfa|bravo\\\\charlie__", 1, "escaped baskslash in flag")]

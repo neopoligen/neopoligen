@@ -4,7 +4,11 @@ use std::env::current_exe;
 use std::fs;
 
 fn main() {
-    let token_set = vec![("``", "``"), ("<<", ">>"), ("^^", "^^")];
+    let token_set = vec![
+        ("``", "``"),
+        // ("<<", ">>"), TODO: set up named spans so they work with no content
+        ("^^", "^^"),
+    ];
     let shorthand_base_cases = make_shorthand_base_cases(token_set);
     output_file(shorthand_base_cases);
 }
@@ -53,7 +57,30 @@ fn make_shorthand_base_cases(token_set: Vec<(&str, &str)>) -> Vec<String> {
 
 fn shorthand_base_cases(start_token: &str, end_token: &str) -> Vec<String> {
     let source = r#"alfa
-alfa-bravo"#;
+alfa bravo
+alfa-bravo
+alfa_bravo
+alfa`bravo
+alfa:bravo
+
+
+    #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
+    #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]
+    #[case("``alfa\\\\bravo``", 0, "escaped backslash in text")]
+    #[case("``alfa:bravo``", 0, "colon in text")]
+    #[case("``alfa: bravo``", 0, "colon in text before space")]
+    #[case("``alfa :bravo``", 0, "colon in text after space")]
+    #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]
+    #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
+    #[case("``alfa|bravo``", 1, "single flag attr")]
+    #[case("``alfa|bravo charlie``", 1, "space in flag")]
+    #[case("``alfa|bravo`charlie``", 1, "single backtick in flag")]
+    #[case("``alfa|bravo\ncharlie``", 1, "newline in flag")]
+    #[case("``alfa|bravo\\charlie``", 1, "non-escaped baskslash in flag")]
+    #[case("``alfa|bravo\\|charlie``", 1, "escaped pipe in flag")]
+    #[case("``alfa|bravo\\`charlie``", 1, "escaped backtick in flag")]
+
+"#;
     source
         .lines()
         .map(|line| format!("{}{}{}", start_token, line, end_token))

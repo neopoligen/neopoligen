@@ -37,13 +37,6 @@ pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     ))
 }
 
-// pub fn code_shorthand_text(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-//     let (source, span) = alt((wordpart, space, newline, single_backtick, escaped_pipe))
-//         .context("")
-//         .parse(source)?;
-//     Ok((source, span))
-// }
-
 pub fn code_shorthand_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let (source, attr) = alt((code_shorthand_key_value_attr, code_shorthand_flag_attr))
         .context("")
@@ -67,7 +60,6 @@ pub fn code_shorthand_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTr
         escaped_pipe,
         escaped_greaterthan,
         escaped_backslash,
-        non_escape_backslash,
     )))
     .context("")
     .parse(source)?;
@@ -144,7 +136,6 @@ mod test {
     #[case("``alfa-bravo``", 0, "hyphen in text")]
     #[case("``alfa`bravo``", 0, "single backtick in text")]
     #[case("``alfa_bravo``", 0, "with single underscore")]
-    #[case("``alfa\\bravo``", 0, "non-escaped backslash in text")]
     #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
     #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]
     #[case("``alfa\\\\bravo``", 0, "escaped backslash in text")]
@@ -157,7 +148,6 @@ mod test {
     #[case("``alfa|bravo charlie``", 1, "space in flag")]
     #[case("``alfa|bravo`charlie``", 1, "single backtick in flag")]
     #[case("``alfa|bravo\ncharlie``", 1, "newline in flag")]
-    #[case("``alfa|bravo\\charlie``", 1, "non-escaped baskslash in flag")]
     #[case("``alfa|bravo\\|charlie``", 1, "escaped pipe in flag")]
     #[case("``alfa|bravo\\`charlie``", 1, "escaped backtick in flag")]
     #[case("``alfa|bravo\\\\charlie``", 1, "escaped baskslash in flag")]
@@ -171,6 +161,7 @@ mod test {
         "newlines in shorthand multiple attrs"
     )]
     #[case("``Result<(), Box<dyn std::error::Error>>``", 0, "rust example")]
+
     fn code_shorhand_fixture(
         #[case] input: &str,
         #[case] attrs: usize,

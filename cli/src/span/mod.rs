@@ -17,7 +17,6 @@ pub mod lessthan;
 pub mod mocks;
 pub mod more_than_two_underscores;
 pub mod named_span;
-pub mod non_escape_backslash;
 pub mod pipe;
 pub mod single_backtick;
 pub mod single_greaterthan;
@@ -41,7 +40,6 @@ use crate::span::hyphen::*;
 // use crate::span::lessthan::*;
 use crate::span::more_than_two_underscores::*;
 use crate::span::named_span::*;
-use crate::span::non_escape_backslash::*;
 use crate::span::single_backtick::*;
 use crate::span::single_greaterthan::*;
 use crate::span::single_lessthan::*;
@@ -95,7 +93,6 @@ pub enum SpanKind {
     MoreThanTwoUnderscores,
     NamedSpan { r#type: String, children: Vec<Span> },
     Newline,
-    NonEscapeBackslash,
     Pipe,
     SingleBacktick,
     SingleUnderscore,
@@ -125,7 +122,6 @@ pub fn base_span_for_all_text<'a>(source: &'a str) -> IResult<&'a str, Span, Err
         escaped_pipe,
         escaped_greaterthan,
         escaped_backslash,
-        non_escape_backslash,
         more_than_two_underscores,
     )),))
     .context("")

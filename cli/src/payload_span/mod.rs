@@ -302,7 +302,6 @@ impl PayloadSpan {
             SpanKind::LinkShorthand => "linkshorthand".to_string(),
             SpanKind::Newline => "newline".to_string(),
             SpanKind::MoreThanTwoUnderscores => "morethantwounderscores".to_string(),
-            SpanKind::NonEscapeBackslash => "nonescapebackslash".to_string(),
             SpanKind::SingleBacktick => "singlebacktick".to_string(),
             SpanKind::SingleGreaterThan => "singlegreaterthan".to_string(),
             SpanKind::SingleLessThan => "singlelessthan".to_string(),

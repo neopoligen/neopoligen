@@ -104,7 +104,6 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorT
         escaped_pipe,
         escaped_greaterthan,
         escaped_backslash,
-        non_escape_backslash,
     )))
     .context("")
     .parse(source)?;
@@ -141,7 +140,6 @@ mod test {
     #[case("<<alfa|bravo-charlie>>", 0, "hyphen in text", true)]
     #[case("<<alfa|bravo`charlie>>", 0, "single backtick in text", true)]
     #[case("<<alfa|bravo\ncharlie>>", 0, "newline in text", true)]
-    #[case("<<alfa|bravo\\charlie>>", 0, "non-escaped backslash in text", true)]
     #[case("<<alfa|bravo\\`charlie>>", 0, "escaped backtick in text", true)]
     #[case("<<alfa|bravo\\:charlie>>", 0, "escaped colon in text", true)]
     #[case("<<alfa|bravo\\|charlie>>", 0, "escaped pipe in text", true)]
@@ -154,12 +152,6 @@ mod test {
     #[case("<<alfa|bravo|charlie delta>>", 1, "space in flag ", true)]
     #[case("<<alfa|bravo|charlie`delta>>", 1, "single backtick in flag", true)]
     #[case("<<alfa|bravo|charlie\ndelta>>", 1, "newline in flag", true)]
-    #[case(
-        "<<alfa|bravo|charlie\\delta>>",
-        1,
-        "non-escaped backslash in flag",
-        true
-    )]
     #[case("<<alfa|bravo|charlie\\`delta>>", 1, "escaped backtick in flag", true)]
     #[case("<<alfa|bravo|charlie\\:delta>>", 1, "escaped colon in flag", true)]
     #[case("<<alfa|bravo|charlie\\|delta>>", 1, "escaped pipe in flag", true)]

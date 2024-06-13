@@ -63,7 +63,6 @@ pub fn footnote_shorthand_flag_attr(source: &str) -> IResult<&str, SpanAttr, Err
         escaped_pipe,
         escaped_greaterthan,
         escaped_backslash,
-        non_escape_backslash,
     )))
     .context("")
     .parse(source)?;
