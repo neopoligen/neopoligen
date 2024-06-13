@@ -12,12 +12,13 @@ use crate::{
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PayloadSection {
+    // TODO: Remove the option for aria
     pub aria: Option<BTreeMap<String, String>>,
     pub attr_string: Option<String>,
     pub attrs: Option<BTreeMap<String, Vec<PayloadSpan>>>,
     pub bounds: String,
     pub children: Option<Vec<PayloadSection>>,
-    pub classes: Option<Vec<String>>,
+    pub classes: Vec<String>,
     pub created: Option<String>,
     pub custom_attrs: Option<BTreeMap<String, String>>,
     pub data: Option<BTreeMap<String, String>>,
@@ -150,9 +151,16 @@ impl PayloadSection {
             .attrs
             .iter()
             .filter_map(|attr| match &attr.kind {
-                SectionAttrKind::KeyValue { key, value } => {
-                    if key.as_str() == "class" {
-                        Some(value.split(" ").map(|s| s.to_string()))
+                SectionAttrKind::KeyValueSpans { key, spans } => {
+                    if key.to_lowercase() == "class" {
+                        //let x = flatten_spans(spans);
+                        Some(
+                            flatten_spans(spans)
+                                .clone()
+                                .split(" ")
+                                .map(|s| s.to_string())
+                                .collect::<Vec<String>>(),
+                        )
                     } else {
                         None
                     }
@@ -161,6 +169,21 @@ impl PayloadSection {
             })
             .flatten()
             .collect::<Vec<String>>();
+        // let classes = section
+        //     .attrs
+        //     .iter()
+        //     .filter_map(|attr| match &attr.kind {
+        //         SectionAttrKind::KeyValue { key, value } => {
+        //             if key.as_str() == "class" {
+        //                 Some(value.split(" ").map(|s| s.to_string()))
+        //             } else {
+        //                 None
+        //             }
+        //         }
+        //         _ => None,
+        //     })
+        //     .flatten()
+        //     .collect::<Vec<String>>();
 
         let created = section.attrs.iter().find_map(|attr| match &attr.kind {
             SectionAttrKind::KeyValue { key, value } => {
@@ -310,11 +333,7 @@ impl PayloadSection {
             } else {
                 Some(children)
             },
-            classes: if classes.len() == 0 {
-                None
-            } else {
-                Some(classes)
-            },
+            classes,
             created,
             custom_attrs: None,
             data: None, // TODO
@@ -538,22 +557,21 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // #[ignore]
-    // fn classes_work() {
-    //     let config = SiteConfig::mock1_basic();
-    //     let payload_section = PayloadSection::new_from_section(
-    //         &Section::mock4_youtube_with_tags_and_classes(),
-    //         &config,
-    //     );
-    //     let left: Vec<String> = vec![
-    //         "class1".to_string(),
-    //         "class2".to_string(),
-    //         "class3".to_string(),
-    //     ];
-    //     let right = payload_section.classes;
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn classes_work() {
+        let config = SiteConfig::mock1_basic();
+        let payload_section = PayloadSection::new_from_section(
+            &Section::mock4_youtube_with_tags_and_classes(),
+            &config,
+        );
+        let left: Vec<String> = vec![
+            "class1".to_string(),
+            "class2".to_string(),
+            "class3".to_string(),
+        ];
+        let right = payload_section.classes;
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // fn classes_dont_show_up_in_attrs() {
