@@ -12,9 +12,9 @@ use crate::{
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PayloadSection {
-    // TODO: Remove the option for aria
-    pub aria: Option<BTreeMap<String, String>>,
+    pub aria: BTreeMap<String, String>,
     pub attr_string: Option<String>,
+    // TODO: Remove option from attrs
     pub attrs: Option<BTreeMap<String, Vec<PayloadSpan>>>,
     pub bounds: String,
     pub children: Option<Vec<PayloadSection>>,
@@ -39,31 +39,32 @@ pub struct PayloadSection {
 
 impl PayloadSection {
     pub fn new_from_section(section: &Section, config: &SiteConfig) -> PayloadSection {
-        let mut aria_attrs: BTreeMap<String, String> = BTreeMap::new();
+        let mut aria: BTreeMap<String, String> = BTreeMap::new();
         section.attrs.iter().for_each(|attr| match &attr.kind {
             SectionAttrKind::KeyValueSpans { key, spans } => {
                 if key.starts_with("aria-") {
                     let single_key = key.strip_prefix("aria-").unwrap();
-                    match aria_attrs.get(single_key) {
+                    match aria.get(single_key) {
                         Some(current) => {
-                            aria_attrs.insert(
+                            aria.insert(
                                 single_key.to_string(),
                                 format!("{} {}", current, flatten_spans(spans)),
                             );
                         }
                         None => {
-                            aria_attrs.insert(single_key.to_string(), flatten_spans(spans));
+                            aria.insert(single_key.to_string(), flatten_spans(spans));
                         }
                     }
                 }
             }
             _ => {}
         });
-        let aria = if aria_attrs.len() > 0 {
-            Some(aria_attrs)
-        } else {
-            None
-        };
+
+        // let aria = if aria_attrs.len() > 0 {
+        //     Some(aria_attrs)
+        // } else {
+        //     None
+        // };
 
         let mut attrs: BTreeMap<String, Vec<PayloadSpan>> = BTreeMap::new();
         section.attrs.iter().for_each(|attr| match &attr.kind {
@@ -343,11 +344,9 @@ impl PayloadSection {
 impl PayloadSection {
     pub fn make_attr_string(&mut self) {
         let mut attr_string = String::from("");
-        if let Some(aria) = &self.aria {
-            aria.iter().for_each(|(key, value)| {
-                attr_string.push_str(format!(r#" aria-{}="{}""#, key, value).as_str());
-            });
-        }
+        let _ = &self.aria.iter().for_each(|(key, value)| {
+            attr_string.push_str(format!(r#" aria-{}="{}""#, key, value).as_str());
+        });
 
         if self.classes.len() > 0 {
             attr_string.push_str(format!(r#" class="{}""#, self.classes.join(" ").trim()).as_str());
@@ -370,7 +369,7 @@ mod test {
             &SiteConfig::mock1_basic(),
         );
         let left = "alfa bravo charlie delta";
-        let r1 = ps.aria.unwrap();
+        let r1 = ps.aria;
         let right = r1.get("description").unwrap();
         assert_eq!(left, right);
     }
