@@ -2,14 +2,17 @@
 
 -- title
 
-Hello World
+Alfa Bravo
+
+charlie delta
 
 -- expected-output/
 
 <section class="title-section flow">
 <hgroup>
-<h1 class="page-title">Hello World</h1>
+<h1 class="page-title">Alfa Bravo</h1>
 </hgroup>
+<p>charlie delta</p>
 </section>
 
 -- /expected-output

@@ -2,18 +2,28 @@
 
 -- h1/
 
-Alfa Bravo Charlie
+Alfa Bravo 
+
+charlie delta
 
 -- /h1
+
+echo foxtrot
 
 
 -- expected-output/
 
 <section class="h1-section flow">
 <hgroup>
-<h1 class="section-heading">Alfa Bravo Charlie</h1>
+<h1 class="section-heading">Alfa Bravo</h1>
 </hgroup>
+<p>charlie delta</p>
 </section>
+
+<section class="p-section flow">
+<p>echo foxtrot</p>
+</section>
+
 
 -- /expected-output
 

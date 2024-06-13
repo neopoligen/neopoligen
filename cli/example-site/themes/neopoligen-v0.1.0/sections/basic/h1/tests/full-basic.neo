@@ -2,14 +2,17 @@
 
 -- h1
 
-Alfa Bravo Charlie
+Alfa Bravo 
+
+charlie delta
 
 -- expected-output/
 
 <section class="h1-section flow">
 <hgroup>
-<h1 class="section-heading">Alfa Bravo Charlie</h1>
+<h1 class="section-heading">Alfa Bravo</h1>
 </hgroup>
+<p>charlie delta</p>
 </section>
 
 -- /expected-output
