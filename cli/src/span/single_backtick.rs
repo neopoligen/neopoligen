@@ -45,7 +45,6 @@ mod test {
             "x",
             Span {
                 attrs: vec![],
-                source_text: "`".to_string(),
                 parsed_text: "`".to_string(),
                 kind: SpanKind::SingleBacktick {},
             },

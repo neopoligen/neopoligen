@@ -7,10 +7,10 @@
   <div>&middot;</div>
 [!- endif -!]
 
-
 <div>
-
-This is the content
+[#
+[!- if section.attrs.url -!][@- section.attrs.url -@][!- endif -!]
+#]
 </div>
 
 [!- if section.id -!]

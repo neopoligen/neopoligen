@@ -68,7 +68,6 @@ mod test {
                                         attrs: vec![],
                                         kind: SpanKind::WordPart,
                                         parsed_text: "alfa".to_string(),
-                                        source_text: "alfa".to_string(),
                                     }],
                                 },
                                 r#type: "block-of-text".to_string(),

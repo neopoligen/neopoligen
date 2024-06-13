@@ -14,7 +14,8 @@ use crate::{
 pub struct PayloadSection {
     pub aria: BTreeMap<String, String>,
     pub attr_string: Option<String>,
-    pub attrs: BTreeMap<String, Vec<PayloadSpan>>,
+    pub attrs: BTreeMap<String, String>,
+    pub attrs_as_spans: BTreeMap<String, Vec<PayloadSpan>>,
     pub bounds: String,
     pub children: Vec<PayloadSection>,
     pub classes: Option<String>,
@@ -56,31 +57,46 @@ impl PayloadSection {
             _ => {}
         });
 
-        let mut attrs: BTreeMap<String, Vec<PayloadSpan>> = BTreeMap::new();
+        let mut attrs: BTreeMap<String, String> = BTreeMap::new();
         section.attrs.iter().for_each(|attr| match &attr.kind {
             SectionAttrKind::KeyValueSpans { key, spans } => {
                 if key.as_str() != "aria"
                     && key.as_str() != "class"
-                    && key.as_str() != "created"
                     && key.as_str() != "data"
                     && key.as_str() != "id"
-                    && key.as_str() != "status"
-                    && key.as_str() != "tag"
-                    && key.as_str() != "template"
-                    && key.as_str() != "title"
-                    && key.as_str() != "updated"
                 {
                     match attrs.get(key) {
+                        Some(cur) => {
+                            attrs.insert(key.clone(), format!("{} {}", cur, flatten_spans(spans)));
+                        }
+                        None => {
+                            attrs.insert(key.clone(), format!("{}", flatten_spans(spans)));
+                        }
+                    };
+                }
+            }
+            _ => (),
+        });
+
+        let mut attrs_as_spans: BTreeMap<String, Vec<PayloadSpan>> = BTreeMap::new();
+        section.attrs.iter().for_each(|attr| match &attr.kind {
+            SectionAttrKind::KeyValueSpans { key, spans } => {
+                if key.as_str() != "aria"
+                    && key.as_str() != "class"
+                    && key.as_str() != "data"
+                    && key.as_str() != "id"
+                {
+                    match attrs_as_spans.get(key) {
                         Some(cur) => {
                             let mut new_attrs = cur.clone();
                             new_attrs.push(PayloadSpan::new_space());
                             spans.iter().for_each(|span| {
                                 new_attrs.push(PayloadSpan::new_from_span(span, config))
                             });
-                            attrs.insert(key.clone(), new_attrs);
+                            attrs_as_spans.insert(key.clone(), new_attrs);
                         }
                         None => {
-                            attrs.insert(
+                            attrs_as_spans.insert(
                                 key.clone(),
                                 spans
                                     .iter()
@@ -308,6 +324,7 @@ impl PayloadSection {
             aria,
             attr_string: None,
             attrs,
+            attrs_as_spans,
             bounds,
             children,
             classes,
@@ -418,6 +435,17 @@ mod test {
             &Section::mock3_image_with_flag_and_multiple_attrs_with_same_key(),
             &SiteConfig::mock1_basic(),
         );
+        let left = "alfa bravo charlie delta";
+        let right = ps.attrs.get("alt").unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn attrs_as_spans_basic_check() {
+        let ps = PayloadSection::new_from_section(
+            &Section::mock3_image_with_flag_and_multiple_attrs_with_same_key(),
+            &SiteConfig::mock1_basic(),
+        );
         let left = &vec![
             PayloadSpan {
                 aria: None,
@@ -501,7 +529,7 @@ mod test {
                 ],
             },
         ];
-        let right = ps.attrs.get("alt").unwrap();
+        let right = ps.attrs_as_spans.get("alt").unwrap();
         assert_eq!(left, right);
     }
 
@@ -531,7 +559,6 @@ mod test {
         let span = Span {
             attrs: vec![],
             parsed_text: "some text".to_string(),
-            source_text: "some text".to_string(),
             kind: SpanKind::WordPart,
         };
         let left = "some text".to_string();
@@ -544,13 +571,11 @@ mod test {
         let span = Span {
             attrs: vec![],
             parsed_text: "".to_string(),
-            source_text: "source_text is DEPRECATED".to_string(),
             kind: SpanKind::NamedSpan {
                 children: vec![Span {
                     attrs: vec![],
                     kind: SpanKind::WordPart,
                     parsed_text: "alfa".to_string(),
-                    source_text: "source_text is DEPRECATED".to_string(),
                 }],
                 r#type: "em".to_string(),
             },

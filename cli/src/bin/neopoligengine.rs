@@ -137,6 +137,12 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
 
             // Errors
             builder.tmp_output_errors().unwrap();
+            if builder.errors.len() > 0 {
+                event!(Level::ERROR, "Total Errors: {}", builder.errors.len());
+            } else {
+                event!(Level::INFO, "No Errors Found");
+            }
+
             // builder.todo("update_file_cache");
             // builder.todo("generate_site_object");
             // builder.todo("load_templates");

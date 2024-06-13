@@ -24,7 +24,7 @@ use walkdir::WalkDir;
 pub struct Builder {
     cache_buffer: BTreeMap<PathBuf, SourcePage>,
     pub config: Option<SiteConfig>,
-    errors: Vec<NeoError>,
+    pub errors: Vec<NeoError>,
     source_pages: BTreeMap<PathBuf, SourcePage>,
     payloads: BTreeMap<String, PagePayload>,
     templates: BTreeMap<String, String>,
@@ -422,8 +422,12 @@ impl Builder {
                         let _ = write_file_with_mkdir(&output_path, &output);
                     }
                     Err(e) => {
-                        dbg!(e);
-                        ()
+                        self.errors.push(NeoError {
+                            kind: NeoErrorKind::GenericErrorWithSourcePath {
+                                source_path: page.source_path.as_ref().unwrap().clone(),
+                                msg: e.to_string(),
+                            },
+                        });
                     }
                 };
             } else {
@@ -584,8 +588,12 @@ impl Builder {
                         });
                     }
                     Err(e) => {
-                        dbg!(e);
-                        ()
+                        self.errors.push(NeoError {
+                            kind: NeoErrorKind::GenericErrorWithSourcePath {
+                                source_path: page.source_path.as_ref().unwrap().clone(),
+                                msg: e.to_string(),
+                            },
+                        });
                     }
                 };
             } else {
