@@ -16,18 +16,16 @@ pub struct PayloadSection {
     pub attr_string: Option<String>,
     pub attrs: BTreeMap<String, Vec<PayloadSpan>>,
     pub bounds: String,
-    // TODO Remove option from children
-    pub children: Option<Vec<PayloadSection>>,
+    pub children: Vec<PayloadSection>,
     pub classes: Vec<String>,
     pub created: Option<String>,
     pub data: BTreeMap<String, String>,
     pub flags: Vec<String>,
     pub id: Option<String>,
     pub kind: Option<String>,
-    // TODO: Remove option from spans
-    pub spans: Option<Vec<PayloadSpan>>,
+    pub spans: Vec<PayloadSpan>,
     pub status: Option<String>,
-    pub tags: Option<Vec<String>>,
+    pub tags: Vec<String>,
     pub text: Option<String>,
     pub title: Option<Vec<PayloadSpan>>,
     pub r#type: String,
@@ -304,20 +302,16 @@ impl PayloadSection {
             attr_string: None,
             attrs,
             bounds,
-            children: if children.len() == 0 {
-                None
-            } else {
-                Some(children)
-            },
+            children,
             classes,
             created,
-            data, // TODO
+            data,
             flags,
             id,
             kind,
-            spans: if spans.len() == 0 { None } else { Some(spans) },
+            spans,
             status,
-            tags: if tags.len() == 0 { None } else { Some(tags) },
+            tags,
             text,
             title: None, // TODO
             r#type: section.r#type.clone(),
