@@ -300,7 +300,7 @@ impl PayloadSection {
             _ => None,
         });
 
-        PayloadSection {
+        let mut ps = PayloadSection {
             aria,
             attr_string: None,
             attrs: if attrs.len() == 0 { None } else { Some(attrs) },
@@ -331,7 +331,21 @@ impl PayloadSection {
             r#type: section.r#type.clone(),
             template_list,
             updated,
+        };
+        ps.make_attr_string();
+        ps
+    }
+}
+
+impl PayloadSection {
+    pub fn make_attr_string(&mut self) {
+        let mut attr_string = String::from("");
+        if let Some(aria) = &self.aria {
+            aria.iter().for_each(|(key, value)| {
+                attr_string.push_str(format!(r#" aria-{}="{}""#, key, value).as_str());
+            });
         }
+        self.attr_string = Some(attr_string);
     }
 }
 
@@ -342,7 +356,7 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn solo_aria_values_basic() {
+    fn aria_values_basic() {
         let ps = PayloadSection::new_from_section(
             &Section::mock9_aria_data(),
             &SiteConfig::mock1_basic(),
@@ -350,6 +364,17 @@ mod test {
         let left = "alfa bravo charlie delta";
         let r1 = ps.aria.unwrap();
         let right = r1.get("description").unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn attr_string_with_aria() {
+        let ps = PayloadSection::new_from_section(
+            &Section::mock9_aria_data(),
+            &SiteConfig::mock1_basic(),
+        );
+        let left = r#" aria-description="alfa bravo charlie delta""#;
+        let right = ps.attr_string.unwrap();
         assert_eq!(left, right);
     }
 
