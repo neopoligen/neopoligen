@@ -625,12 +625,16 @@ impl Builder {
         env.set_lstrip_blocks(true);
         env.set_trim_blocks(true);
         let _ = env.add_template(
-            "themetesterror",
-            include_str!("../error_templates/themetesterror.neoj"),
+            "genericerrorwithsourcepath",
+            include_str!("../error_templates/genericerrorwithsourcepath.neoj"),
         );
         let _ = env.add_template(
             "parsererror",
             include_str!("../error_templates/parsererror.neoj"),
+        );
+        let _ = env.add_template(
+            "themetesterror",
+            include_str!("../error_templates/themetesterror.neoj"),
         );
         let _ = env.add_template("_todo", include_str!("../error_templates/_todo.neoj"));
         env.add_template_owned(

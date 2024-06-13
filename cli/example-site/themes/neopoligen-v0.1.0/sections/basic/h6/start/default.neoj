@@ -11,9 +11,9 @@
       [@ theme.output_span("", "", span) @]
     [! endfor !]
     </h6>
-    [! if section.attrs.subtitle !]
+    [! if section.attrs_as_spans.subtitle !]
       <p class="section-subtitle">
-      [! for span in section.attrs.subtitle !]
+      [! for span in section.attrs_as_spans.subtitle !]
         [@ theme.output_span("", "", span) @]
       [! endfor !]
       </p>
@@ -24,3 +24,4 @@
 
 
 [! include "subsections/content-skip-one-block.neoj" !]
+[! include "subsections/end-section.neoj" !]
