@@ -22,8 +22,8 @@ pub struct PayloadSection {
     pub created: Option<String>,
     pub custom_attrs: Option<BTreeMap<String, String>>,
     pub data: BTreeMap<String, String>,
-    pub first_flag: Option<String>,
-    pub flags: Option<Vec<String>>,
+    pub flags: Vec<String>,
+    pub flags_as_spans: Vec<PayloadSpan>,
     pub id: Option<String>,
     pub kind: Option<String>,
     pub spans: Option<Vec<PayloadSpan>>,
@@ -200,7 +200,7 @@ impl PayloadSection {
             .attrs
             .iter()
             .filter_map(|attr| match &attr.kind {
-                SectionAttrKind::Flag { flag } => Some(flag.to_string()),
+                SectionAttrKind::FlagSpans { spans } => Some(flatten_spans(spans)),
                 _ => None,
             })
             .collect::<Vec<String>>();
@@ -337,8 +337,8 @@ impl PayloadSection {
             created,
             custom_attrs: None,
             data, // TODO
-            flags: if flags.len() == 0 { None } else { Some(flags) },
-            first_flag: None,
+            flags,
+            flags_as_spans: vec![], // TODO
             id,
             kind,
             spans: if spans.len() == 0 { None } else { Some(spans) },
