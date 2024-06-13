@@ -205,6 +205,16 @@ impl PayloadSection {
             })
             .collect::<Vec<String>>();
 
+        // TODO Map these to payload spans
+        // let flags_as_spans = section
+        //     .attrs
+        //     .iter()
+        //     .filter_map(|attr| match &attr.kind {
+        //         SectionAttrKind::FlagSpans { spans } => Some(spans),
+        //         _ => None,
+        //     })
+        //     .collect::<Vec<>>();
+
         let id = section.attrs.iter().find_map(|attr| match &attr.kind {
             SectionAttrKind::KeyValueSpans { key, spans } => {
                 if key.as_str() == "id" {
@@ -259,9 +269,6 @@ impl PayloadSection {
             }
             _ => {}
         });
-        //.iter()
-        //.flatten();
-        //
 
         let subtitle = if subtitle_spans.len() > 0 {
             Some(subtitle_spans)
@@ -360,6 +367,10 @@ impl PayloadSection {
     pub fn make_attr_string(&mut self) {
         let mut attr_string = String::from("");
 
+        if let Some(id) = &self.id {
+            attr_string.push_str(format!(r#" id="{}""#, id).as_str());
+        }
+
         let _ = &self.aria.iter().for_each(|(key, value)| {
             attr_string.push_str(format!(r#" aria-{}="{}""#, key, value).as_str());
         });
@@ -428,48 +439,13 @@ mod test {
     }
 
     #[test]
-    fn data_values_basic() {
+    fn attr_string_with_id() {
         let ps = PayloadSection::new_from_section(
-            &Section::mock10_data_attrs(),
+            &Section::mock5_div_with_id(),
             &SiteConfig::mock1_basic(),
         );
-        let left = "alfa bravo charlie delta";
-        let r1 = ps.data;
-        let right = r1.get("test").unwrap();
-        assert_eq!(left, right);
-    }
-
-    #[test]
-    fn flatten_parsed_text_basic() {
-        let span = Span {
-            attrs: vec![],
-            parsed_text: "some text".to_string(),
-            source_text: "some text".to_string(),
-            kind: SpanKind::WordPart,
-        };
-        let left = "some text".to_string();
-        let right = flatten_parsed_text(&span);
-        assert_eq!(left, right);
-    }
-
-    #[test]
-    fn flatten_parsed_text_from_named_span() {
-        let span = Span {
-            attrs: vec![],
-            parsed_text: "".to_string(),
-            source_text: "DEPRECATED".to_string(),
-            kind: SpanKind::NamedSpan {
-                children: vec![Span {
-                    attrs: vec![],
-                    kind: SpanKind::WordPart,
-                    parsed_text: "alfa".to_string(),
-                    source_text: "DEPRECATED".to_string(),
-                }],
-                r#type: "em".to_string(),
-            },
-        };
-        let left = "alfa".to_string();
-        let right = flatten_parsed_text(&span);
+        let left = r#" id="attr-id""#;
+        let right = ps.attr_string.unwrap();
         assert_eq!(left, right);
     }
 
@@ -566,6 +542,61 @@ mod test {
         assert_eq!(left, right);
     }
 
+    #[test]
+    fn bounds_check() {
+        let config = SiteConfig::mock1_basic();
+        let section = Section::mock1_basic_title_section_no_attrs();
+        let left = "full";
+        let right = &PayloadSection::new_from_section(&section, &config).bounds;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn data_values_basic() {
+        let ps = PayloadSection::new_from_section(
+            &Section::mock10_data_attrs(),
+            &SiteConfig::mock1_basic(),
+        );
+        let left = "alfa bravo charlie delta";
+        let r1 = ps.data;
+        let right = r1.get("test").unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn flatten_parsed_text_basic() {
+        let span = Span {
+            attrs: vec![],
+            parsed_text: "some text".to_string(),
+            source_text: "some text".to_string(),
+            kind: SpanKind::WordPart,
+        };
+        let left = "some text".to_string();
+        let right = flatten_parsed_text(&span);
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn flatten_parsed_text_from_named_span() {
+        let span = Span {
+            attrs: vec![],
+            parsed_text: "".to_string(),
+            source_text: "source_text is DEPRECATED".to_string(),
+            kind: SpanKind::NamedSpan {
+                children: vec![Span {
+                    attrs: vec![],
+                    kind: SpanKind::WordPart,
+                    parsed_text: "alfa".to_string(),
+                    source_text: "source_text is DEPRECATED".to_string(),
+                }],
+                r#type: "em".to_string(),
+            },
+        };
+        let left = "alfa".to_string();
+        let right = flatten_parsed_text(&span);
+        assert_eq!(left, right);
+    }
+
     // #[test]
     // #[ignore]
     // fn todo_check_template_is_not_in_attrs() {
@@ -589,15 +620,6 @@ mod test {
     // fn todo_check_text_from_raw_section() {
     //     // TODO
     // }
-
-    #[test]
-    fn bounds_check() {
-        let config = SiteConfig::mock1_basic();
-        let section = Section::mock1_basic_title_section_no_attrs();
-        let left = "full";
-        let right = &PayloadSection::new_from_section(&section, &config).bounds;
-        assert_eq!(left, right);
-    }
 
     #[test]
     fn classes_work() {
