@@ -12,12 +12,16 @@ use crate::{
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PayloadSection {
+    pub aria: Option<BTreeMap<String, String>>,
+    pub attr_string: Option<String>,
     pub attrs: Option<BTreeMap<String, Vec<PayloadSpan>>>,
     pub bounds: String,
     pub children: Option<Vec<PayloadSection>>,
     pub classes: Option<Vec<String>>,
     pub created: Option<String>,
-    pub data: Option<Value>,
+    pub custom_attrs: Option<BTreeMap<String, String>>,
+    pub data: Option<BTreeMap<String, String>>,
+    pub first_flag: Option<String>,
     pub flags: Option<Vec<String>>,
     pub id: Option<String>,
     pub kind: Option<String>,
@@ -34,10 +38,37 @@ pub struct PayloadSection {
 
 impl PayloadSection {
     pub fn new_from_section(section: &Section, config: &SiteConfig) -> PayloadSection {
+        let mut aria_attrs: BTreeMap<String, String> = BTreeMap::new();
+        section.attrs.iter().for_each(|attr| match &attr.kind {
+            SectionAttrKind::KeyValueSpans { key, spans } => {
+                if key.starts_with("aria-") {
+                    let single_key = key.strip_prefix("aria-").unwrap();
+                    match aria_attrs.get(single_key) {
+                        Some(current) => {
+                            aria_attrs.insert(
+                                single_key.to_string(),
+                                format!("{} {}", current, flatten_spans(spans)),
+                            );
+                        }
+                        None => {
+                            aria_attrs.insert(single_key.to_string(), flatten_spans(spans));
+                        }
+                    }
+                }
+            }
+            _ => {}
+        });
+        let aria = if aria_attrs.len() > 0 {
+            Some(aria_attrs)
+        } else {
+            None
+        };
+
         let mut attrs: BTreeMap<String, Vec<PayloadSpan>> = BTreeMap::new();
         section.attrs.iter().for_each(|attr| match &attr.kind {
             SectionAttrKind::KeyValueSpans { key, spans } => {
-                if key.as_str() != "class"
+                if key.as_str() != "aria"
+                    && key.as_str() != "class"
                     && key.as_str() != "created"
                     && key.as_str() != "data"
                     && key.as_str() != "id"
@@ -270,6 +301,8 @@ impl PayloadSection {
         });
 
         PayloadSection {
+            aria,
+            attr_string: None,
             attrs: if attrs.len() == 0 { None } else { Some(attrs) },
             bounds,
             children: if children.len() == 0 {
@@ -283,8 +316,10 @@ impl PayloadSection {
                 Some(classes)
             },
             created,
+            custom_attrs: None,
             data: None, // TODO
             flags: if flags.len() == 0 { None } else { Some(flags) },
+            first_flag: None,
             id,
             kind,
             spans: if spans.len() == 0 { None } else { Some(spans) },
@@ -305,6 +340,18 @@ mod test {
     use super::*;
     use crate::span::{Span, SpanKind};
     use pretty_assertions::assert_eq;
+
+    #[test]
+    fn solo_aria_values_basic() {
+        let ps = PayloadSection::new_from_section(
+            &Section::mock9_aria_data(),
+            &SiteConfig::mock1_basic(),
+        );
+        let left = "alfa bravo charlie delta";
+        let r1 = ps.aria.unwrap();
+        let right = r1.get("description").unwrap();
+        assert_eq!(left, right);
+    }
 
     #[test]
     fn flatten_parsed_text_basic() {

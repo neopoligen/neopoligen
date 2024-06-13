@@ -18,4 +18,7 @@
 [! endfor !]
 </hgroup>
 
+
+[@ section @]
+
 [! include "subsections/content-skip-one.neoj" !]
