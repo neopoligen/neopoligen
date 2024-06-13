@@ -46,6 +46,7 @@ impl PayloadSection {
                     && key.as_str() != "template"
                     && key.as_str() != "title"
                     && key.as_str() != "updated"
+                    && key.as_str() != "subtitle"
                 {
                     match attrs.get(key) {
                         Some(cur) => {
@@ -185,8 +186,36 @@ impl PayloadSection {
             _ => None,
         });
 
-        let mut template_list = vec![];
+        let spans = match &section.kind {
+            SectionKind::Block { spans } => spans
+                .iter()
+                .map(|span| PayloadSpan::new_from_span(&span, config))
+                .collect::<Vec<PayloadSpan>>(),
+            _ => vec![],
+        };
 
+        let mut subtitle_spans: Vec<PayloadSpan> = vec![];
+        section.attrs.iter().for_each(|attr| match &attr.kind {
+            SectionAttrKind::KeyValueSpans { key, spans } => {
+                if key.eq("subtitle") {
+                    spans.iter().for_each(|span| {
+                        subtitle_spans.push(PayloadSpan::new_from_span(span, config))
+                    })
+                }
+            }
+            _ => {}
+        });
+        //.iter()
+        //.flatten();
+        //
+
+        let subtitle = if subtitle_spans.len() > 0 {
+            Some(subtitle_spans)
+        } else {
+            None
+        };
+
+        let mut template_list = vec![];
         if let Some(template) = section.get_attr("template") {
             template_list.push(format!(
                 "sections/{}/{}/{}/{}.neoj",
@@ -224,14 +253,6 @@ impl PayloadSection {
             })
             .collect::<Vec<String>>();
 
-        let spans = match &section.kind {
-            SectionKind::Block { spans } => spans
-                .iter()
-                .map(|span| PayloadSpan::new_from_span(&span, config))
-                .collect::<Vec<PayloadSpan>>(),
-            _ => vec![],
-        };
-
         let text = match &section.kind {
             SectionKind::Raw { text, .. } => text.clone(),
             _ => None,
@@ -268,7 +289,7 @@ impl PayloadSection {
             kind,
             spans: if spans.len() == 0 { None } else { Some(spans) },
             status,
-            subtitle: None, // TODO
+            subtitle,
             tags: if tags.len() == 0 { None } else { Some(tags) },
             text,
             title: None, // TODO
@@ -565,17 +586,14 @@ mod test {
     //     assert_eq!(left, right);
     // }
 
-    // #[test]
-    // #[ignore]
-    // fn subtitle_basic_check() {
-    //     let ps = PayloadSection::new_from_section(
-    //         &Section::mock7_div_with_title_and_subtitle(),
-    //         &SiteConfig::mock1_basic(),
-    //     );
-    //     let left: Vec<PayloadSpan> = vec![];
-    //     let right = ps.subtitle.unwrap();
-    //     assert_eq!(left, right)
-    // }
+    #[test]
+    fn subtitle_basic_check() {
+        let ps = PayloadSection::new_from_section(
+            &Section::mock7_div_with_title_and_subtitle(),
+            &SiteConfig::mock1_basic(),
+        );
+        assert_eq!(ps.subtitle.unwrap().len(), 2);
+    }
 
     // #[test]
     // #[ignore]

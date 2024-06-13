@@ -41,7 +41,7 @@ impl Section {
 
     pub fn mock7_div_with_title_and_subtitle() -> Section {
         let config = SiteConfig::mock1_basic();
-        let source = "-- div\n-- title: Title From Attr\n-- subtitle: Subtitle From Attr\n\nWhiskey tango\n\n";
+        let source = "-- div\n-- title: Title From Attr\n-- subtitle: Subtitle From Attr\n-- subtitle: Another Subtitle Line\n\nWhiskey tango\n\n";
         start_or_full_section(source, &config.sections).unwrap().1
     }
 
