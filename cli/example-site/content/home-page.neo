@@ -21,6 +21,12 @@ this is a second paragraph
 
 print("asdf")
 
+-- css
+
+body {
+  color: goldenrod;
+}
+
 
 -- metadata
 -- updated: 2024-05-31T19:20:58-04:00

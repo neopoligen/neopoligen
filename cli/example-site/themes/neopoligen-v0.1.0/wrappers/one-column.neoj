@@ -16,7 +16,16 @@
 [!- endif -!]
 [!- endfor -!]
 
-[# TODO: Break this out to an include #]
+[!- for section in page.sections -!]
+[!- if section.type == "css" -!]
+<style>
+[! autoescape false !]
+[@ section.text @]
+[! endautoescape !]
+</style>
+[!- endif -!]
+[!- endfor -!]
+
 [!- for section in page.sections -!]
 [!- if section.type == "javascript" -!]
 <script>
