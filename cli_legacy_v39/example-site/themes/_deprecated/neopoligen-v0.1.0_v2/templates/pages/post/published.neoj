@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  background-color: #111;
+  color: #aaa;
+}
+</style>
+</head>
+<body>
+    <ul>
+    [! for section in page.all_sections() !]
+      <li>
+      [@ section.type() @] 
+      [@ section.template() @] 
+      </li>
+    [! endfor !]
+    </ul>
+
+    <h4>Debug Items</h4>
+    <div class="debug-wrapper">
+      <div>Page type: [@ page.type() @]</div>
+      <div>Page status: [@ page.status() @]</div>
+    </div>
+</body>

@@ -1,0 +1,6 @@
+[! import "includes/theme.neoj" as theme !]
+<a href="[@ span.first_flag @]">
+  [!- for child in span.children -!]
+    [@- theme.output_span("", "", child) -@]
+  [!- endfor -!]
+</a>

@@ -1,0 +1,23 @@
+-- title
+
+Span: del 
+
+-- subtitle
+
+The Deleted Text Span
+
+-- p
+
+Basic Example: 
+
+<<del|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<del|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- id: 2bqphhlz
+

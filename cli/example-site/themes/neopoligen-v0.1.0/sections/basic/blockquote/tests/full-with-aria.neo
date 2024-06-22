@@ -1,0 +1,26 @@
+-- start-theme-test 
+
+-- blockquote
+-- aria-description: this is some 
+-- aria-description: aria text 
+
+Alfa bravo charlie 
+
+Delta echo foxtrot
+
+
+-- expected-output/
+
+<section class="blockquote-section flow" aria-description="this is some aria text">
+    <blockquote>
+        <p>Alfa bravo charlie</p>
+        <p>Delta echo foxtrot</p>
+    </blockquote>
+</section>
+
+-- /expected-output
+
+
+-- metadata
+-- updated: 2024-06-12T20:45:27-04:00
+-- id: 2hnp7qp_blockquote

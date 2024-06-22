@@ -1,0 +1,46 @@
+-- title
+
+Span Types
+
+
+-- pre/
+
+Named Spans: <<em|alfa bravo>> 
+
+Code Shorthand: ``alfa bravo``
+
+Em Shorthand: __alfa bravo__
+
+Strong Shorthand: **alfa bravo**
+
+External Link Shorthand: [[alfa bravo|URL]]
+
+Internal Link: {{alfa bravo|page_id}}
+
+Auto-titled link: %%page_id%%
+
+Raw HTML ((<span>whatever</span>))
+
+Footnote: ^^id^^
+
+Image: !!file_name!!
+
+Classes on a span: @@green|alfa bravo@@
+
+Unicode or HTML entity: &&quot&&
+
+
+-- /pre
+
+
+-- note
+
+Don't use ``::`` since that's a rust (and other language) thing 
+and would mean the potential for requiring lots of extra escaping. 
+
+
+-- metadata
+-- updated: 2024-06-12T16:36:18-04:00
+-- id: 2hnkong7
+
+

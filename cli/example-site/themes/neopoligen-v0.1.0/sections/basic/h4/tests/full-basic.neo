@@ -1,0 +1,21 @@
+-- start-theme-test
+
+-- h4
+
+Alfa Bravo Charlie
+
+-- expected-output/
+
+<section class="h4-section flow">
+<hgroup>
+<h4 class="section-heading">Alfa Bravo Charlie</h4>
+</hgroup>
+</section>
+
+-- /expected-output
+
+
+-- metadata
+-- updated: 2024-06-06T15:03:16-04:00
+-- id: 2hwclom3_h4
+

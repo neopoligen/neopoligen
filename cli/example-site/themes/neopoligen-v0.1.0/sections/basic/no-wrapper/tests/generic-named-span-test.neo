@@ -1,0 +1,22 @@
+-- start-theme-test
+
+-- no-wrapper 
+
+<<em|some text>>
+
+-- expected-output/
+
+<em>some text</em>
+
+-- /expected-output
+
+
+
+-- metadata
+-- created: 2024-06-12T15:06:14-04:00
+-- updated: 2024-06-12T15:06:14-04:00
+-- id: 2hn9rrnh
+-- type: post
+-- status: draft
+
+

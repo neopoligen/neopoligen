@@ -1,0 +1,23 @@
+-- title
+
+Span: dfn 
+
+-- subtitle
+
+The Definition Span
+
+-- p
+
+Basic Example: 
+
+<<dfn|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<dfn|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- id: 2bqpiljy
+

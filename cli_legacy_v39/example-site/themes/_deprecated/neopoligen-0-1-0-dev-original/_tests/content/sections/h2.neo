@@ -1,0 +1,72 @@
+-- title
+
+h2 Section Template Test
+
+
+-- start-template-test
+
+-- h2
+
+This is an H2
+
+And this is a secondary paragraph
+
+-- expected-output
+
+<section class="h2_default_section standard_section heading_level_section flow">
+    <div class="heading_subsection">
+        <h2 class="title_subsection">This is an H2</h2>
+    </div>
+    <div class="content_subsection flow">
+        <p>And this is a secondary paragraph</p>
+    </div>
+</section>
+
+
+
+
+-- start-template-test
+
+-- h2
+-- title: IGNORED SINCE IT'S ALREADY A TITLE SECTION
+-- subtitle: This is a subtitle
+-- forward: This is a forward
+-- preface: This is a preface
+-- afterword: This is an afterword
+-- class: green blue
+-- id: example_id
+-- data-ping: one ping
+-- data-ping: on two lines
+
+H2 With Attributes
+
+Here's some content
+
+-- expected-output
+
+<section 
+    id="example_id"
+    class="h2_default_section standard_section heading_level_section flow green blue" 
+    data-ping="one ping on two lines">
+
+    <div class="forward_subsection flow">This is a forward</div>
+
+    <div class="heading_subsection">
+        <h2 class="title_subsection">H2 With Attributes</h2>
+        <div class="subtitle_subsection">This is a subtitle</div>
+    </div>
+
+    <div class="preface_subsection flow">This is a preface</div>
+
+    <div class="content_subsection flow">
+        <p>Here's some content</p>
+    </div>
+
+    <div class="afterword_subsection flow">This is an afterword</div>
+</section>
+
+
+
+-- metadata
+-- id: 2fvd23b2
+

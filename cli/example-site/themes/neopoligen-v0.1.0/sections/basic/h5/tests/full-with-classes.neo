@@ -1,0 +1,25 @@
+-- start-theme-test 
+
+-- h5
+-- class: alfa bravo 
+-- class: charlie 
+
+Alfa Bravo Charlie
+
+-- expected-output/
+
+<section class="alfa bravo charlie h5-section flow">
+<hgroup>
+  <h5 class="section-heading">
+    Alfa Bravo Charlie
+  </h5>
+</hgroup>
+</section>
+
+
+-- /expected-output
+
+
+-- metadata
+-- updated: 2024-06-12T21:29:27-04:00
+-- id: 2hnut7u3_h5

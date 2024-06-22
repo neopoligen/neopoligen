@@ -7,4 +7,4 @@ watchexec\
   -c\
   -r\
   -e rs,neo\
-  "bash -c 'cargo test -- --nocapture && cargo run'"
+  "bash -c 'cargo test -- --nocapture && cargo run --bin neopoligengine'"

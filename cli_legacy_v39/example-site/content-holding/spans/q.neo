@@ -1,0 +1,23 @@
+-- title
+
+Span: q 
+
+-- subtitle
+
+The Inline Quotation Span
+
+-- p
+
+Basic Example: 
+
+<<q|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<q|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- id: 2bqpn1xm
+

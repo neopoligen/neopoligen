@@ -30,7 +30,7 @@ blockquote {
 
 body { 
   background-color: var(--color-base);
-  color: var(--color-bravo); 
+  color: var(--color-bravo-90); 
   font-size: var(--size-base);
   line-height: 1.6; 
   font-family: 'Inter';
@@ -40,8 +40,15 @@ body {
   margin-top: var(--flow-space, 1em);
 }
 
-.flow-2 > :where(:not(:first-child)) {
-  margin-top: 1.5em;
+footer {
+  max-width: 64ch;
+  margin: auto;
+}
+
+.footnote-ref {
+  display: grid;
+  grid-template-columns: 2ch 1fr 4ch;
+  gap: 20px;
 }
 
 .green {
@@ -83,6 +90,11 @@ h6 {
   font-size: var(--size-6); 
 }
 
+header {
+  max-width: 64ch;
+  margin: auto;
+}
+
 header a {
   color: var(--color-charlie);
 }
@@ -108,6 +120,12 @@ img {
     padding-right: 2.7ch;
     text-align: end;
     width: 7.5ch;
+}
+
+
+main {
+  max-width: 64ch;
+  margin: auto;
 }
 
 .under-construction {

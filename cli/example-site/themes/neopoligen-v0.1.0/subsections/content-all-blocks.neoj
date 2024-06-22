@@ -1,0 +1,7 @@
+[! import "includes/theme.neoj" as theme !]
+[! for child in section.children !]
+    [! if child.kind == "block" !]
+        [@ theme.output_section(site, page_id, child) @]
+    [! endif !]
+[! endfor !]
+

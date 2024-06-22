@@ -1,189 +1,96 @@
-use crate::block::*;
+use crate::section::list_item::*;
 use crate::section::*;
-use crate::sections::*;
-use nom::branch::alt;
+use crate::section_attr::*;
+use crate::span::*;
+// use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;
-use nom::combinator::not;
 use nom::multi::many0;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
-pub fn list_item_block<'a>(
-    source: &'a str,
-    spans: &'a Vec<String>,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, _) = not(tag("-")).context("").parse(source)?;
-    let (source, _) = not(eof).context("").parse(source)?;
-    // dbg!(&source);
-    let (source, spans) = many0(|src| span_finder(src, spans))
-        .context("")
-        .parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    Ok((
-        source,
-        Section::Block {
-            bounds: "full".to_string(),
-            spans,
-            r#type: "list-item-block".to_string(),
-        },
-    ))
-}
-
-pub fn list_item<'a>(
-    source: &'a str,
-    spans: &'a Vec<String>,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, _) = tag("- ").context("").parse(source)?;
-    let (source, children) = many0(|src| list_item_block(src, spans))
-        .context("")
-        .parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    Ok((source, Section::ListItem { bounds: "full".to_string(), children, r#type: "list-item".to_string() }))
-}
-
-pub fn list_item_with_sections<'a>(
-    source: &'a str,
-    sections: &'a Sections,
-    spans: &'a Vec<String>,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, _) = tag("- ").context("").parse(source)?;
-    let (source, children) = many0(alt((
-        |src| list_item_block(src, spans),
-        |src| start_or_full_section(src, &sections, &spans),
-    )))
-    .context("")
-    .parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    Ok((source, Section::ListItem { bounds: "full".to_string(), children, r#type: "list-item".to_string() }))
-}
-
-pub fn list_section_end<'a>(
-    source: &'a str,
-    spans: &'a Vec<String>,
-    key: &'a str,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, _) = tag("/").context("").parse(source)?;
-    let (source, r#type) = tag(key).context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-    let (source, raw_attrs) = many0(section_attr).context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = many0(|src| block_of_end_content(src, spans))
-        .context("")
-        .parse(source)?;
-    let mut attrs: BTreeMap<String, String> = BTreeMap::new();
-    let mut flags: Vec<String> = vec![];
-    raw_attrs.iter().for_each(|attr| match attr {
-        SectionAttr::KeyValue { key, value } => {
-            if attrs.contains_key(key) {
-                let to_update = attrs.get_mut(key).unwrap();
-                to_update.push_str(" ");
-                to_update.push_str(value);
-            } else {
-                attrs.insert(key.to_string(), value.to_string());
-            }
-        }
-        SectionAttr::Flag { key } => flags.push(key.to_string()),
-    });
-    Ok((
-        source,
-        Section::List {
-            attrs,
-            bounds: "end".to_string(),
-            children,
-            flags,
-            r#type: r#type.to_string(),
-        },
-    ))
-}
-
 pub fn list_section_full<'a>(
     source: &'a str,
-    sections: &'a Sections,
-    spans: &'a Vec<String>,
+    sections: &'a ConfigSections,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder(src, &sections.list))
         .context("")
         .parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-    let (source, raw_attrs) = many0(section_attr).context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = many0(|src| list_item(src, spans))
+    let (source, _) = structure_empty_until_newline_or_eof
         .context("")
         .parse(source)?;
-    let mut attrs: BTreeMap<String, String> = BTreeMap::new();
-    let mut flags: Vec<String> = vec![];
-    raw_attrs.iter().for_each(|attr| match attr {
-        SectionAttr::KeyValue { key, value } => {
-            if attrs.contains_key(key) {
-                let to_update = attrs.get_mut(key).unwrap();
-                to_update.push_str(" ");
-                to_update.push_str(value);
-            } else {
-                attrs.insert(key.to_string(), value.to_string());
-            }
-        }
-        SectionAttr::Flag { key } => flags.push(key.to_string()),
-    });
+    let (source, attrs) = many0(section_attr).context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
+    let (source, children) = many1(|src| list_item_full(src, sections))
+        .context("")
+        .parse(source)?;
     Ok((
         source,
-        Section::List {
+        Section {
             attrs,
-            bounds: "full".to_string(),
-            children,
-            flags,
+            bounds: SectionBounds::Full,
+            kind: SectionKind::List { children },
             r#type: r#type.to_string(),
         },
     ))
 }
 
-pub fn list_section_start<'a>(
-    source: &'a str,
-    sections: &'a Sections,
-    spans: &'a Vec<String>,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, r#type) = (|src| tag_finder(src, &sections.list))
-        .context("")
-        .parse(source)?;
-    let (source, _) = tag("/").context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-    let (source, raw_attrs) = many0(section_attr).context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    let (source, mut children) = many0(|src| list_item_with_sections(src, &sections, &spans))
-        .context("")
-        .parse(source)?;
-    let (source, end_section) = list_section_end(source, spans, r#type)?;
-    children.push(end_section);
-    let mut attrs: BTreeMap<String, String> = BTreeMap::new();
-    let mut flags: Vec<String> = vec![];
-    raw_attrs.iter().for_each(|attr| match attr {
-        SectionAttr::KeyValue { key, value } => {
-            if attrs.contains_key(key) {
-                let to_update = attrs.get_mut(key).unwrap();
-                to_update.push_str(" ");
-                to_update.push_str(value);
-            } else {
-                attrs.insert(key.to_string(), value.to_string());
-            }
-        }
-        SectionAttr::Flag { key } => flags.push(key.to_string()),
-    });
-    Ok((
-        source,
-        Section::List {
-            attrs,
-            bounds: "start".to_string(),
-            children,
-            flags,
-            r#type: r#type.to_string(),
-        },
-    ))
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::site_config::SiteConfig;
+    use pretty_assertions::assert_eq;
+    #[test]
+    fn basic_list() {
+        let source = "-- list\n\n- alfa";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "",
+            Section {
+                attrs: vec![],
+                bounds: SectionBounds::Full,
+                kind: SectionKind::List {
+                    children: vec![Section {
+                        attrs: vec![],
+                        bounds: SectionBounds::Full,
+                        kind: SectionKind::ListItem {
+                            children: vec![Section {
+                                attrs: vec![],
+                                bounds: SectionBounds::Full,
+                                kind: SectionKind::Block {
+                                    spans: vec![Span {
+                                        attrs: vec![],
+                                        kind: SpanKind::WordPart,
+                                        parsed_text: "alfa".to_string(),
+                                    }],
+                                },
+                                r#type: "block-of-text".to_string(),
+                            }],
+                        },
+                        r#type: "list-item".to_string(),
+                    }],
+                },
+                r#type: "list".to_string(),
+            },
+        );
+        let right = list_section_full(source, &config.sections).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn link_check() {
+        let config = SiteConfig::mock1_basic();
+        let source = "-- list\n\n- <<link|Main site link|https://daverupert.com/2021/10/html-with-superpowers/>>";
+        let left = "";
+        let right = list_section_full(source, &config.sections).unwrap().0;
+        assert_eq!(left, right);
+    }
+
+    //
 }

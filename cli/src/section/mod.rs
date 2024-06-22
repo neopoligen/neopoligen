@@ -1,168 +1,134 @@
-// DEPRECATED: everything in src/section will go when
-// src/section_v39 is done
-
 pub mod basic;
-pub mod checklist;
-pub mod comment;
-pub mod generic;
-pub mod json;
+pub mod block;
 pub mod list;
+pub mod list_item;
+pub mod mocks;
 pub mod raw;
+pub mod unknown;
 pub mod yaml;
 
 use crate::section::basic::*;
-use crate::section::checklist::*;
-use crate::section::comment::*;
-use crate::section::generic::*;
-use crate::section::json::*;
 use crate::section::list::*;
 use crate::section::raw::*;
+use crate::section::unknown::*;
 use crate::section::yaml::*;
-use crate::sections::*;
+use crate::section_attr::SectionAttr;
+use crate::section_attr::SectionAttrKind;
+use crate::site_config::ConfigSections;
 use crate::span::*;
+use minijinja::Value;
 use nom::branch::alt;
-use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
-use nom::character::complete::line_ending;
-use nom::character::complete::multispace0;
-use nom::character::complete::newline;
-use nom::character::complete::not_line_ending;
-use nom::character::complete::space0;
-use nom::character::complete::space1;
 use nom::combinator::eof;
-use nom::sequence::tuple;
+use nom::multi::many1;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-use serde::Deserialize;
-use serde::Serialize;
-use std::collections::BTreeMap;
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub struct SectionV2 {}
-
-// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-// #[serde(tag = "kind", rename_all = "lowercase")]
-// pub struct SectionAttrForList {
-//     pub key: String,
-//     pub value: String,
-// }
-
-#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-#[serde(tag = "kind", rename_all = "lowercase")]
-pub enum Section {
-    Basic {
-        attrs: BTreeMap<String, String>,
-        attr_list: Vec<SectionAttr>,
-        bounds: String,
-        children: Vec<Section>,
-        flags: Vec<String>,
-        r#type: String,
-    },
-    Block {
-        bounds: String,
-        spans: Vec<Span>,
-        r#type: String,
-    },
-    Checklist {
-        attrs: BTreeMap<String, String>,
-        // TODO
-        // attr_list: Vec<SectionAttr>,
-        r#type: String,
-        children: Vec<Section>,
-        flags: Vec<String>,
-        bounds: String,
-    },
-    ChecklistItem {
-        bounds: String,
-        children: Vec<Section>,
-        status: bool,
-        status_value: Option<String>,
-        r#type: String,
-    },
-    Comment {
-        // TODO
-        // attrs: BTreeMap<String, String>,
-        // attr_list: Vec<SectionAttr>,
-        bounds: String,
-        r#type: String,
-        text: Option<String>,
-        children: Vec<Section>,
-    },
-    Generic {
-        attrs: BTreeMap<String, String>,
-        // TODO
-        // attr_list: Vec<SectionAttr>,
-        bounds: String,
-        children: Vec<Section>,
-        flags: Vec<String>,
-        r#type: String,
-    },
-    Json {
-        attrs: BTreeMap<String, String>,
-        // TODO
-        // attr_list: Vec<SectionAttr>,
-        bounds: String,
-        r#type: String,
-        data: Option<String>,
-        flags: Vec<String>,
-        children: Vec<Section>,
-    },
-    List {
-        attrs: BTreeMap<String, String>,
-        // TODO
-        // attr_list: Vec<SectionAttr>,
-        bounds: String,
-        children: Vec<Section>,
-        flags: Vec<String>,
-        r#type: String,
-    },
-    ListItem {
-        bounds: String,
-        children: Vec<Section>,
-        r#type: String,
-    },
-    Raw {
-        attrs: BTreeMap<String, String>,
-        // TODO
-        // attr_list: Vec<SectionAttr>,
-        bounds: String,
-        children: Vec<Section>,
-        flags: Vec<String>,
-        r#type: String,
-        text: Option<String>,
-    },
-    TagFinderInit,
-    Yaml {
-        attrs: BTreeMap<String, String>,
-        // TODO
-        // attr_list: Vec<SectionAttr>,
-        bounds: String,
-        children: Vec<Section>,
-        data: Option<String>,
-        flags: Vec<String>,
-        r#type: String,
-    },
+pub struct Section {
+    pub attrs: Vec<SectionAttr>,
+    pub bounds: SectionBounds,
+    pub kind: SectionKind,
+    pub r#type: String,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
-pub enum SectionAttr {
-    KeyValue { key: String, value: String },
-    Flag { key: String },
+pub enum SectionBounds {
+    Full,
+    Start,
+    End,
 }
 
-pub fn empty_until_newline_or_eof<'a>(
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[serde(tag = "type", rename_all = "lowercase")]
+pub enum SectionKind {
+    Basic {
+        children: Vec<Section>,
+    },
+    Block {
+        spans: Vec<Span>,
+    },
+    Checklist {
+        children: Vec<Section>,
+    },
+    ChecklistItem {
+        children: Vec<Section>,
+    },
+    Json {
+        data: Value,
+        children: Vec<Section>,
+    },
+    List {
+        children: Vec<Section>,
+    },
+    ListItem {
+        children: Vec<Section>,
+    },
+    Raw {
+        children: Vec<Section>,
+        text: Option<String>,
+    },
+    Unknown {
+        children: Vec<Section>,
+    },
+    Yaml {
+        // TODO: Add children here since
+        // the -- /yaml end sections can have them
+    },
+}
+
+impl Section {
+    // DEPRECATED: I think this isn't needed and can be
+    // removed when PayloadSection is working and pulling
+    // data for itself
+    pub fn get_attr(&self, target: &str) -> Option<String> {
+        let attrs = self
+            .attrs
+            .iter()
+            .filter_map(|attr| match &attr.kind {
+                SectionAttrKind::KeyValue { key, value } => {
+                    if key.as_str() == target {
+                        Some(value.clone())
+                    } else {
+                        None
+                    }
+                }
+                _ => None,
+            })
+            .collect::<Vec<String>>();
+        if attrs.len() > 0 {
+            Some(attrs.join(" "))
+        } else {
+            None
+        }
+    }
+}
+
+pub fn start_or_full_section<'a>(
     source: &'a str,
-) -> IResult<&'a str, &'a str, ErrorTree<&'a str>> {
-    let (source, _) = alt((
-        tuple((space0, newline.map(|_| ""))),
-        tuple((multispace0, eof.map(|_| ""))),
+    sections: &'a ConfigSections,
+) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let (source, section) = alt((
+        |src| basic_section_start(src, &sections),
+        |src| basic_section_full(src, &sections),
+        // |src| list_section_start(src, &sections),
+        |src| list_section_full(src, &sections),
+        |src| raw_section_start(src, &sections),
+        |src| raw_section_full(src, &sections),
+        //|src| yaml_section_start(src, &sections),
+        |src| yaml_section_full(src, &sections),
+        // Reminder: do unknown last since it slurps
+        // everything it can
+        |src| unknown_section_start(src, &sections),
+        |src| unknown_section_full(src, &sections),
     ))
     .context("")
     .parse(source)?;
-    Ok((source, ""))
+    Ok((source, section))
 }
 
 pub fn initial_error<'a>() -> IResult<&'a str, &'a str, ErrorTree<&'a str>> {
@@ -170,78 +136,11 @@ pub fn initial_error<'a>() -> IResult<&'a str, &'a str, ErrorTree<&'a str>> {
     // error in the accumulator. There's a way to do that
     // with just making an error, but I haven't solved all
     // the parts to that yet.
-    let (_, _) = tag("asdf").parse("fdsa")?;
+    let (_, _) = tag("non-matching text")
+        .parse("this will never match so it throws an intentional error")?;
     Ok(("", ""))
 }
 
-pub fn section_attr<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
-    let (source, attr) = alt((section_key_value_attr, section_flag_attr))
-        .context("")
-        .parse(source)?;
-    Ok((source, attr))
-}
-
-pub fn section_key_value_attr<'a>(
-    source: &'a str,
-) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
-    let (source, _) = tag("--").context("").parse(source)?;
-    let (source, _) = space1.context("").parse(source)?;
-    let (source, key) = is_not(": \n").context("").parse(source)?;
-    let (source, _) = tag(":").context("").parse(source)?;
-    let (source, value) = not_line_ending.context("").parse(source)?;
-    let (source, _) = line_ending.context("").parse(source)?;
-    Ok((
-        source,
-        SectionAttr::KeyValue {
-            key: key.trim().to_string(),
-            value: value.trim().to_string(),
-        },
-    ))
-}
-
-pub fn section_flag_attr<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
-    let (source, _) = tag("--").context("").parse(source)?;
-    let (source, _) = space1.context("").parse(source)?;
-    let (source, key) = is_not(":\n").context("").parse(source)?;
-    let (source, _) = line_ending.context("").parse(source)?;
-    Ok((
-        source,
-        SectionAttr::Flag {
-            key: key.trim().to_string(),
-        },
-    ))
-}
-
-pub fn start_or_full_section<'a>(
-    source: &'a str,
-    sections: &'a Sections,
-    spans: &'a Vec<String>,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, results) = alt((
-        |src| basic_section_full(src, &sections, &spans),
-        |src| basic_section_start(src, &sections, &spans),
-        |src| checklist_section_full(src, &sections, &spans),
-        |src| checklist_section_start(src, &sections, &spans),
-        |src| comment_section_full(src, &sections, &spans),
-        |src| comment_section_start(src, &sections, &spans),
-        |src| json_section_full(src, &sections, &spans),
-        |src| json_section_start(src, &sections, &spans),
-        |src| list_section_full(src, &sections, &spans),
-        |src| list_section_start(src, &sections, &spans),
-        |src| raw_section_full(src, &sections, &spans),
-        |src| raw_section_start(src, &sections, &spans),
-        |src| yaml_section_full(src, &sections, &spans),
-        |src| yaml_section_start(src, &sections, &spans),
-        // make sure generic is last
-        |src| generic_section_full(src, &sections, &spans),
-        |src| generic_section_start(src, &sections, &spans),
-    ))
-    .context("")
-    .parse(source)?;
-    Ok((source, results))
-}
-
-// DEPRECATED: Use the one in _v39
 pub fn tag_finder<'a>(
     source: &'a str,
     section: &Vec<String>,
@@ -253,4 +152,62 @@ pub fn tag_finder<'a>(
             _ => tag(item.as_str()).context("").parse(source),
         })?;
     Ok((source, result))
+}
+
+#[cfg(test)]
+mod test {
+    //    use super::*;
+    //   use crate::site_config::SiteConfig;
+    // use pretty_assertions::assert_eq;
+    //
+
+    // // DEPRECATED: TODO: All attr processing will be done
+    // // in PayloadSection
+    // #[test]
+    // fn get_attr_is_none_if_it_does_not_exist() {
+    //     let section = Section::mock1_basic_title_section_no_attrs();
+    //     let left = section.get_attr("key_that_does_not_exist");
+    //     let right = None;
+    //     assert_eq!(left, right);
+    // }
+
+    // // DEPRECATED: TODO: All attr processing will be done
+    // // in PayloadSection
+    // #[test]
+    // #[ignore]
+    // fn get_attr_that_does_exist() {
+    //     let section = Section::mock2_div_with_title_and_template_attrs();
+    //     let left = section.get_attr("template");
+    //     let right = Some("template-from-attr".to_string());
+    //     assert_eq!(left, right);
+    // }
+
+    // // DEPRECATED: TODO: All attr processing will be done
+    // // in PayloadSection
+    // #[test]
+    // #[ignore]
+    // fn get_attr_combined_attrs_with_the_same_key() {
+    //     let section = Section::mock3_image_with_flag_and_multiple_attrs_with_same_key();
+    //     let left = section.get_attr("alt");
+    //     let right = Some("alfa bravo charlie delta".to_string());
+    //     assert_eq!(left, right);
+    // }
+
+    // // DEPRECATED: TODO: All attr processing will be done
+    // // in PayloadSection
+    // #[test]
+    // #[ignore]
+    // fn misc_test() {
+    //     // let source = include_str!("test_files/integration-1.neo");
+    //     let source = include_str!("test_files/to-speed-check.neo");
+    //     let config = SiteConfig::mock1_basic();
+    //     let left = "";
+    //     let right = many1(|src| start_or_full_section(src, &config.sections))(source)
+    //         .unwrap()
+    //         .0;
+    //     dbg!(&right);
+    //     assert_eq!(left, right);
+    // }
+
+    //
 }

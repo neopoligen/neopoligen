@@ -1,0 +1,36 @@
+[!- import "includes/theme.neoj" as theme -!]
+
+<section class="warnings-section list-section flow
+[! if section.attrs.class !][@ ' ' @][@ section.attrs.class @][! endif !]
+"
+[! for attr in section.attrs !]
+[! if 
+    attr != 'afterword' and 
+    attr != 'class' and 
+    attr != 'forward' and 
+    attr != 'h1' and 
+    attr != 'h2' and 
+    attr != 'h3' and 
+    attr != 'h4' and 
+    attr != 'h5' and 
+    attr != 'h6' and 
+    attr != 'preface' and 
+    attr != 'subtitle' and 
+    attr != 'title' 
+!]
+[@ attr @]="[@ section.attrs[attr] @]"
+[! endif !]
+[! endfor !]
+>
+
+[! include "subsections/forward.neoj" !]
+[! include "subsections/headings.neoj" !]
+[! include "subsections/preface.neoj" !]
+<ul class="flow">
+[! for child in section.children !]
+[@ theme.output_section(site, page_id, child) @]
+[! endfor !]
+</ul>
+[! include "subsections/afterword.neoj" !]
+
+</section>

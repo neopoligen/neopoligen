@@ -1,0 +1,3 @@
+[! if section.attrs.afterword !]
+<div class="section-afterword">[@ section.attrs.afterword @]</div>
+[! endif !]

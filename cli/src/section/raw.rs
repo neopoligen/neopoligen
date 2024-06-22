@@ -1,6 +1,5 @@
-use crate::block::*;
 use crate::section::*;
-use crate::sections::*;
+use crate::section_attr::*;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::bytes::complete::take_until;
@@ -12,138 +11,38 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
-pub fn raw_section_end<'a>(
-    source: &'a str,
-    spans: &'a Vec<String>,
-    key: &'a str,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, _) = tag("/").context("").parse(source)?;
-    let (source, r#type) = tag(key).context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-    let (source, raw_attrs) = many0(section_attr).context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = many0(|src| block_of_end_content(src, spans))
-        .context("")
-        .parse(source)?;
-    let mut attrs: BTreeMap<String, String> = BTreeMap::new();
-    let mut flags: Vec<String> = vec![];
-    raw_attrs.iter().for_each(|attr| match attr {
-        SectionAttr::KeyValue { key, value } => {
-            if attrs.contains_key(key) {
-                let to_update = attrs.get_mut(key).unwrap();
-                to_update.push_str(" ");
-                to_update.push_str(value);
-            } else {
-                attrs.insert(key.to_string(), value.to_string());
-            }
-        }
-        SectionAttr::Flag { key } => flags.push(key.to_string()),
-    });
-    Ok((
-        source,
-        Section::Basic {
-            attrs,
-            attr_list: vec![],
-            bounds: "end".to_string(),
-            children,
-            flags,
-            r#type: r#type.to_string(),
-        },
-    ))
-}
-
-// pub fn raw_section_end<'a>(
-//     source: &'a str,
-//     spans: &'a Vec<String>,
-//     key: &'a str,
-// ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-//     let (source, _) = tag("-- ").context("").parse(source)?;
-//     let (source, _) = tag("/").context("").parse(source)?;
-//     let (source, r#type) = tag(key).context("").parse(source)?;
-//     let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-//     let (source, raw_attrs) = many0(section_attr).context("").parse(source)?;
-//     let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-//     let (source, _) = multispace0.context("").parse(source)?;
-//     let (source, children) = many0(|src| block_of_end_content(src, spans))
-//         .context("")
-//         .parse(source)?;
-//     let mut attrs: BTreeMap<String, String> = BTreeMap::new();
-//     let mut flags: Vec<String> = vec![];
-//     raw_attrs.iter().for_each(|attr| match attr {
-//         SectionAttr::KeyValue { key, value } => {
-//             if attrs.contains_key(key) {
-//                 let to_update = attrs.get_mut(key).unwrap();
-//                 to_update.push_str(" ");
-//                 to_update.push_str(value);
-//             } else {
-//                 attrs.insert(key.to_string(), value.to_string());
-//             }
-//         }
-//         SectionAttr::Flag { key } => flags.push(key.to_string()),
-//     });
-//     Ok((
-//         source,
-//         Section::Raw {
-//             attrs,
-//             bounds: "end".to_string(),
-//             children,
-//             flags,
-//             r#type: r#type.to_string(),
-//             text: None,
-//         },
-//     ))
-// }
-
 pub fn raw_section_full<'a>(
     source: &'a str,
-    sections: &'a Sections,
-    _spans: &'a Vec<String>,
+    sections: &'a ConfigSections,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder(src, &sections.raw))
         .context("")
         .parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-    let (source, raw_attrs) = many0(section_attr).context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-    let (source, _) = many0(empty_until_newline_or_eof)
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
+    let (source, attrs) = many0(section_attr).context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
         .context("")
         .parse(source)?;
     let (source, text) = alt((take_until("\n--"), rest)).context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let mut attrs: BTreeMap<String, String> = BTreeMap::new();
-    let mut flags: Vec<String> = vec![];
-    raw_attrs.iter().for_each(|attr| match attr {
-        SectionAttr::KeyValue { key, value } => {
-            if attrs.contains_key(key) {
-                let to_update = attrs.get_mut(key).unwrap();
-                to_update.push_str(" ");
-                to_update.push_str(value);
-            } else {
-                attrs.insert(key.to_string(), value.to_string());
-            }
-        }
-        SectionAttr::Flag { key } => flags.push(key.to_string()),
-    });
-    Ok((
-        source,
-        Section::Raw {
-            attrs,
-            bounds: "full".to_string(),
+    let section = Section {
+        attrs,
+        bounds: SectionBounds::Full,
+        kind: SectionKind::Raw {
             children: vec![],
-            flags,
-            r#type: r#type.to_string(),
-            text: Some(text.trim_end().to_string()),
+            text: Some(text.to_string()),
         },
-    ))
+        r#type: r#type.to_string(),
+    };
+    Ok((source, section))
 }
 
 pub fn raw_section_start<'a>(
     source: &'a str,
-    sections: &'a Sections,
-    spans: &'a Vec<String>,
+    sections: &'a ConfigSections,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder(src, &sections.raw))
@@ -151,38 +50,123 @@ pub fn raw_section_start<'a>(
         .parse(source)?;
     let end_key = format!("-- /{}", r#type);
     let (source, _) = tag("/").context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-    let (source, raw_attrs) = many0(section_attr).context("").parse(source)?;
-    let (source, _) = empty_until_newline_or_eof.context("").parse(source)?;
-    let (source, _) = many0(empty_until_newline_or_eof)
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
+    let (source, attrs) = many0(section_attr).context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
         .context("")
         .parse(source)?;
     let (source, text) = take_until(end_key.as_str()).context("").parse(source)?;
+    let (source, end_section) = basic_section_end(source, r#type)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, end_section) = raw_section_end(source, spans, r#type)?;
-    let mut attrs: BTreeMap<String, String> = BTreeMap::new();
-    let mut flags: Vec<String> = vec![];
-    raw_attrs.iter().for_each(|attr| match attr {
-        SectionAttr::KeyValue { key, value } => {
-            if attrs.contains_key(key) {
-                let to_update = attrs.get_mut(key).unwrap();
-                to_update.push_str(" ");
-                to_update.push_str(value);
-            } else {
-                attrs.insert(key.to_string(), value.to_string());
-            }
-        }
-        SectionAttr::Flag { key } => flags.push(key.to_string()),
-    });
-    Ok((
-        source,
-        Section::Raw {
-            attrs,
-            bounds: "start".to_string(),
-            children: vec![end_section],
-            flags,
-            r#type: r#type.to_string(),
+    let mut children = vec![];
+    children.push(end_section);
+    let section = Section {
+        attrs,
+        bounds: SectionBounds::Start,
+        kind: SectionKind::Raw {
+            children,
             text: Some(text.trim_end().to_string()),
         },
-    ))
+        r#type: r#type.to_string(),
+    };
+    Ok((source, section))
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::site_config::SiteConfig;
+    use pretty_assertions::assert_eq;
+    #[test]
+    #[ignore]
+    fn basic_star_end() {
+        let source = "-- code/\n\nsome code\n\n-- /code\n\n";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "",
+            Section {
+                attrs: vec![],
+                bounds: SectionBounds::Start,
+                kind: SectionKind::Raw {
+                    children: vec![Section {
+                        attrs: vec![],
+                        bounds: SectionBounds::End,
+                        kind: SectionKind::Basic { children: vec![] },
+                        r#type: "code".to_string(),
+                    }],
+                    text: Some("some code".to_string()),
+                },
+                r#type: "code".to_string(),
+            },
+        );
+        let right = raw_section_start(source, &config.sections).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    #[ignore]
+    fn basic_star_end_with_attrs() {
+        let source = "-- code/\n-- bash\n-- class: alfa\n\nsome code\n\n-- /code\n\n";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "",
+            Section {
+                attrs: vec![
+                    SectionAttr {
+                        kind: SectionAttrKind::Flag {
+                            flag: "bash".to_string(),
+                        },
+                    },
+                    SectionAttr {
+                        kind: SectionAttrKind::KeyValue {
+                            key: "class".to_string(),
+                            value: "alfa".to_string(),
+                        },
+                    },
+                ],
+                bounds: SectionBounds::Start,
+                kind: SectionKind::Raw {
+                    children: vec![Section {
+                        attrs: vec![],
+                        bounds: SectionBounds::End,
+                        kind: SectionKind::Basic { children: vec![] },
+                        r#type: "code".to_string(),
+                    }],
+                    text: Some("some code".to_string()),
+                },
+                r#type: "code".to_string(),
+            },
+        );
+        let right = raw_section_start(source, &config.sections).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn somewith_with_dashes_in_it() {
+        let source = "-- code/\n\nalfa -- not here\n\n-- /code\n\n";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "",
+            Section {
+                attrs: vec![],
+                bounds: SectionBounds::Start,
+                kind: SectionKind::Raw {
+                    children: vec![Section {
+                        attrs: vec![],
+                        bounds: SectionBounds::End,
+                        kind: SectionKind::Basic { children: vec![] },
+                        r#type: "code".to_string(),
+                    }],
+                    text: Some("alfa -- not here".to_string()),
+                },
+                r#type: "code".to_string(),
+            },
+        );
+        let right = raw_section_start(source, &config.sections).unwrap();
+        assert_eq!(left, right);
+    }
+
+    //
 }

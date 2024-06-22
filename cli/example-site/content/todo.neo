@@ -1,0 +1,97 @@
+-- title
+
+TODO List
+
+-- todo
+-- title: Sections To Do
+
+[] todo
+
+[] list
+
+[x] title
+
+[] h1-h6
+
+[] image
+
+
+
+-- todo 
+
+[] Document how backslashes work for escaping. i.e. you 
+can use them as normal unless they are in front of specific
+escaped characters, then you need to add an extra backslash if
+you want to use the backslash or leave it off if you want
+to escape the following character. 
+
+[] Note that you can nest named spans, but not shorthands, 
+
+[] Document the code shorthand single pipe ``\|``
+
+[] show to use ``[@ span.class_string @]|neoj`` and 
+``[@ span.id_string @]|neoj`` to get the class and id strings
+for spans if they exist otherwise they are blank. Also,
+note that classes and ids don't get included in the 
+rest of the attrs so you don't have to filter them out. 
+
+[] _generic for the sections
+
+[] Deal with something like this in a key value section
+attr: ``-- title: Stack Overflow: Explanation of <script type="text/template">...</script>``
+
+[] Deal with backticks in key value sections. 
+
+[] If an AST from the cache is invalid, drop it and regenerate
+it instead of panicing. 
+
+[] Make sure all the span types have explicit templates
+
+[] Test code shorthand blocks will all the characters
+that wordpart excludes to make sure they work. 
+
+-- todo 
+-- title: Documentation Notes
+
+[] Note that general attrs have spans, but things like
+"id", don't. They are pulled out into strings directly. 
+
+
+[] "title" show up as their own things in sections
+instead of being included in the attributes. 
+
+[] Default template vec with fallback to pages/post/published.
+for pages. 
+
+[] Write up the "basic/naked" section that doesn't wrap the 
+content in anything
+
+[] Document how you only need span templates for things
+that you need to change from the default that comes in 
+from parsed_text
+
+[] Documnet how the attr_string includes: aria, data, class, 
+id, and all the valid attributes from the config file. 
+
+[] Document that flags are always strings, (as opposed to 
+keyvalue attrs whose values are spans)
+
+[] Note that attr_string does not have classes on it. 
+Thats so you can add classes in with the templates 
+easier
+
+[] Show how start/end blocks work using blockquote
+as the example
+
+[] Document Footnotes
+
+[] Document attrites are plain text but there is also
+the attrs_as_spans to get to them as spans 
+
+[] Document ``[! if "something" in seciton.flags !]blah[! endif !]``
+
+-- metadata
+-- updated: 2024-06-03T18:27:52-04:00
+-- id: 2ho8hakd
+
+

@@ -1,278 +1,333 @@
-// DEPRECATED: TODO: Remove src/section when src/section_v39 is done
-pub mod backtic;
-pub mod close_brace;
-pub mod code;
+pub mod code_shorthand;
+pub mod code_shorthand_single_pipe;
+pub mod colon;
+pub mod colon_not_followed_by_space;
+pub mod double_underscore;
 pub mod em_shorthand;
+pub mod escaped_backslash;
+pub mod escaped_backtick;
+pub mod escaped_caret;
+pub mod escaped_colon;
+pub mod escaped_greaterthan;
+pub mod escaped_hyphen;
 pub mod escaped_pipe;
-pub mod footnote;
-pub mod greater_than;
-pub mod html;
-pub mod known_span;
-pub mod less_than;
-pub mod link;
-pub mod open_brace;
-pub mod strike;
-pub mod strong;
-pub mod underscore;
+pub mod escaped_underscore;
+pub mod footnote_shorthand;
+pub mod greaterthan;
+pub mod hyphen;
+pub mod lessthan;
+pub mod mocks;
+pub mod more_than_two_carets;
+pub mod more_than_two_underscores;
+pub mod named_span;
+pub mod pipe;
+pub mod single_backtick;
+pub mod single_caret;
+pub mod single_greaterthan;
+pub mod single_lessthan;
+pub mod single_underscore;
+pub mod wordpart;
 
-use crate::span::backtic::*;
-use crate::span::close_brace::*;
-use crate::span::code::*;
+use crate::span::code_shorthand::*;
+use crate::span::code_shorthand_single_pipe::*;
+use crate::span::colon::*;
+use crate::span::colon_not_followed_by_space::*;
 use crate::span::em_shorthand::*;
+use crate::span::escaped_backslash::*;
+use crate::span::escaped_backtick::*;
+use crate::span::escaped_caret::*;
+use crate::span::escaped_colon::*;
+use crate::span::escaped_greaterthan::*;
+use crate::span::escaped_hyphen::*;
 use crate::span::escaped_pipe::*;
-use crate::span::footnote::*;
-use crate::span::greater_than::*;
-use crate::span::html::*;
-use crate::span::known_span::*;
-use crate::span::less_than::*;
-use crate::span::link::*;
-use crate::span::open_brace::*;
-use crate::span::strike::*;
-use crate::span::strong::*;
-use crate::span::underscore::*;
+use crate::span::escaped_underscore::*;
+use crate::span::footnote_shorthand::*;
+use crate::span::hyphen::*;
+use crate::span::more_than_two_carets::*;
+use crate::span::more_than_two_underscores::*;
+use crate::span::named_span::*;
+use crate::span::single_backtick::*;
+use crate::span::single_caret::*;
+use crate::span::single_greaterthan::*;
+use crate::span::single_lessthan::*;
+use crate::span::single_underscore::*;
+use crate::span::wordpart::*;
+use crate::span_attr::*;
 use nom::branch::alt;
-use nom::bytes::complete::is_not;
-use nom::bytes::complete::tag;
 use nom::character::complete::line_ending;
 use nom::character::complete::multispace0;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
+use nom::combinator::eof;
 use nom::combinator::not;
-use nom::multi::many0;
 use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-use serde::Deserialize;
-use serde::Serialize;
-use std::collections::BTreeMap;
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-#[serde(tag = "kind", rename_all = "lowercase")]
-pub enum Span {
-    Code {
-        attrs: BTreeMap<String, String>,
-        flags: Vec<String>,
-        text: String,
-        r#type: String,
-    },
-    Em {
-        attrs: BTreeMap<String, String>,
-        flags: Vec<String>,
-        text: String,
-        r#type: String,
-    },
-    Footnote {
-        attrs: BTreeMap<String, String>,
-        flags: Vec<String>,
-        text: String,
-        r#type: String,
-    },
-    Html {
-        text: String,
-        r#type: String,
-    },
-    KnownSpan {
-        attrs: BTreeMap<String, String>,
-        flags: Vec<String>,
-        spans: Vec<Span>,
-        r#type: String,
-    },
-    /*
-    Link {
-        attrs: BTreeMap<String, String>,
-        flags: Vec<String>,
-        text: String,
-        href: Option<String>,
-        r#type: String,
-    },
-    */
-    Newline {
-        text: String,
-        r#type: String,
-    },
-    RawText {
-        text: String,
-        r#type: String,
-    },
-    Space {
-        text: String,
-        r#type: String,
-    },
-    S {
-        attrs: BTreeMap<String, String>,
-        flags: Vec<String>,
-        text: String,
-        r#type: String,
-    },
-    Strong {
-        attrs: BTreeMap<String, String>,
-        flags: Vec<String>,
-        text: String,
-        r#type: String,
-    },
-    UnknownSpan {
-        r#type: String,
-        spans: Vec<Span>,
-        flags: Vec<String>,
-        attrs: BTreeMap<String, String>,
-    },
-    WordPart {
-        text: String,
-        r#type: String,
-    },
+pub struct Span {
+    pub attrs: Vec<SpanAttr>,
+    pub kind: SpanKind,
+    pub parsed_text: String,
 }
 
-pub enum SpanAttr {
-    KeyValue { key: String, value: String },
-    Flag { key: String },
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[serde(rename_all = "lowercase", tag = "kind")]
+pub enum SpanKind {
+    CodeShorthand,
+    Colon,
+    ColonNotFollowedBySpace,
+    DoubleUnderscore,
+    EmShorthand,
+    EscapedBacktick,
+    EscapedBackslash,
+    EscapedCaret,
+    EscapedColon,
+    EscapedGreaterThan,
+    EscapedHyphen,
+    EscapedPipe,
+    EscapedUnderscore,
+    FootnoteShorthand,
+    GreaterThan,
+    Hyphen,
+    LessThan,
+    LinkShorthand,
+    MoreThanTwoUnderscores,
+    MoreThanTwoCarets,
+    NamedSpan { r#type: String, children: Vec<Span> },
+    Newline,
+    Pipe,
+    SingleBacktick,
+    SingleCaret,
+    SingleUnderscore,
+    SingleGreaterThan,
+    SingleLessThan,
+    Space,
+    WordPart,
 }
 
-pub fn span_finder<'a>(
-    source: &'a str,
-    spans: &'a Vec<String>,
-) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+pub fn shorthand<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    let (source, span) = alt((code_shorthand, em_shorthand, footnote_shorthand))
+        .context("")
+        .parse(source)?;
+    Ok((source, span))
+}
+
+pub fn base_span_for_all_text<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
     let (source, span) = alt((
-        escaped_pipe,
-        strike_shorthand,
-        |src| code_shorthand(src, spans),
-        |src| em_shorthand(src, spans),
-        footnote_shorthand,
-        |src| link_shorthand(src, spans),
-        strong_shorthand,
-        html_shorthand,
-        |src| known_span(src, spans),
-        newline,
-        space,
-        word_part,
-        open_brace,
-        close_brace,
-        less_than,
-        greater_than,
-        backtic,
-        underscore,
-        |src| unknown_span(src, spans),
+        alt((
+            wordpart,
+            space,
+            newline,
+            shorthand,
+            named_span,
+            code_shorthand_single_pipe,
+            hyphen,
+            colon,
+            single_caret,
+            single_lessthan,
+            single_greaterthan,
+            single_backtick,
+            single_underscore,
+        )),
+        alt((
+            escaped_backslash,
+            escaped_backtick,
+            escaped_caret,
+            escaped_colon,
+            escaped_hyphen,
+            escaped_greaterthan,
+            escaped_pipe,
+            escaped_underscore,
+            more_than_two_underscores,
+            more_than_two_carets,
+        )),
     ))
     .context("")
     .parse(source)?;
     Ok((source, span))
 }
 
+// Reminder: This doesn't output a span for content
+// it's only for the structure of the file
+pub fn structure_empty_until_newline_or_eof<'a>(
+    source: &'a str,
+) -> IResult<&'a str, &'a str, ErrorTree<&'a str>> {
+    let (source, _) = alt((
+        tuple((space0, line_ending)),
+        tuple((multispace0, eof.map(|_| ""))),
+    ))
+    .context("")
+    .parse(source)?;
+    Ok((source, ""))
+}
+
+// DEPRECATED: replace with base_span_for_all_blocks
+pub fn span_for_body_text<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    let (source, span) = alt((wordpart, span_base, code_shorthand, named_span))
+        .context("")
+        .parse(source)?;
+    Ok((source, span))
+}
+
+// DEPRECATED: use the individual base span types
+pub fn span_base<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    // Reminder, don't put spaces in here so these can
+    // be used for keys. Also, don't put colon in here
+    // since that's also part of the key process
+    let (source, span) = alt((
+        space,
+        newline,
+        single_greaterthan,
+        single_backtick,
+        single_lessthan,
+        colon,
+        escaped_backslash,
+        escaped_backtick,
+        escaped_greaterthan,
+        escaped_pipe,
+    ))(source)?;
+    Ok((source, span))
+}
+
+// DEPRECATED: make and use base_span_for_shorthand_flag
+pub fn span_for_shorthand_flag<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    let (source, span) = alt((span_base, space, newline, colon_not_followed_by_space))(source)?;
+    Ok((source, span))
+}
+
+// DEPRECATED: make and use base_span_for_shorthand_text
+pub fn span_for_shorthand_text<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    let (source, span) = alt((span_base, space, newline, colon))(source)?;
+    Ok((source, span))
+}
+
+// DEPRECATED: make and use base_span_for_shorthand_key_value_key
+pub fn span_for_shorthand_attr_key<'a>(
+    source: &'a str,
+) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    let (source, span) = alt((span_base,))(source)?;
+    Ok((source, span))
+}
+
+// DEPRECATED: make and use base_span_for_shorthand_key_value_value
+pub fn span_for_shorthand_attr_value<'a>(
+    source: &'a str,
+) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    let (source, span) = alt((span_base, colon))(source)?;
+    Ok((source, span))
+}
+
+// pub fn span_without_shorthands_or_single_pipe<'a>(
+//     source: &'a str,
+// ) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+//     let (source, span) = alt((
+//         escaped_pipe,
+//         escaped_backtick,
+//         escaped_backslash,
+//         escaped_colon,
+//         single_backtick,
+//         wordpart,
+//         space,
+//         newline,
+//     ))(source)?;
+//     Ok((source, span))
+// }
+
+// TODO: Move to own file with tests
 pub fn newline(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let (source, text) = tuple((space0, line_ending)).context("").parse(source)?;
+    let (source, _) = tuple((space0, line_ending)).context("").parse(source)?;
     let (source, _) = not(tuple((space0, line_ending)))
         .context("")
         .parse(source)?;
     Ok((
         source,
-        Span::Space {
-            text: text.1.to_string(),
-            r#type: "space".to_string(),
+        Span {
+            attrs: vec![],
+            parsed_text: "\n".to_string(),
+            kind: SpanKind::Newline,
         },
     ))
 }
 
+// TODO: Move to own file with tests
 pub fn space(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let (source, text) = space1.context("").parse(source)?;
-    Ok((
-        source,
-        Span::Space {
-            text: text.to_string(),
-            r#type: "space".to_string(),
-        },
-    ))
-}
-
-pub fn span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-    let (source, _) = tag("|").context("").parse(source)?;
-    let (source, key) = is_not(" |\n\t:").context("").parse(source)?;
-    let (source, _) = tag(":").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
-    let (source, value) = is_not(">|").context("").parse(source)?;
     Ok((
         source,
-        SpanAttr::KeyValue {
-            key: key.trim().to_string(),
-            value: value.trim().to_string(),
+        Span {
+            attrs: vec![],
+            parsed_text: " ".to_string(),
+            kind: SpanKind::Space,
         },
     ))
 }
 
-pub fn span_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-    let (source, _) = tag("|").context("").parse(source)?;
-    let (source, key) = is_not(" |\n\t>").context("").parse(source)?;
-    Ok((
-        source,
-        SpanAttr::Flag {
-            key: key.trim().to_string(),
-        },
-    ))
-}
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+    use rstest::rstest;
 
-pub fn unknown_span<'a>(
-    source: &'a str,
-    spans: &'a Vec<String>,
-) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
-    let (source, _) = tag("<<").context("").parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    let (source, r#type) = is_not(" |><").context("").parse(source)?;
-    let (source, _) = tag("|").context("").parse(source)?;
-    let (source, spans) = many0(|src| span_finder(src, spans))
-        .context("")
-        .parse(source)?;
-    let (source, raw_attrs) = many0(alt((span_key_value_attr, span_flag_attr)))
-        .context("")
-        .parse(source)?;
-    let (source, _) = tag(">>").context("").parse(source)?;
-    let mut flags: Vec<String> = vec![];
-    let mut attrs = BTreeMap::new();
-    raw_attrs.iter().for_each(|attr| match attr {
-        SpanAttr::KeyValue { key, value } => {
-            attrs.insert(key.to_string(), value.to_string());
-        }
-        SpanAttr::Flag { key } => flags.push(key.to_string()),
-    });
-    Ok((
-        source,
-        Span::UnknownSpan {
-            r#type: r#type.to_string(),
-            spans,
-            flags,
-            attrs,
-        },
-    ))
-}
+    #[rstest]
+    #[case("a", "")]
+    #[case("b", "")]
+    #[case(":", "")]
+    #[case("<<alfa|bravo>>", "")]
+    #[case("<<alfa-bravo|charlie>>", "")]
+    #[case("<<alfa_bravo|charlie>>", "")]
+    #[case("<<alfa|bravo-charlie>>", "")]
+    #[case("<<alfa|bravo_charlie>>", "")]
+    #[case("<<alfa|bravo|charlie>>", "")]
+    #[case("<<alfa|bravo|charlie-delta>>", "")]
+    #[case("<<alfa|bravo|charlie_delta>>", "")]
+    #[case("______", "")]
+    #[case("^", "")]
+    #[case("\\^", "")]
+    #[case("^^^", "")]
+    fn run_test(#[case] input: &str, #[case] left: &str) {
+        let right = base_span_for_all_text(input).unwrap().0;
+        assert_eq!(left, right);
+    }
 
-pub fn word_part(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let (source, text) = is_not(" \n\t<>|^[]_`").context("").parse(source)?;
-    Ok((
-        source,
-        Span::WordPart {
-            text: text.to_string(),
-            r#type: "wordpart".to_string(),
-        },
-    ))
-}
-
-pub fn known_span_type<'a>(
-    source: &'a str,
-    spans: &Vec<String>,
-) -> IResult<&'a str, &'a str, ErrorTree<&'a str>> {
-    let (source, result) = spans
-        .iter()
-        .fold(span_initial_error(), |acc, item| match acc {
-            Ok(v) => Ok(v),
-            _ => tag(item.as_str()).parse(source),
-        })?;
-    Ok((source, result))
-}
-
-pub fn span_initial_error<'a>() -> IResult<&'a str, &'a str, ErrorTree<&'a str>> {
-    // the purpose of this function is just to put an
-    // error in the accumulator. There's a way to do that
-    // with just making an error, but I haven't solved all
-    // the parts to that yet.
-    let (_, _) = tag("asdf").parse("fdsa")?;
-    Ok(("", ""))
+    #[test]
+    fn nested_span() {
+        let source = "<<em|delta <<strong|echo>> foxtrot>>";
+        let left = Span {
+            attrs: vec![],
+            parsed_text: "".to_string(),
+            kind: SpanKind::NamedSpan {
+                r#type: "em".to_string(),
+                children: vec![
+                    Span {
+                        attrs: vec![],
+                        kind: SpanKind::WordPart,
+                        parsed_text: "delta ".to_string(),
+                    },
+                    Span {
+                        attrs: vec![],
+                        parsed_text: "".to_string(),
+                        kind: SpanKind::NamedSpan {
+                            r#type: "strong".to_string(),
+                            children: vec![Span {
+                                attrs: vec![],
+                                kind: SpanKind::WordPart,
+                                parsed_text: "echo".to_string(),
+                            }],
+                        },
+                    },
+                    Span {
+                        attrs: vec![],
+                        kind: SpanKind::WordPart,
+                        parsed_text: " foxtrot".to_string(),
+                    },
+                ],
+            },
+        };
+        let right = span_for_body_text(source).unwrap().1;
+        assert_eq!(left, right);
+    }
 }

@@ -1,0 +1,25 @@
+-- start-theme-test 
+
+-- title
+-- aria-description: this is some 
+-- aria-description: aria text 
+
+This Is The Page Title
+
+-- expected-output/
+
+<section class="title-section flow" aria-description="this is some aria text">
+<hgroup>
+  <h1 class="page-title">
+    This Is The Page Title
+  </h1>
+</hgroup>
+</section>
+
+
+-- /expected-output
+
+
+-- metadata
+-- updated: 2024-06-12T20:45:27-04:00
+-- id: 2hnp7qpf_title

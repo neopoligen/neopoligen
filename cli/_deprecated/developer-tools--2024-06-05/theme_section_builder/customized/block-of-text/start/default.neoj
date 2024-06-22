@@ -1,0 +1,8 @@
+[! import "includes/theme.neoj" as theme !]
+<p>[! for span in section.spans !]
+    [@ theme.output_span("", "", span) @]
+[! endfor !]
+
+<pre>
+[@ section|tojson(true) @]
+</pre>

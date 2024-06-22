@@ -1,0 +1,34 @@
+-- title
+
+Set The Home Page With "-- path: /"
+
+-- list/
+
+- Add ``-- path: /`` to the ``-- metadata`` 
+of a page to make it the home page. For example:
+
+-- code/
+
+-- metadata
+-- id: abcd1234
+-- path: /
+
+-- /code
+
+- Note that only one page can be the home 
+page at a time. If you add ``-- path: /`` to
+multiple page, whichever one gets generated 
+last wins and the other one disappears 
+until you remove ``-- path: /`` from one
+of them
+
+
+
+
+-- metadata
+-- created: 2024-06-02T00:27:38-04:00
+-- updated: 2024-06-02T00:27:38-04:00
+-- id: 2hjbmur7
+-- type: post
+-- status: draft
+

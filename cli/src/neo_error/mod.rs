@@ -1,74 +1,120 @@
-use minijinja::value::{Object, Value};
-use serde::Serialize;
-// use std::error::Error;
-use std::fmt;
-use std::fmt::Display;
+use crate::{payload_section::PayloadSection, section::Section};
+use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
-use std::sync::Arc;
-use thiserror::Error;
 
-#[derive(Clone, Debug, Error, Serialize)]
-#[serde(rename_all = "lowercase", tag = "kind")]
-pub enum NeoErrorV39 {
-    #[error("error: {details:?}")]
-    Generic {
-        source_path: Option<PathBuf>,
-        details: String,
-    },
-
-    #[error("minijinja error")]
-    MiniJinjaError {
-        source_path: Option<PathBuf>,
-        details: String,
-    },
-
-    #[error("missing id")]
-    MissingId {
-        source_path: Option<PathBuf>,
-        details: String,
-    },
-
-    #[error("theme test error")]
-    ThemeTestError {
-        source_path: Option<PathBuf>,
-        details: String,
-        expected: String,
-        got: String,
-    },
-
-    #[error("unknown data store error")]
-    Unknown,
-}
-
-#[derive(Clone, Debug, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct NeoError {
-    //pub source_path: Option<PathBuf>,
     pub kind: NeoErrorKind,
 }
 
-#[derive(Clone, Debug, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[serde(tag = "type", rename_all = "lowercase")]
 pub enum NeoErrorKind {
-    MissingIdError {
-        source: String,
+    CouldNotFindPageTemplate {
+        rel_source_path: Option<PathBuf>,
+        msg: Option<String>,
+        template_list: Option<Vec<String>>,
     },
-    NoAst {},
+    GenericErrorWithoutSourcePath {
+        msg: String,
+    },
+    GenericErrorWithSourcePath {
+        source_path: PathBuf,
+        msg: String,
+    },
+    GenericErrorWithSourcePathAndAst {
+        source_path: PathBuf,
+        msg: String,
+        ast: Option<Vec<Section>>,
+    },
+    GenericErrorWithSourcePathAndPayloadSections {
+        source_path: PathBuf,
+        msg: String,
+        sections: Option<Vec<PayloadSection>>,
+    },
+    FileError {
+        source_path: PathBuf,
+        msg: String,
+    },
+    ForwardError {
+        msg: String,
+    },
+    ForwardErrorWithSourcePath {
+        source_path: PathBuf,
+        msg: String,
+    },
+    MissingThemeDirectory {
+        path: PathBuf,
+    },
     ParserError {
+        source_path: Option<PathBuf>,
         line: usize,
         column: usize,
         remainder: String,
         source: String,
         message: String,
     },
-    RenderTemplate {
-        message: String,
+    ThemeTestError {
+        expected: String,
+        got: String,
+        sections: Vec<PayloadSection>,
+        source_path: PathBuf,
     },
 }
 
-impl Display for NeoError {
-    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+impl std::fmt::Display for NeoError {
+    fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
         match &self.kind {
-            NeoErrorKind::NoAst {} => {
-                fmt.write_str("No ast")?;
+            NeoErrorKind::CouldNotFindPageTemplate { .. } => {
+                fmt.write_str("Could not find page template")?;
+            }
+            NeoErrorKind::MissingThemeDirectory { path } => {
+                fmt.write_str("Missing theme directory: ")?;
+                fmt.write_str(path.display().to_string().as_str())?;
+            }
+            NeoErrorKind::GenericErrorWithoutSourcePath { msg } => {
+                fmt.write_str(msg.as_str())?;
+            }
+            NeoErrorKind::GenericErrorWithSourcePath { source_path, msg } => {
+                fmt.write_str("FileError: ")?;
+                fmt.write_str(source_path.display().to_string().as_str())?;
+                fmt.write_str("\n")?;
+                fmt.write_str(msg.as_str())?;
+            }
+            NeoErrorKind::GenericErrorWithSourcePathAndAst {
+                source_path, msg, ..
+            } => {
+                fmt.write_str("FileError: ")?;
+                fmt.write_str(source_path.display().to_string().as_str())?;
+                fmt.write_str("\n")?;
+                fmt.write_str(msg.as_str())?;
+            }
+            NeoErrorKind::GenericErrorWithSourcePathAndPayloadSections {
+                source_path, msg, ..
+            } => {
+                fmt.write_str("FileError: ")?;
+                fmt.write_str(source_path.display().to_string().as_str())?;
+                fmt.write_str("\n")?;
+                fmt.write_str(msg.as_str())?;
+            }
+            NeoErrorKind::FileError { source_path, msg } => {
+                fmt.write_str("FileError: ")?;
+                fmt.write_str(source_path.display().to_string().as_str())?;
+                fmt.write_str("\n")?;
+                fmt.write_str(msg.as_str())?;
+            }
+            NeoErrorKind::ForwardError { msg } => {
+                fmt.write_str(msg.as_str())?;
+            }
+            NeoErrorKind::ForwardErrorWithSourcePath { source_path, msg } => {
+                fmt.write_str("Path: ")?;
+                fmt.write_str(source_path.display().to_string().as_str())?;
+                fmt.write_str("\n")?;
+                fmt.write_str(msg.as_str())?;
+            }
+            NeoErrorKind::ThemeTestError { source_path, .. } => {
+                fmt.write_str("Path: ")?;
+                fmt.write_str(source_path.display().to_string().as_str())?;
             }
             NeoErrorKind::ParserError {
                 line,
@@ -89,47 +135,13 @@ impl Display for NeoError {
                 fmt.write_str("\n")?;
                 fmt.write_str(remainder.as_str())?;
             }
-            NeoErrorKind::MissingIdError { source } => {
-                fmt.write_str("Missing ID\n\n")?;
-                fmt.write_str(source.as_str())?;
-            }
-            NeoErrorKind::RenderTemplate { message } => {
-                fmt.write_str("Problem Rending Template\n\n")?;
-                fmt.write_str(message.as_str())?;
-            }
         }
         Ok(())
     }
 }
 
-impl Object for NeoErrorV39 {
-    fn call_method(
-        self: &Arc<NeoErrorV39>,
-        _state: &minijinja::State,
-        name: &str,
-        _args: &[Value],
-    ) -> Result<Value, minijinja::Error> {
-        match name {
-            _ => Ok(Value::from("[Error: called non-existing function")),
-        }
+impl std::error::Error for NeoError {
+    fn description(&self) -> &str {
+        "todo: figure out how to print errors here"
     }
 }
-
-impl Object for NeoError {
-    fn call_method(
-        self: &Arc<NeoError>,
-        _state: &minijinja::State,
-        name: &str,
-        _args: &[Value],
-    ) -> Result<Value, minijinja::Error> {
-        match name {
-            _ => Ok(Value::from("[Error: called non-existing function")),
-        }
-    }
-}
-
-// impl Display for NeoError {
-//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-//         write!(f, "builder_issue")
-//     }
-// }

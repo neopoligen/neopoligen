@@ -1,0 +1,30 @@
+-- start-theme-test
+
+-- ref
+-- title: Some Reference
+-- url: https://www.example.com/
+
+Some Text
+
+-- expected-output/
+
+<li class="footnote-ref">
+  <div>&bullet;
+  </div>
+  <div class="flow">
+    <a href="https://www.example.com/">Some Reference
+    </a>
+    <p>Some Text
+    </p>
+  </div>
+  <div>
+  </div>
+</li>
+
+-- /expected-output
+
+
+-- metadata
+-- updated: 2024-06-13T10:26:15-04:00
+-- id: 2hpqwixw
+
