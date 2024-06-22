@@ -50,6 +50,8 @@ it instead of panicing.
 [] Test code shorthand blocks will all the characters
 that wordpart excludes to make sure they work. 
 
+[] Handle spans in section key/value attrs 
+
 -- todo 
 -- title: Documentation Notes
 
