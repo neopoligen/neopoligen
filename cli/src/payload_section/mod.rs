@@ -30,7 +30,7 @@ pub struct PayloadSection {
     pub tags: Vec<String>,
     pub text: Option<String>,
     // DEPRECATED: TODO: Remove title and just get it from attrs
-    pub title: Option<Vec<PayloadSpan>>,
+    // pub title: Option<Vec<PayloadSpan>>,
     pub r#type: String,
     pub template_list: Vec<String>,
     pub updated: Option<String>,
@@ -331,7 +331,7 @@ impl PayloadSection {
             status,
             tags,
             text,
-            title: None, // TODO
+            //title: None, // TODO
             r#type: section.r#type.clone(),
             template_list,
             updated,
