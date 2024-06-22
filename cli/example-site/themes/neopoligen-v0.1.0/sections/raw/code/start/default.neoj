@@ -16,7 +16,3 @@
 [@- highlight_code(section.text, "txt") -@]
 [!- endif -!]</code></pre>
 
-
-<pre>
-[@ section|tojson(true) @]
-</pre>

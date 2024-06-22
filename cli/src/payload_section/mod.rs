@@ -330,23 +330,11 @@ impl PayloadSection {
         } else {
             None
         }
-
-        // self.attrs.iter().find_map(|attr| match &attr.kind {
-        //     SectionAttrKind::KeyValueSpans { key, spans } => {
-        //         if key.as_str() == "id" {
-        //             Some(flatten_spans(spans))
-        //         } else {
-        //             None
-        //         }
-        //     }
-        //     _ => None,
-        // })
     }
 
     pub fn make_attr_string(&mut self) {
         let mut attr_string = String::from("");
 
-        // TODO: Handle ID here
         if let Some(id) = &self.id() {
             attr_string.push_str(format!(r#" id="{}""#, id).as_str());
         }
