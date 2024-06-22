@@ -14,7 +14,7 @@ pub struct PayloadSection {
     pub aria: BTreeMap<String, String>,
     pub attr_string: Option<String>,
     pub attrs: BTreeMap<String, String>,
-    pub attrs_as_spans: BTreeMap<String, Vec<PayloadSpan>>,
+    pub attr_spans: BTreeMap<String, Vec<PayloadSpan>>,
     pub bounds: String,
     pub children: Vec<PayloadSection>,
     pub classes: Option<String>,
@@ -71,21 +71,21 @@ impl PayloadSection {
             _ => (),
         });
 
-        let mut attrs_as_spans: BTreeMap<String, Vec<PayloadSpan>> = BTreeMap::new();
+        let mut attr_spans: BTreeMap<String, Vec<PayloadSpan>> = BTreeMap::new();
         section.attrs.iter().for_each(|attr| match &attr.kind {
             SectionAttrKind::KeyValueSpans { key, spans } => {
                 if key.as_str() != "aria" && key.as_str() != "class" && key.as_str() != "data" {
-                    match attrs_as_spans.get(key) {
+                    match attr_spans.get(key) {
                         Some(cur) => {
                             let mut new_attrs = cur.clone();
                             new_attrs.push(PayloadSpan::new_space());
                             spans.iter().for_each(|span| {
                                 new_attrs.push(PayloadSpan::new_from_span(span, config))
                             });
-                            attrs_as_spans.insert(key.clone(), new_attrs);
+                            attr_spans.insert(key.clone(), new_attrs);
                         }
                         None => {
-                            attrs_as_spans.insert(
+                            attr_spans.insert(
                                 key.clone(),
                                 spans
                                     .iter()
@@ -302,7 +302,7 @@ impl PayloadSection {
             aria,
             attr_string: None,
             attrs,
-            attrs_as_spans,
+            attr_spans,
             bounds,
             children,
             classes,
@@ -425,7 +425,7 @@ mod test {
     }
 
     #[test]
-    fn attrs_as_spans_basic_check() {
+    fn attr_spans_basic_check() {
         let ps = PayloadSection::new_from_section(
             &Section::mock3_image_with_flag_and_multiple_attrs_with_same_key(),
             &SiteConfig::mock1_basic(),
@@ -513,7 +513,7 @@ mod test {
                 ],
             },
         ];
-        let right = ps.attrs_as_spans.get("alt").unwrap();
+        let right = ps.attr_spans.get("alt").unwrap();
         assert_eq!(left, right);
     }
 
