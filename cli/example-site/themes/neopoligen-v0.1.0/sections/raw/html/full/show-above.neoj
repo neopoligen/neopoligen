@@ -1,12 +1,10 @@
 
 <h2>HTML</h2>
 <pre>
-[@ section.text|escape @]
+[@ highlight_code(section.text, "html") @]
 </pre>
-
 
 [! autoescape false !]
 [@ section.text @]
 [! endautoescape !]
-
 
