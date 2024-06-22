@@ -4,6 +4,10 @@
     [@- theme.section_classes(section, "code-section") -@] 
     [@- section.attr_string -@]>
 
+[! if "title" in section.attrs_as_spans !]
+<h2>[@ theme.output_spans(site, page_id, section.attrs_as_spans.title) @]</h2>
+[! endif !]
+
 [! if section.flags[0] !]
 <div class="code-language">
 [@ section.flags[0] @]
