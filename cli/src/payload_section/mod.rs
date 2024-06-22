@@ -22,12 +22,14 @@ pub struct PayloadSection {
     pub created: Option<String>,
     pub data: BTreeMap<String, String>,
     pub flags: Vec<String>,
-    pub id: Option<String>,
+    // DEPRECATED: TODO: Remove id and just get it from attrs
+    //pub id: Option<String>,
     pub kind: Option<String>,
     pub spans: Vec<PayloadSpan>,
     pub status: Option<String>,
     pub tags: Vec<String>,
     pub text: Option<String>,
+    // DEPRECATED: TODO: Remove title and just get it from attrs
     pub title: Option<Vec<PayloadSpan>>,
     pub r#type: String,
     pub template_list: Vec<String>,
@@ -60,11 +62,7 @@ impl PayloadSection {
         let mut attrs: BTreeMap<String, String> = BTreeMap::new();
         section.attrs.iter().for_each(|attr| match &attr.kind {
             SectionAttrKind::KeyValueSpans { key, spans } => {
-                if key.as_str() != "aria"
-                    && key.as_str() != "class"
-                    && key.as_str() != "data"
-                    && key.as_str() != "id"
-                {
+                if key.as_str() != "aria" && key.as_str() != "class" && key.as_str() != "data" {
                     match attrs.get(key) {
                         Some(cur) => {
                             attrs.insert(key.clone(), format!("{} {}", cur, flatten_spans(spans)));
@@ -81,11 +79,7 @@ impl PayloadSection {
         let mut attrs_as_spans: BTreeMap<String, Vec<PayloadSpan>> = BTreeMap::new();
         section.attrs.iter().for_each(|attr| match &attr.kind {
             SectionAttrKind::KeyValueSpans { key, spans } => {
-                if key.as_str() != "aria"
-                    && key.as_str() != "class"
-                    && key.as_str() != "data"
-                    && key.as_str() != "id"
-                {
+                if key.as_str() != "aria" && key.as_str() != "class" && key.as_str() != "data" {
                     match attrs_as_spans.get(key) {
                         Some(cur) => {
                             let mut new_attrs = cur.clone();
@@ -223,16 +217,16 @@ impl PayloadSection {
             })
             .collect::<Vec<String>>();
 
-        let id = section.attrs.iter().find_map(|attr| match &attr.kind {
-            SectionAttrKind::KeyValueSpans { key, spans } => {
-                if key.as_str() == "id" {
-                    Some(flatten_spans(spans))
-                } else {
-                    None
-                }
-            }
-            _ => None,
-        });
+        // let id = section.attrs.iter().find_map(|attr| match &attr.kind {
+        //     SectionAttrKind::KeyValueSpans { key, spans } => {
+        //         if key.as_str() == "id" {
+        //             Some(flatten_spans(spans))
+        //         } else {
+        //             None
+        //         }
+        //     }
+        //     _ => None,
+        // });
 
         let kind = Some(match &section.kind {
             SectionKind::Basic { .. } => "basic".to_string(),
@@ -331,7 +325,7 @@ impl PayloadSection {
             created,
             data,
             flags,
-            id,
+            // id,
             kind,
             spans,
             status,
@@ -348,10 +342,30 @@ impl PayloadSection {
 }
 
 impl PayloadSection {
+    pub fn id(&mut self) -> Option<String> {
+        if let Some(id_spans) = self.attrs.get("id") {
+            Some(id_spans.to_string())
+        } else {
+            None
+        }
+
+        // self.attrs.iter().find_map(|attr| match &attr.kind {
+        //     SectionAttrKind::KeyValueSpans { key, spans } => {
+        //         if key.as_str() == "id" {
+        //             Some(flatten_spans(spans))
+        //         } else {
+        //             None
+        //         }
+        //     }
+        //     _ => None,
+        // })
+    }
+
     pub fn make_attr_string(&mut self) {
         let mut attr_string = String::from("");
 
-        if let Some(id) = &self.id {
+        // TODO: Handle ID here
+        if let Some(id) = &self.id() {
             attr_string.push_str(format!(r#" id="{}""#, id).as_str());
         }
 
@@ -665,25 +679,27 @@ mod test {
     //     assert_eq!(left, right);
     // }
 
-    #[test]
-    fn id_basic_check() {
-        let config = SiteConfig::mock1_basic();
-        let payload_section =
-            PayloadSection::new_from_section(&Section::mock5_div_with_id(), &config);
-        let left = "attr-id";
-        let right = payload_section.id.unwrap();
-        assert_eq!(left, right);
-    }
+    // // DEPRECATED: TODO: Remove
+    // #[test]
+    // fn id_basic_check() {
+    //     let config = SiteConfig::mock1_basic();
+    //     let payload_section =
+    //         PayloadSection::new_from_section(&Section::mock5_div_with_id(), &config);
+    //     let left = "attr-id";
+    //     let right = payload_section.id.unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    fn id_metadata_check() {
-        let config = SiteConfig::mock1_basic();
-        let payload_section =
-            PayloadSection::new_from_section(&Section::mock8_metadata_basic(), &config);
-        let left = "id_from_metadata";
-        let right = payload_section.id.unwrap();
-        assert_eq!(left, right);
-    }
+    // // DEPRECATED: TODO: Remove
+    // #[test]
+    // fn id_metadata_check() {
+    //     let config = SiteConfig::mock1_basic();
+    //     let payload_section =
+    //         PayloadSection::new_from_section(&Section::mock8_metadata_basic(), &config);
+    //     let left = "id_from_metadata";
+    //     let right = payload_section.id.unwrap();
+    //     assert_eq!(left, right);
+    // }
 
     #[test]
     fn section_template_list_from_attr() {

@@ -113,7 +113,7 @@ impl PagePayload {
     pub fn get_id(&mut self) {
         self.sections.iter().for_each(|section| {
             if section.r#type == "metadata" {
-                self.id = section.id.clone();
+                self.id = section.clone().id();
             }
         });
     }
