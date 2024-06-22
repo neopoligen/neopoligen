@@ -22,6 +22,7 @@ this is a second paragraph
 print("asdf")
 
 -- css
+-- template: show
 
 body {
   color: goldenrod;
