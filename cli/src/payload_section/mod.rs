@@ -1,5 +1,4 @@
 use crate::helpers::*;
-// use minijinja::Value;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
@@ -22,15 +21,11 @@ pub struct PayloadSection {
     pub created: Option<String>,
     pub data: BTreeMap<String, String>,
     pub flags: Vec<String>,
-    // DEPRECATED: TODO: Remove id and just get it from attrs
-    //pub id: Option<String>,
     pub kind: Option<String>,
     pub spans: Vec<PayloadSpan>,
     pub status: Option<String>,
     pub tags: Vec<String>,
     pub text: Option<String>,
-    // DEPRECATED: TODO: Remove title and just get it from attrs
-    // pub title: Option<Vec<PayloadSpan>>,
     pub r#type: String,
     pub template_list: Vec<String>,
     pub updated: Option<String>,
@@ -217,17 +212,6 @@ impl PayloadSection {
             })
             .collect::<Vec<String>>();
 
-        // let id = section.attrs.iter().find_map(|attr| match &attr.kind {
-        //     SectionAttrKind::KeyValueSpans { key, spans } => {
-        //         if key.as_str() == "id" {
-        //             Some(flatten_spans(spans))
-        //         } else {
-        //             None
-        //         }
-        //     }
-        //     _ => None,
-        // });
-
         let kind = Some(match &section.kind {
             SectionKind::Basic { .. } => "basic".to_string(),
             SectionKind::Block { .. } => "block".to_string(),
@@ -325,13 +309,11 @@ impl PayloadSection {
             created,
             data,
             flags,
-            // id,
             kind,
             spans,
             status,
             tags,
             text,
-            //title: None, // TODO
             r#type: section.r#type.clone(),
             template_list,
             updated,
