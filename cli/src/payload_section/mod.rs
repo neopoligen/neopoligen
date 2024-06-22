@@ -267,7 +267,7 @@ impl PayloadSection {
         };
 
         let mut template_list = vec![];
-        if let Some(template) = section.get_attr("template") {
+        if let Some(template) = attrs.get("template") {
             template_list.push(format!(
                 "sections/{}/{}/{}/{}.neoj",
                 kind.as_ref().unwrap(),
@@ -685,23 +685,22 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // #[ignore]
-    // fn section_template_list_from_attr() {
-    //     let config = SiteConfig::mock1_basic();
-    //     let payload_section = PayloadSection::new_from_section(
-    //         &Section::mock2_div_with_title_and_template_attrs(),
-    //         &config,
-    //     );
-    //     let left = vec![
-    //         "sections/basic/div/full/template-from-attr.neoj".to_string(),
-    //         "sections/basic/div/full/default.neoj".to_string(),
-    //         "sections/basic/_generic/full/default.neoj".to_string(),
-    //         "sections/unknown/_generic/full/default.neoj".to_string(),
-    //     ];
-    //     let right = payload_section.template_list;
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn section_template_list_from_attr() {
+        let config = SiteConfig::mock1_basic();
+        let payload_section = PayloadSection::new_from_section(
+            &Section::mock2_div_with_title_and_template_attrs(),
+            &config,
+        );
+        let left = vec![
+            "sections/basic/div/full/template-from-attr.neoj".to_string(),
+            "sections/basic/div/full/default.neoj".to_string(),
+            "sections/basic/generic/full/default.neoj".to_string(),
+            "sections/unknown/generic/full/default.neoj".to_string(),
+        ];
+        let right = payload_section.template_list;
+        assert_eq!(left, right);
+    }
 
     #[test]
     fn status_check() {

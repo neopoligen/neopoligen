@@ -1,0 +1,12 @@
+
+<h2>HTML</h2>
+<pre>
+[@ section.text|escape @]
+</pre>
+
+
+[! autoescape false !]
+[@ section.text @]
+[! endautoescape !]
+
+
