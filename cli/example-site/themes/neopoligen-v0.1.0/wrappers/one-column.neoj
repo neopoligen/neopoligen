@@ -10,10 +10,22 @@
 
 [!- for section in page.sections -!]
 [!- if section.type == "head" -!]
+[! autoescape false !]
 [@ section.text @]
+[! endautoescape !]
 [!- endif -!]
 [!- endfor -!]
 
+[# TODO: Break this out to an include #]
+[!- for section in page.sections -!]
+[!- if section.type == "javascript" -!]
+<script>
+[! autoescape false !]
+[@ section.text @]
+[! endautoescape !]
+</script>
+[!- endif -!]
+[!- endfor -!]
 
 </head>
 <body>

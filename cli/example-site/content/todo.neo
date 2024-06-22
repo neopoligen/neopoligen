@@ -88,6 +88,8 @@ as the example
 [] Document attrites are plain text but there is also
 the attrs_as_spans to get to them as spans 
 
+[] Document ``[! if "something" in seciton.flags !]blah[! endif !]``
+
 -- metadata
 -- updated: 2024-06-03T18:27:52-04:00
 -- id: 2ho8hakd

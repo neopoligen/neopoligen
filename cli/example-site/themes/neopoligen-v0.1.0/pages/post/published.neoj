@@ -11,7 +11,6 @@
 [!- endblock -!]
 
 
-
 [!- block endmatter -!]
 [! set section_header_has_been_output = false !]
   [!- for section in page.sections -!]
