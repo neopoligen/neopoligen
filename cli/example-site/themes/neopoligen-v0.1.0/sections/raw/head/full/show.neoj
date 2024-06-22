@@ -1,0 +1,7 @@
+<h2>Head</h2>
+<pre>
+[! autoescape false !]
+[@ highlight_code(section.text, "html") @]
+[! endautoescape !]
+</pre>
+

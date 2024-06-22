@@ -7,6 +7,14 @@
 <link rel="stylesheet" href="/theme/styles/variables.css" />
 <link rel="stylesheet" href="/theme/styles/theme.css" />
 <link rel="stylesheet" href="/theme/styles/syntax-highlighting/code-solarized-dark.css" />
+
+[!- for section in page.sections -!]
+[!- if section.type == "head" -!]
+[@ section.text @]
+[!- endif -!]
+[!- endfor -!]
+
+
 </head>
 <body>
 <header><a href="/">Home</a></header>
