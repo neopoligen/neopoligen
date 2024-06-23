@@ -86,9 +86,11 @@ pub fn list_section_start<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = many1(|src| list_item_full(src, sections))
+    let (source, mut children) = many1(|src| list_item_full(src, sections))
         .context("")
         .parse(source)?;
+    let (source, end_section) = list_section_end(source, r#type)?;
+    children.push(end_section);
     Ok((
         source,
         Section {
@@ -143,8 +145,7 @@ mod test {
     }
 
     #[test]
-    #[ignore]
-    fn solo_basic_start_end_list_test() {
+    fn solo_basic_start_list_test() {
         let source = "-- list/\n\n- alfa\n\n-- /list";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -153,25 +154,33 @@ mod test {
                 attrs: vec![],
                 bounds: SectionBounds::Start,
                 kind: SectionKind::List {
-                    children: vec![Section {
-                        attrs: vec![],
-                        bounds: SectionBounds::Full,
-                        kind: SectionKind::ListItem {
-                            children: vec![Section {
-                                attrs: vec![],
-                                bounds: SectionBounds::Full,
-                                kind: SectionKind::Block {
-                                    spans: vec![Span {
-                                        attrs: vec![],
-                                        kind: SpanKind::WordPart,
-                                        parsed_text: "alfa".to_string(),
-                                    }],
-                                },
-                                r#type: "block-of-text".to_string(),
-                            }],
+                    children: vec![
+                        Section {
+                            attrs: vec![],
+                            bounds: SectionBounds::Full,
+                            kind: SectionKind::ListItem {
+                                children: vec![Section {
+                                    attrs: vec![],
+                                    bounds: SectionBounds::Full,
+                                    kind: SectionKind::Block {
+                                        spans: vec![Span {
+                                            attrs: vec![],
+                                            kind: SpanKind::WordPart,
+                                            parsed_text: "alfa".to_string(),
+                                        }],
+                                    },
+                                    r#type: "block-of-text".to_string(),
+                                }],
+                            },
+                            r#type: "list-item".to_string(),
                         },
-                        r#type: "list-item".to_string(),
-                    }],
+                        Section {
+                            attrs: vec![],
+                            bounds: SectionBounds::End,
+                            kind: SectionKind::List { children: vec![] },
+                            r#type: "list".to_string(),
+                        },
+                    ],
                 },
                 r#type: "list".to_string(),
             },
@@ -181,7 +190,7 @@ mod test {
     }
 
     #[test]
-    fn solo_basic_end_list_test() {
+    fn basic_end_list_test() {
         let source = "-- /list";
         let config = SiteConfig::mock1_basic();
         let left = (
