@@ -126,15 +126,20 @@ impl Builder {
                     .image_dest_dir()
                     .join(partial_path);
                 if let Some(dest_dir) = dest_path.parent() {
-                    match fs::create_dir_all(dest_dir) {
-                        Ok(_) => {}
-                        Err(e) => {
-                            let _ = &self.errors.push(NeoError {
-                                kind: NeoErrorKind::GenericErrorWithSourcePath {
-                                    source_path: source_path.to_path_buf(),
-                                    msg: format!("Could not name image dir: {}", e),
-                                },
-                            });
+                    let _ = fs::create_dir_all(dest_dir);
+                    // NOTE: Using read/write here instead of copy to work
+                    // around a notify reload bug that triggers on copy when it shouldn't
+                    if let Ok(data) = std::fs::read(source_path) {
+                        match std::fs::write(dest_path, &data) {
+                            Ok(_) => {}
+                            Err(e) => {
+                                let _ = &self.errors.push(NeoError {
+                                    kind: NeoErrorKind::GenericErrorWithSourcePath {
+                                        source_path: source_path.to_path_buf(),
+                                        msg: format!("Could not copy image: {}", e),
+                                    },
+                                });
+                            }
                         }
                     }
                 }
