@@ -14,6 +14,7 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn basic_section_end<'a>(
     source: &'a str,
     key: &'a str,
+    _nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, _) = tag("/").context("").parse(source)?;
@@ -41,6 +42,7 @@ pub fn basic_section_end<'a>(
 pub fn basic_section_full<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
+    _nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder(src, &sections.basic))
@@ -69,6 +71,7 @@ pub fn basic_section_full<'a>(
 pub fn basic_section_start<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
+    nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder(src, &sections.basic))
@@ -85,11 +88,11 @@ pub fn basic_section_start<'a>(
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, mut children) = many0(alt((
         |src| block_of_anything(src),
-        |src| start_or_full_section(src, &sections),
+        |src| start_or_full_section(src, &sections, nest_level),
     )))
     .context("")
     .parse(source)?;
-    let (source, end_section) = basic_section_end(source, r#type)?;
+    let (source, end_section) = basic_section_end(source, r#type, nest_level)?;
     children.push(end_section);
     let section = Section {
         attrs,
@@ -162,7 +165,7 @@ mod test {
             if bounds == "full" {
                 assert_eq!(
                     remainder,
-                    basic_section_full(source, &config.sections).unwrap().0
+                    basic_section_full(source, &config.sections, 0).unwrap().0
                 );
             }
         }
@@ -200,7 +203,7 @@ mod test {
                 r#type: "title".to_string(),
             },
         );
-        let right = basic_section_full(source, &config.sections).unwrap();
+        let right = basic_section_full(source, &config.sections, 0).unwrap();
         assert_eq!(left, right);
     }
 
@@ -230,7 +233,7 @@ mod test {
                 r#type: "title".to_string(),
             },
         );
-        let right = basic_section_full(source, &config.sections).unwrap();
+        let right = basic_section_full(source, &config.sections, 0).unwrap();
         assert_eq!(left, right);
     }
 

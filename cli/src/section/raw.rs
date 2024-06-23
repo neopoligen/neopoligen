@@ -14,6 +14,7 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn raw_section_full<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
+    _nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder(src, &sections.raw))
@@ -43,6 +44,7 @@ pub fn raw_section_full<'a>(
 pub fn raw_section_start<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
+    nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder(src, &sections.raw))
@@ -58,7 +60,7 @@ pub fn raw_section_start<'a>(
         .context("")
         .parse(source)?;
     let (source, text) = take_until(end_key.as_str()).context("").parse(source)?;
-    let (source, end_section) = basic_section_end(source, r#type)?;
+    let (source, end_section) = basic_section_end(source, r#type, nest_level)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let mut children = vec![];
     children.push(end_section);
@@ -101,7 +103,7 @@ mod test {
                 r#type: "code".to_string(),
             },
         );
-        let right = raw_section_start(source, &config.sections).unwrap();
+        let right = raw_section_start(source, &config.sections, 0).unwrap();
         assert_eq!(left, right);
     }
 
@@ -139,7 +141,7 @@ mod test {
                 r#type: "code".to_string(),
             },
         );
-        let right = raw_section_start(source, &config.sections).unwrap();
+        let right = raw_section_start(source, &config.sections, 0).unwrap();
         assert_eq!(left, right);
     }
 
@@ -164,7 +166,7 @@ mod test {
                 r#type: "code".to_string(),
             },
         );
-        let right = raw_section_start(source, &config.sections).unwrap();
+        let right = raw_section_start(source, &config.sections, 0).unwrap();
         assert_eq!(left, right);
     }
 

@@ -15,6 +15,7 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn unknown_section_end<'a>(
     source: &'a str,
     key: &'a str,
+    _nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, _) = tag("/").context("").parse(source)?;
@@ -42,6 +43,7 @@ pub fn unknown_section_end<'a>(
 pub fn unknown_section_full<'a>(
     source: &'a str,
     _sections: &'a ConfigSections,
+    _nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = is_not(" /\n").context("").parse(source)?;
@@ -68,6 +70,7 @@ pub fn unknown_section_full<'a>(
 pub fn unknown_section_start<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
+    nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = is_not(" /\n").context("").parse(source)?;
@@ -82,11 +85,11 @@ pub fn unknown_section_start<'a>(
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, mut children) = many0(alt((
         |src| block_of_anything(src),
-        |src| start_or_full_section(src, &sections),
+        |src| start_or_full_section(src, &sections, nest_level),
     )))
     .context("")
     .parse(source)?;
-    let (source, end_section) = unknown_section_end(source, r#type)?;
+    let (source, end_section) = unknown_section_end(source, r#type, nest_level)?;
     children.push(end_section);
     let section = Section {
         attrs,
@@ -105,7 +108,7 @@ mod test {
     //     use rstest::rstest;
 
     #[test]
-    fn solo_todo_unknow_start_and_end() {
+    fn todo_unknow_start_and_end() {
         let source = "-- unknown-section/\n\nalfa bravo\n\n-- /unknown-section";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -138,7 +141,7 @@ mod test {
                 r#type: "unknown-section".to_string(),
             },
         );
-        let right = unknown_section_start(source, &config.sections).unwrap();
+        let right = unknown_section_start(source, &config.sections, 0).unwrap();
         assert_eq!(left, right);
     }
 
@@ -168,7 +171,7 @@ mod test {
                 r#type: "unknown-section".to_string(),
             },
         );
-        let right = unknown_section_full(source, &config.sections).unwrap();
+        let right = unknown_section_full(source, &config.sections, 0).unwrap();
         assert_eq!(left, right);
     }
 

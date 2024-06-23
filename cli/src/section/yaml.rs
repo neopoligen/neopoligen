@@ -15,6 +15,7 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn yaml_section_full<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
+    _nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder(src, &sections.yaml))

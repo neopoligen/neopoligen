@@ -11,6 +11,7 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn list_item_full<'a>(
     source: &'a str,
     _sections: &'a ConfigSections,
+    _nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
@@ -31,11 +32,12 @@ pub fn list_item_full<'a>(
 pub fn list_item_start_end<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
+    nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
     let (source, children) = many1(alt((
-        |src| start_or_full_section(src, sections),
+        |src| start_or_full_section(src, sections, nest_level),
         |src| block_of_list_content(src),
     )))
     .context("")
@@ -84,7 +86,7 @@ mod test {
                 r#type: "list-item".to_string(),
             },
         );
-        let right = list_item_full(source, &config.sections).unwrap();
+        let right = list_item_full(source, &config.sections, 0).unwrap();
         assert_eq!(left, right);
     }
 
@@ -137,7 +139,7 @@ mod test {
                 r#type: "list-item".to_string(),
             },
         );
-        let right = list_item_start_end(source, &config.sections).unwrap();
+        let right = list_item_start_end(source, &config.sections, 0).unwrap();
         assert_eq!(left, right);
     }
 }
