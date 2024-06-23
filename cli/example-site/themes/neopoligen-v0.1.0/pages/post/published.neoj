@@ -5,7 +5,7 @@
 [!- block body -!]
 [!- for section in page.sections -!]
 [!- if section.type != "footnote" and section.type != "ref" -!]
-[@- theme.output_section("", "", section) -@]
+[@- theme.output_section(site, page_id, section) -@]
 [!- endif -!]
 [!- endfor -!]
 [!- endblock -!]
@@ -21,7 +21,7 @@
           <ul class="flow">
       [! set section_header_has_been_output = true !]
       [! endif !]
-      [@- theme.output_section("", "", section) -@]
+      [@- theme.output_section(site, page_id, section) -@]
     [!- endif -!]
     [! if loop.last and section_header_has_been_output == true !]
       </ul>

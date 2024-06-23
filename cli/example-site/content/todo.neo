@@ -94,6 +94,7 @@ the attrs_as_spans to get to them as spans
 [] Document how comments work just by making a new section that
 doesn't output anything (except for the end stuff)
 
+[] Show how nesting sections works
 
 
 -- metadata

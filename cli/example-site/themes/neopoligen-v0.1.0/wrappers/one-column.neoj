@@ -45,8 +45,11 @@
 </main>
 <footer></footer>
 
+[#
 <pre>
 [@ page|tojson(true) @]
 </pre>
+#]
 </body>
+
 

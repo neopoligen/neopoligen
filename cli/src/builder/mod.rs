@@ -22,12 +22,12 @@ use walkdir::WalkDir;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Builder {
-    cache_buffer: BTreeMap<PathBuf, SourcePage>,
+    pub cache_buffer: BTreeMap<PathBuf, SourcePage>,
     pub config: Option<SiteConfig>,
     pub errors: Vec<NeoError>,
-    source_pages: BTreeMap<PathBuf, SourcePage>,
-    payloads: BTreeMap<String, PagePayload>,
-    templates: BTreeMap<String, String>,
+    pub source_pages: BTreeMap<PathBuf, SourcePage>,
+    pub payloads: BTreeMap<String, PagePayload>,
+    pub templates: BTreeMap<String, String>,
     pub theme_test_source_pages: BTreeMap<PathBuf, ThemeTest>,
 }
 
@@ -84,6 +84,29 @@ impl Builder {
 }
 
 impl Builder {
+    #[instrument(skip(self))]
+    pub fn build_images(&self) -> Result<()> {
+        event!(Level::DEBUG, "Building Images");
+        let image_source_paths = get_image_paths(&self.config.as_ref().unwrap().image_source_dir());
+        image_source_paths.iter().for_each(|img_path| {
+            let image_name = img_path.file_stem().unwrap();
+            let image_dest_dir = self
+                .config
+                .as_ref()
+                .unwrap()
+                .image_dest_dir()
+                .join(image_name);
+            // TODO: Make all the image size versions here:
+            dbg!(&image_dest_dir);
+            let _ = fs::create_dir_all(&image_dest_dir);
+            let image_dest_path = image_dest_dir.join("280x280.jpg");
+            let _ = fs::copy(img_path, image_dest_path);
+            dbg!(image_dest_dir);
+            ()
+        });
+        Ok(())
+    }
+
     #[instrument(skip(self))]
     pub fn deploy_theme_files(&self) {
         event!(Level::DEBUG, "Deploying Theme Files");
@@ -370,6 +393,10 @@ impl Builder {
         Ok(())
     }
 
+    pub fn get_image_details(&self) -> Value {
+        Value::from("asdf")
+    }
+
     #[instrument(skip(self))]
     pub fn output_pages(&mut self) -> Result<()> {
         event!(Level::INFO, "Outputting pages");
@@ -393,10 +420,12 @@ impl Builder {
                 }
             }
         }
-        let site = Value::from_serialize(Site::new_from_payloads(
-            self.config.as_ref().unwrap().clone(),
-            &self.payloads,
-        ));
+
+        let mut site_obj =
+            Site::new_from_payloads(self.config.as_ref().unwrap().clone(), &self.payloads);
+        site_obj.load_images();
+
+        let site = Value::from_serialize(site_obj);
 
         for (_, page) in self.payloads.iter_mut() {
             let output_path = self
@@ -415,8 +444,7 @@ impl Builder {
             }) {
                 match template.render(context!(
                     page => Value::from_serialize(&page),
-                site=> &site,
-
+                    site=> &site,
                 )) {
                     Ok(output) => {
                         let _ = write_file_with_mkdir(&output_path, &output);

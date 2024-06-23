@@ -56,7 +56,6 @@ async fn main() {
                 "Loaded Engine Config: {}",
                 engine_config_path.display()
             );
-
             event!(Level::INFO, "Active site: {}", &engine_config.active_site);
             match SiteConfig::new_from_engine_config(&engine_config) {
                 Ok(site_config) => {
@@ -117,13 +116,14 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
             // Prep
             let _ = builder.prep_output_dirs();
             let _ = builder.load_templates();
+            let _ = builder.build_images();
             // Site
             builder.load_pages_from_cache().unwrap();
             builder.load_pages_from_fs().unwrap();
             builder.generate_missing_asts();
             let _ = builder.save_asts_to_cache();
             builder.generate_payloads(ThemeTestOrPage::Page);
-            let _ = builder.empty_output_dirs();
+            // let _ = builder.empty_output_dirs();
             let _ = builder.output_pages();
             // Theme Test
             builder.update_config_for_theme_test();

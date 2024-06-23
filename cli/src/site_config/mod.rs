@@ -139,13 +139,13 @@ impl SiteConfig {
     //     self.cache_dir().join("images")
     // }
 
-    // pub fn image_dest_dir(&self) -> PathBuf {
-    //     self.output_dir().join("images")
-    // }
+    pub fn image_dest_dir(&self) -> PathBuf {
+        self.output_dest_dir().join("neo-images")
+    }
 
-    // pub fn image_source_dir(&self) -> PathBuf {
-    //     self.project_dir().join("images")
-    // }
+    pub fn image_source_dir(&self) -> PathBuf {
+        self.project_dir().join("images")
+    }
 
     // pub fn image_widths(&self) -> Vec<u32> {
     //     let mut tmp = BTreeSet::new();

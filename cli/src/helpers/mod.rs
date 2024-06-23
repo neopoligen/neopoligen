@@ -108,6 +108,25 @@ pub fn get_files_with_extension_in_a_single_directory(
         .collect()
 }
 
+pub fn get_image_paths(source_dir: &PathBuf) -> Vec<PathBuf> {
+    let walker = WalkDir::new(source_dir).into_iter();
+    walker
+        .filter_map(|path_result| match path_result {
+            Ok(path) => match path.path().extension() {
+                Some(ext) => {
+                    if ext.to_ascii_lowercase().eq("jpg") {
+                        Some(path.path().to_path_buf())
+                    } else {
+                        None
+                    }
+                }
+                None => None,
+            },
+            Err(_) => None,
+        })
+        .collect()
+}
+
 pub fn get_neo_files_in_dir_recursively(dir: &PathBuf) -> Vec<PathBuf> {
     WalkDir::new(dir)
         .into_iter()
