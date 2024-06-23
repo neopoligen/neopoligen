@@ -115,10 +115,14 @@ pub fn start_or_full_section<'a>(
     let (source, section) = alt((
         |src| basic_section_start(src, &sections),
         |src| basic_section_full(src, &sections),
+        // TODO: Checklist start
+        // TODO: Checklist full
         // |src| list_section_start(src, &sections),
         |src| list_section_full(src, &sections),
         |src| raw_section_start(src, &sections),
         |src| raw_section_full(src, &sections),
+        // TODO: JSON full
+        // TODO: JSON start
         //|src| yaml_section_start(src, &sections),
         |src| yaml_section_full(src, &sections),
         // Reminder: do unknown last since it slurps

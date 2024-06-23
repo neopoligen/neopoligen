@@ -6,6 +6,11 @@ This is a starter site that lays out all
 the files and folders you need to 
 get started.
 
+-- comment
+
+This should not show up
+
+
 -- list
 
 - asdf
@@ -14,9 +19,8 @@ get started.
 
 this is a second paragraph
 
-
 -- code
--- title: Some Code
+-- title: This is a new title
 -- python
 
 print("asdf")

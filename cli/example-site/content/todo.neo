@@ -11,10 +11,9 @@ TODO List
 
 [x] title
 
-[] h1-h6
+[x] h1-h6
 
 [] image
-
 
 
 -- todo 
@@ -91,6 +90,11 @@ as the example
 the attrs_as_spans to get to them as spans 
 
 [] Document ``[! if "something" in seciton.flags !]blah[! endif !]``
+
+[] Document how comments work just by making a new section that
+doesn't output anything (except for the end stuff)
+
+
 
 -- metadata
 -- updated: 2024-06-03T18:27:52-04:00
