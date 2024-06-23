@@ -6,19 +6,17 @@ Welcome To Neopoligen
 
 - get ready
 
--- code/
+-- list/
 
-ping
-
--- /code
-
-this is text after
-
-- this is a list item after
+- ping
 
 -- /list
 
+does this show up now
 
+- this is a list item after it
+
+-- /list
 
 
 

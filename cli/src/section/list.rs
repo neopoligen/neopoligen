@@ -15,7 +15,7 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn list_section_end<'a>(
     source: &'a str,
     key: &'a str,
-    _nest_level: usize,
+    nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, _) = tag("/").context("").parse(source)?;
@@ -28,9 +28,13 @@ pub fn list_section_end<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = many0(|src| block_of_end_content(src))
-        .context("")
-        .parse(source)?;
+    let (source, children) = if nest_level == 0 {
+        many0(|src| block_of_end_content(src))
+            .context("")
+            .parse(source)?
+    } else {
+        (source, vec![])
+    };
     let section = Section {
         attrs,
         bounds: SectionBounds::End,
@@ -217,6 +221,108 @@ mod test {
         let source = "-- list\n\n- <<link|Main site link|https://daverupert.com/2021/10/html-with-superpowers/>>";
         let left = "";
         let right = list_section_full(source, &config.sections, 0).unwrap().0;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_nested_list_test() {
+        let source =
+            "-- list/\n\n- alfa\n\n-- list/\n\n- bravo\n\n-- /list\n\n- charlie\n\n-- /list";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "",
+            Section {
+                attrs: vec![],
+                bounds: SectionBounds::Start,
+                kind: SectionKind::List {
+                    children: vec![
+                        Section {
+                            attrs: vec![],
+                            bounds: SectionBounds::Full,
+                            kind: SectionKind::ListItem {
+                                children: vec![
+                                    Section {
+                                        attrs: vec![],
+                                        bounds: SectionBounds::Full,
+                                        kind: SectionKind::Block {
+                                            spans: vec![Span {
+                                                attrs: vec![],
+                                                kind: SpanKind::WordPart,
+                                                parsed_text: "alfa".to_string(),
+                                            }],
+                                        },
+                                        r#type: "block-of-text".to_string(),
+                                    },
+                                    Section {
+                                        attrs: vec![],
+                                        bounds: SectionBounds::Start,
+                                        kind: SectionKind::List {
+                                            children: vec![
+                                                Section {
+                                                    attrs: vec![],
+                                                    bounds: SectionBounds::Full,
+                                                    kind: SectionKind::ListItem {
+                                                        children: vec![Section {
+                                                            attrs: vec![],
+                                                            bounds: SectionBounds::Full,
+                                                            kind: SectionKind::Block {
+                                                                spans: vec![Span {
+                                                                    attrs: vec![],
+                                                                    kind: SpanKind::WordPart,
+                                                                    parsed_text: "bravo"
+                                                                        .to_string(),
+                                                                }],
+                                                            },
+                                                            r#type: "block-of-text".to_string(),
+                                                        }],
+                                                    },
+                                                    r#type: "list-item".to_string(),
+                                                },
+                                                Section {
+                                                    attrs: vec![],
+                                                    bounds: SectionBounds::End,
+                                                    kind: SectionKind::List { children: vec![] },
+                                                    r#type: "list".to_string(),
+                                                },
+                                            ],
+                                        },
+                                        r#type: "list".to_string(),
+                                    },
+                                ],
+                            },
+                            r#type: "list-item".to_string(),
+                        },
+                        Section {
+                            attrs: vec![],
+                            bounds: SectionBounds::Full,
+                            kind: SectionKind::ListItem {
+                                children: vec![Section {
+                                    attrs: vec![],
+                                    bounds: SectionBounds::Full,
+                                    kind: SectionKind::Block {
+                                        spans: vec![Span {
+                                            attrs: vec![],
+                                            kind: SpanKind::WordPart,
+                                            parsed_text: "charlie".to_string(),
+                                        }],
+                                    },
+                                    r#type: "block-of-text".to_string(),
+                                }],
+                            },
+                            r#type: "list-item".to_string(),
+                        },
+                        Section {
+                            attrs: vec![],
+                            bounds: SectionBounds::End,
+                            kind: SectionKind::List { children: vec![] },
+                            r#type: "list".to_string(),
+                        },
+                    ],
+                },
+                r#type: "list".to_string(),
+            },
+        );
+        let right = list_section_start(source, &config.sections, 0).unwrap();
         assert_eq!(left, right);
     }
 
