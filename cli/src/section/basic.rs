@@ -266,7 +266,7 @@ mod test {
     }
 
     #[test]
-    fn solo_ending_with_nesting() {
+    fn ending_with_nesting() {
         let source = "-- /p\n\nmore stuff";
         let left = "more stuff".to_string();
         let right = basic_section_end(source, "p", 1).unwrap().0;

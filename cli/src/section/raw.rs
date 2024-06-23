@@ -38,7 +38,10 @@ pub fn raw_section_end<'a>(
     let section = Section {
         attrs,
         bounds: SectionBounds::End,
-        kind: SectionKind::Basic { children },
+        kind: SectionKind::Raw {
+            children,
+            text: None,
+        },
         r#type: r#type.to_string(),
     };
     Ok((source, section))
@@ -121,7 +124,7 @@ mod test {
         let left = 0;
         let section = raw_section_end(source, "code", 0).unwrap().1;
         let right = match section.kind {
-            SectionKind::Basic { children, .. } => children.len(),
+            SectionKind::Raw { children, .. } => children.len(),
             _ => 0,
         };
         assert_eq!(left, right);
@@ -133,7 +136,7 @@ mod test {
         let left = 2;
         let section = raw_section_end(source, "code", 0).unwrap().1;
         let right = match section.kind {
-            SectionKind::Basic { children, .. } => children.len(),
+            SectionKind::Raw { children, .. } => children.len(),
             _ => 0,
         };
         assert_eq!(left, right);
@@ -224,7 +227,10 @@ mod test {
                     children: vec![Section {
                         attrs: vec![],
                         bounds: SectionBounds::End,
-                        kind: SectionKind::Basic { children: vec![] },
+                        kind: SectionKind::Raw {
+                            children: vec![],
+                            text: None,
+                        },
                         r#type: "code".to_string(),
                     }],
                     text: Some("alfa -- not here".to_string()),

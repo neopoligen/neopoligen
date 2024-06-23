@@ -15,7 +15,7 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn unknown_section_end<'a>(
     source: &'a str,
     key: &'a str,
-    _nest_level: usize,
+    nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, _) = tag("/").context("").parse(source)?;
@@ -28,9 +28,13 @@ pub fn unknown_section_end<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = many0(|src| block_of_end_content(src))
-        .context("")
-        .parse(source)?;
+    let (source, children) = if nest_level == 0 {
+        many0(|src| block_of_end_content(src))
+            .context("")
+            .parse(source)?
+    } else {
+        (source, vec![])
+    };
     let section = Section {
         attrs,
         bounds: SectionBounds::End,
@@ -172,6 +176,38 @@ mod test {
             },
         );
         let right = unknown_section_full(source, &config.sections, 0).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn ending_without_nesting_and_no_content() {
+        let source = "-- /asdf";
+        let left = 0;
+        let section = unknown_section_end(source, "asdf", 0).unwrap().1;
+        let right = match section.kind {
+            SectionKind::Unknown { children, .. } => children.len(),
+            _ => 0,
+        };
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn ending_without_nesting_and_has_content() {
+        let source = "-- /asdf\n\nthis is\n\nsomethig";
+        let left = 2;
+        let section = unknown_section_end(source, "asdf", 0).unwrap().1;
+        let right = match section.kind {
+            SectionKind::Unknown { children, .. } => children.len(),
+            _ => 0,
+        };
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn ending_with_nesting() {
+        let source = "-- /asdf\n\nmore stuff";
+        let left = "more stuff".to_string();
+        let right = unknown_section_end(source, "asdf", 1).unwrap().0;
         assert_eq!(left, right);
     }
 
