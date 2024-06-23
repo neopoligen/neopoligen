@@ -132,7 +132,6 @@ mod test {
         let source = "-- /code\n\nthis is\n\nsomethig";
         let left = 2;
         let section = raw_section_end(source, "code", 0).unwrap().1;
-        dbg!(&section);
         let right = match section.kind {
             SectionKind::Basic { children, .. } => children.len(),
             _ => 0,
@@ -141,7 +140,7 @@ mod test {
     }
 
     #[test]
-    fn solo_ending_with_nesting() {
+    fn ending_with_nesting() {
         let source = "-- /code\n\nmore stuff";
         let left = "more stuff".to_string();
         let right = raw_section_end(source, "code", 1).unwrap().0;
