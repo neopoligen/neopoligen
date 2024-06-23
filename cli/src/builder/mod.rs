@@ -7,6 +7,7 @@ use crate::source_page::SourcePage;
 use crate::theme_test::ThemeTest; // this might be deprecated
 use anyhow::Result;
 use fs_extra::dir::copy;
+use image::io::Reader;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
 use minijinja::{context, Value};
@@ -85,24 +86,28 @@ impl Builder {
 
 impl Builder {
     #[instrument(skip(self))]
-    pub fn build_images(&self) -> Result<()> {
+    pub fn build_image_cache(&self) -> Result<()> {
         event!(Level::DEBUG, "Building Images");
         let image_source_paths = get_image_paths(&self.config.as_ref().unwrap().image_source_dir());
         image_source_paths.iter().for_each(|img_path| {
-            let image_name = img_path.file_stem().unwrap();
-            let image_dest_dir = self
-                .config
-                .as_ref()
-                .unwrap()
-                .image_dest_dir()
-                .join(image_name);
-            // TODO: Make all the image size versions here:
-            dbg!(&image_dest_dir);
-            let _ = fs::create_dir_all(&image_dest_dir);
-            let image_dest_path = image_dest_dir.join("280x280.jpg");
-            let _ = fs::copy(img_path, image_dest_path);
-            dbg!(image_dest_dir);
-            ()
+            if let Ok(img_reader) = Reader::open(img_path) {
+                if let Ok(img) = img_reader.decode() {
+                    let width = img.width();
+                    let height = img.height();
+                    let image_name = img_path.file_stem().unwrap();
+                    let image_dest_dir = self
+                        .config
+                        .as_ref()
+                        .unwrap()
+                        .image_cache_dir()
+                        .join(image_name);
+                    // TODO: Make all the image size versions here:
+                    //dbg!(&image_dest_dir);
+                    let _ = fs::create_dir_all(&image_dest_dir);
+                    let image_dest_path = image_dest_dir.join(format!("{}x{}.jpg", width, height));
+                    let _ = fs::copy(img_path, image_dest_path);
+                }
+            }
         });
         Ok(())
     }

@@ -116,7 +116,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
             // Prep
             let _ = builder.prep_output_dirs();
             let _ = builder.load_templates();
-            let _ = builder.build_images();
+            let _ = builder.build_image_cache();
             // Site
             builder.load_pages_from_cache().unwrap();
             builder.load_pages_from_fs().unwrap();

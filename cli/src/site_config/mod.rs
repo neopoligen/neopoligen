@@ -135,9 +135,9 @@ impl SiteConfig {
     //     self.templates_dir().join("feeds")
     // }
 
-    // pub fn image_cache_dir(&self) -> PathBuf {
-    //     self.cache_dir().join("images")
-    // }
+    pub fn image_cache_dir(&self) -> PathBuf {
+        self.cache_dir().join("neo-images")
+    }
 
     pub fn image_dest_dir(&self) -> PathBuf {
         self.output_dest_dir().join("neo-images")
