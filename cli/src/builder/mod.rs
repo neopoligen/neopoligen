@@ -102,11 +102,49 @@ impl Builder {
                         .image_cache_dir()
                         .join(image_name);
                     // TODO: Make all the image size versions here:
-                    //dbg!(&image_dest_dir);
                     let _ = fs::create_dir_all(&image_dest_dir);
                     let image_dest_path = image_dest_dir.join(format!("{}x{}.jpg", width, height));
                     let _ = fs::copy(img_path, image_dest_path);
                 }
+            }
+        });
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn deploy_images(&mut self) -> Result<()> {
+        event!(Level::DEBUG, "Deploying Images");
+        let image_source_paths = get_image_paths(&self.config.as_ref().unwrap().image_cache_dir());
+        image_source_paths.iter().for_each(|source_path| {
+            if let Ok(partial_path) =
+                source_path.strip_prefix(&self.config.as_ref().unwrap().image_cache_dir())
+            {
+                let dest_path = &self
+                    .config
+                    .as_ref()
+                    .unwrap()
+                    .image_dest_dir()
+                    .join(partial_path);
+                if let Some(dest_dir) = dest_path.parent() {
+                    match fs::create_dir_all(dest_dir) {
+                        Ok(_) => {}
+                        Err(e) => {
+                            let _ = &self.errors.push(NeoError {
+                                kind: NeoErrorKind::GenericErrorWithSourcePath {
+                                    source_path: source_path.to_path_buf(),
+                                    msg: format!("Could not name image dir: {}", e),
+                                },
+                            });
+                        }
+                    }
+                }
+            } else {
+                let _ = &self.errors.push(NeoError {
+                    kind: NeoErrorKind::GenericErrorWithSourcePath {
+                        source_path: source_path.to_path_buf(),
+                        msg: "Could not move image".to_string(),
+                    },
+                });
             }
         });
         Ok(())

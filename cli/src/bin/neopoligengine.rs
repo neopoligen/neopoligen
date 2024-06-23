@@ -123,8 +123,9 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
             builder.generate_missing_asts();
             let _ = builder.save_asts_to_cache();
             builder.generate_payloads(ThemeTestOrPage::Page);
-            // let _ = builder.empty_output_dirs();
+            let _ = builder.empty_output_dirs();
             let _ = builder.output_pages();
+            let _ = builder.deploy_images();
             // Theme Test
             builder.update_config_for_theme_test();
             builder.load_theme_test_pages().unwrap();
@@ -132,7 +133,6 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
             builder.generate_payloads(ThemeTestOrPage::ThemeTest);
             let _ = builder.test_theme();
             // Other Files
-
             let _ = builder.deploy_theme_files();
 
             // Errors
