@@ -1,9 +1,8 @@
+use crate::section::block::block_of_end_content;
 use crate::section::list_item::*;
 use crate::section::*;
 use crate::section_attr::*;
 use crate::span::*;
-// use nom::branch::alt;
-use crate::section::block::block_of_end_content;
 use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;
 use nom::multi::many0;
@@ -225,7 +224,7 @@ mod test {
     }
 
     #[test]
-    fn solo_nested_list_test() {
+    fn nested_list_test() {
         let source =
             "-- list/\n\n- alfa\n\n-- list/\n\n- bravo\n\n-- /list\n\n- charlie\n\n-- /list";
         let config = SiteConfig::mock1_basic();

@@ -1,3 +1,4 @@
+use crate::section::block::block_of_end_content;
 use crate::section::*;
 use crate::section_attr::*;
 use nom::branch::alt;
@@ -10,6 +11,38 @@ use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
+
+pub fn raw_section_end<'a>(
+    source: &'a str,
+    key: &'a str,
+    nest_level: usize,
+) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let (source, _) = tag("-- ").context("").parse(source)?;
+    let (source, _) = tag("/").context("").parse(source)?;
+    let (source, r#type) = tag(key).context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
+    let (source, attrs) = many0(section_attr).context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
+    let (source, children) = if nest_level == 0 {
+        many0(|src| block_of_end_content(src))
+            .context("")
+            .parse(source)?
+    } else {
+        (source, vec![])
+    };
+    let section = Section {
+        attrs,
+        bounds: SectionBounds::End,
+        kind: SectionKind::Basic { children },
+        r#type: r#type.to_string(),
+    };
+    Ok((source, section))
+}
 
 pub fn raw_section_full<'a>(
     source: &'a str,
@@ -60,7 +93,7 @@ pub fn raw_section_start<'a>(
         .context("")
         .parse(source)?;
     let (source, text) = take_until(end_key.as_str()).context("").parse(source)?;
-    let (source, end_section) = basic_section_end(source, r#type, nest_level)?;
+    let (source, end_section) = raw_section_end(source, r#type, nest_level)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let mut children = vec![];
     children.push(end_section);
@@ -81,9 +114,43 @@ mod test {
     use super::*;
     use crate::site_config::SiteConfig;
     use pretty_assertions::assert_eq;
+
+    #[test]
+    fn ending_without_nesting_and_no_content() {
+        let source = "-- /code";
+        let left = 0;
+        let section = raw_section_end(source, "code", 0).unwrap().1;
+        let right = match section.kind {
+            SectionKind::Basic { children, .. } => children.len(),
+            _ => 0,
+        };
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn ending_without_nesting_and_has_content() {
+        let source = "-- /code\n\nthis is\n\nsomethig";
+        let left = 2;
+        let section = raw_section_end(source, "code", 0).unwrap().1;
+        dbg!(&section);
+        let right = match section.kind {
+            SectionKind::Basic { children, .. } => children.len(),
+            _ => 0,
+        };
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_ending_with_nesting() {
+        let source = "-- /code\n\nmore stuff";
+        let left = "more stuff".to_string();
+        let right = raw_section_end(source, "code", 1).unwrap().0;
+        assert_eq!(left, right);
+    }
+
     #[test]
     #[ignore]
-    fn basic_star_end() {
+    fn basic_start_end() {
         let source = "-- code/\n\nsome code\n\n-- /code\n\n";
         let config = SiteConfig::mock1_basic();
         let left = (
