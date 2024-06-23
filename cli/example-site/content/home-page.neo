@@ -2,50 +2,25 @@
 
 Welcome To Neopoligen
 
-This is a starter site that lays out all 
-the files and folders you need to 
-get started.
-
--- comment
-
-This should not show up
-
-
--- list
-
-- asdf
-
--- p 
-
-hasdf
-
 -- list/
 
-- thing
+- get ready
 
-- alfa
+-- code/
+
+ping
+
+-- /code
+
+this is text after
+
+- this is a list item after
 
 -- /list
 
-this is after the list
 
 
--- p
 
-this is a second paragraph
-
--- code
--- title: This is a new title
--- python
-
-print("asdf")
-
--- css
--- template: show
-
-body {
-  color: goldenrod;
-}
 
 
 -- metadata

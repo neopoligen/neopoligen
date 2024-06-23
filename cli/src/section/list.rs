@@ -86,7 +86,7 @@ pub fn list_section_start<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, mut children) = many1(|src| list_item_full(src, sections))
+    let (source, mut children) = many1(|src| list_item_start_end(src, sections))
         .context("")
         .parse(source)?;
     let (source, end_section) = list_section_end(source, r#type)?;
@@ -107,8 +107,9 @@ mod test {
     use super::*;
     use crate::site_config::SiteConfig;
     use pretty_assertions::assert_eq;
+
     #[test]
-    fn basic_list() {
+    fn basic_list_full() {
         let source = "-- list\n\n- alfa";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -145,7 +146,7 @@ mod test {
     }
 
     #[test]
-    fn solo_basic_start_list_test() {
+    fn basic_start_list_test() {
         let source = "-- list/\n\n- alfa\n\n-- /list";
         let config = SiteConfig::mock1_basic();
         let left = (

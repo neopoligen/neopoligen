@@ -28,6 +28,29 @@ pub fn list_item_full<'a>(
     ))
 }
 
+pub fn list_item_start_end<'a>(
+    source: &'a str,
+    sections: &'a ConfigSections,
+) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let (source, _) = tag("-").context("").parse(source)?;
+    let (source, _) = space1.context("").parse(source)?;
+    let (source, children) = many1(alt((
+        |src| start_or_full_section(src, sections),
+        |src| block_of_list_content(src),
+    )))
+    .context("")
+    .parse(source)?;
+    Ok((
+        source,
+        Section {
+            attrs: vec![],
+            bounds: SectionBounds::Full,
+            kind: SectionKind::ListItem { children },
+            r#type: "list-item".to_string(),
+        },
+    ))
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -62,6 +85,59 @@ mod test {
             },
         );
         let right = list_item_full(source, &config.sections).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_start_end_list_items() {
+        let source = "- alfa\n\n-- p\n\nbravo";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "",
+            Section {
+                attrs: vec![],
+                bounds: SectionBounds::Full,
+                kind: SectionKind::ListItem {
+                    children: {
+                        vec![
+                            Section {
+                                attrs: vec![],
+                                bounds: SectionBounds::Full,
+                                kind: SectionKind::Block {
+                                    spans: vec![Span {
+                                        attrs: vec![],
+                                        kind: SpanKind::WordPart,
+                                        parsed_text: "alfa".to_string(),
+                                    }],
+                                },
+                                r#type: "block-of-text".to_string(),
+                            },
+                            Section {
+                                attrs: vec![],
+                                bounds: SectionBounds::Full,
+                                kind: SectionKind::Basic {
+                                    children: vec![Section {
+                                        attrs: vec![],
+                                        bounds: SectionBounds::Full,
+                                        kind: SectionKind::Block {
+                                            spans: vec![Span {
+                                                attrs: vec![],
+                                                kind: SpanKind::WordPart,
+                                                parsed_text: "bravo".to_string(),
+                                            }],
+                                        },
+                                        r#type: "block-of-text".to_string(),
+                                    }],
+                                },
+                                r#type: "p".to_string(),
+                            },
+                        ]
+                    },
+                },
+                r#type: "list-item".to_string(),
+            },
+        );
+        let right = list_item_start_end(source, &config.sections).unwrap();
         assert_eq!(left, right);
     }
 }
