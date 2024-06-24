@@ -166,6 +166,17 @@ impl PagePayload {
                 });
             }
         });
+        // Now override if there's a `full-path`.
+        self.sections.iter().for_each(|section| {
+            if section.r#type == "metadata" {
+                let _ = &section.attr_spans.iter().for_each(|(key, spans)| {
+                    if key.eq("full-path") {
+                        let the_path = &flatten_payload_spans(&spans.clone());
+                        self.rel_file_path = Some(the_path.trim_start_matches("/").into());
+                    }
+                });
+            }
+        });
     }
 
     pub fn get_status(&mut self) {
@@ -253,6 +264,19 @@ mod test {
         )
         .unwrap();
         let left = PathBuf::from("index.html");
+        let right = p.rel_file_path.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_rel_file_full_path() {
+        let p = PagePayload::new_from_source_page(
+            &PathBuf::from("/test/mocks/source/filename.neo"),
+            &SourcePage::mock6_20240106_foxtrot8_full_path(),
+            ThemeTestOrPage::Page,
+        )
+        .unwrap();
+        let left = PathBuf::from("CNAME");
         let right = p.rel_file_path.unwrap();
         assert_eq!(left, right);
     }

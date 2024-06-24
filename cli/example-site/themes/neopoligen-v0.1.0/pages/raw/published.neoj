@@ -1,0 +1,5 @@
+[!- for section in page.sections -!]
+[!- if section.type == "raw" -!]
+[@- theme.output_section(site, page_id, section) -@]
+[!- endif -!]
+[!- endfor -!]

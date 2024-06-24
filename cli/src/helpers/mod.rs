@@ -360,11 +360,7 @@ pub fn scrub_rel_file_path(source: &str) -> Result<PathBuf, NeoError> {
     } else {
         pb.to_path_buf()
     };
-    if let Some(_) = pb.extension() {
-        Ok(pb)
-    } else {
-        Ok(pb.join("index.html"))
-    }
+    Ok(pb.join("index.html"))
 }
 
 pub fn trim_empty_lines(source: &str) -> String {

@@ -43,4 +43,9 @@ asdf
         "#;
         SourcePage::new_mock_from_str(source)
     }
+
+    pub fn mock6_20240106_foxtrot8_full_path() -> SourcePage {
+        let source = "-- title\n\nFoxtrot\n\n-- metadata\n-- full-path: /CNAME\n-- id: 20240106_foxtrot8\n-- created: 2024-01-06T00:00:00-04:00";
+        SourcePage::new_mock_from_str(source)
+    }
 }

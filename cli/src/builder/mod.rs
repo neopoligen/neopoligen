@@ -1,4 +1,5 @@
 use crate::helpers::*;
+use crate::image::{Image, ImageSize};
 use crate::neo_error::{NeoError, NeoErrorKind};
 use crate::page_payload::{PagePayload, ThemeTestOrPage};
 use crate::site::Site;
@@ -11,12 +12,6 @@ use image::io::Reader;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
 use minijinja::{context, Value};
-// use rimage::config::{Codec, EncoderConfig};
-// use rimage::image::imageops::FilterType;
-// use rimage::image::DynamicImage;
-// use rimage::Decoder;
-// use rimage::Encoder;
-use crate::image::{Image, ImageSize};
 use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
 use serde_json;
