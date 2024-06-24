@@ -16,6 +16,7 @@ use minijinja::{context, Value};
 // use rimage::image::DynamicImage;
 // use rimage::Decoder;
 // use rimage::Encoder;
+use crate::image::Image;
 use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
 use serde_json;
@@ -31,6 +32,7 @@ pub struct Builder {
     pub cache_buffer: BTreeMap<PathBuf, SourcePage>,
     pub config: Option<SiteConfig>,
     pub errors: Vec<NeoError>,
+    pub images: BTreeMap<String, Image>,
     pub source_pages: BTreeMap<PathBuf, SourcePage>,
     pub payloads: BTreeMap<String, PagePayload>,
     pub templates: BTreeMap<String, String>,
@@ -43,6 +45,7 @@ impl Builder {
             cache_buffer: BTreeMap::new(),
             config: Some(site_config.clone()),
             errors: vec![],
+            images: BTreeMap::new(),
             source_pages: BTreeMap::new(),
             payloads: BTreeMap::new(),
             templates: BTreeMap::new(),
@@ -91,7 +94,7 @@ impl Builder {
 
 impl Builder {
     #[instrument(skip(self))]
-    pub fn build_image_cache(&self) -> Result<()> {
+    pub fn build_image_cache(&mut self) -> Result<()> {
         event!(Level::DEBUG, "Building Images");
         let image_source_paths = get_image_paths(&self.config.as_ref().unwrap().image_source_dir());
         image_source_paths.iter().for_each(|img_path| {
@@ -99,7 +102,7 @@ impl Builder {
                 if let Ok(img_reader) = Reader::open(img_path) {
                     if let Ok(img) = img_reader.decode() {
                         let width = img.width();
-                        // let height = img.height();
+                        let height = img.height();
                         let image_name = img_path.file_stem().unwrap();
                         let image_dest_dir = self
                             .config
@@ -110,6 +113,17 @@ impl Builder {
                         let _ = fs::create_dir_all(&image_dest_dir);
                         let image_dest_path = image_dest_dir.join(format!("{}w.jpg", width));
                         let _ = fs::copy(img_path, image_dest_path);
+                        let img_obj = Image {
+                            extension: ext.to_string_lossy().to_string(),
+                            dir: PathBuf::from(format!(
+                                "/neo-images/{}",
+                                image_name.to_string_lossy().to_string()
+                            )),
+                            raw_width: width,
+                            raw_height: height,
+                        };
+                        self.images
+                            .insert(image_name.to_string_lossy().to_string(), img_obj);
                         self.config
                             .as_ref()
                             .unwrap()
@@ -508,7 +522,7 @@ impl Builder {
 
         let mut site_obj =
             Site::new_from_payloads(self.config.as_ref().unwrap().clone(), &self.payloads);
-        site_obj.load_images();
+        site_obj.images = self.images.clone();
 
         let site = Value::from_serialize(site_obj);
 
