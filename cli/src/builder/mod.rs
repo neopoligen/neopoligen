@@ -124,6 +124,7 @@ impl Builder {
                         };
                         self.images
                             .insert(image_name.to_string_lossy().to_string(), img_obj);
+                        // TODO: Handle pngs and other image formats
                         self.config
                             .as_ref()
                             .unwrap()
@@ -133,7 +134,6 @@ impl Builder {
                                 if width > *img_width {
                                     let resize_dest_path =
                                         image_dest_dir.join(format!("{}w.jpg", img_width));
-                                    dbg!(&resize_dest_path);
                                     if ext.to_ascii_lowercase() == "jpg"
                                         || ext.to_ascii_lowercase() == "jpeg"
                                     {
