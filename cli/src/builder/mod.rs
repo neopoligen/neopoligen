@@ -93,7 +93,7 @@ impl Builder {
             if let Ok(img_reader) = Reader::open(img_path) {
                 if let Ok(img) = img_reader.decode() {
                     let width = img.width();
-                    let height = img.height();
+                    // let height = img.height();
                     let image_name = img_path.file_stem().unwrap();
                     let image_dest_dir = self
                         .config
@@ -101,10 +101,10 @@ impl Builder {
                         .unwrap()
                         .image_cache_dir()
                         .join(image_name);
-                    // TODO: Make all the image size versions here:
                     let _ = fs::create_dir_all(&image_dest_dir);
-                    let image_dest_path = image_dest_dir.join(format!("{}x{}.jpg", width, height));
+                    let image_dest_path = image_dest_dir.join(format!("{}w.jpg", width));
                     let _ = fs::copy(img_path, image_dest_path);
+                    // TODO: Make all the image size versions here:
                 }
             }
         });

@@ -96,6 +96,9 @@ doesn't output anything (except for the end stuff)
 
 [] Show how nesting sections works
 
+[] Image widths in the config file for making the different
+responsive image sizes
+
 
 -- metadata
 -- updated: 2024-06-03T18:27:52-04:00
