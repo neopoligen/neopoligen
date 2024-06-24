@@ -99,6 +99,7 @@ doesn't output anything (except for the end stuff)
 [] Image widths in the config file for making the different
 responsive image sizes
 
+[] Update so invalid image file names aren't allowed
 
 -- metadata
 -- updated: 2024-06-03T18:27:52-04:00

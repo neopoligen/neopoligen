@@ -7,11 +7,5 @@ pub struct Image {
     pub dir: PathBuf,
     pub raw_height: u32,
     pub raw_width: u32,
-    // pub sizes: Vec<ImageSize>,
+    pub widths: Vec<u32>,
 }
-
-// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-// pub struct ImageSize {
-//     width: u32,
-//     height: u32,
-// }

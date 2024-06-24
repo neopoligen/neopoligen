@@ -98,6 +98,7 @@ impl Builder {
         event!(Level::DEBUG, "Building Images");
         let image_source_paths = get_image_paths(&self.config.as_ref().unwrap().image_source_dir());
         image_source_paths.iter().for_each(|img_path| {
+            // TODO: Handle pngs and other image formats
             if let Some(ext) = img_path.extension() {
                 if let Ok(img_reader) = Reader::open(img_path) {
                     if let Ok(img) = img_reader.decode() {
@@ -113,18 +114,7 @@ impl Builder {
                         let _ = fs::create_dir_all(&image_dest_dir);
                         let image_dest_path = image_dest_dir.join(format!("{}w.jpg", width));
                         let _ = fs::copy(img_path, image_dest_path);
-                        let img_obj = Image {
-                            extension: ext.to_string_lossy().to_string(),
-                            dir: PathBuf::from(format!(
-                                "/neo-images/{}",
-                                image_name.to_string_lossy().to_string()
-                            )),
-                            raw_width: width,
-                            raw_height: height,
-                        };
-                        self.images
-                            .insert(image_name.to_string_lossy().to_string(), img_obj);
-                        // TODO: Handle pngs and other image formats
+                        let mut widths = vec![];
                         self.config
                             .as_ref()
                             .unwrap()
@@ -142,6 +132,7 @@ impl Builder {
                                             *img_width,
                                             &resize_dest_path,
                                         );
+                                        widths.push(*img_width);
                                     }
                                     //                 } else if image.extension()? == "png" {
                                     //                     resize_and_optimize_png(&image.source_path, version.0, &version_path)?;
@@ -154,7 +145,20 @@ impl Builder {
                                     //                 }
                                     //             }
                                 };
-                            })
+                            });
+
+                        let img_obj = Image {
+                            extension: ext.to_string_lossy().to_string(),
+                            dir: PathBuf::from(format!(
+                                "/neo-images/{}",
+                                image_name.to_string_lossy().to_string()
+                            )),
+                            raw_width: width,
+                            raw_height: height,
+                            widths,
+                        };
+                        self.images
+                            .insert(image_name.to_string_lossy().to_string(), img_obj);
                     }
                 }
             }

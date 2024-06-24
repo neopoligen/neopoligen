@@ -5,8 +5,7 @@ src="
 [@- img.dir -@]
 /
 [@- img.raw_width-@]
-x
-[@- img.raw_height-@]
+w
 .
 [@- img.extension -@]
 " />
