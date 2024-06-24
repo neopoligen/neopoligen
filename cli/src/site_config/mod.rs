@@ -1,6 +1,7 @@
 pub mod mocks;
 
 use crate::engine_config::EngineConfig;
+use crate::helpers::get_dirs_in_dir;
 use crate::neo_error::NeoError;
 use crate::neo_error::NeoErrorKind;
 use anyhow::Result;
@@ -8,8 +9,7 @@ use itertools::Itertools;
 use regex::Regex;
 use serde::Deserialize;
 use serde::Serialize;
-use std::fs::{self, DirEntry};
-use std::io;
+use std::fs::{self};
 use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -48,7 +48,6 @@ pub struct ConfigSections {
     pub block: Vec<String>,
     pub checklist: Vec<String>,
     pub checklist_item: Vec<String>,
-    pub comment: Vec<String>,
     //     pub detail: Vec<String>,
     pub json: Vec<String>,
     pub list: Vec<String>,
@@ -286,7 +285,6 @@ impl SiteConfig {
             "block",
             "checklist",
             "checklist-item",
-            "comment",
             "json",
             "list",
             "list-item",
@@ -382,7 +380,6 @@ fn empty_sections() -> ConfigSections {
         block: vec![],
         checklist: vec![],
         checklist_item: vec![],
-        comment: vec![],
         json: vec![],
         list: vec![],
         list_item: vec![],
@@ -395,32 +392,32 @@ fn empty_vec() -> Vec<String> {
     vec![]
 }
 
-fn get_dirs_in_dir(dir: &PathBuf) -> io::Result<Vec<PathBuf>> {
-    Result::from_iter(
-        fs::read_dir(dir)?
-            .map(|entry| {
-                let entry = entry?;
-                Ok(entry)
-            })
-            .filter_map(|entry: Result<DirEntry, io::Error>| {
-                let path = entry.unwrap().path();
-                if path.is_dir() {
-                    match path.file_name() {
-                        Some(file_name) => {
-                            if file_name.to_string_lossy().starts_with(".") {
-                                None
-                            } else {
-                                Some(Ok(path))
-                            }
-                        }
-                        None => None,
-                    }
-                } else {
-                    None
-                }
-            }),
-    )
-}
+// fn get_dirs_in_dir(dir: &PathBuf) -> io::Result<Vec<PathBuf>> {
+//     Result::from_iter(
+//         fs::read_dir(dir)?
+//             .map(|entry| {
+//                 let entry = entry?;
+//                 Ok(entry)
+//             })
+//             .filter_map(|entry: Result<DirEntry, io::Error>| {
+//                 let path = entry.unwrap().path();
+//                 if path.is_dir() {
+//                     match path.file_name() {
+//                         Some(file_name) => {
+//                             if file_name.to_string_lossy().starts_with(".") {
+//                                 None
+//                             } else {
+//                                 Some(Ok(path))
+//                             }
+//                         }
+//                         None => None,
+//                     }
+//                 } else {
+//                     None
+//                 }
+//             }),
+//     )
+// }
 
 #[cfg(test)]
 mod test {

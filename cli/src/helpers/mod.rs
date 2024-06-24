@@ -89,6 +89,86 @@ pub fn format_html_for_theme_test_display(code: &str) -> String {
     assembler.join("").to_string()
 }
 
+pub fn get_dirs_in_dir(dir: &PathBuf) -> Result<Vec<PathBuf>, NeoError> {
+    if !dir.exists() {
+        Err(NeoError {
+            kind: NeoErrorKind::GenericErrorWithSourcePath {
+                source_path: dir.clone(),
+                msg: "Could not read directory to get directories".to_string(),
+            },
+        })
+    } else {
+        if let Ok(the_dir) = fs::read_dir(dir) {
+            Ok(the_dir
+                .filter_map(|e| {
+                    let path = e.unwrap().path().to_path_buf();
+                    if path.is_dir() {
+                        Some(path)
+                    } else {
+                        None
+                    }
+                })
+                .collect())
+        } else {
+            Err(NeoError {
+                kind: NeoErrorKind::GenericErrorWithSourcePath {
+                    source_path: dir.clone(),
+                    msg: "Could not read directory".to_string(),
+                },
+            })
+        }
+
+        //         fs::read_dir(dir)?
+        //            .map(|entry| {
+        //                let entry = entry?;
+        //               Ok(entry)
+        //         })
+        //         .filter_map(|entry: Result<DirEntry, io::Error>| {
+        //             let path = entry.unwrap().path();
+        //             if path.is_dir() {
+        //                 match path.file_name() {
+        //                     Some(file_name) => {
+        //                         if file_name.to_string_lossy().starts_with(".") {
+        //                             None
+        //                         } else {
+        //                             Some(Ok(path))
+        //                         }
+        //                     }
+        //                     None => None,
+        //                 }
+        //             } else {
+        //                 None
+        //             }
+        //         }),
+        // )
+    }
+
+    // Result::from_iter(
+    //     fs::read_dir(dir)?
+    //         .map(|entry| {
+    //             let entry = entry?;
+    //             Ok(entry)
+    //         })
+    //         .filter_map(|entry: Result<DirEntry, io::Error>| {
+    //             let path = entry.unwrap().path();
+    //             if path.is_dir() {
+    //                 match path.file_name() {
+    //                     Some(file_name) => {
+    //                         if file_name.to_string_lossy().starts_with(".") {
+    //                             None
+    //                         } else {
+    //                             Some(Ok(path))
+    //                         }
+    //                     }
+    //                     None => None,
+    //                 }
+    //             } else {
+    //                 None
+    //             }
+    //         }),
+    // )
+}
+
 pub fn get_files_with_extension_in_a_single_directory(
     dir: &PathBuf,
     extension: &str,

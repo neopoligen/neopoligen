@@ -24,7 +24,6 @@ impl SiteConfig {
             checklist_item: vec!["checklist-item".to_string()],
             list: vec!["list".to_string(), "notes".to_string()],
             list_item: vec!["list-item".to_string()],
-            comment: vec!["comment".to_string()],
             json: vec![],
             raw: vec![
                 "code".to_string(),
@@ -76,7 +75,6 @@ impl SiteConfig {
             checklist_item: vec!["checklist-item".to_string()],
             list: vec!["list".to_string(), "notes".to_string()],
             list_item: vec!["list-item".to_string()],
-            comment: vec!["comment".to_string()],
             json: vec![],
             raw: vec![
                 "code".to_string(),
@@ -145,7 +143,6 @@ impl SiteConfig {
     //             ],
     //             block: vec!["basic-block".to_string()],
     //             checklist: vec!["todo".to_string()],
-    //             comment: vec!["comment".to_string()],
     //             detail: vec!["detail".to_string()],
     //             json: vec!["json-example".to_string()],
     //             list: vec!["list".to_string()],
