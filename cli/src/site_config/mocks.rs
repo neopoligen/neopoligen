@@ -3,6 +3,7 @@
 
 //use crate::sections::*;
 use crate::site_config::*;
+use std::collections::BTreeMap;
 //use serde_json::Value;
 // use std::path::PathBuf;
 
@@ -23,7 +24,6 @@ impl SiteConfig {
             checklist_item: vec!["checklist-item".to_string()],
             list: vec!["list".to_string(), "notes".to_string()],
             list_item: vec!["list-item".to_string()],
-            comment: vec!["comment".to_string()],
             json: vec![],
             raw: vec![
                 "code".to_string(),
@@ -53,6 +53,57 @@ impl SiteConfig {
             ],
             theme_name: "test-theme".to_string(),
             theme_options: None,
+        };
+        config
+    }
+
+    pub fn mock2_with_image_widths() -> SiteConfig {
+        let mut theme_options: BTreeMap<String, Vec<usize>> = BTreeMap::new();
+        theme_options.insert("image_widths".to_string(), vec![100, 400]);
+        let sections = ConfigSections {
+            basic: vec![
+                "bookmark".to_string(),
+                "div".to_string(),
+                "image".to_string(),
+                "p".to_string(),
+                "short".to_string(),
+                "title".to_string(),
+                "youtube".to_string(),
+            ],
+            block: vec![],
+            checklist: vec!["checklist".to_string(), "todo".to_string()],
+            checklist_item: vec!["checklist-item".to_string()],
+            list: vec!["list".to_string(), "notes".to_string()],
+            list_item: vec!["list-item".to_string()],
+            json: vec![],
+            raw: vec![
+                "code".to_string(),
+                "css".to_string(),
+                "html".to_string(),
+                "javascript".to_string(),
+                "pre".to_string(),
+            ],
+            yaml: vec!["metadata".to_string()],
+        };
+        let config = SiteConfig {
+            default_language: "en".to_string(),
+            base_url_raw: "testsite.localhost:1999".to_string(),
+            project_root: Some(PathBuf::from("/test/mocks")),
+            section_attrs: vec![
+                "alt".to_string(),
+                "autofocus".to_string(),
+                "hidden".to_string(),
+                "rel".to_string(),
+            ],
+            sections,
+            span_attrs: vec![
+                "alt".to_string(),
+                "autofocus".to_string(),
+                "hidden".to_string(),
+                "rel".to_string(),
+            ],
+            theme_name: "test-theme".to_string(),
+            theme_options: Some(serde_json::to_value(theme_options).unwrap()),
         };
         config
     }
@@ -92,7 +143,6 @@ impl SiteConfig {
     //             ],
     //             block: vec!["basic-block".to_string()],
     //             checklist: vec!["todo".to_string()],
-    //             comment: vec!["comment".to_string()],
     //             detail: vec!["detail".to_string()],
     //             json: vec!["json-example".to_string()],
     //             list: vec!["list".to_string()],

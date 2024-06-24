@@ -9,6 +9,13 @@
 [!- endmacro -!]
 
 [#############################################################################]
+[!- macro output_spans(site, page_id, spans) -!]
+[! for span in spans !]
+[@- output_span(site, page_id, span) -@]
+[! endfor !]
+[!- endmacro -!]
+
+[#############################################################################]
 [!- macro section_classes(section, extra_classes="") -!]
 [!- if section.classes != none or extra_classes != "" -!]
 [@- ' ' -@]class="[!- endif -!]

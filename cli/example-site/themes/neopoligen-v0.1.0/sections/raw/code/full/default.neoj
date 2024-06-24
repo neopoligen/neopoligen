@@ -1,14 +1,2 @@
-<h3>Code</h3>
-[! if section.flags[0] !]
-<div class="code-language">
-[@ section.flags[0] @]
-</div>
-[! endif !]
-<pre>
-[! if section.flags[0] !]
-[@ highlight_code(section.text, section.flags[0] ) @]
-[! else !]
-[@ highlight_code(section.text, "txt") @]
-[! endif !]
-</pre>
-
+[! include "sections/raw/code/start/default.neoj" !]
+</section>

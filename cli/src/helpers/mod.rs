@@ -3,7 +3,13 @@ use crate::payload_span::PayloadSpan;
 use crate::span::*;
 use minijinja::Value;
 use regex::Regex;
+use rimage::config::{Codec, EncoderConfig};
+use rimage::image::imageops::FilterType;
+use rimage::image::DynamicImage;
+use rimage::Decoder;
+use rimage::Encoder;
 use std::fs;
+use std::fs::File;
 use std::path::PathBuf;
 use syntect::html::{ClassStyle, ClassedHTMLGenerator};
 use syntect::parsing::SyntaxSet;
@@ -83,6 +89,86 @@ pub fn format_html_for_theme_test_display(code: &str) -> String {
     assembler.join("").to_string()
 }
 
+pub fn get_dirs_in_dir(dir: &PathBuf) -> Result<Vec<PathBuf>, NeoError> {
+    if !dir.exists() {
+        Err(NeoError {
+            kind: NeoErrorKind::GenericErrorWithSourcePath {
+                source_path: dir.clone(),
+                msg: "Could not read directory to get directories".to_string(),
+            },
+        })
+    } else {
+        if let Ok(the_dir) = fs::read_dir(dir) {
+            Ok(the_dir
+                .filter_map(|e| {
+                    let path = e.unwrap().path().to_path_buf();
+                    if path.is_dir() {
+                        Some(path)
+                    } else {
+                        None
+                    }
+                })
+                .collect())
+        } else {
+            Err(NeoError {
+                kind: NeoErrorKind::GenericErrorWithSourcePath {
+                    source_path: dir.clone(),
+                    msg: "Could not read directory".to_string(),
+                },
+            })
+        }
+
+        //         fs::read_dir(dir)?
+        //            .map(|entry| {
+        //                let entry = entry?;
+        //               Ok(entry)
+        //         })
+        //         .filter_map(|entry: Result<DirEntry, io::Error>| {
+        //             let path = entry.unwrap().path();
+        //             if path.is_dir() {
+        //                 match path.file_name() {
+        //                     Some(file_name) => {
+        //                         if file_name.to_string_lossy().starts_with(".") {
+        //                             None
+        //                         } else {
+        //                             Some(Ok(path))
+        //                         }
+        //                     }
+        //                     None => None,
+        //                 }
+        //             } else {
+        //                 None
+        //             }
+        //         }),
+        // )
+    }
+
+    // Result::from_iter(
+    //     fs::read_dir(dir)?
+    //         .map(|entry| {
+    //             let entry = entry?;
+    //             Ok(entry)
+    //         })
+    //         .filter_map(|entry: Result<DirEntry, io::Error>| {
+    //             let path = entry.unwrap().path();
+    //             if path.is_dir() {
+    //                 match path.file_name() {
+    //                     Some(file_name) => {
+    //                         if file_name.to_string_lossy().starts_with(".") {
+    //                             None
+    //                         } else {
+    //                             Some(Ok(path))
+    //                         }
+    //                     }
+    //                     None => None,
+    //                 }
+    //             } else {
+    //                 None
+    //             }
+    //         }),
+    // )
+}
+
 pub fn get_files_with_extension_in_a_single_directory(
     dir: &PathBuf,
     extension: &str,
@@ -104,6 +190,25 @@ pub fn get_files_with_extension_in_a_single_directory(
         .filter_map(|p| match p.as_ref().unwrap().path().strip_prefix(".") {
             Ok(_) => None,
             Err(_) => Some(p.as_ref().unwrap().path()),
+        })
+        .collect()
+}
+
+pub fn get_image_paths(source_dir: &PathBuf) -> Vec<PathBuf> {
+    let walker = WalkDir::new(source_dir).into_iter();
+    walker
+        .filter_map(|path_result| match path_result {
+            Ok(path) => match path.path().extension() {
+                Some(ext) => {
+                    if ext.to_ascii_lowercase().eq("jpg") {
+                        Some(path.path().to_path_buf())
+                    } else {
+                        None
+                    }
+                }
+                None => None,
+            },
+            Err(_) => None,
         })
         .collect()
 }
@@ -175,6 +280,71 @@ pub fn highlight_span(args: &[Value]) -> String {
         .collect();
     output_html.join("\n")
 }
+
+pub fn resize_and_optimize_jpg(
+    source: &PathBuf,
+    width: u32,
+    dest: &PathBuf,
+) -> Result<(), NeoError> {
+    match Decoder::from_path(source) {
+        Ok(decoder) => match decoder.decode() {
+            Ok(image) => {
+                let height = image.height() * width / image.width();
+                let resized_image = image.resize_to_fill(width, height, FilterType::Lanczos3);
+                let config = EncoderConfig::new(Codec::MozJpeg)
+                    .with_quality(90.0)
+                    .unwrap();
+                match File::create(&dest) {
+                    Ok(file) => {
+                        let encoder =
+                            Encoder::new(file, DynamicImage::ImageRgba8(resized_image.into()))
+                                .with_config(config);
+                        match encoder.encode() {
+                            Ok(_) => Ok(()),
+                            Err(e) => Err(NeoError {
+                                kind: NeoErrorKind::GenericErrorWithSourcePath {
+                                    source_path: source.clone(),
+                                    msg: format!("image processing error: {}", e),
+                                },
+                            }),
+                        }
+                    }
+                    Err(e) => Err(NeoError {
+                        kind: NeoErrorKind::GenericErrorWithSourcePath {
+                            source_path: source.clone(),
+                            msg: format!("image processing error: {}", e),
+                        },
+                    }),
+                }
+            }
+            Err(e) => Err(NeoError {
+                kind: NeoErrorKind::GenericErrorWithSourcePath {
+                    source_path: source.clone(),
+                    msg: format!("image processing error: {}", e),
+                },
+            }),
+        },
+        Err(e) => Err(NeoError {
+            kind: NeoErrorKind::GenericErrorWithSourcePath {
+                source_path: source.clone(),
+                msg: format!("image processing error: {}", e),
+            },
+        }),
+    }
+}
+
+// fn resize_and_optimize_png(source: &PathBuf, width: u32, dest: &PathBuf) -> Result<(), NeoError> {
+//     let decoder = Decoder::from_path(source)?;
+//     let image = decoder.decode()?;
+//     let height = image.height() * width / image.width();
+//     let resized_image = image.resize_to_fill(width, height, FilterType::Lanczos3);
+//     let config = EncoderConfig::new(Codec::OxiPng);
+//     let file = File::create(&dest)?;
+//     let encoder =
+//         Encoder::new(file, DynamicImage::ImageRgba8(resized_image.into())).with_config(config);
+//     encoder.encode()?;
+//     Ok(())
+// }
 
 pub fn scrub_rel_file_path(source: &str) -> Result<PathBuf, NeoError> {
     let pb = PathBuf::from(source);

@@ -1,6 +1,7 @@
 pub mod mocks;
 
 use crate::engine_config::EngineConfig;
+use crate::helpers::get_dirs_in_dir;
 use crate::neo_error::NeoError;
 use crate::neo_error::NeoErrorKind;
 use anyhow::Result;
@@ -8,8 +9,7 @@ use itertools::Itertools;
 use regex::Regex;
 use serde::Deserialize;
 use serde::Serialize;
-use std::fs::{self, DirEntry};
-use std::io;
+use std::fs::{self};
 use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -48,7 +48,6 @@ pub struct ConfigSections {
     pub block: Vec<String>,
     pub checklist: Vec<String>,
     pub checklist_item: Vec<String>,
-    pub comment: Vec<String>,
     //     pub detail: Vec<String>,
     pub json: Vec<String>,
     pub list: Vec<String>,
@@ -135,17 +134,17 @@ impl SiteConfig {
     //     self.templates_dir().join("feeds")
     // }
 
-    // pub fn image_cache_dir(&self) -> PathBuf {
-    //     self.cache_dir().join("images")
-    // }
+    pub fn image_cache_dir(&self) -> PathBuf {
+        self.cache_dir().join("neo-images")
+    }
 
-    // pub fn image_dest_dir(&self) -> PathBuf {
-    //     self.output_dir().join("images")
-    // }
+    pub fn image_dest_dir(&self) -> PathBuf {
+        self.output_dest_dir().join("neo-images")
+    }
 
-    // pub fn image_source_dir(&self) -> PathBuf {
-    //     self.project_dir().join("images")
-    // }
+    pub fn image_source_dir(&self) -> PathBuf {
+        self.project_dir().join("images")
+    }
 
     // pub fn image_widths(&self) -> Vec<u32> {
     //     let mut tmp = BTreeSet::new();
@@ -199,6 +198,19 @@ impl SiteConfig {
 
     pub fn theme_dir(&self) -> PathBuf {
         self.themes_dir().join(self.theme_name.clone())
+    }
+
+    pub fn theme_image_widths(&self) -> Vec<u32> {
+        match &self.theme_options {
+            Some(theme_options) => {
+                if let Some(widths) = theme_options.get("image_widths") {
+                    serde_json::from_value(widths.clone()).unwrap()
+                } else {
+                    vec![]
+                }
+            }
+            None => vec![],
+        }
     }
 
     // pub fn templates_dir(&self) -> PathBuf {
@@ -273,7 +285,6 @@ impl SiteConfig {
             "block",
             "checklist",
             "checklist-item",
-            "comment",
             "json",
             "list",
             "list-item",
@@ -369,7 +380,6 @@ fn empty_sections() -> ConfigSections {
         block: vec![],
         checklist: vec![],
         checklist_item: vec![],
-        comment: vec![],
         json: vec![],
         list: vec![],
         list_item: vec![],
@@ -382,37 +392,51 @@ fn empty_vec() -> Vec<String> {
     vec![]
 }
 
-// fn empty_spans() -> Vec<String> {
-//     vec![]
+// fn get_dirs_in_dir(dir: &PathBuf) -> io::Result<Vec<PathBuf>> {
+//     Result::from_iter(
+//         fs::read_dir(dir)?
+//             .map(|entry| {
+//                 let entry = entry?;
+//                 Ok(entry)
+//             })
+//             .filter_map(|entry: Result<DirEntry, io::Error>| {
+//                 let path = entry.unwrap().path();
+//                 if path.is_dir() {
+//                     match path.file_name() {
+//                         Some(file_name) => {
+//                             if file_name.to_string_lossy().starts_with(".") {
+//                                 None
+//                             } else {
+//                                 Some(Ok(path))
+//                             }
+//                         }
+//                         None => None,
+//                     }
+//                 } else {
+//                     None
+//                 }
+//             }),
+//     )
 // }
 
-fn get_dirs_in_dir(dir: &PathBuf) -> io::Result<Vec<PathBuf>> {
-    Result::from_iter(
-        fs::read_dir(dir)?
-            .map(|entry| {
-                let entry = entry?;
-                Ok(entry)
-            })
-            .filter_map(|entry: Result<DirEntry, io::Error>| {
-                let path = entry.unwrap().path();
-                if path.is_dir() {
-                    match path.file_name() {
-                        Some(file_name) => {
-                            if file_name.to_string_lossy().starts_with(".") {
-                                None
-                            } else {
-                                Some(Ok(path))
-                            }
-                        }
-                        None => None,
-                    }
-                } else {
-                    None
-                }
-            }),
-    )
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn theme_image_widths_returns_empty_array_if_none_exist() {
+        let config = SiteConfig::mock1_basic();
+        let left: Vec<u32> = vec![];
+        let right = config.theme_image_widths();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_theme_image_widths_return_if_there_are_any() {
+        let config = SiteConfig::mock2_with_image_widths();
+        let left: Vec<u32> = vec![100, 400];
+        let right = config.theme_image_widths();
+        assert_eq!(left, right);
+    }
 }
-
-// fn hard_code_image_widths() -> Vec<u32> {
-//     vec![100, 300, 500, 750, 1000, 1500]
-// }

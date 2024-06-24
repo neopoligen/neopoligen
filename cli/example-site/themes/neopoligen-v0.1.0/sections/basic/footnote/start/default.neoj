@@ -1,7 +1,7 @@
 <li class="footnote-ref">
-[!- if section.id -!]
-  <div id="fnref-[@- section.id -@]-text">
-    <a href="#fnref-[@- section.id @]-link">[@- section.id -@]</a>
+[!- if "id" in section.attrs -!]
+  <div id="fnref-[@- section.attrs.id -@]-text">
+    <a href="#fnref-[@- section.attrs.id @]-link">[@- section.attrs.id -@]</a>
   </div>
 [!- else -!]
   <div>&bullet;</div>
@@ -14,9 +14,9 @@
 [!- include "subsections/content-all-blocks.neoj" -!]
 </div>
 
-[!- if section.id -!]
+[!- if "id" in section.attrs -!]
   <div>
-    <a href="#fnref-[@- section.id @]-link">&#x2934;</a>
+    <a href="#fnref-[@- section.attrs.id @]-link">&#x2934;</a>
   </div>
 [!- else -!]
   <div></div>

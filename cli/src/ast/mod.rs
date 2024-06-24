@@ -24,7 +24,7 @@ fn do_parse<'a>(
     sections: &'a ConfigSections,
 ) -> IResult<&'a str, Vec<Section>, ErrorTree<&'a str>> {
     let (source, _) = multispace0(source)?;
-    let (source, result) = many1(|src| start_or_full_section(src, &sections))
+    let (source, result) = many1(|src| start_or_full_section(src, &sections, 0))
         .context("page")
         .parse(source)?;
     Ok((source, result))

@@ -3,6 +3,7 @@ pub mod builder;
 pub mod engine_config;
 pub mod file_watcher;
 pub mod helpers;
+pub mod image;
 pub mod neo_error;
 pub mod page_payload;
 pub mod payload_section;

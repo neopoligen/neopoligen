@@ -11,9 +11,9 @@
       [@ theme.output_span("", "", span) @]
     [! endfor !]
     </h2>
-    [! if section.attrs_as_spans.subtitle !]
+    [! if section.attr_spans.subtitle !]
       <p class="section-subtitle">
-      [! for span in section.attrs_as_spans.subtitle !]
+      [! for span in section.attr_spans.subtitle !]
         [@ theme.output_span("", "", span) @]
       [! endfor !]
       </p>

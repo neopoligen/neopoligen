@@ -113,7 +113,7 @@ impl PagePayload {
     pub fn get_id(&mut self) {
         self.sections.iter().for_each(|section| {
             if section.r#type == "metadata" {
-                self.id = section.id.clone();
+                self.id = section.clone().id();
             }
         });
     }
@@ -156,7 +156,7 @@ impl PagePayload {
         // at some point instead of two passes
         self.sections.iter().for_each(|section| {
             if section.r#type == "metadata" {
-                let _ = &section.attrs_as_spans.iter().for_each(|(key, spans)| {
+                let _ = &section.attr_spans.iter().for_each(|(key, spans)| {
                     if key.eq("path") {
                         self.rel_file_path = Some(
                             scrub_rel_file_path(&flatten_payload_spans(&spans.clone()))
@@ -187,7 +187,7 @@ impl PagePayload {
     pub fn get_type(&mut self) {
         self.sections.iter().for_each(|section| {
             if section.r#type == "metadata" {
-                let _ = &section.attrs_as_spans.iter().for_each(|(key, spans)| {
+                let _ = &section.attr_spans.iter().for_each(|(key, spans)| {
                     if key.eq("type") {
                         self.r#type = Some(flatten_payload_spans(&spans.clone()));
                     }

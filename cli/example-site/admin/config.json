@@ -4,6 +4,7 @@
   "theme_name": "neopoligen-v0.1.0",
   "theme_options": {
     "author": "Alan W. Smith",
-    "site_name": "Neopoligen Example Site"
+    "site_name": "Neopoligen Example Site",
+    "image_widths": [100, 300, 600, 1200, 2400] 
   }
 }

@@ -11,10 +11,9 @@ TODO List
 
 [x] title
 
-[] h1-h6
+[x] h1-h6
 
 [] image
-
 
 
 -- todo 
@@ -49,6 +48,8 @@ it instead of panicing.
 
 [] Test code shorthand blocks will all the characters
 that wordpart excludes to make sure they work. 
+
+[] Handle spans in section key/value attrs 
 
 -- todo 
 -- title: Documentation Notes
@@ -89,6 +90,16 @@ as the example
 the attrs_as_spans to get to them as spans 
 
 [] Document ``[! if "something" in seciton.flags !]blah[! endif !]``
+
+[] Document how comments work just by making a new section that
+doesn't output anything (except for the end stuff)
+
+[] Show how nesting sections works
+
+[] Image widths in the config file for making the different
+responsive image sizes
+
+[] Update so invalid image file names aren't allowed
 
 -- metadata
 -- updated: 2024-06-03T18:27:52-04:00

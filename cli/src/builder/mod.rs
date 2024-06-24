@@ -7,9 +7,16 @@ use crate::source_page::SourcePage;
 use crate::theme_test::ThemeTest; // this might be deprecated
 use anyhow::Result;
 use fs_extra::dir::copy;
+use image::io::Reader;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
 use minijinja::{context, Value};
+// use rimage::config::{Codec, EncoderConfig};
+// use rimage::image::imageops::FilterType;
+// use rimage::image::DynamicImage;
+// use rimage::Decoder;
+// use rimage::Encoder;
+use crate::image::{Image, ImageSize};
 use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
 use serde_json;
@@ -22,12 +29,13 @@ use walkdir::WalkDir;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Builder {
-    cache_buffer: BTreeMap<PathBuf, SourcePage>,
+    pub cache_buffer: BTreeMap<PathBuf, SourcePage>,
     pub config: Option<SiteConfig>,
     pub errors: Vec<NeoError>,
-    source_pages: BTreeMap<PathBuf, SourcePage>,
-    payloads: BTreeMap<String, PagePayload>,
-    templates: BTreeMap<String, String>,
+    pub images: BTreeMap<String, Image>,
+    pub source_pages: BTreeMap<PathBuf, SourcePage>,
+    pub payloads: BTreeMap<String, PagePayload>,
+    pub templates: BTreeMap<String, String>,
     pub theme_test_source_pages: BTreeMap<PathBuf, ThemeTest>,
 }
 
@@ -37,6 +45,7 @@ impl Builder {
             cache_buffer: BTreeMap::new(),
             config: Some(site_config.clone()),
             errors: vec![],
+            images: BTreeMap::new(),
             source_pages: BTreeMap::new(),
             payloads: BTreeMap::new(),
             templates: BTreeMap::new(),
@@ -84,6 +93,141 @@ impl Builder {
 }
 
 impl Builder {
+    #[instrument(skip(self))]
+    pub fn build_image_cache(&mut self) -> Result<()> {
+        event!(Level::DEBUG, "Building Images");
+        let image_source_paths = get_image_paths(&self.config.as_ref().unwrap().image_source_dir());
+        image_source_paths.iter().for_each(|img_path| {
+            // TODO: Handle pngs and other image formats
+            if let Some(ext) = img_path.extension() {
+                if let Ok(img_reader) = Reader::open(img_path) {
+                    if let Ok(img) = img_reader.decode() {
+                        let width = img.width();
+                        let height = img.height();
+                        let image_name = img_path.file_stem().unwrap();
+                        let image_dest_dir = self
+                            .config
+                            .as_ref()
+                            .unwrap()
+                            .image_cache_dir()
+                            .join(image_name);
+                        let _ = fs::create_dir_all(&image_dest_dir);
+                        let image_dest_path = image_dest_dir.join(format!("{}w.jpg", width));
+                        let _ = fs::copy(img_path, image_dest_path);
+                        let mut sizes = vec![];
+                        self.config
+                            .as_ref()
+                            .unwrap()
+                            .theme_image_widths()
+                            .iter()
+                            .for_each(|img_width| {
+                                if width > *img_width {
+                                    let resize_dest_path =
+                                        image_dest_dir.join(format!("{}w.jpg", img_width));
+                                    if ext.to_ascii_lowercase() == "jpg"
+                                        || ext.to_ascii_lowercase() == "jpeg"
+                                    {
+                                        let _ = resize_and_optimize_jpg(
+                                            &img_path,
+                                            *img_width,
+                                            &resize_dest_path,
+                                        );
+                                        let resize_height = img.height() * *img_width / img.width();
+                                        sizes.push(ImageSize {
+                                            width: *img_width,
+                                            height: resize_height,
+                                        });
+                                    }
+
+                                    //                 } else if image.extension()? == "png" {
+                                    //                     resize_and_optimize_png(&image.source_path, version.0, &version_path)?;
+                                    //                 } else {
+                                    //                     event!(
+                                    //                         Level::ERROR,
+                                    //                         "TODO: Process other image types: {}",
+                                    //                         &image.source_path.display()
+                                    //                     );
+                                    //                 }
+                                    //             }
+                                };
+                            });
+
+                        if let Some(max_width_size) = self
+                            .config
+                            .clone()
+                            .unwrap()
+                            .theme_image_widths()
+                            .into_iter()
+                            .max()
+                        {
+                            if width < max_width_size {
+                                sizes.push(ImageSize { width, height });
+                            }
+                        }
+
+                        let img_obj = Image {
+                            extension: ext.to_string_lossy().to_string(),
+                            dir: PathBuf::from(format!(
+                                "/neo-images/{}",
+                                image_name.to_string_lossy().to_string()
+                            )),
+                            raw_width: width,
+                            raw_height: height,
+                            sizes,
+                        };
+                        self.images
+                            .insert(image_name.to_string_lossy().to_string(), img_obj);
+                    }
+                }
+            }
+        });
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn deploy_images(&mut self) -> Result<()> {
+        event!(Level::DEBUG, "Deploying Images");
+        let image_source_paths = get_image_paths(&self.config.as_ref().unwrap().image_cache_dir());
+        image_source_paths.iter().for_each(|source_path| {
+            if let Ok(partial_path) =
+                source_path.strip_prefix(&self.config.as_ref().unwrap().image_cache_dir())
+            {
+                let dest_path = &self
+                    .config
+                    .as_ref()
+                    .unwrap()
+                    .image_dest_dir()
+                    .join(partial_path);
+                if let Some(dest_dir) = dest_path.parent() {
+                    let _ = fs::create_dir_all(dest_dir);
+                    // NOTE: Using read/write here instead of copy to work
+                    // around a notify reload bug that triggers on copy when it shouldn't
+                    if let Ok(data) = std::fs::read(source_path) {
+                        match std::fs::write(dest_path, &data) {
+                            Ok(_) => {}
+                            Err(e) => {
+                                let _ = &self.errors.push(NeoError {
+                                    kind: NeoErrorKind::GenericErrorWithSourcePath {
+                                        source_path: source_path.to_path_buf(),
+                                        msg: format!("Could not copy image: {}", e),
+                                    },
+                                });
+                            }
+                        }
+                    }
+                }
+            } else {
+                let _ = &self.errors.push(NeoError {
+                    kind: NeoErrorKind::GenericErrorWithSourcePath {
+                        source_path: source_path.to_path_buf(),
+                        msg: "Could not move image".to_string(),
+                    },
+                });
+            }
+        });
+        Ok(())
+    }
+
     #[instrument(skip(self))]
     pub fn deploy_theme_files(&self) {
         event!(Level::DEBUG, "Deploying Theme Files");
@@ -370,6 +514,10 @@ impl Builder {
         Ok(())
     }
 
+    pub fn get_image_details(&self) -> Value {
+        Value::from("asdf")
+    }
+
     #[instrument(skip(self))]
     pub fn output_pages(&mut self) -> Result<()> {
         event!(Level::INFO, "Outputting pages");
@@ -393,10 +541,12 @@ impl Builder {
                 }
             }
         }
-        let site = Value::from_serialize(Site::new_from_payloads(
-            self.config.as_ref().unwrap().clone(),
-            &self.payloads,
-        ));
+
+        let mut site_obj =
+            Site::new_from_payloads(self.config.as_ref().unwrap().clone(), &self.payloads);
+        site_obj.images = self.images.clone();
+
+        let site = Value::from_serialize(site_obj);
 
         for (_, page) in self.payloads.iter_mut() {
             let output_path = self
@@ -415,8 +565,7 @@ impl Builder {
             }) {
                 match template.render(context!(
                     page => Value::from_serialize(&page),
-                site=> &site,
-
+                    site=> &site,
                 )) {
                     Ok(output) => {
                         let _ = write_file_with_mkdir(&output_path, &output);

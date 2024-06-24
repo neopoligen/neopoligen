@@ -111,20 +111,25 @@ impl Section {
 pub fn start_or_full_section<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
+    nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, section) = alt((
-        |src| basic_section_start(src, &sections),
-        |src| basic_section_full(src, &sections),
-        // |src| list_section_start(src, &sections),
-        |src| list_section_full(src, &sections),
-        |src| raw_section_start(src, &sections),
-        |src| raw_section_full(src, &sections),
+        |src| basic_section_start(src, &sections, nest_level),
+        |src| basic_section_full(src, &sections, nest_level),
+        // TODO: Checklist start
+        // TODO: Checklist full
+        |src| list_section_start(src, &sections, nest_level),
+        |src| list_section_full(src, &sections, nest_level),
+        |src| raw_section_start(src, &sections, nest_level),
+        |src| raw_section_full(src, &sections, nest_level),
+        // TODO: JSON full
+        // TODO: JSON start
         //|src| yaml_section_start(src, &sections),
-        |src| yaml_section_full(src, &sections),
+        |src| yaml_section_full(src, &sections, nest_level),
         // Reminder: do unknown last since it slurps
         // everything it can
-        |src| unknown_section_start(src, &sections),
-        |src| unknown_section_full(src, &sections),
+        |src| unknown_section_start(src, &sections, nest_level),
+        |src| unknown_section_full(src, &sections, nest_level),
     ))
     .context("")
     .parse(source)?;
