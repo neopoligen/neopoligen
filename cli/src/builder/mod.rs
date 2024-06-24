@@ -11,6 +11,11 @@ use image::io::Reader;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
 use minijinja::{context, Value};
+// use rimage::config::{Codec, EncoderConfig};
+// use rimage::image::imageops::FilterType;
+// use rimage::image::DynamicImage;
+// use rimage::Decoder;
+// use rimage::Encoder;
 use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
 use serde_json;
@@ -90,21 +95,53 @@ impl Builder {
         event!(Level::DEBUG, "Building Images");
         let image_source_paths = get_image_paths(&self.config.as_ref().unwrap().image_source_dir());
         image_source_paths.iter().for_each(|img_path| {
-            if let Ok(img_reader) = Reader::open(img_path) {
-                if let Ok(img) = img_reader.decode() {
-                    let width = img.width();
-                    // let height = img.height();
-                    let image_name = img_path.file_stem().unwrap();
-                    let image_dest_dir = self
-                        .config
-                        .as_ref()
-                        .unwrap()
-                        .image_cache_dir()
-                        .join(image_name);
-                    let _ = fs::create_dir_all(&image_dest_dir);
-                    let image_dest_path = image_dest_dir.join(format!("{}w.jpg", width));
-                    let _ = fs::copy(img_path, image_dest_path);
-                    // TODO: Make all the image size versions here:
+            if let Some(ext) = img_path.extension() {
+                if let Ok(img_reader) = Reader::open(img_path) {
+                    if let Ok(img) = img_reader.decode() {
+                        let width = img.width();
+                        // let height = img.height();
+                        let image_name = img_path.file_stem().unwrap();
+                        let image_dest_dir = self
+                            .config
+                            .as_ref()
+                            .unwrap()
+                            .image_cache_dir()
+                            .join(image_name);
+                        let _ = fs::create_dir_all(&image_dest_dir);
+                        let image_dest_path = image_dest_dir.join(format!("{}w.jpg", width));
+                        let _ = fs::copy(img_path, image_dest_path);
+                        self.config
+                            .as_ref()
+                            .unwrap()
+                            .theme_image_widths()
+                            .iter()
+                            .for_each(|img_width| {
+                                if width > *img_width {
+                                    let resize_dest_path =
+                                        image_dest_dir.join(format!("{}w.jpg", img_width));
+                                    dbg!(&resize_dest_path);
+                                    if ext.to_ascii_lowercase() == "jpg"
+                                        || ext.to_ascii_lowercase() == "jpeg"
+                                    {
+                                        let _ = resize_and_optimize_jpg(
+                                            &img_path,
+                                            *img_width,
+                                            &resize_dest_path,
+                                        );
+                                    }
+                                    //                 } else if image.extension()? == "png" {
+                                    //                     resize_and_optimize_png(&image.source_path, version.0, &version_path)?;
+                                    //                 } else {
+                                    //                     event!(
+                                    //                         Level::ERROR,
+                                    //                         "TODO: Process other image types: {}",
+                                    //                         &image.source_path.display()
+                                    //                     );
+                                    //                 }
+                                    //             }
+                                };
+                            })
+                    }
                 }
             }
         });

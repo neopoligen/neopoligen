@@ -201,7 +201,7 @@ impl SiteConfig {
         self.themes_dir().join(self.theme_name.clone())
     }
 
-    pub fn theme_image_widths(&self) -> Vec<usize> {
+    pub fn theme_image_widths(&self) -> Vec<u32> {
         match &self.theme_options {
             Some(theme_options) => {
                 if let Some(widths) = theme_options.get("image_widths") {
@@ -430,7 +430,7 @@ mod test {
     #[test]
     fn theme_image_widths_returns_empty_array_if_none_exist() {
         let config = SiteConfig::mock1_basic();
-        let left: Vec<usize> = vec![];
+        let left: Vec<u32> = vec![];
         let right = config.theme_image_widths();
         assert_eq!(left, right);
     }
@@ -438,7 +438,7 @@ mod test {
     #[test]
     fn solo_theme_image_widths_return_if_there_are_any() {
         let config = SiteConfig::mock2_with_image_widths();
-        let left: Vec<usize> = vec![100, 400];
+        let left: Vec<u32> = vec![100, 400];
         let right = config.theme_image_widths();
         assert_eq!(left, right);
     }
