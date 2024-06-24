@@ -16,7 +16,7 @@ use minijinja::{context, Value};
 // use rimage::image::DynamicImage;
 // use rimage::Decoder;
 // use rimage::Encoder;
-use crate::image::Image;
+use crate::image::{Image, ImageSize};
 use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
 use serde_json;
@@ -114,7 +114,7 @@ impl Builder {
                         let _ = fs::create_dir_all(&image_dest_dir);
                         let image_dest_path = image_dest_dir.join(format!("{}w.jpg", width));
                         let _ = fs::copy(img_path, image_dest_path);
-                        let mut widths = vec![];
+                        let mut sizes = vec![];
                         self.config
                             .as_ref()
                             .unwrap()
@@ -132,8 +132,13 @@ impl Builder {
                                             *img_width,
                                             &resize_dest_path,
                                         );
-                                        widths.push(*img_width);
+                                        let resize_height = img.height() * *img_width / img.width();
+                                        sizes.push(ImageSize {
+                                            width: *img_width,
+                                            height: resize_height,
+                                        });
                                     }
+
                                     //                 } else if image.extension()? == "png" {
                                     //                     resize_and_optimize_png(&image.source_path, version.0, &version_path)?;
                                     //                 } else {
@@ -147,6 +152,19 @@ impl Builder {
                                 };
                             });
 
+                        if let Some(max_width_size) = self
+                            .config
+                            .clone()
+                            .unwrap()
+                            .theme_image_widths()
+                            .into_iter()
+                            .max()
+                        {
+                            if width < max_width_size {
+                                sizes.push(ImageSize { width, height });
+                            }
+                        }
+
                         let img_obj = Image {
                             extension: ext.to_string_lossy().to_string(),
                             dir: PathBuf::from(format!(
@@ -155,7 +173,7 @@ impl Builder {
                             )),
                             raw_width: width,
                             raw_height: height,
-                            widths,
+                            sizes,
                         };
                         self.images
                             .insert(image_name.to_string_lossy().to_string(), img_obj);
