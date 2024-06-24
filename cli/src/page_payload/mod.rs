@@ -191,8 +191,28 @@ impl PagePayload {
     }
 
     pub fn get_template_list(&mut self) {
-        self.template_list
-            .push("pages/post/published.neoj".to_string());
+        if let (Some(t), Some(s)) = (self.r#type.clone(), self.status.clone()) {
+            let new_path = format!("pages/{}/{}.neoj", t, s);
+            if !self.template_list.contains(&new_path) {
+                self.template_list.push(new_path);
+            }
+        }
+        if let Some(t) = self.r#type.clone() {
+            let new_path = format!("pages/{}/published.neoj", t);
+            if !self.template_list.contains(&new_path) {
+                self.template_list.push(new_path);
+            }
+        }
+        if let Some(s) = self.status.clone() {
+            let new_path = format!("pages/post/{}.neoj", s);
+            if !self.template_list.contains(&new_path) {
+                self.template_list.push(new_path);
+            }
+        }
+        let new_path = format!("pages/post/published.neoj");
+        if !self.template_list.contains(&new_path) {
+            self.template_list.push(new_path);
+        }
     }
 
     pub fn get_type(&mut self) {
@@ -269,7 +289,7 @@ mod test {
     }
 
     #[test]
-    fn solo_rel_file_full_path() {
+    fn rel_file_full_path() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
             &SourcePage::mock6_20240106_foxtrot8_full_path(),
@@ -342,6 +362,24 @@ mod test {
         )
         .unwrap();
         let left = vec!["pages/post/published.neoj".to_string()];
+        let right = p.template_list;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_template_list_with_type_and_status() {
+        let p = PagePayload::new_from_source_page(
+            &PathBuf::from("/test/mocks/source/filename.neo"),
+            &SourcePage::mock4_20240104_delta123_type_and_status(),
+            ThemeTestOrPage::Page,
+        )
+        .unwrap();
+        let left = vec![
+            "pages/custom-type/custom-status.neoj".to_string(),
+            "pages/custom-type/published.neoj".to_string(),
+            "pages/post/custom-status.neoj".to_string(),
+            "pages/post/published.neoj".to_string(),
+        ];
         let right = p.template_list;
         assert_eq!(left, right);
     }
