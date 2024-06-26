@@ -202,6 +202,10 @@ pub fn get_image_paths(source_dir: &PathBuf) -> Vec<PathBuf> {
                 Some(ext) => {
                     if ext.to_ascii_lowercase().eq("jpg") {
                         Some(path.path().to_path_buf())
+                    } else if ext.to_ascii_lowercase().eq("jepg") {
+                        Some(path.path().to_path_buf())
+                    } else if ext.to_ascii_lowercase().eq("png") {
+                        Some(path.path().to_path_buf())
                     } else {
                         None
                     }
@@ -333,18 +337,55 @@ pub fn resize_and_optimize_jpg(
     }
 }
 
-// fn resize_and_optimize_png(source: &PathBuf, width: u32, dest: &PathBuf) -> Result<(), NeoError> {
-//     let decoder = Decoder::from_path(source)?;
-//     let image = decoder.decode()?;
-//     let height = image.height() * width / image.width();
-//     let resized_image = image.resize_to_fill(width, height, FilterType::Lanczos3);
-//     let config = EncoderConfig::new(Codec::OxiPng);
-//     let file = File::create(&dest)?;
-//     let encoder =
-//         Encoder::new(file, DynamicImage::ImageRgba8(resized_image.into())).with_config(config);
-//     encoder.encode()?;
-//     Ok(())
-// }
+pub fn resize_and_optimize_png(
+    source: &PathBuf,
+    width: u32,
+    dest: &PathBuf,
+) -> Result<(), NeoError> {
+    match Decoder::from_path(source) {
+        Ok(decoder) => match decoder.decode() {
+            Ok(image) => {
+                let height = image.height() * width / image.width();
+                let resized_image = image.resize_to_fill(width, height, FilterType::Lanczos3);
+                let config = EncoderConfig::new(Codec::OxiPng);
+                match File::create(&dest) {
+                    Ok(file) => {
+                        let encoder =
+                            Encoder::new(file, DynamicImage::ImageRgba8(resized_image.into()))
+                                .with_config(config);
+                        match encoder.encode() {
+                            Ok(_) => Ok(()),
+                            Err(e) => Err(NeoError {
+                                kind: NeoErrorKind::GenericErrorWithSourcePath {
+                                    source_path: source.clone(),
+                                    msg: format!("image processing error: {}", e),
+                                },
+                            }),
+                        }
+                    }
+                    Err(e) => Err(NeoError {
+                        kind: NeoErrorKind::GenericErrorWithSourcePath {
+                            source_path: source.clone(),
+                            msg: format!("image processing error: {}", e),
+                        },
+                    }),
+                }
+            }
+            Err(e) => Err(NeoError {
+                kind: NeoErrorKind::GenericErrorWithSourcePath {
+                    source_path: source.clone(),
+                    msg: format!("image processing error: {}", e),
+                },
+            }),
+        },
+        Err(e) => Err(NeoError {
+            kind: NeoErrorKind::GenericErrorWithSourcePath {
+                source_path: source.clone(),
+                msg: format!("image processing error: {}", e),
+            },
+        }),
+    }
+}
 
 pub fn scrub_rel_file_path(source: &str) -> Result<PathBuf, NeoError> {
     let pb = PathBuf::from(source);

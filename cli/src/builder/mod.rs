@@ -107,7 +107,11 @@ impl Builder {
                             .image_cache_dir()
                             .join(image_name);
                         let _ = fs::create_dir_all(&image_dest_dir);
-                        let image_dest_path = image_dest_dir.join(format!("{}w.jpg", width));
+                        let image_dest_path = image_dest_dir.join(format!(
+                            "{}w.{}",
+                            width,
+                            ext.to_string_lossy().to_ascii_lowercase()
+                        ));
                         let _ = fs::copy(img_path, image_dest_path);
                         let mut sizes = vec![];
                         self.config
@@ -117,8 +121,11 @@ impl Builder {
                             .iter()
                             .for_each(|img_width| {
                                 if width > *img_width {
-                                    let resize_dest_path =
-                                        image_dest_dir.join(format!("{}w.jpg", img_width));
+                                    let resize_dest_path = image_dest_dir.join(format!(
+                                        "{}w.{}",
+                                        img_width,
+                                        ext.to_string_lossy().to_ascii_lowercase()
+                                    ));
                                     if ext.to_ascii_lowercase() == "jpg"
                                         || ext.to_ascii_lowercase() == "jpeg"
                                     {
@@ -132,10 +139,20 @@ impl Builder {
                                             width: *img_width,
                                             height: resize_height,
                                         });
+                                    } else if ext.to_ascii_lowercase() == "png" {
+                                        let _ = resize_and_optimize_png(
+                                            &img_path,
+                                            *img_width,
+                                            &resize_dest_path,
+                                        );
+                                        let resize_height = img.height() * *img_width / img.width();
+                                        sizes.push(ImageSize {
+                                            width: *img_width,
+                                            height: resize_height,
+                                        });
                                     }
 
                                     //                 } else if image.extension()? == "png" {
-                                    //                     resize_and_optimize_png(&image.source_path, version.0, &version_path)?;
                                     //                 } else {
                                     //                     event!(
                                     //                         Level::ERROR,

@@ -38,7 +38,14 @@
 
 </head>
 <body>
-<header><a href="/">Home</a></header>
+<header>
+      <a href="/">Home</a>
+      <div class="under-construction">
+        Head's Up: I'm in the middle of upgrading my site. Most things are in place, but
+        there are something missing and/or broken including image alt text. Please
+        bear with me while I'm getting things fixed. 
+      </div>
+    </header>
 <main>
 [!- block body -!][!- endblock -!]
 [!- block endmatter -!][!- endblock -!]

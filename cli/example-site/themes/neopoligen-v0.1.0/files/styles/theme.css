@@ -43,6 +43,7 @@ body {
 footer {
   max-width: 64ch;
   margin: auto;
+  min-height: 5rem;
 }
 
 .footnote-ref {
@@ -99,6 +100,10 @@ header a {
   color: var(--color-charlie);
 }
 
+hr {
+  margin-block: 1.5rem;
+}
+
 img {
   max-width: 100%;
   display: block;
@@ -126,6 +131,23 @@ img {
 main {
   max-width: 64ch;
   margin: auto;
+}
+
+.photo {
+  display: grid;
+  place-items: center;
+  margin-block: 3rem 4rem;
+}
+
+.photo img {
+  background-color: black;
+  padding: 2px;
+  border-top: 8vmin solid #f4f5f8;
+  border-left: 8vmin solid #f4f5f8;
+  border-right: 8vmin solid #f4f5f8;
+  border-bottom: 10vmin solid #f4f5f8;
+  max-height: min(94vh, 98vb);
+  max-width: min(94vw, 98vi, 100%);
 }
 
 .under-construction {
