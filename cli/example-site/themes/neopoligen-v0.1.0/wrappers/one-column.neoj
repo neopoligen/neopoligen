@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="[@- site.config.default_language -@]">
 <head>
-<title>[# TODO: Add page title #]</title>
+<title>[@ page.title @]</title>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<meta property="og:title" content="[@ page.title @]" />
+[# <meta property="og:type" content="article" /> #]
+[# <meta property="og:url" content="TODO" /> #]
+
 <link rel="apple-touch-icon" sizes="180x180" href="/theme/favicons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/theme/favicons/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/theme/favicons/favicon-16x16.png">
@@ -51,21 +56,21 @@
       <a href="/">Home</a>
       <div class="under-construction">
         Head's Up: I'm in the middle of upgrading my site. Most things are in place, but
-        there are something missing and/or broken including image alt text. Please
-        bear with me while I'm getting things fixed. 
+        some things are missing and/or broken. This includes alt text for images. Please
+        bear with me while I get things fixed. 
       </div>
     </header>
-<main>
+<main class="flow">
 [!- block body -!][!- endblock -!]
 [!- block endmatter -!][!- endblock -!]
 </main>
 <footer></footer>
 
-[#
+
 <pre>
 [@ page|tojson(true) @]
 </pre>
-#]
+
 </body>
 
 

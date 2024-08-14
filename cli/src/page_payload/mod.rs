@@ -1,3 +1,4 @@
+use html_escape::*;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use tracing::{event, instrument, Level};
@@ -6,7 +7,7 @@ use crate::{
     helpers::*,
     neo_error::{NeoError, NeoErrorKind},
     payload_section::PayloadSection,
-    payload_span::PayloadSpan,
+    // payload_span::PayloadSpan,
     source_page::SourcePage,
 };
 
@@ -31,7 +32,7 @@ pub struct PagePayload {
     /// specifically used to make an update for the
     /// rel_source_path based off the content dir
     pub theme_test_or_page: ThemeTestOrPage,
-    pub title: Vec<PayloadSpan>,
+    pub title: Option<String>,
     pub used_template: Option<String>,
 }
 
@@ -74,12 +75,10 @@ impl PagePayload {
                     status: Some("published".to_string()),
                     theme_test_or_page,
                     template_list: vec![],
-                    title: vec![], // TODO: Add title spans
+                    title: None,
                     used_template: None,
                 };
-
                 p.get_id();
-
                 match p.id {
                     Some(_) => {
                         p.get_language(&source);
@@ -88,6 +87,7 @@ impl PagePayload {
                         p.get_template_list();
                         p.get_rel_source_path(&source);
                         p.get_rel_file_path();
+                        p.get_title();
                         Ok(p)
                     }
                     None => Err(NeoError {
@@ -151,21 +151,21 @@ impl PagePayload {
             self.language.as_ref().unwrap(),
             self.id.as_ref().unwrap()
         )));
-        // update again if there's a metadata path
-        // TODO: Make this all happen in one go
-        // at some point instead of two passes
-        self.sections.iter().for_each(|section| {
-            if section.r#type == "metadata" {
-                let _ = &section.attr_spans.iter().for_each(|(key, spans)| {
-                    if key.eq("path") {
-                        self.rel_file_path = Some(
-                            scrub_rel_file_path(&flatten_payload_spans(&spans.clone()))
-                                .expect("get filepath"),
-                        );
-                    }
-                });
-            }
-        });
+
+        // // update again if there's a metadata path
+        // // TODO: Make this all happen in one go
+        // // at some point instead of two passes
+        if let Some((_, spans)) = self
+            .sections
+            .iter()
+            .rfind(|section| section.r#type == "metadata")
+            .and_then(|sec| sec.attr_spans.iter().find(|attr| *attr.0 == "path"))
+        {
+            self.rel_file_path = Some(
+                scrub_rel_file_path(&flatten_payload_spans(&spans.clone())).expect("get filepath"),
+            )
+        }
+
         // Now override if there's a `full-path`.
         self.sections.iter().for_each(|section| {
             if section.r#type == "metadata" {
@@ -213,6 +213,21 @@ impl PagePayload {
         if !self.template_list.contains(&new_path) {
             self.template_list.push(new_path);
         }
+    }
+
+    pub fn get_title(&mut self) {
+        self.sections.iter().for_each(|section| {
+            if section.r#type == "title" {
+                match section.children.first() {
+                    Some(stuff) => {
+                        self.title = Some(
+                            encode_safe(&flatten_payload_spans(&stuff.spans.clone())).to_string(),
+                        )
+                    }
+                    _ => (),
+                }
+            }
+        })
     }
 
     pub fn get_type(&mut self) {
