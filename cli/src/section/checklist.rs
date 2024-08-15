@@ -61,12 +61,11 @@ pub fn checklist_section_full<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    dbg!("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    dbg!("AAAAAAAAAAAAAAA");
     let (source, children) = many1(|src| checklist_item_full(src, sections, nest_level))
         .context("")
         .parse(source)?;
-    dbg!("BBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-
+    dbg!("BBBBBBBBBBBBBb");
     Ok((
         source,
         Section {
@@ -121,7 +120,7 @@ mod test {
 
     #[test]
     fn basic_checklist_full() {
-        let source = "-- todo\n\n[] alfa";
+        let source = "-- todo\n\n[] alfa\n\n";
         let config = SiteConfig::mock1_basic();
         let left = (
             "",

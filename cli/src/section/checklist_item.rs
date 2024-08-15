@@ -1,7 +1,9 @@
 use crate::section::block::*;
 use crate::section::*;
+use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::character::complete::space1;
+use nom::combinator::opt;
 use nom::multi::many1;
 use nom::IResult;
 use nom::Parser;
@@ -13,19 +15,29 @@ pub fn checklist_item_full<'a>(
     _sections: &'a ConfigSections,
     _nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, _) = tag("[]").context("").parse(source)?;
+    dbg!(&source);
+    let (source, _) = tag("[").context("").parse(source)?;
+    dbg!(&source);
+    let (source, checked_value) = opt(is_not("]")).context("").parse(source)?;
+    dbg!(&source);
+    let (source, _) = tag("]").context("").parse(source)?;
+    dbg!(&source);
     let (source, _) = space1.context("").parse(source)?;
-    let (source, children) = many1(|src| block_of_list_content(src))
+    let (source, children) = many1(|src| block_of_checklist_content(src))
         .context("")
         .parse(source)?;
+    let (checked, checked_string) = match checked_value {
+        Some(v) => (true, Some(v.to_string())),
+        None => (false, None),
+    };
     Ok((
         source,
         Section {
             attrs: vec![],
             bounds: SectionBounds::Full,
             kind: SectionKind::ChecklistItem {
-                checked: false,
-                checked_string: None,
+                checked,
+                checked_string,
                 children,
             },
             r#type: "checklist-item".to_string(),
@@ -66,8 +78,9 @@ mod test {
     use super::*;
     use crate::site_config::SiteConfig;
     use pretty_assertions::assert_eq;
+
     #[test]
-    fn solo_basic_list_item() {
+    fn basic_checklist_item_not_checked() {
         let source = "[] alfa\n\n";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -100,58 +113,39 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // fn solo_start_end_list_items() {
-    //     let source = "- alfa\n\n-- p\n\nbravo";
-    //     let config = SiteConfig::mock1_basic();
-    //     let left = (
-    //         "",
-    //         Section {
-    //             attrs: vec![],
-    //             bounds: SectionBounds::Full,
-    //             kind: SectionKind::ListItem {
-    //                 children: {
-    //                     vec![
-    //                         Section {
-    //                             attrs: vec![],
-    //                             bounds: SectionBounds::Full,
-    //                             kind: SectionKind::Block {
-    //                                 spans: vec![Span {
-    //                                     attrs: vec![],
-    //                                     kind: SpanKind::WordPart,
-    //                                     parsed_text: "alfa".to_string(),
-    //                                 }],
-    //                             },
-    //                             r#type: "block-of-text".to_string(),
-    //                         },
-    //                         Section {
-    //                             attrs: vec![],
-    //                             bounds: SectionBounds::Full,
-    //                             kind: SectionKind::Basic {
-    //                                 children: vec![Section {
-    //                                     attrs: vec![],
-    //                                     bounds: SectionBounds::Full,
-    //                                     kind: SectionKind::Block {
-    //                                         spans: vec![Span {
-    //                                             attrs: vec![],
-    //                                             kind: SpanKind::WordPart,
-    //                                             parsed_text: "bravo".to_string(),
-    //                                         }],
-    //                                     },
-    //                                     r#type: "block-of-text".to_string(),
-    //                                 }],
-    //                             },
-    //                             r#type: "p".to_string(),
-    //                         },
-    //                     ]
-    //                 },
-    //             },
-    //             r#type: "list-item".to_string(),
-    //         },
-    //     );
-    //     let right = checklist_item_start_end(source, &config.sections, 0).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn basic_checklist_item_is_checked() {
+        let source = "[x] alfa\n\n";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "",
+            Section {
+                attrs: vec![],
+                bounds: SectionBounds::Full,
+                kind: SectionKind::ChecklistItem {
+                    checked: true,
+                    checked_string: Some("x".to_string()),
+                    children: {
+                        vec![Section {
+                            attrs: vec![],
+                            bounds: SectionBounds::Full,
+                            kind: SectionKind::Block {
+                                spans: vec![Span {
+                                    attrs: vec![],
+                                    kind: SpanKind::WordPart,
+                                    parsed_text: "alfa".to_string(),
+                                }],
+                            },
+                            r#type: "block-of-text".to_string(),
+                        }]
+                    },
+                },
+                r#type: "checklist-item".to_string(),
+            },
+        );
+        let right = checklist_item_full(source, &config.sections, 0).unwrap();
+        assert_eq!(left, right);
+    }
 
     //
 }
