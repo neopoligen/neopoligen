@@ -8,13 +8,13 @@
   [! if loop.first !]
     <h1 class="page-title">
     [! for span in child.spans !]
-      [@ theme.output_span("", "", span) @]
+      [@ theme.output_span(site, page_id, span) @]
     [! endfor !]
     </h1>
     [! if section.attr_spans.subtitle !]
       <p class="page-subtitle">
       [! for span in section.attr_spans.subtitle !]
-        [@ theme.output_span("", "", span) @]
+        [@ theme.output_span(site, page_id, span) @]
       [! endfor !]
       </p>
     [! endif !]

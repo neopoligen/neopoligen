@@ -8,17 +8,21 @@ use std::collections::BTreeMap;
 pub struct Site {
     pub config: SiteConfig,
     pub images: BTreeMap<String, Image>,
+    pub absolute_page_urls: BTreeMap<String, String>,
 }
 
 impl Site {
-    pub fn new_from_payloads(
-        config: SiteConfig,
-        _payloads: &BTreeMap<String, PagePayload>,
-    ) -> Site {
-        let site = Site {
+    pub fn new_from_payloads(config: SiteConfig, payloads: &BTreeMap<String, PagePayload>) -> Site {
+        let mut site = Site {
             config: config.clone(),
             images: BTreeMap::new(),
+            absolute_page_urls: BTreeMap::new(),
         };
+        payloads.iter().for_each(|payload| {
+            if let Some(url) = payload.1.absolute_url.clone() {
+                site.absolute_page_urls.insert(payload.0.clone(), url);
+            }
+        });
         site
     }
 

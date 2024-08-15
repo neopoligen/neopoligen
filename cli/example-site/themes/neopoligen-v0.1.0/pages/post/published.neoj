@@ -5,7 +5,7 @@
 [!- block body -!]
 [!- for section in page.sections -!]
 [!- if section.type != "footnote" and section.type != "ref" -!]
-[@- theme.output_section(site, page_id, section) -@]
+[@- theme.output_section(site, page.id, section) -@]
 [!- endif -!]
 [!- endfor -!]
 [!- endblock -!]

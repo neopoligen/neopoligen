@@ -67,17 +67,11 @@
 <footer></footer>
 
 
+[#
 <pre>
 [@ page|tojson(true) @]
 </pre>
-
-<hr>
-
-<pre>
-[@ site|tojson(true) @]
-</pre>
-
-
+#]
 
 
 </body>

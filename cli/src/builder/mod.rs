@@ -90,7 +90,7 @@ impl Builder {
 impl Builder {
     #[instrument(skip(self))]
     pub fn build_image_cache(&mut self) -> Result<()> {
-        event!(Level::DEBUG, "Building Images");
+        event!(Level::INFO, "Building Image Cache");
         let image_source_paths = get_image_paths(&self.config.as_ref().unwrap().image_source_dir());
         image_source_paths.iter().for_each(|img_path| {
             // TODO: Handle pngs and other image formats
@@ -360,7 +360,7 @@ impl Builder {
 
     #[instrument(skip(self))]
     pub fn load_pages_from_cache(&mut self) -> Result<()> {
-        event!(Level::INFO, "Loading Cached Files");
+        event!(Level::INFO, "Loading Pages From Cache");
         let conn = Connection::open(self.config.as_ref().unwrap().cache_db_path())?;
         conn.execute(
             "CREATE TABLE IF NOT EXISTS page_archive (path TEXT, page_object Text)",
