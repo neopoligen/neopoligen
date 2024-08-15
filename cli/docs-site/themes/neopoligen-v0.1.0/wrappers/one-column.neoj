@@ -55,7 +55,7 @@
 <header>
       <a href="/">Home</a>
       <div class="under-construction">
-        Head's Up: I'm in the middle of upgrading my site. Most things are in place, but
+        NOTE: I'm in the middle of upgrading the site. Most things are in place, but
         some things are missing and/or broken. This includes alt text for images. Please
         bear with me while I get things fixed. 
       </div>
@@ -67,11 +67,9 @@
 <footer></footer>
 
 
-[#
 <pre>
 [@ page|tojson(true) @]
 </pre>
-#]
 
 [#
 <pre>

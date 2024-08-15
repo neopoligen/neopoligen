@@ -19,18 +19,42 @@ How It Works
 Neopoligen sites are made from files that looks like this:
 
 -- pre/
+-- class: neo-example
 
 -- title
 
 Welcome To Neopoligen
 
-Neopoligen is a website building app. It's
-designed to make it easy for anyone to create
-their own website for free. 
+Neopoligen is a website building app. It's designed to make 
+it easy for anyone to create their own website for free. 
+
+The app needs a little more work before it's ready for the 
+general public. You can <<link|check out the GitHub Page|
+https://github.com/neopoligen/neopoligen>> if you want to 
+follow along. 
+
+-- metadata
+-- created: 2024-05-31T19:20:58-04:00
+-- id: 2ikuxluk
 
 -- /pre
 
 
+-- p
+
+The files stay on your computer. You own them and
+control them. 
+
+
+
+-- css
+
+
+.neo-example {
+  font-size: 0.7rem;
+  border: 1px solid #333;
+  padding: 1.2rem;
+}
 
 
 -- metadata

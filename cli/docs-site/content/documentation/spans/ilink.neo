@@ -1,0 +1,31 @@
+-- title
+
+ilink Spans
+
+-- list
+
+- For internal site links based off page IDs
+
+- Pass the ID as the first attribute after the text
+
+- Automatically points to the proper URL (including the text slug)
+
+-- code/
+
+<<ilink|Text to link|2khpiymc>>
+
+-- /code
+
+-- p 
+
+Output: 
+
+<<ilink|Text to link|2khpiymc>>
+
+
+-- metadata
+-- created: 2024-08-15T10:37:03-04:00
+-- updated: 2024-08-15T10:37:03-04:00
+-- id: 2khp1wfl
+
+

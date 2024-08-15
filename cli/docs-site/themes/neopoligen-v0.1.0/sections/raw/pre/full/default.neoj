@@ -1,1 +1,12 @@
-code full
+[! import "includes/theme.neoj" as theme !]
+
+<section
+    [@- theme.section_classes(section, "pre-section") -@] 
+    [@- section.attr_string -@]>
+[! if "title" in section.attr_spans !]
+<h2>[@ theme.output_spans(site, page_id, section.attr_spans.title) @]</h2>
+[! endif !]
+
+<pre>[@ section.text @]</pre>
+
+</section>

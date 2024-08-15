@@ -1,1 +1,9 @@
-code end
+[! import "includes/theme.neoj" as theme !]
+</section>
+
+[! for child in section.children !]
+[! if loop.first !]<section class="p-section flow">[! endif !]
+[! include "subsections/content-all-blocks.neoj" !]
+[! if loop.last!]</section>[! endif !]
+[! endfor !]
+
