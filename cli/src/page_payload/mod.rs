@@ -13,6 +13,7 @@ use crate::{
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PagePayload {
+    pub absolute_url: Option<String>,
     pub id: Option<String>,
     pub language: Option<String>,
     // TODO: Rename rel_file_path to rel_dest_path;
@@ -65,11 +66,12 @@ impl PagePayload {
                     })
                     .collect::<Vec<PayloadSection>>();
                 let mut p = PagePayload {
+                    absolute_url: None,
                     id: None,
                     language: None,
-                    rel_source_path: None,
                     r#type: Some("post".to_string()),
                     rel_file_path: None,
+                    rel_source_path: None,
                     sections,
                     source_path: Some(source_path.clone()),
                     status: Some("published".to_string()),
@@ -88,6 +90,7 @@ impl PagePayload {
                         p.get_rel_source_path(&source);
                         p.get_rel_file_path();
                         p.get_title();
+                        p.get_rel_url_path();
                         Ok(p)
                     }
                     None => Err(NeoError {
@@ -167,6 +170,7 @@ impl PagePayload {
         }
 
         // Now override if there's a `full-path`.
+        // TODO: Needs test
         self.sections.iter().for_each(|section| {
             if section.r#type == "metadata" {
                 let _ = &section.attr_spans.iter().for_each(|(key, spans)| {
@@ -177,6 +181,17 @@ impl PagePayload {
                 });
             }
         });
+    }
+
+    // TODO: If you can't make a url_path, throw an error
+    // TODO: Set up for path override
+    // TODO: Set up for home page
+    pub fn get_rel_url_path(&mut self) {
+        if let (Some(lang), Some(id), Some(title)) =
+            (self.language.clone(), self.id.clone(), self.title.clone())
+        {
+            self.absolute_url = Some(format!("/{}/{}/?{}", lang, id, url_from_string(&title)));
+        }
     }
 
     pub fn get_status(&mut self) {

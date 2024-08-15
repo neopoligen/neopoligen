@@ -420,6 +420,21 @@ pub fn trim_empty_lines(source: &str) -> String {
     trimmed_front.trim_end().to_string()
 }
 
+// TODO: Add test to remove "quot" if there's a ``&quot;``
+// in the string
+pub fn url_from_string(source: &str) -> String {
+    let re1 = Regex::new(r"\W").unwrap();
+    let re2 = Regex::new(r"-+").unwrap();
+    let re3 = Regex::new(r"^-").unwrap();
+    let re4 = Regex::new(r"-$").unwrap();
+    let mut updated = source.to_lowercase();
+    updated = re1.replace_all(&updated, "-").to_string();
+    updated = re2.replace_all(&updated, "-").to_string();
+    updated = re3.replace_all(&updated, "").to_string();
+    updated = re4.replace_all(&updated, "").to_string();
+    updated.to_string()
+}
+
 // TODO: Switch to NeoError
 pub fn write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
     match path.parent() {
