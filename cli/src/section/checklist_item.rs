@@ -15,13 +15,9 @@ pub fn checklist_item_full<'a>(
     _sections: &'a ConfigSections,
     _nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    dbg!(&source);
     let (source, _) = tag("[").context("").parse(source)?;
-    dbg!(&source);
     let (source, checked_value) = opt(is_not("]")).context("").parse(source)?;
-    dbg!(&source);
     let (source, _) = tag("]").context("").parse(source)?;
-    dbg!(&source);
     let (source, _) = space1.context("").parse(source)?;
     let (source, children) = many1(|src| block_of_checklist_content(src))
         .context("")

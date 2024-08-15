@@ -76,6 +76,7 @@ pub fn block_of_checklist_content<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = not(eof).context("").parse(source)?;
+    let (source, _) = not(tag("-")).context("").parse(source)?;
     let (source, _) = not(tag("[")).context("").parse(source)?;
     let (source, spans) = many1(alt((base_span_for_all_text,)))
         .context("")
