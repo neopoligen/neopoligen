@@ -93,7 +93,7 @@ impl Section {
 
     pub fn mock11_checklist_items() -> Section {
         let config = SiteConfig::mock1_basic();
-        let source = "-- todo\n\n[] alfa\n\n[x] bravo\n\n";
+        let source = "-- todo\n\n[] alfa\n\n[ping] bravo\n\n";
         start_or_full_section(source, &config.sections, 0)
             .unwrap()
             .1

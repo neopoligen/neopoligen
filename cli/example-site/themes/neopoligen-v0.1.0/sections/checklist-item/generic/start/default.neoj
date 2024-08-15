@@ -2,6 +2,7 @@
 <li class="flow">
 [ [!- if section.checked -!] x [!- endif-!] ]
 
+++++[@ section.checked_string @]++++
 
 [! for child in section.children!]
 [@ theme.output_section("", "", child) @]
