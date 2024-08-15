@@ -61,11 +61,9 @@ pub fn checklist_section_full<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    dbg!("AAAAAAAAAAAAAAA");
     let (source, children) = many1(|src| checklist_item_full(src, sections, nest_level))
         .context("")
         .parse(source)?;
-    dbg!("BBBBBBBBBBBBBb");
     Ok((
         source,
         Section {

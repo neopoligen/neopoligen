@@ -122,8 +122,7 @@ pub fn start_or_full_section<'a>(
         |src| basic_section_start(src, &sections, nest_level),
         |src| basic_section_full(src, &sections, nest_level),
         // TODO: Checklist start
-        // TODO: Checklist full
-        |src| checklist_section_start(src, &sections, nest_level),
+        //|src| checklist_section_start(src, &sections, nest_level),
         |src| checklist_section_full(src, &sections, nest_level),
         |src| list_section_start(src, &sections, nest_level),
         |src| list_section_full(src, &sections, nest_level),
