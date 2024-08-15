@@ -115,7 +115,7 @@ impl PayloadSection {
                 .iter()
                 .map(|child| PayloadSection::new_from_section(child, config))
                 .collect(),
-            SectionKind::ChecklistItem { children } => children
+            SectionKind::ChecklistItem { children, .. } => children
                 .iter()
                 .map(|child| PayloadSection::new_from_section(child, config))
                 .collect(),
