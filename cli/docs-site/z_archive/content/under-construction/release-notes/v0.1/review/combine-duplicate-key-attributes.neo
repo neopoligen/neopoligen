@@ -1,0 +1,31 @@
+-- title
+
+Combine Duplicate Key/Value Attributes
+
+-- h2
+
+Overview
+
+This feature takes any duplicate key/value attributes
+in a section and joins them with a space. This provides
+a way to write longer values for the keys without
+having to scroll horizontally
+
+
+-- todo
+-- title: Details
+
+[x] Duplicate keys in a single header section
+start are combined into a single key attribute
+
+[x] The multiple instances of the key are joined
+with spaces
+
+
+
+
+-- metadata
+-- date: 2024-01-29
+-- id: 2beahtvk
+-- status: scratch
+

@@ -1,0 +1,51 @@
+-- title
+
+Section Categories: JSON Plugin
+
+-- h2
+
+Overview
+
+Get JSON data back from a plugin
+for use in templates
+
+-- todo
+
+[] Call goes to plugs defined as JSON
+in the `_plugins`` folder
+
+[] See <<tlink|2bp5h31n>> for details 
+on setting up and using JSON plugins
+
+
+[x] Full section tags work (e.g. `-- random-color-circle``) 
+
+[] Full sections have attributes
+
+[] Start section tags work (e.g. `-- random-color-circle/``)
+
+[] Start sections have attributes
+
+[] End section tags work (e.g. `-- random-color-circle/``)
+
+[] End sections have attributes
+
+
+[] Attributes can be added as well
+
+
+-- h2
+
+Examples
+
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- id: 2bpi3lw8
+-- status: scratch
+

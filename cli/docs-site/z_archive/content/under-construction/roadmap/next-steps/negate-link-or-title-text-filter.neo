@@ -1,0 +1,23 @@
+-- title
+
+Negate link_or_title_text_filter() calls
+
+-- h2
+
+Overview
+
+Adding the `!`` character in front of a filter
+negates it
+
+
+-- todo
+-- title: Requirements
+
+[] When the `!`` character is in front of 
+a filter, it negates it
+
+-- metadata
+-- date: 2024-02-14
+-- id: 2clozjcn
+-- status: scratch
+

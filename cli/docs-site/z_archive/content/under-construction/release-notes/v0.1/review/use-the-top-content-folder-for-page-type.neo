@@ -1,0 +1,35 @@
+-- title
+
+Use The Top Level Folder To Set A Page's Content Type
+
+-- h2
+
+Overview
+
+If a page does not have a `-- type`` attribute in its
+`-- metadata`` section the first folder under the 
+"pages" directory its in is used to determine the type. 
+
+If the file is directly inside the "pages" folder (i.e.
+it's not in something like "pages/examples") the type
+defaults to "post"
+
+-- todo
+-- title: Requirements
+
+[x] If there is no metadata type, the top
+level folder is used to define the type
+
+[x] The metadata section type overrides
+a folder based type
+
+[x] If there is no metadata type and
+the file is at the root of the tree the
+page defaults to a "post" type
+
+
+-- metadata
+-- date: 2024-02-13
+-- id: 2ckdl8lq
+-- status: scratch
+

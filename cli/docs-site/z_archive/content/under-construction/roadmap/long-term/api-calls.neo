@@ -1,0 +1,52 @@
+-- title
+
+API Calls
+
+-- h2
+
+Overview
+
+-- todo
+
+[] Split this up into individual features
+
+[] call with just URL that returns text
+
+[] call with args templated into the URL that returns text
+
+[] call with body for post that returns text
+
+[] call with just URL that returns json
+
+[] call with args templated into the URL that returns json
+
+[] call with body for post that returns json
+
+[] define envvars that each thing has access to
+
+[] provide template structure for assembling the URLs. 
+Maybe that goes in a different section and called in
+like an include so that the body of the section can 
+be used. Or, maybe there's a separator that's used
+to spit out the URL from the content body inside
+the section. 
+
+
+
+
+
+
+-- tags
+
+
+
+
+
+
+-- metadata
+-- date: 2024-01-23
+-- updated: 2024-01-23 10:56:19
+-- id: 2bmwmsif
+-- status: scratch
+
+

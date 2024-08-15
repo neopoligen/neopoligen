@@ -1,0 +1,91 @@
+#####################################################################
+DESCRIPTION
+##################################################################################
+
+Test an _title.neo that's not the current file and had children
+
+
+##################################################################################
+TEMPLATE
+PATH: pages/testing/published.jinja
+##################################################################################
+
+
+[!- import "includes/macros.jinja" as macros -!]
+[!- set nav_links = site.collection_from_files_and_folders(
+    page_id, 
+    [["test-folder"]]
+) -!]
+[@- macros.nav_menu(nav_links) -@]
+
+
+
+##################################################################################
+SUPPORT_PAGE
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/test-folder/_title.neo
+##################################################################################
+
+-- title
+
+Closed Title Folder With Children
+
+-- metadata
+-- id: aabbcc02
+-- type: testing
+
+
+
+##################################################################################
+SUPPORT_PAGE
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/test-folder/secondary-page.neo
+##################################################################################
+
+-- title
+
+Secondary Page
+
+-- metadata
+-- id: aabbcc03
+
+
+
+##################################################################################
+INPUT
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/file-under-test.neo
+##################################################################################
+
+-- title
+
+File Under Test
+
+-- metadata
+-- id: aabbcc01
+-- type: testing
+
+
+
+
+##################################################################################
+EXPECTED_OUTPUT
+##################################################################################
+
+
+<nav id="nav_menu">
+  <ol>
+    <li id="nav_menu_aabbcc02" class="title_folder_closed">
+      <button
+        class="nav_menu_button"
+        data-menu="nav_menu"
+        data-id="aabbcc02"
+        data-status="closed"
+      >
+        Closed Title Folder With Children
+      </button>
+      <ol id="nav_menu_children_aabbcc02">
+        <li id="nav_menu_aabbcc03" class="page_inactive">
+          <a href="/en/aabbcc03/?secondary-page">Secondary Page</a>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>

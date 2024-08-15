@@ -1,0 +1,35 @@
+-- title
+
+Custom Section Types
+
+-- h2
+
+Overview
+
+-- todo
+
+[] Custom section types are defined
+in the `_configuration`` folder
+
+[] In fact, there's no difference between
+the section types that come by default
+and any section you define
+
+[] Show how to define custom section
+types in the `_configuration`` folder
+
+-- h2
+
+Examples
+
+
+
+-- tags
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 09:52:16
+-- id: 2bpdha4g
+-- status: scratch
+

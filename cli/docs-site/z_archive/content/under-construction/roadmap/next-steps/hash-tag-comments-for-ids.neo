@@ -1,0 +1,56 @@
+-- title
+
+Hash Tag Comments For IDs
+
+-- h2
+
+Overview
+
+You can put a hash tag after IDs in templates and
+content files followed by text to help you 
+remember what the ID is for. So a link 
+like this to the home page:
+
+-- code/
+-- neo
+
+<<tlink|2auhjdnh>>
+
+-- /code
+
+Can become something like:
+
+-- code/
+-- neo
+
+<<tlink|2auhjdnh#home page>>
+
+-- /code
+
+The text after the hash tag is a "comment" that doesn't
+change the way the link works. You can put 
+anything you want there and the link will still
+got to the home page. For example, this works
+too:
+
+-- code/
+-- neo
+
+<<tlink|2auhjdnh#Take Me Back To The Front Of The Site>>
+
+-- /code
+
+
+
+
+-- todo
+-- title: Requirements
+
+
+
+
+-- metadata
+-- date: 2024-03-06
+-- id: 2dj5v8vs
+-- status: scratch
+

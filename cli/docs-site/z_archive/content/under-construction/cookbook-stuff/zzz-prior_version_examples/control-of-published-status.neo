@@ -1,0 +1,31 @@
+-- title
+
+Control Of Status Publication
+
+The `-- status`` in `-- metadata`` must match 
+a template to be output. There no other configuration
+though. When you make a template in the proper location
+under pages template directory (e.g. pages/TYPE/STATUS.jinja)
+with the status it those pages will be included in the 
+output.
+
+
+-- list
+-- title: Use Case
+
+- Creating drafts that don't get published
+
+
+-- notes
+
+- Update this about how there's a default template, but
+the status still determines if the file goes once 
+that's in place
+
+
+
+-- metadata
+-- date: 2024-01-16
+-- id: 2b44qohf
+-- status: published
+

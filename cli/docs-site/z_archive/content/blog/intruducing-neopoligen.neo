@@ -1,0 +1,57 @@
+-- title
+
+Introducing Neopoligen - A Website Builder For Everyone
+
+Today marks 35 years since Tim Berners-Lee submitted
+the proposal for the World Wide Web. Seems like
+a great day to announce the website builder
+I've been working on for the past two years. 
+
+It's called Neopoligen. It's goal is to make it as
+easy as possible for everyone to make a free 
+website. A few details to get started:
+
+-- list
+
+- Neopoligen is a desktop app
+
+- It's Free and Open-Source
+
+- The app works with files you keep on your computer
+
+- There are free services you can publish your Neopoligen
+site to to make it available to the world
+
+- Unlike social media networks, if you decide you want
+to use a different service you won't lose all your content
+since the originals stay on your computer 
+
+
+-- h3
+
+Caveats
+
+-- list
+
+- Currently, the app only runs on M-series Mac, 
+but I'm building it with a tool called 
+Tauri that will let me make it available on Windows and
+Linux as well
+
+- The app also very much "beta" software. If you like
+tinkering with thing, you'll be fine, but there's
+still a little ways sanding down all the sharp edges
+(and getting all the features working)
+
+-- p
+
+Check out <<ilink: 2auhjdnh|the home page>> for more details
+or go to <<ilink: 2dcmgjan|the download page>> to grab
+the app
+
+
+
+
+-- metadata
+-- date: 2024-03-12
+-- id: 2dcgvrpe

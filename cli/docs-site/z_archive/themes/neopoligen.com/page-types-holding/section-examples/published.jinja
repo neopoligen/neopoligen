@@ -1,0 +1,12 @@
+[!- extends "wrappers/default.jinja" -!]
+
+[!- block title -!]
+[@- macros.place_only("title") -@]
+[!- endblock -!]
+
+
+[!- block body -!]
+<div class="section-examples flow">
+[@- macros.main_body() -@]
+</div>
+[!- endblock -!]

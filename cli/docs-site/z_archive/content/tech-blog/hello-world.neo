@@ -1,0 +1,33 @@
+-- title
+
+Hello, World
+
+Welcome to the Neopoligen Tech Blog!
+
+This is where I'm posting about the software
+under the hood that makes Neopoligen run. Things
+like how I arrived at decisions and how I 
+ended up implementing certain things. 
+
+It's also a place for ideas. Writing is one of the ways
+I figure things out. The process of putting words 
+down on a page gets them out of my head in a way 
+that shines light on the missing and misshapen parts. 
+Editing is like iterating on prototypes. I
+can make a lot of progress refining before taking 
+the first pass at code.
+
+Also, this blog gives me content to work with. As
+I'm writing this, the Neopoligen app is hard-wired to 
+build this site. In order to see what it's building
+I need for there to be stuff to build. So, this
+blog will also be where new features see their 
+first light of day. 
+
+I hope you enjoy the show, 
+
+-a
+
+-- metadata
+-- date: 2024-03-05
+-- id: 2cpwqhh7

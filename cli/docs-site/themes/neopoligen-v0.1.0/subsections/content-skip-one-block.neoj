@@ -1,0 +1,5 @@
+[! for child in section.children !]
+[! if not loop.first and child.kind == "block"!]
+    [@ theme.output_section(site, page_id, child) @]
+[! endif !]
+[! endfor !]

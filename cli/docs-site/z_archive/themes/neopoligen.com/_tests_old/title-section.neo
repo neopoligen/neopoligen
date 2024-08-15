@@ -1,0 +1,40 @@
+INPUT:
+
+-- title
+-- id: this_is_an_id_attribute
+-- class: this_is_a_class_attribute
+-- subtitle: This is the subtitle
+-- preface: This is a title preface
+-- forward: This is a title forward
+-- afterword: This is a title afterword
+
+This is a title
+
+This is a paragraph in the title section
+
+And this is a second paragraph
+
+-- metadata
+-- date: 2024-02-18 13:47:17
+-- id: 20source
+-- type: theme-test
+
+TARGET:
+
+<section
+    class="title_section flow this_is_a_class_attribute"
+    id="this_is_an_id_attribute"
+>
+    <div class="forward">This is a title forward</div>
+    <div class="page_title_subtitle_group">
+    <h1 class="page_title">This is a title</h1>
+    <div class="page_subtitle">This is the subtitle</div>
+    </div>
+    <div class="preface">This is a title preface</div>
+    <div class="content">
+    <p>This is a paragraph in the title section</p>
+    <p>And this is a second paragraph</p>
+    </div>
+    <div class="afterword">This is a title afterword</div>
+</section>
+

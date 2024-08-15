@@ -1,0 +1,63 @@
+##################################################################################
+DESCRIPTION
+##################################################################################
+
+A direct call to a file that's not the active file
+
+
+##################################################################################
+TEMPLATE
+PATH: pages/testing/published.jinja
+##################################################################################
+
+
+[!- import "includes/macros.jinja" as macros -!]
+[!- set links = site.collection_from_files_and_folders(page_id, [
+    ["aabbcc02"]
+]) -!]
+[@- macros.nav_menu(links) -@]
+
+
+
+##################################################################################
+SUPPORT_PAGE
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/support-page.neo
+##################################################################################
+
+-- title
+
+Support Page
+
+-- metadata
+-- id: aabbcc02
+-- type: testing
+
+
+
+##################################################################################
+INPUT
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/file-under-test.neo
+##################################################################################
+
+-- title
+
+Main Test Page
+
+-- metadata
+-- id: aabbcc01
+-- type: testing
+
+
+
+##################################################################################
+EXPECTED_OUTPUT
+##################################################################################
+
+
+    <nav id="nav_menu">
+      <ol>
+        <li id="nav_menu_aabbcc02" class="page_inactive">
+          <a href="/en/aabbcc02/?support-page">Support Page</a>
+        </li>
+      </ol>
+    </nav>

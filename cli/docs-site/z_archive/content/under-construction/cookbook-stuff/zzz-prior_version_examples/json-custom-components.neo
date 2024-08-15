@@ -1,0 +1,39 @@
+-- title
+
+JSON Custom Components 
+
+
+-- todo
+
+[] Turn this into a menu
+
+
+-- menu
+-- class: example
+
+[
+  {
+    "letter": "A",
+    "telephony": "Alfa",
+    "morse": "·-",
+    "pronunciation": "AL-FAH"
+  },
+  {
+    "letter": "B",
+    "telephony": "Bravo",
+    "morse": "-···",
+    "pronunciation": "BRAH-VOH"
+  },
+  {
+    "letter": "C",
+    "telephony": "Charlie",
+    "morse": "-·-·",
+    "pronunciation": "CHAR-LEE"
+  }
+]
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2avpve2i
+-- status: published

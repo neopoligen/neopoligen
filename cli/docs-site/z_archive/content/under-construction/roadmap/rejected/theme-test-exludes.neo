@@ -1,0 +1,52 @@
+-- forward
+
+NOTE: This feature was rejected in favor of going
+with exact matches from start to finish
+every time which is easier to reason about.
+
+-- title
+-- class: strike
+
+Theme Test Exclude Content In Test
+
+
+-- h2
+-- class: strike
+
+Overview
+
+The searches in theme tests can be negated. That is, 
+you put in a string that you want to make sure
+_does not__ show up in the output. This is done
+by added `exclude = true`` to the top of the 
+file before the "INPUT:" line.
+
+
+-- todo
+-- class: strike
+-- title: Requirements
+
+[] Adding `exclude = true`` to the top of a 
+theme test before the `INPUT:`` line negates the
+test so that if a `TARGET:`` _does not__ match
+the test passes (and if the `TARGET:`` _does__
+match, the test fails)
+
+
+-- notes
+-- class: strike
+
+- The `exclude`` setting affects all the `TARGET``
+matchers in the file. That is, you can't have
+a single file that does both regular matches
+and excludes at the same time. Testing both
+ways is done by making two test files.
+
+
+
+-- metadata
+-- date: 2024-02-19
+-- id: 2caypbbi
+-- type: release-notes
+-- status: scratch
+

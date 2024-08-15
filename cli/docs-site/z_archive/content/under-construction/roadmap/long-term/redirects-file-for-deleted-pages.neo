@@ -1,0 +1,41 @@
+-- title
+
+Redirects File For Deleted Pages
+
+-- h2
+
+Overview
+
+-- todo
+
+[] When a page is deleted the builder
+notices and adds it to a redirects file
+
+[] TODO: Define the file location
+
+[] The redirects file is CSV file with
+three columns: original ID, new ID, 
+redirect method
+
+[] The new ID can also be a `/`` to 
+send to the home page
+
+[] The default is the `/``
+
+[] Server usage of the file is beyond
+the scope of this proposal
+
+[] TODO: Add the server usage related
+link when that proposal is made
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 12:46:09
+-- id: 2bpyqdzb
+-- status: draft
+

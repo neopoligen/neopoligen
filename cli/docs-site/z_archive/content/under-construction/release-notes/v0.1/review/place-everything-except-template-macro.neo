@@ -1,0 +1,23 @@
+-- title
+
+Place Everything Except Template Macro
+
+-- h2
+
+Overview
+
+Provides `{{ place_everything_except(["section1", "section2"]) }}`` 
+to the template that outputs everything in the AST except
+the listed sections by calling `page.place_everything_except(["section1", "seciton2"])``
+
+-- todo
+-- title: Requirements
+
+[] `{{ place_everything_except(["section1", "section2"]) }}`` works
+
+
+-- metadata
+-- date: 2024-02-13
+-- id: 2ckwxkr5
+-- status: scratch
+

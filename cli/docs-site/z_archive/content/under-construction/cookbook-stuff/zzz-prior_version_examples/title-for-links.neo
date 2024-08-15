@@ -1,0 +1,33 @@
+-- title
+
+Title For Links 
+
+TODO: The first link is working but it's not yet
+being overwritten by metadata
+
+You can add an optional `-- title`` attribute to the
+`-- metadata`` section to create a title that will 
+be used for any automatic links pointing to the page. 
+This is used for when the title on the page itself 
+might not make as much sense as a link, or would benefit
+from being shorter or whatever. 
+
+
+-- metadata
+-- date: 2024-01-15
+-- id: 2ayhtpaa
+-- status: published
+-- title: Some title span support
+
+
+-- code
+
+{{ page.title_for_link }}
+
+
+
+-- metadata
+-- date: 2024-01-15
+-- id: 2ayhtpza
+-- status: published
+

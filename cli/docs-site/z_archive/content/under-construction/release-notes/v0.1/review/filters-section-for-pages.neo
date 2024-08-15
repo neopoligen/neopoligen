@@ -1,0 +1,28 @@
+-- title
+
+Filters Section For Pages Data
+
+-- h2
+
+Overview
+
+This feature adds a `filters`` field
+to each page in page_data. It's a list
+of all the values from the "tags" and
+"filters" sections plus
+the "type" and "status" if those values
+exist in the metadata. That data could
+be pulled individually. This makes it
+easier to get at for filtering purposes
+
+-- todo
+-- title: Details
+
+[x] Each page has a `filters`` field that
+returns a list of the page "type", 
+"status", and the combined "tags"
+
+-- metadata
+-- date: 2024-02-11
+-- id: 2cfbbsai
+

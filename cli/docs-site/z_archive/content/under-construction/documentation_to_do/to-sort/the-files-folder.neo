@@ -1,0 +1,28 @@
+-- title
+
+The files Folder
+
+-- notes
+-- title: Quick Notes
+
+- The files folder sits directly inside a 
+site's main folder. It's next to "docs"
+and "content", etc...
+
+- Any files placed in the folder are 
+copied to the "docs" directory without
+any alteration
+
+For example, putting a file called "my-styles.css" inside
+the "files" folder makes it available at:
+
+www.your-site.com/my-styles.css
+
+
+
+
+-- metadata
+-- date: 2024-03-07 21:13:12
+-- id: 2do0obhf
+-- type: todo
+

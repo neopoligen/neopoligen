@@ -1,0 +1,42 @@
+-- title
+
+Titles For Pages Without Titles
+
+-- h2
+
+Overview
+
+Not all pages have title sections. This
+feature defines the cascade that's
+used to determined a title string for things
+like `tlink`` links
+
+This is the return value from:
+
+-- code
+-- jinja
+
+{{ page.full_title() }}
+
+
+-- todo
+-- title: Priority Order
+
+[x] Title attribute from `-- metadata`` section
+
+[x] First line of title section (regardless of position on page)
+
+[x] Title attribute on first element that has a
+`-- title`` attribute
+
+[x] First few words of the first standard category 
+block
+
+[x] Page ID from `-- metadata`` prepended with `Page ``
+
+
+-- metadata
+-- date: 2024-01-21
+-- id: 2bhqwhuf
+-- status: draft
+

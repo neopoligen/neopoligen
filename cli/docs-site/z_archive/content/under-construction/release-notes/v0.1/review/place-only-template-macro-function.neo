@@ -1,0 +1,23 @@
+-- title
+
+Place Only Template Macro
+
+-- h2
+
+Overview
+
+Provides `{{ place_only("section_name") }}`` 
+to the template that only outputs things in the AST 
+that match the listed sections by calling 
+`page.place_only("section_name")``
+
+-- todo
+-- title: Requirements
+
+[x] `{{ place_only("section_name") }}`` works
+
+-- metadata
+-- date: 2024-02-13
+-- id: 2ckxmsld
+-- status: scratch
+

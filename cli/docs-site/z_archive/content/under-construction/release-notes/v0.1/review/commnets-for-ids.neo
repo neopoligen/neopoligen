@@ -1,0 +1,31 @@
+-- title
+
+Comments For IDs and Tags
+
+-- h2
+
+Overview
+
+You can put a "#" after any tag or id to make a note
+of what it's for. e.g. 
+
+-- code/
+-- neo
+
+<<tlink|id12345#home page>>
+
+-- /code
+
+
+
+-- todo
+-- title: Requirements
+
+
+
+
+-- metadata
+-- date: 2024-02-22
+-- id: 2ckonamv
+-- status: scratch
+

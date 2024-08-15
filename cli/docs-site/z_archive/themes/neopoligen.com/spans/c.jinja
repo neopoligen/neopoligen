@@ -1,0 +1,17 @@
+[#- type: key-value -#]
+[!- import "includes/macros.jinja" as macros -!]
+
+<span class="[@- span.content.value -@]"
+[!- for attribute in span.content.key_value_attributes -!]
+[@- ' ' -@]
+[@- attribute -@]="[@- span.content.key_value_attributes[attribute] -@]"
+[!- endfor -!]
+[!- for flag in span.content.flag_attributes -!]
+[@- ' ' -@]
+[@- flag -@]
+[!- endfor -!]
+>
+[!- for span in span.content.spans -!]
+[@- macros.output_spans(page_id, span, {}) -@]
+[!- endfor -!]
+</span>

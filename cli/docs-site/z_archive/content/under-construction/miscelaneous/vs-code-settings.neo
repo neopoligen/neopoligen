@@ -1,0 +1,37 @@
+-- title
+
+VS Code Settings
+
+There are a few VS Code Settings I use to make
+editing content and themes easier:
+
+-- list
+-- title: Settings
+
+- Turn off "Indent Guides" that in the file/folder
+explorer that I find make it harder to read
+
+Settings - Workbench - Appearance - Tree: Render Indent Guides
+
+<<em|none>>
+
+- Add a little more ident in the file/folder
+explorer for different levels of folders
+
+Settings - Workbench - Appearance - Tree: Indent
+
+<<em|13>>
+
+
+- Don't split out file from folder in the file/folder
+explorer. The main benefit of this is that the `_index.neo``
+files show up directly underneath their parent folder
+
+Settings - Features - Explorer - Sort Order
+
+<<em|mixed>>
+
+
+-- metadata
+-- date: 2024-02-23
+-- id: 2cmjlc0o

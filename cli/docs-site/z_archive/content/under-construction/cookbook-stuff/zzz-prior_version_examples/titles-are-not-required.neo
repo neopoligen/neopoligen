@@ -1,0 +1,17 @@
+-- title
+
+Titles Sections Aren't Required 
+
+-- p
+
+The `-- metadata`` section with an `-- id``,
+`-- type``, and `-- status`` is the only 
+thing required on a page. So, it's possible
+to have pages without titles for things 
+like micro blogging
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2avtebqp
+-- status: published
+

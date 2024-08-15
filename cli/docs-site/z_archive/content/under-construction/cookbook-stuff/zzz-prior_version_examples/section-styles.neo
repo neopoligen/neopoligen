@@ -1,0 +1,21 @@
+-- title
+
+Section Styles 
+
+All the examples here have used a `-- class`` 
+attribute to style them. More than one style
+can be passed and each section can have 
+predefined styles in the templates as well. 
+
+-- p
+-- class: green example
+
+This is green text
+
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2avssxot
+-- status: published
+

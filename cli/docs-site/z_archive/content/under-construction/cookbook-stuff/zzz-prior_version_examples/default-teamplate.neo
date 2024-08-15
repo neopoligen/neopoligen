@@ -1,0 +1,25 @@
+-- title
+
+Default Template Type
+
+A default template type is defined in the config file. 
+Any page who's type doesn't match an existing 
+template type will use it. 
+
+Note that the `status`` must still be set to a valid
+one for publishing. Those are specifically designed
+to allow only certain content to go out
+
+
+-- list
+-- title: Use Case
+
+- Make typos in the `-- type`` less of a problem
+since the page will at least be rendered. 
+
+
+-- metadata
+-- date: 2024-01-17
+-- id: 2b67wqby
+-- status: published
+

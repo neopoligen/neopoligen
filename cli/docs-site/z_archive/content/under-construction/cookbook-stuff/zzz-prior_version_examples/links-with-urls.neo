@@ -1,0 +1,15 @@
+-- title
+
+Links (with urls) 
+
+This is the way to use a full URL with a `link`` 
+span
+
+<<link|this is a link with a url|/pages/2awrcwi5>>
+
+
+-- metadata
+-- date: 2024-01-15
+-- id: 2b0vtgfr
+-- status: published
+

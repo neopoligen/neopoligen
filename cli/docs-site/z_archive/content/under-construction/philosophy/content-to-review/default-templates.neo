@@ -1,0 +1,38 @@
+-- title
+
+Default Templates
+
+-- p
+
+There are a ton of template that make up Neopoligen. 
+They're at the following levels:
+
+-- list
+
+- `helpers/HELPER_FILE.jinja``
+
+- `includes/INCLUDE_FILE.jinja``
+
+- `pages/PAGE_TYPE/PAGE_STATUS.jinja``
+
+- `sections/SECTION_TYPE/SESSION_BOUND/TEMPLATE.jinja``
+
+- `spans/default.jinja`` (note this will probably be split 
+out to individual spans at some point)
+
+- `sys/SYSTEM_TEMPLATE.jinja``
+
+
+-- p
+
+The vast majority are in `sections`` since there are three
+folder for each of the different bounds and each of those
+folders has at least one template in it.  
+
+
+
+-- metadata
+-- date: 2024-01-11
+-- id: 2apnwtvk
+-- status: draft
+

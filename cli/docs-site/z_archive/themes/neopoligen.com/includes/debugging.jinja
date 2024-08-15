@@ -1,0 +1,13 @@
+[!- import "includes/macros.jinja" as macros -!]
+<section class="debugging">
+<h3>Debugging</h3>
+<ul>
+<li>Status: [@- site.page_status(page_id) -@]</li>
+<li>Template: [@- site.page_template(page_id) -@]</li>
+<li>Type: [@- site.page_type(page_id) -@]</li>
+</ul>
+
+[#-
+[@- site.page_ast(page_id) -@]
+-#]
+</section>

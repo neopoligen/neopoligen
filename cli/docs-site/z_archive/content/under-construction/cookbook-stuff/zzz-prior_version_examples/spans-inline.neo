@@ -1,0 +1,40 @@
+-- title
+
+Spans (basic) 
+
+-- h3
+
+Basic Spans
+
+-- code
+-- class: example
+
+<<strong|Charlie Delta>>
+
+-- p
+-- class: example
+
+<<strong|Charlie Delta>>
+
+
+-- h3
+
+Spans With Attributes
+
+-- code
+-- class: example
+
+<<span|Alfa Bravo|class: red|id: charlie>>
+
+-- p
+-- class: example
+
+<<span|Alfa Bravo|class: red|id: charlie>>
+
+
+
+-- metadata
+-- date: 2024-01-13
+-- id: 2avkjkm2
+-- status: published
+

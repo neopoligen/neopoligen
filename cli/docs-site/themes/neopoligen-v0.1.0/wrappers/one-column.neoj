@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="[@- site.config.default_language -@]">
+<head>
+<title>[@ page.title @]</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<meta property="og:title" content="[@ page.title @]" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="[@ site.config.base_url @][@ page.absolute_url @]" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/theme/favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/theme/favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/theme/favicons/favicon-16x16.png">
+<link rel="manifest" href="/theme/favicons/site.webmanifest">
+<link rel="mask-icon" href="/theme/favicons/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="/theme/favicons/favicon.ico">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="msapplication-config" content="/theme/favicons/browserconfig.xml">
+<meta name="theme-color" content="#000000">
+<link rel="stylesheet" href="/theme/styles/variables.css" />
+<link rel="stylesheet" href="/theme/styles/theme.css" />
+<link rel="stylesheet" href="/theme/styles/syntax-highlighting/code-solarized-dark.css" />
+
+[!- for section in page.sections -!]
+[!- if section.type == "head" -!]
+[! autoescape false !]
+[@ section.text @]
+[! endautoescape !]
+[!- endif -!]
+[!- endfor -!]
+
+[!- for section in page.sections -!]
+[!- if section.type == "css" -!]
+<style>
+[! autoescape false !]
+[@ section.text @]
+[! endautoescape !]
+</style>
+[!- endif -!]
+[!- endfor -!]
+
+[!- for section in page.sections -!]
+[!- if section.type == "javascript" -!]
+<script>
+[! autoescape false !]
+[@ section.text @]
+[! endautoescape !]
+</script>
+[!- endif -!]
+[!- endfor -!]
+
+</head>
+<body>
+<header>
+      <a href="/">Home</a>
+      <div class="under-construction">
+        Head's Up: I'm in the middle of upgrading my site. Most things are in place, but
+        some things are missing and/or broken. This includes alt text for images. Please
+        bear with me while I get things fixed. 
+      </div>
+    </header>
+<main class="flow">
+[!- block body -!][!- endblock -!]
+[!- block endmatter -!][!- endblock -!]
+</main>
+<footer></footer>
+
+
+[#
+<pre>
+[@ page|tojson(true) @]
+</pre>
+#]
+
+
+</body>
+
+

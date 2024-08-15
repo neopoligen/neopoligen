@@ -1,0 +1,33 @@
+-- title
+
+Automatic Page Link Titles With Inline Tags
+
+-- h2
+
+Overview
+
+-- todo
+
+[] Using an inline title link tag (i.e. `tlink``) automatically
+pulls the title from the page that's being linked to
+
+[] Inline tags are included in the data sent to the template.
+So, things like style classes, strong, strike-through, 
+etc... are available to output in the template
+
+
+-- h2
+
+Examples
+
+
+
+-- tags
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 09:17:39
+-- id: 2bp9ubzw
+-- status: scratch
+

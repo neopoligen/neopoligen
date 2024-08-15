@@ -1,0 +1,40 @@
+-- title
+
+Spans (custom types) 
+
+-- code
+-- jinja
+-- class: example
+
+<<custom-span|
+This is form a custom span>>
+
+
+-- p
+-- class: example
+
+<<custom-span|This is form a custom span>>
+
+
+-- p
+
+Span types are defined in the config file which then
+ties into a template in the template's `spans`` directory.
+All default span type tags from basic HTML are included 
+by default.
+
+One usage is to add extra text or formatting around
+spans like this example that adds "CUSTOM_SPAN" before
+and after the text.
+
+-- note
+
+Instead of `a`` for the link tag, it's called `link``
+in the default setup. That, of course, can be changed
+if you prefer.
+
+-- metadata
+-- date: 2024-01-15
+-- id: 2b0ymden
+-- status: published
+

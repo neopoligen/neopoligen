@@ -1,0 +1,19 @@
+-- title
+
+Other Assets
+
+You can put other assets anywhere you like and 
+reference them by URL. By convention, I stick 
+everything in an `_assets`` directory with
+sub directories for all the different types
+of files (e.g. `images``, `fonts``, `styles``,
+`p5``, etc...)
+
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2avsdmht
+-- type: post
+-- status: unpublished
+

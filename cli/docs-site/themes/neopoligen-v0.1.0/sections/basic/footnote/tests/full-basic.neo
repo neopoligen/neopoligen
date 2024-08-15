@@ -1,0 +1,29 @@
+-- start-theme-test
+
+-- footnote 
+-- id: 1
+
+Some Text
+
+-- expected-output/
+
+<li class="footnote-ref">
+  <div id="fnref-1-text">
+    <a href="#fnref-1-link">1</a>
+  </div>
+  <div class="flow">
+    <p>Some Text</p>
+  </div>
+  <div>
+    <a href="#fnref-1-link">&#x2934;</a>
+  </div>
+</li>
+
+-- /expected-output
+
+-- metadata
+-- updated: 2024-06-13T12:37:09-04:00
+-- id: 2hpgrfbl
+
+
+

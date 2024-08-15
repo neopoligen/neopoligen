@@ -1,0 +1,25 @@
+-- title
+
+Span: i 
+
+-- subtitle
+
+The Idiomatic Text Span
+
+-- p
+
+Basic Example: 
+
+<<i|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<i|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03
+-- id: 2bqpjg4i
+-- status: published
+

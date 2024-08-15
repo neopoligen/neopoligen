@@ -1,0 +1,24 @@
+-- title
+
+Title Section - Paragraphs 
+
+All the paragraphs after the title so they can 
+be output separately from the title
+
+-- code
+
+{%- for block in page.title_section.blocks  -%}
+    {% if not loop.first %}
+    <p>
+    {%- for span in block.spans -%}
+    {%- include "spans/spans.jinja" -%}
+    {%- endfor -%}
+    </p>
+    {% endif %}
+{%- endfor -%}
+
+-- metadata
+-- date: 2024-01-15
+-- id: 2ayggkm1
+-- status: published
+

@@ -1,0 +1,24 @@
+-- title
+
+JSON Plugins
+
+-- todo
+
+[x] Provides the ability to create sections
+that call out to plugins in the plugin
+directory that return JSON for parsing
+in the templates
+
+[] Pass optional parameters to the plugin
+via `-- param` attributes
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 08:46:28
+-- id: 2bp5h31n
+-- status: draft
+

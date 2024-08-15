@@ -1,0 +1,31 @@
+[!- extends "wrappers/one-column.neoj" -!]
+[!- include "includes/config.neoj" -!]
+[!- import "includes/theme.neoj" as theme -!]
+
+[!- block body -!]
+[!- for section in page.sections -!]
+[!- if section.type != "footnote" and section.type != "ref" -!]
+[@- theme.output_section(site, page.id, section) -@]
+[!- endif -!]
+[!- endfor -!]
+[!- endblock -!]
+
+
+[!- block endmatter -!]
+[! set section_header_has_been_output = false !]
+  [!- for section in page.sections -!]
+    [!- if section.type == "footnote" or section.type == "ref" -!]
+      [! if section_header_has_been_output == false !]
+        <section>
+          <h2>Footnotes And References</h2>
+          <ul class="flow">
+      [! set section_header_has_been_output = true !]
+      [! endif !]
+      [@- theme.output_section(site, page_id, section) -@]
+    [!- endif -!]
+    [! if loop.last and section_header_has_been_output == true !]
+      </ul>
+      </section>
+    [! endif !]
+  [!- endfor -!]
+[!- endblock -!]

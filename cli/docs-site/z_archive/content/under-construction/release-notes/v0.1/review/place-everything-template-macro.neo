@@ -1,0 +1,22 @@
+-- title
+
+Place Everything Template Macro
+
+-- h2
+
+Overview
+
+Provides `{{ place_everything() }}`` to the template
+that outputs the entire AST by calling `page.place_everything()``
+
+-- todo
+-- title: Requirements
+
+[x] `{{ place_everything() }}`` works
+
+
+-- metadata
+-- date: 2024-02-13
+-- id: 2ckx9rq9
+-- status: scratch
+

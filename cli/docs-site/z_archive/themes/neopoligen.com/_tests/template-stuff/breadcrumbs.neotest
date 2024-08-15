@@ -1,0 +1,90 @@
+##################################################################################
+TEMPLATE
+PATH: pages/testing/published.jinja
+##################################################################################
+
+[!- import "includes/macros.jinja" as macros -!]
+[!- set links = site.collection_from_files_and_folders(
+    page_id, 
+    [["active-folder"]]
+) -!]
+
+[@- macros.breadcrumbs(links) -@]
+
+
+##################################################################################
+SUPPORT_PAGE
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/home-page.neo
+##################################################################################
+
+-- title
+
+Breadcrumb Item
+
+NOTE: this page needs the specific id
+that matches the home page from the source
+content of neopoligen.com (which is what these
+templates are for). And the path has to
+be set to the root as well.
+
+-- metadata
+-- id: 2auhjdnh
+-- path: /
+-- type: testing
+
+
+
+##################################################################################
+SUPPORT_PAGE
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/active-folder/_title.neo
+##################################################################################
+
+-- title
+
+Breadcrumb Item
+
+-- metadata
+-- id: aabb0002
+-- type: testing
+
+
+##################################################################################
+SUPPORT_PAGE
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/active-folder/another-level/_title.neo
+##################################################################################
+
+-- title
+
+Another Level
+
+-- metadata
+-- id: aabb0003
+-- type: testing
+
+
+##################################################################################
+INPUT
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/active-folder/another-level/file-under-test.neo
+##################################################################################
+
+-- title
+
+File Under Test
+
+-- metadata
+-- id: aabb0001
+-- type: testing
+
+
+
+##################################################################################
+EXPECTED_OUTPUT
+##################################################################################
+
+<nav class="breadcrumbs">
+    <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/en/aabb0002/?breadcrumb-item">Breadcrumb Item</a></li>
+    <li><a href="/en/aabb0003/?another-level">Another Level</a></li>
+    </ol>
+</nav>

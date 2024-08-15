@@ -1,0 +1,24 @@
+-- start-theme-test
+
+-- list
+
+- alfa 
+
+- bravo
+
+-- expected-output/
+
+<ul>
+<li><p>alfa</p></li>
+<li><p>bravo</p></li>
+</ul>
+
+-- /expected-output
+
+
+
+-- metadata
+-- updated: 2024-06-11T23:12:26-04:00
+-- id: 2hlhrxo8
+
+

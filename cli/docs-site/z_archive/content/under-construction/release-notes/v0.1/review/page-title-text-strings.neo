@@ -1,0 +1,23 @@
+-- title
+
+Plain-Text Page Titles For Links
+
+-- h2
+
+Overview
+
+
+-- todo
+-- title: Requirements
+
+[x] `page.full_title()`` is plain-text 
+(i.e. the content in any inline tags
+is shown but the tags themselves 
+are removed)
+
+
+-- metadata
+-- date: 2024-01-24
+-- id: 2bp9r6uz
+-- status: scratch
+

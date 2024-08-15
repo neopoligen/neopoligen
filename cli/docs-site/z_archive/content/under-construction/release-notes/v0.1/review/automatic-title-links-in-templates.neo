@@ -1,0 +1,29 @@
+-- title
+
+Automatic Title Links In Templates
+
+-- h2
+
+Overview
+
+This feature provides the ability to 
+pass an ID to a function in a template and
+get a link to the corresponding page
+with its title as the output
+
+
+-- todo
+-- title: Details
+
+[x] Using something like `{{ site.tlink("2cg6ussi") }}`` 
+in a template outputs something like:
+
+`<a href="/pages/2cg6ussi/?auto-links">Auto Links</a>`html`
+
+
+
+-- metadata
+-- date: 2024-02-12
+-- id: 2cg6ussi
+-- status: draft
+

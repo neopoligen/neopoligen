@@ -1,0 +1,20 @@
+[! import "includes/theme.neoj" as theme !]
+
+<section
+    [@- theme.section_classes(section, "code-section") -@] 
+    [@- section.attr_string -@]>
+
+[! if "title" in section.attr_spans !]
+<h2>[@ theme.output_spans(site, page_id, section.attr_spans.title) @]</h2>
+[! else !]
+<h2>CSS</h2>
+[! endif !]
+
+[! if section.flags[0] !]
+<div class="code-language">
+[@ section.flags[0] @]
+</div>
+[! endif !]
+
+<pre><code>[@ highlight_code(section.text, "css") @]</code></pre>
+

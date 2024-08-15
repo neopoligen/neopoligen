@@ -1,0 +1,27 @@
+-- title
+
+Set The Output Folder Via Configuration
+
+-- h2
+
+Overview
+
+
+
+-- todo
+-- title: Details
+
+
+
+
+
+-- tags
+-- vTBD
+-- feature-proposal
+
+-- metadata
+-- date: 2024-02-01 14:32:08
+-- updated: 2024-02-01 14:32:08
+-- id: 2bmmiydg
+-- status: scratch
+

@@ -1,0 +1,347 @@
+[#- NOTE: Keeping all the macros in the same file vastly
+simplifies dev. Otherwise things have to be imported 
+repeatedly -#]
+
+
+[#############################################################################]
+[!- macro breadcrumbs(collection) -!]
+<nav class="breadcrumbs"><ol>
+<li>[@- site.ilink(page_id, "2auhjdnh", "Home") -@]</li>
+<li>[@- site.ilink(page_id, "2dcmgjan", "Download") -@]</li>
+[!- for id in collection.active_ancestors -!]
+<li>[@- site.page_html_link(id) -@]</li>
+[!- endfor -!]
+</ol>
+</nav>
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro link_or_title(current_page, target_page) -!]
+[@- site.link_or_title(current_page, target_page) -@]
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro log(payload = {}) -!]
+[@- site.log_from_template(payload|tojson) -@]
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro main_body(page_id, payload = {}) -!]
+[!- for section in site.page_main_body(page_id, payload) -!]
+[#- Do this first to prevent showing the template section itself -#]
+[!- if section.content.key_value_attributes.show_source == "off" -!]
+[!- set show_source = "off" -!]
+[!- endif -!]
+[!- if show_source == "on" -!]
+<div class="neopoligen_source_example flow">
+<div class="neopoligen_source_header">Source</div>
+<pre><code>
+    [!- autoescape true -!][@- section.content.source | trim -@][!- endautoescape -!]
+</code></pre>
+<div class="neopoligen_source_header">Output</div>
+[!- endif -!]
+[@- output_payload(page_id, section, payload) -@]
+[!- if show_source == "on" -!]
+</div>
+[!- endif -!]
+[#- Do this last to prevent showing the template section itself -#]
+[!- if section.content.key_value_attributes.show_source == "on" -!]
+[!- set show_source = "on" -!]
+[!- endif -!]
+[!- endfor -!]
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro nav_links(collection) -!]
+<nav><ul>
+[!- for item in collection.tree  -!]
+[!- if item.status == "PageActive" -!]
+<li>[@- site.page_title(item.id) -@]</li>
+[!- else -!]
+<li>[@- site.page_html_link(item.id) -@]</li>
+[!- endif -!]
+[!- endfor -!]
+</ul></nav>
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro nav_menu(collection) -!]
+[!- set menu_name = "nav_menu" -!]
+[#- TODO: Setup the menu_name to accept a parameter so more than
+one nav_menu can but put on a page -#]
+<nav id="[@- menu_name -@]"><ol>
+[!- for item in collection.tree  -!]
+[@- macros.nav_menu_item(menu_name, item) -@]
+[!- endfor -!]
+</ol></nav>
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro nav_menu_item(menu_name, item) -!]
+[!- if item.status == "PageActive" -!]
+[@- nav_menu_item_page_active(menu_name, item) -@]
+[!- elif item.status == "PageInactive" -!]
+[@- nav_menu_item_page_inactive(menu_name, item) -@]
+[!- elif item.status == "IndexFolderActive" -!]
+[@- nav_menu_item_index_folder_active(menu_name, item) -@]
+[!- elif item.status == "IndexFolderClosed" -!]
+[@- nav_menu_item_index_folder_closed(menu_name, item) -@] 
+[!- elif item.status == "IndexFolderOpened" -!]
+[@- nav_menu_item_index_folder_opened(menu_name, item) -@] 
+[!- elif item.status == "TitleFolderActive" -!]
+[@- nav_menu_item_title_folder_active(menu_name, item) -@]
+[!- elif item.status == "TitleFolderClosed" -!]
+[@- nav_menu_item_title_folder_closed(menu_name, item) -@] 
+[!- elif item.status == "TitleFolderOpened" -!]
+[@- nav_menu_item_title_folder_opened(menu_name, item) -@] 
+[!- endif -!]
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro nav_menu_item_page_active(menu_name, item) -!]
+<li id="[@- menu_name -@]_[@- item.id -@]" class="page_active active_path">
+[@- site.page_title(item.id) -@]
+</li>
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro nav_menu_item_page_inactive(menu_name, item) -!]
+<li id="[@- menu_name -@]_[@- item.id -@]" class="page_inactive">
+[@- site.page_html_link(item.id) -@]
+</li>
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro nav_menu_item_index_folder_active(menu_name, item) -!]
+<li id="[@- menu_name -@]_[@- item.id -@]" class="index_folder_active active_path">
+[@- site.page_title(item.id) -@]
+[!- if item.children|length > 0 -!]
+<ol id="[@- menu_name -@]_children_[@item.id@]">
+[!- for child in item.children -!][@- nav_menu_item(menu_name, child) -@][!- endfor -!]
+</ol>
+[!- endif -!]
+</li>
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro nav_menu_item_index_folder_closed(menu_name, item) -!]
+<li id="[@- menu_name -@]_[@- item.id -@]" class="index_folder_closed">
+[@- site.page_html_link(item.id) -@]
+</li>
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro nav_menu_item_index_folder_opened(menu_name, item) -!]
+<li id="[@- menu_name -@]_[@- item.id -@]" class="index_folder_opened active_path">
+[@- site.page_html_link(item.id) -@]
+[!- if item.children|length > 0 -!]
+<ol id="[@- menu_name -@]_children_[@item.id@]">
+[!- for child in item.children -!][@- nav_menu_item(menu_name, child) -@][!- endfor -!]
+</ol>
+[!- endif -!]
+</li>
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro nav_menu_item_title_folder_closed(menu_name, item) -!]
+<li id="[@- menu_name -@]_[@- item.id -@]" class="title_folder_closed">
+<button class="nav_menu_button" data-menu="[@- menu_name -@]" data-id="[@- item.id -@]" data-status="closed">
+[@- site.page_title(item.id) -@]
+</button>
+[!- if item.children|length > 0 -!]
+<ol id="[@- menu_name -@]_children_[@item.id@]">
+[!- for child in item.children -!][@- nav_menu_item(menu_name, child) -@][!- endfor -!]
+</ol>
+[!- endif -!]
+</li>
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro nav_menu_item_title_folder_opened(menu_name, item) -!]
+<li id="[@- menu_name -@]_[@- item.id -@]" class="title_folder_opened active_path">
+<button class="nav_menu_button" data-menu="[@- menu_name -@]" data-id="[@- item.id -@]" data-status="opened">
+[@- site.page_title(item.id) -@]
+</button>
+[!- if item.children|length > 0 -!]
+<ol id="[@- menu_name -@]_children_[@item.id@]">
+[!- for child in item.children -!][@- nav_menu_item(menu_name, child) -@][!- endfor -!]
+</ol>
+[!- endif -!]
+</li>
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro nav_menu_item_title_folder_active(menu_name, item) -!]
+<li id="[@- menu_name -@]_[@- item.id -@]" class="title_folder_active active_path">
+<button class="nav_menu_button" data-menu="[@- menu_name -@]" data-id="[@- item.id -@]" data-status="active">
+[@- site.page_title(item.id) -@]
+</button>
+[!- if item.children|length > 0 -!]
+<ol id="[@- menu_name -@]_children_[@item.id@]">
+[!- for child in item.children -!][@- nav_menu_item(menu_name, child) -@][!- endfor -!]
+</ol>
+[!- endif -!]
+</li>
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro output_list(page_id, section, extra = {}) -!]
+[!- include "sections/" + section.type + "/" + section.bounds + "/" + section.template + ".jinja" -!]
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro output_payload(page_id, section, extras = {}) -!]
+[!- if section.type == "section" -!]
+[@- output_section(page_id, section.content, extras) -@]
+[!- elif section.type == "block" -!]
+[!- for block_content in section.content -!]
+[@- output_spans(page_id, block_content, extras) -@]
+[!- endfor -!]
+[!- elif section.type == "list" -!]
+[@- output_list(page_id, section.content, extras) -@]
+[!- endif -!]
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro output_section(page_id, section, extra = {}) -!]
+[!- set requested_template = "sections/" + section.type + "/" + section.bounds + "/" + section.template + ".jinja" -!]
+[!- if site.does_template_exist(requested_template) == "yes" -!]
+[!- include requested_template -!]
+[!- else -!]
+[@- site.error("ERROR: Tried to use this template that does not exist: " ~ requested_template) -@]
+[!- endif -!]
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro output_spans(page_id, span, extras = {}) -!]
+[!- if span.content.template -!]
+[!- include span.content.template -!]
+[!- endif -!]
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro place_section(page_id, section_name, extras = {}) -!]
+[!- for section in site.page_place_section(page_id, section_name, extras) -!]
+[@- output_payload(page_id, section, extras) -@]
+[!- endfor -!]
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro prev_next(collection) -!]
+<nav class="prev_next">
+[!- if collection.prev_item -!]
+    <div>Previous:<br /> [@- site.page_html_link(collection.prev_item.id) -@]</div>
+[!- else -!]
+    <div></div>
+[!- endif -!]
+[!- if collection.next_item -!]
+    <div>Next:<br /> [@- site.page_html_link(collection.next_item.id) -@]</div>
+[!- else -!]
+    <div></div>
+[!- endif -!]
+</nav>
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro section_attributes(page_id, payload = {}) -!]
+[!- if payload.section.key_value_attributes.class or payload.classes -!]
+[@- ' ' -@]class="[!- autoescape true -!][@- payload.classes -@][!- endautoescape -!]
+[!- if payload.section.key_value_attributes.class and payload.classes -!]
+[@- ' ' -@][!- endif -!]
+[@- payload.section.key_value_attributes.class -@]"[!- endif -!]
+[!- for key in payload.section.key_value_attributes -!]
+[!- if key != "class" and key not in section_attribute_excludes -!][@- ' ' -@]
+[@- key -@]="[!- autoescape true -!][@- payload.section.key_value_attributes[key] -@][!- endautoescape -!]"
+[!- endif -!][!- endfor -!]
+[!- endmacro -!]
+[#############################################################################]
+
+
+
+[#############################################################################]
+[!- macro section_has_flag(page_id, section, target, extras = {}) -!]
+[!- if target in section.flag_attributes -!]
+[@- true -@][!- else -!][@- false -@]
+[!- endif -!]
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro span_attributes(page_id, span, extras = {}) -!]
+[!- for attribute in span.key_value_attributes -!][@- ' ' -@]
+[@- attribute -@]="[@- span.key_value_attributes[attribute] -@]"
+[!- endfor -!]
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro toc(collection) -!]
+<ul class="table_of_contents">
+<li>TODO: macro.toc</li>
+</ul>
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro toc_item(item) -!]
+<li>
+[@- site.page_html_link(item.id) -@]
+</li>
+[!- endmacro -!]
+[#############################################################################]
+
+
+[#############################################################################]
+[!- macro toc_subtree(page_id, collection) -!]
+<ul class="table_of_contents">
+[!- for item in site.get_subtree(page_id, collection) -!]
+[@- toc_item(item) -@]
+[!- endfor -!]
+</ul>
+[!- endmacro -!]
+[#############################################################################]

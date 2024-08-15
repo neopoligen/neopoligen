@@ -1,0 +1,21 @@
+-- title
+
+Subtitles For Code Blocks 
+
+This is a code block
+
+-- code
+-- subtitle: /some/file/path.json
+
+{
+    "alfa": "bravo"
+}
+
+
+
+
+-- metadata
+-- date: 2024-01-13
+-- id: 2avhvrag
+-- status: published
+

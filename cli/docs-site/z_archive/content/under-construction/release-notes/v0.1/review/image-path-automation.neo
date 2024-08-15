@@ -1,0 +1,51 @@
+-- title
+
+Image Path Automation 
+
+
+-- h2
+
+Overview
+
+-- todo
+
+[x] Images placed in the `images`` folder are
+available to be called in `-- image`` sections
+with just their name (i.e. the full path
+to the image is not needed)
+
+[x] You and make sub-folders in the `-- images``
+directory and put images in them however you
+want. The builder will find them and provide
+the proper path to the templates for use
+
+[x] Images can be called with or without their
+extension
+
+[x] Alt text is pulled in properly
+
+
+-- image
+-- the-dragon-and-the-unicorn-cover
+-- alt: the is the cover the the book
+-- alt: The Dragon and The Unicorn by 
+-- alt: A.A. Attanasio"
+
+
+
+-- notes
+-- title: Notes
+
+- I tend to remove file extensions when I call 
+the images. I think it looks nicer and also
+covers me without having to fiddle with it in
+case I change from a .jpg to a .png or one
+of the other new image formats coming out
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- id: 2bpadds4
+-- status: draft
+

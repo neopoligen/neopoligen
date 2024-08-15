@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta property="og:type" content="article" /><link rel="stylesheet" href="/theme/styles.css" />
+<link rel="stylesheet" href="/theme/highlighting/code-solarized-dark.css" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/theme/favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/theme/favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/theme/favicons/favicon-16x16.png">
+<link rel="manifest" href="/theme/favicons/site.webmanifest">
+<link rel="mask-icon" href="/theme/favicons/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="/theme/favicons/favicon.ico">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="msapplication-config" content="/theme/favicons/browserconfig.xml">
+<meta name="theme-color" content="#000000">
+<script type="module" src="/theme/theme.js"></script></head>
+<body><header></header><main><div class="sidebar">
+
+<h4>Details</h4><nav id="nav_menu"><ol><li id="nav_menu_2auhjdnh" class="page_inactive"><a href="/">Neopoligen</a></li><li id="nav_menu_2dcmgjan" class="page_inactive"><a href="/download/">Download</a></li><li id="nav_menu_2dom5zxe" class="index_folder_closed"><a href="/en/2dom5zxe/?under-construction">Under Construction</a></li></ol></nav><h4>Blog</h4><nav><ul><li><a href="/en/2dcgvrpe/?introducing-neopoligen---a-website-builder-for-everyone">Introducing Neopoligen - A Website Builder For Everyone</a></li></ul></nav><h4>Tech Blog</h4><nav><ul><li><a href="/en/2cpwqhh7/?hello%2C-world">Hello, World</a></li><li><a href="/en/2djkslaj/?the-database-idea">The Database Idea</a></li><li><a href="/en/2dn38hs5/?from-jinja-to-minijinja-to-neojinja-with-pre-attentive-processing">From Jinja To MiniJinja To NeoJinja With Pre-Attentive Processing</a></li><li><a href="/en/2dsrh9bo/?vanilla-javascript-button-toggler">Vanilla JavaScript Button Toggler</a></li></ul></nav><h4><a href="/en/2dpcupti/?shorts">Shorts</a></h4><nav><ul><li><a href="/en/2dn1mxzh/?i-just-learned-you-can-string-multiple-find-and-replace-patterns-together...">I just learned you can string multiple find and replace patterns together...</a></li><li><a href="/en/2dpcg7fp/?instead-of-%22let-the-market-decide%22%2C-how-about-%22let-the-culture-decide%22...">Instead of "let the market decide", how about "let the culture decide"...</a></li><li><a href="/en/2dpcupti/?shorts">Shorts</a></li></ul></nav></div><article class="flow"><nav class="breadcrumbs"><ol>
+<li><a href="/">Home</a></li>
+<li><a href="/download/">Download</a></li></ol>
+</nav><section class="title_section flow"><div class="title_heading_group"><h1>Text Plugins</h1></div></section><section class="todo_section section_category_checklist flow"><ul class="flow"><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled/>
+            </div>
+            <div class="flow"><p>There are two types of plugins. Ones that return plain-text and ones that return json. Each gets their own setup in the config. This lets the engine pass the data to templates as either text or  serialized data</p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled checked/>
+            </div>
+            <div class="flow"><p>A plugin directory is defined in the config file at `dirs.plugins``</p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled checked/>
+            </div>
+            <div class="flow"><p>Plugin sections are also defined in the config in the `json_plugins`` and `text_plugins`` sections. </p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled checked/>
+            </div>
+            <div class="flow"><p>Plugin section definitions look like: </p><p>``` TODO: Put in example of the format here. They keys in the notes might need to be updated.  ```</p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled checked/>
+            </div>
+            <div class="flow"><p>The `section_name`` key defines the name of the `-- SECTION_NAME`` that gets used in the neo file</p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled checked/>
+            </div>
+            <div class="flow"><p>The `plugin`` key defines the name that's used for the directory and the `--SOME-NAME`` part of the extension's executable</p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled/>
+            </div>
+            <div class="flow"><p>The `env_variables`` array defines what variables the environmental variables the has access to</p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled/>
+            </div>
+            <div class="flow"><p>The `internet_access`` defines if the plugin is allowed to  talk to the internet or not</p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled checked/>
+            </div>
+            <div class="flow"><p>The `section_name`` and `plugin`` don't have to be the same thing</p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled checked/>
+            </div>
+            <div class="flow"><p>Multiple sections can be defined that call the same plugin</p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled checked/>
+            </div>
+            <div class="flow"><p>Each plugin has its own directory where the executable must be named `neo-plugin--SOME-NAME``</p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled checked/>
+            </div>
+            <div class="flow"><p>The name of the directory and the `--SOME-NAME`` portion of the plugin name must match</p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled/>
+            </div>
+            <div class="flow"><p>When the section is used a call is made to the  external process</p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled/>
+            </div>
+            <div class="flow"><p>`-- args`` attributes are assembled in order to pass arguments that are escaped by the process so they don't need to be escaped in the neo files</p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled/>
+            </div>
+            <div class="flow"><p>Be able to pass in ENV Vars to the call to the executable </p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled/>
+            </div>
+            <div class="flow"><p>Make start and end markers for variable that will be less likely to need escaping, maybe  (`$$$variable_name$$$``). Goal is to try to avoid folks having to figure out escape strings as much as possible</p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled/>
+            </div>
+            <div class="flow"><p>Still provide a way to escape them</p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled/>
+            </div>
+            <div class="flow"><p>Be able to the body of the section to STDIN for  text plugins</p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled/>
+            </div>
+            <div class="flow"><p>Be able to to pass ENV Vars in the body of STDIN</p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled/>
+            </div>
+            <div class="flow"><p>The can access files on the file system but only files that are inside its own directory </p></div>
+        </li><li class="checklist_item">
+            <div>
+                <input type="checkbox" disabled/>
+            </div>
+            <div class="flow"><p>Consult with security folks to find out what else needs to be done to lock things down properly and what the tradeoffs are</p></div>
+        </li></ul></section><nav class="prev_next"><div></div><div></div></nav><section class="original_content flow">
+    <div class="original_content_toggle_wrapper">
+        <button class="original_content_toggle" data-toggle_text="Hide original content file">Show original content file</button>
+    </div>
+    <div id="original_content_display" class="hidden flow">
+        <h3>Original Content File</h3>
+        <p class="border-bottom-4">This is the file that produced this page</p>
+        <pre ><code>-- title
+
+Text Plugins
+
+
+
+-- todo
+
+[] There are two types of plugins. Ones that return
+plain-text and ones that return json. Each gets
+their own setup in the config. This lets the engine
+pass the data to templates as either text or 
+serialized data
+
+[x] A plugin directory is defined in the config file at
+`dirs.plugins``
+
+[x] Plugin sections are also defined in the config in the
+`json_plugins`` and `text_plugins`` sections. 
+
+[x] Plugin section definitions look like: 
+
+```
+TODO: Put in example of the format here. They keys
+in the notes might need to be updated. 
+```
+
+[x] The `section_name`` key defines the name of the `-- SECTION_NAME``
+that gets used in the neo file
+
+[x] The `plugin`` key defines the name that&#x27;s used for the
+directory and the `--SOME-NAME`` part of the extension&#x27;s
+executable
+
+[] The `env_variables`` array defines what variables the environmental
+variables the has access to
+
+[] The `internet_access`` defines if the plugin is allowed to 
+talk to the internet or not
+
+[x] The `section_name`` and `plugin`` don&#x27;t have to be the same
+thing
+
+[x] Multiple sections can be defined that call the same plugin
+
+[x] Each plugin has its own directory where the executable
+must be named `neo-plugin--SOME-NAME``
+
+[x] The name of the directory and the `--SOME-NAME`` portion
+of the plugin name must match
+
+[] When the section is used a call is made to the 
+external process
+
+[] `-- args`` attributes are assembled in order to
+pass arguments that are escaped by the process so
+they don&#x27;t need to be escaped in the neo files
+
+[] Be able to pass in ENV Vars to the call to
+the executable 
+
+[] Make start and end markers for variable that
+will be less likely to need escaping, maybe 
+(`$$$variable_name$$$``). Goal is to try to avoid
+folks having to figure out escape strings as
+much as possible
+
+[] Still provide a way to escape them
+
+[] Be able to the body of the section to STDIN for 
+text plugins
+
+[] Be able to to pass ENV Vars in the body of STDIN
+
+[] The can access files on the file system but only
+files that are inside its own directory 
+
+[] Consult with security folks to find out what
+else needs to be done to lock things down properly
+and what the tradeoffs are
+
+
+-- metadata
+-- date: 2024-01-21
+-- id: 2bgjz4ep
+-- type: example
+-- status: draft
+
+
+</pre></code>
+        <div class="original_content_toggle_wrapper">
+            <button class="original_content_toggle" data-toggle_text="Hide original content file">Show original content file</button>
+        </div>
+    </div>
+</section></article>
+  </main><footer></footer></body>
+</html>

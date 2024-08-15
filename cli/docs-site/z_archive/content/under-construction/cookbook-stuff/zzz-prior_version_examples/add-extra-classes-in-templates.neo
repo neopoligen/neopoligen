@@ -1,0 +1,19 @@
+-- title
+
+Extra Classes In Templates 
+
+Example template has a default set of classes for 
+styling. They are pulled in vai a `classes`` macro
+which accepts a section argument where extra 
+classes can be added as well
+
+-- code
+
+<div {{- classes(span, "green centered") -}}>
+
+
+-- metadata
+-- date: 2024-01-13
+-- id: 2avlxrax
+-- status: published
+

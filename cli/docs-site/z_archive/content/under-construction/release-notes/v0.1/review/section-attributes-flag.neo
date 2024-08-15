@@ -1,0 +1,25 @@
+-- title
+
+Section Attributes: Flags
+
+-- h2
+
+Overview
+
+This feature adds "flag" style attributes
+to sections. That is, attributes that
+just have a single value instead of
+a key/value pair
+
+-- todo
+-- title: Requirements
+
+[x] flag attribute are in `flag_attributes``
+
+
+
+-- metadata
+-- date: 2024-02-12
+-- id: 2cgj1fxm
+-- status: scratch
+

@@ -1,0 +1,18 @@
+-- title
+
+_developer_tools section-builder
+
+Run with `watch_for_changes`` to 
+auto generate things. 
+
+Recommendation is to use this for all 
+sections. That way if you need to make 
+a change that affects multiple standard
+templates you can just re-run the process
+after you've put your changes in place
+
+
+
+-- metadata
+-- date: 2024-04-19
+-- id: 2flet2uy

@@ -1,0 +1,34 @@
+-- title
+
+Helpful Error Messages
+
+-- note
+
+Dev is still in the prototype phase. Error messages
+are often super cryptic. This post doesn't describe
+the way things are. It's the direction to 
+march towards
+
+-- p
+
+The rust compiler is amazing once you learn how to read it. 
+
+It often walks you to the point that you need to fix
+and frequently provides an suggestion that solves the
+problem. 
+
+That's the goal. If someone can't figure out what to do
+when there's an error by reading the error message it's
+a bug. 
+
+-- todo
+
+[] put in mastodon post from dev who got back to you
+with that philosophy
+
+
+
+-- metadata
+-- date: 2024-01-21
+-- id: 2bgtouao
+

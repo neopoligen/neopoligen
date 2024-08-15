@@ -1,0 +1,20 @@
+-- title
+
+File Path Comment ~~TODO
+
+Since pages are based off IDs it can be tough to 
+track them down. There's a `page.file_path`` variable
+that can be added to templates to make it easy to 
+take a quick look at the source code to determine
+the file
+
+
+-- categories
+-- Miscellaneous
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2ayqjr8x
+-- type: post
+-- status: unpublished
+

@@ -1,0 +1,27 @@
+-- title
+
+Date Formats 
+
+
+-- h2
+
+Overview
+
+Input date formats can be defined in 
+`_configuration/date-formats.txt``
+
+Both Date only and DateTime can be used
+
+-- todo
+
+[] Accept date only formats
+
+[] Accept date formats with only year
+month day
+
+
+-- metadata
+-- date: 2024-01-24
+-- id: 2bpidlc0
+-- status: draft
+

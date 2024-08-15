@@ -1,0 +1,31 @@
+-- title
+
+Raw Sections
+
+-- code
+
+This is some code
+with a few lines
+
+
+-- code
+-- example_flag
+-- title: Example Preformatted
+-- subtitle: With a subtitle
+-- class: green
+-- forward: This is froward text that goes
+-- forward: above the title in this theme
+-- preface: This is a preface that
+-- preface: goes below the title/subtitle
+-- afterword: This is some short text that
+-- afterword: follows the checklist
+
+This is some code
+with a few lines
+
+
+
+-- metadata
+-- date: 2024-02-02
+-- id: 2bpgzvuz
+

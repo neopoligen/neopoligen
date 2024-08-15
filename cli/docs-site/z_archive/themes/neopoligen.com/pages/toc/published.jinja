@@ -1,0 +1,21 @@
+[!- import "includes/macros.jinja" as macros -!]
+[!- include "includes/globals.jinja" -!]
+
+<!DOCTYPE html>
+<html lang="en">
+<head>[!- include "includes/head.jinja" -!]</head>
+<body>
+  <div class="page_wrapper">
+    [!- include "includes/prelude.jinja" -!]
+    <div class="sidebar_article_group">
+      [!- include "includes/sidebar.jinja" -!]
+      <article class="flow">
+        [!- include "includes/breadcrumbs.jinja" -!]
+        [@- macros.place_section(page_id, "title") -@]
+        [@- macros.toc_subtree(page_id, menu) -@]
+        [!- include "includes/debugging.jinja" -!]
+      </article>
+    </div>
+  </div>
+</body>
+</html>

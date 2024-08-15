@@ -1,0 +1,26 @@
+-- title
+
+Filter Page Links Alphabetically Into List Items
+
+-- h2
+
+Overview
+
+The template marco `li_filter_page_links_alpha()`` outputs
+list items for all the pages in the filtered output. 
+
+For example:
+
+`{{ li_filter_page_links_alpha(page.id(), ["release-notes", "rejected"]) }}``
+
+
+-- todo
+-- title: Requirements
+
+[x] `li_filter_page_links_alpha()`` works
+
+-- metadata
+-- date: 2024-02-13
+-- id: 2clmjngb
+-- status: scratch
+

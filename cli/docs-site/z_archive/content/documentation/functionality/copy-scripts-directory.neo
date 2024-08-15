@@ -1,0 +1,15 @@
+-- title
+
+Copy scripts Directory On Build
+
+-- goal
+
+Copy the `./scripts`` directory to
+`./docs/scripts`` on each build
+
+
+
+
+-- metadata
+-- date: 2024-04-19 08:29:36
+-- id: 2fjqxhdz

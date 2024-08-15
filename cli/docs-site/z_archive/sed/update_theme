@@ -1,0 +1,5 @@
+#!/bin/bash
+
+find ../themes/neopoligen.com/ -type f -name "*.jinja" -print0 \
+| xargs -0 \
+sed -i '' 's|collection_menu|nav_menu|g'

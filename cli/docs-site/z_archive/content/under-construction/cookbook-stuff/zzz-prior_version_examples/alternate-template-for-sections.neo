@@ -1,0 +1,26 @@
+-- title
+
+TODO: Alternate Templates For Sections
+
+Each section has a default template that can be 
+overwritten with a `-- template`` attribute. For 
+example, this paragraph section calls a template 
+that centers the text.
+
+
+-- p
+-- class: example
+-- template: centered
+
+Alfa bravo charlie delta
+
+echo foxtrot golf hotel
+
+
+
+-- metadata
+-- date: 2024-01-13
+-- id: 2avg46rk
+-- status: published
+
+

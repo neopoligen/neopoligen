@@ -1,0 +1,16 @@
+-- title
+
+Fast Error Messages
+
+-- todo
+
+[] Error message as fast as spell check when
+they can be meaning full (e.g. don't throw
+errors while someone is in the middle of typing, 
+but maybe it's just on save because that will
+be hard to figure out, but tbd)
+
+-- metadata
+-- date: 2024-01-21
+-- id: 2bhfyjbk
+

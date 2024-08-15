@@ -1,0 +1,27 @@
+-- title
+
+TODO: API Calls
+
+-- todo
+
+[] Config file setup for API call sections
+
+[] What needs to be in the config? 
+
+[] How do env vars get passed
+
+[] Set up for params as attributes
+
+[] Also send body of section as body of post requests
+with env vars filled in
+
+[] Config to limit which env vars the plugin can 
+access
+
+
+-- metadata
+-- date: 2024-01-21
+-- id: 2bgmdubf
+-- type: example
+-- status: scratch
+

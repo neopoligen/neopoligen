@@ -1,0 +1,67 @@
+-- title
+
+Inline Key Value Spans
+
+-- h2
+
+Overview
+
+This feature lets you create inline
+spans that start with a key/value
+pair. 
+
+The initial use case is for a single 
+letter span tag to send css style
+classes for the span
+
+-- code
+-- neo
+
+<<c: alfa bravo|Lorem ipsum>>
+
+-- p
+
+Templates can use that to apply
+the classes to output something like
+
+-- code
+-- html
+
+<span class="alfa bravo>Lorem ipsum</span>
+
+
+-- todo
+
+[x] Inline Key/Value Spans work without
+extra attributes
+
+-- code/
+
+<<c: green|Lorem Ipsum>>
+
+-- /code
+
+[x] Inline Key/Value Spans work with 
+extra attributes:
+
+-- code/
+
+<<c: green|Lorem Ipsum|id: alfa>>
+
+-- /code
+
+-- notes
+-- title: Notes
+
+- flag style attributes (e.g. ones without a colon)
+are not added into the span by default. This is
+done since the primary use case for flag style
+attributes is to define URL and code languages
+for further processing
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- id: 2bpxihiq
+

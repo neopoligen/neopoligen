@@ -1,0 +1,85 @@
+-- title
+
+Environmental Variable Access For Plugins
+
+
+-- h2
+
+Overview
+
+-- todo
+
+[] Plugins can be granted access to Environmental
+Variables for use in API calls, etc...
+
+[] Variables are stored in a TOML config file
+at `~/.config/neopoligen/env.toml``
+
+[] The format of the TOML file is below
+
+[] Variables are passed to plugins via
+`-- arg`` attributes
+
+[] Every `-- arg`` attribute is pattern matched
+to replace variable names surrounded by
+three `$`` on each side with the matching 
+one in the config if the plugin is on the 
+allowed list
+
+
+-- h2
+
+Examples
+
+-- h3
+
+Config File Example
+
+-- code/
+-- toml
+-- title: ~/.config/neopoligen/env.toml
+
+[env_var_name_goes_here]
+token = "the_value_itself"
+plugins = ["list", "of", "allowed", "plugin", "names"]
+
+
+
+-- /code
+
+
+-- h3
+
+Content File Examples
+
+-- code/
+-- neo
+
+-- some-plugin
+-- arg: $$$MY_LOGIN_TOKEN$$$
+
+-- /code
+
+
+-- code/
+-- neo
+
+
+-- some-other-plugin
+-- arg: --auth-token
+-- arg: $$$lowercase_is_fine$$$
+
+
+-- /code
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 11:35:36
+-- id: 2bpqgl8s
+-- status: draft
+

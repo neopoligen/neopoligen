@@ -1,0 +1,38 @@
+##################################################################################
+TEMPLATE
+PATH: pages/testing/published.jinja
+##################################################################################
+
+[!- import "includes/macros.jinja" as macros -!]
+[@- macros.place_section(page_id, "title") -@]
+[@- macros.place_section(page_id, "forward") -@]
+[@- macros.main_body(page_id) -@]
+
+
+##################################################################################
+INPUT
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/index.neo
+##################################################################################
+
+-- title
+
+This is a basic title
+
+with some paragraphs after it
+
+-- metadata
+-- id: file-under-test
+-- data: 2024-01-01 01:01:01
+-- type: testing
+-- status: published
+
+
+
+##################################################################################
+EXPECTED_OUTPUT
+##################################################################################
+
+<section class="title_section flow">
+  <div class="title_heading_group"><h1>This is a basic title</h1></div>
+  <div class="content flow"><p>with some paragraphs after it</p></div>
+</section>

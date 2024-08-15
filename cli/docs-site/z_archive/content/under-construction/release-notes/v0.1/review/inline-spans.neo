@@ -1,0 +1,36 @@
+-- title
+
+Inline Spans 
+
+-- h2
+
+Overview
+
+Inline spans look like this:
+
+-- code/
+
+<<em|Lorem Ipsum>>
+
+-- /code
+
+They can also have attributes like
+
+-- code/
+
+<<em|Lorem Ipsum|id: alfa|class: green>>
+
+-- todo
+-- title: Requirements
+
+[x] Inline spans work without
+attributes
+
+[x] Inline spans work with 
+attributes
+
+
+-- metadata
+-- date: 2024-01-25
+-- id: 2bsz7ewl
+

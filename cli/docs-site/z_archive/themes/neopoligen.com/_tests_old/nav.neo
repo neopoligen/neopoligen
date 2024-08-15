@@ -1,0 +1,95 @@
+DESCRIPTION:
+
+[x] This is the baseline test for the 
+basic-nav json section
+
+[x] The first item is for the page itself which
+demonstrates how only text is shown instead
+of turning it into a link
+
+[x] The second item doesn't have any filters
+associated with it so it shows up as 
+a link
+
+[x] The third shows general 
+behavior when outputting to something that's
+not the current page and when no filters
+match. In that case, the text is turned into
+a link
+
+[x] The fourth item has a filter which matches
+the type defined in the page (i.e. "test-sample-type-2")
+which turns off the link and outputs only text. 
+This is used for things like global navigation
+when the top level page link is designed to be
+off when in a section
+
+[x] The fifth item shows an optional title being
+used instead of the title from the page itself
+
+
+INPUT:
+
+-- title
+
+This is the current page which should not be linked
+
+
+-- nav
+-- json
+-- class: green
+-- id: nav-test
+
+[
+    {
+        "target_page": "id123nav",
+        "exclude_tags": []
+    },
+    {
+        "target_page": "id00alfa",
+        "exclude_tags": []
+    },
+    {
+        "target_page": "id00brav",
+        "exclude_tags": ["this-filter-does-not-match-anything"] 
+    },
+    {
+        "target_page": "id00char",
+        "exclude_tags": ["this-filter-matches-1"]
+    },
+    {
+        "target_page": "id00delt",
+        "exclude_tags": ["spans"],  
+        "title_override": "This is an override title"
+    }
+]
+
+-- tags
+-- this-filter-matches-1
+
+-- metadata
+-- id: id123nav
+-- date: 2024-02-17 15:39:51
+-- type: theme-test
+
+
+TARGET:
+
+<section class="title_section flow">
+  <div class="page_title_subtitle_group">
+    <h1 class="page_title">
+      This is the current page which should not be linked
+    </h1>
+  </div>
+</section>
+<div class="green" id="nav-test">
+  <ol>
+    <li>This is the current page which should not be linked</li>
+    <li><a href="/en/id00alfa/?alfa-test-file">Alfa Test File</a></li>
+    <li><a href="/en/id00brav/?bravo-test-file">Bravo Test File</a></li>
+    <li>Charlie Test File</li>
+    <li><a href="/en/id00delt/?delta-test-file">This is an override title</a></li>
+  </ol>
+</div>
+
+

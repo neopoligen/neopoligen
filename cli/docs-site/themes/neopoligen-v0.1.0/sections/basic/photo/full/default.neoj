@@ -1,0 +1,13 @@
+[! import "includes/theme.neoj" as theme !]
+[! if site.images[section.flags[0]] !]
+[! set img = site.images[section.flags[0]] !]
+<div
+    [@- theme.section_classes(section, "photo") -@] 
+    [@- section.attr_string -@]
+>
+<img 
+    src="[@- img.dir -@]/[@- img.raw_width-@]w.[@- img.extension -@]" 
+/>
+</div>
+
+[! endif !]

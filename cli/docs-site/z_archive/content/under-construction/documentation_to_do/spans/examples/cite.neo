@@ -1,0 +1,25 @@
+-- title
+
+Span: cite 
+
+-- subtitle
+
+The Citation Span
+
+-- p
+
+Basic Example: 
+
+<<cite|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<cite|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03
+-- id: 2bqpgehv
+-- status: published
+

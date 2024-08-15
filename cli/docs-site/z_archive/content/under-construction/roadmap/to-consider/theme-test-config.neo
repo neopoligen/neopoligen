@@ -1,0 +1,31 @@
+-- title
+
+Theme Testing Config Front Matter
+
+-- h2
+
+Overview
+
+Theme tests can be configured by adding 
+"toml" data before the INPUT section. 
+
+The initial use case is to pass an 
+`ignore`` flag to prevent the test
+from being run
+
+The second case is to add a `solo``
+flag that, when found, will cause only
+tests with `solo`` in them to be run
+
+
+
+-- todo
+-- title: Requirements
+
+
+
+-- metadata
+-- date: 2024-02-18
+-- id: 2cyfuy5j
+-- status: scratch
+

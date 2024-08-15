@@ -1,0 +1,26 @@
+-- start-theme-test 
+
+-- blockquote
+-- class: alfa bravo 
+-- class: charlie 
+
+Alfa bravo charlie
+
+Delta echo foxtrot
+
+
+-- expected-output/
+
+<section class="alfa bravo charlie blockquote-section flow">
+    <blockquote>
+        <p>Alfa bravo charlie</p>
+        <p>Delta echo foxtrot</p>
+    </blockquote>
+</section>
+
+-- /expected-output
+
+
+-- metadata
+-- updated: 2024-06-12T21:29:27-04:00
+-- id: 2hnut7u_blockquote

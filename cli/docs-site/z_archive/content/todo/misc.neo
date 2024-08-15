@@ -1,0 +1,51 @@
+-- title
+
+Misc. TODOs
+
+-- todo
+
+[] Allow anything to be used as a section 
+name, default any unknowns to standard
+
+[] Let backticks that don't close work
+
+[] Get footnotes working
+
+[] Get code inline spans working
+
+[] Make a version of the attr text that is escaped
+for usage inside quotes. Maybe make that way the 
+default and then make a `_raw`` if needed to get
+to raw values. 
+
+[] Remove key-value spans from the parser and docs
+
+[] Make sure an initial error is forwarded to the GUI 
+so it doesn't looks like it just died without showing
+anything
+
+[] Restart the external process if there's a
+panic the next time an update happens. (don't just
+auto-try because that would end up looping)
+
+[] Rename `macro.jinja`` and `macros.whatever`` to
+`theme.jinja`` and `theme.whatever``
+
+[] Make an example of a database approach where things
+aren't output directly. You'll need to poss the 
+filtered types to the engine. 
+
+[] Update scripts and styles and pretty much everything
+to use the AST directly instead of calling back to the
+main function
+
+[] I'm explicitly not passing flags as attrs to sections
+(e.g. so you can't do just `-- checked``. You'd have to
+do something like `-- checked: checked``)
+
+
+
+-- metadata
+-- date: 2024-04-22
+-- id: 2fsnirf2
+

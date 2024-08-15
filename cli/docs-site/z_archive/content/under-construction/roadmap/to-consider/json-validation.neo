@@ -1,0 +1,27 @@
+-- title
+
+JSON Validation
+
+
+-- h2
+
+Overview
+
+The data from JSON sections is run through a
+validator and if there's an error that's
+displayed
+
+-- todo
+-- title: Requirements
+
+[] Invalid JSON report an error identifying
+what section and input caused the issue
+
+
+
+-- metadata
+-- date: 2024-02-20
+-- id: 2ceyy8dt
+-- type: release-notes
+-- status: scratch
+

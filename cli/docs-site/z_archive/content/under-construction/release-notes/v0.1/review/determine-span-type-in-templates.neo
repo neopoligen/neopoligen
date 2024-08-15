@@ -1,0 +1,34 @@
+-- title
+
+Determine Span Types Directly Inside Span Files
+
+-- h2
+
+Overview
+
+This feature adds a `{# type: #}`` comment to the
+start of every theme span file. The three possible
+values are:
+
+-- list
+
+- `{# type: standard #}``
+
+- `{# type: key-value #}``
+
+- `{# type: internal #}``
+
+-- p
+
+The "standard" and "key-value" spans become
+available as span tags while the internal
+ones are used only by other templates directly
+
+
+
+
+-- metadata
+-- date: 2024-02-03
+-- id: 2brgv7og
+-- status: draft
+

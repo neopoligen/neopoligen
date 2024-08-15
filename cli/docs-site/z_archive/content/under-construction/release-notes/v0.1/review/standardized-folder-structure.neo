@@ -1,0 +1,147 @@
+-- title
+
+Standardized Folder Structure
+
+-- h2
+
+Overview
+
+The folder structure for Neopoligen
+is standardized in specific way. This is
+done to help minimize the amount of 
+configuration necessary. 
+
+-- list
+-- title: Details
+
+- Path: TODO: c: site_pathPIPE_GOES_HERE~/Neopoligen
+
+The top level folder is called "Neopoligen". It 
+sits in your Home folder. The `~`` stands in for 
+your Home folder in the rest of these examples
+
+- Path: TODO: c: site_pathPIPE_GOES_HERE~/Neopoligen/sites
+
+Neopoligen can build multiple sites at the
+same time. It does that by housing them
+all in this single "sites" folder
+
+- Path: TODO: c: site_pathPIPE_GOES_HERE~/Neopoligen/sites/example-site
+
+Each site gets it's own folder that goes
+in the "sites" folder. For example, the path above
+would be for a site with the folder name "example-site" 
+which is what will be used in the rest of these 
+examples
+
+- Each individual site has nine folders inside it. 
+They are, "configuration", "docs", "extras", "feeds", 
+"images", "pages", "plugins", "tests", and "themes". 
+Details for each of those are as follows:
+
+- Path: TODO: c: site_pathPIPE_GOES_HERE~/Neopoligen/sites/example-site/configuration
+
+The "configuration" folder stores files that provided
+configuration details for the site builder. 
+
+Documentation: <<tlink|2ckd5cxo>>
+
+- Path:  TODO: c: site_pathPIPE_GOES_HERE~/Neopoligen/sites/example-site/docs
+
+The "docs" folder is where Neopoligen outputs the files and
+folders that make up the site. Generally speaking, you don't
+need to do anything in this folder. And, more to the point, 
+anything you change will be overwritten the next time 
+Neopoligen builds the site
+
+The name isn't ideal, but it's what's needed to publish a 
+site on GitHub pages which is a free way to make your site 
+public
+
+Documentation: <<tlink|2ckm26rc>>
+
+- Path:  TODO: c: site_pathPIPE_GOES_HERE~/Neopoligen/sites/example-site/extras
+
+The "extras" folder is for storing any scripts or files you 
+want to have on the site that aren't managed by Neopoligen. This
+can be things like JavaScript libraries, MP3 files, or anything
+else you don't want Neopoligen to alter during publishing
+
+When the site is published, the entire folder is copied directly
+to the "docs" folder where it becomes available. For example, 
+if you download the <<link|P5 JavaScript library|https://p5js.org/>> into 
+<<em|~/Neopoligen/sites/example-site/extras/p5/p5.js>> it is
+copied to:
+<<em|~/Neopoligen/sites/example-site/docs/p5/p5.js>> which allows
+you to use the library with a script tag like:
+
+`<script src="/p5/p5.js"></script>``
+
+(Note: You can store images in the "extras" directory, but 
+Neopoligen won't process them. In most cases, you'll want to
+use the "images" directory listed below.)
+
+Documentation: <<tlink|2ckmbnyy>>
+
+
+- Path: <<c: site_path|~/Neopoligen/sites/example-site/feeds>>
+
+The "feeds" folder is a placeholder. It will be used to provide
+RSS feed configuration once the functionality is in place
+
+Documentation: <<tlink|2ckjlmnl>>
+
+
+- Path:  TODO: c: site_pathPIPE_GOES_HERE~/Neopoligen/sites/example-site/images
+
+The "images" folder is used to store any images you want to
+use in `-- image`` sections. You create sub-folders and store 
+image files in any structure you want inside them. Neopoligen
+will automatically find the image by its name at set the 
+proper path when building the site
+
+Documentation: <<tlink|2ckgpkud>>
+
+- Path:  TODO: c: site_pathPIPE_GOES_HERE~/Neopoligen/sites/example-site/pages
+
+The "pages" folder is where all the plain-text ".neo" content
+files go. Neopoligen uses the `-- id`` attribute in each file's
+`-- metadata`` section for publishing the site. That means you can
+make sub-folders and store the content in any structure you wish 
+and move things around as much as you want
+
+Documentation: <<tlink|2ckhc8nr>>
+
+- Path:  TODO: c: site_pathPIPE_GOES_HERE~/Neopoligen/sites/example-site/plugins
+
+Plugin functionality is under development. When it's ready, this
+is where the plugins will be set up and stored
+
+Documentation: <<tlink|2ckju3rm>>
+
+- Path: c: site_pathPIPE_GOES_HERE~/Neopoligen/sites/example-site/tests
+
+The "tests" directory provides a way to help make sure you
+don't break things if you work with the templates. Each file
+contains details for some output that should show up on the
+site when it's built. Each time the build process runs the
+tests are triggered to alert you to any errors
+
+Documentation: <<tlink|2ckikgds>>
+
+- Path:  TODO: c: site_pathPIPE_GOES_HERE~/Neopoligen/sites/example-site/themes
+
+The template used to output a Neopoligen site are grouped 
+together in themes. This is the parent directory that stores
+each theme in their own sub-folder along with a `theme-to-use.txt``
+file that defines which theme powers the site when its built
+
+Documentation: <<tlink|2ckihevi>>
+
+
+
+-- metadata
+-- date: 2024-02-13
+-- id: 2ck5rhdc
+-- status: scratch
+

@@ -1,0 +1,29 @@
+-- title
+
+Add Source Text To Sections
+
+-- h2
+
+Overview
+
+This feature adds the Neopolitan source for each section
+into a `source`` field so it can be displayed for examples
+
+-- todo
+-- title: Details
+
+[x] Calling `section.source`` in a template outputs the 
+raw source text for the section
+
+[x] source text is trimmed of empty space before and
+after the body of text
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-28
+-- id: 2bbolawz
+
