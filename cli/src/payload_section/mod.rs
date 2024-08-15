@@ -16,6 +16,7 @@ pub struct PayloadSection {
     pub attrs: BTreeMap<String, String>,
     pub attr_spans: BTreeMap<String, Vec<PayloadSpan>>,
     pub bounds: String,
+    pub checked: bool,
     pub children: Vec<PayloadSection>,
     pub classes: Option<String>,
     pub created: Option<String>,
@@ -103,6 +104,15 @@ impl PayloadSection {
             SectionBounds::End => "end".to_string(),
             SectionBounds::Full => "full".to_string(),
             SectionBounds::Start => "start".to_string(),
+        };
+
+        let (checked, checked_string) = match &section.kind {
+            SectionKind::ChecklistItem { checked_string, .. } => match checked_string {
+                Some(v) => (true, Some(v.to_string())),
+                None => (false, None),
+            },
+
+            _ => (false, None),
         };
 
         let children = match &section.kind {
@@ -304,6 +314,7 @@ impl PayloadSection {
             attrs,
             attr_spans,
             bounds,
+            checked,
             children,
             classes,
             created,
@@ -523,6 +534,28 @@ mod test {
         let section = Section::mock1_basic_title_section_no_attrs();
         let left = "full";
         let right = &PayloadSection::new_from_section(&section, &config).bounds;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_checklist_item_checked_false() {
+        let ps = PayloadSection::new_from_section(
+            &Section::mock11_checklist_items(),
+            &SiteConfig::mock1_basic(),
+        );
+        let left = false;
+        let right = ps.children[0].checked;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_checklist_item_checked_true() {
+        let ps = PayloadSection::new_from_section(
+            &Section::mock11_checklist_items(),
+            &SiteConfig::mock1_basic(),
+        );
+        let left = true;
+        let right = ps.children[1].checked;
         assert_eq!(left, right);
     }
 

@@ -1,1 +1,8 @@
-Generic start
+[! import "includes/theme.neoj" as theme !]
+<li class="flow">
+[ [!- if section.checked -!] x [!- endif-!] ]
+
+
+[! for child in section.children!]
+[@ theme.output_section("", "", child) @]
+[! endfor !]
