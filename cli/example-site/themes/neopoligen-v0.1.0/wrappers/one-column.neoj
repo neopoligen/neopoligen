@@ -73,6 +73,11 @@
 </pre>
 #]
 
+[#
+<pre>
+[@ site|tojson(true) @]
+</pre>
+#]
 
 </body>
 
