@@ -8,9 +8,9 @@
 
 -- expected-output/
 
-<ul>
-<li><p>alfa</p></li>
-<li><p>bravo</p></li>
+<ul class="flow">
+<li class="flow"><p>alfa</p></li>
+<li class="flow"><p>bravo</p></li>
 </ul>
 
 -- /expected-output
