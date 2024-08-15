@@ -10,7 +10,7 @@
 
 <pre>[! autoescape true !][@- section.text -@][! endautoescape !]</pre>
 
-
 [! for child in section.children !]
     [@ theme.output_section(site, page_id, child) @]
 [! endfor !]
+

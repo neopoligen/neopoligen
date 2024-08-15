@@ -22,8 +22,7 @@ echo foxtrot
 
 <section class="p-section flow">
 <p>echo foxtrot</p>
-</section>
-
+</section> 
 
 -- /expected-output
 
