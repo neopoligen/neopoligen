@@ -1,8 +1,6 @@
 [! import "includes/theme.neoj" as theme !]
 <li class="flow">
-[ [!- if section.checked -!] x [!- endif-!] ]
-
-++++[@ section.checked_string @]++++
+[ [!- if section.checked -!] [@ section.checked_string @] [!- endif-!] ]
 
 [! for child in section.children!]
 [@ theme.output_section("", "", child) @]

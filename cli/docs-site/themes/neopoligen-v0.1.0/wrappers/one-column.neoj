@@ -54,11 +54,13 @@
 <body>
 <header>
       <a href="/">Home</a>
+      [#
       <div class="under-construction">
         NOTE: I'm in the middle of upgrading the site. Most things are in place, but
         some things are missing and/or broken. This includes alt text for images. Please
         bear with me while I get things fixed. 
       </div>
+      #]
     </header>
 <main class="flow">
 [!- block body -!][!- endblock -!]
@@ -67,9 +69,11 @@
 <footer></footer>
 
 
+[#
 <pre>
 [@ page|tojson(true) @]
 </pre>
+#]
 
 [#
 <pre>

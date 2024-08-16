@@ -1,7 +1,3 @@
-[! import "includes/theme.neoj" as theme !]
-<ul class="flow">
-[! for child in section.children !]
-[@ theme.output_section("", "", child) @]
-[! endfor !]
+[! include "sections/list/list/start/default.neoj" !]
 </ul>
 
