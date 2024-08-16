@@ -1,0 +1,30 @@
+-- title
+
+Confirm Macros Exist
+
+-- h2
+
+Overview
+
+It's easy to misspell macro names when working
+with templates. This feature does a check across
+all the macros in the template to make sure
+they exist in the `includes/macros.jinja`` file
+
+
+
+-- todo
+-- title: Requirements
+
+[] If a macro is called in a template that doesn't
+exist in the `includes/macros.jinja`` file
+an error is reported
+
+
+
+-- metadata
+-- date: 2024-02-20
+-- id: 2cequ34f
+-- type: release-notes
+-- status: scratch
+

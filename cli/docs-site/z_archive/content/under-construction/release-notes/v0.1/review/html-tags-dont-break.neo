@@ -1,0 +1,45 @@
+-- title
+
+HTML Tags Don't Break
+
+-- h2
+
+Overview
+
+Inline HTML tags don't convert to HTML
+in any section other than `-- html``. 
+This proposal makes sure they don't
+break when they do show up and are
+simply passed through to the template
+
+
+-- todo
+
+[] Individual greater than and less than 
+signs don't cause the builder to freak 
+out
+
+[] Greater than and less than signs 
+can be touching a word and still work
+(e.g. in HTML tags)
+
+[] Greater than and less than signs
+can be floating by themselves and
+not break
+
+
+-- h2
+
+Examples
+
+
+
+-- tags
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 11:18:14
+-- id: 2bpo9lwd
+-- status: scratch
+

@@ -1,0 +1,41 @@
+[!- import "includes/macros.jinja" as macros -!]
+
+<section [@- section_attributes(page_id, {"section": section, "classes": "quote_section standard_category_section flow" } ) -@]>
+    [!- include "section-parts/forward.jinja" -!]
+
+    [!- if section.key_value_attributes.title or section.key_value_attributes.subtitle -!]
+    <div class="heading_group">
+        [!- if section.key_value_attributes.title -!]
+            <h2>
+                [@- section.key_value_attributes.title -@]
+            </h2>
+        [!- endif -!]
+        [!- if section.key_value_attributes.subtitle -!]
+            <div class="subtitle">
+                [@- section.key_value_attributes.subtitle -@]
+            </div>
+        [!- endif -!]
+    </div>
+    [!- endif -!]
+
+    [!- include "section-parts/preface.jinja" -!]
+
+    [!- if section.category.content.containers[0] -!]
+    <div class="content flow">
+        [!- for content in section.category.content.containers -!]
+            <p>[@- output_payload(page_id, content, extras) -@]</p>
+        [!- endfor -!]
+    </div>
+    [!- endif -!]
+
+    [!- if section.key_value_attributes.by -!]
+    <div class="attribibution">
+    -- [@ section.key_value_attributes.by -@]
+    [!- if section.key_value_attributes.source -!]
+    [@- ' ' -@]
+    ([@ section.key_value_attributes.source -@])
+    [!- endif -!]
+    </div>
+    [!- endif -!]
+
+    [!- include "section-parts/afterword.jinja" -!]

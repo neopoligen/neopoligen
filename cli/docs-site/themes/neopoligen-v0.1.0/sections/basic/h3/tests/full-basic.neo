@@ -1,0 +1,21 @@
+-- start-theme-test
+
+-- h3
+
+Alfa Bravo Charlie
+
+-- expected-output/
+
+<section class="h3-section flow">
+<hgroup>
+<h3 class="section-heading">Alfa Bravo Charlie</h3>
+</hgroup>
+</section>
+
+-- /expected-output
+
+
+-- metadata
+-- updated: 2024-06-06T15:03:16-04:00
+-- id: 2hwclom3_h3
+

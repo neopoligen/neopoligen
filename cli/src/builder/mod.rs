@@ -1,4 +1,5 @@
 use crate::helpers::*;
+use crate::image::{Image, ImageSize};
 use crate::neo_error::{NeoError, NeoErrorKind};
 use crate::page_payload::{PagePayload, ThemeTestOrPage};
 use crate::site::Site;
@@ -11,12 +12,6 @@ use image::io::Reader;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
 use minijinja::{context, Value};
-// use rimage::config::{Codec, EncoderConfig};
-// use rimage::image::imageops::FilterType;
-// use rimage::image::DynamicImage;
-// use rimage::Decoder;
-// use rimage::Encoder;
-use crate::image::{Image, ImageSize};
 use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
 use serde_json;
@@ -95,7 +90,7 @@ impl Builder {
 impl Builder {
     #[instrument(skip(self))]
     pub fn build_image_cache(&mut self) -> Result<()> {
-        event!(Level::DEBUG, "Building Images");
+        event!(Level::INFO, "Building Image Cache");
         let image_source_paths = get_image_paths(&self.config.as_ref().unwrap().image_source_dir());
         image_source_paths.iter().for_each(|img_path| {
             // TODO: Handle pngs and other image formats
@@ -112,7 +107,11 @@ impl Builder {
                             .image_cache_dir()
                             .join(image_name);
                         let _ = fs::create_dir_all(&image_dest_dir);
-                        let image_dest_path = image_dest_dir.join(format!("{}w.jpg", width));
+                        let image_dest_path = image_dest_dir.join(format!(
+                            "{}w.{}",
+                            width,
+                            ext.to_string_lossy().to_ascii_lowercase()
+                        ));
                         let _ = fs::copy(img_path, image_dest_path);
                         let mut sizes = vec![];
                         self.config
@@ -122,8 +121,11 @@ impl Builder {
                             .iter()
                             .for_each(|img_width| {
                                 if width > *img_width {
-                                    let resize_dest_path =
-                                        image_dest_dir.join(format!("{}w.jpg", img_width));
+                                    let resize_dest_path = image_dest_dir.join(format!(
+                                        "{}w.{}",
+                                        img_width,
+                                        ext.to_string_lossy().to_ascii_lowercase()
+                                    ));
                                     if ext.to_ascii_lowercase() == "jpg"
                                         || ext.to_ascii_lowercase() == "jpeg"
                                     {
@@ -137,10 +139,20 @@ impl Builder {
                                             width: *img_width,
                                             height: resize_height,
                                         });
+                                    } else if ext.to_ascii_lowercase() == "png" {
+                                        let _ = resize_and_optimize_png(
+                                            &img_path,
+                                            *img_width,
+                                            &resize_dest_path,
+                                        );
+                                        let resize_height = img.height() * *img_width / img.width();
+                                        sizes.push(ImageSize {
+                                            width: *img_width,
+                                            height: resize_height,
+                                        });
                                     }
 
                                     //                 } else if image.extension()? == "png" {
-                                    //                     resize_and_optimize_png(&image.source_path, version.0, &version_path)?;
                                     //                 } else {
                                     //                     event!(
                                     //                         Level::ERROR,
@@ -348,7 +360,7 @@ impl Builder {
 
     #[instrument(skip(self))]
     pub fn load_pages_from_cache(&mut self) -> Result<()> {
-        event!(Level::INFO, "Loading Cached Files");
+        event!(Level::INFO, "Loading Pages From Cache");
         let conn = Connection::open(self.config.as_ref().unwrap().cache_db_path())?;
         conn.execute(
             "CREATE TABLE IF NOT EXISTS page_archive (path TEXT, page_object Text)",
@@ -695,7 +707,7 @@ impl Builder {
         )
         .unwrap();
         env.add_template_owned(
-            "sections/basic/expected-output/end/default.neoj",
+            "sections/raw/expected-output/end/default.neoj",
             "<!-- EXPECTED_OUTPUT -->".to_string(),
         )
         .unwrap();
@@ -718,6 +730,7 @@ impl Builder {
                             .collect::<Vec<&str>>();
                         tests.iter().skip(1).for_each(|t| {
                             let parts = t.split("<!-- EXPECTED_OUTPUT -->").collect::<Vec<&str>>();
+                            // dbg!(&parts);
                             if parts.len() == 3 {
                                 let got = format_html_for_theme_test_display(parts[0]);
                                 let expected = format_html_for_theme_test_display(parts[1]);

@@ -116,6 +116,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
             // Prep
             let _ = builder.prep_output_dirs();
             let _ = builder.load_templates();
+            // TODO: Turn image cache back on when dev is done
             let _ = builder.build_image_cache();
             // Site
             builder.load_pages_from_cache().unwrap();
@@ -126,12 +127,14 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
             let _ = builder.empty_output_dirs();
             let _ = builder.output_pages();
             let _ = builder.deploy_images();
+
             // Theme Test
             builder.update_config_for_theme_test();
             builder.load_theme_test_pages().unwrap();
             builder.generate_missing_asts();
             builder.generate_payloads(ThemeTestOrPage::ThemeTest);
             let _ = builder.test_theme();
+
             // Other Files
             let _ = builder.deploy_theme_files();
 

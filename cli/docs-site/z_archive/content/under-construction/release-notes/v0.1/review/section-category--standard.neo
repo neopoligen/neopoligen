@@ -1,0 +1,46 @@
+-- title
+
+Section Category: Standard
+
+-- h2
+
+Overview
+
+Standard sections are those that contain blocks of content
+directly (as opposed to preformatted, list, or plugins).
+This proposal make the start, full, and end variations
+for them. 
+
+-- todo
+
+
+
+[x] Full section tags work (e.g. `-- h2``) 
+
+[x] Full sections have key value attributes
+
+[x] Full sections have flag attributes
+
+[x] Start section tags work (e.g. `-- h2/``)
+
+[x] Start sections have key value attributes
+
+[x] Start sections have flag attributes
+
+[x] End section tags work (e.g. `-- h2/``)
+
+[x] End sections have key value attributes
+
+[x] End sections have flag attributes
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 10:07:15
+-- id: 2bpfw68f
+-- status: published
+

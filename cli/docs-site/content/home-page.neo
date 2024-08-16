@@ -1,0 +1,493 @@
+-- title
+
+Welcome To Neopoligen
+
+-- p
+
+Neopoligen is a free website building app. It's designed to 
+make websites you can tinker with.
+
+The app built this site, but it needs a little more work 
+before it's ready for other folks to play with. Until then, 
+you can read more about how it works below. You can also
+<<link|check out GitHub|
+https://github.com/neopoligen/neopoligen>> 
+if you want to follow along with the development. 
+
+-- h2
+
+How It Works
+
+-- h3
+
+Files
+
+Neopoligen sites are made from files that look like this:
+
+-- pre/
+-- class: neo-example
+
+-- title
+
+Welcome To Neopoligen
+
+-- p
+
+Neopoligen is a free website building app. It's designed to 
+make websites you can tinker with.
+
+The app built this site, but it needs a little more work 
+before it's ready for other folks to play with. Until then, 
+you can read more about how it works below. You can also
+<<link|check out GitHub|https://github.com/neopoligen/neopoligen>> 
+if you want to follow along with the development. 
+
+-- metadata
+-- created: 2024-05-31T19:20:58-04:00
+-- id: 2ikuxluk
+
+
+-- /pre
+
+
+-- h2
+
+Sections
+
+Neopoligen files are made from sections that start with two dashes
+and a name like: <<code|-- title>>, <<code|-- p>> and <<code|-- metadata>>. 
+The name for each section determines what happens to the content in it. 
+For example, outputting a title or a set of paragraphs like above. Some
+sections, like "metadata", don't do anything directly. They're used
+for things like storing the IDs of a pages which are used for linking.
+
+Another type of section is <<code|-- list>> which looks like this:
+
+-- pre/
+-- class: neo-example
+
+-- list
+
+- the quick brown fox
+
+- jumps over the lazy dog
+
+-- /pre
+
+Each line that starts with a single dash becomes a new list
+item which turns into this output:
+
+-- list
+-- class: neo-example
+
+- the quick brown fox
+
+- jumps over the lazy dog
+
+
+-- p
+
+Some of the other default sections include: 
+
+-- list
+
+- Blockquotes
+
+- Checklists
+
+- Code Samples
+
+- Footnotes^^1^^
+
+- HTML, CSS, and JavaScript Embeds 
+
+- Images
+
+
+-- h3
+
+Section Attributes
+
+Each section can have addition details called "attributes". 
+They can do things like change a section's appearance, add 
+alt text to images, or provide more content that can be formatted 
+independently. 
+
+Attributes are made by adding extra lines start 
+with two dashes after a section. For example, 
+here's a <<code|-- class>> attribute that's used to make the
+text in the section green.
+
+-- pre/
+-- class: neo-example
+
+-- p 
+-- class: green 
+
+The quick brown fox jumps over the lazy dog
+
+-- /pre
+
+This is what that looks like:
+
+-- p 
+-- class: green neo-example
+
+The quick brown fox jumps over the lazy dog
+
+
+-- h3
+
+Custom Sections
+
+Neopoligen works by using templates to control the
+output of each type of section. It comes with several default 
+sections, but you can make as many as you want. 
+As far as the app is concerned, there's no difference
+between a section/template combination you make and
+one the ones the come built-in. 
+
+For example, here's a new type of section called <<code|book-to-read-example>> 
+with some attributes for the title, author, and cover image. 
+
+
+-- pre/
+-- class: neo-example
+
+-- book-to-read-example
+-- title: The Peripheral
+-- author: William Gibson
+-- image: the-peripheral-cover.jpg
+
+I've read a bunch of other William Gibson stuff and can't
+wait to get to this one!
+
+-- /pre
+
+And here's an example of what it could look like:
+
+-- book-to-read-example
+-- class: neo-example
+-- title: The Peripheral
+-- author: William Gibson
+-- image: /neo-images/the-peripheral-cover/100w.jpg
+
+I've read a bunch of other William Gibson stuff and can't
+wait to get to this one!
+
+
+-- h2
+
+Spans
+
+Neopoligen supports adding different "spans" to text inside
+sections. A span starts with two less than signs and ends 
+followed by the name for the type of span then a pipe character
+and the contents. A closing pair of two greater than signs ends
+the span. 
+
+For example, here's an "em" span that makes the text inside it italics:
+
+-- pre/
+-- class: neo-example
+
+The <<em|quick brown>> fox
+
+-- /pre
+
+The output looks like this:
+
+-- p
+-- class: neo-example
+
+The <<em|quick brown>> fox
+
+
+-- h3
+
+Nested Spans
+
+Spans can be nested inside each other. For example, here's
+how to make text that's bold (via "strong")
+and underlined (via "u"). 
+
+-- pre/
+-- class: neo-example
+
+The <<strong|<<u|quick brown>>>> fox
+
+-- /pre
+
+
+-- p 
+
+Which outputs:
+
+-- p
+-- class: neo-example
+
+The <<strong|<<u|quick brown>>>> fox
+
+
+
+
+-- h3
+
+Span Attributes
+
+Spans can have attributes as well. Attributes are separated 
+by a pipe character like this:
+
+-- pre/
+-- class: neo-example
+
+The <<em|quick brown|class: green>> fox
+
+-- /pre
+
+The output looks like this:
+
+-- p
+-- class: neo-example
+
+The <<em|quick brown|class: green>> fox
+
+
+-- h3
+
+Custom Span Functionality
+
+Spans work off templates the same way sections do. You can make your 
+own with whatever functionality you want. The <<code|tlink>> span 
+is a good example. It takes the ID of another page on the site
+and turns into into a link to that page using the page's title. 
+
+
+-- pre/
+-- class: neo-example
+
+Next Page: <<tlink|2kiw8tvv>>
+
+-- /pre
+
+-- p
+
+Which outputs this:
+
+
+-- p
+-- class: neo-example
+
+Next Page: <<tlink|2kiw8tvv>>
+
+
+-- h2
+
+Hosting
+
+Neopoligen uses files directly on your computer to create 
+websites. You can preview the sites on your machine. You have to
+published them to a "hosting provider" to make them available
+to the world. Neopoligen is designed to work with a free
+service called GitHub Pages by default. 
+
+Details on using GitHub and other free services are a work in progress.
+
+-- css
+
+.book-grid {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 20px;
+}
+
+code {
+  background-color: #444;
+  border: 1px solid #777;
+  padding-inline: 0.2rem;
+  border-radius: 0.2rem;
+}
+
+.green {
+  color: green;
+}
+
+.neo-example {
+  font-size: 0.85rem;
+  border: 1px solid #333;
+  padding: 1.2rem;
+}
+
+u {
+  text-decoration: underline;
+}
+
+
+-- h2
+
+Tech Stuff
+
+A few details for those interested in the more technical side
+of things:
+
+-- list
+
+- Neopoligen is a <<link|Static Site Generator|https://en.wikipedia.org/wiki/Static_site_generator>> 
+written in <<link|Rust|https://www.rust-lang.org/>> that uses the <<link|nom|https://docs.rs/nom/latest/nom/>> parser 
+combinator for parsing and <<link|MiniJinja|https://docs.rs/minijinja/latest/minijinja/syntax/index.html>> for
+templates
+
+- Sites generated by the app can be hosted pretty much anywhere that offers
+static site hosting. The only real requirement is that the server automatically serve "index.html"
+files when a directory is called e.g. calling "<<em|/en/abcd1234/>>" returns the file
+stored at "<<em|/en/abcd1234/index.html>>"). Every service I'm aware of has this option.
+
+- The original content files are stored locally on your machine. You maintain ownership and 
+control of them. You can change hosting providers at any time without losing your content. 
+
+- You can also keep your site name when changing hosting providers if you buy your own
+domain name (I'll write more about, but it's something I highly recommend if you can
+afford it)
+
+- Neopoligen is not built off from on any JavaScript frameworks and learning 
+JavaScript is not required to create new templates or modify existing ones. (I'm building
+Neopoligen with the explicit goal that it's what powers my site for the next twenty years
+and part of the means not constantly jumping to new frameworks)
+
+- The name of the content file format is "Neopolitan" which uses the ".neo" file extension
+
+- Templates are stored in ".neoj" files. They're just like regular MiniJinja files with the 
+exception that the delimiters have been changed from {% %}, {{ }}, and {# #} to [! !], 
+[@ @], and [# #] because I find those easier to type and read
+
+- Templates are grouped together into themes. The theme for a site is determined via a
+config file. The default theme can be copied to a new folder and used as the starting
+point for making a new one
+
+- Each content page has a "type" which defaults to "post" and a "status" that defaults
+to "published". Those values can be changed for any page by setting attributes in the
+<<code|-- metadata>> section. The "type" and "status" are then used to determine which
+base template to use from the theme. (e.g. you can make templates for "post/draft", 
+"homepage/published", etc...)
+
+- All sections have a default template. Additional templates can be added for each section 
+type and then used by adding a <<code|-- template>> attribute
+
+- Custom CSS and JavaScript can be added to pages via <<code|-- css>> and <<code|-- javascript>> 
+sections. The output from those sections is added to the <head> of the document in
+their appropriate tags
+
+- The default theme contains custom templates for CSS and JavaScript that show them as
+inline code blocks as well as adding them to the <head> of the document. This effectively 
+provides live code for examples so you can verify your samples actually work
+
+- The default theme includes an HTML section that drops raw HTML directly into the output. 
+Similar to the CSS and JavaScript sections there's a custom template to show the code
+in a code block as well as output it to verify code samples do what they're supposed to
+
+- The default theme provides for <<code|-- head>> sections. The content of those sections
+is inserted directly in the html <head> element of the output for things like adding 
+script libraries
+
+- Syntax highlighting is built-in. Highlighting can be applied to sections similar to how
+code blocks are used in Markdown. Highlights can also be added to inline text via spans
+
+- The syntax highlighting is done via classes (instead of via inline styles) so things
+can be controlled via stylesheets
+
+- The syntax highlighter adds an empty span with a specific class at the start of each 
+line that can be used to add line number in CSS
+
+- A test engine for verifying the output of templates is built-in
+
+- Basic image optimization is built-in
+
+- Basic Open Graph images with the title of the page are built-in
+
+- Right now, the app is a command line app, but a front end built with 
+<<link|Tauri|https://tauri.app/>> is in progress. The goal is to make it so 
+folks can build sites without having to learn to use the command line
+
+- Basic error handling and messaging is built into the app. It's not great yet, 
+but improving it is an explicit goal. (This is based off my experience with
+the Rust compiler where the general vibe is if you can't figure out what
+you need to do based on an error message they consider that a bug)
+
+- I've built a basic syntax highlighter for Neopolitan via 
+<<link|Tree-sitter|https://tree-sitter.github.io/tree-sitter/>>
+for <<link|Neovim|https://neovim.io/>>. My longer term goal is to make
+an LSP for both ".neo" and ".neoj" files that can be used with 
+Neovim, VSCode, or any other app that works with LSPs
+
+- Pages are output to URLs based off their IDs be default. (e.g. "<<em|/en/2kiw8tvv/>>"). 
+This is done in an effort to prevent link rot by keeping the URLs the same regardless of
+if the content on the page changes or it's moved in the source file directory structure. 
+
+My plan is to use Neopoligen for my sites from this point forward, but if I ever do move 
+again it will be easier to duplicate that exact structure than trying to match something
+with text slugs or redirects. (Over the past few decades I've used both those techniques 
+repeatedly and I'm not interested in doing it ever again)
+
+- Another reason for the use of IDs is for automatic linking. You can always just link
+directly to the ID for a given page. 
+
+- The default theme provides "ilink" and "tlink" spans for automatic linking to pages. 
+The links these spans generate contain the title of the destination page in a URL friendly query
+string (e.g. "<<em|/en/2kiw8tvv/?todo-list>>"). While that's not nearly as pretty as 
+"<<em|/todo-list>>" it does provide a human readable slug. 
+
+It's unclear from my research what impact using the slug in a query string has on SEO, but, 
+frankly, I don't really care. My goal is not to make sites that most pleases the search engines. It's
+to make an app that makes it as easy as possible to create content. Not having to
+fiddle with URLs supports that goal. 
+
+- All that said, Neopoligen supports setting up specific custom URLs by adding
+a <<code|-- path>> attribute to the <<code|-- metadata>> section of a file. 
+
+Personally, I rarely do this. I want to avoid link rot as much as possible and adding a custom URL
+means having to maintain it. Over the past few decades I've moved my sites enough that
+I've spent days worth of effort dealing with changing URLs. I've decided to opt out
+of that. Even for things like my "about" page. Sure, "/about" looks better than
+"/en/abcd1234/?about", but I doubt that's going to keep most people from clicking
+the link if they even think about it at all. I'd rather put my effort elsewhere.
+
+- The "en" in the default URL paths comes from the default language that's defined for
+each site in its config file. This is done to  support internationalization/localization. 
+I'm not planning to add that any time soon but want to make sure the app and, more 
+importantly, the URLs are prepped for it.
+
+
+
+-- h2
+
+Next Steps
+
+That's the basics of how Neopoligen works. There's more advanced
+stuff like being able to nest sections, embedding JavaScript and 
+CSS, syntax highlighting,  and outputting collections of links 
+of pages. I'm in the process of writing up how the other parts work 
+and will post them as they're finished. 
+
+I'll be posting about progress on my <<link|Mastodon account|https://hachyderm.io/@TheIdOfAlan>>
+if you're interested. You can also checkout my personal site (which is
+built from Neopoligen) at: <<link|alanwsmith.com|https://www.alanwsmith.com/>>
+
+
+
+
+-- footnote
+-- id: 1
+
+The default set of templates for Neopoligen provide for
+automatic linking of footnote numbers in the text and
+the footnote itself at the bottom of the page. 
+
+
+-- metadata
+-- created: 2024-05-31T19:20:58-04:00
+-- updated: 2024-05-31T19:20:58-04:00
+-- id: 2ikuxluk
+-- type: home-page
+-- path: /
+
+

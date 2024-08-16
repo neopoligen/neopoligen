@@ -1,0 +1,41 @@
+-- title
+
+Checklist Sections
+
+-- checklist
+
+[x] alfa
+
+delta
+
+[x] bravo
+
+[] charlie
+
+
+-- checklist
+-- example_flag
+-- title: Example Checklist
+-- subtitle: With a subtitle
+-- class: green
+-- forward: This is froward text that goes
+-- forward: above the title in this theme
+-- preface: This is a preface that
+-- preface: goes below the title/subtitle
+-- afterword: This is some short text that
+-- afterword: follows the checklist
+
+[x] sierra
+
+tango
+
+[x] uniform
+
+[] victor
+
+
+
+-- metadata
+-- date: 2024-02-01
+-- id: 2bn4fdhe
+

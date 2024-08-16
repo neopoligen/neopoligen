@@ -1,3 +1,4 @@
+use html_escape::*;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use tracing::{event, instrument, Level};
@@ -6,12 +7,13 @@ use crate::{
     helpers::*,
     neo_error::{NeoError, NeoErrorKind},
     payload_section::PayloadSection,
-    payload_span::PayloadSpan,
+    // payload_span::PayloadSpan,
     source_page::SourcePage,
 };
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PagePayload {
+    pub absolute_url: Option<String>,
     pub id: Option<String>,
     pub language: Option<String>,
     // TODO: Rename rel_file_path to rel_dest_path;
@@ -31,7 +33,7 @@ pub struct PagePayload {
     /// specifically used to make an update for the
     /// rel_source_path based off the content dir
     pub theme_test_or_page: ThemeTestOrPage,
-    pub title: Vec<PayloadSpan>,
+    pub title: Option<String>,
     pub used_template: Option<String>,
 }
 
@@ -64,22 +66,21 @@ impl PagePayload {
                     })
                     .collect::<Vec<PayloadSection>>();
                 let mut p = PagePayload {
+                    absolute_url: None,
                     id: None,
                     language: None,
-                    rel_source_path: None,
                     r#type: Some("post".to_string()),
                     rel_file_path: None,
+                    rel_source_path: None,
                     sections,
                     source_path: Some(source_path.clone()),
                     status: Some("published".to_string()),
                     theme_test_or_page,
                     template_list: vec![],
-                    title: vec![], // TODO: Add title spans
+                    title: None,
                     used_template: None,
                 };
-
                 p.get_id();
-
                 match p.id {
                     Some(_) => {
                         p.get_language(&source);
@@ -88,6 +89,8 @@ impl PagePayload {
                         p.get_template_list();
                         p.get_rel_source_path(&source);
                         p.get_rel_file_path();
+                        p.get_title();
+                        p.get_rel_url_path();
                         Ok(p)
                     }
                     None => Err(NeoError {
@@ -151,21 +154,44 @@ impl PagePayload {
             self.language.as_ref().unwrap(),
             self.id.as_ref().unwrap()
         )));
-        // update again if there's a metadata path
-        // TODO: Make this all happen in one go
-        // at some point instead of two passes
+
+        // // update again if there's a metadata path
+        // // TODO: Make this all happen in one go
+        // // at some point instead of two passes
+        if let Some((_, spans)) = self
+            .sections
+            .iter()
+            .rfind(|section| section.r#type == "metadata")
+            .and_then(|sec| sec.attr_spans.iter().find(|attr| *attr.0 == "path"))
+        {
+            self.rel_file_path = Some(
+                scrub_rel_file_path(&flatten_payload_spans(&spans.clone())).expect("get filepath"),
+            )
+        }
+
+        // Now override if there's a `full-path`.
+        // TODO: Needs test
         self.sections.iter().for_each(|section| {
             if section.r#type == "metadata" {
                 let _ = &section.attr_spans.iter().for_each(|(key, spans)| {
-                    if key.eq("path") {
-                        self.rel_file_path = Some(
-                            scrub_rel_file_path(&flatten_payload_spans(&spans.clone()))
-                                .expect("get filepath"),
-                        );
+                    if key.eq("full-path") {
+                        let the_path = &flatten_payload_spans(&spans.clone());
+                        self.rel_file_path = Some(the_path.trim_start_matches("/").into());
                     }
                 });
             }
         });
+    }
+
+    // TODO: If you can't make a url_path, throw an error
+    // TODO: Set up for path override
+    // TODO: Set up for home page
+    pub fn get_rel_url_path(&mut self) {
+        if let (Some(lang), Some(id), Some(title)) =
+            (self.language.clone(), self.id.clone(), self.title.clone())
+        {
+            self.absolute_url = Some(format!("/{}/{}/?{}", lang, id, url_from_string(&title)));
+        }
     }
 
     pub fn get_status(&mut self) {
@@ -180,8 +206,43 @@ impl PagePayload {
     }
 
     pub fn get_template_list(&mut self) {
-        self.template_list
-            .push("pages/post/published.neoj".to_string());
+        if let (Some(t), Some(s)) = (self.r#type.clone(), self.status.clone()) {
+            let new_path = format!("pages/{}/{}.neoj", t, s);
+            if !self.template_list.contains(&new_path) {
+                self.template_list.push(new_path);
+            }
+        }
+        if let Some(t) = self.r#type.clone() {
+            let new_path = format!("pages/{}/published.neoj", t);
+            if !self.template_list.contains(&new_path) {
+                self.template_list.push(new_path);
+            }
+        }
+        if let Some(s) = self.status.clone() {
+            let new_path = format!("pages/post/{}.neoj", s);
+            if !self.template_list.contains(&new_path) {
+                self.template_list.push(new_path);
+            }
+        }
+        let new_path = format!("pages/post/published.neoj");
+        if !self.template_list.contains(&new_path) {
+            self.template_list.push(new_path);
+        }
+    }
+
+    pub fn get_title(&mut self) {
+        self.sections.iter().for_each(|section| {
+            if section.r#type == "title" {
+                match section.children.first() {
+                    Some(stuff) => {
+                        self.title = Some(
+                            encode_safe(&flatten_payload_spans(&stuff.spans.clone())).to_string(),
+                        )
+                    }
+                    _ => (),
+                }
+            }
+        })
     }
 
     pub fn get_type(&mut self) {
@@ -258,6 +319,19 @@ mod test {
     }
 
     #[test]
+    fn rel_file_full_path() {
+        let p = PagePayload::new_from_source_page(
+            &PathBuf::from("/test/mocks/source/filename.neo"),
+            &SourcePage::mock6_20240106_foxtrot8_full_path(),
+            ThemeTestOrPage::Page,
+        )
+        .unwrap();
+        let left = PathBuf::from("CNAME");
+        let right = p.rel_file_path.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
     fn rel_source_path_check_for_page() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/content/subdir/filename.neo"),
@@ -318,6 +392,24 @@ mod test {
         )
         .unwrap();
         let left = vec!["pages/post/published.neoj".to_string()];
+        let right = p.template_list;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_template_list_with_type_and_status() {
+        let p = PagePayload::new_from_source_page(
+            &PathBuf::from("/test/mocks/source/filename.neo"),
+            &SourcePage::mock4_20240104_delta123_type_and_status(),
+            ThemeTestOrPage::Page,
+        )
+        .unwrap();
+        let left = vec![
+            "pages/custom-type/custom-status.neoj".to_string(),
+            "pages/custom-type/published.neoj".to_string(),
+            "pages/post/custom-status.neoj".to_string(),
+            "pages/post/published.neoj".to_string(),
+        ];
         let right = p.template_list;
         assert_eq!(left, right);
     }

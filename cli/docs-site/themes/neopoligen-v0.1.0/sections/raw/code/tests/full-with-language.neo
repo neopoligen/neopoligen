@@ -1,0 +1,55 @@
+-- start-theme-test
+
+-- code
+-- python
+
+print("Hello, World")
+
+
+-- expected-output/
+
+<section class="code-section">
+  <div class="code-language">python
+  </div>
+  <pre>
+    <code>
+      <span class="line-marker">
+      </span>
+      <span class="source python">
+        <span class="meta function-call python">
+          <span class="meta qualified-name python">
+            <span class="support function builtin python">print
+            </span>
+          </span>
+          <span class="punctuation section arguments begin python">(
+          </span>
+          <span class="meta function-call arguments python">
+            <span class="meta string python">
+              <span class="string quoted double python">
+                <span class="punctuation definition string begin python">&quot;
+                </span>
+              </span>
+            </span>
+            <span class="meta string python">
+              <span class="string quoted double python">Hello, World
+                <span class="punctuation definition string end python">&quot;
+                </span>
+              </span>
+            </span>
+          </span>
+          <span class="punctuation section arguments end python">)
+          </span>
+        </span>
+      </span>
+    </code>
+  </pre>
+</section>
+
+-- /expected-output
+
+
+-- metadata
+-- updated: 2024-06-22T12:16:59-04:00
+-- id: 2if4w5s4
+
+

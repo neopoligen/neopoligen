@@ -1,0 +1,26 @@
+-- title
+
+Separation From The File System
+
+Using the file system for routing is a
+standard approach in static site generators. 
+
+I'm doing something different. 
+
+In Neopoligen, every file is required to have
+a `-- metadata`` section that includes an
+`-- id`` attribute. It's what's used by 
+default to determine where the output
+goes and by default that's always
+to a `pages`` directory. 
+
+Defining an explicit path is done with
+a `-- path`` attribute in `-- metadata``. 
+The primary use case for that is to 
+set the home page with `-- path: /``
+
+
+-- metadata
+-- date: 2024-01-11
+-- id: 2apmwlmu
+

@@ -433,7 +433,7 @@ mod test {
     }
 
     #[test]
-    fn solo_theme_image_widths_return_if_there_are_any() {
+    fn theme_image_widths_return_if_there_are_any() {
         let config = SiteConfig::mock2_with_image_widths();
         let left: Vec<u32> = vec![100, 400];
         let right = config.theme_image_widths();

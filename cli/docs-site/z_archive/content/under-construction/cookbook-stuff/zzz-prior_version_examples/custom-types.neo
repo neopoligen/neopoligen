@@ -1,0 +1,29 @@
+-- title
+
+Custom Section Types 
+
+Neopolitan is set up to be generic and to 
+allow for any number of new sections to be added
+to the format. All that's required for rendering
+is to add the name to the config file and 
+create a template for it.
+
+
+-- book
+-- class: example
+-- title: Dune
+-- author: Frank Herbert
+-- image: dune-cover.jpg
+-- alt: The book cover for Dune
+-- rating: 5
+
+One of the few books I've read multiple times. It's
+been a while. I should probably go back and read
+it again.
+
+
+-- metadata
+-- date: 2024-01-13
+-- id: 2avnehav
+-- status: published
+

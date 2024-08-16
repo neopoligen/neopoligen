@@ -1,0 +1,29 @@
+-- title
+
+Span: tlink
+
+-- subtitle
+
+Title Link Span
+
+This span takes an ID and automatically 
+creates a link to the page using
+its full title for the text
+
+-- p
+
+Basic Example:
+
+<<tlink|2brmmqau>>
+
+Attribute Example:
+
+<<tlink|2brmmqau|class: green>>
+
+
+
+
+-- metadata
+-- date: 2024-02-03
+-- id: 2brmmqau
+-- status: published

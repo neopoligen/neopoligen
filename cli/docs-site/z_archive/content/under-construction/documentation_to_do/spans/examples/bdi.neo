@@ -1,0 +1,25 @@
+-- title
+
+Span: bdi 
+
+-- subtitle
+
+The Bidirectional Isolate Span
+
+-- p
+
+Basic Example: 
+
+<<bdi|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<bdi|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03
+-- id: 2bqpbnoc
+-- status: published
+

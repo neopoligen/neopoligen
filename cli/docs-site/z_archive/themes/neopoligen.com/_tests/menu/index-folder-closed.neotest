@@ -1,0 +1,54 @@
+##################################################################################
+TEMPLATE
+PATH: pages/testing/published.jinja
+##################################################################################
+
+
+[!- import "includes/macros.jinja" as macros -!]
+[!- set links = site.collection_from_files_and_folders(page_id, [
+    ["test-folder"]
+]) -!]
+[@- macros.nav_menu(links) -@]
+
+
+##################################################################################
+SUPPORT_PAGE
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/test-folder/_index.neo
+##################################################################################
+
+-- title
+
+Closed Folder Index
+
+
+-- metadata
+-- id: 0002
+-- type: testing
+
+
+##################################################################################
+INPUT
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/file-under-test.neo
+##################################################################################
+
+-- title
+
+File Under Test
+
+-- metadata
+-- id: 0001
+-- type: testing
+
+
+
+##################################################################################
+EXPECTED_OUTPUT
+##################################################################################
+
+    <nav id="nav_menu">
+      <ol>
+        <li id="nav_menu_0002" class="index_folder_closed">
+          <a href="/en/0002/?closed-folder-index">Closed Folder Index</a>
+        </li>
+      </ol>
+    </nav>

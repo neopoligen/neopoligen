@@ -72,6 +72,27 @@ pub fn block_of_list_content<'a>(source: &'a str) -> IResult<&'a str, Section, E
     ))
 }
 
+pub fn block_of_checklist_content<'a>(
+    source: &'a str,
+) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let (source, _) = not(eof).context("").parse(source)?;
+    let (source, _) = not(tag("-")).context("").parse(source)?;
+    let (source, _) = not(tag("[")).context("").parse(source)?;
+    let (source, spans) = many1(alt((base_span_for_all_text,)))
+        .context("")
+        .parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
+    Ok((
+        source,
+        Section {
+            attrs: vec![],
+            bounds: SectionBounds::Full,
+            kind: SectionKind::Block { spans },
+            r#type: "block-of-text".to_string(),
+        },
+    ))
+}
+
 #[cfg(test)]
 mod test {
     use super::*;

@@ -1,0 +1,21 @@
+-- title
+
+Includes (templates) 
+
+-- list
+
+- MiniJinja templates can call other templates. I keep 
+things like `global_nav.jinja`` in an `includes`` 
+directory inside the primary templates folder. 
+
+- They can be placed anywhere though.
+
+- The included files have the full context of the 
+parent template (i.e. access to the `site``, `page``, 
+and `functions`` objects)
+
+-- metadata
+-- date: 2024-01-15
+-- id: 2b126dwy
+-- status: published
+

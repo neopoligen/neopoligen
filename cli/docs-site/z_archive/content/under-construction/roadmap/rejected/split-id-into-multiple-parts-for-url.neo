@@ -1,0 +1,22 @@
+-- title
+
+Split The Page ID Across Multiple Directories In The URL
+
+-- h2
+
+Overview
+
+- <<s|move content to directory split with first two chars as the
+front dir followed by four more (and chop everything down to 
+six characters after confirming that'll still be unique enough)>> - Not
+worrying about this right now. The though was to watch out for sites
+that have large amounts of files to avoid putting too many files
+in a directory, but I've got 10K in my Grimoire and it runs fine. 
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- id: 2bpasjgg
+-- status: published
+

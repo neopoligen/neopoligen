@@ -1,0 +1,31 @@
+-- title
+
+Missing Category Check For Sections
+
+-- h2
+
+Overview
+
+Each MiniJinja template in the theme's sections must
+have a category.txt file in it that lists which
+category the section belongs to. If that file
+is missing an error message is show in the app
+during the build process
+
+
+-- todo
+-- title: Requirements
+
+[] If a section doesn't have a `category.txt``
+file an error is displayed in the app
+
+[] If the `category.txt`` file doesn't have a 
+valid category or is otherwise invalid an
+error stating that is displayed in the app
+
+
+-- metadata
+-- date: 2024-02-19
+-- id: 2cc7hh12
+-- status: scratch
+

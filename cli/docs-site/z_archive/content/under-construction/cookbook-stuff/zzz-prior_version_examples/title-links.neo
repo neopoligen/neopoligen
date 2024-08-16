@@ -1,0 +1,20 @@
+-- title
+
+TODO: Title Links
+
+Use this to make an internal link that pulls
+the title for the page automatically
+
+-- code
+
+<<tlink|a1b2c3d4>>
+
+-- p
+
+(tlink stands for title link)
+
+-- metadata
+-- date: 2024-01-16
+-- id: 2b1fbry8
+-- status: published
+

@@ -1,0 +1,14 @@
+[!- extends "wrappers/default.jinja" -!]
+
+[!- block title -!]
+[@- macros.place_only("title") -@]
+[!- endblock -!]
+
+[!- block body -!]
+[@- macros.main_body() -@]
+
+<h4>Integration Test Links</h4>
+<ul>[@- macros.li_filter_page_links_alpha(payload.id(), ["integration-tests", "!home-page"]) -@]<ul>
+[!- endblock -!]
+
+

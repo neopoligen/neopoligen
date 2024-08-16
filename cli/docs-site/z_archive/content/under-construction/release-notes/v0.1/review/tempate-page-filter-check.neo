@@ -1,0 +1,38 @@
+-- title
+
+Template Page Filter Check
+
+-- h2
+
+Overview
+
+Used to see if a page has a filter
+in a case-insensitive way. This
+can be use for things like:
+
+-- code/
+-- jinja
+
+{% if page.has_filter("home-page") %}
+This is the home page
+{% else %}
+This is not the home page
+{% endif %}
+
+-- /code
+
+
+-- todo
+-- title: Details
+
+[] Provides `page.has_filter("some_filter")``
+that returns either `true`` or `false``
+
+[] Matching is done case-insensitive
+
+
+-- metadata
+-- date: 2024-02-13
+-- id: 2ciyt5ek
+-- status: scratch
+

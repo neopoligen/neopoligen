@@ -1,0 +1,164 @@
+-- title
+-- subtitle: Websites For Everyone
+
+Neopoligen
+
+Neopoligen is a free website builder. It's goal is  
+to make it easy to get started even if you've never
+made a site before. 
+
+There's a lot of features built into the app. You can 
+start making content in the default theme as soon as 
+you install it. You can also customize everything.
+From changing font colors all the way to creating 
+the most complicated site you can think if, Neopoligen 
+provides the foundation to make whatever you want on 
+the web. 
+
+-- h2
+
+How It Works
+
+You make content for your site by making files on your 
+computer that look like this: 
+
+-- code/
+-- neo
+
+-- title
+-- subtitle: Websites For Everyone
+
+Neopoligen
+
+Neopoligen is a free website builder. It's goal is  
+to make it easy to get started even if you've never
+made a site before. 
+
+-- /code
+
+Neopoligen combines those files with 
+themes to make a preview version of your site
+on your computer. Once you have things the way
+you want them you can use a free service to share it 
+with the world. 
+
+-- h2
+
+Your Content, Your Site, Forever
+
+You can think about websites as being made up of three
+parts:
+
+-- list
+
+- The <<em|Content>> that makes up the site
+
+- The <<em|Domain Name>> which is used for the site's address (e.g. <<em|neopoligen.com>>)
+
+- The <<em|Host Service>> that sends the site Content to your
+browser when you visit the site's Domain Name address
+
+-- p
+
+When you use TikTok, Instagram, Twitter/X, Facebook, etc...
+that distinction vanishes. Your Content gets locked behind 
+their company Domain Names and Host Services. Neopoligen doesn't work 
+that way. It generates the Content for your site on your 
+computer. You choose your Domain Name and Host Service independently. 
+When you're ready to make your site visible to the world, Neopoligen
+sends a copy of it to the Host Service which connects it to 
+your chosen Domain Name. The original always stays with you.
+
+And, here's the key part: by keeping the parts separate you're 
+free to change your Host Services without losing all your stuff. 
+
+-- h3
+
+Domain Names
+
+Neopoligen sites work with a variety of Host Services including
+some free ones. For example, Neopoligen works with the
+free Host Service provided by a named GitHub (which 
+you can learn how to use here: <<tlink|2dpxfosc>>)
+
+GitHub's Host Service and others like it start you
+off with a free Domain Name like:
+
+alanwsmith.github.io
+
+That's a great start, but it's important to point out
+that the Host Service owns those Domain Names which ties
+you back to them (e.g. I can't move <<em|alanwsmith.github.io>>
+to another Host Service besides GitHub).
+
+That's not a problem as long as you're aware of it. The
+main thing to know is that if you decide to change Host 
+Services you'll lose the Domain Name and have to pick a 
+new one. You won't lose any content though. It'll still 
+all be on your computer ready for Neopoligen to send to 
+whoever you choose for your new Host Service.
+
+
+
+-- h3
+
+Your Own Domain Name
+
+-- aside
+
+This section is about setting up your own Domain Name. 
+Unfortunately, doing so is not free. Prices vary depending
+on the name and average around $15-20/year. 
+
+I want to make it clear that getting and using your own
+Domain Name is completely optional. If you have any 
+hesitation about spending the money, skip it for now 
+and just go straight to the <<ilink: 2dqqynua|Quick Start Guide>>.
+It will get you set up with a a completely free website
+in about TKTKTK minutes. You can always come back
+and switch to your own Domain Name later.
+
+-- p
+
+If you can afford it, my recommendation is to purchase your 
+own Domain Name. This gives you complete control over your 
+site since you can change Host Services without changing the 
+Domain Name. More importantly, it protects your site from things like 
+the Host Service canceling their service or going out 
+of business.
+
+For example, if GitHub ever decides to stop providing 
+Host Services I'd lose <<em|alanwsmith.github.io>> with no
+way to get it back. But, I use my own <<em|alanwsmith.com>>
+domain for my personal site. So, if my current Host Service goes 
+away for some reason I would just pick a new one and set up
+Neopoligen to send my site there. 
+
+The other nice thing about having your own Domain Name
+is branding. For example, I like being able to tell folks to visit:
+
+<<strong|alanwsmith.com>> 
+
+better than 
+
+<<strong|alanwsmith.github.io>>
+
+You can learn how to set up your own Domain
+Name here: <<tlink|2dqn2gso>>
+
+
+-- h3
+
+Download
+
+You can download the app on the <<ilink: 2dcmgjan|download page>>
+
+
+
+
+-- metadata
+-- date: 2024-01-13
+-- id: 2auhjdnh
+-- path: /
+
+

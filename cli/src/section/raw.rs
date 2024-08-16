@@ -70,7 +70,7 @@ pub fn raw_section_full<'a>(
         bounds: SectionBounds::Full,
         kind: SectionKind::Raw {
             children: vec![],
-            text: Some(text.to_string()),
+            text: Some(text.trim_end().to_string()),
         },
         r#type: r#type.to_string(),
     };

@@ -70,4 +70,3 @@ fn generated_shorthand_base_cases(
     assert_eq!(kv.len(), kv_count);
     assert_eq!(flags.len(), flag_count);
 }
-

@@ -1,0 +1,36 @@
+-- title
+
+tlink Spans
+
+For creating links to other pages on the site
+using their titles. 
+
+-- list
+
+- Just pass the ID of the page to link to
+
+- Automatically uses the title of the page
+being linked to
+
+- Automatically links to the url (including text slug)
+
+-- code/
+-- neo
+
+<<tlink|2khp1wfl>>
+
+-- /code
+
+-- p 
+
+Output:
+
+<<tlink|2khp1wfl>>
+
+
+-- metadata
+-- created: 2024-08-15T10:42:42-04:00
+-- updated: 2024-08-15T10:42:42-04:00
+-- id: 2khpiymc
+
+

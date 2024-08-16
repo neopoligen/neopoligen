@@ -1,0 +1,35 @@
+-- title
+
+List Items With Styles 
+
+The ability to add CSS directly to a page with a
+`-- css`` section provides a way to style individual
+parts of the page. For example, changing the color
+of the second item of a list
+
+
+-- list
+-- id: example_list
+
+- Alfa
+
+- Bravo
+
+- Charlie
+
+
+
+-- css
+
+#example_list > ul > li:nth-child(2) {
+    color: green;
+}
+
+
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2avri56x
+-- status: published
+

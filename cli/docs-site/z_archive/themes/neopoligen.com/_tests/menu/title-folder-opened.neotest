@@ -1,0 +1,76 @@
+#####################################################################
+DESCRIPTION
+##################################################################################
+
+Test a _title that's open above the current file. Note that
+you can't have an open folder that doesn't also have 
+children since it can't be open without something under it
+
+
+##################################################################################
+TEMPLATE
+PATH: pages/testing/published.jinja
+##################################################################################
+
+
+[!- import "includes/macros.jinja" as macros -!]
+[!- set links = site.collection_from_files_and_folders(page_id, [
+    ["test-folder"]
+]) -!]
+[@- macros.nav_menu(links) -@]
+
+
+##################################################################################
+SUPPORT_PAGE
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/test-folder/_title.neo
+##################################################################################
+
+-- title
+
+Opened Title Folder
+
+
+-- metadata
+-- id: aabbcc02
+-- type: testing
+
+
+##################################################################################
+INPUT
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/test-folder/file-under-test.neo
+##################################################################################
+
+-- title
+
+File Under Test
+
+-- metadata
+-- id: aabbcc01
+-- type: testing
+
+
+
+##################################################################################
+EXPECTED_OUTPUT
+##################################################################################
+
+
+<nav id="nav_menu">
+  <ol>
+    <li id="nav_menu_aabbcc02" class="title_folder_opened active_path">
+      <button
+        class="nav_menu_button"
+        data-menu="nav_menu"
+        data-id="aabbcc02"
+        data-status="opened"
+      >
+        Opened Title Folder
+      </button>
+      <ol id="nav_menu_children_aabbcc02">
+        <li id="nav_menu_aabbcc01" class="page_active active_path">
+          File Under Test
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>

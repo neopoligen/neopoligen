@@ -1,0 +1,35 @@
+-- title
+
+Update Time Stamp Of File Change In The App
+
+
+-- note
+
+This one is on hold until the app 
+actually has an editor
+
+-- h2
+
+Overview
+
+-- todo
+
+[] The app updates a page in the app editor
+automatically puts the current time
+stamp in the page's `-- metadata``
+`-- updated`` attribute
+
+-- h2
+
+Examples
+
+
+-- tags
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 11:16:11
+-- id: 2bpntpsx
+-- status: draft
+

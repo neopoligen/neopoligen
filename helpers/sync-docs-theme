@@ -1,0 +1,9 @@
+#!/bin/bash
+
+watchexec\
+  --project-origin .\
+  -w "../cli/example-site/"\
+  --workdir "../cli"\
+  -e xsl,js,css,neo,neoj\
+  "rsync --delete -av ./example-site/themes/neopoligen-v0.1.0 ./docs-site/themes/"
+

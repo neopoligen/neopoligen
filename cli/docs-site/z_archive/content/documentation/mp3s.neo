@@ -1,0 +1,16 @@
+-- title
+
+mp3 Sections
+
+-- goal
+
+The mp3s directory works the same
+way the images directory does. That is, 
+the files can be in any directory
+structure and the engine will find them
+by name and link to them properly. 
+
+
+-- metadata
+-- date: 2024-04-19
+-- id: 2fjp42fv

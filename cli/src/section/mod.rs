@@ -1,5 +1,7 @@
 pub mod basic;
 pub mod block;
+pub mod checklist;
+pub mod checklist_item;
 pub mod list;
 pub mod list_item;
 pub mod mocks;
@@ -8,6 +10,7 @@ pub mod unknown;
 pub mod yaml;
 
 use crate::section::basic::*;
+use crate::section::checklist::*;
 use crate::section::list::*;
 use crate::section::raw::*;
 use crate::section::unknown::*;
@@ -56,6 +59,8 @@ pub enum SectionKind {
         children: Vec<Section>,
     },
     ChecklistItem {
+        checked: bool,
+        checked_string: Option<String>,
         children: Vec<Section>,
     },
     Json {
@@ -117,7 +122,8 @@ pub fn start_or_full_section<'a>(
         |src| basic_section_start(src, &sections, nest_level),
         |src| basic_section_full(src, &sections, nest_level),
         // TODO: Checklist start
-        // TODO: Checklist full
+        //|src| checklist_section_start(src, &sections, nest_level),
+        |src| checklist_section_full(src, &sections, nest_level),
         |src| list_section_start(src, &sections, nest_level),
         |src| list_section_full(src, &sections, nest_level),
         |src| raw_section_start(src, &sections, nest_level),

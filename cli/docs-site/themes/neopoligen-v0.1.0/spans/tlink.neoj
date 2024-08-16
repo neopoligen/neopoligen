@@ -1,0 +1,5 @@
+[!- import "includes/theme.neoj" as theme -!]
+
+<a href="[@ site.absolute_page_urls[span.children[0].parsed_text] @]">
+  [@ site.page_titles[span.children[0].parsed_text] @]
+</a>

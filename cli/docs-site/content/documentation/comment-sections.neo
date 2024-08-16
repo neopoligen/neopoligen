@@ -1,0 +1,15 @@
+-- title
+
+Comment Sections
+
+Comment sections can be made by creating an output templates
+with empty files for a section name. The default theme
+has <<code|-- comment>> built-in. 
+
+
+-- metadata
+-- created: 2024-08-16T09:32:12-04:00
+-- updated: 2024-08-16T09:32:12-04:00
+-- id: 2kk6gzzh
+
+

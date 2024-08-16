@@ -1,0 +1,31 @@
+-- title
+
+Drafts
+
+-- list
+
+- For page links, they are based off page IDs. Internal links
+append `?PAGE-TITLE`` to the urls, but they aren't expected to
+do anything. They are there purely for making the URLs more
+human readable. 
+
+I don't know how much impact that will have on SEO, but my 
+hypothesis is it will be very little. And, more to the point, 
+the ability to easily manage the pages is well worth the 
+tradeoff in terms of where development effort can be spent
+on the project. 
+
+- if someone links to the site and you change a title the
+link will just work because it's all ID based. no need for
+redirects
+
+- Lots of little files that are easy to reason about
+
+- Strong naming conventions
+
+- Core configuration
+
+-- metadata
+-- date: 2024-01-15
+-- id: 2b11bv87
+

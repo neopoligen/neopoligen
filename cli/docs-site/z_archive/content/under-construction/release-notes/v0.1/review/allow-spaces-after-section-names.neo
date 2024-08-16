@@ -1,0 +1,25 @@
+-- title
+
+Allow Spaces After Section Names
+
+-- h2
+
+Overview
+
+This proposal updates the parser so
+that any amount of empty space can 
+follow a section tag as long as it's
+on the same line
+
+-- todo
+
+[x] Empty space after a starting
+section tag does not cause an 
+error in the parser
+
+
+-- metadata
+-- date: 2024-01-25
+-- id: 2bqtyvfi
+-- status: draft
+

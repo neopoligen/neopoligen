@@ -1,0 +1,13 @@
+<section class="original_content flow">
+    <div class="original_content_toggle_wrapper">
+        <button class="original_content_toggle" data-toggle_text="Hide original content file">Show original content file</button>
+    </div>
+    <div id="original_content_display" class="hidden flow">
+        <h3>Original Content File</h3>
+        <p class="border-bottom-4">This is the file that produced this page</p>
+        <pre ><code>[!- autoescape true -!][@- site.page_source(page_id) -@][!- endautoescape -!]</pre></code>
+        <div class="original_content_toggle_wrapper">
+            <button class="original_content_toggle" data-toggle_text="Hide original content file">Show original content file</button>
+        </div>
+    </div>
+</section>

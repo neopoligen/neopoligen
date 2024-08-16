@@ -1,0 +1,32 @@
+-- title
+
+Template Testing
+
+TODO write up how template testing works TKTKTKT
+
+Example template:
+
+-- pre/
+
+-- title
+
+This is a test of the title
+
+-- expected-output
+
+<section>...This is a test of the title...</section>
+
+(NOTE: this needs to actually be filled out, but the idea
+is to drop in the expected html output)
+
+-- metadata
+-- id: title-section-basic
+-- type: theme-test
+
+-- /pre
+
+
+
+-- metadata
+-- date: 2024-04-19
+-- id: 2flxhg1h

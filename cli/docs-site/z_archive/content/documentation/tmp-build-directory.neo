@@ -1,0 +1,34 @@
+-- title
+
+tmp Build Directory
+
+-- done
+
+The site is built at `./.building``
+
+When everything is done `./.building``
+the `./docs`` folder is deleted and
+`./building`` is renamed to `./docs``
+to put the new files in place
+
+This method is used so you can still
+browse the existing version of the 
+site while the new one is being built.
+
+-- goal
+
+Possible optimization: instead of 
+deleting `./docs``. Copy all the files
+from `./building`` into it (overwriting
+any that exist) and then compare the
+folder to remove anything from `./docs``
+that doesn't exist in `./building``. This
+would make the transition more atomic since
+there wouldn't be any period where files
+that should exist after the deployment
+aren't available. 
+
+
+-- metadata
+-- date: 2024-04-19
+-- id: 2fjziitj

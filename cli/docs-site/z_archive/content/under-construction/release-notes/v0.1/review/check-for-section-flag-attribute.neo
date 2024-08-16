@@ -1,0 +1,36 @@
+-- title
+
+Check For Section Flag Attribute
+
+
+-- h2
+
+Overview
+
+Sections can have flag attributes
+(e.g. `-- some-flag``). Templates
+can check to see if a specific flag
+exist for a section via:
+
+-- code/
+
+section_has_flag(
+    section, 
+    "target_flag_name"
+)
+
+-- /code
+
+
+-- todo
+-- title: Details
+
+[x] The `section_has_flag()`` macro
+works
+
+
+-- metadata
+-- date: 2024-02-13
+-- id: 2civclbv
+-- status: scratch
+

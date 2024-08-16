@@ -1,0 +1,41 @@
+-- title
+-- subtitle: 
+
+Templates
+
+-- note
+
+This is an early scratch document, it's
+not at all complete
+
+
+-- h2
+
+Introducing NeoJinja
+
+Neopoligen uses templates to make sites. They
+work by using little text snippets to tell the
+template where and how to output your content. 
+
+There are three types of snippets:
+
+-- list
+
+- Output Snippet (start with `[@`` and end with `@]``)
+
+- Instruction Snippets (start with `[!`` and end with `!]``)
+
+- Comment Snippets (start with `[#`` and end with `#]``)
+
+-- p
+
+Neopoligen takes those snippets and converts
+
+
+
+
+
+-- metadata
+-- date: 2024-03-07 12:31:45
+-- id: 2dmzomyo
+-- type: scratch

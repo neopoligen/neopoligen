@@ -1,0 +1,42 @@
+-- title
+
+TODO List
+
+-- todo
+
+[] Format TODO Lists
+
+[x] Make Basic Sections Work
+
+[In-progress] Make Checklist Sections Work (needs start/end parser)
+
+[x] Make List Sections Work
+
+[] Make Ordered List Sections Work
+
+[] Make Detailed List Section Work
+
+[x] Make Raw Sections Work
+
+[In-progress] Make YAML Sections Work (needs start/end parser)
+
+[] Alt text for images
+
+[] OG Images
+
+[] Page Titles (cascade through sources)
+
+[] Override Output Paths
+
+[] Output collections of page links
+
+[] Auto generate page Table Of Contents from headers
+
+
+
+-- metadata
+-- created: 2024-08-15T20:05:20-04:00
+-- updated: 2024-08-15T20:05:20-04:00
+-- id: 2kiw8tvv
+
+

@@ -1,0 +1,29 @@
+-- title
+
+Page href Template Call
+
+-- h2
+
+Overview
+
+Get the href for a page by page_id
+
+-- code
+-- jijna
+
+{{ site.page_href(page_id) }}
+
+
+
+
+
+-- todo
+-- title: Requirements
+
+
+
+-- metadata
+-- date: 2024-02-29
+-- id: 2d47udmz
+-- status: scratch
+

@@ -1,0 +1,29 @@
+-- title
+
+Place Main Body Template Macro
+
+
+-- h2
+
+Overview
+
+Using `{{ main_body() }}`` in a page template
+outputs all the sections for the page that haven't
+been excluded in the config file
+
+See: <<tlink|2ckrkhob>>
+
+
+-- todo
+-- title: Requirements
+
+[x] `{{ main_body() }}`` outputs the main body of
+a page
+
+
+
+-- metadata
+-- date: 2024-02-13
+-- id: 2cktkmom
+-- status: scratch
+

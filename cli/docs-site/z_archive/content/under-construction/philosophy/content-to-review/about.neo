@@ -1,0 +1,45 @@
+-- title
+
+About Neopoligen (And Neopolitan)
+
+-- h2
+
+What's This All About? <<span|The Question|class: faded>>
+
+My site is 20 years old. When I realized that, it got me thinking 
+about the next twenty years. The idea of jumping frameworks every 
+year or two is exhausting. Not because of the tech. Because 
+moving content is a slog. That sent me on a quest. You're
+looking at the result.
+
+
+-- h2
+
+Neopolitan <<span|The Format|class: faded>>
+
+I spent the past year working on a file format
+to replace markdown/mdx for my content files. 
+It's called <<link|Neopolitan|https://www.alanwsmith.com/neopolitan/>> .
+The goal is to allow for flexible content types in plain-text 
+without requiring javascript. 
+
+To see what it looks like, scroll to the end of any page on 
+this site. You'll see a copy of the file that produced it. 
+
+-- h2
+
+Neopoligen <<span|The Engine|class: faded>>
+
+Creating a file format doesn't do a lot of good unless
+there's something to use it. That's what this project
+is about. It's a static site generator built specifically
+for Neopolitan. Ultimately, it's a personal project, but the ideas 
+feel sound so I'm open-sourcing it. 
+
+-a
+
+-- metadata
+-- date: 2024-01-27
+-- id: 2bwdhko7
+-- status: draft
+

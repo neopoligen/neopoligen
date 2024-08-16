@@ -1,0 +1,66 @@
+-- title
+
+Output Testing
+
+-- aside
+
+This is current off during a refactor
+
+-- h2
+
+Overview
+
+Output testing is done by creating files
+in a "tests" folder. The name of each
+file is "NAME-ID.txt" where "NAME" is
+a name to help identify the tests the 
+file contains and "ID" is the
+page id of the content file to run
+the test against.
+
+For example, I put tests for the home 
+page of this site in:
+
+`home-page-2ck33evh.txt``
+
+Tests are defined by writing strings
+to look for. 
+
+Individual tests are separated by lines
+with five tildes (i.e. `~~~~~``)
+
+Spaces and line breaks aren't taken into
+account during the matching. This prevents
+issues with tabs and spaces causing false
+errors
+
+Any errors are printed to the command
+line when the process runs
+
+-- todo
+-- title: Requirements
+
+[x] Load test files when process starts
+
+[x] Run each test when the page output
+is generated and before it's written out
+(this makes it easier test pages that
+have custom paths via their IDs)
+
+[x] If a page fails a test still output
+it, but log the error
+
+
+-- notes
+
+- All tests for a given page must be
+in the same test file. If you make 
+multiple test files pointing to the
+same ID only one of them will get run
+
+
+-- metadata
+-- date: 2024-02-13
+-- id: 2ck33evh
+-- status: scratch
+

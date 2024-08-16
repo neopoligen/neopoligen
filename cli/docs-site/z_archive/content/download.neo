@@ -1,0 +1,46 @@
+-- title
+
+Download
+
+The current version of Neopoligen is available for the mac. 
+Windows and Linux versions are in development.
+
+<<link|Download Neopoligen v0.0.1 for Mac|/downloads/Neopoligen_0.0.1_aarch64.dmg>>
+
+-- h3
+
+Installation
+
+After downloading the file, open the folder where you're browser downloads files and 
+you'll see "Neopoligen_0.0.1_aarch64.dmg". 
+
+-- image
+-- installation-0-0-1-downloads-folder
+
+-- p
+
+Double click the "Neopoligen_0.0.1_aarch64.dmg" file to open a new
+window with the Neopoligen app and shortcut to your Application's folder. 
+
+-- image
+-- installation-0-0-1-app-folder
+
+-- p
+
+Drag "Neopoligen.app" into "Applications" to make a copy there
+that you can open the same way you do your other apps.
+
+The last thing to do is close the installer window. This is done
+with the "eject" button in the Finder sidebar.
+
+
+
+-- image
+-- installation-0-0-1-eject
+
+
+
+-- metadata
+-- date: 2024-03-12
+-- id: 2dcmgjan
+-- path: /download/

@@ -1,0 +1,25 @@
+-- title
+
+Span: canvas 
+
+-- subtitle
+
+The Graphics Canvas Span
+
+-- p
+
+Basic Example: 
+
+<<canvas|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<canvas|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03
+-- id: 2bqpdzlm
+-- status: published
+

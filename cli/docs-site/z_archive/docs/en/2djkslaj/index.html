@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta property="og:type" content="article" /><link rel="stylesheet" href="/theme/styles.css" />
+<link rel="stylesheet" href="/theme/highlighting/code-solarized-dark.css" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/theme/favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/theme/favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/theme/favicons/favicon-16x16.png">
+<link rel="manifest" href="/theme/favicons/site.webmanifest">
+<link rel="mask-icon" href="/theme/favicons/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="/theme/favicons/favicon.ico">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="msapplication-config" content="/theme/favicons/browserconfig.xml">
+<meta name="theme-color" content="#000000">
+<script type="module" src="/theme/theme.js"></script></head>
+<body><header></header><main><div class="sidebar">
+
+<h4>Details</h4><nav id="nav_menu"><ol><li id="nav_menu_2auhjdnh" class="page_inactive"><a href="/">Neopoligen</a></li><li id="nav_menu_2dcmgjan" class="page_inactive"><a href="/download/">Download</a></li><li id="nav_menu_2dom5zxe" class="index_folder_closed"><a href="/en/2dom5zxe/?under-construction">Under Construction</a></li></ol></nav><h4>Blog</h4><nav><ul><li><a href="/en/2dcgvrpe/?introducing-neopoligen---a-website-builder-for-everyone">Introducing Neopoligen - A Website Builder For Everyone</a></li></ul></nav><h4>Tech Blog</h4><nav><ul><li><a href="/en/2cpwqhh7/?hello%2C-world">Hello, World</a></li><li>The Database Idea</li><li><a href="/en/2dn38hs5/?from-jinja-to-minijinja-to-neojinja-with-pre-attentive-processing">From Jinja To MiniJinja To NeoJinja With Pre-Attentive Processing</a></li><li><a href="/en/2dsrh9bo/?vanilla-javascript-button-toggler">Vanilla JavaScript Button Toggler</a></li></ul></nav><h4><a href="/en/2dpcupti/?shorts">Shorts</a></h4><nav><ul><li><a href="/en/2dn1mxzh/?i-just-learned-you-can-string-multiple-find-and-replace-patterns-together...">I just learned you can string multiple find and replace patterns together...</a></li><li><a href="/en/2dpcg7fp/?instead-of-%22let-the-market-decide%22%2C-how-about-%22let-the-culture-decide%22...">Instead of "let the market decide", how about "let the culture decide"...</a></li><li><a href="/en/2dpcupti/?shorts">Shorts</a></li></ul></nav></div><article class="flow"><nav class="breadcrumbs"><ol>
+<li><a href="/">Home</a></li>
+<li><a href="/download/">Download</a></li></ol>
+</nav><section class="title_section flow"><div class="title_heading_group"><h1>The Database Idea</h1></div><div class="content flow"><p>I had what feels like an interesting idea last night: A database.</p><p>Sure, not that novel, but maybe not what you'd initially think of. The thought isn't to integrate database software. That's already gonna happen. Instead,  it's to make a new folder called "database" and throw  files in there. </p><p>Files in the "database" folder wouldn't output to the site directly as pages. Instead, you'd pull their content in from other pages. For example,  you could make some files with `-- book`` sections  in them. Using something like this on a page would  output all the books from your database:</p></div></section><section class="code_section section_category_raw flow"><div class="content">
+        <pre><code>[! for book in db.get(&quot;book&quot;) !]
+[[ book ]] 
+[! endfor !]</code></pre>
+    </div></section>
+
+<section class="p_section section_category_standard flow"><div class="content flow"><p>Of course, you're probably want some control over the sorting. Assuming each book has a `-- title`` attribute like:</p></div></section><section class="code_section section_category_raw flow"><div class="content">
+        <pre><code>-- book
+-- title: Stranger In A Strange Land</code></pre>
+    </div></section>
+
+<section class="p_section section_category_standard flow"><div class="content flow"><p>you could do something like:</p></div></section><section class="code_section section_category_raw flow"><div class="content">
+        <pre><code>[! for book in db.get_sort(&quot;book&quot;, &quot;title&quot;) !]
+[[ book ]]
+[! endfor !]</code></pre>
+    </div></section>
+
+<section class="p_section section_category_standard flow"><div class="content flow"><p>The goal here is not to replicate a full set of database software features. You can always call out to an actual database if you need to do that. Instead, the goal is to be able to do  basic database collections from inside content  files.</p></div></section><section class="original_content flow">
+    <div class="original_content_toggle_wrapper">
+        <button class="original_content_toggle" data-toggle_text="Hide original content file">Show original content file</button>
+    </div>
+    <div id="original_content_display" class="hidden flow">
+        <h3>Original Content File</h3>
+        <p class="border-bottom-4">This is the file that produced this page</p>
+        <pre ><code>-- title
+
+The Database Idea
+
+I had what feels like an interesting idea last night:
+A database.
+
+Sure, not that novel, but maybe not what you&#x27;d
+initially think of. The thought isn&#x27;t to integrate
+database software. That&#x27;s already gonna happen. Instead, 
+it&#x27;s to make a new folder called &quot;database&quot; and throw 
+files in there. 
+
+Files in the &quot;database&quot; folder wouldn&#x27;t output
+to the site directly as pages. Instead, you&#x27;d
+pull their content in from other pages. For example, 
+you could make some files with `-- book`` sections 
+in them. Using something like this on a page would 
+output all the books from your database:
+
+-- code&#x2f;
+-- neojinja
+ 
+[! for book in db.get(&quot;book&quot;) !]
+[[ book ]] 
+[! endfor !]
+
+-- &#x2f;code
+
+Of course, you&#x27;re probably want some control over
+the sorting. Assuming each book has a `-- title``
+attribute like:
+
+-- code&#x2f;
+-- neo
+
+-- book
+-- title: Stranger In A Strange Land
+
+-- &#x2f;code
+
+you could do something like:
+
+-- code&#x2f;
+-- neojinja
+
+[! for book in db.get_sort(&quot;book&quot;, &quot;title&quot;) !]
+[[ book ]]
+[! endfor !]
+
+-- &#x2f;code
+
+The goal here is not to replicate a full set
+of database software features. You can always
+call out to an actual database if you need to do
+that. Instead, the goal is to be able to do 
+basic database collections from inside content 
+files.
+
+-- metadata
+-- date: 2024-03-06
+-- id: 2djkslaj
+</pre></code>
+        <div class="original_content_toggle_wrapper">
+            <button class="original_content_toggle" data-toggle_text="Hide original content file">Show original content file</button>
+        </div>
+    </div>
+</section></article>
+  </main><footer></footer></body>
+</html>

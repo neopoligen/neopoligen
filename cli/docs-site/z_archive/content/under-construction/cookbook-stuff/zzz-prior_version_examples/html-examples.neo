@@ -1,0 +1,21 @@
+-- title
+
+HTML Examples 
+
+The code for HTML examples can be show on the page
+along with the output using a custom template 
+
+-- html
+-- class: example
+-- template: show-below
+
+<div class="center">
+    <button>This button does nothing</button>
+</div>
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2avqvqqb
+-- status: published
+

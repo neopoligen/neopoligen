@@ -1,0 +1,25 @@
+-- title
+
+Span: time 
+
+-- subtitle
+
+The (Date) Time Span
+
+-- p
+
+Basic Example: 
+
+<<time|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<time|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03
+-- id: 2bqppzjo
+-- status: published
+

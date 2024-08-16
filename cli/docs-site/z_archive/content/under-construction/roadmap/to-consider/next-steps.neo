@@ -1,0 +1,116 @@
+-- warning
+
+This file is deprecated and will be removed once
+all the items have been moved to proposal files
+
+
+
+-- todo
+
+[] If a page can't be published remove it from the links
+(e.g. if a template can't be found. Hopefully this can be
+low priority if the fallbacks are strong enough)
+
+[] Tew pages show up when added without having to restart
+the engine
+
+[] Set up so that if a template isn't found for a section it's
+simply skipped instead of breaking the page (and print a note
+in the log about the problem)? (Not sure about this one. 
+With proper error message, I think it might be better to see
+immediately that the page is busted. That reduces the chance
+of shipping something broken in an unacceptable way)
+
+[] Make sure link lists update when files are deleted
+without restarting the engine
+
+[] Add new pages to the link list so they don't show up as
+"link no longer available" without restarting the engine
+
+[] Be able to edit templates and have the changes
+be picked up without having to reload the engine
+
+[] github build process for different environments
+
+[] move page status types into the config for deciding what
+to publish
+
+[] details sections
+
+[] create escape functions for things like alt tags for
+images
+
+[] Warn if the same tag is used in multiple categories
+
+[] logging
+
+[] Clear the site and rebuild from complete scratch each time
+to avoid surprises with cruft remainders from prior sites
+
+[] previous next pagination on pages of the same type
+
+[] URL plugin calls
+
+[] Create A report of missing section types and templates
+. The idea is that you don't have to populate content
+for everything, but every file must exist. Can throw
+as warnings instead of breaking
+
+[] Don't choke if a page can't be processed. Skip it, 
+remove it from any lists, and continue processing and
+watching for changes
+
+[] Add a `-- show_source`` attribute to show show the neopolitan
+source for the section for deme/example purposes
+
+[] RSS Feeds (config to create multiple where you filter by the 
+page types to output and then define the path to send them to, make
+sure you can add stuff via: type, category, status, tags, groups and
+and combination of those (additive, of subtractive))
+
+
+[] Pass body of text_plugin_section... and json_plugin_section...
+to plugins as STDIN
+
+[] Be able to call link lists from the content in the same
+ways you can from the templates
+
+[] add blurred out images feature to default image template with 
+reveals (e.g. for things like spoilers, trigger, or gifs with
+lots of motion)
+
+
+[] Paging Large Collections
+
+[] Add Start and End for all sections once all
+the Full sections are defined
+
+[] URL Based Title for cloudinary
+
+[] Call APIs
+
+[] Call External Processes
+
+[] Better Error Handling
+
+[] Category Pages and List links
+
+[] Tags and Tag Pages? Does Categories cover that?
+Should categories become tags?
+
+[] List pages that have been removed that have internal 
+links pointing to them
+
+[] Pagination Links Between Pages (individual previous/next)
+
+[] Related Links
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 08:19:15
+-- id: 2bp2nmpk
+-- type: roadmap
+-- status: draft
+

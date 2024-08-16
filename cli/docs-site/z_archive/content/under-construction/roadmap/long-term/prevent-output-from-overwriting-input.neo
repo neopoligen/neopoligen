@@ -1,0 +1,35 @@
+-- title
+
+Prevent Output From Overwriting Input
+
+-- h2
+
+Overview
+
+This feature prevents a configuration setup
+that outputs the site into an existing input
+directory
+
+-- todo
+-- title: Details
+
+
+
+
+
+-- h2
+
+Examples
+
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-02-01
+-- updated: 2024-02-01 14:42:05
+-- id: 2bmnvfhk
+-- status: scratch
+

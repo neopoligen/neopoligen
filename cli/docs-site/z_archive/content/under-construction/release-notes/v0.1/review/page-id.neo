@@ -1,0 +1,37 @@
+-- title
+
+Page ID (Builder Side)
+
+-- h2
+
+Overview
+
+This feature creates a `id()`` function on the
+`Page`` object that can be called on both
+the server side and in the templates
+
+-- todo
+
+[x] Calling `.id()`` in the server code 
+returns an `Option<String>`` with the
+id
+
+[x] The id is pulled from the `-- id``
+attribute of the `-- metadata`` section
+
+[x] If `-- id`` exists it's returned as
+`Some(ID)``
+
+[x] If an `-- id`` does not exist, the 
+value returned is `None``
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 16:27:51
+-- id: 2bpznvln
+-- status: published
+

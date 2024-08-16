@@ -1,0 +1,62 @@
+-- title
+
+Show Source Content Sections In Templates
+
+-- h2
+
+Overview
+
+Adding a `-- template`` section to a page provides a way to
+pass variables to to the rendering process. You can show 
+the source of content sections by setting this above them:
+
+-- code/
+-- neoj
+
+-- template
+-- show_source: on
+
+-- /code
+
+
+-- note
+
+This functionality is provided by the theme templates. 
+It's built into the default Neopoligen theme but may
+not be available in others if the authors don't include
+it.
+
+
+-- p
+
+Here's an example of what it looks like when you 
+turn it on:
+
+-- template
+-- show_source: on
+
+-- blockquote
+
+This is an <<strong|example>> of showing the source for a section
+via `-- show_source: on`` in a `-- template`` 
+section
+
+-- template
+-- show_source: off
+
+-- p
+
+Turning it off is done with:
+
+-- code/
+
+-- show_source: off
+
+-- /code
+
+
+
+-- metadata
+-- date: 2024-03-09
+-- id: 2drfspjl
+

@@ -1,0 +1,20 @@
+-- title
+
+CSS In Content 
+
+CSS can be dropped directly in content files
+and it'll be added to the head of the document. 
+
+
+-- css
+
+body {
+    color: goldenrod;
+}
+
+
+-- metadata
+-- date: 2024-01-13
+-- id: 2avmj3gu
+-- status: published
+

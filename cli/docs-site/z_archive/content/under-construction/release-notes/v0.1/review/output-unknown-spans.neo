@@ -1,0 +1,39 @@
+-- title
+
+Output Unknown Spans
+
+-- h2
+
+Overview
+
+This feature allows for unknown inline
+spans to exist. If one is found it gets
+converted into an element with the
+same name in the output HTML. 
+For example:
+
+-- code/
+
+<<unknown_name|Lorem Ipsum>>
+
+-- /code
+
+Becomes:
+
+-- code/
+
+<unknown_name>Lorem Ipsum</unknown_name>
+
+-- /code
+
+
+-- todo
+-- title: Requirements
+
+[] Define requirements
+
+-- metadata
+-- date: 2024-02-12
+-- id: 2chgjtru
+-- status: scratch
+

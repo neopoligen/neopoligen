@@ -1,0 +1,33 @@
+-- title
+
+config.json 
+
+-- h2
+
+Overview
+
+The Neopoligen config file is located at:
+
+-- pre/
+
+/Users/alan/Library/Application Support/Neopoligen/config.json
+
+-- /pre
+
+The only thing that's in it right now is the active site:
+
+-- code/
+-- json
+
+{ "active_site": "neopoligen.github.io" }
+
+-- /code
+
+
+
+
+-- metadata
+-- date: 2024-03-12
+-- id: 2dbb3bkx
+
+

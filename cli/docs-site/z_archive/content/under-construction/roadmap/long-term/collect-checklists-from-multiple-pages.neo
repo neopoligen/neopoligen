@@ -1,0 +1,55 @@
+-- title
+
+Collection Checklists From Multiple Page
+
+-- h2
+
+Overview
+
+-- todo
+
+[] A selection of pages can be defined
+by type, status, or tag
+
+[] A specific checklist section type 
+is defined
+
+[] All pages on the site are searched
+for that section type and if they
+have one the items are added to
+the output
+
+[] The status comes over as well
+
+[] The resulting list can be sorted
+chronologically based on the page
+they originated from or alphabetically
+
+[] Items can be grouped by the page
+they were on
+
+[] Items can also be grouped by 
+status (with a secondary sort of
+alphabetical or chronological)
+
+[] Links to the original page and
+section on the page are available
+
+
+
+-- h2
+
+Examples
+
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 10:15:29
+-- id: 2bpgwgzu
+-- status: proposal
+

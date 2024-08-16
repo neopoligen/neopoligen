@@ -1,0 +1,17 @@
+-- title
+
+Title As Text 
+
+Any time you need to display the title without
+any inline spans doing formatting (e.g. when
+making RSS templates)
+
+-- code
+
+{{ page.title_as_text }}
+
+
+-- metadata
+-- date: 2024-01-15
+-- id: 2ayfybny
+-- status: published

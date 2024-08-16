@@ -1,0 +1,42 @@
+-- title
+
+List Sections
+
+-- list
+
+- Lorem ipsum proin a dui eget neque porta 
+fermentum nec in leo sed ullamcorper
+
+Lectus, id facilisis velit imperdiet vitae 
+duis velit sem, tristique gravida
+
+- Aenean at felis est mauris mollis, nisl 
+aliquam cursus scelerisque
+
+
+
+-- list
+-- example_flag
+-- title: This Is The List Title
+-- subtitle: And the subtitle
+-- class: green
+-- id: list_full_section_example
+-- forward: This is before the list title
+-- preface: This is after the title before the list
+-- afterword: This is after th list
+
+- Lorem ipsumlibero elit, rhoncus vitae tristique 
+vitae, laoreet varius enim sed ipsum
+
+Pellentesque ornare faucibus scelerisque
+
+- Nunc nec justo quis libero iaculis dictum 
+in vel mauris
+
+
+
+
+-- metadata
+-- date: 2024-02-02
+-- id: 2bpcz4de
+

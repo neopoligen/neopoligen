@@ -1,0 +1,68 @@
+-- title
+
+Customization
+
+Neopoligen is designed with customization at it's core. The 
+ability to create new sections and spans is
+fundamental. In fact, there's no difference between
+the sections and spans that come with Neopoligen
+and custom ones you create. They're all built the same way.
+
+The sections and spans that come built-in 
+are there so you can make sites without having to build
+anything yourself. You can take them pretty far. 
+
+But, if you want to dig in, you can make custom sections 
+designed for anything you want. For example, 
+here's a custom "book" section:
+
+-- code/
+
+-- book
+-- title: Understanding Comics
+-- by: Scott McCloud
+-- subtitle: The Invisible Art
+-- image: understanding-comics-cover.jpg
+-- rating: 5
+
+The title says it's about comics, but it's way more
+than that. It's about narrative, and story 
+telling, and art. I highly recommend it (even if you're 
+not into comics)
+
+-- /code
+
+By default, that `-- book`` section will output
+like a standard `-- p`` section with no real formatting. 
+Customizing the output is done by adding a template
+to the "theme". This uses the "welcome" theme. So,
+the path to the new template file is:
+
+-- code/
+
+themes/welcome/sections/custom/book/full/default.jinja
+
+-- /code
+
+-- todo
+
+[] Set up the engine to automatically output unknown
+sections as part of the "standard" category
+
+[] Add details about the template path
+
+[] Make an example showing how to create a new section
+
+
+
+
+
+
+
+-- metadata
+-- date: 2024-02-02
+-- updated: 2024-02-02 20:40:05
+-- id: 2bpuadoq
+-- type: intro
+-- status: scratch
+

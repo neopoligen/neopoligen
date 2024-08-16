@@ -1,0 +1,56 @@
+[!- import "includes/macros.jinja" as macros -!]
+
+<section [@- section_attributes(page_id, {"section": section, "classes": section.type ~ "_section flow" } ) -@]>
+
+    [!- if section.key_value_attributes.forward -!]
+        <div class="forward">
+            [@- section.key_value_attributes.forward -@]
+        </div>
+    [!- endif -!]
+
+    [!- if section.key_value_attributes.title or section.key_value_attributes.subtitle -!]
+    <div class="section_title_subtitle_group">
+    [!- endif -!]
+        [!- if section.key_value_attributes.title -!]
+        <h3 class="section_title">
+            [@- section.key_value_attributes.title -@]
+        </h3>
+        [!- endif -!]
+        [!- if section.key_value_attributes.subtitle -!]
+        <h4 class="section_subtitle">
+            [@- section.key_value_attributes.subtitle -@]
+        </h4>
+        [!- endif -!]
+    [!- if section.key_value_attributes.title or section.key_value_attributes.subtitle -!]
+    </div>
+    [!- endif -!]
+
+    [!- if section.key_value_attributes.preface -!]
+        <div class="preface">
+            [@- section.key_value_attributes.preface -@]
+        </div>
+    [!- endif -!]
+
+    [!- if section.flag_attributes[0] -!]
+    <img src="[@- site.image(section.flag_attributes[0]).raw_href -@]" alt="
+    [!- if section.key_value_attributes.alt -!][@- section.key_value_attributes.alt -@][!- endif -!]
+    ">
+    [!- endif -!]
+
+    [!- if section.category.content.containers[0] -!]
+    <div class="content flow">
+    [!- endif -!]
+        [!- for content in section.category.content.containers -!]
+            <p>[@- output_payload(page_id, content, extras) -@]</p>
+        [!- endfor -!]
+    [!- if section.category.content.containers[0] -!]
+    </div>
+    [!- endif -!]
+
+    [!- if section.key_value_attributes.afterword -!]
+        <div class="afterword">
+            [@- section.key_value_attributes.afterword -@]
+        </div>
+    [!- endif -!]
+
+

@@ -1,0 +1,33 @@
+-- title
+
+Sandbox Plugins
+
+-- h2
+
+Overview
+
+-- todo
+
+[] Plugins are run in a sandboxed
+environment
+
+[] They have access to anything inside
+their own directory but nothing else
+
+
+-- h2
+
+Examples
+
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 11:32:33
+-- id: 2bpptjvt
+-- status: draft
+

@@ -1,0 +1,21 @@
+-- title
+
+HTML Blocks 
+
+Raw HTML can be added to the page with `-- html``
+sections. These are placed on the page with no
+other processing. 
+
+
+-- html
+
+<div class="center">
+    <button>This button does nothing</button>
+</div>
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2avondlp
+-- status: published
+

@@ -1,0 +1,82 @@
+-- title
+
+Initial App Front End
+
+-- h2
+
+Overview
+
+Neopoligen consists of two primary components
+that are used to build sites: a command
+line tool that generates the site and serves
+it locally, and a desktop app that
+provides a friendlier interface to the 
+command line tool. Here's the checklist
+for the desktop portion
+
+-- todo
+-- title: Requirements
+
+[x] The app works on my mac
+
+[] The app works on my windows machine
+
+[] The app can work with any number of 
+sites which are stored in a "Neopoligen/sites"
+folder that's inside the user's Documents
+directory.
+
+[] The app reads a config file to determine
+which site to build and watch for changes
+in
+
+[] When the app is launched it checks to
+see if there's a Neopoligen folder
+in the user's Documents folder. If not, it creates
+one. Additionally, it generates a sample
+site that can be used for reference and
+updates the config file to make it 
+the active site
+
+[x] When the app is launched it starts
+the command line tool which in turn rebuilds
+the active site and stars a web server 
+on a localhost port for it
+
+[x] When the app is active the command line
+tool stays running. It's responsible for
+watching the active site folder and 
+rebuilding the site, serving it on 
+a localhost port, and trigging a browser
+reload when content on configuration files
+change
+
+[] New sites can be created via the app. When
+a new site is created all the default files
+are generated inside a new folder in the
+"Neopoligen/sites" folder with the
+requested name
+
+[] The app provides a drop down list to 
+select the active site. When the active
+site is changed, the config file is
+updated
+
+[x] The app provides a button that launches
+the user's default browser with the 
+localhost URL for the active site
+
+
+
+-- notes
+
+- The app might work on linux distributions.
+Ensuring that it does is not in scope for this
+version
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- id: 2bp6vnhk
+

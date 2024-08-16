@@ -1,0 +1,126 @@
+-- title
+
+Release Notes And The Road Map
+
+These are the release notes for Neopoligen. 
+They provide details on the features and
+examples of how to use them.
+
+They also act as the roadmap for future
+features and functionality. 
+
+-- notes
+-- title: Notes
+
+- Everything starts as a proposal with 
+a ``` attribute in the
+`-- tags`` section
+
+- Proposals are written in the style
+of a release note that will be published
+when the feature is launched
+
+- In face, the proposal will turn into 
+the release note when the feature is
+deployed
+
+- Proposals contain a `-- todo`` section
+that lists details of what the feature
+does
+
+- Proposals contain an optional "Examples"
+section to show it off
+
+- The proposal acts as a place to center
+discussion about the feature and decide
+on the specifics and if it fits in
+
+- If the feature proposal is approved, it's tag
+is changed from ``` to 
+```
+
+- Once the feature is under active development 
+the tag is changed to `-- feature-dev-in-progress``
+
+- When the feature is done, it's tag
+is changed to `-- feature-complete``
+
+- A version number attribute is also used
+
+- The format for the version number tag
+is a `v`` followed by a semver^semver^^ 
+number. For example: ```
+
+- If the feature is required for a specific
+release it gets the version number tag assigned
+at the start. 
+
+- If the feature is not required for a specific
+version it doesn't get the attribute until
+it's finished an placed in a specific version
+release
+
+- When the feature is released the tag is changed
+to `-- feature-published``
+
+
+-- notes
+-- title: Other Notes
+
+- Files are stored in directories with names
+that match their tags for ease of organization
+for us humans but the tags and page IDs are what
+the Builder uses
+
+- The `-- metadate`` section `-- type`` attribute
+for feature is `-- release-notes``
+
+- Proposals can start life without any
+specific `-- todo`` items. When that's
+the case, add as TKTKTKTKT item to
+make it obvious
+
+- If a proposed is rejected it's 
+tag is changed to `-- feature-rejected``
+
+- There will eventually be a 
+`-- feature-deprecated`` attribute, but we 
+haven't made it that far yet
+
+- There are three active directories for the
+current version the one with just the version 
+number and one with `-in-dev`` and one with
+`-todo``
+
+- The `-in-dev`` is actively being worked on
+
+- The `-to-do`` is something targeted to get
+done for the release (which may or may not
+required to make it depending on the feature)
+
+- The other folders are `proposals`` for things
+that haven't been decided on, `rejected`` for
+things that won't be done and a `-todo`` folder
+for the next version
+
+- Not everything in the next version `-todo`` 
+folder is actually expected to get done in 
+that version. It's just the holding place
+for any proposals that have been approved
+
+- When a release goes everything is shifted
+forward one and all the files are coped over
+from the existing `-todo` for the next version
+(which just become the current one) to the
+newly created on. 
+
+- Then features are moved in as the get pulled
+into the new active version
+
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- id: 2bp4g8jy
+

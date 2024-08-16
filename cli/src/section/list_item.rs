@@ -91,7 +91,7 @@ mod test {
     }
 
     #[test]
-    fn solo_start_end_list_items() {
+    fn start_end_list_items() {
         let source = "- alfa\n\n-- p\n\nbravo";
         let config = SiteConfig::mock1_basic();
         let left = (

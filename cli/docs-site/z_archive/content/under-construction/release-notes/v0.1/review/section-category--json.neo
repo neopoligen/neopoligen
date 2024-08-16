@@ -1,0 +1,38 @@
+-- title
+
+Section Types: JSON
+
+-- h2
+
+Overview
+
+-- todo
+
+[x] Provides a way to send JSON objects
+directly to the templates for 
+processing
+
+[x] Full section tags work (e.g. `-- menu``) 
+
+[x] Full sections have flag attributes
+
+[x] Full sections have key/value attributes
+
+[x] Start section tags work (e.g. `-- menu/``)
+
+[x] Start sections have flag attributes
+
+[x] Start sections have key/value attributes
+
+[x] End section tags work (e.g. `-- menu/``)
+
+[x] End sections have flag attributes
+
+[x] End sections have key/value attributes
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- id: 2bphopxo
+-- status: published

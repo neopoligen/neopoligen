@@ -1,0 +1,25 @@
+-- title
+
+Span: b 
+
+-- subtitle
+
+The Bring Attention To Span
+
+-- p
+
+Basic Example: 
+
+<<b|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<b|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03
+-- id: 2bqparow
+-- status: published
+

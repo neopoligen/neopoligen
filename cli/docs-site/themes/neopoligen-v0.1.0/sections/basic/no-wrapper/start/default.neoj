@@ -1,0 +1,6 @@
+[!- import "includes/theme.neoj" as theme -!]
+[!- for child in section.children -!]
+[!- for span in child.spans -!]
+    [@- theme.output_span(site, page_id, span) -@]
+[!- endfor -!]
+[!- endfor -!]

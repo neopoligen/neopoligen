@@ -1,0 +1,42 @@
+-- title
+
+Section Attributes
+
+-- h2
+
+Overview
+
+The `section_attributes(section)`` template
+macro outputs all the attributes
+passed into a section.
+
+The only value not passed in is "class"
+which has its own macro so that extra
+classes can be added. 
+
+Everything else is passed in with any
+double quote characters replaced by `&quot;``
+to prevent them from breaking out of
+the attribute in the tag
+
+Note that flag attributes (i.e. not
+key/value pairs) are not passed in since
+most of their functionality is used inside
+the templates for things like determining
+syntax highlighting languages. They 
+can be added in individually with 
+modifications to your templates if necessary
+
+
+-- todo
+-- title: Requirements
+
+
+
+
+-- metadata
+-- date: 2024-02-14
+-- id: 2cnrzz2l
+-- type: release-notes
+-- status: scratch
+

@@ -1,0 +1,4 @@
+This `sed`` folder is not part of the 
+standard Neopoligen site structure. It's
+for find and replace scripts I'm using during
+development. 

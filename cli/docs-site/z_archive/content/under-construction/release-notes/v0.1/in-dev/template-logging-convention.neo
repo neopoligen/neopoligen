@@ -1,0 +1,50 @@
+-- title
+
+Template Logging Convention
+
+-- h2
+
+Overview
+
+Every theme should be set up with a 
+logging macro that calls to the site. 
+Usage looks like this in the templates:
+
+-- code/
+
+{%- import "includes/macros.jinja" as macros -%}
+
+{{ macros.log({"msg": "some message"}) }}
+
+-- /code
+
+The value is always a `{}`` hashmap/dictionary.
+The `msg`` key will be displayed in the 
+error text in the output.
+
+Other values can be send for other debugging
+as necessary. For example:
+
+-- code/
+
+{{- macros.log({"msg": "some message", "more_stuff": ["a", "b"]}) -}}
+
+-- /code
+
+The macro it itself is set up in the
+`includes/macros.jinja`` file with:
+
+-- code/
+-- jinja
+
+{%- macro log(payload = {}) -%}
+{{- site.log_from_template(payload|tojson) -}}
+{%- endmacro -%}
+
+-- /code
+
+
+
+-- metadata
+-- date: 2024-02-21
+-- id: 2cgxa0io

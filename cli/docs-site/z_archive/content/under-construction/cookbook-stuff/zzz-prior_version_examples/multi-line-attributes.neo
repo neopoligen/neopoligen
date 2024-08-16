@@ -1,0 +1,29 @@
+-- title
+
+Multi-Line Attributes 
+
+For things that have longer attribute needs (like
+image alt tags) the attribute can be added multiple 
+times. They all get combined (with a space in-between)
+
+For example, here's a list section where the 
+title is split across three
+
+-- list
+-- title: alfa
+-- title: bravo
+-- title: charlie
+
+- check item one
+
+-- list
+-- title: Use Case
+
+- Long image alt tags
+
+
+-- metadata
+-- date: 2024-01-15
+-- id: 2b0m57wp
+-- status: published
+

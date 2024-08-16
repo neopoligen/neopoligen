@@ -1,0 +1,29 @@
+-- title
+
+Custom Path Slugs 
+
+Pages are built at a page based on an ID by default. 
+Separating the output from the file structure makes
+it easier to manage content without having to worry
+about the impact on the site. 
+
+Custom paths/slugs can be defined for any page though
+by adding a `-- path`` attribute to the `-- metadata``
+section. As with this page that's at `/custom-path-slugs``
+
+-- code/
+-- class: example
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2ayheha7
+-- status: published
+-- path: /custom-path-slugs
+
+-- /code
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2ayheha7
+-- status: published

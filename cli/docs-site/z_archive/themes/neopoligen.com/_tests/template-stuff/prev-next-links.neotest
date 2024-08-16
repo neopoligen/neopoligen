@@ -1,0 +1,80 @@
+##################################################################################
+TEMPLATE
+PATH: pages/testing/published.jinja
+##################################################################################
+
+[!- import "includes/macros.jinja" as macros -!]
+[!- set links = site.collection_from_files_and_folders(
+    page_id, 
+    [["test-pages"]]
+) -!]
+
+[@- macros.prev_next(links) -@]
+
+##################################################################################
+SUPPORT_PAGE
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/test-pages/_title.neo
+##################################################################################
+
+-- title
+
+Test Page Folder
+
+-- metadata
+-- id: aabb0000
+-- type: testing
+
+
+##################################################################################
+SUPPORT_PAGE
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/test-pages/001-previous-file.neo
+##################################################################################
+
+-- title
+
+Previous File
+
+-- metadata
+-- id: aabb0001
+-- type: testing
+
+
+##################################################################################
+SUPPORT_PAGE
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/test-pages/003-next-file.neo
+##################################################################################
+
+-- title
+
+Next File
+
+-- metadata
+-- id: aabb0003
+-- type: testing
+
+
+
+##################################################################################
+INPUT
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/test-pages/002-file-under-test.neo
+##################################################################################
+
+-- title
+
+File Under Test
+
+-- metadata
+-- id: aabb0002
+-- type: testing
+
+
+
+##################################################################################
+EXPECTED_OUTPUT
+##################################################################################
+
+<nav class="prev_next">
+    <div>Previous:<br /> <a href="/en/aabb0001/?previous-file">Previous File</a></div>
+    <div>Next:<br /> <a href="/en/aabb0003/?next-file">Next File</a></div>
+</nav>
+

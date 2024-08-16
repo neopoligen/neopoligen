@@ -1,0 +1,58 @@
+-- title
+
+Section Category: List
+
+-- h2
+
+Overview
+
+This feature creates the "list" section 
+category. 
+
+-- list
+-- title: Details
+
+- Lists use `-`` characters starting on a 
+line after an empty line to create a list
+item. 
+
+- Multiple paragraphs can go in any
+list item
+
+-- p
+
+See: <<tlink|2bpcz4de>> and <<tlink|2bpdi8ml>> 
+for examples
+
+-- todo
+
+
+[x] Full section tags work (e.g. `-- notes``) 
+
+[x] Full sections have key value attributes
+
+[x] Full sections have flag attributes
+
+[x] Start section tags work (e.g. `-- notes/``)
+
+[x] Start sections have key value attributes
+
+[x] Start sections have flag attributes
+
+[x] End section tags work (e.g. `-- notes/``)
+
+[x] End sections have key value attributes
+
+[x] End sections have flag attributes
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 10:29:08
+-- id: 2bpiba4h
+-- status: published
+

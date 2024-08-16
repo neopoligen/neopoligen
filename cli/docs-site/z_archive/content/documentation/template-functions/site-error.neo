@@ -1,0 +1,33 @@
+-- title
+
+site.error()
+
+-- h2
+
+Overview
+
+The `site.error()`` function is used in templates to send
+error message to the <<ilink: 2dsxkh81|log file>>. 
+
+-- h2
+
+Example
+
+-- code/
+-- neoj
+
+[@- site.error("Something went wrong") -@]
+
+-- /code
+
+The function is used inside an Output Snippet (i.e. `[@- ... -@]``)
+but doesn't actually output anything. It would make
+a little more sense for it to be in a Command Snippet 
+(i.e. `[!- ... -!]``) but that doesn't work with way
+the underlying engine does things.
+
+
+-- metadata
+-- date: 2024-03-09
+-- id: 2dsxa2ep
+

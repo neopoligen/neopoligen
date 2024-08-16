@@ -1,0 +1,15 @@
+-- title
+
+Copy Images Directory To Output 
+
+-- goal
+
+The `./images`` directory is copied
+to `./docs/images`` on each build
+
+
+
+
+-- metadata
+-- date: 2024-04-19
+-- id: 2fjqx7t8

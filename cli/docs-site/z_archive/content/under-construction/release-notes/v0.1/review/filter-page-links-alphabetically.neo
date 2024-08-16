@@ -1,0 +1,151 @@
+-- title
+
+Filter Page Links (Alphabetically)
+
+-- h2
+
+Overview
+
+This feature adds the ability to create
+lists of page links by filtering the page
+"type", "status", "tags", "filters" and
+the pages "folders" components.
+
+The filters are created in `[]`` brackets
+with any number of items in each bracket
+
+-- todo
+-- title: Details
+
+[x] Requests for collections look like
+these examples (more details below):
+
+-- code/
+-- jinja
+
+site.filter_page_links_alpha(
+    page.id(),
+    ["post"]
+)
+
+site.filter_page_links_alpha(
+    page.id(),
+    ["post", "published"]
+)
+
+site.filter_page_links_alpha(
+    page.id(),
+    ["post", "published"],
+    ["post", "draft"]
+)
+
+site.filter_page_links_alpha(
+    page.id(),
+    ["post", "!draft"]
+)
+
+-- /code
+
+-- todo
+
+[x] Responses available in the template look like:
+
+[] The `page.id()`` that's passed in powers the `link_or_title``
+part of the response. If it's the current page, the value
+returned is just the title. Otherwise, it's the full link. This
+means there's no need to filter in the template.
+
+
+-- code/
+-- json
+
+[
+    { 
+        "full_title": "Delta Oscar", 
+        "id": "id12345c", 
+        "link": "<a href=\"/pages/id12345c/?delta-oscar\">Delta Oscar</a>", 
+        "link_title": "Delta Oscar"
+        "link_or_title": "<a href=\"/pages/id12345c/?delta-oscar\">Delta Oscar</a>", 
+    },
+    { 
+        "full_title": "Victor Papa", 
+        "id": "id003333", 
+        "link": "<a href=\"/pages/id003333/?victor-papa\">Victor Papa</a>", 
+        "link_title": "Victor Papa"
+        "link_or_title": "Victor Papa"
+    }
+]
+
+-- /code
+
+-- todo
+
+[x] The results are sorted alphabetically by 
+"link_title"
+
+[x] The page's "type" is included in the filter
+
+[x] The page's "status" is included in the filter
+
+[x] The page's "id" is included in the filter
+
+[x] The page's "tags" are included in the filter
+
+[x] The page's "filters" are included in the filter
+
+[x] The page's "folder" components are included in the filter
+
+[x] Items inside a single pair of `[]`` braces are
+for "and" matches. That is `["alfa", "bravo"]`` must
+have both "alfa" and "bravo" in it's collection of
+key words to filter on
+
+[x] Multiple sets of "and" filters can be passed
+in. Each one is treated as an "or". For example this
+finds all pages with a type of "post" 
+that have a status of "published". Or pages
+with a type of "post" that have a status of
+"draft":
+
+-- code/
+-- jinja
+
+site.filter_page_links_alpha(
+    ["post", "published"], 
+    ["post", "draft"]
+)
+
+-- /code
+
+
+-- todo
+
+[x] A `!`` can be added in front of any filter
+keyword to find pages that _do not__ match
+it. For example, this will find an page
+with "post" that _does not__ have "draft"
+
+-- code/
+-- jinja
+
+site.filter_page_links_alpha(
+    ["post", "!draft"]
+)
+
+-- /code
+
+-- todo
+
+[x] If a page matches multiple times it
+is only returned once
+
+[x] If no pages match the request an empty `[]``
+array is returned
+
+[x] Matches are case-insensitive
+
+
+-- metadata
+-- date: 2024-02-11
+-- id: 2cejgspr
+

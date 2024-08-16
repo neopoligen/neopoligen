@@ -1,0 +1,101 @@
+-- title
+
+JSON Sections
+
+-- menu
+
+{
+    "title": "Example Menu",
+    "url": "#",
+    "items": [
+        {
+            "title": "Lorem Ipsum",
+            "url": "#",
+            "items": [
+                {
+                    "title": "Fringilla Sed",
+                    "url": "#"
+                },
+                {
+                    "title": "Tincidunt Urna",
+                    "url": "#"
+                },
+                {
+                    "title": "Porttitor Interdum",
+                    "url": "#"
+                }
+            ]
+        },
+        {
+            "title": "Vestibulum Volutpat",
+            "url": "#",
+            "items": [
+                {
+                    "title": "Turpis Justo",
+                    "url": "#"
+                },
+                {
+                    "title": "Vehicula Nulla",
+                    "url": "#"
+                }
+            ]
+        }
+    ]
+}
+
+
+-- menu
+-- example_flag
+-- title: This Is An Example Title
+-- subtitle: And subtitle for a JSON Section
+-- class: green
+-- id: json_section_example
+-- forward: This is the forward text
+-- preface: This is the preface text
+-- afterword: This is the afterword text
+
+{
+    "title": "Example Menu",
+    "url": "#",
+    "items": [
+        {
+            "title": "Lorem Ipsum",
+            "url": "#",
+            "items": [
+                {
+                    "title": "Fringilla Sed",
+                    "url": "#"
+                },
+                {
+                    "title": "Tincidunt Urna",
+                    "url": "#"
+                },
+                {
+                    "title": "Porttitor Interdum",
+                    "url": "#"
+                }
+            ]
+        },
+        {
+            "title": "Vestibulum Volutpat",
+            "url": "#",
+            "items": [
+                {
+                    "title": "Turpis Justo",
+                    "url": "#"
+                },
+                {
+                    "title": "Vehicula Nulla",
+                    "url": "#"
+                }
+            ]
+        }
+    ]
+}
+
+
+
+-- metadata
+-- date: 2024-02-02
+-- id: 2bowv51s
+

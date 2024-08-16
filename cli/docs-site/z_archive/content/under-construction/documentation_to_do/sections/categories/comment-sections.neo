@@ -1,0 +1,21 @@
+-- title
+
+Comment Sections
+
+-- comment
+
+This comment should not show up on the page
+
+-- p
+
+NOTE: There is a `-- comment`` section in the 
+original content file directly above this 
+paragraph. It not showing up here means
+it's working as designed.
+
+
+
+-- metadata
+-- date: 2024-02-02
+-- id: 2bnbefrs
+

@@ -6,19 +6,28 @@ use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Site {
+    pub absolute_page_urls: BTreeMap<String, String>,
     pub config: SiteConfig,
     pub images: BTreeMap<String, Image>,
+    pub page_titles: BTreeMap<String, String>,
 }
 
 impl Site {
-    pub fn new_from_payloads(
-        config: SiteConfig,
-        _payloads: &BTreeMap<String, PagePayload>,
-    ) -> Site {
-        let site = Site {
+    pub fn new_from_payloads(config: SiteConfig, payloads: &BTreeMap<String, PagePayload>) -> Site {
+        let mut site = Site {
             config: config.clone(),
             images: BTreeMap::new(),
+            absolute_page_urls: BTreeMap::new(),
+            page_titles: BTreeMap::new(),
         };
+        payloads.iter().for_each(|payload| {
+            if let Some(url) = payload.1.absolute_url.clone() {
+                site.absolute_page_urls.insert(payload.0.clone(), url);
+            }
+            if let Some(title) = payload.1.title.clone() {
+                site.page_titles.insert(payload.0.clone(), title);
+            }
+        });
         site
     }
 

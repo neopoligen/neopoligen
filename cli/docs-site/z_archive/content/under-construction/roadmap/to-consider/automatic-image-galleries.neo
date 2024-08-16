@@ -1,0 +1,23 @@
+-- title
+
+Automatic Images Galleries From Folders
+
+-- h2
+
+Overview
+
+The `-- image-gallery`` section looks at a 
+folder in the `images`` directory and turns
+it into a gallery
+
+-- todo
+-- title: Requirements
+
+[] Automatically read alt text from images
+
+
+-- metadata
+-- date: 2024-02-23
+-- id: 2cmw2nwr
+-- status: scratch
+

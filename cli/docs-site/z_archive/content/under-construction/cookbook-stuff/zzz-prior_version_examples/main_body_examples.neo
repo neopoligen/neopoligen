@@ -1,0 +1,21 @@
+-- title
+
+Main Body Examples 
+
+The config file has an array called `main_body_excludes``. It's 
+purpose is to remove the sections identified in the list from
+the `page.main_body`` output. This provides a way to keep content
+in a file but move it around on the page wherever it needs to 
+be with the `{{ place_section(page, "SECTION_NAME") }}`` macro
+
+-- list
+-- title: Use Cases
+
+- Moving the title around on the page
+
+- Putting references at the bottom of the page
+
+-- metadata
+-- date: 2024-01-15
+-- id: 2b1gvjud
+-- status: published

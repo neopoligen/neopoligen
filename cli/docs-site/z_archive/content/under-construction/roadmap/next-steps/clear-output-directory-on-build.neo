@@ -1,0 +1,17 @@
+-- title
+
+Clear Output Directory On Each Build
+
+-- goal
+
+Every time the build process is run
+the output directory is cleared so 
+there's no kruft from files that were
+deleted or moved
+
+
+
+
+-- metadata
+-- date: 2024-04-19
+-- id: 2fjqb9bx

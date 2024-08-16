@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta property="og:type" content="article" /><link rel="stylesheet" href="/theme/styles.css" />
+<link rel="stylesheet" href="/theme/highlighting/code-solarized-dark.css" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/theme/favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/theme/favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/theme/favicons/favicon-16x16.png">
+<link rel="manifest" href="/theme/favicons/site.webmanifest">
+<link rel="mask-icon" href="/theme/favicons/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="/theme/favicons/favicon.ico">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="msapplication-config" content="/theme/favicons/browserconfig.xml">
+<meta name="theme-color" content="#000000">
+<script type="module" src="/theme/theme.js"></script><style>.demo_area {
+    border: var(--border-4);
+    padding: var(--padding-4);
+}
+
+.demo_area button {
+    margin-bottom: var(--padding-4);
+}</style><script><script template="show">function on_demo_function(element) {
+    const status_elements = document.querySelectorAll(".demo_status")
+    status_elements.forEach((status_element) => {
+        status_element.innerHTML = `${element.dataset.name} clicked on`
+    })
+}</script></script><script><script template="show">function off_demo_function(element) {
+    const status_elements = document.querySelectorAll(".demo_status")
+    status_elements.forEach((status_element) => {
+        status_element.innerHTML = `${element.dataset.name} clicked off`
+    })
+}</script></script><script><script template="show">function add_toggle_function_to_button_selector_demo(on_function, off_function, selector) {
+  let elements = document.querySelectorAll(selector)
+  elements.forEach((element) => {
+    element.addEventListener("click", (event) => { 
+        elements.forEach((update_element) => {
+            update_element.classList.toggle("on")
+            update_element.classList.toggle("off")
+            const text_buffer = update_element.innerHTML
+            update_element.innerHTML = update_element.dataset.toggle_text
+            update_element.dataset.toggle_text = text_buffer
+        })
+      const element = event.target
+      if (element.classList.contains("on")) {
+        on_function.call(undefined, element)
+      } else {
+        off_function.call(undefined, element)
+      }
+    })
+  })
+}</script></script><script><script template="show">document.addEventListener("DOMContentLoaded", () => {
+  add_toggle_function_to_button_selector_demo(
+    on_demo_function, 
+    off_demo_function, 
+    ".demo_button"
+  )
+})</script></script></head>
+<body><header></header><main><div class="sidebar">
+
+<h4>Details</h4><nav id="nav_menu"><ol><li id="nav_menu_2auhjdnh" class="page_inactive"><a href="/">Neopoligen</a></li><li id="nav_menu_2dcmgjan" class="page_inactive"><a href="/download/">Download</a></li><li id="nav_menu_2dom5zxe" class="index_folder_closed"><a href="/en/2dom5zxe/?under-construction">Under Construction</a></li></ol></nav><h4>Blog</h4><nav><ul><li><a href="/en/2dcgvrpe/?introducing-neopoligen---a-website-builder-for-everyone">Introducing Neopoligen - A Website Builder For Everyone</a></li></ul></nav><h4>Tech Blog</h4><nav><ul><li><a href="/en/2cpwqhh7/?hello%2C-world">Hello, World</a></li><li><a href="/en/2djkslaj/?the-database-idea">The Database Idea</a></li><li><a href="/en/2dn38hs5/?from-jinja-to-minijinja-to-neojinja-with-pre-attentive-processing">From Jinja To MiniJinja To NeoJinja With Pre-Attentive Processing</a></li><li>Vanilla JavaScript Button Toggler</li></ul></nav><h4><a href="/en/2dpcupti/?shorts">Shorts</a></h4><nav><ul><li><a href="/en/2dn1mxzh/?i-just-learned-you-can-string-multiple-find-and-replace-patterns-together...">I just learned you can string multiple find and replace patterns together...</a></li><li><a href="/en/2dpcg7fp/?instead-of-%22let-the-market-decide%22%2C-how-about-%22let-the-culture-decide%22...">Instead of "let the market decide", how about "let the culture decide"...</a></li><li><a href="/en/2dpcupti/?shorts">Shorts</a></li></ul></nav></div><article class="flow"><nav class="breadcrumbs"><ol>
+<li><a href="/">Home</a></li>
+<li><a href="/download/">Download</a></li></ol>
+</nav><section class="title_section flow"><div class="title_heading_group"><h1>Vanilla JavaScript Button Toggler</h1></div></section><section class="h2_section flow"><div class="h2_heading_group"><h2>Introduction</h2></div><div class="content flow"><p>This is a prototype I'm working on to simplify setting up button functionality. The goals are:</p></div></section>
+<section class="list_section section_category_list flow"><ul class="flow"><li class="list_item flow"><p>Define two functions for each button type. One for "on" clicks and one for "off" clicks</p></li><li class="list_item flow"><p>Use a query selector to define what buttons get the functionality </p></li><li class="list_item flow"><p>Automatically swap on/off text for the button</p></li><li class="list_item flow"><p>If multiple buttons are assigned, update them all when any one of them is clicked</p></li><li class="list_item flow"><p>Make sure the functions have access to the  element for the button that was clicked</p></li></ul></section><section class="h2_section flow"><div class="h2_heading_group"><h2>The Demo</h2></div><div class="content flow"><p>Here's the HTML code and demo buttons</p></div></section>
+<section class="html_code_example_section code_example flow" template="show"><div class="heading_group">
+        <h3>HTML Source</h3></div><pre><code>&lt;div class=&quot;demo_area&quot;&gt;
+
+    &lt;button 
+        class=&quot;demo_button&quot; 
+        data-name=&quot;Alfa&quot;
+        data-toggle_text=&quot;Alfa On&quot;
+        &gt;Alfa Off&lt;&#x2f;button&gt;
+
+    &lt;button 
+        class=&quot;demo_button&quot; 
+        data-name=&quot;Bravo&quot;
+        data-toggle_text=&quot;Bravo On&quot;
+        &gt;Bravo Off&lt;&#x2f;button&gt;
+
+    &lt;div class=&quot;demo_status&quot;&gt;No button clicks yet&lt;&#x2f;div&gt;
+
+&lt;&#x2f;div&gt;</code></pre>
+
+    <div class="output_header">Output</div>
+    
+    <div class="content"><div class="demo_area">
+
+    <button 
+        class="demo_button" 
+        data-name="Alfa"
+        data-toggle_text="Alfa On"
+        >Alfa Off</button>
+
+    <button 
+        class="demo_button" 
+        data-name="Bravo"
+        data-toggle_text="Bravo On"
+        >Bravo Off</button>
+
+    <div class="demo_status">No button clicks yet</div>
+
+</div></div></section><section class="h2_section flow"><div class="h2_heading_group"><h2>Initial Functions</h2></div><div class="content flow"><p>The first step is to set up the on/off functions</p></div></section>
+<section class="script_code_example_section code_example flow" template="show"><div class="heading_group">
+        <h3>JavaScript</h3></div><pre><code>function on_demo_function(element) {
+    const status_elements = document.querySelectorAll(".demo_status")
+    status_elements.forEach((status_element) => {
+        status_element.innerHTML = `${element.dataset.name} clicked on`
+    })
+}</code></pre></section><section class="script_code_example_section code_example flow" template="show"><div class="heading_group">
+        <h3>JavaScript</h3></div><pre><code>function off_demo_function(element) {
+    const status_elements = document.querySelectorAll(".demo_status")
+    status_elements.forEach((status_element) => {
+        status_element.innerHTML = `${element.dataset.name} clicked off`
+    })
+}</code></pre></section><section class="h2_section flow"><div class="h2_heading_group"><h2>The Main Adder</h2></div><div class="content flow"><p>Here's the function that does all the work</p></div></section>
+<section class="script_code_example_section code_example flow" template="show"><div class="heading_group">
+        <h3>JavaScript</h3></div><pre><code>function add_toggle_function_to_button_selector_demo(on_function, off_function, selector) {
+  let elements = document.querySelectorAll(selector)
+  elements.forEach((element) => {
+    element.addEventListener("click", (event) => { 
+        elements.forEach((update_element) => {
+            update_element.classList.toggle("on")
+            update_element.classList.toggle("off")
+            const text_buffer = update_element.innerHTML
+            update_element.innerHTML = update_element.dataset.toggle_text
+            update_element.dataset.toggle_text = text_buffer
+        })
+      const element = event.target
+      if (element.classList.contains("on")) {
+        on_function.call(undefined, element)
+      } else {
+        off_function.call(undefined, element)
+      }
+    })
+  })
+}</code></pre></section><section class="h2_section flow"><div class="h2_heading_group"><h2>Putting It In Place</h2></div><div class="content flow"><p>With those three functions in place adding the on/off functions to a button (or collection of buttons with the same selector) is done like this:</p></div></section>
+<section class="script_code_example_section code_example flow" template="show"><div class="heading_group">
+        <h3>JavaScript</h3></div><pre><code>document.addEventListener("DOMContentLoaded", () => {
+  add_toggle_function_to_button_selector_demo(
+    on_demo_function, 
+    off_demo_function, 
+    ".demo_button"
+  )
+})</code></pre></section><section class="h2_section flow"><div class="h2_heading_group"><h2>Another Look</h2></div><div class="content flow"><p>And here's another batch of buttons that's wired up and working</p></div></section>
+<section class="html_code_example_section code_example flow" template="show"><div class="heading_group">
+        <h3>HTML Source</h3></div><pre><code>&lt;div class=&quot;demo_area&quot;&gt;
+
+    &lt;button 
+        class=&quot;demo_button&quot; 
+        data-name=&quot;Charlie&quot;
+        data-toggle_text=&quot;Charlie On&quot;
+        &gt;Charlie Off&lt;&#x2f;button&gt;
+
+    &lt;button 
+        class=&quot;demo_button&quot; 
+        data-name=&quot;Delta&quot;
+        data-toggle_text=&quot;Delta On&quot;
+        &gt;Delta Off&lt;&#x2f;button&gt;
+
+    &lt;div class=&quot;demo_status&quot;&gt;No button clicks yet&lt;&#x2f;div&gt;
+
+&lt;&#x2f;div&gt;</code></pre>
+
+    <div class="output_header">Output</div>
+    
+    <div class="content"><div class="demo_area">
+
+    <button 
+        class="demo_button" 
+        data-name="Charlie"
+        data-toggle_text="Charlie On"
+        >Charlie Off</button>
+
+    <button 
+        class="demo_button" 
+        data-name="Delta"
+        data-toggle_text="Delta On"
+        >Delta Off</button>
+
+    <div class="demo_status">No button clicks yet</div>
+
+</div></div></section><section class="h2_section flow"><div class="h2_heading_group"><h2>Outro</h2></div><div class="content flow"><p>This is working as expected on a mac in safar, chrome, and firefox. Still need to do a little more testing, but so far so good.</p></div></section>
+<section class="original_content flow">
+    <div class="original_content_toggle_wrapper">
+        <button class="original_content_toggle" data-toggle_text="Hide original content file">Show original content file</button>
+    </div>
+    <div id="original_content_display" class="hidden flow">
+        <h3>Original Content File</h3>
+        <p class="border-bottom-4">This is the file that produced this page</p>
+        <pre ><code>-- title
+
+Vanilla JavaScript Button Toggler
+
+-- h2
+
+Introduction
+
+This is a prototype I&#x27;m working on to simplify setting
+up button functionality. The goals are:
+
+-- list
+
+- Define two functions for each button type. One
+for &quot;on&quot; clicks and one for &quot;off&quot; clicks
+
+- Use a query selector to define what buttons
+get the functionality 
+
+- Automatically swap on&#x2f;off text for the button
+
+- If multiple buttons are assigned, update them
+all when any one of them is clicked
+
+- Make sure the functions have access to the 
+element for the button that was clicked
+
+-- h2
+
+The Demo
+
+Here&#x27;s the HTML code and demo buttons
+
+-- html
+-- template: show
+
+&lt;div class=&quot;demo_area&quot;&gt;
+
+    &lt;button 
+        class=&quot;demo_button&quot; 
+        data-name=&quot;Alfa&quot;
+        data-toggle_text=&quot;Alfa On&quot;
+        &gt;Alfa Off&lt;&#x2f;button&gt;
+
+    &lt;button 
+        class=&quot;demo_button&quot; 
+        data-name=&quot;Bravo&quot;
+        data-toggle_text=&quot;Bravo On&quot;
+        &gt;Bravo Off&lt;&#x2f;button&gt;
+
+    &lt;div class=&quot;demo_status&quot;&gt;No button clicks yet&lt;&#x2f;div&gt;
+
+&lt;&#x2f;div&gt;
+
+
+-- h2
+
+Initial Functions
+
+The first step is to set up the on&#x2f;off functions
+
+-- script
+-- template: show
+
+function on_demo_function(element) {
+    const status_elements = document.querySelectorAll(&quot;.demo_status&quot;)
+    status_elements.forEach((status_element) =&gt; {
+        status_element.innerHTML = `${element.dataset.name} clicked on`
+    })
+}
+
+
+-- script
+-- template: show
+
+function off_demo_function(element) {
+    const status_elements = document.querySelectorAll(&quot;.demo_status&quot;)
+    status_elements.forEach((status_element) =&gt; {
+        status_element.innerHTML = `${element.dataset.name} clicked off`
+    })
+}
+
+-- h2
+
+The Main Adder
+
+Here&#x27;s the function that does all the work
+
+-- script
+-- template: show
+
+function add_toggle_function_to_button_selector_demo(on_function, off_function, selector) {
+  let elements = document.querySelectorAll(selector)
+  elements.forEach((element) =&gt; {
+    element.addEventListener(&quot;click&quot;, (event) =&gt; { 
+        elements.forEach((update_element) =&gt; {
+            update_element.classList.toggle(&quot;on&quot;)
+            update_element.classList.toggle(&quot;off&quot;)
+            const text_buffer = update_element.innerHTML
+            update_element.innerHTML = update_element.dataset.toggle_text
+            update_element.dataset.toggle_text = text_buffer
+        })
+      const element = event.target
+      if (element.classList.contains(&quot;on&quot;)) {
+        on_function.call(undefined, element)
+      } else {
+        off_function.call(undefined, element)
+      }
+    })
+  })
+}
+
+-- h2
+
+Putting It In Place
+
+With those three functions in place adding the on&#x2f;off
+functions to a button (or collection of buttons
+with the same selector) is done like this:
+
+-- script
+-- template: show
+
+document.addEventListener(&quot;DOMContentLoaded&quot;, () =&gt; {
+  add_toggle_function_to_button_selector_demo(
+    on_demo_function, 
+    off_demo_function, 
+    &quot;.demo_button&quot;
+  )
+})
+
+
+-- h2
+
+Another Look
+
+And here&#x27;s another batch of buttons that&#x27;s
+wired up and working
+
+-- html
+-- template: show
+
+&lt;div class=&quot;demo_area&quot;&gt;
+
+    &lt;button 
+        class=&quot;demo_button&quot; 
+        data-name=&quot;Charlie&quot;
+        data-toggle_text=&quot;Charlie On&quot;
+        &gt;Charlie Off&lt;&#x2f;button&gt;
+
+    &lt;button 
+        class=&quot;demo_button&quot; 
+        data-name=&quot;Delta&quot;
+        data-toggle_text=&quot;Delta On&quot;
+        &gt;Delta Off&lt;&#x2f;button&gt;
+
+    &lt;div class=&quot;demo_status&quot;&gt;No button clicks yet&lt;&#x2f;div&gt;
+
+&lt;&#x2f;div&gt;
+
+-- h2
+
+Outro
+
+This is working as expected on a mac in safar, chrome,
+and firefox. Still need to do a little more testing,
+but so far so good.
+
+
+
+-- css
+
+.demo_area {
+    border: var(--border-4);
+    padding: var(--padding-4);
+}
+
+.demo_area button {
+    margin-bottom: var(--padding-4);
+}
+
+
+
+-- metadata
+-- date: 2024-03-09 14:23:49
+-- id: 2dsrh9bo</pre></code>
+        <div class="original_content_toggle_wrapper">
+            <button class="original_content_toggle" data-toggle_text="Hide original content file">Show original content file</button>
+        </div>
+    </div>
+</section></article>
+  </main><footer></footer></body>
+</html>

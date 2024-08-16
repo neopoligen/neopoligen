@@ -4,6 +4,26 @@ Helpers README
 
 -- h2
 
+Syncing
+
+You probably want all four of these running when doing dev work
+
+-- list
+
+- ./sync-docs-site - syncs over to ~/Documents/Neopoligen/neopoligen.github.io
+
+- ./sync-docs-theme - syncs dev theme to docs-site theme
+
+- ./sync-example-site-for-dev - syncs to ~/Documents/Neopoligen/example-site
+
+- ./sync-theme-to-aws - syncs theme to aws prod site ~/Documents/Neopoligen/alanwsmith.com/themes
+
+
+
+
+
+-- h2
+
 General Dev
 
 Run each of these in their own terminal:

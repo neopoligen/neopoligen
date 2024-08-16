@@ -1,0 +1,27 @@
+-- title
+
+The Database Metadata Tag
+
+-- h2
+
+Overview
+
+Any files with `-- database`` in the metadata
+aren't published directly to the site. 
+
+But, their content is made available for 
+inclusion on other pages
+
+
+-- todo
+-- title: Requirements
+
+
+
+
+-- metadata
+-- date: 2024-03-06
+-- id: 2dj4nhio
+-- type: release-notes
+-- status: scratch
+
