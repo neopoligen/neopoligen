@@ -6,8 +6,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <meta property="og:title" content="[@ page.title @]" />
+<meta property="og:description" content="a post from alan w. smith" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="[@ site.config.base_url @][@ page.absolute_url @]" />
+<meta property="og:image" content="[@ site.config.base_url @]/neo-images/default-og-image/1200w.jpg" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="/theme/favicons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/theme/favicons/favicon-32x32.png">

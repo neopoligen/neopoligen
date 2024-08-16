@@ -293,21 +293,6 @@ service called GitHub Pages by default.
 
 Details on using GitHub and other free services are a work in progress.
 
--- h2
-
-Next Steps
-
-That's the basics of how Neopoligen works. There's more advanced
-stuff like being able to nest sections, embedding JavaScript and 
-CSS, syntax highlighting,  and outputting collections of links 
-of pages. I'm in the process of writing up how the other parts work 
-and will post them as they're finished. 
-
-I'll be posting about progress on my <<link|Mastodon account|https://hachyderm.io/@TheIdOfAlan>>
-if you're interested. You can also checkout my personal site (which is
-built from Neopoligen) at: <<link|alanwsmith.com|https://www.alanwsmith.com/>>
-
-
 -- css
 
 .book-grid {
@@ -358,14 +343,13 @@ files when a directory is called e.g. calling "<<em|/en/abcd1234/>>" returns the
 stored at "<<em|/en/abcd1234/index.html>>"). Every service I'm aware of has this option.
 
 - The original content files are stored locally on your machine. You maintain ownership and 
-control of them. You can always change hosting providers to move to a new one without
-losing your content. 
+control of them. You can change hosting providers at any time without losing your content. 
 
 - You can also keep your site name when changing hosting providers if you buy your own
 domain name (I'll write more about, but it's something I highly recommend if you can
 afford it)
 
-- Neopoliten is not built off from on any JavaScript frameworks and learning 
+- Neopoligen is not built off from on any JavaScript frameworks and learning 
 JavaScript is not required to create new templates or modify existing ones. (I'm building
 Neopoligen with the explicit goal that it's what powers my site for the next twenty years
 and part of the means not constantly jumping to new frameworks)
@@ -373,7 +357,7 @@ and part of the means not constantly jumping to new frameworks)
 - The name of the content file format is "Neopolitan" which uses the ".neo" file extension
 
 - Templates are stored in ".neoj" files. They're just like regular MiniJinja files with the 
-exception that the delimeters have been changed from {% %}, {{ }}, and {# #} to [! !], 
+exception that the delimiters have been changed from {% %}, {{ }}, and {# #} to [! !], 
 [@ @], and [# #] because I find those easier to type and read
 
 - Templates are grouped together into themes. The theme for a site is determined via a
@@ -381,7 +365,7 @@ config file. The default theme can be copied to a new folder and used as the sta
 point for making a new one
 
 - Each content page has a "type" which defaults to "post" and a "status" that defaults
-to "published". Those values can be chaned for any page by setting attributes in the
+to "published". Those values can be changed for any page by setting attributes in the
 <<code|-- metadata>> section. The "type" and "status" are then used to determine which
 base template to use from the theme. (e.g. you can make templates for "post/draft", 
 "homepage/published", etc...)
@@ -402,16 +386,16 @@ Similar to the CSS and JavaScript sections there's a custom template to show the
 in a code block as well as output it to verify code samples do what they're supposed to
 
 - The default theme provides for <<code|-- head>> sections. The content of those sections
-is inserted direclty in the html <head> element of the output for things like adding 
-script calls
+is inserted directly in the html <head> element of the output for things like adding 
+script libraries
 
 - Syntax highlighting is built-in. Highlighting can be applied to sections similar to how
 code blocks are used in Markdown. Highlights can also be added to inline text via spans
 
 - The syntax highlighting is done via classes (instead of via inline styles) so things
-can be controlled via external stylesheets
+can be controlled via stylesheets
 
-- The syntax highligher addes an empty span with a specific class at the start of each 
+- The syntax highlighter adds an empty span with a specific class at the start of each 
 line that can be used to add line number in CSS
 
 - A test engine for verifying the output of templates is built-in
@@ -429,15 +413,16 @@ but improving it is an explicit goal. (This is based off my experience with
 the Rust compiler where the general vibe is if you can't figure out what
 you need to do based on an error message they consider that a bug)
 
-- I've built a basic syntax highligher for Neopolitan via 
+- I've built a basic syntax highlighter for Neopolitan via 
 <<link|Tree-sitter|https://tree-sitter.github.io/tree-sitter/>>
 for <<link|Neovim|https://neovim.io/>>. My longer term goal is to make
 an LSP for both ".neo" and ".neoj" files that can be used with 
 Neovim, VSCode, or any other app that works with LSPs
 
 - Pages are output to URLs based off their IDs be default. (e.g. "<<em|/en/2kiw8tvv/>>"). 
-This is done in an effort to prevent linkrot by keeping the URLs the same regardless of
+This is done in an effort to prevent link rot by keeping the URLs the same regardless of
 if the content on the page changes or it's moved in the source file directory structure. 
+
 My plan is to use Neopoligen for my sites from this point forward, but if I ever do move 
 again it will be easier to duplicate that exact structure than trying to match something
 with text slugs or redirects. (Over the past few decades I've used both those techniques 
@@ -448,27 +433,44 @@ directly to the ID for a given page.
 
 - The default theme provides "ilink" and "tlink" spans for automatic linking to pages. 
 The links these spans generate contain the title of the destination page in a URL friendly query
-string (e.g. "<<em|/en/2kiw8tvv/?todo-list>>"). While that's not nearly as pretty as
-simply "<<em|/todo-list>>" it does provide for human readability. It's unclear from my
-research what impact using the slug in a query string has on SEO, but, frankly, I don't 
-really care. My goal is not to make sites that most pleases the search engines. It's
+string (e.g. "<<em|/en/2kiw8tvv/?todo-list>>"). While that's not nearly as pretty as 
+"<<em|/todo-list>>" it does provide a human readable slug. 
+
+It's unclear from my research what impact using the slug in a query string has on SEO, but, 
+frankly, I don't really care. My goal is not to make sites that most pleases the search engines. It's
 to make an app that makes it as easy as possible to create content. Not having to
 fiddle with URLs supports that goal. 
 
-- All that said, Neopoligen happily supports setting up specific custom URLs by adding
-a <<code|-- path>> attribute to the <<code|-- metadata>> section of a file. (Personally, 
-I rarely do this. I want to avoid linkrot as much as possible and adding a custom URL
+- All that said, Neopoligen supports setting up specific custom URLs by adding
+a <<code|-- path>> attribute to the <<code|-- metadata>> section of a file. 
+
+Personally, I rarely do this. I want to avoid link rot as much as possible and adding a custom URL
 means having to maintain it. Over the past few decades I've moved my sites enough that
 I've spent days worth of effort dealing with changing URLs. I've decided to opt out
 of that. Even for things like my "about" page. Sure, "/about" looks better than
-"/en/abcd1234/?about", but I doubt that's going to keep most people from cliking
-the link if they even think about it at all. I'd rather put my effort elsewhere.)
+"/en/abcd1234/?about", but I doubt that's going to keep most people from clicking
+the link if they even think about it at all. I'd rather put my effort elsewhere.
 
-- The "en" in the default URL paths comes from the default langauge that's defined for
+- The "en" in the default URL paths comes from the default language that's defined for
 each site in its config file. This is done to  support internationalization/localization. 
-I'm planning to add that any time soon but want to make sure the app is prepped for it.
+I'm not planning to add that any time soon but want to make sure the app and, more 
+importantly, the URLs are prepped for it.
 
 
+
+-- h2
+
+Next Steps
+
+That's the basics of how Neopoligen works. There's more advanced
+stuff like being able to nest sections, embedding JavaScript and 
+CSS, syntax highlighting,  and outputting collections of links 
+of pages. I'm in the process of writing up how the other parts work 
+and will post them as they're finished. 
+
+I'll be posting about progress on my <<link|Mastodon account|https://hachyderm.io/@TheIdOfAlan>>
+if you're interested. You can also checkout my personal site (which is
+built from Neopoligen) at: <<link|alanwsmith.com|https://www.alanwsmith.com/>>
 
 
 
@@ -478,7 +480,7 @@ I'm planning to add that any time soon but want to make sure the app is prepped 
 
 The default set of templates for Neopoligen provide for
 automatic linking of footnote numbers in the text and
-the footnot itself at the bottom of the page. 
+the footnote itself at the bottom of the page. 
 
 
 -- metadata
@@ -487,4 +489,5 @@ the footnot itself at the bottom of the page.
 -- id: 2ikuxluk
 -- type: home-page
 -- path: /
+
 

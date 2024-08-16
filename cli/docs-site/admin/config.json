@@ -1,5 +1,5 @@
 {
-  "base_url": "http://localhost:1989",
+  "base_url": "https://www.neopoligen.com",
   "default_language": "en",
   "theme_name": "neopoligen-v0.1.0",
   "theme_options": {
