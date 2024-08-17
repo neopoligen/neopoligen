@@ -21,6 +21,19 @@ a:focus {
   color: var(--color-foxtrot);
 }
 
+.aside-section {
+  margin-left: 6rem;
+  border: 1px solid var(--color-charlie-80);
+  border-radius: 0.3rem;
+  padding-inline: 1.3rem;
+  padding-block: 0.8rem;
+}
+
+.aside-title {
+  font-weight: bold;
+}
+
+
 blockquote {
   margin: 1.3rem;
   padding: 1.3rem;
@@ -36,14 +49,25 @@ body {
   font-family: 'Inter';
 }
 
+.code-pre {
+  font-size: var(--size-8);
+  margin-left: 3rem;
+  padding-left: 0.3rem;
+  border-left: 1px solid var(--color-delta);
+  background-color: var(--color-black-30);
+  border-top-right-radius: 0.3rem;
+  border-bottom-right-radius: 0.3rem;
+}
+
 .flow > :where(:not(:first-child)) {
   margin-top: var(--flow-space, 1em);
 }
 
 footer {
-  max-width: 64ch;
+  max-width: 56ch;
   margin: auto;
   min-height: 5rem;
+  padding-inline: 1rem;
 }
 
 .footnote-ref {
@@ -92,8 +116,9 @@ h6 {
 }
 
 header {
-  max-width: 64ch;
+  max-width: 56ch;
   margin: auto;
+  padding-inline: 1rem;
 }
 
 header a {
@@ -129,8 +154,22 @@ img {
 
 
 main {
-  max-width: 64ch;
+  max-width: 56ch;
   margin: auto;
+  padding-inline: 1rem;
+}
+
+.note-section {
+  border: 1px solid var(--color-delta);
+  border-radius: 0.3rem;
+  margin-top: 1.6rem;
+  margin-inline: 0.6rem;
+  padding-block: 0.74rem;
+  padding-inline: 1.3rem;
+}
+
+.note-title {
+  font-weight: bold;
 }
 
 .photo {

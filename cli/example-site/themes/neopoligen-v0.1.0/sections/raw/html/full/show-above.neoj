@@ -1,7 +1,5 @@
-<h2>HTML</h2>
-<pre>
-[@ highlight_code(section.text, "html") @]
-</pre>
+<h3>HTML</h3>
+<pre class="code-pre"><code>[@ highlight_code(section.text, "html") @]</code></pre>
 
 [! autoescape false !]
 [@ section.text @]

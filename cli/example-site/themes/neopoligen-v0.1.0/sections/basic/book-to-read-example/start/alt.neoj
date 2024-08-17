@@ -1,0 +1,42 @@
+[! import "includes/theme.neoj" as theme !]
+
+<section 
+    [@- theme.section_classes(section, "book-to-read-example-section flow") -@] 
+    [@- section.attr_string -@]>
+
+<div class="book-grid-alt">
+
+  <div>
+
+    <div>
+    [! for span in section.attr_spans.author!]
+      [@- theme.output_span(site, page_id, span) -@]
+    [! endfor !]
+    </div>
+    <h4>
+    [! for span in section.attr_spans.title!]
+      [@- theme.output_span(site, page_id, span) -@]
+    [! endfor !]
+    </h4>
+
+
+  <div>
+    [! include "subsections/content-all-blocks.neoj" !]
+  </div>
+
+  </div>
+
+
+  <div class="book-image">
+  <img src="
+    [!- for span in section.attr_spans.image -!]
+      [@- theme.output_span(site, page_id, span) -@]
+    [!- endfor -!]" 
+    alt="Book cover for [! for span in section.attr_spans.title!][@- theme.output_span(site, page_id, span) -@][! endfor !] by [! for span in section.attr_spans.author!][@- theme.output_span(site, page_id, span) -@][! endfor !]"
+    />
+  </div> 
+
+</div>
+
+[! include "subsections/end-section.neoj" !]
+

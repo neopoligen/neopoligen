@@ -1,10 +1,8 @@
 [! import "includes/theme.neoj" as theme !]
 
 <section 
-    [@- theme.section_classes(section, "p-section flow") -@] 
+    [@- theme.section_classes(section, "book-to-read-example-section flow") -@] 
     [@- section.attr_string -@]>
-
-<div>Book To Read</div>
 
 <div class="book-grid">
   <div class="book-image">

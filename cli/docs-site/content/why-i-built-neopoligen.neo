@@ -1,0 +1,623 @@
+-- title
+
+Why I Built Neopoligen
+
+-- h2
+
+Intro
+
+Making your own website builder is generally considered 
+a silly thing to do. There are a ton of great site 
+generators out there. If you're goal is simply to build 
+a website, spending time "reinventing the wheel" isn't 
+worth it. 
+
+So, why did I build my own? Because, it wasn't 
+about the websites. It was about replacing markdown.
+
+
+-- note
+-- title: Quick Note
+
+If you want to see what my format looks like you can 
+<<tablink|check out the source file for this page here|
+https://github.com/neopoligen/neopoligen.github.io/blob/main/content/why-i-built-neopoligen.neo>>
+
+
+-- comment
+
+##########################################################
+
+Hey! It looks like you're reading the source file. Nice!
+
+One thing to point out is that you can make comment
+sections (like this one) for keeping notes in your
+content files that don't show up in the output. It's
+a super handy feature. 
+
+Another thing to mention is that I'm using a lot of 
+examples on this page. I'm doing this by making
+duplicates of the source inside ``-- pre`` sections. 
+All the duplication makes things looks a little more 
+choppy than your average page. Just a little something to 
+keep in mind as your browsing. 
+
+Now, back to the rest of the content...
+
+##########################################################
+
+
+-- h2
+
+The Case Against Markdown
+
+I started using Markdown^^1^^ for my notes for as soon
+as learned about the format. I love writing notes
+in plain-text files. I also publish a huge chunk of
+my notes on my website. So, having a format that
+outputs to HTML is ideal. 
+
+There are things I don't like about it though:
+
+
+-- list
+
+- It's very limited in what you can do with it. 
+Basically just headings, lists, links, basic images,
+and code blocks
+
+- There's no built-in way to add more content block types 
+
+- There's no built-in way to apply attributes to sections
+
+- There's no built-in way to apply attributes to inline text
+
+
+-- p
+
+I bumped up against those limitations enough that it sent
+me on the search for something else.
+
+
+-- aside
+
+Yes, I know you can just write HTML to address some
+of those things, but I want my content format to handle 
+things natively. 
+
+
+-- h2
+
+The Case Against MDX, Etc...
+
+I started looking at MDX when I hit my frustration 
+limit with Markdown. It looked promising, but 
+after getting it to work I realized I don't really
+like working with the JSX. 
+
+I took a look at Markdoc and some other formats
+too. They offered different feature sets, but nothing
+quite did what I wanted. So, I decided to start
+from scratch. 
+
+
+-- h2
+
+Designing Neopolitan
+
+My website is over twenty years old. I've moved content 
+repeatedly over the decades. I've used plain HTML, 
+wordpress, django databases, ruby on rails, custom databases, 
+markdown, MDX, and probably a few other things I've forgotten. 
+
+I never want to have to migrate content again. 
+
+That meant coming up with a single format that could do everything I can
+think of at the moment and everything I can envision wanting to
+do in the future. All without relying on a framework or specific language. 
+
+I ended up with the format I'm calling Neopolitan. I tried to 
+keep it as simple as possible.
+
+
+-- h2
+
+Neopolitan Sections And Spans
+
+You can read more details about how the format works on 
+<<ilink|the home page|2ikuxluk>>, but it mainly breaks down
+like this:
+
+
+-- list
+
+- Each page is made of sections
+
+- Each section has a defined type
+
+- Each section can have attributes
+
+- The content in each section can have spans
+
+- Each span has a defined type
+
+- Each span can have attributes
+
+
+-- p
+
+The most important point about the sections and spans
+is that they are arbitrary. The default theme ships
+with several basic ones to get started, but you can make 
+new ones on the fly.
+
+There's not a lot to it, but that's kinda the point. 
+Complexity is friction and friction keeps me from
+making things. I want to reduce it as much as 
+possible. 
+
+
+
+-- h2
+
+Section Templates
+
+Neopoligen works by mapping the different types of 
+sections to corresponding MiniJinja^^4^^ templates^^5^^. 
+Each type of section has a default template. For example,
+here's a section type I made called "book-to-read-example":
+
+-- pre/
+-- class: neo-example
+
+-- book-to-read-example
+-- title: The Peripheral
+-- author: William Gibson
+-- image: /neo-images/the-peripheral-cover/100w.jpg
+
+I've read a bunch of other William Gibson stuff and can't
+wait to get to this one!
+
+-- /pre
+
+
+Which looks like this:
+
+-- book-to-read-example
+-- title: The Peripheral
+-- author: William Gibson
+-- image: /neo-images/the-peripheral-cover/100w.jpg
+
+I've read a bunch of other William Gibson stuff and can't
+wait to get to this one!
+
+
+-- h2
+
+Alternate Templates
+
+Additional templates can be built for any section 
+type. Switching to one of the alternates is done
+by adding a "template" attribute to the section. 
+Here's the same example as above but calling
+a template called "alt":
+
+-- pre/
+-- class: neo-example
+
+-- book-to-read-example
+-- title: The Peripheral
+-- author: William Gibson
+-- image: /neo-images/the-peripheral-cover/100w.jpg
+-- template: alt
+
+I've read a bunch of other William Gibson stuff and can't
+wait to get to this one!
+
+-- /pre
+
+
+Which looks like this:
+
+-- book-to-read-example
+-- title: The Peripheral
+-- author: William Gibson
+-- image: /neo-images/the-peripheral-cover/100w.jpg
+-- template: alt
+
+I've read a bunch of other William Gibson stuff and can't
+wait to get to this one!
+
+
+-- p 
+
+The biggest point here is there's a clean separation between
+the content and the layout. 
+
+
+-- h2
+
+Span Templates
+
+Spans are sections of content that look like this:
+
+-- pre/
+-- class: neo-example
+
+This is <<strong|bold text>>
+
+-- /pre
+
+
+-- p
+
+Which outputs:
+
+-- p
+-- class: neo-example
+
+This is <<strong|bold text>>
+
+-- p
+
+They work similar to sections in the each one has
+a corresponding template. Spans default to putting
+their text inside the corresponding HTML tag (e.g.
+"strong", "em", etc...). They also take attributes
+which can be used for things like setting a CSS 
+class on them. 
+
+For example, this:
+
+-- pre/
+-- class: neo-example
+
+This is <<strong|green bold text|class: green>>
+
+-- /pre
+
+-- p
+
+Turns into this:
+
+-- p
+-- class: neo-example
+
+This is <<strong|green bold text|class: green>>
+
+-- p
+
+
+-- h2
+
+More On Span Templates
+
+Span templates don't have to map directly to HTML 
+tags. They can be used to create more complicated
+output. Take this "tablink" for example:
+
+
+-- pre/
+-- class: neo-example
+
+<<tablink|text to link|https://www.example.com>>
+
+-- /pre
+
+-- p 
+
+It's used to create a link to another page that
+opens in a different tab like this:
+
+
+-- p
+-- class: neo-example
+
+<<tablink|text to link|https://www.example.com>>
+
+
+-- p
+
+The template creates the link, points it to the "_blank"
+target for the new tab, and then appends the character
+to identify that it's going to a new tab. 
+
+-- h2
+
+Adding CSS
+
+My website includes a lot of my notes. Lots of those
+have little pieces of CSS. To help accommodate this I use a 
+<<code|-- css>> section type. The default template 
+for the section type is empty. So, nothing renders
+directly on the page. Instead I added the content 
+of the section to the <head> of the document at the 
+page level (which is just another template). 
+
+Of course, since it's a section, we can create a new template
+that <<em|does>> output its contents and call it
+to show the code on the page too. For example, 
+this is the custom CSS that I've added to this page:
+
+-- css
+-- template: show
+
+.book-grid {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 20px;
+}
+
+.book-grid-alt {
+  display: grid;
+  grid-template-columns: 1fr 100px 1fr;
+  gap: 20px;
+}
+
+.book-to-read-example-section {
+  font-size: 0.85rem;
+  border: 1px solid #333;
+  padding: 1.2rem;
+  border-radius: 0.3rem;
+}
+
+p > code {
+  border: 1px solid #777;
+  padding-inline: 0.2rem;
+  border-radius: 0.2rem;
+  font-family: monospace;
+}
+
+.green {
+    color: green;
+}
+
+.neo-example {
+  font-size: 0.85rem;
+  border: 1px solid #333;
+  padding: 1.2rem;
+  border-radius: 0.3rem;
+}
+
+
+-- p
+
+I get hugely frustrated when I'm reading a blog post
+where someone puts in CSS that they say does something
+but when you copy/paste it it doesn't work. This goes
+a long way to avoiding that since the code displayed 
+on the page is literally the same code that's in
+the <head> of the document. 
+
+
+-- h2
+
+Adding HTML
+
+Adding HTML on the page is done in a similar manner 
+to CSS. The biggest difference is that it outputs
+where you put it instead of in the <head> of the
+document. So, this:
+
+-- pre/
+-- class: neo-example
+
+-- html
+
+<button>This button does nothing</button>
+
+-- /pre
+
+-- p 
+
+Outputs:
+
+
+-- html
+
+<button>This button does nothing</button>
+
+
+-- h2
+
+Showing HTML
+
+Like CSS, you can also make templates
+that show the source code along with the actual
+items in the DOM. 
+
+For example, this:
+
+-- pre/
+-- class: neo-example
+
+-- html
+-- template: show-above
+
+<button 
+    id="count_btn" 
+    data-count="0">Counter: 0</button>
+
+
+-- /pre
+
+
+-- p
+
+Outputs this:
+
+-- html
+-- template: show-above
+
+<button 
+    id="count_btn" 
+    data-count="0">Counter: 0</button>
+
+
+-- h2
+
+Adding JavaScript
+
+You can add JavaScript to the <head> of a document 
+the same way you can with CSS. By default, it doesn't 
+show on the page, but you can use a template 
+to show it as well. 
+
+For example:
+
+-- pre/
+-- class: neo-example
+
+-- javascript
+-- template: show
+
+function addToCounter() {
+    const btn = document.querySelector("#count_btn")
+    btn.dataset.count = parseInt(btn.dataset.count, 10) + 1
+    btn.innerHTML = `Counter: ${btn.dataset.count}`
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.querySelector("#count_btn")
+    btn.addEventListener("click", addToCounter)
+})
+
+-- /pre
+
+Adds the code to the <head> of the document and
+outputs this on the page:
+
+-- javascript
+-- template: show
+
+function addToCounter() {
+    const btn = document.querySelector("#count_btn")
+    btn.dataset.count = parseInt(btn.dataset.count, 10) + 1
+    btn.innerHTML = `Counter: ${btn.dataset.count}`
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.querySelector("#count_btn")
+    btn.addEventListener("click", addToCounter)
+})
+
+-- p
+
+You can verify that the code works by clicking
+the button in the HTML section. (Again, this is in
+an effort to make sure that any samples I show
+actually work)
+
+
+-- h2
+
+Syntax Highlighting
+
+Neopoligen includes a built in syntax highlighter. I use
+it in <<code|-- code>> sections by passing the name of
+the language like this:
+
+-- pre/
+-- class: neo-example
+
+-- code
+-- rust
+
+println!("Hello, world");
+
+-- /pre
+
+Which outputs:
+
+-- code
+-- rust
+
+println!("Hello, world");
+
+-- p
+
+Syntax highlighting is done with classes instead of inline
+styles so things can be controlled from style sheets.
+
+The highlighter also adds span at the start of each line that
+can be used as a target for adding CSS line numbers as seen above. 
+
+
+-- h2
+
+No JavaScript Required
+
+I'm tired of jumping JavaScript frameworks. One of the 
+final straws that sent me down the path of making my
+own site generator was  when I went fix a spelling 
+error on a site I hadn't touched in a few months and
+everything broke because some dependency in the 
+framework changed. 
+
+Neopoligen is pretty basic at it's core. It parses
+Neopolitan files to create ASTs that are sent
+to the template engine for rendering. There's still
+some things to add to the AST, but the goal is to
+get the point where any changes are additive so that 
+existing templates will always continue to work with 
+future updates.
+
+
+-- h2
+
+Wrapping Up
+
+Those are some of the highlights of why I went
+down this path. It's been a couple of years work
+at this point. I'm already using Neopoligen on
+this site and <<link|my personal site|https://www.alanwsmith.com/>>.
+There's still some stuff left to implement, but
+the design is pretty well locked-in. 
+
+It's been a lot of work, but I couldn't be 
+happier with the result. 
+
+
+-- ref
+-- id: 1
+-- title: Markdown
+-- url: https://en.wikipedia.org/wiki/Markdown
+
+The lightweight markup language that's used all
+over the place in the tech world. 
+
+-- ref
+-- id: 2
+-- title: MDX
+-- url: https://mdxjs.com/
+
+A way to add JSX to Markdown
+
+-- footnote
+-- id: 3
+
+There are also JSON and YAML sections on the way for 
+using more complicated data structures
+
+-- ref
+-- id: 4
+-- title: MiniJinja
+-- url: https://docs.rs/minijinja/latest/minijinja/
+
+A rust template engine based of the Jinja2 template
+engine from Python
+
+-- footnote
+-- id: 5
+
+If there's no matching template for a specific section
+or span type a generic replacement is used
+
+
+
+
+-- metadata
+-- created: 2024-08-17T10:36:29-04:00
+-- updated: 2024-08-17T10:36:29-04:00
+-- id: 2kn3czfj
+

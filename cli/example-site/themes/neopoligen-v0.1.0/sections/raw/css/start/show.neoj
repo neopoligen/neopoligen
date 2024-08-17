@@ -5,9 +5,9 @@
     [@- section.attr_string -@]>
 
 [! if "title" in section.attr_spans !]
-<h2>[@ theme.output_spans(site, page_id, section.attr_spans.title) @]</h2>
+<h3>[@ theme.output_spans(site, page_id, section.attr_spans.title) @]</h3>
 [! else !]
-<h2>CSS</h2>
+<h3>CSS</h3>
 [! endif !]
 
 [! if section.flags[0] !]
@@ -16,5 +16,5 @@
 </div>
 [! endif !]
 
-<pre><code>[@ highlight_code(section.text, "css") @]</code></pre>
+<pre class="code-pre"><code>[@ highlight_code(section.text, "css") @]</code></pre>
 

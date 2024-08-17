@@ -1,6 +1,4 @@
-<h2>JavaScript</h2>
+<h3>JavaScript</h3>
 
-<pre>
-[@ highlight_code(section.text, "javascript") @]
-</pre>
+<pre class="code-pre"><code>[@ highlight_code(section.text, "javascript") @]</code></pre>
 
