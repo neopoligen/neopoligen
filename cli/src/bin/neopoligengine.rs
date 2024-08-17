@@ -117,7 +117,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
             let _ = builder.prep_output_dirs();
             let _ = builder.load_templates();
             // TODO: Turn image cache back on when dev is done
-            let _ = builder.build_image_cache();
+            // let _ = builder.build_image_cache();
             // Site
             builder.load_pages_from_cache().unwrap();
             builder.load_pages_from_fs().unwrap();

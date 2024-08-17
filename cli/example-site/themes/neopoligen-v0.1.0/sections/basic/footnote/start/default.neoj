@@ -2,9 +2,10 @@
 [!- if "id" in section.attrs -!]
   <div id="fnref-[@- section.attrs.id -@]-text">
     <a href="#fnref-[@- section.attrs.id @]-link">[@- section.attrs.id -@]</a>
+    |
   </div>
 [!- else -!]
-  <div>&bullet;</div>
+  <div>&bullet; |</div>
 [!- endif -!]
 
 <div class="flow">
@@ -16,6 +17,7 @@
 
 [!- if "id" in section.attrs -!]
   <div>
+  |
     <a href="#fnref-[@- section.attrs.id @]-link">&#x2934;</a>
   </div>
 [!- else -!]

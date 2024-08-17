@@ -10,9 +10,9 @@
 
 [#############################################################################]
 [!- macro output_spans(site, page_id, spans) -!]
-[! for span in spans !]
+[!- for span in spans -!]
 [@- output_span(site, page_id, span) -@]
-[! endfor !]
+[!- endfor -!]
 [!- endmacro -!]
 
 [#############################################################################]

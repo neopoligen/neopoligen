@@ -2,20 +2,24 @@
 [!- if "id" in section.attrs -!]
   <div id="fnref-[@- section.attrs.id -@]-text">
     <a href="#fnref-[@- section.attrs.id @]-link">[@- section.attrs.id -@]</a>
+    |
   </div>
 [!- else -!]
-  <div>&bullet;</div>
+  <div>&bullet; |</div>
 [!- endif -!]
 
-<div class="flow">
+<div>
 [!- if section.attrs.url -!]<a href="[@- section.attrs.url -@]">[!- endif -!]
 [!- if section.attrs.title -!][@- section.attrs.title -@][!- endif -!]
 [!- if section.attrs.url -!]</a>[!- endif -!]
-[!- include "subsections/content-all-blocks.neoj" -!]
+  <div class="flow">
+  [!- include "subsections/content-all-blocks.neoj" -!]
+  </div>
 </div>
 
 [!- if "id" in section.attrs -!]
   <div>
+  |
     <a href="#fnref-[@- section.attrs.id @]-link">&#x2934;</a>
   </div>
 [!- else -!]

@@ -1,11 +1,13 @@
 -- title
 
-Welcome To Neopoligen
+Neopoligen
 
 -- p
 
 Neopoligen is a free website building app. It's designed to 
-make websites you can tinker with.
+make websites you can tinker with. It's largely a personal
+project, but I'm open-sourcing it for anyone else who likes
+to play around with different tools.
 
 The app built this site, but it needs a little more work 
 before it's ready for other folks to play with. Until then, 
@@ -13,6 +15,9 @@ you can read more about how it works below. You can also
 <<link|check out GitHub|
 https://github.com/neopoligen/neopoligen>> 
 if you want to follow along with the development. 
+
+(If you're wondering why I decided to make my own app
+you can check out <<tlink|2kn3czfj>>)
 
 -- h2
 
@@ -157,7 +162,7 @@ with some attributes for the title, author, and cover image.
 -- book-to-read-example
 -- title: The Peripheral
 -- author: William Gibson
--- image: the-peripheral-cover.jpg
+-- image: /neo-images/the-peripheral-cover/100w.jpg
 
 I've read a bunch of other William Gibson stuff and can't
 wait to get to this one!
@@ -167,7 +172,6 @@ wait to get to this one!
 And here's an example of what it could look like:
 
 -- book-to-read-example
--- class: neo-example
 -- title: The Peripheral
 -- author: William Gibson
 -- image: /neo-images/the-peripheral-cover/100w.jpg
@@ -293,34 +297,6 @@ service called GitHub Pages by default.
 
 Details on using GitHub and other free services are a work in progress.
 
--- css
-
-.book-grid {
-  display: grid;
-  grid-template-columns: 100px 1fr;
-  gap: 20px;
-}
-
-code {
-  background-color: #444;
-  border: 1px solid #777;
-  padding-inline: 0.2rem;
-  border-radius: 0.2rem;
-}
-
-.green {
-  color: green;
-}
-
-.neo-example {
-  font-size: 0.85rem;
-  border: 1px solid #333;
-  padding: 1.2rem;
-}
-
-u {
-  text-decoration: underline;
-}
 
 
 -- h2
@@ -473,14 +449,50 @@ if you're interested. You can also checkout my personal site (which is
 built from Neopoligen) at: <<link|alanwsmith.com|https://www.alanwsmith.com/>>
 
 
-
-
 -- footnote
 -- id: 1
 
 The default set of templates for Neopoligen provide for
 automatic linking of footnote numbers in the text and
-the footnote itself at the bottom of the page. 
+the footnote itself at the bottom of the page.
+
+
+
+-- css
+
+.book-to-read-example-section {
+  font-size: 0.85rem;
+  border: 1px solid #333;
+  padding: 1.2rem;
+  border-radius: 0.3rem;
+}
+
+.book-grid {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 20px;
+}
+
+code {
+  border: 1px solid #777;
+  padding-inline: 0.2rem;
+  border-radius: 0.2rem;
+  font-family: monospace;
+}
+
+.green {
+  color: green;
+}
+
+.neo-example {
+  font-size: 0.85rem;
+  border: 1px solid #333;
+  padding: 1.2rem;
+}
+
+u {
+  text-decoration: underline;
+}
 
 
 -- metadata
