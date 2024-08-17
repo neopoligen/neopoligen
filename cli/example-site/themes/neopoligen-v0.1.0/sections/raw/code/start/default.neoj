@@ -5,16 +5,18 @@
     [@- section.attr_string -@]>
 
 [! if "title" in section.attr_spans !]
-<h2>[@ theme.output_spans(site, page_id, section.attr_spans.title) @]</h2>
+<h3>[@ theme.output_spans(site, page_id, section.attr_spans.title) @]</h3>
 [! endif !]
 
+[#
 [! if section.flags[0] !]
 <div class="code-language">
-[@ section.flags[0] @]
+Language: [@ section.flags[0] @]
 </div>
 [! endif !]
+#]
 
-<pre><code>[!- if section.flags[0] -!]
+<pre class="code-pre"><code>[!- if section.flags[0] -!]
 [@- highlight_code(section.text, section.flags[0] ) -@]
 [!- else -!]
 [@- highlight_code(section.text, "txt") -@]

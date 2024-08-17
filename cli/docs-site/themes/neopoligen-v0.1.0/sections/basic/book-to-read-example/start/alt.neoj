@@ -7,6 +7,7 @@
 <div class="book-grid-alt">
 
   <div>
+
     <div>
     [! for span in section.attr_spans.author!]
       [@- theme.output_span(site, page_id, span) -@]
@@ -17,7 +18,14 @@
       [@- theme.output_span(site, page_id, span) -@]
     [! endfor !]
     </h4>
+
+
+  <div>
+    [! include "subsections/content-all-blocks.neoj" !]
   </div>
+
+  </div>
+
 
   <div class="book-image">
   <img src="
@@ -27,10 +35,6 @@
     alt="Book cover for [! for span in section.attr_spans.title!][@- theme.output_span(site, page_id, span) -@][! endfor !] by [! for span in section.attr_spans.author!][@- theme.output_span(site, page_id, span) -@][! endfor !]"
     />
   </div> 
-
-  <div>
-    [! include "subsections/content-all-blocks.neoj" !]
-  </div>
 
 </div>
 

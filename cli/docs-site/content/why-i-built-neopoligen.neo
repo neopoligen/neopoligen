@@ -12,7 +12,7 @@ generators out there. If you're goal is simply to build
 a website, spending time "reinventing the wheel" isn't 
 worth it. 
 
-So, why did I build my own? Because, for me, it wasn't 
+So, why did I build my own? Because, it wasn't 
 about the websites. It was about replacing markdown.
 
 
@@ -20,8 +20,8 @@ about the websites. It was about replacing markdown.
 -- title: Quick Note
 
 If you want to see what my format looks like you can 
-<<link|check out the source file for this page here|
-https://github.com/neopoligen/neopoligen.github.io/tree/main/content>>
+<<tablink|check out the source file for this page here|
+https://github.com/neopoligen/neopoligen.github.io/blob/main/content/why-i-built-neopoligen.neo>>
 
 
 -- comment
@@ -35,11 +35,11 @@ sections (like this one) for keeping notes in your
 content files that don't show up in the output. It's
 a super handy feature. 
 
-One thing to point out about this page is that I'm 
-using a lot of examples. I'm doing this by making
-duplicates of the source inside ``-- pre`` section. 
+Another thing to mention is that I'm using a lot of 
+examples on this page. I'm doing this by making
+duplicates of the source inside ``-- pre`` sections. 
 All the duplication makes things looks a little more 
-choppy than normal pages. Just a little something to 
+choppy than your average page. Just a little something to 
 keep in mind as your browsing. 
 
 Now, back to the rest of the content...
@@ -59,6 +59,7 @@ outputs to HTML is ideal.
 
 There are things I don't like about it though:
 
+
 -- list
 
 - It's very limited in what you can do with it. 
@@ -71,10 +72,12 @@ and code blocks
 
 - There's no built-in way to apply attributes to inline text
 
+
 -- p
 
 I bumped up against those limitations enough that it sent
 me on the search for something else.
+
 
 -- aside
 
@@ -155,7 +158,6 @@ possible.
 
 
 
-
 -- h2
 
 Section Templates
@@ -178,6 +180,7 @@ wait to get to this one!
 
 -- /pre
 
+
 Which looks like this:
 
 -- book-to-read-example
@@ -187,6 +190,7 @@ Which looks like this:
 
 I've read a bunch of other William Gibson stuff and can't
 wait to get to this one!
+
 
 -- h2
 
@@ -211,6 +215,7 @@ I've read a bunch of other William Gibson stuff and can't
 wait to get to this one!
 
 -- /pre
+
 
 Which looks like this:
 
@@ -242,6 +247,7 @@ Spans are sections of content that look like this:
 This is <<strong|bold text>>
 
 -- /pre
+
 
 -- p
 
@@ -374,6 +380,168 @@ p > code {
 }
 
 
+-- p
+
+I get hugely frustrated when I'm reading a blog post
+where someone puts in CSS that they say does something
+but when you copy/paste it it doesn't work. This goes
+a long way to avoiding that since the code displayed 
+on the page is literally the same code that's in
+the <head> of the document. 
+
+
+-- h2
+
+Adding HTML
+
+Adding HTML on the page is done in a similar manner 
+to CSS. The biggest difference is that it outputs
+where you put it instead of in the <head> of the
+document. So, this:
+
+-- pre/
+-- class: neo-example
+
+-- html
+
+<button>This button does nothing</button>
+
+-- /pre
+
+-- p 
+
+Outputs:
+
+
+-- html
+
+<button>This button does nothing</button>
+
+
+-- h2
+
+Showing HTML
+
+Like CSS, you can also make templates
+that show the source code along with the actual
+items in the DOM. 
+
+For example, this:
+
+-- pre/
+-- class: neo-example
+
+-- html
+-- template: show-above
+
+<button 
+    id="count_btn" 
+    data-count="0">Counter: 0</button>
+
+
+-- /pre
+
+
+-- p
+
+Outputs this:
+
+-- html
+-- template: show-above
+
+<button 
+    id="count_btn" 
+    data-count="0">Counter: 0</button>
+
+
+-- h2
+
+Adding JavaScript
+
+You can add JavaScript to the <head> of a document 
+the same way you can with CSS. By default, it doesn't 
+show on the page, but you can use a template 
+to show it as well. 
+
+For example:
+
+-- pre/
+-- class: neo-example
+
+-- javascript
+-- template: show
+
+function addToCounter() {
+    const btn = document.querySelector("#count_btn")
+    btn.dataset.count = parseInt(btn.dataset.count, 10) + 1
+    btn.innerHTML = `Counter: ${btn.dataset.count}`
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.querySelector("#count_btn")
+    btn.addEventListener("click", addToCounter)
+})
+
+-- /pre
+
+Adds the code to the <head> of the document and
+outputs this on the page:
+
+-- javascript
+-- template: show
+
+function addToCounter() {
+    const btn = document.querySelector("#count_btn")
+    btn.dataset.count = parseInt(btn.dataset.count, 10) + 1
+    btn.innerHTML = `Counter: ${btn.dataset.count}`
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.querySelector("#count_btn")
+    btn.addEventListener("click", addToCounter)
+})
+
+-- p
+
+You can verify that the code works by clicking
+the button in the HTML section. (Again, this is in
+an effort to make sure that any samples I show
+actually work)
+
+
+-- h2
+
+Syntax Highlighting
+
+Neopoligen includes a built in syntax highlighter. I use
+it in <<code|-- code>> sections by passing the name of
+the language like this:
+
+-- pre/
+-- class: neo-example
+
+-- code
+-- rust
+
+println!("Hello, world");
+
+-- /pre
+
+Which outputs:
+
+-- code
+-- rust
+
+println!("Hello, world");
+
+-- p
+
+Syntax highlighting is done with classes instead of inline
+styles so things can be controlled from style sheets.
+
+The highlighter also adds span at the start of each line that
+can be used as a target for adding CSS line numbers as seen above. 
+
 
 -- h2
 
@@ -395,9 +563,19 @@ existing templates will always continue to work with
 future updates.
 
 
+-- h2
 
+Wrapping Up
 
+Those are some of the highlights of why I went
+down this path. It's been a couple of years work
+at this point. I'm already using Neopoligen on
+this site and <<link|my personal site|https://www.alanwsmith.com/>>.
+There's still some stuff left to implement, but
+the design is pretty well locked-in. 
 
+It's been a lot of work, but I couldn't be 
+happier with the result. 
 
 
 -- ref
