@@ -421,6 +421,7 @@ Outputs:
 
 
 -- html
+-- class: neo-example
 
 <button>This button does nothing</button>
 
@@ -454,11 +455,18 @@ Outputs this:
 
 -- html
 -- template: show-above
+-- class: neo-example
 
 <button id="count_btn" data-count="0">
     Counter: 0
 </button>
 
+-- p
+
+This helps make sure that any HTML samples in 
+blog posts and tutorials actually work because
+the same code that's used for the DOM is what's
+actually displayed. 
 
 -- h2
 

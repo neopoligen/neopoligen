@@ -1,3 +1,7 @@
+[!- import "includes/theme.neoj" as theme -!]
+<section
+    [@- theme.section_classes(section, "html-section") -@] 
+    [@- section.attr_string -@]>
 [! autoescape false !]
 [@ section.text @]
 [! endautoescape !]

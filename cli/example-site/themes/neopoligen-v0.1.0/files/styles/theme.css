@@ -186,6 +186,10 @@ main {
   font-weight: bold;
 }
 
+.pad-top-1 {
+  padding-top: 1rem;
+}
+
 .photo {
   display: grid;
   place-items: center;

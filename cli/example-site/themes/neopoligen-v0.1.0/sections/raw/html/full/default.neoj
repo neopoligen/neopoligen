@@ -1,4 +1,2 @@
-[! autoescape false !]
-[@ section.text @]
-[! endautoescape !]
-
+[!- include "sections/raw/html/start/default.neoj" -!]
+</section>

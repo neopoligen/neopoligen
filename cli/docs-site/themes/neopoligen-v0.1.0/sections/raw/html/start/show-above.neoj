@@ -2,7 +2,15 @@
 <section
     [@- theme.section_classes(section, "html-section") -@] 
     [@- section.attr_string -@]>
+<h4>HTML</h4>
+<div class="pad-top-1">
+<pre class="code-pre"><code>[@ highlight_code(section.text, "html") @]</code></pre>
+</div>
+
+<h4 class="pad-top-1">Output</h4>
+<div class="pad-top-1">
 [! autoescape false !]
 [@ section.text @]
 [! endautoescape !]
+</div>
 
