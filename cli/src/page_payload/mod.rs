@@ -190,7 +190,12 @@ impl PagePayload {
         if let (Some(lang), Some(id), Some(title)) =
             (self.language.clone(), self.id.clone(), self.title.clone())
         {
-            self.absolute_url = Some(format!("/{}/{}/?{}", lang, id, url_from_string(&title)));
+            self.absolute_url = Some(format!(
+                "/{}/{}/?page={}",
+                lang,
+                id,
+                url_from_string(&title)
+            ));
         }
     }
 
@@ -265,6 +270,19 @@ mod test {
     use super::*;
     use pretty_assertions::assert_eq;
     use std::path::PathBuf;
+
+    #[test]
+    fn absolute_url_check() {
+        let p = PagePayload::new_from_source_page(
+            &PathBuf::from("/test/mocks/source/filename.neo"),
+            &SourcePage::mock1_20240101_alfa1234_minimal(),
+            ThemeTestOrPage::Page,
+        )
+        .unwrap();
+        let left = "/en/20240101_alfa1234/?page=alfa-alfa-alfa".to_string();
+        let right = p.absolute_url.unwrap();
+        assert_eq!(left, right);
+    }
 
     #[test]
     fn id_basic_check() {

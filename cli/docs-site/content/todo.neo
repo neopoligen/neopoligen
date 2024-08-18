@@ -32,6 +32,9 @@ TODO List
 
 [] Auto generate page Table Of Contents from headers
 
+[] Cover error like ``[@ span.first_flag] @]`` where there's an extra ``]``
+
+
 
 
 -- metadata

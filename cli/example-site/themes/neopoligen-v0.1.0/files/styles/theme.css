@@ -64,7 +64,7 @@ body {
 }
 
 footer {
-  max-width: 56ch;
+  max-width: 60ch;
   margin: auto;
   min-height: 5rem;
   padding-inline: 1rem;
@@ -116,7 +116,7 @@ h6 {
 }
 
 header {
-  max-width: 56ch;
+  max-width: 60ch;
   margin: auto;
   padding-inline: 1rem;
 }
@@ -154,7 +154,7 @@ img {
 
 
 main {
-  max-width: 56ch;
+  max-width: 60ch;
   margin: auto;
   padding-inline: 1rem;
 }
