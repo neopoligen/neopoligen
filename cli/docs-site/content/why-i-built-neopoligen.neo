@@ -581,6 +581,17 @@ actually work)
 
 -- h2
 
+External Scripts And <head> Content
+
+The <<code|-- head>> section is used to add things
+directly to the <head> of a page. This can be used to call
+external JS libraries like P5, D3, etc... or anything
+else that you need to load onto the page. 
+
+
+
+-- h2
+
 Section Syntax Highlighting
 
 Neopoligen includes a built in syntax highlighter. I use
@@ -643,8 +654,144 @@ Which outputs:
 -- p
 -- class: neo-example
 
-Rust code: <<code|println("hello, world");|rust>>
+Rust code: <<code|println!("hello, world");|rust>>
 
+-- h2
+
+Responsive Image Optimization
+
+I used to be a professional photographer. I don't shoot
+as much these days, but I still want it to be easy to 
+work with photos. Neopoligen is set up so I can throw
+my full size images into a directory and it'll automatically
+make multiple sizes of them that can be used with <<code|srcset>>.
+
+-- h2
+
+Calling Images By Name
+
+Another image related thing I always found a pain was dealing
+with the paths for the images. Neopoligen deals with this
+by calling images by name regardless of where they are stored
+in the source images directory. The data returns to the 
+template includes all the available responsive sizes for
+building a <<code|srcset|html>> attribute. 
+
+You can also skip the extension. This means if you ever decide 
+to to something like upgrading all your .jpg files to .webp, 
+they'll continue to work without having to go back and re-name 
+everything. 
+
+The default way to call an image looks like this:
+
+-- pre/
+-- class: neo-example
+
+-- image
+-- large-test-image
+-- alt: The words 'Large Test jpg' are in dark blue
+-- alt: text on a black background in the upper right.
+-- alt: Most of a red circle shows up in the upper left,
+-- alt: and most of the bottom is covered by a curved
+-- alt: blue shape that just gives some shape for
+-- alt: this test image.
+
+
+-- /pre
+
+-- image
+-- large-test-image
+-- alt: The words 'Large Test jpg' are in dark blue
+-- alt: text on a black background in the upper right.
+-- alt: Most of a red circle shows up in the upper left,
+-- alt: and most of the bottom is covered by a curved
+-- alt: blue shape that just gives some shape for
+-- alt: this test image.
+
+-- p 
+
+The example also shows how alt text can be added to
+image including extended alt text that would otherwise
+end up in a single very long line in the content file. 
+
+-- note
+
+I'm refactoring the way images handling. The srcset and alt
+text might not show depending on when you see this. 
+
+
+
+-- h2
+
+Automatic Image Alt Text Ingestion
+
+The International Press Telecommunications Council^^7^^ (which
+is responsible for setting standards for the new media) added
+Alt Text fields to their spec^^8^^. These have been included in
+Photo Mechanic, Photoshop, Brdige, and Lightroom (the tools I use
+for editing my photographs). This means you can store alt
+text directly in your images. Neopoligen pulls that metadata
+if it's available and uses it for image alt text. 
+
+-- aside
+
+I love only having to edit image metadata once per image and
+doing it when I make the image instead of when I'm trying
+to include it. With luck, everything will work this way eventually.
+
+
+-- h2
+
+Open Graph Image Generation
+
+Neopoligen is set up to automatically generate Open Graph images
+that include the title of the page for use in previewing
+on other sites. You can also create custom ones for individual
+posts as well. 
+
+
+-- h2
+
+RSS Feeds
+
+I love RSS Feeds. There's been a bit of a resurgence of them
+recently and I want to participate. I'm still figuring out
+the exact approach I want to use but Neopoligen will be able
+to provide multiple feeds that can be filtered based off
+different criteria (e.g. just posts, just photos, or everything)  
+
+-- h2
+
+RSS Timeline
+
+I'm still working on this, but the basic idea is to create
+a list of other RSS feeds and then include links to the 
+individual posts as a form of timeline. 
+
+
+-- h2
+
+Microblog
+
+Microblog style posts can be made without having to worry 
+about making a title. 
+
+
+-- h2
+
+DB Style Collections
+
+This is still a work in progress, but the goal is to be able 
+to query across all my content files to make collections out
+of them. For example, I'm making a book section type. By adding
+and <<code|-- read|neo>> attribute to it I can create pages
+showing what I want to read and what I've read independently. 
+When I read a book, I'll update the attribute for it and it'll
+move automatically. 
+
+This is actually one of the most exciting things for me. The idea
+that I can use flat files to store content and then query things
+like a database opens the door for so many possibilities. 
 
 
 -- h2
@@ -729,15 +876,21 @@ Link with title: <<tlink|2kiw8tvv>>
 
 Wrapping Up
 
-Those are some of the highlights of why I went
-down this path. It's been a couple of years work
-at this point. I'm already using Neopoligen on
-this site and <<link|my personal site|https://www.alanwsmith.com/>>.
-There's still some stuff left to implement, but
-the design is pretty well locked-in. 
+I've been working on Neopolitan and Neopoligen 
+for a couple years at this point. The idea above
+are the refinement of all that time. My goal is
+to be able to use the format and the engine for 
+the next twenty years. But, even if the engine
+doesn't last, I'm pretty confident at this point
+that the format will stick with me. 
 
 It's been a lot of work, but I couldn't be 
-happier with the result. 
+happier with the results. 
+
+If you've got any questions or just want to reach
+out, you can hit me up on 
+<<link|Mastodon|https://hachyderm.io/@TheIdOfAlan>>
+
 
 
 -- footnote
@@ -783,6 +936,22 @@ This is the target footnote for the example in
 the main content. Note that there's nothing magical 
 about them. They are built from section and span
 templates just like everything else.
+
+
+-- footnote
+-- id: 7
+-- title: International Press Telecommunications Council
+-- url: https://iptc.org/
+
+The global standards body of the news media. Responsible
+for making the IPTC metadata spec.
+
+-- footnote
+-- id: 8
+-- title: IPTC Announces New Properties in Photo Metadata to Make Images More Accessible
+-- url: https://iptc.org/news/iptc-announces-new-properties-in-photo-metadata-to-make-images-more-accessible/
+
+
 
 
 -- css
