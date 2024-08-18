@@ -1,4 +1,4 @@
-[! import "includes/theme.neoj" as theme !]
+[!- import "includes/theme.neoj" as theme -!]
 
 <section
     [@- theme.section_classes(section, "pre-section") -@] 

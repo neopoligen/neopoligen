@@ -1,4 +1,3 @@
-<h3>JavaScript</h3>
-
-<pre class="code-pre"><code>[@ highlight_code(section.text, "javascript") @]</code></pre>
+[!- include "sections/raw/javascript/start/show.neoj" -!]
+</section>
 

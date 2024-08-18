@@ -277,9 +277,14 @@ This is <<strong|bold text>>
 They work similar to sections in the each one has
 a corresponding template. Spans default to putting
 their text inside the corresponding HTML tag (e.g.
-"strong", "em", etc...). They also take attributes
-which can be used for things like setting a CSS 
-class on them. 
+"strong", "em", etc...). 
+
+-- h2
+
+Span Attributes
+
+Spans can take optional attributes. They can be
+used for things like setting a CSS class on them. 
 
 For example, this:
 
@@ -304,7 +309,7 @@ This is <<strong|green bold text|class: green>>
 
 -- h2
 
-More On Span Templates
+Advanced Span Templates
 
 Span templates don't have to map directly to HTML 
 tags. They can be used to create more complicated
@@ -338,6 +343,53 @@ to identify that it's going to a new tab.
 
 -- h2
 
+Footnotes
+
+I love footnotes. They make it easier for me to write
+at a higher level then point to more detail later 
+which makes for better prose. There's a shorthand
+built into Neopoligen for adding the footnote numbers
+in the content that looks like this:
+
+-- pre/
+-- class: neo-example
+
+This is a footnote^^6^^
+
+-- /pre
+
+-- p
+
+Which outputs:
+
+-- p
+-- class: neo-example
+
+This is a footnote^^6^^
+
+-- p 
+
+These correspond to a footnote section that has
+an id attribute with the same number. For example,
+this is the section that produces the footnote
+that's at the bottom of the page:
+
+-- pre/
+-- class: neo-example
+
+-- footnote
+-- id: 6
+
+This is the target footnote for the example in
+the main content. 
+
+-- /pre
+
+
+
+
+-- h2
+
 Adding CSS
 
 My website includes a lot of my notes. Lots of those
@@ -350,40 +402,34 @@ page level (which is just another template).
 
 Of course, since it's a section, we can create a new template
 that <<em|does>> output its contents and call it
-to show the code on the page too. For example, 
-this is the custom CSS that I've added to this page:
+to show the code on the page too. For example, this
+adds css for the <<code|#count_btn|css>> to the
+page:
+
+-- pre/
+-- class: neo-example
 
 -- css
 -- template: show
 
-.book-grid {
-  display: grid;
-  grid-template-columns: 100px 1fr;
-  gap: 20px;
+button {
+    color: red;
+    font-weight: bold;
 }
 
-.book-grid-alt {
-  display: grid;
-  grid-template-columns: 1fr 100px 1fr;
-  gap: 20px;
-}
+-- /pre
 
-.book-to-read-example-section {
-  font-size: 0.85rem;
-  border: 1px solid #333;
-  padding: 1.2rem;
-  border-radius: 0.3rem;
-}
+-- p
 
-.green {
-    color: green;
-}
+And, it outputs this on the page:
 
-.neo-example {
-  font-size: 0.85rem;
-  border: 1px solid #333;
-  padding: 1.2rem;
-  border-radius: 0.3rem;
+-- css
+-- template: show
+-- class: neo-example
+
+button {
+    color: red;
+    font-weight: bold;
 }
 
 
@@ -424,6 +470,13 @@ Outputs:
 -- class: neo-example
 
 <button>This button does nothing</button>
+
+
+-- note
+
+The red/bold font in the button is from the 
+CSS that was added to the page in the 
+example above. 
 
 
 -- h2
@@ -487,7 +540,8 @@ For example:
 
 function addToCounter() {
     const btn = document.querySelector("#count_btn")
-    btn.dataset.count = parseInt(btn.dataset.count, 10) + 1
+    const count = parseInt(btn.dataset.count, 10)
+    btn.dataset.count = count + 1
     btn.innerHTML = `Counter: ${btn.dataset.count}`
 }
 
@@ -503,10 +557,12 @@ outputs this on the page:
 
 -- javascript
 -- template: show
+-- class: neo-example
 
 function addToCounter() {
     const btn = document.querySelector("#count_btn")
-    btn.dataset.count = parseInt(btn.dataset.count, 10) + 1
+    const count = parseInt(btn.dataset.count, 10)
+    btn.dataset.count = count + 1
     btn.innerHTML = `Counter: ${btn.dataset.count}`
 }
 
@@ -547,6 +603,7 @@ Which outputs:
 
 -- code
 -- rust
+-- class: neo-example
 
 fn main() {
     println!("Hello, world");
@@ -560,6 +617,12 @@ styles so things can be controlled from style sheets.
 The highlighter also adds span at the start of each line that
 can be used as a target for adding CSS line numbers as seen above. 
 
+-- note
+
+Eventually, this will be a web component that has a copy button, 
+displays the language, and has the ability to turn wrapping on 
+and off. It's just a matter of updating the template to make
+that happen. 
 
 -- h2
 
@@ -712,6 +775,47 @@ engine from Python
 If there's no matching template for a specific section
 or span type a generic replacement is used
 
+
+-- footnote
+-- id: 6
+
+This is the target footnote for the example in
+the main content. Note that there's nothing magical 
+about them. They are built from section and span
+templates just like everything else.
+
+
+-- css
+
+.book-grid {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 20px;
+}
+
+.book-grid-alt {
+  display: grid;
+  grid-template-columns: 1fr 100px 1fr;
+  gap: 20px;
+}
+
+.book-to-read-example-section {
+  font-size: 0.85rem;
+  border: 1px solid #333;
+  padding: 1.2rem;
+  border-radius: 0.3rem;
+}
+
+.green {
+    color: green;
+}
+
+.neo-example {
+  font-size: 0.85rem;
+  border: 1px solid #333;
+  padding: 1.2rem;
+  border-radius: 0.3rem;
+}
 
 
 

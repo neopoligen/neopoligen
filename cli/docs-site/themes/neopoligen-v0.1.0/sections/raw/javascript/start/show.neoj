@@ -1,17 +1,15 @@
 [! import "includes/theme.neoj" as theme !]
 
 <section
-    [@- theme.section_classes(section, "css-section") -@] 
+    [@- theme.section_classes(section, "javascript-section") -@] 
     [@- section.attr_string -@]>
 
 [! if "title" in section.attr_spans !]
 <h4>[@ theme.output_spans(site, page_id, section.attr_spans.title) @]</h4>
 [! else !]
-<h4>CSS</h4>
+<h4>JavaScript</h4>
 [! endif !]
 
 <div class="pad-top-1">
-<pre class="code-pre"><code>[@ highlight_code(section.text, "css") @]</code></pre>
+<pre class="code-pre"><code>[@ highlight_code(section.text, "javascript") @]</code></pre>
 </div>
-
-
