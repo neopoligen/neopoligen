@@ -623,7 +623,7 @@ It's been a lot of work, but I couldn't be
 happier with the result. 
 
 
--- ref
+-- footnote
 -- id: 1
 -- title: Markdown
 -- url: https://en.wikipedia.org/wiki/Markdown
@@ -631,7 +631,7 @@ happier with the result.
 The lightweight markup language that's used all
 over the place in the tech world. 
 
--- ref
+-- footnote
 -- id: 2
 -- title: MDX
 -- url: https://mdxjs.com/
@@ -644,7 +644,7 @@ A way to add JSX to Markdown
 There are also JSON and YAML sections on the way for 
 using more complicated data structures
 
--- ref
+-- footnote
 -- id: 4
 -- title: MiniJinja
 -- url: https://docs.rs/minijinja/latest/minijinja/

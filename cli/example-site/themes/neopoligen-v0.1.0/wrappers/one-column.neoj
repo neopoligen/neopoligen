@@ -77,7 +77,7 @@
 </pre>
 #]
 
-[#
+[# BE CAREFUL TURNING THIS ON ON THE MAIN SITE IT'S HUGE
 <pre>
 [@ site|tojson(true) @]
 </pre>

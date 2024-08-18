@@ -1,27 +1,9 @@
-<li class="footnote-ref">
-[!- if "id" in section.attrs -!]
-  <div id="fnref-[@- section.attrs.id -@]-text">
-    <a href="#fnref-[@- section.attrs.id @]-link">[@- section.attrs.id -@]</a>
-    |
+<li class="ref-item">
+  <div>
+    [!- if section.attrs.url -!]<a href="[@- section.attrs.url -@]">[!- endif -!]
+    [!- if section.attrs.title -!][@- section.attrs.title -@][!- endif -!]
+    [!- if section.attrs.url -!]</a>[!- endif -!]
   </div>
-[!- else -!]
-  <div>&bullet; |</div>
-[!- endif -!]
-
-<div>
-[!- if section.attrs.url -!]<a href="[@- section.attrs.url -@]">[!- endif -!]
-[!- if section.attrs.title -!][@- section.attrs.title -@][!- endif -!]
-[!- if section.attrs.url -!]</a>[!- endif -!]
   <div class="flow">
   [!- include "subsections/content-all-blocks.neoj" -!]
   </div>
-</div>
-
-[!- if "id" in section.attrs -!]
-  <div>
-  |
-    <a href="#fnref-[@- section.attrs.id @]-link">&#x2934;</a>
-  </div>
-[!- else -!]
-  <div></div>
-[!- endif -!]
