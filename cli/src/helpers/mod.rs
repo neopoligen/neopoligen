@@ -267,6 +267,7 @@ pub fn highlight_code(args: &[Value]) -> String {
 
 pub fn highlight_span(args: &[Value]) -> String {
     let code = args[0].to_string();
+    dbg!(&code);
     let lang = args[1].to_string();
     let syntax_set = SyntaxSet::load_defaults_newlines();
     let syntax = syntax_set

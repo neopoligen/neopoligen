@@ -1,0 +1,20 @@
+[! import "includes/theme.neoj" as theme -!]
+
+[!- set code_span -!]
+[!- for child in span.children -!]
+[@- child.parsed_text -@]
+[!- endfor -!]
+[!- endset -!]
+
+[!- set code_lang -!]
+[!- if span.first_flag -!]
+[@- span.first_flag -@]
+[!- else -!]
+"txt"
+[!- endif -!]
+[!- endset -!]
+
+
+<code class="[! for c in span.classes !][@ c @][! endfor !]">
+[@- highlight_span(code_span, code_lang) -@]
+</code>

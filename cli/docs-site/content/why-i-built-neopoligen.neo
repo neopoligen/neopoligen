@@ -153,6 +153,24 @@ making things. I want to reduce it as much as
 possible. 
 
 
+-- h2
+
+Templates Not JavaScript
+
+I'm tired of jumping JavaScript frameworks. One of the 
+final straws that sent me down the path of making my
+own site generator was  when I went fix a spelling 
+error on a site I hadn't touched in a few months and
+everything broke because some dependency in the 
+framework changed. 
+
+Neopoligen is pretty basic at it's core. It parses
+Neopolitan files to create ASTs that are sent
+to the template engine for rendering. There's still
+some things to add to the AST, but the goal is to
+get the point where any changes are additive so that 
+existing templates will always continue to work with 
+future updates.
 
 -- h2
 
@@ -357,13 +375,6 @@ this is the custom CSS that I've added to this page:
   border-radius: 0.3rem;
 }
 
-p > code {
-  border: 1px solid #777;
-  padding-inline: 0.2rem;
-  border-radius: 0.2rem;
-  font-family: monospace;
-}
-
 .green {
     color: green;
 }
@@ -430,10 +441,9 @@ For example, this:
 -- html
 -- template: show-above
 
-<button 
-    id="count_btn" 
-    data-count="0">Counter: 0</button>
-
+<button id="count_btn" data-count="0">
+    Counter: 0
+</button>
 
 -- /pre
 
@@ -445,9 +455,9 @@ Outputs this:
 -- html
 -- template: show-above
 
-<button 
-    id="count_btn" 
-    data-count="0">Counter: 0</button>
+<button id="count_btn" data-count="0">
+    Counter: 0
+</button>
 
 
 -- h2
@@ -507,7 +517,7 @@ actually work)
 
 -- h2
 
-Syntax Highlighting
+Section Syntax Highlighting
 
 Neopoligen includes a built in syntax highlighter. I use
 it in <<code|-- code>> sections by passing the name of
@@ -519,7 +529,9 @@ the language like this:
 -- code
 -- rust
 
-println!("Hello, world");
+fn main() {
+    println!("Hello, world");
+}
 
 -- /pre
 
@@ -528,7 +540,9 @@ Which outputs:
 -- code
 -- rust
 
-println!("Hello, world");
+fn main() {
+    println!("Hello, world");
+}
 
 -- p
 
@@ -537,6 +551,29 @@ styles so things can be controlled from style sheets.
 
 The highlighter also adds span at the start of each line that
 can be used as a target for adding CSS line numbers as seen above. 
+
+
+-- h2
+
+Span Syntax Highlighting
+
+Language specific syntax highlighting can be done one inline
+code too. 
+
+-- pre/
+-- class: neo-example
+
+Rust code: <<code|println!("hello");|rust>>
+
+-- /pre
+
+Which outputs:
+
+-- p
+-- class: neo-example
+
+Rust code: <<code|println("hello, world");|rust>>
+
 
 
 -- h2
@@ -588,24 +625,33 @@ query strings is. But, I don't care. This is
 very much a case where I prefer function (designed
 to prevent link rot) over form. 
 
+
 -- h2
 
-No JavaScript Required
+Automatic Linking
 
-I'm tired of jumping JavaScript frameworks. One of the 
-final straws that sent me down the path of making my
-own site generator was  when I went fix a spelling 
-error on a site I hadn't touched in a few months and
-everything broke because some dependency in the 
-framework changed. 
+Because URLs are ID based it's trivial to use them
+to create links between pages. Two built-in templates
+provide links with either custom text or the 
+title of the page being linked to. For example:
 
-Neopoligen is pretty basic at it's core. It parses
-Neopolitan files to create ASTs that are sent
-to the template engine for rendering. There's still
-some things to add to the AST, but the goal is to
-get the point where any changes are additive so that 
-existing templates will always continue to work with 
-future updates.
+-- pre/
+-- class: neo-example
+
+This is a <<ilink|custom text link|2kiw8tvv>>
+
+Link with title: <<tlink|2kiw8tvv>>
+
+-- /pre
+
+Outputs:
+
+-- p
+-- class: neo-example
+
+This is a <<ilink|custom text link|2kiw8tvv>>
+
+Link with title: <<tlink|2kiw8tvv>>
 
 
 -- h2
