@@ -8,16 +8,14 @@ Some Text
 
 -- expected-output/
 
-<li class="footnote-ref">
-  <div>&bullet;
-  </div>
-  <div class="flow">
+<li class="ref-item">
+  <div>
     <a href="https://www.example.com/">Some Reference
     </a>
+  </div>
+  <div class="flow">
     <p>Some Text
     </p>
-  </div>
-  <div>
   </div>
 </li>
 
