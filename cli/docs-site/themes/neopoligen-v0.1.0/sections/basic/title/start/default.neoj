@@ -22,7 +22,5 @@
 [! endfor !]
 </hgroup>
 
-
 [! include "subsections/content-skip-one-block.neoj" !]
-
 [! include "subsections/end-section.neoj" !]

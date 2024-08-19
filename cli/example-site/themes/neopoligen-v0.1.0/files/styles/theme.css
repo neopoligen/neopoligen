@@ -23,6 +23,7 @@ a:focus {
 
 .aside-section {
   margin-left: 6rem;
+  margin-right: 0.6rem;
   border: 1px solid var(--color-charlie-80);
   border-radius: 0.3rem;
   padding-inline: 1.3rem;
@@ -212,4 +213,17 @@ main {
   border: 1px solid var(--color-alfa);
   border-radius: 0.3rem;
   margin: 2rem;
+}
+
+.warning-section {
+  border: 1px solid var(--color-foxtrot);
+  border-radius: 0.3rem;
+  margin-top: 1.6rem;
+  margin-inline: 0.6rem;
+  padding-block: 0.74rem;
+  padding-inline: 1.3rem;
+}
+
+.warning-title {
+  font-weight: bold;
 }

@@ -118,6 +118,26 @@ keep it as simple as possible.
 
 -- h2
 
+Templates Not JavaScript
+
+I'm tired of jumping JavaScript frameworks. One of the 
+final straws that sent me down the path of making my
+own site generator was  when I went fix a spelling 
+error on a site I hadn't touched in a few months and
+everything broke because some dependency in the 
+framework changed. 
+
+Neopoligen is pretty basic at it's core. It parses
+Neopolitan files to create ASTs that are sent
+to the template engine for rendering. There's still
+some things to add to the AST, but the goal is to
+get the point where any changes are additive so that 
+existing templates will always continue to work with 
+future updates.
+
+
+-- h2
+
 Neopolitan Sections And Spans
 
 You can read more details about how the format works on 
@@ -155,22 +175,76 @@ possible.
 
 -- h2
 
-Templates Not JavaScript
+Sections
 
-I'm tired of jumping JavaScript frameworks. One of the 
-final straws that sent me down the path of making my
-own site generator was  when I went fix a spelling 
-error on a site I hadn't touched in a few months and
-everything broke because some dependency in the 
-framework changed. 
+Neopolitan sections open with a line that has two 
+dashes followed by the kind of section. For example:
 
-Neopoligen is pretty basic at it's core. It parses
-Neopolitan files to create ASTs that are sent
-to the template engine for rendering. There's still
-some things to add to the AST, but the goal is to
-get the point where any changes are additive so that 
-existing templates will always continue to work with 
-future updates.
+-- pre/
+-- class: neo-example
+
+-- note
+
+This is a note
+
+-- aside
+
+This is an aside
+
+-- warning
+
+This is a warning
+
+-- /pre
+
+Which outputs:
+
+-- note
+
+This is a note
+
+-- aside
+
+This is an aside
+
+-- warning
+
+This is a warning
+
+
+
+-- h2
+
+Section Attributes
+
+Section attributes are created by adding lines
+started with two dashes directly below the opening 
+section line. For example, here's a "class" attribute
+added to a "p" section to apply a CSS style to 
+the section to change the of the text:
+
+-- pre/
+-- class: neo-example
+
+-- p
+-- class: green
+
+Pour the stew from the pot into the plate
+
+Raise the sail and steer the ship northward
+
+-- /pre
+
+Which outputs:
+
+-- p
+-- class: neo-example green
+
+Pour the stew from the pot into the plate
+
+Raise the sail and steer the ship northward
+
+
 
 -- h2
 
@@ -178,8 +252,9 @@ Section Templates
 
 Neopoligen works by mapping the different types of 
 sections to corresponding MiniJinja^^4^^ templates^^5^^. 
-Each type of section has a default template. For example,
-here's a section type I made called "book-to-read-example":
+There are several templates built into the app, but you 
+can also make your own. For example, here's a section type
+ I made called "book-to-read-example":
 
 -- pre/
 -- class: neo-example
@@ -205,14 +280,23 @@ Which looks like this:
 I've read a bunch of other William Gibson stuff and can't
 wait to get to this one!
 
+-- p
+
+It's important to point out that there's no difference
+between the templates that ship with Neopoligen and the
+ones you make. You can make as many arbitrary sections
+as you want. They are all treated the same way.
+
 
 -- h2
 
 Alternate Templates
 
-Additional templates can be built for any section 
-type. Switching to one of the alternates is done
-by adding a "template" attribute to the section. 
+Each section has a default template. Additional 
+templates can be built for them as well. Switching 
+to one of the alternates is done by adding a 
+"template" attribute to the section. 
+
 Here's the same example as above but calling
 a template called "alt":
 
@@ -245,13 +329,68 @@ wait to get to this one!
 
 -- p 
 
-The biggest point here is there's a clean separation between
+There's a clean separation of concerns between
 the content and the layout. 
+
 
 
 -- h2
 
-Span Templates
+Nesting Sections
+
+One of the biggest differences between Neopolitan and
+markdown is that sections can be nested. This is done
+by adding a "/" to the end of a section name where
+you want the nesting to start and then closing the
+nesting with a corresponding section that starts with 
+a "/". For example:
+
+-- pre/
+-- class: neo-example
+
+-- div/
+-- class: example-grid
+
+    -- note
+
+    Fly by night, and you waste little time
+
+    -- note
+
+    Pull the dart from the cork target
+
+    -- note
+
+    Pick a card and slip it under the pack
+
+-- /div
+
+-- /pre
+
+Outputs:
+
+-- div/
+-- class: example-grid
+
+    -- note
+
+    Fly by night, and you waste little time
+
+    -- note
+
+    Pull the dart from the cork target
+
+    -- note
+
+    Pick a card and slip it under the pack
+
+-- /div
+
+
+
+-- h2
+
+Spans
 
 Spans are sections of content that look like this:
 
@@ -309,7 +448,7 @@ This is <<strong|green bold text|class: green>>
 
 -- h2
 
-Advanced Span Templates
+Span Templates
 
 Span templates don't have to map directly to HTML 
 tags. They can be used to create more complicated
@@ -341,49 +480,43 @@ The template creates the link, points it to the "_blank"
 target for the new tab, and then appends the character
 to identify that it's going to a new tab. 
 
+
 -- h2
 
-Footnotes
+Built-In Test Suite
 
-I love footnotes. They make it easier for me to write
-at a higher level then point to more detail later 
-which makes for better prose. There's a shorthand
-built into Neopoligen for adding the footnote numbers
-in the content that looks like this:
+Each template can have a set of tests associated with it
+to make sure it's doing the right thing. All the tests
+are run each time a site is generated and a report shows
+any errors. 
 
--- pre/
--- class: neo-example
+The tests themselves are done in Neopolitan files that
+look like this:
 
-This is a footnote^^6^^
-
--- /pre
-
--- p
-
-Which outputs:
-
--- p
--- class: neo-example
-
-This is a footnote^^6^^
-
--- p 
-
-These correspond to a footnote section that has
-an id attribute with the same number. For example,
-this is the section that produces the footnote
-that's at the bottom of the page:
 
 -- pre/
 -- class: neo-example
 
--- footnote
--- id: 6
+-- start-theme-test
 
-This is the target footnote for the example in
-the main content. 
+-- p
+
+Alfa bravo charlie 
+
+Delta echo foxtrot
+
+-- expected-output/
+
+<section class="p-section flow">
+<p>Alfa bravo charlie</p>
+<p>Delta echo foxtrot</p>
+</section>
+
+-- /expected-output
 
 -- /pre
+
+
 
 
 
@@ -579,6 +712,9 @@ an effort to make sure that any samples I show
 actually work)
 
 
+
+
+
 -- h2
 
 External Scripts And <head> Content
@@ -656,6 +792,55 @@ Which outputs:
 
 Rust code: <<code|println!("hello, world");|rust>>
 
+
+
+
+-- h2
+
+Footnotes
+
+I love footnotes. They make it easier for me to write
+at a higher level then point to more detail later 
+which makes for better prose. There's a shorthand
+built into Neopoligen for adding the footnote numbers
+in the content that looks like this:
+
+-- pre/
+-- class: neo-example
+
+This is a footnote^^6^^
+
+-- /pre
+
+-- p
+
+Which outputs:
+
+-- p
+-- class: neo-example
+
+This is a footnote^^6^^
+
+-- p 
+
+These correspond to a footnote section that has
+an id attribute with the same number. For example,
+this is the section that produces the footnote
+that's at the bottom of the page:
+
+-- pre/
+-- class: neo-example
+
+-- footnote
+-- id: 6
+
+This is the target footnote for the example in
+the main content. 
+
+-- /pre
+
+
+
 -- h2
 
 Responsive Image Optimization
@@ -717,7 +902,12 @@ end up in a single very long line in the content file.
 -- note
 
 I'm refactoring the way images handling. The srcset and alt
-text might not show depending on when you see this. 
+text might not show depending on when you see this. And, yes,
+if you have two files with the same name it creates a "race
+condition" where you don't know which image will show up. 
+I'm adding a feature to warn you about that, but either way
+it's a minor issue compared to the convenience of not 
+having to mess with file paths. 
 
 
 
@@ -973,6 +1163,19 @@ for making the IPTC metadata spec.
   border: 1px solid #333;
   padding: 1.2rem;
   border-radius: 0.3rem;
+}
+
+.example-grid {
+  --min: 15ch;
+  --gap: 1rem;
+  display: grid;
+  grid-gap: var(--gap);
+  grid-template-columns: repeat(
+    auto-fit, 
+    minmax(
+      min(100%, var(--min)), 1fr
+    )
+  );
 }
 
 .green {

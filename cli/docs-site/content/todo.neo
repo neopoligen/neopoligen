@@ -34,6 +34,9 @@ TODO List
 
 [] Cover error like ``[@ span.first_flag] @]`` where there's an extra ``]``
 
+[] Move attributes list to each section individually for the
+attrs that get added to the <section> automatically 
+
 
 
 
