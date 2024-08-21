@@ -4,7 +4,7 @@
 
 [!- block body -!]
 [!- for section in page.sections -!]
-[!- if section.type != "footnote" and section.type != "ref" -!]
+[!- if section.type != "footnote" and section.type != "ref" and section.type != "endnote" -!]
 [@- theme.output_section(site, page.id, section) -@]
 [!- endif -!]
 [!- endfor -!]
@@ -13,6 +13,24 @@
 
 [!- block endmatter -!]
 <div class="fin-token">~ fin ~</div>
+
+[! set endnote_header_has_been_output = false !]
+[!- for section in page.sections -!]
+  [!- if section.type == "endnote" -!]
+    [! if endnote_header_has_been_output == false !]
+      <section class="flow">
+        <h2>Endnotes</h2>
+        <ul class="flow">
+    [! set endnote_header_has_been_output = true !]
+    [! endif !]
+    [@- theme.output_section(site, page_id, section) -@]
+  [!- endif -!]
+  [! if loop.last and endnote_header_has_been_output == true !]
+    </ul>
+    </section>
+  [! endif !]
+[!- endfor -!]
+
 
 [! set footnote_header_has_been_output = false !]
 [!- for section in page.sections -!]
