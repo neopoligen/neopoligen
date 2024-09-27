@@ -19,7 +19,12 @@ pub struct Block {}
 
 pub fn block_of_anything<'a>(source: &'a str) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = not(eof).context("").parse(source)?;
-    let (source, _) = not(tag("--")).context("").parse(source)?;
+    // NOTE: Ideally this would look for "--" when it's not inside a
+    // list and "-" when it's in a list. In order to do that
+    // a new "list_depth" argument needs to be passed around.
+    // For now, everything is just using "-". That means you can't
+    // start a block of text with just a dash.
+    let (source, _) = not(tag("-")).context("").parse(source)?;
     let (source, spans) = many1(alt((base_span_for_all_text, pipe)))
         .context("")
         .parse(source)?;

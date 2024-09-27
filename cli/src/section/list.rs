@@ -376,6 +376,25 @@ mod test {
                         },
                         Section {
                             attrs: vec![],
+                            bounds: SectionBounds::Full,
+                            kind: SectionKind::ListItem {
+                                children: vec![Section {
+                                    attrs: vec![],
+                                    bounds: SectionBounds::Full,
+                                    kind: SectionKind::Block {
+                                        spans: vec![Span {
+                                            attrs: vec![],
+                                            kind: SpanKind::WordPart,
+                                            parsed_text: "charlie".to_string(),
+                                        }],
+                                    },
+                                    r#type: "block-of-text".to_string(),
+                                }],
+                            },
+                            r#type: "list-item".to_string(),
+                        },
+                        Section {
+                            attrs: vec![],
                             bounds: SectionBounds::End,
                             kind: SectionKind::List { children: vec![] },
                             r#type: "list".to_string(),
