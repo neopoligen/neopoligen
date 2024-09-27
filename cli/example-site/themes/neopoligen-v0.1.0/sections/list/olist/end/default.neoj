@@ -1,4 +1,4 @@
-</ul>
+</ol>
 
 [! for child in section.children !]
     [@ theme.output_section(site, page_id, child) @]
