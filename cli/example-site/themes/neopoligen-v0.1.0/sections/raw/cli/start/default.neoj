@@ -10,23 +10,16 @@
 
 <div class="cli-wrapper">
 
-<div class="cli-subtitle">
-[! if "subtitle" in section.attr_spans !]
+<div class="cli-title">
+[! if "title" in section.attr_spans !]
 [@ theme.output_spans(site, page_id, section.attr_spans.title) @]</div>
 [! else !]
 command line:
 [! endif !]
 </div>
 
-[#
-[! if section.flags[0] !]
-<div class="cli-language">
-Language: [@ section.flags[0] @]
-</div>
-[! endif !]
-#]
 
-<pre class="cli-pre"><code>
+<pre class="cli-block"><code>
 [@- highlight_code_no_nums(section.text, "bash") -@]
 </code></pre>
 

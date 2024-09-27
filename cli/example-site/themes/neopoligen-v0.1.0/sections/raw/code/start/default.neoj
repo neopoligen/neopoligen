@@ -4,11 +4,19 @@
     [@- theme.section_classes(section, "code-section") -@] 
     [@- section.attr_string -@]>
 
-[! if "title" in section.attr_spans !]
-<h3>[@ theme.output_spans(site, page_id, section.attr_spans.title) @]</h3>
-[! endif !]
+
 
 <div class="code-wrapper">
+
+[! if "title" in section.attr_spans or section.flags[0] !]
+<div class="code-title">
+[!- if "title" in section.attr_spans -!]
+[@ theme.output_spans(site, page_id, section.attr_spans.title) @]
+[!- else -!]
+[@ section.flags[0] @]
+[!- endif -!]
+</div>
+[! endif !]
 
 [! if "subtitle" in section.attr_spans !]
 <div class="code-subtitle">[@ theme.output_spans(site, page_id, section.attr_spans.subtitle) @]</div>
@@ -23,13 +31,14 @@ Language: [@ section.flags[0] @]
 #]
 
 [!- if "no-nums" in section.flags -!]
-<pre class="code-pre-no-nums"><code>[!- if section.flags[0] -!]
+<pre class="code-block-no-nums"><code>[!- if section.flags[0] -!]
 [@- highlight_code_no_nums(section.text, section.flags[0] ) -@]
 [!- else -!]
 [@- highlight_code_no_nums(section.text, "txt") -@]
 [!- endif -!]</code></pre>
 [!- else -!]
-<pre class="code-pre"><code>[!- if section.flags[0] -!]
+
+<pre class="code-block"><code>[!- if section.flags[0] -!]
 [@- highlight_code(section.text, section.flags[0] ) -@]
 [!- else -!]
 [@- highlight_code(section.text, "txt") -@]

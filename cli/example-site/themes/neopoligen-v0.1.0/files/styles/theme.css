@@ -50,8 +50,13 @@ body {
   font-family: 'Inter';
 }
 
-.cli-pre {
+.cli-block {
   padding-block: 0.5rem;
+}
+
+.cli-title {
+  color: var(--color-bravo-70);
+  border-bottom: 1px solid var(--color-bravo-10); 
 }
 
 .cli-subtitle {
@@ -66,7 +71,7 @@ body {
   border-radius: 0.3rem;
 }
 
-.code-pre {
+.code-block {
   font-size: var(--size-8);
   margin-left: 3rem;
   padding-left: 0.3rem;
@@ -77,19 +82,18 @@ body {
   border-bottom-right-radius: 0.3rem;
 }
 
-.code-pre-no-nums {
+.code-block-no-nums {
   padding: 0.8rem;
   background-color: var(--color-black-30);
-
 }
 
-.code-subtitle {
+.code-title {
+  border-bottom: 1px solid var(--color-bravo-20);
+  color: var(--color-bravo-60);
+  font-family: monospace;
   font-size: var(--size-8);
-  margin-left: 3rem;
-  padding-left: 0.3rem;
-  border-left: 1px solid var(--color-delta);
-  border-bottom: 1px solid var(--color-delta);
-  padding-block: 0.3rem;
+  padding: 0.3rem;
+  margin-bottom: 0.5rem;
 }
 
 .code-wrapper {
@@ -230,15 +234,20 @@ main {
   padding-top: 1rem;
 }
 
-.pre-section {}
-
-.pre-section pre {
+.pre-block {
+  font-family: monospace;
+  background-color: var(--color-black-30);
   overflow-wrap: break-word;
+  padding: 0.8rem;
   white-space: pre-wrap; 
 }
 
-.pre-subtitle {
-  border-bottom: 1px solid var(--color-bravo-10); 
+.pre-title {
+  border-bottom: 1px solid var(--color-bravo-20);
+  color: var(--color-bravo-60);
+  font-family: monospace;
+  font-size: var(--size-8);
+  padding: 0.3rem;
   margin-bottom: 0.5rem;
 }
 

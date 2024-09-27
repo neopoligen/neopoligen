@@ -4,12 +4,14 @@
     [@- theme.section_classes(section, "pre-section") -@] 
     [@- section.attr_string -@]>
 
-[! if "title" in section.attr_spans !]
-<h2>[@ theme.output_spans(site, page_id, section.attr_spans.title) @]</h2>
-[! endif !]
-
-
 <div class="pre-wrapper">
+
+
+[! if "title" in section.attr_spans !]
+<div class="pre-title">
+[@ theme.output_spans(site, page_id, section.attr_spans.title) @]
+</div>
+[! endif !]
 
 [! if "subtitle" in section.attr_spans !]
 <div class="pre-subtitle">
@@ -17,7 +19,7 @@
 </div>
 [! endif !]
 
-<pre>[! autoescape true !][@- section.text -@][! endautoescape !]</pre>
+<pre class="pre-block">[! autoescape true !][@- section.text -@][! endautoescape !]</pre>
 
 [! for child in section.children !]
     [@ theme.output_section(site, page_id, child) @]
