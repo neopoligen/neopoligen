@@ -535,7 +535,7 @@ impl Builder {
         event!(Level::INFO, "Outputting pages");
         let mut env = Environment::new();
         env.add_function("highlight_code", highlight_code);
-        env.add_function("highlight_code_without_nums", highlight_code_without_nums);
+        env.add_function("highlight_code_no_nums", highlight_code_no_nums);
         env.add_function("highlight_span", highlight_span);
         env.set_syntax(
             SyntaxConfig::builder()
@@ -657,7 +657,7 @@ impl Builder {
         env.set_lstrip_blocks(true);
         env.set_trim_blocks(true);
         env.add_function("highlight_code", highlight_code);
-        env.add_function("highlight_code_without_nums", highlight_code_without_nums);
+        env.add_function("highlight_code_no_nums", highlight_code_no_nums);
         env.add_function("highlight_span", highlight_span);
         // TODO: Add start-test-template and expected-output templates
         // TODO: Update "pages/post/published.neoj" for theme test

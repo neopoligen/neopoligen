@@ -8,6 +8,15 @@
 <h2>[@ theme.output_spans(site, page_id, section.attr_spans.title) @]</h2>
 [! endif !]
 
+
+<div class="pre-wrapper">
+
+[! if "subtitle" in section.attr_spans !]
+<div class="pre-subtitle">
+[@ theme.output_spans(site, page_id, section.attr_spans.subtitle) @]
+</div>
+[! endif !]
+
 <pre>[! autoescape true !][@- section.text -@][! endautoescape !]</pre>
 
 [! for child in section.children !]

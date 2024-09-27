@@ -9,6 +9,7 @@ Code with a title
 
 <section class="code-section">
   <h3>Some Code</h3>
+<div class="code-wrapper">
   <pre class="code-pre">
     <code>
       <span class="line-marker">
@@ -17,6 +18,7 @@ Code with a title
       </span>
     </code>
   </pre>
+</div>
 </section>
 
 -- /expected-output

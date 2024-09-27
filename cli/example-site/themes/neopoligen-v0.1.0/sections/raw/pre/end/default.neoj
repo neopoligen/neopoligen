@@ -1,4 +1,5 @@
 [! import "includes/theme.neoj" as theme !]
+</div>
 </section>
 
 [! for child in section.children !]

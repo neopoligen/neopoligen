@@ -8,6 +8,12 @@
 <h3>[@ theme.output_spans(site, page_id, section.attr_spans.title) @]</h3>
 [! endif !]
 
+<div class="code-wrapper">
+
+[! if "subtitle" in section.attr_spans !]
+<div class="code-subtitle">[@ theme.output_spans(site, page_id, section.attr_spans.subtitle) @]</div>
+[! endif !]
+
 [#
 [! if section.flags[0] !]
 <div class="code-language">
@@ -16,11 +22,20 @@ Language: [@ section.flags[0] @]
 [! endif !]
 #]
 
+[!- if "no-nums" in section.flags -!]
+<pre class="code-pre-no-nums"><code>[!- if section.flags[0] -!]
+[@- highlight_code_no_nums(section.text, section.flags[0] ) -@]
+[!- else -!]
+[@- highlight_code_no_nums(section.text, "txt") -@]
+[!- endif -!]</code></pre>
+[!- else -!]
 <pre class="code-pre"><code>[!- if section.flags[0] -!]
 [@- highlight_code(section.text, section.flags[0] ) -@]
 [!- else -!]
 [@- highlight_code(section.text, "txt") -@]
 [!- endif -!]</code></pre>
+[!- endif -!]
+
 
 [! for child in section.children !]
     [@ theme.output_section(site, page_id, child) @] 

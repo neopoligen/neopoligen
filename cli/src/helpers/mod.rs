@@ -265,7 +265,7 @@ pub fn highlight_code(args: &[Value]) -> String {
     output_html.join("\n")
 }
 
-pub fn highlight_code_without_nums(args: &[Value]) -> String {
+pub fn highlight_code_no_nums(args: &[Value]) -> String {
     let code = args[0].to_string();
     let lang = args[1].to_string();
     let syntax_set = SyntaxSet::load_defaults_newlines();
@@ -478,8 +478,8 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn check_highlight_code_with_no_nums() {
-        let left = highlight_code_without_nums(&[
+    fn check_highlight_code_no_nums() {
+        let left = highlight_code_no_nums(&[
             minijinja::Value::from("asdf".to_string()),
             minijinja::Value::from("txt".to_string()),
         ]);

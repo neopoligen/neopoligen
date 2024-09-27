@@ -1,7 +1,7 @@
 -- start-theme-test
 
 -- code/
--- template: no-nums
+-- no-nums
 
 alfa bravo
 
@@ -11,11 +11,13 @@ alfa bravo
 
 
 <section class="code-section">
+<div class="code-wrapper">
 <pre class="code-pre-no-nums">
 <code>
 <span class="text plain">alfa bravo</span>
 </code>
 </pre>
+</div>
 </section>
 
 -- /expected-output
