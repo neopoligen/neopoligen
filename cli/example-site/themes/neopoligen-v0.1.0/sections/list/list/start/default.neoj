@@ -1,7 +1,13 @@
 [! import "includes/theme.neoj" as theme !]
+
+<pre>
+[@ section|tojson(true) @]
+</pre>
+
 <ul
     [@- theme.section_classes(section, "flow") -@] 
     [@- section.attr_string -@]>
+    
 [! for child in section.children !]
 [@ theme.output_section(site, page_id, child) @]
 [! endfor !]

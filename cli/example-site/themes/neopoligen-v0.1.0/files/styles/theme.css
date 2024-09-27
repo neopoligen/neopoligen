@@ -50,6 +50,16 @@ body {
   font-family: 'Inter';
 }
 
+.cli-pre {
+  font-size: var(--size-8);
+  margin-left: 3rem;
+  padding-left: 0.3rem;
+  border-left: 1px solid var(--color-delta);
+  background-color: var(--color-black-30);
+  border-top-right-radius: 0.3rem;
+  border-bottom-right-radius: 0.3rem;
+}
+
 .code-pre {
   font-size: var(--size-8);
   margin-left: 3rem;
@@ -188,6 +198,18 @@ main {
 
 .pad-top-1 {
   padding-top: 1rem;
+}
+
+.pre-section {
+  padding: 1rem;
+  border: 1px solid var(--color-bravo-10);
+  border-radius: 0.3rem;
+}
+
+.pre-section pre {
+  white-space: pre-wrap; 
+  overflow-wrap: break-word;
+  font-size: var(--size-8);
 }
 
 .photo {

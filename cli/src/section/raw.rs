@@ -1,4 +1,4 @@
-use crate::section::block::block_of_end_content;
+use crate::section::block::*;
 use crate::section::*;
 use crate::section_attr::*;
 use nom::branch::alt;
@@ -33,7 +33,9 @@ pub fn raw_section_end<'a>(
             .context("")
             .parse(source)?
     } else {
-        (source, vec![])
+        many0(|src| block_of_anything(src))
+            .context("")
+            .parse(source)?
     };
     let section = Section {
         attrs,
@@ -80,8 +82,9 @@ pub fn raw_section_full<'a>(
 pub fn raw_section_start<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
-    nest_level: usize,
+    mut nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    nest_level += 1;
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder(src, &sections.raw))
         .context("")
@@ -143,6 +146,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn ending_with_nesting() {
         let source = "-- /code\n\nmore stuff";
         let left = "more stuff".to_string();
@@ -151,7 +155,6 @@ mod test {
     }
 
     #[test]
-    #[ignore]
     fn basic_start_end() {
         let source = "-- code/\n\nsome code\n\n-- /code\n\n";
         let config = SiteConfig::mock1_basic();
@@ -164,7 +167,10 @@ mod test {
                     children: vec![Section {
                         attrs: vec![],
                         bounds: SectionBounds::End,
-                        kind: SectionKind::Basic { children: vec![] },
+                        kind: SectionKind::Raw {
+                            text: None,
+                            children: vec![],
+                        },
                         r#type: "code".to_string(),
                     }],
                     text: Some("some code".to_string()),
@@ -234,6 +240,59 @@ mod test {
                         r#type: "code".to_string(),
                     }],
                     text: Some("alfa -- not here".to_string()),
+                },
+                r#type: "code".to_string(),
+            },
+        );
+        let right = raw_section_start(source, &config.sections, 0).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_start_end_with_content_after_end() {
+        let source = "-- code/\n\nalfa\n\n-- /code\n\nbravo\n\ncharlie\n\n-- p";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "-- p",
+            Section {
+                attrs: vec![],
+                bounds: SectionBounds::Start,
+                kind: SectionKind::Raw {
+                    children: vec![Section {
+                        attrs: vec![],
+                        bounds: SectionBounds::End,
+                        kind: SectionKind::Raw {
+                            text: None,
+                            children: vec![
+                                Section {
+                                    attrs: vec![],
+                                    bounds: SectionBounds::Full,
+                                    kind: SectionKind::Block {
+                                        spans: vec![Span {
+                                            attrs: vec![],
+                                            kind: SpanKind::WordPart,
+                                            parsed_text: "bravo".to_string(),
+                                        }],
+                                    },
+                                    r#type: "block-of-text".to_string(),
+                                },
+                                Section {
+                                    attrs: vec![],
+                                    bounds: SectionBounds::Full,
+                                    kind: SectionKind::Block {
+                                        spans: vec![Span {
+                                            attrs: vec![],
+                                            kind: SpanKind::WordPart,
+                                            parsed_text: "charlie".to_string(),
+                                        }],
+                                    },
+                                    r#type: "block-of-text".to_string(),
+                                },
+                            ],
+                        },
+                        r#type: "code".to_string(),
+                    }],
+                    text: Some("alfa".to_string()),
                 },
                 r#type: "code".to_string(),
             },

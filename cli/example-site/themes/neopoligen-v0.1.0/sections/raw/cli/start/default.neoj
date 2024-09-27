@@ -1,7 +1,7 @@
 [! import "includes/theme.neoj" as theme !]
 
 <section
-    [@- theme.section_classes(section, "code-section") -@] 
+    [@- theme.section_classes(section, "cli-section") -@] 
     [@- section.attr_string -@]>
 
 [! if "title" in section.attr_spans !]
@@ -10,22 +10,14 @@
 
 [#
 [! if section.flags[0] !]
-<div class="code-language">
+<div class="cli-language">
 Language: [@ section.flags[0] @]
 </div>
 [! endif !]
 #]
 
-<pre class="code-pre"><code>[!- if section.flags[0] -!]
-[@- highlight_code(section.text, section.flags[0] ) -@]
-[!- else -!]
-[@- highlight_code(section.text, "txt") -@]
-[!- endif -!]</code></pre>
+<pre class="cli-pre"><code>[@- section.text -@]</code></pre>
 
 [! for child in section.children !]
     [@ theme.output_section(site, page_id, child) @] 
 [! endfor !]
-
-
-
-
