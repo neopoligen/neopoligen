@@ -1,4 +1,17 @@
 [#############################################################################]
+[!- macro debug_section(site, page_id, section) -!]
+<li>
+    <p>[@ section.kind @]-[@ section.type @]-[@ section.bounds @]</p>
+<ul>
+[!- for child in section.children -!]
+[@- debug_section(site, page_id, child) -@]
+[!- endfor -!]
+</ul>
+</li>
+[!- endmacro -!]
+
+
+[#############################################################################]
 [!- macro output_section(site, page_id, section) -!]
 [!- include section.template_list ignore missing -!]
 [!- endmacro -!]

@@ -67,4 +67,13 @@
 [!- endfor -!]
 
 
+[#-
+<h3>Sections</h3>
+<ul>
+[!- for section in page.sections -!]
+[@ theme.debug_section(site, page_id, section) @]
+[!- endfor -!]
+</ul>
+-#]
+
 [!- endblock -!]

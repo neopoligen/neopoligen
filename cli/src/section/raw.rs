@@ -249,7 +249,7 @@ mod test {
     }
 
     #[test]
-    fn solo_start_end_with_content_after_end() {
+    fn start_end_with_content_after_end() {
         let source = "-- code/\n\nalfa\n\n-- /code\n\nbravo\n\ncharlie\n\n-- p";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -289,6 +289,34 @@ mod test {
                                     r#type: "block-of-text".to_string(),
                                 },
                             ],
+                        },
+                        r#type: "code".to_string(),
+                    }],
+                    text: Some("alfa".to_string()),
+                },
+                r#type: "code".to_string(),
+            },
+        );
+        let right = raw_section_start(source, &config.sections, 0).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn start_end_with_list_item_after() {
+        let source = "-- code/\n\nalfa\n\n-- /code\n\n- bravo";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "- bravo",
+            Section {
+                attrs: vec![],
+                bounds: SectionBounds::Start,
+                kind: SectionKind::Raw {
+                    children: vec![Section {
+                        attrs: vec![],
+                        bounds: SectionBounds::End,
+                        kind: SectionKind::Raw {
+                            text: None,
+                            children: vec![],
                         },
                         r#type: "code".to_string(),
                     }],
