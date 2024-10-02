@@ -1,0 +1,17 @@
+[! import "includes/theme.neoj" as theme !]
+
+<section
+    [@- theme.section_classes(section, "link-section") -@] 
+    [@- section.attr_string -@]>
+
+<div class="link-wrapper">
+
+[! if "title" in section.attr_spans !]
+<div class="link-title">[@ theme.output_spans(site, page_id, section.attr_spans.title) @]</div>
+[! endif !]
+
+<div class="link-block">
+[!- for child in section.children -!]
+    [@- theme.output_section(site, page_id, child) -@]
+[!- endfor -!]
+</div>

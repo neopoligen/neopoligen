@@ -4,8 +4,6 @@
     [@- theme.section_classes(section, "code-section") -@] 
     [@- section.attr_string -@]>
 
-
-
 <div class="code-wrapper">
 
 [! if "title" in section.attr_spans or section.flags[0] !]

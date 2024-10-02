@@ -56,11 +56,13 @@
 <body>
 <header>
       <a href="/">Home</a>
+      [! if site.config.base_url == "www.alanwsmith.com" !]
       <div class="under-construction">
         NOTE: I'm in the middle of upgrading the site. Most things are in place, but
         some things are missing and/or broken. This includes alt text for images. Please
         bear with me while I get things fixed. 
       </div>
+      [! endif !]
     </header>
 <main class="flow">
 [!- block body -!][!- endblock -!]

@@ -65,7 +65,7 @@ body {
 
 .cli-wrapper {
   font-size: var(--size-8);
-  padding: 0.3rem;
+  padding: 0.5rem;
   background-color: var(--color-black-30);
   border: 1px solid var(--color-bravo-10);
   border-radius: 0.3rem;
@@ -74,17 +74,21 @@ body {
 .code-block {
   font-size: var(--size-8);
   margin-left: 3rem;
-  padding-left: 0.3rem;
+  padding-left: 0.5rem;
   padding-top: 0.7rem;
   border-left: 1px solid var(--color-delta);
   background-color: var(--color-black-30);
   border-top-right-radius: 0.3rem;
   border-bottom-right-radius: 0.3rem;
+  overflow-wrap: break-word;
+  white-space: pre-wrap; 
 }
 
 .code-block-no-nums {
   padding: 0.8rem;
   background-color: var(--color-black-30);
+  overflow-wrap: break-word;
+  white-space: pre-wrap; 
 }
 
 .code-title {
@@ -92,7 +96,7 @@ body {
   color: var(--color-bravo-60);
   font-family: monospace;
   font-size: var(--size-8);
-  padding: 0.3rem;
+  padding: 0.5rem;
   margin-bottom: 0.5rem;
 }
 
@@ -101,7 +105,7 @@ body {
   background-color: var(--color-black-30);
   border: 1px solid var(--color-bravo-10);
   border-radius: 0.3rem;
-  padding: 0.4rem;
+  padding: 0.5rem;
 }
 
 .fin-token {
@@ -184,6 +188,14 @@ header a {
   color: var(--color-charlie);
 }
 
+.highlight .cli-wrapper, 
+.highlight .code-wrapper, 
+.highlight .link-wrapper, 
+.highlight .pre-wrapper
+ {
+  border-color: red;
+} 
+
 hr {
   margin-block: 1.5rem;
 }
@@ -209,6 +221,27 @@ img {
     padding-right: 2.7ch;
     text-align: end;
     width: 7.5ch;
+}
+
+.link-block {
+  padding: 0.5rem;
+}
+
+.link-title {
+  border-bottom: 1px solid var(--color-bravo-20);
+  color: var(--color-bravo-60);
+  font-family: monospace;
+  font-size: var(--size-8);
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.link-wrapper {
+  font-size: var(--size-5);
+  padding: 0.3rem;
+  background-color: var(--color-black-30);
+  border: 1px solid var(--color-bravo-10);
+  border-radius: 0.3rem;
 }
 
 main {

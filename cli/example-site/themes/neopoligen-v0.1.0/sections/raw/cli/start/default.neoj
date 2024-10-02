@@ -4,24 +4,20 @@
     [@- theme.section_classes(section, "cli-section") -@] 
     [@- section.attr_string -@]>
 
-[! if "title" in section.attr_spans !]
-<h3>[@ theme.output_spans(site, page_id, section.attr_spans.title) @]</h3>
-[! endif !]
-
 <div class="cli-wrapper">
 
-<div class="cli-title">
-[! if "title" in section.attr_spans !]
-[@ theme.output_spans(site, page_id, section.attr_spans.title) @]</div>
-[! else !]
-command line:
-[! endif !]
-</div>
+    <div class="cli-title">
+    [! if "title" in section.attr_spans !]
+    [@ theme.output_spans(site, page_id, section.attr_spans.title) @]
+    [! else !]
+    command line:
+    [! endif !]
+    </div>
 
 
-<pre class="cli-block"><code>
-[@- highlight_code_no_nums(section.text, "bash") -@]
-</code></pre>
+    <pre class="cli-block"><code>
+    [@- highlight_code_no_nums(section.text, "bash") -@]
+    </code></pre>
 
 [! for child in section.children !]
     [@ theme.output_section(site, page_id, child) @] 

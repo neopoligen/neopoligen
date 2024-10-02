@@ -1,4 +1,4 @@
-[! import "includes/theme.neoj" as theme !]
+[!- import "includes/theme.neoj" as theme -!]
 <a href="[@ span.first_flag @]" target="_blank">
   [!- for child in span.children -!]
     [@- theme.output_span("", "", child) -@]

@@ -1,7 +1,2 @@
 [! import "includes/theme.neoj" as theme !]
-<p>
-[! for span in section.spans !]
-[@ theme.output_span(site, page_id, span) @]
-[! endfor !]
-</p>
-
+<p>[@- theme.output_spans(site, page_id, section.spans) -@]</p>
