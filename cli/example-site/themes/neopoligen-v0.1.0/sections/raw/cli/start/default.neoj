@@ -10,14 +10,14 @@
     [! if "title" in section.attr_spans !]
     [@ theme.output_spans(site, page_id, section.attr_spans.title) @]
     [! else !]
-    command line:
+    terminal commands
     [! endif !]
     </div>
-
-
+    <div [!- if "no-copy" not in section.flags !] class="code-button-wrapper"[!- endif -!]>
     <pre class="cli-block"><code>
     [@- highlight_code_no_nums(section.text, "bash") -@]
     </code></pre>
+    </div>
 
 [! for child in section.children !]
     [@ theme.output_section(site, page_id, child) @] 

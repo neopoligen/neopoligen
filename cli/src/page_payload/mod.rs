@@ -1,6 +1,9 @@
 use html_escape::*;
+use minijinja::value::Object;
+use minijinja::value::Value;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
+use std::sync::Arc;
 use tracing::{event, instrument, Level};
 
 use crate::{
@@ -14,6 +17,7 @@ use crate::{
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PagePayload {
     pub absolute_url: Option<String>,
+    pub flags: Vec<String>,
     pub id: Option<String>,
     pub language: Option<String>,
     // TODO: Rename rel_file_path to rel_dest_path;
@@ -44,6 +48,20 @@ pub enum ThemeTestOrPage {
     Page,
 }
 
+// This is an attempt to send the values as an object
+// instead of having to serialize it.
+// TODO: See if you can get this to work:
+// https://docs.rs/minijinja/latest/minijinja/value/trait.Object.html
+impl Object for PagePayload {
+    fn get_value(self: &Arc<Self>, field: &Value) -> Option<Value> {
+        match field.as_str()? {
+            "title" => Some(Value::from(self.get_title_v2())),
+            // TODO: Add all the rest of the stuff here
+            _ => None,
+        }
+    }
+}
+
 impl PagePayload {
     pub fn new_from_source_page(
         source_path: &PathBuf,
@@ -67,6 +85,7 @@ impl PagePayload {
                     .collect::<Vec<PayloadSection>>();
                 let mut p = PagePayload {
                     absolute_url: None,
+                    flags: vec![],
                     id: None,
                     language: None,
                     r#type: Some("post".to_string()),
@@ -83,6 +102,7 @@ impl PagePayload {
                 p.get_id();
                 match p.id {
                     Some(_) => {
+                        p.get_flags();
                         p.get_language(&source);
                         p.get_type();
                         p.get_status();
@@ -248,6 +268,32 @@ impl PagePayload {
                 }
             }
         })
+    }
+
+    pub fn get_title_v2(&self) -> Option<Value> {
+        self.sections.iter().find_map(|section| {
+            if section.r#type == "title" {
+                match section.children.first() {
+                    Some(stuff) => Some(Value::from(
+                        encode_safe(&flatten_payload_spans(&stuff.spans.clone())).to_string(),
+                    )),
+                    _ => None,
+                }
+            } else {
+                None
+            }
+        })
+    }
+
+    pub fn get_flags(&mut self) {
+        self.sections.iter().for_each(|section| {
+            if section.r#type == "metadata" {
+                let _ = &section
+                    .flags
+                    .iter()
+                    .for_each(|flag| self.flags.push(flag.clone()));
+            }
+        });
     }
 
     pub fn get_type(&mut self) {

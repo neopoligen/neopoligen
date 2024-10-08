@@ -20,9 +20,14 @@
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="msapplication-config" content="/theme/favicons/browserconfig.xml">
 <meta name="theme-color" content="#000000">
+[! if "no-css" not in page.flags !]
 <link rel="stylesheet" href="/theme/styles/variables.css" />
 <link rel="stylesheet" href="/theme/styles/theme.css" />
 <link rel="stylesheet" href="/theme/styles/syntax-highlighting/code-solarized-dark.css" />
+[! endif !]
+
+<script src="/theme/scripts/theme.js"></script>
+
 
 [!- for section in page.sections -!]
 [!- if section.type == "head" -!]
@@ -72,12 +77,14 @@
 
 
 [#
+#]
 <pre>
 [@ page|tojson(true) @]
 </pre>
-#]
 
-[# BE CAREFUL TURNING THIS ON ON THE MAIN SITE IT'S HUGE
+[# BE CAREFUL TURNING THIS ON ON THE MAIN SITE IT IS HUGE
+AND YOU CAN FILL UP ALL YOUR DISK SPACE
+BECAUSE IT IS LIKE 500GB EASY
 <pre>
 [@ site|tojson(true) @]
 </pre>

@@ -28,6 +28,7 @@ Language: [@ section.flags[0] @]
 [! endif !]
 #]
 
+<div [!- if "no-copy" not in section.flags !] class="code-button-wrapper"[!- endif -!]>
 [!- if "no-nums" in section.flags -!]
 <pre class="code-block-no-nums"><code>[!- if section.flags[0] -!]
 [@- highlight_code_no_nums(section.text, section.flags[0] ) -@]
@@ -42,6 +43,7 @@ Language: [@ section.flags[0] @]
 [@- highlight_code(section.text, "txt") -@]
 [!- endif -!]</code></pre>
 [!- endif -!]
+</div>
 
 
 [! for child in section.children !]

@@ -6,9 +6,13 @@
 
 <div class="link-wrapper">
 
+<div class="link-title">
 [! if "title" in section.attr_spans !]
-<div class="link-title">[@ theme.output_spans(site, page_id, section.attr_spans.title) @]</div>
+[@ theme.output_spans(site, page_id, section.attr_spans.title) @]
+[!- else -!]
+link
 [! endif !]
+</div>
 
 <div class="link-block">
 [!- for child in section.children -!]

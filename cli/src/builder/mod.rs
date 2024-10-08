@@ -577,7 +577,12 @@ impl Builder {
                 }
             }) {
                 match template.render(context!(
-                    page => Value::from_serialize(&page),
+                   page => Value::from_serialize(&page),
+
+                // TODO: Figure out if you can send this as an object so
+                // you don't have to serialize which will hopefully make things
+                // faster
+                 // page => Value::from_object(page.clone()),
                     site=> &site,
                 )) {
                     Ok(output) => {

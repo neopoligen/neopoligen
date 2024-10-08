@@ -2,5 +2,5 @@
 <a href="[@ span.first_flag @]" target="_blank">
   [!- for child in span.children -!]
     [@- theme.output_span("", "", child) -@]
-  [!- endfor -!]↗
-</a>
+  [!- endfor -!]
+</a> <span class="new-tab-arrow">↗</span>
