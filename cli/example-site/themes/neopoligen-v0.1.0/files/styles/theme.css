@@ -1,3 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&display=swap');
+
+:root {
+  --size-base: 16px;
+  --size-1: 3.157rem;
+  --size-2: 2.369rem;
+  --size-3: 1.777rem;
+  --size-4: 1.333rem;
+  --size-5: 1rem;
+  --size-6: 0.75rem;
+  --size-7: 0.564rem;
+}
+
+:root, [data-scheme="light"] {
+  --color-scheme: light;
+  --color-background: oklch(93.076% 0.03467 92.999);
+  --color-link: oklch(53.076% 0.13467 92.999);
+  --color-text: oklch(33.076% 0.03467 92.999);
+  --bw-match: rgb(255 255 255);
+  --bw-match-90: rgb(255 255 255 / 90%);
+  --bw-match-80: rgb(255 255 255 / 80%);
+  --bw-match-70: rgb(255 255 255 / 70%);
+  --bw-match-60: rgb(255 255 255 / 60%);
+  --bw-match-50: rgb(255 255 255 / 50%);
+  --bw-match-40: rgb(255 255 255 / 40%);
+  --bw-match-30: rgb(255 255 255 / 30%);
+  --bw-match-20: rgb(255 255 255 / 20%);
+  --bw-match-10: rgb(255 255 255 / 10%);
+  --bw-reverse: rgb(0 0 0);
+  --bw-reverse-90: rgb(0 0 0 / 90%);
+  --bw-reverse-80: rgb(0 0 0 / 80%);
+  --bw-reverse-70: rgb(0 0 0 / 70%);
+  --bw-reverse-60: rgb(0 0 0 / 60%);
+  --bw-reverse-50: rgb(0 0 0 / 50%);
+  --bw-reverse-40: rgb(0 0 0 / 40%);
+  --bw-reverse-30: rgb(0 0 0 / 30%);
+  --bw-reverse-20: rgb(0 0 0 / 20%);
+  --bw-reverse-10: rgb(0 0 0 / 10%);
+  --border-bw-match: 1px solid var(--bw-match);
+  --border-bw-match-40: 1px solid var(--bw-match-40);
+  --border-bw-reverse: 1px solid var(--bw-reverse);
+  --border-bw-reverse-40: 1px solid var(--bw-reverse-40);
+
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-scheme: dark;
+    --color-background: oklch(16.009% 0.03076 39.927);
+    --color-link: oklch(76.009% 0.13076 159.927);
+    --color-text: oklch(96.009% 0.03076 339.927);
+    --bw-match: rgb(0 0 0);
+    --bw-match-90: rgb(0 0 0 / 90%);
+    --bw-match-80: rgb(0 0 0 / 80%);
+    --bw-match-70: rgb(0 0 0 / 70%);
+    --bw-match-60: rgb(0 0 0 / 60%);
+    --bw-match-50: rgb(0 0 0 / 50%);
+    --bw-match-40: rgb(0 0 0 / 40%);
+    --bw-match-30: rgb(0 0 0 / 30%);
+    --bw-match-20: rgb(0 0 0 / 20%);
+    --bw-match-10: rgb(0 0 0 / 10%);
+    --bw-reverse: rgb(255 255 255);
+    --bw-reverse-90: rgb(255 255 255 / 90%);
+    --bw-reverse-80: rgb(255 255 255 / 80%);
+    --bw-reverse-70: rgb(255 255 255 / 70%);
+    --bw-reverse-60: rgb(255 255 255 / 60%);
+    --bw-reverse-50: rgb(255 255 255 / 50%);
+    --bw-reverse-40: rgb(255 255 255 / 40%);
+    --bw-reverse-30: rgb(255 255 255 / 30%);
+    --bw-reverse-20: rgb(255 255 255 / 20%);
+    --bw-reverse-10: rgb(255 255 255 / 10%);
+  --border-bw-match: 1px solid var(--bw-match);
+  --border-bw-match-40: 1px solid var(--bw-match-40);
+  --border-bw-reverse: 1px solid var(--bw-reverse);
+  --border-bw-reverse-40: 1px solid var(--bw-reverse-40);
+  }
+}
+
+[data-scheme="black"] {
+  --color-scheme: dark;
+  --color-background: black;
+  --color-link: #ff0;
+  --color-text: white;
+  --bw-match: rgb(0 0 0);
+  --bw-match-90: rgb(0 0 0 / 90%);
+  --bw-match-80: rgb(0 0 0 / 80%);
+  --bw-match-70: rgb(0 0 0 / 70%);
+  --bw-match-60: rgb(0 0 0 / 60%);
+  --bw-match-50: rgb(0 0 0 / 50%);
+  --bw-match-40: rgb(0 0 0 / 40%);
+  --bw-match-30: rgb(0 0 0 / 30%);
+  --bw-match-20: rgb(0 0 0 / 20%);
+  --bw-match-10: rgb(0 0 0 / 10%);
+  --bw-reverse: rgb(255 255 255);
+  --bw-reverse-90: rgb(255 255 255 / 90%);
+  --bw-reverse-80: rgb(255 255 255 / 80%);
+  --bw-reverse-70: rgb(255 255 255 / 70%);
+  --bw-reverse-60: rgb(255 255 255 / 60%);
+  --bw-reverse-50: rgb(255 255 255 / 50%);
+  --bw-reverse-40: rgb(255 255 255 / 40%);
+  --bw-reverse-30: rgb(255 255 255 / 30%);
+  --bw-reverse-20: rgb(255 255 255 / 20%);
+  --bw-reverse-10: rgb(255 255 255 / 10%);
+  --border-bw-match: 1px solid var(--bw-match);
+  --border-bw-match-40: 1px solid var(--bw-match-40);
+  --border-bw-reverse: 1px solid var(--bw-reverse);
+  --border-bw-reverse-40: 1px solid var(--bw-reverse-40);
+}
+
+[data-scheme="white"] {
+  --color-scheme: light;
+  --color-background: white;
+  --color-link: #00f;
+  --color-text: black;
+  --bw-match: rgb(255 255 255);
+  --bw-match-90: rgb(255 255 255 / 90%);
+  --bw-match-80: rgb(255 255 255 / 80%);
+  --bw-match-70: rgb(255 255 255 / 70%);
+  --bw-match-60: rgb(255 255 255 / 60%);
+  --bw-match-50: rgb(255 255 255 / 50%);
+  --bw-match-40: rgb(255 255 255 / 40%);
+  --bw-match-30: rgb(255 255 255 / 30%);
+  --bw-match-20: rgb(255 255 255 / 20%);
+  --bw-match-10: rgb(255 255 255 / 10%);
+  --bw-reverse: rgb(0 0 0);
+  --bw-reverse-90: rgb(0 0 0 / 90%);
+  --bw-reverse-80: rgb(0 0 0 / 80%);
+  --bw-reverse-70: rgb(0 0 0 / 70%);
+  --bw-reverse-60: rgb(0 0 0 / 60%);
+  --bw-reverse-50: rgb(0 0 0 / 50%);
+  --bw-reverse-40: rgb(0 0 0 / 40%);
+  --bw-reverse-30: rgb(0 0 0 / 30%);
+  --bw-reverse-20: rgb(0 0 0 / 20%);
+  --bw-reverse-10: rgb(0 0 0 / 10%);
+  --border-bw-match: 1px solid var(--bw-match);
+  --border-bw-match-40: 1px solid var(--bw-match-40);
+  --border-bw-reverse: 1px solid var(--bw-reverse);
+  --border-bw-reverse-40: 1px solid var(--bw-reverse-40);
+}
+
 *,
 *::before,
 *::after {
@@ -44,24 +184,20 @@ td {
 
 /* end reset */
 
-a,
-a:active {
-  color: var(--color-foxtrot);
+a {
+  color: var(--color-link);
   text-decoration: none;
 }
 
 a:hover {
-  color: var(--color-bravo);
-}
-
-a:focus {
-  color: var(--color-foxtrot);
+  text-decoration: underline;
 }
 
 .aside-section {
+  background-color: var(--bw-reverse-10);
   margin-left: 6rem;
   margin-right: 0.6rem;
-  border: 1px solid var(--color-charlie-80);
+  border: var(--border-bw-reverse);
   border-radius: 0.3rem;
   padding-inline: 1.3rem;
   padding-block: 0.8rem;
@@ -79,8 +215,8 @@ blockquote {
 }
 
 body {
-  background-color: var(--color-base);
-  color: var(--color-bravo-90);
+  background-color: var(--color-background);
+  color: var(--color-text);
   font-size: var(--size-base);
   line-height: 1.6;
   font-family: 'Inter';
