@@ -46,10 +46,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link 
     rel="preload" 
-    href="https://fonts.gstatic.com/s/afacadflux/v1/9oRdNYYQryMlneUPykRmTuH4ET0fri4I5rJVT_C8EIgoZFamLA.woff2" 
+    href="/theme/fonts/Inter-VariableFont_slnt,wght.ttf"
     as="font" 
-    type="font/woff" 
-    crossorigin />
+    type="font/opentype" 
+    />
   <link rel="preload" href="/theme/styles/theme.css" as="style" />
 [! endif !]
 
