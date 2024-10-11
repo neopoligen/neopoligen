@@ -6,6 +6,7 @@
 
 <div class="code-wrapper">
 
+[! if "no-title" not in section.flags !]
 [! if "title" in section.attr_spans or section.flags[0] !]
 <div class="code-title">
 [!- if "title" in section.attr_spans -!]
@@ -14,6 +15,7 @@
 [@ section.flags[0] @]
 [!- endif -!]
 </div>
+[! endif !]
 [! endif !]
 
 [! if "subtitle" in section.attr_spans !]

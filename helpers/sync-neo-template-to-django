@@ -6,5 +6,5 @@ watchexec\
   --project-origin .\
   -w "../cli/example-site/"\
   --workdir "../cli/example-site/themes"\
-  -e xsl,js,css,neo,neoj\
+  -e xsl,js,css,neo,neoj,jsonc\
   "rsync --delete -av ./neopoligen-v0.1.0 ~/Documents/Neopoligen/django.alanwsmith.com/themes/"

@@ -1,6 +1,5 @@
 const schemes = ["auto", "light", "dark", "black", "white"]
 
-
 function addCodeCopyButtons() {
   const codeExamples = document.querySelectorAll('.code-button-wrapper')
   codeExamples.forEach((example, index) => {
@@ -23,11 +22,7 @@ function addCodeCopyButtons() {
         el.innerHTML = 'Error copying'
       }
       setTimeout(
-        (theButton) => {
-          theButton.innerHTML = 'Copy'
-        },
-        2000,
-        el
+        (theButton) => {theButton.innerHTML = 'Copy'}, 2000, el
       )
     })
     example.appendChild(copyButton)
@@ -35,10 +30,10 @@ function addCodeCopyButtons() {
 }
 
 function addSchemeSwitchers() {
-  const switchers = document.querySelectorAll(".scheme-switcher")
+  const switchers = document.querySelectorAll(".color-scheme-switcher")
   switchers.forEach((switcher, num) => {
     const fieldSet = document.createElement("fieldset")
-    fieldSet.classList.add("scheme-list")
+    fieldSet.classList.add("color-scheme-list")
     const legend = document.createElement("legend")
     legend.innerHTML = "Color Scheme"
     fieldSet.appendChild(legend)
@@ -180,7 +175,7 @@ function switchColorMode(event) {
 document.addEventListener('DOMContentLoaded', () => {
   addSchemeSwitchers()
   updateScheme()
-  duplicateDarkStyles()
+  //duplicateDarkStyles() - currently out since you need to duplicate more than :root
   addCodeCopyButtons()
   makeContentVisible()
 })

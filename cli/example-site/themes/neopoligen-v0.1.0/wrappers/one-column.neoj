@@ -48,7 +48,7 @@
     rel="preload" 
     href="/theme/fonts/Inter-VariableFont_slnt,wght.ttf"
     as="font" 
-    type="font/opentype" 
+    type="font/ttf" 
     />
   <link rel="preload" href="/theme/styles/theme.css" as="style" />
 [! endif !]
@@ -95,10 +95,12 @@
 
 </head>
 <body>
-<header>
   [! if "no-styles" not in page.flags !]
     <link rel="stylesheet" href="/theme/styles/theme.css" />
-    <div class="scheme-switcher"></div>
+  [! endif !]
+<header>
+  [! if "no-styles" not in page.flags !]
+    <div class="color-scheme-switcher"></div>
   [! endif !]
       <div>
         <a href="/">Home</a>
@@ -134,7 +136,6 @@ BECAUSE IT IS LIKE 500GB EASY
 [@ site|tojson(true) @]
 </pre>
 #]
-
 
 [!- for section in page.sections -!]
 [!- if section.type == "css" -!]
