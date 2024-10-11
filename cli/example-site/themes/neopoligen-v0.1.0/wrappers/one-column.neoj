@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-[! if "no-styles" not in page.flags !]
   <script>
     function currentSchemer() {
       const schemer = localStorage.getItem('schemer')
@@ -28,14 +27,19 @@
         return currentSchemer()
       }
     }
-    const startSheet = document.createElement("style")
-    if (currentScheme() === "dark") {
-      startSheet.innerHTML = `body { background-color: oklch(16.009% 0.03076 39.927); } html { visibility: hidden; }`
-    } else {
-      startSheet.innerHTML = `body { background-color: oklch(93.076% 0.03467 92.999); } html { visibility: hidden; }`
-    }
-    document.head.appendChild(startSheet)
+    
+    [! if "no-styles" not in page.flags !]
+      const startSheet = document.createElement("style")
+      if (currentScheme() === "dark") {
+        startSheet.innerHTML = `body { background-color: oklch(16.009% 0.03076 39.927); } html { visibility: hidden; }`
+      } else {
+        startSheet.innerHTML = `body { background-color: oklch(93.076% 0.03467 92.999); } html { visibility: hidden; }`
+      }
+      document.head.appendChild(startSheet)
+    [! endif !]
   </script>
+  
+  [! if "no-styles" not in page.flags !]
   <noscript>
     <style>
       body { background-color: oklch(93.076% 0.03467 92.999); } 

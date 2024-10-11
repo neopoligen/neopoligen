@@ -28,7 +28,8 @@
   --radius-6: 0.6rem;
 }
 
-:root, [data-scheme="light"] {
+:root,
+[data-scheme='light'] {
   --color-scheme: light;
   --color-background: oklch(93.076% 0.03467 92.999);
   --color-link: oklch(53.076% 0.13467 92.999);
@@ -59,10 +60,10 @@
   --border-bw-reverse: 1px solid var(--bw-reverse);
   --border-bw-reverse-40: 1px solid var(--bw-reverse-40);
 
-  .code-wrapper { background-color: goldenrod; }
-
+/* START LIGHT CODE STYLES */
+.cli-wrapper, .code-wrapper, .html-wrapper, .link-wrapper, .pre-wrapper { color: #24292e; background-color: #ffffff; } .comment,.punctuation.definition.comment,.string.comment { color: #6A737D;   } .constant,.entity.name.constant,.variable.other.constant,.variable.other.enummember,.variable.language { color: #005CC5;   } .entity,.entity.name { color: #6F42C1;   } .variable.parameter.function { color: #24292E;   } .entity.name.tag { color: #22863A;   } .keyword { color: #D73A49;   } .storage,.storage.type { color: #D73A49;   } .storage.modifier.package,.storage.modifier.import,.storage.type.java { color: #24292E;   } .string,.punctuation.definition.string,.string punctuation.section.embedded source { color: #032F62;   } .support { color: #005CC5;   } .meta.property-name { color: #005CC5;   } .variable { color: #E36209;   } .variable.other { color: #24292E;   } .invalid.broken { color: #B31D28;  font-style: italic;  } .invalid.deprecated { color: #B31D28;  font-style: italic;  } .invalid.illegal { color: #B31D28;  font-style: italic;  } .invalid.unimplemented { color: #B31D28;  font-style: italic;  } .carriage-return { color: #FAFBFC;  font-style: italic underline;  } .message.error { color: #B31D28;   } .string variable { color: #005CC5;   } .source.regexp,.string.regexp { color: #032F62;   } .string.regexp.character-class,.string.regexp constant.character.escape,.string.regexp source.ruby.embedded,.string.regexp string.regexp.arbitrary-repitition { color: #032F62;   } .string.regexp constant.character.escape { color: #22863A;  font-style: bold;  } .support.constant { color: #005CC5;   } .support.variable { color: #005CC5;   } .meta.module-reference { color: #005CC5;   } .punctuation.definition.list.begin.markdown { color: #E36209;   } .markup.heading,.markup.heading entity.name { color: #005CC5;  font-style: bold;  } .markup.quote { color: #22863A;   } .markup.italic { color: #24292E;  font-style: italic;  } .markup.bold { color: #24292E;  font-style: bold;  } .markup.underline {  font-style: underline;  } .markup.strikethrough {  font-style: strikethrough;  } .markup.inline.raw { color: #005CC5;   } .markup.deleted,.meta.diff.header.from-file,.punctuation.definition.deleted { color: #B31D28;   } .markup.inserted,.meta.diff.header.to-file,.punctuation.definition.inserted { color: #22863A;   } .markup.changed,.punctuation.definition.changed { color: #E36209;   } .markup.ignored,.markup.untracked { color: #F6F8FA;   } .meta.diff.range { color: #6F42C1;  font-style: bold;  } .meta.diff.header { color: #005CC5;   } .meta.separator { color: #005CC5;  font-style: bold;  } .meta.output { color: #005CC5;   } .brackethighlighter.tag,.brackethighlighter.curly,.brackethighlighter.round,.brackethighlighter.square,.brackethighlighter.angle,.brackethighlighter.quote { color: #586069;   } .brackethighlighter.unmatched { color: #B31D28;   } .constant.other.reference.link,.string.other.link { color: #032F62;  font-style: underline;  } .token.info-token { color: #316BCD;   } .token.warn-token { color: #CD9731;   } .token.error-token { color: #CD3131;   } .token.debug-token { color: #800080;   }
+/* END LIGHT CODE STYLES */
 }
-
 
 @media (prefers-color-scheme: dark) {
   /* Make sure to duplicate :root to [data-scheme="dark"] */
@@ -98,13 +99,16 @@
     --border-bw-reverse-40: 1px solid var(--bw-reverse-40);
   }
 
-  [data-scheme="auto"] {
-    .code-wrapper { background-color: green; }
+  
+  [data-scheme='auto'] {
+    /* Put Dark Code Theme Styles Here */
+/* START DARK CODE STYLES */
+.cli-wrapper, .code-wrapper, .html-wrapper, .link-wrapper, .pre-wrapper { color: #ffffff; background-color: #000000; } .meta.embedded,.source.groovy.embedded,.string meta.image.inline.markdown,.variable.legacy.builtin.python { color: #FFFFFF;   } .emphasis {  font-style: italic;  } .strong {  font-style: bold;  } .meta.diff.header { color: #000080;   } .comment { color: #7CA668;   } .constant.language { color: #569CD6;   } .constant.numeric,.constant.other.color.rgb-value,.constant.other.rgb-value,.support.constant.color { color: #B5CEA8;   } .constant.regexp { color: #B46695;   } .constant.character { color: #569CD6;   } .entity.name.tag { color: #569CD6;   } .entity.name.tag.css,.entity.name.tag.less { color: #D7BA7D;   } .entity.other.attribute-name { color: #9CDCFE;   } .entity.other.attribute-name.class.css,.source.css entity.other.attribute-name.class,.entity.other.attribute-name.id.css,.entity.other.attribute-name.parent-selector.css,.entity.other.attribute-name.parent.less,.source.css entity.other.attribute-name.pseudo-class,.entity.other.attribute-name.pseudo-element.css,.source.css.less entity.other.attribute-name.id,.entity.other.attribute-name.scss { color: #D7BA7D;   } .invalid { color: #F44747;   } .markup.underline {  font-style: underline;  } .markup.bold {  font-style: bold;  } .markup.heading { color: #6796E6;  font-style: bold;  } .markup.italic {  font-style: italic;  } .markup.strikethrough {  font-style: strikethrough;  } .markup.inserted { color: #B5CEA8;   } .markup.deleted { color: #CE9178;   } .markup.changed { color: #569CD6;   } .punctuation.definition.tag { color: #808080;   } .meta.preprocessor { color: #569CD6;   } .meta.preprocessor.string { color: #CE9178;   } .meta.preprocessor.numeric { color: #B5CEA8;   } .meta.structure.dictionary.key.python { color: #9CDCFE;   } .storage { color: #569CD6;   } .storage.type { color: #569CD6;   } .storage.modifier { color: #569CD6;   } .string { color: #CE9178;   } .string.tag { color: #CE9178;   } .string.value { color: #CE9178;   } .string.regexp { color: #D16969;   } .punctuation.definition.template-expression.begin,.punctuation.definition.template-expression.end,.punctuation.section.embedded { color: #569CD6;   } .meta.template.expression { color: #FFFFFF;   } .support.type.vendored.property-name,.support.type.property-name,.source.css variable,.source.coffee.embedded { color: #D4D4D4;   } .keyword { color: #569CD6;   } .keyword.control { color: #569CD6;   } .keyword.operator { color: #D4D4D4;   } .keyword.operator.new,.keyword.operator.expression,.keyword.operator.cast,.keyword.operator.sizeof,.keyword.operator.logical.python { color: #569CD6;   } .keyword.other.unit { color: #B5CEA8;   } .support.function.git-rebase { color: #D4D4D4;   } .constant.sha.git-rebase { color: #B5CEA8;   } .storage.modifier.import.java,.variable.language.wildcard.java,.storage.modifier.package.java { color: #D4D4D4;   } .variable.language.this { color: #569CD6;   } .entity.name.function,.support.function,.support.constant.handlebars,.source.powershell variable.other.member { color: #DCDCAA;   } .support.class,.support.type,.entity.name.type,.entity.name.namespace,.entity.name.scope-resolution,.entity.name.class,.storage.type.cs,.storage.type.generic.cs,.storage.type.modifier.cs,.storage.type.variable.cs,.storage.type.annotation.java,.storage.type.generic.java,.storage.type.java,.storage.type.object.array.java,.storage.type.primitive.array.java,.storage.type.primitive.java,.storage.type.token.java,.storage.type.groovy,.storage.type.annotation.groovy,.storage.type.parameters.groovy,.storage.type.generic.groovy,.storage.type.object.array.groovy,.storage.type.primitive.array.groovy,.storage.type.primitive.groovy { color: #4EC9B0;   } .meta.type.cast.expr,.meta.type.new.expr,.support.constant.math,.support.constant.dom,.support.constant.json,.entity.other.inherited-class { color: #4EC9B0;   } .keyword.control,.source.cpp keyword.operator.new,.source.cpp keyword.operator.delete,.keyword.other.using,.keyword.other.directive.using,.keyword.other.operator { color: #C586C0;   } .variable,.meta.definition.variable.name,.support.variable { color: #9CDCFE;   } .meta.object-literal.key { color: #9CDCFE;   } .support.constant.property-value,.support.constant.font-name,.support.constant.media-type,.support.constant.media,.constant.other.color.rgb-value,.constant.other.rgb-value,.support.constant.color { color: #CE9178;   } .meta.resultLinePrefix.contextLinePrefix.search { color: #CBEDCB;   } .token.info-token { color: #6796E6;   } .token.warn-token { color: #008000;   } .token.error-token { color: #FF0000;   } .token.debug-token { color: #B267E6;   }
+/* END DARK CODE STYLES */
   }
 }
 
-
-[data-scheme="dark"] {    
+[data-scheme='dark'] {
   --color-scheme: dark;
   --color-background: oklch(16.009% 0.03076 39.927);
   --color-link: oklch(76.009% 0.13076 159.927);
@@ -135,10 +139,12 @@
   --border-bw-reverse: 1px solid var(--bw-reverse);
   --border-bw-reverse-40: 1px solid var(--bw-reverse-40);
 
-  .code-wrapper { background-color: purple; }
+  /* START DARK CODE STYLES */
+  .cli-wrapper, .code-wrapper, .html-wrapper, .link-wrapper, .pre-wrapper { color: #ffffff; background-color: #000000; } .meta.embedded,.source.groovy.embedded,.string meta.image.inline.markdown,.variable.legacy.builtin.python { color: #FFFFFF;   } .emphasis {  font-style: italic;  } .strong {  font-style: bold;  } .meta.diff.header { color: #000080;   } .comment { color: #7CA668;   } .constant.language { color: #569CD6;   } .constant.numeric,.constant.other.color.rgb-value,.constant.other.rgb-value,.support.constant.color { color: #B5CEA8;   } .constant.regexp { color: #B46695;   } .constant.character { color: #569CD6;   } .entity.name.tag { color: #569CD6;   } .entity.name.tag.css,.entity.name.tag.less { color: #D7BA7D;   } .entity.other.attribute-name { color: #9CDCFE;   } .entity.other.attribute-name.class.css,.source.css entity.other.attribute-name.class,.entity.other.attribute-name.id.css,.entity.other.attribute-name.parent-selector.css,.entity.other.attribute-name.parent.less,.source.css entity.other.attribute-name.pseudo-class,.entity.other.attribute-name.pseudo-element.css,.source.css.less entity.other.attribute-name.id,.entity.other.attribute-name.scss { color: #D7BA7D;   } .invalid { color: #F44747;   } .markup.underline {  font-style: underline;  } .markup.bold {  font-style: bold;  } .markup.heading { color: #6796E6;  font-style: bold;  } .markup.italic {  font-style: italic;  } .markup.strikethrough {  font-style: strikethrough;  } .markup.inserted { color: #B5CEA8;   } .markup.deleted { color: #CE9178;   } .markup.changed { color: #569CD6;   } .punctuation.definition.tag { color: #808080;   } .meta.preprocessor { color: #569CD6;   } .meta.preprocessor.string { color: #CE9178;   } .meta.preprocessor.numeric { color: #B5CEA8;   } .meta.structure.dictionary.key.python { color: #9CDCFE;   } .storage { color: #569CD6;   } .storage.type { color: #569CD6;   } .storage.modifier { color: #569CD6;   } .string { color: #CE9178;   } .string.tag { color: #CE9178;   } .string.value { color: #CE9178;   } .string.regexp { color: #D16969;   } .punctuation.definition.template-expression.begin,.punctuation.definition.template-expression.end,.punctuation.section.embedded { color: #569CD6;   } .meta.template.expression { color: #FFFFFF;   } .support.type.vendored.property-name,.support.type.property-name,.source.css variable,.source.coffee.embedded { color: #D4D4D4;   } .keyword { color: #569CD6;   } .keyword.control { color: #569CD6;   } .keyword.operator { color: #D4D4D4;   } .keyword.operator.new,.keyword.operator.expression,.keyword.operator.cast,.keyword.operator.sizeof,.keyword.operator.logical.python { color: #569CD6;   } .keyword.other.unit { color: #B5CEA8;   } .support.function.git-rebase { color: #D4D4D4;   } .constant.sha.git-rebase { color: #B5CEA8;   } .storage.modifier.import.java,.variable.language.wildcard.java,.storage.modifier.package.java { color: #D4D4D4;   } .variable.language.this { color: #569CD6;   } .entity.name.function,.support.function,.support.constant.handlebars,.source.powershell variable.other.member { color: #DCDCAA;   } .support.class,.support.type,.entity.name.type,.entity.name.namespace,.entity.name.scope-resolution,.entity.name.class,.storage.type.cs,.storage.type.generic.cs,.storage.type.modifier.cs,.storage.type.variable.cs,.storage.type.annotation.java,.storage.type.generic.java,.storage.type.java,.storage.type.object.array.java,.storage.type.primitive.array.java,.storage.type.primitive.java,.storage.type.token.java,.storage.type.groovy,.storage.type.annotation.groovy,.storage.type.parameters.groovy,.storage.type.generic.groovy,.storage.type.object.array.groovy,.storage.type.primitive.array.groovy,.storage.type.primitive.groovy { color: #4EC9B0;   } .meta.type.cast.expr,.meta.type.new.expr,.support.constant.math,.support.constant.dom,.support.constant.json,.entity.other.inherited-class { color: #4EC9B0;   } .keyword.control,.source.cpp keyword.operator.new,.source.cpp keyword.operator.delete,.keyword.other.using,.keyword.other.directive.using,.keyword.other.operator { color: #C586C0;   } .variable,.meta.definition.variable.name,.support.variable { color: #9CDCFE;   } .meta.object-literal.key { color: #9CDCFE;   } .support.constant.property-value,.support.constant.font-name,.support.constant.media-type,.support.constant.media,.constant.other.color.rgb-value,.constant.other.rgb-value,.support.constant.color { color: #CE9178;   } .meta.resultLinePrefix.contextLinePrefix.search { color: #CBEDCB;   } .token.info-token { color: #6796E6;   } .token.warn-token { color: #008000;   } .token.error-token { color: #FF0000;   } .token.debug-token { color: #B267E6;   }
+  /* END DARK CODE STYLES */
 }
 
-[data-scheme="black"] {
+[data-scheme='black'] {
   --color-scheme: dark;
   --color-background: black;
   --color-link: #ff0;
@@ -169,11 +175,12 @@
   --border-bw-reverse: 1px solid var(--bw-reverse);
   --border-bw-reverse-40: 1px solid var(--bw-reverse-40);
 
-  .code-wrapper { background-color: red; }
-
+  /* START DARK CODE STYLES */
+  .cli-wrapper, .code-wrapper, .html-wrapper, .link-wrapper, .pre-wrapper { color: #ffffff; background-color: #000000; } .meta.embedded,.source.groovy.embedded,.string meta.image.inline.markdown,.variable.legacy.builtin.python { color: #FFFFFF;   } .emphasis {  font-style: italic;  } .strong {  font-style: bold;  } .meta.diff.header { color: #000080;   } .comment { color: #7CA668;   } .constant.language { color: #569CD6;   } .constant.numeric,.constant.other.color.rgb-value,.constant.other.rgb-value,.support.constant.color { color: #B5CEA8;   } .constant.regexp { color: #B46695;   } .constant.character { color: #569CD6;   } .entity.name.tag { color: #569CD6;   } .entity.name.tag.css,.entity.name.tag.less { color: #D7BA7D;   } .entity.other.attribute-name { color: #9CDCFE;   } .entity.other.attribute-name.class.css,.source.css entity.other.attribute-name.class,.entity.other.attribute-name.id.css,.entity.other.attribute-name.parent-selector.css,.entity.other.attribute-name.parent.less,.source.css entity.other.attribute-name.pseudo-class,.entity.other.attribute-name.pseudo-element.css,.source.css.less entity.other.attribute-name.id,.entity.other.attribute-name.scss { color: #D7BA7D;   } .invalid { color: #F44747;   } .markup.underline {  font-style: underline;  } .markup.bold {  font-style: bold;  } .markup.heading { color: #6796E6;  font-style: bold;  } .markup.italic {  font-style: italic;  } .markup.strikethrough {  font-style: strikethrough;  } .markup.inserted { color: #B5CEA8;   } .markup.deleted { color: #CE9178;   } .markup.changed { color: #569CD6;   } .punctuation.definition.tag { color: #808080;   } .meta.preprocessor { color: #569CD6;   } .meta.preprocessor.string { color: #CE9178;   } .meta.preprocessor.numeric { color: #B5CEA8;   } .meta.structure.dictionary.key.python { color: #9CDCFE;   } .storage { color: #569CD6;   } .storage.type { color: #569CD6;   } .storage.modifier { color: #569CD6;   } .string { color: #CE9178;   } .string.tag { color: #CE9178;   } .string.value { color: #CE9178;   } .string.regexp { color: #D16969;   } .punctuation.definition.template-expression.begin,.punctuation.definition.template-expression.end,.punctuation.section.embedded { color: #569CD6;   } .meta.template.expression { color: #FFFFFF;   } .support.type.vendored.property-name,.support.type.property-name,.source.css variable,.source.coffee.embedded { color: #D4D4D4;   } .keyword { color: #569CD6;   } .keyword.control { color: #569CD6;   } .keyword.operator { color: #D4D4D4;   } .keyword.operator.new,.keyword.operator.expression,.keyword.operator.cast,.keyword.operator.sizeof,.keyword.operator.logical.python { color: #569CD6;   } .keyword.other.unit { color: #B5CEA8;   } .support.function.git-rebase { color: #D4D4D4;   } .constant.sha.git-rebase { color: #B5CEA8;   } .storage.modifier.import.java,.variable.language.wildcard.java,.storage.modifier.package.java { color: #D4D4D4;   } .variable.language.this { color: #569CD6;   } .entity.name.function,.support.function,.support.constant.handlebars,.source.powershell variable.other.member { color: #DCDCAA;   } .support.class,.support.type,.entity.name.type,.entity.name.namespace,.entity.name.scope-resolution,.entity.name.class,.storage.type.cs,.storage.type.generic.cs,.storage.type.modifier.cs,.storage.type.variable.cs,.storage.type.annotation.java,.storage.type.generic.java,.storage.type.java,.storage.type.object.array.java,.storage.type.primitive.array.java,.storage.type.primitive.java,.storage.type.token.java,.storage.type.groovy,.storage.type.annotation.groovy,.storage.type.parameters.groovy,.storage.type.generic.groovy,.storage.type.object.array.groovy,.storage.type.primitive.array.groovy,.storage.type.primitive.groovy { color: #4EC9B0;   } .meta.type.cast.expr,.meta.type.new.expr,.support.constant.math,.support.constant.dom,.support.constant.json,.entity.other.inherited-class { color: #4EC9B0;   } .keyword.control,.source.cpp keyword.operator.new,.source.cpp keyword.operator.delete,.keyword.other.using,.keyword.other.directive.using,.keyword.other.operator { color: #C586C0;   } .variable,.meta.definition.variable.name,.support.variable { color: #9CDCFE;   } .meta.object-literal.key { color: #9CDCFE;   } .support.constant.property-value,.support.constant.font-name,.support.constant.media-type,.support.constant.media,.constant.other.color.rgb-value,.constant.other.rgb-value,.support.constant.color { color: #CE9178;   } .meta.resultLinePrefix.contextLinePrefix.search { color: #CBEDCB;   } .token.info-token { color: #6796E6;   } .token.warn-token { color: #008000;   } .token.error-token { color: #FF0000;   } .token.debug-token { color: #B267E6;   }
+  /* END DARK CODE STYLES */
 }
 
-[data-scheme="white"] {
+[data-scheme='white'] {
   --color-scheme: light;
   --color-background: white;
   --color-link: #00f;
@@ -204,10 +211,10 @@
   --border-bw-reverse: 1px solid var(--bw-reverse);
   --border-bw-reverse-40: 1px solid var(--bw-reverse-40);
 
-  .code-wrapper { background-color: blue; }
+  /* START LIGHT CODE STYLES */
+  .cli-wrapper, .code-wrapper, .html-wrapper, .link-wrapper, .pre-wrapper { color: #24292e; background-color: #ffffff; } .comment,.punctuation.definition.comment,.string.comment { color: #6A737D;   } .constant,.entity.name.constant,.variable.other.constant,.variable.other.enummember,.variable.language { color: #005CC5;   } .entity,.entity.name { color: #6F42C1;   } .variable.parameter.function { color: #24292E;   } .entity.name.tag { color: #22863A;   } .keyword { color: #D73A49;   } .storage,.storage.type { color: #D73A49;   } .storage.modifier.package,.storage.modifier.import,.storage.type.java { color: #24292E;   } .string,.punctuation.definition.string,.string punctuation.section.embedded source { color: #032F62;   } .support { color: #005CC5;   } .meta.property-name { color: #005CC5;   } .variable { color: #E36209;   } .variable.other { color: #24292E;   } .invalid.broken { color: #B31D28;  font-style: italic;  } .invalid.deprecated { color: #B31D28;  font-style: italic;  } .invalid.illegal { color: #B31D28;  font-style: italic;  } .invalid.unimplemented { color: #B31D28;  font-style: italic;  } .carriage-return { color: #FAFBFC;  font-style: italic underline;  } .message.error { color: #B31D28;   } .string variable { color: #005CC5;   } .source.regexp,.string.regexp { color: #032F62;   } .string.regexp.character-class,.string.regexp constant.character.escape,.string.regexp source.ruby.embedded,.string.regexp string.regexp.arbitrary-repitition { color: #032F62;   } .string.regexp constant.character.escape { color: #22863A;  font-style: bold;  } .support.constant { color: #005CC5;   } .support.variable { color: #005CC5;   } .meta.module-reference { color: #005CC5;   } .punctuation.definition.list.begin.markdown { color: #E36209;   } .markup.heading,.markup.heading entity.name { color: #005CC5;  font-style: bold;  } .markup.quote { color: #22863A;   } .markup.italic { color: #24292E;  font-style: italic;  } .markup.bold { color: #24292E;  font-style: bold;  } .markup.underline {  font-style: underline;  } .markup.strikethrough {  font-style: strikethrough;  } .markup.inline.raw { color: #005CC5;   } .markup.deleted,.meta.diff.header.from-file,.punctuation.definition.deleted { color: #B31D28;   } .markup.inserted,.meta.diff.header.to-file,.punctuation.definition.inserted { color: #22863A;   } .markup.changed,.punctuation.definition.changed { color: #E36209;   } .markup.ignored,.markup.untracked { color: #F6F8FA;   } .meta.diff.range { color: #6F42C1;  font-style: bold;  } .meta.diff.header { color: #005CC5;   } .meta.separator { color: #005CC5;  font-style: bold;  } .meta.output { color: #005CC5;   } .brackethighlighter.tag,.brackethighlighter.curly,.brackethighlighter.round,.brackethighlighter.square,.brackethighlighter.angle,.brackethighlighter.quote { color: #586069;   } .brackethighlighter.unmatched { color: #B31D28;   } .constant.other.reference.link,.string.other.link { color: #032F62;  font-style: underline;  } .token.info-token { color: #316BCD;   } .token.warn-token { color: #CD9731;   } .token.error-token { color: #CD3131;   } .token.debug-token { color: #800080;   }
+  /* END LIGHT CODE STYLES */
 }
-
-
 
 *,
 *::before,
@@ -315,7 +322,7 @@ button {
 .cli-title {
   border-bottom: 1px solid var(--color-bravo-20);
   color: var(--color-bravo-60);
-  font-size: var(--size-8);
+  font-size: var(--size-6);
   padding: 0.5rem;
   margin-bottom: 0.5rem;
 }
@@ -325,15 +332,14 @@ button {
 }
 
 .cli-wrapper {
-  font-size: var(--size-8);
-  padding: 0.5rem;
-  background-color: var(--bw-reverse-10);
-  border: 1px solid var(--color-bravo-10);
-  border-radius: 0.3rem;
+  font-size: var(--size-6);
+  border: var(--border-bw-reverse-40);
+  border-radius: var(--radius-2);
+  padding: var(--pad-1);
 }
 
 .code-block {
-  font-size: var(--size-8);
+  font-size: var(--size-6);
   margin-left: 3rem;
   padding-left: 0.5rem;
   padding-top: 0.7rem;
@@ -365,16 +371,16 @@ button {
 .code-title {
   border-bottom: 1px solid var(--color-bravo-20);
   color: var(--color-bravo-60);
-  font-size: var(--size-8);
+  font-size: var(--size-6);
   padding: 0.5rem;
   margin-bottom: 0.5rem;
 }
 
 .code-wrapper {
-  font-size: var(--size-8);
-  border: 1px solid var(--color-bravo-10);
-  border-radius: 0.3rem;
-  padding: 0.5rem;
+  font-size: var(--size-6);
+  border: var(--border-bw-reverse-40);
+  border-radius: var(--radius-2);
+  padding: var(--pad-1);
 }
 
 .color-scheme-list {
@@ -479,7 +485,7 @@ hr {
 }
 
 .html-output-wrapper {
-  font-size: var(--size-8);
+  font-size: var(--size-6);
   background-color: var(--color-black-30);
   border: 1px solid var(--color-bravo-10);
   border-radius: 0.3rem;
@@ -523,17 +529,16 @@ img {
   border-bottom: 1px solid var(--color-bravo-20);
   color: var(--color-bravo-60);
   font-family: monospace;
-  font-size: var(--size-8);
+  font-size: var(--size-6);
   padding: 0.5rem;
   margin-bottom: 0.5rem;
 }
 
 .link-wrapper {
   font-size: var(--size-5);
-  padding: 0.3rem;
-  background-color: var(--color-black-30);
-  border: 1px solid var(--color-bravo-10);
-  border-radius: 0.3rem;
+  border: var(--border-bw-reverse-40);
+  border-radius: var(--radius-2);
+  padding: var(--pad-1);
 }
 
 main {
@@ -592,17 +597,16 @@ main {
   border-bottom: 1px solid var(--color-bravo-20);
   color: var(--color-bravo-60);
   font-family: monospace;
-  font-size: var(--size-8);
+  font-size: var(--size-6);
   padding: 0.3rem;
   margin-bottom: 0.5rem;
 }
 
 .pre-wrapper {
-  font-size: var(--size-8);
-  background-color: var(--color-black-30);
-  border: 1px solid var(--color-bravo-10);
-  border-radius: 0.3rem;
-  padding: 0.4rem;
+  font-size: var(--size-6);
+  border: var(--border-bw-reverse-40);
+  border-radius: var(--radius-2);
+  padding: var(--pad-1);
 }
 
 .red {
@@ -628,6 +632,3 @@ main {
 .warning-title {
   font-weight: bold;
 }
-
-
-
