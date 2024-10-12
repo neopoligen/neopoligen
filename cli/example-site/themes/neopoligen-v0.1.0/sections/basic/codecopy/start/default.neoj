@@ -1,0 +1,33 @@
+[! import "includes/theme.neoj" as theme !]
+
+[! if "from" in section.attrs !]
+[! for from_section in page.sections !]
+[! if from_section.attrs.id == section.attrs.from !]
+
+<section
+    [@- theme.section_classes(section, "code-section") -@] 
+    [@- section.attr_string -@]>
+
+<div class="highlight-wrapper [!- if "no-buttons" in section.flags -!][@- ' ' -@]no-buttons[!- endif -!]">
+
+[!- if "no-nums" in section.flags -!]
+<pre class="highlight-block-no-nums"><code>[!- if section.flags[0] -!]
+[@- highlight_code_no_nums(from_section.text, from_section.flags[0], section.attrs.start, section.attrs.end) -@]
+[!- else -!]
+[@- highlight_code_no_nums(from_section.text, "txt", section.attrs.start, section.attrs.end) -@]
+[!- endif -!]</code></pre>
+[!- else -!]
+<pre class="highlight-block"><code>[!- if section.flags[0] -!]
+[@- highlight_code(from_section.text, from_section.flags[0], section.attrs.start, section.attrs.end ) -@]
+[!- else -!]
+[@- highlight_code(from_section.text, "txt", section.attrs.start, section.attrs.end) -@]
+[!- endif -!]</code></pre>
+[!- endif -!]
+
+</div>
+
+</section>
+
+[! endif !]
+[! endfor !]
+[! endif !]

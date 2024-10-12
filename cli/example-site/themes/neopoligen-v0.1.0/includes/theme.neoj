@@ -17,6 +17,11 @@
 [!- endmacro -!]
 
 [#############################################################################]
+[!- macro output_section_v2(site, page, section) -!]
+[!- include section.template_list ignore missing -!]
+[!- endmacro -!]
+
+[#############################################################################]
 [!- macro output_span(site, page_id, span) -!]
 [!- include span.template_list ignore missing -!]
 [!- endmacro -!]

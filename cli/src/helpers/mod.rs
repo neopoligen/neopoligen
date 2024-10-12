@@ -262,6 +262,16 @@ pub fn get_neo_files_in_dir_recursively(dir: &PathBuf) -> Vec<PathBuf> {
 pub fn highlight_code(args: &[Value]) -> String {
     let code = args[0].to_string();
     let lang = args[1].to_string();
+    let start = if args.len() == 4 {
+        args[2].to_string().parse::<usize>().unwrap()
+    } else {
+        0
+    };
+    let end = if args.len() == 4 {
+        args[3].to_string().parse::<usize>().unwrap()
+    } else {
+        0
+    };
     let syntax_set = SyntaxSet::load_defaults_newlines();
     let syntax = syntax_set
         .find_syntax_by_token(&lang)
@@ -276,12 +286,32 @@ pub fn highlight_code(args: &[Value]) -> String {
         .lines()
         .map(|line| format!(r#"<span class="line-marker"></span>{}"#, line))
         .collect();
-    output_html.join("\n")
+    if start > 0 {
+        output_html
+            .iter()
+            .skip(start - 1)
+            .take(end)
+            .map(|x| x.to_string())
+            .collect::<Vec<String>>()
+            .join("\n")
+    } else {
+        output_html.join("\n")
+    }
 }
 
 pub fn highlight_code_no_nums(args: &[Value]) -> String {
     let code = args[0].to_string();
     let lang = args[1].to_string();
+    let start = if args.len() == 4 {
+        args[2].to_string().parse::<usize>().unwrap()
+    } else {
+        0
+    };
+    let end = if args.len() == 4 {
+        args[3].to_string().parse::<usize>().unwrap()
+    } else {
+        0
+    };
     let syntax_set = SyntaxSet::load_defaults_newlines();
     let syntax = syntax_set
         .find_syntax_by_token(&lang)
@@ -299,7 +329,17 @@ pub fn highlight_code_no_nums(args: &[Value]) -> String {
         .lines()
         .map(|line| format!(r#"{}"#, line))
         .collect();
-    output_html.join("\n")
+    if start > 0 {
+        output_html
+            .iter()
+            .skip(start - 1)
+            .take(end)
+            .map(|x| x.to_string())
+            .collect::<Vec<String>>()
+            .join("\n")
+    } else {
+        output_html.join("\n")
+    }
 }
 
 pub fn highlight_span(args: &[Value]) -> String {

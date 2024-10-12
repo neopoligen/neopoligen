@@ -4,9 +4,18 @@
 
 [!- block body -!]
 [!- for section in page.sections -!]
-[!- if section.type != "footnote" and section.type != "ref" and section.type != "endnote" -!]
+[!- if 
+  section.type != "footnote" 
+  and section.type != "ref" 
+  and section.type != "endnote" 
+  and section.type != "codecopy" -!]
 [@- theme.output_section(site, page.id, section) -@]
 [!- endif -!]
+
+[!- if section.type == "codecopy" -!]
+[@- theme.output_section_v2(site, page, section) -@]
+[!- endif -!]
+
 [!- endfor -!]
 [!- endblock -!]
 
