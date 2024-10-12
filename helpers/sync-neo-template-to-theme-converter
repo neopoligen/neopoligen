@@ -1,0 +1,8 @@
+#!/bin/bash
+
+watchexec\
+  --project-origin .\
+  -w "../cli/example-site/"\
+  --workdir "../cli/example-site/themes"\
+  -e xsl,js,css,neo,neoj\
+  "rsync --delete -av ./neopoligen-v0.1.0 ~/Documents/Neopoligen/theme-converter.alanwsmith.com/themes/"

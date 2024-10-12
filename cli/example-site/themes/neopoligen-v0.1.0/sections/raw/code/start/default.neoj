@@ -4,48 +4,50 @@
     [@- theme.section_classes(section, "code-section") -@] 
     [@- section.attr_string -@]>
 
-<div class="code-wrapper">
+<div class="highlight-wrapper">
+
 
 [! if "no-title" not in section.flags !]
 [! if "title" in section.attr_spans or section.flags[0] !]
-<div class="code-title">
+<div class="highlight-title">
 [!- if "title" in section.attr_spans -!]
 [@ theme.output_spans(site, page_id, section.attr_spans.title) @]
 [!- else -!]
 [@ section.flags[0] @]
 [!- endif -!]
-</div>
-[! endif !]
-[! endif !]
-
 [! if "subtitle" in section.attr_spans !]
-<div class="code-subtitle">[@ theme.output_spans(site, page_id, section.attr_spans.subtitle) @]</div>
+<div class="highlight-subtitle">[@ theme.output_spans(site, page_id, section.attr_spans.subtitle) @]</div>
 [! endif !]
-
-[#
-[! if section.flags[0] !]
-<div class="code-language">
-Language: [@ section.flags[0] @]
 </div>
 [! endif !]
-#]
+[! endif !]
 
-<div [!- if "no-copy" not in section.flags !] class="code-button-wrapper"[!- endif -!]>
+
+<div class="highlight-grid">
+    <div class="highlight-spacer"></div>
+
 [!- if "no-nums" in section.flags -!]
-<pre class="code-block-no-nums"><code>[!- if section.flags[0] -!]
+<pre class="highlight-block-no-nums"><code>[!- if section.flags[0] -!]
 [@- highlight_code_no_nums(section.text, section.flags[0] ) -@]
 [!- else -!]
 [@- highlight_code_no_nums(section.text, "txt") -@]
 [!- endif -!]</code></pre>
 [!- else -!]
-
-<pre class="code-block"><code>[!- if section.flags[0] -!]
+<pre class="highlight-block"><code>[!- if section.flags[0] -!]
 [@- highlight_code(section.text, section.flags[0] ) -@]
 [!- else -!]
 [@- highlight_code(section.text, "txt") -@]
 [!- endif -!]</code></pre>
 [!- endif -!]
+
 </div>
+
+
+[!- if "no-copy" not in section.flags !]
+<div class="highlight-status-bar"></div>
+[!- endif -!]
+
+
 
 
 [! for child in section.children !]

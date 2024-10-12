@@ -1,32 +1,65 @@
 const schemes = ["auto", "light", "dark", "black", "white"]
 
-function addCodeCopyButtons() {
-  const codeExamples = document.querySelectorAll('.code-button-wrapper')
-  codeExamples.forEach((example, index) => {
-    const dataId = `code-block-${index}`
-    example.dataset.codeblock = dataId
-    const copyButton = document.createElement('button')
-    copyButton.innerHTML = 'Copy'
-    copyButton.classList.add('code-button')
-    copyButton.dataset.codeblockbutton = dataId
-    copyButton.addEventListener('click', async (event) => {
-      const el = event.target
-      const blockId = el.dataset.codeblockbutton
-      const codePreEl = document.querySelector(
-        `[data-codeblock="${blockId}"] pre`
-      )
-      try {
-        await navigator.clipboard.writeText(codePreEl.innerText)
-        el.innerHTML = 'Copied'
-      } catch (err) {
-        el.innerHTML = 'Error copying'
-      }
-      setTimeout(
-        (theButton) => {theButton.innerHTML = 'Copy'}, 2000, el
-      )
-    })
-    example.appendChild(copyButton)
+function addCopyButtons() {
+  const highlightWrappers = document.querySelectorAll('.highlight-wrapper')
+  highlightWrappers.forEach((wrapper, indx) => {
+    console.log(wrapper)
   })
+
+
+  // codeExamples.forEach((example, index) => {
+  //   const dataId = `code-block-${index}`
+  //   example.dataset.codeblock = dataId
+  //   const copyButton = document.createElement('button')
+  //   copyButton.innerHTML = 'Copy Code'
+  //   copyButton.classList.add('code-button')
+  //   copyButton.dataset.codeblockbutton = dataId
+  //   copyButton.addEventListener('click', async (event) => {
+  //     const el = event.target
+  //     const blockId = el.dataset.codeblockbutton
+  //     const codePreEl = document.querySelector(
+  //       `[data-codeblock="${blockId}"] pre`
+  //     )
+  //     try {
+  //       await navigator.clipboard.writeText(codePreEl.innerText)
+  //       el.innerHTML = 'Copied'
+  //     } catch (err) {
+  //       el.innerHTML = 'Error copying'
+  //     }
+  //     setTimeout(
+  //       (theButton) => {theButton.innerHTML = 'Copy Code'}, 2000, el
+  //     )
+  //   })
+  //   example.appendChild(copyButton)
+  // })
+
+  // const codeExamples = document.querySelectorAll('.highlight-status-bar')
+  // codeExamples.forEach((example, index) => {
+  //   const dataId = `code-block-${index}`
+  //   example.dataset.codeblock = dataId
+  //   const copyButton = document.createElement('button')
+  //   copyButton.innerHTML = 'Copy Code'
+  //   copyButton.classList.add('code-button')
+  //   copyButton.dataset.codeblockbutton = dataId
+  //   copyButton.addEventListener('click', async (event) => {
+  //     const el = event.target
+  //     const blockId = el.dataset.codeblockbutton
+  //     const codePreEl = document.querySelector(
+  //       `[data-codeblock="${blockId}"] pre`
+  //     )
+  //     try {
+  //       await navigator.clipboard.writeText(codePreEl.innerText)
+  //       el.innerHTML = 'Copied'
+  //     } catch (err) {
+  //       el.innerHTML = 'Error copying'
+  //     }
+  //     setTimeout(
+  //       (theButton) => {theButton.innerHTML = 'Copy Code'}, 2000, el
+  //     )
+  //   })
+  //   example.appendChild(copyButton)
+  // })
+
 }
 
 function addSchemeSwitchers() {
@@ -176,6 +209,6 @@ document.addEventListener('DOMContentLoaded', () => {
   addSchemeSwitchers()
   updateScheme()
   //duplicateDarkStyles() - currently out since you need to duplicate more than :root
-  addCodeCopyButtons()
+  addCopyButtons()
   makeContentVisible()
 })

@@ -7,7 +7,6 @@ use crate::site_config::SiteConfig;
 use crate::source_page::SourcePage;
 use crate::theme_test::ThemeTest; // this might be deprecated
 use anyhow::Result;
-use fs_extra::dir::copy;
 use image::io::Reader;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
@@ -243,9 +242,6 @@ impl Builder {
     #[instrument(skip(self))]
     pub fn deploy_theme_files(&self) {
         event!(Level::DEBUG, "Deploying Theme Files");
-        let mut options = fs_extra::dir::CopyOptions::new();
-        options.overwrite = true;
-        options.content_only = true;
         let source_dir = self.config.as_ref().unwrap().theme_dir().join("files");
         let dest_dir = self
             .config
@@ -253,10 +249,9 @@ impl Builder {
             .unwrap()
             .output_dest_dir()
             .join("theme");
-        match copy(source_dir, dest_dir, &options) {
-            Ok(_) => (),
-            Err(e) => println!("{}", e),
-        }
+        // TODO: handle the result from copy_dir which
+        // is an error.
+        let _ = copy_dir(&source_dir, &dest_dir);
     }
 
     #[instrument(skip(self))]
