@@ -3,35 +3,31 @@ const schemes = ["auto", "light", "dark", "black", "white"]
 function addCopyButtons() {
   const highlightWrappers = document.querySelectorAll('.highlight-wrapper')
   highlightWrappers.forEach((wrapper, indx) => {
-    console.log(wrapper)
+    const dataId = `highlight-block-${indx}`
+    wrapper.dataset.highlightblock = dataId
+    const copyButton = document.createElement('button')
+    copyButton.innerHTML = 'Copy This Content'
+    copyButton.classList.add('highlight-copy-button')
+    copyButton.dataset.highlighttarget = dataId
+
+    copyButton.addEventListener('click', async (event) => {
+      const el = event.target
+      const blockId = el.dataset.highlighttarget
+      const preEl = document.querySelector(
+        `[data-highlightblock="${blockId}"] pre`
+      )
+      try {
+        await navigator.clipboard.writeText(preEl.innerText)
+        el.innerHTML = 'Copied'
+      } catch (err) {
+        el.innerHTML = 'Error copying'
+      }
+      setTimeout(
+        (theButton) => {theButton.innerHTML = 'Copy This Content'}, 2000, el
+      )
+    })
+    wrapper.appendChild(copyButton)
   })
-
-
-  // codeExamples.forEach((example, index) => {
-  //   const dataId = `code-block-${index}`
-  //   example.dataset.codeblock = dataId
-  //   const copyButton = document.createElement('button')
-  //   copyButton.innerHTML = 'Copy Code'
-  //   copyButton.classList.add('code-button')
-  //   copyButton.dataset.codeblockbutton = dataId
-  //   copyButton.addEventListener('click', async (event) => {
-  //     const el = event.target
-  //     const blockId = el.dataset.codeblockbutton
-  //     const codePreEl = document.querySelector(
-  //       `[data-codeblock="${blockId}"] pre`
-  //     )
-  //     try {
-  //       await navigator.clipboard.writeText(codePreEl.innerText)
-  //       el.innerHTML = 'Copied'
-  //     } catch (err) {
-  //       el.innerHTML = 'Error copying'
-  //     }
-  //     setTimeout(
-  //       (theButton) => {theButton.innerHTML = 'Copy Code'}, 2000, el
-  //     )
-  //   })
-  //   example.appendChild(copyButton)
-  // })
 
   // const codeExamples = document.querySelectorAll('.highlight-status-bar')
   // codeExamples.forEach((example, index) => {
