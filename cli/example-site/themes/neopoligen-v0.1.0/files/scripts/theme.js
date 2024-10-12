@@ -9,7 +9,6 @@ function addCopyButtons() {
     copyButton.innerHTML = 'Copy This Content'
     copyButton.classList.add('highlight-copy-button')
     copyButton.dataset.highlighttarget = dataId
-
     copyButton.addEventListener('click', async (event) => {
       const el = event.target
       const blockId = el.dataset.highlighttarget
@@ -28,34 +27,6 @@ function addCopyButtons() {
     })
     wrapper.appendChild(copyButton)
   })
-
-  // const codeExamples = document.querySelectorAll('.highlight-status-bar')
-  // codeExamples.forEach((example, index) => {
-  //   const dataId = `code-block-${index}`
-  //   example.dataset.codeblock = dataId
-  //   const copyButton = document.createElement('button')
-  //   copyButton.innerHTML = 'Copy Code'
-  //   copyButton.classList.add('code-button')
-  //   copyButton.dataset.codeblockbutton = dataId
-  //   copyButton.addEventListener('click', async (event) => {
-  //     const el = event.target
-  //     const blockId = el.dataset.codeblockbutton
-  //     const codePreEl = document.querySelector(
-  //       `[data-codeblock="${blockId}"] pre`
-  //     )
-  //     try {
-  //       await navigator.clipboard.writeText(codePreEl.innerText)
-  //       el.innerHTML = 'Copied'
-  //     } catch (err) {
-  //       el.innerHTML = 'Error copying'
-  //     }
-  //     setTimeout(
-  //       (theButton) => {theButton.innerHTML = 'Copy Code'}, 2000, el
-  //     )
-  //   })
-  //   example.appendChild(copyButton)
-  // })
-
 }
 
 function addSchemeSwitchers() {
