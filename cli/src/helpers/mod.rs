@@ -268,7 +268,7 @@ pub fn highlight_code(args: &[Value]) -> String {
         0
     };
     let end = if args.len() == 4 {
-        args[3].to_string().parse::<usize>().unwrap()
+        args[3].to_string().parse::<usize>().unwrap() - start + 1
     } else {
         0
     };
@@ -308,7 +308,7 @@ pub fn highlight_code_no_nums(args: &[Value]) -> String {
         0
     };
     let end = if args.len() == 4 {
-        args[3].to_string().parse::<usize>().unwrap()
+        args[3].to_string().parse::<usize>().unwrap() - start + 1
     } else {
         0
     };
