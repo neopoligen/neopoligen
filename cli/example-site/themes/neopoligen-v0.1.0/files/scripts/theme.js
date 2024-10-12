@@ -29,6 +29,44 @@ function addCopyButtons() {
   })
 }
 
+
+function addWrapButtons() {
+  const highlightWrappers = document.querySelectorAll('.highlight-wrapper')
+  highlightWrappers.forEach((wrapper, indx) => {
+    wrapper.dataset.wrapstate = "on" 
+    const dataId = `wrap-block-${indx}`
+    wrapper.dataset.wrapblock = dataId
+    const wrapButton = document.createElement('button')
+    wrapButton.innerHTML = 'Toggle Wrapping'
+    wrapButton.classList.add('highlight-copy-button')
+    wrapButton.dataset.wraptarget = dataId
+    wrapButton.addEventListener('click', async (event) => {
+      const el = event.target
+      const targetId = el.dataset.wraptarget
+      const theWrapper = document.querySelector(
+        `[data-wrapblock="${targetId}"]`
+      )
+      const thePre = theWrapper.querySelector(
+        `pre`
+      )
+      if (theWrapper.dataset.wrapstate === "on") {
+        theWrapper.dataset.wrapstate = "off"
+        thePre.style.whiteSpace = "pre"
+        thePre.style.overflowWrap ="normal"
+        thePre.style.overflowX ="auto"
+        thePre.style.overscrollBehaviorX = "none"
+      } else {
+        theWrapper.dataset.wrapstate = "on"
+        thePre.style.whiteSpace = "pre-wrap"
+        thePre.style.overflowWrap ="break-word"
+        thePre.style.overflowX ="visible"
+        thePre.style.overscrollBehaviorX = "auto"
+      }
+    })
+    wrapper.appendChild(wrapButton)
+  })
+}
+
 function addSchemeSwitchers() {
   const switchers = document.querySelectorAll(".color-scheme-switcher")
   switchers.forEach((switcher, num) => {
@@ -176,6 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
   addSchemeSwitchers()
   updateScheme()
   //duplicateDarkStyles() - currently out since you need to duplicate more than :root
+  addWrapButtons()
   addCopyButtons()
   makeContentVisible()
 })
