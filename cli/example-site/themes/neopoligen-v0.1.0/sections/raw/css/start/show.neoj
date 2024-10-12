@@ -4,6 +4,10 @@
     [@- theme.section_classes(section, "css-section-show") -@] 
     [@- section.attr_string -@]>
 
+[! if "heading" in section.attr_spans !]
+<h3>[@ theme.output_spans(site, page_id, section.attr_spans.heading) @]</h3>
+[! endif !]
+
 [! if "title" in section.attr_spans !]
 <h3>[@ theme.output_spans(site, page_id, section.attr_spans.title) @]</h3>
 [! endif !]

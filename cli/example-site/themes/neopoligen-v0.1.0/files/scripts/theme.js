@@ -3,29 +3,31 @@ const schemes = ["auto", "light", "dark", "black", "white"]
 function addCopyButtons() {
   const highlightWrappers = document.querySelectorAll('.highlight-wrapper')
   highlightWrappers.forEach((wrapper, indx) => {
-    const dataId = `highlight-block-${indx}`
-    wrapper.dataset.highlightblock = dataId
-    const copyButton = document.createElement('button')
-    copyButton.innerHTML = 'Copy This Content'
-    copyButton.classList.add('highlight-copy-button')
-    copyButton.dataset.highlighttarget = dataId
-    copyButton.addEventListener('click', async (event) => {
-      const el = event.target
-      const blockId = el.dataset.highlighttarget
-      const preEl = document.querySelector(
-        `[data-highlightblock="${blockId}"] pre`
-      )
-      try {
-        await navigator.clipboard.writeText(preEl.innerText)
-        el.innerHTML = 'Copied'
-      } catch (err) {
-        el.innerHTML = 'Error copying'
-      }
-      setTimeout(
-        (theButton) => {theButton.innerHTML = 'Copy This Content'}, 2000, el
-      )
-    })
-    wrapper.appendChild(copyButton)
+    if (wrapper.classList.contains('no-buttons') === false) {
+      const dataId = `highlight-block-${indx}`
+      wrapper.dataset.highlightblock = dataId
+      const copyButton = document.createElement('button')
+      copyButton.innerHTML = 'Copy This Content'
+      copyButton.classList.add('highlight-copy-button')
+      copyButton.dataset.highlighttarget = dataId
+      copyButton.addEventListener('click', async (event) => {
+        const el = event.target
+        const blockId = el.dataset.highlighttarget
+        const preEl = document.querySelector(
+          `[data-highlightblock="${blockId}"] pre`
+        )
+        try {
+          await navigator.clipboard.writeText(preEl.innerText)
+          el.innerHTML = 'Copied'
+        } catch (err) {
+          el.innerHTML = 'Error copying'
+        }
+        setTimeout(
+          (theButton) => {theButton.innerHTML = 'Copy This Content'}, 2000, el
+        )
+      })
+      wrapper.appendChild(copyButton)
+    }
   })
 }
 
@@ -33,37 +35,39 @@ function addCopyButtons() {
 function addWrapButtons() {
   const highlightWrappers = document.querySelectorAll('.highlight-wrapper')
   highlightWrappers.forEach((wrapper, indx) => {
-    wrapper.dataset.wrapstate = "on" 
-    const dataId = `wrap-block-${indx}`
-    wrapper.dataset.wrapblock = dataId
-    const wrapButton = document.createElement('button')
-    wrapButton.innerHTML = 'Toggle Wrapping'
-    wrapButton.classList.add('highlight-copy-button')
-    wrapButton.dataset.wraptarget = dataId
-    wrapButton.addEventListener('click', async (event) => {
-      const el = event.target
-      const targetId = el.dataset.wraptarget
-      const theWrapper = document.querySelector(
-        `[data-wrapblock="${targetId}"]`
-      )
-      const thePre = theWrapper.querySelector(
-        `pre`
-      )
-      if (theWrapper.dataset.wrapstate === "on") {
-        theWrapper.dataset.wrapstate = "off"
-        thePre.style.whiteSpace = "pre"
-        thePre.style.overflowWrap ="normal"
-        thePre.style.overflowX ="auto"
-        thePre.style.overscrollBehaviorX = "none"
-      } else {
-        theWrapper.dataset.wrapstate = "on"
-        thePre.style.whiteSpace = "pre-wrap"
-        thePre.style.overflowWrap ="break-word"
-        thePre.style.overflowX ="visible"
-        thePre.style.overscrollBehaviorX = "auto"
-      }
-    })
-    wrapper.appendChild(wrapButton)
+    if (wrapper.classList.contains('no-buttons') === false) {
+      wrapper.dataset.wrapstate = "on" 
+      const dataId = `wrap-block-${indx}`
+      wrapper.dataset.wrapblock = dataId
+      const wrapButton = document.createElement('button')
+      wrapButton.innerHTML = 'Toggle Wrapping'
+      wrapButton.classList.add('highlight-copy-button')
+      wrapButton.dataset.wraptarget = dataId
+      wrapButton.addEventListener('click', async (event) => {
+        const el = event.target
+        const targetId = el.dataset.wraptarget
+        const theWrapper = document.querySelector(
+          `[data-wrapblock="${targetId}"]`
+        )
+        const thePre = theWrapper.querySelector(
+          `pre`
+        )
+        if (theWrapper.dataset.wrapstate === "on") {
+          theWrapper.dataset.wrapstate = "off"
+          thePre.style.whiteSpace = "pre"
+          thePre.style.overflowWrap ="normal"
+          thePre.style.overflowX ="auto"
+          thePre.style.overscrollBehaviorX = "none"
+        } else {
+          theWrapper.dataset.wrapstate = "on"
+          thePre.style.whiteSpace = "pre-wrap"
+          thePre.style.overflowWrap ="break-word"
+          thePre.style.overflowX ="visible"
+          thePre.style.overscrollBehaviorX = "auto"
+        }
+      })
+      wrapper.appendChild(wrapButton)
+    }
   })
 }
 

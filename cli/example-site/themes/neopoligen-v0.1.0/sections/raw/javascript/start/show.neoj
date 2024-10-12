@@ -4,8 +4,8 @@
     [@- theme.section_classes(section, "javascript-section-show") -@] 
     [@- section.attr_string -@]>
 
-[! if "title" in section.attr_spans !]
-<h3>[@ theme.output_spans(site, page_id, section.attr_spans.title) @]</h3>
+[! if "heading" in section.attr_spans !]
+<h3>[@ theme.output_spans(site, page_id, section.attr_spans.heading) @]</h3>
 [! endif !]
 
 <div class="code-wrapper code-button-wrapper">

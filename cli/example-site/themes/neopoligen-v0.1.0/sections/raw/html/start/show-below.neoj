@@ -11,6 +11,6 @@
 </div>
 
 <h3>HTML</h3>
-<div class="pad-top-1 code-button-wrapper">
-<pre class="code-pre"><code>[@ highlight_code(section.text, "html") @]</code></pre>
+<div class="code-wrapper code-button-wrapper">
+<pre class="code-block"><code>[@ highlight_code(section.text, "html") @]</code></pre>
 </div>

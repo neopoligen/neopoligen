@@ -4,8 +4,7 @@
     [@- theme.section_classes(section, "code-section") -@] 
     [@- section.attr_string -@]>
 
-<div class="highlight-wrapper">
-
+<div class="highlight-wrapper [!- if "no-buttons" in section.flags -!][@- ' ' -@]no-buttons[!- endif -!]">
 
 [! if "no-title" not in section.flags !]
 [! if "title" in section.attr_spans or section.flags[0] !]
