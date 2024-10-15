@@ -4,33 +4,45 @@
     [@- theme.section_classes(section, "code-section") -@] 
     [@- section.attr_string -@]>
 
-<div class="highlight-wrapper [!- if "no-buttons" in section.flags -!][@- ' ' -@]no-buttons[!- endif -!]">
+<aws-code-block 
+  [# TODO: Implement no-buttons and no-copy features
+  [!- if "no-buttons" in section.flags -!][@- ' ' -@]data-buttons="off"[!- endif -!]
+  #]
+>
 
 [! if "no-title" not in section.flags !]
-[! if "title" in section.attr_spans or section.flags[0] !]
-<div class="highlight-title">
-[!- if "title" in section.attr_spans -!]
-[@ theme.output_spans(site, page_id, section.attr_spans.title) @]
+
+  [! if "title" in section.attr_spans !]
+    <div class="aws-code-block-title">
+      [@ theme.output_spans(site, page_id, section.attr_spans.title) @]
+    </div>
+  [!- endif -!]
+
+  [! if "subtitle" in section.attr_spans !]
+    <div class="aws-code-block-subtitle">[@ theme.output_spans(site, page_id, section.attr_spans.subtitle) @]</div>
+  [! endif !]
+
+[! endif !]
+
+<div class="aws-code-block-wrapper">
+    <div class="aws-code-block-sidebar"></div>
+
+<pre class="aws-code-block-show-nums"><code>[!- if section.flags[0] -!]
+[@- highlight_code(section.text, section.flags[0] ) -@]
 [!- else -!]
-[@ section.flags[0] @]
-[!- endif -!]
-[! if "subtitle" in section.attr_spans !]
-<div class="highlight-subtitle">[@ theme.output_spans(site, page_id, section.attr_spans.subtitle) @]</div>
-[! endif !]
-</div>
-[! endif !]
-[! endif !]
+[@- highlight_code(section.text, "txt") -@]
+[!- endif -!]</code></pre>
 
-
-<div class="highlight-grid">
-    <div class="highlight-spacer"></div>
-
+[#
+TODO: Delete this old block when the code is working 
+prorpery with `no-nums` being a class or flag based switch. 
 [!- if "no-nums" in section.flags -!]
 <pre class="highlight-block-no-nums"><code>[!- if section.flags[0] -!]
 [@- highlight_code_no_nums(section.text, section.flags[0] ) -@]
 [!- else -!]
 [@- highlight_code_no_nums(section.text, "txt") -@]
 [!- endif -!]</code></pre>
+
 [!- else -!]
 <pre class="highlight-block"><code>[!- if section.flags[0] -!]
 [@- highlight_code(section.text, section.flags[0] ) -@]
@@ -38,14 +50,10 @@
 [@- highlight_code(section.text, "txt") -@]
 [!- endif -!]</code></pre>
 [!- endif -!]
+#]
 
 </div>
-
-
-[!- if "no-copy" not in section.flags !]
-<div class="highlight-status-bar"></div>
-[!- endif -!]
-
+</aws-code-block>
 
 [! for child in section.children !]
     [@ theme.output_section(site, page_id, child) @] 

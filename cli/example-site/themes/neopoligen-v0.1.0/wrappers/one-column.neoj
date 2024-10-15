@@ -57,10 +57,6 @@
   <link rel="preload" href="/theme/styles/theme.css" as="style" />
 [! endif !]
 
-[! if "no-scripts" not in page.flags !]
-  <script src="/theme/scripts/theme.js" defer></script>
-[! endif !]
-
 <title>[@ page.title @]</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta property="og:title" content="[@ page.title @]" />
@@ -80,16 +76,6 @@
 <meta name="description" content="A post from alan w. smith" />
 
 [!- for section in page.sections -!]
-[!- if section.type == "javascript" -!]
-<script>
-[! autoescape false !]
-[@ section.text @]
-[! endautoescape !]
-</script>
-[!- endif -!]
-[!- endfor -!]
-
-[!- for section in page.sections -!]
 [!- if section.type == "head" -!]
 [! autoescape false !]
 [@ section.text @]
@@ -102,7 +88,8 @@
   [! if "no-styles" not in page.flags !]
     <link rel="stylesheet" href="/theme/styles/theme.css" />
   [! endif !]
-<header>
+
+  <header>
   [! if "no-styles" not in page.flags !]
     <div class="color-scheme-switcher"></div>
   [! endif !]
@@ -116,16 +103,13 @@
         bear with me while I get things fixed. 
       </div>
       [! endif !]
-    </header>
+  </header>
     <main class="flow">
     [!- block body -!][!- endblock -!]
     [!- block endmatter -!][!- endblock -!]
     </main>
     <footer>
-      [! if site.config.base_url != "www.alanwsmith.com" !]
-        from <a href="https://www.alanwsmith.com/">alan w smith</a>
-      [! endif !]
-      <div class="scheme-switcher"></div>
+        from <a href="https://hachyderm.io/@TheIdOfAlan">alan w smith</a>
     </footer>
 [#
 <pre>
@@ -151,6 +135,20 @@ BECAUSE IT IS LIKE 500GB EASY
 [!- endif -!]
 [!- endfor -!]
 
+[! if "no-scripts" not in page.flags !]
+  <script src="/theme/scripts/theme.js" type="module"></script>
+[! endif !]
+
+[!- for section in page.sections -!]
+[!- if section.type == "javascript" -!]
+<script type="module">
+[! autoescape false !]
+[@ section.text @]
+[! endautoescape !]
+</script>
+[!- endif -!]
+[!- endfor -!]
+  
 [! if "no-styles" not in page.flags !]
     <noscript>
       <style>html { visibility: visible; }</style>

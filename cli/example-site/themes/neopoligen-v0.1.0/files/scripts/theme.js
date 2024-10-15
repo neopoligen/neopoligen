@@ -1,5 +1,165 @@
 const schemes = ["auto", "light", "dark", "black", "white"]
 
+class AwsCodeBlock extends HTMLElement {
+    connectedCallback() {
+        this.pre = this.querySelector('pre');
+        if (this.pre !== null) {
+            this.minHeight = 0;
+            this.addButtonsDiv();
+            this.makeToggleWrapButton();
+            this.makeReduceButton();
+            this.makeEnlargeButton();
+            this.makeCopyButton();
+            this.setMinHeight();
+        }
+    }
+
+    addButtonsDiv() {
+        this.buttonsDiv = document.createElement("div");
+        this.buttonsDiv.classList.add("aws-code-block-buttons");
+        this.appendChild(this.buttonsDiv);
+    }
+
+    checkForWrap() {
+        return true;
+        /*  
+        const compareEl = document.createElement('pre');
+        const styles = window.getComputedStyle(this.pre);
+        const cssText = Object.values(styles).reduce(
+            (css, propertyName) => 
+                `${css}${propertyName}:${styles.getPropertyValue(
+                    propertyName
+            )};`
+        );
+        compareEl.style.cssText = cssText;
+        compareEl.innerHTML = this.pre.innerHTML;
+        compareEl.style.position = 'absolute';
+        compareEl.style.top = 0;
+        compareEl.style.left = 0;
+        compareEl.style.whiteSpace = 'nowrap';
+        compareEl.style.visibility = 'hidden';
+        console.log(compareEl);
+        this.appendChild(compareEl);
+        const isWrapping = 
+            compareEl.scrollWidth > this.pre.offsetWidth 
+            ? true : false;
+        // compareEl.remove();
+        return isWrapping;
+        */
+    }
+
+
+    async copyCode() {
+        try {
+          await navigator.clipboard.writeText(this.pre.innerText);
+          this.copyButton.innerHTML = 'Copied';
+        } catch (err) {
+          this.copyButton.innerHTML = 'Copy Failed';
+        }
+        setTimeout(() => 
+            {this.copyButton.innerHTML = 'Copy Code'}, 
+            1200
+        );
+    }
+
+    enlargeFont() {
+        this.pre.style.fontSize = `${this.getFontSize() * 1.05}px`;
+        this.setMinHeight();
+    }
+
+    getFontSize() {
+        const styles = window.getComputedStyle(this.pre);
+        const size = parseFloat(
+            styles.getPropertyValue('font-size')
+        );
+        return size;
+    }
+
+    makeCopyButton() {
+        this.copyButton = document.createElement("button");
+        this.copyButton.innerHTML = "Copy Code";
+        this.copyButton.addEventListener(
+            "click", 
+            () => { this.copyCode(); }
+        );
+        this.buttonsDiv.appendChild(this.copyButton);
+        const copyButtonRect = this.copyButton.getBoundingClientRect();
+        // TODO: Figure out why adding 20px here is necessary to
+        // keep the button text from wrapping.
+        this.copyButton.style.width = `${copyButtonRect.width + 20}px`;
+    }
+
+    makeEnlargeButton() {
+        this.enlargeButton = document.createElement("button");
+        this.enlargeButton.innerHTML = "Enlarge Font";
+        this.enlargeButton.addEventListener(
+            "click", 
+            () => { this.enlargeFont(); }
+        );
+        this.buttonsDiv.appendChild(this.enlargeButton);
+    }
+
+    makeReduceButton() {
+        this.reduceButton = document.createElement("button");
+        this.reduceButton.innerHTML = "Reduce Font";
+        this.reduceButton.addEventListener(
+            "click", 
+            () => { this.reduceFont(); }
+        );
+        this.buttonsDiv.appendChild(this.reduceButton);
+    }
+
+    makeToggleWrapButton() {
+        if (this.checkForWrap()) {
+            this.wrapState = "On";
+            this.toggleWrapButton = document.createElement("button");
+            this.toggleWrapButton.innerHTML = 'Turn Wrapping Off';
+            this.toggleWrapButton.addEventListener(
+                "click", 
+                () => { this.toggleWrap() }
+            );
+            this.buttonsDiv.appendChild(this.toggleWrapButton);
+            const toggleWrapButtonRect = 
+                this.toggleWrapButton.getBoundingClientRect();
+            // NOTE: Adding 20 pixels here. I'm not sure why
+            // that's necessary, but without it the button
+            // changes size when changing the text in this
+            // example
+            this.toggleWrapButton.style.minWidth = 
+                `${toggleWrapButtonRect.width + 20}px`;
+        }
+    }
+
+    reduceFont() {
+        this.pre.style.fontSize = `${this.getFontSize() * 0.95}px`;
+    }
+
+    setMinHeight() {
+        // TODO: Figure out why this is adding an extra lines
+        // worth of space to the bottom of the pre element
+        // in this example.
+        const preRect = this.pre.getBoundingClientRect();
+        if (this.minHeight < preRect.height) {
+            this.minHeight = preRect.height;
+            this.pre.style.minHeight = `${preRect.height}px`;
+        }
+    }
+
+    toggleWrap() {
+        this.pre.classList.toggle("no-wrapping");
+        this.toggleWrapButton.innerHTML = 
+            `Turn Wrapping ${this.wrapState}`;
+        this.wrapState = this.wrapState === "On" ? "Off" : "On";
+        this.setMinHeight();
+    }
+
+}
+
+customElements.define("aws-code-block", AwsCodeBlock);
+
+
+/*
+
 function addCopyButtons() {
   const highlightWrappers = document.querySelectorAll('.highlight-wrapper')
   highlightWrappers.forEach((wrapper, indx) => {
@@ -70,6 +230,8 @@ function addWrapButtons() {
     }
   })
 }
+
+*/
 
 function addSchemeSwitchers() {
   const switchers = document.querySelectorAll(".color-scheme-switcher")
@@ -217,8 +379,8 @@ function switchColorMode(event) {
 document.addEventListener('DOMContentLoaded', () => {
   addSchemeSwitchers()
   updateScheme()
-  //duplicateDarkStyles() - currently out since you need to duplicate more than :root
-  addWrapButtons()
-  addCopyButtons()
+  // duplicateDarkStyles() - currently out since you need to duplicate more than :root
+  // addWrapButtons()
+  // addCopyButtons()
   makeContentVisible()
 })

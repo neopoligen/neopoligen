@@ -284,7 +284,7 @@ pub fn highlight_code(args: &[Value]) -> String {
     let initial_html = html_generator.finalize();
     let output_html: Vec<_> = initial_html
         .lines()
-        .map(|line| format!(r#"<span class="line-marker"></span>{}"#, line))
+        .map(|line| format!(r#"<span class="aws-code-block-marker"></span>{}"#, line))
         .collect();
     if start > 0 {
         output_html
@@ -299,6 +299,8 @@ pub fn highlight_code(args: &[Value]) -> String {
     }
 }
 
+// TODO: Remove this in favor of handling the
+// nums v no-nums in the templates and CSS.
 pub fn highlight_code_no_nums(args: &[Value]) -> String {
     let code = args[0].to_string();
     let lang = args[1].to_string();

@@ -8,11 +8,13 @@
   section.type != "footnote" 
   and section.type != "ref" 
   and section.type != "endnote" 
-  and section.type != "codecopy" -!]
+  and section.type != "copycode" 
+  and section.type != "ps" 
+-!]
 [@- theme.output_section(site, page.id, section) -@]
 [!- endif -!]
 
-[!- if section.type == "codecopy" -!]
+[!- if section.type == "copycode" -!]
 [@- theme.output_section_v2(site, page, section) -@]
 [!- endif -!]
 
@@ -40,6 +42,19 @@
   [! endif !]
 [!- endfor -!]
 
+
+[! set ps_header_has_been_output = false !]
+[!- for section in page.sections -!]
+  [!- if section.type == "ps" -!]
+    [! if ps_header_has_been_output == false !]
+        <section class="ps-header-section flow">
+          <h2>Postscript</h2>
+        </section>
+      [! set ps_header_has_been_output = true !]
+    [! endif !]
+    [@- theme.output_section(site, page_id, section) -@]
+  [!- endif -!]
+[!- endfor -!]
 
 [! set footnote_header_has_been_output = false !]
 [!- for section in page.sections -!]
