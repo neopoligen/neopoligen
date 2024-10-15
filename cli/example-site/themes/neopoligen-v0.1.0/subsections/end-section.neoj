@@ -1,6 +1,6 @@
 [! import "includes/theme.neoj" as theme !]
 [! for child in section.children !]
-    [! if loop.last and child.kind != "block" !]
+    [! if loop.last and child.bounds == "end" !]
         [@ theme.output_section(site, page_id, child) @]
     [! endif !]
 [! endfor !]

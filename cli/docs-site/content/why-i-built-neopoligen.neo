@@ -26,8 +26,6 @@ https://github.com/neopoligen/neopoligen.github.io/blob/main/content/why-i-built
 
 -- comment
 
-##########################################################
-
 Hey! It looks like you're reading the source file. Nice!
 
 One thing to point out is that you can make comment
@@ -43,8 +41,6 @@ choppy than your average page. Just a little something to
 keep in mind as your browsing. 
 
 Now, back to the rest of the content...
-
-##########################################################
 
 
 -- h2
@@ -122,6 +118,26 @@ keep it as simple as possible.
 
 -- h2
 
+Templates Not JavaScript
+
+I'm tired of jumping JavaScript frameworks. One of the 
+final straws that sent me down the path of making my
+own site generator was  when I went fix a spelling 
+error on a site I hadn't touched in a few months and
+everything broke because some dependency in the 
+framework changed. 
+
+Neopoligen is pretty basic at it's core. It parses
+Neopolitan files to create ASTs that are sent
+to the template engine for rendering. There's still
+some things to add to the AST, but the goal is to
+get the point where any changes are additive so that 
+existing templates will always continue to work with 
+future updates.
+
+
+-- h2
+
 Neopolitan Sections And Spans
 
 You can read more details about how the format works on 
@@ -157,6 +173,78 @@ making things. I want to reduce it as much as
 possible. 
 
 
+-- h2
+
+Sections
+
+Neopolitan sections open with a line that has two 
+dashes followed by the kind of section. For example:
+
+-- pre/
+-- class: neo-example
+
+-- note
+
+This is a note
+
+-- aside
+
+This is an aside
+
+-- warning
+
+This is a warning
+
+-- /pre
+
+Which outputs:
+
+-- note
+
+This is a note
+
+-- aside
+
+This is an aside
+
+-- warning
+
+This is a warning
+
+
+
+-- h2
+
+Section Attributes
+
+Section attributes are created by adding lines
+started with two dashes directly below the opening 
+section line. For example, here's a "class" attribute
+added to a "p" section to apply a CSS style to 
+the section to change the of the text:
+
+-- pre/
+-- class: neo-example
+
+-- p
+-- class: green
+
+Pour the stew from the pot into the plate
+
+Raise the sail and steer the ship northward
+
+-- /pre
+
+Which outputs:
+
+-- p
+-- class: neo-example green
+
+Pour the stew from the pot into the plate
+
+Raise the sail and steer the ship northward
+
+
 
 -- h2
 
@@ -164,8 +252,9 @@ Section Templates
 
 Neopoligen works by mapping the different types of 
 sections to corresponding MiniJinja^^4^^ templates^^5^^. 
-Each type of section has a default template. For example,
-here's a section type I made called "book-to-read-example":
+There are several templates built into the app, but you 
+can also make your own. For example, here's a section type
+ I made called "book-to-read-example":
 
 -- pre/
 -- class: neo-example
@@ -191,14 +280,23 @@ Which looks like this:
 I've read a bunch of other William Gibson stuff and can't
 wait to get to this one!
 
+-- p
+
+It's important to point out that there's no difference
+between the templates that ship with Neopoligen and the
+ones you make. You can make as many arbitrary sections
+as you want. They are all treated the same way.
+
 
 -- h2
 
 Alternate Templates
 
-Additional templates can be built for any section 
-type. Switching to one of the alternates is done
-by adding a "template" attribute to the section. 
+Each section has a default template. Additional 
+templates can be built for them as well. Switching 
+to one of the alternates is done by adding a 
+"template" attribute to the section. 
+
 Here's the same example as above but calling
 a template called "alt":
 
@@ -231,13 +329,68 @@ wait to get to this one!
 
 -- p 
 
-The biggest point here is there's a clean separation between
+There's a clean separation of concerns between
 the content and the layout. 
+
 
 
 -- h2
 
-Span Templates
+Nesting Sections
+
+One of the biggest differences between Neopolitan and
+markdown is that sections can be nested. This is done
+by adding a "/" to the end of a section name where
+you want the nesting to start and then closing the
+nesting with a corresponding section that starts with 
+a "/". For example:
+
+-- pre/
+-- class: neo-example
+
+-- div/
+-- class: example-grid
+
+    -- note
+
+    Fly by night, and you waste little time
+
+    -- note
+
+    Pull the dart from the cork target
+
+    -- note
+
+    Pick a card and slip it under the pack
+
+-- /div
+
+-- /pre
+
+Outputs:
+
+-- div/
+-- class: example-grid
+
+    -- note
+
+    Fly by night, and you waste little time
+
+    -- note
+
+    Pull the dart from the cork target
+
+    -- note
+
+    Pick a card and slip it under the pack
+
+-- /div
+
+
+
+-- h2
+
+Spans
 
 Spans are sections of content that look like this:
 
@@ -263,9 +416,14 @@ This is <<strong|bold text>>
 They work similar to sections in the each one has
 a corresponding template. Spans default to putting
 their text inside the corresponding HTML tag (e.g.
-"strong", "em", etc...). They also take attributes
-which can be used for things like setting a CSS 
-class on them. 
+"strong", "em", etc...). 
+
+-- h2
+
+Span Attributes
+
+Spans can take optional attributes. They can be
+used for things like setting a CSS class on them. 
 
 For example, this:
 
@@ -290,7 +448,7 @@ This is <<strong|green bold text|class: green>>
 
 -- h2
 
-More On Span Templates
+Span Templates
 
 Span templates don't have to map directly to HTML 
 tags. They can be used to create more complicated
@@ -322,6 +480,47 @@ The template creates the link, points it to the "_blank"
 target for the new tab, and then appends the character
 to identify that it's going to a new tab. 
 
+
+-- h2
+
+Built-In Test Suite
+
+Each template can have a set of tests associated with it
+to make sure it's doing the right thing. All the tests
+are run each time a site is generated and a report shows
+any errors. 
+
+The tests themselves are done in Neopolitan files that
+look like this:
+
+
+-- pre/
+-- class: neo-example
+
+-- start-theme-test
+
+-- p
+
+Alfa bravo charlie 
+
+Delta echo foxtrot
+
+-- expected-output/
+
+<section class="p-section flow">
+<p>Alfa bravo charlie</p>
+<p>Delta echo foxtrot</p>
+</section>
+
+-- /expected-output
+
+-- /pre
+
+
+
+
+
+
 -- h2
 
 Adding CSS
@@ -336,47 +535,34 @@ page level (which is just another template).
 
 Of course, since it's a section, we can create a new template
 that <<em|does>> output its contents and call it
-to show the code on the page too. For example, 
-this is the custom CSS that I've added to this page:
+to show the code on the page too. For example, this
+adds css for the <<code|#count_btn|css>> to the
+page:
+
+-- pre/
+-- class: neo-example
 
 -- css
 -- template: show
 
-.book-grid {
-  display: grid;
-  grid-template-columns: 100px 1fr;
-  gap: 20px;
+button {
+    color: red;
+    font-weight: bold;
 }
 
-.book-grid-alt {
-  display: grid;
-  grid-template-columns: 1fr 100px 1fr;
-  gap: 20px;
-}
+-- /pre
 
-.book-to-read-example-section {
-  font-size: 0.85rem;
-  border: 1px solid #333;
-  padding: 1.2rem;
-  border-radius: 0.3rem;
-}
+-- p
 
-p > code {
-  border: 1px solid #777;
-  padding-inline: 0.2rem;
-  border-radius: 0.2rem;
-  font-family: monospace;
-}
+And, it outputs this on the page:
 
-.green {
-    color: green;
-}
+-- css
+-- template: show
+-- class: neo-example
 
-.neo-example {
-  font-size: 0.85rem;
-  border: 1px solid #333;
-  padding: 1.2rem;
-  border-radius: 0.3rem;
+button {
+    color: red;
+    font-weight: bold;
 }
 
 
@@ -414,8 +600,16 @@ Outputs:
 
 
 -- html
+-- class: neo-example
 
 <button>This button does nothing</button>
+
+
+-- note
+
+The red/bold font in the button is from the 
+CSS that was added to the page in the 
+example above. 
 
 
 -- h2
@@ -434,10 +628,9 @@ For example, this:
 -- html
 -- template: show-above
 
-<button 
-    id="count_btn" 
-    data-count="0">Counter: 0</button>
-
+<button id="count_btn" data-count="0">
+    Counter: 0
+</button>
 
 -- /pre
 
@@ -448,11 +641,18 @@ Outputs this:
 
 -- html
 -- template: show-above
+-- class: neo-example
 
-<button 
-    id="count_btn" 
-    data-count="0">Counter: 0</button>
+<button id="count_btn" data-count="0">
+    Counter: 0
+</button>
 
+-- p
+
+This helps make sure that any HTML samples in 
+blog posts and tutorials actually work because
+the same code that's used for the DOM is what's
+actually displayed. 
 
 -- h2
 
@@ -473,7 +673,8 @@ For example:
 
 function addToCounter() {
     const btn = document.querySelector("#count_btn")
-    btn.dataset.count = parseInt(btn.dataset.count, 10) + 1
+    const count = parseInt(btn.dataset.count, 10)
+    btn.dataset.count = count + 1
     btn.innerHTML = `Counter: ${btn.dataset.count}`
 }
 
@@ -489,10 +690,12 @@ outputs this on the page:
 
 -- javascript
 -- template: show
+-- class: neo-example
 
 function addToCounter() {
     const btn = document.querySelector("#count_btn")
-    btn.dataset.count = parseInt(btn.dataset.count, 10) + 1
+    const count = parseInt(btn.dataset.count, 10)
+    btn.dataset.count = count + 1
     btn.innerHTML = `Counter: ${btn.dataset.count}`
 }
 
@@ -509,9 +712,23 @@ an effort to make sure that any samples I show
 actually work)
 
 
+
+
+
 -- h2
 
-Syntax Highlighting
+External Scripts And <head> Content
+
+The <<code|-- head>> section is used to add things
+directly to the <head> of a page. This can be used to call
+external JS libraries like P5, D3, etc... or anything
+else that you need to load onto the page. 
+
+
+
+-- h2
+
+Section Syntax Highlighting
 
 Neopoligen includes a built in syntax highlighter. I use
 it in <<code|-- code>> sections by passing the name of
@@ -523,7 +740,9 @@ the language like this:
 -- code
 -- rust
 
-println!("Hello, world");
+fn main() {
+    println!("Hello, world");
+}
 
 -- /pre
 
@@ -531,8 +750,11 @@ Which outputs:
 
 -- code
 -- rust
+-- class: neo-example
 
-println!("Hello, world");
+fn main() {
+    println!("Hello, world");
+}
 
 -- p
 
@@ -542,43 +764,326 @@ styles so things can be controlled from style sheets.
 The highlighter also adds span at the start of each line that
 can be used as a target for adding CSS line numbers as seen above. 
 
+-- note
+
+Eventually, this will be a web component that has a copy button, 
+displays the language, and has the ability to turn wrapping on 
+and off. It's just a matter of updating the template to make
+that happen. 
 
 -- h2
 
-No JavaScript Required
+Span Syntax Highlighting
 
-I'm tired of jumping JavaScript frameworks. One of the 
-final straws that sent me down the path of making my
-own site generator was  when I went fix a spelling 
-error on a site I hadn't touched in a few months and
-everything broke because some dependency in the 
-framework changed. 
+Language specific syntax highlighting can be done one inline
+code too. 
 
-Neopoligen is pretty basic at it's core. It parses
-Neopolitan files to create ASTs that are sent
-to the template engine for rendering. There's still
-some things to add to the AST, but the goal is to
-get the point where any changes are additive so that 
-existing templates will always continue to work with 
-future updates.
+-- pre/
+-- class: neo-example
+
+Rust code: <<code|println!("hello");|rust>>
+
+-- /pre
+
+Which outputs:
+
+-- p
+-- class: neo-example
+
+Rust code: <<code|println!("hello, world");|rust>>
+
+
+
+
+-- h2
+
+Footnotes
+
+I love footnotes. They make it easier for me to write
+at a higher level then point to more detail later 
+which makes for better prose. There's a shorthand
+built into Neopoligen for adding the footnote numbers
+in the content that looks like this:
+
+-- pre/
+-- class: neo-example
+
+This is a footnote^^6^^
+
+-- /pre
+
+-- p
+
+Which outputs:
+
+-- p
+-- class: neo-example
+
+This is a footnote^^6^^
+
+-- p 
+
+These correspond to a footnote section that has
+an id attribute with the same number. For example,
+this is the section that produces the footnote
+that's at the bottom of the page:
+
+-- pre/
+-- class: neo-example
+
+-- footnote
+-- id: 6
+
+This is the target footnote for the example in
+the main content. 
+
+-- /pre
+
+
+
+-- h2
+
+Responsive Image Optimization
+
+I used to be a professional photographer. I don't shoot
+as much these days, but I still want it to be easy to 
+work with photos. Neopoligen is set up so I can throw
+my full size images into a directory and it'll automatically
+make multiple sizes of them that can be used with <<code|srcset>>.
+
+-- h2
+
+Calling Images By Name
+
+Another image related thing I always found a pain was dealing
+with the paths for the images. Neopoligen deals with this
+by calling images by name regardless of where they are stored
+in the source images directory. The data returns to the 
+template includes all the available responsive sizes for
+building a <<code|srcset|html>> attribute. 
+
+You can also skip the extension. This means if you ever decide 
+to to something like upgrading all your .jpg files to .webp, 
+they'll continue to work without having to go back and re-name 
+everything. 
+
+The default way to call an image looks like this:
+
+-- pre/
+-- class: neo-example
+
+-- image
+-- large-test-image
+-- alt: The words 'Large Test jpg' are in dark blue
+-- alt: text on a black background in the upper right.
+-- alt: Most of a red circle shows up in the upper left,
+-- alt: and most of the bottom is covered by a curved
+-- alt: blue shape that just gives some shape for
+-- alt: this test image.
+
+
+-- /pre
+
+-- image
+-- large-test-image
+-- alt: The words 'Large Test jpg' are in dark blue
+-- alt: text on a black background in the upper right.
+-- alt: Most of a red circle shows up in the upper left,
+-- alt: and most of the bottom is covered by a curved
+-- alt: blue shape that just gives some shape for
+-- alt: this test image.
+
+-- p 
+
+The example also shows how alt text can be added to
+image including extended alt text that would otherwise
+end up in a single very long line in the content file. 
+
+-- note
+
+I'm refactoring the way images handling. The srcset and alt
+text might not show depending on when you see this. And, yes,
+if you have two files with the same name it creates a "race
+condition" where you don't know which image will show up. 
+I'm adding a feature to warn you about that, but either way
+it's a minor issue compared to the convenience of not 
+having to mess with file paths. 
+
+
+
+-- h2
+
+Automatic Image Alt Text Ingestion
+
+The International Press Telecommunications Council^^7^^ (which
+is responsible for setting standards for the new media) added
+Alt Text fields to their spec^^8^^. These have been included in
+Photo Mechanic, Photoshop, Brdige, and Lightroom (the tools I use
+for editing my photographs). This means you can store alt
+text directly in your images. Neopoligen pulls that metadata
+if it's available and uses it for image alt text. 
+
+-- aside
+
+I love only having to edit image metadata once per image and
+doing it when I make the image instead of when I'm trying
+to include it. With luck, everything will work this way eventually.
+
+
+-- h2
+
+Open Graph Image Generation
+
+Neopoligen is set up to automatically generate Open Graph images
+that include the title of the page for use in previewing
+on other sites. You can also create custom ones for individual
+posts as well. 
+
+
+-- h2
+
+RSS Feeds
+
+I love RSS Feeds. There's been a bit of a resurgence of them
+recently and I want to participate. I'm still figuring out
+the exact approach I want to use but Neopoligen will be able
+to provide multiple feeds that can be filtered based off
+different criteria (e.g. just posts, just photos, or everything)  
+
+-- h2
+
+RSS Timeline
+
+I'm still working on this, but the basic idea is to create
+a list of other RSS feeds and then include links to the 
+individual posts as a form of timeline. 
+
+
+-- h2
+
+Microblog
+
+Microblog style posts can be made without having to worry 
+about making a title. 
+
+
+-- h2
+
+DB Style Collections
+
+This is still a work in progress, but the goal is to be able 
+to query across all my content files to make collections out
+of them. For example, I'm making a book section type. By adding
+and <<code|-- read|neo>> attribute to it I can create pages
+showing what I want to read and what I've read independently. 
+When I read a book, I'll update the attribute for it and it'll
+move automatically. 
+
+This is actually one of the most exciting things for me. The idea
+that I can use flat files to store content and then query things
+like a database opens the door for so many possibilities. 
+
+
+-- h2
+
+Permanent URLs
+
+I don't want to have to think about URLs. And, if I 
+ever migrate to new software I want to make it as easy
+as possible to match the existing URls so I don't have to
+do a bunch of redirects. To address this I set up 
+Neopoligen so that every page must have an ID and that
+ID is what's used by default for the URL. The base 
+URL for any post is:
+
+-- pre
+-- class: neo-example
+
+/LANGUAGE/ID
+
+-- p 
+
+For example, this page is always available at:
+
+-- pre
+-- class: neo-example
+
+/en/2kn3czfj
+
+-- p
+
+URLs are made more human readable to appending the
+title in a "query parameter" like this:
+
+-- pre
+-- class: neo-example
+
+/en/2kn3czfj/?page=why-i-built-neopoligen
+
+-- p
+
+Because of the way the site is served the title
+can change and both the old and new URLs 
+will continue to work without having to build
+a redirects setup.
+
+They aren't the prettiest URLs. I'm also unsure
+of what the SEO impact of moving the titles to 
+query strings is. But, I don't care. This is 
+very much a case where I prefer function (designed
+to prevent link rot) over form. 
+
+
+-- h2
+
+Automatic Linking
+
+Because URLs are ID based it's trivial to use them
+to create links between pages. Two built-in templates
+provide links with either custom text or the 
+title of the page being linked to. For example:
+
+-- pre/
+-- class: neo-example
+
+This is a <<ilink|custom text link|2kiw8tvv>>
+
+Link with title: <<tlink|2kiw8tvv>>
+
+-- /pre
+
+Outputs:
+
+-- p
+-- class: neo-example
+
+This is a <<ilink|custom text link|2kiw8tvv>>
+
+Link with title: <<tlink|2kiw8tvv>>
 
 
 -- h2
 
 Wrapping Up
 
-Those are some of the highlights of why I went
-down this path. It's been a couple of years work
-at this point. I'm already using Neopoligen on
-this site and <<link|my personal site|https://www.alanwsmith.com/>>.
-There's still some stuff left to implement, but
-the design is pretty well locked-in. 
+I've been working on Neopolitan and Neopoligen 
+for a couple years at this point. The idea above
+are the refinement of all that time. My goal is
+to be able to use the format and the engine for 
+the next twenty years. But, even if the engine
+doesn't last, I'm pretty confident at this point
+that the format will stick with me. 
 
 It's been a lot of work, but I couldn't be 
-happier with the result. 
+happier with the results. 
+
+If you've got any questions or just want to reach
+out, you can hit me up on 
+<<link|Mastodon|https://hachyderm.io/@TheIdOfAlan>>
 
 
--- ref
+
+-- footnote
 -- id: 1
 -- title: Markdown
 -- url: https://en.wikipedia.org/wiki/Markdown
@@ -586,7 +1091,7 @@ happier with the result.
 The lightweight markup language that's used all
 over the place in the tech world. 
 
--- ref
+-- footnote
 -- id: 2
 -- title: MDX
 -- url: https://mdxjs.com/
@@ -599,7 +1104,7 @@ A way to add JSX to Markdown
 There are also JSON and YAML sections on the way for 
 using more complicated data structures
 
--- ref
+-- footnote
 -- id: 4
 -- title: MiniJinja
 -- url: https://docs.rs/minijinja/latest/minijinja/
@@ -613,6 +1118,76 @@ engine from Python
 If there's no matching template for a specific section
 or span type a generic replacement is used
 
+
+-- footnote
+-- id: 6
+
+This is the target footnote for the example in
+the main content. Note that there's nothing magical 
+about them. They are built from section and span
+templates just like everything else.
+
+
+-- footnote
+-- id: 7
+-- title: International Press Telecommunications Council
+-- url: https://iptc.org/
+
+The global standards body of the news media. Responsible
+for making the IPTC metadata spec.
+
+-- footnote
+-- id: 8
+-- title: IPTC Announces New Properties in Photo Metadata to Make Images More Accessible
+-- url: https://iptc.org/news/iptc-announces-new-properties-in-photo-metadata-to-make-images-more-accessible/
+
+
+
+
+-- css
+
+.book-grid {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 20px;
+}
+
+.book-grid-alt {
+  display: grid;
+  grid-template-columns: 1fr 100px 1fr;
+  gap: 20px;
+}
+
+.book-to-read-example-section {
+  font-size: 0.85rem;
+  border: 1px solid #333;
+  padding: 1.2rem;
+  border-radius: 0.3rem;
+}
+
+.example-grid {
+  --min: 15ch;
+  --gap: 1rem;
+  display: grid;
+  grid-gap: var(--gap);
+  grid-template-columns: repeat(
+    auto-fit, 
+    minmax(
+      min(100%, var(--min)), 1fr
+    )
+  );
+}
+
+.green {
+    color: green;
+}
+
+.neo-example {
+  font-size: 0.85rem;
+  border: 1px solid #333;
+  padding: 1.2rem;
+  border-radius: 0.3rem;
+}
 
 
 

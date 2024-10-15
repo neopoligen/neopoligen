@@ -7,9 +7,9 @@
 [! for child in section.children !]
   [! if loop.first !]
     <h1 class="section-heading">
-    [! for span in child.spans !]
-      [@ theme.output_span(site, page_id, span) @]
-    [! endfor !]
+    [!- for span in child.spans -!]
+      [@- theme.output_span(site, page_id, span) -@]
+    [!- endfor -!]
     </h1>
     [! if section.attr_spans.subtitle !]
       <p class="section-subtitle">

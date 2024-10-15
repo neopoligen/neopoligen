@@ -9,9 +9,7 @@ print("Hello, World")
 -- expected-output/
 
 <section class="code-section">
-  <div class="code-language">python
-  </div>
-  <pre>
+  <pre class="code-pre">
     <code>
       <span class="line-marker">
       </span>

@@ -1,4 +1,7 @@
-[! import "includes/theme.neoj" as theme -!]
-<[@ span.type @] class="[! for c in span.classes !][@ c @][! endfor !]">[!- for child in span.children -!]
+[!- import "includes/theme.neoj" as theme -!]
+<[@ span.type @] 
+[! if span.classes[0] !] class="[! for c in span.classes !][@ c @][! endfor !]"
+[! endif !]
+>[!- for child in span.children -!]
 [@- theme.output_span(site, page_id, child) -@]
 [!- endfor -!]</[@ span.type @]>

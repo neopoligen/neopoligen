@@ -7,9 +7,7 @@
 [! for child in section.children !]
   [! if loop.first !]
     <h1 class="page-title">
-    [! for span in child.spans !]
-      [@ theme.output_span(site, page_id, span) @]
-    [! endfor !]
+      [@- theme.output_spans(site, page_id, child.spans) -@]
     </h1>
     [! if section.attr_spans.subtitle !]
       <p class="page-subtitle">
@@ -22,7 +20,5 @@
 [! endfor !]
 </hgroup>
 
-
 [! include "subsections/content-skip-one-block.neoj" !]
-
 [! include "subsections/end-section.neoj" !]

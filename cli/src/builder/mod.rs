@@ -7,7 +7,6 @@ use crate::site_config::SiteConfig;
 use crate::source_page::SourcePage;
 use crate::theme_test::ThemeTest; // this might be deprecated
 use anyhow::Result;
-use fs_extra::dir::copy;
 use image::io::Reader;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
@@ -243,9 +242,6 @@ impl Builder {
     #[instrument(skip(self))]
     pub fn deploy_theme_files(&self) {
         event!(Level::DEBUG, "Deploying Theme Files");
-        let mut options = fs_extra::dir::CopyOptions::new();
-        options.overwrite = true;
-        options.content_only = true;
         let source_dir = self.config.as_ref().unwrap().theme_dir().join("files");
         let dest_dir = self
             .config
@@ -253,10 +249,9 @@ impl Builder {
             .unwrap()
             .output_dest_dir()
             .join("theme");
-        match copy(source_dir, dest_dir, &options) {
-            Ok(_) => (),
-            Err(e) => println!("{}", e),
-        }
+        // TODO: handle the result from copy_dir which
+        // is an error.
+        let _ = copy_dir(&source_dir, &dest_dir);
     }
 
     #[instrument(skip(self))]
@@ -535,6 +530,7 @@ impl Builder {
         event!(Level::INFO, "Outputting pages");
         let mut env = Environment::new();
         env.add_function("highlight_code", highlight_code);
+        env.add_function("highlight_code_no_nums", highlight_code_no_nums);
         env.add_function("highlight_span", highlight_span);
         env.set_syntax(
             SyntaxConfig::builder()
@@ -576,7 +572,12 @@ impl Builder {
                 }
             }) {
                 match template.render(context!(
-                    page => Value::from_serialize(&page),
+                   page => Value::from_serialize(&page),
+
+                // TODO: Figure out if you can send this as an object so
+                // you don't have to serialize which will hopefully make things
+                // faster
+                 // page => Value::from_object(page.clone()),
                     site=> &site,
                 )) {
                     Ok(output) => {
@@ -656,6 +657,7 @@ impl Builder {
         env.set_lstrip_blocks(true);
         env.set_trim_blocks(true);
         env.add_function("highlight_code", highlight_code);
+        env.add_function("highlight_code_no_nums", highlight_code_no_nums);
         env.add_function("highlight_span", highlight_span);
         // TODO: Add start-test-template and expected-output templates
         // TODO: Update "pages/post/published.neoj" for theme test

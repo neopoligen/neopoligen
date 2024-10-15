@@ -1,9 +1,8 @@
 [! import "includes/theme.neoj" as theme !]
 
-
 [TODO: Code shorthand span ]
 
-[#
+[#-
 <code 
 
 [@ theme.span_classes(span) -@]
@@ -18,4 +17,4 @@
 [! endfor !]
 [@- highlight_span(span.parsed_text(), ns.lang) -@]
 </code>
-#]
+-#]

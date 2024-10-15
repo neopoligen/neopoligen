@@ -1,0 +1,32 @@
+-- start-theme-test
+
+-- code/
+-- subtitle: file: some/file/path.txt
+
+delta whiskey
+
+-- /code
+
+-- expected-output/
+
+
+<section class="code-section">
+<div class="code-wrapper">
+<div class="code-subtitle">file: some/file/path.txt</div>
+<pre class="code-pre">
+<code>
+<span class="line-marker"></span>
+<span class="text plain">delta whiskey</span>
+</code>
+</pre>
+</div>
+</section>
+
+-- /expected-output
+
+
+-- metadata
+-- updated: 2024-06-22T11:57:11-04:00
+-- id: 2if26rbsadfwer
+
+

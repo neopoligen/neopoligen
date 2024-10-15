@@ -325,5 +325,172 @@ mod test {
         assert_eq!(left, right);
     }
 
+    #[test]
+    fn nested_code_test() {
+        let source = "-- list/\n\n- alfa\n\n-- code/\n\nbravo\n\n-- /code\n\n- charlie\n\n-- /list";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "",
+            Section {
+                attrs: vec![],
+                bounds: SectionBounds::Start,
+                kind: SectionKind::List {
+                    children: vec![
+                        Section {
+                            attrs: vec![],
+                            bounds: SectionBounds::Full,
+                            kind: SectionKind::ListItem {
+                                children: vec![
+                                    Section {
+                                        attrs: vec![],
+                                        bounds: SectionBounds::Full,
+                                        kind: SectionKind::Block {
+                                            spans: vec![Span {
+                                                attrs: vec![],
+                                                kind: SpanKind::WordPart,
+                                                parsed_text: "alfa".to_string(),
+                                            }],
+                                        },
+                                        r#type: "block-of-text".to_string(),
+                                    },
+                                    Section {
+                                        attrs: vec![],
+                                        bounds: SectionBounds::Start,
+                                        kind: SectionKind::Raw {
+                                            children: vec![Section {
+                                                attrs: vec![],
+                                                bounds: SectionBounds::End,
+                                                kind: SectionKind::Raw {
+                                                    text: None,
+                                                    children: vec![],
+                                                },
+                                                r#type: "code".to_string(),
+                                            }],
+                                            text: Some("bravo".to_string()),
+                                        },
+                                        r#type: "code".to_string(),
+                                    },
+                                ],
+                            },
+                            r#type: "list-item".to_string(),
+                        },
+                        Section {
+                            attrs: vec![],
+                            bounds: SectionBounds::Full,
+                            kind: SectionKind::ListItem {
+                                children: vec![Section {
+                                    attrs: vec![],
+                                    bounds: SectionBounds::Full,
+                                    kind: SectionKind::Block {
+                                        spans: vec![Span {
+                                            attrs: vec![],
+                                            kind: SpanKind::WordPart,
+                                            parsed_text: "charlie".to_string(),
+                                        }],
+                                    },
+                                    r#type: "block-of-text".to_string(),
+                                }],
+                            },
+                            r#type: "list-item".to_string(),
+                        },
+                        Section {
+                            attrs: vec![],
+                            bounds: SectionBounds::End,
+                            kind: SectionKind::List { children: vec![] },
+                            r#type: "list".to_string(),
+                        },
+                    ],
+                },
+                r#type: "list".to_string(),
+            },
+        );
+        let right = list_section_start(source, &config.sections, 0).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn nested_code_test_nested_list_item() {
+        let source =
+            "-- list/\n\n- alfa\n\n-- code/\n\nbravo\n\n-- /code\n\n- charlie\n\n-- /list\n\n-- h2";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "-- h2",
+            Section {
+                attrs: vec![],
+                bounds: SectionBounds::Start,
+                kind: SectionKind::List {
+                    children: vec![
+                        Section {
+                            attrs: vec![],
+                            bounds: SectionBounds::Full,
+                            kind: SectionKind::ListItem {
+                                children: vec![
+                                    Section {
+                                        attrs: vec![],
+                                        bounds: SectionBounds::Full,
+                                        kind: SectionKind::Block {
+                                            spans: vec![Span {
+                                                attrs: vec![],
+                                                kind: SpanKind::WordPart,
+                                                parsed_text: "alfa".to_string(),
+                                            }],
+                                        },
+                                        r#type: "block-of-text".to_string(),
+                                    },
+                                    Section {
+                                        attrs: vec![],
+                                        bounds: SectionBounds::Start,
+                                        kind: SectionKind::Raw {
+                                            children: vec![Section {
+                                                attrs: vec![],
+                                                bounds: SectionBounds::End,
+                                                kind: SectionKind::Raw {
+                                                    text: None,
+                                                    children: vec![],
+                                                },
+                                                r#type: "code".to_string(),
+                                            }],
+                                            text: Some("bravo".to_string()),
+                                        },
+                                        r#type: "code".to_string(),
+                                    },
+                                ],
+                            },
+                            r#type: "list-item".to_string(),
+                        },
+                        Section {
+                            attrs: vec![],
+                            bounds: SectionBounds::Full,
+                            kind: SectionKind::ListItem {
+                                children: vec![Section {
+                                    attrs: vec![],
+                                    bounds: SectionBounds::Full,
+                                    kind: SectionKind::Block {
+                                        spans: vec![Span {
+                                            attrs: vec![],
+                                            kind: SpanKind::WordPart,
+                                            parsed_text: "charlie".to_string(),
+                                        }],
+                                    },
+                                    r#type: "block-of-text".to_string(),
+                                }],
+                            },
+                            r#type: "list-item".to_string(),
+                        },
+                        Section {
+                            attrs: vec![],
+                            bounds: SectionBounds::End,
+                            kind: SectionKind::List { children: vec![] },
+                            r#type: "list".to_string(),
+                        },
+                    ],
+                },
+                r#type: "list".to_string(),
+            },
+        );
+        let right = list_section_start(source, &config.sections, 0).unwrap();
+        assert_eq!(left, right);
+    }
+
     //
 }

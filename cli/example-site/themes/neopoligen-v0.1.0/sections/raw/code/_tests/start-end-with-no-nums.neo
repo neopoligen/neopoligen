@@ -1,0 +1,30 @@
+-- start-theme-test
+
+-- code/
+-- no-nums
+
+alfa bravo
+
+-- /code
+
+-- expected-output/
+
+
+<section class="code-section">
+<div class="code-wrapper">
+<pre class="code-pre-no-nums">
+<code>
+<span class="text plain">alfa bravo</span>
+</code>
+</pre>
+</div>
+</section>
+
+-- /expected-output
+
+
+-- metadata
+-- updated: 2024-06-22T11:57:11-04:00
+-- id: 2if26rbs
+
+

@@ -9,9 +9,8 @@ print("Hello, World")
 -- expected-output/
 
 <section class="code-section">
-  <div class="code-language">python
-  </div>
-  <pre>
+<div class="code-wrapper">
+  <pre class="code-pre">
     <code>
       <span class="line-marker">
       </span>
@@ -43,6 +42,7 @@ print("Hello, World")
       </span>
     </code>
   </pre>
+</div>
 </section>
 
 -- /expected-output

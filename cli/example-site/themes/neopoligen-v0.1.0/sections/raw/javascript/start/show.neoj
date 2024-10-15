@@ -1,0 +1,13 @@
+[! import "includes/theme.neoj" as theme !]
+
+<section
+    [@- theme.section_classes(section, "javascript-section-show") -@] 
+    [@- section.attr_string -@]>
+
+[! if "heading" in section.attr_spans !]
+<h3>[@ theme.output_spans(site, page_id, section.attr_spans.heading) @]</h3>
+[! endif !]
+
+<div class="code-wrapper code-button-wrapper">
+<pre class="code-block"><code>[@ highlight_code(section.text, "javascript") @]</code></pre>
+</div>

@@ -23,6 +23,7 @@ a:focus {
 
 .aside-section {
   margin-left: 6rem;
+  margin-right: 0.6rem;
   border: 1px solid var(--color-charlie-80);
   border-radius: 0.3rem;
   padding-inline: 1.3rem;
@@ -59,21 +60,35 @@ body {
   border-bottom-right-radius: 0.3rem;
 }
 
+.fin-token {
+  padding-block: 3rem;
+  text-align: center;
+  color: var(--color-charlie-80);
+}
+
 .flow > :where(:not(:first-child)) {
   margin-top: var(--flow-space, 1em);
 }
 
 footer {
-  max-width: 56ch;
+  max-width: 62ch;
   margin: auto;
   min-height: 5rem;
   padding-inline: 1rem;
+}
+
+.footnote-number {
+  border-right: 1px solid var(--color-charlie-40);
 }
 
 .footnote-ref {
   display: grid;
   grid-template-columns: 2ch 1fr 4ch;
   gap: 20px;
+}
+
+.footnote-return-arrow {
+  border-left: 1px solid var(--color-charlie-40);
 }
 
 .green {
@@ -116,7 +131,7 @@ h6 {
 }
 
 header {
-  max-width: 56ch;
+  max-width: 62ch;
   margin: auto;
   padding-inline: 1rem;
 }
@@ -152,9 +167,8 @@ img {
     width: 7.5ch;
 }
 
-
 main {
-  max-width: 56ch;
+  max-width: 62ch;
   margin: auto;
   padding-inline: 1rem;
 }
@@ -170,6 +184,10 @@ main {
 
 .note-title {
   font-weight: bold;
+}
+
+.pad-top-1 {
+  padding-top: 1rem;
 }
 
 .photo {
@@ -194,4 +212,17 @@ main {
   border: 1px solid var(--color-alfa);
   border-radius: 0.3rem;
   margin: 2rem;
+}
+
+.warning-section {
+  border: 1px solid var(--color-foxtrot);
+  border-radius: 0.3rem;
+  margin-top: 1.6rem;
+  margin-inline: 0.6rem;
+  padding-block: 0.74rem;
+  padding-inline: 1.3rem;
+}
+
+.warning-title {
+  font-weight: bold;
 }

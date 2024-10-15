@@ -16,6 +16,20 @@ use syntect::parsing::SyntaxSet;
 use syntect::util::LinesWithEndings;
 use walkdir::WalkDir;
 
+pub fn copy_dir(source_dir: &PathBuf, dest_dir: &PathBuf) -> Result<(), std::io::Error> {
+    for entry in WalkDir::new(source_dir) {
+        let source_path = entry?.into_path();
+        let dest_path = dest_dir.join(source_path.strip_prefix(source_dir).unwrap());
+        if source_path.is_dir() {
+            fs::create_dir_all(dest_path)?;
+        } else {
+            let data = std::fs::read(source_path)?;
+            std::fs::write(dest_path, &data)?;
+        }
+    }
+    Ok(())
+}
+
 pub fn empty_dir(dir: &PathBuf) -> std::io::Result<()> {
     for entry in dir.read_dir()? {
         let entry = entry?;
@@ -248,6 +262,16 @@ pub fn get_neo_files_in_dir_recursively(dir: &PathBuf) -> Vec<PathBuf> {
 pub fn highlight_code(args: &[Value]) -> String {
     let code = args[0].to_string();
     let lang = args[1].to_string();
+    let start = if args.len() == 4 {
+        args[2].to_string().parse::<usize>().unwrap()
+    } else {
+        0
+    };
+    let end = if args.len() == 4 {
+        args[3].to_string().parse::<usize>().unwrap() - start + 1
+    } else {
+        0
+    };
     let syntax_set = SyntaxSet::load_defaults_newlines();
     let syntax = syntax_set
         .find_syntax_by_token(&lang)
@@ -260,9 +284,64 @@ pub fn highlight_code(args: &[Value]) -> String {
     let initial_html = html_generator.finalize();
     let output_html: Vec<_> = initial_html
         .lines()
-        .map(|line| format!(r#"<span class="line-marker"></span>{}"#, line))
+        .map(|line| format!(r#"<span class="aws-code-block-marker"></span>{}"#, line))
         .collect();
-    output_html.join("\n")
+    if start > 0 {
+        output_html
+            .iter()
+            .skip(start - 1)
+            .take(end)
+            .map(|x| x.to_string())
+            .collect::<Vec<String>>()
+            .join("\n")
+    } else {
+        output_html.join("\n")
+    }
+}
+
+// TODO: Remove this in favor of handling the
+// nums v no-nums in the templates and CSS.
+pub fn highlight_code_no_nums(args: &[Value]) -> String {
+    let code = args[0].to_string();
+    let lang = args[1].to_string();
+    let start = if args.len() == 4 {
+        args[2].to_string().parse::<usize>().unwrap()
+    } else {
+        0
+    };
+    let end = if args.len() == 4 {
+        args[3].to_string().parse::<usize>().unwrap() - start + 1
+    } else {
+        0
+    };
+    let syntax_set = SyntaxSet::load_defaults_newlines();
+    let syntax = syntax_set
+        .find_syntax_by_token(&lang)
+        .unwrap_or_else(|| syntax_set.find_syntax_plain_text());
+    let mut html_generator =
+        ClassedHTMLGenerator::new_with_class_style(syntax, &syntax_set, ClassStyle::Spaced);
+    for line in LinesWithEndings::from(&trim_empty_lines(&code)) {
+        let _ = html_generator.parse_html_for_line_which_includes_newline(line);
+    }
+    let initial_html = html_generator.finalize();
+    // NOTE: This may not be the most efficient way to make the lines
+    // since there's no addition like in the regular highlight_code()
+    // function, but it works fine.
+    let output_html: Vec<_> = initial_html
+        .lines()
+        .map(|line| format!(r#"{}"#, line))
+        .collect();
+    if start > 0 {
+        output_html
+            .iter()
+            .skip(start - 1)
+            .take(end)
+            .map(|x| x.to_string())
+            .collect::<Vec<String>>()
+            .join("\n")
+    } else {
+        output_html.join("\n")
+    }
 }
 
 pub fn highlight_span(args: &[Value]) -> String {
@@ -446,5 +525,21 @@ pub fn write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String
             Err(e) => Err(e.to_string()),
         },
         None => Err("Could not make directory".to_string()),
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn check_highlight_code_no_nums() {
+        let left = highlight_code_no_nums(&[
+            minijinja::Value::from("asdf".to_string()),
+            minijinja::Value::from("txt".to_string()),
+        ]);
+        let right = r#"<span class="text plain">asdf</span>"#.to_string();
+        assert_eq!(left, right);
     }
 }

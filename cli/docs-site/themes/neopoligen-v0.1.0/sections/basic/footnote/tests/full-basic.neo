@@ -8,13 +8,15 @@ Some Text
 -- expected-output/
 
 <li class="footnote-ref">
-  <div id="fnref-1-text">
+  <div id="fnref-1-text" class="footnote-number">
     <a href="#fnref-1-link">1</a>
   </div>
-  <div class="flow">
-    <p>Some Text</p>
+  <div class="footnote-text">
+    <div class="flow">
+      <p>Some Text</p>
+    </div>
   </div>
-  <div>
+  <div class="footnote-return-arrow">
     <a href="#fnref-1-link">&#x2934;</a>
   </div>
 </li>

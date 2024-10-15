@@ -1,0 +1,18 @@
+[!- import "includes/theme.neoj" as theme -!]
+<section
+    [@- theme.section_classes(section, "html-section-show") -@] 
+    [@- section.attr_string -@]>
+    
+<h3>HTML</h3>
+<div class="code-wrapper code-button-wrapper">
+<pre class="code-block"><code>[@ highlight_code(section.text, "html") @]</code></pre>
+</div>
+
+<h3 class="pad-top-1">Output</h3>
+<div class="html-output-wrapper">
+[! autoescape false !]
+[@ section.text @]
+[! endautoescape !]
+</div>
+
+

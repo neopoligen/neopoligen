@@ -1,14 +1,25 @@
-[! import "includes/theme.neoj" as theme !]
+[!- import "includes/theme.neoj" as theme -!]
 
 <section
     [@- theme.section_classes(section, "pre-section") -@] 
     [@- section.attr_string -@]>
 
+<div class="pre-wrapper">
+
+
 [! if "title" in section.attr_spans !]
-<h2>[@ theme.output_spans(site, page_id, section.attr_spans.title) @]</h2>
+<div class="pre-title">
+[@ theme.output_spans(site, page_id, section.attr_spans.title) @]
+</div>
 [! endif !]
 
-<pre>[! autoescape true !][@- section.text -@][! endautoescape !]</pre>
+[! if "subtitle" in section.attr_spans !]
+<div class="pre-subtitle">
+[@ theme.output_spans(site, page_id, section.attr_spans.subtitle) @]
+</div>
+[! endif !]
+
+<pre class="pre-block">[! autoescape true !][@- section.text -@][! endautoescape !]</pre>
 
 [! for child in section.children !]
     [@ theme.output_section(site, page_id, child) @]

@@ -1,28 +1,79 @@
 <!DOCTYPE html>
-<html lang="[@- site.config.default_language -@]">
+<html lang="en">
 <head>
-<title>[@ page.title @]</title>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    function currentSchemer() {
+      const schemer = localStorage.getItem('schemer')
+      if (schemer) {
+        return schemer
+      } else {
+        return hasSystem() ? "auto" : "light"
+      }
+    }
+    function prefersDark() {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches
+    }
+    function prefersLight() {
+      return window.matchMedia("(prefers-color-scheme: light)").matches
+    }
+    function hasSystem() {
+      return prefersDark() || prefersLight() ? true : false
+    }
+    function currentScheme() {
+      if (currentSchemer() === "auto") {
+        return prefersDark() ? "dark" : "light"
+      } else {
+        return currentSchemer()
+      }
+    }
+    
+    [! if "no-styles" not in page.flags !]
+      const startSheet = document.createElement("style")
+      if (currentScheme() === "dark") {
+        startSheet.innerHTML = `body { background-color: oklch(16.009% 0.03076 39.927); } html { visibility: hidden; }`
+      } else {
+        startSheet.innerHTML = `body { background-color: oklch(93.076% 0.03467 92.999); } html { visibility: hidden; }`
+      }
+      document.head.appendChild(startSheet)
+    [! endif !]
+  </script>
+  
+  [! if "no-styles" not in page.flags !]
+  <noscript>
+    <style>
+      body { background-color: oklch(93.076% 0.03467 92.999); } 
+      html { visibility: hidden; }
+    </style>
+  </noscript>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    rel="preload" 
+    href="/theme/fonts/Inter-VariableFont_slnt,wght.ttf"
+    as="font" 
+    type="font/ttf" 
+    />
+  <link rel="preload" href="/theme/styles/theme.css" as="style" />
+[! endif !]
 
+<title>[@ page.title @]</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta property="og:title" content="[@ page.title @]" />
 <meta property="og:description" content="a post from alan w. smith" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="[@ site.config.base_url @][@ page.absolute_url @]" />
 <meta property="og:image" content="[@ site.config.base_url @]/neo-images/default-og-image/1200w.jpg" />
-
-<link rel="apple-touch-icon" sizes="180x180" href="/theme/favicons/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/theme/favicons/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/theme/favicons/favicon-16x16.png">
-<link rel="manifest" href="/theme/favicons/site.webmanifest">
-<link rel="mask-icon" href="/theme/favicons/safari-pinned-tab.svg" color="#5bbad5">
-<link rel="shortcut icon" href="/theme/favicons/favicon.ico">
-<meta name="msapplication-TileColor" content="#da532c">
-<meta name="msapplication-config" content="/theme/favicons/browserconfig.xml">
-<meta name="theme-color" content="#000000">
-<link rel="stylesheet" href="/theme/styles/variables.css" />
-<link rel="stylesheet" href="/theme/styles/theme.css" />
-<link rel="stylesheet" href="/theme/styles/syntax-highlighting/code-solarized-dark.css" />
+<link rel="apple-touch-icon" sizes="180x180" href="/theme/favicons/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/theme/favicons/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/theme/favicons/favicon-16x16.png" />
+<link rel="manifest" href="/theme/favicons/site.webmanifest" />
+<link rel="mask-icon" href="/theme/favicons/safari-pinned-tab.svg" color="#5bbad5" />
+<link rel="shortcut icon" href="/theme/favicons/favicon.ico" />
+<meta name="msapplication-TileColor" content="#da532c" />
+<meta name="msapplication-config" content="/theme/favicons/browserconfig.xml" />
+<meta name="theme-color" content="#000000" />
+<meta name="description" content="A post from alan w. smith" />
 
 [!- for section in page.sections -!]
 [!- if section.type == "head" -!]
@@ -31,6 +82,48 @@
 [! endautoescape !]
 [!- endif -!]
 [!- endfor -!]
+
+</head>
+<body>
+  [! if "no-styles" not in page.flags !]
+    <link rel="stylesheet" href="/theme/styles/theme.css" />
+  [! endif !]
+
+  <header>
+  [! if "no-styles" not in page.flags !]
+    <div class="color-scheme-switcher"></div>
+  [! endif !]
+      <div>
+        <a href="/">Home</a>
+      </div>
+      [! if site.config.base_url == "www.alanwsmith.com" !]
+      <div class="under-construction">
+        NOTE: I'm in the middle of upgrading the site. Most things are in place, but
+        some things are missing and/or broken. This includes alt text for images. Please
+        bear with me while I get things fixed. 
+      </div>
+      [! endif !]
+  </header>
+    <main class="flow">
+    [!- block body -!][!- endblock -!]
+    [!- block endmatter -!][!- endblock -!]
+    </main>
+    <footer>
+        from <a href="https://hachyderm.io/@TheIdOfAlan">alan w smith</a>
+    </footer>
+[#
+<pre>
+[@ page|tojson(true) @]
+</pre>
+#]
+
+[# BE CAREFUL TURNING THIS ON ON THE MAIN SITE IT IS HUGE
+AND YOU CAN FILL UP ALL YOUR DISK SPACE
+BECAUSE IT IS LIKE 500GB EASY
+<pre>
+[@ site|tojson(true) @]
+</pre>
+#]
 
 [!- for section in page.sections -!]
 [!- if section.type == "css" -!]
@@ -42,47 +135,26 @@
 [!- endif -!]
 [!- endfor -!]
 
+[! if "no-scripts" not in page.flags !]
+  <script src="/theme/scripts/theme.js" type="module"></script>
+[! endif !]
+
 [!- for section in page.sections -!]
 [!- if section.type == "javascript" -!]
-<script>
+<script type="module">
 [! autoescape false !]
 [@ section.text @]
 [! endautoescape !]
 </script>
 [!- endif -!]
 [!- endfor -!]
-
-</head>
-<body>
-<header>
-      <a href="/">Home</a>
-      [#
-      <div class="under-construction">
-        NOTE: I'm in the middle of upgrading the site. Most things are in place, but
-        some things are missing and/or broken. This includes alt text for images. Please
-        bear with me while I get things fixed. 
-      </div>
-      #]
-    </header>
-<main class="flow">
-[!- block body -!][!- endblock -!]
-[!- block endmatter -!][!- endblock -!]
-</main>
-<footer></footer>
-
-
-[#
-<pre>
-[@ page|tojson(true) @]
-</pre>
-#]
-
-[#
-<pre>
-[@ site|tojson(true) @]
-</pre>
-#]
+  
+[! if "no-styles" not in page.flags !]
+    <noscript>
+      <style>html { visibility: visible; }</style>
+    </noscript>
+[! endif !]
 
 </body>
-
+</html>
 

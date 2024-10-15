@@ -1,5 +1,7 @@
 [! if site.images[section.flags[0]] !]
 [! set img = site.images[section.flags[0]] !]
 <img 
-src="[@- img.dir -@]/[@- img.raw_width-@]w.[@- img.extension -@]" />
+src="[@- img.dir -@]/[@- img.raw_width-@]w.[@- img.extension -@]"
+alt="My apologies. Alt text is currently offline. I'm working on an update to fix it."
+/>
 [! endif !]

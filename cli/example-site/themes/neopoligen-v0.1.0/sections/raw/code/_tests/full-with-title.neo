@@ -8,8 +8,9 @@ Code with a title
 -- expected-output/
 
 <section class="code-section">
-  <h2>Some Code</h2>
-  <pre>
+<div class="code-wrapper">
+  <div class="code-title">Some Code</div>
+  <pre class="code-pre">
     <code>
       <span class="line-marker">
       </span>
@@ -17,6 +18,7 @@ Code with a title
       </span>
     </code>
   </pre>
+</div>
 </section>
 
 -- /expected-output

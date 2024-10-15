@@ -8,7 +8,7 @@ this is code without any attrs
 
 
 <section class="code-section">
-<pre>
+<pre class="code-pre">
 <code>
 <span class="line-marker"></span>
 <span class="text plain">this is code without any attrs</span>
