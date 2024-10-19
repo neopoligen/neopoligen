@@ -11,11 +11,7 @@
   and section.type != "copycode" 
   and section.type != "ps" 
 -!]
-[@- theme.output_section(site, page.id, section) -@]
-[!- endif -!]
-
-[!- if section.type == "copycode" -!]
-[@- theme.output_section_v2(site, page, section) -@]
+[@- theme.output_section(site, page, section) -@]
 [!- endif -!]
 
 [!- endfor -!]

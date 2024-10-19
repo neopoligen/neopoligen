@@ -1,10 +1,10 @@
 [#############################################################################]
-[!- macro debug_section(site, page_id, section) -!]
+[!- macro debug_section(site, page, section) -!]
 <li>
     <p>[@ section.kind @]-[@ section.type @]-[@ section.bounds @]</p>
 <ul>
 [!- for child in section.children -!]
-[@- debug_section(site, page_id, child) -@]
+[@- debug_section(site, page, child) -@]
 [!- endfor -!]
 </ul>
 </li>
@@ -12,24 +12,19 @@
 
 
 [#############################################################################]
-[!- macro output_section(site, page_id, section) -!]
+[!- macro output_section(site, page, section) -!]
 [!- include section.template_list ignore missing -!]
 [!- endmacro -!]
 
 [#############################################################################]
-[!- macro output_section_v2(site, page, section) -!]
-[!- include section.template_list ignore missing -!]
-[!- endmacro -!]
-
-[#############################################################################]
-[!- macro output_span(site, page_id, span) -!]
+[!- macro output_span(site, page, span) -!]
 [!- include span.template_list ignore missing -!]
 [!- endmacro -!]
 
 [#############################################################################]
-[!- macro output_spans(site, page_id, spans) -!]
+[!- macro output_spans(site, page, spans) -!]
 [!- for span in spans -!]
-[@- output_span(site, page_id, span) -@]
+[@- output_span(site, page, span) -@]
 [!- endfor -!]
 [!- endmacro -!]
 

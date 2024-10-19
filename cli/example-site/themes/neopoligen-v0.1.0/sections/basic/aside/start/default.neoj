@@ -4,10 +4,9 @@
     [@- theme.section_classes(section, "aside-section") -@] 
     [@- section.attr_string -@]>
     <div class="aside-title">Aside</div>
+
 <aside class="flow">
 [! include "subsections/content-all-blocks.neoj" !]
 </aside>
 
-[! for child in section.children !]
-    [@ theme.output_section(site, page_id, child) @] 
-[! endfor !]
+[! include "subsections/end-section.neoj" !]

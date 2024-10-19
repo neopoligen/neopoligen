@@ -720,6 +720,12 @@ main {
   padding: var(--pad-1);
 }
 
+.preview-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+}
+
 .red {
   color: red;
 }
