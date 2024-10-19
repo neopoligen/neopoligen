@@ -3,23 +3,17 @@
 <section 
     [@- theme.section_classes(section, "preview-section") -@] 
     [@- section.attr_string -@]>
-
 [! if 'id' in section.attrs !]
-<a href="[@ site.absolute_page_urls[section.attrs.id] @]">[@ site.page_titles[section.attrs.id] @]</a>
+<a href="[@ site.pages[section.attrs.id].absolute_url @]">[@ site.pages[section.attrs.id].title @]</a>
 [! endif !]
 
-
-<pre>
-[@ site|tojson(true) @]
-</pre>
-
-[#
-
-<a href="[@ site.absolute_page_urls[span.children[0].parsed_text] @]">
-  [@ site.page_titles[span.children[0].parsed_text] @]
-</a>
-
-#]
+<div class="preview-blurb">
+[! for sub_section in site.pages[section.attrs.id].sections !]
+[! if sub_section.type == "blurb" !]
+[@- theme.output_section(site, site.pages[section.attrs.id], sub_section) -@]
+[! endif !]
+[! endfor !]
+</div>
 
 [! include "subsections/content-all-blocks.neoj" !]
 [! include "subsections/end-section.neoj" !]
