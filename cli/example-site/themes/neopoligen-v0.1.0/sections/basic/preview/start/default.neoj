@@ -3,10 +3,9 @@
 <section 
     [@- theme.section_classes(section, "preview-section") -@] 
     [@- section.attr_string -@]>
+
 [! if 'id' in section.attrs !]
 <a href="[@ site.pages[section.attrs.id].absolute_url @]">[@ site.pages[section.attrs.id].title @]</a>
-[! endif !]
-
 <div class="preview-blurb">
 [! for sub_section in site.pages[section.attrs.id].sections !]
 [! if sub_section.type == "blurb" !]
@@ -14,6 +13,8 @@
 [! endif !]
 [! endfor !]
 </div>
+[! endif !]
+
 
 [! include "subsections/content-all-blocks.neoj" !]
 [! include "subsections/end-section.neoj" !]

@@ -1,23 +1,33 @@
 -- title
 
-Combine Two vecs In Rust
+Scratch Page Testing
 
--- youtube
--- 4EmstuO0Em8
+-- css
+-- template: show
+-- id: copy-target
+
+body {
+  color: blue;
+}
+
+-- h2
+
+This is a copy
+
+-- copycode
+-- from: copy-target
+-- start: 2
+-- end: 2
 
 
 -- blurb/
 
-Here's a line of code
+In which we examine:
 
--- youtube
--- 4EmstuO0Em8
-
--- pre
-
-This is a thing
-asdf
-
+-- copycode
+-- from: copy-target
+-- start: 2
+-- end: 2
 
 -- /blurb
 

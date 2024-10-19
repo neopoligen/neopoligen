@@ -1,0 +1,15 @@
+[! import "includes/theme.neoj" as theme !]
+
+<h2>Notes</h2>
+
+<ul
+    [@- theme.section_classes(section, "flow") -@] 
+    [@- section.attr_string -@]>
+
+    
+[! for child in section.children !]
+[@ theme.output_section(site, page_id, child) @]
+[! endfor !]
+
+
+

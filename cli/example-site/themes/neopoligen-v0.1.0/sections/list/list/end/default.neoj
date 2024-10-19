@@ -1,3 +1,5 @@
+[! import "includes/theme.neoj" as theme !]
+
 </ul>
 
 [! for child in section.children !]
