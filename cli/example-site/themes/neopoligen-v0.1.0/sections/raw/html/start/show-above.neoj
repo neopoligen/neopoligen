@@ -3,6 +3,8 @@
     [@- theme.section_classes(section, "html-section-show") -@] 
     [@- section.attr_string -@]>
     
+
+<div class="html-show-wrapper">
 <h3>HTML</h3>
 
 <aws-code-block 
@@ -24,12 +26,12 @@
 <pre class="aws-code-block-show-nums"><code>[@- highlight_code(section.text, "html") -@]</code></pre></div>
 </aws-code-block>
 
+<h3>Output</h3>
 
-<h3 class="pad-top-1">Output</h3>
-<div class="html-output-wrapper">
+<div>
 [! autoescape false !]
 [@ section.text @]
 [! endautoescape !]
 </div>
 
-
+</div>

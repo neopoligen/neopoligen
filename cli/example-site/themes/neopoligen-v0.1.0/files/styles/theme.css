@@ -590,12 +590,10 @@ hr {
   margin-block: 1.5rem;
 }
 
-.html-output-wrapper {
-  font-size: var(--size-6);
-  background-color: var(--color-black-30);
-  border: 1px solid var(--color-bravo-10);
+.html-show-wrapper {
+  border: 1px solid var(--bw-reverse-40);
   border-radius: 0.3rem;
-  padding: 0.5rem;
+  padding: var(--pad-medium);
 }
 
 .html-section-show {
