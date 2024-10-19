@@ -2,12 +2,15 @@
 
 Welcome "TO" Neopoligen
 
+-- aside
+
+this is an aside
+
 
 -- div/
 -- class: preview-wrapper
 
-
--- preview 
+-- preview
 -- title: This is a preview
 
 alfa
@@ -20,10 +23,7 @@ bravo
 
 
 
-
-
 -- /div
-
 
 
 
