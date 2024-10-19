@@ -10,6 +10,7 @@
   and section.type != "endnote" 
   and section.type != "copycode" 
   and section.type != "ps" 
+  and section.type != "blurb" 
 -!]
 [@- theme.output_section(site, page.id, section) -@]
 [!- endif -!]
