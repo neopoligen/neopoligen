@@ -720,11 +720,18 @@ main {
   padding: var(--pad-1);
 }
 
+.preview-section {
+  padding: var(--pad-medium);
+  border: 1px solid var(--bw-reverse-40);
+  border-radius: var(--radius-medium);
+}
 .preview-wrapper {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-
+  gap: var(--pad-small);
 }
+
+
 
 .red {
   color: red;

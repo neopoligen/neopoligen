@@ -1,54 +1,24 @@
 -- title
 
-Welcome "TO" Neopoligen
-
--- code
--- python
-
-print("asdf")
-
-
-
-
--- html 
--- template: show-below
-
-<div>asdf</div>
-
+Neopoligen Example Site
 
 -- div/
 -- class: preview-wrapper
 -- no-flow
 
 -- preview
--- title: This is a preview
+-- id: 2gek2pg3
 
-alfa
 
--- preview 
--- title: This is a preview
+-- preview
+-- id: 2hnkong7
 
-bravo
 
 
 
 -- /div
 
 
-
--- p
-
-Is this thing on
-
- 
-<<ilink|This is a link|2ho8hakd>>
-
-<<tlink|2ho8hakd>>
-
-Image should to next
-
--- image
--- large-test-jpg
 
 
 -- metadata

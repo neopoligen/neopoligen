@@ -3,7 +3,24 @@
 <section 
     [@- theme.section_classes(section, "preview-section") -@] 
     [@- section.attr_string -@]>
-    THISDFSDFSLKDJFJ
+
+[! if 'id' in section.attrs !]
+[@ site.page_titles[section.attrs.id] @]
+[! endif !]
+
+
+[#
+<pre>
+[@ site|tojson(true) @]
+</pre>
+
+
+<a href="[@ site.absolute_page_urls[span.children[0].parsed_text] @]">
+  [@ site.page_titles[span.children[0].parsed_text] @]
+</a>
+
+#]
+
 [! include "subsections/content-all-blocks.neoj" !]
 [! include "subsections/end-section.neoj" !]
 
