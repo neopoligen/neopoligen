@@ -57,6 +57,8 @@
   <link rel="preload" href="/theme/styles/theme.css" as="style" />
 [! endif !]
 
+
+
 <title>[@ page.title @]</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta property="og:title" content="[@ page.title @]" />
@@ -139,6 +141,8 @@ BECAUSE IT IS LIKE 500GB EASY
 [! if "no-scripts" not in page.flags !]
   <script src="/theme/scripts/theme.js" type="module"></script>
 [! endif !]
+
+
 
 [!- for section in page.sections -!]
 [!- if section.type == "javascript" -!]
