@@ -5,6 +5,7 @@
 
 :root {
   --max-width: 62ch;
+  /* todo: replace these with pad-small, etc... */
   --pad-1: 0.1rem;
   --pad-2: 0.3rem;
   --pad-3: 0.6rem;
@@ -12,6 +13,12 @@
   --pad-5: 1.3rem;
   --pad-6: 3.1em;
   --pad-7: 6.2em;
+
+  --pad-small: 0.1rem;
+  --pad-medium: 0.3rem;
+  --pad-large: 0.9rem;
+  --pad-huge: 2.7rem;
+
   --size-1: 3.157rem;
   --size-2: 2.369rem;
   --size-3: 1.777rem;
@@ -20,12 +27,19 @@
   --size-6: 0.75rem;
   --size-7: 0.564rem;
   --size-base: 16px;
+  /* todo: replace these with radius-main, etc... */
   --radius-1: 0.1rem;
   --radius-2: 0.2rem;
   --radius-3: 0.3rem;
   --radius-4: 0.4rem;
   --radius-5: 0.5rem;
   --radius-6: 0.6rem;
+
+  --radius-small: 0.1rem;
+  --radius-medium: 0.3rem;
+  --radius-large: 0.6rem;
+  --radius-huge: 1.3rem;
+
 }
 
 :root,
@@ -503,6 +517,12 @@ footer {
   border-left: 1px solid var(--color-charlie-40);
 }
 
+.global-nav {
+  border-top: 1px solid var(--bw-reverse-40);
+  border-bottom: 1px solid var(--bw-reverse-40);
+  margin-top: 2rem;
+}
+
 .green {
   color: green;
 }
@@ -636,6 +656,7 @@ main {
   margin: auto;
   padding-inline: 1rem;
 }
+
 
 .new-tab-arrow {
   color: var(--color-black-40);
