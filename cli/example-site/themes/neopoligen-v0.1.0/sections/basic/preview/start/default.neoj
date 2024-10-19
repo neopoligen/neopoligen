@@ -5,15 +5,15 @@
     [@- section.attr_string -@]>
 
 [! if 'id' in section.attrs !]
-[@ site.page_titles[section.attrs.id] @]
+<a href="[@ site.absolute_page_urls[section.attrs.id] @]">[@ site.page_titles[section.attrs.id] @]</a>
 [! endif !]
 
 
-[#
 <pre>
 [@ site|tojson(true) @]
 </pre>
 
+[#
 
 <a href="[@ site.absolute_page_urls[span.children[0].parsed_text] @]">
   [@ site.page_titles[span.children[0].parsed_text] @]

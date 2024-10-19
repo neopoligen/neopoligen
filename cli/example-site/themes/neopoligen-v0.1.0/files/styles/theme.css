@@ -728,7 +728,7 @@ main {
 .preview-wrapper {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--pad-small);
+  gap: var(--pad-large);
 }
 
 
