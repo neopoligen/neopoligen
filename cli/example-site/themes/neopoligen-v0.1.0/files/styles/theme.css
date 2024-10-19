@@ -748,6 +748,12 @@ main {
   text-align: right;
 }
 
+.preview-thumbnail { 
+  max-width: 90px;
+  float: right;
+  border-radius: var(--radius-small);
+}
+
 .preview-title {
   min-height: 3.6rem;
   border-bottom: 1px solid var(--bw-reverse-40);
@@ -771,7 +777,6 @@ main {
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: var(--pad-large);
 }
-
 
 
 .red {
