@@ -9,11 +9,15 @@ Video Test
 
 -- blurb/
 
-This is the blurb
-
 -- youtube
 -- REPPgPcw4hk
 
+this is text
+
+-- p
+
+
+Let's have the <<strong|<<em|<<tablink|text|https://www.example.com/>>>>>> below the video
 
 -- /blurb
 

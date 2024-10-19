@@ -2,6 +2,7 @@
 
 Scratch Page Testing
 
+
 -- css
 -- template: show
 -- id: copy-target
@@ -22,21 +23,24 @@ This is a copy
 
 -- blurb/
 
-In which we examine:
-
-This <<strong|is>> new
 
 -- copycode
 -- from: copy-target
--- start: 2
--- end: 2
+-- start: 1
+-- end: 3
+
+-- p
+
+This <<strong|is>> new
 
 -- /blurb
+
 
 -- metadata
 -- created: 2024-05-09T11:51:56-04:00
 -- id: 2gek2pg3
 -- type: post
--- tag: rust 
--- status: scratch
+-- status: draft 
+-- tag: css
+
 

@@ -1,24 +1,60 @@
 -- title
+-- class: wrapper-width-medium
+
+
 
 Neopoligen Example Site
+
+This is the home page
+
+
+-- h2
+
+Main Stuff
+
 
 -- div/
 -- class: preview-wrapper
 -- no-flow
 
--- preview
--- id: 2gek2pg3
 
 -- preview
--- id: 2hnkong7
+-- from: 2gek2pg3
 
 -- preview
--- id: 2nei4xfz
+-- from: 2hnkong7
 
+-- preview
+-- from: 2nei4xfz
+
+-- preview
+-- from: 2nf439vo
+
+-- preview
+-- from: 2nf4oup7
+
+-- preview
+-- from: 2nf4y8pc
 
 -- /div
 
+-- h2
 
+Extra Stuff
+
+-- div/
+-- class: preview-wrapper
+-- no-flow
+
+
+
+-- preview
+-- from: 2nf4ciuz
+
+-- preview
+-- from: 2nf4n8av
+
+-- /div
 
 
 -- metadata

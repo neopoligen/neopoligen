@@ -3,5 +3,7 @@
 <section 
     [@- theme.section_classes(section, "blurb-section flow") -@] 
     [@- section.attr_string -@]>
+
+
 [! include "subsections/content-all-blocks.neoj" !]
 [! include "subsections/end-section.neoj" !]

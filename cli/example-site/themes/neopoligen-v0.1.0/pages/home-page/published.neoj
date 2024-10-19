@@ -1,4 +1,4 @@
-[!- extends "wrappers/one-column.neoj" -!]
+[!- extends "wrappers/home-page.neoj" -!]
 [!- include "includes/config.neoj" -!]
 [!- import "includes/theme.neoj" as theme -!]
 

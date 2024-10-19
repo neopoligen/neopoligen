@@ -6,6 +6,7 @@
 
 [! if section.flags[0] !]
 
+<div class="youtube-player-wrapper">
 <iframe 
   width="560" 
   height="315" 
@@ -15,12 +16,18 @@
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
   referrerpolicy="strict-origin-when-cross-origin" 
   allowfullscreen></iframe>
+</div>
 
 [! endif !]
 
+[# 
+TODO: NOTE: This is currently duplicaiting
+the content when rendered in a preview
+section on another page. Not really using
+it, so taking it out of the mix for no
 [! include "subsections/content-all-blocks.neoj" !]
-
 [! for child in section.children !]
-    [@ theme.output_section(site, page_id, child) @] 
+    [@ theme.output_section(site, page, child) @] 
 [! endfor !]
+#]
 

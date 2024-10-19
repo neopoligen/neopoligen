@@ -4,17 +4,21 @@
     [@- theme.section_classes(section, "preview-section") -@] 
     [@- section.attr_string -@]>
 
-[! if 'id' in section.attrs !]
-<a href="[@ site.pages[section.attrs.id].absolute_url @]">[@ site.pages[section.attrs.id].title @]</a>
+[! if 'from' in section.attrs !]
+<div class="preview-title">
+<a href="[@ site.pages[section.attrs.from].absolute_url @]">[@ site.pages[section.attrs.from].title @]</a>
+</div>
 <div class="preview-blurb">
-[! for sub_section in site.pages[section.attrs.id].sections !]
+[! for sub_section in site.pages[section.attrs.from].sections !]
 [! if sub_section.type == "blurb" !]
-[@- theme.output_section(site, site.pages[section.attrs.id], sub_section) -@]
+[@- theme.output_section(site, site.pages[section.attrs.from], sub_section) -@]
 [! endif !]
 [! endfor !]
 </div>
+<div class="preview-lower-link">
+<a href="[@ site.pages[section.attrs.from].absolute_url @]">view</a>
+</div>
 [! endif !]
-
 
 [! include "subsections/content-all-blocks.neoj" !]
 [! include "subsections/end-section.neoj" !]
