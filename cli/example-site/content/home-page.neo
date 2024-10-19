@@ -2,9 +2,21 @@
 
 Welcome "TO" Neopoligen
 
--- aside
+-- code
+-- python
 
-this is an aside
+print("asdf")
+
+
+
+
+-- css 
+-- template: show
+
+body {
+  font-size: 1rem;
+}
+
 
 
 -- div/
@@ -15,7 +27,6 @@ this is an aside
 -- title: This is a preview
 
 alfa
-
 
 -- preview 
 -- title: This is a preview
