@@ -77,13 +77,12 @@ pub fn basic_section_start<'a>(
     sections: &'a ConfigSections,
     nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    dbg!("-----------------------------------");
-    dbg!(&sections.basic);
     let (source, _) = tag("-- ").context("").parse(source)?;
-    dbg!(&sections.basic);
     let (source, r#type) = (|src| tag_finder_start(src, &sections.basic))
         .context("")
         .parse(source)?;
+    // TODO: You can remove the lines below
+    // the next time you see them
     // let (source, _) = tag("/").context("").parse(source)?;
     // let (source, _) = structure_empty_until_newline_or_eof
     //     .context("")
