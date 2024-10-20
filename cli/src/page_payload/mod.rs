@@ -461,7 +461,7 @@ mod test {
     }
 
     #[test]
-    fn solo_template_list_with_type_and_status() {
+    fn template_list_with_type_and_status() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
             &SourcePage::mock4_20240104_delta123_type_and_status(),

@@ -540,7 +540,7 @@ mod test {
     }
 
     #[test]
-    fn solo_checklist_item_checked_false() {
+    fn checklist_item_checked_false() {
         let ps = PayloadSection::new_from_section(
             &Section::mock11_checklist_items(),
             &SiteConfig::mock1_basic(),
@@ -551,7 +551,7 @@ mod test {
     }
 
     #[test]
-    fn solo_checklist_item_checked_true() {
+    fn checklist_item_checked_true() {
         let ps = PayloadSection::new_from_section(
             &Section::mock11_checklist_items(),
             &SiteConfig::mock1_basic(),

@@ -4,10 +4,10 @@
 }
 
 :root {
-  --wrapper-width-small: min(40ch, 96%);
-  --wrapper-width-medium: min(64ch, 96%);
-  --wrapper-width-large: min(110ch, 96%);
-  --wrapper-width-full: min(96%);
+  --wrapper-small: min(40ch, 96%);
+  --wrapper-medium: min(64ch, 96%);
+  --wrapper-large: min(110ch, 96%);
+  --wrapper-full: min(96%);
 
   /* todo: replace these with pad-small, etc... */
   --pad-1: 0.1rem;
@@ -267,24 +267,24 @@ button {
   cursor: pointer;
 }
 
-.wrapper-width-small {
+.wrapper-small {
     margin: auto;
-    max-width: var(--wrapper-width-small);
+    max-width: var(--wrapper-small);
 }
 
-.wrapper-width-medium{
+.wrapper-medium {
     margin: auto;
-    max-width: var(--wrapper-width-medium);
+    max-width: var(--wrapper-medium);
 }
 
-.wrapper-width-large {
+.wrapper-large {
     margin: auto;
-    max-width: var(--wrapper-width-large);
+    max-width: var(--wrapper-large);
 }
 
-.wrapper-width-full {
+.wrapper-full {
     margin: auto;
-    max-width: var(--wrapper-width-full);
+    max-width: var(--wrapper-full);
 }
 
 p,
@@ -766,13 +766,9 @@ main {
   height: 100%;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  /*
-  align-self: start;
-  min-height: 7rem;
-  */
 }
 
-.preview-wrapper {
+.previews-section {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: var(--pad-large);

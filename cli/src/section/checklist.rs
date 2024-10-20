@@ -50,12 +50,12 @@ pub fn checklist_section_full<'a>(
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     nest_level += 1;
     let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, r#type) = (|src| tag_finder(src, &sections.checklist))
+    let (source, r#type) = (|src| tag_finder_full(src, &sections.checklist))
         .context("")
         .parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
+    // let (source, _) = structure_empty_until_newline_or_eof
+    //     .context("")
+    //     .parse(source)?;
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
@@ -82,7 +82,7 @@ pub fn checklist_section_start<'a>(
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     nest_level += 1;
     let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, r#type) = (|src| tag_finder(src, &sections.checklist))
+    let (source, r#type) = (|src| tag_finder_start(src, &sections.checklist))
         .context("")
         .parse(source)?;
     let (source, _) = tag("/").context("").parse(source)?;

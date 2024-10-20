@@ -16,7 +16,7 @@
   [! endfor !]
   </div>
   <div class="preview-lower-link">
-  <a href="[@ site.pages[section.attrs.from].absolute_url @]">view</a>
+  <a href="[@ site.pages[section.attrs.from].absolute_url @]">read</a>
   </div>
 
 [! else !]

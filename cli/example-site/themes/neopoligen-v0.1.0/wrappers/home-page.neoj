@@ -93,19 +93,36 @@
 
   <header>
   [! if "no-styles" not in page.flags !]
-    <div class="color-scheme-switcher wrapper-width-medium"></div>
+    <div class="color-scheme-switcher wrapper-medium"></div>
   [! endif !]
-      <nav class="global-nav wrapper-width-large">
-        <a href="/">Home</a>
+      <nav class="global-nav wrapper-large">
+        <ol>
+          <!-- TODO: Move nav to a config and allow ilink, tlinks, tablinks, etc... -->
+          <li><a href="/">Home</a></li>
+          <li><a href="/en/2nh4mjg7/">Introduction</a></li>
+        </ol>
       </nav>
   </header>
-    <main class="flow wrapper-width-large">
+    <main class="flow wrapper-large">
     [!- block body -!][!- endblock -!]
     [!- block endmatter -!][!- endblock -!]
     </main>
-    <footer>
+    <footer class="wrapper-medium">
       <div>from <a href="https://hachyderm.io/@TheIdOfAlan">alan w smith</a></div>
       <div>RSS Feed coming as soon as I can code it up</div>
+      <div>
+        Debugging Notes - 
+        Wrapper: home-page
+      </div>
+
+      [# TODO: Add the source page when it's in the data
+      <div>Neopoligen Source - This is the original source 
+        for this page. I'm using it for debugging while
+        I'm working on the site, but i'll also give you 
+        an idea of how things work if you're interested.</div>
+      <pre>Add Neo source here.</pre>
+      #]
+
     </footer>
 [#
 <pre>

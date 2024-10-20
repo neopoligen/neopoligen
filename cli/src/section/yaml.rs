@@ -18,7 +18,7 @@ pub fn yaml_section_full<'a>(
     _nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, r#type) = (|src| tag_finder(src, &sections.yaml))
+    let (source, r#type) = (|src| tag_finder_full(src, &sections.yaml))
         .context("")
         .parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
