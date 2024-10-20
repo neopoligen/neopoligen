@@ -11,6 +11,11 @@ use crate::{
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PayloadSection {
+    // TODO: Remove attrs, attr_spans, aria, classes,
+    // data, and all related attribute things in
+    // favor of just moving everything to "attrs_v2"
+    // which will eventually go back to just being
+    // attrs
     pub aria: BTreeMap<String, String>,
     pub attr_string: Option<String>,
     pub attrs: BTreeMap<String, String>,

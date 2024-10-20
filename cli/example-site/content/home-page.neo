@@ -1,7 +1,5 @@
 -- title
--- class: wrapper-width-medium
-
-
+-- class: wrapper-medium
 
 Neopoligen Example Site
 
@@ -41,11 +39,7 @@ Main Stuff HERE
 
 Extra Stuff
 
--- div/
--- class: preview-wrapper
--- no-flow
-
-
+-- previews/
 
 -- preview
 -- from: 2nf4ciuz
@@ -53,7 +47,7 @@ Extra Stuff
 -- preview
 -- from: 2nf4n8av
 
--- /div
+-- /previews
 
 
 -- metadata
