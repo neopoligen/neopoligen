@@ -44,6 +44,8 @@ pub fn unknown_section_end<'a>(
     Ok((source, section))
 }
 
+// TODO: Make this use tag_finder_full
+
 pub fn unknown_section_full<'a>(
     source: &'a str,
     _sections: &'a ConfigSections,

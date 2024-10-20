@@ -10,6 +10,7 @@ pub struct Site {
     pub config: SiteConfig,
     pub images: BTreeMap<String, Image>,
     pub page_titles: BTreeMap<String, String>,
+    pub pages: BTreeMap<String, PagePayload>,
 }
 
 impl Site {
@@ -19,6 +20,7 @@ impl Site {
             images: BTreeMap::new(),
             absolute_page_urls: BTreeMap::new(),
             page_titles: BTreeMap::new(),
+            pages: payloads.clone(),
         };
         payloads.iter().for_each(|payload| {
             if let Some(url) = payload.1.absolute_url.clone() {

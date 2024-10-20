@@ -3,14 +3,53 @@
     [@- theme.section_classes(section, "html-section") -@] 
     [@- section.attr_string -@]>
 
-<h3 class="pad-top-1">Output</h3>
+<div class="html-show-wrapper">
+
+[! if "no-heading" not in section.flags !]
+  [! if "heading" in section.attr_spans !]
+    <h3>[@ theme.output_spans(site, page_id, section.attr_spans.heading) @]</h3>
+  [! else !]
+    <h3>Output From HTML</h3>
+  [! endif !]
+[! endif !]
+
 <div class="pad-top-1">
 [! autoescape false !]
 [@ section.text @]
 [! endautoescape !]
 </div>
 
-<h3>HTML</h3>
-<div class="code-wrapper code-button-wrapper">
-<pre class="code-block"><code>[@ highlight_code(section.text, "html") @]</code></pre>
+[# TODO: Figure out how you want to 
+handle the different between the HTML
+and the Output portions of the section
+  [! if "no-heading" not in section.flags !]
+    [! if "heading" in section.attr_spans !]
+      <h3>[@ theme.output_spans(site, page_id, section.attr_spans.heading) @]</h3>
+    [! else !]
+      <h3>HTML Source</h3>
+    [! endif !]
+  [! endif !]
+#]
+
+<aws-code-block 
+  [# TODO: Implement no-buttons and no-copy features
+  [!- if "no-buttons" in section.flags -!][@- ' ' -@]data-buttons="off"[!- endif -!]
+  #]>
+[! if "no-title" not in section.flags !]
+  [! if "title" in section.attr_spans !]
+    <div class="aws-code-block-title">
+      [@ theme.output_spans(site, page_id, section.attr_spans.title) @]
+    </div>
+  [!- endif -!]
+  [! if "subtitle" in section.attr_spans !]
+    <div class="aws-code-block-subtitle">[@ theme.output_spans(site, page_id, section.attr_spans.subtitle) @]</div>
+  [! endif !]
+[! endif !]
+<div class="aws-code-block-wrapper">
+    <div class="aws-code-block-sidebar"></div>
+<pre class="aws-code-block-show-nums"><code>[@- highlight_code(section.text, "html") -@]</code></pre></div>
+</aws-code-block>
+
 </div>
+
+

@@ -1,19 +1,53 @@
 -- title
+-- class: wrapper-medium
 
-Welcome "TO" Neopoligen
+Neopoligen Example Site
 
--- p
+This is the home page
 
-This is some text
 
-<<ilink|This is a link|2ho8hakd>>
+-- h2
 
-<<tlink|2ho8hakd>>
+Main Stuff HERE
 
-Image should to next
+-- previews/
 
--- image
--- large-test-jpg
+-- preview
+-- from: 2nfwcjb2
+
+-- preview
+-- from: 2gek2pg3
+
+-- preview
+-- from: 2hnkong7
+
+-- preview
+-- from: 2nei4xfz
+
+-- preview
+-- from: 2nf439vo
+
+-- preview
+-- from: 2nf4oup7
+
+-- preview
+-- from: 2nf4y8pc
+
+-- /previews
+
+-- h2
+
+Extra Stuff
+
+-- previews/
+
+-- preview
+-- from: 2nf4ciuz
+
+-- preview
+-- from: 2nf4n8av
+
+-- /previews
 
 
 -- metadata

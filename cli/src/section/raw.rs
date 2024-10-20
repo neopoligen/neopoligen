@@ -55,7 +55,7 @@ pub fn raw_section_full<'a>(
     _nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, r#type) = (|src| tag_finder(src, &sections.raw))
+    let (source, r#type) = (|src| tag_finder_full(src, &sections.raw))
         .context("")
         .parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
@@ -86,14 +86,15 @@ pub fn raw_section_start<'a>(
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     nest_level += 1;
     let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, r#type) = (|src| tag_finder(src, &sections.raw))
+    let (source, r#type) = (|src| tag_finder_start(src, &sections.raw))
         .context("")
         .parse(source)?;
     let end_key = format!("-- /{}", r#type);
-    let (source, _) = tag("/").context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
+    // This is safe to delete next time you look at it.
+    // let (source, _) = tag("/").context("").parse(source)?;
+    // let (source, _) = structure_empty_until_newline_or_eof
+    //     .context("")
+    //     .parse(source)?;
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")

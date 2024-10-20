@@ -11,6 +11,11 @@ use crate::{
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PayloadSection {
+    // TODO: Remove attrs, attr_spans, aria, classes,
+    // data, and all related attribute things in
+    // favor of just moving everything to "attrs_v2"
+    // which will eventually go back to just being
+    // attrs
     pub aria: BTreeMap<String, String>,
     pub attr_string: Option<String>,
     pub attrs: BTreeMap<String, String>,
@@ -540,7 +545,7 @@ mod test {
     }
 
     #[test]
-    fn solo_checklist_item_checked_false() {
+    fn checklist_item_checked_false() {
         let ps = PayloadSection::new_from_section(
             &Section::mock11_checklist_items(),
             &SiteConfig::mock1_basic(),
@@ -551,7 +556,7 @@ mod test {
     }
 
     #[test]
-    fn solo_checklist_item_checked_true() {
+    fn checklist_item_checked_true() {
         let ps = PayloadSection::new_from_section(
             &Section::mock11_checklist_items(),
             &SiteConfig::mock1_basic(),

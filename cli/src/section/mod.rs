@@ -22,8 +22,11 @@ use crate::span::*;
 use minijinja::Value;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
+use nom::character::complete::line_ending;
+use nom::character::complete::space0;
 use nom::combinator::eof;
 use nom::multi::many1;
+use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -152,7 +155,7 @@ pub fn initial_error<'a>() -> IResult<&'a str, &'a str, ErrorTree<&'a str>> {
     Ok(("", ""))
 }
 
-pub fn tag_finder<'a>(
+pub fn tag_finder_start<'a>(
     source: &'a str,
     section: &Vec<String>,
 ) -> IResult<&'a str, &'a str, ErrorTree<&'a str>> {
@@ -160,10 +163,45 @@ pub fn tag_finder<'a>(
         .iter()
         .fold(initial_error(), |acc, item| match acc {
             Ok(v) => Ok(v),
-            _ => tag(item.as_str()).context("").parse(source),
+            _ => tuple((tag(item.as_str()), tag("/"), space0, line_ending))
+                .map(|x| x.0)
+                .context("")
+                .parse(source),
         })?;
     Ok((source, result))
 }
+
+pub fn tag_finder_full<'a>(
+    source: &'a str,
+    section: &Vec<String>,
+) -> IResult<&'a str, &'a str, ErrorTree<&'a str>> {
+    let (source, result) = section
+        .iter()
+        .fold(initial_error(), |acc, item| match acc {
+            Ok(v) => Ok(v),
+            _ => tuple((tag(item.as_str()), space0, line_ending))
+                .map(|x| x.0)
+                .context("")
+                .parse(source),
+        })?;
+    Ok((source, result))
+}
+
+// pub fn tag_finder_end<'a>(
+//     source: &'a str,
+//     section: &Vec<String>,
+// ) -> IResult<&'a str, &'a str, ErrorTree<&'a str>> {
+//     let (source, result) = section
+//         .iter()
+//         .fold(initial_error(), |acc, item| match acc {
+//             Ok(v) => Ok(v),
+//             _ => tuple((tag(item.as_str()), tag("/"), space0, line_ending))
+//                 .map(|x| x.0)
+//                 .context("")
+//                 .parse(source),
+//         })?;
+//     Ok((source, result))
+// }
 
 #[cfg(test)]
 mod test {

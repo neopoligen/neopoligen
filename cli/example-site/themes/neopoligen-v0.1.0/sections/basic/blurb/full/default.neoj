@@ -1,1 +1,3 @@
-[# Don't output anything for comments #]
+[! include "sections/basic/blurb/start/default.neoj" !]
+</section>
+

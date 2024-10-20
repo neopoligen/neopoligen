@@ -89,13 +89,17 @@
     <link rel="stylesheet" href="/theme/styles/theme.css" />
   [! endif !]
 
-  <header>
+  <header class="wrapper-medium">
   [! if "no-styles" not in page.flags !]
     <div class="color-scheme-switcher"></div>
   [! endif !]
-      <div>
-        <a href="/">Home</a>
-      </div>
+      <nav class="global-nav">
+        <ol>
+          <!-- TODO: Move nav to a config and allow ilink, tlinks, tablinks, etc... -->
+          <li><a href="/">Home</a></li>
+          <li><a href="/en/2nh4mjg7/">Introduction</a></li>
+        </ol>
+      </nav>
       [! if site.config.base_url == "www.alanwsmith.com" !]
       <div class="under-construction">
         NOTE: I'm in the middle of upgrading the site. Most things are in place, but
@@ -104,12 +108,17 @@
       </div>
       [! endif !]
   </header>
-    <main class="flow">
+    <main class="wrapper-medium flow">
     [!- block body -!][!- endblock -!]
     [!- block endmatter -!][!- endblock -!]
     </main>
-    <footer>
-        from <a href="https://hachyderm.io/@TheIdOfAlan">alan w smith</a>
+    <footer class="wrapper-medium">
+      <div>from <a href="https://hachyderm.io/@TheIdOfAlan">alan w smith</a></div>
+      <div>RSS Feed coming as soon as I can code it up</div>
+      <div>
+        Debugging Notes - 
+        Wrapper: home-page
+      </div>
     </footer>
 [#
 <pre>
@@ -154,6 +163,8 @@ BECAUSE IT IS LIKE 500GB EASY
       <style>html { visibility: visible; }</style>
     </noscript>
 [! endif !]
+
+
 
 </body>
 </html>

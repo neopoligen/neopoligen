@@ -1,0 +1,50 @@
+[! import "includes/theme.neoj" as theme !]
+
+<section 
+    [@- theme.section_classes(section, "preview-section") -@] 
+    [@- section.attr_string -@]>
+
+[! if 'from' in section.attrs !]
+  <div class="preview-title">
+  <a href="[@ site.pages[section.attrs.from].absolute_url @]">[@ site.pages[section.attrs.from].title @]</a>
+  </div>
+  <div class="preview-blurb">
+  [! for sub_section in site.pages[section.attrs.from].sections !]
+  [! if sub_section.type == "blurb" !]
+  [@- theme.output_section(site, site.pages[section.attrs.from], sub_section) -@]
+  [! endif !]
+  [! endfor !]
+  </div>
+  <div class="preview-lower-link">
+  <a href="[@ site.pages[section.attrs.from].absolute_url @]">read</a>
+  </div>
+
+[! else !]
+
+  <div class="preview-title">
+  [! if "title" in section.attrs !]
+    [! if "tablink" in section.attrs !]
+    <a href="[@ section.attrs.tablink @]" target="_blank">
+      [@ section.attrs.title @]
+    </a>
+    [! else !]
+    [@ section.attrs.title @]
+    [! endif !]
+  [! endif !]
+  </div>
+  <div class="preview-blurb">
+
+  [! include "subsections/content-all-blocks.neoj" !]
+
+  </div>
+  <div class="preview-lower-link">
+    [! if "tablink" in section.attrs !]
+    <a href="[@ section.attrs.tablink @]" target="_blank">
+      link
+    </a>
+    [! endif !]
+  </div>
+
+[! endif !]
+
+

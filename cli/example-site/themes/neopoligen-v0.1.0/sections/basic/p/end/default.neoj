@@ -2,6 +2,6 @@
 </section>
 
 [! for child in section.children !]
-[@ theme.output_section(site, page_id, child) @]
+[@ theme.output_section(site, page, child) @]
 [! endfor !]
 

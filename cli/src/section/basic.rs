@@ -49,12 +49,12 @@ pub fn basic_section_full<'a>(
     _nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, r#type) = (|src| tag_finder(src, &sections.basic))
+    let (source, r#type) = (|src| tag_finder_full(src, &sections.basic))
         .context("")
         .parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
+    // let (source, _) = structure_empty_until_newline_or_eof
+    //     .context("")
+    //     .parse(source)?;
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
@@ -78,13 +78,15 @@ pub fn basic_section_start<'a>(
     nest_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, r#type) = (|src| tag_finder(src, &sections.basic))
+    let (source, r#type) = (|src| tag_finder_start(src, &sections.basic))
         .context("")
         .parse(source)?;
-    let (source, _) = tag("/").context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
+    // TODO: You can remove the lines below
+    // the next time you see them
+    // let (source, _) = tag("/").context("").parse(source)?;
+    // let (source, _) = structure_empty_until_newline_or_eof
+    //     .context("")
+    //     .parse(source)?;
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
@@ -208,6 +210,74 @@ mod test {
             },
         );
         let right = basic_section_full(source, &config.sections, 0).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn basic_full_test_checking_name_collision() {
+        let source = "-- preview\n\nHello World";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "",
+            Section {
+                attrs: vec![],
+                bounds: SectionBounds::Full,
+                kind: SectionKind::Basic {
+                    children: vec![Section {
+                        attrs: vec![],
+                        bounds: SectionBounds::Full,
+                        kind: SectionKind::Block {
+                            spans: vec![Span {
+                                attrs: vec![],
+                                kind: SpanKind::WordPart,
+                                parsed_text: "Hello World".to_string(),
+                            }],
+                        },
+                        r#type: "block-of-text".to_string(),
+                    }],
+                },
+                r#type: "preview".to_string(),
+            },
+        );
+        let right = basic_section_full(source, &config.sections, 0).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_basic_start_end_test_checking_name_collision() {
+        let source = "-- previews/\n\nHello World\n\n-- /previews\n\n";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "",
+            Section {
+                attrs: vec![],
+                bounds: SectionBounds::Start,
+                kind: SectionKind::Basic {
+                    children: vec![
+                        Section {
+                            attrs: vec![],
+                            bounds: SectionBounds::Full,
+                            kind: SectionKind::Block {
+                                spans: vec![Span {
+                                    attrs: vec![],
+                                    kind: SpanKind::WordPart,
+                                    parsed_text: "Hello World".to_string(),
+                                }],
+                            },
+                            r#type: "block-of-text".to_string(),
+                        },
+                        Section {
+                            attrs: vec![],
+                            bounds: SectionBounds::End,
+                            kind: SectionKind::Basic { children: vec![] },
+                            r#type: "previews".to_string(),
+                        },
+                    ],
+                },
+                r#type: "previews".to_string(),
+            },
+        );
+        let right = basic_section_start(source, &config.sections, 0).unwrap();
         assert_eq!(left, right);
     }
 

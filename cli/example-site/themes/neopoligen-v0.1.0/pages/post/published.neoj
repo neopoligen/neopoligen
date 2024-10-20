@@ -8,14 +8,10 @@
   section.type != "footnote" 
   and section.type != "ref" 
   and section.type != "endnote" 
-  and section.type != "copycode" 
   and section.type != "ps" 
+  and section.type != "blurb" 
 -!]
 [@- theme.output_section(site, page.id, section) -@]
-[!- endif -!]
-
-[!- if section.type == "copycode" -!]
-[@- theme.output_section_v2(site, page, section) -@]
 [!- endif -!]
 
 [!- endfor -!]
