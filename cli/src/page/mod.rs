@@ -1,7 +1,12 @@
+pub mod mocks;
+
 use crate::ast::parse_ast;
+use crate::helpers::flatten_spans;
 use crate::neo_error::NeoError;
 use crate::neo_error::NeoErrorKind;
 use crate::section::Section;
+use crate::section_attr::SectionAttr;
+use crate::section_attr::SectionAttrKind;
 use crate::site_config::SiteConfig;
 use minijinja::value::Object;
 use minijinja::Error;
@@ -54,12 +59,51 @@ impl PageV41 {
                 self.ast = Some(ast);
                 Ok(())
             }
-            _ => Ok(()),
+            Err(e) => Err(e),
         }
     }
 
+    // TODO: Make return Value
     pub fn id(&self) -> Result<String, NeoError> {
         Ok("dev-alfa".to_string())
+    }
+
+    pub fn id_raw(&self) -> Result<String, NeoError> {
+        match &self.ast {
+            Some(sections) => {
+                sections
+                    .iter()
+                    .for_each(|section| match section.r#type.as_str() {
+                        "pagedata" => {
+                            section.attrs.iter().for_each(|attr| match attr {
+                                SectionAttr { kind, .. } => match kind {
+                                    SectionAttrKind::KeyValueSpans { key, spans } => {
+                                        match key.as_str() {
+                                            "id" => {
+                                                let x = flatten_spans(spans);
+                                                dbg!(x);
+                                                ()
+                                            }
+                                            _ => (),
+                                        }
+                                        ()
+                                    }
+                                    _ => (),
+                                },
+                            });
+                            ()
+                        }
+                        _ => (),
+                    });
+                Ok("mock1_basic".to_string())
+            }
+            None => Err(NeoError {
+                kind: NeoErrorKind::GenericErrorWithoutSourcePath {
+                    msg: "could not get id".to_string(),
+                },
+            }),
+        }
+        // Ok("mock1_basic".to_string())
     }
 
     pub fn output_fs_rel_path(&self, base_rel_path: &PathBuf) -> PathBuf {
@@ -87,5 +131,19 @@ impl Object for PageV41 {
             "dev_ping_page" => self.dev_ping_page(args),
             _ => Ok(Value::from("")),
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn solo_id_test_get_basic_id() {
+        let page = PageV41::mock1_basic_page();
+        let left = "mock1_basic".to_string();
+        let right = page.id_raw().unwrap();
+        assert_eq!(left, right);
     }
 }
