@@ -24,6 +24,11 @@ pub struct SiteV41 {
 }
 
 impl SiteV41 {
+    pub fn ping(&self, args: &[Value]) -> Value {
+        self.pages.get("dev-alfa").unwrap().dev_ping()
+        //Value::from("THIS IS IT")
+    }
+
     // pub fn new_from_source_pages(
     //     // TODO: Switch thsi to PageV41
     //     source_pages: &BTreeMap<PathBuf, SourcePage>,
@@ -56,7 +61,7 @@ impl Object for SiteV41 {
         args: &[Value],
     ) -> Result<Value, Error> {
         match name {
-            // "ping" => Ok(Value::from(self.ping(args))),
+            "ping" => Ok(Value::from(self.ping(args))),
             _ => Ok(Value::from("")),
         }
     }

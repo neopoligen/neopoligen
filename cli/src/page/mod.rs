@@ -3,6 +3,7 @@ use crate::neo_error::NeoError;
 use crate::neo_error::NeoErrorKind;
 use crate::section::Section;
 use crate::site_config::SiteConfig;
+use minijinja::Value;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
@@ -33,6 +34,9 @@ impl PageV41 {
 }
 
 impl PageV41 {
+    pub fn dev_ping(&self) -> Value {
+        Value::from("THIS IS PAGE DEV PING")
+    }
     pub fn generate_ast(&mut self, site_config: &SiteConfig) -> Result<(), NeoError> {
         match parse_ast(&self.raw_source, site_config.sections.clone()) {
             Ok(ast) => {
@@ -44,7 +48,7 @@ impl PageV41 {
     }
 
     pub fn id(&self) -> Result<String, NeoError> {
-        Ok("asdfasdf".to_string())
+        Ok("dev-alfa".to_string())
     }
 
     pub fn output_fs_rel_path(&self, base_rel_path: &PathBuf) -> PathBuf {
