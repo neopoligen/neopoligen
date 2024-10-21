@@ -121,7 +121,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
     match BuilderV41::new_from_site_config(site_config) {
         Ok(mut builder) => {
             builder.load_pages_from_fs().unwrap();
-            // dbg!(builder.site_v41);
+            dbg!(builder.raw_pages);
 
             // TODO: load from cache
             //builder.load_pages_from_cache().unwrap();

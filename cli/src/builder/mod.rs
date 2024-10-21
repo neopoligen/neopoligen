@@ -27,15 +27,17 @@ use walkdir::WalkDir;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct BuilderV41 {
-    pub site_config: SiteConfig,
+    pub errors: Vec<NeoError>,
     pub raw_pages: Vec<PageV41>,
+    pub site_config: SiteConfig,
 }
 
 impl BuilderV41 {
     pub fn new_from_site_config(site_config: &SiteConfig) -> Result<BuilderV41, NeoError> {
         let b = BuilderV41 {
-            site_config: site_config.clone(),
+            errors: vec![],
             raw_pages: vec![],
+            site_config: site_config.clone(),
         };
         Ok(b)
     }
@@ -50,7 +52,10 @@ impl BuilderV41 {
                     if ext.to_ascii_lowercase() == "neo"
                         && !filename.to_str().unwrap().starts_with(".")
                     {
-                        let p = PageV41::new_from_fs_path(&path);
+                        match PageV41::new_from_fs_path(&path) {
+                            Ok(p) => self.raw_pages.push(p),
+                            Err(e) => self.errors.push(e),
+                        }
                     }
                 }
             }
