@@ -97,8 +97,11 @@ impl BuilderV41 {
                 .unwrap(),
         );
 
-        let _ = env.add_template_owned("dev-test", "[@ site.ping() @]".to_string());
-
+        let _ = env.add_template_owned(
+            "dev-test",
+            "HERE: [@ page.dev_ping_page('yo') @]".to_string(),
+            // "HERE: [@ site.ping('yo') @]".to_string(),
+        );
         let site_clone = Value::from_object(self.site.clone().unwrap());
 
         self.site
@@ -119,12 +122,19 @@ impl BuilderV41 {
                     }
                 }) {
                     match template.render(context!(
-                        site => &site_clone
+                        site => &site_clone,
+                        page => Value::from_object(page.clone())
+
                     )) {
                         Ok(output) => {
+                            event!(
+                                Level::INFO,
+                                "Made file in output_pages: TBD on this message"
+                            );
                             dbg!(output);
                         }
                         Err(e) => {
+                            event!(Level::ERROR, "Error on page output in output_pages");
                             self.errors.push(NeoError {
                                 kind: NeoErrorKind::GenericErrorWithSourcePath {
                                     source_path: page.fs_path.clone(),

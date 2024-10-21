@@ -3,10 +3,13 @@ use crate::neo_error::NeoError;
 use crate::neo_error::NeoErrorKind;
 use crate::section::Section;
 use crate::site_config::SiteConfig;
+use minijinja::value::Object;
+use minijinja::Error;
 use minijinja::Value;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
+use std::sync::Arc;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PageV41 {
@@ -34,9 +37,17 @@ impl PageV41 {
 }
 
 impl PageV41 {
-    pub fn dev_ping(&self) -> Value {
-        Value::from("THIS IS PAGE DEV PING")
+    pub fn dev_ping(&self, args: &[Value]) -> Value {
+        Value::from(format!("ALFA THIS IS PAGE DEV PING: {}", args[0]))
     }
+
+    pub fn dev_ping_page(&self, args: &[Value]) -> Result<Value, Error> {
+        Ok(Value::from(format!(
+            "BRAVO PAGE PING TEST PING: {}",
+            args[0]
+        )))
+    }
+
     pub fn generate_ast(&mut self, site_config: &SiteConfig) -> Result<(), NeoError> {
         match parse_ast(&self.raw_source, site_config.sections.clone()) {
             Ok(ast) => {
@@ -59,7 +70,22 @@ impl PageV41 {
         path
     }
 
+    // pub fn sections(&self) -> Value {}
     pub fn template_list(&self) -> Vec<String> {
         vec!["dev-test".to_string()]
+    }
+}
+
+impl Object for PageV41 {
+    fn call_method(
+        self: &Arc<PageV41>,
+        _state: &minijinja::State,
+        name: &str,
+        args: &[Value],
+    ) -> Result<Value, Error> {
+        match name {
+            "dev_ping_page" => self.dev_ping_page(args),
+            _ => Ok(Value::from("")),
+        }
     }
 }

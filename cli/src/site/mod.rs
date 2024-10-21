@@ -25,7 +25,7 @@ pub struct SiteV41 {
 
 impl SiteV41 {
     pub fn ping(&self, args: &[Value]) -> Value {
-        self.pages.get("dev-alfa").unwrap().dev_ping()
+        self.pages.get("dev-alfa").unwrap().dev_ping(args)
         //Value::from("THIS IS IT")
     }
 
@@ -51,20 +51,6 @@ impl SiteV41 {
     // }
 
     //
-}
-
-impl Object for SiteV41 {
-    fn call_method(
-        self: &Arc<SiteV41>,
-        _state: &minijinja::State,
-        name: &str,
-        args: &[Value],
-    ) -> Result<Value, Error> {
-        match name {
-            "ping" => Ok(Value::from(self.ping(args))),
-            _ => Ok(Value::from("")),
-        }
-    }
 }
 
 // TODO: Deprecate this as SiteV41 comes online
@@ -117,4 +103,18 @@ impl Site {
     //         },
     //     );
     // }
+}
+
+impl Object for SiteV41 {
+    fn call_method(
+        self: &Arc<SiteV41>,
+        _state: &minijinja::State,
+        name: &str,
+        args: &[Value],
+    ) -> Result<Value, Error> {
+        match name {
+            "ping" => Ok(Value::from(self.ping(args))),
+            _ => Ok(Value::from("")),
+        }
+    }
 }
