@@ -122,7 +122,9 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
         Ok(mut builder) => {
             let _ = builder.load_pages_from_fs();
             let _ = builder.make_asts(&site_config);
-            dbg!(builder.raw_pages);
+            let _ = builder.prep_site(&site_config);
+            // dbg!(builder.site);
+            // dbg!(builder.raw_pages);
 
             // TODO: load from cache
             //builder.load_pages_from_cache().unwrap();

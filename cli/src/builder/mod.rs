@@ -30,6 +30,7 @@ pub struct BuilderV41 {
     pub errors: Vec<NeoError>,
     pub raw_pages: Vec<PageV41>,
     pub site_config: SiteConfig,
+    pub site: Option<SiteV41>,
 }
 
 impl BuilderV41 {
@@ -37,6 +38,7 @@ impl BuilderV41 {
         let b = BuilderV41 {
             errors: vec![],
             raw_pages: vec![],
+            site: None,
             site_config: site_config.clone(),
         };
         Ok(b)
@@ -64,7 +66,8 @@ impl BuilderV41 {
         }
         Ok(())
     }
-    #[instrument(skip(self))]
+
+    #[instrument(skip(self, site_config))]
     pub fn make_asts(&mut self, site_config: &SiteConfig) -> Result<()> {
         event!(Level::INFO, "Generating ASTs");
         self.raw_pages
@@ -76,37 +79,10 @@ impl BuilderV41 {
         Ok(())
     }
 
-    //#[instrument(skip(self))]
-    //pub fn _old_to_delete_generate_missing_asts(&mut self) {
-    //    self.source_pages.iter_mut().for_each(|(sp, page)| {
-    //        if let None = page.ast {
-    //            if let Err(e) = page.generate_ast() {
-    //                self.errors.push(match e.kind {
-    //                    NeoErrorKind::ParserError {
-    //                        line,
-    //                        column,
-    //                        remainder,
-    //                        source,
-    //                        message,
-    //                        ..
-    //                    } => NeoError {
-    //                        kind: NeoErrorKind::ParserError {
-    //                            source_path: Some(sp.clone()),
-    //                            line,
-    //                            column,
-    //                            remainder,
-    //                            source,
-    //                            message,
-    //                        },
-    //                    },
-    //                    _ => e,
-    //                })
-    //                // e.source_path = PathBuf::from("asdf");
-    //                //self.errors.push(e);
-    //            }
-    //        }
-    //    })
-    //}
+    #[instrument(skip(self, site_config))]
+    pub fn prep_site(&mut self, site_config: &SiteConfig) -> Result<()> {
+        Ok(())
+    }
 
     //
 }
