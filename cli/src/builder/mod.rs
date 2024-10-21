@@ -174,7 +174,11 @@ impl BuilderV41 {
                                     //event!(Level::INFO, "Making file in output_pages",);
                                 }
                                 Err(e) => self.errors.push({
-                                    event!(Level::ERROR, "Error on page output in output_pages");
+                                    event!(
+                                        Level::ERROR,
+                                        "Error on page output in output_pages: {}",
+                                        absolute_output_path.display()
+                                    );
                                     NeoError {
                                         kind: NeoErrorKind::GenericErrorWithSourcePath {
                                             source_path: absolute_output_path.to_path_buf(),
@@ -185,7 +189,11 @@ impl BuilderV41 {
                             }
                         }
                         Err(e) => {
-                            event!(Level::ERROR, "Error on page output in output_pages");
+                            event!(
+                                Level::ERROR,
+                                "Error on page output in output_pages: {}",
+                                page.fs_path.display()
+                            );
                             self.errors.push(NeoError {
                                 kind: NeoErrorKind::GenericErrorWithSourcePath {
                                     source_path: page.fs_path.clone(),
