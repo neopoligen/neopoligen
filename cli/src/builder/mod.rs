@@ -110,7 +110,10 @@ impl BuilderV41 {
             .iter_mut()
             .for_each(|p| match p.generate_ast(site_config) {
                 Ok(()) => (),
-                Err(e) => self.errors.push(e),
+                Err(e) => {
+                    event!(Level::ERROR, "Error in make_asts: {}", &e);
+                    self.errors.push(e)
+                }
             });
         Ok(())
     }
@@ -134,8 +137,6 @@ impl BuilderV41 {
         );
 
         self.templates.iter().for_each(|(k, v)| {
-            dbg!(&k);
-            dbg!(&v);
             let _ = env.add_template_owned(k, v);
         });
 
@@ -238,7 +239,10 @@ impl BuilderV41 {
                 site.pages.insert(id, p.clone());
                 ()
             }
-            Err(e) => self.errors.push(e),
+            Err(e) => {
+                event!(Level::ERROR, "prep_site Error: {}", e);
+                self.errors.push(e)
+            }
         });
         self.site = Some(site);
         Ok(())
