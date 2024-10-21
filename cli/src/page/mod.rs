@@ -1,7 +1,7 @@
-use crate::ast::parse_ast_v41;
+use crate::ast::parse_ast;
 use crate::neo_error::NeoError;
 use crate::neo_error::NeoErrorKind;
-use crate::section::SectionV41;
+use crate::section::Section;
 use crate::site_config::SiteConfig;
 use serde::{Deserialize, Serialize};
 use std::fs;
@@ -9,7 +9,7 @@ use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PageV41 {
-    pub ast: Option<Vec<SectionV41>>,
+    pub ast: Option<Vec<Section>>,
     pub raw_source: String,
     pub fs_path: PathBuf,
 }
@@ -36,7 +36,7 @@ impl PageV41 {
     pub fn generate_ast(&mut self, site_config: &SiteConfig) -> Result<(), NeoError> {
         // TODO: See about removing this clone and passing a ref for sections
         // if you ever decide to check this again...
-        match parse_ast_v41(&self.raw_source, &site_config.sections) {
+        match parse_ast(&self.raw_source, site_config.sections.clone()) {
             Ok(ast) => {
                 self.ast = Some(ast);
                 Ok(())
