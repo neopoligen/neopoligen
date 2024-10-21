@@ -13,6 +13,9 @@ use std::fs::{self};
 use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub struct SiteConfigV41 {}
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SiteConfig {
     #[serde(rename = "base_url")]
     pub base_url_raw: String,

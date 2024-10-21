@@ -34,6 +34,9 @@ use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub struct SectionV41 {}
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Section {
     pub attrs: Vec<SectionAttr>,
     pub bounds: SectionBounds,

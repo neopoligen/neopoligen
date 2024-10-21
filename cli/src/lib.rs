@@ -5,6 +5,7 @@ pub mod file_watcher;
 pub mod helpers;
 pub mod image;
 pub mod neo_error;
+pub mod page;
 pub mod page_payload;
 pub mod payload_section;
 pub mod payload_section_attr;

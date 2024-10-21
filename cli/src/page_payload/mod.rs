@@ -14,6 +14,8 @@ use crate::{
     source_page::SourcePage,
 };
 
+// TODO: Deprecate PagePayload in favor of PageV2
+
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PagePayload {
     pub absolute_url: Option<String>,

@@ -1,8 +1,12 @@
+#![allow(unused_variables)]
+#![allow(unused_mut)]
+
 use crate::helpers::*;
 use crate::image::{Image, ImageSize};
 use crate::neo_error::{NeoError, NeoErrorKind};
+use crate::page::PageV41;
 use crate::page_payload::{PagePayload, ThemeTestOrPage};
-use crate::site::Site;
+use crate::site::{Site, SiteV41};
 use crate::site_config::SiteConfig;
 use crate::source_page::SourcePage;
 use crate::theme_test::ThemeTest; // this might be deprecated
@@ -22,13 +26,51 @@ use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub struct BuilderV41 {
+    pub site_config: SiteConfig,
+    pub raw_pages: Vec<PageV41>,
+}
+
+impl BuilderV41 {
+    pub fn new_from_site_config(site_config: &SiteConfig) -> Result<BuilderV41, NeoError> {
+        let b = BuilderV41 {
+            site_config: site_config.clone(),
+            raw_pages: vec![],
+        };
+        Ok(b)
+    }
+
+    #[instrument(skip(self))]
+    pub fn load_pages_from_fs(&mut self) -> Result<()> {
+        event!(Level::INFO, "Loading Pages From FS");
+        for entry in WalkDir::new(&self.site_config.content_source_dir()) {
+            let path = entry?.path().to_path_buf();
+            if path.is_file() {
+                if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
+                    if ext.to_ascii_lowercase() == "neo"
+                        && !filename.to_str().unwrap().starts_with(".")
+                    {
+                        let p = PageV41::new_from_fs_path(&path);
+                    }
+                }
+            }
+        }
+        Ok(())
+    }
+}
+
+// TODO: Deprecate Builder as BuilderV41 comes online
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Builder {
     pub cache_buffer: BTreeMap<PathBuf, SourcePage>,
     pub config: Option<SiteConfig>,
     pub errors: Vec<NeoError>,
     pub images: BTreeMap<String, Image>,
+    // TODO: deprecate source_pages
     pub source_pages: BTreeMap<PathBuf, SourcePage>,
+    // TODO: deprecate payloads
     pub payloads: BTreeMap<String, PagePayload>,
+    pub site_v41: Option<SiteV41>,
     pub templates: BTreeMap<String, String>,
     pub theme_test_source_pages: BTreeMap<PathBuf, ThemeTest>,
 }
@@ -42,6 +84,7 @@ impl Builder {
             images: BTreeMap::new(),
             source_pages: BTreeMap::new(),
             payloads: BTreeMap::new(),
+            site_v41: None,
             templates: BTreeMap::new(),
             theme_test_source_pages: BTreeMap::new(),
         };
@@ -294,6 +337,7 @@ impl Builder {
         })
     }
 
+    // TODO: Deprecate generate_payloads in favor of prep_site
     #[instrument(skip(self))]
     pub fn generate_payloads(&mut self, theme_test_or_page: ThemeTestOrPage) {
         self.payloads = BTreeMap::new();
@@ -522,7 +566,7 @@ impl Builder {
     }
 
     pub fn get_image_details(&self) -> Value {
-        Value::from("asdf")
+        Value::from("TODO")
     }
 
     #[instrument(skip(self))]
@@ -610,6 +654,12 @@ impl Builder {
     #[instrument(skip(self))]
     pub fn prep_output_dirs(&self) -> Result<()> {
         fs::create_dir_all(self.config.as_ref().unwrap().cache_dir())?;
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn prep_site(&self) -> Result<()> {
+        let site_v41 = SiteV41::new_from_source_pages(&self.source_pages);
         Ok(())
     }
 

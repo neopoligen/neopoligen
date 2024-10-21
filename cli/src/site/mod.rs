@@ -1,9 +1,47 @@
+#![allow(unused_variables)]
+#![allow(unused_mut)]
+
 use crate::image::Image;
-use crate::{page_payload::PagePayload, site_config::SiteConfig};
+use crate::neo_error::NeoError;
+// use crate::neo_error::{NeoError, NeoErrorKind};
+use crate::page::PageV41;
+use crate::page_payload::PagePayload;
+use crate::site_config::SiteConfig; // TODO: Deprecate SiteConfig In Favor Of SiteConfigV41
+use crate::site_config::SiteConfigV41;
+use crate::source_page::SourcePage;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
-// use std::path::PathBuf;
+use std::path::PathBuf;
 
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub struct SiteV41 {
+    pub config: Option<SiteConfigV41>,
+    pub pages: BTreeMap<String, PageV41>,
+}
+
+impl SiteV41 {
+    pub fn new_from_source_pages(
+        source_pages: &BTreeMap<PathBuf, SourcePage>,
+    ) -> Result<SiteV41, NeoError> {
+        let mut site = SiteV41 {
+            config: None,
+            pages: BTreeMap::new(),
+        };
+        site.load_source_pages(&source_pages);
+        Ok(site)
+    }
+
+    pub fn load_source_pages(&self, source_pages: &BTreeMap<PathBuf, SourcePage>) {
+        source_pages
+            .iter()
+            .for_each(|(source_path, source_content)| {
+                dbg!(&source_content);
+                ()
+            })
+    }
+}
+
+// TODO: Deprecate this as SiteV41 comes online
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Site {
     pub absolute_page_urls: BTreeMap<String, String>,

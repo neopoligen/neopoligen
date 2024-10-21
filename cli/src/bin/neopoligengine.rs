@@ -1,10 +1,15 @@
+#![allow(unused_variables)]
+#![allow(unused_imports)]
+#![allow(unused_mut)]
+
 use axum::Router;
 use dirs::config_dir;
 use dirs::data_local_dir;
 use neopoligengine::builder::Builder;
+use neopoligengine::builder::BuilderV41;
 use neopoligengine::engine_config::EngineConfig;
 use neopoligengine::file_watcher::FileWatcher;
-use neopoligengine::page_payload::ThemeTestOrPage;
+// use neopoligengine::page_payload::ThemeTestOrPage;
 use neopoligengine::site_config::SiteConfig;
 use std::path::PathBuf;
 use tokio::sync::mpsc;
@@ -79,22 +84,24 @@ async fn run_web_server(engine_config: EngineConfig, site_config: SiteConfig) {
     let livereload = LiveReloadLayer::new();
     let reloader = livereload.reloader();
     build_site(&reloader, &site_config);
-    let localhost_domain = format!("localhost:{}", engine_config.port);
-    let app = Router::new()
-        .nest_service("/", ServeDir::new(&site_config.output_dest_dir()))
-        .nest_service("/neo-status", ServeDir::new(&site_config.status_dest_dir()))
-        .layer(livereload);
-    let (tx, rx) = mpsc::channel(1);
-    let _content_watcher = FileWatcher::new(&site_config.content_source_dir(), tx.clone()).await;
-    let _theme_watcher = FileWatcher::new(&site_config.theme_dir(), tx.clone()).await;
-    tokio::spawn(async move {
-        catch_file_changes(reloader, rx, &site_config).await;
-    });
-    if let Ok(listener) = tokio::net::TcpListener::bind(localhost_domain).await {
-        if (axum::serve(listener, app).await).is_ok() {
-            // Server is going at this point
-        }
-    }
+
+    //////// TODO: Turn this back on when the main SiteV41 is in place
+    // let localhost_domain = format!("localhost:{}", engine_config.port);
+    // let app = Router::new()
+    //     .nest_service("/", ServeDir::new(&site_config.output_dest_dir()))
+    //     .nest_service("/neo-status", ServeDir::new(&site_config.status_dest_dir()))
+    //     .layer(livereload);
+    // let (tx, rx) = mpsc::channel(1);
+    // let _content_watcher = FileWatcher::new(&site_config.content_source_dir(), tx.clone()).await;
+    // let _theme_watcher = FileWatcher::new(&site_config.theme_dir(), tx.clone()).await;
+    // tokio::spawn(async move {
+    //     catch_file_changes(reloader, rx, &site_config).await;
+    // });
+    // if let Ok(listener) = tokio::net::TcpListener::bind(localhost_domain).await {
+    //     if (axum::serve(listener, app).await).is_ok() {
+    //         // Server is going at this point
+    //     }
+    // }
 }
 
 #[instrument(skip(reloader, rx, site_config))]
@@ -111,40 +118,51 @@ async fn catch_file_changes(
 #[instrument(skip(reloader, site_config))]
 fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
-    match Builder::new_from_site_config(site_config) {
+    match BuilderV41::new_from_site_config(site_config) {
         Ok(mut builder) => {
-            // Prep
-            let _ = builder.prep_output_dirs();
-            let _ = builder.load_templates();
-            // TODO: Turn image cache back on when dev is done
-            let _ = builder.build_image_cache();
-            // Site
-            builder.load_pages_from_cache().unwrap();
             builder.load_pages_from_fs().unwrap();
-            builder.generate_missing_asts();
-            let _ = builder.save_asts_to_cache();
-            builder.generate_payloads(ThemeTestOrPage::Page);
-            let _ = builder.empty_output_dirs();
-            let _ = builder.output_pages();
-            let _ = builder.deploy_images();
+            // dbg!(builder.site_v41);
 
-            // Theme Test
-            builder.update_config_for_theme_test();
-            builder.load_theme_test_pages().unwrap();
-            builder.generate_missing_asts();
-            builder.generate_payloads(ThemeTestOrPage::ThemeTest);
-            let _ = builder.test_theme();
+            // TODO: load from cache
+            //builder.load_pages_from_cache().unwrap();
+            // builder.load_pages_from_fs_v41().unwrap();
+            // dbg!(builder.site_v41);
+
+            //// Prep
+            ////
+            //let _ = builder.prep_output_dirs();
+            //let _ = builder.load_templates();
+            //// TODO: Turn image cache back on when dev is done
+            //// let _ = builder.build_image_cache();
+            //// Site
+            //builder.load_pages_from_cache().unwrap();
+            //builder.load_pages_from_fs().unwrap();
+            //builder.generate_missing_asts();
+            //let _ = builder.save_asts_to_cache();
+            //let _ = builder.prep_site();
+
+            // builder.generate_payloads(ThemeTestOrPage::Page);
+            // let _ = builder.empty_output_dirs();
+            // let _ = builder.output_pages();
+            // let _ = builder.deploy_images();
+
+            // // Theme Test
+            // builder.update_config_for_theme_test();
+            // builder.load_theme_test_pages().unwrap();
+            // builder.generate_missing_asts();
+            // builder.generate_payloads(ThemeTestOrPage::ThemeTest);
+            // let _ = builder.test_theme();
 
             // Other Files
-            let _ = builder.deploy_theme_files();
+            // let _ = builder.deploy_theme_files();
 
-            // Errors
-            builder.tmp_output_errors().unwrap();
-            if builder.errors.len() > 0 {
-                event!(Level::ERROR, "Total Errors: {}", builder.errors.len());
-            } else {
-                event!(Level::INFO, "No Errors Found");
-            }
+            // // Errors
+            // builder.tmp_output_errors().unwrap();
+            // if builder.errors.len() > 0 {
+            //     event!(Level::ERROR, "Total Errors: {}", builder.errors.len());
+            // } else {
+            //     event!(Level::INFO, "No Errors Found");
+            // }
 
             // builder.todo("update_file_cache");
             // builder.todo("generate_site_object");
