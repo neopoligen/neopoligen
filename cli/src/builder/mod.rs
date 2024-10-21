@@ -80,7 +80,7 @@ impl BuilderV41 {
     }
 
     #[instrument(skip(self))]
-    pub fn output_pages(&self) -> Result<()> {
+    pub fn output_pages(&mut self) -> Result<()> {
         event!(Level::INFO, "Outputting pages");
         let mut env = Environment::new();
 
@@ -116,10 +116,21 @@ impl BuilderV41 {
                         None
                     }
                 }) {
-                    dbg!(template);
+                    match template.render(context!()) {
+                        Ok(output) => {
+                            dbg!(output);
+                        }
+                        Err(e) => {
+                            self.errors.push(NeoError {
+                                kind: NeoErrorKind::GenericErrorWithSourcePath {
+                                    source_path: page.fs_path.clone(),
+                                    msg: e.to_string(),
+                                },
+                            });
+                        }
+                    }
                 }
             });
-
         Ok(())
     }
 
