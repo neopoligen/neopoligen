@@ -205,13 +205,17 @@ impl BuilderV41 {
                 } else {
                     event!(
                         Level::ERROR,
-                        "Could not find template for: {}",
-                        page.fs_path.display()
+                        "Could not find template for: {} - Missing: {}",
+                        page.fs_path.display(),
+                        page.template_list().join(",")
                     );
                     self.errors.push(NeoError {
                         kind: NeoErrorKind::GenericErrorWithSourcePath {
                             source_path: page.fs_path.clone(),
-                            msg: "Could not find template".to_string(),
+                            msg: format!(
+                                "Could not templates for page. {}",
+                                page.template_list().join(",")
+                            ),
                         },
                     });
                 }
