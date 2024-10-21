@@ -34,8 +34,6 @@ impl PageV41 {
 
 impl PageV41 {
     pub fn generate_ast(&mut self, site_config: &SiteConfig) -> Result<(), NeoError> {
-        // TODO: See about removing this clone and passing a ref for sections
-        // if you ever decide to check this again...
         match parse_ast(&self.raw_source, site_config.sections.clone()) {
             Ok(ast) => {
                 self.ast = Some(ast);
@@ -43,5 +41,9 @@ impl PageV41 {
             }
             _ => Ok(()),
         }
+    }
+
+    pub fn id(&self) -> Result<String, NeoError> {
+        Ok("asdf".to_string())
     }
 }

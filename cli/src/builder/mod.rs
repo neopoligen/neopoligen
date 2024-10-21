@@ -81,6 +81,19 @@ impl BuilderV41 {
 
     #[instrument(skip(self, site_config))]
     pub fn prep_site(&mut self, site_config: &SiteConfig) -> Result<()> {
+        event!(Level::INFO, "Prepping Site");
+        let mut site = SiteV41 {
+            config: site_config.clone(),
+            pages: BTreeMap::new(),
+        };
+        self.raw_pages.iter().for_each(|p| match p.id() {
+            Ok(id) => {
+                site.pages.insert(id, p.clone());
+                ()
+            }
+            Err(e) => self.errors.push(e),
+        });
+        self.site = Some(site);
         Ok(())
     }
 
@@ -685,11 +698,11 @@ impl Builder {
         Ok(())
     }
 
-    #[instrument(skip(self))]
-    pub fn prep_site(&self) -> Result<()> {
-        let site_v41 = SiteV41::new_from_source_pages(&self.source_pages);
-        Ok(())
-    }
+    // #[instrument(skip(self))]
+    // pub fn prep_site(&self) -> Result<()> {
+    //     let site_v41 = SiteV41::new_from_source_pages(&self.source_pages);
+    //     Ok(())
+    // }
 
     #[instrument(skip(self))]
     pub fn save_asts_to_cache(&self) -> Result<()> {
