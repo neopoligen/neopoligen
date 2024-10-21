@@ -99,6 +99,8 @@ impl BuilderV41 {
 
         let _ = env.add_template_owned("dev-test", "this is test".to_string());
 
+        let site_clone = Value::from_object(self.site.clone().unwrap());
+
         self.site
             .as_ref()
             .unwrap()
@@ -116,7 +118,9 @@ impl BuilderV41 {
                         None
                     }
                 }) {
-                    match template.render(context!()) {
+                    match template.render(context!(
+                    site => site_clone
+                    )) {
                         Ok(output) => {
                             dbg!(output);
                         }

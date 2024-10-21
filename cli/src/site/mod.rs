@@ -4,6 +4,10 @@
 
 use crate::image::Image;
 use crate::neo_error::NeoError;
+use minijinja::value::Object;
+use minijinja::Error;
+use minijinja::Value;
+use std::sync::Arc;
 // use crate::neo_error::{NeoError, NeoErrorKind};
 use crate::page::PageV41;
 use crate::page_payload::PagePayload;
@@ -42,6 +46,20 @@ impl SiteV41 {
     // }
 
     //
+}
+
+impl Object for SiteV41 {
+    fn call_method(
+        self: &Arc<SiteV41>,
+        _state: &minijinja::State,
+        name: &str,
+        args: &[Value],
+    ) -> Result<Value, Error> {
+        match name {
+            // "ping" => Ok(Value::from(self.ping(args))),
+            _ => Ok(Value::from("")),
+        }
+    }
 }
 
 // TODO: Deprecate this as SiteV41 comes online
