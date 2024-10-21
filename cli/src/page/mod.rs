@@ -106,7 +106,7 @@ impl PageV41 {
     pub fn output_fs_rel_path(&self, base_rel_path: &PathBuf) -> PathBuf {
         // TODO: handle override paths from metadata
         let mut path = base_rel_path.clone();
-        path = path.join(self.id().unwrap());
+        path = path.join(self.id_raw().unwrap());
         path = path.join("index.html");
         path
     }
@@ -137,10 +137,18 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn solo_id_test_get_basic_id() {
+    fn id_test_get_basic_id() {
         let page = PageV41::mock1_basic_page();
         let left = "mock1_basic_page".to_string();
         let right = page.id_raw().unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_output_rel_path_test_mock1() {
+        let page = PageV41::mock1_basic_page();
+        let left = PathBuf::from("qwer/mock1_basic_page/index.html");
+        let right = page.output_fs_rel_path(&PathBuf::from("qwer"));
         assert_eq!(left, right);
     }
 }
