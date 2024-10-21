@@ -57,8 +57,14 @@ impl BuilderV41 {
                         && !filename.to_str().unwrap().starts_with(".")
                     {
                         match PageV41::new_from_fs_path(&path) {
-                            Ok(p) => self.raw_pages.push(p),
-                            Err(e) => self.errors.push(e),
+                            Ok(p) => {
+                                event![Level::INFO, "Added raw page: {}", path.display()];
+                                self.raw_pages.push(p)
+                            }
+                            Err(e) => {
+                                event![Level::ERROR, "Error loading raw page: {}", path.display()];
+                                self.errors.push(e)
+                            }
                         }
                     }
                 }
@@ -110,6 +116,7 @@ impl BuilderV41 {
             .pages
             .iter()
             .for_each(|(id, page)| {
+                dbg!(&id);
                 let base_rel_path = PathBuf::from(self.site_config.default_language().unwrap());
                 let file_rel_path = page.output_fs_rel_path(&base_rel_path);
                 let absolute_output_path = &self
@@ -117,7 +124,6 @@ impl BuilderV41 {
                     .project_dir()
                     .join(&self.site_config.output_directory)
                     .join(file_rel_path);
-                dbg!(absolute_output_path);
                 if let Some(template) = page.template_list().iter().find_map(|name| {
                     if let Ok(tmpl) = env.get_template(name) {
                         Some(tmpl)
@@ -128,14 +134,22 @@ impl BuilderV41 {
                     match template.render(context!(
                         site => &site_clone,
                         page => Value::from_object(page.clone())
-
                     )) {
                         Ok(output) => {
-                            event!(
-                                Level::INFO,
-                                "Made file in output_pages: TBD on this message"
-                            );
-                            dbg!(output);
+                            match write_file_with_mkdir(&absolute_output_path, output.as_str()) {
+                                Ok(()) => {
+                                    event!(Level::INFO, "Making file in output_pages",);
+                                }
+                                Err(e) => self.errors.push({
+                                    event!(Level::ERROR, "Error on page output in output_pages");
+                                    NeoError {
+                                        kind: NeoErrorKind::GenericErrorWithSourcePath {
+                                            source_path: absolute_output_path.to_path_buf(),
+                                            msg: e,
+                                        },
+                                    }
+                                }),
+                            }
                         }
                         Err(e) => {
                             event!(Level::ERROR, "Error on page output in output_pages");
@@ -159,7 +173,7 @@ impl BuilderV41 {
             config: site_config.clone(),
             pages: BTreeMap::new(),
         };
-        self.raw_pages.iter().for_each(|p| match p.id() {
+        self.raw_pages.iter().for_each(|p| match p.id_raw() {
             Ok(id) => {
                 site.pages.insert(id, p.clone());
                 ()
