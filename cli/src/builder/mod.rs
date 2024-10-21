@@ -31,6 +31,7 @@ pub struct BuilderV41 {
     pub raw_pages: Vec<PageV41>,
     pub site_config: SiteConfig,
     pub site: Option<SiteV41>,
+    pub templates: BTreeMap<String, String>,
 }
 
 impl BuilderV41 {
@@ -40,6 +41,7 @@ impl BuilderV41 {
             raw_pages: vec![],
             site: None,
             site_config: site_config.clone(),
+            templates: BTreeMap::new(),
         };
         Ok(b)
     }
@@ -58,7 +60,7 @@ impl BuilderV41 {
                     {
                         match PageV41::new_from_fs_path(&path) {
                             Ok(p) => {
-                                event![Level::INFO, "Added raw page: {}", path.display()];
+                                //event![Level::INFO, "Added raw page: {}", path.display()];
                                 self.raw_pages.push(p)
                             }
                             Err(e) => {
@@ -66,6 +68,33 @@ impl BuilderV41 {
                                 self.errors.push(e)
                             }
                         }
+                    }
+                }
+            }
+        }
+        Ok(())
+    }
+
+    #[instrument(skip(self, site_config))]
+    pub fn load_templates(&mut self, site_config: &SiteConfig) -> Result<()> {
+        event!(Level::INFO, "Loading Templates");
+        for entry in WalkDir::new(&self.site_config.theme_dir()) {
+            let path = entry?.path().to_path_buf();
+            if path.is_file() {
+                if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
+                    if ext.to_ascii_lowercase() == "neoj"
+                        && !filename.to_str().unwrap().starts_with(".")
+                    {
+                        let template_name = &path.strip_prefix(&self.site_config.theme_dir());
+                        let content = fs::read_to_string(&path)?;
+                        self.templates.insert(
+                            template_name
+                                .as_ref()
+                                .unwrap()
+                                .to_string_lossy()
+                                .to_string(),
+                            content,
+                        );
                     }
                 }
             }
@@ -103,11 +132,16 @@ impl BuilderV41 {
                 .unwrap(),
         );
 
-        let _ = env.add_template_owned(
-            "dev-test",
-            "HERE: [@ page.dev_ping_page('yo') @]".to_string(),
-            // "HERE: [@ site.ping('yo') @]".to_string(),
-        );
+        self.templates.iter().for_each(|(k, v)| {
+            let _ = env.add_template_owned(k, v);
+        });
+
+        // let _ = env.add_template_owned(
+        //     "dev-test",
+        //     "HERE: [@ page.dev_ping_page('yo') @]".to_string(),
+        //     // "HERE: [@ site.ping('yo') @]".to_string(),
+        // );
+
         let site_clone = Value::from_object(self.site.clone().unwrap());
 
         self.site
@@ -116,7 +150,6 @@ impl BuilderV41 {
             .pages
             .iter()
             .for_each(|(id, page)| {
-                dbg!(&id);
                 let base_rel_path = PathBuf::from(self.site_config.default_language().unwrap());
                 let file_rel_path = page.output_fs_rel_path(&base_rel_path);
                 let absolute_output_path = &self
@@ -138,7 +171,7 @@ impl BuilderV41 {
                         Ok(output) => {
                             match write_file_with_mkdir(&absolute_output_path, output.as_str()) {
                                 Ok(()) => {
-                                    event!(Level::INFO, "Making file in output_pages",);
+                                    //event!(Level::INFO, "Making file in output_pages",);
                                 }
                                 Err(e) => self.errors.push({
                                     event!(Level::ERROR, "Error on page output in output_pages");
@@ -161,6 +194,18 @@ impl BuilderV41 {
                             });
                         }
                     }
+                } else {
+                    event!(
+                        Level::ERROR,
+                        "Could not find template for: {}",
+                        page.fs_path.display()
+                    );
+                    self.errors.push(NeoError {
+                        kind: NeoErrorKind::GenericErrorWithSourcePath {
+                            source_path: page.fs_path.clone(),
+                            msg: "Could not find template".to_string(),
+                        },
+                    });
                 }
             });
         Ok(())
@@ -482,7 +527,6 @@ impl Builder {
                 }
             };
             ()
-
             //match PagePayload::new_from_source_page(&page) {
             //    Ok(p) => match p.id {
             //        Some(id) => {
@@ -520,118 +564,121 @@ impl Builder {
             //        );
             //    }
             //}
-
             //
         });
     }
 
-    #[instrument(skip(self))]
-    pub fn load_pages_from_cache(&mut self) -> Result<()> {
-        event!(Level::INFO, "Loading Pages From Cache");
-        let conn = Connection::open(self.config.as_ref().unwrap().cache_db_path())?;
-        conn.execute(
-            "CREATE TABLE IF NOT EXISTS page_archive (path TEXT, page_object Text)",
-            (),
-        )?;
-        let mut stmt = conn.prepare("SELECT path, page_object FROM page_archive")?;
-        let mut rows = stmt.query([])?;
-        while let Some(row) = rows.next()? {
-            let path_string: String = row.get(0)?;
-            let path = PathBuf::from(path_string);
-            let page: String = row.get(1)?;
-            let p: SourcePage = serde_json::from_str(&page.to_string())?;
-            self.cache_buffer.insert(path, p);
-        }
-        Ok(())
-    }
+    // TODO: Hang onto this until you figure out if you need this
+    // level of cache in BuilderV41 or not
+    // #[instrument(skip(self))]
+    // pub fn load_pages_from_cache(&mut self) -> Result<()> {
+    //     event!(Level::INFO, "Loading Pages From Cache");
+    //     let conn = Connection::open(self.config.as_ref().unwrap().cache_db_path())?;
+    //     conn.execute(
+    //         "CREATE TABLE IF NOT EXISTS page_archive (path TEXT, page_object Text)",
+    //         (),
+    //     )?;
+    //     let mut stmt = conn.prepare("SELECT path, page_object FROM page_archive")?;
+    //     let mut rows = stmt.query([])?;
+    //     while let Some(row) = rows.next()? {
+    //         let path_string: String = row.get(0)?;
+    //         let path = PathBuf::from(path_string);
+    //         let page: String = row.get(1)?;
+    //         let p: SourcePage = serde_json::from_str(&page.to_string())?;
+    //         self.cache_buffer.insert(path, p);
+    //     }
+    //     Ok(())
+    // }
 
-    #[instrument(skip(self))]
-    pub fn load_pages_from_fs(&mut self) -> Result<()> {
-        event!(Level::INFO, "Loading Source Content Files");
-        for entry in WalkDir::new(&self.config.as_ref().unwrap().content_source_dir()) {
-            let path = entry?.path().to_path_buf();
-            if path.is_file() {
-                if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
-                    if ext.to_ascii_lowercase() == "neo"
-                        && !filename.to_str().unwrap().starts_with(".")
-                    {
-                        if let Some(cached_page) = self.cache_buffer.get(&path) {
-                            let updated = fs::metadata(&path)
-                                .unwrap()
-                                .modified()
-                                .unwrap()
-                                .duration_since(UNIX_EPOCH)
-                                .unwrap()
-                                .as_secs();
-                            if cached_page.updated.unwrap() == updated {
-                                let mut updated_cached_page = cached_page.clone();
-                                updated_cached_page.config =
-                                    Some(self.config.as_ref().unwrap().clone());
-                                self.source_pages.insert(path.clone(), updated_cached_page);
-                            } else {
-                                match SourcePage::new_from_source_path(
-                                    &path,
-                                    self.config.as_ref().unwrap().clone(),
-                                ) {
-                                    Ok(p) => {
-                                        self.source_pages.insert(path.clone(), p);
-                                    }
-                                    Err(_e) => {
-                                        dbg!("TODO: hoist page could not load error");
-                                        ()
-                                    }
-                                }
-                            }
-                        } else {
-                            match SourcePage::new_from_source_path(
-                                &path,
-                                self.config.as_ref().unwrap().clone(),
-                            ) {
-                                Ok(p) => {
-                                    self.source_pages.insert(path.clone(), p);
-                                }
-                                Err(_e) => {
-                                    dbg!("TODO: hoist page could not load error");
-                                    ()
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        Ok(())
-    }
+    // TODO: Delete this when the fs page loader for BuilderV41 is done
+    // #[instrument(skip(self))]
+    // pub fn load_pages_from_fs(&mut self) -> Result<()> {
+    //     event!(Level::INFO, "Loading Source Content Files");
+    //     for entry in WalkDir::new(&self.config.as_ref().unwrap().content_source_dir()) {
+    //         let path = entry?.path().to_path_buf();
+    //         if path.is_file() {
+    //             if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
+    //                 if ext.to_ascii_lowercase() == "neo"
+    //                     && !filename.to_str().unwrap().starts_with(".")
+    //                 {
+    //                     if let Some(cached_page) = self.cache_buffer.get(&path) {
+    //                         let updated = fs::metadata(&path)
+    //                             .unwrap()
+    //                             .modified()
+    //                             .unwrap()
+    //                             .duration_since(UNIX_EPOCH)
+    //                             .unwrap()
+    //                             .as_secs();
+    //                         if cached_page.updated.unwrap() == updated {
+    //                             let mut updated_cached_page = cached_page.clone();
+    //                             updated_cached_page.config =
+    //                                 Some(self.config.as_ref().unwrap().clone());
+    //                             self.source_pages.insert(path.clone(), updated_cached_page);
+    //                         } else {
+    //                             match SourcePage::new_from_source_path(
+    //                                 &path,
+    //                                 self.config.as_ref().unwrap().clone(),
+    //                             ) {
+    //                                 Ok(p) => {
+    //                                     self.source_pages.insert(path.clone(), p);
+    //                                 }
+    //                                 Err(_e) => {
+    //                                     dbg!("TODO: hoist page could not load error");
+    //                                     ()
+    //                                 }
+    //                             }
+    //                         }
+    //                     } else {
+    //                         match SourcePage::new_from_source_path(
+    //                             &path,
+    //                             self.config.as_ref().unwrap().clone(),
+    //                         ) {
+    //                             Ok(p) => {
+    //                                 self.source_pages.insert(path.clone(), p);
+    //                             }
+    //                             Err(_e) => {
+    //                                 dbg!("TODO: hoist page could not load error");
+    //                                 ()
+    //                             }
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     Ok(())
+    // }
 
-    #[instrument(skip(self))]
-    pub fn load_templates(&mut self) -> Result<()> {
-        event!(Level::INFO, "Loading Templates");
-        for entry in WalkDir::new(&self.config.as_ref().unwrap().theme_dir()) {
-            //for entry in WalkDir::new(&self.config.as_ref().unwrap().templates_dir()) {
-            let path = entry?.path().to_path_buf();
-            if path.is_file() {
-                if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
-                    if ext.to_ascii_lowercase() == "neoj"
-                        && !filename.to_str().unwrap().starts_with(".")
-                    {
-                        let template_name =
-                            &path.strip_prefix(&self.config.as_ref().unwrap().theme_dir());
-                        //&path.strip_prefix(&self.config.as_ref().unwrap().templates_dir());
-                        let content = fs::read_to_string(&path)?;
-                        self.templates.insert(
-                            template_name
-                                .as_ref()
-                                .unwrap()
-                                .to_string_lossy()
-                                .to_string(),
-                            content,
-                        );
-                    }
-                }
-            }
-        }
-        Ok(())
-    }
+    // TODO: delete this when load_template for BuilderV41 is working
+    //#[instrument(skip(self))]
+    //pub fn load_templates(&mut self) -> Result<()> {
+    //    event!(Level::INFO, "Loading Templates");
+    //    for entry in WalkDir::new(&self.config.as_ref().unwrap().theme_dir()) {
+    //        //for entry in WalkDir::new(&self.config.as_ref().unwrap().templates_dir()) {
+    //        let path = entry?.path().to_path_buf();
+    //        if path.is_file() {
+    //            if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
+    //                if ext.to_ascii_lowercase() == "neoj"
+    //                    && !filename.to_str().unwrap().starts_with(".")
+    //                {
+    //                    let template_name =
+    //                        &path.strip_prefix(&self.config.as_ref().unwrap().theme_dir());
+    //                    //&path.strip_prefix(&self.config.as_ref().unwrap().templates_dir());
+    //                    let content = fs::read_to_string(&path)?;
+    //                    self.templates.insert(
+    //                        template_name
+    //                            .as_ref()
+    //                            .unwrap()
+    //                            .to_string_lossy()
+    //                            .to_string(),
+    //                        content,
+    //                    );
+    //                }
+    //            }
+    //        }
+    //    }
+    //    Ok(())
+    //}
 
     #[instrument(skip(self))]
     pub fn load_theme_test_pages(&mut self) -> Result<()> {

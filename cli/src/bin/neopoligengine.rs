@@ -123,15 +123,8 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
             let _ = builder.load_pages_from_fs();
             let _ = builder.make_asts(&site_config);
             let _ = builder.prep_site(&site_config);
+            let _ = builder.load_templates(&site_config);
             let _ = builder.output_pages();
-
-            // dbg!(builder.site);
-            // dbg!(builder.raw_pages);
-
-            // TODO: load from cache
-            //builder.load_pages_from_cache().unwrap();
-            // builder.load_pages_from_fs_v41().unwrap();
-            // dbg!(builder.site_v41);
 
             //// Prep
             ////
@@ -140,11 +133,6 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
             //// TODO: Turn image cache back on when dev is done
             //// let _ = builder.build_image_cache();
             //// Site
-            //builder.load_pages_from_cache().unwrap();
-            //builder.load_pages_from_fs().unwrap();
-            //builder.generate_missing_asts();
-            //let _ = builder.save_asts_to_cache();
-            //let _ = builder.prep_site();
 
             // builder.generate_payloads(ThemeTestOrPage::Page);
             // let _ = builder.empty_output_dirs();
