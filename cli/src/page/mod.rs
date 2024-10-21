@@ -54,4 +54,8 @@ impl PageV41 {
         path = path.join("index.html");
         path
     }
+
+    pub fn template_list(&self) -> Vec<String> {
+        vec!["dev-test".to_string()]
+    }
 }
