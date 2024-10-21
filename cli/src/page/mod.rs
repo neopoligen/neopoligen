@@ -89,15 +89,17 @@ impl PageV41 {
                 match tmp {
                     Some(id) => id.unwrap(),
                     None => Err(NeoError {
-                        kind: NeoErrorKind::GenericErrorWithoutSourcePath {
-                            msg: "could not figure out id".to_string(),
+                        kind: NeoErrorKind::GenericErrorWithSourcePath {
+                            source_path: self.fs_path.clone(),
+                            msg: "Could not get id from pagedata".to_string(),
                         },
                     }),
                 }
             }
             None => Err(NeoError {
-                kind: NeoErrorKind::GenericErrorWithoutSourcePath {
-                    msg: "could not get id".to_string(),
+                kind: NeoErrorKind::GenericErrorWithSourcePath {
+                    source_path: self.fs_path.clone(),
+                    msg: "Could not get id from pagedata".to_string(),
                 },
             }),
         }
