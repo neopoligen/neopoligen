@@ -110,10 +110,14 @@ impl BuilderV41 {
             .pages
             .iter()
             .for_each(|(id, page)| {
-                // TODO: Pull base_rel_path this from the config
-                let base_rel_path = PathBuf::from("en");
+                let base_rel_path = PathBuf::from(self.site_config.default_language().unwrap());
                 let file_rel_path = page.output_fs_rel_path(&base_rel_path);
-                let absolute_output_path = &self.site_config.project_dir().join(file_rel_path);
+                let absolute_output_path = &self
+                    .site_config
+                    .project_dir()
+                    .join(&self.site_config.output_directory)
+                    .join(file_rel_path);
+                dbg!(absolute_output_path);
                 if let Some(template) = page.template_list().iter().find_map(|name| {
                     if let Ok(tmpl) = env.get_template(name) {
                         Some(tmpl)

@@ -40,6 +40,7 @@ impl SiteConfig {
         let config = SiteConfig {
             default_language: "en".to_string(),
             base_url_raw: "testsite.localhost:1999".to_string(),
+            output_directory: "_site".to_string(),
             project_root: Some(PathBuf::from("/test/mocks")),
             section_attrs: vec![
                 "alt".to_string(),
@@ -94,6 +95,7 @@ impl SiteConfig {
         let config = SiteConfig {
             default_language: "en".to_string(),
             base_url_raw: "testsite.localhost:1999".to_string(),
+            output_directory: "_site".to_string(),
             project_root: Some(PathBuf::from("/test/mocks")),
             section_attrs: vec![
                 "alt".to_string(),

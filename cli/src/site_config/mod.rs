@@ -20,6 +20,8 @@ pub struct SiteConfig {
     #[serde(rename = "base_url")]
     pub base_url_raw: String,
     pub default_language: String,
+    #[serde(default = "output_dir_name")]
+    pub output_directory: String,
     pub theme_name: String,
     pub theme_options: Option<serde_json::Value>,
     #[serde(default = "empty_sections")]
@@ -393,6 +395,10 @@ fn empty_sections() -> ConfigSections {
 
 fn empty_vec() -> Vec<String> {
     vec![]
+}
+
+fn output_dir_name() -> String {
+    "_site".to_string()
 }
 
 // fn get_dirs_in_dir(dir: &PathBuf) -> io::Result<Vec<PathBuf>> {
