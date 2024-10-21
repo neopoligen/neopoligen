@@ -21,6 +21,7 @@ pub struct SiteV41 {
 
 impl SiteV41 {
     pub fn new_from_source_pages(
+        // TODO: Switch thsi to PageV41
         source_pages: &BTreeMap<PathBuf, SourcePage>,
     ) -> Result<SiteV41, NeoError> {
         let mut site = SiteV41 {

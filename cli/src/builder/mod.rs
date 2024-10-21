@@ -41,7 +41,9 @@ impl BuilderV41 {
         };
         Ok(b)
     }
+}
 
+impl BuilderV41 {
     #[instrument(skip(self))]
     pub fn load_pages_from_fs(&mut self) -> Result<()> {
         event!(Level::INFO, "Loading Pages From FS");
@@ -62,6 +64,51 @@ impl BuilderV41 {
         }
         Ok(())
     }
+    #[instrument(skip(self))]
+    pub fn make_asts(&mut self, site_config: &SiteConfig) -> Result<()> {
+        event!(Level::INFO, "Generating ASTs");
+        self.raw_pages
+            .iter_mut()
+            .for_each(|p| match p.generate_ast(site_config) {
+                Ok(()) => (),
+                Err(e) => self.errors.push(e),
+            });
+        Ok(())
+    }
+
+    //#[instrument(skip(self))]
+    //pub fn _old_to_delete_generate_missing_asts(&mut self) {
+    //    self.source_pages.iter_mut().for_each(|(sp, page)| {
+    //        if let None = page.ast {
+    //            if let Err(e) = page.generate_ast() {
+    //                self.errors.push(match e.kind {
+    //                    NeoErrorKind::ParserError {
+    //                        line,
+    //                        column,
+    //                        remainder,
+    //                        source,
+    //                        message,
+    //                        ..
+    //                    } => NeoError {
+    //                        kind: NeoErrorKind::ParserError {
+    //                            source_path: Some(sp.clone()),
+    //                            line,
+    //                            column,
+    //                            remainder,
+    //                            source,
+    //                            message,
+    //                        },
+    //                    },
+    //                    _ => e,
+    //                })
+    //                // e.source_path = PathBuf::from("asdf");
+    //                //self.errors.push(e);
+    //            }
+    //        }
+    //    })
+    //}
+
+    //
 }
 
 // TODO: Deprecate Builder as BuilderV41 comes online

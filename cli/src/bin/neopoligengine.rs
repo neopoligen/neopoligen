@@ -120,7 +120,8 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
     event!(Level::INFO, "Building Site");
     match BuilderV41::new_from_site_config(site_config) {
         Ok(mut builder) => {
-            builder.load_pages_from_fs().unwrap();
+            let _ = builder.load_pages_from_fs();
+            let _ = builder.make_asts(&site_config);
             dbg!(builder.raw_pages);
 
             // TODO: load from cache

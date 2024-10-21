@@ -1,6 +1,8 @@
+use crate::ast::parse_ast_v41;
 use crate::neo_error::NeoError;
 use crate::neo_error::NeoErrorKind;
 use crate::section::SectionV41;
+use crate::site_config::SiteConfig;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
@@ -26,6 +28,20 @@ impl PageV41 {
                     msg: e.to_string(),
                 },
             }),
+        }
+    }
+}
+
+impl PageV41 {
+    pub fn generate_ast(&mut self, site_config: &SiteConfig) -> Result<(), NeoError> {
+        // TODO: See about removing this clone and passing a ref for sections
+        // if you ever decide to check this again...
+        match parse_ast_v41(&self.raw_source, &site_config.sections) {
+            Ok(ast) => {
+                self.ast = Some(ast);
+                Ok(())
+            }
+            _ => Ok(()),
         }
     }
 }
