@@ -44,6 +44,14 @@ impl PageV41 {
     }
 
     pub fn id(&self) -> Result<String, NeoError> {
-        Ok("asdf".to_string())
+        Ok("asdfasdf".to_string())
+    }
+
+    pub fn output_fs_rel_path(&self, base_rel_path: &PathBuf) -> PathBuf {
+        // TODO: handle override paths from metadata
+        let mut path = base_rel_path.clone();
+        path = path.join(self.id().unwrap());
+        path = path.join("index.html");
+        path
     }
 }

@@ -1,5 +1,6 @@
 #![allow(unused_variables)]
 #![allow(unused_mut)]
+#![allow(unused_imports)]
 
 use crate::image::Image;
 use crate::neo_error::NeoError;

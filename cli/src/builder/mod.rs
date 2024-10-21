@@ -79,6 +79,46 @@ impl BuilderV41 {
         Ok(())
     }
 
+    #[instrument(skip(self))]
+    pub fn output_pages(&self) -> Result<()> {
+        event!(Level::INFO, "Outputting pages");
+        let mut env = Environment::new();
+
+        // env.add_function("highlight_code", highlight_code);
+        // env.add_function("highlight_code_no_nums", highlight_code_no_nums);
+        // env.add_function("highlight_span", highlight_span);
+
+        env.set_syntax(
+            SyntaxConfig::builder()
+                .block_delimiters("[!", "!]")
+                .variable_delimiters("[@", "@]")
+                .comment_delimiters("[#", "#]")
+                .build()
+                .unwrap(),
+        );
+
+        let _ = env.add_template_owned("dev-test", "this is test".to_string());
+
+        self.site
+            .as_ref()
+            .unwrap()
+            .pages
+            .iter()
+            .for_each(|(id, p)| {
+                // TODO: Pull base_rel_path this from the config
+                let base_rel_path = PathBuf::from("en");
+                let file_rel_path = p.output_fs_rel_path(&base_rel_path);
+                let absolute_output_path = &self.site_config.project_dir().join(file_rel_path);
+                dbg!(absolute_output_path);
+
+                //dbg!(&self.site_config);
+
+                ()
+            });
+
+        Ok(())
+    }
+
     #[instrument(skip(self, site_config))]
     pub fn prep_site(&mut self, site_config: &SiteConfig) -> Result<()> {
         event!(Level::INFO, "Prepping Site");

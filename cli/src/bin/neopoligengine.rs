@@ -123,7 +123,9 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
             let _ = builder.load_pages_from_fs();
             let _ = builder.make_asts(&site_config);
             let _ = builder.prep_site(&site_config);
-            dbg!(builder.site);
+            let _ = builder.output_pages();
+
+            // dbg!(builder.site);
             // dbg!(builder.raw_pages);
 
             // TODO: load from cache
