@@ -20,6 +20,7 @@ use nom_supreme::parser_ext::ParserExt;
 //     // }
 // }
 
+// TODO: Deprecate for v41
 pub fn parse_ast(source: &str, sections: ConfigSections) -> Result<Vec<Section>, NeoError> {
     match final_parser(|src| do_parse(src, &sections))(source) {
         Ok(data) => Ok(data),
@@ -27,6 +28,7 @@ pub fn parse_ast(source: &str, sections: ConfigSections) -> Result<Vec<Section>,
     }
 }
 
+// TODO: Deprecate for v41
 fn do_parse<'a>(
     source: &'a str,
     sections: &'a ConfigSections,

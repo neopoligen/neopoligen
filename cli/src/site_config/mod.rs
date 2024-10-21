@@ -13,8 +13,137 @@ use std::fs::{self};
 use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub struct SiteConfigV41 {}
+pub struct SiteConfigV41 {
+    pub base_url: String,
+    pub default_language: String,
+    #[serde(default = "output_dir_name_v41")]
+    pub output_directory: String,
+    pub theme: String,
+    //pub theme_options: Option<serde_json::Value>,
+    #[serde(default = "empty_sections_v41")]
+    pub sections: ConfigSections,
+    //
+    // Reminder: ``project_root`` isn't expected to come from the
+    // JSON file. The process sets it internally
+    pub project_root: Option<PathBuf>,
+    //
+    // section_attrs
+    //
+    // The key/value and flag attrs to include
+    // in the defatul ``attr_string`` for sections
+    //
+    // TODO: Load this from admin/attrs/section.txt
+    // #[serde(default = "empty_vec_v41")]
+    // pub section_attrs: Vec<String>,
+    // span_attrs
+    // The key value and flag attrs to include
+    // in the default ``attr_string`` for spans
+    //
+    // TODO: Load this from admin/attrs/span.txt
+    // #[serde(default = "empty_vec_v41")]
+    // pub span_attrs: Vec<String>,
+}
 
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub struct SiteConfigSectionsV41 {
+    pub basic: Vec<String>,
+    pub block: Vec<String>,
+    pub checklist: Vec<String>,
+    pub checklist_item: Vec<String>,
+    //     pub detail: Vec<String>,
+    pub json: Vec<String>,
+    pub list: Vec<String>,
+    pub list_item: Vec<String>,
+    pub raw: Vec<String>,
+    // pub table: Vec<String>,
+    pub yaml: Vec<String>,
+}
+
+impl SiteConfigV41 {
+    pub fn new_from_engine_config(engine_config: &EngineConfig) -> Result<SiteConfigV41, NeoError> {
+        let project_root = engine_config
+            .sites_dir
+            .join(engine_config.active_site.as_str());
+        let config_path = project_root.join("admin").join("config.json");
+        match fs::read_to_string(&config_path) {
+            Ok(text) => match serde_json::from_str::<SiteConfigV41>(&text) {
+                Ok(mut config) => {
+                    config.project_root = Some(project_root.clone());
+                    if !config.theme_dir().is_dir() {
+                        Err(NeoError {
+                            kind: NeoErrorKind::MissingThemeDirectory {
+                                path: config.theme_dir().clone(),
+                            },
+                        })
+                    } else {
+                        //config.load_sections();
+                        //config.load_section_attrs();
+                        //config.load_span_attrs();
+                        Ok(config)
+                    }
+                }
+                Err(e) => Err(NeoError {
+                    kind: NeoErrorKind::GenericErrorWithoutSourcePath {
+                        msg: format!("Could not load config: {} - {}", config_path.display(), e),
+                    },
+                }),
+            },
+            Err(e) => Err(NeoError {
+                kind: NeoErrorKind::GenericErrorWithoutSourcePath {
+                    msg: format!("Could not load config: {} - {}", config_path.display(), e),
+                },
+            }),
+        }
+    }
+}
+
+impl SiteConfigV41 {
+    pub fn content_source_dir(&self) -> PathBuf {
+        self.project_dir().join("content")
+    }
+
+    pub fn default_language(&self) -> Result<String> {
+        Ok(self.default_language.clone())
+    }
+
+    pub fn project_dir(&self) -> PathBuf {
+        self.project_root.clone().unwrap()
+    }
+
+    pub fn theme_dir(&self) -> PathBuf {
+        self.themes_dir().join(self.theme.clone())
+    }
+
+    pub fn themes_dir(&self) -> PathBuf {
+        self.project_dir().join("themes")
+    }
+}
+
+fn empty_sections_v41() -> ConfigSections {
+    ConfigSections {
+        basic: vec![],
+        block: vec![],
+        checklist: vec![],
+        checklist_item: vec![],
+        json: vec![],
+        list: vec![],
+        list_item: vec![],
+        raw: vec![],
+        yaml: vec![],
+    }
+}
+
+// fn empty_vec_v41() -> Vec<String> {
+//     vec![]
+// }
+
+fn output_dir_name_v41() -> String {
+    "_site".to_string()
+}
+
+// //////////////////////////////////////////////////////////////////////////
+
+// TODO: Deprecate this when SiteConfigV41 is in place
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SiteConfig {
     #[serde(rename = "base_url")]
@@ -379,6 +508,7 @@ impl SiteConfig {
     }
 }
 
+// TODO: deprecate when v41 is done
 fn empty_sections() -> ConfigSections {
     ConfigSections {
         basic: vec![],

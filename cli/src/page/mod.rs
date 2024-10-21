@@ -7,7 +7,7 @@ use crate::neo_error::NeoErrorKind;
 use crate::section::Section;
 use crate::section_attr::SectionAttr;
 use crate::section_attr::SectionAttrKind;
-use crate::site_config::SiteConfig;
+use crate::site_config::SiteConfigV41;
 use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::Value;
@@ -53,7 +53,7 @@ impl PageV41 {
         )))
     }
 
-    pub fn generate_ast(&mut self, site_config: &SiteConfig) -> Result<(), NeoError> {
+    pub fn generate_ast(&mut self, site_config: &SiteConfigV41) -> Result<(), NeoError> {
         match parse_ast(&self.raw_source, site_config.sections.clone()) {
             Ok(ast) => {
                 self.ast = Some(ast);
@@ -113,9 +113,8 @@ impl PageV41 {
         path
     }
 
-    // pub fn sections(&self) -> Value {}
     pub fn template_list(&self) -> Vec<String> {
-        vec!["dev-test".to_string()]
+        vec!["templates/post/published.neoj".to_string()]
     }
 }
 

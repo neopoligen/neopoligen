@@ -12,6 +12,7 @@ use std::sync::Arc;
 use crate::page::PageV41;
 use crate::page_payload::PagePayload;
 use crate::site_config::SiteConfig; // TODO: Deprecate SiteConfig In Favor Of SiteConfigV41
+use crate::site_config::SiteConfigV41;
 use crate::source_page::SourcePage;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -19,7 +20,7 @@ use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SiteV41 {
-    pub config: SiteConfig,
+    pub config: SiteConfigV41,
     pub pages: BTreeMap<String, PageV41>,
 }
 

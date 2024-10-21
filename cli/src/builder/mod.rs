@@ -8,6 +8,7 @@ use crate::page::PageV41;
 use crate::page_payload::{PagePayload, ThemeTestOrPage};
 use crate::site::{Site, SiteV41};
 use crate::site_config::SiteConfig;
+use crate::site_config::SiteConfigV41;
 use crate::source_page::SourcePage;
 use crate::theme_test::ThemeTest; // this might be deprecated
 use anyhow::Result;
@@ -29,13 +30,13 @@ use walkdir::WalkDir;
 pub struct BuilderV41 {
     pub errors: Vec<NeoError>,
     pub raw_pages: Vec<PageV41>,
-    pub site_config: SiteConfig,
+    pub site_config: SiteConfigV41,
     pub site: Option<SiteV41>,
     pub templates: BTreeMap<String, String>,
 }
 
 impl BuilderV41 {
-    pub fn new_from_site_config(site_config: &SiteConfig) -> Result<BuilderV41, NeoError> {
+    pub fn new_from_site_config(site_config: &SiteConfigV41) -> Result<BuilderV41, NeoError> {
         let b = BuilderV41 {
             errors: vec![],
             raw_pages: vec![],
@@ -76,7 +77,7 @@ impl BuilderV41 {
     }
 
     #[instrument(skip(self, site_config))]
-    pub fn load_templates(&mut self, site_config: &SiteConfig) -> Result<()> {
+    pub fn load_templates(&mut self, site_config: &SiteConfigV41) -> Result<()> {
         event!(Level::INFO, "Loading Templates");
         for entry in WalkDir::new(&self.site_config.theme_dir()) {
             let path = entry?.path().to_path_buf();
@@ -103,7 +104,7 @@ impl BuilderV41 {
     }
 
     #[instrument(skip(self, site_config))]
-    pub fn make_asts(&mut self, site_config: &SiteConfig) -> Result<()> {
+    pub fn make_asts(&mut self, site_config: &SiteConfigV41) -> Result<()> {
         event!(Level::INFO, "Generating ASTs");
         self.raw_pages
             .iter_mut()
@@ -133,6 +134,8 @@ impl BuilderV41 {
         );
 
         self.templates.iter().for_each(|(k, v)| {
+            dbg!(&k);
+            dbg!(&v);
             let _ = env.add_template_owned(k, v);
         });
 
@@ -224,7 +227,7 @@ impl BuilderV41 {
     }
 
     #[instrument(skip(self, site_config))]
-    pub fn prep_site(&mut self, site_config: &SiteConfig) -> Result<()> {
+    pub fn prep_site(&mut self, site_config: &SiteConfigV41) -> Result<()> {
         event!(Level::INFO, "Prepping Site");
         let mut site = SiteV41 {
             config: site_config.clone(),

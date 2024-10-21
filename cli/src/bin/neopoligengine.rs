@@ -10,7 +10,8 @@ use neopoligengine::builder::BuilderV41;
 use neopoligengine::engine_config::EngineConfig;
 use neopoligengine::file_watcher::FileWatcher;
 // use neopoligengine::page_payload::ThemeTestOrPage;
-use neopoligengine::site_config::SiteConfig;
+use neopoligengine::site_config::SiteConfig; // TODO: Deprecate when v41 is done
+use neopoligengine::site_config::SiteConfigV41;
 use std::path::PathBuf;
 use tokio::sync::mpsc;
 use tower_http::services::ServeDir;
@@ -62,7 +63,7 @@ async fn main() {
                 engine_config_path.display()
             );
             event!(Level::INFO, "Active site: {}", &engine_config.active_site);
-            match SiteConfig::new_from_engine_config(&engine_config) {
+            match SiteConfigV41::new_from_engine_config(&engine_config) {
                 Ok(site_config) => {
                     run_web_server(engine_config.clone(), site_config).await;
                 }
@@ -79,7 +80,7 @@ async fn main() {
 }
 
 #[instrument(skip(engine_config, site_config))]
-async fn run_web_server(engine_config: EngineConfig, site_config: SiteConfig) {
+async fn run_web_server(engine_config: EngineConfig, site_config: SiteConfigV41) {
     event!(Level::INFO, "Starting web server");
     let livereload = LiveReloadLayer::new();
     let reloader = livereload.reloader();
@@ -108,7 +109,7 @@ async fn run_web_server(engine_config: EngineConfig, site_config: SiteConfig) {
 async fn catch_file_changes(
     reloader: Reloader,
     mut rx: mpsc::Receiver<Vec<PathBuf>>,
-    site_config: &SiteConfig,
+    site_config: &SiteConfigV41,
 ) {
     while let Some(_) = rx.recv().await {
         build_site(&reloader, site_config);
@@ -116,7 +117,7 @@ async fn catch_file_changes(
 }
 
 #[instrument(skip(reloader, site_config))]
-fn build_site(reloader: &Reloader, site_config: &SiteConfig) {
+fn build_site(reloader: &Reloader, site_config: &SiteConfigV41) {
     event!(Level::INFO, "Building Site");
     match BuilderV41::new_from_site_config(site_config) {
         Ok(mut builder) => {
