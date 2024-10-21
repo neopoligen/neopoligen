@@ -71,31 +71,29 @@ impl PageV41 {
     pub fn id_raw(&self) -> Result<String, NeoError> {
         match &self.ast {
             Some(sections) => {
-                sections
+                let tmp = sections
                     .iter()
-                    .for_each(|section| match section.r#type.as_str() {
-                        "pagedata" => {
-                            section.attrs.iter().for_each(|attr| match attr {
-                                SectionAttr { kind, .. } => match kind {
-                                    SectionAttrKind::KeyValueSpans { key, spans } => {
-                                        match key.as_str() {
-                                            "id" => {
-                                                let x = flatten_spans(spans);
-                                                dbg!(x);
-                                                ()
-                                            }
-                                            _ => (),
-                                        }
-                                        ()
-                                    }
-                                    _ => (),
+                    .find_map(|section| match section.r#type.as_str() {
+                        "pagedata" => Some(section.attrs.iter().find_map(|attr| match attr {
+                            SectionAttr { kind, .. } => match kind {
+                                SectionAttrKind::KeyValueSpans { key, spans } => match key.as_str()
+                                {
+                                    "id" => Some(Ok::<String, NeoError>(flatten_spans(spans))),
+                                    _ => None,
                                 },
-                            });
-                            ()
-                        }
-                        _ => (),
+                                _ => None,
+                            },
+                        })),
+                        _ => None,
                     });
-                Ok("mock1_basic".to_string())
+                match tmp {
+                    Some(id) => id.unwrap(),
+                    None => Err(NeoError {
+                        kind: NeoErrorKind::GenericErrorWithoutSourcePath {
+                            msg: "could not figure out id".to_string(),
+                        },
+                    }),
+                }
             }
             None => Err(NeoError {
                 kind: NeoErrorKind::GenericErrorWithoutSourcePath {
@@ -103,7 +101,6 @@ impl PageV41 {
                 },
             }),
         }
-        // Ok("mock1_basic".to_string())
     }
 
     pub fn output_fs_rel_path(&self, base_rel_path: &PathBuf) -> PathBuf {
@@ -142,7 +139,7 @@ mod test {
     #[test]
     fn solo_id_test_get_basic_id() {
         let page = PageV41::mock1_basic_page();
-        let left = "mock1_basic".to_string();
+        let left = "mock1_basic_page".to_string();
         let right = page.id_raw().unwrap();
         assert_eq!(left, right);
     }
