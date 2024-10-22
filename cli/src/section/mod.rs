@@ -7,14 +7,12 @@ pub mod list_item;
 pub mod mocks;
 pub mod raw;
 pub mod unknown;
-pub mod yaml;
 
 use crate::section::basic::*;
 use crate::section::checklist::*;
 use crate::section::list::*;
 use crate::section::raw::*;
 use crate::section::unknown::*;
-use crate::section::yaml::*;
 use crate::section_attr::SectionAttr;
 use crate::section_attr::SectionAttrKind;
 use crate::site_config::ConfigSections;
@@ -24,7 +22,6 @@ use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::character::complete::line_ending;
 use nom::character::complete::space0;
-use nom::combinator::eof;
 use nom::multi::many1;
 use nom::sequence::tuple;
 use nom::IResult;
@@ -66,7 +63,7 @@ pub enum SectionKind {
         checked_string: Option<String>,
         children: Vec<Section>,
     },
-    Json {
+    Json5 {
         data: Value,
         children: Vec<Section>,
     },
@@ -82,10 +79,6 @@ pub enum SectionKind {
     },
     Unknown {
         children: Vec<Section>,
-    },
-    Yaml {
-        // TODO: Add children here since
-        // the -- /yaml end sections can have them
     },
 }
 
@@ -131,10 +124,8 @@ pub fn start_or_full_section<'a>(
         |src| list_section_full(src, &sections, nest_level),
         |src| raw_section_start(src, &sections, nest_level),
         |src| raw_section_full(src, &sections, nest_level),
-        // TODO: JSON full
-        // TODO: JSON start
-        //|src| yaml_section_start(src, &sections),
-        |src| yaml_section_full(src, &sections, nest_level),
+        // TODO: JSON5 full
+        // TODO: JSON5 start
         // Reminder: do unknown last since it slurps
         // everything it can
         |src| unknown_section_start(src, &sections, nest_level),

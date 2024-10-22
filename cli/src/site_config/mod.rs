@@ -11,6 +11,7 @@ use serde::Deserialize;
 use serde::Serialize;
 use std::fs::{self};
 use std::path::PathBuf;
+use tracing::{event, instrument, Level};
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SiteConfigV41 {
@@ -44,27 +45,27 @@ pub struct SiteConfigV41 {
     // pub span_attrs: Vec<String>,
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub struct SiteConfigSectionsV41 {
-    pub basic: Vec<String>,
-    pub block: Vec<String>,
-    pub checklist: Vec<String>,
-    pub checklist_item: Vec<String>,
-    //     pub detail: Vec<String>,
-    pub json: Vec<String>,
-    pub list: Vec<String>,
-    pub list_item: Vec<String>,
-    pub raw: Vec<String>,
-    // pub table: Vec<String>,
-    pub yaml: Vec<String>,
-}
+// NOTE: This isn't being used since it would
+// require updating every parser file.
+// TODO: Delete this when SiteConfigV41 is done
+// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+// pub struct SiteConfigSectionsV41 {
+//     pub basic: Vec<String>,
+//     pub block: Vec<String>,
+//     pub checklist: Vec<String>,
+//     pub checklist_item: Vec<String>,
+//     pub json5: Vec<String>,
+//     pub list: Vec<String>,
+//     pub list_item: Vec<String>,
+//     pub raw: Vec<String>,
+// }
 
 impl SiteConfigV41 {
     pub fn new_from_engine_config(engine_config: &EngineConfig) -> Result<SiteConfigV41, NeoError> {
         let project_root = engine_config
             .sites_dir
             .join(engine_config.active_site.as_str());
-        let config_path = project_root.join("admin").join("config.json");
+        let config_path = project_root.join("admin").join("settings.json5");
         match fs::read_to_string(&config_path) {
             Ok(text) => match serde_json::from_str::<SiteConfigV41>(&text) {
                 Ok(mut config) => {
@@ -76,7 +77,8 @@ impl SiteConfigV41 {
                             },
                         })
                     } else {
-                        //config.load_sections();
+                        // TODO: Handle errors here
+                        config.load_sections().unwrap();
                         //config.load_section_attrs();
                         //config.load_span_attrs();
                         Ok(config)
@@ -97,6 +99,28 @@ impl SiteConfigV41 {
     }
 }
 
+impl SiteConfigV41 {
+    #[instrument(skip(self))]
+    pub fn load_sections(&mut self) -> Result<(), NeoError> {
+        event!(Level::INFO, "Loading Theme Sections");
+        let section_list: Vec<&str> = vec![
+            "basic",
+            "block",
+            "checklist",
+            "checklist_item",
+            "json5",
+            "list",
+            "list_item",
+            "raw",
+        ];
+        section_list.iter().for_each(|item| {
+            dbg!(item);
+            ()
+        });
+
+        Ok(())
+    }
+}
 impl SiteConfigV41 {
     pub fn content_source_dir(&self) -> PathBuf {
         self.project_dir().join("content")
@@ -125,11 +149,10 @@ fn empty_sections_v41() -> ConfigSections {
         block: vec![],
         checklist: vec![],
         checklist_item: vec![],
-        json: vec![],
+        json5: vec![],
         list: vec![],
         list_item: vec![],
         raw: vec![],
-        yaml: vec![],
     }
 }
 
@@ -182,13 +205,10 @@ pub struct ConfigSections {
     pub block: Vec<String>,
     pub checklist: Vec<String>,
     pub checklist_item: Vec<String>,
-    //     pub detail: Vec<String>,
-    pub json: Vec<String>,
+    pub json5: Vec<String>,
     pub list: Vec<String>,
     pub list_item: Vec<String>,
     pub raw: Vec<String>,
-    // pub table: Vec<String>,
-    pub yaml: Vec<String>,
 }
 
 impl SiteConfig {
@@ -196,7 +216,7 @@ impl SiteConfig {
         let project_root = engine_config
             .sites_dir
             .join(engine_config.active_site.as_str());
-        let config_path = project_root.join("admin").join("config.json");
+        let config_path = project_root.join("admin").join("settings.json5");
         match fs::read_to_string(&config_path) {
             Ok(text) => match serde_json::from_str::<SiteConfig>(&text) {
                 Ok(mut config) => {
@@ -444,15 +464,13 @@ impl SiteConfig {
                     // } else if category.eq_ignore_ascii_case("checklist-item") {
                     //     self.sections.checklistitem.push(section_name);
                     } else if category.eq_ignore_ascii_case("json") {
-                        self.sections.json.push(section_name);
+                        self.sections.json5.push(section_name);
                     } else if category.eq_ignore_ascii_case("list") {
                         self.sections.list.push(section_name);
                     // } else if category.eq_ignore_ascii_case("list-item") {
                     //     self.sections.listitem.push(section_name);
                     } else if category.eq_ignore_ascii_case("raw") {
                         self.sections.raw.push(section_name);
-                    } else if category.eq_ignore_ascii_case("yaml") {
-                        self.sections.yaml.push(section_name);
                     }
                 }
             });
@@ -515,11 +533,10 @@ fn empty_sections() -> ConfigSections {
         block: vec![],
         checklist: vec![],
         checklist_item: vec![],
-        json: vec![],
+        json5: vec![],
         list: vec![],
         list_item: vec![],
         raw: vec![],
-        yaml: vec![],
     }
 }
 

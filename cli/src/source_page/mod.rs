@@ -12,6 +12,8 @@ use std::fs;
 use std::path::PathBuf;
 use std::time::UNIX_EPOCH;
 
+// TODO: Deprecated: SourcePage goes away when v41 is done
+
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SourcePage {
     pub ast: Option<Vec<Section>>,
@@ -110,7 +112,7 @@ impl SourcePage {
         // that provides individual access as well
         if let Some(ast) = &self.ast {
             ast.iter().find_map(|section| match &section.kind {
-                SectionKind::Yaml {} => {
+                SectionKind::Json5 { .. } => {
                     if section.r#type.as_str() == "metadata" {
                         section.attrs.iter().find_map(|attr| match &attr.kind {
                             SectionAttrKind::KeyValue { key, value } => {

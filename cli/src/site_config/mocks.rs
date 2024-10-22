@@ -14,11 +14,10 @@ impl SiteConfigV41 {
             block: vec![],
             checklist: vec![],
             checklist_item: vec![],
-            json: vec![],
+            json5: vec![],
             list: vec![],
             list_item: vec![],
             raw: vec![],
-            yaml: vec![],
         };
         // let sections = ConfigSections {
         //     basic: vec![
@@ -96,7 +95,7 @@ impl SiteConfigV41 {
             checklist_item: vec!["checklist-item".to_string()],
             list: vec!["list".to_string(), "notes".to_string()],
             list_item: vec!["list-item".to_string()],
-            json: vec![],
+            json5: vec!["pagedata".to_string()],
             raw: vec![
                 "code".to_string(),
                 "css".to_string(),
@@ -104,7 +103,6 @@ impl SiteConfigV41 {
                 "javascript".to_string(),
                 "pre".to_string(),
             ],
-            yaml: vec!["metadata".to_string()],
         };
         let config = SiteConfig {
             default_language: "en".to_string(),
@@ -218,7 +216,7 @@ impl SiteConfig {
             checklist_item: vec!["checklist-item".to_string()],
             list: vec!["list".to_string(), "notes".to_string()],
             list_item: vec!["list-item".to_string()],
-            json: vec![],
+            json5: vec!["pagedata".to_string()],
             raw: vec![
                 "code".to_string(),
                 "css".to_string(),
@@ -226,7 +224,6 @@ impl SiteConfig {
                 "javascript".to_string(),
                 "pre".to_string(),
             ],
-            yaml: vec!["metadata".to_string()],
         };
         let config = SiteConfig {
             default_language: "en".to_string(),
@@ -273,7 +270,7 @@ impl SiteConfig {
             checklist_item: vec!["checklist-item".to_string()],
             list: vec!["list".to_string(), "notes".to_string()],
             list_item: vec!["list-item".to_string()],
-            json: vec![],
+            json5: vec!["pagedata".to_string()],
             raw: vec![
                 "code".to_string(),
                 "css".to_string(),
@@ -281,7 +278,6 @@ impl SiteConfig {
                 "javascript".to_string(),
                 "pre".to_string(),
             ],
-            yaml: vec!["metadata".to_string()],
         };
         let config = SiteConfig {
             default_language: "en".to_string(),

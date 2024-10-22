@@ -139,7 +139,7 @@ impl PayloadSection {
                 .iter()
                 .map(|child| PayloadSection::new_from_section(child, config))
                 .collect(),
-            SectionKind::Json { children, .. } => children
+            SectionKind::Json5 { children, .. } => children
                 .iter()
                 .map(|child| PayloadSection::new_from_section(child, config))
                 .collect(),
@@ -155,7 +155,7 @@ impl PayloadSection {
                 .iter()
                 .map(|child| PayloadSection::new_from_section(child, config))
                 .collect(),
-            SectionKind::Yaml { .. } => vec![],
+            // SectionKind::Yaml { .. } => vec![],
         };
 
         let tmp_classes = section
@@ -233,12 +233,12 @@ impl PayloadSection {
             SectionKind::Block { .. } => "block".to_string(),
             SectionKind::Checklist { .. } => "checklist".to_string(),
             SectionKind::ChecklistItem { .. } => "checklist-item".to_string(),
-            SectionKind::Json { .. } => "json".to_string(),
+            SectionKind::Json5 { .. } => "json5".to_string(),
             SectionKind::List { .. } => "list".to_string(),
             SectionKind::ListItem { .. } => "list-item".to_string(),
             SectionKind::Raw { .. } => "raw".to_string(),
             SectionKind::Unknown { .. } => "unknown".to_string(),
-            SectionKind::Yaml { .. } => "yaml".to_string(),
+            // SectionKind::Yaml { .. } => "yaml".to_string(),
         });
 
         let status = section.attrs.iter().find_map(|attr| match &attr.kind {
