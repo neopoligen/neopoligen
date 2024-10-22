@@ -45,6 +45,18 @@ pub struct SiteConfigV41 {
     // pub span_attrs: Vec<String>,
 }
 
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub struct SectionSettings {
+    pub attributes: SectionSettingsAttrFlags,
+    pub flags: SectionSettingsAttrFlags,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub struct SectionSettingsAttrFlags {
+    pub primary: Vec<String>,
+    pub secondary: Vec<String>,
+}
+
 // NOTE: This isn't being used since it would
 // require updating every parser file.
 // TODO: Delete this when SiteConfigV41 is done
@@ -118,30 +130,49 @@ impl SiteConfigV41 {
             let category_dir = section_root.join(category);
             if let Ok(section_dirs) = get_dirs_in_dir(&category_dir) {
                 section_dirs.iter().for_each(|section_dir| {
-                    let section_name = section_dir
-                        .file_stem()
-                        .unwrap()
-                        .to_string_lossy()
-                        .to_string();
-                    if !section_name.starts_with(".") {
-                        if category.eq_ignore_ascii_case("basic") {
-                            self.sections.basic.push(section_name.clone());
-                        } else if category.eq_ignore_ascii_case("block") {
-                            self.sections.block.push(section_name.clone());
-                        } else if category.eq_ignore_ascii_case("checklist") {
-                            self.sections.checklist.push(section_name.clone());
-                        } else if category.eq_ignore_ascii_case("checklist-item") {
-                            self.sections.checklist_item.push(section_name.clone());
-                        } else if category.eq_ignore_ascii_case("json5") {
-                            self.sections.json5.push(section_name.clone());
-                        } else if category.eq_ignore_ascii_case("list") {
-                            self.sections.list.push(section_name.clone());
-                        } else if category.eq_ignore_ascii_case("list-item") {
-                            self.sections.list_item.push(section_name.clone());
-                        } else if category.eq_ignore_ascii_case("raw") {
-                            self.sections.raw.push(section_name.clone());
-                        }
-                    }
+                    let json5_path = section_dir.join("_settings.json5");
+                    let _ = match fs::read_to_string(&json5_path) {
+                        Ok(text) => match serde_json5::from_str::<SectionSettings>(&text) {
+                            Ok(_j) => {
+                                let section_name = section_dir
+                                    .file_stem()
+                                    .unwrap()
+                                    .to_string_lossy()
+                                    .to_string();
+                                if !section_name.starts_with(".") {
+                                    // check to see if there's a settings.json5 file
+                                    if category.eq_ignore_ascii_case("basic") {
+                                        self.sections.basic.push(section_name.clone());
+                                    } else if category.eq_ignore_ascii_case("block") {
+                                        self.sections.block.push(section_name.clone());
+                                    } else if category.eq_ignore_ascii_case("checklist") {
+                                        self.sections.checklist.push(section_name.clone());
+                                    } else if category.eq_ignore_ascii_case("checklist-item") {
+                                        self.sections.checklist_item.push(section_name.clone());
+                                    } else if category.eq_ignore_ascii_case("json5") {
+                                        self.sections.json5.push(section_name.clone());
+                                    } else if category.eq_ignore_ascii_case("list") {
+                                        self.sections.list.push(section_name.clone());
+                                    } else if category.eq_ignore_ascii_case("list-item") {
+                                        self.sections.list_item.push(section_name.clone());
+                                    } else if category.eq_ignore_ascii_case("raw") {
+                                        self.sections.raw.push(section_name.clone());
+                                    }
+                                }
+                                Ok(())
+                            }
+                            Err(_e) => Ok(()),
+                        },
+                        Err(e) => Err(NeoError {
+                            kind: NeoErrorKind::GenericErrorWithoutSourcePath {
+                                msg: format!(
+                                    "Could not load section settiongs file: {} - {}",
+                                    json5_path.display(),
+                                    e
+                                ),
+                            },
+                        }),
+                    };
                 })
             }
         });
