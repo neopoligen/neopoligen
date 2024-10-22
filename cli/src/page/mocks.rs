@@ -21,4 +21,20 @@ Mock 1 Basic Page
         page.generate_ast(&site_config).unwrap();
         page
     }
+
+    pub fn mock2_missing_id_and_status() -> PageV41 {
+        let site_config = SiteConfigV41::mock1_basic();
+        let mut page = PageV41 {
+            ast: None,
+            raw_source: r#"-- title
+
+Mock 1 Basic Page
+
+-- pagedata"#
+                .to_string(),
+            fs_path: PathBuf::from("not/a/real/path.neo"),
+        };
+        page.generate_ast(&site_config).unwrap();
+        page
+    }
 }

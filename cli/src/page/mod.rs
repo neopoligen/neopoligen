@@ -11,6 +11,7 @@ use crate::site_config::SiteConfigV41;
 use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::Value;
+use nom::Err;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
@@ -81,12 +82,21 @@ impl PageV41 {
                         })),
                         _ => None,
                     });
+
                 match tmp {
-                    Some(id) => id.unwrap(),
+                    Some(status) => match status {
+                        Some(s) => Ok(s?),
+                        None => Err(NeoError {
+                            kind: NeoErrorKind::GenericErrorWithSourcePath {
+                                source_path: self.fs_path.clone(),
+                                msg: "could not get status for file".to_string(),
+                            },
+                        }),
+                    },
                     None => Err(NeoError {
                         kind: NeoErrorKind::GenericErrorWithSourcePath {
                             source_path: self.fs_path.clone(),
-                            msg: "Could not get id from pagedata".to_string(),
+                            msg: "Could not get status from pagedata".to_string(),
                         },
                     }),
                 }
@@ -108,6 +118,8 @@ impl PageV41 {
         path
     }
 
+    // NOTE: This feels really hacky. TODO is look at cleaning
+    // it up at some point.
     pub fn status(&self) -> Result<String, NeoError> {
         match &self.ast {
             Some(sections) => {
@@ -129,11 +141,19 @@ impl PageV41 {
                         _ => None,
                     });
                 match tmp {
-                    Some(id) => id.unwrap(),
+                    Some(status) => match status {
+                        Some(s) => Ok(s?),
+                        None => Err(NeoError {
+                            kind: NeoErrorKind::GenericErrorWithSourcePath {
+                                source_path: self.fs_path.clone(),
+                                msg: "could not get status for file".to_string(),
+                            },
+                        }),
+                    },
                     None => Err(NeoError {
                         kind: NeoErrorKind::GenericErrorWithSourcePath {
                             source_path: self.fs_path.clone(),
-                            msg: "Could not get id from pagedata".to_string(),
+                            msg: "Could not get status from pagedata".to_string(),
                         },
                     }),
                 }
@@ -149,7 +169,14 @@ impl PageV41 {
 
     pub fn template_list(&self) -> Vec<String> {
         if let Ok(status) = self.status() {
-            vec![format!("page-templates/post/{}.neoj", status)]
+            vec![
+                format!("page-templates/post/{}.neoj", status),
+                // NOTE: this will pub "published" in for now
+                // if it's the requested status. That's fine
+                // for the time being but could be cleaned up
+                // and some point.
+                format!("page-templates/post/published.neoj"),
+            ]
         } else {
             vec![]
         }
@@ -184,11 +211,23 @@ mod test {
     }
 
     #[test]
+    fn id_should_error_if_missing() {
+        let page = PageV41::mock2_missing_id_and_status();
+        assert!(page.id().is_err());
+    }
+
+    #[test]
     fn status_test_get_basic_status() {
         let page = PageV41::mock1_basic_page();
         let left = "published".to_string();
         let right = page.status().unwrap();
         assert_eq!(left, right);
+    }
+
+    #[test]
+    fn status_should_error_if_missing() {
+        let page = PageV41::mock2_missing_id_and_status();
+        assert!(page.status().is_err());
     }
 
     #[test]
