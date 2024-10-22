@@ -37,6 +37,50 @@ pub struct BuilderV42 {
 }
 
 impl BuilderV42 {
+    #[instrument(skip(self))]
+    pub fn add_theme_test_templates_to_config(&mut self) {
+        // TODO: maybe make this return results and errors.
+        event!(Level::INFO, "Adding theme test templates to config");
+        let _ = &self.templates.insert(
+            "page-templates/post/done.neoj".to_string(),
+            r#"[!- import "helpers/theme.neoj" as theme -!]
+        [!- for section in page.sections() -!]
+        [@- theme.output_section(site, page, section) -@]
+        [!- endfor -!]"#
+                .to_string(),
+        );
+        let _ = &self.templates.insert(
+            "sections/basic/neo-theme-test/start/default.neoj".to_string(),
+            r#"<!-- START_THEME_TEST -->"#.to_string(),
+        );
+        let _ = &self.templates.insert(
+            "sections/basic/neo-theme-test/end/default.neoj".to_string(),
+            r#"<!-- END_THEME_TEST -->"#.to_string(),
+        );
+        let _ = &self.templates.insert(
+            "sections/raw/neo-expected-output/start/default.neoj".to_string(),
+            r#"[! import "helpers/theme.neoj" as theme !]
+        <!-- EXPECTED_OUTPUT -->
+        [@ section.text @]
+        [! for child in section.children !]
+        [@ theme.output_section("", "", child) @]
+        [! endfor !]"#
+                .to_string(),
+        );
+        let _ = &self.templates.insert(
+            "sections/raw/neo-expected-output/end/default.neoj".to_string(),
+            "<!-- EXPECTED_OUTPUT -->".to_string(),
+        );
+        self.site_config
+            .sections
+            .basic
+            .push("neo-theme-test".to_string());
+        self.site_config
+            .sections
+            .raw
+            .push("neo-expected-output".to_string());
+    }
+
     pub fn new_from_site_config(site_config: &SiteConfigV42) -> Result<BuilderV42, NeoError> {
         let b = BuilderV42 {
             errors: vec![],
@@ -123,11 +167,9 @@ impl BuilderV42 {
     pub fn output_pages(&mut self) -> Result<()> {
         event!(Level::INFO, "Outputting pages");
         let mut env = Environment::new();
-
         // env.add_function("highlight_code", highlight_code);
         // env.add_function("highlight_code_no_nums", highlight_code_no_nums);
         // env.add_function("highlight_span", highlight_span);
-
         env.set_syntax(
             SyntaxConfig::builder()
                 .block_delimiters("[!", "!]")
@@ -136,7 +178,6 @@ impl BuilderV42 {
                 .build()
                 .unwrap(),
         );
-
         self.templates.iter().for_each(|(k, v)| {
             let _ = env.add_template_owned(k, v);
         });
@@ -246,6 +287,59 @@ impl BuilderV42 {
     #[instrument(skip(self, site_config))]
     pub fn test_templates(&mut self, site_config: &SiteConfigV42) -> Result<()> {
         event!(Level::INFO, "Testing Templates");
+        let mut env = Environment::new();
+        // env.add_function("highlight_code", highlight_code);
+        // env.add_function("highlight_code_no_nums", highlight_code_no_nums);
+        // env.add_function("highlight_span", highlight_span);
+        env.set_syntax(
+            SyntaxConfig::builder()
+                .block_delimiters("[!", "!]")
+                .variable_delimiters("[@", "@]")
+                .comment_delimiters("[#", "#]")
+                .build()
+                .unwrap(),
+        );
+        self.templates.iter().for_each(|(k, v)| {
+            let _ = env.add_template_owned(k, v);
+        });
+        // Override the template used by default:
+        env.add_template_owned(
+            "page-templates/post/done.neoj",
+            r#"[!- import "helpers/theme.neoj" as theme -!]
+[!- for section in page.sections() -!]
+[@- theme.output_section(site, page, section) -@]
+[!- endfor -!]"#
+                .to_string(),
+        )
+        .unwrap();
+        env.add_template_owned(
+            "sections/basic/neo-theme-test/start/default.neoj",
+            r#"<!-- START_THEME_TEST -->"#.to_string(),
+        )
+        .unwrap();
+        env.add_template_owned(
+            "sections/basic/neo-theme-test/end/default.neoj",
+            r#"<!-- END_THEME_TEST -->"#.to_string(),
+        )
+        .unwrap();
+        env.add_template_owned(
+            "sections/raw/neo-expected-output/start/default.neoj",
+            r#"[! import "helpers/theme.neoj" as theme !]
+<!-- EXPECTED_OUTPUT -->
+[@ section.text @]
+[! for child in section.children !]
+[@ theme.output_section("", "", child) @]
+[! endfor !]
+"#
+            .to_string(),
+        )
+        .unwrap();
+        env.add_template_owned(
+            "sections/raw/neo-expected-output/end/default.neoj",
+            "<!-- EXPECTED_OUTPUT -->".to_string(),
+        )
+        .unwrap();
+
         Ok(())
     }
 
