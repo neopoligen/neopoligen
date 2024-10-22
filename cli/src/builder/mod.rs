@@ -154,7 +154,7 @@ impl BuilderV41 {
                     .site_config
                     .project_dir()
                     .join(&self.site_config.output_directory)
-                    .join(file_rel_path);
+                    .join(file_rel_path.unwrap());
                 if let Some(template) = page.template_list().iter().find_map(|name| {
                     if let Ok(tmpl) = env.get_template(name) {
                         Some(tmpl)

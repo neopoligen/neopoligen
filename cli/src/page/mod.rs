@@ -11,7 +11,6 @@ use crate::site_config::SiteConfigV41;
 use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::Value;
-// use nom::Err;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
@@ -43,17 +42,6 @@ impl PageV41 {
 }
 
 impl PageV41 {
-    // pub fn dev_ping(&self, args: &[Value]) -> Value {
-    //     Value::from(format!("ALFA THIS IS PAGE DEV PING: {}", args[0]))
-    // }
-
-    pub fn dev_ping_page(&self, args: &[Value]) -> Result<Value, Error> {
-        Ok(Value::from(format!(
-            "BRAVO PAGE PING TEST PING: {}",
-            args[0]
-        )))
-    }
-
     pub fn generate_ast(&mut self, site_config: &SiteConfigV41) -> Result<(), NeoError> {
         match parse_ast(&self.raw_source, site_config.sections.clone()) {
             Ok(ast) => {
@@ -61,6 +49,53 @@ impl PageV41 {
                 Ok(())
             }
             Err(e) => Err(e),
+        }
+    }
+
+    pub fn get_pagedata_attr(&self, attr_key: &str) -> Result<String, NeoError> {
+        match &self.ast {
+            Some(sections) => {
+                let tmp = sections
+                    .iter()
+                    .find_map(|section| match section.r#type.as_str() {
+                        "pagedata" => Some(section.attrs.iter().find_map(|attr| match attr {
+                            SectionAttr { kind, .. } => match kind {
+                                SectionAttrKind::KeyValueSpans { key, spans } => {
+                                    if key.as_str() == attr_key {
+                                        Some(Ok::<String, NeoError>(flatten_spans(spans)))
+                                    } else {
+                                        None
+                                    }
+                                }
+                                _ => None,
+                            },
+                        })),
+                        _ => None,
+                    });
+                match tmp {
+                    Some(status) => match status {
+                        Some(s) => Ok(s?),
+                        None => Err(NeoError {
+                            kind: NeoErrorKind::GenericErrorWithSourcePath {
+                                source_path: self.fs_path.clone(),
+                                msg: format!("Could not get attr from pagedata: {}", attr_key),
+                            },
+                        }),
+                    },
+                    None => Err(NeoError {
+                        kind: NeoErrorKind::GenericErrorWithSourcePath {
+                            source_path: self.fs_path.clone(),
+                            msg: format!("Could not get attr from pagedata: {}", attr_key),
+                        },
+                    }),
+                }
+            }
+            None => Err(NeoError {
+                kind: NeoErrorKind::GenericErrorWithSourcePath {
+                    source_path: self.fs_path.clone(),
+                    msg: format!("Could not get attr from pagedata: {}", attr_key),
+                },
+            }),
         }
     }
 
@@ -82,7 +117,6 @@ impl PageV41 {
                         })),
                         _ => None,
                     });
-
                 match tmp {
                     Some(status) => match status {
                         Some(s) => Ok(s?),
@@ -110,12 +144,26 @@ impl PageV41 {
         }
     }
 
-    pub fn output_fs_rel_path(&self, base_rel_path: &PathBuf) -> PathBuf {
+    pub fn output_fs_rel_path(&self, base_rel_path: &PathBuf) -> Result<PathBuf, NeoError> {
         // TODO: handle override paths from metadata
-        let mut path = base_rel_path.clone();
-        path = path.join(self.id().unwrap());
-        path = path.join("index.html");
-        path
+        if let Ok(mut path_override) = self.get_pagedata_attr("path") {
+            path_override = path_override.strip_prefix("/").unwrap().to_string();
+            Ok(PathBuf::from(path_override))
+        } else {
+            match self.id() {
+                Ok(id) => {
+                    let mut path = base_rel_path.clone();
+                    path = path.join(id).join("index.html");
+                    Ok(path)
+                }
+                _ => Err(NeoError {
+                    kind: NeoErrorKind::GenericErrorWithSourcePath {
+                        source_path: self.fs_path.clone(),
+                        msg: "Could not find id to make output path".to_string(),
+                    },
+                }),
+            }
+        }
     }
 
     // NOTE: This feels really hacky. TODO is look at cleaning
@@ -233,8 +281,18 @@ mod test {
     #[test]
     fn output_rel_path_test_mock1() {
         let page = PageV41::mock1_basic_page();
-        let left = PathBuf::from("qwer/mock1_basic_page/index.html");
-        let right = page.output_fs_rel_path(&PathBuf::from("qwer"));
+        let left = PathBuf::from("en/mock1_basic_page/index.html");
+        let right = page.output_fs_rel_path(&PathBuf::from("en")).unwrap();
         assert_eq!(left, right);
     }
+
+    #[test]
+    fn solo_output_rel_path_with_path_attr() {
+        let page = PageV41::mock3_custom_path();
+        let left = PathBuf::from("/index.html");
+        let right = page.output_fs_rel_path(&PathBuf::from("en")).unwrap();
+        assert_eq!(left, right);
+    }
+
+    //
 }
