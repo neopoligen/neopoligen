@@ -79,6 +79,8 @@ impl Object for Span {
         _args: &[Value],
     ) -> Result<Value, Error> {
         match name {
+            "kind" => self.kind(),
+            "parsed_text" => self.parsed_text(),
             "template_list" => self.template_list(),
             _ => Ok(Value::from("")),
         }
@@ -96,6 +98,13 @@ impl Span {
     pub fn kind(&self) -> Result<Value, Error> {
         match &self.kind {
             SpanKind::WordPart => Ok(Value::from("wordpart")),
+            _ => Ok(Value::from("unknown")),
+        }
+    }
+
+    pub fn parsed_text(&self) -> Result<Value, Error> {
+        match &self.kind {
+            SpanKind::WordPart => Ok(Value::from(&self.parsed_text)),
             _ => Ok(Value::from("unknown")),
         }
     }

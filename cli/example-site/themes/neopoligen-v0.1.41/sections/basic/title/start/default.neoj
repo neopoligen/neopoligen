@@ -1,5 +1,4 @@
 [!- import "helpers/theme.neoj" as theme -!]
 <section>
-  <div>this is title</div>
   [!- include "subsections/all-content-blocks.neoj" -!]
 

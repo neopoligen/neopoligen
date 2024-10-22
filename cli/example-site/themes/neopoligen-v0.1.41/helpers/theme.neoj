@@ -12,7 +12,6 @@
 [#############################################################################]
 [!- macro output_spans(site, page, spans) -!]
 [!- for span in spans -!]
-SPAN HERE
 [@- output_span(site, page, span) -@]
 [!- endfor -!]
 [!- endmacro -!]
