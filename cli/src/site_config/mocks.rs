@@ -65,6 +65,14 @@ impl SiteConfigV41 {
 
             attr_flag_lists: Some(ConfigLists {
                 basic: BTreeMap::new(),
+                block: BTreeMap::new(),
+                checklist: BTreeMap::new(),
+                checklist_item: BTreeMap::new(),
+                json5: BTreeMap::new(),
+                list: BTreeMap::new(),
+                list_item: BTreeMap::new(),
+                raw: BTreeMap::new(),
+                unknow: BTreeMap::new(),
             }),
 
             // span_attrs: vec![
