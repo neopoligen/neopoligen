@@ -1,7 +1,10 @@
 [!- extends "page-wrappers/one-column.neoj" -!]
+[!- import "helpers/theme.neoj" as theme -!]
 
 [!- block body -!]
 [! for section in page.sections() !]
+[@ theme.output_section(site, page, section) @]
+
 <div>
 [@ section.type() @] -
 [@ section.kind() @] - 

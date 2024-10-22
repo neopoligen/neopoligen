@@ -1,0 +1,4 @@
+[#############################################################################]
+[!- macro output_section(site, page, section) -!]
+[!- include section.template_list() ignore missing -!]
+[!- endmacro -!]

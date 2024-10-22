@@ -135,6 +135,18 @@ impl Section {
             SectionKind::Unknown { .. } => Ok(Value::from("unknown")),
         }
     }
+
+    pub fn template_list(&self) -> Result<Value, Error> {
+        Ok(Value::from_serialize(vec![format!(
+            "sections/{}/{}/{}/{}.neoj",
+            &self.kind().unwrap(),
+            &self.r#type,
+            &self.bounds().unwrap(),
+            "default"
+        )]))
+    }
+
+    //
 }
 
 pub fn start_or_full_section<'a>(
@@ -231,6 +243,7 @@ impl Object for Section {
         match name {
             "bounds" => self.bounds(),
             "kind" => self.kind(),
+            "template_list" => self.template_list(),
             "type" => Ok(Value::from(&self.r#type)),
             _ => Ok(Value::from("")),
         }
@@ -239,10 +252,20 @@ impl Object for Section {
 
 #[cfg(test)]
 mod test {
-    //    use super::*;
+    use super::*;
     //   use crate::site_config::SiteConfig;
-    // use pretty_assertions::assert_eq;
+    use pretty_assertions::assert_eq;
     //
+
+    #[test]
+    fn solo_template_list_basic_check() {
+        let section = Section::mock1_basic_title_section_no_attrs();
+        let left = section.template_list().unwrap();
+        let right = Value::from_serialize::<Vec<String>>(vec![
+            "sections/basic/title/full/default.neoj".to_string(),
+        ]);
+        assert_eq!(left, right);
+    }
 
     // // DEPRECATED: TODO: All attr processing will be done
     // // in PayloadSection
