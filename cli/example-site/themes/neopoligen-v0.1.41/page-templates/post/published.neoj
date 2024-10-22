@@ -1,1 +1,5 @@
-This is the posts published template
+[!- extends "page-wrappers/one-column.neoj" -!]
+
+[!- block body -!]
+Here we are
+[!- endblock -!]

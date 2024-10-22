@@ -150,6 +150,10 @@ impl SiteConfigV41 {
 }
 
 impl SiteConfigV41 {
+    pub fn admin_dir(&self) -> PathBuf {
+        self.project_dir().join("admin")
+    }
+
     pub fn content_source_dir(&self) -> PathBuf {
         self.project_dir().join("content")
     }
@@ -158,8 +162,16 @@ impl SiteConfigV41 {
         Ok(self.default_language.clone())
     }
 
+    pub fn output_dest_dir(&self) -> PathBuf {
+        self.project_dir().join("_site")
+    }
+
     pub fn project_dir(&self) -> PathBuf {
         self.project_root.clone().unwrap()
+    }
+
+    pub fn status_dest_dir(&self) -> PathBuf {
+        self.admin_dir().join("status")
     }
 
     pub fn theme_dir(&self) -> PathBuf {
