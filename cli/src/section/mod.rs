@@ -23,6 +23,7 @@ use crate::site_config::ConfigSections;
 use crate::span::*;
 use minijinja::value::Object;
 use minijinja::Error;
+use minijinja::ErrorKind;
 use minijinja::Value;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
@@ -119,23 +120,31 @@ impl Section {
         }))
     }
 
-    pub fn classes(&self) -> Result<Value, Error> {
-        Ok(Value::from(
-            self.attrs
-                .iter()
-                .filter_map(|attr| match &attr.kind {
-                    SectionAttrKind::KeyValueSpans { key, spans } => {
-                        if key == "class" {
-                            Some(flatten_spans(spans))
-                        } else {
-                            None
-                        }
+    pub fn class_attr(&self) -> Result<Value, Error> {
+        if self.classes().len() > 0 {
+            Ok(Value::from(format!(
+                r#"class="{}""#,
+                self.classes().join(" ")
+            )))
+        } else {
+            Ok(Value::from(""))
+        }
+    }
+
+    pub fn classes(&self) -> Vec<String> {
+        self.attrs
+            .iter()
+            .filter_map(|attr| match &attr.kind {
+                SectionAttrKind::KeyValueSpans { key, spans } => {
+                    if key == "class" {
+                        Some(flatten_spans(spans))
+                    } else {
+                        None
                     }
-                    _ => None,
-                })
-                .collect::<Vec<String>>()
-                .join(" "),
-        ))
+                }
+                _ => None,
+            })
+            .collect::<Vec<String>>()
     }
 
     // // DEPRECATED: I think this isn't needed and can be
@@ -301,6 +310,7 @@ impl Object for Section {
             "attr_flag_list" => self.attr_flag_list(args),
             "bounds" => self.bounds(),
             "children" => self.children(),
+            "class_attr" => self.class_attr(),
             "kind" => self.kind(),
             "spans" => self.spans(),
             "template_list" => self.template_list(),
@@ -318,10 +328,34 @@ mod test {
     //
 
     #[test]
-    fn solo_classes_none() {
+    fn class_attr_none() {
+        let section = Section::mock1_basic_title_section_no_attrs();
+        let left = section.class_attr().unwrap();
+        let right = Value::from("");
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn class_attr_basic() {
         let section = Section::mock4_youtube_with_tags_and_classes();
-        let left = section.classes().unwrap();
-        let right = Value::from("alfa-class");
+        let left = section.class_attr().unwrap();
+        let right = Value::from(r#"class="alfa-class""#);
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn classes_none() {
+        let section = Section::mock1_basic_title_section_no_attrs();
+        let left = section.classes();
+        let right: Vec<String> = vec![];
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn classes_basic() {
+        let section = Section::mock4_youtube_with_tags_and_classes();
+        let left = section.classes();
+        let right = vec!["alfa-class".to_string()];
         assert_eq!(left, right);
     }
 

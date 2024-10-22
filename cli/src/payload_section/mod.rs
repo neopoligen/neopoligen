@@ -633,17 +633,18 @@ mod test {
     //     // TODO
     // }
 
-    #[test]
-    fn classes_work() {
-        let config = SiteConfig::mock1_basic();
-        let payload_section = PayloadSection::new_from_section(
-            &Section::mock4_youtube_with_tags_and_classes(),
-            &config,
-        );
-        let left = "class1 class2 class3".to_string();
-        let right = payload_section.classes.unwrap();
-        assert_eq!(left, right);
-    }
+    // // TODO: Deprecate when V41 is working
+    // #[test]
+    // fn classes_work() {
+    //     let config = SiteConfig::mock1_basic();
+    //     let payload_section = PayloadSection::new_from_section(
+    //         &Section::mock4_youtube_with_tags_and_classes(),
+    //         &config,
+    //     );
+    //     let left = "class1 class2 class3".to_string();
+    //     let right = payload_section.classes.unwrap();
+    //     assert_eq!(left, right);
+    // }
 
     // #[test]
     // fn classes_dont_show_up_in_attrs() {
