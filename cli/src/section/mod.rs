@@ -88,6 +88,15 @@ pub enum SectionKind {
 }
 
 impl Section {
+    pub fn attr_list(&self, _args: &[Value]) -> Result<Value, Error> {
+        Ok(Value::from(r#"class="unknown-section""#))
+    }
+
+    // TODO: Make this do the flags
+    pub fn flag_list(&self, _args: &[Value]) -> Result<Value, Error> {
+        Ok(Value::from(r#""#))
+    }
+
     pub fn bounds(&self) -> Result<Value, Error> {
         match self.bounds {
             SectionBounds::End => Ok(Value::from("end")),
@@ -267,11 +276,13 @@ impl Object for Section {
         self: &Arc<Section>,
         _state: &minijinja::State,
         name: &str,
-        _args: &[Value],
+        args: &[Value],
     ) -> Result<Value, Error> {
         match name {
+            "attr_list" => self.attr_list(args),
             "bounds" => self.bounds(),
             "children" => self.children(),
+            "flag_list" => self.flag_list(args),
             "kind" => self.kind(),
             "spans" => self.spans(),
             "template_list" => self.template_list(),

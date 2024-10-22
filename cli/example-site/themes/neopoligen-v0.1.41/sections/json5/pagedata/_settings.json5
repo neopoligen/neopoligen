@@ -1,10 +1,4 @@
 {
-  "attributes": {
-    "primary": [],
-    "secondary": []
-  }, 
-  "flags": {
-    "primary": [],
-    "secondary": []
-  }
+  "attrs": [], 
+  "flags": [],
 }

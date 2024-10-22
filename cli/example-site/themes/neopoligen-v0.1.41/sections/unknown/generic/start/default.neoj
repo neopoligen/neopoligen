@@ -1,4 +1,4 @@
 [!- import "helpers/theme.neoj" as theme -!]
-<section>
+<section [@ section.attr_list("unknown-section") @]>
   [!- include "subsections/all-blocks.neoj" -!]
 

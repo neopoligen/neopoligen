@@ -1,0 +1,26 @@
+-- neo-theme-test/
+
+-- title
+
+Alfa Bravo
+
+charlie delta
+
+-- /neo-theme-test
+
+
+-- neo-expected-output/
+
+<section>
+<h1 class="page-title">Alfa Bravo</h1>
+<p>charlie delta</p>
+</section>
+
+-- /neo-expected-output
+
+
+-- metadata
+-- id: 2nnx0dwn
+-- status: published 
+
+

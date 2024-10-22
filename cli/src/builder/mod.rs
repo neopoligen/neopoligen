@@ -1,5 +1,6 @@
 #![allow(unused_variables)]
 #![allow(unused_mut)]
+#![allow(unused_imports)]
 
 use crate::helpers::*;
 use crate::image::{Image, ImageSize};
@@ -18,7 +19,7 @@ use minijinja::Environment;
 use minijinja::{context, Value};
 use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
-use serde_json;
+use serde_json5;
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
@@ -242,6 +243,12 @@ impl BuilderV41 {
         Ok(())
     }
 
+    #[instrument(skip(self, site_config))]
+    pub fn test_templates(&mut self, site_config: &SiteConfigV41) -> Result<()> {
+        event!(Level::INFO, "Testing Templates");
+        Ok(())
+    }
+
     //
 }
 
@@ -316,113 +323,110 @@ impl Builder {
 }
 
 impl Builder {
-    #[instrument(skip(self))]
-    pub fn build_image_cache(&mut self) -> Result<()> {
-        event!(Level::INFO, "Building Image Cache");
-        let image_source_paths = get_image_paths(&self.config.as_ref().unwrap().image_source_dir());
-        image_source_paths.iter().for_each(|img_path| {
-            // TODO: Handle pngs and other image formats
-            if let Some(ext) = img_path.extension() {
-                if let Ok(img_reader) = Reader::open(img_path) {
-                    if let Ok(img) = img_reader.decode() {
-                        let width = img.width();
-                        let height = img.height();
-                        let image_name = img_path.file_stem().unwrap();
-                        let image_dest_dir = self
-                            .config
-                            .as_ref()
-                            .unwrap()
-                            .image_cache_dir()
-                            .join(image_name);
-                        let _ = fs::create_dir_all(&image_dest_dir);
-                        let image_dest_path = image_dest_dir.join(format!(
-                            "{}w.{}",
-                            width,
-                            ext.to_string_lossy().to_ascii_lowercase()
-                        ));
-                        let _ = fs::copy(img_path, image_dest_path);
-                        let mut sizes = vec![];
-                        self.config
-                            .as_ref()
-                            .unwrap()
-                            .theme_image_widths()
-                            .iter()
-                            .for_each(|img_width| {
-                                if width > *img_width {
-                                    let resize_dest_path = image_dest_dir.join(format!(
-                                        "{}w.{}",
-                                        img_width,
-                                        ext.to_string_lossy().to_ascii_lowercase()
-                                    ));
-                                    if ext.to_ascii_lowercase() == "jpg"
-                                        || ext.to_ascii_lowercase() == "jpeg"
-                                    {
-                                        let _ = resize_and_optimize_jpg(
-                                            &img_path,
-                                            *img_width,
-                                            &resize_dest_path,
-                                        );
-                                        let resize_height = img.height() * *img_width / img.width();
-                                        sizes.push(ImageSize {
-                                            width: *img_width,
-                                            height: resize_height,
-                                        });
-                                    } else if ext.to_ascii_lowercase() == "png" {
-                                        let _ = resize_and_optimize_png(
-                                            &img_path,
-                                            *img_width,
-                                            &resize_dest_path,
-                                        );
-                                        let resize_height = img.height() * *img_width / img.width();
-                                        sizes.push(ImageSize {
-                                            width: *img_width,
-                                            height: resize_height,
-                                        });
-                                    }
-
-                                    //                 } else if image.extension()? == "png" {
-                                    //                 } else {
-                                    //                     event!(
-                                    //                         Level::ERROR,
-                                    //                         "TODO: Process other image types: {}",
-                                    //                         &image.source_path.display()
-                                    //                     );
-                                    //                 }
-                                    //             }
-                                };
-                            });
-
-                        if let Some(max_width_size) = self
-                            .config
-                            .clone()
-                            .unwrap()
-                            .theme_image_widths()
-                            .into_iter()
-                            .max()
-                        {
-                            if width < max_width_size {
-                                sizes.push(ImageSize { width, height });
-                            }
-                        }
-
-                        let img_obj = Image {
-                            extension: ext.to_string_lossy().to_string(),
-                            dir: PathBuf::from(format!(
-                                "/neo-images/{}",
-                                image_name.to_string_lossy().to_string()
-                            )),
-                            raw_width: width,
-                            raw_height: height,
-                            sizes,
-                        };
-                        self.images
-                            .insert(image_name.to_string_lossy().to_string(), img_obj);
-                    }
-                }
-            }
-        });
-        Ok(())
-    }
+    //     #[instrument(skip(self))]
+    //     pub fn build_image_cache(&mut self) -> Result<()> {
+    //         event!(Level::INFO, "Building Image Cache");
+    //         let image_source_paths = get_image_paths(&self.config.as_ref().unwrap().image_source_dir());
+    //         image_source_paths.iter().for_each(|img_path| {
+    //             // TODO: Handle pngs and other image formats
+    //             if let Some(ext) = img_path.extension() {
+    //                 if let Ok(img_reader) = Reader::open(img_path) {
+    //                     if let Ok(img) = img_reader.decode() {
+    //                         let width = img.width();
+    //                         let height = img.height();
+    //                         let image_name = img_path.file_stem().unwrap();
+    //                         let image_dest_dir = self
+    //                             .config
+    //                             .as_ref()
+    //                             .unwrap()
+    //                             .image_cache_dir()
+    //                             .join(image_name);
+    //                         let _ = fs::create_dir_all(&image_dest_dir);
+    //                         let image_dest_path = image_dest_dir.join(format!(
+    //                             "{}w.{}",
+    //                             width,
+    //                             ext.to_string_lossy().to_ascii_lowercase()
+    //                         ));
+    //                         let _ = fs::copy(img_path, image_dest_path);
+    //                         let mut sizes = vec![];
+    //                         self.config
+    //                             .as_ref()
+    //                             .unwrap()
+    //                             .theme_image_widths()
+    //                             .iter()
+    //                             .for_each(|img_width| {
+    //                                 if width > *img_width {
+    //                                     let resize_dest_path = image_dest_dir.join(format!(
+    //                                         "{}w.{}",
+    //                                         img_width,
+    //                                         ext.to_string_lossy().to_ascii_lowercase()
+    //                                     ));
+    //                                     if ext.to_ascii_lowercase() == "jpg"
+    //                                         || ext.to_ascii_lowercase() == "jpeg"
+    //                                     {
+    //                                         let _ = resize_and_optimize_jpg(
+    //                                             &img_path,
+    //                                             *img_width,
+    //                                             &resize_dest_path,
+    //                                         );
+    //                                         let resize_height = img.height() * *img_width / img.width();
+    //                                         sizes.push(ImageSize {
+    //                                             width: *img_width,
+    //                                             height: resize_height,
+    //                                         });
+    //                                     } else if ext.to_ascii_lowercase() == "png" {
+    //                                         let _ = resize_and_optimize_png(
+    //                                             &img_path,
+    //                                             *img_width,
+    //                                             &resize_dest_path,
+    //                                         );
+    //                                         let resize_height = img.height() * *img_width / img.width();
+    //                                         sizes.push(ImageSize {
+    //                                             width: *img_width,
+    //                                             height: resize_height,
+    //                                         });
+    //                                     }
+    //                                     //                 } else if image.extension()? == "png" {
+    //                                     //                 } else {
+    //                                     //                     event!(
+    //                                     //                         Level::ERROR,
+    //                                     //                         "TODO: Process other image types: {}",
+    //                                     //                         &image.source_path.display()
+    //                                     //                     );
+    //                                     //                 }
+    //                                     //             }
+    //                                 };
+    //                             });
+    //                         if let Some(max_width_size) = self
+    //                             .config
+    //                             .clone()
+    //                             .unwrap()
+    //                             .theme_image_widths()
+    //                             .into_iter()
+    //                             .max()
+    //                         {
+    //                             if width < max_width_size {
+    //                                 sizes.push(ImageSize { width, height });
+    //                             }
+    //                         }
+    //                         let img_obj = Image {
+    //                             extension: ext.to_string_lossy().to_string(),
+    //                             dir: PathBuf::from(format!(
+    //                                 "/neo-images/{}",
+    //                                 image_name.to_string_lossy().to_string()
+    //                             )),
+    //                             raw_width: width,
+    //                             raw_height: height,
+    //                             sizes,
+    //                         };
+    //                         self.images
+    //                             .insert(image_name.to_string_lossy().to_string(), img_obj);
+    //                     }
+    //                 }
+    //             }
+    //         });
+    //         Ok(())
+    //     }
 
     #[instrument(skip(self))]
     pub fn deploy_images(&mut self) -> Result<()> {
@@ -781,13 +785,10 @@ impl Builder {
                 }
             }
         }
-
         let mut site_obj =
             Site::new_from_payloads(self.config.as_ref().unwrap().clone(), &self.payloads);
         site_obj.images = self.images.clone();
-
         let site = Value::from_serialize(site_obj);
-
         for (_, page) in self.payloads.iter_mut() {
             let output_path = self
                 .config
@@ -805,7 +806,6 @@ impl Builder {
             }) {
                 match template.render(context!(
                    page => Value::from_serialize(&page),
-
                 // TODO: Figure out if you can send this as an object so
                 // you don't have to serialize which will hopefully make things
                 // faster
@@ -833,8 +833,6 @@ impl Builder {
                     },
                 });
             };
-
-            //
         }
         Ok(())
     }
@@ -863,7 +861,7 @@ impl Builder {
         let query = "INSERT INTO page_archive(path, page_object) VALUES (?1, ?2)";
         let tx = conn.transaction()?;
         for (_, p) in self.source_pages.iter() {
-            match serde_json::to_string(p) {
+            match serde_json5::to_string(p) {
                 Ok(page_object) => {
                     match tx.execute(
                         query,

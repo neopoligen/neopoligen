@@ -79,7 +79,7 @@ impl SiteConfigV41 {
             .join(engine_config.active_site.as_str());
         let config_path = project_root.join("admin").join("settings.json5");
         match fs::read_to_string(&config_path) {
-            Ok(text) => match serde_json::from_str::<SiteConfigV41>(&text) {
+            Ok(text) => match serde_json5::from_str::<SiteConfigV41>(&text) {
                 Ok(mut config) => {
                     config.project_root = Some(project_root.clone());
                     if !config.theme_dir().is_dir() {
@@ -246,7 +246,7 @@ pub struct SiteConfig {
     #[serde(default = "output_dir_name")]
     pub output_directory: String,
     pub theme_name: String,
-    pub theme_options: Option<serde_json::Value>,
+    // pub theme_options: Option<serde_json5::Value>,
     #[serde(default = "empty_sections")]
     pub sections: ConfigSections,
     // Reminder: This isn't expected to come from the
@@ -289,7 +289,7 @@ impl SiteConfig {
             .join(engine_config.active_site.as_str());
         let config_path = project_root.join("admin").join("settings.json5");
         match fs::read_to_string(&config_path) {
-            Ok(text) => match serde_json::from_str::<SiteConfig>(&text) {
+            Ok(text) => match serde_json5::from_str::<SiteConfig>(&text) {
                 Ok(mut config) => {
                     config.project_root = Some(project_root.clone());
                     if !config.theme_dir().is_dir() {
@@ -425,18 +425,19 @@ impl SiteConfig {
         self.themes_dir().join(self.theme_name.clone())
     }
 
-    pub fn theme_image_widths(&self) -> Vec<u32> {
-        match &self.theme_options {
-            Some(theme_options) => {
-                if let Some(widths) = theme_options.get("image_widths") {
-                    serde_json::from_value(widths.clone()).unwrap()
-                } else {
-                    vec![]
-                }
-            }
-            None => vec![],
-        }
-    }
+    // pub fn theme_image_widths(&self) -> Vec<u32> {
+    //     match &self.theme_options {
+    //         Some(theme_options) => {
+    //             if let Some(widths) = theme_options.get("image_widths") {
+    //                 // serde_json5::from_value(widths.clone()).unwrap()
+    //                 vec![]
+    //             } else {
+    //                 vec![]
+    //             }
+    //         }
+    //         None => vec![],
+    //     }
+    // }
 
     // pub fn templates_dir(&self) -> PathBuf {
     //     self.theme_dir().join("templates")

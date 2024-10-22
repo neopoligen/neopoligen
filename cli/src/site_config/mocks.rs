@@ -1,3 +1,4 @@
+#![allow(unused_imports)]
 // use std::collections::BTreeMap;
 // use std::str::FromStr;
 
@@ -75,8 +76,8 @@ impl SiteConfigV41 {
     }
 
     pub fn mock2_with_image_widths() -> SiteConfig {
-        let mut theme_options: BTreeMap<String, Vec<usize>> = BTreeMap::new();
-        theme_options.insert("image_widths".to_string(), vec![100, 400]);
+        // let mut theme_options: BTreeMap<String, Vec<usize>> = BTreeMap::new();
+        // theme_options.insert("image_widths".to_string(), vec![100, 400]);
         let sections = ConfigSections {
             basic: vec![
                 "bookmark".to_string(),
@@ -123,7 +124,7 @@ impl SiteConfigV41 {
                 "rel".to_string(),
             ],
             theme_name: "test-theme".to_string(),
-            theme_options: Some(serde_json::to_value(theme_options).unwrap()),
+            //theme_options: Some(serde_json::to_value(theme_options).unwrap()),
         };
         config
     }
@@ -244,14 +245,14 @@ impl SiteConfig {
                 "rel".to_string(),
             ],
             theme_name: "test-theme".to_string(),
-            theme_options: None,
+            //theme_options: None,
         };
         config
     }
 
     pub fn mock2_with_image_widths() -> SiteConfig {
-        let mut theme_options: BTreeMap<String, Vec<usize>> = BTreeMap::new();
-        theme_options.insert("image_widths".to_string(), vec![100, 400]);
+        // let mut theme_options: BTreeMap<String, Vec<usize>> = BTreeMap::new();
+        // theme_options.insert("image_widths".to_string(), vec![100, 400]);
         let sections = ConfigSections {
             basic: vec![
                 "bookmark".to_string(),
@@ -298,7 +299,7 @@ impl SiteConfig {
                 "rel".to_string(),
             ],
             theme_name: "test-theme".to_string(),
-            theme_options: Some(serde_json::to_value(theme_options).unwrap()),
+            // theme_options: Some(serde_json::to_value(theme_options).unwrap()),
         };
         config
     }

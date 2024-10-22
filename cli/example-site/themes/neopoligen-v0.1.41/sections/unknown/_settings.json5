@@ -1,10 +1,4 @@
 {
-  "attributes": {
-    "primary": ["accesskey"],
-    "secondary": []
-  }, 
-  "flags": {
-    "primary": ["hidden"],
-    "secondary": []
-  }
+  "attrs": ["accesskey"], 
+  "flags": ["hidden"],
 }
