@@ -6,6 +6,15 @@ This is some text
 
 And some more stuff here
 
+
+-- pre/
+
+this is pre text
+
+-- /pre
+
+Alfa Bravo After Pre
+
 -- div
 
 This is a div
