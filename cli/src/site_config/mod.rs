@@ -675,8 +675,8 @@ fn output_dir_name() -> String {
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use pretty_assertions::assert_eq;
+    // use super::*;
+    // use pretty_assertions::assert_eq;
 
     // #[test]
     // fn theme_image_widths_returns_empty_array_if_none_exist() {

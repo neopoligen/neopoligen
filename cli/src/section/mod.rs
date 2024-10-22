@@ -9,6 +9,7 @@ pub mod mocks;
 pub mod raw;
 pub mod unknown;
 
+use crate::helpers::flatten_spans;
 use crate::section::basic::*;
 use crate::section::checklist::*;
 use crate::section::json5::*;
@@ -16,6 +17,7 @@ use crate::section::list::*;
 use crate::section::raw::*;
 use crate::section::unknown::*;
 use crate::section_attr::SectionAttr;
+use crate::section_attr::SectionAttrKind;
 // use crate::section_attr::SectionAttrKind;
 use crate::site_config::ConfigSections;
 use crate::span::*;
@@ -115,6 +117,25 @@ impl Section {
                 .collect(),
             _ => vec![],
         }))
+    }
+
+    pub fn classes(&self) -> Result<Value, Error> {
+        Ok(Value::from(
+            self.attrs
+                .iter()
+                .filter_map(|attr| match &attr.kind {
+                    SectionAttrKind::KeyValueSpans { key, spans } => {
+                        if key == "class" {
+                            Some(flatten_spans(spans))
+                        } else {
+                            None
+                        }
+                    }
+                    _ => None,
+                })
+                .collect::<Vec<String>>()
+                .join(" "),
+        ))
     }
 
     // // DEPRECATED: I think this isn't needed and can be
@@ -297,7 +318,15 @@ mod test {
     //
 
     #[test]
-    fn solo_template_list_basic_check() {
+    fn solo_classes_none() {
+        let section = Section::mock4_youtube_with_tags_and_classes();
+        let left = section.classes().unwrap();
+        let right = Value::from("alfa-class");
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn template_list_basic_check() {
         let section = Section::mock1_basic_title_section_no_attrs();
         let left = section.template_list().unwrap();
         let right = Value::from_serialize::<Vec<String>>(vec![

@@ -28,7 +28,8 @@ impl Section {
 
     pub fn mock4_youtube_with_tags_and_classes() -> Section {
         let config = SiteConfig::mock1_basic();
-        let source = "-- youtube\n-- NPJ1qQraMZI\n-- tag: minecraft\n-- tag: how-to\n-- class: class1 class2\n-- class: class3";
+        let source =
+            "-- youtube\n-- NPJ1qQraMZI\n-- tag: minecraft\n-- tag: how-to\n-- class: alfa-class";
         start_or_full_section(source, &config.sections, 0)
             .unwrap()
             .1
