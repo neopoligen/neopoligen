@@ -4,11 +4,5 @@
 [!- block body -!]
 [! for section in page.sections() !]
 [@ theme.output_section(site, page, section) @]
-
-<div>
-[@ section.type() @] -
-[@ section.kind() @] - 
-[@ section.bounds() @] 
-</div>
 [! endfor !]
 [!- endblock -!]
