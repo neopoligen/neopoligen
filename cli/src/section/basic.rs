@@ -244,7 +244,7 @@ mod test {
     }
 
     #[test]
-    fn solo_basic_start_end_test_checking_name_collision() {
+    fn basic_start_end_test_checking_name_collision() {
         let source = "-- previews/\n\nHello World\n\n-- /previews\n\n";
         let config = SiteConfig::mock1_basic();
         let left = (

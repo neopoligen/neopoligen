@@ -14,7 +14,7 @@ impl SiteConfigV41 {
             block: vec![],
             checklist: vec![],
             checklist_item: vec![],
-            json5: vec![],
+            json5: vec!["pagedata".to_string()],
             list: vec![],
             list_item: vec![],
             raw: vec![],

@@ -146,7 +146,7 @@ mod test {
     }
 
     #[test]
-    fn solo_output_rel_path_test_mock1() {
+    fn output_rel_path_test_mock1() {
         let page = PageV41::mock1_basic_page();
         let left = PathBuf::from("qwer/mock1_basic_page/index.html");
         let right = page.output_fs_rel_path(&PathBuf::from("qwer"));

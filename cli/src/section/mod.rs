@@ -2,6 +2,7 @@ pub mod basic;
 pub mod block;
 pub mod checklist;
 pub mod checklist_item;
+pub mod json5;
 pub mod list;
 pub mod list_item;
 pub mod mocks;
@@ -10,6 +11,7 @@ pub mod unknown;
 
 use crate::section::basic::*;
 use crate::section::checklist::*;
+use crate::section::json5::*;
 use crate::section::list::*;
 use crate::section::raw::*;
 use crate::section::unknown::*;
@@ -120,6 +122,7 @@ pub fn start_or_full_section<'a>(
         // TODO: Checklist start
         //|src| checklist_section_start(src, &sections, nest_level),
         |src| checklist_section_full(src, &sections, nest_level),
+        |src| json5_section_full(src, &sections, nest_level),
         |src| list_section_start(src, &sections, nest_level),
         |src| list_section_full(src, &sections, nest_level),
         |src| raw_section_start(src, &sections, nest_level),
