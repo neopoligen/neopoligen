@@ -3,7 +3,6 @@
 [!- include section.template_list() ignore missing -!]
 [!- endmacro -!]
 
-
 [#############################################################################]
 [!- macro output_span(site, page, span) -!]
 [!- include span.template_list() ignore missing -!]

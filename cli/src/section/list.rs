@@ -35,6 +35,8 @@ pub fn list_section_end<'a>(
         (source, vec![])
     };
     let section = Section {
+        attr_list: vec![],
+        flag_list: vec![],
         attrs,
         bounds: SectionBounds::End,
         kind: SectionKind::List { children },
@@ -68,6 +70,8 @@ pub fn list_section_full<'a>(
     Ok((
         source,
         Section {
+            attr_list: vec![],
+            flag_list: vec![],
             attrs,
             bounds: SectionBounds::Full,
             kind: SectionKind::List { children },
@@ -103,6 +107,8 @@ pub fn list_section_start<'a>(
     Ok((
         source,
         Section {
+            attr_list: vec![],
+            flag_list: vec![],
             attrs,
             bounds: SectionBounds::Start,
             kind: SectionKind::List { children },
@@ -124,14 +130,20 @@ mod test {
         let left = (
             "",
             Section {
+                attr_list: vec![],
+                flag_list: vec![],
                 attrs: vec![],
                 bounds: SectionBounds::Full,
                 kind: SectionKind::List {
                     children: vec![Section {
+                        attr_list: vec![],
+                        flag_list: vec![],
                         attrs: vec![],
                         bounds: SectionBounds::Full,
                         kind: SectionKind::ListItem {
                             children: vec![Section {
+                                attr_list: vec![],
+                                flag_list: vec![],
                                 attrs: vec![],
                                 bounds: SectionBounds::Full,
                                 kind: SectionKind::Block {
@@ -161,15 +173,21 @@ mod test {
         let left = (
             "",
             Section {
+                attr_list: vec![],
+                flag_list: vec![],
                 attrs: vec![],
                 bounds: SectionBounds::Start,
                 kind: SectionKind::List {
                     children: vec![
                         Section {
+                            attr_list: vec![],
+                            flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::Full,
                             kind: SectionKind::ListItem {
                                 children: vec![Section {
+                                    attr_list: vec![],
+                                    flag_list: vec![],
                                     attrs: vec![],
                                     bounds: SectionBounds::Full,
                                     kind: SectionKind::Block {
@@ -185,6 +203,8 @@ mod test {
                             r#type: "list-item".to_string(),
                         },
                         Section {
+                            attr_list: vec![],
+                            flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::End,
                             kind: SectionKind::List { children: vec![] },
@@ -205,6 +225,8 @@ mod test {
         let left = (
             "",
             Section {
+                attr_list: vec![],
+                flag_list: vec![],
                 attrs: vec![],
                 bounds: SectionBounds::End,
                 kind: SectionKind::List { children: vec![] },
@@ -232,16 +254,22 @@ mod test {
         let left = (
             "",
             Section {
+                attr_list: vec![],
+                flag_list: vec![],
                 attrs: vec![],
                 bounds: SectionBounds::Start,
                 kind: SectionKind::List {
                     children: vec![
                         Section {
+                            attr_list: vec![],
+                            flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::Full,
                             kind: SectionKind::ListItem {
                                 children: vec![
                                     Section {
+                                        attr_list: vec![],
+                                        flag_list: vec![],
                                         attrs: vec![],
                                         bounds: SectionBounds::Full,
                                         kind: SectionKind::Block {
@@ -254,15 +282,21 @@ mod test {
                                         r#type: "block-of-text".to_string(),
                                     },
                                     Section {
+                                        attr_list: vec![],
+                                        flag_list: vec![],
                                         attrs: vec![],
                                         bounds: SectionBounds::Start,
                                         kind: SectionKind::List {
                                             children: vec![
                                                 Section {
+                                                    attr_list: vec![],
+                                                    flag_list: vec![],
                                                     attrs: vec![],
                                                     bounds: SectionBounds::Full,
                                                     kind: SectionKind::ListItem {
                                                         children: vec![Section {
+                                                            attr_list: vec![],
+                                                            flag_list: vec![],
                                                             attrs: vec![],
                                                             bounds: SectionBounds::Full,
                                                             kind: SectionKind::Block {
@@ -279,6 +313,8 @@ mod test {
                                                     r#type: "list-item".to_string(),
                                                 },
                                                 Section {
+                                                    attr_list: vec![],
+                                                    flag_list: vec![],
                                                     attrs: vec![],
                                                     bounds: SectionBounds::End,
                                                     kind: SectionKind::List { children: vec![] },
@@ -293,10 +329,14 @@ mod test {
                             r#type: "list-item".to_string(),
                         },
                         Section {
+                            attr_list: vec![],
+                            flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::Full,
                             kind: SectionKind::ListItem {
                                 children: vec![Section {
+                                    attr_list: vec![],
+                                    flag_list: vec![],
                                     attrs: vec![],
                                     bounds: SectionBounds::Full,
                                     kind: SectionKind::Block {
@@ -312,6 +352,8 @@ mod test {
                             r#type: "list-item".to_string(),
                         },
                         Section {
+                            attr_list: vec![],
+                            flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::End,
                             kind: SectionKind::List { children: vec![] },
@@ -333,16 +375,22 @@ mod test {
         let left = (
             "",
             Section {
+                attr_list: vec![],
+                flag_list: vec![],
                 attrs: vec![],
                 bounds: SectionBounds::Start,
                 kind: SectionKind::List {
                     children: vec![
                         Section {
+                            attr_list: vec![],
+                            flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::Full,
                             kind: SectionKind::ListItem {
                                 children: vec![
                                     Section {
+                                        attr_list: vec![],
+                                        flag_list: vec![],
                                         attrs: vec![],
                                         bounds: SectionBounds::Full,
                                         kind: SectionKind::Block {
@@ -355,10 +403,14 @@ mod test {
                                         r#type: "block-of-text".to_string(),
                                     },
                                     Section {
+                                        attr_list: vec![],
+                                        flag_list: vec![],
                                         attrs: vec![],
                                         bounds: SectionBounds::Start,
                                         kind: SectionKind::Raw {
                                             children: vec![Section {
+                                                attr_list: vec![],
+                                                flag_list: vec![],
                                                 attrs: vec![],
                                                 bounds: SectionBounds::End,
                                                 kind: SectionKind::Raw {
@@ -376,10 +428,14 @@ mod test {
                             r#type: "list-item".to_string(),
                         },
                         Section {
+                            attr_list: vec![],
+                            flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::Full,
                             kind: SectionKind::ListItem {
                                 children: vec![Section {
+                                    attr_list: vec![],
+                                    flag_list: vec![],
                                     attrs: vec![],
                                     bounds: SectionBounds::Full,
                                     kind: SectionKind::Block {
@@ -395,6 +451,8 @@ mod test {
                             r#type: "list-item".to_string(),
                         },
                         Section {
+                            attr_list: vec![],
+                            flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::End,
                             kind: SectionKind::List { children: vec![] },
@@ -417,16 +475,22 @@ mod test {
         let left = (
             "-- h2",
             Section {
+                attr_list: vec![],
+                flag_list: vec![],
                 attrs: vec![],
                 bounds: SectionBounds::Start,
                 kind: SectionKind::List {
                     children: vec![
                         Section {
+                            attr_list: vec![],
+                            flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::Full,
                             kind: SectionKind::ListItem {
                                 children: vec![
                                     Section {
+                                        attr_list: vec![],
+                                        flag_list: vec![],
                                         attrs: vec![],
                                         bounds: SectionBounds::Full,
                                         kind: SectionKind::Block {
@@ -439,10 +503,14 @@ mod test {
                                         r#type: "block-of-text".to_string(),
                                     },
                                     Section {
+                                        attr_list: vec![],
+                                        flag_list: vec![],
                                         attrs: vec![],
                                         bounds: SectionBounds::Start,
                                         kind: SectionKind::Raw {
                                             children: vec![Section {
+                                                attr_list: vec![],
+                                                flag_list: vec![],
                                                 attrs: vec![],
                                                 bounds: SectionBounds::End,
                                                 kind: SectionKind::Raw {
@@ -460,10 +528,14 @@ mod test {
                             r#type: "list-item".to_string(),
                         },
                         Section {
+                            attr_list: vec![],
+                            flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::Full,
                             kind: SectionKind::ListItem {
                                 children: vec![Section {
+                                    attr_list: vec![],
+                                    flag_list: vec![],
                                     attrs: vec![],
                                     bounds: SectionBounds::Full,
                                     kind: SectionKind::Block {
@@ -479,6 +551,8 @@ mod test {
                             r#type: "list-item".to_string(),
                         },
                         Section {
+                            attr_list: vec![],
+                            flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::End,
                             kind: SectionKind::List { children: vec![] },

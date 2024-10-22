@@ -21,6 +21,8 @@ pub fn list_item_full<'a>(
     Ok((
         source,
         Section {
+            attr_list: vec![],
+            flag_list: vec![],
             attrs: vec![],
             bounds: SectionBounds::Full,
             kind: SectionKind::ListItem { children },
@@ -45,6 +47,8 @@ pub fn list_item_start_end<'a>(
     Ok((
         source,
         Section {
+            attr_list: vec![],
+            flag_list: vec![],
             attrs: vec![],
             bounds: SectionBounds::Full,
             kind: SectionKind::ListItem { children },
@@ -65,11 +69,15 @@ mod test {
         let left = (
             "",
             Section {
+                attr_list: vec![],
+                flag_list: vec![],
                 attrs: vec![],
                 bounds: SectionBounds::Full,
                 kind: SectionKind::ListItem {
                     children: {
                         vec![Section {
+                            attr_list: vec![],
+                            flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::Full,
                             kind: SectionKind::Block {
@@ -97,12 +105,16 @@ mod test {
         let left = (
             "",
             Section {
+                attr_list: vec![],
+                flag_list: vec![],
                 attrs: vec![],
                 bounds: SectionBounds::Full,
                 kind: SectionKind::ListItem {
                     children: {
                         vec![
                             Section {
+                                attr_list: vec![],
+                                flag_list: vec![],
                                 attrs: vec![],
                                 bounds: SectionBounds::Full,
                                 kind: SectionKind::Block {
@@ -115,10 +127,14 @@ mod test {
                                 r#type: "block-of-text".to_string(),
                             },
                             Section {
+                                attr_list: vec![],
+                                flag_list: vec![],
                                 attrs: vec![],
                                 bounds: SectionBounds::Full,
                                 kind: SectionKind::Basic {
                                     children: vec![Section {
+                                        attr_list: vec![],
+                                        flag_list: vec![],
                                         attrs: vec![],
                                         bounds: SectionBounds::Full,
                                         kind: SectionKind::Block {

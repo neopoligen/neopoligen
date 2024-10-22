@@ -37,8 +37,10 @@ use std::sync::Arc;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Section {
+    pub attr_list: Vec<String>,
     pub attrs: Vec<SectionAttr>,
     pub bounds: SectionBounds,
+    pub flag_list: Vec<String>,
     pub kind: SectionKind,
     pub r#type: String,
 }
@@ -92,7 +94,7 @@ impl Section {
         Ok(Value::from(r#"class="unknown-section""#))
     }
 
-    // TODO: Make this do the flags
+    // TODO: Make this do the flags for real
     pub fn flag_list(&self, _args: &[Value]) -> Result<Value, Error> {
         Ok(Value::from(r#""#))
     }

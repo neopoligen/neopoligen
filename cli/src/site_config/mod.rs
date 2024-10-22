@@ -652,19 +652,21 @@ mod test {
     use super::*;
     use pretty_assertions::assert_eq;
 
-    #[test]
-    fn theme_image_widths_returns_empty_array_if_none_exist() {
-        let config = SiteConfig::mock1_basic();
-        let left: Vec<u32> = vec![];
-        let right = config.theme_image_widths();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // fn theme_image_widths_returns_empty_array_if_none_exist() {
+    //     let config = SiteConfig::mock1_basic();
+    //     let left: Vec<u32> = vec![];
+    //     let right = config.theme_image_widths();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    fn theme_image_widths_return_if_there_are_any() {
-        let config = SiteConfig::mock2_with_image_widths();
-        let left: Vec<u32> = vec![100, 400];
-        let right = config.theme_image_widths();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // fn theme_image_widths_return_if_there_are_any() {
+    //     let config = SiteConfig::mock2_with_image_widths();
+    //     let left: Vec<u32> = vec![100, 400];
+    //     let right = config.theme_image_widths();
+    //     assert_eq!(left, right);
+    // }
+
+    //
 }

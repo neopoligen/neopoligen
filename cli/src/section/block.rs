@@ -32,6 +32,8 @@ pub fn block_of_anything<'a>(source: &'a str) -> IResult<&'a str, Section, Error
     Ok((
         source,
         Section {
+            attr_list: vec![],
+            flag_list: vec![],
             attrs: vec![],
             bounds: SectionBounds::Full,
             kind: SectionKind::Block { spans },
@@ -51,6 +53,8 @@ pub fn block_of_end_content<'a>(source: &'a str) -> IResult<&'a str, Section, Er
     Ok((
         source,
         Section {
+            attr_list: vec![],
+            flag_list: vec![],
             attrs: vec![],
             bounds: SectionBounds::Full,
             kind: SectionKind::Block { spans },
@@ -69,6 +73,8 @@ pub fn block_of_list_content<'a>(source: &'a str) -> IResult<&'a str, Section, E
     Ok((
         source,
         Section {
+            attr_list: vec![],
+            flag_list: vec![],
             attrs: vec![],
             bounds: SectionBounds::Full,
             kind: SectionKind::Block { spans },
@@ -90,6 +96,8 @@ pub fn block_of_checklist_content<'a>(
     Ok((
         source,
         Section {
+            attr_list: vec![],
+            flag_list: vec![],
             attrs: vec![],
             bounds: SectionBounds::Full,
             kind: SectionKind::Block { spans },

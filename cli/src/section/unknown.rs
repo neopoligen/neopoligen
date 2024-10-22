@@ -36,6 +36,8 @@ pub fn unknown_section_end<'a>(
         (source, vec![])
     };
     let section = Section {
+        attr_list: vec![],
+        flag_list: vec![],
         attrs,
         bounds: SectionBounds::End,
         kind: SectionKind::Unknown { children },
@@ -65,6 +67,8 @@ pub fn unknown_section_full<'a>(
         .context("")
         .parse(source)?;
     let section = Section {
+        attr_list: vec![],
+        flag_list: vec![],
         attrs,
         bounds: SectionBounds::Full,
         kind: SectionKind::Unknown { children },
@@ -98,6 +102,8 @@ pub fn unknown_section_start<'a>(
     let (source, end_section) = unknown_section_end(source, r#type, nest_level)?;
     children.push(end_section);
     let section = Section {
+        attr_list: vec![],
+        flag_list: vec![],
         attrs,
         bounds: SectionBounds::Start,
         kind: SectionKind::Unknown { children },
@@ -120,11 +126,15 @@ mod test {
         let left = (
             "",
             Section {
+                attr_list: vec![],
+                flag_list: vec![],
                 attrs: vec![],
                 bounds: SectionBounds::Start,
                 kind: SectionKind::Unknown {
                     children: vec![
                         Section {
+                            attr_list: vec![],
+                            flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::Full,
                             kind: SectionKind::Block {
@@ -137,6 +147,8 @@ mod test {
                             r#type: "block-of-text".to_string(),
                         },
                         Section {
+                            attr_list: vec![],
+                            flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::End,
                             kind: SectionKind::Unknown { children: vec![] },
@@ -158,10 +170,14 @@ mod test {
         let left = (
             "",
             Section {
+                attr_list: vec![],
+                flag_list: vec![],
                 attrs: vec![],
                 bounds: SectionBounds::Full,
                 kind: SectionKind::Unknown {
                     children: vec![Section {
+                        attr_list: vec![],
+                        flag_list: vec![],
                         attrs: vec![],
                         bounds: SectionBounds::Full,
                         kind: SectionKind::Block {

@@ -38,6 +38,8 @@ pub fn raw_section_end<'a>(
             .parse(source)?
     };
     let section = Section {
+        attr_list: vec![],
+        flag_list: vec![],
         attrs,
         bounds: SectionBounds::End,
         kind: SectionKind::Raw {
@@ -68,6 +70,8 @@ pub fn raw_section_full<'a>(
     let (source, text) = alt((take_until("\n--"), rest)).context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let section = Section {
+        attr_list: vec![],
+        flag_list: vec![],
         attrs,
         bounds: SectionBounds::Full,
         kind: SectionKind::Raw {
@@ -105,6 +109,8 @@ pub fn raw_section_start<'a>(
     let mut children = vec![];
     children.push(end_section);
     let section = Section {
+        attr_list: vec![],
+        flag_list: vec![],
         attrs,
         bounds: SectionBounds::Start,
         kind: SectionKind::Raw {
@@ -162,10 +168,14 @@ mod test {
         let left = (
             "",
             Section {
+                attr_list: vec![],
+                flag_list: vec![],
                 attrs: vec![],
                 bounds: SectionBounds::Start,
                 kind: SectionKind::Raw {
                     children: vec![Section {
+                        attr_list: vec![],
+                        flag_list: vec![],
                         attrs: vec![],
                         bounds: SectionBounds::End,
                         kind: SectionKind::Raw {
@@ -191,6 +201,8 @@ mod test {
         let left = (
             "",
             Section {
+                attr_list: vec![],
+                flag_list: vec![],
                 attrs: vec![
                     SectionAttr {
                         kind: SectionAttrKind::Flag {
@@ -207,6 +219,8 @@ mod test {
                 bounds: SectionBounds::Start,
                 kind: SectionKind::Raw {
                     children: vec![Section {
+                        attr_list: vec![],
+                        flag_list: vec![],
                         attrs: vec![],
                         bounds: SectionBounds::End,
                         kind: SectionKind::Basic { children: vec![] },
@@ -228,10 +242,14 @@ mod test {
         let left = (
             "",
             Section {
+                attr_list: vec![],
+                flag_list: vec![],
                 attrs: vec![],
                 bounds: SectionBounds::Start,
                 kind: SectionKind::Raw {
                     children: vec![Section {
+                        attr_list: vec![],
+                        flag_list: vec![],
                         attrs: vec![],
                         bounds: SectionBounds::End,
                         kind: SectionKind::Raw {
@@ -256,16 +274,22 @@ mod test {
         let left = (
             "-- p",
             Section {
+                attr_list: vec![],
+                flag_list: vec![],
                 attrs: vec![],
                 bounds: SectionBounds::Start,
                 kind: SectionKind::Raw {
                     children: vec![Section {
+                        attr_list: vec![],
+                        flag_list: vec![],
                         attrs: vec![],
                         bounds: SectionBounds::End,
                         kind: SectionKind::Raw {
                             text: None,
                             children: vec![
                                 Section {
+                                    attr_list: vec![],
+                                    flag_list: vec![],
                                     attrs: vec![],
                                     bounds: SectionBounds::Full,
                                     kind: SectionKind::Block {
@@ -278,6 +302,8 @@ mod test {
                                     r#type: "block-of-text".to_string(),
                                 },
                                 Section {
+                                    attr_list: vec![],
+                                    flag_list: vec![],
                                     attrs: vec![],
                                     bounds: SectionBounds::Full,
                                     kind: SectionKind::Block {
@@ -309,10 +335,14 @@ mod test {
         let left = (
             "- bravo",
             Section {
+                attr_list: vec![],
+                flag_list: vec![],
                 attrs: vec![],
                 bounds: SectionBounds::Start,
                 kind: SectionKind::Raw {
                     children: vec![Section {
+                        attr_list: vec![],
+                        flag_list: vec![],
                         attrs: vec![],
                         bounds: SectionBounds::End,
                         kind: SectionKind::Raw {
