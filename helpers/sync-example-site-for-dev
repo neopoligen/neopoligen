@@ -4,5 +4,5 @@ watchexec\
   --project-origin .\
   -w "../cli/example-site"\
   --workdir "../cli/example-site"\
-  -e xsl,json,js,css,neo,neoj\
+  -e xsl,json5,js,css,neo,neoj\
   "rsync --delete -av ./ ~/Documents/Neopoligen/example-site/"

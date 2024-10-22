@@ -90,13 +90,9 @@ pub enum SectionKind {
 }
 
 impl Section {
-    pub fn attr_list(&self, _args: &[Value]) -> Result<Value, Error> {
+    // TODO: Hoist the attrs and flags from the settings
+    pub fn attr_flag_list(&self, _args: &[Value]) -> Result<Value, Error> {
         Ok(Value::from(r#"class="unknown-section""#))
-    }
-
-    // TODO: Make this do the flags for real
-    pub fn flag_list(&self, _args: &[Value]) -> Result<Value, Error> {
-        Ok(Value::from(r#""#))
     }
 
     pub fn bounds(&self) -> Result<Value, Error> {
@@ -281,10 +277,9 @@ impl Object for Section {
         args: &[Value],
     ) -> Result<Value, Error> {
         match name {
-            "attr_list" => self.attr_list(args),
+            "attr_flag_list" => self.attr_flag_list(args),
             "bounds" => self.bounds(),
             "children" => self.children(),
-            "flag_list" => self.flag_list(args),
             "kind" => self.kind(),
             "spans" => self.spans(),
             "template_list" => self.template_list(),

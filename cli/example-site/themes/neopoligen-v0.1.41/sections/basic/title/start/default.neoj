@@ -1,5 +1,6 @@
 [!- import "helpers/theme.neoj" as theme -!]
-<section>
+<!-- THIS IS A TITLE SECTION -->
+<section [@ section.attr_flag_list() @]>
   <h1>[!- include "subsections/just-one-block.neoj" -!]</h1>
   [!- include "subsections/skip-one-block.neoj" -!]
 

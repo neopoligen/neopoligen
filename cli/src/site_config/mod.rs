@@ -49,15 +49,15 @@ pub struct SiteConfigV41 {
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SectionSettings {
-    pub attributes: SectionSettingsAttrFlags,
-    pub flags: SectionSettingsAttrFlags,
+    pub attrs: Vec<String>,
+    pub flags: Vec<String>,
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub struct SectionSettingsAttrFlags {
-    pub primary: Vec<String>,
-    pub secondary: Vec<String>,
-}
+// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+// pub struct SectionSettingsAttrFlags {
+//     pub primary: Vec<String>,
+//     pub secondary: Vec<String>,
+// }
 
 // NOTE: This isn't being used since it would
 // require updating every parser file.
@@ -163,17 +163,41 @@ impl SiteConfigV41 {
                                 }
                                 Ok(())
                             }
-                            Err(_e) => Ok(()),
+                            Err(e) => {
+                                event!(
+                                    Level::ERROR,
+                                    "Could not load _settings.json5 file: {} - {}",
+                                    e,
+                                    json5_path.display()
+                                );
+                                Err(NeoError {
+                                    kind: NeoErrorKind::GenericErrorWithoutSourcePath {
+                                        msg: format!(
+                                            "Could not load _settings.json5 file: {} - {}",
+                                            e,
+                                            json5_path.display(),
+                                        ),
+                                    },
+                                })
+                            }
                         },
-                        Err(e) => Err(NeoError {
-                            kind: NeoErrorKind::GenericErrorWithoutSourcePath {
-                                msg: format!(
-                                    "Could not load section settiongs file: {} - {}",
-                                    json5_path.display(),
-                                    e
-                                ),
-                            },
-                        }),
+                        Err(e) => {
+                            event!(
+                                Level::ERROR,
+                                "Could not load _settings.json5 file: {} - {}",
+                                e,
+                                json5_path.display()
+                            );
+                            Err(NeoError {
+                                kind: NeoErrorKind::GenericErrorWithoutSourcePath {
+                                    msg: format!(
+                                        "Could not load _settings.json5 file: {} - {}",
+                                        e,
+                                        json5_path.display(),
+                                    ),
+                                },
+                            })
+                        }
                     };
                 })
             }
