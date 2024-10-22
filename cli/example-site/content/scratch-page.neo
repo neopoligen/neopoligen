@@ -3,39 +3,6 @@
 Scratch Page Testing
 
 
--- css
--- template: show
--- id: copy-target
-
-body {
-  color: blue;
-}
-
--- h2
-
-This is a copy
-
--- copycode
--- from: copy-target
--- start: 2
--- end: 2
-
-
--- blurb/
-
-
--- copycode
--- from: copy-target
--- start: 1
--- end: 3
-
--- p
-
-This <<strong|is>> new
-
--- /blurb
-
-
 -- pagedata
 -- created: 2024-05-09T11:51:56-04:00
 -- id: 2gek2pg3

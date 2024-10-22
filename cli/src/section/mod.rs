@@ -96,6 +96,16 @@ impl Section {
         }
     }
 
+    pub fn children(&self) -> Result<Value, Error> {
+        Ok(Value::from_serialize::<Vec<Value>>(match &self.kind {
+            SectionKind::Basic { children } => children
+                .iter()
+                .map(|c| Value::from_object(c.clone()))
+                .collect(),
+            _ => vec![],
+        }))
+    }
+
     // // DEPRECATED: I think this isn't needed and can be
     // // removed when PayloadSection is working and pulling
     // // data for itself. And actually, I don't think it's
@@ -245,6 +255,7 @@ impl Object for Section {
     ) -> Result<Value, Error> {
         match name {
             "bounds" => self.bounds(),
+            "children" => self.children(),
             "kind" => self.kind(),
             "template_list" => self.template_list(),
             "type" => Ok(Value::from(&self.r#type)),
