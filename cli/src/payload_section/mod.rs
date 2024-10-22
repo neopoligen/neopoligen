@@ -633,7 +633,7 @@ mod test {
     //     // TODO
     // }
 
-    // // TODO: Deprecate when V41 is working
+    // // TODO: Deprecate when V42 is working
     // #[test]
     // fn classes_work() {
     //     let config = SiteConfig::mock1_basic();

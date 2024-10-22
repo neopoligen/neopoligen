@@ -7,7 +7,7 @@ use crate::neo_error::NeoErrorKind;
 use crate::section::Section;
 use crate::section_attr::SectionAttr;
 use crate::section_attr::SectionAttrKind;
-use crate::site_config::SiteConfigV41;
+use crate::site_config::SiteConfigV42;
 use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::Value;
@@ -17,16 +17,16 @@ use std::path::PathBuf;
 use std::sync::Arc;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub struct PageV41 {
+pub struct PageV42 {
     pub ast: Option<Vec<Section>>,
     pub raw_source: String,
     pub fs_path: PathBuf,
 }
 
-impl PageV41 {
-    pub fn new_from_fs_path(path: &PathBuf) -> Result<PageV41, NeoError> {
+impl PageV42 {
+    pub fn new_from_fs_path(path: &PathBuf) -> Result<PageV42, NeoError> {
         match fs::read_to_string(path) {
-            Ok(raw_source) => Ok(PageV41 {
+            Ok(raw_source) => Ok(PageV42 {
                 ast: None,
                 fs_path: path.clone(),
                 raw_source,
@@ -41,12 +41,12 @@ impl PageV41 {
     }
 }
 
-impl PageV41 {
+impl PageV42 {
     pub fn ast(&self) -> Result<Value, Error> {
         Ok(Value::from_serialize(&self.ast))
     }
 
-    pub fn generate_ast(&mut self, site_config: &SiteConfigV41) -> Result<(), NeoError> {
+    pub fn generate_ast(&mut self, site_config: &SiteConfigV42) -> Result<(), NeoError> {
         match parse_ast(&self.raw_source, site_config.sections.clone()) {
             Ok(ast) => {
                 self.ast = Some(ast);
@@ -246,9 +246,9 @@ impl PageV41 {
     }
 }
 
-impl Object for PageV41 {
+impl Object for PageV42 {
     fn call_method(
-        self: &Arc<PageV41>,
+        self: &Arc<PageV42>,
         _state: &minijinja::State,
         name: &str,
         _args: &[Value],
@@ -269,7 +269,7 @@ mod test {
 
     #[test]
     fn id_test_get_basic_id() {
-        let page = PageV41::mock1_basic_page();
+        let page = PageV42::mock1_basic_page();
         let left = "mock1_basic_page".to_string();
         let right = page.id().unwrap();
         assert_eq!(left, right);
@@ -277,13 +277,13 @@ mod test {
 
     #[test]
     fn id_should_error_if_missing() {
-        let page = PageV41::mock2_missing_id_and_status();
+        let page = PageV42::mock2_missing_id_and_status();
         assert!(page.id().is_err());
     }
 
     #[test]
     fn status_test_get_basic_status() {
-        let page = PageV41::mock1_basic_page();
+        let page = PageV42::mock1_basic_page();
         let left = "published".to_string();
         let right = page.status().unwrap();
         assert_eq!(left, right);
@@ -291,13 +291,13 @@ mod test {
 
     #[test]
     fn status_should_error_if_missing() {
-        let page = PageV41::mock2_missing_id_and_status();
+        let page = PageV42::mock2_missing_id_and_status();
         assert!(page.status().is_err());
     }
 
     #[test]
     fn output_rel_path_test_mock1() {
-        let page = PageV41::mock1_basic_page();
+        let page = PageV42::mock1_basic_page();
         let left = PathBuf::from("en/mock1_basic_page/index.html");
         let right = page.output_fs_rel_path(&PathBuf::from("en")).unwrap();
         assert_eq!(left, right);
@@ -305,7 +305,7 @@ mod test {
 
     #[test]
     fn output_rel_path_with_path_attr() {
-        let page = PageV41::mock3_custom_path();
+        let page = PageV42::mock3_custom_path();
         let left = PathBuf::from("index.html");
         let right = page.output_fs_rel_path(&PathBuf::from("en")).unwrap();
         assert_eq!(left, right);

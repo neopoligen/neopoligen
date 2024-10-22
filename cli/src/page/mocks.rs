@@ -1,12 +1,12 @@
-use crate::site_config::SiteConfigV41;
+use crate::site_config::SiteConfigV42;
 use std::path::PathBuf;
 
-use super::PageV41;
+use super::PageV42;
 
-impl PageV41 {
-    pub fn mock1_basic_page() -> PageV41 {
-        let site_config = SiteConfigV41::mock1_basic();
-        let mut page = PageV41 {
+impl PageV42 {
+    pub fn mock1_basic_page() -> PageV42 {
+        let site_config = SiteConfigV42::mock1_basic();
+        let mut page = PageV42 {
             ast: None,
             raw_source: r#"-- title
 
@@ -22,9 +22,9 @@ Mock 1 Basic Page
         page
     }
 
-    pub fn mock2_missing_id_and_status() -> PageV41 {
-        let site_config = SiteConfigV41::mock1_basic();
-        let mut page = PageV41 {
+    pub fn mock2_missing_id_and_status() -> PageV42 {
+        let site_config = SiteConfigV42::mock1_basic();
+        let mut page = PageV42 {
             ast: None,
             raw_source: r#"-- title
 
@@ -38,9 +38,9 @@ Mock 2 Missing pagedata id and status
         page
     }
 
-    pub fn mock3_custom_path() -> PageV41 {
-        let site_config = SiteConfigV41::mock1_basic();
-        let mut page = PageV41 {
+    pub fn mock3_custom_path() -> PageV42 {
+        let site_config = SiteConfigV42::mock1_basic();
+        let mut page = PageV42 {
             ast: None,
             raw_source: r#"-- title
 

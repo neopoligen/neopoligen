@@ -161,7 +161,7 @@ impl Section {
     // // DEPRECATED: I think this isn't needed and can be
     // // removed when PayloadSection is working and pulling
     // // data for itself. And actually, I don't think it's
-    // // needed when the move to V41 is done
+    // // needed when the move to V42 is done
     // pub fn get_attr(&self, target: &str) -> Option<String> {
     //     let attrs = self
     //         .attrs

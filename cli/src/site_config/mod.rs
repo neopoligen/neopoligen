@@ -15,7 +15,7 @@ use std::path::PathBuf;
 use tracing::{event, instrument, Level};
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub struct SiteConfigV41 {
+pub struct SiteConfigV42 {
     pub base_url: String,
     pub default_language: String,
     #[serde(default = "output_dir_name_v41")]
@@ -61,9 +61,9 @@ pub struct SectionSettings {
 
 // NOTE: This isn't being used since it would
 // require updating every parser file.
-// TODO: Delete this when SiteConfigV41 is done
+// TODO: Delete this when SiteConfigV42 is done
 // #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-// pub struct SiteConfigSectionsV41 {
+// pub struct SiteConfigSectionsV42 {
 //     pub basic: Vec<String>,
 //     pub block: Vec<String>,
 //     pub checklist: Vec<String>,
@@ -74,14 +74,14 @@ pub struct SectionSettings {
 //     pub raw: Vec<String>,
 // }
 
-impl SiteConfigV41 {
-    pub fn new_from_engine_config(engine_config: &EngineConfig) -> Result<SiteConfigV41, NeoError> {
+impl SiteConfigV42 {
+    pub fn new_from_engine_config(engine_config: &EngineConfig) -> Result<SiteConfigV42, NeoError> {
         let project_root = engine_config
             .sites_dir
             .join(engine_config.active_site.as_str());
         let config_path = project_root.join("admin").join("settings.json5");
         match fs::read_to_string(&config_path) {
-            Ok(text) => match serde_json5::from_str::<SiteConfigV41>(&text) {
+            Ok(text) => match serde_json5::from_str::<SiteConfigV42>(&text) {
                 Ok(mut config) => {
                     config.project_root = Some(project_root.clone());
                     if !config.theme_dir().is_dir() {
@@ -113,7 +113,7 @@ impl SiteConfigV41 {
     }
 }
 
-impl SiteConfigV41 {
+impl SiteConfigV42 {
     #[instrument(skip(self))]
     pub fn load_sections(&mut self) -> Result<(), NeoError> {
         event!(Level::INFO, "Loading Theme Sections");
@@ -206,7 +206,7 @@ impl SiteConfigV41 {
     }
 }
 
-impl SiteConfigV41 {
+impl SiteConfigV42 {
     pub fn admin_dir(&self) -> PathBuf {
         self.project_dir().join("admin")
     }
@@ -263,7 +263,7 @@ fn output_dir_name_v41() -> String {
 
 // //////////////////////////////////////////////////////////////////////////
 
-// TODO: Deprecate this when SiteConfigV41 is in place
+// TODO: Deprecate this when SiteConfigV42 is in place
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SiteConfig {
     #[serde(rename = "base_url")]

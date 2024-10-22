@@ -9,32 +9,32 @@ use minijinja::Error;
 use minijinja::Value;
 use std::sync::Arc;
 // use crate::neo_error::{NeoError, NeoErrorKind};
-use crate::page::PageV41;
+use crate::page::PageV42;
 use crate::page_payload::PagePayload;
-use crate::site_config::SiteConfig; // TODO: Deprecate SiteConfig In Favor Of SiteConfigV41
-use crate::site_config::SiteConfigV41;
+use crate::site_config::SiteConfig; // TODO: Deprecate SiteConfig In Favor Of SiteConfigV42
+use crate::site_config::SiteConfigV42;
 use crate::source_page::SourcePage;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub struct SiteV41 {
-    pub config: SiteConfigV41,
-    pub pages: BTreeMap<String, PageV41>,
+pub struct SiteV42 {
+    pub config: SiteConfigV42,
+    pub pages: BTreeMap<String, PageV42>,
 }
 
-impl SiteV41 {
+impl SiteV42 {
     //pub fn ping(&self, args: &[Value]) -> Value {
     //    self.pages.get("dev-alfa").unwrap().dev_ping(args)
     //    //Value::from("THIS IS IT")
     //}
 
     // pub fn new_from_source_pages(
-    //     // TODO: Switch thsi to PageV41
+    //     // TODO: Switch thsi to PageV42
     //     source_pages: &BTreeMap<PathBuf, SourcePage>,
-    // ) -> Result<SiteV41, NeoError> {
-    //     let mut site = SiteV41 {
+    // ) -> Result<SiteV42, NeoError> {
+    //     let mut site = SiteV42 {
     //         config: None,
     //         pages: BTreeMap::new(),
     //     };
@@ -54,7 +54,7 @@ impl SiteV41 {
     //
 }
 
-// TODO: Deprecate this as SiteV41 comes online
+// TODO: Deprecate this as SiteV42 comes online
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Site {
     pub absolute_page_urls: BTreeMap<String, String>,
@@ -106,9 +106,9 @@ impl Site {
     // }
 }
 
-impl Object for SiteV41 {
+impl Object for SiteV42 {
     fn call_method(
-        self: &Arc<SiteV41>,
+        self: &Arc<SiteV42>,
         _state: &minijinja::State,
         name: &str,
         args: &[Value],

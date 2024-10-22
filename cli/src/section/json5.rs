@@ -56,13 +56,13 @@ pub fn json5_section_full<'a>(
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::site_config::SiteConfigV41;
+    use crate::site_config::SiteConfigV42;
     // use pretty_assertions::assert_eq;
 
     #[test]
     fn json5_basic_test() {
         let source = "-- pagedata\n-- id: abcd1234";
-        let config = SiteConfigV41::mock1_basic();
+        let config = SiteConfigV42::mock1_basic();
         let response = json5_section_full(source, &config.sections, 0);
         assert!(response.is_ok());
     }

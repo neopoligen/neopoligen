@@ -8,8 +8,8 @@ use std::collections::BTreeMap;
 //use serde_json::Value;
 // use std::path::PathBuf;
 
-impl SiteConfigV41 {
-    pub fn mock1_basic() -> SiteConfigV41 {
+impl SiteConfigV42 {
+    pub fn mock1_basic() -> SiteConfigV42 {
         let sections = ConfigSections {
             basic: vec![],
             block: vec![],
@@ -49,7 +49,7 @@ impl SiteConfigV41 {
         //     yaml: vec!["metadata".to_string()],
         // };
 
-        let config = SiteConfigV41 {
+        let config = SiteConfigV42 {
             default_language: "en".to_string(),
             base_url: "testsite.localhost:1999".to_string(),
             output_directory: "_site".to_string(),

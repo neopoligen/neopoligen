@@ -5,11 +5,11 @@
 use crate::helpers::*;
 use crate::image::{Image, ImageSize};
 use crate::neo_error::{NeoError, NeoErrorKind};
-use crate::page::PageV41;
+use crate::page::PageV42;
 use crate::page_payload::{PagePayload, ThemeTestOrPage};
-use crate::site::{Site, SiteV41};
+use crate::site::{Site, SiteV42};
 use crate::site_config::SiteConfig;
-use crate::site_config::SiteConfigV41;
+use crate::site_config::SiteConfigV42;
 use crate::source_page::SourcePage;
 use crate::theme_test::ThemeTest; // this might be deprecated
 use anyhow::Result;
@@ -28,17 +28,17 @@ use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub struct BuilderV41 {
+pub struct BuilderV42 {
     pub errors: Vec<NeoError>,
-    pub raw_pages: Vec<PageV41>,
-    pub site_config: SiteConfigV41,
-    pub site: Option<SiteV41>,
+    pub raw_pages: Vec<PageV42>,
+    pub site_config: SiteConfigV42,
+    pub site: Option<SiteV42>,
     pub templates: BTreeMap<String, String>,
 }
 
-impl BuilderV41 {
-    pub fn new_from_site_config(site_config: &SiteConfigV41) -> Result<BuilderV41, NeoError> {
-        let b = BuilderV41 {
+impl BuilderV42 {
+    pub fn new_from_site_config(site_config: &SiteConfigV42) -> Result<BuilderV42, NeoError> {
+        let b = BuilderV42 {
             errors: vec![],
             raw_pages: vec![],
             site: None,
@@ -49,7 +49,7 @@ impl BuilderV41 {
     }
 }
 
-impl BuilderV41 {
+impl BuilderV42 {
     #[instrument(skip(self))]
     pub fn load_pages_from_fs(&mut self) -> Result<()> {
         event!(Level::INFO, "Loading Pages From FS");
@@ -60,7 +60,7 @@ impl BuilderV41 {
                     if ext.to_ascii_lowercase() == "neo"
                         && !filename.to_str().unwrap().starts_with(".")
                     {
-                        match PageV41::new_from_fs_path(&path) {
+                        match PageV42::new_from_fs_path(&path) {
                             Ok(p) => {
                                 //event![Level::INFO, "Added raw page: {}", path.display()];
                                 self.raw_pages.push(p)
@@ -78,7 +78,7 @@ impl BuilderV41 {
     }
 
     #[instrument(skip(self, site_config))]
-    pub fn load_templates(&mut self, site_config: &SiteConfigV41) -> Result<()> {
+    pub fn load_templates(&mut self, site_config: &SiteConfigV42) -> Result<()> {
         event!(Level::INFO, "Loading Templates");
         for entry in WalkDir::new(&self.site_config.theme_dir()) {
             let path = entry?.path().to_path_buf();
@@ -105,7 +105,7 @@ impl BuilderV41 {
     }
 
     #[instrument(skip(self, site_config))]
-    pub fn make_asts(&mut self, site_config: &SiteConfigV41) -> Result<()> {
+    pub fn make_asts(&mut self, site_config: &SiteConfigV42) -> Result<()> {
         event!(Level::INFO, "Generating ASTs");
         self.raw_pages
             .iter_mut()
@@ -223,9 +223,9 @@ impl BuilderV41 {
     }
 
     #[instrument(skip(self, site_config))]
-    pub fn prep_site(&mut self, site_config: &SiteConfigV41) -> Result<()> {
+    pub fn prep_site(&mut self, site_config: &SiteConfigV42) -> Result<()> {
         event!(Level::INFO, "Prepping Site");
-        let mut site = SiteV41 {
+        let mut site = SiteV42 {
             config: site_config.clone(),
             pages: BTreeMap::new(),
         };
@@ -244,7 +244,7 @@ impl BuilderV41 {
     }
 
     #[instrument(skip(self, site_config))]
-    pub fn test_templates(&mut self, site_config: &SiteConfigV41) -> Result<()> {
+    pub fn test_templates(&mut self, site_config: &SiteConfigV42) -> Result<()> {
         event!(Level::INFO, "Testing Templates");
         Ok(())
     }
@@ -252,7 +252,7 @@ impl BuilderV41 {
     //
 }
 
-// TODO: Deprecate Builder as BuilderV41 comes online
+// TODO: Deprecate Builder as BuilderV42 comes online
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Builder {
     pub cache_buffer: BTreeMap<PathBuf, SourcePage>,
@@ -263,7 +263,7 @@ pub struct Builder {
     pub source_pages: BTreeMap<PathBuf, SourcePage>,
     // TODO: deprecate payloads
     pub payloads: BTreeMap<String, PagePayload>,
-    pub site_v41: Option<SiteV41>,
+    pub site_v41: Option<SiteV42>,
     pub templates: BTreeMap<String, String>,
     pub theme_test_source_pages: BTreeMap<PathBuf, ThemeTest>,
 }
@@ -586,7 +586,7 @@ impl Builder {
     }
 
     // TODO: Hang onto this until you figure out if you need this
-    // level of cache in BuilderV41 or not
+    // level of cache in BuilderV42 or not
     // #[instrument(skip(self))]
     // pub fn load_pages_from_cache(&mut self) -> Result<()> {
     //     event!(Level::INFO, "Loading Pages From Cache");
@@ -607,7 +607,7 @@ impl Builder {
     //     Ok(())
     // }
 
-    // TODO: Delete this when the fs page loader for BuilderV41 is done
+    // TODO: Delete this when the fs page loader for BuilderV42 is done
     // #[instrument(skip(self))]
     // pub fn load_pages_from_fs(&mut self) -> Result<()> {
     //     event!(Level::INFO, "Loading Source Content Files");
@@ -666,7 +666,7 @@ impl Builder {
     //     Ok(())
     // }
 
-    // TODO: delete this when load_template for BuilderV41 is working
+    // TODO: delete this when load_template for BuilderV42 is working
     //#[instrument(skip(self))]
     //pub fn load_templates(&mut self) -> Result<()> {
     //    event!(Level::INFO, "Loading Templates");
@@ -845,7 +845,7 @@ impl Builder {
 
     // #[instrument(skip(self))]
     // pub fn prep_site(&self) -> Result<()> {
-    //     let site_v41 = SiteV41::new_from_source_pages(&self.source_pages);
+    //     let site_v41 = SiteV42::new_from_source_pages(&self.source_pages);
     //     Ok(())
     // }
 
