@@ -230,15 +230,22 @@ impl PageV42 {
         }
     }
 
+    pub fn template(&self) -> Result<String, NeoError> {
+        self.get_pagedata_attr("template")
+    }
+
     pub fn template_list(&self) -> Vec<String> {
-        if let Ok(status) = self.status() {
+        if let (Ok(template), Ok(status)) = (self.template(), self.status()) {
+            vec![
+                format!("page-templates/{}/{}.neoj", template, status),
+                format!("page-templates/{}/done.neoj", template),
+                format!("page-templates/post/{}.neoj", status),
+                format!("page-templates/post/done.neoj"),
+            ]
+        } else if let Ok(status) = self.status() {
             vec![
                 format!("page-templates/post/{}.neoj", status),
-                // NOTE: this will pub "published" in for now
-                // if it's the requested status. That's fine
-                // for the time being but could be cleaned up
-                // and some point.
-                format!("page-templates/post/published.neoj"),
+                format!("page-templates/post/done.neoj"),
             ]
         } else {
             vec![]
@@ -282,20 +289,6 @@ mod test {
     }
 
     #[test]
-    fn status_test_get_basic_status() {
-        let page = PageV42::mock1_basic_page();
-        let left = "published".to_string();
-        let right = page.status().unwrap();
-        assert_eq!(left, right);
-    }
-
-    #[test]
-    fn status_should_error_if_missing() {
-        let page = PageV42::mock2_missing_id_and_status();
-        assert!(page.status().is_err());
-    }
-
-    #[test]
     fn output_rel_path_test_mock1() {
         let page = PageV42::mock1_basic_page();
         let left = PathBuf::from("en/mock1_basic_page/index.html");
@@ -308,6 +301,33 @@ mod test {
         let page = PageV42::mock3_custom_path();
         let left = PathBuf::from("index.html");
         let right = page.output_fs_rel_path(&PathBuf::from("en")).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn status_test_get_basic_status() {
+        let page = PageV42::mock1_basic_page();
+        let left = "scratch".to_string();
+        let right = page.status().unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn status_should_error_if_missing() {
+        let page = PageV42::mock2_missing_id_and_status();
+        assert!(page.status().is_err());
+    }
+
+    #[test]
+    fn solo_template_list_with_found_template_and_status() {
+        let page = PageV42::mock3_custom_path();
+        let left = vec![
+            "page-templates/home-page/draft.neoj".to_string(),
+            "page-templates/home-page/done.neoj".to_string(),
+            "page-templates/post/draft.neoj".to_string(),
+            "page-templates/post/done.neoj".to_string(),
+        ];
+        let right = page.template_list();
         assert_eq!(left, right);
     }
 

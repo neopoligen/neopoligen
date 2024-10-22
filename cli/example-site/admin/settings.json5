@@ -2,6 +2,6 @@
   "base_url": "http://localhost:1989",
   "default_language": "en",
   "theme": "neopoligen-v0.1.42",
-  // todo: add this: "run_theme_tests": "yes" 
+  // todo: add this: "run_theme_tests": "no" 
 }
 

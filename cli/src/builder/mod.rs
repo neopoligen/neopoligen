@@ -949,7 +949,6 @@ impl Builder {
             "<!-- EXPECTED_OUTPUT -->".to_string(),
         )
         .unwrap();
-
         for (_, page) in self.payloads.iter_mut() {
             if let Some(template) = page.template_list.iter().find_map(|name| {
                 if let Ok(tmpl) = env.get_template(name) {

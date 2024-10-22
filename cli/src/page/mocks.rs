@@ -14,7 +14,7 @@ Mock 1 Basic Page
 
 -- pagedata
 -- id: mock1_basic_page
--- status: published "#
+-- status: scratch "#
                 .to_string(),
             fs_path: PathBuf::from("not/a/real/path.neo"),
         };
@@ -44,10 +44,12 @@ Mock 2 Missing pagedata id and status
             ast: None,
             raw_source: r#"-- title
 
-Mock 2 Missing pagedata id and status
+Mock 3
 
 -- pagedata
--- id: mock3_custom_path
+-- id: mock3_test
+-- template: home-page
+-- status: draft 
 -- path: /index.html"#
                 .to_string(),
             fs_path: PathBuf::from("not/a/real/path.neo"),
