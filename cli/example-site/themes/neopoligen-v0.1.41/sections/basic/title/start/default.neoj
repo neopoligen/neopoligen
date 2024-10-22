@@ -1,4 +1,5 @@
 [!- import "helpers/theme.neoj" as theme -!]
 <section>
-  [!- include "subsections/all-content-blocks.neoj" -!]
+<h1>[!- include "subsections/just-one-block.neoj" -!]</h1>
+[!- include "subsections/skip-one-block.neoj" -!]
 
