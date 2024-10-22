@@ -89,7 +89,11 @@ pub enum SectionKind {
 
 impl Section {
     pub fn bounds(&self) -> Result<Value, Error> {
-        Ok(Value::from("bounds"))
+        match self.bounds {
+            SectionBounds::End => Ok(Value::from("end")),
+            SectionBounds::Full => Ok(Value::from("full")),
+            SectionBounds::Start => Ok(Value::from("start")),
+        }
     }
 
     // // DEPRECATED: I think this isn't needed and can be
