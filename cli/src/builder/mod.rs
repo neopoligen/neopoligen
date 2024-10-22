@@ -50,7 +50,12 @@ impl BuilderV42 {
         );
         let _ = &self.templates.insert(
             "sections/basic/neo-theme-test/start/default.neoj".to_string(),
-            r#"<!-- START_THEME_TEST -->"#.to_string(),
+            r#"
+[!- import "helpers/theme.neoj" as theme -!]
+<!-- START_THEME_TEST -->
+[!- include "subsections/all-blocks.neoj" -!]
+"#
+            .to_string(),
         );
         let _ = &self.templates.insert(
             "sections/basic/neo-theme-test/end/default.neoj".to_string(),
@@ -180,12 +185,12 @@ impl BuilderV42 {
         Ok(())
     }
 
-    #[instrument(skip(self, site_config))]
-    pub fn make_asts(&mut self, site_config: &SiteConfigV42) -> Result<()> {
+    #[instrument(skip(self))]
+    pub fn make_asts(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating ASTs");
         self.raw_pages
             .iter_mut()
-            .for_each(|p| match p.generate_ast(site_config) {
+            .for_each(|p| match p.generate_ast(&self.site_config) {
                 Ok(()) => (),
                 Err(e) => {
                     event!(Level::ERROR, "Error in make_asts: {}", &e);
@@ -213,9 +218,7 @@ impl BuilderV42 {
         self.templates.iter().for_each(|(k, v)| {
             let _ = env.add_template_owned(k, v);
         });
-
         let site_clone = Value::from_object(self.site.clone().unwrap());
-
         self.site
             .as_ref()
             .unwrap()
@@ -292,7 +295,6 @@ impl BuilderV42 {
                     });
                 }
             });
-
         Ok(())
     }
 
@@ -335,15 +337,14 @@ impl BuilderV42 {
         self.templates.iter().for_each(|(k, v)| {
             let _ = env.add_template_owned(k, v);
         });
-
         let site_clone = Value::from_object(self.site.clone().unwrap());
-
         self.site
             .as_ref()
             .unwrap()
             .pages
             .iter()
             .for_each(|(id, page)| {
+                //dbg!(&page);
                 // let base_rel_path = PathBuf::from(self.site_config.default_language().unwrap());
                 // let file_rel_path = page.output_fs_rel_path(&base_rel_path);
                 // let absolute_output_path = &self
