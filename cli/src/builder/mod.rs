@@ -292,6 +292,7 @@ impl BuilderV42 {
                     });
                 }
             });
+
         Ok(())
     }
 
@@ -334,43 +335,88 @@ impl BuilderV42 {
         self.templates.iter().for_each(|(k, v)| {
             let _ = env.add_template_owned(k, v);
         });
-        // Override the template used by default:
-        env.add_template_owned(
-            "page-templates/post/done.neoj",
-            r#"[!- import "helpers/theme.neoj" as theme -!]
-[!- for section in page.sections() -!]
-[@- theme.output_section(site, page, section) -@]
-[!- endfor -!]"#
-                .to_string(),
-        )
-        .unwrap();
-        env.add_template_owned(
-            "sections/basic/neo-theme-test/start/default.neoj",
-            r#"<!-- START_THEME_TEST -->"#.to_string(),
-        )
-        .unwrap();
-        env.add_template_owned(
-            "sections/basic/neo-theme-test/end/default.neoj",
-            r#"<!-- END_THEME_TEST -->"#.to_string(),
-        )
-        .unwrap();
-        env.add_template_owned(
-            "sections/raw/neo-expected-output/start/default.neoj",
-            r#"[! import "helpers/theme.neoj" as theme !]
-<!-- EXPECTED_OUTPUT -->
-[@ section.text @]
-[! for child in section.children !]
-[@ theme.output_section("", "", child) @]
-[! endfor !]
-"#
-            .to_string(),
-        )
-        .unwrap();
-        env.add_template_owned(
-            "sections/raw/neo-expected-output/end/default.neoj",
-            "<!-- EXPECTED_OUTPUT -->".to_string(),
-        )
-        .unwrap();
+
+        let site_clone = Value::from_object(self.site.clone().unwrap());
+
+        self.site
+            .as_ref()
+            .unwrap()
+            .pages
+            .iter()
+            .for_each(|(id, page)| {
+                // let base_rel_path = PathBuf::from(self.site_config.default_language().unwrap());
+                // let file_rel_path = page.output_fs_rel_path(&base_rel_path);
+                // let absolute_output_path = &self
+                //     .site_config
+                //     .project_dir()
+                //     .join(&self.site_config.output_directory)
+                //     .join(file_rel_path.unwrap());
+
+                if let Some(template) = page.template_list().iter().find_map(|name| {
+                    if let Ok(tmpl) = env.get_template(name) {
+                        Some(tmpl)
+                    } else {
+                        None
+                    }
+                }) {
+                    match template.render(context!(
+                        site => &site_clone,
+                        page => Value::from_object(page.clone())
+                    )) {
+                        Ok(output) => {
+                            dbg!(&output);
+
+                            //match write_file_with_mkdir(&absolute_output_path, output.as_str()) {
+                            //    Ok(()) => {
+                            //        //event!(Level::INFO, "Making file in output_pages",);
+                            //    }
+                            //    Err(e) => self.errors.push({
+                            //        event!(
+                            //            Level::ERROR,
+                            //            "Error on page output in output_pages: {}",
+                            //            absolute_output_path.display()
+                            //        );
+                            //        NeoError {
+                            //            kind: NeoErrorKind::GenericErrorWithSourcePath {
+                            //                source_path: absolute_output_path.to_path_buf(),
+                            //                msg: e,
+                            //            },
+                            //        }
+                            //    }),
+                            //}
+                        }
+                        Err(e) => {
+                            event!(
+                                Level::ERROR,
+                                "Error on page output in output_pages: {}",
+                                page.fs_path.display()
+                            );
+                            self.errors.push(NeoError {
+                                kind: NeoErrorKind::GenericErrorWithSourcePath {
+                                    source_path: page.fs_path.clone(),
+                                    msg: e.to_string(),
+                                },
+                            });
+                        }
+                    }
+                } else {
+                    event!(
+                        Level::ERROR,
+                        "Could not find template for: {} - Missing: {}",
+                        page.fs_path.display(),
+                        page.template_list().join(",")
+                    );
+                    self.errors.push(NeoError {
+                        kind: NeoErrorKind::GenericErrorWithSourcePath {
+                            source_path: page.fs_path.clone(),
+                            msg: format!(
+                                "Could not templates for page. {}",
+                                page.template_list().join(",")
+                            ),
+                        },
+                    });
+                }
+            });
 
         Ok(())
     }

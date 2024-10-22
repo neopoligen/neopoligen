@@ -133,7 +133,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             let _ = builder.prep_site(&site_config);
             let _ = builder.load_templates(&site_config);
             let _ = builder.load_theme_test_templates();
-            //  let _ = builder.test_templates(&site_config);
+            let _ = builder.test_templates(&site_config);
 
             //// Prep
             ////
