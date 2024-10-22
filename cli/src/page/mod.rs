@@ -42,16 +42,16 @@ impl PageV41 {
 }
 
 impl PageV41 {
-    pub fn dev_ping(&self, args: &[Value]) -> Value {
-        Value::from(format!("ALFA THIS IS PAGE DEV PING: {}", args[0]))
-    }
+    // pub fn dev_ping(&self, args: &[Value]) -> Value {
+    //     Value::from(format!("ALFA THIS IS PAGE DEV PING: {}", args[0]))
+    // }
 
-    pub fn dev_ping_page(&self, args: &[Value]) -> Result<Value, Error> {
-        Ok(Value::from(format!(
-            "BRAVO PAGE PING TEST PING: {}",
-            args[0]
-        )))
-    }
+    // pub fn dev_ping_page(&self, args: &[Value]) -> Result<Value, Error> {
+    //     Ok(Value::from(format!(
+    //         "BRAVO PAGE PING TEST PING: {}",
+    //         args[0]
+    //     )))
+    // }
 
     pub fn generate_ast(&mut self, site_config: &SiteConfigV41) -> Result<(), NeoError> {
         match parse_ast(&self.raw_source, site_config.sections.clone()) {
@@ -63,12 +63,12 @@ impl PageV41 {
         }
     }
 
-    // TODO: Make return Value
-    pub fn id(&self) -> Result<String, NeoError> {
-        Ok("dev-alfa".to_string())
-    }
+    // // TODO: Make return Value
+    // pub fn id(&self) -> Result<String, NeoError> {
+    //     Ok("dev-alfa".to_string())
+    // }
 
-    pub fn id_raw(&self) -> Result<String, NeoError> {
+    pub fn id(&self) -> Result<String, NeoError> {
         match &self.ast {
             Some(sections) => {
                 let tmp = sections
@@ -108,7 +108,7 @@ impl PageV41 {
     pub fn output_fs_rel_path(&self, base_rel_path: &PathBuf) -> PathBuf {
         // TODO: handle override paths from metadata
         let mut path = base_rel_path.clone();
-        path = path.join(self.id_raw().unwrap());
+        path = path.join(self.id().unwrap());
         path = path.join("index.html");
         path
     }
@@ -123,10 +123,10 @@ impl Object for PageV41 {
         self: &Arc<PageV41>,
         _state: &minijinja::State,
         name: &str,
-        args: &[Value],
+        _args: &[Value],
     ) -> Result<Value, Error> {
         match name {
-            "dev_ping_page" => self.dev_ping_page(args),
+            // "dev_ping_page" => self.dev_ping_page(args),
             _ => Ok(Value::from("")),
         }
     }
@@ -141,7 +141,7 @@ mod test {
     fn id_test_get_basic_id() {
         let page = PageV41::mock1_basic_page();
         let left = "mock1_basic_page".to_string();
-        let right = page.id_raw().unwrap();
+        let right = page.id().unwrap();
         assert_eq!(left, right);
     }
 

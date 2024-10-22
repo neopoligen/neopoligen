@@ -228,7 +228,7 @@ impl BuilderV41 {
             config: site_config.clone(),
             pages: BTreeMap::new(),
         };
-        self.raw_pages.iter().for_each(|p| match p.id_raw() {
+        self.raw_pages.iter().for_each(|p| match p.id() {
             Ok(id) => {
                 site.pages.insert(id, p.clone());
                 ()

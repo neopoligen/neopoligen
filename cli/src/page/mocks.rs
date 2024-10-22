@@ -18,7 +18,7 @@ Mock 1 Basic Page
                 .to_string(),
             fs_path: PathBuf::from("not/a/real/path.neo"),
         };
-        let _ = page.generate_ast(&site_config);
+        page.generate_ast(&site_config).unwrap();
         page
     }
 }
