@@ -358,7 +358,6 @@ impl BuilderV42 {
                             tests.iter().skip(1).for_each(|t| {
                                 let parts =
                                     t.split("<!-- EXPECTED_OUTPUT -->").collect::<Vec<&str>>();
-                                // dbg!(&parts);
                                 if parts.len() == 3 {
                                     let got = format_html_for_theme_test_display(parts[0]);
                                     let expected = format_html_for_theme_test_display(parts[1]);

@@ -135,6 +135,13 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             let _ = builder.load_theme_test_templates();
             let _ = builder.test_templates(&site_config);
 
+            // Errors
+            if builder.errors.len() > 0 {
+                event!(Level::ERROR, "Total Errors: {}", builder.errors.len());
+            } else {
+                event!(Level::INFO, "No Errors Found");
+            }
+
             //// Prep
             ////
             //let _ = builder.prep_output_dirs();
@@ -157,14 +164,6 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
 
             // Other Files
             // let _ = builder.deploy_theme_files();
-
-            // // Errors
-            // builder.tmp_output_errors().unwrap();
-            // if builder.errors.len() > 0 {
-            //     event!(Level::ERROR, "Total Errors: {}", builder.errors.len());
-            // } else {
-            //     event!(Level::INFO, "No Errors Found");
-            // }
 
             // builder.todo("update_file_cache");
             // builder.todo("generate_site_object");
