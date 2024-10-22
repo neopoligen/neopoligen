@@ -29,6 +29,8 @@ pub fn checklist_item_full<'a>(
     Ok((
         source,
         Section {
+            attr_list: vec![],
+            flag_list: vec![],
             attrs: vec![],
             bounds: SectionBounds::Full,
             kind: SectionKind::ChecklistItem {
@@ -57,6 +59,8 @@ pub fn checklist_item_start_end<'a>(
     Ok((
         source,
         Section {
+            attr_list: vec![],
+            flag_list: vec![],
             attrs: vec![],
             bounds: SectionBounds::Full,
             kind: SectionKind::ChecklistItem {
@@ -82,6 +86,8 @@ mod test {
         let left = (
             "",
             Section {
+                attr_list: vec![],
+                flag_list: vec![],
                 attrs: vec![],
                 bounds: SectionBounds::Full,
                 kind: SectionKind::ChecklistItem {
@@ -89,6 +95,8 @@ mod test {
                     checked_string: None,
                     children: {
                         vec![Section {
+                            attr_list: vec![],
+                            flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::Full,
                             kind: SectionKind::Block {
@@ -116,6 +124,8 @@ mod test {
         let left = (
             "",
             Section {
+                attr_list: vec![],
+                flag_list: vec![],
                 attrs: vec![],
                 bounds: SectionBounds::Full,
                 kind: SectionKind::ChecklistItem {
@@ -123,6 +133,8 @@ mod test {
                     checked_string: Some("x".to_string()),
                     children: {
                         vec![Section {
+                            attr_list: vec![],
+                            flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::Full,
                             kind: SectionKind::Block {

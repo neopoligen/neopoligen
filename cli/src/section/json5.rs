@@ -13,6 +13,8 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
+// TODO: Make json5_section_start and json5_section_end
+
 pub fn json5_section_full<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
@@ -37,6 +39,8 @@ pub fn json5_section_full<'a>(
     Ok((
         source,
         Section {
+            attr_list: vec![],
+            flag_list: vec![],
             attrs,
             bounds: SectionBounds::Full,
             kind: SectionKind::Json5 {
