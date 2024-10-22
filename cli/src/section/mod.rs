@@ -114,7 +114,17 @@ impl Section {
     }
 
     pub fn output_kind(&self) -> Result<Value, Error> {
-        Ok(Value::from("asdfasdfasdf"))
+        match &self.kind {
+            SectionKind::Unknown { .. } => Ok(Value::from("unknown")),
+            SectionKind::List { .. } => Ok(Value::from("list")),
+            SectionKind::ListItem { .. } => Ok(Value::from("list-item")),
+            SectionKind::Checklist { .. } => Ok(Value::from("checklist")),
+            SectionKind::ChecklistItem { .. } => Ok(Value::from("checklist-item")),
+            SectionKind::Basic { .. } => Ok(Value::from("basic")),
+            SectionKind::Block { .. } => Ok(Value::from("block")),
+            SectionKind::Json5 { .. } => Ok(Value::from("json5")),
+            SectionKind::Raw { .. } => Ok(Value::from("raw")),
+        }
     }
 }
 
