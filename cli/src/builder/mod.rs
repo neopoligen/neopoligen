@@ -38,7 +38,7 @@ pub struct BuilderV42 {
 
 impl BuilderV42 {
     #[instrument(skip(self))]
-    pub fn add_theme_test_templates_to_config(&mut self) -> Result<()> {
+    pub fn load_theme_test_templates(&mut self) -> Result<()> {
         event!(Level::INFO, "Adding theme test templates to config");
         let _ = &self.templates.insert(
             "page-templates/post/done.neoj".to_string(),
@@ -70,6 +70,12 @@ impl BuilderV42 {
             "sections/raw/neo-expected-output/end/default.neoj".to_string(),
             "<!-- EXPECTED_OUTPUT -->".to_string(),
         );
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn add_theme_test_templates_to_config(&mut self) -> Result<()> {
+        event!(Level::INFO, "Adding theme test templates to config");
         self.site_config
             .sections
             .basic
@@ -104,7 +110,6 @@ impl BuilderV42 {
                 }
             }
         }
-
         Ok(())
     }
 
