@@ -63,11 +63,6 @@ impl PageV41 {
         }
     }
 
-    // // TODO: Make return Value
-    // pub fn id(&self) -> Result<String, NeoError> {
-    //     Ok("dev-alfa".to_string())
-    // }
-
     pub fn id(&self) -> Result<String, NeoError> {
         match &self.ast {
             Some(sections) => {
@@ -113,8 +108,51 @@ impl PageV41 {
         path
     }
 
+    pub fn status(&self) -> Result<String, NeoError> {
+        match &self.ast {
+            Some(sections) => {
+                let tmp = sections
+                    .iter()
+                    .find_map(|section| match section.r#type.as_str() {
+                        "pagedata" => Some(section.attrs.iter().find_map(|attr| match attr {
+                            SectionAttr { kind, .. } => match kind {
+                                SectionAttrKind::KeyValueSpans { key, spans } => match key.as_str()
+                                {
+                                    "status" => Some(Ok::<String, NeoError>(
+                                        flatten_spans(spans).trim().to_string(),
+                                    )),
+                                    _ => None,
+                                },
+                                _ => None,
+                            },
+                        })),
+                        _ => None,
+                    });
+                match tmp {
+                    Some(id) => id.unwrap(),
+                    None => Err(NeoError {
+                        kind: NeoErrorKind::GenericErrorWithSourcePath {
+                            source_path: self.fs_path.clone(),
+                            msg: "Could not get id from pagedata".to_string(),
+                        },
+                    }),
+                }
+            }
+            None => Err(NeoError {
+                kind: NeoErrorKind::GenericErrorWithSourcePath {
+                    source_path: self.fs_path.clone(),
+                    msg: "Could not get id from pagedata".to_string(),
+                },
+            }),
+        }
+    }
+
     pub fn template_list(&self) -> Vec<String> {
-        vec!["page-templates/post/published.neoj".to_string()]
+        if let Ok(status) = self.status() {
+            vec![format!("page-templates/post/{}.neoj", status)]
+        } else {
+            vec![]
+        }
     }
 }
 
@@ -142,6 +180,14 @@ mod test {
         let page = PageV41::mock1_basic_page();
         let left = "mock1_basic_page".to_string();
         let right = page.id().unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn status_test_get_basic_status() {
+        let page = PageV41::mock1_basic_page();
+        let left = "published".to_string();
+        let right = page.status().unwrap();
         assert_eq!(left, right);
     }
 

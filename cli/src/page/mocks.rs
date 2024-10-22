@@ -14,7 +14,7 @@ Mock 1 Basic Page
 
 -- pagedata
 -- id: mock1_basic_page
--- status: published"#
+-- status: published "#
                 .to_string(),
             fs_path: PathBuf::from("not/a/real/path.neo"),
         };
