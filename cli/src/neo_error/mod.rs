@@ -1,4 +1,5 @@
 use crate::{payload_section::PayloadSection, section::Section};
+use minijinja::Value;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
@@ -57,7 +58,7 @@ pub enum NeoErrorKind {
     ThemeTestError {
         expected: String,
         got: String,
-        sections: Vec<PayloadSection>,
+        sections: Value,
         source_path: PathBuf,
     },
 }

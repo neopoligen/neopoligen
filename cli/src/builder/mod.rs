@@ -340,15 +340,6 @@ impl BuilderV42 {
             .pages
             .iter()
             .for_each(|(id, page)| {
-                //dbg!(&page);
-                // let base_rel_path = PathBuf::from(self.site_config.default_language().unwrap());
-                // let file_rel_path = page.output_fs_rel_path(&base_rel_path);
-                // let absolute_output_path = &self
-                //     .site_config
-                //     .project_dir()
-                //     .join(&self.site_config.output_directory)
-                //     .join(file_rel_path.unwrap());
-
                 if let Some(template) = page.template_list().iter().find_map(|name| {
                     if let Ok(tmpl) = env.get_template(name) {
                         Some(tmpl)
@@ -361,31 +352,36 @@ impl BuilderV42 {
                         page => Value::from_object(page.clone())
                     )) {
                         Ok(output) => {
-                            dbg!(&output);
-
-                            //match write_file_with_mkdir(&absolute_output_path, output.as_str()) {
-                            //    Ok(()) => {
-                            //        //event!(Level::INFO, "Making file in output_pages",);
-                            //    }
-                            //    Err(e) => self.errors.push({
-                            //        event!(
-                            //            Level::ERROR,
-                            //            "Error on page output in output_pages: {}",
-                            //            absolute_output_path.display()
-                            //        );
-                            //        NeoError {
-                            //            kind: NeoErrorKind::GenericErrorWithSourcePath {
-                            //                source_path: absolute_output_path.to_path_buf(),
-                            //                msg: e,
-                            //            },
-                            //        }
-                            //    }),
-                            //}
+                            let tests = output
+                                .split("<!-- START_THEME_TEST -->")
+                                .collect::<Vec<&str>>();
+                            tests.iter().skip(1).for_each(|t| {
+                                let parts =
+                                    t.split("<!-- EXPECTED_OUTPUT -->").collect::<Vec<&str>>();
+                                // dbg!(&parts);
+                                if parts.len() == 3 {
+                                    let got = format_html_for_theme_test_display(parts[0]);
+                                    let expected = format_html_for_theme_test_display(parts[1]);
+                                    let got_compare = got.replace("\n", "").replace(" ", "");
+                                    let expected_compare =
+                                        expected.replace("\n", "").replace(" ", "");
+                                    if got_compare != expected_compare {
+                                        self.errors.push(NeoError {
+                                            kind: NeoErrorKind::ThemeTestError {
+                                                expected: expected.to_string(),
+                                                got: got.to_string(),
+                                                sections: page.sections().unwrap().clone(),
+                                                source_path: page.fs_path.clone(),
+                                            },
+                                        })
+                                    }
+                                }
+                            });
                         }
                         Err(e) => {
                             event!(
                                 Level::ERROR,
-                                "Error on page output in output_pages: {}",
+                                "Error on theme test: {}",
                                 page.fs_path.display()
                             );
                             self.errors.push(NeoError {
@@ -1143,14 +1139,15 @@ impl Builder {
                                 let got_compare = got.replace("\n", "").replace(" ", "");
                                 let expected_compare = expected.replace("\n", "").replace(" ", "");
                                 if got_compare != expected_compare {
-                                    self.errors.push(NeoError {
-                                        kind: NeoErrorKind::ThemeTestError {
-                                            expected: expected.to_string(),
-                                            got: got.to_string(),
-                                            sections: page.sections.clone(),
-                                            source_path: page.source_path.as_ref().unwrap().clone(),
-                                        },
-                                    })
+
+                                    // self.errors.push(NeoError {
+                                    //     kind: NeoErrorKind::ThemeTestError {
+                                    //         expected: expected.to_string(),
+                                    //         got: got.to_string(),
+                                    //         sections: page.sections.clone(),
+                                    //         source_path: page.source_path.as_ref().unwrap().clone(),
+                                    //     },
+                                    // })
                                 }
                             }
                         });
