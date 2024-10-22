@@ -11,7 +11,7 @@ use crate::site_config::SiteConfigV41;
 use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::Value;
-use nom::Err;
+// use nom::Err;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
@@ -47,12 +47,12 @@ impl PageV41 {
     //     Value::from(format!("ALFA THIS IS PAGE DEV PING: {}", args[0]))
     // }
 
-    // pub fn dev_ping_page(&self, args: &[Value]) -> Result<Value, Error> {
-    //     Ok(Value::from(format!(
-    //         "BRAVO PAGE PING TEST PING: {}",
-    //         args[0]
-    //     )))
-    // }
+    pub fn dev_ping_page(&self, args: &[Value]) -> Result<Value, Error> {
+        Ok(Value::from(format!(
+            "BRAVO PAGE PING TEST PING: {}",
+            args[0]
+        )))
+    }
 
     pub fn generate_ast(&mut self, site_config: &SiteConfigV41) -> Result<(), NeoError> {
         match parse_ast(&self.raw_source, site_config.sections.clone()) {
@@ -191,7 +191,7 @@ impl Object for PageV41 {
         _args: &[Value],
     ) -> Result<Value, Error> {
         match name {
-            // "dev_ping_page" => self.dev_ping_page(args),
+            "id" => Ok(Value::from(self.id().unwrap())),
             _ => Ok(Value::from("")),
         }
     }

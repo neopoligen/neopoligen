@@ -24,6 +24,9 @@
     [!- block endmatter -!][!- endblock -!]
   </main>
   <footer class="wrapper-medium">
+      <pre>
+        [@ page.id() @]
+      </pre>
   </footer>
 </body>
 </html>
