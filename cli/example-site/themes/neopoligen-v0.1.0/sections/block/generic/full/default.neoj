@@ -1,2 +1,2 @@
-[! import "includes/theme.neoj" as theme !]
+[!- import "includes/theme.neoj" as theme -!]
 <p>[@- theme.output_spans(site, page_id, section.spans) -@]</p>

@@ -79,6 +79,7 @@ impl Object for Span {
         _args: &[Value],
     ) -> Result<Value, Error> {
         match name {
+            "template_list" => self.template_list(),
             _ => Ok(Value::from("")),
         }
     }
@@ -89,6 +90,22 @@ pub struct Span {
     pub attrs: Vec<SpanAttr>,
     pub kind: SpanKind,
     pub parsed_text: String,
+}
+
+impl Span {
+    pub fn kind(&self) -> Result<Value, Error> {
+        match &self.kind {
+            SpanKind::WordPart => Ok(Value::from("wordpart")),
+            _ => Ok(Value::from("unknown")),
+        }
+    }
+
+    pub fn template_list(&self) -> Result<Value, Error> {
+        Ok(Value::from_serialize::<Vec<Value>>(vec![
+            Value::from(format!("spans/{}.neoj", self.kind().unwrap())),
+            Value::from("spans/unknown.neoj"),
+        ]))
+    }
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
