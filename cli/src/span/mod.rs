@@ -53,6 +53,9 @@ use crate::span::single_lessthan::*;
 use crate::span::single_underscore::*;
 use crate::span::wordpart::*;
 use crate::span_attr::*;
+use minijinja::value::Object;
+use minijinja::Error;
+use minijinja::Value;
 use nom::branch::alt;
 use nom::character::complete::line_ending;
 use nom::character::complete::multispace0;
@@ -66,6 +69,20 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
+use std::sync::Arc;
+
+impl Object for Span {
+    fn call_method(
+        self: &Arc<Span>,
+        _state: &minijinja::State,
+        name: &str,
+        _args: &[Value],
+    ) -> Result<Value, Error> {
+        match name {
+            _ => Ok(Value::from("")),
+        }
+    }
+}
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Span {

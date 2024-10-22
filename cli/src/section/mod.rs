@@ -146,6 +146,16 @@ impl Section {
         }
     }
 
+    pub fn spans(&self) -> Result<Value, Error> {
+        Ok(Value::from_serialize::<Vec<Value>>(match &self.kind {
+            SectionKind::Block { spans } => spans
+                .iter()
+                .map(|s| Value::from_object(s.clone()))
+                .collect(),
+            _ => vec![],
+        }))
+    }
+
     pub fn template_list(&self) -> Result<Value, Error> {
         Ok(Value::from_serialize(vec![
             format!(
@@ -257,6 +267,7 @@ impl Object for Section {
             "bounds" => self.bounds(),
             "children" => self.children(),
             "kind" => self.kind(),
+            "spans" => self.spans(),
             "template_list" => self.template_list(),
             "type" => Ok(Value::from(&self.r#type)),
             _ => Ok(Value::from("")),
