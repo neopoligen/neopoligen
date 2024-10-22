@@ -124,6 +124,93 @@ impl BuilderV42 {
         };
         Ok(b)
     }
+
+    #[instrument(skip(self))]
+    pub fn tmp_output_errors(&self) -> Result<()> {
+        event!(Level::INFO, "Outputting errors");
+        let mut env = Environment::new();
+        env.set_syntax(
+            SyntaxConfig::builder()
+                .block_delimiters("[!", "!]")
+                .variable_delimiters("[@", "@]")
+                .comment_delimiters("[#", "#]")
+                .build()
+                .unwrap(),
+        );
+        env.set_debug(true);
+        env.set_lstrip_blocks(true);
+        env.set_trim_blocks(true);
+        let _ = env.add_template(
+            "genericerrorwithsourcepath",
+            include_str!("../error_templates/genericerrorwithsourcepath.neoj"),
+        );
+        let _ = env.add_template(
+            "parsererror",
+            include_str!("../error_templates/parsererror.neoj"),
+        );
+        let _ = env.add_template(
+            "themetesterror",
+            include_str!("../error_templates/themetesterror.neoj"),
+        );
+        let _ = env.add_template("_todo", include_str!("../error_templates/_todo.neoj"));
+        env.add_template_owned(
+            "tmp_status",
+            r#"
+<!DOCTYPE html>
+<html><head><style> 
+body { background-color: #111; color: #aaa; } 
+</style></head><body>
+<header><a href="/">Home</a></header>
+<h1>Status</h1>
+<h2>Errors</h2>
+<ul>
+[! for error in errors !]
+<li>
+[! include [error.kind.type, "_todo"] !]
+[#
+[! if error.kind.source_path !]<h4>Path: [@ error.kind.source_path @]</h4>[! endif !]
+[! if error.kind.rel_source_path !]<h4>File Path: [@ error.kind.rel_source_path @]</h4>[! endif !]
+[! if error.kind.type == "themetesterror" !]
+    <h2>Theme Test Error</h2>
+    <h3>Expected</h3>
+    <pre>
+    [! autoescape true !]
+    [@ error.kind.expected@]
+    [! endautoescape !]
+    </pre>
+    <h3>Got</h3>
+    <pre>
+    [! autoescape true !]
+    [@ error.kind.got @]
+    [! endautoescape !]
+    </pre>
+    <h3>Sections</h3>
+    <pre>
+    [@ error.kind.sections|tojson(true)@]
+    </pre>
+[! else !]
+    <h2>[@ error.kind.type @]</h2>
+    <pre>
+    </pre>
+[! endif !]
+#]
+</li>
+[! endfor !]
+</ul>
+<h2>Config</h2>
+<pre>[@ config|tojson(true) @]</pre>
+</body></html>
+        "#,
+        )?;
+        let tmpl = env.get_template("tmp_status")?;
+        let output = tmpl.render(context!(
+            config => Value::from_serialize(&self.site_config),
+            errors => Value::from_serialize(&self.errors)
+        ))?;
+        let status_path = self.site_config.status_dest_dir().join("index.html");
+        let _ = write_file_with_mkdir(&status_path, &output);
+        Ok(())
+    }
 }
 
 impl BuilderV42 {

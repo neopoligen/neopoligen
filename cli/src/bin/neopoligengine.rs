@@ -136,6 +136,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             let _ = builder.test_templates(&site_config);
 
             // Errors
+            builder.tmp_output_errors().unwrap();
             if builder.errors.len() > 0 {
                 event!(Level::ERROR, "Total Errors: {}", builder.errors.len());
             } else {
