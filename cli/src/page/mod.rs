@@ -319,12 +319,23 @@ mod test {
     }
 
     #[test]
-    fn solo_template_list_with_found_template_and_status() {
+    fn template_list_with_found_template_and_status() {
         let page = PageV42::mock3_custom_path();
         let left = vec![
             "page-templates/home-page/draft.neoj".to_string(),
             "page-templates/home-page/done.neoj".to_string(),
             "page-templates/post/draft.neoj".to_string(),
+            "page-templates/post/done.neoj".to_string(),
+        ];
+        let right = page.template_list();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn template_list_without_custom_template_attr() {
+        let page = PageV42::mock1_basic_page();
+        let left = vec![
+            "page-templates/post/scratch.neoj".to_string(),
             "page-templates/post/done.neoj".to_string(),
         ];
         let right = page.template_list();
