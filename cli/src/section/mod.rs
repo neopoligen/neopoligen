@@ -122,15 +122,13 @@ pub fn start_or_full_section<'a>(
         // TODO: Checklist start
         //|src| checklist_section_start(src, &sections, nest_level),
         |src| checklist_section_full(src, &sections, nest_level),
+        // TODO: Add json5 start
         |src| json5_section_full(src, &sections, nest_level),
         |src| list_section_start(src, &sections, nest_level),
         |src| list_section_full(src, &sections, nest_level),
         |src| raw_section_start(src, &sections, nest_level),
         |src| raw_section_full(src, &sections, nest_level),
-        // TODO: JSON5 full
-        // TODO: JSON5 start
-        // Reminder: do unknown last since it slurps
-        // everything it can
+        // Reminder: do unknown last since it slurps everything
         |src| unknown_section_start(src, &sections, nest_level),
         |src| unknown_section_full(src, &sections, nest_level),
     ))

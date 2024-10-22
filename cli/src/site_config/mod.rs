@@ -103,7 +103,8 @@ impl SiteConfigV41 {
     #[instrument(skip(self))]
     pub fn load_sections(&mut self) -> Result<(), NeoError> {
         event!(Level::INFO, "Loading Theme Sections");
-        let section_list: Vec<&str> = vec![
+        let section_root = self.theme_dir().join("sections");
+        let section_categories: Vec<&str> = vec![
             "basic",
             "block",
             "checklist",
@@ -113,14 +114,41 @@ impl SiteConfigV41 {
             "list_item",
             "raw",
         ];
-        section_list.iter().for_each(|item| {
-            dbg!(item);
-            ()
+        section_categories.iter().for_each(|category| {
+            let category_dir = section_root.join(category);
+            if let Ok(section_dirs) = get_dirs_in_dir(&category_dir) {
+                section_dirs.iter().for_each(|section_dir| {
+                    let section_name = section_dir
+                        .file_stem()
+                        .unwrap()
+                        .to_string_lossy()
+                        .to_string();
+                    if !section_name.starts_with(".") {
+                        if category.eq_ignore_ascii_case("basic") {
+                            self.sections.basic.push(section_name.clone());
+                        } else if category.eq_ignore_ascii_case("block") {
+                            self.sections.block.push(section_name.clone());
+                        } else if category.eq_ignore_ascii_case("checklist") {
+                            self.sections.checklist.push(section_name.clone());
+                        } else if category.eq_ignore_ascii_case("checklist-item") {
+                            self.sections.checklist_item.push(section_name.clone());
+                        } else if category.eq_ignore_ascii_case("json5") {
+                            self.sections.json5.push(section_name.clone());
+                        } else if category.eq_ignore_ascii_case("list") {
+                            self.sections.list.push(section_name.clone());
+                        } else if category.eq_ignore_ascii_case("list-item") {
+                            self.sections.list_item.push(section_name.clone());
+                        } else if category.eq_ignore_ascii_case("raw") {
+                            self.sections.raw.push(section_name.clone());
+                        }
+                    }
+                })
+            }
         });
-
         Ok(())
     }
 }
+
 impl SiteConfigV41 {
     pub fn content_source_dir(&self) -> PathBuf {
         self.project_dir().join("content")

@@ -140,12 +140,6 @@ impl BuilderV41 {
             let _ = env.add_template_owned(k, v);
         });
 
-        // let _ = env.add_template_owned(
-        //     "dev-test",
-        //     "HERE: [@ page.dev_ping_page('yo') @]".to_string(),
-        //     // "HERE: [@ site.ping('yo') @]".to_string(),
-        // );
-
         let site_clone = Value::from_object(self.site.clone().unwrap());
 
         self.site

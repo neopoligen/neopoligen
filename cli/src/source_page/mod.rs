@@ -91,6 +91,7 @@ impl SourcePage {
             source_path: Some(PathBuf::from("/test/mocks/content/mock-file.neo")),
             updated: None,
         };
+        // TODO: Add error handling here.
         let _ = p.generate_ast();
         p
     }

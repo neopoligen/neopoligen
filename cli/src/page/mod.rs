@@ -114,7 +114,7 @@ impl PageV41 {
     }
 
     pub fn template_list(&self) -> Vec<String> {
-        vec!["templates/post/published.neoj".to_string()]
+        vec!["page-templates/post/published.neoj".to_string()]
     }
 }
 
