@@ -137,13 +137,16 @@ impl Section {
     }
 
     pub fn template_list(&self) -> Result<Value, Error> {
-        Ok(Value::from_serialize(vec![format!(
-            "sections/{}/{}/{}/{}.neoj",
-            &self.kind().unwrap(),
-            &self.r#type,
-            &self.bounds().unwrap(),
-            "default"
-        )]))
+        Ok(Value::from_serialize(vec![
+            format!(
+                "sections/{}/{}/{}/{}.neoj",
+                &self.kind().unwrap(),
+                &self.r#type,
+                &self.bounds().unwrap(),
+                "default"
+            ),
+            "sections/unknown/generic/full/default.neoj".to_string(),
+        ]))
     }
 
     //
@@ -263,6 +266,7 @@ mod test {
         let left = section.template_list().unwrap();
         let right = Value::from_serialize::<Vec<String>>(vec![
             "sections/basic/title/full/default.neoj".to_string(),
+            "sections/unknown/generic/full/default.neoj".to_string(),
         ]);
         assert_eq!(left, right);
     }
