@@ -16,7 +16,7 @@ use crate::section::list::*;
 use crate::section::raw::*;
 use crate::section::unknown::*;
 use crate::section_attr::SectionAttr;
-use crate::section_attr::SectionAttrKind;
+// use crate::section_attr::SectionAttrKind;
 use crate::site_config::ConfigSections;
 use crate::span::*;
 use minijinja::value::Object;
@@ -88,42 +88,47 @@ pub enum SectionKind {
 }
 
 impl Section {
-    // DEPRECATED: I think this isn't needed and can be
-    // removed when PayloadSection is working and pulling
-    // data for itself
-    pub fn get_attr(&self, target: &str) -> Option<String> {
-        let attrs = self
-            .attrs
-            .iter()
-            .filter_map(|attr| match &attr.kind {
-                SectionAttrKind::KeyValue { key, value } => {
-                    if key.as_str() == target {
-                        Some(value.clone())
-                    } else {
-                        None
-                    }
-                }
-                _ => None,
-            })
-            .collect::<Vec<String>>();
-        if attrs.len() > 0 {
-            Some(attrs.join(" "))
-        } else {
-            None
-        }
+    pub fn bounds(&self) -> Result<Value, Error> {
+        Ok(Value::from("bounds"))
     }
 
-    pub fn output_kind(&self) -> Result<Value, Error> {
+    // // DEPRECATED: I think this isn't needed and can be
+    // // removed when PayloadSection is working and pulling
+    // // data for itself. And actually, I don't think it's
+    // // needed when the move to V41 is done
+    // pub fn get_attr(&self, target: &str) -> Option<String> {
+    //     let attrs = self
+    //         .attrs
+    //         .iter()
+    //         .filter_map(|attr| match &attr.kind {
+    //             SectionAttrKind::KeyValue { key, value } => {
+    //                 if key.as_str() == target {
+    //                     Some(value.clone())
+    //                 } else {
+    //                     None
+    //                 }
+    //             }
+    //             _ => None,
+    //         })
+    //         .collect::<Vec<String>>();
+    //     if attrs.len() > 0 {
+    //         Some(attrs.join(" "))
+    //     } else {
+    //         None
+    //     }
+    // }
+
+    pub fn kind(&self) -> Result<Value, Error> {
         match &self.kind {
-            SectionKind::Unknown { .. } => Ok(Value::from("unknown")),
-            SectionKind::List { .. } => Ok(Value::from("list")),
-            SectionKind::ListItem { .. } => Ok(Value::from("list-item")),
-            SectionKind::Checklist { .. } => Ok(Value::from("checklist")),
-            SectionKind::ChecklistItem { .. } => Ok(Value::from("checklist-item")),
             SectionKind::Basic { .. } => Ok(Value::from("basic")),
             SectionKind::Block { .. } => Ok(Value::from("block")),
+            SectionKind::Checklist { .. } => Ok(Value::from("checklist")),
+            SectionKind::ChecklistItem { .. } => Ok(Value::from("checklist-item")),
             SectionKind::Json5 { .. } => Ok(Value::from("json5")),
+            SectionKind::List { .. } => Ok(Value::from("list")),
+            SectionKind::ListItem { .. } => Ok(Value::from("list-item")),
             SectionKind::Raw { .. } => Ok(Value::from("raw")),
+            SectionKind::Unknown { .. } => Ok(Value::from("unknown")),
         }
     }
 }
@@ -220,7 +225,8 @@ impl Object for Section {
         _args: &[Value],
     ) -> Result<Value, Error> {
         match name {
-            "kind" => self.output_kind(),
+            "bounds" => self.bounds(),
+            "kind" => self.kind(),
             "type" => Ok(Value::from(&self.r#type)),
             _ => Ok(Value::from("")),
         }

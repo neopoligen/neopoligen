@@ -42,6 +42,10 @@ impl PageV41 {
 }
 
 impl PageV41 {
+    pub fn ast(&self) -> Result<Value, Error> {
+        Ok(Value::from_serialize(&self.ast))
+    }
+
     pub fn generate_ast(&mut self, site_config: &SiteConfigV41) -> Result<(), NeoError> {
         match parse_ast(&self.raw_source, site_config.sections.clone()) {
             Ok(ast) => {
@@ -250,6 +254,7 @@ impl Object for PageV41 {
         _args: &[Value],
     ) -> Result<Value, Error> {
         match name {
+            "ast" => self.ast(),
             "id" => Ok(Value::from(self.id().unwrap())),
             "sections" => self.sections(),
             _ => Ok(Value::from("")),

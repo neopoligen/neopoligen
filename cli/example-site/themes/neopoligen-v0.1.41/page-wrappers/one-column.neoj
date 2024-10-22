@@ -25,6 +25,7 @@
   <footer class="wrapper-medium">
       <pre>
         Debug: page id: [@ page.id() @]
+        [@ page.ast()|tojson(true) @]
       </pre>
   </footer>
 </body>

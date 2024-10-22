@@ -1,12 +1,11 @@
 [!- extends "page-wrappers/one-column.neoj" -!]
 
 [!- block body -!]
-Ping
-[@ page.sections() @]
 [! for section in page.sections() !]
 <div>
 [@ section.type() @] -
-[@ section.kind() @] 
+[@ section.kind() @] - 
+[@ section.bounds() @] 
 </div>
 [! endfor !]
 [!- endblock -!]
