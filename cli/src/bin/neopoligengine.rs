@@ -127,8 +127,8 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             let _ = builder.output_pages();
 
             // // Theme Test
-            builder.add_theme_test_templates_to_config();
-            // builder.load_theme_test_pages();
+            let _ = builder.add_theme_test_templates_to_config();
+            let _ = builder.load_theme_test_pages();
             // // let _ = builder.make_asts(&site_config);
             // let _ = builder.prep_site(&site_config);
             // let _ = builder.load_templates(&site_config);

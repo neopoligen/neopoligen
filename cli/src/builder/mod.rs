@@ -38,8 +38,7 @@ pub struct BuilderV42 {
 
 impl BuilderV42 {
     #[instrument(skip(self))]
-    pub fn add_theme_test_templates_to_config(&mut self) {
-        // TODO: maybe make this return results and errors.
+    pub fn add_theme_test_templates_to_config(&mut self) -> Result<()> {
         event!(Level::INFO, "Adding theme test templates to config");
         let _ = &self.templates.insert(
             "page-templates/post/done.neoj".to_string(),
@@ -79,6 +78,34 @@ impl BuilderV42 {
             .sections
             .raw
             .push("neo-expected-output".to_string());
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn load_theme_test_pages(&mut self) -> Result<()> {
+        event!(Level::INFO, "Loading Theme Test Pages");
+        self.raw_pages = vec![];
+        for entry in WalkDir::new(&self.site_config.theme_dir()) {
+            let path = entry?.path().to_path_buf();
+            if path.is_file() {
+                if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
+                    if ext.to_ascii_lowercase() == "neo" {
+                        match PageV42::new_from_fs_path(&path) {
+                            Ok(p) => {
+                                // event![Level::INFO, "Added raw page: {}", path.display()];
+                                self.raw_pages.push(p)
+                            }
+                            Err(e) => {
+                                event![Level::ERROR, "Error loading raw page: {}", path.display()];
+                                self.errors.push(e)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Ok(())
     }
 
     pub fn new_from_site_config(site_config: &SiteConfigV42) -> Result<BuilderV42, NeoError> {
