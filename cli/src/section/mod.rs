@@ -23,7 +23,7 @@ use crate::site_config::ConfigSections;
 use crate::span::*;
 use minijinja::value::Object;
 use minijinja::Error;
-use minijinja::ErrorKind;
+// use minijinja::ErrorKind;
 use minijinja::Value;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
@@ -93,9 +93,17 @@ pub enum SectionKind {
 }
 
 impl Section {
-    // TODO: Hoist the attrs and flags from the settings
-    pub fn attr_flag_list(&self, _args: &[Value]) -> Result<Value, Error> {
-        Ok(Value::from(r#"class="unknown-section""#))
+    // TODO: Hoist attrs and flags from the settings
+    pub fn attr_flag_list(&self, args: &[Value]) -> Result<Value, Error> {
+        let mut class_list = self.classes();
+        for i in 0..args.len() {
+            class_list.push(args[i].to_string())
+        }
+        if class_list.len() > 0 {
+            Ok(Value::from(format!(r#"class="{}""#, class_list.join(" "))))
+        } else {
+            Ok(Value::from(""))
+        }
     }
 
     pub fn bounds(&self) -> Result<Value, Error> {
@@ -120,6 +128,9 @@ impl Section {
         }))
     }
 
+    // TOOD: Accept arguments for extra classes
+    // to add (and to create the class attr if
+    // it doesn't already exist)
     pub fn class_attr(&self) -> Result<Value, Error> {
         if self.classes().len() > 0 {
             Ok(Value::from(format!(
@@ -326,6 +337,50 @@ mod test {
     //   use crate::site_config::SiteConfig;
     use pretty_assertions::assert_eq;
     //
+    // TODO:
+    // - bounds test
+
+    #[test]
+    fn attr_flag_list_none() {
+        let section = Section::mock1_basic_title_section_no_attrs();
+        let left = section.attr_flag_list(&[]).unwrap();
+        let right = Value::from("");
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn attr_flag_list_passing_value() {
+        let section = Section::mock1_basic_title_section_no_attrs();
+        let left = section.attr_flag_list(&["ping-test".into()]).unwrap();
+        let right = Value::from(r#"class="ping-test""#);
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn attr_flag_list_from_attribute() {
+        let section = Section::mock4_youtube_with_tags_and_classes();
+        let left = section.attr_flag_list(&[]).unwrap();
+        let right = Value::from(r#"class="alfa-class""#);
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn attr_flag_list_from_attribute_and_passed_value() {
+        let section = Section::mock4_youtube_with_tags_and_classes();
+        let left = section.attr_flag_list(&["bravo-class".into()]).unwrap();
+        let right = Value::from(r#"class="alfa-class bravo-class""#);
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_attr_flag_list_passing_a_class() {
+        let section = Section::mock1_basic_title_section_no_attrs();
+        let left = section
+            .attr_flag_list(&["foxtrot-test-class".into()])
+            .unwrap();
+        let right = Value::from(r#"class="foxtrot-test-class""#);
+        assert_eq!(left, right);
+    }
 
     #[test]
     fn class_attr_none() {
