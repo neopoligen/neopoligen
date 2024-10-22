@@ -66,10 +66,11 @@ impl BuilderV42 {
             r#"[! import "helpers/theme.neoj" as theme !]
         <!-- EXPECTED_OUTPUT -->
         [@ section.text @]
-        [! for child in section.children !]
+        [! for child in section.children() !]
         [@ theme.output_section("", "", child) @]
-        [! endfor !]"#
-                .to_string(),
+        [! endfor !]
+        "#
+            .to_string(),
         );
         let _ = &self.templates.insert(
             "sections/raw/neo-expected-output/end/default.neoj".to_string(),
