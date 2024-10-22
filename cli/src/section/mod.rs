@@ -120,6 +120,30 @@ impl Section {
                 .iter()
                 .map(|c| Value::from_object(c.clone()))
                 .collect(),
+            SectionKind::Checklist { children } => children
+                .iter()
+                .map(|c| Value::from_object(c.clone()))
+                .collect(),
+            SectionKind::ChecklistItem { children, .. } => children
+                .iter()
+                .map(|c| Value::from_object(c.clone()))
+                .collect(),
+            SectionKind::Json5 { children, .. } => children
+                .iter()
+                .map(|c| Value::from_object(c.clone()))
+                .collect(),
+            SectionKind::List { children } => children
+                .iter()
+                .map(|c| Value::from_object(c.clone()))
+                .collect(),
+            SectionKind::ListItem { children } => children
+                .iter()
+                .map(|c| Value::from_object(c.clone()))
+                .collect(),
+            SectionKind::Raw { children, .. } => children
+                .iter()
+                .map(|c| Value::from_object(c.clone()))
+                .collect(),
             SectionKind::Unknown { children } => children
                 .iter()
                 .map(|c| Value::from_object(c.clone()))
@@ -221,6 +245,13 @@ impl Section {
             ),
             "sections/unknown/generic/full/default.neoj".to_string(),
         ]))
+    }
+
+    pub fn text(&self) -> Result<Value, Error> {
+        match &self.kind {
+            SectionKind::Raw { text, .. } => Ok(Value::from(text.clone().unwrap())),
+            _ => Ok(Value::from("")),
+        }
     }
 
     //
@@ -325,6 +356,7 @@ impl Object for Section {
             "kind" => self.kind(),
             "spans" => self.spans(),
             "template_list" => self.template_list(),
+            "text" => self.text(),
             "type" => Ok(Value::from(&self.r#type)),
             _ => Ok(Value::from("")),
         }
