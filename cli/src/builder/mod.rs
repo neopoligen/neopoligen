@@ -64,13 +64,8 @@ impl BuilderV42 {
         let _ = &self.templates.insert(
             "sections/raw/neo-expected-output/start/default.neoj".to_string(),
             r#"[! import "helpers/theme.neoj" as theme !]
-        <!-- EXPECTED_OUTPUT -->
-        [@ section.text @]
-        [! for child in section.children() !]
-        [@ theme.output_section("", "", child) @]
-        [! endfor !]
-        "#
-            .to_string(),
+        <!-- EXPECTED_OUTPUT -->[@ section.text() @][!- include "subsections/all-blocks.neoj" -!]"#
+                .to_string(),
         );
         let _ = &self.templates.insert(
             "sections/raw/neo-expected-output/end/default.neoj".to_string(),
