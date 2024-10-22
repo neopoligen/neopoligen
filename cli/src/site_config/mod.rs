@@ -1,5 +1,6 @@
 pub mod mocks;
 
+use crate::config_lists::ConfigLists;
 use crate::engine_config::EngineConfig;
 use crate::helpers::get_dirs_in_dir;
 use crate::neo_error::NeoError;
@@ -23,6 +24,7 @@ pub struct SiteConfigV41 {
     //pub theme_options: Option<serde_json::Value>,
     #[serde(default = "empty_sections_v41")]
     pub sections: ConfigSections,
+    pub attr_flag_lists: Option<ConfigLists>,
     //
     // Reminder: ``project_root`` isn't expected to come from the
     // JSON file. The process sets it internally

@@ -1,5 +1,6 @@
 pub mod ast;
 pub mod builder;
+pub mod config_lists;
 pub mod engine_config;
 pub mod file_watcher;
 pub mod helpers;

@@ -3,7 +3,7 @@
 // use std::str::FromStr;
 
 //use crate::sections::*;
-use crate::site_config::*;
+use crate::{config_lists::ConfigList, site_config::*};
 use std::collections::BTreeMap;
 //use serde_json::Value;
 // use std::path::PathBuf;
@@ -62,6 +62,10 @@ impl SiteConfigV41 {
             //     "rel".to_string(),
             // ],
             sections,
+
+            attr_flag_lists: Some(ConfigLists {
+                basic: BTreeMap::new(),
+            }),
 
             // span_attrs: vec![
             //     "alt".to_string(),
