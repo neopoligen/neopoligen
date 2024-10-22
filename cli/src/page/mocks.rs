@@ -28,7 +28,7 @@ Mock 1 Basic Page
             ast: None,
             raw_source: r#"-- title
 
-Mock 1 Basic Page
+Mock 2 Missing pagedata id and status
 
 -- pagedata"#
                 .to_string(),
