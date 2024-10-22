@@ -19,6 +19,8 @@ use crate::section_attr::SectionAttr;
 use crate::section_attr::SectionAttrKind;
 use crate::site_config::ConfigSections;
 use crate::span::*;
+use minijinja::value::Object;
+use minijinja::Error;
 use minijinja::Value;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
@@ -31,6 +33,7 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Section {
@@ -108,6 +111,10 @@ impl Section {
         } else {
             None
         }
+    }
+
+    pub fn output_kind(&self) -> Result<Value, Error> {
+        Ok(Value::from("asdfasdfasdf"))
     }
 }
 
@@ -194,6 +201,21 @@ pub fn tag_finder_full<'a>(
 //         })?;
 //     Ok((source, result))
 // }
+
+impl Object for Section {
+    fn call_method(
+        self: &Arc<Section>,
+        _state: &minijinja::State,
+        name: &str,
+        _args: &[Value],
+    ) -> Result<Value, Error> {
+        match name {
+            "kind" => self.output_kind(),
+            "type" => Ok(Value::from(&self.r#type)),
+            _ => Ok(Value::from("")),
+        }
+    }
+}
 
 #[cfg(test)]
 mod test {

@@ -166,6 +166,17 @@ impl PageV41 {
         }
     }
 
+    pub fn sections(&self) -> Result<Value, Error> {
+        Ok(Value::from_serialize(
+            self.ast
+                .clone()
+                .unwrap()
+                .iter()
+                .map(|s| Value::from_object(s.clone()))
+                .collect::<Value>(),
+        ))
+    }
+
     // NOTE: This feels really hacky. TODO is look at cleaning
     // it up at some point.
     pub fn status(&self) -> Result<String, NeoError> {
@@ -240,6 +251,7 @@ impl Object for PageV41 {
     ) -> Result<Value, Error> {
         match name {
             "id" => Ok(Value::from(self.id().unwrap())),
+            "sections" => self.sections(),
             _ => Ok(Value::from("")),
         }
     }
