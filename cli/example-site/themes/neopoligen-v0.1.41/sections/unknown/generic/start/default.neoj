@@ -1,5 +1,4 @@
 [!- import "helpers/theme.neoj" as theme -!]
 <section>
-  <div>[NOTE: No template for [@ section.type() @] - [@ section.bounds() @]]</div>
   [!- include "subsections/all-blocks.neoj" -!]
 

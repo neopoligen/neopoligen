@@ -102,6 +102,10 @@ impl Section {
                 .iter()
                 .map(|c| Value::from_object(c.clone()))
                 .collect(),
+            SectionKind::Unknown { children } => children
+                .iter()
+                .map(|c| Value::from_object(c.clone()))
+                .collect(),
             _ => vec![],
         }))
     }
@@ -156,6 +160,8 @@ impl Section {
         }))
     }
 
+    // TODO: cascade back the templates through
+    // the various defaults
     pub fn template_list(&self) -> Result<Value, Error> {
         Ok(Value::from_serialize(vec![
             format!(
