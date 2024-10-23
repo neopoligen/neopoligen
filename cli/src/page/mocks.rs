@@ -14,8 +14,9 @@ Mock 1 Basic Page
 
 -- pagedata
 -- id: mock1_basic_page
--- status: scratch "#
-                .to_string(),
+-- status: scratch 
+"#
+            .to_string(),
             fs_path: PathBuf::from("not/a/real/path.neo"),
         };
         page.generate_ast(&site_config).unwrap();

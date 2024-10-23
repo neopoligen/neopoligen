@@ -65,7 +65,7 @@ pub fn unknown_section_full<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = many0(|src| block_of_anything(src))
+    let (source, children) = many0(|src| block_of_end_content(src))
         .context("")
         .parse(source)?;
     let section = Section {
@@ -88,7 +88,6 @@ pub fn unknown_section_start<'a>(
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = is_not(" \n/").context("").parse(source)?;
     let (source, _) = tag("/").context("").parse(source)?;
-    dbg!(&source);
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
         .parse(source)?;
@@ -101,14 +100,19 @@ pub fn unknown_section_start<'a>(
     // let (source, _) = structure_empty_until_newline_or_eof
     //     .context("")
     //     .parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
+    // dbg!("xxxxxxxxxxxxxxxxxx");
+    // dbg!(&source);
+    // let (source, _) = structure_empty_until_newline_or_eof
+    //     .context("")
+    //     .parse(source)?;
+    // dbg!("----------------------");
+    // dbg!(&source);
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, mut children) = many0(alt((
-        |src| block_of_end_content(src),
         |src| start_or_full_section(src, &sections, nest_level, list_level),
+        |src| block_of_end_content(src),
     )))
     .context("")
     .parse(source)?;
@@ -125,41 +129,41 @@ pub fn unknown_section_start<'a>(
     Ok((source, section))
 }
 
-pub fn _unknown_section_start<'a>(
-    source: &'a str,
-    sections: &'a ConfigSections,
-    nest_level: usize,
-    list_level: usize,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, r#type) = is_not(" /\n").context("").parse(source)?;
-    let (source, _) = tag("/").context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
-    let (source, attrs) = many0(section_attr).context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    let (source, mut children) = many0(alt((
-        |src| block_of_anything(src),
-        |src| start_or_full_section(src, &sections, nest_level, list_level),
-    )))
-    .context("")
-    .parse(source)?;
-    let (source, end_section) = basic_section_end(source, r#type, nest_level, list_level)?;
-    children.push(end_section);
-    let section = Section {
-        attr_list: vec![],
-        flag_list: vec![],
-        attrs,
-        bounds: SectionBounds::Start,
-        kind: SectionKind::Unknown { children },
-        r#type: r#type.to_string(),
-    };
-    Ok((source, section))
-}
+// pub fn _unknown_section_start<'a>(
+//     source: &'a str,
+//     sections: &'a ConfigSections,
+//     nest_level: usize,
+//     list_level: usize,
+// ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+//     let (source, _) = tag("-- ").context("").parse(source)?;
+//     let (source, r#type) = is_not(" /\n").context("").parse(source)?;
+//     let (source, _) = tag("/").context("").parse(source)?;
+//     let (source, _) = structure_empty_until_newline_or_eof
+//         .context("")
+//         .parse(source)?;
+//     let (source, attrs) = many0(section_attr).context("").parse(source)?;
+//     let (source, _) = structure_empty_until_newline_or_eof
+//         .context("")
+//         .parse(source)?;
+//     let (source, _) = multispace0.context("").parse(source)?;
+//     let (source, mut children) = many0(alt((
+//         |src| block_of_anything(src),
+//         |src| start_or_full_section(src, &sections, nest_level, list_level),
+//     )))
+//     .context("")
+//     .parse(source)?;
+//     let (source, end_section) = basic_section_end(source, r#type, nest_level, list_level)?;
+//     children.push(end_section);
+//     let section = Section {
+//         attr_list: vec![],
+//         flag_list: vec![],
+//         attrs,
+//         bounds: SectionBounds::Start,
+//         kind: SectionKind::Unknown { children },
+//         r#type: r#type.to_string(),
+//     };
+//     Ok((source, section))
+// }
 
 #[cfg(test)]
 mod test {
@@ -169,7 +173,7 @@ mod test {
     //     use rstest::rstest;
 
     #[test]
-    fn unknown_start_and_end_not_in_list() {
+    fn solo_unknown_start_and_end_not_in_list() {
         let source = "-- unknown-section/\n\nalfa bravo\n\n-- /unknown-section";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -212,7 +216,7 @@ mod test {
             },
         );
         let right = unknown_section_start(source, &config.sections, 0, 0);
-        //dbg!(&right);
+        // dbg!(&right);
         assert_eq!(left, right.unwrap());
     }
 

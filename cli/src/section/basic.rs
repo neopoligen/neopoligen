@@ -69,7 +69,7 @@ pub fn basic_section_full<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = many0(|src| block_of_anything(src))
+    let (source, children) = many0(|src| block_of_end_content(src))
         .context("")
         .parse(source)?;
     let section = Section {
@@ -311,7 +311,7 @@ mod test {
     }
 
     #[test]
-    fn solo_basic_start_end_test_checking_name_collision() {
+    fn basic_start_end_test_checking_name_collision() {
         let source = "-- previews/\n\nHello World\n\n-- /previews";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -354,7 +354,7 @@ mod test {
             },
         );
         let right = basic_section_start(source, &config.sections, 0, 0);
-        dbg!(&right);
+        // dbg!(&right);
         assert_eq!(left, right.unwrap());
     }
 

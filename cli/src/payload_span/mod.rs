@@ -311,6 +311,7 @@ impl PayloadSpan {
             SpanKind::SingleBacktick => "single-backtick".to_string(),
             SpanKind::SingleCaret => "single-caret".to_string(),
             SpanKind::SingleGreaterThan => "single-greaterthan".to_string(),
+            SpanKind::SingleHyphen => "single-hyphen".to_string(),
             SpanKind::SingleLessThan => "single-lessthan".to_string(),
             SpanKind::SingleUnderscore => "single-underscore".to_string(),
             SpanKind::Space => "space".to_string(),

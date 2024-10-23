@@ -25,6 +25,7 @@ pub mod pipe;
 pub mod single_backtick;
 pub mod single_caret;
 pub mod single_greaterthan;
+pub mod single_hyphen;
 pub mod single_lessthan;
 pub mod single_underscore;
 pub mod wordpart;
@@ -51,6 +52,7 @@ use crate::span::named_span::*;
 use crate::span::single_backtick::*;
 use crate::span::single_caret::*;
 use crate::span::single_greaterthan::*;
+use crate::span::single_hyphen::*;
 use crate::span::single_lessthan::*;
 use crate::span::single_underscore::*;
 use crate::span::wordpart::*;
@@ -132,6 +134,7 @@ impl Span {
             SpanKind::Pipe => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleBacktick => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleCaret => Ok(Value::from(&self.parsed_text)),
+            SpanKind::SingleHyphen => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleUnderscore => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleGreaterThan => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleLessThan => Ok(Value::from(&self.parsed_text)),
@@ -180,6 +183,7 @@ pub enum SpanKind {
     SingleBacktick,
     SingleCaret,
     SingleUnderscore,
+    SingleHyphen,
     SingleGreaterThan,
     SingleLessThan,
     Space,
