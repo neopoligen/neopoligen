@@ -12,6 +12,7 @@ pub fn list_item_full<'a>(
     source: &'a str,
     _sections: &'a ConfigSections,
     _nest_level: usize,
+    _list_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
@@ -35,12 +36,14 @@ pub fn list_item_start_end<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
     nest_level: usize,
+    list_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
     let (source, children) = many1(alt((
-        |src| start_or_full_section(src, sections, nest_level),
-        |src| block_of_list_content(src),
+        |src| start_or_full_section(src, sections, nest_level, list_level),
+        // |src| block_of_list_content_v42(src),
+        |src| block_that_is_not_a_list_item(src),
     )))
     .context("")
     .parse(source)?;
@@ -62,6 +65,7 @@ mod test {
     use super::*;
     use crate::site_config::SiteConfig;
     use pretty_assertions::assert_eq;
+
     #[test]
     fn basic_list_item() {
         let source = "- alfa\n\n";
@@ -94,7 +98,7 @@ mod test {
                 r#type: "list-item".to_string(),
             },
         );
-        let right = list_item_full(source, &config.sections, 0).unwrap();
+        let right = list_item_full(source, &config.sections, 0, 0).unwrap();
         assert_eq!(left, right);
     }
 
@@ -155,7 +159,67 @@ mod test {
                 r#type: "list-item".to_string(),
             },
         );
-        let right = list_item_start_end(source, &config.sections, 0).unwrap();
+        let right = list_item_start_end(source, &config.sections, 0, 0).unwrap();
         assert_eq!(left, right);
     }
+
+    #[test]
+    fn solo_start_end_list_items_with_code_section() {
+        let source = "- alfa\n\n-- code/\n\nbravo\n\n-- /code\n\n- charlie\n\n-- /list";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "- charlie\n\n-- /list",
+            Section {
+                attr_list: vec![],
+                flag_list: vec![],
+                attrs: vec![],
+                bounds: SectionBounds::Full,
+                kind: SectionKind::ListItem {
+                    children: {
+                        vec![
+                            Section {
+                                attr_list: vec![],
+                                flag_list: vec![],
+                                attrs: vec![],
+                                bounds: SectionBounds::Full,
+                                kind: SectionKind::Block {
+                                    spans: vec![Span {
+                                        attrs: vec![],
+                                        kind: SpanKind::WordPart,
+                                        parsed_text: "alfa".to_string(),
+                                    }],
+                                },
+                                r#type: "block-of-text".to_string(),
+                            },
+                            Section {
+                                attr_list: vec![],
+                                flag_list: vec![],
+                                attrs: vec![],
+                                bounds: SectionBounds::Start,
+                                kind: SectionKind::Raw {
+                                    children: vec![Section {
+                                        attr_list: vec![],
+                                        flag_list: vec![],
+                                        attrs: vec![],
+                                        bounds: SectionBounds::End,
+                                        kind: SectionKind::Raw {
+                                            children: vec![],
+                                            text: None,
+                                        },
+                                        r#type: "code".to_string(),
+                                    }],
+                                    text: Some("bravo".to_string()),
+                                },
+                                r#type: "code".to_string(),
+                            },
+                        ]
+                    },
+                },
+                r#type: "list-item".to_string(),
+            },
+        );
+        let right = list_item_start_end(source, &config.sections, 0, 0).unwrap();
+        assert_eq!(left, right);
+    }
+    //
 }

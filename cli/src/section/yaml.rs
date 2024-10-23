@@ -1,3 +1,8 @@
+// NOTE: yaml is deprecated and won't be used for V42 and it'll
+// take a compelling argument to add it in instead of just
+// standardizing on json5 everywhere.
+//
+// TODO: Delete yaml.rs when V42 is live
 use crate::section::*;
 use crate::section_attr::*;
 use crate::span::*;
@@ -16,6 +21,7 @@ pub fn yaml_section_full<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
     _nest_level: usize,
+    list_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder_full(src, &sections.yaml))

@@ -15,6 +15,7 @@ pub mod escaped_underscore;
 pub mod footnote_shorthand;
 pub mod greaterthan;
 pub mod hyphen;
+pub mod hyphen_with_trailing_non_hyphen;
 pub mod lessthan;
 pub mod mocks;
 pub mod more_than_two_carets;
@@ -43,6 +44,7 @@ use crate::span::escaped_pipe::*;
 use crate::span::escaped_underscore::*;
 use crate::span::footnote_shorthand::*;
 use crate::span::hyphen::*;
+use crate::span::hyphen_with_trailing_non_hyphen::*;
 use crate::span::more_than_two_carets::*;
 use crate::span::more_than_two_underscores::*;
 use crate::span::named_span::*;
@@ -107,6 +109,7 @@ impl Span {
             SpanKind::CodeShorthand => Ok(Value::from(&self.parsed_text)),
             SpanKind::Colon => Ok(Value::from(&self.parsed_text)),
             SpanKind::ColonNotFollowedBySpace => Ok(Value::from(&self.parsed_text)),
+            SpanKind::DashWithTrailingNonDash => Ok(Value::from(&self.parsed_text)),
             SpanKind::DoubleUnderscore => Ok(Value::from(&self.parsed_text)),
             SpanKind::EmShorthand => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedBacktick => Ok(Value::from(&self.parsed_text)),
@@ -119,7 +122,8 @@ impl Span {
             SpanKind::EscapedUnderscore => Ok(Value::from(&self.parsed_text)),
             SpanKind::FootnoteShorthand => Ok(Value::from(&self.parsed_text)),
             SpanKind::GreaterThan => Ok(Value::from(&self.parsed_text)),
-            SpanKind::Hyphen => Ok(Value::from(&self.parsed_text)),
+            // SpanKind::Hyphen => Ok(Value::from(&self.parsed_text)),
+            SpanKind::HyphenWithTrailingNonHyphen => Ok(Value::from(&self.parsed_text)),
             SpanKind::LessThan => Ok(Value::from(&self.parsed_text)),
             SpanKind::LinkShorthand => Ok(Value::from(&self.parsed_text)),
             SpanKind::MoreThanTwoUnderscores => Ok(Value::from(&self.parsed_text)),
@@ -151,6 +155,7 @@ pub enum SpanKind {
     CodeShorthand,
     Colon,
     ColonNotFollowedBySpace,
+    DashWithTrailingNonDash,
     DoubleUnderscore,
     EmShorthand,
     EscapedBacktick,
@@ -164,6 +169,7 @@ pub enum SpanKind {
     FootnoteShorthand,
     GreaterThan,
     Hyphen,
+    HyphenWithTrailingNonHyphen,
     LessThan,
     LinkShorthand,
     MoreThanTwoUnderscores,
@@ -196,7 +202,44 @@ pub fn base_span_for_all_text<'a>(source: &'a str) -> IResult<&'a str, Span, Err
             shorthand,
             named_span,
             code_shorthand_single_pipe,
+            // hyphen,
+            hyphen_with_trailing_non_hyphen,
+            colon,
+            single_caret,
+            single_lessthan,
+            single_greaterthan,
+            single_backtick,
+            single_underscore,
+        )),
+        alt((
+            escaped_backslash,
+            escaped_backtick,
+            escaped_caret,
+            escaped_colon,
+            escaped_hyphen,
+            escaped_greaterthan,
+            escaped_pipe,
+            escaped_underscore,
+            more_than_two_underscores,
+            more_than_two_carets,
+        )),
+    ))
+    .context("")
+    .parse(source)?;
+    Ok((source, span))
+}
+
+pub fn base_span_for_list_item<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    let (source, span) = alt((
+        alt((
+            wordpart,
+            space,
+            newline,
+            shorthand,
+            named_span,
+            code_shorthand_single_pipe,
             hyphen,
+            // hyphen_with_trailing_non_hyphen,
             colon,
             single_caret,
             single_lessthan,
@@ -234,6 +277,11 @@ pub fn structure_empty_until_newline_or_eof<'a>(
     .context("")
     .parse(source)?;
     Ok((source, ""))
+}
+
+pub fn span_for_not_a_list_item<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    let (source, span) = alt((wordpart, space)).context("").parse(source)?;
+    Ok((source, span))
 }
 
 // DEPRECATED: replace with base_span_for_all_blocks

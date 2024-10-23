@@ -16,6 +16,7 @@ pub fn raw_section_end<'a>(
     source: &'a str,
     key: &'a str,
     nest_level: usize,
+    _list_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, _) = tag("/").context("").parse(source)?;
@@ -55,6 +56,7 @@ pub fn raw_section_full<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
     _nest_level: usize,
+    _list_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder_full(src, &sections.raw))
@@ -87,6 +89,7 @@ pub fn raw_section_start<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
     mut nest_level: usize,
+    list_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     nest_level += 1;
     let (source, _) = tag("-- ").context("").parse(source)?;
@@ -104,7 +107,7 @@ pub fn raw_section_start<'a>(
         .context("")
         .parse(source)?;
     let (source, text) = take_until(end_key.as_str()).context("").parse(source)?;
-    let (source, end_section) = raw_section_end(source, r#type, nest_level)?;
+    let (source, end_section) = raw_section_end(source, r#type, nest_level, list_level)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let mut children = vec![];
     children.push(end_section);
@@ -132,7 +135,7 @@ mod test {
     fn ending_without_nesting_and_no_content() {
         let source = "-- /code";
         let left = 0;
-        let section = raw_section_end(source, "code", 0).unwrap().1;
+        let section = raw_section_end(source, "code", 0, 0).unwrap().1;
         let right = match section.kind {
             SectionKind::Raw { children, .. } => children.len(),
             _ => 0,
@@ -144,7 +147,7 @@ mod test {
     fn ending_without_nesting_and_has_content() {
         let source = "-- /code\n\nthis is\n\nsomethig";
         let left = 2;
-        let section = raw_section_end(source, "code", 0).unwrap().1;
+        let section = raw_section_end(source, "code", 0, 0).unwrap().1;
         let right = match section.kind {
             SectionKind::Raw { children, .. } => children.len(),
             _ => 0,
@@ -152,14 +155,15 @@ mod test {
         assert_eq!(left, right);
     }
 
-    #[test]
-    #[ignore]
-    fn ending_with_nesting() {
-        let source = "-- /code\n\nmore stuff";
-        let left = "more stuff".to_string();
-        let right = raw_section_end(source, "code", 1).unwrap().0;
-        assert_eq!(left, right);
-    }
+    // TODO: Bring back in with proper list_nesting check
+    // #[test]
+    // #[ignore]
+    // fn ending_with_nesting() {
+    //     let source = "-- /code\n\nmore stuff";
+    //     let left = "more stuff".to_string();
+    //     let right = raw_section_end(source, "code", 1).unwrap().0;
+    //     assert_eq!(left, right);
+    // }
 
     #[test]
     fn basic_start_end() {
@@ -189,7 +193,7 @@ mod test {
                 r#type: "code".to_string(),
             },
         );
-        let right = raw_section_start(source, &config.sections, 0).unwrap();
+        let right = raw_section_start(source, &config.sections, 0, 0).unwrap();
         assert_eq!(left, right);
     }
 
@@ -231,7 +235,7 @@ mod test {
                 r#type: "code".to_string(),
             },
         );
-        let right = raw_section_start(source, &config.sections, 0).unwrap();
+        let right = raw_section_start(source, &config.sections, 0, 0).unwrap();
         assert_eq!(left, right);
     }
 
@@ -263,7 +267,7 @@ mod test {
                 r#type: "code".to_string(),
             },
         );
-        let right = raw_section_start(source, &config.sections, 0).unwrap();
+        let right = raw_section_start(source, &config.sections, 0, 0).unwrap();
         assert_eq!(left, right);
     }
 
@@ -324,7 +328,7 @@ mod test {
                 r#type: "code".to_string(),
             },
         );
-        let right = raw_section_start(source, &config.sections, 0).unwrap();
+        let right = raw_section_start(source, &config.sections, 0, 0).unwrap();
         assert_eq!(left, right);
     }
 
@@ -356,7 +360,7 @@ mod test {
                 r#type: "code".to_string(),
             },
         );
-        let right = raw_section_start(source, &config.sections, 0).unwrap();
+        let right = raw_section_start(source, &config.sections, 0, 0).unwrap();
         assert_eq!(left, right);
     }
 

@@ -6,6 +6,7 @@ use html_escape;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
+// TODO: Deprecate this when V42 is working
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PayloadSpan {
     ///
@@ -287,6 +288,7 @@ impl PayloadSpan {
             SpanKind::CodeShorthand => "code-shorthand".to_string(),
             SpanKind::Colon => "colon".to_string(),
             SpanKind::ColonNotFollowedBySpace => "colon-not-followed-by-space".to_string(),
+            SpanKind::DashWithTrailingNonDash => "dash-with-trailing-space".to_string(),
             SpanKind::DoubleUnderscore => "double-underscore".to_string(),
             SpanKind::EmShorthand => "em-shorthand".to_string(),
             SpanKind::EscapedBackslash => "escaped-backslash".to_string(),
@@ -300,6 +302,7 @@ impl PayloadSpan {
             SpanKind::FootnoteShorthand => "footnote-shorthand".to_string(),
             SpanKind::GreaterThan => "greaterthan".to_string(),
             SpanKind::Hyphen => "hyphen".to_string(),
+            SpanKind::HyphenWithTrailingNonHyphen => "hyphen-with-trailing-non-hyphen".to_string(),
             SpanKind::LessThan => "lessthan".to_string(),
             SpanKind::LinkShorthand => "link-shorthand".to_string(),
             SpanKind::Newline => "newline".to_string(),

@@ -261,22 +261,23 @@ pub fn start_or_full_section<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
     nest_level: usize,
+    list_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, section) = alt((
-        |src| basic_section_start(src, &sections, nest_level),
-        |src| basic_section_full(src, &sections, nest_level),
+        |src| basic_section_start(src, &sections, nest_level, list_level),
+        |src| basic_section_full(src, &sections, nest_level, list_level),
         // TODO: Checklist start
-        //|src| checklist_section_start(src, &sections, nest_level),
-        |src| checklist_section_full(src, &sections, nest_level),
+        //|src| checklist_section_start(src, &sections, nest_level, list_level),
+        |src| checklist_section_full(src, &sections, nest_level, list_level),
         // TODO: Add json5 start
-        |src| json5_section_full(src, &sections, nest_level),
-        |src| list_section_start(src, &sections, nest_level),
-        |src| list_section_full(src, &sections, nest_level),
-        |src| raw_section_start(src, &sections, nest_level),
-        |src| raw_section_full(src, &sections, nest_level),
+        |src| json5_section_full(src, &sections, nest_level, list_level),
+        |src| list_section_start(src, &sections, nest_level, list_level),
+        |src| list_section_full(src, &sections, nest_level, list_level),
+        |src| raw_section_start(src, &sections, nest_level, list_level),
+        |src| raw_section_full(src, &sections, nest_level, list_level),
         // Reminder: do unknown last since it slurps everything
-        |src| unknown_section_start(src, &sections, nest_level),
-        |src| unknown_section_full(src, &sections, nest_level),
+        |src| unknown_section_start(src, &sections, nest_level, list_level),
+        |src| unknown_section_full(src, &sections, nest_level, list_level),
     ))
     .context("")
     .parse(source)?;

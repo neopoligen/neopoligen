@@ -15,6 +15,7 @@ pub fn checklist_section_end<'a>(
     source: &'a str,
     key: &'a str,
     nest_level: usize,
+    _list_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, _) = tag("/").context("").parse(source)?;
@@ -49,6 +50,7 @@ pub fn checklist_section_full<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
     mut nest_level: usize,
+    list_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     nest_level += 1;
     let (source, _) = tag("-- ").context("").parse(source)?;
@@ -63,9 +65,10 @@ pub fn checklist_section_full<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = many1(|src| checklist_item_full(src, sections, nest_level))
-        .context("")
-        .parse(source)?;
+    let (source, children) =
+        many1(|src| checklist_item_full(src, sections, nest_level, list_level))
+            .context("")
+            .parse(source)?;
     Ok((
         source,
         Section {
@@ -83,6 +86,7 @@ pub fn checklist_section_start<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
     mut nest_level: usize,
+    list_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     nest_level += 1;
     let (source, _) = tag("-- ").context("").parse(source)?;
@@ -98,10 +102,11 @@ pub fn checklist_section_start<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, mut children) = many1(|src| checklist_item_start_end(src, sections, nest_level))
-        .context("")
-        .parse(source)?;
-    let (source, end_section) = list_section_end(source, r#type, nest_level)?;
+    let (source, mut children) =
+        many1(|src| checklist_item_start_end(src, sections, nest_level, list_level))
+            .context("")
+            .parse(source)?;
+    let (source, end_section) = list_section_end(source, r#type, nest_level, list_level)?;
     children.push(end_section);
     Ok((
         source,
@@ -163,7 +168,7 @@ mod test {
                 r#type: "todo".to_string(),
             },
         );
-        let right = checklist_section_full(source, &config.sections, 0).unwrap();
+        let right = checklist_section_full(source, &config.sections, 0, 0).unwrap();
         assert_eq!(left, right);
     }
 
