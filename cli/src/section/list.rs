@@ -220,7 +220,7 @@ mod test {
                                 children: vec![],
                                 closing: "list".to_string(),
                             },
-                            r#type: "end".to_string(),
+                            r#type: "closing".to_string(),
                         },
                     ],
                 },
@@ -525,11 +525,11 @@ mod test {
                                                 flag_list: vec![],
                                                 attrs: vec![],
                                                 bounds: SectionBounds::End,
-                                                kind: SectionKind::Raw {
-                                                    text: None,
+                                                kind: SectionKind::End {
                                                     children: vec![],
+                                                    closing: "code".to_string(),
                                                 },
-                                                r#type: "code".to_string(),
+                                                r#type: "closing".to_string(),
                                             }],
                                             text: Some("bravo".to_string()),
                                         },

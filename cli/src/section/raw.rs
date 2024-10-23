@@ -293,8 +293,8 @@ mod test {
                         flag_list: vec![],
                         attrs: vec![],
                         bounds: SectionBounds::End,
-                        kind: SectionKind::Raw {
-                            text: None,
+                        kind: SectionKind::End {
+                            closing: "code".to_string(),
                             children: vec![
                                 Section {
                                     attr_list: vec![],
@@ -326,7 +326,7 @@ mod test {
                                 },
                             ],
                         },
-                        r#type: "code".to_string(),
+                        r#type: "closing".to_string(),
                     }],
                     text: Some("alfa".to_string()),
                 },
