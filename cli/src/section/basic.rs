@@ -14,7 +14,7 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn basic_section_end<'a>(
     source: &'a str,
     key: &'a str,
-    nest_level: usize,
+    _nest_level: usize,
     list_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
@@ -24,18 +24,18 @@ pub fn basic_section_end<'a>(
         .context("")
         .parse(source)?;
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
+    // let (source, _) = structure_empty_until_newline_or_eof
+    //     .context("")
+    //     .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, children) = if list_level > 0 {
         many0(|src| block_of_end_content_that_is_not_a_list_item(src))
             .context("")
             .parse(source)?
-    } else if nest_level == 0 {
-        many0(|src| block_of_end_content(src))
-            .context("")
-            .parse(source)?
+    // } else if nest_level == 0 {
+    //     many0(|src| block_of_end_content(src))
+    //         .context("")
+    //         .parse(source)?
     } else {
         (source, vec![])
     };

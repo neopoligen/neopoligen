@@ -15,7 +15,7 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn raw_section_end<'a>(
     source: &'a str,
     key: &'a str,
-    nest_level: usize,
+    _nest_level: usize,
     list_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
@@ -338,7 +338,7 @@ mod test {
     }
 
     #[test]
-    fn solo_start_end_with_list_item_after_when_in_list() {
+    fn start_end_with_list_item_after_when_in_list() {
         let source = "-- code/\n\nalfa\n\n-- /code\n\n- bravo";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -370,7 +370,7 @@ mod test {
     }
 
     #[test]
-    fn solo_start_end_with_list_item_after_when_not_in_a_list() {
+    fn start_end_with_list_item_after_when_not_in_a_list() {
         let nest_level = 0;
         let list_level = 0;
         let source = "-- code/\n\nalfa\n\n-- /code\n\n- bravo";
