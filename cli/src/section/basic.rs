@@ -312,7 +312,7 @@ mod test {
     }
 
     #[test]
-    fn basic_start_end_test_checking_name_collision() {
+    fn solo_basic_start_end_test_checking_name_collision() {
         let source = "-- previews/\n\nHello World\n\n-- /previews\n\n";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -343,8 +343,11 @@ mod test {
                             flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::End,
-                            kind: SectionKind::Basic { children: vec![] },
-                            r#type: "previews".to_string(),
+                            kind: SectionKind::End {
+                                children: vec![],
+                                closing: "previews".to_string(),
+                            },
+                            r#type: "closing".to_string(),
                         },
                     ],
                 },
@@ -407,7 +410,7 @@ mod test {
         let left = 2;
         let section = basic_section_end(source, "p", 0, 0).unwrap().1;
         let right = match section.kind {
-            SectionKind::Basic { children, .. } => children.len(),
+            SectionKind::End { children, .. } => children.len(),
             _ => 0,
         };
         assert_eq!(left, right);
