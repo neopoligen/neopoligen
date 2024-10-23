@@ -32,12 +32,10 @@ pub fn basic_section_end<'a>(
         many0(|src| block_of_end_content_that_is_not_a_list_item(src))
             .context("")
             .parse(source)?
-    // } else if nest_level == 0 {
-    //     many0(|src| block_of_end_content(src))
-    //         .context("")
-    //         .parse(source)?
     } else {
-        (source, vec![])
+        many0(|src| block_of_end_content(src))
+            .context("")
+            .parse(source)?
     };
     let section = Section {
         attr_list: vec![],
@@ -107,7 +105,7 @@ pub fn basic_section_start<'a>(
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, mut children) = many0(alt((
-        |src| block_of_anything(src),
+        |src| block_of_end_content(src),
         |src| start_or_full_section(src, &sections, nest_level, list_level),
     )))
     .context("")
@@ -236,7 +234,7 @@ mod test {
     }
 
     #[test]
-    fn basic_start_text_with_dash() {
+    fn basic_start_text_with_dash_not_in_list() {
         let source = "-- p\n\n- Hello World";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -256,7 +254,7 @@ mod test {
                             spans: vec![
                                 Span {
                                     attrs: vec![],
-                                    kind: SpanKind::HyphenWithTrailingNonHyphen,
+                                    kind: SpanKind::Hyphen,
                                     parsed_text: "-".to_string(),
                                 },
                                 Span {
@@ -311,8 +309,8 @@ mod test {
     }
 
     #[test]
-    fn basic_start_end_test_checking_name_collision() {
-        let source = "-- previews/\n\nHello World\n\n-- /previews\n\n";
+    fn solo_basic_start_end_test_checking_name_collision() {
+        let source = "-- previews/\n\nHello World\n\n-- /previews";
         let config = SiteConfig::mock1_basic();
         let left = (
             "",
@@ -353,8 +351,9 @@ mod test {
                 r#type: "previews".to_string(),
             },
         );
-        let right = basic_section_start(source, &config.sections, 0, 0).unwrap();
-        assert_eq!(left, right);
+        let right = basic_section_start(source, &config.sections, 0, 0);
+        dbg!(&right);
+        assert_eq!(left, right.unwrap());
     }
 
     #[test]
@@ -408,6 +407,7 @@ mod test {
         let source = "-- /p\n\nthis is\n\nsomethig";
         let left = 2;
         let section = basic_section_end(source, "p", 0, 0).unwrap().1;
+        dbg!(&section);
         let right = match section.kind {
             SectionKind::End { children, .. } => children.len(),
             _ => 0,

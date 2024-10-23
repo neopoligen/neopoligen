@@ -277,7 +277,7 @@ mod test {
     }
 
     #[test]
-    fn solo_start_end_with_content_after_end() {
+    fn start_end_with_content_after_end() {
         let source = "-- code/\n\nalfa\n\n-- /code\n\nbravo\n\ncharlie\n\n-- p";
         let config = SiteConfig::mock1_basic();
         let left = (

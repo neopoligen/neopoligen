@@ -419,7 +419,7 @@ mod test {
     }
 
     #[test]
-    fn solo_attr_flag_list_passing_a_class() {
+    fn attr_flag_list_passing_a_class() {
         let section = Section::mock1_basic_title_section_no_attrs();
         let left = section
             .attr_flag_list(&["foxtrot-test-class".into()])

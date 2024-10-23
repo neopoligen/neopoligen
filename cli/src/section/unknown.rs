@@ -86,18 +86,15 @@ pub fn unknown_section_start<'a>(
     list_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
-
     let (source, r#type) = is_not(" \n/").context("").parse(source)?;
     let (source, _) = tag("/").context("").parse(source)?;
     dbg!(&source);
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
         .parse(source)?;
-
     // let (source, r#type) = (|src| tag_finder_start(src, &sections.basic))
     //     .context("")
     //     .parse(source)?;
-
     // TODO: You can remove the lines below
     // the next time you see them
     // let (source, _) = tag("/").context("").parse(source)?;

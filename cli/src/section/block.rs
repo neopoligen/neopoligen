@@ -220,7 +220,7 @@ mod test {
     }
 
     #[test]
-    fn solo_block_of_anything_basic() {
+    fn block_of_anything_basic() {
         let source = "alfa";
         let left = (
             "",
@@ -244,7 +244,7 @@ mod test {
     }
 
     #[test]
-    fn solo_block_that_is_not_a_list_item_with_content() {
+    fn block_that_is_not_a_list_item_with_content() {
         let source = "alfa";
         let left = (
             "",
@@ -268,7 +268,7 @@ mod test {
     }
 
     #[test]
-    fn solo_block_that_is_not_a_list_item_should_fail_on_list_item() {
+    fn block_that_is_not_a_list_item_should_fail_on_list_item() {
         let source = "- foxtrot";
         assert!(block_that_is_not_a_list_item(source).is_err());
     }

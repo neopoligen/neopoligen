@@ -11,7 +11,7 @@ use std::collections::BTreeMap;
 impl SiteConfigV42 {
     pub fn mock1_basic() -> SiteConfigV42 {
         let sections = ConfigSections {
-            basic: vec![],
+            basic: vec!["previews".to_string()],
             block: vec![],
             checklist: vec![],
             checklist_item: vec![],
