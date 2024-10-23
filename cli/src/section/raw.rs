@@ -1,4 +1,4 @@
-// use crate::section::block::*;
+use crate::section::block::*;
 use crate::section::*;
 use crate::section_attr::*;
 use nom::branch::alt;
@@ -12,45 +12,45 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
-// pub fn raw_section_end<'a>(
-//     source: &'a str,
-//     key: &'a str,
-//     nest_level: usize,
-//     _list_level: usize,
-// ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-//     let (source, _) = tag("-- ").context("").parse(source)?;
-//     let (source, _) = tag("/").context("").parse(source)?;
-//     let (source, r#type) = tag(key).context("").parse(source)?;
-//     let (source, _) = structure_empty_until_newline_or_eof
-//         .context("")
-//         .parse(source)?;
-//     let (source, attrs) = many0(section_attr).context("").parse(source)?;
-//     let (source, _) = structure_empty_until_newline_or_eof
-//         .context("")
-//         .parse(source)?;
-//     let (source, _) = multispace0.context("").parse(source)?;
-//     let (source, children) = if nest_level == 0 {
-//         many0(|src| block_of_end_content(src))
-//             .context("")
-//             .parse(source)?
-//     } else {
-//         many0(|src| block_of_anything(src))
-//             .context("")
-//             .parse(source)?
-//     };
-//     let section = Section {
-//         attr_list: vec![],
-//         flag_list: vec![],
-//         attrs,
-//         bounds: SectionBounds::End,
-//         kind: SectionKind::Raw {
-//             children,
-//             text: None,
-//         },
-//         r#type: r#type.to_string(),
-//     };
-//     Ok((source, section))
-// }
+pub fn raw_section_end<'a>(
+    source: &'a str,
+    key: &'a str,
+    nest_level: usize,
+    list_level: usize,
+) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let (source, _) = tag("-- ").context("").parse(source)?;
+    let (source, _) = tag("/").context("").parse(source)?;
+    let (source, r#type) = tag(key).context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
+    let (source, attrs) = many0(section_attr).context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
+    let (source, children) = if list_level > 0 {
+        many0(|src| block_of_end_content_that_is_not_a_list_item(src))
+            .context("")
+            .parse(source)?
+    } else {
+        many0(|src| block_of_anything(src))
+            .context("")
+            .parse(source)?
+    };
+    let section = Section {
+        attr_list: vec![],
+        flag_list: vec![],
+        attrs,
+        bounds: SectionBounds::End,
+        kind: SectionKind::End {
+            children,
+            closing: r#type.to_string(),
+        },
+        r#type: "closing".to_string(),
+    };
+    Ok((source, section))
+}
 
 pub fn raw_section_full<'a>(
     source: &'a str,
@@ -108,7 +108,7 @@ pub fn raw_section_start<'a>(
         .parse(source)?;
     let (source, text) = take_until(end_key.as_str()).context("").parse(source)?;
     // let (source, end_section) = raw_section_end(source, r#type, nest_level, list_level)?;
-    let (source, end_section) = basic_section_end(source, r#type, nest_level, list_level)?;
+    let (source, end_section) = raw_section_end(source, r#type, nest_level, list_level)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let mut children = vec![];
     children.push(end_section);
@@ -338,7 +338,7 @@ mod test {
     }
 
     #[test]
-    fn solo_start_end_with_list_item_after() {
+    fn solo_start_end_with_list_item_after_when_in_list() {
         let source = "-- code/\n\nalfa\n\n-- /code\n\n- bravo";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -365,7 +365,61 @@ mod test {
                 r#type: "code".to_string(),
             },
         );
-        let right = raw_section_start(source, &config.sections, 0, 0).unwrap();
+        let right = raw_section_start(source, &config.sections, 1, 1).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_start_end_with_list_item_after_when_not_in_a_list() {
+        let nest_level = 0;
+        let list_level = 0;
+        let source = "-- code/\n\nalfa\n\n-- /code\n\n- bravo";
+        let config = SiteConfig::mock1_basic();
+        let left = (
+            "",
+            Section {
+                attr_list: vec![],
+                flag_list: vec![],
+                attrs: vec![],
+                bounds: SectionBounds::Start,
+                kind: SectionKind::Raw {
+                    children: vec![Section {
+                        attr_list: vec![],
+                        flag_list: vec![],
+                        attrs: vec![],
+                        bounds: SectionBounds::End,
+                        kind: SectionKind::End {
+                            children: vec![Section {
+                                attr_list: vec![],
+                                attrs: vec![],
+                                bounds: SectionBounds::Full,
+                                flag_list: vec![],
+                                kind: SectionKind::Block {
+                                    spans: vec![
+                                        Span {
+                                            attrs: vec![],
+                                            kind: SpanKind::Hyphen,
+                                            parsed_text: "-".to_string(),
+                                        },
+                                        Span {
+                                            attrs: vec![],
+                                            kind: SpanKind::WordPart,
+                                            parsed_text: " bravo".to_string(),
+                                        },
+                                    ],
+                                },
+                                r#type: "block-of-text".to_string(),
+                            }],
+                            closing: "code".to_string(),
+                        },
+                        r#type: "closing".to_string(),
+                    }],
+                    text: Some("alfa".to_string()),
+                },
+                r#type: "code".to_string(),
+            },
+        );
+        let right = raw_section_start(source, &config.sections, nest_level, list_level).unwrap();
         assert_eq!(left, right);
     }
 

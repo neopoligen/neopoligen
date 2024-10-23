@@ -28,7 +28,6 @@ pub fn basic_section_end<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-
     let (source, children) = if list_level > 0 {
         many0(|src| block_of_end_content_that_is_not_a_list_item(src))
             .context("")
@@ -237,7 +236,7 @@ mod test {
     }
 
     #[test]
-    fn solo_basic_start_text_with_dash() {
+    fn basic_start_text_with_dash() {
         let source = "-- p\n\n- Hello World";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -312,7 +311,7 @@ mod test {
     }
 
     #[test]
-    fn solo_basic_start_end_test_checking_name_collision() {
+    fn basic_start_end_test_checking_name_collision() {
         let source = "-- previews/\n\nHello World\n\n-- /previews\n\n";
         let config = SiteConfig::mock1_basic();
         let left = (

@@ -165,7 +165,7 @@ mod test {
     }
 
     #[test]
-    fn start_end_list_items_with_code_section() {
+    fn start_end_list_items_with_code_section_in_a_list() {
         let source = "- alfa\n\n-- code/\n\nbravo\n\n-- /code\n\n- charlie\n\n-- /list";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -207,7 +207,7 @@ mod test {
                                             children: vec![],
                                             closing: "code".to_string(),
                                         },
-                                        r#type: "end".to_string(),
+                                        r#type: "closing".to_string(),
                                     }],
                                     text: Some("bravo".to_string()),
                                 },
