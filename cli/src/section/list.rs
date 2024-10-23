@@ -216,8 +216,11 @@ mod test {
                             flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::End,
-                            kind: SectionKind::Basic { children: vec![] },
-                            r#type: "neo-end".to_string(),
+                            kind: SectionKind::End {
+                                children: vec![],
+                                closing: "list".to_string(),
+                            },
+                            r#type: "end".to_string(),
                         },
                     ],
                 },
