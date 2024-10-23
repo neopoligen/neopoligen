@@ -39,6 +39,14 @@ impl PageV42 {
             }),
         }
     }
+
+    pub fn mock_from_test_directory_sample(contents: &str) -> Result<PageV42, NeoError> {
+        Ok(PageV42 {
+            ast: None,
+            fs_path: PathBuf::from("not/a/real/path.neo"),
+            raw_source: contents.to_string(),
+        })
+    }
 }
 
 impl PageV42 {

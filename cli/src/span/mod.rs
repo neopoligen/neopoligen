@@ -1,3 +1,5 @@
+#![allow(non_snake_case)]
+
 pub mod code_shorthand;
 pub mod code_shorthand_single_pipe;
 pub mod colon;
@@ -8,8 +10,10 @@ pub mod escaped_backslash;
 pub mod escaped_backtick;
 pub mod escaped_caret;
 pub mod escaped_colon;
+pub mod escaped_exclamation;
 pub mod escaped_greaterthan;
 pub mod escaped_hyphen;
+pub mod escaped_lessthan;
 pub mod escaped_pipe;
 pub mod escaped_underscore;
 pub mod footnote_shorthand;
@@ -24,6 +28,7 @@ pub mod named_span;
 pub mod pipe;
 pub mod single_backtick;
 pub mod single_caret;
+pub mod single_exclamation;
 pub mod single_greaterthan;
 pub mod single_hyphen;
 pub mod single_lessthan;
@@ -41,6 +46,7 @@ use crate::span::escaped_caret::*;
 use crate::span::escaped_colon::*;
 use crate::span::escaped_greaterthan::*;
 use crate::span::escaped_hyphen::*;
+// use crate::span::escaped_lessthan::*;
 use crate::span::escaped_pipe::*;
 use crate::span::escaped_underscore::*;
 use crate::span::footnote_shorthand::*;
@@ -61,6 +67,7 @@ use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::Value;
 use nom::branch::alt;
+use nom::bytes::complete::is_not;
 use nom::character::complete::line_ending;
 use nom::character::complete::multispace0;
 use nom::character::complete::space0;
@@ -118,7 +125,9 @@ impl Span {
             SpanKind::EscapedBackslash => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedCaret => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedColon => Ok(Value::from(&self.parsed_text)),
+            SpanKind::EscapedExclamation => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedGreaterThan => Ok(Value::from(&self.parsed_text)),
+            SpanKind::EscapedLessThan => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedHyphen => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedPipe => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedUnderscore => Ok(Value::from(&self.parsed_text)),
@@ -165,7 +174,9 @@ pub enum SpanKind {
     EscapedBackslash,
     EscapedCaret,
     EscapedColon,
+    EscapedExclamation,
     EscapedGreaterThan,
+    EscapedLessThan,
     EscapedHyphen,
     EscapedPipe,
     EscapedUnderscore,
@@ -180,14 +191,32 @@ pub enum SpanKind {
     NamedSpan { r#type: String, children: Vec<Span> },
     Newline,
     Pipe,
+    PlainText,
     SingleBacktick,
     SingleCaret,
-    SingleUnderscore,
-    SingleHyphen,
+    SingleExclamation,
     SingleGreaterThan,
+    SingleHyphen,
     SingleLessThan,
+    SingleUnderscore,
     Space,
     WordPart,
+}
+
+// TODO: Move stuff to this one and any siblings that need
+// to be made with it. This includes single hyphens, double
+// hyphens, and [ and ] characters since those things will
+// be parsed out at the start of blocks.
+pub fn take_until_special_characters<'a>(
+    source: &'a str,
+) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+    let (source, parsed_text) = is_not("\\\n\t<!@#$%^&*").context("").parse(source)?;
+    let span = Span {
+        attrs: vec![],
+        parsed_text: parsed_text.to_string(),
+        kind: SpanKind::PlainText,
+    };
+    Ok((source, span))
 }
 
 pub fn shorthand<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
@@ -197,6 +226,7 @@ pub fn shorthand<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a st
     Ok((source, span))
 }
 
+// TODO: Make and move to a V42 version if necessary
 pub fn base_span_for_all_text<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
     let (source, span) = alt((
         alt((
@@ -232,7 +262,7 @@ pub fn base_span_for_all_text<'a>(source: &'a str) -> IResult<&'a str, Span, Err
     .parse(source)?;
     Ok((source, span))
 }
-
+// TODO: Make and move to a V42 version if necessary
 pub fn base_span_for_list_item<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
     let (source, span) = alt((
         alt((
@@ -395,6 +425,31 @@ mod test {
     use pretty_assertions::assert_eq;
     use rstest::rstest;
 
+    #[rstest]
+    #[case("a", "")]
+    #[case("bravo", "")]
+    #[case(" charlie delta ", "")]
+
+    // #[case("b", "")]
+    // #[case(":", "")]
+    // #[case("<<alfa|bravo>>", "")]
+    // #[case("<<alfa-bravo|charlie>>", "")]
+    // #[case("<<alfa_bravo|charlie>>", "")]
+    // #[case("<<alfa|bravo-charlie>>", "")]
+    // #[case("<<alfa|bravo_charlie>>", "")]
+    // #[case("<<alfa|bravo|charlie>>", "")]
+    // #[case("<<alfa|bravo|charlie-delta>>", "")]
+    // #[case("<<alfa|bravo|charlie_delta>>", "")]
+    // #[case("______", "")]
+    // #[case("^", "")]
+    // #[case("\\^", "")]
+    // #[case("^^^", "")]
+    fn solo_take_until_special_characters(#[case] input: &str, #[case] left: &str) {
+        let right = take_until_special_characters(input).unwrap().0;
+        assert_eq!(left, right);
+    }
+
+    // Deprecated
     #[rstest]
     #[case("a", "")]
     #[case("b", "")]

@@ -295,7 +295,9 @@ impl PayloadSpan {
             SpanKind::EscapedBacktick => "escaped-backtick".to_string(),
             SpanKind::EscapedCaret => "escaped-caret".to_string(),
             SpanKind::EscapedColon => "escaped-colon".to_string(),
+            SpanKind::EscapedExclamation => "escaped-exclamation".to_string(),
             SpanKind::EscapedGreaterThan => "escaped-greaterthan".to_string(),
+            SpanKind::EscapedLessThan => "escaped-lessthan".to_string(),
             SpanKind::EscapedHyphen => "escaped-hyphen".to_string(),
             SpanKind::EscapedPipe => "escaped-pipe".to_string(),
             SpanKind::EscapedUnderscore => "escaped-underscore".to_string(),
@@ -310,6 +312,7 @@ impl PayloadSpan {
             SpanKind::MoreThanTwoUnderscores => "more-than-two-underscores".to_string(),
             SpanKind::SingleBacktick => "single-backtick".to_string(),
             SpanKind::SingleCaret => "single-caret".to_string(),
+            SpanKind::SingleExclamation => "single-exclamation".to_string(),
             SpanKind::SingleGreaterThan => "single-greaterthan".to_string(),
             SpanKind::SingleHyphen => "single-hyphen".to_string(),
             SpanKind::SingleLessThan => "single-lessthan".to_string(),
@@ -318,6 +321,7 @@ impl PayloadSpan {
             SpanKind::WordPart => "wordpart".to_string(),
             SpanKind::NamedSpan { r#type, .. } => r#type.to_string(),
             SpanKind::Pipe => "pipe".to_string(),
+            SpanKind::PlainText => "plain-text".to_string(),
         };
 
         let mut ps = PayloadSpan {

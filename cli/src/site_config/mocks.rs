@@ -20,49 +20,12 @@ impl SiteConfigV42 {
             list_item: vec![],
             raw: vec![],
         };
-        // let sections = ConfigSections {
-        //     basic: vec![
-        //         "bookmark".to_string(),
-        //         "div".to_string(),
-        //         "image".to_string(),
-        //         "p".to_string(),
-        //         "preview".to_string(),
-        //         "preview-thumbnail".to_string(),
-        //         "previews".to_string(),
-        //         "short".to_string(),
-        //         "title".to_string(),
-        //         "youtube".to_string(),
-        //     ],
-        //     block: vec![],
-        //     checklist: vec!["checklist".to_string(), "todo".to_string()],
-        //     checklist_item: vec!["checklist-item".to_string()],
-        //     list: vec!["list".to_string(), "notes".to_string()],
-        //     list_item: vec!["list-item".to_string()],
-        //     json: vec![],
-        //     raw: vec![
-        //         "code".to_string(),
-        //         "css".to_string(),
-        //         "html".to_string(),
-        //         "javascript".to_string(),
-        //         "pre".to_string(),
-        //     ],
-        //     yaml: vec!["metadata".to_string()],
-        // };
-
         let config = SiteConfigV42 {
             default_language: "en".to_string(),
             base_url: "testsite.localhost:1999".to_string(),
             output_directory: "_site".to_string(),
             project_root: Some(PathBuf::from("/test/mocks")),
-
-            // section_attrs: vec![
-            //     "alt".to_string(),
-            //     "autofocus".to_string(),
-            //     "hidden".to_string(),
-            //     "rel".to_string(),
-            // ],
             sections,
-
             attr_flag_lists: Some(ConfigLists {
                 basic: BTreeMap::new(),
                 block: BTreeMap::new(),
@@ -74,15 +37,40 @@ impl SiteConfigV42 {
                 raw: BTreeMap::new(),
                 unknow: BTreeMap::new(),
             }),
-
-            // span_attrs: vec![
-            //     "alt".to_string(),
-            //     "autofocus".to_string(),
-            //     "hidden".to_string(),
-            //     "rel".to_string(),
-            // ],
             theme: "test-theme".to_string(),
-            //theme_options: None,
+        };
+        config
+    }
+
+    pub fn mock_for_files_in_test_samples_dir() -> SiteConfigV42 {
+        let sections = ConfigSections {
+            basic: vec!["title".to_string(), "previews".to_string()],
+            block: vec![],
+            checklist: vec![],
+            checklist_item: vec![],
+            json5: vec!["pagedata".to_string()],
+            list: vec![],
+            list_item: vec![],
+            raw: vec![],
+        };
+        let config = SiteConfigV42 {
+            default_language: "en".to_string(),
+            base_url: "testsite.localhost:1999".to_string(),
+            output_directory: "_site".to_string(),
+            project_root: Some(PathBuf::from("/test/mocks")),
+            sections,
+            attr_flag_lists: Some(ConfigLists {
+                basic: BTreeMap::new(),
+                block: BTreeMap::new(),
+                checklist: BTreeMap::new(),
+                checklist_item: BTreeMap::new(),
+                json5: BTreeMap::new(),
+                list: BTreeMap::new(),
+                list_item: BTreeMap::new(),
+                raw: BTreeMap::new(),
+                unknow: BTreeMap::new(),
+            }),
+            theme: "test-theme".to_string(),
         };
         config
     }
