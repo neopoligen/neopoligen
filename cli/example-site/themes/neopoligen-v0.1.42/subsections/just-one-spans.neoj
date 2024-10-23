@@ -1,0 +1,6 @@
+  [!- for child in section.children() -!]
+    [!- if loop.first -!]
+      [@- theme.output_spans(site, page, child.spans()) -@]
+    [!- endif -!]
+  [!- endfor -!]
+
