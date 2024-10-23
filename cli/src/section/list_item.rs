@@ -165,7 +165,7 @@ mod test {
     }
 
     #[test]
-    fn solo_start_end_list_items_with_code_section() {
+    fn start_end_list_items_with_code_section() {
         let source = "- alfa\n\n-- code/\n\nbravo\n\n-- /code\n\n- charlie\n\n-- /list";
         let config = SiteConfig::mock1_basic();
         let left = (

@@ -40,7 +40,6 @@ pub fn basic_section_end<'a>(
     } else {
         (source, vec![])
     };
-
     let section = Section {
         attr_list: vec![],
         flag_list: vec![],
@@ -50,7 +49,7 @@ pub fn basic_section_end<'a>(
             children,
             closing: closing.to_string(),
         },
-        r#type: "end".to_string(),
+        r#type: "closing".to_string(),
     };
     Ok((source, section))
 }

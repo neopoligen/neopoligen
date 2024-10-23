@@ -187,11 +187,11 @@ mod test {
                         flag_list: vec![],
                         attrs: vec![],
                         bounds: SectionBounds::End,
-                        kind: SectionKind::Raw {
-                            text: None,
+                        kind: SectionKind::End {
                             children: vec![],
+                            closing: "code".to_string(),
                         },
-                        r#type: "code".to_string(),
+                        r#type: "closing".to_string(),
                     }],
                     text: Some("some code".to_string()),
                 },
@@ -261,11 +261,11 @@ mod test {
                         flag_list: vec![],
                         attrs: vec![],
                         bounds: SectionBounds::End,
-                        kind: SectionKind::Raw {
+                        kind: SectionKind::End {
                             children: vec![],
-                            text: None,
+                            closing: "code".to_string(),
                         },
-                        r#type: "code".to_string(),
+                        r#type: "closing".to_string(),
                     }],
                     text: Some("alfa -- not here".to_string()),
                 },
@@ -338,7 +338,7 @@ mod test {
     }
 
     #[test]
-    fn start_end_with_list_item_after() {
+    fn solo_start_end_with_list_item_after() {
         let source = "-- code/\n\nalfa\n\n-- /code\n\n- bravo";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -354,11 +354,11 @@ mod test {
                         flag_list: vec![],
                         attrs: vec![],
                         bounds: SectionBounds::End,
-                        kind: SectionKind::Raw {
-                            text: None,
+                        kind: SectionKind::End {
                             children: vec![],
+                            closing: "code".to_string(),
                         },
-                        r#type: "code".to_string(),
+                        r#type: "closing".to_string(),
                     }],
                     text: Some("alfa".to_string()),
                 },

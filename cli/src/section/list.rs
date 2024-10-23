@@ -176,7 +176,7 @@ mod test {
     }
 
     #[test]
-    fn solo_basic_start_list_test() {
+    fn basic_start_list_test() {
         let source = "-- list/\n\n- alfa\n\n-- /list";
         let config = SiteConfig::mock1_basic();
         let left = (
