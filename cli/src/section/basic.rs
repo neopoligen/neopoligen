@@ -19,7 +19,7 @@ pub fn basic_section_end<'a>(
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, _) = tag("/").context("").parse(source)?;
-    let (source, r#type) = tag(key).context("").parse(source)?;
+    let (source, closing) = tag(key).context("").parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
         .parse(source)?;
@@ -46,8 +46,11 @@ pub fn basic_section_end<'a>(
         flag_list: vec![],
         attrs,
         bounds: SectionBounds::End,
-        kind: SectionKind::Basic { children },
-        r#type: "neo-end".to_string(),
+        kind: SectionKind::End {
+            children,
+            closing: closing.to_string(),
+        },
+        r#type: "end".to_string(),
     };
     Ok((source, section))
 }

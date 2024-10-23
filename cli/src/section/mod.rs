@@ -73,6 +73,10 @@ pub enum SectionKind {
         checked_string: Option<String>,
         children: Vec<Section>,
     },
+    End {
+        children: Vec<Section>,
+        closing: String,
+    },
     Json5 {
         data: Value,
         children: Vec<Section>,
@@ -125,6 +129,10 @@ impl Section {
                 .map(|c| Value::from_object(c.clone()))
                 .collect(),
             SectionKind::ChecklistItem { children, .. } => children
+                .iter()
+                .map(|c| Value::from_object(c.clone()))
+                .collect(),
+            SectionKind::End { children, .. } => children
                 .iter()
                 .map(|c| Value::from_object(c.clone()))
                 .collect(),
@@ -214,6 +222,7 @@ impl Section {
             SectionKind::Block { .. } => Ok(Value::from("block")),
             SectionKind::Checklist { .. } => Ok(Value::from("checklist")),
             SectionKind::ChecklistItem { .. } => Ok(Value::from("checklist-item")),
+            SectionKind::End { .. } => Ok(Value::from("end")),
             SectionKind::Json5 { .. } => Ok(Value::from("json5")),
             SectionKind::List { .. } => Ok(Value::from("list")),
             SectionKind::ListItem { .. } => Ok(Value::from("list-item")),

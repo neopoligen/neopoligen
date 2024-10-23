@@ -135,6 +135,10 @@ impl PayloadSection {
                 .iter()
                 .map(|child| PayloadSection::new_from_section(child, config))
                 .collect(),
+            SectionKind::End { children, .. } => children
+                .iter()
+                .map(|child| PayloadSection::new_from_section(child, config))
+                .collect(),
             SectionKind::List { children } => children
                 .iter()
                 .map(|child| PayloadSection::new_from_section(child, config))
@@ -233,6 +237,7 @@ impl PayloadSection {
             SectionKind::Block { .. } => "block".to_string(),
             SectionKind::Checklist { .. } => "checklist".to_string(),
             SectionKind::ChecklistItem { .. } => "checklist-item".to_string(),
+            SectionKind::End { .. } => "end".to_string(),
             SectionKind::Json5 { .. } => "json5".to_string(),
             SectionKind::List { .. } => "list".to_string(),
             SectionKind::ListItem { .. } => "list-item".to_string(),
