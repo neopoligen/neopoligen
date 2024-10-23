@@ -11,8 +11,8 @@ charlie delta
 
 -- neo-expected-output/
 
-<section>
-<h1 class="page-title">Alfa Bravo</h1>
+<section class="title-section flow">
+<h1>Alfa Bravo</h1>
 <p>charlie delta</p>
 </section>
 

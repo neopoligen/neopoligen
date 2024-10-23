@@ -59,7 +59,7 @@ impl BuilderV42 {
         );
         let _ = &self.templates.insert(
             "sections/basic/neo-theme-test/end/default.neoj".to_string(),
-            r#"<!-- END_THEME_TEST -->"#.to_string(),
+            r#""#.to_string(),
         );
         let _ = &self.templates.insert(
             "sections/raw/neo-expected-output/start/default.neoj".to_string(),
