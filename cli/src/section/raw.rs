@@ -203,8 +203,7 @@ mod test {
     }
 
     #[test]
-    #[ignore]
-    fn basic_star_end_with_attrs() {
+    fn basic_start_end_with_attrs() {
         let source = "-- code/\n-- bash\n-- class: alfa\n\nsome code\n\n-- /code\n\n";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -219,9 +218,13 @@ mod test {
                         },
                     },
                     SectionAttr {
-                        kind: SectionAttrKind::KeyValue {
+                        kind: SectionAttrKind::KeyValueSpans {
                             key: "class".to_string(),
-                            value: "alfa".to_string(),
+                            spans: vec![Span {
+                                attrs: vec![],
+                                kind: SpanKind::WordPart,
+                                parsed_text: "alfa".to_string(),
+                            }],
                         },
                     },
                 ],
@@ -232,8 +235,11 @@ mod test {
                         flag_list: vec![],
                         attrs: vec![],
                         bounds: SectionBounds::End,
-                        kind: SectionKind::Basic { children: vec![] },
-                        r#type: "code".to_string(),
+                        kind: SectionKind::End {
+                            children: vec![],
+                            closing: "code".to_string(),
+                        },
+                        r#type: "closing".to_string(),
                     }],
                     text: Some("some code".to_string()),
                 },

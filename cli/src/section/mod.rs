@@ -400,7 +400,6 @@ mod test {
 
     // TODO: Add this back in
     #[test]
-    #[ignore]
     fn attr_flag_list_from_attribute() {
         let section = Section::mock4_youtube_with_tags_and_classes();
         let left = section.attr_flag_list(&[]).unwrap();
@@ -410,7 +409,6 @@ mod test {
 
     // TODO: Add this back in
     #[test]
-    #[ignore]
     fn attr_flag_list_from_attribute_and_passed_value() {
         let section = Section::mock4_youtube_with_tags_and_classes();
         let left = section.attr_flag_list(&["bravo-class".into()]).unwrap();
@@ -436,9 +434,7 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // TODO: Add this back in when hyphens are working
     #[test]
-    #[ignore]
     fn class_attr_basic() {
         let section = Section::mock4_youtube_with_tags_and_classes();
         let left = section.class_attr().unwrap();
@@ -456,7 +452,6 @@ mod test {
 
     // TODO: Add this back in when hyphens are working
     #[test]
-    #[ignore]
     fn classes_basic() {
         let section = Section::mock4_youtube_with_tags_and_classes();
         let left = section.classes();

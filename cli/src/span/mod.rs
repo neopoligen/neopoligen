@@ -52,7 +52,7 @@ use crate::span::named_span::*;
 use crate::span::single_backtick::*;
 use crate::span::single_caret::*;
 use crate::span::single_greaterthan::*;
-use crate::span::single_hyphen::*;
+// use crate::span::single_hyphen::*;
 use crate::span::single_lessthan::*;
 use crate::span::single_underscore::*;
 use crate::span::wordpart::*;

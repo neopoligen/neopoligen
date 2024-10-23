@@ -93,7 +93,7 @@ pub fn block_of_end_content<'a>(source: &'a str) -> IResult<&'a str, Section, Er
 pub fn block_of_end_content_that_is_not_a_list_item<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    dbg!(&source);
+    // dbg!(&source);
     // let (source, _) = multispace0.context("").parse(source)?;
     let (source, _) = not(eof).context("").parse(source)?;
     let (source, _) = not(tag("-")).context("").parse(source)?;

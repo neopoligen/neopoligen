@@ -409,7 +409,7 @@ mod test {
         let source = "-- /p\n\nthis is\n\nsomethig";
         let left = 2;
         let section = basic_section_end(source, "p", 0, 0).unwrap().1;
-        dbg!(&section);
+        // dbg!(&section);
         let right = match section.kind {
             SectionKind::End { children, .. } => children.len(),
             _ => 0,

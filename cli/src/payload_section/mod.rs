@@ -376,37 +376,38 @@ impl PayloadSection {
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use crate::span::{Span, SpanKind};
-    use pretty_assertions::assert_eq;
+
+    // use super::*;
+    // use crate::span::{Span, SpanKind};
+    // use pretty_assertions::assert_eq;
 
     // TODO: When V42 is done, check all these to make sure
     // everything was covered
 
-    #[test]
-    #[ignore]
-    fn aria_values_basic() {
-        let ps = PayloadSection::new_from_section(
-            &Section::mock9_aria_data(),
-            &SiteConfig::mock1_basic(),
-        );
-        let left = "alfa bravo charlie delta";
-        let r1 = ps.aria;
-        let right = r1.get("description").unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn aria_values_basic() {
+    //     let ps = PayloadSection::new_from_section(
+    //         &Section::mock9_aria_data(),
+    //         &SiteConfig::mock1_basic(),
+    //     );
+    //     let left = "alfa bravo charlie delta";
+    //     let r1 = ps.aria;
+    //     let right = r1.get("description").unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn attr_string_with_aria() {
-        let ps = PayloadSection::new_from_section(
-            &Section::mock9_aria_data(),
-            &SiteConfig::mock1_basic(),
-        );
-        let left = r#" aria-description="alfa bravo charlie delta""#;
-        let right = ps.attr_string.unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn attr_string_with_aria() {
+    //     let ps = PayloadSection::new_from_section(
+    //         &Section::mock9_aria_data(),
+    //         &SiteConfig::mock1_basic(),
+    //     );
+    //     let left = r#" aria-description="alfa bravo charlie delta""#;
+    //     let right = ps.attr_string.unwrap();
+    //     assert_eq!(left, right);
+    // }
 
     // #[test]
     // fn attr_string_with_classes() {
@@ -419,215 +420,215 @@ mod test {
     //     assert_eq!(left, right);
     // }
 
-    #[test]
-    #[ignore]
-    fn attr_string_with_data() {
-        let ps = PayloadSection::new_from_section(
-            &Section::mock9_aria_data(),
-            &SiteConfig::mock1_basic(),
-        );
-        let left = r#" aria-description="alfa bravo charlie delta""#;
-        let right = ps.attr_string.unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn attr_string_with_data() {
+    //     let ps = PayloadSection::new_from_section(
+    //         &Section::mock9_aria_data(),
+    //         &SiteConfig::mock1_basic(),
+    //     );
+    //     let left = r#" aria-description="alfa bravo charlie delta""#;
+    //     let right = ps.attr_string.unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn attr_string_with_id() {
-        let ps = PayloadSection::new_from_section(
-            &Section::mock5_div_with_id(),
-            &SiteConfig::mock1_basic(),
-        );
-        let left = r#" id="attr-id""#;
-        let right = ps.attr_string.unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn attr_string_with_id() {
+    //     let ps = PayloadSection::new_from_section(
+    //         &Section::mock5_div_with_id(),
+    //         &SiteConfig::mock1_basic(),
+    //     );
+    //     let left = r#" id="attr-id""#;
+    //     let right = ps.attr_string.unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn attrs_basic_check() {
-        let ps = PayloadSection::new_from_section(
-            &Section::mock3_image_with_flag_and_multiple_attrs_with_same_key(),
-            &SiteConfig::mock1_basic(),
-        );
-        let left = "alfa bravo charlie delta";
-        let right = ps.attrs.get("alt").unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn attrs_basic_check() {
+    //     let ps = PayloadSection::new_from_section(
+    //         &Section::mock3_image_with_flag_and_multiple_attrs_with_same_key(),
+    //         &SiteConfig::mock1_basic(),
+    //     );
+    //     let left = "alfa bravo charlie delta";
+    //     let right = ps.attrs.get("alt").unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn attr_spans_basic_check() {
-        let ps = PayloadSection::new_from_section(
-            &Section::mock3_image_with_flag_and_multiple_attrs_with_same_key(),
-            &SiteConfig::mock1_basic(),
-        );
-        let left = &vec![
-            PayloadSpan {
-                aria: None,
-                aria_unescaped: None,
-                attr_string: None,
-                attrs: None,
-                attrs_unescaped: None,
-                children: vec![],
-                classes: None,
-                classes_unescaped: None,
-                custom_attrs: None,
-                custom_attrs_unescaped: None,
-                data: None,
-                data_unescaped: None,
-                first_flag: None,
-                first_flag_unescaped: None,
-                flags: None,
-                flags_unescaped: None,
-                id: None,
-                id_unescaped: None,
-                kind: "basic".to_string(),
-                r#type: "wordpart".to_string(),
-                parsed_text: "alfa bravo".to_string(),
-                template_list: vec![
-                    "spans/wordpart.neoj".to_string(),
-                    "spans/generic-basic-span.neoj".to_string(),
-                ],
-            },
-            PayloadSpan {
-                aria: None,
-                aria_unescaped: None,
-                attr_string: None,
-                attrs: None,
-                attrs_unescaped: None,
-                children: vec![],
-                classes: None,
-                classes_unescaped: None,
-                custom_attrs: None,
-                custom_attrs_unescaped: None,
-                data: None,
-                data_unescaped: None,
-                first_flag: None,
-                first_flag_unescaped: None,
-                flags: None,
-                flags_unescaped: None,
-                id: None,
-                id_unescaped: None,
-                kind: "basic".to_string(),
-                r#type: "space".to_string(),
-                parsed_text: " ".to_string(),
-                template_list: vec![
-                    "spans/space.neoj".to_string(),
-                    "spans/generic-basic-span.neoj".to_string(),
-                ],
-            },
-            PayloadSpan {
-                aria: None,
-                aria_unescaped: None,
-                attr_string: None,
-                attrs: None,
-                attrs_unescaped: None,
-                children: vec![],
-                classes: None,
-                classes_unescaped: None,
-                custom_attrs: None,
-                custom_attrs_unescaped: None,
-                data: None,
-                data_unescaped: None,
-                first_flag: None,
-                first_flag_unescaped: None,
-                flags: None,
-                flags_unescaped: None,
-                id: None,
-                id_unescaped: None,
-                kind: "basic".to_string(),
-                r#type: "wordpart".to_string(),
-                parsed_text: "charlie delta".to_string(),
-                template_list: vec![
-                    "spans/wordpart.neoj".to_string(),
-                    "spans/generic-basic-span.neoj".to_string(),
-                ],
-            },
-        ];
-        let right = ps.attr_spans.get("alt").unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn attr_spans_basic_check() {
+    //     let ps = PayloadSection::new_from_section(
+    //         &Section::mock3_image_with_flag_and_multiple_attrs_with_same_key(),
+    //         &SiteConfig::mock1_basic(),
+    //     );
+    //     let left = &vec![
+    //         PayloadSpan {
+    //             aria: None,
+    //             aria_unescaped: None,
+    //             attr_string: None,
+    //             attrs: None,
+    //             attrs_unescaped: None,
+    //             children: vec![],
+    //             classes: None,
+    //             classes_unescaped: None,
+    //             custom_attrs: None,
+    //             custom_attrs_unescaped: None,
+    //             data: None,
+    //             data_unescaped: None,
+    //             first_flag: None,
+    //             first_flag_unescaped: None,
+    //             flags: None,
+    //             flags_unescaped: None,
+    //             id: None,
+    //             id_unescaped: None,
+    //             kind: "basic".to_string(),
+    //             r#type: "wordpart".to_string(),
+    //             parsed_text: "alfa bravo".to_string(),
+    //             template_list: vec![
+    //                 "spans/wordpart.neoj".to_string(),
+    //                 "spans/generic-basic-span.neoj".to_string(),
+    //             ],
+    //         },
+    //         PayloadSpan {
+    //             aria: None,
+    //             aria_unescaped: None,
+    //             attr_string: None,
+    //             attrs: None,
+    //             attrs_unescaped: None,
+    //             children: vec![],
+    //             classes: None,
+    //             classes_unescaped: None,
+    //             custom_attrs: None,
+    //             custom_attrs_unescaped: None,
+    //             data: None,
+    //             data_unescaped: None,
+    //             first_flag: None,
+    //             first_flag_unescaped: None,
+    //             flags: None,
+    //             flags_unescaped: None,
+    //             id: None,
+    //             id_unescaped: None,
+    //             kind: "basic".to_string(),
+    //             r#type: "space".to_string(),
+    //             parsed_text: " ".to_string(),
+    //             template_list: vec![
+    //                 "spans/space.neoj".to_string(),
+    //                 "spans/generic-basic-span.neoj".to_string(),
+    //             ],
+    //         },
+    //         PayloadSpan {
+    //             aria: None,
+    //             aria_unescaped: None,
+    //             attr_string: None,
+    //             attrs: None,
+    //             attrs_unescaped: None,
+    //             children: vec![],
+    //             classes: None,
+    //             classes_unescaped: None,
+    //             custom_attrs: None,
+    //             custom_attrs_unescaped: None,
+    //             data: None,
+    //             data_unescaped: None,
+    //             first_flag: None,
+    //             first_flag_unescaped: None,
+    //             flags: None,
+    //             flags_unescaped: None,
+    //             id: None,
+    //             id_unescaped: None,
+    //             kind: "basic".to_string(),
+    //             r#type: "wordpart".to_string(),
+    //             parsed_text: "charlie delta".to_string(),
+    //             template_list: vec![
+    //                 "spans/wordpart.neoj".to_string(),
+    //                 "spans/generic-basic-span.neoj".to_string(),
+    //             ],
+    //         },
+    //     ];
+    //     let right = ps.attr_spans.get("alt").unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn bounds_check() {
-        let config = SiteConfig::mock1_basic();
-        let section = Section::mock1_basic_title_section_no_attrs();
-        let left = "full";
-        let right = &PayloadSection::new_from_section(&section, &config).bounds;
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn bounds_check() {
+    //     let config = SiteConfig::mock1_basic();
+    //     let section = Section::mock1_basic_title_section_no_attrs();
+    //     let left = "full";
+    //     let right = &PayloadSection::new_from_section(&section, &config).bounds;
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn checklist_item_checked_false() {
-        let ps = PayloadSection::new_from_section(
-            &Section::mock11_checklist_items(),
-            &SiteConfig::mock1_basic(),
-        );
-        let left = false;
-        let right = ps.children[0].checked;
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn checklist_item_checked_false() {
+    //     let ps = PayloadSection::new_from_section(
+    //         &Section::mock11_checklist_items(),
+    //         &SiteConfig::mock1_basic(),
+    //     );
+    //     let left = false;
+    //     let right = ps.children[0].checked;
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn checklist_item_checked_true() {
-        let ps = PayloadSection::new_from_section(
-            &Section::mock11_checklist_items(),
-            &SiteConfig::mock1_basic(),
-        );
-        let left = true;
-        let right = ps.children[1].checked;
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn checklist_item_checked_true() {
+    //     let ps = PayloadSection::new_from_section(
+    //         &Section::mock11_checklist_items(),
+    //         &SiteConfig::mock1_basic(),
+    //     );
+    //     let left = true;
+    //     let right = ps.children[1].checked;
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn data_values_basic() {
-        let ps = PayloadSection::new_from_section(
-            &Section::mock10_data_attrs(),
-            &SiteConfig::mock1_basic(),
-        );
-        let left = "alfa bravo charlie delta";
-        let r1 = ps.data;
-        let right = r1.get("test").unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn data_values_basic() {
+    //     let ps = PayloadSection::new_from_section(
+    //         &Section::mock10_data_attrs(),
+    //         &SiteConfig::mock1_basic(),
+    //     );
+    //     let left = "alfa bravo charlie delta";
+    //     let r1 = ps.data;
+    //     let right = r1.get("test").unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn flatten_parsed_text_basic() {
-        let span = Span {
-            attrs: vec![],
-            parsed_text: "some text".to_string(),
-            kind: SpanKind::WordPart,
-        };
-        let left = "some text".to_string();
-        let right = flatten_parsed_text(&span);
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn flatten_parsed_text_basic() {
+    //     let span = Span {
+    //         attrs: vec![],
+    //         parsed_text: "some text".to_string(),
+    //         kind: SpanKind::WordPart,
+    //     };
+    //     let left = "some text".to_string();
+    //     let right = flatten_parsed_text(&span);
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn flatten_parsed_text_from_named_span() {
-        let span = Span {
-            attrs: vec![],
-            parsed_text: "".to_string(),
-            kind: SpanKind::NamedSpan {
-                children: vec![Span {
-                    attrs: vec![],
-                    kind: SpanKind::WordPart,
-                    parsed_text: "alfa".to_string(),
-                }],
-                r#type: "em".to_string(),
-            },
-        };
-        let left = "alfa".to_string();
-        let right = flatten_parsed_text(&span);
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn flatten_parsed_text_from_named_span() {
+    //     let span = Span {
+    //         attrs: vec![],
+    //         parsed_text: "".to_string(),
+    //         kind: SpanKind::NamedSpan {
+    //             children: vec![Span {
+    //                 attrs: vec![],
+    //                 kind: SpanKind::WordPart,
+    //                 parsed_text: "alfa".to_string(),
+    //             }],
+    //             r#type: "em".to_string(),
+    //         },
+    //     };
+    //     let left = "alfa".to_string();
+    //     let right = flatten_parsed_text(&span);
+    //     assert_eq!(left, right);
+    // }
 
     // #[test]
     // #[ignore]
@@ -732,35 +733,35 @@ mod test {
     //     assert_eq!(left, right);
     // }
 
-    #[test]
-    #[ignore]
-    fn section_template_list_from_attr() {
-        let config = SiteConfig::mock1_basic();
-        let payload_section = PayloadSection::new_from_section(
-            &Section::mock2_div_with_title_and_template_attrs(),
-            &config,
-        );
-        let left = vec![
-            "sections/basic/div/full/template-from-attr.neoj".to_string(),
-            "sections/basic/div/full/default.neoj".to_string(),
-            "sections/basic/generic/full/default.neoj".to_string(),
-            "sections/unknown/generic/full/default.neoj".to_string(),
-        ];
-        let right = payload_section.template_list;
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn section_template_list_from_attr() {
+    //     let config = SiteConfig::mock1_basic();
+    //     let payload_section = PayloadSection::new_from_section(
+    //         &Section::mock2_div_with_title_and_template_attrs(),
+    //         &config,
+    //     );
+    //     let left = vec![
+    //         "sections/basic/div/full/template-from-attr.neoj".to_string(),
+    //         "sections/basic/div/full/default.neoj".to_string(),
+    //         "sections/basic/generic/full/default.neoj".to_string(),
+    //         "sections/unknown/generic/full/default.neoj".to_string(),
+    //     ];
+    //     let right = payload_section.template_list;
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn status_check() {
-        let config = SiteConfig::mock1_basic();
-        let section = Section::mock6_div_with_created_and_updated_and_status();
-        let left = "section-status-example";
-        let right = &PayloadSection::new_from_section(&section, &config)
-            .status
-            .unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn status_check() {
+    //     let config = SiteConfig::mock1_basic();
+    //     let section = Section::mock6_div_with_created_and_updated_and_status();
+    //     let left = "section-status-example";
+    //     let right = &PayloadSection::new_from_section(&section, &config)
+    //         .status
+    //         .unwrap();
+    //     assert_eq!(left, right);
+    // }
 
     // #[test]
     // fn status_does_not_show_up_in_attrs() {
@@ -794,32 +795,32 @@ mod test {
     //     assert_eq!(left, right);
     // }
 
-    #[test]
-    #[ignore]
-    fn template_list_check() {
-        let config = SiteConfig::mock1_basic();
-        let payload_section = PayloadSection::new_from_section(
-            &Section::mock1_basic_title_section_no_attrs(),
-            &config,
-        );
-        let left = vec![
-            "sections/basic/title/full/default.neoj".to_string(),
-            "sections/basic/generic/full/default.neoj".to_string(),
-            "sections/unknown/generic/full/default.neoj".to_string(),
-        ];
-        let right = payload_section.template_list;
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn template_list_check() {
+    //     let config = SiteConfig::mock1_basic();
+    //     let payload_section = PayloadSection::new_from_section(
+    //         &Section::mock1_basic_title_section_no_attrs(),
+    //         &config,
+    //     );
+    //     let left = vec![
+    //         "sections/basic/title/full/default.neoj".to_string(),
+    //         "sections/basic/generic/full/default.neoj".to_string(),
+    //         "sections/unknown/generic/full/default.neoj".to_string(),
+    //     ];
+    //     let right = payload_section.template_list;
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn type_of_section() {
-        let config = SiteConfig::mock1_basic();
-        let section = Section::mock1_basic_title_section_no_attrs();
-        let left = "title".to_string();
-        let right = PayloadSection::new_from_section(&section, &config).r#type;
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn type_of_section() {
+    //     let config = SiteConfig::mock1_basic();
+    //     let section = Section::mock1_basic_title_section_no_attrs();
+    //     let left = "title".to_string();
+    //     let right = PayloadSection::new_from_section(&section, &config).r#type;
+    //     assert_eq!(left, right);
+    // }
 
     // #[test]
     // #[ignore]

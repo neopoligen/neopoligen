@@ -178,9 +178,7 @@ mod test {
         assert!(section_flag_attr(source).is_ok());
     }
 
-    // TODO: Put this back in
     #[test]
-    #[ignore]
     fn flag_attr_with_hyphen() {
         let source = "-- https://www.exa-mple.com";
         assert!(section_flag_attr(source).is_ok());

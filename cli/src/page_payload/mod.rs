@@ -315,210 +315,211 @@ impl PagePayload {
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use pretty_assertions::assert_eq;
-    use std::path::PathBuf;
 
-    #[test]
-    #[ignore]
-    fn absolute_url_check() {
-        let p = PagePayload::new_from_source_page(
-            &PathBuf::from("/test/mocks/source/filename.neo"),
-            &SourcePage::mock1_20240101_alfa1234_minimal(),
-            ThemeTestOrPage::Page,
-        )
-        .unwrap();
-        let left = "/en/20240101_alfa1234/?page=alfa-alfa-alfa".to_string();
-        let right = p.absolute_url.unwrap();
-        assert_eq!(left, right);
-    }
+    // use super::*;
+    // use pretty_assertions::assert_eq;
+    // use std::path::PathBuf;
 
-    #[test]
-    #[ignore]
-    fn id_basic_check() {
-        let p = PagePayload::new_from_source_page(
-            &PathBuf::from("/test/mocks/source/filename.neo"),
-            &SourcePage::mock1_20240101_alfa1234_minimal(),
-            ThemeTestOrPage::Page,
-        )
-        .unwrap();
-        let left = "20240101_alfa1234".to_string();
-        let right = p.id.unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn absolute_url_check() {
+    //     let p = PagePayload::new_from_source_page(
+    //         &PathBuf::from("/test/mocks/source/filename.neo"),
+    //         &SourcePage::mock1_20240101_alfa1234_minimal(),
+    //         ThemeTestOrPage::Page,
+    //     )
+    //     .unwrap();
+    //     let left = "/en/20240101_alfa1234/?page=alfa-alfa-alfa".to_string();
+    //     let right = p.absolute_url.unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn language_basic_check() {
-        let p = PagePayload::new_from_source_page(
-            &PathBuf::from("/test/mocks/source/filename.neo"),
-            &SourcePage::mock1_20240101_alfa1234_minimal(),
-            ThemeTestOrPage::Page,
-        )
-        .unwrap();
-        let left = "en".to_string();
-        let right = p.language.unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn id_basic_check() {
+    //     let p = PagePayload::new_from_source_page(
+    //         &PathBuf::from("/test/mocks/source/filename.neo"),
+    //         &SourcePage::mock1_20240101_alfa1234_minimal(),
+    //         ThemeTestOrPage::Page,
+    //     )
+    //     .unwrap();
+    //     let left = "20240101_alfa1234".to_string();
+    //     let right = p.id.unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn rel_file_path_default() {
-        let p = PagePayload::new_from_source_page(
-            &PathBuf::from("/test/mocks/source/filename.neo"),
-            &SourcePage::mock1_20240101_alfa1234_minimal(),
-            ThemeTestOrPage::Page,
-        )
-        .unwrap();
-        let left = PathBuf::from("en/20240101_alfa1234/index.html");
-        let right = p.rel_file_path.unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn language_basic_check() {
+    //     let p = PagePayload::new_from_source_page(
+    //         &PathBuf::from("/test/mocks/source/filename.neo"),
+    //         &SourcePage::mock1_20240101_alfa1234_minimal(),
+    //         ThemeTestOrPage::Page,
+    //     )
+    //     .unwrap();
+    //     let left = "en".to_string();
+    //     let right = p.language.unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn rel_file_path_home_page() {
-        let p = PagePayload::new_from_source_page(
-            &PathBuf::from("/test/mocks/source/filename.neo"),
-            &SourcePage::mock2_20240102_bravo123_home_page_path(),
-            ThemeTestOrPage::Page,
-        )
-        .unwrap();
-        let left = PathBuf::from("index.html");
-        let right = p.rel_file_path.unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn rel_file_path_default() {
+    //     let p = PagePayload::new_from_source_page(
+    //         &PathBuf::from("/test/mocks/source/filename.neo"),
+    //         &SourcePage::mock1_20240101_alfa1234_minimal(),
+    //         ThemeTestOrPage::Page,
+    //     )
+    //     .unwrap();
+    //     let left = PathBuf::from("en/20240101_alfa1234/index.html");
+    //     let right = p.rel_file_path.unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn rel_file_full_path() {
-        let p = PagePayload::new_from_source_page(
-            &PathBuf::from("/test/mocks/source/filename.neo"),
-            &SourcePage::mock6_20240106_foxtrot8_full_path(),
-            ThemeTestOrPage::Page,
-        )
-        .unwrap();
-        let left = PathBuf::from("CNAME");
-        let right = p.rel_file_path.unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn rel_file_path_home_page() {
+    //     let p = PagePayload::new_from_source_page(
+    //         &PathBuf::from("/test/mocks/source/filename.neo"),
+    //         &SourcePage::mock2_20240102_bravo123_home_page_path(),
+    //         ThemeTestOrPage::Page,
+    //     )
+    //     .unwrap();
+    //     let left = PathBuf::from("index.html");
+    //     let right = p.rel_file_path.unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn rel_source_path_check_for_page() {
-        let p = PagePayload::new_from_source_page(
-            &PathBuf::from("/test/mocks/content/subdir/filename.neo"),
-            &SourcePage::mock1_20240101_alfa1234_minimal(),
-            ThemeTestOrPage::Page,
-        )
-        .unwrap();
-        let left = PathBuf::from("subdir/filename.neo");
-        let right = p.rel_source_path.unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn rel_file_full_path() {
+    //     let p = PagePayload::new_from_source_page(
+    //         &PathBuf::from("/test/mocks/source/filename.neo"),
+    //         &SourcePage::mock6_20240106_foxtrot8_full_path(),
+    //         ThemeTestOrPage::Page,
+    //     )
+    //     .unwrap();
+    //     let left = PathBuf::from("CNAME");
+    //     let right = p.rel_file_path.unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn rel_source_path_check_for_theme_test() {
-        let p = PagePayload::new_from_source_page(
-            &PathBuf::from("/test/mocks/themes/test-theme/templates/filename.neo"),
-            &SourcePage::mock1_20240101_alfa1234_minimal(),
-            ThemeTestOrPage::ThemeTest,
-        )
-        .unwrap();
-        let left = PathBuf::from("templates/filename.neo");
-        let right = p.rel_source_path.unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn rel_source_path_check_for_page() {
+    //     let p = PagePayload::new_from_source_page(
+    //         &PathBuf::from("/test/mocks/content/subdir/filename.neo"),
+    //         &SourcePage::mock1_20240101_alfa1234_minimal(),
+    //         ThemeTestOrPage::Page,
+    //     )
+    //     .unwrap();
+    //     let left = PathBuf::from("subdir/filename.neo");
+    //     let right = p.rel_source_path.unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn status_custom_check() {
-        let p = PagePayload::new_from_source_page(
-            &PathBuf::from("/test/mocks/source/filename.neo"),
-            &SourcePage::mock4_20240104_delta123_type_and_status(),
-            ThemeTestOrPage::Page,
-        )
-        .unwrap();
-        let left = "custom-status".to_string();
-        let right = p.status.unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn rel_source_path_check_for_theme_test() {
+    //     let p = PagePayload::new_from_source_page(
+    //         &PathBuf::from("/test/mocks/themes/test-theme/templates/filename.neo"),
+    //         &SourcePage::mock1_20240101_alfa1234_minimal(),
+    //         ThemeTestOrPage::ThemeTest,
+    //     )
+    //     .unwrap();
+    //     let left = PathBuf::from("templates/filename.neo");
+    //     let right = p.rel_source_path.unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn status_default_check() {
-        let p = PagePayload::new_from_source_page(
-            &PathBuf::from("/test/mocks/source/filename.neo"),
-            &SourcePage::mock1_20240101_alfa1234_minimal(),
-            ThemeTestOrPage::Page,
-        )
-        .unwrap();
-        let left = "published".to_string();
-        let right = p.status.unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn status_custom_check() {
+    //     let p = PagePayload::new_from_source_page(
+    //         &PathBuf::from("/test/mocks/source/filename.neo"),
+    //         &SourcePage::mock4_20240104_delta123_type_and_status(),
+    //         ThemeTestOrPage::Page,
+    //     )
+    //     .unwrap();
+    //     let left = "custom-status".to_string();
+    //     let right = p.status.unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn template_list_default_check() {
-        let p = PagePayload::new_from_source_page(
-            &PathBuf::from("/test/mocks/source/filename.neo"),
-            &SourcePage::mock1_20240101_alfa1234_minimal(),
-            ThemeTestOrPage::Page,
-        )
-        .unwrap();
-        let left = vec!["pages/post/published.neoj".to_string()];
-        let right = p.template_list;
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn status_default_check() {
+    //     let p = PagePayload::new_from_source_page(
+    //         &PathBuf::from("/test/mocks/source/filename.neo"),
+    //         &SourcePage::mock1_20240101_alfa1234_minimal(),
+    //         ThemeTestOrPage::Page,
+    //     )
+    //     .unwrap();
+    //     let left = "published".to_string();
+    //     let right = p.status.unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn template_list_with_type_and_status() {
-        let p = PagePayload::new_from_source_page(
-            &PathBuf::from("/test/mocks/source/filename.neo"),
-            &SourcePage::mock4_20240104_delta123_type_and_status(),
-            ThemeTestOrPage::Page,
-        )
-        .unwrap();
-        let left = vec![
-            "pages/custom-type/custom-status.neoj".to_string(),
-            "pages/custom-type/published.neoj".to_string(),
-            "pages/post/custom-status.neoj".to_string(),
-            "pages/post/published.neoj".to_string(),
-        ];
-        let right = p.template_list;
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn template_list_default_check() {
+    //     let p = PagePayload::new_from_source_page(
+    //         &PathBuf::from("/test/mocks/source/filename.neo"),
+    //         &SourcePage::mock1_20240101_alfa1234_minimal(),
+    //         ThemeTestOrPage::Page,
+    //     )
+    //     .unwrap();
+    //     let left = vec!["pages/post/published.neoj".to_string()];
+    //     let right = p.template_list;
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn type_default_check() {
-        let p = PagePayload::new_from_source_page(
-            &PathBuf::from("/test/mocks/source/filename.neo"),
-            &SourcePage::mock1_20240101_alfa1234_minimal(),
-            ThemeTestOrPage::Page,
-        )
-        .unwrap();
-        let left = "post".to_string();
-        let right = p.r#type.unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn template_list_with_type_and_status() {
+    //     let p = PagePayload::new_from_source_page(
+    //         &PathBuf::from("/test/mocks/source/filename.neo"),
+    //         &SourcePage::mock4_20240104_delta123_type_and_status(),
+    //         ThemeTestOrPage::Page,
+    //     )
+    //     .unwrap();
+    //     let left = vec![
+    //         "pages/custom-type/custom-status.neoj".to_string(),
+    //         "pages/custom-type/published.neoj".to_string(),
+    //         "pages/post/custom-status.neoj".to_string(),
+    //         "pages/post/published.neoj".to_string(),
+    //     ];
+    //     let right = p.template_list;
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn type_custom_check() {
-        let p = PagePayload::new_from_source_page(
-            &PathBuf::from("/test/mocks/source/filename.neo"),
-            &SourcePage::mock4_20240104_delta123_type_and_status(),
-            ThemeTestOrPage::Page,
-        )
-        .unwrap();
-        let left = "custom-type".to_string();
-        let right = p.r#type.unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn type_default_check() {
+    //     let p = PagePayload::new_from_source_page(
+    //         &PathBuf::from("/test/mocks/source/filename.neo"),
+    //         &SourcePage::mock1_20240101_alfa1234_minimal(),
+    //         ThemeTestOrPage::Page,
+    //     )
+    //     .unwrap();
+    //     let left = "post".to_string();
+    //     let right = p.r#type.unwrap();
+    //     assert_eq!(left, right);
+    // }
+
+    // #[test]
+    // #[ignore]
+    // fn type_custom_check() {
+    //     let p = PagePayload::new_from_source_page(
+    //         &PathBuf::from("/test/mocks/source/filename.neo"),
+    //         &SourcePage::mock4_20240104_delta123_type_and_status(),
+    //         ThemeTestOrPage::Page,
+    //     )
+    //     .unwrap();
+    //     let left = "custom-type".to_string();
+    //     let right = p.r#type.unwrap();
+    //     assert_eq!(left, right);
+    // }
 
     // #[test]
     // #[ignore]

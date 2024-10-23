@@ -268,7 +268,12 @@ impl BuilderV42 {
             .for_each(|p| match p.generate_ast(&self.site_config) {
                 Ok(()) => (),
                 Err(e) => {
-                    event!(Level::ERROR, "Error in make_asts: {}", &e);
+                    event!(
+                        Level::ERROR,
+                        "Error in make_asts: {}, {}",
+                        &p.fs_path.display(),
+                        &e
+                    );
                     self.errors.push(e)
                 }
             });
