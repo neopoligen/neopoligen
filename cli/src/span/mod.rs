@@ -104,8 +104,36 @@ impl Span {
 
     pub fn parsed_text(&self) -> Result<Value, Error> {
         match &self.kind {
+            SpanKind::CodeShorthand => Ok(Value::from(&self.parsed_text)),
+            SpanKind::Colon => Ok(Value::from(&self.parsed_text)),
+            SpanKind::ColonNotFollowedBySpace => Ok(Value::from(&self.parsed_text)),
+            SpanKind::DoubleUnderscore => Ok(Value::from(&self.parsed_text)),
+            SpanKind::EmShorthand => Ok(Value::from(&self.parsed_text)),
+            SpanKind::EscapedBacktick => Ok(Value::from(&self.parsed_text)),
+            SpanKind::EscapedBackslash => Ok(Value::from(&self.parsed_text)),
+            SpanKind::EscapedCaret => Ok(Value::from(&self.parsed_text)),
+            SpanKind::EscapedColon => Ok(Value::from(&self.parsed_text)),
+            SpanKind::EscapedGreaterThan => Ok(Value::from(&self.parsed_text)),
+            SpanKind::EscapedHyphen => Ok(Value::from(&self.parsed_text)),
+            SpanKind::EscapedPipe => Ok(Value::from(&self.parsed_text)),
+            SpanKind::EscapedUnderscore => Ok(Value::from(&self.parsed_text)),
+            SpanKind::FootnoteShorthand => Ok(Value::from(&self.parsed_text)),
+            SpanKind::GreaterThan => Ok(Value::from(&self.parsed_text)),
+            SpanKind::Hyphen => Ok(Value::from(&self.parsed_text)),
+            SpanKind::LessThan => Ok(Value::from(&self.parsed_text)),
+            SpanKind::LinkShorthand => Ok(Value::from(&self.parsed_text)),
+            SpanKind::MoreThanTwoUnderscores => Ok(Value::from(&self.parsed_text)),
+            SpanKind::MoreThanTwoCarets => Ok(Value::from(&self.parsed_text)),
+            SpanKind::Newline => Ok(Value::from(&self.parsed_text)),
+            SpanKind::Pipe => Ok(Value::from(&self.parsed_text)),
+            SpanKind::SingleBacktick => Ok(Value::from(&self.parsed_text)),
+            SpanKind::SingleCaret => Ok(Value::from(&self.parsed_text)),
+            SpanKind::SingleUnderscore => Ok(Value::from(&self.parsed_text)),
+            SpanKind::SingleGreaterThan => Ok(Value::from(&self.parsed_text)),
+            SpanKind::SingleLessThan => Ok(Value::from(&self.parsed_text)),
+            SpanKind::Space => Ok(Value::from(&self.parsed_text)),
             SpanKind::WordPart => Ok(Value::from(&self.parsed_text)),
-            _ => Ok(Value::from("unknown")),
+            _ => Ok(Value::from("[UNKNOWN_SPAN]")),
         }
     }
 
