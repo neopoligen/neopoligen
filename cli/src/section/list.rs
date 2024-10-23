@@ -176,7 +176,7 @@ mod test {
     }
 
     #[test]
-    fn basic_start_list_test() {
+    fn solo_basic_start_list_test() {
         let source = "-- list/\n\n- alfa\n\n-- /list";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -216,8 +216,8 @@ mod test {
                             flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::End,
-                            kind: SectionKind::List { children: vec![] },
-                            r#type: "list".to_string(),
+                            kind: SectionKind::Basic { children: vec![] },
+                            r#type: "neo-end".to_string(),
                         },
                     ],
                 },

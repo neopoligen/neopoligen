@@ -204,7 +204,7 @@ mod test {
                                         attrs: vec![],
                                         bounds: SectionBounds::End,
                                         kind: SectionKind::Basic { children: vec![] },
-                                        r#type: "code".to_string(),
+                                        r#type: "neo-end".to_string(),
                                     }],
                                     text: Some("bravo".to_string()),
                                 },

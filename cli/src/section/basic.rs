@@ -47,7 +47,7 @@ pub fn basic_section_end<'a>(
         attrs,
         bounds: SectionBounds::End,
         kind: SectionKind::Basic { children },
-        r#type: r#type.to_string(),
+        r#type: "neo-end".to_string(),
     };
     Ok((source, section))
 }

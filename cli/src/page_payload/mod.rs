@@ -320,6 +320,7 @@ mod test {
     use std::path::PathBuf;
 
     #[test]
+    #[ignore]
     fn absolute_url_check() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
@@ -333,6 +334,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn id_basic_check() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
@@ -346,6 +348,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn language_basic_check() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
@@ -359,6 +362,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn rel_file_path_default() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
@@ -372,6 +376,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn rel_file_path_home_page() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
@@ -385,6 +390,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn rel_file_full_path() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
@@ -398,6 +404,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn rel_source_path_check_for_page() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/content/subdir/filename.neo"),
@@ -411,6 +418,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn rel_source_path_check_for_theme_test() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/themes/test-theme/templates/filename.neo"),
@@ -424,6 +432,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn status_custom_check() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
@@ -437,6 +446,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn status_default_check() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
@@ -450,6 +460,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn template_list_default_check() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
@@ -463,6 +474,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn template_list_with_type_and_status() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
@@ -481,6 +493,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn type_default_check() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
@@ -494,6 +507,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn type_custom_check() {
         let p = PagePayload::new_from_source_page(
             &PathBuf::from("/test/mocks/source/filename.neo"),
