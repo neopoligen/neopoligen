@@ -50,7 +50,7 @@ Mock 3
 -- pagedata
 -- id: mock3_test
 -- template: home-page
--- status: draft 
+-- status: draft
 -- path: /index.html"#
                 .to_string(),
             fs_path: PathBuf::from("not/a/real/path.neo"),

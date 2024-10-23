@@ -298,7 +298,7 @@ mod test {
     }
 
     #[test]
-    fn output_rel_path_with_path_attr() {
+    fn solo_output_rel_path_with_path_attr() {
         let page = PageV42::mock3_custom_path();
         let left = PathBuf::from("index.html");
         let right = page.output_fs_rel_path(&PathBuf::from("en")).unwrap();

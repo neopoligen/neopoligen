@@ -1,7 +1,7 @@
 use crate::span::colon::colon;
 use crate::span::double_underscore::double_underscore;
 use crate::span::escaped_pipe::escaped_pipe;
-// use crate::span::hyphen::hyphen;
+use crate::span::hyphen::hyphen;
 use crate::span::pipe::pipe;
 use crate::span::single_underscore::single_underscore;
 use crate::span::wordpart::wordpart;
@@ -53,7 +53,7 @@ pub fn section_key_value_attr<'a>(
     let (source, spans) = many1(alt((
         wordpart,
         space,
-        //hyphen,
+        hyphen,
         colon,
         escaped_pipe,
         pipe,
@@ -105,7 +105,7 @@ pub fn section_flag_attr<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, E
     let (source, parts) = many1(alt((
         wordpart,
         colon,
-        // hyphen,
+        hyphen,
         single_underscore,
         double_underscore,
     )))
