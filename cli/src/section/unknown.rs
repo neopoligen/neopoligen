@@ -172,8 +172,8 @@ mod test {
     //     use rstest::rstest;
 
     #[test]
-    fn solo_unknown_start_and_end_not_in_list() {
-        let source = "-- unknown-section/\n\nalfa bravo\n\n-- /unknown-section\n\n";
+    fn unknown_start_and_end_not_in_list() {
+        let source = "-- unknown-section/\n\nalfa bravo\n\n-- /unknown-section";
         let config = SiteConfig::mock1_basic();
         let left = (
             "",

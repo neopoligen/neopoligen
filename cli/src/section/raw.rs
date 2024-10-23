@@ -34,7 +34,7 @@ pub fn raw_section_end<'a>(
             .context("")
             .parse(source)?
     } else {
-        many0(|src| block_of_anything(src))
+        many0(|src| block_of_end_content(src))
             .context("")
             .parse(source)?
     };
@@ -277,7 +277,7 @@ mod test {
     }
 
     #[test]
-    fn start_end_with_content_after_end() {
+    fn solo_start_end_with_content_after_end() {
         let source = "-- code/\n\nalfa\n\n-- /code\n\nbravo\n\ncharlie\n\n-- p";
         let config = SiteConfig::mock1_basic();
         let left = (
