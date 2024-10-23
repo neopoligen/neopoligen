@@ -19,6 +19,29 @@ charlie delta
 -- /neo-expected-output
 
 
+
+-- neo-theme-test/
+
+-- div 
+
+Alfa Bravo
+
+charlie delta
+
+-- /neo-theme-test
+
+-- neo-expected-output/
+
+<section class="unknown-section flow">
+<p>Alfa Bravo</p>
+<p>charlie delta</p>
+</section>
+
+-- /neo-expected-output
+
+
+
+
 -- pagedata
 -- id: title-test-001
 -- status: done

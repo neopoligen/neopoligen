@@ -41,14 +41,6 @@ impl BuilderV42 {
     pub fn load_theme_test_templates(&mut self) -> Result<()> {
         event!(Level::INFO, "Adding theme test templates to config");
         let _ = &self.templates.insert(
-            "page-templates/post/done.neoj".to_string(),
-            r#"[!- import "helpers/theme.neoj" as theme -!]
-        [!- for section in page.sections() -!]
-        [@- theme.output_section(site, page, section) -@]
-        [!- endfor -!]"#
-                .to_string(),
-        );
-        let _ = &self.templates.insert(
             "sections/basic/neo-theme-test/start/default.neoj".to_string(),
             r#"
 [!- import "helpers/theme.neoj" as theme -!]
