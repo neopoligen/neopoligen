@@ -12,45 +12,45 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
-pub fn raw_section_end<'a>(
-    source: &'a str,
-    key: &'a str,
-    nest_level: usize,
-    _list_level: usize,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, _) = tag("/").context("").parse(source)?;
-    let (source, r#type) = tag(key).context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
-    let (source, attrs) = many0(section_attr).context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = if nest_level == 0 {
-        many0(|src| block_of_end_content(src))
-            .context("")
-            .parse(source)?
-    } else {
-        many0(|src| block_of_anything(src))
-            .context("")
-            .parse(source)?
-    };
-    let section = Section {
-        attr_list: vec![],
-        flag_list: vec![],
-        attrs,
-        bounds: SectionBounds::End,
-        kind: SectionKind::Raw {
-            children,
-            text: None,
-        },
-        r#type: r#type.to_string(),
-    };
-    Ok((source, section))
-}
+// pub fn raw_section_end<'a>(
+//     source: &'a str,
+//     key: &'a str,
+//     nest_level: usize,
+//     _list_level: usize,
+// ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+//     let (source, _) = tag("-- ").context("").parse(source)?;
+//     let (source, _) = tag("/").context("").parse(source)?;
+//     let (source, r#type) = tag(key).context("").parse(source)?;
+//     let (source, _) = structure_empty_until_newline_or_eof
+//         .context("")
+//         .parse(source)?;
+//     let (source, attrs) = many0(section_attr).context("").parse(source)?;
+//     let (source, _) = structure_empty_until_newline_or_eof
+//         .context("")
+//         .parse(source)?;
+//     let (source, _) = multispace0.context("").parse(source)?;
+//     let (source, children) = if nest_level == 0 {
+//         many0(|src| block_of_end_content(src))
+//             .context("")
+//             .parse(source)?
+//     } else {
+//         many0(|src| block_of_anything(src))
+//             .context("")
+//             .parse(source)?
+//     };
+//     let section = Section {
+//         attr_list: vec![],
+//         flag_list: vec![],
+//         attrs,
+//         bounds: SectionBounds::End,
+//         kind: SectionKind::Raw {
+//             children,
+//             text: None,
+//         },
+//         r#type: r#type.to_string(),
+//     };
+//     Ok((source, section))
+// }
 
 pub fn raw_section_full<'a>(
     source: &'a str,
@@ -107,7 +107,8 @@ pub fn raw_section_start<'a>(
         .context("")
         .parse(source)?;
     let (source, text) = take_until(end_key.as_str()).context("").parse(source)?;
-    let (source, end_section) = raw_section_end(source, r#type, nest_level, list_level)?;
+    // let (source, end_section) = raw_section_end(source, r#type, nest_level, list_level)?;
+    let (source, end_section) = basic_section_end(source, r#type, nest_level, list_level)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let mut children = vec![];
     children.push(end_section);
@@ -131,29 +132,33 @@ mod test {
     use crate::site_config::SiteConfig;
     use pretty_assertions::assert_eq;
 
-    #[test]
-    fn ending_without_nesting_and_no_content() {
-        let source = "-- /code";
-        let left = 0;
-        let section = raw_section_end(source, "code", 0, 0).unwrap().1;
-        let right = match section.kind {
-            SectionKind::Raw { children, .. } => children.len(),
-            _ => 0,
-        };
-        assert_eq!(left, right);
-    }
+    // TODO: DEPRECATED: basic_section_end is now used for everything
+    // this can be delete the next time you see it.
+    // #[test]
+    // fn ending_without_nesting_and_no_content() {
+    //     let source = "-- /code";
+    //     let left = 0;
+    //     let section = raw_section_end(source, "code", 0, 0).unwrap().1;
+    //     let right = match section.kind {
+    //         SectionKind::Raw { children, .. } => children.len(),
+    //         _ => 0,
+    //     };
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    fn ending_without_nesting_and_has_content() {
-        let source = "-- /code\n\nthis is\n\nsomethig";
-        let left = 2;
-        let section = raw_section_end(source, "code", 0, 0).unwrap().1;
-        let right = match section.kind {
-            SectionKind::Raw { children, .. } => children.len(),
-            _ => 0,
-        };
-        assert_eq!(left, right);
-    }
+    // TODO: DEPRECATED: basic_section_end is now used for everything
+    // this can be delete the next time you see it.
+    // #[test]
+    // fn ending_without_nesting_and_has_content() {
+    //     let source = "-- /code\n\nthis is\n\nsomethig";
+    //     let left = 2;
+    //     let section = raw_section_end(source, "code", 0, 0).unwrap().1;
+    //     let right = match section.kind {
+    //         SectionKind::Raw { children, .. } => children.len(),
+    //         _ => 0,
+    //     };
+    //     assert_eq!(left, right);
+    // }
 
     // TODO: Bring back in with proper list_nesting check
     // #[test]

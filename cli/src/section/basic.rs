@@ -15,7 +15,7 @@ pub fn basic_section_end<'a>(
     source: &'a str,
     key: &'a str,
     nest_level: usize,
-    _list_level: usize,
+    list_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, _) = tag("/").context("").parse(source)?;
@@ -28,13 +28,19 @@ pub fn basic_section_end<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = if nest_level == 0 {
+
+    let (source, children) = if list_level > 0 {
+        many0(|src| block_of_end_content_that_is_not_a_list_item(src))
+            .context("")
+            .parse(source)?
+    } else if nest_level == 0 {
         many0(|src| block_of_end_content(src))
             .context("")
             .parse(source)?
     } else {
         (source, vec![])
     };
+
     let section = Section {
         attr_list: vec![],
         flag_list: vec![],

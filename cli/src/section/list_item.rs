@@ -40,10 +40,11 @@ pub fn list_item_start_end<'a>(
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
+
     let (source, children) = many1(alt((
         |src| start_or_full_section(src, sections, nest_level, list_level),
         // |src| block_of_list_content_v42(src),
-        |src| block_that_is_not_a_list_item(src),
+        |src| block_of_end_content_that_is_not_a_list_item(src),
     )))
     .context("")
     .parse(source)?;
@@ -202,10 +203,7 @@ mod test {
                                         flag_list: vec![],
                                         attrs: vec![],
                                         bounds: SectionBounds::End,
-                                        kind: SectionKind::Raw {
-                                            children: vec![],
-                                            text: None,
-                                        },
+                                        kind: SectionKind::Basic { children: vec![] },
                                         r#type: "code".to_string(),
                                     }],
                                     text: Some("bravo".to_string()),
@@ -218,8 +216,9 @@ mod test {
                 r#type: "list-item".to_string(),
             },
         );
-        let right = list_item_start_end(source, &config.sections, 0, 0).unwrap();
+        let right = list_item_start_end(source, &config.sections, 1, 1).unwrap();
         assert_eq!(left, right);
     }
+
     //
 }

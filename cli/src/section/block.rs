@@ -90,6 +90,30 @@ pub fn block_of_end_content<'a>(source: &'a str) -> IResult<&'a str, Section, Er
     ))
 }
 
+pub fn block_of_end_content_that_is_not_a_list_item<'a>(
+    source: &'a str,
+) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    dbg!(&source);
+    // let (source, _) = multispace0.context("").parse(source)?;
+    let (source, _) = not(eof).context("").parse(source)?;
+    let (source, _) = not(tag("-")).context("").parse(source)?;
+    let (source, spans) = many1(alt((base_span_for_all_text,)))
+        .context("")
+        .parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
+    Ok((
+        source,
+        Section {
+            attr_list: vec![],
+            flag_list: vec![],
+            attrs: vec![],
+            bounds: SectionBounds::Full,
+            kind: SectionKind::Block { spans },
+            r#type: "block-of-text".to_string(),
+        },
+    ))
+}
+
 pub fn block_of_list_content_start_v42<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {

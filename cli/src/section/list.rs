@@ -50,9 +50,10 @@ pub fn list_section_full<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
     mut nest_level: usize,
-    list_level: usize,
+    mut list_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     nest_level += 1;
+    list_level += 1;
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder_full(src, &sections.list))
         .context("")
@@ -86,9 +87,10 @@ pub fn list_section_start<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
     mut nest_level: usize,
-    list_level: usize,
+    mut list_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     nest_level += 1;
+    list_level += 1;
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder_start(src, &sections.list))
         .context("")
@@ -106,7 +108,10 @@ pub fn list_section_start<'a>(
         many1(|src| list_item_start_end(src, sections, nest_level, list_level))
             .context("")
             .parse(source)?;
-    let (source, end_section) = list_section_end(source, r#type, nest_level, list_level)?;
+    // many1(|src| list_item_start_end(src, sections, nest_level, list_level))
+    //     .context("")
+    //     .parse(source)?;
+    let (source, end_section) = basic_section_end(source, r#type, nest_level, list_level)?;
     children.push(end_section);
     Ok((
         source,
