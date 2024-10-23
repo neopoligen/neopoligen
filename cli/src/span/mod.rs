@@ -1,5 +1,3 @@
-#![allow(non_snake_case)]
-
 pub mod code_shorthand;
 pub mod code_shorthand_single_pipe;
 pub mod colon;

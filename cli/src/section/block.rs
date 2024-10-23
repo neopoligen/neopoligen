@@ -1,4 +1,3 @@
-#![allow(non_snake_case)]
 use crate::section::Section;
 use crate::section::SectionBounds;
 use crate::section::SectionKind;
@@ -9,7 +8,9 @@ use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;
 // use nom::character::complete::space1;
+use crate::span::escaped_exclamation::escaped_exclamation;
 use crate::span::escaped_lessthan::*;
+use crate::span::single_exclamation::single_exclamation;
 use crate::span::single_lessthan::*;
 use nom::combinator::eof;
 use nom::combinator::not;
@@ -19,13 +20,10 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
-use self::escaped_exclamation::escaped_exclamation;
-use self::single_exclamation::single_exclamation;
-
 #[derive(Clone, Debug, PartialEq)]
 pub struct Block {}
 
-pub fn block_of_main_content_V42<'a>(
+pub fn block_of_main_content_v42<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, spans) = many1(alt((
@@ -38,7 +36,7 @@ pub fn block_of_main_content_V42<'a>(
     )))
     .context("")
     .parse(source)?;
-    // let (source, _) = multispace0.context("").parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
     Ok((
         source,
         Section {
@@ -253,7 +251,7 @@ mod test {
     #[case(r#"\!!"#)]
 
     fn solo_check_basic_parsing_passes(#[case] input: &str) {
-        let response = block_of_main_content_V42(input);
+        let response = block_of_main_content_v42(input);
         if response.is_ok() {
             let (remainder, _) = response.as_ref().unwrap();
             if *remainder == "" {

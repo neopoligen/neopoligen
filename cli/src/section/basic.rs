@@ -69,9 +69,12 @@ pub fn basic_section_full<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = many0(|src| block_of_end_content(src))
+    let (source, children) = many0(|src| block_of_main_content_v42(src))
         .context("")
         .parse(source)?;
+    // let (source, children) = many0(|src| block_of_end_content(src))
+    //     .context("")
+    //     .parse(source)?;
     let section = Section {
         attr_list: vec![],
         flag_list: vec![],
