@@ -11,40 +11,40 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
-pub fn list_section_end<'a>(
-    source: &'a str,
-    key: &'a str,
-    nest_level: usize,
-    _list_level: usize,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, _) = tag("/").context("").parse(source)?;
-    let (source, r#type) = tag(key).context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
-    let (source, attrs) = many0(section_attr).context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = if nest_level == 0 {
-        many0(|src| block_of_end_content(src))
-            .context("")
-            .parse(source)?
-    } else {
-        (source, vec![])
-    };
-    let section = Section {
-        attr_list: vec![],
-        flag_list: vec![],
-        attrs,
-        bounds: SectionBounds::End,
-        kind: SectionKind::List { children },
-        r#type: r#type.to_string(),
-    };
-    Ok((source, section))
-}
+// pub fn list_section_end<'a>(
+//     source: &'a str,
+//     key: &'a str,
+//     nest_level: usize,
+//     _list_level: usize,
+// ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+//     let (source, _) = tag("-- ").context("").parse(source)?;
+//     let (source, _) = tag("/").context("").parse(source)?;
+//     let (source, r#type) = tag(key).context("").parse(source)?;
+//     let (source, _) = structure_empty_until_newline_or_eof
+//         .context("")
+//         .parse(source)?;
+//     let (source, attrs) = many0(section_attr).context("").parse(source)?;
+//     let (source, _) = structure_empty_until_newline_or_eof
+//         .context("")
+//         .parse(source)?;
+//     let (source, _) = multispace0.context("").parse(source)?;
+//     let (source, children) = if nest_level == 0 {
+//         many0(|src| block_of_end_content(src))
+//             .context("")
+//             .parse(source)?
+//     } else {
+//         (source, vec![])
+//     };
+//     let section = Section {
+//         attr_list: vec![],
+//         flag_list: vec![],
+//         attrs,
+//         bounds: SectionBounds::End,
+//         kind: SectionKind::List { children },
+//         r#type: r#type.to_string(),
+//     };
+//     Ok((source, section))
+// }
 
 pub fn list_section_full<'a>(
     source: &'a str,
@@ -231,23 +231,24 @@ mod test {
         assert_eq!(left, right);
     }
 
-    #[test]
-    fn basic_end_list_test() {
-        let source = "-- /list";
-        let left = (
-            "",
-            Section {
-                attr_list: vec![],
-                flag_list: vec![],
-                attrs: vec![],
-                bounds: SectionBounds::End,
-                kind: SectionKind::List { children: vec![] },
-                r#type: "list".to_string(),
-            },
-        );
-        let right = list_section_end(source, "list", 0, 0).unwrap();
-        assert_eq!(left, right);
-    }
+    // TODO: Delete this when V42 is working since basic_section_end takes over
+    // #[test]
+    // fn basic_end_list_test() {
+    //     let source = "-- /list";
+    //     let left = (
+    //         "",
+    //         Section {
+    //             attr_list: vec![],
+    //             flag_list: vec![],
+    //             attrs: vec![],
+    //             bounds: SectionBounds::End,
+    //             kind: SectionKind::List { children: vec![] },
+    //             r#type: "list".to_string(),
+    //         },
+    //     );
+    //     let right = list_section_end(source, "list", 0, 0).unwrap();
+    //     assert_eq!(left, right);
+    // }
 
     #[test]
     fn link_check() {
@@ -329,8 +330,11 @@ mod test {
                                                     flag_list: vec![],
                                                     attrs: vec![],
                                                     bounds: SectionBounds::End,
-                                                    kind: SectionKind::List { children: vec![] },
-                                                    r#type: "list".to_string(),
+                                                    kind: SectionKind::End {
+                                                        children: vec![],
+                                                        closing: "list".to_string(),
+                                                    },
+                                                    r#type: "closing".to_string(),
                                                 },
                                             ],
                                         },
@@ -368,8 +372,11 @@ mod test {
                             flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::End,
-                            kind: SectionKind::List { children: vec![] },
-                            r#type: "list".to_string(),
+                            kind: SectionKind::End {
+                                children: vec![],
+                                closing: "list".to_string(),
+                            },
+                            r#type: "closing".to_string(),
                         },
                     ],
                 },
@@ -425,11 +432,11 @@ mod test {
                                                 flag_list: vec![],
                                                 attrs: vec![],
                                                 bounds: SectionBounds::End,
-                                                kind: SectionKind::Raw {
-                                                    text: None,
+                                                kind: SectionKind::End {
                                                     children: vec![],
+                                                    closing: "code".to_string(),
                                                 },
-                                                r#type: "code".to_string(),
+                                                r#type: "closing".to_string(),
                                             }],
                                             text: Some("bravo".to_string()),
                                         },
@@ -467,8 +474,11 @@ mod test {
                             flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::End,
-                            kind: SectionKind::List { children: vec![] },
-                            r#type: "list".to_string(),
+                            kind: SectionKind::End {
+                                children: vec![],
+                                closing: "list".to_string(),
+                            },
+                            r#type: "closing".to_string(),
                         },
                     ],
                 },
@@ -567,8 +577,11 @@ mod test {
                             flag_list: vec![],
                             attrs: vec![],
                             bounds: SectionBounds::End,
-                            kind: SectionKind::List { children: vec![] },
-                            r#type: "list".to_string(),
+                            kind: SectionKind::End {
+                                children: vec![],
+                                closing: "list".to_string(),
+                            },
+                            r#type: "closing".to_string(),
                         },
                     ],
                 },

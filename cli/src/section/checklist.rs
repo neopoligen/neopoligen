@@ -11,40 +11,40 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
-pub fn checklist_section_end<'a>(
-    source: &'a str,
-    key: &'a str,
-    nest_level: usize,
-    _list_level: usize,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, _) = tag("/").context("").parse(source)?;
-    let (source, r#type) = tag(key).context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
-    let (source, attrs) = many0(section_attr).context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = if nest_level == 0 {
-        many0(|src| block_of_end_content(src))
-            .context("")
-            .parse(source)?
-    } else {
-        (source, vec![])
-    };
-    let section = Section {
-        attr_list: vec![],
-        flag_list: vec![],
-        attrs,
-        bounds: SectionBounds::End,
-        kind: SectionKind::Checklist { children },
-        r#type: r#type.to_string(),
-    };
-    Ok((source, section))
-}
+// pub fn checklist_section_end<'a>(
+//     source: &'a str,
+//     key: &'a str,
+//     nest_level: usize,
+//     _list_level: usize,
+// ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+//     let (source, _) = tag("-- ").context("").parse(source)?;
+//     let (source, _) = tag("/").context("").parse(source)?;
+//     let (source, r#type) = tag(key).context("").parse(source)?;
+//     let (source, _) = structure_empty_until_newline_or_eof
+//         .context("")
+//         .parse(source)?;
+//     let (source, attrs) = many0(section_attr).context("").parse(source)?;
+//     let (source, _) = structure_empty_until_newline_or_eof
+//         .context("")
+//         .parse(source)?;
+//     let (source, _) = multispace0.context("").parse(source)?;
+//     let (source, children) = if nest_level == 0 {
+//         many0(|src| block_of_end_content(src))
+//             .context("")
+//             .parse(source)?
+//     } else {
+//         (source, vec![])
+//     };
+//     let section = Section {
+//         attr_list: vec![],
+//         flag_list: vec![],
+//         attrs,
+//         bounds: SectionBounds::End,
+//         kind: SectionKind::Checklist { children },
+//         r#type: r#type.to_string(),
+//     };
+//     Ok((source, section))
+// }
 
 pub fn checklist_section_full<'a>(
     source: &'a str,
@@ -106,7 +106,7 @@ pub fn checklist_section_start<'a>(
         many1(|src| checklist_item_start_end(src, sections, nest_level, list_level))
             .context("")
             .parse(source)?;
-    let (source, end_section) = list_section_end(source, r#type, nest_level, list_level)?;
+    let (source, end_section) = basic_section_end(source, r#type, nest_level, list_level)?;
     children.push(end_section);
     Ok((
         source,
