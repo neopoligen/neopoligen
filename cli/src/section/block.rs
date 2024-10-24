@@ -20,6 +20,9 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
+use self::escaped_hyphen::escaped_hyphen;
+use self::single_hyphen::single_hyphen;
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct Block {}
 
@@ -29,6 +32,9 @@ pub fn block_of_main_content_v42<'a>(
     let (source, spans) = many1(alt((
         take_until_special_characters,
         newline,
+        escaped_hyphen,
+        single_hyphen,
+        single_exclamation,
         escaped_lessthan,
         single_lessthan,
         escaped_exclamation,
@@ -249,6 +255,9 @@ mod test {
     #[case(r#"\<<"#)]
     #[case("! ")]
     #[case(r#"\!!"#)]
+    #[case("! ")]
+    #[case("- ")]
+    #[case(r#"\--"#)]
 
     fn solo_check_basic_parsing_passes(#[case] input: &str) {
         let response = block_of_main_content_v42(input);

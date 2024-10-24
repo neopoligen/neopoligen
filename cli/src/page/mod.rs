@@ -283,9 +283,9 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn id_test_get_basic_id() {
+    fn solo_id_test_get_basic_id() {
         let page = PageV42::mock1_basic_page();
-        //dbg!(&page.ast());
+        // dbg!(&page.ast());
         let left = "mock1_basic_page".to_string();
         let right = page.id().unwrap();
         assert_eq!(left, right);
