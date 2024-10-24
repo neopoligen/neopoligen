@@ -4,6 +4,7 @@ pub mod colon;
 pub mod colon_not_followed_by_space;
 pub mod double_underscore;
 pub mod em_shorthand;
+pub mod escaped_asterisk;
 pub mod escaped_backslash;
 pub mod escaped_backtick;
 pub mod escaped_caret;
@@ -25,6 +26,7 @@ pub mod more_than_two_carets;
 pub mod more_than_two_underscores;
 pub mod named_span;
 pub mod pipe;
+pub mod single_asterisk;
 pub mod single_backtick;
 pub mod single_caret;
 pub mod single_exclamation;
@@ -121,6 +123,7 @@ impl Span {
             SpanKind::DashWithTrailingNonDash => Ok(Value::from(&self.parsed_text)),
             SpanKind::DoubleUnderscore => Ok(Value::from(&self.parsed_text)),
             SpanKind::EmShorthand => Ok(Value::from(&self.parsed_text)),
+            SpanKind::EscapedAsterisk => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedBacktick => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedBackslash => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedCaret => Ok(Value::from(&self.parsed_text)),
@@ -142,6 +145,7 @@ impl Span {
             SpanKind::MoreThanTwoCarets => Ok(Value::from(&self.parsed_text)),
             SpanKind::Newline => Ok(Value::from(&self.parsed_text)),
             SpanKind::Pipe => Ok(Value::from(&self.parsed_text)),
+            SpanKind::SingleAsterisk => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleBacktick => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleCaret => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleHashtag => Ok(Value::from(&self.parsed_text)),
@@ -172,6 +176,7 @@ pub enum SpanKind {
     DashWithTrailingNonDash,
     DoubleUnderscore,
     EmShorthand,
+    EscapedAsterisk,
     EscapedBacktick,
     EscapedBackslash,
     EscapedCaret,
@@ -195,6 +200,7 @@ pub enum SpanKind {
     Newline,
     Pipe,
     PlainText,
+    SingleAsterisk,
     SingleBacktick,
     SingleCaret,
     SingleExclamation,

@@ -118,7 +118,7 @@ impl BuilderV42 {
     }
 
     #[instrument(skip(self))]
-    pub fn output_source_file_errors(&self) -> Result<()> {
+    pub fn output_errors_for_source_files(&self) -> Result<()> {
         let _ = &self.errors.iter().for_each(|err| {
             match &err.kind {
                 NeoErrorKind::ParserError {
@@ -145,7 +145,10 @@ impl BuilderV42 {
                     }
                     ()
                 }
-                NeoErrorKind::GenericErrorWithSourcePath { source_path, msg } => (),
+                NeoErrorKind::GenericErrorWithSourcePath { source_path, msg } => {
+                    dbg!(source_path);
+                    ()
+                }
                 // TODO: cover the rest of the errors
                 _ => (),
             }

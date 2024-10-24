@@ -21,10 +21,12 @@ use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
 use self::code_shorthand::code_shorthand;
+use self::escaped_asterisk::escaped_asterisk;
 use self::escaped_backtick::escaped_backtick;
 use self::escaped_hashtag::escaped_hashtag;
 use self::escaped_hyphen::escaped_hyphen;
 use self::named_span::named_span;
+use self::single_asterisk::single_asterisk;
 use self::single_backtick::single_backtick;
 use self::single_hashtag::single_hashtag;
 use self::single_hyphen::single_hyphen;
@@ -39,12 +41,14 @@ pub fn block_of_main_content_v42<'a>(
         take_until_special_characters,
         newline,
         // singles
+        single_asterisk,
         single_backtick,
         single_exclamation,
         single_hashtag,
         single_hyphen,
         single_lessthan,
         // escapes
+        escaped_asterisk,
         escaped_backtick,
         escaped_exclamation,
         escaped_hashtag,
@@ -285,7 +289,10 @@ mod test {
     #[case("` ")]
     #[case(r#"\``"#)]
     #[case("``alfa``")]
+    #[case("#")]
     #[case(r#"\##"#)]
+    #[case("*")]
+    #[case(r#"\**"#)]
 
     fn solo_check_basic_parsing_passes(#[case] input: &str) {
         let response = block_of_main_content_v42(input);
