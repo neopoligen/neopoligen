@@ -1,6 +1,7 @@
 use self::any_asterisk::any_asterisk;
 use self::any_caret::any_caret;
 use self::any_colon::any_colon;
+use self::any_greaterthan::any_greaterthan;
 use self::any_hyphen::any_hyphen;
 use self::any_lessthan::any_lessthan;
 use self::any_newline::any_newline;
@@ -35,6 +36,7 @@ pub fn code_shorthand_attr_key_base_v42(source: &str) -> IResult<&str, Vec<Span>
         escaped_colon,
         escaped_backslash,
         colon_not_followed_by_space,
+        any_greaterthan,
     )))
     .context("")
     .parse(source)?;
@@ -59,6 +61,7 @@ pub fn code_shorthand_attr_value_base_v42(
         escaped_colon,
         escaped_pipe,
         any_newline,
+        any_greaterthan,
     )))
     .context("")
     .parse(source)?;
@@ -119,7 +122,7 @@ pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTre
 
 pub fn code_shorthand_base_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let (source, span) = alt((
-        plaintext.context(""),
+        plaintext,
         single_backtick,
         any_asterisk,
         any_caret,
@@ -131,7 +134,9 @@ pub fn code_shorthand_base_span(source: &str) -> IResult<&str, Span, ErrorTree<&
         escaped_backslash,
         escaped_pipe,
         any_colon,
+        any_greaterthan,
     ))
+    .context("")
     .parse(source)?;
     Ok((source, span))
 }
@@ -160,7 +165,7 @@ mod test {
     use rstest::rstest;
 
     #[test]
-    fn ping_code_key_value_attr_basic() {
+    fn solo_code_key_value_attr_basic() {
         let source = "|sierra: foxtrot";
         let left = (
             "",
@@ -184,7 +189,7 @@ mod test {
     }
 
     #[test]
-    fn ping_code_value_base_basic_test() {
+    fn solo_code_value_base_basic_test() {
         let source = "whiskey";
         let left = (
             "",
@@ -199,7 +204,7 @@ mod test {
     }
 
     #[test]
-    fn ping_code_key_base_basic_test() {
+    fn solo_code_key_base_basic_test() {
         let source = "|alfa: bravo";
         let left = (
             "bravo",
@@ -239,7 +244,7 @@ mod test {
     #[case("|mi\\::ke: ")]
     #[case("|mi::ke: ")]
     #[case("|nov\\\\ember: ")]
-    fn ping_valid_code_key_base(#[case] source: &str) {
+    fn solo_valid_code_key_base(#[case] source: &str) {
         let result = code_shorthand_attr_key_base_v42(source);
         if result.is_ok() {
             //dbg!(&result.unwrap().clone());
@@ -277,7 +282,7 @@ mod test {
     #[case("mi\\::ke: |")]
     #[case("mi::ke: |")]
     #[case("nov\\\\ember: |")]
-    fn ping_valid_code_value_base(#[case] source: &str) {
+    fn solo_valid_code_value_base(#[case] source: &str) {
         let result = code_shorthand_attr_value_base_v42(source);
         let remainder = result.as_ref().unwrap().0;
         if result.is_ok() && remainder == "|" {
@@ -315,7 +320,7 @@ mod test {
     #[case("``bravo:charlie``")]
     #[case("``bravo: charlie``")]
     #[case("``bravo : charlie``")]
-    fn ping_valid_code_shorthands(#[case] source: &str) {
+    fn solo_valid_code_shorthands(#[case] source: &str) {
         let result = code_shorthand(source);
         if result.is_ok() {
             assert!(true)
@@ -328,7 +333,7 @@ mod test {
     // Invalid Code Shorthands
     #[rstest]
     #[case("``no trailing pipe|``")]
-    fn ping_invalid_code_shorthands(#[case] source: &str) {
+    fn solo_invalid_code_shorthands(#[case] source: &str) {
         let result = code_shorthand(source);
         if result.is_ok() {
             dbg!(&result);
@@ -351,7 +356,7 @@ mod test {
     #[case("|esacped\\`backtick")]
     #[case("|esacped\\|pipe")]
     #[case("|esacped\\\\escape")]
-    fn ping_valid_code_shorthand_flags(#[case] source: &str) {
+    fn solo_valid_code_shorthand_flags(#[case] source: &str) {
         let result = code_shorthand_flag_v42(source);
         if result.as_ref().is_ok() {
             if result.as_ref().unwrap().0 == "" {
@@ -369,7 +374,7 @@ mod test {
     // Invalid Code Shorthand Flags
     #[rstest]
     #[case("|alfa: value")]
-    fn ping_invalid_code_shorthand_flags(#[case] source: &str) {
+    fn solo_invalid_code_shorthand_flags(#[case] source: &str) {
         let result = code_shorthand_flag_v42(source);
         if result.as_ref().is_ok() {
             dbg!(&result);
@@ -380,7 +385,7 @@ mod test {
     }
 
     #[test]
-    fn ping_code_shorthand_with_flag_attr() {
+    fn solo_code_shorthand_with_flag_attr() {
         let source = "``code|rust``";
         let left = (
             "",
@@ -440,7 +445,7 @@ mod test {
         "newlines in shorthand multiple attrs"
     )]
     #[case("``Result<(), Box<dyn std::error::Error>>``", 0, "rust example")]
-    fn ping_code_shorhand_fixture(
+    fn solo_code_shorthand_fixture(
         #[case] input: &str,
         #[case] attrs: usize,
         #[case] _description: &str,
@@ -452,7 +457,7 @@ mod test {
 
     #[rstest]
     #[case("``\\``", "can't have a single backslash at the end of code text")]
-    fn ping_error_cases(#[case] input: &str, #[case] _desc: &str) {
+    fn solo_error_cases(#[case] input: &str, #[case] _desc: &str) {
         assert!(code_shorthand(input).is_err());
     }
 }

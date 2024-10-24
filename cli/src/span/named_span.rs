@@ -113,14 +113,59 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorT
     Ok((source, attr))
 }
 
+// NEW V42 STUFF ////////////////////////////////////////////////////////////////
+
+pub fn named_span_key_value_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
+    let (source, _) = tag("|").context("").parse(source)?;
+    Ok((
+        source,
+        SpanAttr {
+            kind: SpanAttrKind::KeyValueSpansV42 {
+                key: vec![],
+                value: vec![],
+            },
+        },
+    ))
+}
+
+pub fn named_span_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
+    let (source, _) = tag("|").context("").parse(source)?;
+    Ok((
+        source,
+        SpanAttr {
+            kind: SpanAttrKind::FlagV42 { value: vec![] },
+        },
+    ))
+}
+
+pub fn named_span_base_span_v42(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+    let (source, span) = alt((plaintext,)).context("").parse(source)?;
+    Ok((source, span))
+}
+
+pub fn named_span_content_value_span_v42(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+    let (source, span) = alt((plaintext,)).context("").parse(source)?;
+    Ok((source, span))
+}
+
 pub fn named_span_v42(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+    let (source, _) = tag("<<").context("").parse(source)?;
+    let (source, type_spans) = many1(named_span_base_span_v42).context("").parse(source)?;
+    let (source, _) = tag("|").context("").parse(source)?;
+    let (source, value_spans) = many1(named_span_content_value_span_v42)
+        .context("")
+        .parse(source)?;
+    let (source, attr_spans) = many0(alt((named_span_flag_v42, named_span_key_value_v42)))
+        .context("")
+        .parse(source)?;
+    let (source, _) = tag(">>").context("").parse(source)?;
     Ok((
         source,
         Span {
-            attrs: vec![],
+            attrs: attr_spans,
             kind: SpanKind::NamedSpanV42 {
-                r#type: vec![],
-                children: vec![],
+                r#type: type_spans,
+                value: value_spans,
             },
             parsed_text: "".to_string(),
         },
@@ -134,7 +179,6 @@ mod test {
     use rstest::rstest;
 
     #[test]
-    #[ignore]
     fn solo_ns_basic_v42() {
         let source = "<<em|alfa>>";
         let left = (
@@ -142,8 +186,16 @@ mod test {
             Span {
                 attrs: vec![],
                 kind: SpanKind::NamedSpanV42 {
-                    r#type: vec![],
-                    children: vec![],
+                    r#type: vec![Span {
+                        attrs: vec![],
+                        kind: SpanKind::PlainText,
+                        parsed_text: "em".to_string(),
+                    }],
+                    value: vec![Span {
+                        attrs: vec![],
+                        kind: SpanKind::PlainText,
+                        parsed_text: "alfa".to_string(),
+                    }],
                 },
                 parsed_text: "".to_string(),
             },

@@ -2,6 +2,7 @@ pub mod any_asterisk;
 pub mod any_backtick;
 pub mod any_caret;
 pub mod any_colon;
+pub mod any_greaterthan;
 pub mod any_hyphen;
 pub mod any_lessthan;
 pub mod any_newline;
@@ -131,6 +132,7 @@ impl Span {
             SpanKind::AnyBacktick => Ok(Value::from(&self.parsed_text)),
             SpanKind::AnyCaret => Ok(Value::from(&self.parsed_text)),
             SpanKind::AnyColon => Ok(Value::from(&self.parsed_text)),
+            SpanKind::AnyGreaterThan => Ok(Value::from(&self.parsed_text)),
             SpanKind::AnyHyphen => Ok(Value::from(&self.parsed_text)),
             SpanKind::AnyLessThan => Ok(Value::from(&self.parsed_text)),
             SpanKind::AnyNewline => Ok(Value::from(&self.parsed_text)),
@@ -160,7 +162,7 @@ impl Span {
             SpanKind::FootnoteShorthand => Ok(Value::from(&self.parsed_text)),
             SpanKind::GreaterThan => Ok(Value::from(&self.parsed_text)),
             SpanKind::HyphenWithTrailingNonHyphen => Ok(Value::from(&self.parsed_text)),
-            SpanKind::LessThan => Ok(Value::from(&self.parsed_text)),
+            SpanKind::LessThan => Ok(Value::from(&self.parsed_text)), // TODO: Deprecate in favor of AnyGreaterThan
             SpanKind::LinkShorthand => Ok(Value::from(&self.parsed_text)),
             SpanKind::MoreThanTwoUnderscores => Ok(Value::from(&self.parsed_text)),
             SpanKind::MoreThanTwoCarets => Ok(Value::from(&self.parsed_text)),
@@ -198,14 +200,13 @@ pub enum SpanKind {
     AnyBacktick,
     AnyCaret,
     AnyColon,
+    AnyGreaterThan,
     AnyHyphen,
     AnyLessThan,
     AnyNewline,
     AnyPipe,
     AnyUnderscore,
-    CodeShorthand {
-        children: Vec<Span>,
-    },
+    CodeShorthand { children: Vec<Span> },
     Colon, // TODO: Deprecate this in favor of AnyColon
     ColonFollowedByMultispace0,
     ColonFollowedByMultispace1,
@@ -234,14 +235,8 @@ pub enum SpanKind {
     LinkShorthand,
     MoreThanTwoUnderscores,
     MoreThanTwoCarets,
-    NamedSpan {
-        r#type: String,
-        children: Vec<Span>,
-    },
-    NamedSpanV42 {
-        r#type: Vec<Span>,
-        children: Vec<Span>,
-    },
+    NamedSpan { r#type: String, children: Vec<Span> },
+    NamedSpanV42 { r#type: Vec<Span>, value: Vec<Span> },
     Newline,
     Pipe,
     PlainText,
