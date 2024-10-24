@@ -7,7 +7,13 @@ use rstest::rstest;
 #[test]
 pub fn sample_runner() {
     let site_config = SiteConfigV42::mock_for_files_in_test_samples_dir();
+
     let mut p = PageV42::mock_from_test_directory_sample(include_str!("samples/1.neo")).unwrap();
+    let parsed = p.generate_ast(&site_config);
+    dbg!(&parsed);
+    assert!(parsed.is_ok());
+
+    let mut p = PageV42::mock_from_test_directory_sample(include_str!("samples/2.neo")).unwrap();
     let parsed = p.generate_ast(&site_config);
     dbg!(&parsed);
     assert!(parsed.is_ok());

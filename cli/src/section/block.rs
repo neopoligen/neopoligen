@@ -37,22 +37,19 @@ pub struct Block {}
 pub fn block_of_main_content_v42<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let (source, _) = not(tag("--")).context("").parse(source)?;
     let (source, spans) = many1(alt((
         take_until_special_characters,
         newline,
         // singles
         single_asterisk,
         single_backtick,
-        single_exclamation,
-        single_hashtag,
-        single_hyphen,
+        //single_hyphen,
         single_lessthan,
         // escapes
         escaped_asterisk,
         escaped_backtick,
-        escaped_exclamation,
-        escaped_hashtag,
-        escaped_hyphen,
+        // escaped_hyphen,
         escaped_lessthan,
         // add shorthands here
         code_shorthand,
@@ -281,16 +278,9 @@ mod test {
     #[case("<\n")]
     #[case(r#"\<<"#)]
     #[case("<<span|ping>>")]
-    #[case("! ")]
-    #[case(r#"\!!"#)]
-    #[case("! ")]
-    #[case("- ")]
-    #[case(r#"\--"#)]
     #[case("` ")]
     #[case(r#"\``"#)]
     #[case("``alfa``")]
-    #[case("#")]
-    #[case(r#"\##"#)]
     #[case("*")]
     #[case(r#"\**"#)]
 

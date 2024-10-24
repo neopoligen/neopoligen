@@ -241,18 +241,11 @@ mod test {
                         attrs: vec![],
                         bounds: SectionBounds::Full,
                         kind: SectionKind::Block {
-                            spans: vec![
-                                Span {
-                                    attrs: vec![],
-                                    kind: SpanKind::SingleHyphen,
-                                    parsed_text: "-".to_string(),
-                                },
-                                Span {
-                                    attrs: vec![],
-                                    kind: SpanKind::PlainText,
-                                    parsed_text: " Hello World".to_string(),
-                                },
-                            ],
+                            spans: vec![Span {
+                                attrs: vec![],
+                                kind: SpanKind::PlainText,
+                                parsed_text: "- Hello World".to_string(),
+                            }],
                         },
                         r#type: "block-of-text".to_string(),
                     }],
@@ -299,7 +292,7 @@ mod test {
     }
 
     #[test]
-    fn solo_basic_start_end_test_checking_name_collision() {
+    fn basic_start_end_test_checking_name_collision() {
         let source = "-- previews/\n\nHello World\n\n-- /previews";
         let config = SiteConfig::mock1_basic();
         let left = (

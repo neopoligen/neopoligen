@@ -220,7 +220,7 @@ pub enum SpanKind {
 pub fn take_until_special_characters<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
-    let (source, parsed_text) = is_not("-\\\n\t<!@#$%^&*`").context("").parse(source)?;
+    let (source, parsed_text) = is_not("\n<^*`\\").context("").parse(source)?;
     let span = Span {
         attrs: vec![],
         parsed_text: parsed_text.to_string(),
