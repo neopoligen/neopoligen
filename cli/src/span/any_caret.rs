@@ -29,7 +29,7 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn solo_single_character() {
+    fn single_character() {
         let source = "^";
         let left = (
             "",
@@ -44,7 +44,7 @@ mod test {
     }
 
     #[test]
-    fn solo_allowing_trailing() {
+    fn allowing_trailing() {
         let source = "^^";
         let left = (
             "^",

@@ -1,7 +1,7 @@
+pub mod any_asterisk;
 pub mod any_caret;
 pub mod any_lessthan;
 pub mod code_shorthand;
-// pub mod code_shorthand_single_pipe;
 pub mod colon;
 pub mod colon_not_followed_by_space;
 pub mod double_underscore;
@@ -11,8 +11,6 @@ pub mod escaped_backslash;
 pub mod escaped_backtick;
 pub mod escaped_caret;
 pub mod escaped_colon;
-pub mod plaintext;
-//pub mod escaped_exclamation;
 pub mod escaped_greaterthan;
 pub mod escaped_hashtag;
 pub mod escaped_hyphen;
@@ -21,7 +19,6 @@ pub mod escaped_pipe;
 pub mod escaped_underscore;
 pub mod footnote_shorthand;
 pub mod greaterthan;
-// pub mod hyphen;
 pub mod hyphen_with_trailing_non_hyphen;
 pub mod lessthan;
 pub mod mocks;
@@ -29,16 +26,15 @@ pub mod more_than_two_carets;
 pub mod more_than_two_underscores;
 pub mod named_span;
 pub mod pipe;
+pub mod plaintext;
 pub mod single_asterisk;
 pub mod single_backtick;
 pub mod single_caret;
-// pub mod single_exclamation;
 pub mod single_greaterthan;
 pub mod single_hashtag;
 pub mod single_hyphen;
 pub mod single_lessthan;
 pub mod single_underscore;
-// pub mod wordpart; // deprecated in favor of plaintext
 
 use crate::span::code_shorthand::*;
 // use crate::span::code_shorthand_single_pipe::*;
@@ -121,6 +117,7 @@ impl Span {
 
     pub fn parsed_text(&self) -> Result<Value, Error> {
         match &self.kind {
+            SpanKind::AnyAsterisk => Ok(Value::from(&self.parsed_text)),
             SpanKind::AnyLessThan => Ok(Value::from(&self.parsed_text)),
             SpanKind::AnyCaret => Ok(Value::from(&self.parsed_text)),
             SpanKind::CodeShorthand { .. } => Ok(Value::from(&self.parsed_text)),
@@ -145,6 +142,7 @@ impl Span {
             SpanKind::GreaterThan => Ok(Value::from(&self.parsed_text)),
             // SpanKind::Hyphen => Ok(Value::from(&self.parsed_text)),
             SpanKind::HyphenWithTrailingNonHyphen => Ok(Value::from(&self.parsed_text)),
+            // TODO: Deprecate LessThan in favor of AnyLessThan
             SpanKind::LessThan => Ok(Value::from(&self.parsed_text)),
             SpanKind::LinkShorthand => Ok(Value::from(&self.parsed_text)),
             SpanKind::MoreThanTwoUnderscores => Ok(Value::from(&self.parsed_text)),
@@ -177,8 +175,9 @@ impl Span {
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(rename_all = "lowercase", tag = "kind")]
 pub enum SpanKind {
-    AnyLessThan,
+    AnyAsterisk,
     AnyCaret,
+    AnyLessThan,
     CodeShorthand { children: Vec<Span> },
     Colon,
     ColonNotFollowedBySpace,

@@ -18,6 +18,7 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
+use self::any_asterisk::any_asterisk;
 use self::any_caret::any_caret;
 use self::escaped_lessthan::escaped_lessthan;
 
@@ -38,6 +39,7 @@ pub fn code_shorthand_base_span(source: &str) -> IResult<&str, Span, ErrorTree<&
     let (source, span) = alt((
         plaintext.context(""),
         single_backtick,
+        any_asterisk,
         any_caret,
         any_lessthan,
         escaped_backtick,
@@ -88,8 +90,8 @@ mod test {
     #[case("``html <div> tag``")]
     #[case("``single ^ caret``")]
     #[case("``multiple ^^ carets``")]
-    //#[case("``single * asterisk``")]
-    //#[case("``multiple ** asterisks``")]
+    #[case("``single * asterisk``")]
+    #[case("``multiple ** asterisks``")]
     #[case("``single ` backtick``")]
     #[case("``single \\` backtick esaped``")]
     #[case("``escaped \\`` backtick before single backtick``")]

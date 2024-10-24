@@ -29,7 +29,7 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn solo_any_test() {
+    fn basic_test() {
         let source = "<";
         let left = (
             "",
