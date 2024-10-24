@@ -8,9 +8,9 @@ use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;
 // use nom::character::complete::space1;
-use crate::span::escaped_exclamation::escaped_exclamation;
+//use crate::span::escaped_exclamation::escaped_exclamation;
 use crate::span::escaped_lessthan::*;
-use crate::span::single_exclamation::single_exclamation;
+// use crate::span::single_exclamation::single_exclamation;
 use crate::span::single_lessthan::*;
 use nom::combinator::eof;
 use nom::combinator::not;
@@ -23,13 +23,16 @@ use nom_supreme::parser_ext::ParserExt;
 use self::code_shorthand::code_shorthand;
 use self::escaped_asterisk::escaped_asterisk;
 use self::escaped_backtick::escaped_backtick;
-use self::escaped_hashtag::escaped_hashtag;
-use self::escaped_hyphen::escaped_hyphen;
+use self::escaped_caret::escaped_caret;
+use self::footnote_shorthand::footnote_shorthand;
+// use self::escaped_hashtag::escaped_hashtag;
+// use self::escaped_hyphen::escaped_hyphen;
 use self::named_span::named_span;
 use self::single_asterisk::single_asterisk;
 use self::single_backtick::single_backtick;
-use self::single_hashtag::single_hashtag;
-use self::single_hyphen::single_hyphen;
+use self::single_caret::single_caret;
+// use self::single_hashtag::single_hashtag;
+// use self::single_hyphen::single_hyphen;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Block {}
@@ -44,15 +47,18 @@ pub fn block_of_main_content_v42<'a>(
         // singles
         single_asterisk,
         single_backtick,
+        single_caret,
         //single_hyphen,
         single_lessthan,
         // escapes
         escaped_asterisk,
         escaped_backtick,
+        escaped_caret,
         // escaped_hyphen,
         escaped_lessthan,
         // add shorthands here
         code_shorthand,
+        footnote_shorthand,
         // named span
         named_span,
     )))
@@ -283,6 +289,8 @@ mod test {
     #[case("``alfa``")]
     #[case("*")]
     #[case(r#"\**"#)]
+    #[case("^")]
+    #[case(r#"\^^"#)]
 
     fn solo_check_basic_parsing_passes(#[case] input: &str) {
         let response = block_of_main_content_v42(input);
