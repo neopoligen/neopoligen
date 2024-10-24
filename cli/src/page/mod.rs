@@ -283,7 +283,7 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn solo_id_test_get_basic_id() {
+    fn id_test_get_basic_id() {
         let page = PageV42::mock1_basic_page();
         // dbg!(&page.ast());
         let left = "mock1_basic_page".to_string();

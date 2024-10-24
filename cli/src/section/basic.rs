@@ -24,19 +24,13 @@ pub fn basic_section_end<'a>(
         .context("")
         .parse(source)?;
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
-    // let (source, _) = structure_empty_until_newline_or_eof
-    //     .context("")
-    //     .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, children) = if list_level > 0 {
         many0(|src| block_of_list_item_content_v42(src))
             .context("")
             .parse(source)?
-        // many0(|src| block_of_end_content_that_is_not_a_list_item(src))
-        //     .context("")
-        //     .parse(source)?
     } else {
-        many0(|src| block_of_end_content(src))
+        many0(|src| block_of_main_content_v42(src))
             .context("")
             .parse(source)?
     };
@@ -64,9 +58,6 @@ pub fn basic_section_full<'a>(
     let (source, r#type) = (|src| tag_finder_full(src, &sections.basic))
         .context("")
         .parse(source)?;
-    // let (source, _) = structure_empty_until_newline_or_eof
-    //     .context("")
-    //     .parse(source)?;
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
@@ -75,9 +66,6 @@ pub fn basic_section_full<'a>(
     let (source, children) = many0(|src| block_of_main_content_v42(src))
         .context("")
         .parse(source)?;
-    // let (source, children) = many0(|src| block_of_end_content(src))
-    //     .context("")
-    //     .parse(source)?;
     let section = Section {
         attr_list: vec![],
         flag_list: vec![],
@@ -99,12 +87,6 @@ pub fn basic_section_start<'a>(
     let (source, r#type) = (|src| tag_finder_start(src, &sections.basic))
         .context("")
         .parse(source)?;
-    // TODO: You can remove the lines below
-    // the next time you see them
-    // let (source, _) = tag("/").context("").parse(source)?;
-    // let (source, _) = structure_empty_until_newline_or_eof
-    //     .context("")
-    //     .parse(source)?;
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")

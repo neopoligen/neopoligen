@@ -260,7 +260,7 @@ mod test {
     }
 
     #[test]
-    fn solo_nested_list_test() {
+    fn nested_list_test() {
         let source =
             "-- list/\n\n- alfa\n\n-- list/\n\n- bravo\n\n-- /list\n\n- charlie\n\n-- /list";
         let config = SiteConfig::mock1_basic();
