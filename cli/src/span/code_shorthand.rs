@@ -1,7 +1,5 @@
 #![allow(unused_variables)]
 #![allow(unused_imports)]
-use std::result;
-
 use self::any_asterisk::any_asterisk;
 use self::any_caret::any_caret;
 use self::any_hyphen::any_hyphen;
@@ -26,9 +24,10 @@ use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
+use std::result;
 
 pub fn code_shorthand_flag_base_span_v42(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let (source, result) = is_not(": \n\t|\\").context("").parse(source)?;
+    let (source, result) = is_not(": \n\t|\\`").context("").parse(source)?;
     Ok((
         source,
         Span {
@@ -42,19 +41,23 @@ pub fn code_shorthand_flag_base_span_v42(source: &str) -> IResult<&str, Span, Er
 pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, spans) = many1(alt((
-        code_shorthand_flag_base_span_v42,
-        colon_not_followed_by_space,
-        escaped_pipe,
-        escaped_backslash,
-    )))
+    let (source, spans) = many1(pair(
+        alt((
+            code_shorthand_flag_base_span_v42,
+            colon_not_followed_by_space,
+            escaped_pipe,
+            escaped_backslash,
+            escaped_backtick,
+            single_backtick,
+        )),
+        not(tag(": ")),
+    ))
     .context("")
     .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    //let text = "asdf".to_string();
     let text = spans
         .iter()
-        .map(|s| s.parsed_text().unwrap().to_string())
+        .map(|s| s.0.parsed_text().unwrap().to_string())
         .collect::<Vec<String>>()
         .join("");
     let flag = SpanAttr {
@@ -128,7 +131,7 @@ mod test {
     #[case("``escaped \\`` backtick before single backtick``")]
     #[case("``escaped \\| pipe``")]
     #[case("``escaped \\\\ backslash``")]
-    fn valid_code_shorthands(#[case] source: &str) {
+    fn solo_valid_code_shorthands(#[case] source: &str) {
         let result = code_shorthand(source);
         if result.is_ok() {
             assert!(true)
@@ -159,6 +162,8 @@ mod test {
     #[case("| charlie-delta ")]
     #[case("|https://www.example.com/")]
     #[case("|\ncontains")]
+    #[case("|single`backtick")]
+    #[case("|esacped\\`backtick")]
     #[case("|esacped\\|pipe")]
     #[case("|esacped\\\\escape")]
     fn solo_valid_code_shorthand_flags(#[case] source: &str) {
@@ -179,18 +184,13 @@ mod test {
     // Invalid Code Shorthand Flags
     #[rstest]
     #[case("|alfa: value")]
-    fn invalid_code_shorthand_flags(#[case] source: &str) {
+    fn solo_invalid_code_shorthand_flags(#[case] source: &str) {
         let result = code_shorthand_flag_v42(source);
-        if !result.as_ref().is_ok() {
-            if result.as_ref().unwrap().0 == "" {
-                assert!(true)
-            } else {
-                dbg!(format!("missed: {}", result.unwrap().0));
-                assert!(false);
-            }
-        } else {
+        if result.as_ref().is_ok() {
             dbg!(&result);
             assert!(false);
+        } else {
+            assert!(true)
         }
     }
 
