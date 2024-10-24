@@ -229,6 +229,8 @@ mod test {
     #[case("|\necho:\n")]
     #[case("|fox<trot: ")]
     #[case("|fox<<trot: ")]
+    #[case("|fox>trot: ")]
+    #[case("|fox>>trot: ")]
     #[case("|go^lf: ")]
     #[case("|go^^lf: ")]
     #[case("|hot*el: ")]

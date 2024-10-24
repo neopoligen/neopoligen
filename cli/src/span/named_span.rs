@@ -16,8 +16,10 @@ use self::any_backtick::any_backtick;
 use self::any_caret::any_caret;
 use self::any_colon::any_colon;
 use self::any_hyphen::any_hyphen;
+use self::any_lessthan::any_lessthan;
 use self::any_newline::any_newline;
 use self::any_underscore::any_underscore;
+use self::colon_followed_by_multispace1::colon_followed_by_multispace1;
 use self::escaped_lessthan::escaped_lessthan;
 
 // TODO: Deprecated remove when V42 is ready
@@ -124,13 +126,40 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorT
 
 // NEW V42 STUFF ////////////////////////////////////////////////////////////////
 
-pub fn named_span_key_value_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
+pub fn named_span_attr_key_v42(source: &str) -> IResult<&str, Vec<Span>, ErrorTree<&str>> {
+    let (source, _) = multispace0.context("").parse(source)?;
+    let (source, spans) = many1(alt((
+        plaintext,
+        any_hyphen,
+        any_caret,
+        any_asterisk,
+        escaped_backtick,
+        single_backtick,
+        any_underscore,
+        any_hyphen,
+        escaped_pipe,
+        escaped_colon,
+        escaped_backslash,
+        colon_not_followed_by_space,
+        single_lessthan,
+        escaped_lessthan,
+        single_greaterthan,
+        escaped_greaterthan,
+    )))
+    .context("")
+    .parse(source)?;
+    let (source, _) = colon_followed_by_multispace1.context("").parse(source)?;
+    Ok((source, spans))
+}
+
+pub fn named_span_attr_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
+    let (source, key_spans) = named_span_attr_key_v42.context("").parse(source)?;
     Ok((
         source,
         SpanAttr {
             kind: SpanAttrKind::KeyValueSpansV42 {
-                key: vec![],
+                key: key_spans,
                 value: vec![],
             },
         },
@@ -147,8 +176,6 @@ pub fn named_span_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&s
     ))
 }
 
-//        \n<^>*`_-|:\\
-//
 pub fn named_span_type_span_v42(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let (source, span) = alt((
         plaintext,
@@ -200,7 +227,7 @@ pub fn named_span_v42(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let (source, value_spans) = many1(named_span_content_value_span_v42)
         .context("")
         .parse(source)?;
-    let (source, attr_spans) = many0(alt((named_span_flag_v42, named_span_key_value_v42)))
+    let (source, attr_spans) = many0(alt((named_span_flag_v42, named_span_attr_v42)))
         .context("")
         .parse(source)?;
     let (source, _) = tag(">>").context("").parse(source)?;
@@ -223,6 +250,7 @@ mod test {
     use pretty_assertions::assert_eq;
     use rstest::rstest;
 
+    // Valid Named Spans
     #[rstest]
     #[case("<<alfa|bravo>>")]
     #[case("<<\nalfa\nbravo\n|\nalfa\nbravo\n>>")]
@@ -241,6 +269,45 @@ mod test {
     #[case("<<alfa\\\\bravo|alfa\\\\bravo>>")]
     fn solo_valid_named_span_cases(#[case] source: &str) {
         let result = named_span_v42(source);
+        if result.is_ok() {
+            //dbg!(&result.unwrap().clone());
+            assert!(true)
+        } else {
+            dbg!(&result);
+            assert!(false);
+        }
+    }
+
+    // Valid named span key value keys
+    // \n<^*`_-|:\\
+    #[rstest]
+    #[case("spaced are allowed: ")]
+    #[case("colon:without:spaces: ")]
+    #[case("alfa: ")]
+    #[case("bravo-charlie: ")]
+    #[case("\ndelta: ")]
+    #[case("\necho:\n")]
+    #[case("fox<trot: ")]
+    #[case("fox\\<<trot: ")]
+    #[case("fox>trot: ")]
+    #[case("fox\\>>trot: ")]
+    #[case("go^lf: ")]
+    #[case("go^^lf: ")]
+    #[case("hot*el: ")]
+    #[case("hot**el: ")]
+    #[case("ind`ia: ")]
+    #[case("ind\\``ia: ")]
+    #[case("jul_iet: ")]
+    #[case("jul__iet: ")]
+    #[case("ki-lo: ")]
+    #[case("ki--lo: ")]
+    #[case("li\\|ma: ")]
+    #[case("mi\\:ke: ")]
+    #[case("mi\\::ke: ")]
+    #[case("mi::ke: ")]
+    #[case("nov\\\\ember: ")]
+    fn named_span_attr_key_v42_tests(#[case] source: &str) {
+        let result = named_span_attr_key_v42(source);
         if result.is_ok() {
             //dbg!(&result.unwrap().clone());
             assert!(true)
