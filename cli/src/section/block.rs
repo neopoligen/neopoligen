@@ -20,7 +20,11 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
+use self::code_shorthand::code_shorthand;
+use self::escaped_backtick::escaped_backtick;
 use self::escaped_hyphen::escaped_hyphen;
+use self::named_span::named_span;
+use self::single_backtick::single_backtick;
 use self::single_hyphen::single_hyphen;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -39,6 +43,12 @@ pub fn block_of_main_content_v42<'a>(
         single_lessthan,
         escaped_exclamation,
         single_exclamation,
+        escaped_backtick,
+        single_backtick,
+        // add shorthands here
+        code_shorthand,
+        // named span
+        named_span,
     )))
     .context("")
     .parse(source)?;
@@ -253,11 +263,15 @@ mod test {
     #[case("< ")]
     #[case("<\n")]
     #[case(r#"\<<"#)]
+    #[case("<<span|ping>>")]
     #[case("! ")]
     #[case(r#"\!!"#)]
     #[case("! ")]
     #[case("- ")]
     #[case(r#"\--"#)]
+    #[case("` ")]
+    #[case(r#"\``"#)]
+    #[case("``alfa``")]
 
     fn solo_check_basic_parsing_passes(#[case] input: &str) {
         let response = block_of_main_content_v42(input);

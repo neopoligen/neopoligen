@@ -16,7 +16,8 @@ pub fn list_item_full<'a>(
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
-    let (source, children) = many1(|src| block_of_list_content(src))
+    //let (source, children) = many1(|src| block_of_list_content(src))
+    let (source, children) = many1(|src| block_of_main_content_v42(src))
         .context("")
         .parse(source)?;
     Ok((
@@ -44,7 +45,8 @@ pub fn list_item_start_end<'a>(
     let (source, children) = many1(alt((
         |src| start_or_full_section(src, sections, nest_level, list_level),
         // |src| block_of_list_content_v42(src),
-        |src| block_of_end_content_that_is_not_a_list_item(src),
+        //|src| block_of_end_content_that_is_not_a_list_item(src),
+        |src| block_of_main_content_v42(src),
     )))
     .context("")
     .parse(source)?;

@@ -29,9 +29,12 @@ pub fn basic_section_end<'a>(
     //     .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, children) = if list_level > 0 {
-        many0(|src| block_of_end_content_that_is_not_a_list_item(src))
+        many0(|src| block_of_main_content_v42(src))
             .context("")
             .parse(source)?
+        // many0(|src| block_of_end_content_that_is_not_a_list_item(src))
+        //     .context("")
+        //     .parse(source)?
     } else {
         many0(|src| block_of_end_content(src))
             .context("")
@@ -108,7 +111,7 @@ pub fn basic_section_start<'a>(
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, mut children) = many0(alt((
-        |src| block_of_end_content(src),
+        |src| block_of_main_content_v42(src),
         |src| start_or_full_section(src, &sections, nest_level, list_level),
     )))
     .context("")
@@ -224,7 +227,7 @@ mod test {
                         kind: SectionKind::Block {
                             spans: vec![Span {
                                 attrs: vec![],
-                                kind: SpanKind::WordPart,
+                                kind: SpanKind::PlainText,
                                 parsed_text: "Hello World".to_string(),
                             }],
                         },
@@ -259,12 +262,12 @@ mod test {
                             spans: vec![
                                 Span {
                                     attrs: vec![],
-                                    kind: SpanKind::Hyphen,
+                                    kind: SpanKind::SingleHyphen,
                                     parsed_text: "-".to_string(),
                                 },
                                 Span {
                                     attrs: vec![],
-                                    kind: SpanKind::WordPart,
+                                    kind: SpanKind::PlainText,
                                     parsed_text: " Hello World".to_string(),
                                 },
                             ],
@@ -299,7 +302,7 @@ mod test {
                         kind: SectionKind::Block {
                             spans: vec![Span {
                                 attrs: vec![],
-                                kind: SpanKind::WordPart,
+                                kind: SpanKind::PlainText,
                                 parsed_text: "Hello World".to_string(),
                             }],
                         },
@@ -314,7 +317,7 @@ mod test {
     }
 
     #[test]
-    fn basic_start_end_test_checking_name_collision() {
+    fn solo_basic_start_end_test_checking_name_collision() {
         let source = "-- previews/\n\nHello World\n\n-- /previews";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -334,7 +337,7 @@ mod test {
                             kind: SectionKind::Block {
                                 spans: vec![Span {
                                     attrs: vec![],
-                                    kind: SpanKind::WordPart,
+                                    kind: SpanKind::PlainText,
                                     parsed_text: "Hello World".to_string(),
                                 }],
                             },
@@ -362,7 +365,7 @@ mod test {
     }
 
     #[test]
-    fn basic_with_code_shorthand() {
+    fn solo_basic_with_code_shorthand() {
         let source = "-- title\n\n``code shorthand``";
         let config = SiteConfig::mock1_basic();
         let left = (
