@@ -42,6 +42,8 @@ pub fn code_shorthand_attr_key_base_v42(source: &str) -> IResult<&str, Vec<Span>
         any_underscore,
         any_hyphen,
         escaped_pipe,
+        escaped_colon,
+        escaped_backslash,
     )))
     .context("")
     .parse(source)?;
@@ -212,6 +214,7 @@ mod test {
     // Valid Code Shorthand Key Base
     // \n<^*`_-|:\\
     #[rstest]
+    #[case("|spaced are allowed: ")]
     #[case("|alfa: ")]
     #[case("|bravo-charlie: ")]
     #[case("|\ndelta: ")]
@@ -229,6 +232,8 @@ mod test {
     #[case("|ki-lo: ")]
     #[case("|ki--lo: ")]
     #[case("|li\\|ma: ")]
+    #[case("|mi\\:ke: ")]
+    #[case("|nov\\\\ember: ")]
     fn solo_valid_code_key_base(#[case] source: &str) {
         let result = code_shorthand_attr_key_base_v42(source);
         if result.is_ok() {
