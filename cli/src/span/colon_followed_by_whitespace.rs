@@ -6,7 +6,7 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
-pub fn colon_followed_by_space(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+pub fn colon_followed_by_whitespace(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let (source, _) = pair(tag(":"), space1).context("").parse(source)?;
     Ok((
         source,
@@ -33,7 +33,7 @@ mod test {
                 kind: SpanKind::ColonFollowedByWhitespace,
             },
         );
-        let right = colon_followed_by_space(source).unwrap();
+        let right = colon_followed_by_whitespace(source).unwrap();
         assert_eq!(left, right);
     }
 }
