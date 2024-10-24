@@ -1,5 +1,6 @@
 #![allow(unused_variables)]
 #![allow(unused_imports)]
+use crate::span::any_lessthan::any_lessthan;
 use crate::span::greaterthan::*;
 use crate::span::lessthan::*;
 use crate::span::*;
@@ -36,9 +37,9 @@ pub fn code_shorthand_base_span(source: &str) -> IResult<&str, Span, ErrorTree<&
     let (source, span) = alt((
         plaintext.context(""),
         single_backtick,
-        single_lessthan,
-        escaped_lessthan,
+        any_lessthan,
         escaped_backtick,
+        escaped_pipe,
     ))
     .parse(source)?;
     Ok((source, span))
@@ -81,10 +82,10 @@ mod test {
     #[case("``delta echo|foxtrot``")]
     #[case("``golf| hotel | india``")]
     #[case("``<html> singel lessthan``")]
-    #[case("``\\<< escaped less than``")]
+    #[case("``<< multiple lessthans``")]
     #[case("``single ` backtick``")]
     #[case("``escaped \\`` backtick``")]
-    // #[case("``escaped\\|pipe``")]
+    #[case("``escaped \\| pipe``")]
     fn solo_valid_code_shorthands(#[case] source: &str) {
         let result = code_shorthand(source);
         if result.is_ok() {

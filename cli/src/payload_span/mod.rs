@@ -325,6 +325,7 @@ impl PayloadSpan {
             SpanKind::NamedSpan { r#type, .. } => r#type.to_string(),
             SpanKind::Pipe => "pipe".to_string(),
             SpanKind::PlainText => "plain-text".to_string(),
+            _ => "deprecated-span".to_string(),
         };
 
         let mut ps = PayloadSpan {
