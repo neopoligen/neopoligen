@@ -66,6 +66,14 @@ pub fn block_of_main_content_v42<'a>(
     ))
 }
 
+pub fn block_of_list_item_content_v42<'a>(
+    source: &'a str,
+) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let (source, _) = not(tag("-")).context("").parse(source)?;
+    let (source, section) = block_of_main_content_v42.context("").parse(source)?;
+    Ok((source, section))
+}
+
 // TODO: Depreacte this in favor of block_of_main_body_content_V42
 pub fn block_of_anything<'a>(source: &'a str) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = not(eof).context("").parse(source)?;
@@ -162,48 +170,48 @@ pub fn block_of_end_content_that_is_not_a_list_item<'a>(
     ))
 }
 
-pub fn block_of_list_content_start_v42<'a>(
-    source: &'a str,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, spans) = many1(alt((base_span_for_all_text,)))
-        .context("")
-        .parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    Ok((
-        source,
-        Section {
-            attr_list: vec![],
-            flag_list: vec![],
-            attrs: vec![],
-            bounds: SectionBounds::Full,
-            kind: SectionKind::Block { spans },
-            r#type: "block-of-text".to_string(),
-        },
-    ))
-}
+// pub fn block_of_list_content_start_v42_deprecated<'a>(
+//     source: &'a str,
+// ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+//     let (source, spans) = many1(alt((base_span_for_all_text,)))
+//         .context("")
+//         .parse(source)?;
+//     let (source, _) = multispace0.context("").parse(source)?;
+//     Ok((
+//         source,
+//         Section {
+//             attr_list: vec![],
+//             flag_list: vec![],
+//             attrs: vec![],
+//             bounds: SectionBounds::Full,
+//             kind: SectionKind::Block { spans },
+//             r#type: "block-of-text".to_string(),
+//         },
+//     ))
+// }
 
-pub fn block_of_list_content_v42<'a>(
-    source: &'a str,
-) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let (source, _) = multispace0.context("").parse(source)?;
-    let (source, _) = not(eof).context("").parse(source)?;
-    let (source, _) = not(tag("-")).context("").parse(source)?;
-    let (source, spans) = many1(alt((base_span_for_list_item,)))
-        .context("")
-        .parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    Ok((
-        source,
-        Section {
-            attr_list: vec![],
-            flag_list: vec![],
-            attrs: vec![],
-            bounds: SectionBounds::Full,
-            kind: SectionKind::Block { spans },
-            r#type: "block-of-text".to_string(),
-        },
-    ))
-}
+// pub fn block_of_list_content_v42_deprecated<'a>(
+//     source: &'a str,
+// ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+//     let (source, _) = multispace0.context("").parse(source)?;
+//     let (source, _) = not(eof).context("").parse(source)?;
+//     let (source, _) = not(tag("-")).context("").parse(source)?;
+//     let (source, spans) = many1(alt((base_span_for_list_item,)))
+//         .context("")
+//         .parse(source)?;
+//     let (source, _) = multispace0.context("").parse(source)?;
+//     Ok((
+//         source,
+//         Section {
+//             attr_list: vec![],
+//             flag_list: vec![],
+//             attrs: vec![],
+//             bounds: SectionBounds::Full,
+//             kind: SectionKind::Block { spans },
+//             r#type: "block-of-text".to_string(),
+//         },
+//     ))
+// }
 
 pub fn block_of_list_content<'a>(source: &'a str) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = multispace0.context("").parse(source)?;

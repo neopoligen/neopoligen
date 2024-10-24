@@ -29,7 +29,7 @@ pub fn basic_section_end<'a>(
     //     .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, children) = if list_level > 0 {
-        many0(|src| block_of_main_content_v42(src))
+        many0(|src| block_of_list_item_content_v42(src))
             .context("")
             .parse(source)?
         // many0(|src| block_of_end_content_that_is_not_a_list_item(src))
