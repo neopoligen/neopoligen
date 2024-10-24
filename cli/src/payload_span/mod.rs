@@ -489,8 +489,8 @@ impl PayloadSpan {
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use pretty_assertions::assert_eq;
+    // use super::*;
+    // use pretty_assertions::assert_eq;
 
     // #[test]
     // fn nested_spans_test() {

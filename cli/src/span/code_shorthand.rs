@@ -1,7 +1,4 @@
-#![allow(unused_variables)]
-#![allow(unused_imports)]
 use self::any_asterisk::any_asterisk;
-use self::any_backtick::any_backtick;
 use self::any_caret::any_caret;
 use self::any_colon::any_colon;
 use self::any_hyphen::any_hyphen;
@@ -9,17 +6,10 @@ use self::any_lessthan::any_lessthan;
 use self::any_newline::any_newline;
 use self::any_underscore::any_underscore;
 use self::colon_followed_by_multispace1::colon_followed_by_multispace1;
-use self::escaped_lessthan::escaped_lessthan;
-use crate::span::greaterthan::*;
-use crate::span::lessthan::*;
 use crate::span::*;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
-use nom::bytes::complete::take_until;
-use nom::character::complete::alpha1;
-use nom::character::complete::digit1;
-use nom::character::complete::multispace1;
 use nom::multi::many0;
 use nom::multi::many1;
 use nom::sequence::pair;
@@ -27,10 +17,9 @@ use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-use std::result;
 
 pub fn code_shorthand_attr_key_base_v42(source: &str) -> IResult<&str, Vec<Span>, ErrorTree<&str>> {
-    let (source, result) = tag("|").context("").parse(source)?;
+    let (source, _) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, spans) = many1(alt((
         plaintext,

@@ -136,9 +136,7 @@ impl Span {
             SpanKind::AnyNewline => Ok(Value::from(&self.parsed_text)),
             SpanKind::AnyPipe => Ok(Value::from(&self.parsed_text)),
             SpanKind::AnyUnderscore => Ok(Value::from(&self.parsed_text)),
-            SpanKind::CodeShorthand { .. } => {
-                Ok(Value::from("TODO: combine spans for code shorthand"))
-            }
+            SpanKind::CodeShorthand { .. } => Ok(Value::from("NEOPOLIGEN_TODO: CodeShorthand")),
             SpanKind::Colon => Ok(Value::from(&self.parsed_text)),
             SpanKind::ColonFollowedByMultispace0 => Ok(Value::from(&self.parsed_text)),
             SpanKind::ColonFollowedByMultispace1 => Ok(Value::from(&self.parsed_text)),
@@ -170,6 +168,7 @@ impl Span {
             SpanKind::NamedSpan { .. } => Ok(Value::from(
                 "[NEOPOLIGEN_TODO: figure out what to do with named span top level text]",
             )),
+            SpanKind::NamedSpanV42 { .. } => Ok(Value::from("[NEOPOLIGEN_TODO: NamedSpanV42]")),
             SpanKind::Pipe => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleAsterisk => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleBacktick => Ok(Value::from(&self.parsed_text)),
@@ -204,7 +203,9 @@ pub enum SpanKind {
     AnyNewline,
     AnyPipe,
     AnyUnderscore,
-    CodeShorthand { children: Vec<Span> },
+    CodeShorthand {
+        children: Vec<Span>,
+    },
     Colon, // TODO: Deprecate this in favor of AnyColon
     ColonFollowedByMultispace0,
     ColonFollowedByMultispace1,
@@ -233,7 +234,14 @@ pub enum SpanKind {
     LinkShorthand,
     MoreThanTwoUnderscores,
     MoreThanTwoCarets,
-    NamedSpan { r#type: String, children: Vec<Span> },
+    NamedSpan {
+        r#type: String,
+        children: Vec<Span>,
+    },
+    NamedSpanV42 {
+        r#type: Vec<Span>,
+        children: Vec<Span>,
+    },
     Newline,
     Pipe,
     PlainText,

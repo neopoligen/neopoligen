@@ -11,6 +11,7 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
+// TODO: Deprecated remove when V42 is ready
 pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let (source, _) = tag("<<").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
@@ -43,6 +44,7 @@ pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     ))
 }
 
+// TODO: Deprecated remove when V42 is ready
 pub fn named_span_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let (source, attr) = alt((named_span_key_value_attr, named_span_flag_attr))
         .context("")
@@ -50,6 +52,7 @@ pub fn named_span_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>>
     Ok((source, attr))
 }
 
+// TODO: Deprecated remove when V42 is ready
 pub fn named_span_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
@@ -67,6 +70,7 @@ pub fn named_span_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&
     Ok((source, attr))
 }
 
+// TODO: Deprecated remove when V42 is ready
 pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
@@ -109,11 +113,44 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorT
     Ok((source, attr))
 }
 
+pub fn named_span_v42(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+    Ok((
+        source,
+        Span {
+            attrs: vec![],
+            kind: SpanKind::NamedSpanV42 {
+                r#type: vec![],
+                children: vec![],
+            },
+            parsed_text: "".to_string(),
+        },
+    ))
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
     use pretty_assertions::assert_eq;
     use rstest::rstest;
+
+    #[test]
+    #[ignore]
+    fn solo_ns_basic_v42() {
+        let source = "<<em|alfa>>";
+        let left = (
+            "",
+            Span {
+                attrs: vec![],
+                kind: SpanKind::NamedSpanV42 {
+                    r#type: vec![],
+                    children: vec![],
+                },
+                parsed_text: "".to_string(),
+            },
+        );
+        let right = named_span_v42(source).unwrap();
+        assert_eq!(left, right);
+    }
 
     #[rstest]
     #[case("<<alfa|bravo>>", 0, "single word", true)]
