@@ -1,6 +1,7 @@
 pub mod any_asterisk;
 pub mod any_backtick;
 pub mod any_caret;
+pub mod any_colon;
 pub mod any_hyphen;
 pub mod any_lessthan;
 pub mod any_newline;
@@ -129,6 +130,7 @@ impl Span {
             SpanKind::AnyAsterisk => Ok(Value::from(&self.parsed_text)),
             SpanKind::AnyBacktick => Ok(Value::from(&self.parsed_text)),
             SpanKind::AnyCaret => Ok(Value::from(&self.parsed_text)),
+            SpanKind::AnyColon => Ok(Value::from(&self.parsed_text)),
             SpanKind::AnyHyphen => Ok(Value::from(&self.parsed_text)),
             SpanKind::AnyLessThan => Ok(Value::from(&self.parsed_text)),
             SpanKind::AnyNewline => Ok(Value::from(&self.parsed_text)),
@@ -196,13 +198,14 @@ pub enum SpanKind {
     AnyAsterisk,
     AnyBacktick,
     AnyCaret,
+    AnyColon,
     AnyHyphen,
     AnyLessThan,
     AnyNewline,
     AnyPipe,
     AnyUnderscore,
     CodeShorthand { children: Vec<Span> },
-    Colon, // TODO: Deprecate this in favor of making an AnyColon
+    Colon, // TODO: Deprecate this in favor of AnyColon
     ColonFollowedByMultispace0,
     ColonFollowedByMultispace1,
     ColonFollowedBySpace0,

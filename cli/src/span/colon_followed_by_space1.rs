@@ -23,7 +23,7 @@ mod test {
     use super::*;
     use pretty_assertions::assert_eq;
     #[test]
-    fn solo_basic_check() {
+    fn basic_check() {
         let source = ": ";
         let left = (
             "",

@@ -5,10 +5,6 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
-// This is for things like inside code blocks where you don't
-// want (or have to) escape less than signs since they
-// aren't control characters in the parsing.
-
 pub fn any_asterisk(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let (source, _) = tag("*").context("").parse(source)?;
     Ok((

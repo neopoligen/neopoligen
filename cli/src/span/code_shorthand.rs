@@ -3,6 +3,7 @@
 use self::any_asterisk::any_asterisk;
 use self::any_backtick::any_backtick;
 use self::any_caret::any_caret;
+use self::any_colon::any_colon;
 use self::any_hyphen::any_hyphen;
 use self::any_lessthan::any_lessthan;
 use self::any_newline::any_newline;
@@ -55,7 +56,17 @@ pub fn code_shorthand_attr_key_base_v42(source: &str) -> IResult<&str, Vec<Span>
 pub fn code_shorthand_attr_value_base_v42(
     source: &str,
 ) -> IResult<&str, Vec<Span>, ErrorTree<&str>> {
-    let (source, spans) = many1(alt((plaintext,))).context("").parse(source)?;
+    let (source, spans) = many1(alt((
+        plaintext,
+        any_colon,
+        any_hyphen,
+        any_caret,
+        any_lessthan,
+        any_asterisk,
+        any_underscore,
+    )))
+    .context("")
+    .parse(source)?;
     Ok((source, spans))
 }
 
@@ -242,6 +253,43 @@ mod test {
         let result = code_shorthand_attr_key_base_v42(source);
         if result.is_ok() {
             //dbg!(&result.unwrap().clone());
+            assert!(true)
+        } else {
+            dbg!(&result);
+            assert!(false);
+        }
+    }
+
+    // Valid Code Shorthand Attr Value Base
+    // \n<^*`_-|:\\
+    #[rstest]
+    #[case("spaced are allowed|")]
+    #[case("colon:without:spaces|")]
+    #[case("alfa: |")]
+    #[case("bravo-charlie: |")]
+    // #[case("|\ndelta: |")]
+    // #[case("|\necho:\n|")]
+    #[case("fox<trot: |")]
+    #[case("fox<<trot: |")]
+    #[case("go^lf: |")]
+    #[case("go^^lf: |")]
+    #[case("hot*el: |")]
+    #[case("hot**el: |")]
+    // #[case("ind`ia: |")]
+    // #[case("ind\\``ia: |")]
+    #[case("jul_iet: |")]
+    #[case("jul__iet: |")]
+    #[case("ki-lo: |")]
+    #[case("ki--lo: |")]
+    // #[case("li\\|ma: |")]
+    // #[case("mi\\:ke: |")]
+    // #[case("mi\\::ke: |")]
+    // #[case("mi::ke: |")]
+    // #[case("nov\\\\ember: |")]
+    fn solo_valid_code_value_base(#[case] source: &str) {
+        let result = code_shorthand_attr_value_base_v42(source);
+        let remainder = result.as_ref().unwrap().0;
+        if result.is_ok() && remainder == "|" {
             assert!(true)
         } else {
             dbg!(&result);
