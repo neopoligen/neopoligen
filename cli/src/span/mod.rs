@@ -74,7 +74,7 @@ use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::Value;
 use nom::branch::alt;
-use nom::bytes::complete::is_not;
+//use nom::bytes::complete::is_not;
 use nom::character::complete::line_ending;
 use nom::character::complete::multispace0;
 use nom::character::complete::space0;
@@ -130,7 +130,9 @@ impl Span {
             SpanKind::AnyNewline => Ok(Value::from(&self.parsed_text)),
             SpanKind::AnyPipe => Ok(Value::from(&self.parsed_text)),
             SpanKind::AnyUnderscore => Ok(Value::from(&self.parsed_text)),
-            SpanKind::CodeShorthand { .. } => Ok(Value::from(&self.parsed_text)),
+            SpanKind::CodeShorthand { .. } => {
+                Ok(Value::from("TODO: combine spans for code shorthand"))
+            }
             SpanKind::Colon => Ok(Value::from(&self.parsed_text)),
             SpanKind::ColonNotFollowedBySpace => Ok(Value::from(&self.parsed_text)),
             SpanKind::DashWithTrailingNonDash => Ok(Value::from(&self.parsed_text)),
@@ -141,7 +143,6 @@ impl Span {
             SpanKind::EscapedBackslash => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedCaret => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedColon => Ok(Value::from(&self.parsed_text)),
-            // SpanKind::EscapedExclamation => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedGreaterThan => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedHashtag => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedLessThan => Ok(Value::from(&self.parsed_text)),
@@ -150,15 +151,15 @@ impl Span {
             SpanKind::EscapedUnderscore => Ok(Value::from(&self.parsed_text)),
             SpanKind::FootnoteShorthand => Ok(Value::from(&self.parsed_text)),
             SpanKind::GreaterThan => Ok(Value::from(&self.parsed_text)),
-            // SpanKind::Hyphen => Ok(Value::from(&self.parsed_text)),
             SpanKind::HyphenWithTrailingNonHyphen => Ok(Value::from(&self.parsed_text)),
-            // TODO: Deprecate LessThan in favor of AnyLessThan
             SpanKind::LessThan => Ok(Value::from(&self.parsed_text)),
             SpanKind::LinkShorthand => Ok(Value::from(&self.parsed_text)),
             SpanKind::MoreThanTwoUnderscores => Ok(Value::from(&self.parsed_text)),
             SpanKind::MoreThanTwoCarets => Ok(Value::from(&self.parsed_text)),
             SpanKind::Newline => Ok(Value::from(&self.parsed_text)),
-            SpanKind::NamedSpan { .. } => Ok(Value::from("[NAMED_SPAN_TODO]")),
+            SpanKind::NamedSpan { .. } => Ok(Value::from(
+                "[NEOPOLIGEN_TODO: figure out what to do with named span top level text]",
+            )),
             SpanKind::Pipe => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleAsterisk => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleBacktick => Ok(Value::from(&self.parsed_text)),
@@ -170,7 +171,6 @@ impl Span {
             SpanKind::SingleLessThan => Ok(Value::from(&self.parsed_text)),
             SpanKind::Space => Ok(Value::from(&self.parsed_text)),
             SpanKind::PlainText => Ok(Value::from(&self.parsed_text)),
-            // _ => Ok(Value::from("[UNKNOWN_SPAN]")),
         }
     }
 

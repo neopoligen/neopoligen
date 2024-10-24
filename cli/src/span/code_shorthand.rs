@@ -1,10 +1,19 @@
 #![allow(unused_variables)]
 #![allow(unused_imports)]
-use crate::span::any_lessthan::any_lessthan;
+use std::result;
+
+use self::any_asterisk::any_asterisk;
+use self::any_caret::any_caret;
+use self::any_hyphen::any_hyphen;
+use self::any_lessthan::any_lessthan;
+use self::any_newline::any_newline;
+use self::any_underscore::any_underscore;
+use self::escaped_lessthan::escaped_lessthan;
 use crate::span::greaterthan::*;
 use crate::span::lessthan::*;
 use crate::span::*;
 use nom::branch::alt;
+use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::bytes::complete::take_until;
 use nom::character::complete::alpha1;
@@ -18,18 +27,36 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
-use self::any_asterisk::any_asterisk;
-use self::any_caret::any_caret;
-use self::any_hyphen::any_hyphen;
-use self::any_newline::any_newline;
-use self::any_underscore::any_underscore;
-use self::escaped_lessthan::escaped_lessthan;
+pub fn code_shorthand_flag_base_span_v42(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+    let (source, result) = is_not(": \n\t|\\").context("").parse(source)?;
+    Ok((
+        source,
+        Span {
+            attrs: vec![],
+            kind: SpanKind::PlainText,
+            parsed_text: result.to_string(),
+        },
+    ))
+}
 
 pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, text) = is_not("`| \n\t").context("").parse(source)?;
+    let (source, spans) = many1(alt((
+        code_shorthand_flag_base_span_v42,
+        colon_not_followed_by_space,
+        escaped_pipe,
+        escaped_backslash,
+    )))
+    .context("")
+    .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
+    //let text = "asdf".to_string();
+    let text = spans
+        .iter()
+        .map(|s| s.parsed_text().unwrap().to_string())
+        .collect::<Vec<String>>()
+        .join("");
     let flag = SpanAttr {
         kind: SpanAttrKind::Flag {
             value: text.to_string(),
@@ -60,16 +87,7 @@ pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let (source, _) = tag("``").context("").context("").parse(source)?;
     let (source, spans) = many1(code_shorthand_base_span).context("").parse(source)?;
     let (source, attrs) = many0(code_shorthand_flag_v42).context("").parse(source)?;
-    // let (source, parts) = many1(alt((base_span_for_all_text, lessthan, greaterthan)))
-    //     .context("")
-    //     .parse(source)?;
-    //    let (source, attrs) = many0(code_shorthand_attr).context("").parse(source)?;
     let (source, _) = tag("``").context("").parse(source)?;
-    // let parsed_text = parts
-    //     .iter()
-    //     .map(|word| word.parsed_text.clone())
-    //     .collect::<Vec<String>>()
-    //     .join("");
     Ok((
         source,
         Span {
@@ -110,7 +128,7 @@ mod test {
     #[case("``escaped \\`` backtick before single backtick``")]
     #[case("``escaped \\| pipe``")]
     #[case("``escaped \\\\ backslash``")]
-    fn solo_valid_code_shorthands(#[case] source: &str) {
+    fn valid_code_shorthands(#[case] source: &str) {
         let result = code_shorthand(source);
         if result.is_ok() {
             assert!(true)
@@ -140,9 +158,30 @@ mod test {
     #[case("| bravo ")]
     #[case("| charlie-delta ")]
     #[case("|https://www.example.com/")]
+    #[case("|\ncontains")]
+    #[case("|esacped\\|pipe")]
+    #[case("|esacped\\\\escape")]
     fn solo_valid_code_shorthand_flags(#[case] source: &str) {
         let result = code_shorthand_flag_v42(source);
         if result.as_ref().is_ok() {
+            if result.as_ref().unwrap().0 == "" {
+                assert!(true)
+            } else {
+                dbg!(format!("missed: {}", result.unwrap().0));
+                assert!(false);
+            }
+        } else {
+            dbg!(&result);
+            assert!(false);
+        }
+    }
+
+    // Invalid Code Shorthand Flags
+    #[rstest]
+    #[case("|alfa: value")]
+    fn invalid_code_shorthand_flags(#[case] source: &str) {
+        let result = code_shorthand_flag_v42(source);
+        if !result.as_ref().is_ok() {
             if result.as_ref().unwrap().0 == "" {
                 assert!(true)
             } else {
@@ -173,7 +212,7 @@ mod test {
     // }
 
     #[test]
-    fn solo_code_shorthand_with_flag_attr() {
+    fn code_shorthand_with_flag_attr() {
         let source = "``code|rust``";
         let left = (
             "",
