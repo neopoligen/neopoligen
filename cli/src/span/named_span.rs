@@ -11,6 +11,15 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
+use self::any_asterisk::any_asterisk;
+use self::any_backtick::any_backtick;
+use self::any_caret::any_caret;
+use self::any_colon::any_colon;
+use self::any_hyphen::any_hyphen;
+use self::any_newline::any_newline;
+use self::any_underscore::any_underscore;
+use self::escaped_lessthan::escaped_lessthan;
+
 // TODO: Deprecated remove when V42 is ready
 pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let (source, _) = tag("<<").context("").parse(source)?;
@@ -138,19 +147,55 @@ pub fn named_span_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&s
     ))
 }
 
-pub fn named_span_base_span_v42(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let (source, span) = alt((plaintext,)).context("").parse(source)?;
+//        \n<^>*`_-|:\\
+//
+pub fn named_span_type_span_v42(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+    let (source, span) = alt((
+        plaintext,
+        any_newline,
+        single_lessthan,
+        escaped_lessthan,
+        any_caret,
+        single_greaterthan,
+        escaped_greaterthan,
+        any_asterisk,
+        any_backtick,
+        any_underscore,
+        any_hyphen,
+        escaped_pipe,
+        any_colon,
+        escaped_backslash,
+    ))
+    .context("")
+    .parse(source)?;
     Ok((source, span))
 }
 
 pub fn named_span_content_value_span_v42(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let (source, span) = alt((plaintext,)).context("").parse(source)?;
+    let (source, span) = alt((
+        plaintext,
+        any_newline,
+        single_lessthan,
+        escaped_lessthan,
+        any_caret,
+        single_greaterthan,
+        escaped_greaterthan,
+        any_asterisk,
+        any_backtick,
+        any_underscore,
+        any_hyphen,
+        escaped_pipe,
+        any_colon,
+        escaped_backslash,
+    ))
+    .context("")
+    .parse(source)?;
     Ok((source, span))
 }
 
 pub fn named_span_v42(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let (source, _) = tag("<<").context("").parse(source)?;
-    let (source, type_spans) = many1(named_span_base_span_v42).context("").parse(source)?;
+    let (source, type_spans) = many1(named_span_type_span_v42).context("").parse(source)?;
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, value_spans) = many1(named_span_content_value_span_v42)
         .context("")
@@ -177,6 +222,33 @@ mod test {
     use super::*;
     use pretty_assertions::assert_eq;
     use rstest::rstest;
+
+    #[rstest]
+    #[case("<<alfa|bravo>>")]
+    #[case("<<\nalfa\nbravo\n|\nalfa\nbravo\n>>")]
+    #[case("<<alfa<bravo|alfa<bravo>>")]
+    #[case("<<alfa\\<<bravo|alfa\\<<bravo>>")]
+    #[case("<<alfa^bravo|alfa^bravo>>")]
+    #[case("<<alfa>bravo|alfa>bravo>>")]
+    #[case("<<alfa\\>>bravo|alfa\\>>bravo>>")]
+    #[case("<<alfa*bravo|alfa*bravo>>")]
+    #[case("<<alfa`bravo|alfa`bravo>>")]
+    #[case("<<alfa_bravo|alfa_bravo>>")]
+    #[case("<<alfa_bravo|alfa_bravo>>")]
+    #[case("<<alfa-bravo|alfa-bravo>>")]
+    #[case("<<alfa\\|bravo|alfa\\|bravo>>")]
+    #[case("<<alfa:bravo|alfa:bravo>>")]
+    #[case("<<alfa\\\\bravo|alfa\\\\bravo>>")]
+    fn solo_valid_named_span_cases(#[case] source: &str) {
+        let result = named_span_v42(source);
+        if result.is_ok() {
+            //dbg!(&result.unwrap().clone());
+            assert!(true)
+        } else {
+            dbg!(&result);
+            assert!(false);
+        }
+    }
 
     #[test]
     fn solo_ns_basic_v42() {
