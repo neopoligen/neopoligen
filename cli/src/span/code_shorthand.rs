@@ -64,6 +64,12 @@ pub fn code_shorthand_attr_value_base_v42(
         any_lessthan,
         any_asterisk,
         any_underscore,
+        single_backtick,
+        escaped_backtick,
+        escaped_backslash,
+        escaped_colon,
+        escaped_pipe,
+        any_newline,
     )))
     .context("")
     .parse(source)?;
@@ -267,25 +273,26 @@ mod test {
     #[case("colon:without:spaces|")]
     #[case("alfa: |")]
     #[case("bravo-charlie: |")]
-    // #[case("|\ndelta: |")]
-    // #[case("|\necho:\n|")]
+    #[case("  leading spaces|")]
+    #[case("\nleading newline|")]
+    #[case("includes\nnewline|")]
     #[case("fox<trot: |")]
     #[case("fox<<trot: |")]
     #[case("go^lf: |")]
     #[case("go^^lf: |")]
     #[case("hot*el: |")]
     #[case("hot**el: |")]
-    // #[case("ind`ia: |")]
-    // #[case("ind\\``ia: |")]
+    #[case("ind`ia: |")]
+    #[case("ind\\``ia: |")]
     #[case("jul_iet: |")]
     #[case("jul__iet: |")]
     #[case("ki-lo: |")]
     #[case("ki--lo: |")]
-    // #[case("li\\|ma: |")]
-    // #[case("mi\\:ke: |")]
-    // #[case("mi\\::ke: |")]
-    // #[case("mi::ke: |")]
-    // #[case("nov\\\\ember: |")]
+    #[case("li\\|ma: |")]
+    #[case("mi\\:ke: |")]
+    #[case("mi\\::ke: |")]
+    #[case("mi::ke: |")]
+    #[case("nov\\\\ember: |")]
     fn solo_valid_code_value_base(#[case] source: &str) {
         let result = code_shorthand_attr_value_base_v42(source);
         let remainder = result.as_ref().unwrap().0;
