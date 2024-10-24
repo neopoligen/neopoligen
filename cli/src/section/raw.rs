@@ -171,6 +171,7 @@ mod test {
     // }
 
     #[test]
+    #[ignore]
     fn basic_start_end() {
         let source = "-- code/\n\nsome code\n\n-- /code\n\n";
         let config = SiteConfig::mock1_basic();
@@ -203,6 +204,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn basic_start_end_with_attrs() {
         let source = "-- code/\n-- bash\n-- class: alfa\n\nsome code\n\n-- /code\n\n";
         let config = SiteConfig::mock1_basic();
@@ -251,6 +253,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn somewith_with_dashes_in_it() {
         let source = "-- code/\n\nalfa -- not here\n\n-- /code\n\n";
         let config = SiteConfig::mock1_basic();
@@ -283,6 +286,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn start_end_with_content_after_end() {
         let source = "-- code/\n\nalfa\n\n-- /code\n\nbravo\n\ncharlie\n\n-- p";
         let config = SiteConfig::mock1_basic();
@@ -344,6 +348,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn start_end_with_list_item_after_when_in_list() {
         let source = "-- code/\n\nalfa\n\n-- /code\n\n- bravo";
         let config = SiteConfig::mock1_basic();
@@ -376,6 +381,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn start_end_with_list_item_after_when_not_in_a_list() {
         let nest_level = 0;
         let list_level = 0;

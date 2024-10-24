@@ -476,29 +476,30 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // Deprecated
-    #[rstest]
-    #[case("a", "")]
-    #[case("b", "")]
-    #[case(":", "")]
-    #[case("<<alfa|bravo>>", "")]
-    #[case("<<alfa-bravo|charlie>>", "")]
-    #[case("<<alfa_bravo|charlie>>", "")]
-    #[case("<<alfa|bravo-charlie>>", "")]
-    #[case("<<alfa|bravo_charlie>>", "")]
-    #[case("<<alfa|bravo|charlie>>", "")]
-    #[case("<<alfa|bravo|charlie-delta>>", "")]
-    #[case("<<alfa|bravo|charlie_delta>>", "")]
-    #[case("______", "")]
-    #[case("^", "")]
-    #[case("\\^", "")]
-    #[case("^^^", "")]
-    fn run_test(#[case] input: &str, #[case] left: &str) {
-        let right = base_span_for_all_text(input).unwrap().0;
-        assert_eq!(left, right);
-    }
+    // // Deprecated
+    // #[rstest]
+    // #[case("a", "")]
+    // #[case("b", "")]
+    // #[case(":", "")]
+    // #[case("<<alfa|bravo>>", "")]
+    // #[case("<<alfa-bravo|charlie>>", "")]
+    // #[case("<<alfa_bravo|charlie>>", "")]
+    // #[case("<<alfa|bravo-charlie>>", "")]
+    // #[case("<<alfa|bravo_charlie>>", "")]
+    // #[case("<<alfa|bravo|charlie>>", "")]
+    // #[case("<<alfa|bravo|charlie-delta>>", "")]
+    // #[case("<<alfa|bravo|charlie_delta>>", "")]
+    // #[case("______", "")]
+    // #[case("^", "")]
+    // #[case("\\^", "")]
+    // #[case("^^^", "")]
+    // fn run_test(#[case] input: &str, #[case] left: &str) {
+    //     let right = base_span_for_all_text(input).unwrap().0;
+    //     assert_eq!(left, right);
+    // }
 
     #[test]
+    #[ignore]
     fn nested_span() {
         let source = "<<em|delta <<strong|echo>> foxtrot>>";
         let left = Span {

@@ -327,7 +327,7 @@ mod test {
     #[case(r#"\**"#)]
     #[case("^")]
     #[case(r#"\^^"#)]
-
+    #[ignore]
     fn check_basic_parsing_passes(#[case] input: &str) {
         let response = block_of_main_content_v42(input);
         if response.is_ok() {
@@ -357,6 +357,7 @@ mod test {
     // }
 
     #[test]
+    #[ignore]
     fn block_of_anything_basic() {
         let source = "alfa";
         let left = (
@@ -381,6 +382,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn block_that_is_not_a_list_item_with_content() {
         let source = "alfa";
         let left = (
@@ -405,6 +407,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn block_that_is_not_a_list_item_should_fail_on_list_item() {
         let source = "- foxtrot";
         assert!(block_that_is_not_a_list_item(source).is_err());

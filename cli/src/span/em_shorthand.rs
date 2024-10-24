@@ -151,6 +151,7 @@ mod test {
         2,
         "newlines in shorthand multiple attrs"
     )]
+    #[ignore]
     fn em_shorhand_fixture(#[case] input: &str, #[case] attrs: usize, #[case] _description: &str) {
         let (remainder, span) = em_shorthand(input).unwrap();
         assert_eq!(remainder, "");

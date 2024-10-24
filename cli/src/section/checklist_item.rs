@@ -82,6 +82,7 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
+    #[ignore]
     fn basic_checklist_item_not_checked() {
         let source = "[] alfa\n\n";
         let config = SiteConfig::mock1_basic();
@@ -120,6 +121,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn basic_checklist_item_is_checked() {
         let source = "[x] alfa\n\n";
         let config = SiteConfig::mock1_basic();

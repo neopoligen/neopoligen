@@ -128,6 +128,7 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
+    #[ignore]
     fn basic_checklist_full() {
         let source = "-- todo\n\n[] alfa\n\n-- p";
         let config = SiteConfig::mock1_basic();

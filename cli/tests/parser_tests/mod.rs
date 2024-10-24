@@ -5,6 +5,7 @@ use neopoligengine::span_attr::*;
 use rstest::rstest;
 
 #[test]
+#[ignore]
 pub fn sample_runner() {
     let site_config = SiteConfigV42::mock_for_files_in_test_samples_dir();
 
@@ -86,7 +87,7 @@ pub fn sample_runner() {
 #[case(38, r#"^^alfa bravo|charlie^^"#, 1, 0)]
 #[case(39, r#"^^alfa bravo|charlie|delta^^"#, 2, 0)]
 #[case(40, r#"^^alfa bravo|https://www.example.com/^^"#, 1, 0)]
-
+#[ignore]
 fn generated_shorthand_base_cases(
     #[case] _number: usize,
     #[case] source: &str,

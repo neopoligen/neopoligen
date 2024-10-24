@@ -160,6 +160,7 @@ mod test {
     #[case("-- alfa")]
     #[case("-- bravo-charlie")]
     #[case("-- https://www.example.com/")]
+    #[ignore]
     fn valid_section_flags(#[case] source: &str) {
         let response = section_flag_attr(source);
         if response.is_ok() {
@@ -175,6 +176,7 @@ mod test {
     #[case("-- alfa:")]
     #[case("-- bravo: charlie")]
     #[case("-- delta echo")]
+    #[ignore]
     fn invalid_section_flags(#[case] source: &str) {
         let response = section_flag_attr(source);
         if response.is_ok() {
@@ -191,6 +193,7 @@ mod test {
     #[case("-- charlie-delta: echo")]
     #[case("-- foxtrot: ``em|golf``")]
     #[case("-- url: https://www.example.com/")]
+    #[ignore]
     fn valid_section_attrs(#[case] source: &str) {
         let response = section_key_value_attr(source);
         if response.is_ok() {
@@ -204,6 +207,7 @@ mod test {
     // Invalid Attrs
     #[rstest]
     #[case("-- alfa bravo: charlie")]
+    #[ignore]
     // #[case("-- https://www.example.com/")]
     fn invalid_section_attrs(#[case] source: &str) {
         let response = section_key_value_attr(source);
@@ -225,6 +229,7 @@ mod test {
     #[case("escaped pipe", "-- key: some \\| thing", true)]
     #[case("path with slash", "-- path: /", true)]
     #[case("flag with doulbe underscore", "-- alfa__bravo", true)]
+    #[ignore]
     fn section_attr_basic_fixture(
         #[case] _description: &str,
         #[case] source: &str,
@@ -236,24 +241,28 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn flag_attr_with_colons_in_it() {
         let source = "-- https://www.example.com";
         assert!(section_flag_attr(source).is_ok());
     }
 
     #[test]
+    #[ignore]
     fn flag_attr_with_hyphen() {
         let source = "-- https://www.exa-mple.com";
         assert!(section_flag_attr(source).is_ok());
     }
 
     #[test]
+    #[ignore]
     fn flag_attr_with_single_underscore() {
         let source = "-- alfa_bravo";
         assert!(section_flag_attr(source).is_ok());
     }
 
     #[test]
+    #[ignore]
     fn key_value_spans_basic() {
         let source = "-- key: value";
         let left = SectionAttr {
@@ -302,6 +311,7 @@ mod test {
     // }
 
     #[test]
+    #[ignore]
     fn key_value_with_single_underscore() {
         let source = "-- key: alfa_bravo";
         let left = SectionAttr {

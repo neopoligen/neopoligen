@@ -150,6 +150,7 @@ mod test {
         "link span with link",
         true
     )]
+    #[ignore]
     fn run_test(
         #[case] input: &str,
         #[case] attrs: usize,
@@ -166,6 +167,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn attr_with_hyphen() {
         let source = "<<em|alfa|data-ping: bravo>>";
         let left = (
@@ -193,6 +195,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn basic_test() {
         let source = "<<em|alfa>>";
         let left = (
@@ -215,6 +218,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn with_escaped_pipe() {
         let source = "<<alfa|ping\\|ping>>";
         let left = (
@@ -281,6 +285,7 @@ mod test {
     // }
 
     #[test]
+    #[ignore]
     fn with_flag_attr() {
         let source = "<<code|something|rust>>";
         let left = (

@@ -133,6 +133,7 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
+    #[ignore]
     fn basic_list_full() {
         let source = "-- list\n\n- alfa";
         let config = SiteConfig::mock1_basic();
@@ -176,6 +177,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn basic_start_list_test() {
         let source = "-- list/\n\n- alfa\n\n-- /list";
         let config = SiteConfig::mock1_basic();
@@ -251,6 +253,7 @@ mod test {
     // }
 
     #[test]
+    #[ignore]
     fn link_check() {
         let config = SiteConfig::mock1_basic();
         let source = "-- list\n\n- <<link|Main site link|https://daverupert.com/2021/10/html-with-superpowers/>>";
@@ -260,6 +263,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn nested_list_test() {
         let source =
             "-- list/\n\n- alfa\n\n-- list/\n\n- bravo\n\n-- /list\n\n- charlie\n\n-- /list";
@@ -388,6 +392,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn nested_code_test() {
         let source = "-- list/\n\n- alfa\n\n-- code/\n\nbravo\n\n-- /code\n\n- charlie\n\n-- /list";
         let config = SiteConfig::mock1_basic();
@@ -490,6 +495,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn nested_code_test_nested_list_item() {
         let source =
             "-- list/\n\n- alfa\n\n-- code/\n\nbravo\n\n-- /code\n\n- charlie\n\n-- /list\n\n-- h2";

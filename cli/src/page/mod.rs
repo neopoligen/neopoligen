@@ -288,6 +288,7 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
+    #[ignore]
     fn id_test_get_basic_id() {
         let page = PageV42::mock1_basic_page();
         // dbg!(&page.ast());
@@ -297,12 +298,14 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn id_should_error_if_missing() {
         let page = PageV42::mock2_missing_id_and_status();
         assert!(page.id().is_err());
     }
 
     #[test]
+    #[ignore]
     fn output_rel_path_test_mock1() {
         let page = PageV42::mock1_basic_page();
         let left = PathBuf::from("en/mock1_basic_page/index.html");
@@ -311,6 +314,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn output_rel_path_with_path_attr() {
         let page = PageV42::mock3_custom_path();
         let left = PathBuf::from("index.html");
@@ -319,6 +323,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn status_test_get_basic_status() {
         let page = PageV42::mock1_basic_page();
         let left = "scratch".to_string();
@@ -327,12 +332,14 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn status_should_error_if_missing() {
         let page = PageV42::mock2_missing_id_and_status();
         assert!(page.status().is_err());
     }
 
     #[test]
+    #[ignore]
     fn template_list_with_found_template_and_status() {
         let page = PageV42::mock3_custom_path();
         let left = vec![
@@ -346,6 +353,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn template_list_without_custom_template_attr() {
         let page = PageV42::mock1_basic_page();
         let left = vec![

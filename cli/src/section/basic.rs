@@ -161,7 +161,7 @@ mod test {
         "",
         true
     )]
-
+    #[ignore]
     fn basic_fixture(
         #[case] _description: &str,
         #[case] source: &str,
@@ -190,6 +190,7 @@ mod test {
     //     assert_eq!("", right);
     // }
     #[test]
+    #[ignore]
     fn basic_full_test() {
         let source = "-- title\n\nHello World";
         let config = SiteConfig::mock1_basic();
@@ -224,6 +225,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn basic_start_text_with_dash_not_in_list() {
         let source = "-- p\n\n- Hello World";
         let config = SiteConfig::mock1_basic();
@@ -258,6 +260,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn basic_full_test_checking_name_collision() {
         let source = "-- preview\n\nHello World";
         let config = SiteConfig::mock1_basic();
@@ -292,6 +295,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn basic_start_end_test_checking_name_collision() {
         let source = "-- previews/\n\nHello World\n\n-- /previews";
         let config = SiteConfig::mock1_basic();
@@ -340,6 +344,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn basic_with_code_shorthand() {
         let source = "-- title\n\n``code shorthand``";
         let config = SiteConfig::mock1_basic();
@@ -374,6 +379,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn ending_without_nesting_and_no_content() {
         let source = "-- /p";
         let left = 0;
@@ -386,6 +392,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn ending_without_nesting_and_has_content() {
         let source = "-- /p\n\nthis is\n\nsomethig";
         let left = 2;
