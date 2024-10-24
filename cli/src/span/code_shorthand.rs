@@ -41,9 +41,21 @@ pub fn code_shorthand_attr_value_base_v42(
     Ok((source, spans))
 }
 
-// pub fn code_shorthand_attr_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-//     Ok((source, ""))
-// }
+pub fn code_shorthand_attr_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
+    let (source, key_spans) = code_shorthand_attr_key_base_v42.context("").parse(source)?;
+    let (source, value_spans) = code_shorthand_attr_value_base_v42
+        .context("")
+        .parse(source)?;
+    Ok((
+        "",
+        SpanAttr {
+            kind: SpanAttrKind::KeyValueSpansV42 {
+                key: key_spans,
+                value: value_spans,
+            },
+        },
+    ))
+}
 
 pub fn code_shorthand_flag_base_span_v42(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let (source, result) = is_not(": \n\t|\\`").context("").parse(source)?;
@@ -127,6 +139,30 @@ mod test {
     use super::*;
     use pretty_assertions::assert_eq;
     use rstest::rstest;
+
+    #[test]
+    fn solo_code_key_value_attr_basic() {
+        let source = "|sierra: foxtrot";
+        let left = (
+            "",
+            SpanAttr {
+                kind: SpanAttrKind::KeyValueSpansV42 {
+                    key: vec![Span {
+                        attrs: vec![],
+                        kind: SpanKind::PlainText,
+                        parsed_text: "sierra".to_string(),
+                    }],
+                    value: vec![Span {
+                        attrs: vec![],
+                        kind: SpanKind::PlainText,
+                        parsed_text: "foxtrot".to_string(),
+                    }],
+                },
+            },
+        );
+        let right = code_shorthand_attr_v42(source).unwrap();
+        assert_eq!(left, right)
+    }
 
     #[test]
     fn solo_code_value_base_basic_test() {
