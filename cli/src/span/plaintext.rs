@@ -13,7 +13,7 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn plaintext<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
     // NOTE: pipe needs to stay here since plaintext is used in shorthands and
     // inside spans.
-    let (source, parsed_text) = is_not("\n<^*`|\\").context("").parse(source)?;
+    let (source, parsed_text) = is_not("\n<^*`_-|\\").context("").parse(source)?;
     let span = Span {
         attrs: vec![],
         parsed_text: parsed_text.to_string(),

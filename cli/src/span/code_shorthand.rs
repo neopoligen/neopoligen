@@ -20,7 +20,9 @@ use nom_supreme::parser_ext::ParserExt;
 
 use self::any_asterisk::any_asterisk;
 use self::any_caret::any_caret;
+use self::any_hyphen::any_hyphen;
 use self::any_newline::any_newline;
+use self::any_underscore::any_underscore;
 use self::escaped_lessthan::escaped_lessthan;
 
 pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
@@ -42,9 +44,12 @@ pub fn code_shorthand_base_span(source: &str) -> IResult<&str, Span, ErrorTree<&
         single_backtick,
         any_asterisk,
         any_caret,
+        any_hyphen,
         any_lessthan,
         any_newline,
+        any_underscore,
         escaped_backtick,
+        escaped_backslash,
         escaped_pipe,
     ))
     .parse(source)?;
@@ -96,10 +101,15 @@ mod test {
     #[case("``multiple ^^ carets``")]
     #[case("``single * asterisk``")]
     #[case("``multiple ** asterisks``")]
+    #[case("``single _ underscore``")]
+    #[case("``multiple __ underscores``")]
+    #[case("``single - hyphen``")]
+    #[case("``multiple -- hyphens``")]
     #[case("``single ` backtick``")]
     #[case("``single \\` backtick esaped``")]
     #[case("``escaped \\`` backtick before single backtick``")]
     #[case("``escaped \\| pipe``")]
+    #[case("``escaped \\\\ backslash``")]
     fn solo_valid_code_shorthands(#[case] source: &str) {
         let result = code_shorthand(source);
         if result.is_ok() {
