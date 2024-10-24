@@ -11,7 +11,9 @@ use nom_supreme::parser_ext::ParserExt;
 // hyphens, and [ and ] characters since those things will
 // be parsed out at the start of blocks.
 pub fn plaintext<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
-    let (source, parsed_text) = is_not("\n<^*`\\").context("").parse(source)?;
+    // NOTE: pipe needs to stay here since plaintext is used in shorthands and
+    // inside spans.
+    let (source, parsed_text) = is_not("\n<^*`|\\").context("").parse(source)?;
     let span = Span {
         attrs: vec![],
         parsed_text: parsed_text.to_string(),
@@ -19,3 +21,5 @@ pub fn plaintext<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a st
     };
     Ok((source, span))
 }
+
+// TODO: set up other things so they can caputre pipe

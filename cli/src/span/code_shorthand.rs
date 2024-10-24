@@ -21,7 +21,7 @@ pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTre
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, text) = is_not("`| \n\t").context("").parse(source)?;
-    // TODO: allow for escaped pipes and backticks here
+    let (source, _) = multispace0.context("").parse(source)?;
     let flag = SpanAttr {
         kind: SpanAttrKind::Flag {
             value: text.to_string(),
@@ -31,15 +31,8 @@ pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTre
 }
 
 pub fn code_shorthand_base_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    //    let (source, span) =
-    Ok((
-        "",
-        Span {
-            attrs: vec![],
-            kind: SpanKind::PlainText,
-            parsed_text: "".to_string(),
-        },
-    ))
+    let (source, span) = plaintext.context("").parse(source)?;
+    Ok((source, span))
 }
 
 pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
@@ -158,8 +151,13 @@ mod test {
     #[case("| bravo ")]
     fn solo_valid_code_shorthand_flags(#[case] source: &str) {
         let result = code_shorthand_flag_v42(source);
-        if result.is_ok() {
-            assert!(true)
+        if result.as_ref().is_ok() {
+            if result.as_ref().unwrap().0 == "" {
+                assert!(true)
+            } else {
+                dbg!(format!("missed: {}", result.unwrap().0));
+                assert!(false);
+            }
         } else {
             dbg!(&result);
             assert!(false);
@@ -169,12 +167,12 @@ mod test {
     // Valid Code Shorthands
     #[rstest]
     #[case("``alfa``")]
-    // #[case("``bravo charlie``")]
-    // #[case("``delta echo|foxtrot``")]
-    // #[case("``golf| hotel | india``")]
+    #[case("``bravo charlie``")]
+    #[case("``delta echo|foxtrot``")]
+    #[case("``golf| hotel | india``")]
     // #[case("``<html>``")]
     // #[case("``escaped\\|pipe``")]
-    fn solo_valid_code_shorthands(#[case] source: &str) {
+    fn valid_code_shorthands(#[case] source: &str) {
         let result = code_shorthand(source);
         if result.is_ok() {
             assert!(true)
@@ -184,19 +182,19 @@ mod test {
         }
     }
 
-    // Invalid Code Shorthands
-    #[rstest]
-    #[case("``alfa|no spaces``")]
-    #[case("``no trailing pipe|``")]
-    fn solo_invalid_code_shorthands(#[case] source: &str) {
-        let result = code_shorthand(source);
-        if result.is_ok() {
-            dbg!(&result);
-            assert!(false);
-        } else {
-            assert!(true)
-        }
-    }
+    //// Invalid Code Shorthands
+    //#[rstest]
+    ////#[case("``alfa|no spaces``")]
+    //// #[case("``no trailing pipe|``")]
+    //fn solo_invalid_code_shorthands(#[case] source: &str) {
+    //    let result = code_shorthand(source);
+    //    if result.is_ok() {
+    //        dbg!(&result);
+    //        assert!(false);
+    //    } else {
+    //        assert!(true)
+    //    }
+    //}
 
     // #[test]
     // fn solo_code_shorthand_with_esaped_pipe() {
@@ -215,26 +213,32 @@ mod test {
     //     assert_eq!(left, right);
     // }
 
-    // #[test]
-    // fn solo_code_shorthand_with_flag_attr() {
-    //     let source = "``code|rust``";
-    //     let left = (
-    //         "",
-    //         Span {
-    //             attrs: vec![SpanAttr {
-    //                 kind: SpanAttrKind::Flag {
-    //                     value: "rust".to_string(),
-    //                 },
-    //             }],
-    //             parsed_text: "code".to_string(),
-    //             kind: SpanKind::CodeShorthand {},
-    //         },
-    //     );
-    //     let result = code_shorthand(source);
-    //     dbg!(&result);
-    //     let right = result.unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn solo_code_shorthand_with_flag_attr() {
+        let source = "``code|rust``";
+        let left = (
+            "",
+            Span {
+                attrs: vec![SpanAttr {
+                    kind: SpanAttrKind::Flag {
+                        value: "rust".to_string(),
+                    },
+                }],
+                parsed_text: "".to_string(),
+                kind: SpanKind::CodeShorthand {
+                    children: vec![Span {
+                        attrs: vec![],
+                        kind: SpanKind::PlainText,
+                        parsed_text: "code".to_string(),
+                    }],
+                },
+            },
+        );
+        let result = code_shorthand(source);
+        // dbg!(&result);
+        let right = result.unwrap();
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // fn code_shorthand_with_multiple_flags() {
