@@ -29,7 +29,9 @@ use std::result;
 
 pub fn code_shorthand_attr_key_base_v42(source: &str) -> IResult<&str, Vec<Span>, ErrorTree<&str>> {
     let (source, result) = tag("|").context("").parse(source)?;
-    let (source, spans) = many1(alt((plaintext_dev,))).context("").parse(source)?;
+    let (source, spans) = many1(alt((plaintext_dev, any_hyphen)))
+        .context("")
+        .parse(source)?;
     let (source, _) = colon_followed_by_whitespace.context("").parse(source)?;
     Ok((source, spans))
 }
@@ -196,11 +198,12 @@ mod test {
 
     // Valid Code Shorthand Key Base
     #[rstest]
-    #[case("``|alfa: ``")]
-    fn valid_code_key_base(#[case] source: &str) {
+    #[case("|alfa: ")]
+    #[case("|bravo-charlie: ")]
+    fn solo_valid_code_key_base(#[case] source: &str) {
         let result = code_shorthand_attr_key_base_v42(source);
         if result.is_ok() {
-            dbg!(&result.unwrap().clone());
+            //dbg!(&result.unwrap().clone());
             assert!(true)
         } else {
             dbg!(&result);
