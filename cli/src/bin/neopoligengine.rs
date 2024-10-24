@@ -145,7 +145,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             // }
 
             // Output Source File Errors
-            // let _ = builder.output_source_file_errors();
+            let _ = builder.output_source_file_errors();
 
             //// Prep
             ////

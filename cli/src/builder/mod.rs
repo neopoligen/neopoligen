@@ -120,8 +120,35 @@ impl BuilderV42 {
     #[instrument(skip(self))]
     pub fn output_source_file_errors(&self) -> Result<()> {
         let _ = &self.errors.iter().for_each(|err| {
-            dbg!(err);
-            ()
+            match &err.kind {
+                NeoErrorKind::ParserError {
+                    source_path,
+                    line,
+                    column,
+                    remainder,
+                    source,
+                    message,
+                } => {
+                    if let Ok(error_file_path) = replace_path(
+                        source_path.as_ref().unwrap(),
+                        &self.site_config.content_source_dir(),
+                        &self.site_config.source_file_error_dir(),
+                    ) {
+                        let _ = write_file_with_mkdir(
+                            &error_file_path,
+                            format!(
+                                "{}\n\nLine: {} - Column: {}\n\n{}",
+                                message, line, column, remainder
+                            )
+                            .as_str(),
+                        );
+                    }
+                    ()
+                }
+                NeoErrorKind::GenericErrorWithSourcePath { source_path, msg } => (),
+                // TODO: cover the rest of the errors
+                _ => (),
+            }
         });
         Ok(())
     }

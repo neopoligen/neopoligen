@@ -364,6 +364,13 @@ pub fn highlight_span(args: &[Value]) -> String {
     output_html.join("\n")
 }
 
+pub fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result<PathBuf, String> {
+    match path.strip_prefix(find) {
+        Ok(path_part) => Ok(replace.clone().join(path_part)),
+        Err(e) => Err(format!("Could not reaplce path: {}", e)),
+    }
+}
+
 pub fn resize_and_optimize_jpg(
     source: &PathBuf,
     width: u32,

@@ -219,12 +219,20 @@ impl SiteConfigV42 {
         Ok(self.default_language.clone())
     }
 
+    pub fn errors_dir(&self) -> PathBuf {
+        self.project_dir().join("_errors")
+    }
+
     pub fn output_dest_dir(&self) -> PathBuf {
         self.project_dir().join("_site")
     }
 
     pub fn project_dir(&self) -> PathBuf {
         self.project_root.clone().unwrap()
+    }
+
+    pub fn source_file_error_dir(&self) -> PathBuf {
+        self.errors_dir().join("source_files")
     }
 
     pub fn status_dest_dir(&self) -> PathBuf {
