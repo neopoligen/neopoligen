@@ -1,3 +1,6 @@
+// TODO: Deprecate: this is all going to be done in
+// code_shorthand directly. Should be able to delete this
+// next time you look at it.
 use crate::span::*;
 use nom::bytes::complete::tag;
 use nom::IResult;

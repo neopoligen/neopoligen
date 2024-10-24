@@ -6,8 +6,10 @@ use nom::bytes::complete::tag;
 use nom::bytes::complete::take_until;
 use nom::character::complete::alpha1;
 use nom::character::complete::digit1;
+use nom::character::complete::multispace1;
 use nom::multi::many0;
 use nom::multi::many1;
+use nom::sequence::pair;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -15,7 +17,9 @@ use nom_supreme::parser_ext::ParserExt;
 
 pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
-    let (source, text) = is_not("`|").context("").parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
+    let (source, text) = is_not("`| \n\t").context("").parse(source)?;
+    // TODO: allow for escaped pipes and backticks here
     let flag = SpanAttr {
         kind: SpanAttrKind::Flag {
             value: text.to_string(),
@@ -134,16 +138,45 @@ mod test {
     use pretty_assertions::assert_eq;
     use rstest::rstest;
 
+    // Valid Code Shorthand Flags
+    #[rstest]
+    #[case("|alfa")]
+    #[case("| bravo ")]
+    fn solo_valid_code_shorthand_flags(#[case] source: &str) {
+        let result = code_shorthand_flag_v42(source);
+        if result.is_ok() {
+            assert!(true)
+        } else {
+            dbg!(&result);
+            assert!(false);
+        }
+    }
+
     // Valid Code Shorthands
     #[rstest]
     #[case("``alfa``")]
-    fn solo_valud_code_shorthands(#[case] source: &str) {
+    #[case("``bravo charlie``")]
+    #[case("``delta echo|foxtrot``")]
+    fn valid_code_shorthands(#[case] source: &str) {
         let result = code_shorthand(source);
         if result.is_ok() {
             assert!(true)
         } else {
             dbg!(&result);
             assert!(false);
+        }
+    }
+
+    // Invalid Code Shorthands
+    #[rstest]
+    #[case("``alfa|no spaces``")]
+    fn solo_invalid_code_shorthands(#[case] source: &str) {
+        let result = code_shorthand(source);
+        if result.is_ok() {
+            dbg!(&result);
+            assert!(false);
+        } else {
+            assert!(true)
         }
     }
 
@@ -158,6 +191,34 @@ mod test {
                         value: "rust".to_string(),
                     },
                 }],
+                parsed_text: "code".to_string(),
+                kind: SpanKind::CodeShorthand {},
+            },
+        );
+        let result = code_shorthand(source);
+        dbg!(&result);
+        let right = result.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn code_shorthand_with_multiple_flags() {
+        let source = "``code|rust|hidden``";
+        let left = (
+            "",
+            Span {
+                attrs: vec![
+                    SpanAttr {
+                        kind: SpanAttrKind::Flag {
+                            value: "rust".to_string(),
+                        },
+                    },
+                    SpanAttr {
+                        kind: SpanAttrKind::Flag {
+                            value: "hidden".to_string(),
+                        },
+                    },
+                ],
                 parsed_text: "code".to_string(),
                 kind: SpanKind::CodeShorthand {},
             },
