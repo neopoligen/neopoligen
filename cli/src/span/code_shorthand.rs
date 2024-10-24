@@ -17,6 +17,8 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
+use self::escaped_lessthan::escaped_lessthan;
+
 pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
@@ -31,7 +33,8 @@ pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTre
 }
 
 pub fn code_shorthand_base_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let (source, span) = alt((plaintext.context(""), single_lessthan)).parse(source)?;
+    let (source, span) =
+        alt((plaintext.context(""), single_lessthan, escaped_lessthan)).parse(source)?;
     Ok((source, span))
 }
 
@@ -39,19 +42,16 @@ pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let (source, _) = tag("``").context("").context("").parse(source)?;
     let (source, spans) = many1(code_shorthand_base_span).context("").parse(source)?;
     let (source, attrs) = many0(code_shorthand_flag_v42).context("").parse(source)?;
-
     // let (source, parts) = many1(alt((base_span_for_all_text, lessthan, greaterthan)))
     //     .context("")
     //     .parse(source)?;
     //    let (source, attrs) = many0(code_shorthand_attr).context("").parse(source)?;
     let (source, _) = tag("``").context("").parse(source)?;
-
     // let parsed_text = parts
     //     .iter()
     //     .map(|word| word.parsed_text.clone())
     //     .collect::<Vec<String>>()
     //     .join("");
-
     Ok((
         source,
         Span {
@@ -60,83 +60,6 @@ pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
             parsed_text: "".to_string(),
         },
     ))
-}
-
-pub fn code_shorthand_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-    let (source, attr) = alt((code_shorthand_key_value_attr, code_shorthand_flag_attr))
-        .context("")
-        .parse(source)?;
-    Ok((source, attr))
-}
-
-pub fn code_shorthand_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-    let (source, _) = tag("|").context("").parse(source)?;
-    // TODO: Allow spaces here
-    let (source, words) = many1(alt((
-        space,
-        newline,
-        colon,
-        hyphen_with_trailing_non_hyphen,
-        single_lessthan,
-        single_greaterthan,
-        single_backtick,
-        escaped_backtick,
-        escaped_pipe,
-        escaped_greaterthan,
-        escaped_backslash,
-    )))
-    .context("")
-    .parse(source)?;
-    let value = words
-        .iter()
-        .map(|word| word.parsed_text.clone())
-        .collect::<Vec<String>>()
-        .join("");
-    let attr = SpanAttr {
-        kind: SpanAttrKind::Flag { value },
-    };
-    Ok((source, attr))
-}
-
-pub fn code_shorthand_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-    let (source, _) = tag("|").context("").parse(source)?;
-    let (source, key_parts) = many1(alt((alpha1, digit1, tag("-"), tag("_"))))
-        .context("")
-        .parse(source)?;
-    let (source, _) = tag(":").context("").parse(source)?;
-    let (source, _) = space1.context("").parse(source)?;
-    let (source, tokens) = many1(alt((
-        space,
-        newline,
-        colon,
-        hyphen_with_trailing_non_hyphen,
-        single_lessthan,
-        single_greaterthan,
-        single_backtick,
-        escaped_backtick,
-        escaped_pipe,
-        escaped_greaterthan,
-        escaped_backslash,
-    )))
-    .context("")
-    .parse(source)?;
-    let key = key_parts
-        .iter()
-        .map(|p| p.to_string())
-        .collect::<Vec<String>>()
-        .join("");
-    let value = tokens
-        .iter()
-        .map(|word| word.parsed_text.clone())
-        .collect::<Vec<String>>()
-        .join("");
-    let attr = SpanAttr {
-        kind: SpanAttrKind::KeyValue {
-            key: key.to_string(),
-            value,
-        },
-    };
-    Ok((source, attr))
 }
 
 #[cfg(test)]
@@ -152,6 +75,7 @@ mod test {
     #[case("``delta echo|foxtrot``")]
     #[case("``golf| hotel | india``")]
     #[case("``<html>``")]
+    #[case("``\\<< escaped less than``")]
     // #[case("``escaped\\|pipe``")]
     fn solo_valid_code_shorthands(#[case] source: &str) {
         let result = code_shorthand(source);
@@ -565,3 +489,53 @@ mod test {
 
     //
 }
+
+// // TODO: Deprecated: Remove when V42 is done
+// pub fn code_shorthand_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
+//     let (source, _) = tag("|").context("").parse(source)?;
+//     let (source, key_parts) = many1(alt((alpha1, digit1, tag("-"), tag("_"))))
+//         .context("")
+//         .parse(source)?;
+//     let (source, _) = tag(":").context("").parse(source)?;
+//     let (source, _) = space1.context("").parse(source)?;
+//     let (source, tokens) = many1(alt((
+//         space,
+//         newline,
+//         colon,
+//         hyphen_with_trailing_non_hyphen,
+//         single_lessthan,
+//         single_greaterthan,
+//         single_backtick,
+//         escaped_backtick,
+//         escaped_pipe,
+//         escaped_greaterthan,
+//         escaped_backslash,
+//     )))
+//     .context("")
+//     .parse(source)?;
+//     let key = key_parts
+//         .iter()
+//         .map(|p| p.to_string())
+//         .collect::<Vec<String>>()
+//         .join("");
+//     let value = tokens
+//         .iter()
+//         .map(|word| word.parsed_text.clone())
+//         .collect::<Vec<String>>()
+//         .join("");
+//     let attr = SpanAttr {
+//         kind: SpanAttrKind::KeyValue {
+//             key: key.to_string(),
+//             value,
+//         },
+//     };
+//     Ok((source, attr))
+// }
+
+// // TODO: Deprecated: remove when v42 is done
+// pub fn code_shorthand_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
+//     let (source, attr) = alt((code_shorthand_key_value_attr, code_shorthand_flag_attr))
+//         .context("")
+//         .parse(source)?;
+//     Ok((source, attr))
+// }
