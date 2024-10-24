@@ -10,6 +10,7 @@ pub mod escaped_caret;
 pub mod escaped_colon;
 pub mod escaped_exclamation;
 pub mod escaped_greaterthan;
+pub mod escaped_hashtag;
 pub mod escaped_hyphen;
 pub mod escaped_lessthan;
 pub mod escaped_pipe;
@@ -28,6 +29,7 @@ pub mod single_backtick;
 pub mod single_caret;
 pub mod single_exclamation;
 pub mod single_greaterthan;
+pub mod single_hashtag;
 pub mod single_hyphen;
 pub mod single_lessthan;
 pub mod single_underscore;
@@ -125,6 +127,7 @@ impl Span {
             SpanKind::EscapedColon => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedExclamation => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedGreaterThan => Ok(Value::from(&self.parsed_text)),
+            SpanKind::EscapedHashtag => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedLessThan => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedHyphen => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedPipe => Ok(Value::from(&self.parsed_text)),
@@ -141,6 +144,7 @@ impl Span {
             SpanKind::Pipe => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleBacktick => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleCaret => Ok(Value::from(&self.parsed_text)),
+            SpanKind::SingleHashtag => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleHyphen => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleUnderscore => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleGreaterThan => Ok(Value::from(&self.parsed_text)),
@@ -174,6 +178,7 @@ pub enum SpanKind {
     EscapedColon,
     EscapedExclamation,
     EscapedGreaterThan,
+    EscapedHashtag,
     EscapedLessThan,
     EscapedHyphen,
     EscapedPipe,
@@ -194,6 +199,7 @@ pub enum SpanKind {
     SingleCaret,
     SingleExclamation,
     SingleGreaterThan,
+    SingleHashtag,
     SingleHyphen,
     SingleLessThan,
     SingleUnderscore,

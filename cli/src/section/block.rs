@@ -22,9 +22,11 @@ use nom_supreme::parser_ext::ParserExt;
 
 use self::code_shorthand::code_shorthand;
 use self::escaped_backtick::escaped_backtick;
+use self::escaped_hashtag::escaped_hashtag;
 use self::escaped_hyphen::escaped_hyphen;
 use self::named_span::named_span;
 use self::single_backtick::single_backtick;
+use self::single_hashtag::single_hashtag;
 use self::single_hyphen::single_hyphen;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -36,15 +38,18 @@ pub fn block_of_main_content_v42<'a>(
     let (source, spans) = many1(alt((
         take_until_special_characters,
         newline,
-        escaped_hyphen,
-        single_hyphen,
-        single_exclamation,
-        escaped_lessthan,
-        single_lessthan,
-        escaped_exclamation,
-        single_exclamation,
-        escaped_backtick,
+        // singles
         single_backtick,
+        single_exclamation,
+        single_hashtag,
+        single_hyphen,
+        single_lessthan,
+        // escapes
+        escaped_backtick,
+        escaped_exclamation,
+        escaped_hashtag,
+        escaped_hyphen,
+        escaped_lessthan,
         // add shorthands here
         code_shorthand,
         // named span
@@ -280,6 +285,7 @@ mod test {
     #[case("` ")]
     #[case(r#"\``"#)]
     #[case("``alfa``")]
+    #[case(r#"\##"#)]
 
     fn solo_check_basic_parsing_passes(#[case] input: &str) {
         let response = block_of_main_content_v42(input);

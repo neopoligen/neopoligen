@@ -27,16 +27,16 @@ mod test {
     use pretty_assertions::assert_eq;
     #[test]
     fn basic_check() {
-        let source = "\\^";
+        let source = "\\-";
         let left = (
             "",
             Span {
                 attrs: vec![],
-                parsed_text: "^".to_string(),
-                kind: SpanKind::EscapedCaret,
+                parsed_text: "-".to_string(),
+                kind: SpanKind::EscapedHyphen,
             },
         );
-        let right = escaped_caret(source).unwrap();
+        let right = escaped_hyphen(source).unwrap();
         assert_eq!(left, right);
     }
 }

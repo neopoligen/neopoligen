@@ -1,3 +1,5 @@
+// TODO: Deprecate payload_span/mod.rs when V42 is working
+
 use crate::site_config::SiteConfig;
 use crate::span::Span;
 use crate::span::SpanKind;
@@ -297,6 +299,7 @@ impl PayloadSpan {
             SpanKind::EscapedColon => "escaped-colon".to_string(),
             SpanKind::EscapedExclamation => "escaped-exclamation".to_string(),
             SpanKind::EscapedGreaterThan => "escaped-greaterthan".to_string(),
+            SpanKind::EscapedHashtag => "escaped-hashtag".to_string(),
             SpanKind::EscapedLessThan => "escaped-lessthan".to_string(),
             SpanKind::EscapedHyphen => "escaped-hyphen".to_string(),
             SpanKind::EscapedPipe => "escaped-pipe".to_string(),
@@ -314,6 +317,7 @@ impl PayloadSpan {
             SpanKind::SingleCaret => "single-caret".to_string(),
             SpanKind::SingleExclamation => "single-exclamation".to_string(),
             SpanKind::SingleGreaterThan => "single-greaterthan".to_string(),
+            SpanKind::SingleHashtag => "single-hashtag".to_string(),
             SpanKind::SingleHyphen => "single-hyphen".to_string(),
             SpanKind::SingleLessThan => "single-lessthan".to_string(),
             SpanKind::SingleUnderscore => "single-underscore".to_string(),
