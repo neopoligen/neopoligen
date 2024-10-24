@@ -287,7 +287,7 @@ impl PayloadSpan {
 
         let r#type = match &span.kind {
             // TODO: Rename these to have underscores for snake_case
-            SpanKind::CodeShorthand => "code-shorthand".to_string(),
+            SpanKind::CodeShorthand { .. } => "code-shorthand".to_string(),
             SpanKind::Colon => "colon".to_string(),
             SpanKind::ColonNotFollowedBySpace => "colon-not-followed-by-space".to_string(),
             SpanKind::DashWithTrailingNonDash => "dash-with-trailing-space".to_string(),

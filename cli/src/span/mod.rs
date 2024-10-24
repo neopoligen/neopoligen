@@ -1,5 +1,5 @@
 pub mod code_shorthand;
-pub mod code_shorthand_single_pipe;
+// pub mod code_shorthand_single_pipe;
 pub mod colon;
 pub mod colon_not_followed_by_space;
 pub mod double_underscore;
@@ -38,7 +38,7 @@ pub mod single_underscore;
 // pub mod wordpart; // deprecated in favor of plaintext
 
 use crate::span::code_shorthand::*;
-use crate::span::code_shorthand_single_pipe::*;
+// use crate::span::code_shorthand_single_pipe::*;
 use crate::span::colon::*;
 use crate::span::colon_not_followed_by_space::*;
 use crate::span::em_shorthand::*;
@@ -117,7 +117,7 @@ impl Span {
 
     pub fn parsed_text(&self) -> Result<Value, Error> {
         match &self.kind {
-            SpanKind::CodeShorthand => Ok(Value::from(&self.parsed_text)),
+            SpanKind::CodeShorthand { .. } => Ok(Value::from(&self.parsed_text)),
             SpanKind::Colon => Ok(Value::from(&self.parsed_text)),
             SpanKind::ColonNotFollowedBySpace => Ok(Value::from(&self.parsed_text)),
             SpanKind::DashWithTrailingNonDash => Ok(Value::from(&self.parsed_text)),
@@ -171,7 +171,7 @@ impl Span {
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(rename_all = "lowercase", tag = "kind")]
 pub enum SpanKind {
-    CodeShorthand,
+    CodeShorthand { children: Vec<Span> },
     Colon,
     ColonNotFollowedBySpace,
     DashWithTrailingNonDash,
@@ -240,7 +240,7 @@ pub fn base_span_for_all_text<'a>(source: &'a str) -> IResult<&'a str, Span, Err
             newline,
             shorthand,
             named_span,
-            code_shorthand_single_pipe,
+            //code_shorthand_single_pipe,
             // hyphen,
             // hyphen_with_trailing_non_hyphen,
             colon,
@@ -275,7 +275,7 @@ pub fn base_span_for_list_item<'a>(source: &'a str) -> IResult<&'a str, Span, Er
             newline,
             shorthand,
             named_span,
-            code_shorthand_single_pipe,
+            // code_shorthand_single_pipe,
             // hyphen,
             // hyphen_with_trailing_non_hyphen,
             colon,

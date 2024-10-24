@@ -359,7 +359,7 @@ mod test {
                         kind: SectionKind::Block {
                             spans: vec![Span {
                                 attrs: vec![],
-                                kind: SpanKind::CodeShorthand,
+                                kind: SpanKind::CodeShorthand { children: vec![] },
                                 parsed_text: "code shorthand".to_string(),
                             }],
                         },
