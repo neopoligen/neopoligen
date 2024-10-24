@@ -30,8 +30,6 @@ use nom_supreme::parser_ext::ParserExt;
 use std::result;
 
 pub fn code_shorthand_attr_key_base_v42(source: &str) -> IResult<&str, Vec<Span>, ErrorTree<&str>> {
-    dbg!("aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-    dbg!(&source);
     let (source, result) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, spans) = many1(alt((
@@ -52,8 +50,6 @@ pub fn code_shorthand_attr_key_base_v42(source: &str) -> IResult<&str, Vec<Span>
     .context("")
     .parse(source)?;
     let (source, _) = colon_followed_by_multispace1.context("").parse(source)?;
-    dbg!("bbbbbbbbbbbbbbbbbbbb");
-    dbg!(&source);
     Ok((source, spans))
 }
 
@@ -97,11 +93,7 @@ pub fn code_shorthand_attr_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTre
 }
 
 pub fn code_shorthand_flag_base_span_v42(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    dbg!("gggggggggggggggggggggggggggggg");
-    dbg!(&source);
     let (source, result) = is_not(":|\\`").context("").parse(source)?;
-    dbg!("hhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
-    dbg!(&source);
     Ok((
         source,
         Span {
@@ -113,8 +105,6 @@ pub fn code_shorthand_flag_base_span_v42(source: &str) -> IResult<&str, Span, Er
 }
 
 pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-    dbg!("iiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-    dbg!(&source);
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, span_hits) = many1(pair(
@@ -135,14 +125,10 @@ pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTre
     let flag = SpanAttr {
         kind: SpanAttrKind::FlagV42 { value: spans },
     };
-    dbg!("jjjjjjjjjjjjjjjjjjjjjjjjjjj");
-    dbg!(&source);
     Ok((source, flag))
 }
 
 pub fn code_shorthand_base_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    dbg!("kkkkkkkkkkkkkkkkkkkkkkkkkk");
-    dbg!(&source);
     let (source, span) = alt((
         plaintext.context(""),
         single_backtick,
@@ -158,22 +144,16 @@ pub fn code_shorthand_base_span(source: &str) -> IResult<&str, Span, ErrorTree<&
         any_colon,
     ))
     .parse(source)?;
-    dbg!("lllllllllllllllllllllllllllllllll");
-    dbg!(&source);
     Ok((source, span))
 }
 
 pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    dbg!("mmmmmmmmmmmmmmmmmm");
-    dbg!(&source);
     let (source, _) = tag("``").context("").context("").parse(source)?;
     let (source, spans) = many1(code_shorthand_base_span).context("").parse(source)?;
     let (source, attrs) = many0(alt((code_shorthand_attr_v42, code_shorthand_flag_v42)))
         .context("")
         .parse(source)?;
     let (source, _) = tag("``").context("").parse(source)?;
-    dbg!("nnnnnnnnnnnnnnnnnnn");
-    dbg!(&source);
     Ok((
         source,
         Span {
@@ -191,7 +171,7 @@ mod test {
     use rstest::rstest;
 
     #[test]
-    fn code_key_value_attr_basic() {
+    fn solo_code_key_value_attr_basic() {
         let source = "|sierra: foxtrot";
         let left = (
             "",
@@ -215,7 +195,7 @@ mod test {
     }
 
     #[test]
-    fn code_value_base_basic_test() {
+    fn solo_code_value_base_basic_test() {
         let source = "whiskey";
         let left = (
             "",
@@ -230,7 +210,7 @@ mod test {
     }
 
     #[test]
-    fn code_key_base_basic_test() {
+    fn solo_code_key_base_basic_test() {
         let source = "|alfa: bravo";
         let left = (
             "bravo",
@@ -270,7 +250,7 @@ mod test {
     #[case("|mi\\::ke: ")]
     #[case("|mi::ke: ")]
     #[case("|nov\\\\ember: ")]
-    fn valid_code_key_base(#[case] source: &str) {
+    fn solo_valid_code_key_base(#[case] source: &str) {
         let result = code_shorthand_attr_key_base_v42(source);
         if result.is_ok() {
             //dbg!(&result.unwrap().clone());
@@ -308,7 +288,7 @@ mod test {
     #[case("mi\\::ke: |")]
     #[case("mi::ke: |")]
     #[case("nov\\\\ember: |")]
-    fn valid_code_value_base(#[case] source: &str) {
+    fn solo_valid_code_value_base(#[case] source: &str) {
         let result = code_shorthand_attr_value_base_v42(source);
         let remainder = result.as_ref().unwrap().0;
         if result.is_ok() && remainder == "|" {
@@ -346,7 +326,7 @@ mod test {
     #[case("``bravo:charlie``")]
     #[case("``bravo: charlie``")]
     #[case("``bravo : charlie``")]
-    fn valid_code_shorthands(#[case] source: &str) {
+    fn solo_valid_code_shorthands(#[case] source: &str) {
         let result = code_shorthand(source);
         if result.is_ok() {
             assert!(true)
@@ -359,7 +339,7 @@ mod test {
     // Invalid Code Shorthands
     #[rstest]
     #[case("``no trailing pipe|``")]
-    fn invalid_code_shorthands(#[case] source: &str) {
+    fn solo_invalid_code_shorthands(#[case] source: &str) {
         let result = code_shorthand(source);
         if result.is_ok() {
             dbg!(&result);
@@ -382,7 +362,7 @@ mod test {
     #[case("|esacped\\`backtick")]
     #[case("|esacped\\|pipe")]
     #[case("|esacped\\\\escape")]
-    fn valid_code_shorthand_flags(#[case] source: &str) {
+    fn solo_valid_code_shorthand_flags(#[case] source: &str) {
         let result = code_shorthand_flag_v42(source);
         if result.as_ref().is_ok() {
             if result.as_ref().unwrap().0 == "" {
@@ -400,7 +380,7 @@ mod test {
     // Invalid Code Shorthand Flags
     #[rstest]
     #[case("|alfa: value")]
-    fn invalid_code_shorthand_flags(#[case] source: &str) {
+    fn solo_invalid_code_shorthand_flags(#[case] source: &str) {
         let result = code_shorthand_flag_v42(source);
         if result.as_ref().is_ok() {
             dbg!(&result);
@@ -411,7 +391,7 @@ mod test {
     }
 
     #[test]
-    fn code_shorthand_with_flag_attr() {
+    fn solo_code_shorthand_with_flag_attr() {
         let source = "``code|rust``";
         let left = (
             "",
@@ -441,36 +421,36 @@ mod test {
     }
 
     #[rstest]
-    // #[case("``alfa``", 0, "single word")]
-    // #[case("``alfa bravo``", 0, "space in text")]
-    // #[case("``alfa-bravo``", 0, "hyphen in text")]
-    // #[case("``alfa`bravo``", 0, "single backtick in text")]
-    // #[case("``alfa_bravo``", 0, "with single underscore")]
-    // #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
-    // #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]
-    // #[case("``alfa\\\\bravo``", 0, "escaped backslash in text")]
-    // #[case("``alfa:bravo``", 0, "colon in text")]
-    // #[case("``alfa: bravo``", 0, "colon in text before space")]
-    // #[case("``alfa :bravo``", 0, "colon in text after space")]
-    // #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]
-    // #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
-    // #[case("``alfa|bravo``", 1, "single flag attr")]
-    // #[case("``alfa|bravo charlie``", 1, "space in flag")]
-    // #[case("``alfa|bravo`charlie``", 1, "single backtick in flag")]
-    // #[case("``alfa|bravo\ncharlie``", 1, "newline in flag")]
-    // #[case("``alfa|bravo\\|charlie``", 1, "escaped pipe in flag")]
-    // #[case("``alfa|bravo\\`charlie``", 1, "escaped backtick in flag")]
-    // #[case("``alfa|bravo\\\\charlie``", 1, "escaped baskslash in flag")]
-    // #[case("``alfa|bravo|charlie``", 2, "two flag attrs")]
+    #[case("``alfa``", 0, "single word")]
+    #[case("``alfa bravo``", 0, "space in text")]
+    #[case("``alfa-bravo``", 0, "hyphen in text")]
+    #[case("``alfa`bravo``", 0, "single backtick in text")]
+    #[case("``alfa_bravo``", 0, "with single underscore")]
+    #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
+    #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]
+    #[case("``alfa\\\\bravo``", 0, "escaped backslash in text")]
+    #[case("``alfa:bravo``", 0, "colon in text")]
+    #[case("``alfa: bravo``", 0, "colon in text before space")]
+    #[case("``alfa :bravo``", 0, "colon in text after space")]
+    #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]
+    #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
+    #[case("``alfa|bravo``", 1, "single flag attr")]
+    #[case("``alfa|bravo charlie``", 1, "space in flag")]
+    #[case("``alfa|bravo`charlie``", 1, "single backtick in flag")]
+    #[case("``alfa|bravo\ncharlie``", 1, "newline in flag")]
+    #[case("``alfa|bravo\\|charlie``", 1, "escaped pipe in flag")]
+    #[case("``alfa|bravo\\`charlie``", 1, "escaped backtick in flag")]
+    #[case("``alfa|bravo\\\\charlie``", 1, "escaped baskslash in flag")]
+    #[case("``alfa|bravo|charlie``", 2, "two flag attrs")]
     #[case("``alfa|bravo: charlie``", 1, "single key value attr")]
-    // #[case("``alfa|bravo: charlie|delta: echo``", 2, "single key value attr")]
-    // #[case("``\nalfa\n|\nbravo\n``", 1, "newlines in shorthand")]
-    // #[case(
-    //     "``\nalfa\n|\nbravo\n|\ncharlie\n``",
-    //     2,
-    //     "newlines in shorthand multiple attrs"
-    // )]
-    // #[case("``Result<(), Box<dyn std::error::Error>>``", 0, "rust example")]
+    #[case("``alfa|bravo: charlie|delta: echo``", 2, "single key value attr")]
+    #[case("``\nalfa\n|\nbravo\n``", 1, "newlines in shorthand")]
+    #[case(
+        "``\nalfa\n|\nbravo\n|\ncharlie\n``",
+        2,
+        "newlines in shorthand multiple attrs"
+    )]
+    #[case("``Result<(), Box<dyn std::error::Error>>``", 0, "rust example")]
     fn solo_code_shorhand_fixture(
         #[case] input: &str,
         #[case] attrs: usize,
@@ -483,7 +463,7 @@ mod test {
 
     #[rstest]
     #[case("``\\``", "can't have a single backslash at the end of code text")]
-    fn error_cases(#[case] input: &str, #[case] _desc: &str) {
+    fn solo_error_cases(#[case] input: &str, #[case] _desc: &str) {
         assert!(code_shorthand(input).is_err());
     }
 }
