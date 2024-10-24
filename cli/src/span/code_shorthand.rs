@@ -33,8 +33,14 @@ pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTre
 }
 
 pub fn code_shorthand_base_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let (source, span) =
-        alt((plaintext.context(""), single_lessthan, escaped_lessthan)).parse(source)?;
+    let (source, span) = alt((
+        plaintext.context(""),
+        single_backtick,
+        single_lessthan,
+        escaped_lessthan,
+        escaped_backtick,
+    ))
+    .parse(source)?;
     Ok((source, span))
 }
 
@@ -74,8 +80,10 @@ mod test {
     #[case("``bravo charlie``")]
     #[case("``delta echo|foxtrot``")]
     #[case("``golf| hotel | india``")]
-    #[case("``<html>``")]
+    #[case("``<html> singel lessthan``")]
     #[case("``\\<< escaped less than``")]
+    #[case("``single ` backtick``")]
+    #[case("``escaped \\`` backtick``")]
     // #[case("``escaped\\|pipe``")]
     fn solo_valid_code_shorthands(#[case] source: &str) {
         let result = code_shorthand(source);
