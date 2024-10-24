@@ -1,6 +1,7 @@
 pub mod any_asterisk;
 pub mod any_caret;
 pub mod any_lessthan;
+pub mod any_newline;
 pub mod code_shorthand;
 pub mod colon;
 pub mod colon_not_followed_by_space;
@@ -118,8 +119,9 @@ impl Span {
     pub fn parsed_text(&self) -> Result<Value, Error> {
         match &self.kind {
             SpanKind::AnyAsterisk => Ok(Value::from(&self.parsed_text)),
-            SpanKind::AnyLessThan => Ok(Value::from(&self.parsed_text)),
             SpanKind::AnyCaret => Ok(Value::from(&self.parsed_text)),
+            SpanKind::AnyLessThan => Ok(Value::from(&self.parsed_text)),
+            SpanKind::AnyNewline => Ok(Value::from(&self.parsed_text)),
             SpanKind::CodeShorthand { .. } => Ok(Value::from(&self.parsed_text)),
             SpanKind::Colon => Ok(Value::from(&self.parsed_text)),
             SpanKind::ColonNotFollowedBySpace => Ok(Value::from(&self.parsed_text)),
@@ -178,6 +180,7 @@ pub enum SpanKind {
     AnyAsterisk,
     AnyCaret,
     AnyLessThan,
+    AnyNewline,
     CodeShorthand { children: Vec<Span> },
     Colon,
     ColonNotFollowedBySpace,

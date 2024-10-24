@@ -20,6 +20,7 @@ use nom_supreme::parser_ext::ParserExt;
 
 use self::any_asterisk::any_asterisk;
 use self::any_caret::any_caret;
+use self::any_newline::any_newline;
 use self::escaped_lessthan::escaped_lessthan;
 
 pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
@@ -42,6 +43,7 @@ pub fn code_shorthand_base_span(source: &str) -> IResult<&str, Span, ErrorTree<&
         any_asterisk,
         any_caret,
         any_lessthan,
+        any_newline,
         escaped_backtick,
         escaped_pipe,
     ))
@@ -85,6 +87,8 @@ mod test {
     #[case("``bravo charlie``")]
     #[case("``delta echo|foxtrot``")]
     #[case("``golf| hotel | india``")]
+    #[case("``contains \n neline``")]
+    #[case("``contains \n\n nelines``")]
     #[case("``single < lessthan``")]
     #[case("``multiple << lessthans``")]
     #[case("``html <div> tag``")]
