@@ -8,6 +8,7 @@ pub mod any_pipe;
 pub mod any_underscore;
 pub mod code_shorthand;
 pub mod colon;
+pub mod colon_followed_by_whitespace;
 pub mod colon_not_followed_by_space;
 pub mod double_underscore;
 pub mod em_shorthand;
@@ -134,6 +135,7 @@ impl Span {
                 Ok(Value::from("TODO: combine spans for code shorthand"))
             }
             SpanKind::Colon => Ok(Value::from(&self.parsed_text)),
+            SpanKind::ColonFollowedByWhitespace => Ok(Value::from(&self.parsed_text)),
             SpanKind::ColonNotFollowedBySpace => Ok(Value::from(&self.parsed_text)),
             SpanKind::DashWithTrailingNonDash => Ok(Value::from(&self.parsed_text)),
             SpanKind::DoubleUnderscore => Ok(Value::from(&self.parsed_text)),
@@ -194,7 +196,8 @@ pub enum SpanKind {
     AnyPipe,
     AnyUnderscore,
     CodeShorthand { children: Vec<Span> },
-    Colon,
+    Colon, // TODO: Deprecate this in favor of making an AnyColon
+    ColonFollowedByWhitespace,
     ColonNotFollowedBySpace,
     DashWithTrailingNonDash,
     DoubleUnderscore,
