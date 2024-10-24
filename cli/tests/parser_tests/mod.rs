@@ -17,6 +17,11 @@ pub fn sample_runner() {
     let parsed = p.generate_ast(&site_config);
     dbg!(&parsed);
     assert!(parsed.is_ok());
+
+    let mut p = PageV42::mock_from_test_directory_sample(include_str!("samples/3.neo")).unwrap();
+    let parsed = p.generate_ast(&site_config);
+    dbg!(&parsed);
+    assert!(parsed.is_ok());
 }
 
 #[rstest]

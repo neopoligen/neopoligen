@@ -62,9 +62,9 @@ pub fn raw_section_full<'a>(
     let (source, r#type) = (|src| tag_finder_full(src, &sections.raw))
         .context("")
         .parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
+    // let (source, _) = structure_empty_until_newline_or_eof
+    //     .context("")
+    //     .parse(source)?;
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")

@@ -1,0 +1,4 @@
+<section [@ section.attr_flag_list("code-section flow") @]>
+<pre>---[@ section.text() @]---</pre>
+[!- include "subsections/all-blocks.neoj" -!]
+

@@ -51,7 +51,14 @@ impl SiteConfigV42 {
             json5: vec!["pagedata".to_string()],
             list: vec![],
             list_item: vec![],
-            raw: vec!["code".to_string()],
+            raw: vec![
+                "code".to_string(),
+                "css".to_string(),
+                "html".to_string(),
+                "javascript".to_string(),
+                "results".to_string(),
+                "output".to_string(),
+            ],
         };
         let config = SiteConfigV42 {
             default_language: "en".to_string(),
