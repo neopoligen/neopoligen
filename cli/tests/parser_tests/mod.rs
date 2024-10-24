@@ -4,6 +4,15 @@ use neopoligengine::span::*;
 use neopoligengine::span_attr::*;
 use rstest::rstest;
 
+#[test]
+pub fn sample_runner() {
+    let site_config = SiteConfigV42::mock_for_files_in_test_samples_dir();
+    let mut p = PageV42::mock_from_test_directory_sample(include_str!("samples/1.neo")).unwrap();
+    let parsed = p.generate_ast(&site_config);
+    dbg!(&parsed);
+    assert!(parsed.is_ok());
+}
+
 #[rstest]
 #[case(1, r#"``alfa bravo``"#, 0, 0)]
 #[case(2, r#"``alfa`bravo``"#, 0, 0)]
@@ -71,14 +80,4 @@ fn generated_shorthand_base_cases(
         .collect::<Vec<()>>();
     assert_eq!(kv.len(), kv_count);
     assert_eq!(flags.len(), flag_count);
-}
-
-#[test]
-#[ignore]
-pub fn sample_runner() {
-    let site_config = SiteConfigV42::mock_for_files_in_test_samples_dir();
-    let mut p = PageV42::mock_from_test_directory_sample(include_str!("samples/1.neo")).unwrap();
-    let parsed = p.generate_ast(&site_config);
-    dbg!(&parsed);
-    assert!(parsed.is_ok());
 }

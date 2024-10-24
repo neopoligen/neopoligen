@@ -29,13 +29,9 @@ pub fn unknown_section_end<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = if nest_level == 0 {
-        many0(|src| block_of_end_content(src))
-            .context("")
-            .parse(source)?
-    } else {
-        (source, vec![])
-    };
+    let (source, children) = many0(|src| block_of_main_content_v42(src))
+        .context("")
+        .parse(source)?;
     let section = Section {
         attr_list: vec![],
         flag_list: vec![],
@@ -65,7 +61,7 @@ pub fn unknown_section_full<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = many0(|src| block_of_end_content(src))
+    let (source, children) = many0(|src| block_of_main_content_v42(src))
         .context("")
         .parse(source)?;
     let section = Section {
@@ -112,7 +108,7 @@ pub fn unknown_section_start<'a>(
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, mut children) = many0(alt((
         |src| start_or_full_section(src, &sections, nest_level, list_level),
-        |src| block_of_end_content(src),
+        |src| block_of_main_content_v42(src),
     )))
     .context("")
     .parse(source)?;
@@ -193,7 +189,7 @@ mod test {
                             kind: SectionKind::Block {
                                 spans: vec![Span {
                                     attrs: vec![],
-                                    kind: SpanKind::WordPart,
+                                    kind: SpanKind::PlainText,
                                     parsed_text: "alfa bravo".to_string(),
                                 }],
                             },
@@ -240,7 +236,7 @@ mod test {
                         kind: SectionKind::Block {
                             spans: vec![Span {
                                 attrs: vec![],
-                                kind: SpanKind::WordPart,
+                                kind: SpanKind::PlainText,
                                 parsed_text: "Hello World".to_string(),
                             }],
                         },

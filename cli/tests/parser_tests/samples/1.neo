@@ -1,12 +1,7 @@
--- todo
+-- code/
 
-[] Write up notes on how this works
+async fn run_web_server() -> std::result::Result<(), Box<dyn std::error::Error>> {
+}
 
-
--- pagedata
--- created: 2023-09-05T01:05:49-04:00
--- id: 2uxny2p4
--- site: aws
--- type: post
--- status: draft 
+-- /code
 
