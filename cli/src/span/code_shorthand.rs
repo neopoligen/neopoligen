@@ -3,6 +3,7 @@ use crate::span::lessthan::*;
 use crate::span::*;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
+use nom::bytes::complete::take_until;
 use nom::character::complete::alpha1;
 use nom::character::complete::digit1;
 use nom::multi::many0;
@@ -12,23 +13,39 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
+pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
+    let (source, _) = tag("|").context("").parse(source)?;
+    let (source, text) = is_not("`|").context("").parse(source)?;
+    let flag = SpanAttr {
+        kind: SpanAttrKind::Flag {
+            value: text.to_string(),
+        },
+    };
+    Ok((source, flag))
+}
+
 pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+    let (source, _) = tag("``").context("").context("").parse(source)?;
+    let (source, out) = is_not("`|").context("").parse(source)?;
+    let (source, attrs) = many0(code_shorthand_flag_v42).context("").parse(source)?;
+
+    // let (source, parts) = many1(alt((base_span_for_all_text, lessthan, greaterthan)))
+    //     .context("")
+    //     .parse(source)?;
+    //    let (source, attrs) = many0(code_shorthand_attr).context("").parse(source)?;
     let (source, _) = tag("``").context("").parse(source)?;
-    let (source, parts) = many1(alt((base_span_for_all_text, lessthan, greaterthan)))
-        .context("")
-        .parse(source)?;
-    let (source, attrs) = many0(code_shorthand_attr).context("").parse(source)?;
-    let (source, _) = tag("``").context("").parse(source)?;
-    let parsed_text = parts
-        .iter()
-        .map(|word| word.parsed_text.clone())
-        .collect::<Vec<String>>()
-        .join("");
+
+    // let parsed_text = parts
+    //     .iter()
+    //     .map(|word| word.parsed_text.clone())
+    //     .collect::<Vec<String>>()
+    //     .join("");
+
     Ok((
         source,
         Span {
             attrs,
-            parsed_text,
+            parsed_text: out.to_string(),
             kind: SpanKind::CodeShorthand,
         },
     ))
@@ -116,6 +133,39 @@ mod test {
     use super::*;
     use pretty_assertions::assert_eq;
     use rstest::rstest;
+
+    // Valid Code Shorthands
+    #[rstest]
+    #[case("``alfa``")]
+    fn solo_valud_code_shorthands(#[case] source: &str) {
+        let result = code_shorthand(source);
+        if result.is_ok() {
+            assert!(true)
+        } else {
+            dbg!(&result);
+            assert!(false);
+        }
+    }
+
+    #[test]
+    fn solo_code_shorthand_with_flag_attr() {
+        let source = "``code|rust``";
+        let left = (
+            "",
+            Span {
+                attrs: vec![SpanAttr {
+                    kind: SpanAttrKind::Flag {
+                        value: "rust".to_string(),
+                    },
+                }],
+                parsed_text: "code".to_string(),
+                kind: SpanKind::CodeShorthand {},
+            },
+        );
+        let right = code_shorthand(source).unwrap();
+        assert_eq!(left, right);
+    }
+
     #[rstest]
     #[case("``alfa``", 0, "single word")]
     #[case("``alfa bravo``", 0, "space in text")]
@@ -147,7 +197,6 @@ mod test {
         "newlines in shorthand multiple attrs"
     )]
     #[case("``Result<(), Box<dyn std::error::Error>>``", 0, "rust example")]
-
     fn code_shorhand_fixture(
         #[case] input: &str,
         #[case] attrs: usize,
@@ -218,25 +267,6 @@ mod test {
                 attrs: vec![],
                 parsed_text: "ping`ping".to_string(),
                 kind: SpanKind::CodeShorthand,
-            },
-        );
-        let right = code_shorthand(source).unwrap();
-        assert_eq!(left, right);
-    }
-
-    #[test]
-    fn code_shorthand_with_flag_attr() {
-        let source = "``code|rust``";
-        let left = (
-            "",
-            Span {
-                attrs: vec![SpanAttr {
-                    kind: SpanAttrKind::Flag {
-                        value: "rust".to_string(),
-                    },
-                }],
-                parsed_text: "code".to_string(),
-                kind: SpanKind::CodeShorthand {},
             },
         );
         let right = code_shorthand(source).unwrap();

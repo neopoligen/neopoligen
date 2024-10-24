@@ -37,9 +37,13 @@ use self::single_caret::single_caret;
 #[derive(Clone, Debug, PartialEq)]
 pub struct Block {}
 
+// TODO: Make this the same thing as main, but without
+// newline. (i.e. extract main to a base set of things
+// then only add newline to it)
 pub fn block_of_section_attr_value_v42<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Vec<Span>, ErrorTree<&'a str>> {
+    dbg!(&source);
     let (source, spans) = many1(alt((
         plaintext,
         // singles

@@ -53,13 +53,23 @@ pub fn section_key_value_attr<'a>(
 ) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
     let (source, _) = tag("--").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
-    let (source, key) = is_not(": \n").context("").parse(source)?;
+    let (source, key_parts) = many1(alt((
+        is_not(": \n\t"),
+        pair(tag(":"), not(alt((multispace1, eof)))).map(|x| x.0),
+    )))
+    .context("")
+    .parse(source)?;
     let (source, _) = tag(":").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
     let (source, spans) = block_of_section_attr_value_v42.context("").parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
         .parse(source)?;
+    let key = key_parts
+        .iter()
+        .map(|part| part.to_string())
+        .collect::<Vec<String>>()
+        .join("");
     Ok((
         source,
         SectionAttr {
@@ -95,7 +105,6 @@ pub fn section_key_value_attr<'a>(
 // }
 
 pub fn section_flag_attr<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
-    // -- https://www.example.com/
     let (source, _) = tag("--").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
     let (source, parts) = many1(alt((
@@ -150,7 +159,7 @@ mod test {
     #[case("-- alfa")]
     #[case("-- bravo-charlie")]
     #[case("-- https://www.example.com/")]
-    fn solo_valid_section_flags(#[case] source: &str) {
+    fn valid_section_flags(#[case] source: &str) {
         let response = section_flag_attr(source);
         if response.is_ok() {
             assert!(true)
@@ -165,7 +174,7 @@ mod test {
     #[case("-- alfa:")]
     #[case("-- bravo: charlie")]
     #[case("-- delta echo")]
-    fn solo_invalid_section_flags(#[case] source: &str) {
+    fn invalid_section_flags(#[case] source: &str) {
         let response = section_flag_attr(source);
         if response.is_ok() {
             dbg!(&response);
@@ -175,20 +184,35 @@ mod test {
         }
     }
 
-    //// Valid Attrs
-    //#[rstest]
-    //#[case("-- alfa: bravo")]
-    ////#[case("-- bravo-charlie")]
-    //// #[case("-- https://www.example.com/")]
-    //fn solo_valid_section_flags(#[case] source: &str) {
-    //    let response = section_flag_attr(source);
-    //    if response.is_ok() {
-    //        assert!(true)
-    //    } else {
-    //        dbg!(&response);
-    //        assert!(false);
-    //    }
-    //}
+    // Valid Attrs
+    #[rstest]
+    #[case("-- alfa: bravo")]
+    #[case("-- charlie-delta: echo")]
+    #[case("-- foxtrot: ``em|golf``")]
+    #[case("-- url: https://www.example.com/")]
+    fn valid_section_attrs(#[case] source: &str) {
+        let response = section_key_value_attr(source);
+        if response.is_ok() {
+            assert!(true)
+        } else {
+            dbg!(&response);
+            assert!(false);
+        }
+    }
+
+    // Invalid Attrs
+    #[rstest]
+    #[case("-- alfa bravo: charlie")]
+    // #[case("-- https://www.example.com/")]
+    fn invalid_section_attrs(#[case] source: &str) {
+        let response = section_key_value_attr(source);
+        if response.is_ok() {
+            dbg!(&response);
+            assert!(false);
+        } else {
+            assert!(true)
+        }
+    }
 
     // TODO: Put this back in:
     // #[case("colon and hyphen", "-- created: 2024-06-09T14:28:09-04:00", true)]
