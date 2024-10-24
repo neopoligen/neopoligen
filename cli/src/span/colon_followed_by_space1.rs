@@ -6,14 +6,14 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
-pub fn colon_followed_by_whitespace(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+pub fn colon_followed_by_space1(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let (source, _) = pair(tag(":"), space1).context("").parse(source)?;
     Ok((
         source,
         Span {
             attrs: vec![],
             parsed_text: ": ".to_string(),
-            kind: SpanKind::ColonFollowedByWhitespace,
+            kind: SpanKind::ColonFollowedBySpace1,
         },
     ))
 }
@@ -30,10 +30,10 @@ mod test {
             Span {
                 attrs: vec![],
                 parsed_text: ": ".to_string(),
-                kind: SpanKind::ColonFollowedByWhitespace,
+                kind: SpanKind::ColonFollowedBySpace1,
             },
         );
-        let right = colon_followed_by_whitespace(source).unwrap();
+        let right = colon_followed_by_space1(source).unwrap();
         assert_eq!(left, right);
     }
 }
