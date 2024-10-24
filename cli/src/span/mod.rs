@@ -9,7 +9,7 @@ pub mod escaped_backslash;
 pub mod escaped_backtick;
 pub mod escaped_caret;
 pub mod escaped_colon;
-pub mod escaped_exclamation;
+//pub mod escaped_exclamation;
 pub mod escaped_greaterthan;
 pub mod escaped_hashtag;
 pub mod escaped_hyphen;
@@ -18,7 +18,7 @@ pub mod escaped_pipe;
 pub mod escaped_underscore;
 pub mod footnote_shorthand;
 pub mod greaterthan;
-pub mod hyphen;
+// pub mod hyphen;
 pub mod hyphen_with_trailing_non_hyphen;
 pub mod lessthan;
 pub mod mocks;
@@ -29,13 +29,13 @@ pub mod pipe;
 pub mod single_asterisk;
 pub mod single_backtick;
 pub mod single_caret;
-pub mod single_exclamation;
+// pub mod single_exclamation;
 pub mod single_greaterthan;
 pub mod single_hashtag;
 pub mod single_hyphen;
 pub mod single_lessthan;
 pub mod single_underscore;
-pub mod wordpart;
+// pub mod wordpart; // deprecated in favor of plaintext
 
 use crate::span::code_shorthand::*;
 use crate::span::code_shorthand_single_pipe::*;
@@ -52,7 +52,7 @@ use crate::span::escaped_hyphen::*;
 use crate::span::escaped_pipe::*;
 use crate::span::escaped_underscore::*;
 use crate::span::footnote_shorthand::*;
-use crate::span::hyphen::*;
+// use crate::span::hyphen::*;
 use crate::span::hyphen_with_trailing_non_hyphen::*;
 use crate::span::more_than_two_carets::*;
 use crate::span::more_than_two_underscores::*;
@@ -63,7 +63,7 @@ use crate::span::single_greaterthan::*;
 // use crate::span::single_hyphen::*;
 use crate::span::single_lessthan::*;
 use crate::span::single_underscore::*;
-use crate::span::wordpart::*;
+// use crate::span::wordpart::*;
 use crate::span_attr::*;
 use minijinja::value::Object;
 use minijinja::Error;
@@ -110,7 +110,7 @@ pub struct Span {
 impl Span {
     pub fn kind(&self) -> Result<Value, Error> {
         match &self.kind {
-            SpanKind::WordPart => Ok(Value::from("wordpart")),
+            SpanKind::PlainText => Ok(Value::from("plaintext")),
             _ => Ok(Value::from("unknown")),
         }
     }
@@ -128,7 +128,7 @@ impl Span {
             SpanKind::EscapedBackslash => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedCaret => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedColon => Ok(Value::from(&self.parsed_text)),
-            SpanKind::EscapedExclamation => Ok(Value::from(&self.parsed_text)),
+            // SpanKind::EscapedExclamation => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedGreaterThan => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedHashtag => Ok(Value::from(&self.parsed_text)),
             SpanKind::EscapedLessThan => Ok(Value::from(&self.parsed_text)),
@@ -144,6 +144,7 @@ impl Span {
             SpanKind::MoreThanTwoUnderscores => Ok(Value::from(&self.parsed_text)),
             SpanKind::MoreThanTwoCarets => Ok(Value::from(&self.parsed_text)),
             SpanKind::Newline => Ok(Value::from(&self.parsed_text)),
+            SpanKind::NamedSpan { .. } => Ok(Value::from("[NAMED_SPAN_TODO]")),
             SpanKind::Pipe => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleAsterisk => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleBacktick => Ok(Value::from(&self.parsed_text)),
@@ -154,8 +155,8 @@ impl Span {
             SpanKind::SingleGreaterThan => Ok(Value::from(&self.parsed_text)),
             SpanKind::SingleLessThan => Ok(Value::from(&self.parsed_text)),
             SpanKind::Space => Ok(Value::from(&self.parsed_text)),
-            SpanKind::WordPart => Ok(Value::from(&self.parsed_text)),
-            _ => Ok(Value::from("[UNKNOWN_SPAN]")),
+            SpanKind::PlainText => Ok(Value::from(&self.parsed_text)),
+            // _ => Ok(Value::from("[UNKNOWN_SPAN]")),
         }
     }
 
@@ -181,7 +182,7 @@ pub enum SpanKind {
     EscapedBackslash,
     EscapedCaret,
     EscapedColon,
-    EscapedExclamation,
+    //EscapedExclamation,
     EscapedGreaterThan,
     EscapedHashtag,
     EscapedLessThan,
@@ -190,7 +191,6 @@ pub enum SpanKind {
     EscapedUnderscore,
     FootnoteShorthand,
     GreaterThan,
-    Hyphen,
     HyphenWithTrailingNonHyphen,
     LessThan,
     LinkShorthand,
@@ -203,23 +203,19 @@ pub enum SpanKind {
     SingleAsterisk,
     SingleBacktick,
     SingleCaret,
-    SingleExclamation,
     SingleGreaterThan,
     SingleHashtag,
     SingleHyphen,
     SingleLessThan,
     SingleUnderscore,
     Space,
-    WordPart,
 }
 
 // TODO: Move stuff to this one and any siblings that need
 // to be made with it. This includes single hyphens, double
 // hyphens, and [ and ] characters since those things will
 // be parsed out at the start of blocks.
-pub fn take_until_special_characters<'a>(
-    source: &'a str,
-) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
+pub fn plaintext<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
     let (source, parsed_text) = is_not("\n<^*`\\").context("").parse(source)?;
     let span = Span {
         attrs: vec![],
@@ -240,13 +236,12 @@ pub fn shorthand<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a st
 pub fn base_span_for_all_text<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
     let (source, span) = alt((
         alt((
-            wordpart,
             space,
             newline,
             shorthand,
             named_span,
             code_shorthand_single_pipe,
-            hyphen,
+            // hyphen,
             // hyphen_with_trailing_non_hyphen,
             colon,
             single_caret,
@@ -276,13 +271,12 @@ pub fn base_span_for_all_text<'a>(source: &'a str) -> IResult<&'a str, Span, Err
 pub fn base_span_for_list_item<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
     let (source, span) = alt((
         alt((
-            wordpart,
             space,
             newline,
             shorthand,
             named_span,
             code_shorthand_single_pipe,
-            hyphen,
+            // hyphen,
             // hyphen_with_trailing_non_hyphen,
             colon,
             single_caret,
@@ -324,13 +318,13 @@ pub fn structure_empty_until_newline_or_eof<'a>(
 }
 
 pub fn span_for_not_a_list_item<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
-    let (source, span) = alt((wordpart, space)).context("").parse(source)?;
+    let (source, span) = alt((space,)).context("").parse(source)?;
     Ok((source, span))
 }
 
 // DEPRECATED: replace with base_span_for_all_blocks
 pub fn span_for_body_text<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
-    let (source, span) = alt((wordpart, span_base, code_shorthand, named_span))
+    let (source, span) = alt((span_base, code_shorthand, named_span))
         .context("")
         .parse(source)?;
     Ok((source, span))
@@ -454,8 +448,8 @@ mod test {
     // #[case("^", "")]
     // #[case("\\^", "")]
     // #[case("^^^", "")]
-    fn solo_take_until_special_characters(#[case] input: &str, #[case] left: &str) {
-        let right = take_until_special_characters(input).unwrap().0;
+    fn solo_plaintext(#[case] input: &str, #[case] left: &str) {
+        let right = plaintext(input).unwrap().0;
         assert_eq!(left, right);
     }
 
@@ -492,7 +486,7 @@ mod test {
                 children: vec![
                     Span {
                         attrs: vec![],
-                        kind: SpanKind::WordPart,
+                        kind: SpanKind::PlainText,
                         parsed_text: "delta ".to_string(),
                     },
                     Span {
@@ -502,14 +496,14 @@ mod test {
                             r#type: "strong".to_string(),
                             children: vec![Span {
                                 attrs: vec![],
-                                kind: SpanKind::WordPart,
+                                kind: SpanKind::PlainText,
                                 parsed_text: "echo".to_string(),
                             }],
                         },
                     },
                     Span {
                         attrs: vec![],
-                        kind: SpanKind::WordPart,
+                        kind: SpanKind::PlainText,
                         parsed_text: " foxtrot".to_string(),
                     },
                 ],

@@ -222,7 +222,7 @@ mod test {
                             key: "class".to_string(),
                             spans: vec![Span {
                                 attrs: vec![],
-                                kind: SpanKind::WordPart,
+                                kind: SpanKind::PlainText,
                                 parsed_text: "alfa".to_string(),
                             }],
                         },
@@ -310,7 +310,7 @@ mod test {
                                     kind: SectionKind::Block {
                                         spans: vec![Span {
                                             attrs: vec![],
-                                            kind: SpanKind::WordPart,
+                                            kind: SpanKind::PlainText,
                                             parsed_text: "bravo".to_string(),
                                         }],
                                     },
@@ -324,7 +324,7 @@ mod test {
                                     kind: SectionKind::Block {
                                         spans: vec![Span {
                                             attrs: vec![],
-                                            kind: SpanKind::WordPart,
+                                            kind: SpanKind::PlainText,
                                             parsed_text: "charlie".to_string(),
                                         }],
                                     },
@@ -401,18 +401,11 @@ mod test {
                                 bounds: SectionBounds::Full,
                                 flag_list: vec![],
                                 kind: SectionKind::Block {
-                                    spans: vec![
-                                        Span {
-                                            attrs: vec![],
-                                            kind: SpanKind::Hyphen,
-                                            parsed_text: "-".to_string(),
-                                        },
-                                        Span {
-                                            attrs: vec![],
-                                            kind: SpanKind::WordPart,
-                                            parsed_text: " bravo".to_string(),
-                                        },
-                                    ],
+                                    spans: vec![Span {
+                                        attrs: vec![],
+                                        kind: SpanKind::PlainText,
+                                        parsed_text: "- bravo".to_string(),
+                                    }],
                                 },
                                 r#type: "block-of-text".to_string(),
                             }],

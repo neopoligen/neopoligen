@@ -50,7 +50,6 @@ pub fn em_shorthand_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree
     let (source, _) = tag("|").context("").parse(source)?;
     // TODO: Allow spaces here
     let (source, words) = many1(alt((
-        wordpart,
         space,
         newline,
         colon,
@@ -86,7 +85,6 @@ pub fn em_shorthand_key_value_attr(source: &str) -> IResult<&str, SpanAttr, Erro
     let (source, _) = tag(":").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
     let (source, tokens) = many1(alt((
-        wordpart,
         space,
         newline,
         colon,
@@ -335,7 +333,7 @@ mod test {
     //         vec![
     //             Span {
     //                 attrs: vec![],
-    //                 kind: SpanKind::WordPart,
+    //                 kind: SpanKind::PlainText,
     //                 parsed_text: "alfa ".to_string(),
     //                 source_text: "alfa ".to_string(),
     //             },
@@ -347,7 +345,7 @@ mod test {
     //             },
     //             Span {
     //                 attrs: vec![],
-    //                 kind: SpanKind::WordPart,
+    //                 kind: SpanKind::PlainText,
     //                 parsed_text: " charlie".to_string(),
     //                 source_text: " charlie".to_string(),
     //             },
@@ -365,7 +363,7 @@ mod test {
     //         vec![
     //             Span {
     //                 attrs: vec![],
-    //                 kind: SpanKind::WordPart,
+    //                 kind: SpanKind::PlainText,
     //                 parsed_text: "alfa ".to_string(),
     //                 source_text: "alfa ".to_string(),
     //             },
@@ -377,7 +375,7 @@ mod test {
     //             },
     //             Span {
     //                 attrs: vec![],
-    //                 kind: SpanKind::WordPart,
+    //                 kind: SpanKind::PlainText,
     //                 parsed_text: " charlie".to_string(),
     //                 source_text: " charlie".to_string(),
     //             },
@@ -395,7 +393,7 @@ mod test {
     //         vec![
     //             Span {
     //                 attrs: vec![],
-    //                 kind: SpanKind::WordPart,
+    //                 kind: SpanKind::PlainText,
     //                 parsed_text: "alfa ".to_string(),
     //                 source_text: "alfa ".to_string(),
     //             },
@@ -407,7 +405,7 @@ mod test {
     //             },
     //             Span {
     //                 attrs: vec![],
-    //                 kind: SpanKind::WordPart,
+    //                 kind: SpanKind::PlainText,
     //                 parsed_text: " charlie".to_string(),
     //                 source_text: " charlie".to_string(),
     //             },

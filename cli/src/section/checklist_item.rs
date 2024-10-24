@@ -104,7 +104,7 @@ mod test {
                             kind: SectionKind::Block {
                                 spans: vec![Span {
                                     attrs: vec![],
-                                    kind: SpanKind::WordPart,
+                                    kind: SpanKind::PlainText,
                                     parsed_text: "alfa".to_string(),
                                 }],
                             },
@@ -142,7 +142,7 @@ mod test {
                             kind: SectionKind::Block {
                                 spans: vec![Span {
                                     attrs: vec![],
-                                    kind: SpanKind::WordPart,
+                                    kind: SpanKind::PlainText,
                                     parsed_text: "alfa".to_string(),
                                 }],
                             },

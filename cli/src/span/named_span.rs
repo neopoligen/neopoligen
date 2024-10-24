@@ -78,9 +78,7 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorT
     let (source, _) = tag(":").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
     let (source, tokens) = many1(alt((
-        wordpart,
         colon,
-        hyphen,
         newline,
         single_lessthan,
         single_greaterthan,
@@ -185,7 +183,7 @@ mod test {
                     children: vec![Span {
                         attrs: vec![],
                         parsed_text: "alfa".to_string(),
-                        kind: SpanKind::WordPart,
+                        kind: SpanKind::PlainText,
                     }],
                 },
             },
@@ -207,7 +205,7 @@ mod test {
                     children: vec![Span {
                         attrs: vec![],
                         parsed_text: "alfa".to_string(),
-                        kind: SpanKind::WordPart,
+                        kind: SpanKind::PlainText,
                     }],
                 },
             },
@@ -230,7 +228,7 @@ mod test {
                         Span {
                             attrs: vec![],
                             parsed_text: "ping".to_string(),
-                            kind: SpanKind::WordPart,
+                            kind: SpanKind::PlainText,
                         },
                         Span {
                             attrs: vec![],
@@ -240,7 +238,7 @@ mod test {
                         Span {
                             attrs: vec![],
                             parsed_text: "ping".to_string(),
-                            kind: SpanKind::WordPart,
+                            kind: SpanKind::PlainText,
                         },
                     ],
                 },
@@ -299,7 +297,7 @@ mod test {
                     children: vec![Span {
                         attrs: vec![],
                         parsed_text: "something".to_string(),
-                        kind: SpanKind::WordPart,
+                        kind: SpanKind::PlainText,
                     }],
                 },
             },
@@ -393,7 +391,7 @@ mod test {
     //         vec![
     //             Span {
     //                 attrs: vec![],
-    //                 kind: SpanKind::WordPart,
+    //                 kind: SpanKind::PlainText,
     //                 parsed_text: "alfa".to_string(),
     //                 source_text: "alfa".to_string(),
     //             },
@@ -417,7 +415,7 @@ mod test {
     //             },
     //             Span {
     //                 attrs: vec![],
-    //                 kind: SpanKind::WordPart,
+    //                 kind: SpanKind::PlainText,
     //                 parsed_text: "charlie".to_string(),
     //                 source_text: "charlie".to_string(),
     //             },
@@ -435,7 +433,7 @@ mod test {
     //         vec![
     //             Span {
     //                 attrs: vec![],
-    //                 kind: SpanKind::WordPart,
+    //                 kind: SpanKind::PlainText,
     //                 parsed_text: "alfa".to_string(),
     //                 source_text: "alfa".to_string(),
     //             },
@@ -459,7 +457,7 @@ mod test {
     //             },
     //             Span {
     //                 attrs: vec![],
-    //                 kind: SpanKind::WordPart,
+    //                 kind: SpanKind::PlainText,
     //                 parsed_text: "charlie".to_string(),
     //                 source_text: "charlie".to_string(),
     //             },
@@ -477,7 +475,7 @@ mod test {
     //         vec![
     //             Span {
     //                 attrs: vec![],
-    //                 kind: SpanKind::WordPart,
+    //                 kind: SpanKind::PlainText,
     //                 parsed_text: "alfa".to_string(),
     //                 source_text: "alfa".to_string(),
     //             },
@@ -501,7 +499,7 @@ mod test {
     //             },
     //             Span {
     //                 attrs: vec![],
-    //                 kind: SpanKind::WordPart,
+    //                 kind: SpanKind::PlainText,
     //                 parsed_text: "charlie".to_string(),
     //                 source_text: "charlie".to_string(),
     //             },

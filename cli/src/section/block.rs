@@ -37,12 +37,41 @@ use self::single_caret::single_caret;
 #[derive(Clone, Debug, PartialEq)]
 pub struct Block {}
 
+pub fn block_of_section_attr_value_v42<'a>(
+    source: &'a str,
+) -> IResult<&'a str, Vec<Span>, ErrorTree<&'a str>> {
+    let (source, spans) = many1(alt((
+        plaintext,
+        // singles
+        single_asterisk,
+        single_backtick,
+        single_caret,
+        //single_hyphen,
+        single_lessthan,
+        // escapes
+        escaped_asterisk,
+        escaped_backtick,
+        escaped_caret,
+        // escaped_hyphen,
+        escaped_lessthan,
+        // add shorthands here
+        code_shorthand,
+        footnote_shorthand,
+        // named span
+        named_span,
+    )))
+    .context("")
+    .parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
+    Ok((source, spans))
+}
+
 pub fn block_of_main_content_v42<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = not(tag("--")).context("").parse(source)?;
     let (source, spans) = many1(alt((
-        take_until_special_characters,
+        plaintext,
         newline,
         // singles
         single_asterisk,
@@ -81,6 +110,8 @@ pub fn block_of_main_content_v42<'a>(
 pub fn block_of_list_item_content_v42<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    // NOTE, this just to make sure it's not a new list item the
+    // forwards to the other thing
     let (source, _) = not(tag("-")).context("").parse(source)?;
     let (source, section) = block_of_main_content_v42.context("").parse(source)?;
     Ok((source, section))
@@ -333,7 +364,7 @@ mod test {
                 kind: SectionKind::Block {
                     spans: vec![Span {
                         attrs: vec![],
-                        kind: SpanKind::WordPart,
+                        kind: SpanKind::PlainText,
                         parsed_text: "alfa".to_string(),
                     }],
                 },
@@ -357,7 +388,7 @@ mod test {
                 kind: SectionKind::Block {
                     spans: vec![Span {
                         attrs: vec![],
-                        kind: SpanKind::WordPart,
+                        kind: SpanKind::PlainText,
                         parsed_text: "alfa".to_string(),
                     }],
                 },

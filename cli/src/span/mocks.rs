@@ -1,12 +1,13 @@
 use crate::span::Span;
 
 use super::named_span;
+use super::plaintext;
 use super::span_for_body_text;
-use super::wordpart;
+// use super::wordpart;
 
 impl Span {
     pub fn mock1_basic_wordpard() -> Span {
-        wordpart("alfa").unwrap().1
+        plaintext("alfa").unwrap().1
     }
 
     pub fn mock2_named_link_with_flag_and_attrs() -> Span {

@@ -1,10 +1,11 @@
+// use crate::section::block::block_of_main_content_v42;
+use crate::section::block::block_of_section_attr_value_v42;
 use crate::span::colon::colon;
 use crate::span::double_underscore::double_underscore;
-use crate::span::escaped_pipe::escaped_pipe;
-use crate::span::hyphen::hyphen;
-use crate::span::pipe::pipe;
+// use crate::span::escaped_pipe::escaped_pipe;
+// use crate::span::hyphen::hyphen;
+// use crate::span::pipe::pipe;
 use crate::span::single_underscore::single_underscore;
-use crate::span::wordpart::wordpart;
 use crate::span::*;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
@@ -49,18 +50,7 @@ pub fn section_key_value_attr<'a>(
     let (source, key) = is_not(": \n").context("").parse(source)?;
     let (source, _) = tag(":").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
-    // TODO: Add all the different span types that are allowed here
-    let (source, spans) = many1(alt((
-        wordpart,
-        space,
-        hyphen,
-        colon,
-        escaped_pipe,
-        pipe,
-        single_underscore,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, spans) = block_of_section_attr_value_v42.context("").parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
         .parse(source)?;
@@ -102,15 +92,9 @@ pub fn section_flag_attr<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, E
     // -- https://www.example.com/
     let (source, _) = tag("--").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
-    let (source, parts) = many1(alt((
-        wordpart,
-        colon,
-        hyphen,
-        single_underscore,
-        double_underscore,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, parts) = many1(alt((colon, single_underscore, double_underscore)))
+        .context("")
+        .parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
         .parse(source)?;
@@ -198,7 +182,7 @@ mod test {
                 key: "key".to_string(),
                 spans: vec![Span {
                     attrs: vec![],
-                    kind: SpanKind::WordPart {},
+                    kind: SpanKind::PlainText {},
                     parsed_text: "value".to_string(),
                 }],
             },
@@ -218,7 +202,7 @@ mod test {
     //             spans: vec![
     //                 Span {
     //                     attrs: vec![],
-    //                     kind: SpanKind::WordPart {},
+    //                     kind: SpanKind::PlainText {},
     //                     parsed_text: "alfa".to_string(),
     //                 },
     //                 Span {
@@ -228,7 +212,7 @@ mod test {
     //                 },
     //                 Span {
     //                     attrs: vec![],
-    //                     kind: SpanKind::WordPart {},
+    //                     kind: SpanKind::PlainText {},
     //                     parsed_text: "bravo".to_string(),
     //                 },
     //             ],
@@ -247,7 +231,7 @@ mod test {
                 spans: vec![
                     Span {
                         attrs: vec![],
-                        kind: SpanKind::WordPart {},
+                        kind: SpanKind::PlainText {},
                         parsed_text: "alfa".to_string(),
                     },
                     Span {
@@ -257,7 +241,7 @@ mod test {
                     },
                     Span {
                         attrs: vec![],
-                        kind: SpanKind::WordPart {},
+                        kind: SpanKind::PlainText {},
                         parsed_text: "bravo".to_string(),
                     },
                 ],

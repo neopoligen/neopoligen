@@ -1,0 +1,72 @@
+-- title
+
+Creating Background Borders With Photoshop Scripting 
+
+
+-- p
+
+This is what I used to add a white boarder with a black pen line to my instagram photos.
+
+-- p
+
+#+FILENAME: AWS-Instagram-Boarder.jsx
+#+begin_src js :results output :wrap example :tangle "/Applications/Adobe Photoshop 2022/Presets/Scripts/AWS Instagram Border.jsx"
+
+-- p
+
+var doc = app.activeDocument;
+
+-- p
+
+function main(black_border, white_border) {
+    setBg(0,0,0);
+    addBorder(black_border);
+    setBg(255,255,255);
+    addBorder(white_border);
+}
+
+-- p
+
+function setBg(r,g,b) {
+    var new_color = new SolidColor();
+    new_color.rgb.red = r;
+    new_color.rgb.green = g;
+    new_color.rgb.blue = b;
+    backgroundColor = new_color;
+}
+
+-- p
+
+function addBorder(border_size) {
+    doc.resizeCanvas(UnitValue(doc.width + (border_size  * 2) , 'px') ,
+                     UnitValue(doc.height + (border_size  * 2) , 'px') );
+}
+
+-- p
+
+main(2, 38);
+
+-- p
+
+#+end_src
+
+-- p
+
+#+TODO:
+
+-- p
+
+Write a post on installing and using Photoshop Scripts
+
+
+-- categories
+-- Photoshop 
+-- Photoshop Scripting
+
+-- pagedata
+-- created: 2015-12-11T01:39:51-04:00
+-- id: 01a67w8r
+-- status: done 
+-- type: post
+-- SCRUBBED_NEO: false
+-- site: aws
