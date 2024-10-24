@@ -18,6 +18,7 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
+use self::any_caret::any_caret;
 use self::escaped_lessthan::escaped_lessthan;
 
 pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
@@ -37,6 +38,7 @@ pub fn code_shorthand_base_span(source: &str) -> IResult<&str, Span, ErrorTree<&
     let (source, span) = alt((
         plaintext.context(""),
         single_backtick,
+        any_caret,
         any_lessthan,
         escaped_backtick,
         escaped_pipe,
@@ -81,10 +83,16 @@ mod test {
     #[case("``bravo charlie``")]
     #[case("``delta echo|foxtrot``")]
     #[case("``golf| hotel | india``")]
-    #[case("``<html> singel lessthan``")]
-    #[case("``<< multiple lessthans``")]
+    #[case("``single < lessthan``")]
+    #[case("``multiple << lessthans``")]
+    #[case("``html <div> tag``")]
+    #[case("``single ^ caret``")]
+    #[case("``multiple ^^ carets``")]
+    //#[case("``single * asterisk``")]
+    //#[case("``multiple ** asterisks``")]
     #[case("``single ` backtick``")]
-    #[case("``escaped \\`` backtick``")]
+    #[case("``single \\` backtick esaped``")]
+    #[case("``escaped \\`` backtick before single backtick``")]
     #[case("``escaped \\| pipe``")]
     fn solo_valid_code_shorthands(#[case] source: &str) {
         let result = code_shorthand(source);

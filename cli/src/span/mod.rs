@@ -1,3 +1,4 @@
+pub mod any_caret;
 pub mod any_lessthan;
 pub mod code_shorthand;
 // pub mod code_shorthand_single_pipe;
@@ -121,6 +122,7 @@ impl Span {
     pub fn parsed_text(&self) -> Result<Value, Error> {
         match &self.kind {
             SpanKind::AnyLessThan => Ok(Value::from(&self.parsed_text)),
+            SpanKind::AnyCaret => Ok(Value::from(&self.parsed_text)),
             SpanKind::CodeShorthand { .. } => Ok(Value::from(&self.parsed_text)),
             SpanKind::Colon => Ok(Value::from(&self.parsed_text)),
             SpanKind::ColonNotFollowedBySpace => Ok(Value::from(&self.parsed_text)),
@@ -176,6 +178,7 @@ impl Span {
 #[serde(rename_all = "lowercase", tag = "kind")]
 pub enum SpanKind {
     AnyLessThan,
+    AnyCaret,
     CodeShorthand { children: Vec<Span> },
     Colon,
     ColonNotFollowedBySpace,
