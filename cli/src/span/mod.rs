@@ -471,7 +471,7 @@ mod test {
     // #[case("^", "")]
     // #[case("\\^", "")]
     // #[case("^^^", "")]
-    fn solo_plaintext(#[case] input: &str, #[case] left: &str) {
+    fn plaintext_basic(#[case] input: &str, #[case] left: &str) {
         let right = plaintext(input).unwrap().0;
         assert_eq!(left, right);
     }

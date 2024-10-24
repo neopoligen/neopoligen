@@ -176,7 +176,7 @@ mod test {
     use rstest::rstest;
 
     #[test]
-    fn solo_code_key_value_attr_basic() {
+    fn code_key_value_attr_basic() {
         let source = "|sierra: foxtrot";
         let left = (
             "",
@@ -200,7 +200,7 @@ mod test {
     }
 
     #[test]
-    fn solo_code_value_base_basic_test() {
+    fn code_value_base_basic_test() {
         let source = "whiskey";
         let left = (
             "",
@@ -215,7 +215,7 @@ mod test {
     }
 
     #[test]
-    fn solo_code_key_base_basic_test() {
+    fn code_key_base_basic_test() {
         let source = "|alfa: bravo";
         let left = (
             "bravo",
@@ -255,7 +255,7 @@ mod test {
     #[case("|mi\\::ke: ")]
     #[case("|mi::ke: ")]
     #[case("|nov\\\\ember: ")]
-    fn solo_valid_code_key_base(#[case] source: &str) {
+    fn valid_code_key_base(#[case] source: &str) {
         let result = code_shorthand_attr_key_base_v42(source);
         if result.is_ok() {
             //dbg!(&result.unwrap().clone());
@@ -293,7 +293,7 @@ mod test {
     #[case("mi\\::ke: |")]
     #[case("mi::ke: |")]
     #[case("nov\\\\ember: |")]
-    fn solo_valid_code_value_base(#[case] source: &str) {
+    fn valid_code_value_base(#[case] source: &str) {
         let result = code_shorthand_attr_value_base_v42(source);
         let remainder = result.as_ref().unwrap().0;
         if result.is_ok() && remainder == "|" {
