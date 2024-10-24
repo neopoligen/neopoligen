@@ -31,7 +31,7 @@ pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTre
 }
 
 pub fn code_shorthand_base_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let (source, span) = plaintext.context("").parse(source)?;
+    let (source, span) = alt((plaintext.context(""), single_lessthan)).parse(source)?;
     Ok((source, span))
 }
 
@@ -145,10 +145,44 @@ mod test {
     use pretty_assertions::assert_eq;
     use rstest::rstest;
 
+    // Valid Code Shorthands
+    #[rstest]
+    #[case("``alfa``")]
+    #[case("``bravo charlie``")]
+    #[case("``delta echo|foxtrot``")]
+    #[case("``golf| hotel | india``")]
+    #[case("``<html>``")]
+    // #[case("``escaped\\|pipe``")]
+    fn solo_valid_code_shorthands(#[case] source: &str) {
+        let result = code_shorthand(source);
+        if result.is_ok() {
+            assert!(true)
+        } else {
+            dbg!(&result);
+            assert!(false);
+        }
+    }
+
+    // Invalid Code Shorthands
+    #[rstest]
+    #[case("``alfa|no spaces``")]
+    #[case("``no trailing pipe|``")]
+    fn solo_invalid_code_shorthands(#[case] source: &str) {
+        let result = code_shorthand(source);
+        if result.is_ok() {
+            dbg!(&result);
+            assert!(false);
+        } else {
+            assert!(true)
+        }
+    }
+
     // Valid Code Shorthand Flags
     #[rstest]
     #[case("|alfa")]
     #[case("| bravo ")]
+    #[case("| charlie-delta ")]
+    #[case("|https://www.example.com/")]
     fn solo_valid_code_shorthand_flags(#[case] source: &str) {
         let result = code_shorthand_flag_v42(source);
         if result.as_ref().is_ok() {
@@ -163,38 +197,6 @@ mod test {
             assert!(false);
         }
     }
-
-    // Valid Code Shorthands
-    #[rstest]
-    #[case("``alfa``")]
-    #[case("``bravo charlie``")]
-    #[case("``delta echo|foxtrot``")]
-    #[case("``golf| hotel | india``")]
-    // #[case("``<html>``")]
-    // #[case("``escaped\\|pipe``")]
-    fn valid_code_shorthands(#[case] source: &str) {
-        let result = code_shorthand(source);
-        if result.is_ok() {
-            assert!(true)
-        } else {
-            dbg!(&result);
-            assert!(false);
-        }
-    }
-
-    //// Invalid Code Shorthands
-    //#[rstest]
-    ////#[case("``alfa|no spaces``")]
-    //// #[case("``no trailing pipe|``")]
-    //fn solo_invalid_code_shorthands(#[case] source: &str) {
-    //    let result = code_shorthand(source);
-    //    if result.is_ok() {
-    //        dbg!(&result);
-    //        assert!(false);
-    //    } else {
-    //        assert!(true)
-    //    }
-    //}
 
     // #[test]
     // fn solo_code_shorthand_with_esaped_pipe() {
