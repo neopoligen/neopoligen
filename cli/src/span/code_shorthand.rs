@@ -34,6 +34,13 @@ pub fn code_shorthand_attr_key_base_v42(source: &str) -> IResult<&str, Vec<Span>
     Ok((source, spans))
 }
 
+pub fn code_shorthand_attr_value_base_v42(
+    source: &str,
+) -> IResult<&str, Vec<Span>, ErrorTree<&str>> {
+    let (source, spans) = many1(alt((plaintext_dev,))).context("").parse(source)?;
+    Ok((source, spans))
+}
+
 // pub fn code_shorthand_attr_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
 //     Ok((source, ""))
 // }
@@ -120,6 +127,21 @@ mod test {
     use super::*;
     use pretty_assertions::assert_eq;
     use rstest::rstest;
+
+    #[test]
+    fn solo_code_value_base_basic_test() {
+        let source = "whiskey";
+        let left = (
+            "",
+            vec![Span {
+                attrs: vec![],
+                kind: SpanKind::PlainText,
+                parsed_text: "whiskey".to_string(),
+            }],
+        );
+        let right = code_shorthand_attr_value_base_v42(source).unwrap();
+        assert_eq!(left, right);
+    }
 
     #[test]
     fn solo_code_key_base_basic_test() {
