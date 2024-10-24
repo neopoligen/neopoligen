@@ -340,7 +340,7 @@ mod test {
     }
 
     #[test]
-    fn solo_basic_with_code_shorthand() {
+    fn basic_with_code_shorthand() {
         let source = "-- title\n\n``code shorthand``";
         let config = SiteConfig::mock1_basic();
         let left = (

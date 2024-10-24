@@ -323,7 +323,7 @@ mod test {
     #[case("^")]
     #[case(r#"\^^"#)]
 
-    fn solo_check_basic_parsing_passes(#[case] input: &str) {
+    fn check_basic_parsing_passes(#[case] input: &str) {
         let response = block_of_main_content_v42(input);
         if response.is_ok() {
             let (remainder, _) = response.as_ref().unwrap();

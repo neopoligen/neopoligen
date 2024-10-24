@@ -1,17 +1,23 @@
 // use crate::section::block::block_of_main_content_v42;
 use crate::section::block::block_of_section_attr_value_v42;
-use crate::span::colon::colon;
-use crate::span::double_underscore::double_underscore;
+// use crate::span::colon::colon;
+// use crate::span::double_underscore::double_underscore;
 // use crate::span::escaped_pipe::escaped_pipe;
 // use crate::span::hyphen::hyphen;
 // use crate::span::pipe::pipe;
-use crate::span::single_underscore::single_underscore;
+// use crate::span::single_underscore::single_underscore;
 use crate::span::*;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
+use nom::character::complete::anychar;
+use nom::character::complete::multispace1;
 use nom::character::complete::space1;
+use nom::combinator::eof;
+use nom::combinator::not;
 use nom::multi::many1;
+use nom::sequence::pair;
+use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -92,15 +98,18 @@ pub fn section_flag_attr<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, E
     // -- https://www.example.com/
     let (source, _) = tag("--").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
-    let (source, parts) = many1(alt((colon, single_underscore, double_underscore)))
-        .context("")
-        .parse(source)?;
+    let (source, parts) = many1(alt((
+        is_not(": \n\t"),
+        pair(tag(":"), not(alt((multispace1, eof)))).map(|x| x.0),
+    )))
+    .context("")
+    .parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
         .parse(source)?;
     let flag = parts
         .iter()
-        .map(|part| part.parsed_text.to_string())
+        .map(|part| part.to_string())
         .collect::<Vec<String>>()
         .join("");
     Ok((
@@ -129,16 +138,61 @@ pub fn section_flag_attr_old<'a>(
         },
     ))
 }
+
 #[cfg(test)]
 mod test {
     use super::*;
     use pretty_assertions::assert_eq;
     use rstest::rstest;
 
+    // Valid Flags
+    #[rstest]
+    #[case("-- alfa")]
+    #[case("-- bravo-charlie")]
+    #[case("-- https://www.example.com/")]
+    fn solo_valid_section_flags(#[case] source: &str) {
+        let response = section_flag_attr(source);
+        if response.is_ok() {
+            assert!(true)
+        } else {
+            dbg!(&response);
+            assert!(false);
+        }
+    }
+
+    // Invalid Flags
+    #[rstest]
+    #[case("-- alfa:")]
+    #[case("-- bravo: charlie")]
+    #[case("-- delta echo")]
+    fn solo_invalid_section_flags(#[case] source: &str) {
+        let response = section_flag_attr(source);
+        if response.is_ok() {
+            dbg!(&response);
+            assert!(false)
+        } else {
+            assert!(true);
+        }
+    }
+
+    //// Valid Attrs
+    //#[rstest]
+    //#[case("-- alfa: bravo")]
+    ////#[case("-- bravo-charlie")]
+    //// #[case("-- https://www.example.com/")]
+    //fn solo_valid_section_flags(#[case] source: &str) {
+    //    let response = section_flag_attr(source);
+    //    if response.is_ok() {
+    //        assert!(true)
+    //    } else {
+    //        dbg!(&response);
+    //        assert!(false);
+    //    }
+    //}
+
     // TODO: Put this back in:
     // #[case("colon and hyphen", "-- created: 2024-06-09T14:28:09-04:00", true)]
     // #[case("type with hyphen", "-- type: home-page", true)]
-
     #[rstest]
     // TODO: Add all the rest of the possible options here
     #[case("basic key value test", "-- key: value", true)]
