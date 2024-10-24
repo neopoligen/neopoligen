@@ -25,7 +25,7 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn solo_basic_check_without_whitespace() {
+    fn basic_check_without_whitespace() {
         let source = ":";
         let left = (
             "",
@@ -40,7 +40,7 @@ mod test {
     }
 
     #[test]
-    fn solo_basic_check_with_whitespace() {
+    fn basic_check_with_whitespace() {
         let source = ":\n   ";
         let left = (
             "",

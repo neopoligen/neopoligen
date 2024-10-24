@@ -1,12 +1,13 @@
 #![allow(unused_variables)]
 #![allow(unused_imports)]
 use self::any_asterisk::any_asterisk;
+use self::any_backtick::any_backtick;
 use self::any_caret::any_caret;
 use self::any_hyphen::any_hyphen;
 use self::any_lessthan::any_lessthan;
 use self::any_newline::any_newline;
 use self::any_underscore::any_underscore;
-use self::colon_followed_by_space1::colon_followed_by_space1;
+use self::colon_followed_by_multispace1::colon_followed_by_multispace1;
 use self::escaped_lessthan::escaped_lessthan;
 use crate::span::greaterthan::*;
 use crate::span::lessthan::*;
@@ -30,10 +31,21 @@ use std::result;
 pub fn code_shorthand_attr_key_base_v42(source: &str) -> IResult<&str, Vec<Span>, ErrorTree<&str>> {
     let (source, result) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, spans) = many1(alt((plaintext_dev, any_hyphen)))
-        .context("")
-        .parse(source)?;
-    let (source, _) = colon_followed_by_space1.context("").parse(source)?;
+    let (source, spans) = many1(alt((
+        plaintext_dev,
+        any_hyphen,
+        any_lessthan,
+        any_caret,
+        any_asterisk,
+        escaped_backtick,
+        single_backtick,
+        any_underscore,
+        any_hyphen,
+        escaped_pipe,
+    )))
+    .context("")
+    .parse(source)?;
+    let (source, _) = colon_followed_by_multispace1.context("").parse(source)?;
     Ok((source, spans))
 }
 
@@ -197,14 +209,26 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // \n<^*`_-|:\\
-
     // Valid Code Shorthand Key Base
+    // \n<^*`_-|:\\
     #[rstest]
     #[case("|alfa: ")]
     #[case("|bravo-charlie: ")]
     #[case("|\ndelta: ")]
     #[case("|\necho:\n")]
+    #[case("|fox<trot: ")]
+    #[case("|fox<<trot: ")]
+    #[case("|go^lf: ")]
+    #[case("|go^^lf: ")]
+    #[case("|hot*el: ")]
+    #[case("|hot**el: ")]
+    #[case("|ind`ia: ")]
+    #[case("|ind\\``ia: ")]
+    #[case("|jul_iet: ")]
+    #[case("|jul__iet: ")]
+    #[case("|ki-lo: ")]
+    #[case("|ki--lo: ")]
+    #[case("|li\\|ma: ")]
     fn solo_valid_code_key_base(#[case] source: &str) {
         let result = code_shorthand_attr_key_base_v42(source);
         if result.is_ok() {
