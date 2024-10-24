@@ -235,6 +235,8 @@ mod test {
     #[case("|ki--lo: ")]
     #[case("|li\\|ma: ")]
     #[case("|mi\\:ke: ")]
+    #[case("|mi\\::ke: ")]
+    #[case("|mi::ke: ")]
     #[case("|nov\\\\ember: ")]
     fn solo_valid_code_key_base(#[case] source: &str) {
         let result = code_shorthand_attr_key_base_v42(source);
