@@ -51,6 +51,7 @@ impl ThemeTest {
         let ast = parse_ast(
             self.source_content.as_ref().unwrap(),
             self.config.as_ref().unwrap().sections.clone(),
+            &PathBuf::from("tmp/path/until/theme_test/mod.rs/is/delete"),
         )?;
         self.ast = Some(ast);
         Ok(())

@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use crate::neo_error::*;
 use crate::section::*;
 use crate::site_config::ConfigSections;
@@ -21,10 +23,14 @@ use nom_supreme::parser_ext::ParserExt;
 // }
 
 // TODO: Deprecate for v41
-pub fn parse_ast(source: &str, sections: ConfigSections) -> Result<Vec<Section>, NeoError> {
+pub fn parse_ast(
+    source: &str,
+    sections: ConfigSections,
+    fs_path: &PathBuf,
+) -> Result<Vec<Section>, NeoError> {
     match final_parser(|src| do_parse(src, &sections))(source) {
         Ok(data) => Ok(data),
-        Err(e) => Err(get_error(source, &e).into()),
+        Err(e) => Err(get_error(source, &e, fs_path).into()),
     }
 }
 
@@ -40,14 +46,13 @@ fn do_parse<'a>(
     Ok((source, result))
 }
 
-fn get_error(content: &str, tree: &ErrorTree<&str>) -> NeoError {
+fn get_error(content: &str, tree: &ErrorTree<&str>, fs_path: &PathBuf) -> NeoError {
     match tree {
         GenericErrorTree::Base { location, kind } => {
             let details = Location::recreate_context(content, location);
-
             NeoError {
                 kind: NeoErrorKind::ParserError {
-                    source_path: None,
+                    source_path: Some(fs_path.clone()),
                     line: details.line,
                     column: details.column,
                     source: content.to_string(),
@@ -55,16 +60,13 @@ fn get_error(content: &str, tree: &ErrorTree<&str>) -> NeoError {
                     message: kind.to_string(),
                 },
             }
-
-            //
         }
         GenericErrorTree::Stack { contexts, .. } => {
             let context = contexts[0];
             let details = Location::recreate_context(content, context.0);
-
             NeoError {
                 kind: NeoErrorKind::ParserError {
-                    source_path: None,
+                    source_path: Some(fs_path.clone()),
                     line: details.line,
                     column: details.column,
                     source: content.to_string(),
@@ -72,10 +74,8 @@ fn get_error(content: &str, tree: &ErrorTree<&str>) -> NeoError {
                     message: context.1.to_string(),
                 },
             }
-
-            //
         }
-        GenericErrorTree::Alt(items) => get_error(content, &items[0]),
+        GenericErrorTree::Alt(items) => get_error(content, &items[0], fs_path),
     }
 }
 

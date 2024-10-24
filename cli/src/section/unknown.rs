@@ -15,7 +15,7 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn unknown_section_end<'a>(
     source: &'a str,
     key: &'a str,
-    nest_level: usize,
+    _nest_level: usize,
     _list_level: usize,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
@@ -29,6 +29,7 @@ pub fn unknown_section_end<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
+    // TODO: Watch for nested list stuff
     let (source, children) = many0(|src| block_of_main_content_v42(src))
         .context("")
         .parse(source)?;

@@ -55,7 +55,11 @@ impl PageV42 {
     }
 
     pub fn generate_ast(&mut self, site_config: &SiteConfigV42) -> Result<(), NeoError> {
-        match parse_ast(&self.raw_source, site_config.sections.clone()) {
+        match parse_ast(
+            &self.raw_source,
+            site_config.sections.clone(),
+            &self.fs_path,
+        ) {
             Ok(ast) => {
                 self.ast = Some(ast);
                 Ok(())

@@ -1,3 +1,6 @@
+// TODO: Deprecated: Delete source_page/mod.rs and
+// all the associated files when V42 is done.
+//
 pub mod mocks;
 
 use crate::ast::parse_ast;
@@ -102,6 +105,7 @@ impl SourcePage {
         let ast = parse_ast(
             self.source_content.as_ref().unwrap(),
             self.config.as_ref().unwrap().sections.clone(),
+            &PathBuf::from("not/a/real/path/but/this/is/going/away"),
         )?;
         self.ast = Some(ast);
         Ok(())

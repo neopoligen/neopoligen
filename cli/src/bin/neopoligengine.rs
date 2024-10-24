@@ -136,13 +136,16 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             let _ = builder.load_templates(&site_config);
             let _ = builder.output_pages();
 
-            // Errors
-            builder.tmp_output_errors().unwrap();
-            if builder.errors.len() > 0 {
-                event!(Level::ERROR, "Total Errors: {}", builder.errors.len());
-            } else {
-                event!(Level::INFO, "No Errors Found");
-            }
+            // // Errors
+            // builder.tmp_output_errors().unwrap();
+            // if builder.errors.len() > 0 {
+            //     event!(Level::ERROR, "Total Errors: {}", builder.errors.len());
+            // } else {
+            //     event!(Level::INFO, "No Errors Found");
+            // }
+
+            // Output Source File Errors
+            // let _ = builder.output_source_file_errors();
 
             //// Prep
             ////

@@ -118,6 +118,15 @@ impl BuilderV42 {
     }
 
     #[instrument(skip(self))]
+    pub fn output_source_file_errors(&self) -> Result<()> {
+        let _ = &self.errors.iter().for_each(|err| {
+            dbg!(err);
+            ()
+        });
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn tmp_output_errors(&self) -> Result<()> {
         event!(Level::INFO, "Outputting errors");
         let mut env = Environment::new();
@@ -268,12 +277,13 @@ impl BuilderV42 {
             .for_each(|p| match p.generate_ast(&self.site_config) {
                 Ok(()) => (),
                 Err(e) => {
-                    event!(
-                        Level::ERROR,
-                        "Error in make_asts: {}, {}",
-                        &p.fs_path.display(),
-                        &e
-                    );
+                    // event!(
+                    //     Level::ERROR,
+                    //     "Error in make_asts: {}, {}",
+                    //     &p.fs_path.display(),
+                    //     &e
+                    // );
+
                     self.errors.push(e)
                 }
             });
@@ -391,7 +401,7 @@ impl BuilderV42 {
                 ()
             }
             Err(e) => {
-                event!(Level::ERROR, "prep_site Error: {}", e);
+                // event!(Level::ERROR, "prep_site Error: {}", e);
                 self.errors.push(e)
             }
         });
