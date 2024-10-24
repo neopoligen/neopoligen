@@ -32,7 +32,7 @@ pub fn code_shorthand_attr_key_base_v42(source: &str) -> IResult<&str, Vec<Span>
     let (source, result) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, spans) = many1(alt((
-        plaintext_dev,
+        plaintext,
         any_hyphen,
         any_lessthan,
         any_caret,
@@ -44,6 +44,7 @@ pub fn code_shorthand_attr_key_base_v42(source: &str) -> IResult<&str, Vec<Span>
         escaped_pipe,
         escaped_colon,
         escaped_backslash,
+        colon_not_followed_by_space,
     )))
     .context("")
     .parse(source)?;
@@ -54,7 +55,7 @@ pub fn code_shorthand_attr_key_base_v42(source: &str) -> IResult<&str, Vec<Span>
 pub fn code_shorthand_attr_value_base_v42(
     source: &str,
 ) -> IResult<&str, Vec<Span>, ErrorTree<&str>> {
-    let (source, spans) = many1(alt((plaintext_dev,))).context("").parse(source)?;
+    let (source, spans) = many1(alt((plaintext,))).context("").parse(source)?;
     Ok((source, spans))
 }
 
@@ -215,6 +216,7 @@ mod test {
     // \n<^*`_-|:\\
     #[rstest]
     #[case("|spaced are allowed: ")]
+    #[case("|colon:without:spaces: ")]
     #[case("|alfa: ")]
     #[case("|bravo-charlie: ")]
     #[case("|\ndelta: ")]

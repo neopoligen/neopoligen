@@ -1,5 +1,6 @@
 use crate::span::*;
 use nom::bytes::complete::tag;
+use nom::character::complete::multispace1;
 use nom::sequence::pair;
 use nom::IResult;
 use nom::Parser;
@@ -10,7 +11,7 @@ pub fn colon_not_followed_by_space(source: &str) -> IResult<&str, Span, ErrorTre
     // Reminder: not doing the source/replace here because the
     // escape is captured by the slash. There's certainly
     // a way around that, but this is fine
-    let (source, _) = pair(tag(":"), not(space1)).context("").parse(source)?;
+    let (source, _) = pair(tag(":"), not(multispace1)).context("").parse(source)?;
     Ok((
         source,
         Span {
