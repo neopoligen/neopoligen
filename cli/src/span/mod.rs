@@ -9,6 +9,7 @@ pub mod escaped_backslash;
 pub mod escaped_backtick;
 pub mod escaped_caret;
 pub mod escaped_colon;
+pub mod plaintext;
 //pub mod escaped_exclamation;
 pub mod escaped_greaterthan;
 pub mod escaped_hashtag;
@@ -57,6 +58,7 @@ use crate::span::hyphen_with_trailing_non_hyphen::*;
 use crate::span::more_than_two_carets::*;
 use crate::span::more_than_two_underscores::*;
 use crate::span::named_span::*;
+use crate::span::plaintext::*;
 use crate::span::single_backtick::*;
 use crate::span::single_caret::*;
 use crate::span::single_greaterthan::*;
@@ -209,20 +211,6 @@ pub enum SpanKind {
     SingleLessThan,
     SingleUnderscore,
     Space,
-}
-
-// TODO: Move stuff to this one and any siblings that need
-// to be made with it. This includes single hyphens, double
-// hyphens, and [ and ] characters since those things will
-// be parsed out at the start of blocks.
-pub fn plaintext<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
-    let (source, parsed_text) = is_not("\n<^*`\\").context("").parse(source)?;
-    let span = Span {
-        attrs: vec![],
-        parsed_text: parsed_text.to_string(),
-        kind: SpanKind::PlainText,
-    };
-    Ok((source, span))
 }
 
 pub fn shorthand<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {

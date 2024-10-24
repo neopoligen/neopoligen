@@ -11,6 +11,7 @@ use nom::character::complete::multispace0;
 //use crate::span::escaped_exclamation::escaped_exclamation;
 use crate::span::escaped_lessthan::*;
 // use crate::span::single_exclamation::single_exclamation;
+use crate::span::plaintext::plaintext;
 use crate::span::single_lessthan::*;
 use nom::combinator::eof;
 use nom::combinator::not;

@@ -1566,7 +1566,7 @@ dependencies = [
 
 [[package]]
 name = "neopoligengine"
-version = "0.1.42"
+version = "0.42.0"
 dependencies = [
  "anyhow",
  "axum",

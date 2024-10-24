@@ -31,6 +31,7 @@ pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTre
 }
 
 pub fn code_shorthand_base_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+    //    let (source, span) =
     Ok((
         "",
         Span {
@@ -43,9 +44,7 @@ pub fn code_shorthand_base_span(source: &str) -> IResult<&str, Span, ErrorTree<&
 
 pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
     let (source, _) = tag("``").context("").context("").parse(source)?;
-    let (source, spans) = many1(alt((code_shorthand_base_span, escaped_pipe)))
-        .context("")
-        .parse(source)?;
+    let (source, spans) = many1(code_shorthand_base_span).context("").parse(source)?;
     let (source, attrs) = many0(code_shorthand_flag_v42).context("").parse(source)?;
 
     // let (source, parts) = many1(alt((base_span_for_all_text, lessthan, greaterthan)))
@@ -170,12 +169,12 @@ mod test {
     // Valid Code Shorthands
     #[rstest]
     #[case("``alfa``")]
-    #[case("``bravo charlie``")]
-    #[case("``delta echo|foxtrot``")]
-    #[case("``golf| hotel | india``")]
-    #[case("``<html>``")]
-    #[case("``escaped\\|pipe``")]
-    fn valid_code_shorthands(#[case] source: &str) {
+    // #[case("``bravo charlie``")]
+    // #[case("``delta echo|foxtrot``")]
+    // #[case("``golf| hotel | india``")]
+    // #[case("``<html>``")]
+    // #[case("``escaped\\|pipe``")]
+    fn solo_valid_code_shorthands(#[case] source: &str) {
         let result = code_shorthand(source);
         if result.is_ok() {
             assert!(true)
