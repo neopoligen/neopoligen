@@ -30,6 +30,8 @@ use nom_supreme::parser_ext::ParserExt;
 use std::result;
 
 pub fn code_shorthand_attr_key_base_v42(source: &str) -> IResult<&str, Vec<Span>, ErrorTree<&str>> {
+    dbg!("aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    dbg!(&source);
     let (source, result) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, spans) = many1(alt((
@@ -50,6 +52,8 @@ pub fn code_shorthand_attr_key_base_v42(source: &str) -> IResult<&str, Vec<Span>
     .context("")
     .parse(source)?;
     let (source, _) = colon_followed_by_multispace1.context("").parse(source)?;
+    dbg!("bbbbbbbbbbbbbbbbbbbb");
+    dbg!(&source);
     Ok((source, spans))
 }
 
@@ -82,7 +86,7 @@ pub fn code_shorthand_attr_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTre
         .context("")
         .parse(source)?;
     Ok((
-        "",
+        source,
         SpanAttr {
             kind: SpanAttrKind::KeyValueSpansV42 {
                 key: key_spans,
@@ -93,7 +97,11 @@ pub fn code_shorthand_attr_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTre
 }
 
 pub fn code_shorthand_flag_base_span_v42(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let (source, result) = is_not(": \n\t|\\`").context("").parse(source)?;
+    dbg!("gggggggggggggggggggggggggggggg");
+    dbg!(&source);
+    let (source, result) = is_not(":|\\`").context("").parse(source)?;
+    dbg!("hhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+    dbg!(&source);
     Ok((
         source,
         Span {
@@ -105,6 +113,8 @@ pub fn code_shorthand_flag_base_span_v42(source: &str) -> IResult<&str, Span, Er
 }
 
 pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
+    dbg!("iiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+    dbg!(&source);
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, span_hits) = many1(pair(
@@ -125,10 +135,14 @@ pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTre
     let flag = SpanAttr {
         kind: SpanAttrKind::FlagV42 { value: spans },
     };
+    dbg!("jjjjjjjjjjjjjjjjjjjjjjjjjjj");
+    dbg!(&source);
     Ok((source, flag))
 }
 
 pub fn code_shorthand_base_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+    dbg!("kkkkkkkkkkkkkkkkkkkkkkkkkk");
+    dbg!(&source);
     let (source, span) = alt((
         plaintext.context(""),
         single_backtick,
@@ -141,18 +155,25 @@ pub fn code_shorthand_base_span(source: &str) -> IResult<&str, Span, ErrorTree<&
         escaped_backtick,
         escaped_backslash,
         escaped_pipe,
+        any_colon,
     ))
     .parse(source)?;
+    dbg!("lllllllllllllllllllllllllllllllll");
+    dbg!(&source);
     Ok((source, span))
 }
 
 pub fn code_shorthand(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+    dbg!("mmmmmmmmmmmmmmmmmm");
+    dbg!(&source);
     let (source, _) = tag("``").context("").context("").parse(source)?;
     let (source, spans) = many1(code_shorthand_base_span).context("").parse(source)?;
-    let (source, attrs) = many0(alt((code_shorthand_flag_v42,)))
+    let (source, attrs) = many0(alt((code_shorthand_attr_v42, code_shorthand_flag_v42)))
         .context("")
         .parse(source)?;
     let (source, _) = tag("``").context("").parse(source)?;
+    dbg!("nnnnnnnnnnnnnnnnnnn");
+    dbg!(&source);
     Ok((
         source,
         Span {
@@ -322,6 +343,9 @@ mod test {
     #[case("``escaped \\`` backtick before single backtick``")]
     #[case("``escaped \\| pipe``")]
     #[case("``escaped \\\\ backslash``")]
+    #[case("``bravo:charlie``")]
+    #[case("``bravo: charlie``")]
+    #[case("``bravo : charlie``")]
     fn valid_code_shorthands(#[case] source: &str) {
         let result = code_shorthand(source);
         if result.is_ok() {
@@ -334,7 +358,6 @@ mod test {
 
     // Invalid Code Shorthands
     #[rstest]
-    #[case("``alfa|no spaces``")]
     #[case("``no trailing pipe|``")]
     fn invalid_code_shorthands(#[case] source: &str) {
         let result = code_shorthand(source);
@@ -350,6 +373,8 @@ mod test {
     #[rstest]
     #[case("|alfa")]
     #[case("| bravo ")]
+    #[case("|space in flag")]
+    #[case("|newline\nin flag")]
     #[case("| charlie-delta ")]
     #[case("|https://www.example.com/")]
     #[case("|\ncontains")]
@@ -357,7 +382,7 @@ mod test {
     #[case("|esacped\\`backtick")]
     #[case("|esacped\\|pipe")]
     #[case("|esacped\\\\escape")]
-    fn solo_valid_code_shorthand_flags(#[case] source: &str) {
+    fn valid_code_shorthand_flags(#[case] source: &str) {
         let result = code_shorthand_flag_v42(source);
         if result.as_ref().is_ok() {
             if result.as_ref().unwrap().0 == "" {
@@ -375,7 +400,7 @@ mod test {
     // Invalid Code Shorthand Flags
     #[rstest]
     #[case("|alfa: value")]
-    fn solo_invalid_code_shorthand_flags(#[case] source: &str) {
+    fn invalid_code_shorthand_flags(#[case] source: &str) {
         let result = code_shorthand_flag_v42(source);
         if result.as_ref().is_ok() {
             dbg!(&result);
@@ -385,25 +410,8 @@ mod test {
         }
     }
 
-    // #[test]
-    // fn code_shorthand_with_esaped_pipe() {
-    //     let source = "``esacped\\|pipe``";
-    //     let left = (
-    //         "",
-    //         Span {
-    //             attrs: vec![],
-    //             parsed_text: "escaped|pipe".to_string(),
-    //             kind: SpanKind::CodeShorthand {},
-    //         },
-    //     );
-    //     let result = code_shorthand(source);
-    //     dbg!(&result);
-    //     let right = result.unwrap();
-    //     assert_eq!(left, right);
-    // }
-
     #[test]
-    fn solo_code_shorthand_with_flag_attr() {
+    fn code_shorthand_with_flag_attr() {
         let source = "``code|rust``";
         let left = (
             "",
@@ -428,69 +436,42 @@ mod test {
             },
         );
         let result = code_shorthand(source);
-        // dbg!(&result);
         let right = result.unwrap();
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // fn code_shorthand_with_multiple_flags() {
-    //     let source = "``code|rust|hidden``";
-    //     let left = (
-    //         "",
-    //         Span {
-    //             attrs: vec![
-    //                 SpanAttr {
-    //                     kind: SpanAttrKind::Flag {
-    //                         value: "rust".to_string(),
-    //                     },
-    //                 },
-    //                 SpanAttr {
-    //                     kind: SpanAttrKind::Flag {
-    //                         value: "hidden".to_string(),
-    //                     },
-    //                 },
-    //             ],
-    //             parsed_text: "code".to_string(),
-    //             kind: SpanKind::CodeShorthand {},
-    //         },
-    //     );
-    //     let right = code_shorthand(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
-
     #[rstest]
-    #[case("``alfa``", 0, "single word")]
-    #[case("``alfa bravo``", 0, "space in text")]
-    #[case("``alfa-bravo``", 0, "hyphen in text")]
-    #[case("``alfa`bravo``", 0, "single backtick in text")]
-    #[case("``alfa_bravo``", 0, "with single underscore")]
-    #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
-    #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]
-    #[case("``alfa\\\\bravo``", 0, "escaped backslash in text")]
-    #[case("``alfa:bravo``", 0, "colon in text")]
-    #[case("``alfa: bravo``", 0, "colon in text before space")]
-    #[case("``alfa :bravo``", 0, "colon in text after space")]
-    #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]
-    #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
-    #[case("``alfa|bravo``", 1, "single flag attr")]
-    #[case("``alfa|bravo charlie``", 1, "space in flag")]
-    #[case("``alfa|bravo`charlie``", 1, "single backtick in flag")]
-    #[case("``alfa|bravo\ncharlie``", 1, "newline in flag")]
-    #[case("``alfa|bravo\\|charlie``", 1, "escaped pipe in flag")]
-    #[case("``alfa|bravo\\`charlie``", 1, "escaped backtick in flag")]
-    #[case("``alfa|bravo\\\\charlie``", 1, "escaped baskslash in flag")]
-    #[case("``alfa|bravo|charlie``", 2, "two flag attrs")]
+    // #[case("``alfa``", 0, "single word")]
+    // #[case("``alfa bravo``", 0, "space in text")]
+    // #[case("``alfa-bravo``", 0, "hyphen in text")]
+    // #[case("``alfa`bravo``", 0, "single backtick in text")]
+    // #[case("``alfa_bravo``", 0, "with single underscore")]
+    // #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
+    // #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]
+    // #[case("``alfa\\\\bravo``", 0, "escaped backslash in text")]
+    // #[case("``alfa:bravo``", 0, "colon in text")]
+    // #[case("``alfa: bravo``", 0, "colon in text before space")]
+    // #[case("``alfa :bravo``", 0, "colon in text after space")]
+    // #[case("``alfa\\|bravo``", 0, "escaped pipe in text")]
+    // #[case("``alfa\\`bravo``", 0, "escaped backtick in text")]
+    // #[case("``alfa|bravo``", 1, "single flag attr")]
+    // #[case("``alfa|bravo charlie``", 1, "space in flag")]
+    // #[case("``alfa|bravo`charlie``", 1, "single backtick in flag")]
+    // #[case("``alfa|bravo\ncharlie``", 1, "newline in flag")]
+    // #[case("``alfa|bravo\\|charlie``", 1, "escaped pipe in flag")]
+    // #[case("``alfa|bravo\\`charlie``", 1, "escaped backtick in flag")]
+    // #[case("``alfa|bravo\\\\charlie``", 1, "escaped baskslash in flag")]
+    // #[case("``alfa|bravo|charlie``", 2, "two flag attrs")]
     #[case("``alfa|bravo: charlie``", 1, "single key value attr")]
-    #[case("``alfa|bravo: charlie|delta: echo``", 2, "single key value attr")]
-    #[case("``\nalfa\n|\nbravo\n``", 1, "newlines in shorthand")]
-    #[case(
-        "``\nalfa\n|\nbravo\n|\ncharlie\n``",
-        2,
-        "newlines in shorthand multiple attrs"
-    )]
-    #[case("``Result<(), Box<dyn std::error::Error>>``", 0, "rust example")]
-    fn code_shorhand_fixture(
+    // #[case("``alfa|bravo: charlie|delta: echo``", 2, "single key value attr")]
+    // #[case("``\nalfa\n|\nbravo\n``", 1, "newlines in shorthand")]
+    // #[case(
+    //     "``\nalfa\n|\nbravo\n|\ncharlie\n``",
+    //     2,
+    //     "newlines in shorthand multiple attrs"
+    // )]
+    // #[case("``Result<(), Box<dyn std::error::Error>>``", 0, "rust example")]
+    fn solo_code_shorhand_fixture(
         #[case] input: &str,
         #[case] attrs: usize,
         #[case] _description: &str,
@@ -505,304 +486,4 @@ mod test {
     fn error_cases(#[case] input: &str, #[case] _desc: &str) {
         assert!(code_shorthand(input).is_err());
     }
-
-    // #[test]
-    // fn code_shorthand_basic() {
-    //     let source = "``ping``";
-    //     let left = (
-    //         "",
-    //         Span {
-    //             attrs: vec![],
-    //             parsed_text: "ping".to_string(),
-    //             kind: SpanKind::CodeShorthand,
-    //         },
-    //     );
-    //     let right = code_shorthand(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
-
-    // #[test]
-    // fn code_shorthand_with_escaped_pipe() {
-    //     let source = "``ping\\|ping``";
-    //     let left = (
-    //         "",
-    //         Span {
-    //             attrs: vec![],
-    //             parsed_text: "ping|ping".to_string(),
-    //             kind: SpanKind::CodeShorthand,
-    //         },
-    //     );
-    //     let right = code_shorthand(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
-
-    // #[test]
-    // fn code_shorthand_with_escaped_backslash() {
-    //     let source = "``ping\\\\ping``";
-    //     let left = (
-    //         "",
-    //         Span {
-    //             attrs: vec![],
-    //             parsed_text: "ping\\ping".to_string(),
-    //             kind: SpanKind::CodeShorthand,
-    //         },
-    //     );
-    //     let right = code_shorthand(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
-
-    // #[test]
-    // fn code_shorthand_with_escaped_backtick() {
-    //     let source = "``ping\\`ping``";
-    //     let left = (
-    //         "",
-    //         Span {
-    //             attrs: vec![],
-    //             parsed_text: "ping`ping".to_string(),
-    //             kind: SpanKind::CodeShorthand,
-    //         },
-    //     );
-    //     let right = code_shorthand(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
-
-    // #[test]
-    // fn code_shorthand_with_multiple_flag_attrs() {
-    //     let source = "``code|rust|hidden``";
-    //     let left = (
-    //         "",
-    //         Span {
-    //             attrs: vec![
-    //                 SpanAttr {
-    //                     kind: SpanAttrKind::Flag {
-    //                         value: "rust".to_string(),
-    //                     },
-    //                 },
-    //                 SpanAttr {
-    //                     kind: SpanAttrKind::Flag {
-    //                         value: "hidden".to_string(),
-    //                     },
-    //                 },
-    //             ],
-    //             parsed_text: "code".to_string(),
-    //             kind: SpanKind::CodeShorthand,
-    //         },
-    //     );
-    //     let right = code_shorthand(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
-
-    // #[test]
-    // fn flag_attr_for_code_basic_end_at_block() {
-    //     let source = "|rust``";
-    //     let left = (
-    //         "``",
-    //         SpanAttr {
-    //             kind: SpanAttrKind::Flag {
-    //                 value: "rust".to_string(),
-    //             },
-    //         },
-    //     );
-    //     let right = code_shorthand_flag_attr(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
-
-    // #[test]
-    // fn flag_attr_for_code_url() {
-    //     let source = "|https://www.example.com``";
-    //     let left = (
-    //         "``",
-    //         SpanAttr {
-    //             kind: SpanAttrKind::Flag {
-    //                 value: "https://www.example.com".to_string(),
-    //             },
-    //         },
-    //     );
-    //     let right = code_shorthand_flag_attr(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
-
-    // #[test]
-    // fn flag_attr_for_code_with_pipe_escape() {
-    //     let source = "|rust\\|here``";
-    //     let left = (
-    //         "``",
-    //         SpanAttr {
-    //             kind: SpanAttrKind::Flag {
-    //                 value: "rust|here".to_string(),
-    //             },
-    //         },
-    //     );
-    //     let right = code_shorthand_flag_attr(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
-
-    // #[test]
-    // fn integration_1_basic() {
-    //     let source = "alfa ``bravo`` charlie";
-    //     let left = (
-    //         "",
-    //         vec![
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::PlainText,
-    //                 parsed_text: "alfa ".to_string(),
-    //             },
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::CodeShorthand,
-    //                 parsed_text: "bravo".to_string(),
-    //             },
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::PlainText,
-    //                 parsed_text: " charlie".to_string(),
-    //             },
-    //         ],
-    //     );
-    //     let right = many1(span_for_body_text).parse(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
-
-    // #[test]
-    // fn integration_2_escaped_pipe() {
-    //     let source = r#"alfa ``bravo\|delta`` charlie"#;
-    //     let left = (
-    //         "",
-    //         vec![
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::PlainText,
-    //                 parsed_text: "alfa ".to_string(),
-    //             },
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::CodeShorthand,
-    //                 parsed_text: "bravo|delta".to_string(),
-    //             },
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::PlainText,
-    //                 parsed_text: " charlie".to_string(),
-    //             },
-    //         ],
-    //     );
-    //     let right = many1(span_for_body_text).parse(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
-
-    // #[test]
-    // fn integration_2_escaped_single_backtick() {
-    //     let source = r#"alfa ``bravo`delta`` charlie"#;
-    //     let left = (
-    //         "",
-    //         vec![
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::PlainText,
-    //                 parsed_text: "alfa ".to_string(),
-    //             },
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::CodeShorthand,
-    //                 parsed_text: "bravo`delta".to_string(),
-    //             },
-    //             Span {
-    //                 attrs: vec![],
-    //                 kind: SpanKind::PlainText,
-    //                 parsed_text: " charlie".to_string(),
-    //             },
-    //         ],
-    //     );
-    //     let right = many1(span_for_body_text).parse(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
-
-    // #[test]
-    // fn code_shorthand_key_value_attrs_basic_key_value_attr() {
-    //     let source = "|class: green";
-    //     let left = (
-    //         "",
-    //         SpanAttr {
-    //             kind: SpanAttrKind::KeyValue {
-    //                 key: "class".to_string(),
-    //                 value: "green".to_string(),
-    //             },
-    //         },
-    //     );
-    //     let right = code_shorthand_key_value_attr(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
-
-    // #[test]
-    // fn code_shorthand_basic_with_key_value() {
-    //     let source = "``ping|class: blue``";
-    //     let left = (
-    //         "",
-    //         Span {
-    //             attrs: vec![SpanAttr {
-    //                 kind: SpanAttrKind::KeyValue {
-    //                     key: "class".to_string(),
-    //                     value: "blue".to_string(),
-    //                 },
-    //             }],
-    //             parsed_text: "ping".to_string(),
-    //             kind: SpanKind::CodeShorthand {},
-    //         },
-    //     );
-    //     let right = code_shorthand(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
-
-    //
 }
-
-// // TODO: Deprecated: Remove when V42 is done
-// pub fn code_shorthand_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-//     let (source, _) = tag("|").context("").parse(source)?;
-//     let (source, key_parts) = many1(alt((alpha1, digit1, tag("-"), tag("_"))))
-//         .context("")
-//         .parse(source)?;
-//     let (source, _) = tag(":").context("").parse(source)?;
-//     let (source, _) = space1.context("").parse(source)?;
-//     let (source, tokens) = many1(alt((
-//         space,
-//         newline,
-//         colon,
-//         hyphen_with_trailing_non_hyphen,
-//         single_lessthan,
-//         single_greaterthan,
-//         single_backtick,
-//         escaped_backtick,
-//         escaped_pipe,
-//         escaped_greaterthan,
-//         escaped_backslash,
-//     )))
-//     .context("")
-//     .parse(source)?;
-//     let key = key_parts
-//         .iter()
-//         .map(|p| p.to_string())
-//         .collect::<Vec<String>>()
-//         .join("");
-//     let value = tokens
-//         .iter()
-//         .map(|word| word.parsed_text.clone())
-//         .collect::<Vec<String>>()
-//         .join("");
-//     let attr = SpanAttr {
-//         kind: SpanAttrKind::KeyValue {
-//             key: key.to_string(),
-//             value,
-//         },
-//     };
-//     Ok((source, attr))
-// }
-
-// // TODO: Deprecated: remove when v42 is done
-// pub fn code_shorthand_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-//     let (source, attr) = alt((code_shorthand_key_value_attr, code_shorthand_flag_attr))
-//         .context("")
-//         .parse(source)?;
-//     Ok((source, attr))
-// }
