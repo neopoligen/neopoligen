@@ -107,7 +107,7 @@ pub fn code_shorthand_flag_base_span_v42(source: &str) -> IResult<&str, Span, Er
 pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, spans) = many1(pair(
+    let (source, span_hits) = many1(pair(
         alt((
             code_shorthand_flag_base_span_v42,
             colon_not_followed_by_space,
@@ -121,15 +121,9 @@ pub fn code_shorthand_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTre
     .context("")
     .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let text = spans
-        .iter()
-        .map(|s| s.0.parsed_text().unwrap().to_string())
-        .collect::<Vec<String>>()
-        .join("");
+    let spans = span_hits.iter().map(|sh| sh.0.clone()).collect();
     let flag = SpanAttr {
-        kind: SpanAttrKind::Flag {
-            value: text.to_string(),
-        },
+        kind: SpanAttrKind::FlagV42 { value: spans },
     };
     Ok((source, flag))
 }
@@ -363,7 +357,7 @@ mod test {
     #[case("|esacped\\`backtick")]
     #[case("|esacped\\|pipe")]
     #[case("|esacped\\\\escape")]
-    fn valid_code_shorthand_flags(#[case] source: &str) {
+    fn solo_valid_code_shorthand_flags(#[case] source: &str) {
         let result = code_shorthand_flag_v42(source);
         if result.as_ref().is_ok() {
             if result.as_ref().unwrap().0 == "" {
@@ -381,7 +375,7 @@ mod test {
     // Invalid Code Shorthand Flags
     #[rstest]
     #[case("|alfa: value")]
-    fn invalid_code_shorthand_flags(#[case] source: &str) {
+    fn solo_invalid_code_shorthand_flags(#[case] source: &str) {
         let result = code_shorthand_flag_v42(source);
         if result.as_ref().is_ok() {
             dbg!(&result);
@@ -409,14 +403,18 @@ mod test {
     // }
 
     #[test]
-    fn code_shorthand_with_flag_attr() {
+    fn solo_code_shorthand_with_flag_attr() {
         let source = "``code|rust``";
         let left = (
             "",
             Span {
                 attrs: vec![SpanAttr {
-                    kind: SpanAttrKind::Flag {
-                        value: "rust".to_string(),
+                    kind: SpanAttrKind::FlagV42 {
+                        value: vec![Span {
+                            attrs: vec![],
+                            kind: SpanKind::PlainText,
+                            parsed_text: "rust".to_string(),
+                        }],
                     },
                 }],
                 parsed_text: "".to_string(),
