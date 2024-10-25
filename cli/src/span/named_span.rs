@@ -274,6 +274,7 @@ pub fn named_span_content_value_span_v42(source: &str) -> IResult<&str, Span, Er
         escaped_pipe,
         any_colon,
         escaped_backslash,
+        named_span_v42,
     ))
     .context("")
     .parse(source)?;
@@ -330,7 +331,8 @@ mod test {
     #[case("<<alfa|bravo|flag>>")]
     #[case("<<alfa|bravo|flag|two>>")]
     #[case("<<alfa|bravo|key: value|another: value>>")]
-    fn switch_valid_named_span_cases(#[case] source: &str) {
+    #[case("<<em|nested <<link|named span|https://www.example.com/>> with att|class: clicky>>")]
+    fn solo_switch_valid_named_span_cases(#[case] source: &str) {
         let result = named_span_v42(source);
         if result.is_ok() {
             //dbg!(&result.unwrap().clone());
