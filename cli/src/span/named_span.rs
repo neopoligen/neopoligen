@@ -1,11 +1,13 @@
 //use crate::span::escaped_colon::*;
 use crate::span::*;
 use nom::branch::alt;
+use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::character::complete::alpha1;
 use nom::character::complete::digit1;
 use nom::multi::many0;
 use nom::multi::many1;
+use nom::sequence::pair;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -16,7 +18,7 @@ use self::any_backtick::any_backtick;
 use self::any_caret::any_caret;
 use self::any_colon::any_colon;
 use self::any_hyphen::any_hyphen;
-use self::any_lessthan::any_lessthan;
+// use self::any_lessthan::any_lessthan;
 use self::any_newline::any_newline;
 use self::any_underscore::any_underscore;
 use self::colon_followed_by_multispace1::colon_followed_by_multispace1;
@@ -126,6 +128,30 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorT
 
 // NEW V42 STUFF ////////////////////////////////////////////////////////////////
 
+pub fn named_span_attr_value_v42(source: &str) -> IResult<&str, Vec<Span>, ErrorTree<&str>> {
+    let (source, spans) = many1(alt((
+        plaintext,
+        any_colon,
+        any_hyphen,
+        any_caret,
+        any_asterisk,
+        any_underscore,
+        single_backtick,
+        escaped_backtick,
+        escaped_backslash,
+        escaped_colon,
+        escaped_pipe,
+        any_newline,
+        single_greaterthan,
+        escaped_greaterthan,
+        single_lessthan,
+        escaped_lessthan,
+    )))
+    .context("")
+    .parse(source)?;
+    Ok((source, spans))
+}
+
 pub fn named_span_attr_key_v42(source: &str) -> IResult<&str, Vec<Span>, ErrorTree<&str>> {
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, spans) = many1(alt((
@@ -166,14 +192,48 @@ pub fn named_span_attr_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&s
     ))
 }
 
-pub fn named_span_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-    let (source, _) = tag("|").context("").parse(source)?;
+pub fn named_span_flag_base_span_v42(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+    let (source, result) = is_not(":|\\<>").context("").parse(source)?;
     Ok((
         source,
-        SpanAttr {
-            kind: SpanAttrKind::FlagV42 { value: vec![] },
+        Span {
+            attrs: vec![],
+            kind: SpanKind::PlainText,
+            parsed_text: result.to_string(),
         },
     ))
+}
+
+pub fn named_span_flag_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
+    let (source, _) = tag("|").context("").parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
+    let (source, span_hits) = many1(pair(
+        alt((
+            named_span_flag_base_span_v42,
+            colon_not_followed_by_space,
+            escaped_pipe,
+            escaped_backslash,
+            single_lessthan,
+            escaped_lessthan,
+            single_greaterthan,
+            escaped_greaterthan,
+        )),
+        not(tag(": ")),
+    ))
+    .context("")
+    .parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
+    let spans = span_hits.iter().map(|sh| sh.0.clone()).collect();
+    let flag = SpanAttr {
+        kind: SpanAttrKind::FlagV42 { value: spans },
+    };
+    Ok((source, flag))
+    // Ok((
+    //     source,
+    //     SpanAttr {
+    //         kind: SpanAttrKind::FlagV42 { value: vec![] },
+    //     },
+    // ))
 }
 
 pub fn named_span_type_span_v42(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
@@ -250,7 +310,7 @@ mod test {
     use pretty_assertions::assert_eq;
     use rstest::rstest;
 
-    // Valid Named Spans
+    // Valid Named Spans including flags
     #[rstest]
     #[case("<<alfa|bravo>>")]
     #[case("<<\nalfa\nbravo\n|\nalfa\nbravo\n>>")]
@@ -267,6 +327,7 @@ mod test {
     #[case("<<alfa\\|bravo|alfa\\|bravo>>")]
     #[case("<<alfa:bravo|alfa:bravo>>")]
     #[case("<<alfa\\\\bravo|alfa\\\\bravo>>")]
+    #[case("<<alfa|bravo|flag>>")]
     fn solo_valid_named_span_cases(#[case] source: &str) {
         let result = named_span_v42(source);
         if result.is_ok() {
@@ -278,7 +339,7 @@ mod test {
         }
     }
 
-    // Valid named span key value keys
+    // Valid named span attr keys
     // \n<^*`_-|:\\
     #[rstest]
     #[case("spaced are allowed: ")]
@@ -311,6 +372,76 @@ mod test {
         if result.is_ok() {
             //dbg!(&result.unwrap().clone());
             assert!(true)
+        } else {
+            dbg!(&result);
+            assert!(false);
+        }
+    }
+
+    // Valid Attr Values
+    #[rstest]
+    #[case("spaced are allowed|")]
+    #[case("colon:without:spaces|")]
+    #[case("alfa: |")]
+    #[case("bravo-charlie: |")]
+    #[case("  leading spaces|")]
+    #[case("\nleading newline|")]
+    #[case("includes\nnewline|")]
+    #[case("fox<trot: |")]
+    #[case("fox\\<<trot: |")]
+    #[case("fox>trot: |")]
+    #[case("fox\\>>trot: |")]
+    #[case("go^lf: |")]
+    #[case("go^^lf: |")]
+    #[case("hot*el: |")]
+    #[case("hot**el: |")]
+    #[case("ind`ia: |")]
+    #[case("ind\\``ia: |")]
+    #[case("jul_iet: |")]
+    #[case("jul__iet: |")]
+    #[case("ki-lo: |")]
+    #[case("ki--lo: |")]
+    #[case("li\\|ma: |")]
+    #[case("mi\\:ke: |")]
+    #[case("mi\\::ke: |")]
+    #[case("mi::ke: |")]
+    #[case("nov\\\\ember: |")]
+    fn solo_valid_attr_values(#[case] source: &str) {
+        let result = named_span_attr_value_v42(source);
+        let remainder = result.as_ref().unwrap().0;
+        if result.is_ok() && remainder == "|" {
+            assert!(true)
+        } else {
+            dbg!(&result);
+            assert!(false);
+        }
+    }
+
+    // Valid Named Span Flags
+    #[rstest]
+    #[case("|alfa")]
+    #[case("| bravo ")]
+    #[case("|space in flag")]
+    #[case("|newline\nin flag")]
+    #[case("| charlie-delta ")]
+    #[case("|https://www.example.com/")]
+    #[case("|\ncontains")]
+    #[case("|single`backtick")]
+    #[case("|esacped\\|pipe")]
+    #[case("|esacped\\\\escape")]
+    #[case("|single<lessthan")]
+    #[case("|escaped\\<lessthan")]
+    #[case("|single>greaterthan")]
+    #[case("|escaped\\>greaterthan")]
+    fn solo_named_span_flag_v42_test(#[case] source: &str) {
+        let result = named_span_flag_v42(source);
+        if result.as_ref().is_ok() {
+            if result.as_ref().unwrap().0 == "" {
+                assert!(true)
+            } else {
+                dbg!(format!("missed: {}", result.unwrap().0));
+                assert!(false);
+            }
         } else {
             dbg!(&result);
             assert!(false);
