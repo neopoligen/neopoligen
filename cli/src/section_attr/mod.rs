@@ -62,8 +62,8 @@ pub fn section_key_value_attr<'a>(
     source: &'a str,
 ) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
     // TODO: get debug value from the ast tree
-    let debug = false;
-    let dbg_header = "_____ SECTION_KEY_VALUE_ATTR _____";
+    let debug = true;
+    let dbg_header = "SECTION_KEY_VALUE_ATTR";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = tag("--").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
@@ -71,7 +71,7 @@ pub fn section_key_value_attr<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, key_parts) = many1(alt((
         is_not(": \n\t"),
-        pair(tag(":"), not(alt((multispace1, eof)))).map(|x| x.0),
+        pair(tag(":"), not(alt((space1, eof)))).map(|x| x.0),
     )))
     .context("")
     .parse(source)?;

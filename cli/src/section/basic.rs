@@ -20,7 +20,7 @@ pub fn basic_section_end<'a>(
     _checklist_level: usize,
     debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let dbg_header = "_____ BASIC_SECTION_END _____";
+    let dbg_header = "BASIC_SECTION_END";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     // let (source, _) = multispace0.context("").parse(source)?;
     let (source, _) = tag("-- ").context("").parse(source)?;
@@ -74,7 +74,7 @@ pub fn basic_section_full<'a>(
     _checklist_level: usize,
     debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let dbg_header = "_____ BASIC_SECTION_FULL _____";
+    let dbg_header = "BASIC_SECTION_FULL";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
@@ -112,7 +112,7 @@ pub fn basic_section_start<'a>(
     debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     nest_level += 1;
-    let dbg_header = "_____ BASIC_SECTION_START _____";
+    let dbg_header = "BASIC_SECTION_START";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);

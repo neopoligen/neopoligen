@@ -275,20 +275,110 @@ pub fn start_or_full_section<'a>(
     debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, section) = alt((
-        |src| basic_section_start(src, &sections, nest_level, list_level, checklist_level, debug),
-        |src| basic_section_full(src, &sections, nest_level, list_level, checklist_level, debug),
+        |src| {
+            basic_section_start(
+                src,
+                &sections,
+                nest_level,
+                list_level,
+                checklist_level,
+                debug,
+            )
+        },
+        |src| {
+            basic_section_full(
+                src,
+                &sections,
+                nest_level,
+                list_level,
+                checklist_level,
+                debug,
+            )
+        },
         // TODO: Checklist start
         //|src| checklist_section_start(src, &sections, nest_level, list_level),
-        |src| checklist_section_full(src, &sections, nest_level, list_level, checklist_level, debug),
+        |src| {
+            checklist_section_full(
+                src,
+                &sections,
+                nest_level,
+                list_level,
+                checklist_level,
+                debug,
+            )
+        },
         // TODO: Add json5 start
-        |src| json5_section_full(src, &sections, nest_level, list_level, checklist_level, debug),
-        |src| list_section_start(src, &sections, nest_level, list_level, checklist_level, debug),
-        |src| list_section_full(src, &sections, nest_level, list_level, checklist_level, debug),
-        |src| raw_section_start(src, &sections, nest_level, list_level, checklist_level, debug),
-        |src| raw_section_full(src, &sections, nest_level, list_level, checklist_level, debug),
+        |src| {
+            json5_section_full(
+                src,
+                &sections,
+                nest_level,
+                list_level,
+                checklist_level,
+                debug,
+            )
+        },
+        |src| {
+            list_section_start(
+                src,
+                &sections,
+                nest_level,
+                list_level,
+                checklist_level,
+                debug,
+            )
+        },
+        |src| {
+            list_section_full(
+                src,
+                &sections,
+                nest_level,
+                list_level,
+                checklist_level,
+                debug,
+            )
+        },
+        |src| {
+            raw_section_start(
+                src,
+                &sections,
+                nest_level,
+                list_level,
+                checklist_level,
+                debug,
+            )
+        },
+        |src| {
+            raw_section_full(
+                src,
+                &sections,
+                nest_level,
+                list_level,
+                checklist_level,
+                debug,
+            )
+        },
         // Reminder: do unknown last since it slurps everything
-        |src| unknown_section_start(src, &sections, nest_level, list_level, checklist_level, debug),
-        |src| unknown_section_full(src, &sections, nest_level, list_level, checklist_level, debug),
+        |src| {
+            unknown_section_start(
+                src,
+                &sections,
+                nest_level,
+                list_level,
+                checklist_level,
+                debug,
+            )
+        },
+        |src| {
+            unknown_section_full(
+                src,
+                &sections,
+                nest_level,
+                list_level,
+                checklist_level,
+                debug,
+            )
+        },
     ))
     .context("")
     .parse(source)?;

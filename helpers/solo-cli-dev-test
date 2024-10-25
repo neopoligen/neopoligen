@@ -7,4 +7,4 @@ watchexec\
   -c\
   -r\
   -e rs,neo\
-  "bash -c 'cargo test solo -- --nocapture'"
+  "bash -c 'cargo test solo -- --nocapture --test-threads=1'"

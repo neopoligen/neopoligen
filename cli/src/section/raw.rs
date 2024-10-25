@@ -1,3 +1,4 @@
+use crate::helpers::dump_parser_if_debug;
 use crate::section::block::*;
 use crate::section::*;
 use crate::section_attr::*;
@@ -19,19 +20,24 @@ pub fn raw_section_end<'a>(
     _nest_level: usize,
     list_level: usize,
     _checklist_level: usize,
-    _debug: bool,
+    debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let dbg_header = "RAW_SECTION_END";
+    dump_parser_if_debug(debug, dbg_header, &source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 2);
     let (source, _) = tag("/").context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 3);
     let (source, r#type) = tag(key).context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 4);
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
         .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 5);
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
-    // let (source, _) = structure_empty_until_newline_or_eof
-    //     .context("")
-    //     .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 6);
     let (source, _) = multispace0.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 7);
     let (source, children) = if list_level > 0 {
         many0(|src| block_of_list_item_content_v42(src))
             .context("")
@@ -41,6 +47,7 @@ pub fn raw_section_end<'a>(
             .context("")
             .parse(source)?
     };
+    dump_parser_if_debug(debug, dbg_header, &source, 8);
 
     // let (source, children) = if list_level > 0 {
     //     many0(|src| block_of_end_content_that_is_not_a_list_item(src))
@@ -72,21 +79,22 @@ pub fn raw_section_full<'a>(
     _nest_level: usize,
     _list_level: usize,
     _checklist_level: usize,
-    _debug: bool,
+    debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let dbg_header = "RAW_SECTION_FULL";
+    dump_parser_if_debug(debug, dbg_header, &source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 2);
     let (source, r#type) = (|src| tag_finder_full(src, &sections.raw))
         .context("")
         .parse(source)?;
-    // let (source, _) = structure_empty_until_newline_or_eof
-    //     .context("")
-    //     .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 3);
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
-    // let (source, _) = structure_empty_until_newline_or_eof
-    //     .context("")
-    //     .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 4);
     let (source, text) = alt((take_until("\n--"), rest)).context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 5);
     let (source, _) = multispace0.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 6);
     let section = Section {
         attr_list: vec![],
         flag_list: vec![],
@@ -110,25 +118,32 @@ pub fn raw_section_start<'a>(
     debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     nest_level += 1;
+    let dbg_header = "RAW_SECTION_START";
+    dump_parser_if_debug(debug, dbg_header, &source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 2);
     let (source, r#type) = (|src| tag_finder_start(src, &sections.raw))
         .context("")
         .parse(source)?;
     let end_key = format!("-- /{}", r#type);
-    // This is safe to delete next time you look at it.
-    // let (source, _) = tag("/").context("").parse(source)?;
-    // let (source, _) = structure_empty_until_newline_or_eof
-    //     .context("")
-    //     .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 3);
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 4);
     let (source, _) = many0(pair(space0, newline)).context("").parse(source)?;
-    // let (source, _) = structure_empty_until_newline_or_eof
-    //     .context("")
-    //     .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 5);
     let (source, text) = take_until(end_key.as_str()).context("").parse(source)?;
-    // let (source, end_section) = raw_section_end(source, r#type, nest_level, list_level)?;
-    let (source, end_section) = raw_section_end(source, r#type, nest_level, list_level, checklist_level, debug)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 6);
+    let (source, end_section) = raw_section_end(
+        source,
+        r#type,
+        nest_level,
+        list_level,
+        checklist_level,
+        debug,
+    )?;
+    dump_parser_if_debug(debug, dbg_header, &source, 7);
     let (source, _) = multispace0.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 8);
     let mut children = vec![];
     children.push(end_section);
     let section = Section {
@@ -445,7 +460,15 @@ mod test {
                 r#type: "code".to_string(),
             },
         );
-        let right = raw_section_start(source, &config.sections, nest_level, list_level, checklist_level, debug).unwrap();
+        let right = raw_section_start(
+            source,
+            &config.sections,
+            nest_level,
+            list_level,
+            checklist_level,
+            debug,
+        )
+        .unwrap();
         assert_eq!(left, right);
     }
 

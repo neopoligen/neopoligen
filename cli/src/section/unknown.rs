@@ -21,7 +21,7 @@ pub fn unknown_section_end<'a>(
     _checklist_level: usize,
     debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let dbg_header = "_____ UNKNOWN_SECTION_END _____";
+    let dbg_header = "UNKNOWN_SECTION_END";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
@@ -63,7 +63,7 @@ pub fn unknown_section_full<'a>(
     checklist_level: usize,
     debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let dbg_header = "_____ UNKNOWN_SECTION_FULL _____";
+    let dbg_header = "UNKNOWN_SECTION_FULL";
     dump_parser_if_debug(debug, dbg_header, &source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, &source, 2);
@@ -81,8 +81,8 @@ pub fn unknown_section_full<'a>(
     dump_parser_if_debug(debug, dbg_header, &source, 5);
     let (source, children) = if nest_level > 0 {
         many0(alt((
-            |src| basic_section_end(src, &r#type, nest_level, list_level, checklist_level, debug),
             |src| block_of_main_content_v42(src),
+            |src| basic_section_end(src, &r#type, nest_level, list_level, checklist_level, debug),
         )))
         .context("")
         .parse(source)?
@@ -112,7 +112,7 @@ pub fn unknown_section_start<'a>(
     debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     nest_level += 1;
-    let dbg_header = "_____ UNKNOWN_SECTION_START _____";
+    let dbg_header = "UNKNOWN_SECTION_START";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);

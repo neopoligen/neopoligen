@@ -40,11 +40,13 @@ fn do_parse<'a>(
     sections: &'a ConfigSections,
 ) -> IResult<&'a str, Vec<Section>, ErrorTree<&'a str>> {
     let (source, _) = multispace0(source)?;
+    let temp_debug_flag = true;
     // The 0, 0, 0 below are for the nest, list, and checklist levels, they are followed by the
     // debug flag
-    let (source, result) = many1(|src| start_or_full_section(src, &sections, 0, 0, 0, false))
-        .context("page")
-        .parse(source)?;
+    let (source, result) =
+        many1(|src| start_or_full_section(src, &sections, 0, 0, 0, temp_debug_flag))
+            .context("page")
+            .parse(source)?;
     Ok((source, result))
 }
 
