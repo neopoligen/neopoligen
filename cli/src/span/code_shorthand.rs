@@ -322,6 +322,7 @@ mod test {
     #[case("``bravo:charlie``")]
     #[case("``bravo: charlie``")]
     #[case("``bravo : charlie``")]
+
     fn switch_valid_code_shorthands(#[case] source: &str) {
         let result = code_shorthand(source);
         if result.is_ok() {
