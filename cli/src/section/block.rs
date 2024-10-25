@@ -28,7 +28,7 @@ use self::escaped_caret::escaped_caret;
 use self::footnote_shorthand::footnote_shorthand;
 // use self::escaped_hashtag::escaped_hashtag;
 // use self::escaped_hyphen::escaped_hyphen;
-use self::named_span::named_span;
+use self::named_span::named_span_v42;
 use self::single_asterisk::single_asterisk;
 use self::single_backtick::single_backtick;
 use self::single_caret::single_caret;
@@ -63,7 +63,7 @@ pub fn block_of_section_attr_value_v42<'a>(
         code_shorthand,
         footnote_shorthand,
         // named span
-        named_span,
+        named_span_v42,
     )))
     .context("")
     .parse(source)?;
@@ -94,7 +94,7 @@ pub fn block_of_main_content_v42<'a>(
         code_shorthand,
         footnote_shorthand,
         // named span
-        named_span,
+        named_span_v42,
     )))
     .context("")
     .parse(source)?;

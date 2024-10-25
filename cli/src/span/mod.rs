@@ -265,7 +265,7 @@ pub fn base_span_for_all_text<'a>(source: &'a str) -> IResult<&'a str, Span, Err
             space,
             newline,
             shorthand,
-            named_span,
+            named_span_v42,
             //code_shorthand_single_pipe,
             // hyphen,
             // hyphen_with_trailing_non_hyphen,
@@ -300,7 +300,7 @@ pub fn base_span_for_list_item<'a>(source: &'a str) -> IResult<&'a str, Span, Er
             space,
             newline,
             shorthand,
-            named_span,
+            named_span_v42,
             // code_shorthand_single_pipe,
             // hyphen,
             // hyphen_with_trailing_non_hyphen,
@@ -350,7 +350,7 @@ pub fn span_for_not_a_list_item<'a>(source: &'a str) -> IResult<&'a str, Span, E
 
 // DEPRECATED: replace with base_span_for_all_blocks
 pub fn span_for_body_text<'a>(source: &'a str) -> IResult<&'a str, Span, ErrorTree<&'a str>> {
-    let (source, span) = alt((span_base, code_shorthand, named_span))
+    let (source, span) = alt((span_base, code_shorthand, named_span_v42))
         .context("")
         .parse(source)?;
     Ok((source, span))

@@ -18,113 +18,112 @@ use self::any_backtick::any_backtick;
 use self::any_caret::any_caret;
 use self::any_colon::any_colon;
 use self::any_hyphen::any_hyphen;
-// use self::any_lessthan::any_lessthan;
 use self::any_newline::any_newline;
 use self::any_underscore::any_underscore;
 use self::colon_followed_by_multispace1::colon_followed_by_multispace1;
 use self::escaped_lessthan::escaped_lessthan;
 
-// TODO: Deprecated remove when V42 is ready
-pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let (source, _) = tag("<<").context("").parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    let (source, type_parts) = many1(alt((alpha1, digit1, tag("-"), tag("_"))))
-        .context("")
-        .parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    let (source, _) = tag("|").context("").parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = many0(alt((base_span_for_all_text,)))
-        .context("")
-        .parse(source)?;
-    let (source, attrs) = many0(named_span_attr).context("").parse(source)?;
-    let (source, _) = tag(">>").context("").parse(source)?;
-    let r#type = type_parts
-        .iter()
-        .map(|p| p.to_string())
-        .collect::<Vec<String>>()
-        .join("");
-    Ok((
-        source,
-        Span {
-            attrs,
-            parsed_text: "".to_string(),
-            kind: SpanKind::NamedSpan {
-                r#type: r#type.to_string(),
-                children,
-            },
-        },
-    ))
-}
+// // TODO: Deprecated remove when V42 is ready
+// pub fn named_span(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+//     let (source, _) = tag("<<").context("").parse(source)?;
+//     let (source, _) = multispace0.context("").parse(source)?;
+//     let (source, type_parts) = many1(alt((alpha1, digit1, tag("-"), tag("_"))))
+//         .context("")
+//         .parse(source)?;
+//     let (source, _) = multispace0.context("").parse(source)?;
+//     let (source, _) = tag("|").context("").parse(source)?;
+//     let (source, _) = multispace0.context("").parse(source)?;
+//     let (source, children) = many0(alt((base_span_for_all_text,)))
+//         .context("")
+//         .parse(source)?;
+//     let (source, attrs) = many0(named_span_attr).context("").parse(source)?;
+//     let (source, _) = tag(">>").context("").parse(source)?;
+//     let r#type = type_parts
+//         .iter()
+//         .map(|p| p.to_string())
+//         .collect::<Vec<String>>()
+//         .join("");
+//     Ok((
+//         source,
+//         Span {
+//             attrs,
+//             parsed_text: "".to_string(),
+//             kind: SpanKind::NamedSpan {
+//                 r#type: r#type.to_string(),
+//                 children,
+//             },
+//         },
+//     ))
+// }
 
-// TODO: Deprecated remove when V42 is ready
-pub fn named_span_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-    let (source, attr) = alt((named_span_key_value_attr, named_span_flag_attr))
-        .context("")
-        .parse(source)?;
-    Ok((source, attr))
-}
+// // TODO: Deprecated remove when V42 is ready
+// pub fn named_span_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
+//     let (source, attr) = alt((named_span_key_value_attr, named_span_flag_attr))
+//         .context("")
+//         .parse(source)?;
+//     Ok((source, attr))
+// }
 
-// TODO: Deprecated remove when V42 is ready
-pub fn named_span_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-    let (source, _) = tag("|").context("").parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    let (source, words) = many1(alt((base_span_for_all_text,)))
-        .context("")
-        .parse(source)?;
-    let value = words
-        .iter()
-        .map(|word| word.parsed_text.clone())
-        .collect::<Vec<String>>()
-        .join("");
-    let attr = SpanAttr {
-        kind: SpanAttrKind::Flag { value },
-    };
-    Ok((source, attr))
-}
+// // TODO: Deprecated remove when V42 is ready
+// pub fn named_span_flag_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
+//     let (source, _) = tag("|").context("").parse(source)?;
+//     let (source, _) = multispace0.context("").parse(source)?;
+//     let (source, words) = many1(alt((base_span_for_all_text,)))
+//         .context("")
+//         .parse(source)?;
+//     let value = words
+//         .iter()
+//         .map(|word| word.parsed_text.clone())
+//         .collect::<Vec<String>>()
+//         .join("");
+//     let attr = SpanAttr {
+//         kind: SpanAttrKind::Flag { value },
+//     };
+//     Ok((source, attr))
+// }
 
-// TODO: Deprecated remove when V42 is ready
-pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
-    let (source, _) = tag("|").context("").parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    // TODO: allow for spaces here
-    // TODO: Move this to span_for_shorthand_attr_key
-    let (source, key_parts) = many1(alt((alpha1, digit1, tag("-"), tag("_"))))
-        .context("")
-        .parse(source)?;
-    let (source, _) = tag(":").context("").parse(source)?;
-    let (source, _) = space1.context("").parse(source)?;
-    let (source, tokens) = many1(alt((
-        colon,
-        newline,
-        single_lessthan,
-        single_greaterthan,
-        single_backtick,
-        escaped_backtick,
-        escaped_pipe,
-        escaped_greaterthan,
-        escaped_backslash,
-    )))
-    .context("")
-    .parse(source)?;
-    let value = tokens
-        .iter()
-        .map(|word| word.parsed_text.clone())
-        .collect::<Vec<String>>()
-        .join("");
-    let key = key_parts
-        .iter()
-        .map(|p| p.to_string())
-        .collect::<Vec<String>>()
-        .join("");
-    let attr = SpanAttr {
-        kind: SpanAttrKind::KeyValue {
-            key: key.to_string(),
-            value,
-        },
-    };
-    Ok((source, attr))
-}
+// // TODO: Deprecated remove when V42 is ready
+// pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
+//     let (source, _) = tag("|").context("").parse(source)?;
+//     let (source, _) = multispace0.context("").parse(source)?;
+//     // TODO: allow for spaces here
+//     // TODO: Move this to span_for_shorthand_attr_key
+//     let (source, key_parts) = many1(alt((alpha1, digit1, tag("-"), tag("_"))))
+//         .context("")
+//         .parse(source)?;
+//     let (source, _) = tag(":").context("").parse(source)?;
+//     let (source, _) = space1.context("").parse(source)?;
+//     let (source, tokens) = many1(alt((
+//         colon,
+//         newline,
+//         single_lessthan,
+//         single_greaterthan,
+//         single_backtick,
+//         escaped_backtick,
+//         escaped_pipe,
+//         escaped_greaterthan,
+//         escaped_backslash,
+//     )))
+//     .context("")
+//     .parse(source)?;
+//     let value = tokens
+//         .iter()
+//         .map(|word| word.parsed_text.clone())
+//         .collect::<Vec<String>>()
+//         .join("");
+//     let key = key_parts
+//         .iter()
+//         .map(|p| p.to_string())
+//         .collect::<Vec<String>>()
+//         .join("");
+//     let attr = SpanAttr {
+//         kind: SpanAttrKind::KeyValue {
+//             key: key.to_string(),
+//             value,
+//         },
+//     };
+//     Ok((source, attr))
+// }
 
 // NEW V42 STUFF ////////////////////////////////////////////////////////////////
 
@@ -477,142 +476,142 @@ mod test {
         assert_eq!(left, right);
     }
 
-    #[rstest]
-    #[case("<<alfa|bravo>>", 0, "single word", true)]
-    #[case("<<alfa|bravo charlie>>", 0, "space in text", true)]
-    #[case("<<alfa|bravo-charlie>>", 0, "hyphen in text", true)]
-    #[case("<<alfa|bravo`charlie>>", 0, "single backtick in text", true)]
-    #[case("<<alfa|bravo\ncharlie>>", 0, "newline in text", true)]
-    #[case("<<alfa|bravo\\`charlie>>", 0, "escaped backtick in text", true)]
-    #[case("<<alfa|bravo\\:charlie>>", 0, "escaped colon in text", true)]
-    #[case("<<alfa|bravo\\|charlie>>", 0, "escaped pipe in text", true)]
-    #[case("<<alfa|bravo\\\\charlie>>", 0, "escaped baskslash in text", true)]
-    #[case("<<alfa|bravo:charlie>>", 0, "colon in text surrounded", true)]
-    #[case("<<alfa|bravo: charlie>>", 0, "colon in text before space", true)]
-    #[case("<<alfa|bravo :charlie>>", 0, "colon in text after space", true)]
-    #[case("<<alfa|bravo : charlie>>", 0, "colon in text floating", true)]
-    #[case("<<alfa|bravo|charlie>>", 1, "single flag", true)]
-    #[case("<<alfa|bravo|charlie delta>>", 1, "space in flag ", true)]
-    #[case("<<alfa|bravo|charlie`delta>>", 1, "single backtick in flag", true)]
-    #[case("<<alfa|bravo|charlie\ndelta>>", 1, "newline in flag", true)]
-    #[case("<<alfa|bravo|charlie\\`delta>>", 1, "escaped backtick in flag", true)]
-    #[case("<<alfa|bravo|charlie\\:delta>>", 1, "escaped colon in flag", true)]
-    #[case("<<alfa|bravo|charlie\\|delta>>", 1, "escaped pipe in flag", true)]
-    #[case(
-        "<<alfa|bravo|charlie\\\\delta>>",
-        1,
-        "escaped backslash in flag",
-        true
-    )]
-    #[case("<<alfa-bravo|charlie>>", 0, "hyphen in name", true)]
-    #[case("<<alfa|<<bravo|clarlie>>>>", 0, "nested span", true)]
-    #[case(
-        "<<link|Perl|https://en.wikipedia.org/wiki/Perl>>",
-        1,
-        "link span with link",
-        true
-    )]
-    #[ignore]
-    fn run_test(
-        #[case] input: &str,
-        #[case] attrs: usize,
-        #[case] _description: &str,
-        #[case] should_be_valid: bool,
-    ) {
-        if should_be_valid {
-            let (remainder, span) = named_span(input).unwrap();
-            assert_eq!(remainder, "");
-            assert_eq!(span.attrs.len(), attrs);
-        } else {
-            assert!(named_span(input).is_err());
-        }
-    }
+    // #[rstest]
+    // #[case("<<alfa|bravo>>", 0, "single word", true)]
+    // #[case("<<alfa|bravo charlie>>", 0, "space in text", true)]
+    // #[case("<<alfa|bravo-charlie>>", 0, "hyphen in text", true)]
+    // #[case("<<alfa|bravo`charlie>>", 0, "single backtick in text", true)]
+    // #[case("<<alfa|bravo\ncharlie>>", 0, "newline in text", true)]
+    // #[case("<<alfa|bravo\\`charlie>>", 0, "escaped backtick in text", true)]
+    // #[case("<<alfa|bravo\\:charlie>>", 0, "escaped colon in text", true)]
+    // #[case("<<alfa|bravo\\|charlie>>", 0, "escaped pipe in text", true)]
+    // #[case("<<alfa|bravo\\\\charlie>>", 0, "escaped baskslash in text", true)]
+    // #[case("<<alfa|bravo:charlie>>", 0, "colon in text surrounded", true)]
+    // #[case("<<alfa|bravo: charlie>>", 0, "colon in text before space", true)]
+    // #[case("<<alfa|bravo :charlie>>", 0, "colon in text after space", true)]
+    // #[case("<<alfa|bravo : charlie>>", 0, "colon in text floating", true)]
+    // #[case("<<alfa|bravo|charlie>>", 1, "single flag", true)]
+    // #[case("<<alfa|bravo|charlie delta>>", 1, "space in flag ", true)]
+    // #[case("<<alfa|bravo|charlie`delta>>", 1, "single backtick in flag", true)]
+    // #[case("<<alfa|bravo|charlie\ndelta>>", 1, "newline in flag", true)]
+    // #[case("<<alfa|bravo|charlie\\`delta>>", 1, "escaped backtick in flag", true)]
+    // #[case("<<alfa|bravo|charlie\\:delta>>", 1, "escaped colon in flag", true)]
+    // #[case("<<alfa|bravo|charlie\\|delta>>", 1, "escaped pipe in flag", true)]
+    // #[case(
+    //     "<<alfa|bravo|charlie\\\\delta>>",
+    //     1,
+    //     "escaped backslash in flag",
+    //     true
+    // )]
+    // #[case("<<alfa-bravo|charlie>>", 0, "hyphen in name", true)]
+    // #[case("<<alfa|<<bravo|clarlie>>>>", 0, "nested span", true)]
+    // #[case(
+    //     "<<link|Perl|https://en.wikipedia.org/wiki/Perl>>",
+    //     1,
+    //     "link span with link",
+    //     true
+    // )]
+    // #[ignore]
+    // fn run_test(
+    //     #[case] input: &str,
+    //     #[case] attrs: usize,
+    //     #[case] _description: &str,
+    //     #[case] should_be_valid: bool,
+    // ) {
+    //     if should_be_valid {
+    //         let (remainder, span) = named_span(input).unwrap();
+    //         assert_eq!(remainder, "");
+    //         assert_eq!(span.attrs.len(), attrs);
+    //     } else {
+    //         assert!(named_span(input).is_err());
+    //     }
+    // }
 
-    #[test]
-    #[ignore]
-    fn attr_with_hyphen() {
-        let source = "<<em|alfa|data-ping: bravo>>";
-        let left = (
-            "",
-            Span {
-                attrs: vec![SpanAttr {
-                    kind: SpanAttrKind::KeyValue {
-                        key: "data-ping".to_string(),
-                        value: "bravo".to_string(),
-                    },
-                }],
-                parsed_text: "".to_string(),
-                kind: SpanKind::NamedSpan {
-                    r#type: "em".to_string(),
-                    children: vec![Span {
-                        attrs: vec![],
-                        parsed_text: "alfa".to_string(),
-                        kind: SpanKind::PlainText,
-                    }],
-                },
-            },
-        );
-        let right = named_span(source).unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn attr_with_hyphen() {
+    //     let source = "<<em|alfa|data-ping: bravo>>";
+    //     let left = (
+    //         "",
+    //         Span {
+    //             attrs: vec![SpanAttr {
+    //                 kind: SpanAttrKind::KeyValue {
+    //                     key: "data-ping".to_string(),
+    //                     value: "bravo".to_string(),
+    //                 },
+    //             }],
+    //             parsed_text: "".to_string(),
+    //             kind: SpanKind::NamedSpan {
+    //                 r#type: "em".to_string(),
+    //                 children: vec![Span {
+    //                     attrs: vec![],
+    //                     parsed_text: "alfa".to_string(),
+    //                     kind: SpanKind::PlainText,
+    //                 }],
+    //             },
+    //         },
+    //     );
+    //     let right = named_span(source).unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn basic_test() {
-        let source = "<<em|alfa>>";
-        let left = (
-            "",
-            Span {
-                attrs: vec![],
-                parsed_text: "".to_string(),
-                kind: SpanKind::NamedSpan {
-                    r#type: "em".to_string(),
-                    children: vec![Span {
-                        attrs: vec![],
-                        parsed_text: "alfa".to_string(),
-                        kind: SpanKind::PlainText,
-                    }],
-                },
-            },
-        );
-        let right = named_span(source).unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn basic_test() {
+    //     let source = "<<em|alfa>>";
+    //     let left = (
+    //         "",
+    //         Span {
+    //             attrs: vec![],
+    //             parsed_text: "".to_string(),
+    //             kind: SpanKind::NamedSpan {
+    //                 r#type: "em".to_string(),
+    //                 children: vec![Span {
+    //                     attrs: vec![],
+    //                     parsed_text: "alfa".to_string(),
+    //                     kind: SpanKind::PlainText,
+    //                 }],
+    //             },
+    //         },
+    //     );
+    //     let right = named_span(source).unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn with_escaped_pipe() {
-        let source = "<<alfa|ping\\|ping>>";
-        let left = (
-            "",
-            Span {
-                attrs: vec![],
-                parsed_text: "".to_string(),
-                kind: SpanKind::NamedSpan {
-                    r#type: "alfa".to_string(),
-                    children: vec![
-                        Span {
-                            attrs: vec![],
-                            parsed_text: "ping".to_string(),
-                            kind: SpanKind::PlainText,
-                        },
-                        Span {
-                            attrs: vec![],
-                            parsed_text: "|".to_string(),
-                            kind: SpanKind::EscapedPipe,
-                        },
-                        Span {
-                            attrs: vec![],
-                            parsed_text: "ping".to_string(),
-                            kind: SpanKind::PlainText,
-                        },
-                    ],
-                },
-            },
-        );
-        let right = named_span(source).unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn with_escaped_pipe() {
+    //     let source = "<<alfa|ping\\|ping>>";
+    //     let left = (
+    //         "",
+    //         Span {
+    //             attrs: vec![],
+    //             parsed_text: "".to_string(),
+    //             kind: SpanKind::NamedSpan {
+    //                 r#type: "alfa".to_string(),
+    //                 children: vec![
+    //                     Span {
+    //                         attrs: vec![],
+    //                         parsed_text: "ping".to_string(),
+    //                         kind: SpanKind::PlainText,
+    //                     },
+    //                     Span {
+    //                         attrs: vec![],
+    //                         parsed_text: "|".to_string(),
+    //                         kind: SpanKind::EscapedPipe,
+    //                     },
+    //                     Span {
+    //                         attrs: vec![],
+    //                         parsed_text: "ping".to_string(),
+    //                         kind: SpanKind::PlainText,
+    //                     },
+    //                 ],
+    //             },
+    //         },
+    //     );
+    //     let right = named_span(source).unwrap();
+    //     assert_eq!(left, right);
+    // }
 
     // #[test]
     // fn with_escaped_backslash() {
@@ -646,32 +645,32 @@ mod test {
     //     assert_eq!(left, right);
     // }
 
-    #[test]
-    #[ignore]
-    fn with_flag_attr() {
-        let source = "<<code|something|rust>>";
-        let left = (
-            "",
-            Span {
-                attrs: vec![SpanAttr {
-                    kind: SpanAttrKind::Flag {
-                        value: "rust".to_string(),
-                    },
-                }],
-                parsed_text: "".to_string(),
-                kind: SpanKind::NamedSpan {
-                    r#type: "code".to_string(),
-                    children: vec![Span {
-                        attrs: vec![],
-                        parsed_text: "something".to_string(),
-                        kind: SpanKind::PlainText,
-                    }],
-                },
-            },
-        );
-        let right = named_span(source).unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn with_flag_attr() {
+    //     let source = "<<code|something|rust>>";
+    //     let left = (
+    //         "",
+    //         Span {
+    //             attrs: vec![SpanAttr {
+    //                 kind: SpanAttrKind::Flag {
+    //                     value: "rust".to_string(),
+    //                 },
+    //             }],
+    //             parsed_text: "".to_string(),
+    //             kind: SpanKind::NamedSpan {
+    //                 r#type: "code".to_string(),
+    //                 children: vec![Span {
+    //                     attrs: vec![],
+    //                     parsed_text: "something".to_string(),
+    //                     kind: SpanKind::PlainText,
+    //                 }],
+    //             },
+    //         },
+    //     );
+    //     let right = named_span(source).unwrap();
+    //     assert_eq!(left, right);
+    // }
 
     // #[test]
     // fn with_multiple_flag_attrs() {
