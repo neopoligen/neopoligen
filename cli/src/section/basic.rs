@@ -15,22 +15,24 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn basic_section_end<'a>(
     source: &'a str,
     key: &'a str,
-    _nest_level: usize,
+    nest_level: usize,
     list_level: usize,
     _checklist_level: usize,
     debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let dbg_header = "_____ BASIC_SECTION_END _____";
     dump_parser_if_debug(debug, dbg_header, source, 1);
+    // let (source, _) = multispace0.context("").parse(source)?;
     let (source, _) = tag("-- ").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, _) = tag("/").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, closing) = tag(key).context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
+    // let (source, _) = structure_empty_until_newline_or_eof
+    //     .context("")
+    //     .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
@@ -38,6 +40,13 @@ pub fn basic_section_end<'a>(
         many0(|src| block_of_list_item_content_v42(src))
             .context("")
             .parse(source)?
+    } else if nest_level > 0 {
+        many0(alt((
+            |src| block_of_main_content_v42(src),
+            // basic_section_end(source, key, nest_level, list_level, checklist_level, debug),
+        )))
+        .context("")
+        .parse(source)?
     } else {
         many0(|src| block_of_main_content_v42(src))
             .context("")
@@ -97,12 +106,12 @@ pub fn basic_section_full<'a>(
 pub fn basic_section_start<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
-    nest_level: usize,
+    mut nest_level: usize,
     list_level: usize,
     checklist_level: usize,
     debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    //nest_level += 1;
+    nest_level += 1;
     let dbg_header = "_____ BASIC_SECTION_START _____";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
@@ -113,9 +122,6 @@ pub fn basic_section_start<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);
-    // let (source, _) = structure_empty_until_newline_or_eof
-    //     .context("")
-    //     .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, mut children) = many0(alt((
         |src| block_of_main_content_v42(src),
@@ -132,22 +138,6 @@ pub fn basic_section_start<'a>(
     )))
     .context("")
     .parse(source)?;
-
-    //    let source = if nest_level > 0 { source } else { source };
-
-    // let (source, nested_end) = if nested_level > 0 {
-    //     basic_section_end(
-    //         source,
-    //         r#type,
-    //         nest_level,
-    //         list_level,
-    //         checklist_level,
-    //         debug,
-    //     )?
-    // }
-
-    //children.push(nested_end);
-
     let (source, end_section) = basic_section_end(
         source,
         r#type,

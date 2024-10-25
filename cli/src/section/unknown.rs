@@ -118,33 +118,14 @@ pub fn unknown_section_start<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, _) = tag("/").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);
-    // let (source, _) = many0(pair(space0, newline)).context("").parse(source)?;
-    // let (source, _) = structure_empty_until_newline_or_eof
-    //     .context("")
-    //     .parse(source)?;
-    // let (source, r#type) = (|src| tag_finder_start(src, &sections.basic))
-    //     .context("")
-    //     .parse(source)?;
-    // TODO: You can remove the lines below
-    // the next time you see them
-    // let (source, _) = tag("/").context("").parse(source)?;
-    // let (source, _) = structure_empty_until_newline_or_eof
-    //     .context("")
-    //     .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 6);
-    // dbg!("xxxxxxxxxxxxxxxxxx");
-    // dbg!(&source);
-    // let (source, _) = structure_empty_until_newline_or_eof
-    //     .context("")
-    //     .parse(source)?;
-    // dbg!("----------------------");
-    // dbg!(&source);
     let (source, _) = multispace0.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 7);
     let (source, mut children) = many0(alt((
+        |src| block_of_main_content_v42(src),
         |src| {
             start_or_full_section(
                 src,
@@ -155,7 +136,6 @@ pub fn unknown_section_start<'a>(
                 debug,
             )
         },
-        |src| block_of_main_content_v42(src),
     )))
     .context("")
     .parse(source)?;
