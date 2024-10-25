@@ -84,10 +84,7 @@ pub fn unknown_section_full<'a>(
     //     .context("")
     //     .parse(source)?;
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "4"));
-        dbg!(&source);
-    }
+    dump_parser_if_debug(debug, dbg_header, &source, 4);
     // let (source, _) = structure_empty_until_newline_or_eof
     //     .context("")
     //     .parse(source)?;

@@ -21,28 +21,17 @@ pub fn basic_section_end<'a>(
     debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let dbg_header = "______________ BASIC_SECTION_END";
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "1"));
-        dbg!(&source);
-    }
+    dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "2"));
-        dbg!(&source);
-    }
+    dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, _) = tag("/").context("").parse(source)?;
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "3"));
-        dbg!(&source);
-    }
+    dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, closing) = tag(key).context("").parse(source)?;
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "4"));
-        dbg!(&source);
-    }
+    dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
         .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, children) = if list_level > 0 {
@@ -77,27 +66,15 @@ pub fn basic_section_full<'a>(
     debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let dbg_header = "______________ BASIC_SECTION_FULL";
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "1"));
-        dbg!(&source);
-    }
+    dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "2"));
-        dbg!(&source);
-    }
+    dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, r#type) = (|src| tag_finder_full(src, &sections.basic))
         .context("")
         .parse(source)?;
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "3"));
-        dbg!(&source);
-    }
+    dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "4"));
-        dbg!(&source);
-    }
+    dump_parser_if_debug(debug, dbg_header, source, 4);
     // let (source, attrs) = many0(section_attr).context("").parse(source)?;
     // let (source, _) = structure_empty_until_newline_or_eof
     //     .context("")
@@ -125,28 +102,16 @@ pub fn basic_section_start<'a>(
     checklist_level: usize,
     debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let dbg_header = "______________ BASIC_SECTION_END";
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "1"));
-        dbg!(&source);
-    }
+    let dbg_header = "______________ BASIC_SECTION_START";
+    dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "2"));
-        dbg!(&source);
-    }
+    dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, r#type) = (|src| tag_finder_start(src, &sections.basic))
         .context("")
         .parse(source)?;
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "3"));
-        dbg!(&source);
-    }
+    dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "4"));
-        dbg!(&source);
-    }
+    dump_parser_if_debug(debug, dbg_header, source, 4);
     // let (source, _) = structure_empty_until_newline_or_eof
     //     .context("")
     //     .parse(source)?;
