@@ -25,6 +25,8 @@ pub struct SiteConfigV42 {
     #[serde(default = "empty_sections_v41")]
     pub sections: ConfigSections,
     pub attr_flag_lists: Option<ConfigLists>,
+    #[serde(default = "debug_parser_default")]
+    pub debug_parser: bool,
     //
     // Reminder: ``project_root`` isn't expected to come from the
     // JSON file. The process sets it internally
@@ -630,6 +632,10 @@ impl SiteConfig {
             //     }
         });
     }
+}
+
+fn debug_parser_default() -> bool {
+    false
 }
 
 // TODO: deprecate when v41 is done
