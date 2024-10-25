@@ -30,6 +30,13 @@ pub fn copy_dir(source_dir: &PathBuf, dest_dir: &PathBuf) -> Result<(), std::io:
     Ok(())
 }
 
+pub fn dump_parser_if_debug(debug: bool, dbg_header: &str, source: &str, count: usize) {
+    if debug {
+        dbg!(format!("{}: {}", dbg_header, count));
+        dbg!(source);
+    }
+}
+
 pub fn empty_dir(dir: &PathBuf) -> std::io::Result<()> {
     for entry in dir.read_dir()? {
         let entry = entry?;

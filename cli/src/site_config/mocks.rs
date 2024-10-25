@@ -62,7 +62,7 @@ impl SiteConfigV42 {
             ],
         };
         let config = SiteConfigV42 {
-            debug_parser: false,
+            debug_parser: true,
             default_language: "en".to_string(),
             base_url: "testsite.localhost:1999".to_string(),
             output_directory: "_site".to_string(),

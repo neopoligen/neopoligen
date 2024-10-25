@@ -1,13 +1,12 @@
+use crate::helpers::dump_parser_if_debug;
 use crate::section::block::*;
 use crate::section::*;
 use crate::section_attr::*;
 use crate::span::*;
-//use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;
 use nom::multi::many0;
-// use nom::sequence::pair;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -19,11 +18,28 @@ pub fn unknown_section_end<'a>(
     _nest_level: usize,
     _list_level: usize,
     _checklist_level: usize,
-    _debug: bool,
+    debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let dbg_header = "______________ UNKNOWN_SECTION_END";
+    if debug {
+        dbg!(format!("{}: {}", dbg_header, "1"));
+        dbg!(&source);
+    }
     let (source, _) = tag("-- ").context("").parse(source)?;
+    if debug {
+        dbg!(format!("{}: {}", dbg_header, "2"));
+        dbg!(&source);
+    }
     let (source, _) = tag("/").context("").parse(source)?;
+    if debug {
+        dbg!(format!("{}: {}", dbg_header, "3"));
+        dbg!(&source);
+    }
     let (source, r#type) = tag(key).context("").parse(source)?;
+    if debug {
+        dbg!(format!("{}: {}", dbg_header, "4"));
+        dbg!(&source);
+    }
     // let (source, _) = many0(pair(space0, newline)).context("").parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
@@ -56,14 +72,22 @@ pub fn unknown_section_full<'a>(
     _nest_level: usize,
     _list_level: usize,
     _checklist_level: usize,
-    _debug: bool,
+    debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let dbg_header = "______________ UNKNOWN_SECTION_FULL";
+    dump_parser_if_debug(debug, dbg_header, &source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 2);
     let (source, r#type) = is_not(" /\n").context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 3);
     // let (source, _) = structure_empty_until_newline_or_eof
     //     .context("")
     //     .parse(source)?;
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
+    if debug {
+        dbg!(format!("{}: {}", dbg_header, "4"));
+        dbg!(&source);
+    }
     // let (source, _) = structure_empty_until_newline_or_eof
     //     .context("")
     //     .parse(source)?;
@@ -90,9 +114,26 @@ pub fn unknown_section_start<'a>(
     checklist_level: usize,
     debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let dbg_header = "______________ UNKNOWN_SECTION_START";
+    if debug {
+        dbg!(format!("{}: {}", dbg_header, "1"));
+        dbg!(&source);
+    }
     let (source, _) = tag("-- ").context("").parse(source)?;
+    if debug {
+        dbg!(format!("{}: {}", dbg_header, "2"));
+        dbg!(&source);
+    }
     let (source, r#type) = is_not(" \n/").context("").parse(source)?;
+    if debug {
+        dbg!(format!("{}: {}", dbg_header, "3"));
+        dbg!(&source);
+    }
     let (source, _) = tag("/").context("").parse(source)?;
+    if debug {
+        dbg!(format!("{}: {}", dbg_header, "4"));
+        dbg!(&source);
+    }
     // let (source, _) = many0(pair(space0, newline)).context("").parse(source)?;
     // let (source, _) = structure_empty_until_newline_or_eof
     //     .context("")
@@ -117,12 +158,28 @@ pub fn unknown_section_start<'a>(
     // dbg!(&source);
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, mut children) = many0(alt((
-        |src| start_or_full_section(src, &sections, nest_level, list_level, checklist_level, debug),
+        |src| {
+            start_or_full_section(
+                src,
+                &sections,
+                nest_level,
+                list_level,
+                checklist_level,
+                debug,
+            )
+        },
         |src| block_of_main_content_v42(src),
     )))
     .context("")
     .parse(source)?;
-    let (source, end_section) = basic_section_end(source, r#type, nest_level, list_level, checklist_level, debug)?;
+    let (source, end_section) = basic_section_end(
+        source,
+        r#type,
+        nest_level,
+        list_level,
+        checklist_level,
+        debug,
+    )?;
     children.push(end_section);
     let section = Section {
         attr_list: vec![],
@@ -225,7 +282,14 @@ mod test {
                 r#type: "unknown-section".to_string(),
             },
         );
-        let right = unknown_section_start(source, &config.sections, nest_level, list_level, checklist_level, debug);
+        let right = unknown_section_start(
+            source,
+            &config.sections,
+            nest_level,
+            list_level,
+            checklist_level,
+            debug,
+        );
         // dbg!(&right);
         assert_eq!(left, right.unwrap());
     }
@@ -264,7 +328,15 @@ mod test {
                 r#type: "unknown-section".to_string(),
             },
         );
-        let right = unknown_section_full(source, &config.sections, nest_level, list_level, checklist_level, debug).unwrap();
+        let right = unknown_section_full(
+            source,
+            &config.sections,
+            nest_level,
+            list_level,
+            checklist_level,
+            debug,
+        )
+        .unwrap();
         assert_eq!(left, right);
     }
 
@@ -276,7 +348,16 @@ mod test {
         let debug = false;
         let source = "-- /asdf";
         let left = 0;
-        let section = unknown_section_end(source, "asdf", nest_level, list_level, checklist_level, debug).unwrap().1;
+        let section = unknown_section_end(
+            source,
+            "asdf",
+            nest_level,
+            list_level,
+            checklist_level,
+            debug,
+        )
+        .unwrap()
+        .1;
         let right = match section.kind {
             SectionKind::Unknown { children, .. } => children.len(),
             _ => 0,
@@ -292,7 +373,16 @@ mod test {
         let debug = false;
         let source = "-- /asdf\n\nthis is\n\nsomethig";
         let left = 2;
-        let section = unknown_section_end(source, "asdf", nest_level, list_level, checklist_level, debug).unwrap().1;
+        let section = unknown_section_end(
+            source,
+            "asdf",
+            nest_level,
+            list_level,
+            checklist_level,
+            debug,
+        )
+        .unwrap()
+        .1;
         let right = match section.kind {
             SectionKind::Unknown { children, .. } => children.len(),
             _ => 0,
