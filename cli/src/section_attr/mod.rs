@@ -223,7 +223,7 @@ mod test {
     #[case("-- alfa")]
     #[case("-- bravo-charlie")]
     #[case("-- https://www.example.com/")]
-    fn solo_valid_section_flags(#[case] source: &str) {
+    fn valid_section_flags(#[case] source: &str) {
         let response = section_flag_v42(source);
         if response.is_ok() {
             assert!(true)

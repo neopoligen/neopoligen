@@ -8,7 +8,7 @@ use rstest::rstest;
 pub fn solo_sample_runner() {
     let site_config = SiteConfigV42::mock_for_files_in_test_samples_dir();
 
-    let mut p = PageV42::mock_from_test_directory_sample(include_str!("samples/6.neo")).unwrap();
+    let mut p = PageV42::mock_from_test_directory_sample(include_str!("samples/7.neo")).unwrap();
     let parsed = p.generate_ast(&site_config);
     if parsed.is_ok() {
         assert!(true)
@@ -16,6 +16,15 @@ pub fn solo_sample_runner() {
         dbg!(&parsed);
         assert!(false);
     }
+
+    // let mut p = PageV42::mock_from_test_directory_sample(include_str!("samples/6.neo")).unwrap();
+    // let parsed = p.generate_ast(&site_config);
+    // if parsed.is_ok() {
+    //     assert!(true)
+    // } else {
+    //     dbg!(&parsed);
+    //     assert!(false);
+    // }
 
     // let mut p = PageV42::mock_from_test_directory_sample(include_str!("samples/5.neo")).unwrap();
     // let parsed = p.generate_ast(&site_config);

@@ -7,6 +7,7 @@ use nom::bytes::complete::take_until;
 use nom::character::complete::multispace0;
 use nom::combinator::rest;
 use nom::multi::many0;
+use nom::sequence::pair;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -30,14 +31,25 @@ pub fn raw_section_end<'a>(
     //     .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, children) = if list_level > 0 {
-        many0(|src| block_of_end_content_that_is_not_a_list_item(src))
+        many0(|src| block_of_list_item_content_v42(src))
             .context("")
             .parse(source)?
     } else {
-        many0(|src| block_of_end_content(src))
+        many0(|src| block_of_main_content_v42(src))
             .context("")
             .parse(source)?
     };
+
+    // let (source, children) = if list_level > 0 {
+    //     many0(|src| block_of_end_content_that_is_not_a_list_item(src))
+    //         .context("")
+    //         .parse(source)?
+    // } else {
+    //     many0(|src| block_of_end_content(src))
+    //         .context("")
+    //         .parse(source)?
+    // };
+
     let section = Section {
         attr_list: vec![],
         flag_list: vec![],
@@ -103,9 +115,10 @@ pub fn raw_section_start<'a>(
     //     .context("")
     //     .parse(source)?;
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
+    let (source, _) = many0(pair(space0, newline)).context("").parse(source)?;
+    // let (source, _) = structure_empty_until_newline_or_eof
+    //     .context("")
+    //     .parse(source)?;
     let (source, text) = take_until(end_key.as_str()).context("").parse(source)?;
     // let (source, end_section) = raw_section_end(source, r#type, nest_level, list_level)?;
     let (source, end_section) = raw_section_end(source, r#type, nest_level, list_level)?;
