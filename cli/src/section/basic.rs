@@ -29,13 +29,15 @@ pub fn basic_section_end<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, closing) = tag(key).context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);
-    let (source, _) = multispace0.context("").parse(source)?;
-    // let (source, _) = structure_empty_until_newline_or_eof
-    //     .context("")
-    //     .parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
+    //let (source, _) = multispace0.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 6);
     let (source, _) = multispace0.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 7);
     let (source, children) = if list_level > 0 {
         many0(|src| block_of_list_item_content_v42(src))
             .context("")
@@ -52,6 +54,7 @@ pub fn basic_section_end<'a>(
             .context("")
             .parse(source)?
     };
+    dump_parser_if_debug(debug, dbg_header, source, 8);
     let section = Section {
         attr_list: vec![],
         flag_list: vec![],

@@ -1,0 +1,56 @@
+-- todo/
+
+[] Reference
+
+[] Show
+
+-- /todo
+
+-- code/
+-- rust
+
+let data = std::fs::read(in_src)?;
+std::fs::write(out_dst, &data)?;
+
+-- /code
+
+-- todo/
+
+[] Mention the problem was with your static site generator
+but also shows up in mdBook. 
+
+[] Mention that switcing to kqueue from fsevent fixes
+the issue but can run into too many files issue
+
+-- /todo
+
+-- ref
+-- title: Notify seems to trigger on std::fs::copy but not std::io::copy or std::fs::{read,write} #259 
+-- url: https://github.com/notify-rs/notify/issues/259
+
+-- ref
+-- title: Second attempt on preventing an event buildup #569 
+-- url: https://github.com/trunk-rs/trunk/pull/569
+
+-- ref
+-- title: Add workaround for macOS notify problem. #2157 
+-- url: https://github.com/rust-lang/mdBook/pull/2157
+
+-- ref
+-- title: Watch triggers multiple times for non-markdown on APFS (macOS) #2133 
+-- url: https://github.com/rust-lang/mdBook/issues/2133
+
+-- ref
+-- title: notify async monitors example
+-- url: https://github.com/notify-rs/notify/blob/main/examples/async_monitor.rs
+
+
+-- pagedata
+-- created: 2024-05-19T08:22:47-04:00
+-- id: 2ggzpyar
+-- type: post
+-- tag: rust 
+-- status: scratch
+
+
+

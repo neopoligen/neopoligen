@@ -120,7 +120,10 @@ pub fn unknown_section_start<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, _) = tag("/").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);
-    let (source, _) = multispace0.context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
+    //let (source, _) = multispace0.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 6);
