@@ -59,9 +59,9 @@ pub fn basic_section_full<'a>(
         .context("")
         .parse(source)?;
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
+    // let (source, _) = structure_empty_until_newline_or_eof
+    //     .context("")
+    //     .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, children) = many0(|src| block_of_main_content_v42(src))
         .context("")
@@ -88,9 +88,9 @@ pub fn basic_section_start<'a>(
         .context("")
         .parse(source)?;
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
+    // let (source, _) = structure_empty_until_newline_or_eof
+    //     .context("")
+    //     .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, mut children) = many0(alt((
         |src| block_of_main_content_v42(src),

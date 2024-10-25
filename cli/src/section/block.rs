@@ -52,7 +52,6 @@ pub struct Block {}
 pub fn block_of_section_attr_value_v42<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Vec<Span>, ErrorTree<&'a str>> {
-    dbg!(&source);
     let (source, spans) = many1(alt((
         plaintext,
         newline,

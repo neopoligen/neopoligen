@@ -58,7 +58,6 @@ impl PageV42 {
     }
 
     pub fn generate_ast(&mut self, site_config: &SiteConfigV42) -> Result<(), NeoError> {
-        dbg!(&self.fs_path);
         match parse_ast(
             &self.raw_source,
             site_config.sections.clone(),
