@@ -21,10 +21,16 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
+use self::any_colon::any_colon;
+use self::any_hyphen::any_hyphen;
+use self::any_pipe::any_pipe;
 use self::code_shorthand::code_shorthand;
 use self::escaped_asterisk::escaped_asterisk;
+use self::escaped_backslash::escaped_backslash;
 use self::escaped_backtick::escaped_backtick;
 use self::escaped_caret::escaped_caret;
+use self::escaped_greaterthan::escaped_greaterthan;
+use self::escaped_underscore::escaped_underscore;
 use self::footnote_shorthand::footnote_shorthand;
 // use self::escaped_hashtag::escaped_hashtag;
 // use self::escaped_hyphen::escaped_hyphen;
@@ -32,6 +38,8 @@ use self::named_span::named_span_v42;
 use self::single_asterisk::single_asterisk;
 use self::single_backtick::single_backtick;
 use self::single_caret::single_caret;
+use self::single_greaterthan::single_greaterthan;
+use self::single_underscore::single_underscore;
 // use self::single_hashtag::single_hashtag;
 // use self::single_hyphen::single_hyphen;
 
@@ -76,24 +84,26 @@ pub fn block_of_main_content_v42<'a>(
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = not(tag("--")).context("").parse(source)?;
     let (source, spans) = many1(alt((
+        // \n<^>*`_-|:\\
         plaintext,
         newline,
-        // singles
         single_asterisk,
-        single_backtick,
-        single_caret,
-        //single_hyphen,
-        single_lessthan,
-        // escapes
         escaped_asterisk,
-        escaped_backtick,
-        escaped_caret,
-        // escaped_hyphen,
+        single_lessthan,
         escaped_lessthan,
-        // add shorthands here
+        single_caret,
+        escaped_caret,
+        single_greaterthan,
+        escaped_greaterthan,
+        single_backtick,
+        escaped_backtick,
+        single_underscore,
+        escaped_underscore,
+        any_hyphen,
+        any_pipe,
+        any_colon,
+        escaped_backslash,
         code_shorthand,
-        footnote_shorthand,
-        // named span
         named_span_v42,
     )))
     .context("")
@@ -314,6 +324,7 @@ mod test {
     #[rstest]
     #[case("alfa")]
     #[case(" bravo charle")]
+    #[case("hotel-union")]
     #[case("x\n")]
     #[case("<")]
     #[case("< ")]
@@ -327,7 +338,6 @@ mod test {
     #[case(r#"\**"#)]
     #[case("^")]
     #[case(r#"\^^"#)]
-    #[ignore]
     fn check_basic_parsing_passes(#[case] input: &str) {
         let response = block_of_main_content_v42(input);
         if response.is_ok() {
