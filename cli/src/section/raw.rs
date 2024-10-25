@@ -103,9 +103,9 @@ pub fn raw_section_start<'a>(
     //     .context("")
     //     .parse(source)?;
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
+    // let (source, _) = structure_empty_until_newline_or_eof
+    //     .context("")
+    //     .parse(source)?;
     let (source, text) = take_until(end_key.as_str()).context("").parse(source)?;
     // let (source, end_section) = raw_section_end(source, r#type, nest_level, list_level)?;
     let (source, end_section) = raw_section_end(source, r#type, nest_level, list_level)?;
