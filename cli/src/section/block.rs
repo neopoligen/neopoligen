@@ -75,7 +75,9 @@ pub fn block_of_section_attr_value_v42<'a>(
     )))
     .context("")
     .parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
     Ok((source, spans))
 }
 

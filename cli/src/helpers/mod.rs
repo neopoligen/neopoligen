@@ -38,12 +38,17 @@ pub fn dump_parser_if_debug(debug: bool, dbg_header: &str, source: &str, count: 
         }
         println!(" {}: {}", dbg_header, count);
 
-        source.lines().take(5).for_each(|line| {
-            for _ in 0..count * 2 {
-                print!("█");
-            }
-            println!(" {}", line);
-        })
+        let l = source
+            .lines()
+            .take(5)
+            .map(|line| line)
+            .collect::<Vec<&str>>()
+            .join(r#"\n"#);
+
+        for _ in 0..count * 2 {
+            print!("█");
+        }
+        println!(" {}", l);
     }
 }
 
