@@ -12,6 +12,7 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
+// TODO: See if you can deprecate this and just use basic_section_end
 pub fn unknown_section_end<'a>(
     source: &'a str,
     key: &'a str,
@@ -20,26 +21,14 @@ pub fn unknown_section_end<'a>(
     _checklist_level: usize,
     debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let dbg_header = "______________ UNKNOWN_SECTION_END";
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "1"));
-        dbg!(&source);
-    }
+    let dbg_header = "_____ UNKNOWN_SECTION_END _____";
+    dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "2"));
-        dbg!(&source);
-    }
+    dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, _) = tag("/").context("").parse(source)?;
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "3"));
-        dbg!(&source);
-    }
+    dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, r#type) = tag(key).context("").parse(source)?;
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "4"));
-        dbg!(&source);
-    }
+    dump_parser_if_debug(debug, dbg_header, source, 4);
     // let (source, _) = many0(pair(space0, newline)).context("").parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
@@ -68,13 +57,13 @@ pub fn unknown_section_end<'a>(
 
 pub fn unknown_section_full<'a>(
     source: &'a str,
-    _sections: &'a ConfigSections,
-    _nest_level: usize,
-    _list_level: usize,
-    _checklist_level: usize,
+    sections: &'a ConfigSections,
+    nest_level: usize,
+    list_level: usize,
+    checklist_level: usize,
     debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let dbg_header = "______________ UNKNOWN_SECTION_FULL";
+    let dbg_header = "_____ UNKNOWN_SECTION_FULL _____";
     dump_parser_if_debug(debug, dbg_header, &source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, &source, 2);
@@ -89,9 +78,18 @@ pub fn unknown_section_full<'a>(
     //     .context("")
     //     .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = many0(|src| block_of_main_content_v42(src))
+    let (source, children) = if nest_level > 0 {
+        many0(alt((
+            |src| basic_section_end(src, &r#type, nest_level, list_level, checklist_level, debug),
+            |src| block_of_main_content_v42(src),
+        )))
         .context("")
-        .parse(source)?;
+        .parse(source)?
+    } else {
+        many0(|src| block_of_main_content_v42(src))
+            .context("")
+            .parse(source)?
+    };
     let section = Section {
         attr_list: vec![],
         flag_list: vec![],
@@ -106,31 +104,20 @@ pub fn unknown_section_full<'a>(
 pub fn unknown_section_start<'a>(
     source: &'a str,
     sections: &'a ConfigSections,
-    nest_level: usize,
+    mut nest_level: usize,
     list_level: usize,
     checklist_level: usize,
     debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
-    let dbg_header = "______________ UNKNOWN_SECTION_START";
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "1"));
-        dbg!(&source);
-    }
+    nest_level += 1;
+    let dbg_header = "_____ UNKNOWN_SECTION_START _____";
+    dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "2"));
-        dbg!(&source);
-    }
+    dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, r#type) = is_not(" \n/").context("").parse(source)?;
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "3"));
-        dbg!(&source);
-    }
+    dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, _) = tag("/").context("").parse(source)?;
-    if debug {
-        dbg!(format!("{}: {}", dbg_header, "4"));
-        dbg!(&source);
-    }
+    dump_parser_if_debug(debug, dbg_header, source, 4);
     // let (source, _) = many0(pair(space0, newline)).context("").parse(source)?;
     // let (source, _) = structure_empty_until_newline_or_eof
     //     .context("")
@@ -145,7 +132,9 @@ pub fn unknown_section_start<'a>(
     //     .context("")
     //     .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 6);
     // dbg!("xxxxxxxxxxxxxxxxxx");
     // dbg!(&source);
     // let (source, _) = structure_empty_until_newline_or_eof
@@ -154,6 +143,7 @@ pub fn unknown_section_start<'a>(
     // dbg!("----------------------");
     // dbg!(&source);
     let (source, _) = multispace0.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 7);
     let (source, mut children) = many0(alt((
         |src| {
             start_or_full_section(
@@ -169,6 +159,7 @@ pub fn unknown_section_start<'a>(
     )))
     .context("")
     .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 8);
     let (source, end_section) = basic_section_end(
         source,
         r#type,

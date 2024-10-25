@@ -9,6 +9,7 @@ pub fn solo_run_sample_8() {
     let site_config = SiteConfigV42::mock_for_files_in_test_samples_dir();
     let mut p = PageV42::mock_from_test_directory_sample(include_str!("samples/8.neo")).unwrap();
     let parsed = p.generate_ast(&site_config);
+    dbg!(&p.ast);
     if parsed.is_ok() {
         assert!(true)
     } else {

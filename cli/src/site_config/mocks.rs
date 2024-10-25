@@ -45,7 +45,12 @@ impl SiteConfigV42 {
 
     pub fn mock_for_files_in_test_samples_dir() -> SiteConfigV42 {
         let sections = ConfigSections {
-            basic: vec!["title".to_string(), "previews".to_string()],
+            basic: vec![
+                "title".to_string(),
+                "previews".to_string(),
+                "tldr".to_string(),
+                "div".to_string(),
+            ],
             block: vec![],
             checklist: vec![],
             checklist_item: vec![],
