@@ -78,6 +78,7 @@ pub fn unknown_section_full<'a>(
     //     .context("")
     //     .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, &source, 5);
     let (source, children) = if nest_level > 0 {
         many0(alt((
             |src| basic_section_end(src, &r#type, nest_level, list_level, checklist_level, debug),
@@ -90,6 +91,7 @@ pub fn unknown_section_full<'a>(
             .context("")
             .parse(source)?
     };
+    dump_parser_if_debug(debug, dbg_header, &source, 6);
     let section = Section {
         attr_list: vec![],
         flag_list: vec![],
@@ -148,6 +150,7 @@ pub fn unknown_section_start<'a>(
         checklist_level,
         debug,
     )?;
+    dump_parser_if_debug(debug, dbg_header, source, 9);
     children.push(end_section);
     let section = Section {
         attr_list: vec![],

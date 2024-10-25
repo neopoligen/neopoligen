@@ -157,7 +157,10 @@ pub fn section_flag_v42(source: &str) -> IResult<&str, SectionAttr, ErrorTree<&s
     // let flag = SpanAttr {
     //     kind: SpanAttrKind::FlagV42 { value: spans },
     // };
-    let (source, _) = multispace0.context("").parse(source)?;
+    // let (source, _) = multispace0.context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
     let spans = span_hits.iter().map(|sh| sh.0.clone()).collect();
     Ok((
         source,

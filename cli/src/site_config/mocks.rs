@@ -50,6 +50,8 @@ impl SiteConfigV42 {
                 "previews".to_string(),
                 "tldr".to_string(),
                 "div".to_string(),
+                // "blurb".to_string(),
+                // "youtube".to_string(),
             ],
             block: vec![],
             checklist: vec![],
