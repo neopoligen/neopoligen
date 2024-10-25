@@ -51,6 +51,8 @@ pub fn checklist_section_full<'a>(
     sections: &'a ConfigSections,
     mut nest_level: usize,
     list_level: usize,
+    checklist_level: usize,
+    debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     nest_level += 1;
     let (source, _) = tag("-- ").context("").parse(source)?;
@@ -66,7 +68,7 @@ pub fn checklist_section_full<'a>(
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, children) =
-        many1(|src| checklist_item_full(src, sections, nest_level, list_level))
+        many1(|src| checklist_item_full(src, sections, nest_level, list_level, checklist_level, debug))
             .context("")
             .parse(source)?;
     Ok((
@@ -87,6 +89,8 @@ pub fn checklist_section_start<'a>(
     sections: &'a ConfigSections,
     mut nest_level: usize,
     list_level: usize,
+    checklist_level: usize,
+    debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     nest_level += 1;
     let (source, _) = tag("-- ").context("").parse(source)?;
@@ -103,10 +107,10 @@ pub fn checklist_section_start<'a>(
         .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, mut children) =
-        many1(|src| checklist_item_start_end(src, sections, nest_level, list_level))
+        many1(|src| checklist_item_start_end(src, sections, nest_level, list_level, checklist_level, debug))
             .context("")
             .parse(source)?;
-    let (source, end_section) = basic_section_end(source, r#type, nest_level, list_level)?;
+    let (source, end_section) = basic_section_end(source, r#type, nest_level, list_level, checklist_level, debug)?;
     children.push(end_section);
     Ok((
         source,
@@ -169,7 +173,7 @@ mod test {
                 r#type: "todo".to_string(),
             },
         );
-        let right = checklist_section_full(source, &config.sections, 0, 0).unwrap();
+        let right = checklist_section_full(source, &config.sections, 0, 0, 0, false).unwrap();
         assert_eq!(left, right);
     }
 

@@ -16,6 +16,8 @@ pub fn basic_section_end<'a>(
     key: &'a str,
     _nest_level: usize,
     list_level: usize,
+    _checklist_level: usize,
+    _debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, _) = tag("/").context("").parse(source)?;
@@ -53,6 +55,8 @@ pub fn basic_section_full<'a>(
     sections: &'a ConfigSections,
     _nest_level: usize,
     _list_level: usize,
+    _checklist_level: usize,
+    _debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder_full(src, &sections.basic))
@@ -82,6 +86,8 @@ pub fn basic_section_start<'a>(
     sections: &'a ConfigSections,
     nest_level: usize,
     list_level: usize,
+    checklist_level: usize,
+    debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder_start(src, &sections.basic))
@@ -94,11 +100,11 @@ pub fn basic_section_start<'a>(
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, mut children) = many0(alt((
         |src| block_of_main_content_v42(src),
-        |src| start_or_full_section(src, &sections, nest_level, list_level),
+        |src| start_or_full_section(src, &sections, nest_level, list_level, checklist_level, debug),
     )))
     .context("")
     .parse(source)?;
-    let (source, end_section) = basic_section_end(source, r#type, nest_level, list_level)?;
+    let (source, end_section) = basic_section_end(source, r#type, nest_level, list_level, checklist_level, debug)?;
     children.push(end_section);
     let section = Section {
         attr_list: vec![],
@@ -175,7 +181,7 @@ mod test {
             if bounds == "full" {
                 assert_eq!(
                     remainder,
-                    basic_section_full(source, &config.sections, 0, 0)
+                    basic_section_full(source, &config.sections, 0, 0, 0, false)
                         .unwrap()
                         .0
                 );
@@ -220,7 +226,7 @@ mod test {
                 r#type: "title".to_string(),
             },
         );
-        let right = basic_section_full(source, &config.sections, 0, 0).unwrap();
+        let right = basic_section_full(source, &config.sections, 0, 0, 0, false).unwrap();
         assert_eq!(left, right);
     }
 
@@ -255,7 +261,7 @@ mod test {
                 r#type: "p".to_string(),
             },
         );
-        let right = basic_section_full(source, &config.sections, 0, 0).unwrap();
+        let right = basic_section_full(source, &config.sections, 0, 0, 0, false).unwrap();
         assert_eq!(left, right);
     }
 
@@ -290,7 +296,7 @@ mod test {
                 r#type: "preview".to_string(),
             },
         );
-        let right = basic_section_full(source, &config.sections, 0, 0).unwrap();
+        let right = basic_section_full(source, &config.sections, 0, 0, 0, false).unwrap();
         assert_eq!(left, right);
     }
 
@@ -338,7 +344,7 @@ mod test {
                 r#type: "previews".to_string(),
             },
         );
-        let right = basic_section_start(source, &config.sections, 0, 0);
+        let right = basic_section_start(source, &config.sections, 0, 0, 0, false);
         // dbg!(&right);
         assert_eq!(left, right.unwrap());
     }
@@ -374,7 +380,7 @@ mod test {
                 r#type: "title".to_string(),
             },
         );
-        let right = basic_section_full(source, &config.sections, 0, 0).unwrap();
+        let right = basic_section_full(source, &config.sections, 0, 0, 0, false).unwrap();
         assert_eq!(left, right);
     }
 
@@ -383,7 +389,7 @@ mod test {
     fn ending_without_nesting_and_no_content() {
         let source = "-- /p";
         let left = 0;
-        let section = basic_section_end(source, "p", 0, 0).unwrap().1;
+        let section = basic_section_end(source, "p", 0, 0, 0, false).unwrap().1;
         let right = match section.kind {
             SectionKind::Basic { children, .. } => children.len(),
             _ => 0,
@@ -396,7 +402,7 @@ mod test {
     fn ending_without_nesting_and_has_content() {
         let source = "-- /p\n\nthis is\n\nsomethig";
         let left = 2;
-        let section = basic_section_end(source, "p", 0, 0).unwrap().1;
+        let section = basic_section_end(source, "p", 0, 0, 0, false).unwrap().1;
         // dbg!(&section);
         let right = match section.kind {
             SectionKind::End { children, .. } => children.len(),

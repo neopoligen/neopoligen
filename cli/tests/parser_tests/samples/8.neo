@@ -1,0 +1,70 @@
+-- title
+
+Make A Button To Copy Text Onto The Clipboard
+
+-- tldr/
+
+-- html/
+-- show
+
+<p id="content">
+  lima <em>delta</em> november
+</p>
+
+<button id="copyButton">
+  Copy Content
+</button>
+
+-- /html
+
+-- javascript/
+-- show
+
+const copyContent = async () => {
+  try {
+    await navigator.clipboard.writeText(
+      content.innerText
+    )
+    copyButton.innerHTML = "Copied!"
+  } catch (err) {
+    console.error("Could not copy to clipboard")
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  copyButton.addEventListener("click", copyContent)
+})
+
+-- /javascript
+
+
+-- /tldr
+
+-- notes
+
+- I'm using __innerText__ instead of __innerHTML__
+in the copy. Using __innerHTML__ put the tags 
+themselves in the output when I posted into
+a plain-text editor
+
+
+-- ref
+-- title: MDN: Navigator Clipboard
+-- url: https://developer.mozilla.org/en-US/docs/Web/API/Clipboard
+
+
+-- ref
+-- title: MDN: Navigator Clipboard API
+-- url: https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API
+
+
+-- tags 
+-- webdev
+
+-- pagedata
+-- created: 2022-03-14T23:10:14-04:00
+-- id: 26p8miod
+-- status: draft 
+-- type: post
+-- tag: javascript
+

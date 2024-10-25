@@ -13,6 +13,8 @@ pub fn list_item_full<'a>(
     _sections: &'a ConfigSections,
     _nest_level: usize,
     _list_level: usize,
+    _checklist_level: usize,
+    _debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
@@ -38,12 +40,13 @@ pub fn list_item_start_end<'a>(
     sections: &'a ConfigSections,
     nest_level: usize,
     list_level: usize,
+    checklist_level: usize,
+    debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
-
     let (source, children) = many1(alt((
-        |src| start_or_full_section(src, sections, nest_level, list_level),
+        |src| start_or_full_section(src, sections, nest_level, list_level, checklist_level, debug),
         // |src| block_of_list_content_v42(src),
         //|src| block_of_end_content_that_is_not_a_list_item(src),
         |src| block_of_list_item_content_v42(src),
@@ -101,7 +104,7 @@ mod test {
                 r#type: "list-item".to_string(),
             },
         );
-        let right = list_item_full(source, &config.sections, 0, 0).unwrap();
+        let right = list_item_full(source, &config.sections, 0, 0, 0, false).unwrap();
         assert_eq!(left, right);
     }
 
@@ -162,7 +165,7 @@ mod test {
                 r#type: "list-item".to_string(),
             },
         );
-        let right = list_item_start_end(source, &config.sections, 0, 0).unwrap();
+        let right = list_item_start_end(source, &config.sections, 0, 0, 0, false).unwrap();
         assert_eq!(left, right);
     }
 
@@ -221,7 +224,7 @@ mod test {
                 r#type: "list-item".to_string(),
             },
         );
-        let right = list_item_start_end(source, &config.sections, 1, 1).unwrap();
+        let right = list_item_start_end(source, &config.sections, 1, 1, 0, false).unwrap();
         assert_eq!(left, right);
     }
 

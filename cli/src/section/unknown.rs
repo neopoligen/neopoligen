@@ -7,6 +7,7 @@ use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;
 use nom::multi::many0;
+// use nom::sequence::pair;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -17,10 +18,13 @@ pub fn unknown_section_end<'a>(
     key: &'a str,
     _nest_level: usize,
     _list_level: usize,
+    _checklist_level: usize,
+    _debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, _) = tag("/").context("").parse(source)?;
     let (source, r#type) = tag(key).context("").parse(source)?;
+    // let (source, _) = many0(pair(space0, newline)).context("").parse(source)?;
     let (source, _) = structure_empty_until_newline_or_eof
         .context("")
         .parse(source)?;
@@ -51,6 +55,8 @@ pub fn unknown_section_full<'a>(
     _sections: &'a ConfigSections,
     _nest_level: usize,
     _list_level: usize,
+    _checklist_level: usize,
+    _debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = is_not(" /\n").context("").parse(source)?;
@@ -81,13 +87,16 @@ pub fn unknown_section_start<'a>(
     sections: &'a ConfigSections,
     nest_level: usize,
     list_level: usize,
+    checklist_level: usize,
+    debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = is_not(" \n/").context("").parse(source)?;
     let (source, _) = tag("/").context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
+    // let (source, _) = many0(pair(space0, newline)).context("").parse(source)?;
+    // let (source, _) = structure_empty_until_newline_or_eof
+    //     .context("")
+    //     .parse(source)?;
     // let (source, r#type) = (|src| tag_finder_start(src, &sections.basic))
     //     .context("")
     //     .parse(source)?;
@@ -108,12 +117,12 @@ pub fn unknown_section_start<'a>(
     // dbg!(&source);
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, mut children) = many0(alt((
-        |src| start_or_full_section(src, &sections, nest_level, list_level),
+        |src| start_or_full_section(src, &sections, nest_level, list_level, checklist_level, debug),
         |src| block_of_main_content_v42(src),
     )))
     .context("")
     .parse(source)?;
-    let (source, end_section) = basic_section_end(source, r#type, nest_level, list_level)?;
+    let (source, end_section) = basic_section_end(source, r#type, nest_level, list_level, checklist_level, debug)?;
     children.push(end_section);
     let section = Section {
         attr_list: vec![],
@@ -171,6 +180,10 @@ mod test {
 
     #[test]
     fn unknown_start_and_end_not_in_list() {
+        let nest_level = 0;
+        let list_level = 0;
+        let checklist_level = 0;
+        let debug = false;
         let source = "-- unknown-section/\n\nalfa bravo\n\n-- /unknown-section";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -212,13 +225,17 @@ mod test {
                 r#type: "unknown-section".to_string(),
             },
         );
-        let right = unknown_section_start(source, &config.sections, 0, 0);
+        let right = unknown_section_start(source, &config.sections, nest_level, list_level, checklist_level, debug);
         // dbg!(&right);
         assert_eq!(left, right.unwrap());
     }
 
     #[test]
     fn basic_full_test() {
+        let nest_level = 0;
+        let list_level = 0;
+        let checklist_level = 0;
+        let debug = false;
         let source = "-- unknown-section\n\nHello World";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -247,15 +264,19 @@ mod test {
                 r#type: "unknown-section".to_string(),
             },
         );
-        let right = unknown_section_full(source, &config.sections, 0, 0).unwrap();
+        let right = unknown_section_full(source, &config.sections, nest_level, list_level, checklist_level, debug).unwrap();
         assert_eq!(left, right);
     }
 
     #[test]
     fn ending_without_nesting_and_no_content() {
+        let nest_level = 0;
+        let list_level = 0;
+        let checklist_level = 0;
+        let debug = false;
         let source = "-- /asdf";
         let left = 0;
-        let section = unknown_section_end(source, "asdf", 0, 0).unwrap().1;
+        let section = unknown_section_end(source, "asdf", nest_level, list_level, checklist_level, debug).unwrap().1;
         let right = match section.kind {
             SectionKind::Unknown { children, .. } => children.len(),
             _ => 0,
@@ -265,9 +286,13 @@ mod test {
 
     #[test]
     fn ending_without_nesting_and_has_content() {
+        let nest_level = 0;
+        let list_level = 0;
+        let checklist_level = 0;
+        let debug = false;
         let source = "-- /asdf\n\nthis is\n\nsomethig";
         let left = 2;
-        let section = unknown_section_end(source, "asdf", 0, 0).unwrap().1;
+        let section = unknown_section_end(source, "asdf", nest_level, list_level, checklist_level, debug).unwrap().1;
         let right = match section.kind {
             SectionKind::Unknown { children, .. } => children.len(),
             _ => 0,

@@ -20,6 +20,8 @@ pub fn json5_section_full<'a>(
     sections: &'a ConfigSections,
     _nest_level: usize,
     _list_level: usize,
+    _checklist_level: usize,
+    _debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder_full(src, &sections.json5))
@@ -64,7 +66,7 @@ mod test {
     fn json5_basic_test() {
         let source = "-- pagedata\n-- id: abcd1234";
         let config = SiteConfigV42::mock1_basic();
-        let response = json5_section_full(source, &config.sections, 0, 0);
+        let response = json5_section_full(source, &config.sections, 0, 0, 0, false);
         assert!(response.is_ok());
     }
 }

@@ -18,6 +18,8 @@ pub fn raw_section_end<'a>(
     key: &'a str,
     _nest_level: usize,
     list_level: usize,
+    _checklist_level: usize,
+    _debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, _) = tag("/").context("").parse(source)?;
@@ -69,6 +71,8 @@ pub fn raw_section_full<'a>(
     sections: &'a ConfigSections,
     _nest_level: usize,
     _list_level: usize,
+    _checklist_level: usize,
+    _debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = tag("-- ").context("").parse(source)?;
     let (source, r#type) = (|src| tag_finder_full(src, &sections.raw))
@@ -102,6 +106,8 @@ pub fn raw_section_start<'a>(
     sections: &'a ConfigSections,
     mut nest_level: usize,
     list_level: usize,
+    checklist_level: usize,
+    debug: bool,
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     nest_level += 1;
     let (source, _) = tag("-- ").context("").parse(source)?;
@@ -121,7 +127,7 @@ pub fn raw_section_start<'a>(
     //     .parse(source)?;
     let (source, text) = take_until(end_key.as_str()).context("").parse(source)?;
     // let (source, end_section) = raw_section_end(source, r#type, nest_level, list_level)?;
-    let (source, end_section) = raw_section_end(source, r#type, nest_level, list_level)?;
+    let (source, end_section) = raw_section_end(source, r#type, nest_level, list_level, checklist_level, debug)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let mut children = vec![];
     children.push(end_section);
@@ -212,7 +218,7 @@ mod test {
                 r#type: "code".to_string(),
             },
         );
-        let right = raw_section_start(source, &config.sections, 0, 0).unwrap();
+        let right = raw_section_start(source, &config.sections, 0, 0, 0, false).unwrap();
         assert_eq!(left, right);
     }
 
@@ -261,7 +267,7 @@ mod test {
                 r#type: "code".to_string(),
             },
         );
-        let right = raw_section_start(source, &config.sections, 0, 0).unwrap();
+        let right = raw_section_start(source, &config.sections, 0, 0, 0, false).unwrap();
         assert_eq!(left, right);
     }
 
@@ -294,7 +300,7 @@ mod test {
                 r#type: "code".to_string(),
             },
         );
-        let right = raw_section_start(source, &config.sections, 0, 0).unwrap();
+        let right = raw_section_start(source, &config.sections, 0, 0, 0, false).unwrap();
         assert_eq!(left, right);
     }
 
@@ -356,7 +362,7 @@ mod test {
                 r#type: "code".to_string(),
             },
         );
-        let right = raw_section_start(source, &config.sections, 0, 0).unwrap();
+        let right = raw_section_start(source, &config.sections, 0, 0, 0, false).unwrap();
         assert_eq!(left, right);
     }
 
@@ -389,7 +395,7 @@ mod test {
                 r#type: "code".to_string(),
             },
         );
-        let right = raw_section_start(source, &config.sections, 1, 1).unwrap();
+        let right = raw_section_start(source, &config.sections, 1, 1, 0, false).unwrap();
         assert_eq!(left, right);
     }
 
@@ -398,6 +404,8 @@ mod test {
     fn start_end_with_list_item_after_when_not_in_a_list() {
         let nest_level = 0;
         let list_level = 0;
+        let checklist_level = 0;
+        let debug = false;
         let source = "-- code/\n\nalfa\n\n-- /code\n\n- bravo";
         let config = SiteConfig::mock1_basic();
         let left = (
@@ -437,7 +445,7 @@ mod test {
                 r#type: "code".to_string(),
             },
         );
-        let right = raw_section_start(source, &config.sections, nest_level, list_level).unwrap();
+        let right = raw_section_start(source, &config.sections, nest_level, list_level, checklist_level, debug).unwrap();
         assert_eq!(left, right);
     }
 
