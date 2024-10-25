@@ -331,7 +331,7 @@ mod test {
     #[case("<<alfa|bravo|flag>>")]
     #[case("<<alfa|bravo|flag|two>>")]
     #[case("<<alfa|bravo|key: value|another: value>>")]
-    fn solo_valid_named_span_cases(#[case] source: &str) {
+    fn switch_valid_named_span_cases(#[case] source: &str) {
         let result = named_span_v42(source);
         if result.is_ok() {
             //dbg!(&result.unwrap().clone());
@@ -409,7 +409,7 @@ mod test {
     #[case("mi\\::ke: |")]
     #[case("mi::ke: |")]
     #[case("nov\\\\ember: |")]
-    fn solo_valid_attr_values(#[case] source: &str) {
+    fn switch_valid_attr_values(#[case] source: &str) {
         let result = named_span_attr_value_v42(source);
         let remainder = result.as_ref().unwrap().0;
         if result.is_ok() && remainder == "|" {
@@ -436,7 +436,7 @@ mod test {
     #[case("|escaped\\<lessthan")]
     #[case("|single>greaterthan")]
     #[case("|escaped\\>greaterthan")]
-    fn solo_named_span_flag_v42_test(#[case] source: &str) {
+    fn switch_named_span_flag_v42_test(#[case] source: &str) {
         let result = named_span_flag_v42(source);
         if result.as_ref().is_ok() {
             if result.as_ref().unwrap().0 == "" {
@@ -452,7 +452,7 @@ mod test {
     }
 
     #[test]
-    fn solo_ns_basic_v42() {
+    fn switch_ns_basic_v42() {
         let source = "<<em|alfa>>";
         let left = (
             "",
