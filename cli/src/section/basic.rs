@@ -40,13 +40,13 @@ pub fn basic_section_end<'a>(
         many0(|src| block_of_list_item_content_v42(src))
             .context("")
             .parse(source)?
-    } else if nest_level > 0 {
-        many0(alt((
-            |src| block_of_main_content_v42(src),
-            // basic_section_end(source, key, nest_level, list_level, checklist_level, debug),
-        )))
-        .context("")
-        .parse(source)?
+    // } else if nest_level > 0 {
+    //     many0(alt((
+    //         |src| block_of_main_content_v42(src),
+    //         // basic_section_end(source, key, nest_level, list_level, checklist_level, debug),
+    //     )))
+    //     .context("")
+    //     .parse(source)?
     } else {
         many0(|src| block_of_main_content_v42(src))
             .context("")
