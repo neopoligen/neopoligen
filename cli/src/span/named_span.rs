@@ -181,12 +181,13 @@ pub fn named_span_attr_key_v42(source: &str) -> IResult<&str, Vec<Span>, ErrorTr
 pub fn named_span_attr_v42(source: &str) -> IResult<&str, SpanAttr, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, key_spans) = named_span_attr_key_v42.context("").parse(source)?;
+    let (source, value_spans) = named_span_attr_value_v42.context("").parse(source)?;
     Ok((
         source,
         SpanAttr {
             kind: SpanAttrKind::KeyValueSpansV42 {
                 key: key_spans,
-                value: vec![],
+                value: value_spans,
             },
         },
     ))
@@ -328,6 +329,8 @@ mod test {
     #[case("<<alfa:bravo|alfa:bravo>>")]
     #[case("<<alfa\\\\bravo|alfa\\\\bravo>>")]
     #[case("<<alfa|bravo|flag>>")]
+    #[case("<<alfa|bravo|flag|two>>")]
+    #[case("<<alfa|bravo|key: value|another: value>>")]
     fn solo_valid_named_span_cases(#[case] source: &str) {
         let result = named_span_v42(source);
         if result.is_ok() {
