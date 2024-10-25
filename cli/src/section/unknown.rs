@@ -57,7 +57,7 @@ pub fn unknown_section_end<'a>(
 
 pub fn unknown_section_full<'a>(
     source: &'a str,
-    sections: &'a ConfigSections,
+    _sections: &'a ConfigSections,
     nest_level: usize,
     list_level: usize,
     checklist_level: usize,

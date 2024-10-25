@@ -2,7 +2,7 @@ use crate::helpers::dump_parser_if_debug;
 use crate::section::block::*;
 use crate::section::*;
 use crate::section_attr::*;
-use crate::span::*;
+// use crate::span::*;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;
@@ -15,7 +15,7 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn basic_section_end<'a>(
     source: &'a str,
     key: &'a str,
-    nest_level: usize,
+    _nest_level: usize,
     list_level: usize,
     _checklist_level: usize,
     debug: bool,
