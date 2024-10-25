@@ -7,6 +7,7 @@ use crate::section::block::block_of_section_attr_value_v42;
 // use crate::span::hyphen::hyphen;
 // use crate::span::pipe::pipe;
 // use crate::span::single_underscore::single_underscore;
+use crate::helpers::dump_parser_if_debug;
 use crate::span::*;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
@@ -60,20 +61,31 @@ pub fn section_attr<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, ErrorT
 pub fn section_key_value_attr<'a>(
     source: &'a str,
 ) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
+    // TODO: get debug value from the ast tree
+    let debug = false;
+    let dbg_header = "_____ SECTION_KEY_VALUE_ATTR _____";
+    dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = tag("--").context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, _) = space1.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, key_parts) = many1(alt((
         is_not(": \n\t"),
         pair(tag(":"), not(alt((multispace1, eof)))).map(|x| x.0),
     )))
     .context("")
     .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, _) = tag(":").context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, _) = space1.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 6);
     let (source, spans) = block_of_section_attr_value_v42.context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 7);
+    // let (source, _) = structure_empty_until_newline_or_eof
+    //     .context("")
+    //     .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 8);
     let key = key_parts
         .iter()
         .map(|part| part.to_string())

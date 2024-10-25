@@ -54,7 +54,6 @@ pub fn block_of_section_attr_value_v42<'a>(
 ) -> IResult<&'a str, Vec<Span>, ErrorTree<&'a str>> {
     let (source, spans) = many1(alt((
         plaintext,
-        newline,
         single_asterisk,
         escaped_asterisk,
         single_lessthan,
