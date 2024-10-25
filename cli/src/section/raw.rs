@@ -66,9 +66,9 @@ pub fn raw_section_full<'a>(
     //     .context("")
     //     .parse(source)?;
     let (source, attrs) = many0(section_attr).context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
+    // let (source, _) = structure_empty_until_newline_or_eof
+    //     .context("")
+    //     .parse(source)?;
     let (source, text) = alt((take_until("\n--"), rest)).context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let section = Section {

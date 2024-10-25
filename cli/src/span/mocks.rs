@@ -1,6 +1,6 @@
 use crate::span::Span;
 
-use super::named_span;
+// use super::named_span;
 use super::named_span_v42;
 use super::plaintext;
 use super::span_for_body_text;

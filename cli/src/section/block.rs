@@ -31,7 +31,7 @@ use self::escaped_backtick::escaped_backtick;
 use self::escaped_caret::escaped_caret;
 use self::escaped_greaterthan::escaped_greaterthan;
 use self::escaped_underscore::escaped_underscore;
-use self::footnote_shorthand::footnote_shorthand;
+// use self::footnote_shorthand::footnote_shorthand;
 // use self::escaped_hashtag::escaped_hashtag;
 // use self::escaped_hyphen::escaped_hyphen;
 use self::named_span::named_span_v42;
@@ -55,22 +55,24 @@ pub fn block_of_section_attr_value_v42<'a>(
     dbg!(&source);
     let (source, spans) = many1(alt((
         plaintext,
-        // singles
+        newline,
         single_asterisk,
-        single_backtick,
-        single_caret,
-        //single_hyphen,
-        single_lessthan,
-        // escapes
         escaped_asterisk,
-        escaped_backtick,
-        escaped_caret,
-        // escaped_hyphen,
+        single_lessthan,
         escaped_lessthan,
-        // add shorthands here
+        single_caret,
+        escaped_caret,
+        single_greaterthan,
+        escaped_greaterthan,
+        single_backtick,
+        escaped_backtick,
+        single_underscore,
+        escaped_underscore,
+        any_hyphen,
+        any_pipe,
+        any_colon,
+        escaped_backslash,
         code_shorthand,
-        footnote_shorthand,
-        // named span
         named_span_v42,
     )))
     .context("")
@@ -84,7 +86,6 @@ pub fn block_of_main_content_v42<'a>(
 ) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
     let (source, _) = not(tag("--")).context("").parse(source)?;
     let (source, spans) = many1(alt((
-        // \n<^>*`_-|:\\
         plaintext,
         newline,
         single_asterisk,
