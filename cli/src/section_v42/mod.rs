@@ -1,7 +1,9 @@
 pub mod basic;
+pub mod block;
 pub mod json5;
 
 use crate::section_v42::basic::*;
+use crate::section_v42::block::*;
 use crate::section_v42::json5::*;
 use crate::site_config::SiteConfigV42;
 use nom::branch::alt;
@@ -16,6 +18,7 @@ use serde::Serialize;
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum SectionV42 {
     Basic(BasicSectionV42),
+    Block(BlockSectionV42),
     Json5(Json5SectionV42),
 }
 
