@@ -36,7 +36,9 @@ pub fn json5_section_full_v42<'a>(
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let _dbg_header = "BASIC_SECTION_START";
     let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, kind) = tag("pagedata").context("").parse(source)?;
+    let (source, kind) = alt((tag("pagedata"), tag("json5-test")))
+        .context("")
+        .parse(source)?;
     let (source, _) = line_ending.context("").parse(source)?;
     let (source, raw_attrs) = many0(section_attr_v42).context("").parse(source)?;
     let (source, json_text) = alt((take_until("\n-- "), rest)).context("").parse(source)?;
@@ -128,4 +130,30 @@ mod test {
         let right = json5_section_full_v42(&source, &site_config, 0, 0, 0).unwrap();
         assert_eq!(left, right);
     }
+
+    #[test]
+    fn solo_basic_data_test() {
+        let site_config = SiteConfigV42::mock1_basic();
+        let source = SAMPLE_DIR
+            .get_file("002-basic-data.neo")
+            .unwrap()
+            .contents_utf8()
+            .unwrap()
+            .to_string();
+        let left = (
+            "",
+            SectionV42::Json5(Json5SectionV42 {
+                attrs: vec![],
+                flags: vec![],
+                kind: "json5-test".to_string(),
+                data: serde_json5::from_str::<Value>(r#"{"alfa": "bravo"}"#).unwrap(),
+                error: None,
+                children: vec![],
+            }),
+        );
+        let right = json5_section_full_v42(&source, &site_config, 0, 0, 0).unwrap();
+        assert_eq!(left, right);
+    }
+
+    //
 }
