@@ -47,8 +47,16 @@ pub enum NeoErrorKind {
     MissingThemeDirectory {
         path: PathBuf,
     },
+    // TODO: Deprecate ParseError in favor of ParserErrorV42
     ParserError {
         source_path: Option<PathBuf>,
+        line: usize,
+        column: usize,
+        remainder: String,
+        source: String,
+        message: String,
+    },
+    ParserErrorV42 {
         line: usize,
         column: usize,
         remainder: String,
@@ -116,6 +124,25 @@ impl std::fmt::Display for NeoError {
             NeoErrorKind::ThemeTestError { source_path, .. } => {
                 fmt.write_str("Path: ")?;
                 fmt.write_str(source_path.display().to_string().as_str())?;
+            }
+            NeoErrorKind::ParserErrorV42 {
+                line,
+                column,
+                remainder,
+                message,
+                ..
+            } => {
+                fmt.write_str("Error: ")?;
+                fmt.write_str(message.as_str())?;
+                fmt.write_str("\n")?;
+                fmt.write_str("Line: ")?;
+                fmt.write_str(line.to_string().as_str())?;
+                fmt.write_str(" Column: ")?;
+                fmt.write_str(column.to_string().as_str())?;
+                fmt.write_str(" At: ")?;
+                fmt.write_str("\n")?;
+                fmt.write_str("\n")?;
+                fmt.write_str(remainder.as_str())?;
             }
             NeoErrorKind::ParserError {
                 line,

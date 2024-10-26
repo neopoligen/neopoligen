@@ -14,7 +14,7 @@ impl PageV42 {
             .contents_utf8()
             .unwrap()
             .to_string();
-        let ast = parse_ast_v42(&source, &PathBuf::from(name), &site_config).unwrap();
+        let ast = parse_ast_v42(&source, &site_config).unwrap();
         PageV42 { ast, source }
     }
 }
