@@ -1,31 +1,38 @@
 #![allow(unused_variables)]
 #![allow(unused_imports)]
 
+pub mod mocks;
+
+use crate::neo_error::NeoError;
 use crate::section_v42::SectionV42;
+use crate::site_config::SiteConfigV42;
 use serde::Deserialize;
 use serde::Serialize;
 use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PageV42 {
-    pub ast: Option<Vec<SectionV42>>,
-    pub raw_source: String,
-    pub fs_path: PathBuf,
+    pub ast: Vec<SectionV42>,
+    pub source: String,
 }
+
+impl PageV42 {}
 
 #[cfg(test)]
 mod test {
+
+    use include_dir::{include_dir, Dir};
+
+    use super::PageV42;
     // use super::*;
     // use pretty_assertions::assert_eq;
     //use rstest::rstest;
-    use std::collections::BTreeMap;
 
-    // #[test]
-    // fn solo_validate_samples() {
-    //     valid_samples().iter().for_each(|(_key, source)| {
-    //         dbg!(source);
-    //     });
-    // }
+    #[test]
+    pub fn solo_check_section_count() {
+        let page = PageV42::valid_sample("000-pagedata-only.neo");
+        dbg!(page);
+    }
 
     // fn valid_samples() -> BTreeMap<String, String> {
     //     let mut samples = BTreeMap::new();

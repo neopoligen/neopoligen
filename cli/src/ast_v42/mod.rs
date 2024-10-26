@@ -1,13 +1,12 @@
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 
-use std::path::PathBuf;
-
 use crate::neo_error::*;
 use crate::section::*;
+use crate::section_v42::SectionV42;
 use crate::site_config::ConfigSections;
+use crate::site_config::SiteConfigV42;
 use nom::character::complete::multispace0;
-//use nom::multi::many1;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -15,15 +14,15 @@ use nom_supreme::error::GenericErrorTree;
 use nom_supreme::final_parser::final_parser;
 use nom_supreme::final_parser::Location;
 use nom_supreme::final_parser::RecreateContext;
+use std::path::PathBuf;
 //use nom_supreme::parser_ext::ParserExt;
 
 pub fn parse_ast_v42(
     source: &str,
-    sections: ConfigSections,
     fs_path: &PathBuf,
-    debug: bool,
-) -> Result<Vec<Section>, NeoError> {
-    match final_parser(|src| do_parse_v42(src, &sections, debug))(source) {
+    site_config: &SiteConfigV42,
+) -> Result<Vec<SectionV42>, NeoError> {
+    match final_parser(|src| do_parse_v42(src, site_config))(source) {
         Ok(data) => Ok(data),
         Err(e) => Err(get_error_v42(source, &e, fs_path).into()),
     }
@@ -31,9 +30,8 @@ pub fn parse_ast_v42(
 
 fn do_parse_v42<'a>(
     source: &'a str,
-    sections: &'a ConfigSections,
-    debug: bool,
-) -> IResult<&'a str, Vec<Section>, ErrorTree<&'a str>> {
+    site_config: &'a SiteConfigV42,
+) -> IResult<&'a str, Vec<SectionV42>, ErrorTree<&'a str>> {
     let (source, result) = multispace0(source)?;
     // let temp_debug_flag = false;
     // // The 0, 0, 0 below are for the nest, list, and checklist levels, they are followed by the
