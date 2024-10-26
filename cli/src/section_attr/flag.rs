@@ -55,7 +55,7 @@ pub fn section_flag_attr_v42<'a>(
     Ok((
         source,
         SectionAttrV42::FlagV42(SectionFlagAttrV42 {
-            value: value.to_string(),
+            value: value.trim().to_string(),
         }),
     ))
 }
@@ -70,6 +70,8 @@ mod test {
     #[case("alfa")]
     #[case("bravo-charlie")]
     #[case("https://www.example.com/")]
+    #[case("  leading_spaces_are_okay")]
+    #[case("trailing_spaces_are_okay   ")]
     fn solo_section_flag_attr_v42_valid_flags(#[case] left: &str) {
         let source = format!("-- {}", left);
         let response = section_flag_attr_v42(source.as_str()).unwrap();
@@ -77,7 +79,7 @@ mod test {
             SectionAttrV42::FlagV42(data) => data.value,
             _ => "".to_string(),
         };
-        assert_eq!(left, right);
+        assert_eq!(left.trim(), right);
     }
 
     #[rstest]
