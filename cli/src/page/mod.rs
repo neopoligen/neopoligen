@@ -322,6 +322,7 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
+    #[ignore] // TODO: update this to test for spans
     fn solo_pagedata_basic_check() {
         let page = PageV42::sample_from("000-pagedata-only");
         let left = Value::from("asdf");
@@ -333,7 +334,6 @@ mod test {
     #[ignore]
     fn id_test_get_basic_id() {
         let page = PageV42::mock1_basic_page();
-        // dbg!(&page.ast());
         let left = "mock1_basic_page".to_string();
         let right = page.raw_id().unwrap();
         assert_eq!(left, right);

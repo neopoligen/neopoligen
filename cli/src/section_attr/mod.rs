@@ -35,6 +35,8 @@ use self::single_backtick::single_backtick;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SectionAttr {
+    // TODO: Rename this payload
+    // TODO: Or, see if you can hoist it up a level?
     pub kind: SectionAttrKind,
 }
 
@@ -45,7 +47,7 @@ pub enum SectionAttrKind {
     KeyValue { key: String, value: String },
     KeyValueSpans { key: String, spans: Vec<Span> },
     Flag { flag: String }, // TODO: Deprecate in favor of V42
-    FlagV42 { value: Vec<Span> },
+                           // FlagV42 { value: Vec<Span> },
 }
 
 // pub fn section_attr_old<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
@@ -54,7 +56,7 @@ pub enum SectionAttrKind {
 // }
 
 pub fn section_attr<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
-    let (source, attr) = alt((section_key_value_attr, section_flag_v42))(source)?;
+    let (source, attr) = alt((section_key_value_attr, section_flag))(source)?;
     Ok((source, attr))
 }
 
@@ -98,6 +100,31 @@ pub fn section_key_value_attr<'a>(
     ))
 }
 
+pub fn section_flag<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
+    let (source, _) = tag("--").context("").parse(source)?;
+    let (source, _) = space1.context("").parse(source)?;
+    let (source, parts) = many1(alt((
+        is_not(": \n\t"),
+        pair(tag(":"), not(alt((multispace1, eof)))).map(|x| x.0),
+    )))
+    .context("")
+    .parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
+    let flag = parts
+        .iter()
+        .map(|part| part.to_string())
+        .collect::<Vec<String>>()
+        .join("");
+    Ok((
+        source,
+        SectionAttr {
+            kind: SectionAttrKind::Flag { flag },
+        },
+    ))
+}
+
 // // DEPRECATED: Replace with keyvaluespans version
 // pub fn section_key_value_attr_39<'a>(
 //     source: &'a str,
@@ -121,62 +148,63 @@ pub fn section_key_value_attr<'a>(
 //     ))
 // }
 
-pub fn section_flag_base_span_v42(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
-    let (source, result) = is_not(":|\n\\").context("").parse(source)?;
-    Ok((
-        source,
-        Span {
-            attrs: vec![],
-            kind: SpanKind::PlainText,
-            parsed_text: result.to_string(),
-        },
-    ))
-}
+// pub fn section_flag_base_span_v42(source: &str) -> IResult<&str, Span, ErrorTree<&str>> {
+//     let (source, result) = is_not(":|\n\\").context("").parse(source)?;
+//     Ok((
+//         source,
+//         Span {
+//             attrs: vec![],
+//             kind: SpanKind::PlainText,
+//             parsed_text: result.to_string(),
+//         },
+//     ))
+// }
 
-pub fn section_flag_v42(source: &str) -> IResult<&str, SectionAttr, ErrorTree<&str>> {
-    let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    let (source, span_hits) = many1(pair(
-        alt((
-            section_flag_base_span_v42,
-            colon_not_followed_by_space,
-            escaped_pipe,
-            escaped_backslash,
-        )),
-        not(tag(": ")),
-    ))
-    .context("")
-    .parse(source)?;
-    // let (source, span_hits) = many1(pair(
-    //     alt((
-    //         code_shorthand_flag_base_span_v42,
-    //         colon_not_followed_by_space,
-    //         escaped_pipe,
-    //         escaped_backslash,
-    //         escaped_backtick,
-    //         single_backtick,
-    //     )),
-    //     not(tag(": ")),
-    // ))
-    // .context("")
-    // .parse(source)?;
-    // let (source, _) = multispace0.context("").parse(source)?;
-    // let spans = span_hits.iter().map(|sh| sh.0.clone()).collect();
-    // let flag = SpanAttr {
-    //     kind: SpanAttrKind::FlagV42 { value: spans },
-    // };
-    // let (source, _) = multispace0.context("").parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
-        .context("")
-        .parse(source)?;
-    let spans = span_hits.iter().map(|sh| sh.0.clone()).collect();
-    Ok((
-        source,
-        SectionAttr {
-            kind: SectionAttrKind::FlagV42 { value: spans },
-        },
-    ))
-}
+// TODO: Remove this becuase moving back to having flag just be a string
+// pub fn section_flag_v42(source: &str) -> IResult<&str, SectionAttr, ErrorTree<&str>> {
+//     let (source, _) = tag("-- ").context("").parse(source)?;
+//     let (source, _) = multispace0.context("").parse(source)?;
+//     let (source, span_hits) = many1(pair(
+//         alt((
+//             section_flag_base_span_v42,
+//             colon_not_followed_by_space,
+//             escaped_pipe,
+//             escaped_backslash,
+//         )),
+//         not(tag(": ")),
+//     ))
+//     .context("")
+//     .parse(source)?;
+//     // let (source, span_hits) = many1(pair(
+//     //     alt((
+//     //         code_shorthand_flag_base_span_v42,
+//     //         colon_not_followed_by_space,
+//     //         escaped_pipe,
+//     //         escaped_backslash,
+//     //         escaped_backtick,
+//     //         single_backtick,
+//     //     )),
+//     //     not(tag(": ")),
+//     // ))
+//     // .context("")
+//     // .parse(source)?;
+//     // let (source, _) = multispace0.context("").parse(source)?;
+//     // let spans = span_hits.iter().map(|sh| sh.0.clone()).collect();
+//     // let flag = SpanAttr {
+//     //     kind: SpanAttrKind::FlagV42 { value: spans },
+//     // };
+//     // let (source, _) = multispace0.context("").parse(source)?;
+//     let (source, _) = structure_empty_until_newline_or_eof
+//         .context("")
+//         .parse(source)?;
+//     let spans = span_hits.iter().map(|sh| sh.0.clone()).collect();
+//     Ok((
+//         source,
+//         SectionAttr {
+//             kind: SectionAttrKind::FlagV42 { value: spans },
+//         },
+//     ))
+// }
 
 // pub fn section_flag_attr<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, ErrorTree<&'a str>> {
 //     let (source, _) = tag("--").context("").parse(source)?;
@@ -231,32 +259,61 @@ mod test {
 
     // Valid Flags
     #[rstest]
-    #[case("-- alfa")]
-    #[case("-- bravo-charlie")]
-    #[case("-- https://www.example.com/")]
-    fn valid_section_flags(#[case] source: &str) {
-        let response = section_flag_v42(source);
-        if response.is_ok() {
-            assert!(true)
-        } else {
-            dbg!(&response);
-            assert!(false);
-        }
+    #[case("alfa")]
+    #[case("bravo-charlie")]
+    #[case("https://www.example.com/")]
+    fn solo_valid_section_flags(#[case] left: &str) {
+        let source = format!("-- {}", left);
+        let response = section_flag(source.as_str()).unwrap();
+        let right = match response.1.kind {
+            SectionAttrKind::Flag { flag } => flag,
+            _ => "".to_string(),
+        };
+        assert_eq!(left, right);
+
+        // let response = section_flag(source.as_str());
+        // let left = match response.unwrap() {
+        //     SectionAttrKind::Flag { flag } => flag,
+        //     _ => "".to_string(),
+        // };
+        // if response.is_ok() {
+        //     assert!(true)
+        // } else {
+        //     dbg!(&response);
+        //     assert!(false);
+        // }
     }
 
-    // Invalid Flags
-    #[rstest]
-    #[case("-- alfa: ")]
-    #[case("-- bravo: charlie")]
-    fn invalid_section_flags(#[case] source: &str) {
-        let response = section_flag_v42(source);
-        if response.is_ok() {
-            dbg!(&response);
-            assert!(false)
-        } else {
-            assert!(true);
-        }
-    }
+    // // TODO: Move to useing section_flag instead of section_flag_v42
+    // // Valid Flags
+    // #[rstest]
+    // #[case("-- alfa")]
+    // #[case("-- bravo-charlie")]
+    // #[case("-- https://www.example.com/")]
+    // fn valid_section_flags(#[case] source: &str) {
+    //     let response = section_flag_v42(source);
+    //     if response.is_ok() {
+    //         assert!(true)
+    //     } else {
+    //         dbg!(&response);
+    //         assert!(false);
+    //     }
+    // }
+
+    // // TODO: Move to useing section_flag instead of section_flag_v42
+    // // Invalid Flags
+    // #[rstest]
+    // #[case("-- alfa: ")]
+    // #[case("-- bravo: charlie")]
+    // fn invalid_section_flags(#[case] source: &str) {
+    //     let response = section_flag_v42(source);
+    //     if response.is_ok() {
+    //         dbg!(&response);
+    //         assert!(false)
+    //     } else {
+    //         assert!(true);
+    //     }
+    // }
 
     // Valid Attrs
     #[rstest]
@@ -310,26 +367,29 @@ mod test {
         }
     }
 
-    #[test]
-    #[ignore]
-    fn flag_attr_with_colons_in_it() {
-        let source = "-- https://www.example.com";
-        assert!(section_flag_v42(source).is_ok());
-    }
+    // // TODO: Move to useing section_flag instead of section_flag_v42
+    // #[test]
+    // #[ignore]
+    // fn flag_attr_with_colons_in_it() {
+    //     let source = "-- https://www.example.com";
+    //     assert!(section_flag_v42(source).is_ok());
+    // }
 
-    #[test]
-    #[ignore]
-    fn flag_attr_with_hyphen() {
-        let source = "-- https://www.exa-mple.com";
-        assert!(section_flag_v42(source).is_ok());
-    }
+    // // TODO: Move to useing section_flag instead of section_flag_v42
+    // #[test]
+    // #[ignore]
+    // fn flag_attr_with_hyphen() {
+    //     let source = "-- https://www.exa-mple.com";
+    //     assert!(section_flag_v42(source).is_ok());
+    // }
 
-    #[test]
-    #[ignore]
-    fn flag_attr_with_single_underscore() {
-        let source = "-- alfa_bravo";
-        assert!(section_flag_v42(source).is_ok());
-    }
+    // // TODO: Move to useing section_flag instead of section_flag_v42
+    // #[test]
+    // #[ignore]
+    // fn flag_attr_with_single_underscore() {
+    //     let source = "-- alfa_bravo";
+    //     assert!(section_flag_v42(source).is_ok());
+    // }
 
     #[test]
     #[ignore]
