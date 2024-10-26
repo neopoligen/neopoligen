@@ -30,8 +30,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SectionKeyValueAttrV42 {
-    key: String,
-    value: Vec<Span>,
+    pub key: String,
+    pub value: Vec<Span>,
 }
 
 pub fn section_key_value_attr_v42<'a>(
@@ -62,6 +62,7 @@ pub fn section_key_value_attr_v42<'a>(
         .map(|part| part.to_string())
         .collect::<Vec<String>>()
         .join("")
+        .trim()
         .to_string();
     Ok((
         source,
@@ -106,11 +107,19 @@ mod test {
     #[rstest]
     #[case("alfa", "bravo")]
     #[case("charlie", "delta-echo")]
+    #[case("  leading_spaces", "are_ok")]
+    #[case("test_value", "    value_leading_spaces_are_ok")]
+    #[case("test_value", "value_trailing_spaces_are_ok    ")]
+    #[case("test_value", "<<link|named_span|https://www.example.com/>>")]
+    #[case("test_value", "``code shorthand``")]
+    #[case("test_value", "``code shorthand|with_flag``")]
+    // TODO: do a character check of all the stuff that should work
+
     // #[case("https://www.example.com/")]
     // #[case("  leading_spaces_are_okay")]
     // #[case("trailing_spaces_are_okay   ")]
     // #[case("these_characters_are_okay:!@#$%^&*()[]<>|-")]
-    fn solo_section_flag_attr_v42_valid_flags(#[case] left_key: &str, #[case] left_value: &str) {
+    fn section_flag_attr_v42_valid_flags(#[case] left_key: &str, #[case] left_value: &str) {
         let source = format!("-- {}: {}", left_key, left_value);
         let response = section_key_value_attr_v42(source.as_str()).unwrap();
         let right = match response.1 {
@@ -122,6 +131,10 @@ mod test {
         };
         assert_eq!(left_key.trim(), right);
     }
+
+    // Add to failing case
+    // #[case("trailing_spaces_after_key_before_colon_fail   ", "x")]
+    // don't allow single backslashes, they must be part of an escape
 
     // #[rstest]
     // #[case("alfa:")]

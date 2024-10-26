@@ -30,7 +30,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SectionFlagAttrV42 {
-    value: String,
+    pub value: String,
 }
 
 pub fn section_flag_attr_v42<'a>(
