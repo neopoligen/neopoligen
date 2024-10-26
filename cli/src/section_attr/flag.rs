@@ -59,3 +59,41 @@ pub fn section_flag_attr_v42<'a>(
         }),
     ))
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+    use rstest::rstest;
+
+    #[rstest]
+    #[case("alfa")]
+    #[case("bravo-charlie")]
+    #[case("https://www.example.com/")]
+    fn solo_section_flag_attr_v42_valid_flags(#[case] left: &str) {
+        let source = format!("-- {}", left);
+        let response = section_flag_attr_v42(source.as_str()).unwrap();
+        let right = match response.1 {
+            SectionAttrV42::FlagV42(data) => data.value,
+            _ => "".to_string(),
+        };
+        assert_eq!(left, right);
+    }
+
+    #[rstest]
+    #[case("alfa:")]
+    #[case("bravo: charlie")]
+    #[case("delta: ")]
+    fn solo_section_flag_attr_v42_invalid_flags(#[case] left: &str) {
+        let source = format!("-- {}", left);
+        let result = section_flag_attr_v42(source.as_str());
+        if result.is_err() {
+            assert!(true)
+        } else {
+            dbg!(left);
+            assert!(false)
+        }
+    }
+
+    //
+}

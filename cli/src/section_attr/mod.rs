@@ -48,6 +48,7 @@ pub enum SectionAttrV42 {
     KeyValueV42(SectionKeyValueAttrV42),
 }
 
+// TODO: Deprecate in favor of SectionAttrV42
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SectionAttr {
     // TODO: Rename this payload
