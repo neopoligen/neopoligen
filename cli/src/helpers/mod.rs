@@ -73,7 +73,7 @@ pub fn flatten_payload_spans(spans: &Vec<PayloadSpan>) -> String {
         .join("")
 }
 
-// TODO: Deal with nestings
+// TODO: I think this is deprecated.
 pub fn flatten_payload_parsed_text(span: &PayloadSpan) -> String {
     span.parsed_text.clone()
 }
@@ -88,11 +88,13 @@ pub fn flatten_spans(spans: &Vec<Span>) -> String {
 
 pub fn flatten_parsed_text(span: &Span) -> String {
     match &span.kind {
-        SpanKind::NamedSpan { children, .. } => children
-            .iter()
-            .map(|span| flatten_parsed_text(span))
-            .collect::<Vec<String>>()
-            .join(""),
+        //SpanKind::NamedSpanV42 { .. } => span.value().unwrap().into(),
+        SpanKind::NamedSpanV42 { value, .. } => flatten_spans(value),
+        // SpanKind::NamedSpan { children, .. } => children
+        //     .iter()
+        //     .map(|span| flatten_parsed_text(span))
+        //     .collect::<Vec<String>>()
+        //     .join(""),
         _ => span.parsed_text.clone(),
     }
 }

@@ -1,7 +1,31 @@
+[!- import "helpers/theme.neoj" as theme -!]
+[@ span @]
 [@ span.kind() @]
 [@ span.type() @]
+_[@ span.children() @]_
+
 [! if span.type() == "tlink" !]
 THIS IS TLINK
 [! else !]
-<[@ span.type() @]>[@ span.value() @]</[@ span.type() @]>
+<[@ span.type() @]>---[@ span.value() @]</[@ span.type() @]>
+
+
+
+[!- for child in span.value -!]
+x
+[@- theme.output_span(site, page_id, child) -@]
+[!- endfor -!]</[@ span.type @]>
+
 [! endif !]
+
+
+
+
+[#
+<[@ span.type @] 
+[! if span.classes[0] !] class="[! for c in span.classes !][@ c @][! endfor !]"
+[! endif !]
+>[!- for child in span.children -!]
+[@- theme.output_span(site, page_id, child) -@]
+[!- endfor -!]</[@ span.type @]>
+#]

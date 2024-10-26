@@ -104,6 +104,7 @@ impl Object for Span {
         _args: &[Value],
     ) -> Result<Value, Error> {
         match name {
+            "children" => self.children(),
             "kind" => self.kind(),
             "parsed_text" => self.parsed_text(),
             "template_list" => self.template_list(),
@@ -136,6 +137,15 @@ impl Span {
             // TODO rename unknown to generic
             _ => Ok(Value::from("unknown")),
             //Ok(Value::from(flatten_spans(&self.r#type)))
+        }
+    }
+
+    pub fn children(&self) -> Result<Value, Error> {
+        match &self.kind {
+            SpanKind::NamedSpanV42 { value, .. } => {
+                Ok(Value::from_iter::<Vec<Value>>(vec![Value::from("asdf")]))
+            }
+            _ => Ok(Value::from("unknown")),
         }
     }
 
