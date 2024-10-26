@@ -1,6 +1,7 @@
 #![allow(unused_variables)]
 #![allow(unused_imports)]
 
+pub mod any_hyphen;
 pub mod plaintext;
 pub mod single_line_ending;
 
