@@ -24,6 +24,7 @@ pub struct Json5SectionV42 {
     flags: Vec<SectionFlagAttrV42>,
     data: Value,
     error: Option<String>,
+    children: Vec<SectionV42>,
 }
 
 pub fn json5_section_full_v42<'a>(
@@ -75,6 +76,7 @@ pub fn json5_section_full_v42<'a>(
         kind: kind.to_string(),
         data,
         error,
+        children: vec![],
     });
 
     Ok((source, section))
@@ -120,10 +122,10 @@ mod test {
                 kind: "pagedata".to_string(),
                 data: serde_json5::from_str::<Value>("{}").unwrap(),
                 error: None,
+                children: vec![],
             }),
         );
         let right = json5_section_full_v42(&source, &site_config, 0, 0, 0).unwrap();
         assert_eq!(left, right);
-        //let raw_ast = parse_ast_v42(&source, &site_config).unwrap();
     }
 }
