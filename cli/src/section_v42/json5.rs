@@ -19,12 +19,12 @@ use serde::Serialize;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Json5SectionV42 {
-    kind: String,
-    attrs: Vec<SectionKeyValueAttrV42>,
-    flags: Vec<SectionFlagAttrV42>,
-    data: Value,
-    error: Option<String>,
-    children: Vec<SectionV42>,
+    pub kind: String,
+    pub attrs: Vec<SectionKeyValueAttrV42>,
+    pub flags: Vec<SectionFlagAttrV42>,
+    pub data: Value,
+    pub error: Option<String>,
+    pub children: Vec<SectionV42>,
 }
 
 pub fn json5_section_full_v42<'a>(
