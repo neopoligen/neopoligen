@@ -1,5 +1,7 @@
+use crate::section_attr_v42;
 use crate::section_attr_v42::flag::SectionFlagAttrV42;
 use crate::section_attr_v42::key_value::SectionKeyValueAttrV42;
+use crate::section_attr_v42::section_attr_v42;
 use crate::section_v42::*;
 use crate::site_config::SiteConfigV42;
 use crate::span_v42::space0_line_ending_or_eof::space0_line_ending_or_eof;
@@ -19,7 +21,7 @@ use serde::Serialize;
 pub struct BasicSectionV42 {
     pub attrs: Vec<SectionKeyValueAttrV42>,
     pub children: Vec<SectionV42>,
-    pub flags: Vec<SectionFlagAttrV42>,
+    pub flags: Vec<String>,
     pub kind: String,
 }
 
@@ -35,18 +37,21 @@ pub fn basic_section_full_v42<'a>(
     let (source, kind) = terminated(tag("title"), space0_line_ending_or_eof)
         .context("")
         .parse(source)?;
+    let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     let (source, _) = rest.context("").parse(source)?;
     let section = SectionV42::Basic(BasicSectionV42 {
-        attrs: vec![],
+        attrs,
         children: vec![],
         kind: kind.to_string(),
-        flags: vec![],
+        flags,
     });
     Ok((source, section))
 }
 
 #[cfg(test)]
 mod test {
+    use crate::span_v42::{plaintext::PlainTextSpan, SpanV42};
+
     use super::*;
     use include_dir::{include_dir, Dir};
     use pretty_assertions::assert_eq;
@@ -87,10 +92,15 @@ mod test {
         let left = (
             "",
             SectionV42::Basic(BasicSectionV42 {
-                attrs: vec![],
+                attrs: vec![SectionKeyValueAttrV42 {
+                    key: "test-key".to_string(),
+                    value: vec![SpanV42::PlainText(PlainTextSpan {
+                        output: "testValue".to_string(),
+                    })],
+                }],
                 children: vec![],
                 kind: "title".to_string(),
-                flags: vec![],
+                flags: vec!["test-flag".to_string()],
             }),
         );
         let right = basic_section_full_v42(&source, &site_config, 0, 0, 0).unwrap();

@@ -1,7 +1,6 @@
 use crate::section_attr_v42::flag::SectionFlagAttrV42;
 use crate::section_attr_v42::key_value::SectionKeyValueAttrV42;
 use crate::section_attr_v42::section_attr_v42;
-use crate::section_attr_v42::SectionAttrV42;
 use crate::section_v42::*;
 use crate::site_config::SiteConfigV42;
 use minijinja::Value;
@@ -9,7 +8,6 @@ use nom::bytes::complete::tag;
 use nom::bytes::complete::take_until;
 use nom::character::complete::line_ending;
 use nom::combinator::rest;
-use nom::multi::many0;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -21,7 +19,7 @@ use serde::Serialize;
 pub struct Json5SectionV42 {
     pub kind: String,
     pub attrs: Vec<SectionKeyValueAttrV42>,
-    pub flags: Vec<SectionFlagAttrV42>,
+    pub flags: Vec<String>,
     pub data: Value,
     pub error: Option<String>,
     pub children: Vec<SectionV42>,

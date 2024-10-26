@@ -47,9 +47,11 @@ pub enum SectionAttrV42 {
 
 pub fn section_attr_v42<'a>(
     source: &'a str,
-) -> IResult<&'a str, (Vec<SectionKeyValueAttrV42>, Vec<SectionFlagAttrV42>), ErrorTree<&'a str>> {
+) -> IResult<&'a str, (Vec<SectionKeyValueAttrV42>, Vec<String>), ErrorTree<&'a str>> {
     let (source, raw_attrs) =
         many0(alt((section_flag_attr_v42, section_key_value_attr_v42)))(source)?;
+    // TODO: Combine multiple attrs into the same one
+    // if they have the same key
     let attrs = raw_attrs
         .iter()
         .filter_map(|attr| match attr {
@@ -60,10 +62,10 @@ pub fn section_attr_v42<'a>(
     let flags = raw_attrs
         .iter()
         .filter_map(|attr| match attr {
-            SectionAttrV42::FlagV42(f) => Some(f.clone()),
+            SectionAttrV42::FlagV42(f) => Some(f.value.clone()),
             _ => None,
         })
-        .collect();
+        .collect::<Vec<String>>();
     Ok((source, (attrs, flags)))
 }
 
