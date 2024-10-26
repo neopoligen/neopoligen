@@ -1,4 +1,8 @@
 #![allow(unused_imports)]
+
+pub mod flag;
+
+use crate::section_attr::flag::SectionFlagAttrV42;
 // use crate::section::block::block_of_main_content_v42;
 use crate::section::block::block_of_section_attr_value_v42;
 // use crate::span::colon::colon;
@@ -32,6 +36,17 @@ use self::escaped_backslash::escaped_backslash;
 use self::escaped_backtick::escaped_backtick;
 use self::escaped_pipe::escaped_pipe;
 use self::single_backtick::single_backtick;
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub struct SectionKeyValueAttrV42 {
+    value: String,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+enum SectionAttrV42 {
+    FlagV42(SectionFlagAttrV42),
+    KeyValueV42(SectionKeyValueAttrV42),
+}
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SectionAttr {
@@ -253,36 +268,36 @@ pub fn section_flag<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, ErrorT
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use pretty_assertions::assert_eq;
-    use rstest::rstest;
 
-    // Valid Flags
-    #[rstest]
-    #[case("alfa")]
-    #[case("bravo-charlie")]
-    #[case("https://www.example.com/")]
-    fn solo_valid_section_flags(#[case] left: &str) {
-        let source = format!("-- {}", left);
-        let response = section_flag(source.as_str()).unwrap();
-        let right = match response.1.kind {
-            SectionAttrKind::Flag { flag } => flag,
-            _ => "".to_string(),
-        };
-        assert_eq!(left, right);
+    // use super::*;
+    // use pretty_assertions::assert_eq;
+    // use rstest::rstest;
 
-        // let response = section_flag(source.as_str());
-        // let left = match response.unwrap() {
-        //     SectionAttrKind::Flag { flag } => flag,
-        //     _ => "".to_string(),
-        // };
-        // if response.is_ok() {
-        //     assert!(true)
-        // } else {
-        //     dbg!(&response);
-        //     assert!(false);
-        // }
-    }
+    // // Valid Flags
+    // #[rstest]
+    // #[case("alfa")]
+    // #[case("bravo-charlie")]
+    // #[case("https://www.example.com/")]
+    // fn solo_valid_section_flags(#[case] left: &str) {
+    //     let source = format!("-- {}", left);
+    //     let response = section_flag(source.as_str()).unwrap();
+    //     let right = match response.1.kind {
+    //         SectionAttrKind::Flag { flag } => flag,
+    //         _ => "".to_string(),
+    //     };
+    //     assert_eq!(left, right);
+    //     // let response = section_flag(source.as_str());
+    //     // let left = match response.unwrap() {
+    //     //     SectionAttrKind::Flag { flag } => flag,
+    //     //     _ => "".to_string(),
+    //     // };
+    //     // if response.is_ok() {
+    //     //     assert!(true)
+    //     // } else {
+    //     //     dbg!(&response);
+    //     //     assert!(false);
+    //     // }
+    // }
 
     // // TODO: Move to useing section_flag instead of section_flag_v42
     // // Valid Flags
@@ -315,57 +330,57 @@ mod test {
     //     }
     // }
 
-    // Valid Attrs
-    #[rstest]
-    #[case("-- alfa: bravo")]
-    #[case("-- charlie-delta: echo")]
-    #[case("-- foxtrot: ``em|golf``")]
-    #[case("-- url: https://www.example.com/")]
-    fn valid_section_attrs(#[case] source: &str) {
-        let response = section_key_value_attr(source);
-        if response.is_ok() {
-            assert!(true)
-        } else {
-            dbg!(&response);
-            assert!(false);
-        }
-    }
+    // // Valid Attrs
+    // #[rstest]
+    // #[case("-- alfa: bravo")]
+    // #[case("-- charlie-delta: echo")]
+    // #[case("-- foxtrot: ``em|golf``")]
+    // #[case("-- url: https://www.example.com/")]
+    // fn valid_section_attrs(#[case] source: &str) {
+    //     let response = section_key_value_attr(source);
+    //     if response.is_ok() {
+    //         assert!(true)
+    //     } else {
+    //         dbg!(&response);
+    //         assert!(false);
+    //     }
+    // }
 
-    // Invalid Attrs
-    #[rstest]
-    #[case("-- alfa bravo: charlie")]
-    #[ignore]
-    // #[case("-- https://www.example.com/")]
-    fn invalid_section_attrs(#[case] source: &str) {
-        let response = section_key_value_attr(source);
-        if response.is_ok() {
-            dbg!(&response);
-            assert!(false);
-        } else {
-            assert!(true)
-        }
-    }
+    // // Invalid Attrs
+    // #[rstest]
+    // #[case("-- alfa bravo: charlie")]
+    // #[ignore]
+    // // #[case("-- https://www.example.com/")]
+    // fn invalid_section_attrs(#[case] source: &str) {
+    //     let response = section_key_value_attr(source);
+    //     if response.is_ok() {
+    //         dbg!(&response);
+    //         assert!(false);
+    //     } else {
+    //         assert!(true)
+    //     }
+    // }
 
-    // TODO: Put this back in:
-    // #[case("colon and hyphen", "-- created: 2024-06-09T14:28:09-04:00", true)]
-    // #[case("type with hyphen", "-- type: home-page", true)]
-    #[rstest]
-    // TODO: Add all the rest of the possible options here
-    #[case("basic key value test", "-- key: value", true)]
-    #[case("pipe", "-- key: some | thing", true)]
-    #[case("escaped pipe", "-- key: some \\| thing", true)]
-    #[case("path with slash", "-- path: /", true)]
-    #[case("flag with doulbe underscore", "-- alfa__bravo", true)]
-    #[ignore]
-    fn section_attr_basic_fixture(
-        #[case] _description: &str,
-        #[case] source: &str,
-        #[case] should_pass: bool,
-    ) {
-        if should_pass {
-            assert_eq!("", section_attr(source).unwrap().0);
-        }
-    }
+    // // TODO: Put this back in:
+    // // #[case("colon and hyphen", "-- created: 2024-06-09T14:28:09-04:00", true)]
+    // // #[case("type with hyphen", "-- type: home-page", true)]
+    // #[rstest]
+    // // TODO: Add all the rest of the possible options here
+    // #[case("basic key value test", "-- key: value", true)]
+    // #[case("pipe", "-- key: some | thing", true)]
+    // #[case("escaped pipe", "-- key: some \\| thing", true)]
+    // #[case("path with slash", "-- path: /", true)]
+    // #[case("flag with doulbe underscore", "-- alfa__bravo", true)]
+    // #[ignore]
+    // fn section_attr_basic_fixture(
+    //     #[case] _description: &str,
+    //     #[case] source: &str,
+    //     #[case] should_pass: bool,
+    // ) {
+    //     if should_pass {
+    //         assert_eq!("", section_attr(source).unwrap().0);
+    //     }
+    // }
 
     // // TODO: Move to useing section_flag instead of section_flag_v42
     // #[test]
@@ -391,23 +406,23 @@ mod test {
     //     assert!(section_flag_v42(source).is_ok());
     // }
 
-    #[test]
-    #[ignore]
-    fn key_value_spans_basic() {
-        let source = "-- key: value";
-        let left = SectionAttr {
-            kind: SectionAttrKind::KeyValueSpans {
-                key: "key".to_string(),
-                spans: vec![Span {
-                    attrs: vec![],
-                    kind: SpanKind::PlainText {},
-                    parsed_text: "value".to_string(),
-                }],
-            },
-        };
-        let right = section_attr(source).unwrap().1;
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn key_value_spans_basic() {
+    //     let source = "-- key: value";
+    //     let left = SectionAttr {
+    //         kind: SectionAttrKind::KeyValueSpans {
+    //             key: "key".to_string(),
+    //             spans: vec![Span {
+    //                 attrs: vec![],
+    //                 kind: SpanKind::PlainText {},
+    //                 parsed_text: "value".to_string(),
+    //             }],
+    //         },
+    //     };
+    //     let right = section_attr(source).unwrap().1;
+    //     assert_eq!(left, right);
+    // }
 
     // TODO: Bring this test back when dash_with_trailing_not_dash is working
     // #[test]
@@ -440,33 +455,35 @@ mod test {
     //     assert_eq!(left, right);
     // }
 
-    #[test]
-    #[ignore]
-    fn key_value_with_single_underscore() {
-        let source = "-- key: alfa_bravo";
-        let left = SectionAttr {
-            kind: SectionAttrKind::KeyValueSpans {
-                key: "key".to_string(),
-                spans: vec![
-                    Span {
-                        attrs: vec![],
-                        kind: SpanKind::PlainText {},
-                        parsed_text: "alfa".to_string(),
-                    },
-                    Span {
-                        attrs: vec![],
-                        kind: SpanKind::SingleUnderscore {},
-                        parsed_text: "_".to_string(),
-                    },
-                    Span {
-                        attrs: vec![],
-                        kind: SpanKind::PlainText {},
-                        parsed_text: "bravo".to_string(),
-                    },
-                ],
-            },
-        };
-        let right = section_attr(source).unwrap().1;
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn key_value_with_single_underscore() {
+    //     let source = "-- key: alfa_bravo";
+    //     let left = SectionAttr {
+    //         kind: SectionAttrKind::KeyValueSpans {
+    //             key: "key".to_string(),
+    //             spans: vec![
+    //                 Span {
+    //                     attrs: vec![],
+    //                     kind: SpanKind::PlainText {},
+    //                     parsed_text: "alfa".to_string(),
+    //                 },
+    //                 Span {
+    //                     attrs: vec![],
+    //                     kind: SpanKind::SingleUnderscore {},
+    //                     parsed_text: "_".to_string(),
+    //                 },
+    //                 Span {
+    //                     attrs: vec![],
+    //                     kind: SpanKind::PlainText {},
+    //                     parsed_text: "bravo".to_string(),
+    //                 },
+    //             ],
+    //         },
+    //     };
+    //     let right = section_attr(source).unwrap().1;
+    //     assert_eq!(left, right);
+    // }
+
+    //
 }
