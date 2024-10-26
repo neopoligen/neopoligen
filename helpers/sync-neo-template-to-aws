@@ -5,4 +5,4 @@ watchexec\
   -w "../cli/example-site/"\
   --workdir "../cli/example-site/themes"\
   -e xsl,js,css,neo,neoj,json5\
-  "rsync --delete -av ./neopoligen-v0.1.42 ~/Documents/Neopoligen/alanwsmith.com/themes/"
+  "rsync --delete -av ./neopoligen-v0.42.0 ~/Documents/Neopoligen/alanwsmith.com/themes/"

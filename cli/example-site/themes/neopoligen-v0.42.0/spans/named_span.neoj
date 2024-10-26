@@ -1,0 +1,7 @@
+[@ span.kind() @]
+[@ span.type() @]
+[! if span.type() == "tlink" !]
+THIS IS TLINK
+[! else !]
+<[@ span.type() @]>CONTENT HERE</[@ span.type() @]>
+[! endif !]

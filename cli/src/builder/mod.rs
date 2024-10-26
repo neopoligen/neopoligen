@@ -147,6 +147,7 @@ impl BuilderV42 {
                 }
                 NeoErrorKind::GenericErrorWithSourcePath { source_path, msg } => {
                     dbg!(source_path);
+                    dbg!(msg);
                     ()
                 }
                 // TODO: cover the rest of the errors

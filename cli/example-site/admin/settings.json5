@@ -1,9 +1,10 @@
 {
   "base_url": "http://localhost:1989",
   "default_language": "en",
-  "theme": "neopoligen-v0.1.42",
+  "theme": "neopoligen-v0.42.0",
   // todo: add this: "run_theme_tests": "no",
   // todo: "status_types": ["scratch", "draft", "done"],
   // todo: "default_status": "done",
+  // todo: add note about dumping the parser when that's done
 }
 

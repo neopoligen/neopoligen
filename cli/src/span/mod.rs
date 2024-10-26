@@ -47,6 +47,7 @@ pub mod single_hyphen;
 pub mod single_lessthan;
 pub mod single_underscore;
 
+use crate::helpers::flatten_spans;
 use crate::span::code_shorthand::*;
 // use crate::span::code_shorthand_single_pipe::*;
 use crate::span::colon::*;
@@ -106,6 +107,7 @@ impl Object for Span {
             "kind" => self.kind(),
             "parsed_text" => self.parsed_text(),
             "template_list" => self.template_list(),
+            "type" => self.r#type(),
             _ => Ok(Value::from("")),
         }
     }
@@ -121,8 +123,18 @@ pub struct Span {
 impl Span {
     pub fn kind(&self) -> Result<Value, Error> {
         match &self.kind {
-            SpanKind::PlainText => Ok(Value::from("plaintext")),
+            SpanKind::NamedSpanV42 { .. } => Ok(Value::from("named_span")),
+            // TODO rename unknown to generic
             _ => Ok(Value::from("unknown")),
+        }
+    }
+
+    pub fn r#type(&self) -> Result<Value, Error> {
+        match &self.kind {
+            SpanKind::NamedSpanV42 { r#type, .. } => Ok(Value::from(flatten_spans(r#type))),
+            // TODO rename unknown to generic
+            _ => Ok(Value::from("unknown")),
+            //Ok(Value::from(flatten_spans(&self.r#type)))
         }
     }
 
