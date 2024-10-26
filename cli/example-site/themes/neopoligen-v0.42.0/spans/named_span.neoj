@@ -3,5 +3,5 @@
 [! if span.type() == "tlink" !]
 THIS IS TLINK
 [! else !]
-<[@ span.type() @]>CONTENT HERE</[@ span.type() @]>
+<[@ span.type() @]>[@ span.value() @]</[@ span.type() @]>
 [! endif !]

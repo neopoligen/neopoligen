@@ -108,6 +108,7 @@ impl Object for Span {
             "parsed_text" => self.parsed_text(),
             "template_list" => self.template_list(),
             "type" => self.r#type(),
+            "value" => self.value(),
             _ => Ok(Value::from("")),
         }
     }
@@ -135,6 +136,13 @@ impl Span {
             // TODO rename unknown to generic
             _ => Ok(Value::from("unknown")),
             //Ok(Value::from(flatten_spans(&self.r#type)))
+        }
+    }
+
+    pub fn value(&self) -> Result<Value, Error> {
+        match &self.kind {
+            SpanKind::NamedSpanV42 { value, .. } => Ok(Value::from(flatten_spans(value))),
+            _ => Ok(Value::from("unknown")),
         }
     }
 
