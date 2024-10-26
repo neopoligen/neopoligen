@@ -36,6 +36,7 @@ pub fn json5_section_full_v42<'a>(
     let (source, kind) = tag("pagedata").context("").parse(source)?;
     let (source, _) = line_ending.context("").parse(source)?;
     let (source, raw_attrs) = many0(section_attr_v42).context("").parse(source)?;
+    // let (source, json_text)
     let (source, _) = rest.context("").parse(source)?;
     let attrs = raw_attrs
         .iter()
@@ -63,9 +64,11 @@ pub fn json5_section_full_v42<'a>(
 
 #[cfg(test)]
 mod test {
+    use crate::span_v42::{plaintext::PlainTextSpan, SpanV42};
+
     use super::*;
     use include_dir::{include_dir, Dir};
-    use pretty_assertions::assert_eq;
+    // use pretty_assertions::assert_eq;
 
     const SAMPLE_DIR: Dir = include_dir!("src/section_v42/samples/json5/valid");
 
@@ -73,11 +76,35 @@ mod test {
     fn solo_pagedata_with_extra_data() {
         let site_config = SiteConfigV42::mock1_basic();
         let source = SAMPLE_DIR
-            .get_file("001-pagedata-with-extra-data.neo")
+            .get_file("001-pagedata-without-extra-data.neo")
             .unwrap()
             .contents_utf8()
             .unwrap()
             .to_string();
+        let left = (
+            "",
+            SectionV42::Json5(Json5SectionV42 {
+                attrs: vec![
+                    SectionKeyValueAttrV42 {
+                        key: "id".to_string(),
+                        value: vec![SpanV42::PlainText(PlainTextSpan {
+                            output: "abcd1234".to_string(),
+                        })],
+                    },
+                    SectionKeyValueAttrV42 {
+                        key: "status".to_string(),
+                        value: vec![SpanV42::PlainText(PlainTextSpan {
+                            output: "draft".to_string(),
+                        })],
+                    },
+                ],
+                flags: vec![],
+                kind: "pagedata".to_string(),
+                data: serde_json5::from_str::<Value>("{}").unwrap(),
+            }),
+        );
+        let right = json5_section_full_v42(&source, &site_config, 0, 0, 0).unwrap();
+        assert_eq!(left, right);
         //let raw_ast = parse_ast_v42(&source, &site_config).unwrap();
     }
 }

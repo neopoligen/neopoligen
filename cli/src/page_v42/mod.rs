@@ -37,7 +37,7 @@ mod test {
     #[test]
     pub fn solo_check_section_count() {
         let page = PageV42::valid_sample("000-pagedata-only.neo");
-        dbg!(page.ast());
+        // dbg!(page.ast());
         // dbg!(page);
     }
 
