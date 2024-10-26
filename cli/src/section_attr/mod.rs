@@ -43,7 +43,7 @@ pub struct SectionKeyValueAttrV42 {
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-enum SectionAttrV42 {
+pub enum SectionAttrV42 {
     FlagV42(SectionFlagAttrV42),
     KeyValueV42(SectionKeyValueAttrV42),
 }
