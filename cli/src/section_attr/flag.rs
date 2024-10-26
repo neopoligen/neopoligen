@@ -39,7 +39,7 @@ pub fn section_flag_attr_v42<'a>(
     let (source, _) = tag("--").context("").parse(source)?;
     let (source, _) = space1.context("").parse(source)?;
     let (source, parts) = many1(alt((
-        is_not(": \n\t"),
+        is_not(": \n\t\\"),
         pair(tag(":"), not(alt((multispace1, eof)))).map(|x| x.0),
     )))
     .context("")
@@ -72,6 +72,7 @@ mod test {
     #[case("https://www.example.com/")]
     #[case("  leading_spaces_are_okay")]
     #[case("trailing_spaces_are_okay   ")]
+    #[case("these_characters_are_okay:!@#$%^&*()[]<>|")]
     fn solo_section_flag_attr_v42_valid_flags(#[case] left: &str) {
         let source = format!("-- {}", left);
         let response = section_flag_attr_v42(source.as_str()).unwrap();
@@ -86,6 +87,7 @@ mod test {
     #[case("alfa:")]
     #[case("bravo: charlie")]
     #[case("delta: ")]
+    #[case("no_escaped_\\allowed")]
     fn solo_section_flag_attr_v42_invalid_flags(#[case] left: &str) {
         let source = format!("-- {}", left);
         let result = section_flag_attr_v42(source.as_str());
