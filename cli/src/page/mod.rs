@@ -266,6 +266,12 @@ impl PageV42 {
             vec![]
         }
     }
+
+    pub fn title(&self) -> Result<Value, Error> {
+        Ok(Value::from("[TODO: PAGE TITLE]"))
+    }
+
+    //
 }
 
 impl Object for PageV42 {
@@ -279,6 +285,7 @@ impl Object for PageV42 {
             "ast" => self.ast(),
             "id" => Ok(Value::from(self.id().unwrap())),
             "sections" => self.sections(),
+            "title" => self.title(),
             _ => Ok(Value::from("")),
         }
     }

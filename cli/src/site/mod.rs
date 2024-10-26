@@ -106,6 +106,35 @@ impl Site {
     // }
 }
 
+impl SiteV42 {
+    pub fn page_url(&self, args: &[Value]) -> Result<Value, Error> {
+        Ok(Value::from("/"))
+    }
+
+    pub fn page_title(&self, args: &[Value]) -> Result<Value, Error> {
+        if args.len() == 1 {
+            let key = args[0].to_string();
+            if let Some(p) = self.pages.get(&key) {
+                if let Ok(title) = p.title() {
+                    Ok(title)
+                } else {
+                    // TODO: Send error here about missing argument
+                    // for page title
+                    Ok(Value::from(""))
+                }
+            } else {
+                // TODO: Send error here about missing argument
+                // for page title
+                Ok(Value::from(""))
+            }
+        } else {
+            // TODO: Send error here about missing argument
+            // for page title
+            Ok(Value::from(""))
+        }
+    }
+}
+
 impl Object for SiteV42 {
     fn call_method(
         self: &Arc<SiteV42>,
@@ -114,6 +143,8 @@ impl Object for SiteV42 {
         args: &[Value],
     ) -> Result<Value, Error> {
         match name {
+            "page_title" => self.page_title(args),
+            "page_url" => self.page_url(args),
             // "ping" => Ok(Value::from(self.ping(args))),
             _ => Ok(Value::from("")),
         }
