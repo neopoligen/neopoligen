@@ -4,6 +4,7 @@ use crate::section_attr_v42::section_attr_v42;
 use crate::section_attr_v42::SectionAttrV42;
 use crate::section_v42::*;
 use crate::site_config::SiteConfigV42;
+use minijinja::Value;
 use nom::bytes::complete::tag;
 use nom::character::complete::line_ending;
 use nom::combinator::rest;
@@ -20,6 +21,7 @@ pub struct Json5SectionV42 {
     kind: String,
     attrs: Vec<SectionKeyValueAttrV42>,
     flags: Vec<SectionFlagAttrV42>,
+    data: Value,
 }
 
 pub fn json5_section_full_v42<'a>(
@@ -35,7 +37,6 @@ pub fn json5_section_full_v42<'a>(
     let (source, _) = line_ending.context("").parse(source)?;
     let (source, raw_attrs) = many0(section_attr_v42).context("").parse(source)?;
     let (source, _) = rest.context("").parse(source)?;
-
     let attrs = raw_attrs
         .iter()
         .filter_map(|attr| match attr {
@@ -43,7 +44,6 @@ pub fn json5_section_full_v42<'a>(
             _ => None,
         })
         .collect();
-
     let flags = raw_attrs
         .iter()
         .filter_map(|attr| match attr {
@@ -56,6 +56,28 @@ pub fn json5_section_full_v42<'a>(
         attrs,
         flags,
         kind: kind.to_string(),
+        data: serde_json5::from_str::<Value>("{}").unwrap(),
     });
     Ok((source, section))
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use include_dir::{include_dir, Dir};
+    use pretty_assertions::assert_eq;
+
+    const SAMPLE_DIR: Dir = include_dir!("src/section_v42/samples/json5/valid");
+
+    #[test]
+    fn solo_pagedata_with_extra_data() {
+        let site_config = SiteConfigV42::mock1_basic();
+        let source = SAMPLE_DIR
+            .get_file("001-pagedata-with-extra-data.neo")
+            .unwrap()
+            .contents_utf8()
+            .unwrap()
+            .to_string();
+        //let raw_ast = parse_ast_v42(&source, &site_config).unwrap();
+    }
 }
