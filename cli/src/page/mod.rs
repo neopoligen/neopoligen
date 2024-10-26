@@ -118,6 +118,9 @@ impl PageV42 {
         }
     }
 
+    // TODO: Convert to MiniJinja value calling
+    // this logic from id_as_string or something like
+    // that
     pub fn id(&self) -> Result<String, NeoError> {
         match &self.ast {
             Some(sections) => {

@@ -108,7 +108,22 @@ impl Site {
 
 impl SiteV42 {
     pub fn page_url(&self, args: &[Value]) -> Result<Value, Error> {
-        Ok(Value::from("/"))
+        if args.len() == 1 {
+            let key = args[0].to_string();
+            if let Some(p) = self.pages.get(&key) {
+                if let Ok(id) = p.id() {
+                    // TODO: call default language properly here
+                    Ok(Value::from(format!("/en/{}/", id)))
+                } else {
+                    Ok(Value::from("/"))
+                }
+            } else {
+                Ok(Value::from("/"))
+            }
+        } else {
+            // TODO: Figure out what error to throw here
+            Ok(Value::from("/"))
+        }
     }
 
     pub fn page_title(&self, args: &[Value]) -> Result<Value, Error> {
