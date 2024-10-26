@@ -1,3 +1,4 @@
+use crate::helpers::flatten_spans_v42;
 use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
 use crate::span_v42::SpanV42;
@@ -11,8 +12,9 @@ use serde::Serialize;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct BlockSectionV42 {
-    pub spans: Vec<SpanV42>,
     pub kind: String,
+    pub spans: Vec<SpanV42>,
+    pub text: String,
 }
 
 pub fn generic_block_section_v42<'a>(
@@ -23,11 +25,13 @@ pub fn generic_block_section_v42<'a>(
     _checklist_level: usize,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     let (source, spans) = spans_of_generic_block_content.context("").parse(source)?;
+    let text = flatten_spans_v42(&spans);
     Ok((
         source,
         SectionV42::Block(BlockSectionV42 {
             kind: "generic".to_string(),
             spans,
+            text,
         }),
     ))
 }
@@ -58,6 +62,7 @@ mod test {
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     output: "this is some text".to_string(),
                 })],
+                text: "this is some text".to_string(),
             }),
         );
         let right = generic_block_section_v42(&source, &site_config, 0, 0, 0).unwrap();

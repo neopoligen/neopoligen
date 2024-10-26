@@ -1,6 +1,8 @@
 use crate::neo_error::{NeoError, NeoErrorKind};
 use crate::payload_span::PayloadSpan;
 use crate::span::*;
+use crate::span_v42::plaintext::PlainTextSpan;
+use crate::span_v42::SpanV42;
 use minijinja::Value;
 use regex::Regex;
 use rimage::config::{Codec, EncoderConfig};
@@ -82,6 +84,17 @@ pub fn flatten_spans(spans: &Vec<Span>) -> String {
     spans
         .iter()
         .map(|span| flatten_parsed_text(span))
+        .collect::<Vec<String>>()
+        .join("")
+}
+
+pub fn flatten_spans_v42(spans: &Vec<SpanV42>) -> String {
+    spans
+        .iter()
+        .map(|span| match span {
+            SpanV42::PlainText(s) => s.output.to_string(),
+            _ => "".to_string(),
+        })
         .collect::<Vec<String>>()
         .join("")
 }
