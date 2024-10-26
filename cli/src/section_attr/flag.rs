@@ -72,8 +72,8 @@ mod test {
     #[case("https://www.example.com/")]
     #[case("  leading_spaces_are_okay")]
     #[case("trailing_spaces_are_okay   ")]
-    #[case("these_characters_are_okay:!@#$%^&*()[]<>|")]
-    fn solo_section_flag_attr_v42_valid_flags(#[case] left: &str) {
+    #[case("these_characters_are_okay:!@#$%^&*()[]<>|-")]
+    fn section_flag_attr_v42_valid_flags(#[case] left: &str) {
         let source = format!("-- {}", left);
         let response = section_flag_attr_v42(source.as_str()).unwrap();
         let right = match response.1 {
@@ -88,7 +88,7 @@ mod test {
     #[case("bravo: charlie")]
     #[case("delta: ")]
     #[case("no_escaped_\\allowed")]
-    fn solo_section_flag_attr_v42_invalid_flags(#[case] left: &str) {
+    fn section_flag_attr_v42_invalid_flags(#[case] left: &str) {
         let source = format!("-- {}", left);
         let result = section_flag_attr_v42(source.as_str());
         if result.is_err() {

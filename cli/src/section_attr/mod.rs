@@ -1,8 +1,10 @@
 #![allow(unused_imports)]
 
 pub mod flag;
+pub mod key_value;
 
 use crate::section_attr::flag::SectionFlagAttrV42;
+use crate::section_attr::key_value::SectionKeyValueAttrV42;
 // use crate::section::block::block_of_main_content_v42;
 use crate::section::block::block_of_section_attr_value_v42;
 // use crate::span::colon::colon;
@@ -37,10 +39,10 @@ use self::escaped_backtick::escaped_backtick;
 use self::escaped_pipe::escaped_pipe;
 use self::single_backtick::single_backtick;
 
-#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub struct SectionKeyValueAttrV42 {
-    value: String,
-}
+// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+// pub struct SectionKeyValueAttrV42 {
+//     value: String,
+// }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub enum SectionAttrV42 {
