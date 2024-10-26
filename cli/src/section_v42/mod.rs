@@ -1,16 +1,21 @@
-use nom::IResult;
-use nom_supreme::error::ErrorTree;
-use serde::Deserialize;
-use serde::Serialize;
-
 pub mod basic;
+pub mod json5;
 
 use crate::section_v42::basic::*;
+use crate::section_v42::json5::*;
 use crate::site_config::SiteConfigV42;
+use nom::branch::alt;
+use nom::IResult;
+use nom::Parser;
+use nom_supreme::error::ErrorTree;
+use nom_supreme::ParserExt;
+use serde::Deserialize;
+use serde::Serialize;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub enum SectionV42 {
     Basic(BasicSectionV42),
+    Json5(Json5SectionV42),
 }
 
 pub fn start_or_full_section_v42<'a>(
@@ -20,6 +25,13 @@ pub fn start_or_full_section_v42<'a>(
     list_level: usize,
     checklist_level: usize,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
+    let (source, section) = alt((
+        // |src| basic_section_full_v42(src, &site_config, nest_level, list_level, checklist_level),
+        |src| json5_section_full_v42(src, &site_config, nest_level, list_level, checklist_level),
+    ))
+    .context("")
+    .parse(source)?;
+
     //let (source, section) = alt((
     //    |src| {
     //        basic_section_start(
@@ -129,5 +141,5 @@ pub fn start_or_full_section_v42<'a>(
     //.context("")
     //.parse(source)?;
 
-    Ok((source, SectionV42::Basic(BasicSectionV42 {})))
+    Ok((source, section))
 }
