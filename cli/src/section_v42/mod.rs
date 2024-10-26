@@ -13,6 +13,7 @@ use serde::Deserialize;
 use serde::Serialize;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+// #[serde(tag = "type", rename_all = "lowercase")]
 pub enum SectionV42 {
     Basic(BasicSectionV42),
     Json5(Json5SectionV42),
@@ -26,7 +27,7 @@ pub fn start_or_full_section_v42<'a>(
     checklist_level: usize,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     let (source, section) = alt((
-        // |src| basic_section_full_v42(src, &site_config, nest_level, list_level, checklist_level),
+        |src| basic_section_full_v42(src, &site_config, nest_level, list_level, checklist_level),
         |src| json5_section_full_v42(src, &site_config, nest_level, list_level, checklist_level),
     ))
     .context("")

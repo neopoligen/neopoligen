@@ -20,7 +20,7 @@ pub fn basic_section_full_v42<'a>(
     _checklist_level: usize,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let _dbg_header = "BASIC_SECTION_START";
-    let (source, _) = tag("-- ").context("").parse(source)?;
+    let (source, _) = tag("-- Totototo").context("").parse(source)?;
     //let (source, kind) = tag("pagedata").context("").parse(source)?;
     let section = SectionV42::Basic(BasicSectionV42 {});
     Ok((source, section))
