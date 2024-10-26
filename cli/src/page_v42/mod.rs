@@ -36,14 +36,14 @@ mod test {
 
     #[test]
     pub fn solo_check_1() {
-        let page = PageV42::valid_sample("001-pagedata-only.neo");
+        let page = PageV42::valid_sample_mock("001-pagedata-only.neo");
         // dbg!(page.ast().unwrap());
         // dbg!(page);
     }
 
     #[test]
     pub fn solo_check_2() {
-        let page = PageV42::valid_sample("002-basic-sample.neo");
+        let page = PageV42::valid_sample_mock("002-basic-sample.neo");
         dbg!(page.ast().unwrap());
         // dbg!(page);
     }

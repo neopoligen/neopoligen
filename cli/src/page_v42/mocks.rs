@@ -4,7 +4,7 @@ use include_dir::{include_dir, Dir};
 use std::path::PathBuf;
 
 impl PageV42 {
-    pub fn valid_sample(name: &str) -> PageV42 {
+    pub fn valid_sample_mock(name: &str) -> PageV42 {
         const SAMPLE_DIR: Dir = include_dir!("src/page_v42/samples/valid");
         let site_config = SiteConfigV42::mock1_basic();
         let source = SAMPLE_DIR

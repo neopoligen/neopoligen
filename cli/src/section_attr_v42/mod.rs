@@ -15,7 +15,9 @@ use crate::section::block::block_of_section_attr_value_v42;
 // use crate::span::pipe::pipe;
 // use crate::span::single_underscore::single_underscore;
 use crate::helpers::dump_parser_if_debug;
+use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
 use crate::span::*;
+use crate::span_v42::SpanV42;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
@@ -34,6 +36,7 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 
 use self::flag::section_flag_attr_v42;
 use self::key_value::section_key_value_attr_v42;
@@ -47,18 +50,29 @@ pub enum SectionAttrV42 {
 
 pub fn section_attr_v42<'a>(
     source: &'a str,
-) -> IResult<&'a str, (Vec<SectionKeyValueAttrV42>, Vec<String>), ErrorTree<&'a str>> {
+) -> IResult<
+    &'a str,
+    (BTreeMap<String, SectionKeyValueAttrPayloadV42>, Vec<String>),
+    ErrorTree<&'a str>,
+> {
     let (source, raw_attrs) =
         many0(alt((section_flag_attr_v42, section_key_value_attr_v42)))(source)?;
     // TODO: Combine multiple attrs into the same one
     // if they have the same key
-    let attrs = raw_attrs
-        .iter()
-        .filter_map(|attr| match attr {
-            SectionAttrV42::KeyValueV42(kv) => Some(kv.clone()),
-            _ => None,
-        })
-        .collect();
+    let mut attrs = BTreeMap::new();
+    raw_attrs.iter().for_each(|attr| match attr {
+        SectionAttrV42::KeyValueV42(kv) => {
+            attrs.insert(
+                kv.key.to_string(),
+                SectionKeyValueAttrPayloadV42 {
+                    text: "asdf".to_string(),
+                    spans: vec![],
+                },
+            );
+            ()
+        }
+        _ => (),
+    });
     let flags = raw_attrs
         .iter()
         .filter_map(|attr| match attr {
