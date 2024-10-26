@@ -56,10 +56,8 @@ pub fn json5_section_full_v42<'a>(
             _ => None,
         })
         .collect();
-
     let mut error = None;
     let data;
-
     if json_text.trim() != "" {
         data = match serde_json5::from_str::<Value>(json_text) {
             Ok(d) => d,
@@ -71,7 +69,6 @@ pub fn json5_section_full_v42<'a>(
     } else {
         data = serde_json5::from_str::<Value>(r#"{}"#).unwrap()
     }
-
     let section = SectionV42::Json5(Json5SectionV42 {
         attrs,
         flags,
@@ -80,7 +77,6 @@ pub fn json5_section_full_v42<'a>(
         error,
         children: vec![],
     });
-
     Ok((source, section))
 }
 
