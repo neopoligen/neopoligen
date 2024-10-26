@@ -37,12 +37,35 @@ pub struct SectionKeyValueAttrV42 {
 pub fn section_key_value_attr_v42<'a>(
     source: &'a str,
 ) -> IResult<&'a str, SectionAttrV42, ErrorTree<&'a str>> {
+    let debug = false;
+    let dbg_header = "SECTION_KEY_VALUE_ATTR";
+    dump_parser_if_debug(debug, dbg_header, source, 1);
+    let (source, _) = tag("--").context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 2);
+    let (source, _) = space1.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 3);
+    let (source, key_parts) = many1(alt((
+        is_not(": \n\t"),
+        pair(tag(":"), not(alt((space1, eof)))).map(|x| x.0),
+    )))
+    .context("")
+    .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 4);
+    let (source, _) = tag(":").context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 5);
+    let (source, _) = space1.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 6);
+    let (source, value) = block_of_section_attr_value_v42.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 7);
+    let key = key_parts
+        .iter()
+        .map(|part| part.to_string())
+        .collect::<Vec<String>>()
+        .join("")
+        .to_string();
     Ok((
         source,
-        SectionAttrV42::KeyValueV42(SectionKeyValueAttrV42 {
-            key: "".to_string(),
-            value: vec![],
-        }),
+        SectionAttrV42::KeyValueV42(SectionKeyValueAttrV42 { key, value }),
     ))
 }
 
@@ -82,19 +105,22 @@ mod test {
 
     #[rstest]
     #[case("alfa", "bravo")]
-    // #[case("bravo-charlie")]
+    #[case("charlie", "delta-echo")]
     // #[case("https://www.example.com/")]
     // #[case("  leading_spaces_are_okay")]
     // #[case("trailing_spaces_are_okay   ")]
     // #[case("these_characters_are_okay:!@#$%^&*()[]<>|-")]
     fn solo_section_flag_attr_v42_valid_flags(#[case] left_key: &str, #[case] left_value: &str) {
         let source = format!("-- {}: {}", left_key, left_value);
-        let _response = section_key_value_attr_v42(source.as_str()).unwrap();
-        //let right = match response.1 {
-        //    //SectionAttrV42::FlagV42(data) => data.value,
-        //    _ => "".to_string(),
-        //};
-        // assert_eq!(left.trim(), right);
+        let response = section_key_value_attr_v42(source.as_str()).unwrap();
+        let right = match response.1 {
+            // NOTE: Only checking keys here which means the
+            // parsing worked. Specific value checks are done
+            // in other tests
+            SectionAttrV42::KeyValueV42(data) => data.key,
+            _ => "".to_string(),
+        };
+        assert_eq!(left_key.trim(), right);
     }
 
     // #[rstest]
