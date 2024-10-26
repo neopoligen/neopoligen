@@ -1,3 +1,6 @@
+#![allow(unused_imports)]
+#![allow(unused_variables)]
+
 pub mod mocks;
 
 use crate::ast::parse_ast;
@@ -321,90 +324,90 @@ mod test {
     use super::*;
     use pretty_assertions::assert_eq;
 
-    #[test]
-    #[ignore] // TODO: update this to test for spans
-    fn solo_pagedata_basic_check() {
-        let page = PageV42::sample_from("000-pagedata-only");
-        let left = Value::from("asdf");
-        let right = page.title().unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore] // TODO: update this to test for spans
+    // fn pagedata_basic_check() {
+    //     let page = PageV42::sample_from("000-pagedata-only");
+    //     let left = Value::from("asdf");
+    //     let right = page.title().unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn id_test_get_basic_id() {
-        let page = PageV42::mock1_basic_page();
-        let left = "mock1_basic_page".to_string();
-        let right = page.raw_id().unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn id_test_get_basic_id() {
+    //     let page = PageV42::mock1_basic_page();
+    //     let left = "mock1_basic_page".to_string();
+    //     let right = page.raw_id().unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn id_should_error_if_missing() {
-        let page = PageV42::mock2_missing_id_and_status();
-        assert!(page.id().is_err());
-    }
+    // #[test]
+    // #[ignore]
+    // fn id_should_error_if_missing() {
+    //     let page = PageV42::mock2_missing_id_and_status();
+    //     assert!(page.id().is_err());
+    // }
 
-    #[test]
-    #[ignore]
-    fn output_rel_path_test_mock1() {
-        let page = PageV42::mock1_basic_page();
-        let left = PathBuf::from("en/mock1_basic_page/index.html");
-        let right = page.output_fs_rel_path(&PathBuf::from("en")).unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn output_rel_path_test_mock1() {
+    //     let page = PageV42::mock1_basic_page();
+    //     let left = PathBuf::from("en/mock1_basic_page/index.html");
+    //     let right = page.output_fs_rel_path(&PathBuf::from("en")).unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn output_rel_path_with_path_attr() {
-        let page = PageV42::mock3_custom_path();
-        let left = PathBuf::from("index.html");
-        let right = page.output_fs_rel_path(&PathBuf::from("en")).unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn output_rel_path_with_path_attr() {
+    //     let page = PageV42::mock3_custom_path();
+    //     let left = PathBuf::from("index.html");
+    //     let right = page.output_fs_rel_path(&PathBuf::from("en")).unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn status_test_get_basic_status() {
-        let page = PageV42::mock1_basic_page();
-        let left = "scratch".to_string();
-        let right = page.status().unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn status_test_get_basic_status() {
+    //     let page = PageV42::mock1_basic_page();
+    //     let left = "scratch".to_string();
+    //     let right = page.status().unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn status_should_error_if_missing() {
-        let page = PageV42::mock2_missing_id_and_status();
-        assert!(page.status().is_err());
-    }
+    // #[test]
+    // #[ignore]
+    // fn status_should_error_if_missing() {
+    //     let page = PageV42::mock2_missing_id_and_status();
+    //     assert!(page.status().is_err());
+    // }
 
-    #[test]
-    #[ignore]
-    fn template_list_with_found_template_and_status() {
-        let page = PageV42::mock3_custom_path();
-        let left = vec![
-            "page-templates/home-page/draft.neoj".to_string(),
-            "page-templates/home-page/done.neoj".to_string(),
-            "page-templates/post/draft.neoj".to_string(),
-            "page-templates/post/done.neoj".to_string(),
-        ];
-        let right = page.template_list();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn template_list_with_found_template_and_status() {
+    //     let page = PageV42::mock3_custom_path();
+    //     let left = vec![
+    //         "page-templates/home-page/draft.neoj".to_string(),
+    //         "page-templates/home-page/done.neoj".to_string(),
+    //         "page-templates/post/draft.neoj".to_string(),
+    //         "page-templates/post/done.neoj".to_string(),
+    //     ];
+    //     let right = page.template_list();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore]
-    fn template_list_without_custom_template_attr() {
-        let page = PageV42::mock1_basic_page();
-        let left = vec![
-            "page-templates/post/scratch.neoj".to_string(),
-            "page-templates/post/done.neoj".to_string(),
-        ];
-        let right = page.template_list();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore]
+    // fn template_list_without_custom_template_attr() {
+    //     let page = PageV42::mock1_basic_page();
+    //     let left = vec![
+    //         "page-templates/post/scratch.neoj".to_string(),
+    //         "page-templates/post/done.neoj".to_string(),
+    //     ];
+    //     let right = page.template_list();
+    //     assert_eq!(left, right);
+    // }
 
     //
 }

@@ -12,15 +12,15 @@ use std::sync::Arc;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PlainTextSpan {
-    pub text: String,
+    pub output: String,
 }
 
 pub fn plaintext<'a>(source: &'a str) -> IResult<&'a str, SpanV42, ErrorTree<&'a str>> {
-    let (source, text) = is_not("\n<>`-|:\\").context("").parse(source)?;
+    let (source, output) = is_not("\r\n<>`-|:\\").context("").parse(source)?;
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: text.to_string(),
+            output: output.to_string(),
         }),
     ))
 }
@@ -33,7 +33,7 @@ mod test {
 
     #[rstest]
     #[case("alfa-bravo", "-bravo")]
-    fn solo_valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
+    fn valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
         assert_eq!(remainder, plaintext(source).unwrap().0);
     }
 }

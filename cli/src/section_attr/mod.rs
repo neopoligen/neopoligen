@@ -1,10 +1,7 @@
 #![allow(unused_imports)]
 
-pub mod flag;
-pub mod key_value;
-
-use crate::section_attr::flag::SectionFlagAttrV42;
-use crate::section_attr::key_value::SectionKeyValueAttrV42;
+// use crate::section_attr::flag::SectionFlagAttrV42;
+// use crate::section_attr::key_value::SectionKeyValueAttrV42;
 // use crate::section::block::block_of_main_content_v42;
 use crate::section::block::block_of_section_attr_value_v42;
 // use crate::span::colon::colon;
@@ -37,22 +34,9 @@ use self::colon_not_followed_by_space::colon_not_followed_by_space;
 use self::escaped_backslash::escaped_backslash;
 use self::escaped_backtick::escaped_backtick;
 use self::escaped_pipe::escaped_pipe;
-use self::flag::section_flag_attr_v42;
-use self::key_value::section_key_value_attr_v42;
+// use self::flag::section_flag_attr_v42;
+// use self::key_value::section_key_value_attr_v42;
 use self::single_backtick::single_backtick;
-
-#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub enum SectionAttrV42 {
-    FlagV42(SectionFlagAttrV42),
-    KeyValueV42(SectionKeyValueAttrV42),
-}
-
-pub fn section_attr_v42<'a>(
-    source: &'a str,
-) -> IResult<&'a str, SectionAttrV42, ErrorTree<&'a str>> {
-    let (source, attr) = alt((section_flag_attr_v42, section_key_value_attr_v42))(source)?;
-    Ok((source, attr))
-}
 
 // /////////////////////////////////////////////////
 // TODO: Deprecate everything below here
@@ -284,34 +268,9 @@ pub fn section_flag<'a>(source: &'a str) -> IResult<&'a str, SectionAttr, ErrorT
 #[cfg(test)]
 mod test {
 
-    use super::*;
-    use pretty_assertions::assert_eq;
-    use rstest::rstest;
-
-    #[test]
-    fn solo_section_attr_v42_get_flag() {
-        let source = "-- alfa-flag";
-        let left = SectionAttrV42::FlagV42(SectionFlagAttrV42 {
-            value: "alfa-flag".to_string(),
-        });
-        let right = section_attr_v42(source);
-        assert_eq!(left, right.unwrap().1);
-    }
-
-    #[test]
-    fn solo_section_attr_v42_get_key_value() {
-        let source = "-- alfa: bravo";
-        let left = SectionAttrV42::KeyValueV42(SectionKeyValueAttrV42 {
-            key: "alfa".to_string(),
-            value: vec![Span {
-                attrs: vec![],
-                kind: SpanKind::PlainText,
-                parsed_text: "bravo".to_string(),
-            }],
-        });
-        let right = section_attr_v42(source);
-        assert_eq!(left, right.unwrap().1);
-    }
+    // use super::*;
+    // use pretty_assertions::assert_eq;
+    // use rstest::rstest;
 
     // // Valid Flags
     // #[rstest]

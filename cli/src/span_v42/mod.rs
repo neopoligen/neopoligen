@@ -1,6 +1,8 @@
+#![allow(unused_variables)]
 #![allow(unused_imports)]
 
 pub mod plaintext;
+pub mod single_line_ending;
 
 // use crate::helpers::flatten_spans;
 
@@ -62,4 +64,17 @@ pub enum SpanV42 {
 pub fn span_v42<'a>(source: &'a str) -> IResult<&'a str, SpanV42, ErrorTree<&'a str>> {
     let (source, span) = alt((plaintext,)).context("").parse(source)?;
     Ok((source, span))
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+    use rstest::rstest;
+
+    #[rstest]
+    #[case("alfa-bravo", "-bravo")]
+    fn valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
+        assert_eq!(remainder, plaintext(source).unwrap().0);
+    }
 }
