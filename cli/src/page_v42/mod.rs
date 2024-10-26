@@ -44,7 +44,7 @@ mod test {
     #[test]
     pub fn solo_check_2() {
         let page = PageV42::valid_sample("002-basic-sample.neo");
-        dbg!(page.ast().unwrap());
+        // dbg!(page.ast().unwrap());
         // dbg!(page);
     }
 

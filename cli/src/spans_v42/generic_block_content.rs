@@ -12,9 +12,7 @@ use nom_supreme::ParserExt;
 pub fn spans_of_generic_block_content<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Vec<SpanV42>, ErrorTree<&'a str>> {
-    let (source, output) = many1(alt((plaintext, any_hyphens)))
-        .context("")
-        .parse(source)?;
+    let (source, output) = many1(alt((plaintext,))).context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     Ok((source, output))
 }

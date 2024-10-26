@@ -40,22 +40,24 @@ pub fn json5_section_full_v42<'a>(
         .context("")
         .parse(source)?;
     let (source, _) = line_ending.context("").parse(source)?;
-    let (source, raw_attrs) = many0(section_attr_v42).context("").parse(source)?;
+    let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     let (source, json_text) = alt((take_until("\n-- "), rest)).context("").parse(source)?;
-    let attrs = raw_attrs
-        .iter()
-        .filter_map(|attr| match attr {
-            SectionAttrV42::KeyValueV42(kv) => Some(kv.clone()),
-            _ => None,
-        })
-        .collect();
-    let flags = raw_attrs
-        .iter()
-        .filter_map(|attr| match attr {
-            SectionAttrV42::FlagV42(f) => Some(f.clone()),
-            _ => None,
-        })
-        .collect();
+
+    // let attrs = raw_attrs
+    //     .iter()
+    //     .filter_map(|attr| match attr {
+    //         SectionAttrV42::KeyValueV42(kv) => Some(kv.clone()),
+    //         _ => None,
+    //     })
+    //     .collect();
+    // let flags = raw_attrs
+    //     .iter()
+    //     .filter_map(|attr| match attr {
+    //         SectionAttrV42::FlagV42(f) => Some(f.clone()),
+    //         _ => None,
+    //     })
+    //     .collect();
+
     let mut error = None;
     let data;
     if json_text.trim() != "" {

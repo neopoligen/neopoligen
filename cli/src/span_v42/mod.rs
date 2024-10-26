@@ -4,6 +4,7 @@
 pub mod any_hyphen;
 pub mod plaintext;
 pub mod single_line_ending;
+pub mod space0_line_ending_or_eof;
 
 // use crate::helpers::flatten_spans;
 
