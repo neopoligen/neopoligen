@@ -12,6 +12,7 @@ use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::Value;
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
 use std::sync::Arc;
@@ -40,7 +41,23 @@ impl PageV42 {
         }
     }
 
-    // TODO: Move this to the mocks file
+    pub fn sample_from(file_name: &str) -> PageV42 {
+        let mut samples = BTreeMap::new();
+        samples.insert(
+            "000-pagedata-only",
+            include_str!("samples/000-pagedata-only.neo"),
+        );
+        let mut p = PageV42 {
+            ast: None,
+            fs_path: PathBuf::from(format!("samples/{}.neo", file_name)),
+            raw_source: samples.get(file_name).unwrap().to_string(),
+        };
+        let site_config = SiteConfigV42::mock1_basic();
+        let _ = p.generate_ast(&site_config);
+        p
+    }
+
+    // TODO: Deprecated in favor of making pages from sample_from
     pub fn mock_from_test_directory_sample(contents: &str) -> Result<PageV42, NeoError> {
         Ok(PageV42 {
             ast: None,
@@ -118,10 +135,15 @@ impl PageV42 {
         }
     }
 
-    // TODO: Convert to MiniJinja value calling
-    // this logic from id_as_string or something like
-    // that
-    pub fn id(&self) -> Result<String, NeoError> {
+    pub fn id(&self) -> Result<Value, Error> {
+        // TODO: Figure out what to do with error handling here
+        match &self.raw_id() {
+            Ok(s) => Ok(Value::from(s)),
+            Err(_e) => Ok(Value::from("NO_ID_AVAILABLE")),
+        }
+    }
+
+    pub fn raw_id(&self) -> Result<String, NeoError> {
         match &self.ast {
             Some(sections) => {
                 let tmp = sections
@@ -172,7 +194,7 @@ impl PageV42 {
             path_override = path_override.strip_prefix("/").unwrap().to_string();
             Ok(PathBuf::from(path_override))
         } else {
-            match self.id() {
+            match self.raw_id() {
                 Ok(id) => {
                     let mut path = base_rel_path.clone();
                     path = path.join(id).join("index.html");
@@ -271,7 +293,7 @@ impl PageV42 {
     }
 
     pub fn title(&self) -> Result<Value, Error> {
-        Ok(Value::from("[TODO: PAGE TITLE]"))
+        Ok(Value::from(self.raw_id().unwrap()))
     }
 
     //
@@ -286,7 +308,7 @@ impl Object for PageV42 {
     ) -> Result<Value, Error> {
         match name {
             "ast" => self.ast(),
-            "id" => Ok(Value::from(self.id().unwrap())),
+            "id" => self.id(),
             "sections" => self.sections(),
             "title" => self.title(),
             _ => Ok(Value::from("")),
@@ -300,12 +322,20 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
+    fn solo_pagedata_basic_check() {
+        let page = PageV42::sample_from("000-pagedata-only");
+        let left = Value::from("asdf");
+        let right = page.title().unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
     #[ignore]
     fn id_test_get_basic_id() {
         let page = PageV42::mock1_basic_page();
         // dbg!(&page.ast());
         let left = "mock1_basic_page".to_string();
-        let right = page.id().unwrap();
+        let right = page.raw_id().unwrap();
         assert_eq!(left, right);
     }
 

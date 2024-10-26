@@ -332,7 +332,7 @@ mod test {
     #[case("<<alfa|bravo|flag|two>>")]
     #[case("<<alfa|bravo|key: value|another: value>>")]
     #[case("<<em|nested <<link|named span|https://www.example.com/>> with att|class: clicky>>")]
-    fn solo_switch_valid_named_span_cases(#[case] source: &str) {
+    fn switch_valid_named_span_cases(#[case] source: &str) {
         let result = named_span_v42(source);
         if result.is_ok() {
             //dbg!(&result.unwrap().clone());
