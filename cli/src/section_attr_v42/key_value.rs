@@ -1,7 +1,9 @@
 #![allow(unused_imports)]
 use crate::section_attr_v42::SectionAttrV42;
+use crate::span_v42::*;
+use crate::spans_v42::basic_content::spans_of_basic_content;
 // use crate::section::block::block_of_main_content_v42;
-use crate::section::block::block_of_section_attr_value_v42;
+// use crate::section::block::block_of_section_attr_value_v42;
 // use crate::span::colon::colon;
 // use crate::span::double_underscore::double_underscore;
 // use crate::span::escaped_pipe::escaped_pipe;
@@ -9,7 +11,7 @@ use crate::section::block::block_of_section_attr_value_v42;
 // use crate::span::pipe::pipe;
 // use crate::span::single_underscore::single_underscore;
 use crate::helpers::dump_parser_if_debug;
-use crate::span::*;
+// use crate::span::*;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
@@ -31,7 +33,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SectionKeyValueAttrV42 {
     pub key: String,
-    pub value: Vec<Span>,
+    pub value: Vec<SpanV42>,
 }
 
 pub fn section_key_value_attr_v42<'a>(
@@ -55,7 +57,7 @@ pub fn section_key_value_attr_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, _) = space1.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 6);
-    let (source, value) = block_of_section_attr_value_v42.context("").parse(source)?;
+    let (source, value) = spans_of_basic_content.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 7);
     let key = key_parts
         .iter()

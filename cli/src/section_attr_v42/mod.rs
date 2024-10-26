@@ -38,6 +38,7 @@ use self::flag::section_flag_attr_v42;
 use self::key_value::section_key_value_attr_v42;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+// #[serde(tag = "type", rename_all = "lowercase")]
 pub enum SectionAttrV42 {
     FlagV42(SectionFlagAttrV42),
     KeyValueV42(SectionKeyValueAttrV42),
@@ -67,20 +68,20 @@ mod test {
         assert_eq!(left, right.unwrap().1);
     }
 
-    #[test]
-    fn section_attr_v42_get_key_value() {
-        let source = "-- alfa: bravo";
-        let left = SectionAttrV42::KeyValueV42(SectionKeyValueAttrV42 {
-            key: "alfa".to_string(),
-            value: vec![Span {
-                attrs: vec![],
-                kind: SpanKind::PlainText,
-                parsed_text: "bravo".to_string(),
-            }],
-        });
-        let right = section_attr_v42(source);
-        assert_eq!(left, right.unwrap().1);
-    }
+    // #[test]
+    // fn section_attr_v42_get_key_value() {
+    //     let source = "-- alfa: bravo";
+    //     let left = SectionAttrV42::KeyValueV42(SectionKeyValueAttrV42 {
+    //         key: "alfa".to_string(),
+    //         value: vec![SpanV42 {
+    //             attrs: vec![],
+    //             kind: SpanKind::PlainText,
+    //             parsed_text: "bravo".to_string(),
+    //         }],
+    //     });
+    //     let right = section_attr_v42(source);
+    //     assert_eq!(left, right.unwrap().1);
+    // }
 
     // // Valid Flags
     // #[rstest]

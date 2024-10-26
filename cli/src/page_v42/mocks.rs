@@ -1,8 +1,7 @@
+use super::PageV42;
 use crate::{ast_v42::parse_ast_v42, site_config::SiteConfigV42};
 use include_dir::{include_dir, Dir};
 use std::path::PathBuf;
-
-use super::PageV42;
 
 impl PageV42 {
     pub fn valid_sample(name: &str) -> PageV42 {
@@ -14,7 +13,7 @@ impl PageV42 {
             .contents_utf8()
             .unwrap()
             .to_string();
-        let ast = parse_ast_v42(&source, &site_config).unwrap();
-        PageV42 { ast, source }
+        let raw_ast = parse_ast_v42(&source, &site_config).unwrap();
+        PageV42 { raw_ast, source }
     }
 }

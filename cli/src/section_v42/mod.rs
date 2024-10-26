@@ -13,7 +13,7 @@ use serde::Deserialize;
 use serde::Serialize;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-// #[serde(tag = "type", rename_all = "lowercase")]
+#[serde(tag = "type", rename_all = "lowercase")]
 pub enum SectionV42 {
     Basic(BasicSectionV42),
     Json5(Json5SectionV42),

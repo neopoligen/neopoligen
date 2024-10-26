@@ -6,17 +6,23 @@ pub mod mocks;
 use crate::neo_error::NeoError;
 use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
+use minijinja::Error;
+use minijinja::Value;
 use serde::Deserialize;
 use serde::Serialize;
 use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PageV42 {
-    pub ast: Vec<SectionV42>,
+    pub raw_ast: Vec<SectionV42>,
     pub source: String,
 }
 
-impl PageV42 {}
+impl PageV42 {
+    pub fn ast(&self) -> Result<Value, Error> {
+        Ok(Value::from_serialize(&self.raw_ast))
+    }
+}
 
 #[cfg(test)]
 mod test {
@@ -31,7 +37,8 @@ mod test {
     #[test]
     pub fn solo_check_section_count() {
         let page = PageV42::valid_sample("000-pagedata-only.neo");
-        dbg!(page);
+        dbg!(page.ast());
+        // dbg!(page);
     }
 
     // fn valid_samples() -> BTreeMap<String, String> {
