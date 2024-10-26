@@ -67,6 +67,17 @@ pub fn empty_dir(dir: &PathBuf) -> std::io::Result<()> {
     Ok(())
 }
 
+pub fn flatten_spans_v42(spans: &Vec<SpanV42>) -> String {
+    spans
+        .iter()
+        .map(|span| match span {
+            SpanV42::PlainText(s) => s.output.to_string(),
+        })
+        .collect::<Vec<String>>()
+        .join("")
+}
+
+// TODO: Deprecated - remove when v42 is done
 pub fn flatten_payload_spans(spans: &Vec<PayloadSpan>) -> String {
     spans
         .iter()
@@ -75,11 +86,12 @@ pub fn flatten_payload_spans(spans: &Vec<PayloadSpan>) -> String {
         .join("")
 }
 
-// TODO: I think this is deprecated.
+// TODO: Deprecated - remove when v42 is done
 pub fn flatten_payload_parsed_text(span: &PayloadSpan) -> String {
     span.parsed_text.clone()
 }
 
+// TODO: Deprecated - remove when v42 is done
 pub fn flatten_spans(spans: &Vec<Span>) -> String {
     spans
         .iter()
@@ -88,17 +100,7 @@ pub fn flatten_spans(spans: &Vec<Span>) -> String {
         .join("")
 }
 
-pub fn flatten_spans_v42(spans: &Vec<SpanV42>) -> String {
-    spans
-        .iter()
-        .map(|span| match span {
-            SpanV42::PlainText(s) => s.output.to_string(),
-            _ => "".to_string(),
-        })
-        .collect::<Vec<String>>()
-        .join("")
-}
-
+// TODO: Deprecated - remove when v42 is done
 pub fn flatten_parsed_text(span: &Span) -> String {
     match &span.kind {
         //SpanKind::NamedSpanV42 { .. } => span.value().unwrap().into(),

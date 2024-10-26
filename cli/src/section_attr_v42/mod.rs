@@ -4,6 +4,7 @@
 pub mod flag;
 pub mod key_value;
 
+use crate::helpers::flatten_spans_v42;
 use crate::section_attr_v42::flag::SectionFlagAttrV42;
 use crate::section_attr_v42::key_value::SectionKeyValueAttrV42;
 // use crate::section::block::block_of_main_content_v42;
@@ -65,8 +66,8 @@ pub fn section_attr_v42<'a>(
             attrs.insert(
                 kv.key.to_string(),
                 SectionKeyValueAttrPayloadV42 {
-                    text: "asdf".to_string(),
-                    spans: vec![],
+                    text: flatten_spans_v42(&kv.value),
+                    spans: kv.value.clone(),
                 },
             );
             ()
