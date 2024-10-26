@@ -6,6 +6,7 @@ use crate::section_v42::*;
 use crate::site_config::SiteConfigV42;
 use minijinja::Value;
 use nom::bytes::complete::tag;
+use nom::bytes::complete::take_until;
 use nom::character::complete::line_ending;
 use nom::combinator::rest;
 use nom::multi::many0;
@@ -22,6 +23,7 @@ pub struct Json5SectionV42 {
     attrs: Vec<SectionKeyValueAttrV42>,
     flags: Vec<SectionFlagAttrV42>,
     data: Value,
+    error: Option<String>,
 }
 
 pub fn json5_section_full_v42<'a>(
@@ -36,8 +38,7 @@ pub fn json5_section_full_v42<'a>(
     let (source, kind) = tag("pagedata").context("").parse(source)?;
     let (source, _) = line_ending.context("").parse(source)?;
     let (source, raw_attrs) = many0(section_attr_v42).context("").parse(source)?;
-    // let (source, json_text)
-    let (source, _) = rest.context("").parse(source)?;
+    let (source, json_text) = alt((take_until("\n-- "), rest)).context("").parse(source)?;
     let attrs = raw_attrs
         .iter()
         .filter_map(|attr| match attr {
@@ -53,12 +54,29 @@ pub fn json5_section_full_v42<'a>(
         })
         .collect();
 
+    let mut error = None;
+    let data;
+
+    if json_text.trim() != "" {
+        data = match serde_json5::from_str::<Value>(json_text) {
+            Ok(d) => d,
+            Err(e) => {
+                error = Some(e.to_string());
+                serde_json5::from_str::<Value>(r#"{}"#).unwrap()
+            }
+        };
+    } else {
+        data = serde_json5::from_str::<Value>(r#"{}"#).unwrap()
+    }
+
     let section = SectionV42::Json5(Json5SectionV42 {
         attrs,
         flags,
         kind: kind.to_string(),
-        data: serde_json5::from_str::<Value>("{}").unwrap(),
+        data,
+        error,
     });
+
     Ok((source, section))
 }
 
@@ -101,6 +119,7 @@ mod test {
                 flags: vec![],
                 kind: "pagedata".to_string(),
                 data: serde_json5::from_str::<Value>("{}").unwrap(),
+                error: None,
             }),
         );
         let right = json5_section_full_v42(&source, &site_config, 0, 0, 0).unwrap();
