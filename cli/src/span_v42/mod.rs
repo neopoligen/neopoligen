@@ -54,6 +54,7 @@ use std::sync::Arc;
 
 use crate::span_v42::plaintext::*;
 
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub enum SpanV42 {
     PlainText(PlainTextSpan),
 }

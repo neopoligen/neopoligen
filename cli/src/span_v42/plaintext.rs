@@ -1,17 +1,8 @@
-// use crate::span_attr::*;
+use crate::span_v42::SpanV42;
 use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::Value;
-use nom::branch::alt;
-//use nom::bytes::complete::is_not;
-use crate::span_v42::SpanV42;
-use nom::character::complete::line_ending;
-use nom::character::complete::multispace0;
-use nom::character::complete::space0;
-use nom::character::complete::space1;
-use nom::combinator::eof;
-use nom::combinator::not;
-use nom::sequence::tuple;
+use nom::bytes::complete::is_not;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -19,15 +10,30 @@ use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PlainTextSpan {
     pub text: String,
 }
 
 pub fn plaintext<'a>(source: &'a str) -> IResult<&'a str, SpanV42, ErrorTree<&'a str>> {
+    let (source, text) = is_not("\n<>`-|:\\").context("").parse(source)?;
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: "asdf".to_string(),
+            text: text.to_string(),
         }),
     ))
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+    use rstest::rstest;
+
+    #[rstest]
+    #[case("alfa-bravo", "-bravo")]
+    fn solo_valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
+        assert_eq!(remainder, plaintext(source).unwrap().0);
+    }
 }
