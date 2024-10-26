@@ -9,8 +9,10 @@ use crate::site_config::SiteConfigV42;
 use crate::span_v42::space0_line_ending_or_eof::space0_line_ending_or_eof;
 use crate::span_v42::SpanV42;
 use nom::bytes::complete::tag;
+use nom::character::complete::multispace0;
 use nom::character::complete::space1;
 use nom::combinator::rest;
+use nom::multi::many0;
 use nom::sequence::pair;
 use nom::sequence::terminated;
 use nom::IResult;
@@ -31,10 +33,10 @@ pub struct BasicSectionV42 {
 
 pub fn basic_section_full_v42<'a>(
     source: &'a str,
-    _site_config: &'a SiteConfigV42,
-    _nest_level: usize,
-    _list_level: usize,
-    _checklist_level: usize,
+    site_config: &'a SiteConfigV42,
+    nest_level: usize,
+    list_level: usize,
+    checklist_level: usize,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let _dbg_header = "BASIC_SECTION_START";
     let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
@@ -42,10 +44,17 @@ pub fn basic_section_full_v42<'a>(
         .context("")
         .parse(source)?;
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
+    let (source, children) = many0(|src| {
+        generic_block_section_v42(src, site_config, nest_level, list_level, checklist_level)
+    })
+    .context("")
+    .parse(source)?;
+
     let (source, _) = rest.context("").parse(source)?;
     let section = SectionV42::Basic(BasicSectionV42 {
         attrs,
-        children: vec![],
+        children,
         kind: kind.to_string(),
         flags,
     });
