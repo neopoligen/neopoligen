@@ -142,9 +142,16 @@ impl Span {
 
     pub fn children(&self) -> Result<Value, Error> {
         match &self.kind {
-            SpanKind::NamedSpanV42 { value, .. } => {
-                Ok(Value::from_iter::<Vec<Value>>(vec![Value::from("asdf")]))
-            }
+            SpanKind::NamedSpanV42 { value, .. } => Ok(Value::from_iter::<Vec<Value>>(
+                value
+                    .iter()
+                    .map(|v| Value::from_object(v.clone()))
+                    .collect(),
+            )),
+            //SpanKind::NamedSpanV42 { value, .. } => Ok(Value::from_object(value)),
+            // SpanKind::NamedSpanV42 { value, .. } => {
+            //     Ok(Value::from_iter::<Vec<Value>>(vec![Value::from("asdf")]))
+            // }
             _ => Ok(Value::from("unknown")),
         }
     }

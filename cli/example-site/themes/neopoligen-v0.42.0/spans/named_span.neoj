@@ -7,13 +7,12 @@ _[@ span.children() @]_
 [! if span.type() == "tlink" !]
 THIS IS TLINK
 [! else !]
-<[@ span.type() @]>---[@ span.value() @]</[@ span.type() @]>
+<[@ span.type() @]>---[@ span.parsed_text() @]</[@ span.type() @]>
 
 
-
-[!- for child in span.value -!]
-x
-[@- theme.output_span(site, page_id, child) -@]
+[!- for child in span.children() -!]
+[@ child @]
+[#[@- theme.output_span(site, page_id, child) -@]#]
 [!- endfor -!]</[@ span.type @]>
 
 [! endif !]
