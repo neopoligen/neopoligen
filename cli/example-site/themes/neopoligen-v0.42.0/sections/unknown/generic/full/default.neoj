@@ -1,1 +1,6 @@
-Unknown generic full default
+[! import "helpers/theme.neoj" as theme !]
+
+[! for child in section.children !]
+[@ theme.output_section(site, page, child) @]
+[! endfor !]
+
