@@ -122,6 +122,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
         Ok(mut builder) => {
             // Build Site
             let _ = builder.load_pages_from_fs();
+            let _ = builder.prep_site(&site_config);
 
             // // Theme Test
             // let _ = builder.add_theme_test_templates_to_config();
@@ -132,7 +133,6 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             // let _ = builder.load_theme_test_templates();
             // let _ = builder.test_templates(&site_config);
 
-            // let _ = builder.prep_site(&site_config);
             // let _ = builder.load_templates(&site_config);
             // let _ = builder.output_pages();
 

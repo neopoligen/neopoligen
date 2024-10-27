@@ -1,4 +1,8 @@
-use crate::{neo_error::NeoError, page_v42::PageV42, site_config::SiteConfigV42};
+pub mod inits;
+
+use std::collections::BTreeMap;
+
+use crate::{neo_error::NeoError, page_v42::PageV42, site::SiteV42, site_config::SiteConfigV42};
 use anyhow::Result;
 use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
@@ -7,16 +11,7 @@ pub struct BuilderV42 {
     pub errors: Vec<NeoError>,
     pub pages: Vec<PageV42>,
     pub site_config: SiteConfigV42,
-}
-
-impl BuilderV42 {
-    pub fn new_from_site_config(site_config: &SiteConfigV42) -> Result<BuilderV42, NeoError> {
-        Ok(BuilderV42 {
-            errors: vec![],
-            pages: vec![],
-            site_config: site_config.clone(),
-        })
-    }
+    pub site: Option<SiteV42>,
 }
 
 impl BuilderV42 {
@@ -45,7 +40,29 @@ impl BuilderV42 {
                 }
             }
         }
-
         Ok(())
     }
+
+    #[instrument(skip(self, site_config))]
+    pub fn prep_site(&mut self, site_config: &SiteConfigV42) -> Result<()> {
+        event!(Level::INFO, "Prepping Site");
+        let mut site = SiteV42 {
+            config: site_config.clone(),
+            pages: BTreeMap::new(),
+        };
+        self.pages.iter().for_each(|p| match p.id() {
+            Ok(id) => {
+                site.pages.insert(id.to_string(), p.clone());
+                ()
+            }
+            Err(e) => {
+                // event!(Level::ERROR, "prep_site Error: {}", e);
+                // self.errors.push(e)
+            }
+        });
+        self.site = Some(site);
+        Ok(())
+    }
+
+    //
 }

@@ -23,6 +23,10 @@ impl PageV42 {
     pub fn ast(&self) -> Result<Value, Error> {
         Ok(Value::from_serialize(&self.raw_ast))
     }
+
+    pub fn id(&self) -> Result<Value, Error> {
+        Ok(Value::from("asdf"))
+    }
 }
 
 #[cfg(test)]
