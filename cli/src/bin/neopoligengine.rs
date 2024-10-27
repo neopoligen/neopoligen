@@ -121,7 +121,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
     match BuilderV42::new_from_site_config(site_config) {
         Ok(mut builder) => {
             // Build Site
-            let _ = builder.load_pages_from_fs();
+            let _ = builder.load_pages_from_file_system();
             let _ = builder.prep_site(&site_config);
             let _ = builder.load_templates(&site_config);
             let _ = builder.output_pages();

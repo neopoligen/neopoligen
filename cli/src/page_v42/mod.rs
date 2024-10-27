@@ -23,8 +23,11 @@ impl PageV42 {
         Ok(Value::from_serialize(&self.raw_ast))
     }
 
-    pub fn html_output_fs_rel_path(&self, _base_path: &PathBuf) -> Result<PathBuf, NeoError> {
-        Ok(PathBuf::from("index.html"))
+    pub fn html_file_system_path(&self, base_path: &PathBuf) -> Result<PathBuf, NeoError> {
+        Ok(base_path
+            .clone()
+            .join(self.id().unwrap())
+            .join("index.html"))
     }
 
     pub fn id(&self) -> Result<String, Error> {

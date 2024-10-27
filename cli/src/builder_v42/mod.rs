@@ -23,7 +23,7 @@ pub struct BuilderV42 {
 
 impl BuilderV42 {
     #[instrument(skip(self))]
-    pub fn load_pages_from_fs(&mut self) -> Result<()> {
+    pub fn load_pages_from_file_system(&mut self) -> Result<()> {
         event!(Level::INFO, "Loading Pages From FS");
         for entry in WalkDir::new(&self.site_config.content_source_dir()) {
             let path = entry?.path().to_path_buf();
@@ -103,12 +103,13 @@ impl BuilderV42 {
             .iter()
             .for_each(|(_id, page)| {
                 let base_rel_path = PathBuf::from(self.site_config.default_language().unwrap());
-                let file_rel_path = page.html_output_fs_rel_path(&base_rel_path);
+                let file_rel_path = page.html_file_system_path(&base_rel_path);
                 let absolute_output_path = &self
                     .site_config
                     .project_dir()
                     .join(&self.site_config.output_directory)
                     .join(file_rel_path.unwrap());
+                dbg!(absolute_output_path);
                 if let Some(template) = page.template_list().iter().find_map(|name| {
                     if let Ok(tmpl) = env.get_template(name) {
                         Some(tmpl)
