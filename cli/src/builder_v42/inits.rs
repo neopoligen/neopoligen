@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use super::BuilderV42;
 use crate::neo_error::NeoError;
 use crate::site_config::SiteConfigV42;
@@ -9,6 +11,7 @@ impl BuilderV42 {
             pages: vec![],
             site_config: site_config.clone(),
             site: None,
+            templates: BTreeMap::new(),
         })
     }
 }

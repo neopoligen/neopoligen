@@ -7,16 +7,19 @@ pub mod mocks;
 use crate::neo_error::NeoError;
 use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
+use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::Value;
 use serde::Deserialize;
 use serde::Serialize;
 use std::path::PathBuf;
+use std::sync::Arc;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PageV42 {
     pub raw_ast: Vec<SectionV42>,
     pub source: String,
+    pub fs_path: PathBuf,
 }
 
 impl PageV42 {
@@ -26,6 +29,31 @@ impl PageV42 {
 
     pub fn id(&self) -> Result<Value, Error> {
         Ok(Value::from("asdf"))
+    }
+
+    pub fn output_fs_rel_path(&self, base_path: &PathBuf) -> Result<PathBuf, NeoError> {
+        Ok(PathBuf::from("index.html"))
+    }
+
+    pub fn template_list(&self) -> Vec<String> {
+        vec!["page-templates/post/done.neoj".to_string()]
+    }
+}
+
+impl Object for PageV42 {
+    fn call_method(
+        self: &Arc<PageV42>,
+        _state: &minijinja::State,
+        name: &str,
+        _args: &[Value],
+    ) -> Result<Value, Error> {
+        match name {
+            "ast" => self.ast(),
+            // "id" => self.id(),
+            // "sections" => self.sections(),
+            // "title" => self.title(),
+            _ => Ok(Value::from("")),
+        }
     }
 }
 

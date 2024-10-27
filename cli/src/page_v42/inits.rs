@@ -18,6 +18,7 @@ impl PageV42 {
                 Ok(raw_ast) => Ok(PageV42 {
                     raw_ast,
                     source: source.to_string(),
+                    fs_path: PathBuf::from("todo/add/fs_path/to/page_v42"),
                 }),
                 Err(e) => Err(NeoError {
                     kind: NeoErrorKind::ForwardErrorWithSourcePath {

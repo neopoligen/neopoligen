@@ -14,6 +14,10 @@ impl PageV42 {
             .unwrap()
             .to_string();
         let raw_ast = parse_ast_v42(&source, &site_config).unwrap();
-        PageV42 { raw_ast, source }
+        PageV42 {
+            raw_ast,
+            source,
+            fs_path: PathBuf::from("mock/path/file.neo"),
+        }
     }
 }
