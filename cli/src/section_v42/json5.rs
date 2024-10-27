@@ -3,6 +3,7 @@ use crate::section_attr_v42::flag::SectionFlagAttrV42;
 use crate::section_attr_v42::key_value::SectionKeyValueAttrV42;
 use crate::section_attr_v42::section_attr_v42;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
+use crate::section_v42::make_template_list::make_template_list;
 use crate::section_v42::*;
 use crate::site_config::SiteConfigV42;
 use crate::span_v42::SpanV42;
@@ -22,11 +23,13 @@ use std::collections::BTreeMap;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Json5SectionV42 {
     pub attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42>,
+    pub bounds: String,
     pub children: Vec<SectionV42>,
     pub data: Value,
     pub error: Option<String>,
     pub flags: Vec<String>,
     pub kind: String,
+    pub template_list: Vec<String>,
 }
 
 pub fn json5_section_full_v42<'a>(
@@ -75,11 +78,13 @@ pub fn json5_section_full_v42<'a>(
     }
     let section = SectionV42::Json5(Json5SectionV42 {
         attrs,
-        flags,
-        kind: kind.to_string(),
+        bounds: "full".to_string(),
+        children: vec![],
         data,
         error,
-        children: vec![],
+        flags,
+        kind: kind.to_string(),
+        template_list: make_template_list("json5", kind, "full", "default"),
     });
     Ok((source, section))
 }
