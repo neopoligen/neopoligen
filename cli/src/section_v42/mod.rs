@@ -1,11 +1,15 @@
 pub mod basic;
 pub mod block;
 pub mod json5;
+pub mod make_template_list;
 
 use crate::section_v42::basic::*;
 use crate::section_v42::block::*;
 use crate::section_v42::json5::*;
 use crate::site_config::SiteConfigV42;
+use minijinja::value::Object;
+use minijinja::Error;
+use minijinja::Value;
 use nom::branch::alt;
 use nom::IResult;
 use nom::Parser;
@@ -13,6 +17,7 @@ use nom_supreme::error::ErrorTree;
 use nom_supreme::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
+use std::sync::Arc;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
@@ -20,6 +25,32 @@ pub enum SectionV42 {
     Basic(BasicSectionV42),
     Block(BlockSectionV42),
     Json5(Json5SectionV42),
+}
+
+impl SectionV42 {
+    pub fn template_list(&self) -> Result<Value, Error> {
+        Ok(Value::from_serialize(vec![
+            "sections/basic/title/full/default.neoj".to_string(),
+        ]))
+    }
+}
+
+impl Object for SectionV42 {
+    fn call_method(
+        self: &Arc<SectionV42>,
+        _state: &minijinja::State,
+        name: &str,
+        _args: &[Value],
+    ) -> Result<Value, Error> {
+        match name {
+            "template_list" => self.template_list(),
+            //"ast" => self.ast(),
+            // "id" => self.id(),
+            // "sections" => self.sections(),
+            // "title" => self.title(),
+            _ => Ok(Value::from("")),
+        }
+    }
 }
 
 pub fn start_or_full_section_v42<'a>(

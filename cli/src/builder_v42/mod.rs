@@ -34,7 +34,7 @@ impl BuilderV42 {
                     {
                         match PageV42::new_from_fs_path(&path, &self.site_config) {
                             Ok(p) => {
-                                dbg!(&p.ast());
+                                //dbg!(&p.ast());
                                 //event![Level::INFO, "Added raw page: {}", path.display()];
                                 self.pages.push(p)
                             }
@@ -50,8 +50,8 @@ impl BuilderV42 {
         Ok(())
     }
 
-    #[instrument(skip(self, site_config))]
-    pub fn load_templates(&mut self, site_config: &SiteConfigV42) -> Result<()> {
+    #[instrument(skip(self, _site_config))]
+    pub fn load_templates(&mut self, _site_config: &SiteConfigV42) -> Result<()> {
         event!(Level::INFO, "Loading Templates");
         for entry in WalkDir::new(&self.site_config.theme_dir()) {
             let path = entry?.path().to_path_buf();
@@ -101,7 +101,7 @@ impl BuilderV42 {
             .unwrap()
             .pages
             .iter()
-            .for_each(|(id, page)| {
+            .for_each(|(_id, page)| {
                 let base_rel_path = PathBuf::from(self.site_config.default_language().unwrap());
                 let file_rel_path = page.output_fs_rel_path(&base_rel_path);
                 let absolute_output_path = &self
@@ -187,9 +187,9 @@ impl BuilderV42 {
                 site.pages.insert(id.to_string(), p.clone());
                 ()
             }
-            Err(e) => {
+            Err(_e) => {
                 // event!(Level::ERROR, "prep_site Error: {}", e);
-                // self.errors.push(e)
+                //self.errors.push(e)
             }
         });
         self.site = Some(site);

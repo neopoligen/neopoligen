@@ -11,6 +11,12 @@ color: goldenrod;
 <body>
 <h1>Hello, World</h1>
 
+<ul>
+[! for section in page.ast() !]
+<li>[@ section @]</li>
+[! endfor !]
+</ul>
+
 <pre>
 [@ page.ast()|tojson(true) @]
 </pre>
