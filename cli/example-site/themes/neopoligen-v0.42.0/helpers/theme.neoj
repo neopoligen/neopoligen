@@ -5,7 +5,7 @@
 
 [#############################################################################]
 [!- macro output_span(site, page, span) -!]
-[!- include "spans/" + span.type + ".neoj" ignore missing -!]
+[!- include ["spans/" + span.type + ".neoj"] ignore missing -!]
 [!- endmacro -!]
 
 [#############################################################################]
