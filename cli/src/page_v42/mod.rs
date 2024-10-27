@@ -31,17 +31,6 @@ impl PageV42 {
         self.get_pagedata(&[Value::from("id")])
     }
 
-    // pub fn get_pagedata(&self, args: &[Value]) -> Result<Value, Error> {
-    //     if args.len() == 1 {
-    //         match self.get_raw_pagedata(args[0].to_string().as_str()) {
-    //             Ok(v) => Ok(Value::from(v)),
-    //             Err(_e) => Ok(Value::from("TODO_MAKE_PAGEDATA_ERROR")),
-    //         }
-    //     } else {
-    //         Ok(Value::from("TODO_MAKE_PAGEDATA_ERROR"))
-    //     }
-    // }
-
     pub fn get_pagedata(&self, args: &[Value]) -> Result<String, Error> {
         if args.len() == 1 {
             match &self
@@ -72,10 +61,6 @@ impl PageV42 {
             Err(_e) => Ok(Value::from("")),
         }
     }
-
-    // pub fn raw_id(&self) -> Result<String, Error> {
-    //     self.get_raw_pagedata("id")
-    // }
 
     pub fn template_list(&self) -> Vec<String> {
         vec!["page-templates/post/done.neoj".to_string()]
