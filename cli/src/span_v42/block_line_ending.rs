@@ -6,8 +6,10 @@ use minijinja::Value;
 use nom::bytes::complete::is_not;
 use nom::character::complete::line_ending;
 use nom::character::complete::space0;
+use nom::combinator::eof;
 use nom::combinator::not;
 use nom::sequence::pair;
+use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -16,7 +18,7 @@ use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
 pub fn block_line_ending(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, _) = pair(line_ending, not(pair(space0, line_ending)))
+    let (source, _) = tuple((line_ending, not(eof), not(pair(space0, line_ending))))
         .context("")
         .parse(source)?;
     Ok((
@@ -47,9 +49,9 @@ mod test {
 
     #[test]
     fn solo_single_instance_at_eof() {
-        let source = "\n";
+        let source = "\nx";
         let left = (
-            "",
+            "x",
             SpanV42::PlainText(PlainTextSpan {
                 output: " ".to_string(),
             }),
@@ -73,6 +75,12 @@ mod test {
     #[test]
     fn solo_avoid_eof() {
         let source = "";
+        assert!(block_line_ending(source).is_err());
+    }
+
+    #[test]
+    fn solo_avoid_new_line_before_eof() {
+        let source = "\n";
         assert!(block_line_ending(source).is_err());
     }
 }
