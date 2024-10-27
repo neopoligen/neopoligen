@@ -39,28 +39,12 @@ pub fn json5_section_full_v42<'a>(
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let _dbg_header = "BASIC_SECTION_START";
     let (source, _) = tag("-- ").context("").parse(source)?;
-    let (source, kind) = alt((tag("pagedata"), tag("json5-test")))
+    let (source, kind) = alt((tag("pagedata"), tag("json5-test"), tag("dev")))
         .context("")
         .parse(source)?;
     let (source, _) = line_ending.context("").parse(source)?;
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     let (source, json_text) = alt((take_until("-- "), rest)).context("").parse(source)?;
-
-    // let attrs = raw_attrs
-    //     .iter()
-    //     .filter_map(|attr| match attr {
-    //         SectionAttrV42::KeyValueV42(kv) => Some(kv.clone()),
-    //         _ => None,
-    //     })
-    //     .collect();
-    // let flags = raw_attrs
-    //     .iter()
-    //     .filter_map(|attr| match attr {
-    //         SectionAttrV42::FlagV42(f) => Some(f.clone()),
-    //         _ => None,
-    //     })
-    //     .collect();
-
     let mut error = None;
     let data;
     if json_text.trim() != "" {
