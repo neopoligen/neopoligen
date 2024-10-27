@@ -26,7 +26,7 @@ pub struct BasicSectionV42 {
     pub children: Vec<SectionV42>,
     pub flags: Vec<String>,
     pub kind: String,
-    pub template_list: BTreeSet<String>,
+    pub template_list: Vec<String>,
 }
 
 pub fn basic_section_full_v42<'a>(
@@ -44,7 +44,7 @@ pub fn basic_section_full_v42<'a>(
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, children) = many0(|src| {
-        generic_block_section_v42(src, site_config, nest_level, list_level, checklist_level)
+        paragraph_block_section_v42(src, site_config, nest_level, list_level, checklist_level)
     })
     .context("")
     .parse(source)?;

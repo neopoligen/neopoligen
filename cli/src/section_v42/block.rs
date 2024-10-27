@@ -20,10 +20,10 @@ pub struct BlockSectionV42 {
     pub kind: String,
     pub spans: Vec<SpanV42>,
     pub text: String,
-    pub template_list: BTreeSet<String>,
+    pub template_list: Vec<String>,
 }
 
-pub fn generic_block_section_v42<'a>(
+pub fn paragraph_block_section_v42<'a>(
     source: &'a str,
     _site_config: &'a SiteConfigV42,
     _nest_level: usize,
@@ -36,10 +36,10 @@ pub fn generic_block_section_v42<'a>(
         source,
         SectionV42::Block(BlockSectionV42 {
             children: vec![],
-            kind: "generic".to_string(),
+            kind: "paragraph".to_string(),
             spans,
             text,
-            template_list: make_template_list("block", "generic", "full", "default"),
+            template_list: vec!["sections/block/paragraph/full/default.neoj".to_string()],
         }),
     ))
 }
@@ -47,7 +47,6 @@ pub fn generic_block_section_v42<'a>(
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::helpers::set_from_vec;
     use crate::span_v42::plaintext::PlainTextSpan;
     use include_dir::{include_dir, Dir};
     use pretty_assertions::assert_eq;
@@ -64,12 +63,12 @@ mod test {
             .unwrap()
             .trim()
             .to_string();
-        let template_list = set_from_vec(vec!["sections/block/generic/full/default.neoj"]);
+        let template_list = vec!["sections/block/paragraph/full/default.neoj".to_string()];
         let left = (
             "",
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
-                kind: "generic".to_string(),
+                kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     output: "this is some text".to_string(),
                 })],
@@ -77,7 +76,7 @@ mod test {
                 template_list,
             }),
         );
-        let right = generic_block_section_v42(&source, &site_config, 0, 0, 0).unwrap();
+        let right = paragraph_block_section_v42(&source, &site_config, 0, 0, 0).unwrap();
         assert_eq!(left, right);
     }
 
@@ -91,12 +90,12 @@ mod test {
             .unwrap()
             .trim()
             .to_string();
-        let template_list = set_from_vec(vec!["sections/block/generic/full/default.neoj"]);
+        let template_list = vec!["sections/block/paragraph/full/default.neoj".to_string()];
         let left = (
             "",
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
-                kind: "generic".to_string(),
+                kind: "paragraph".to_string(),
                 spans: vec![
                     SpanV42::PlainText(PlainTextSpan {
                         output: "multiple".to_string(),
@@ -112,7 +111,7 @@ mod test {
                 template_list,
             }),
         );
-        let right = generic_block_section_v42(&source, &site_config, 0, 0, 0).unwrap();
+        let right = paragraph_block_section_v42(&source, &site_config, 0, 0, 0).unwrap();
         assert_eq!(left, right);
     }
 

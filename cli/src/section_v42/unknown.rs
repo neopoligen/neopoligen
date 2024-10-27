@@ -19,7 +19,6 @@ use nom_supreme::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::BTreeMap;
-use std::collections::BTreeSet;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct UnknownSectionV42 {
@@ -29,7 +28,7 @@ pub struct UnknownSectionV42 {
     pub end_sections: Vec<SectionV42>,
     pub flags: Vec<String>,
     pub kind: String,
-    pub template_list: BTreeSet<String>,
+    pub template_list: Vec<String>,
 }
 
 pub fn unknown_section_start_v42<'a>(
@@ -50,7 +49,7 @@ pub fn unknown_section_start_v42<'a>(
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, children) = many0(|src| {
-        generic_block_section_v42(src, site_config, nest_level, list_level, checklist_level)
+        paragraph_block_section_v42(src, site_config, nest_level, list_level, checklist_level)
     })
     .context("")
     .parse(source)?;
@@ -93,7 +92,7 @@ pub fn unknown_section_full_v42<'a>(
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, children) = many0(|src| {
-        generic_block_section_v42(src, site_config, nest_level, list_level, checklist_level)
+        paragraph_block_section_v42(src, site_config, nest_level, list_level, checklist_level)
     })
     .context("")
     .parse(source)?;
@@ -112,7 +111,6 @@ pub fn unknown_section_full_v42<'a>(
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::helpers::set_from_vec;
     use crate::{
         helpers::get_include_str_file,
         span_v42::{plaintext::PlainTextSpan, SpanV42},
@@ -128,31 +126,31 @@ mod test {
         let source = get_include_str_file(SAMPLES, "001-basic-full.neo");
         let attrs = BTreeMap::new();
         let bounds = Bound::Full;
+        let block_templates = vec!["sections/block/paragraph/full/default.neoj".to_string()];
         let children = vec![
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
-                kind: "generic".to_string(),
+                kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     output: "Content".to_string(),
                 })],
                 text: "Content".to_string(),
-                template_list: set_from_vec(vec!["sections/block/generic/full/default.neoj"]),
+                template_list: block_templates.clone(),
             }),
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
-                kind: "generic".to_string(),
+                kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     output: "Blocks".to_string(),
                 })],
                 text: "Blocks".to_string(),
-                template_list: set_from_vec(vec!["sections/block/generic/full/default.neoj"]),
+                template_list: block_templates.clone(),
             }),
         ];
         let end_sections = vec![];
         let kind = "unknown-test-section".to_string();
         let flags = vec![];
-        let mut template_list = BTreeSet::new();
-        template_list.insert("sections/unknown/generic/full/default.neoj".to_string());
+        let template_list = vec!["sections/unknown/generic/full/default.neoj".to_string()];
         let left = (
             "",
             SectionV42::Unknown(UnknownSectionV42 {
@@ -175,24 +173,25 @@ mod test {
         let source = get_include_str_file(SAMPLES, "002-basic-start-end.neo");
         let attrs = BTreeMap::new();
         let bounds = Bound::Start;
+        let block_templates = vec!["sections/block/paragraph/full/default.neoj".to_string()];
         let children = vec![
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
-                kind: "generic".to_string(),
+                kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     output: "Delta".to_string(),
                 })],
                 text: "Delta".to_string(),
-                template_list: set_from_vec(vec!["sections/block/generic/full/default.neoj"]),
+                template_list: block_templates.clone(),
             }),
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
-                kind: "generic".to_string(),
+                kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     output: "Tango".to_string(),
                 })],
                 text: "Tango".to_string(),
-                template_list: set_from_vec(vec!["sections/block/generic/full/default.neoj"]),
+                template_list: block_templates.clone(),
             }),
         ];
         let end_sections = vec![SectionV42::End(EndSectionV42 {
@@ -201,15 +200,14 @@ mod test {
             children: vec![],
             flags: vec![],
             kind: "unknown-test-section".to_string(),
-            template_list: set_from_vec(vec![
-                "sections/ends/generic/end/default.neoj",
-                "sections/ends/unknown-test-section/end/default.neoj",
-            ]),
+            template_list: vec![
+                "sections/ends/unknown-test-section/end/default.neoj".to_string(),
+                "sections/ends/generic/end/default.neoj".to_string(),
+            ],
         })];
         let kind = "unknown-test-section".to_string();
         let flags = vec![];
-        let mut template_list = BTreeSet::new();
-        template_list.insert("sections/unknown/generic/start/default.neoj".to_string());
+        let template_list = vec!["sections/unknown/generic/start/default.neoj".to_string()];
         let left = (
             "",
             SectionV42::Unknown(UnknownSectionV42 {

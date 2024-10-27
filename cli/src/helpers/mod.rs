@@ -534,15 +534,6 @@ pub fn scrub_rel_file_path(source: &str) -> Result<PathBuf, NeoError> {
     Ok(pb.join("index.html"))
 }
 
-pub fn set_from_vec(items: Vec<&str>) -> BTreeSet<String> {
-    let mut data = BTreeSet::new();
-    items.iter().for_each(|item| {
-        data.insert(item.to_string());
-        ()
-    });
-    data
-}
-
 pub fn trim_empty_lines(source: &str) -> String {
     let re = Regex::new(r"\S").unwrap();
     let trimmed_front = source.split("\n").fold("".to_string(), |acc, l| {
