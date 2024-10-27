@@ -9,3 +9,7 @@ This Is Basic Test
 -- template: post
 -- status: scratch
 
+
+{
+  "alfa": "bravo" 
+  }
