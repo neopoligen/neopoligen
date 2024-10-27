@@ -1,1 +1,7 @@
-This is the end section
+[! import "helpers/theme.neoj" as theme !]
+
+[! for child in section.children !]
+[@ theme.output_section(site, page, child) @]
+[! endfor !]
+
+
