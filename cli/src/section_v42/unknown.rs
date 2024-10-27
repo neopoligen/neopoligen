@@ -75,7 +75,7 @@ mod test {
     #[test]
     fn solo_integration_001() {
         let site_config = SiteConfigV42::mock1_basic();
-        let source = get_include_str_file(SAMPLES, "001-basic.neo");
+        let source = get_include_str_file(SAMPLES, "001-basic-full.neo");
         let attrs = BTreeMap::new();
         let bounds = Bound::Full;
         let children = vec![
