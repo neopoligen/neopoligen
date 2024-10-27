@@ -23,11 +23,24 @@ impl PageV42 {
         Ok(Value::from_serialize(&self.raw_ast))
     }
 
-    pub fn html_file_system_path(&self, base_path: &PathBuf) -> Result<PathBuf, NeoError> {
-        Ok(base_path
-            .clone()
-            .join(self.id().unwrap())
-            .join("index.html"))
+    pub fn html_file_system_relative_path(&self, base_path: &PathBuf) -> Result<PathBuf, NeoError> {
+        if let Ok(p) = self.get_pagedata(&[Value::from("path")]) {
+            dbg!(&p);
+            if p != "" {
+                let new_base = p.strip_prefix("/").unwrap();
+                Ok(PathBuf::from(new_base))
+            } else {
+                Ok(base_path
+                    .clone()
+                    .join(self.id().unwrap())
+                    .join("index.html"))
+            }
+        } else {
+            Ok(base_path
+                .clone()
+                .join(self.id().unwrap())
+                .join("index.html"))
+        }
     }
 
     pub fn id(&self) -> Result<String, Error> {
@@ -35,7 +48,12 @@ impl PageV42 {
     }
 
     pub fn get_pagedata(&self, args: &[Value]) -> Result<String, Error> {
-        if args.len() == 1 {
+        if args.len() == 0 {
+            Err(Error::new(
+                minijinja::ErrorKind::MissingArgument,
+                "get_pagedata requires an argument with an item to search for",
+            ))
+        } else if args.len() == 1 {
             match &self
                 .raw_ast
                 .iter()
@@ -51,17 +69,23 @@ impl PageV42 {
                 .get(&args[0].to_string())
             {
                 Some(v) => Ok(v.text.clone()),
-                None => Ok("TODO_MAKE_THIS_AN_ERROR".to_string()),
+                None => Err(Error::new(
+                    minijinja::ErrorKind::InvalidOperation,
+                    format!("Could not find {} in pagedata", &args[0]),
+                )),
             }
         } else {
-            Ok("TODO_MAKE_THIS_AN_ERROR".to_string())
+            Err(Error::new(
+                minijinja::ErrorKind::TooManyArguments,
+                "get_pagedata take only one argument for things to look for but more than one was passed in",
+            ))
         }
     }
 
     pub fn make_value_from_string(&self, input: Result<String, Error>) -> Result<Value, Error> {
         match input {
             Ok(v) => Ok(Value::from(v)),
-            Err(_e) => Ok(Value::from("")),
+            Err(e) => Err(e),
         }
     }
 
@@ -95,10 +119,30 @@ mod test {
     // use rstest::rstest;
 
     #[test]
-    pub fn solo_id_check_basic() {
+    fn solo_id_check_basic() {
         let page = PageV42::valid_sample_mock("001-pagedata-only.neo");
         let left = "001-pagedata-only".to_string();
         let right = page.id().unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_default_html_file_system_relative_path_from_id() {
+        let page = PageV42::valid_sample_mock("001-pagedata-only.neo");
+        let left = PathBuf::from("en/001-pagedata-only/index.html");
+        let right = page
+            .html_file_system_relative_path(&PathBuf::from("en"))
+            .unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_custom_path_in_pagedata() {
+        let page = PageV42::valid_sample_mock("003-custom-path-in-pagedata.neo");
+        let left = PathBuf::from("index.html");
+        let right = page
+            .html_file_system_relative_path(&PathBuf::from("en"))
+            .unwrap();
         assert_eq!(left, right);
     }
 

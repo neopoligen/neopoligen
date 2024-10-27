@@ -103,13 +103,12 @@ impl BuilderV42 {
             .iter()
             .for_each(|(_id, page)| {
                 let base_rel_path = PathBuf::from(self.site_config.default_language().unwrap());
-                let file_rel_path = page.html_file_system_path(&base_rel_path);
+                let file_rel_path = page.html_file_system_relative_path(&base_rel_path);
                 let absolute_output_path = &self
                     .site_config
                     .project_dir()
                     .join(&self.site_config.output_directory)
                     .join(file_rel_path.unwrap());
-                dbg!(absolute_output_path);
                 if let Some(template) = page.template_list().iter().find_map(|name| {
                     if let Ok(tmpl) = env.get_template(name) {
                         Some(tmpl)
