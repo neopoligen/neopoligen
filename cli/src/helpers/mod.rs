@@ -10,7 +10,6 @@ use rimage::image::imageops::FilterType;
 use rimage::image::DynamicImage;
 use rimage::Decoder;
 use rimage::Encoder;
-use std::collections::BTreeSet;
 use std::fs;
 use std::fs::File;
 use std::path::PathBuf;
