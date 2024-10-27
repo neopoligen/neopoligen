@@ -54,6 +54,18 @@ pub fn unknown_section_start_v42<'a>(
     })
     .context("")
     .parse(source)?;
+    let (source, end_section) = (|src| {
+        end_section_basic_v42(
+            src,
+            site_config,
+            nest_level,
+            list_level,
+            checklist_level,
+            kind,
+        )
+    })
+    .context("")
+    .parse(source)?;
     let section = SectionV42::Unknown(UnknownSectionV42 {
         attrs,
         bounds: Bound::Start,
