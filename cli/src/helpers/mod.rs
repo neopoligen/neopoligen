@@ -1,7 +1,7 @@
 use crate::neo_error::{NeoError, NeoErrorKind};
 use crate::payload_span::PayloadSpan;
 use crate::span::*;
-use crate::span_v42::plaintext::PlainTextSpan;
+// use crate::span_v42::plaintext::PlainTextSpan;
 use crate::span_v42::SpanV42;
 use minijinja::Value;
 use regex::Regex;

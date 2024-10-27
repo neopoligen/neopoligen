@@ -50,8 +50,6 @@ pub fn basic_section_full_v42<'a>(
     })
     .context("")
     .parse(source)?;
-
-    let (source, _) = rest.context("").parse(source)?;
     let section = SectionV42::Basic(BasicSectionV42 {
         attrs,
         children,

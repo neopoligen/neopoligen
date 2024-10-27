@@ -5,12 +5,12 @@
 use axum::Router;
 use dirs::config_dir;
 use dirs::data_local_dir;
-use neopoligengine::builder::Builder;
-use neopoligengine::builder::BuilderV42;
+// use neopoligengine::builder::Builder;
+use neopoligengine::builder_v42::BuilderV42;
 use neopoligengine::engine_config::EngineConfig;
 use neopoligengine::file_watcher::FileWatcher;
 // use neopoligengine::page_payload::ThemeTestOrPage;
-use neopoligengine::site_config::SiteConfig; // TODO: Deprecate when v41 is done
+use neopoligengine::site_config::SiteConfig; // TODO: Deprecate when v42 is done
 use neopoligengine::site_config::SiteConfigV42;
 use std::path::PathBuf;
 use tokio::sync::mpsc;
@@ -120,21 +120,21 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
     event!(Level::INFO, "Building Site");
     match BuilderV42::new_from_site_config(site_config) {
         Ok(mut builder) => {
-            // Theme Test
-            let _ = builder.add_theme_test_templates_to_config();
-            let _ = builder.load_theme_test_pages();
-            let _ = builder.make_asts();
-            let _ = builder.prep_site(&site_config);
-            let _ = builder.load_templates(&site_config);
-            let _ = builder.load_theme_test_templates();
-            let _ = builder.test_templates(&site_config);
-
             // Build Site
             let _ = builder.load_pages_from_fs();
-            let _ = builder.make_asts();
-            let _ = builder.prep_site(&site_config);
-            let _ = builder.load_templates(&site_config);
-            let _ = builder.output_pages();
+
+            // // Theme Test
+            // let _ = builder.add_theme_test_templates_to_config();
+            // let _ = builder.load_theme_test_pages();
+            // let _ = builder.make_asts();
+            // let _ = builder.prep_site(&site_config);
+            // let _ = builder.load_templates(&site_config);
+            // let _ = builder.load_theme_test_templates();
+            // let _ = builder.test_templates(&site_config);
+
+            // let _ = builder.prep_site(&site_config);
+            // let _ = builder.load_templates(&site_config);
+            // let _ = builder.output_pages();
 
             // // Errors
             // builder.tmp_output_errors().unwrap();
@@ -145,7 +145,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             // }
 
             // Output Source File Errors
-            let _ = builder.output_errors_for_source_files();
+            // let _ = builder.output_errors_for_source_files();
 
             //// Prep
             ////

@@ -1,6 +1,7 @@
 pub mod ast;
 pub mod ast_v42;
 pub mod builder;
+pub mod builder_v42;
 pub mod config_lists;
 pub mod engine_config;
 pub mod file_watcher;

@@ -5,8 +5,9 @@
 use crate::helpers::*;
 use crate::image::{Image, ImageSize};
 use crate::neo_error::{NeoError, NeoErrorKind};
-use crate::page::PageV42;
+// use crate::page::PageV42;
 use crate::page_payload::{PagePayload, ThemeTestOrPage};
+use crate::page_v42::PageV42;
 use crate::site::{Site, SiteV42};
 use crate::site_config::SiteConfig;
 use crate::site_config::SiteConfigV42;
@@ -27,519 +28,562 @@ use std::time::UNIX_EPOCH;
 use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 
-#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub struct BuilderV42 {
-    pub errors: Vec<NeoError>,
-    pub raw_pages: Vec<PageV42>,
-    pub site_config: SiteConfigV42,
-    pub site: Option<SiteV42>,
-    pub templates: BTreeMap<String, String>,
-}
+// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+// pub struct BuilderV42 {
+//     pub errors: Vec<NeoError>,
+//     pub raw_pages: Vec<PageV42>,
+//     pub site_config: SiteConfigV42,
+//     pub site: Option<SiteV42>,
+//     pub templates: BTreeMap<String, String>,
+// }
 
-impl BuilderV42 {
-    #[instrument(skip(self))]
-    pub fn load_theme_test_templates(&mut self) -> Result<()> {
-        event!(Level::INFO, "Adding theme test templates to config");
-        let _ = &self.templates.insert(
-            "sections/basic/neo-theme-test/start/default.neoj".to_string(),
-            r#"
-[!- import "helpers/theme.neoj" as theme -!]
-<!-- START_THEME_TEST -->
-[!- include "subsections/all-blocks.neoj" -!]
-"#
-            .to_string(),
-        );
-        let _ = &self.templates.insert(
-            "sections/basic/neo-theme-test/end/default.neoj".to_string(),
-            r#""#.to_string(),
-        );
-        let _ = &self.templates.insert(
-            "sections/raw/neo-expected-output/start/default.neoj".to_string(),
-            r#"[! import "helpers/theme.neoj" as theme !]
-        <!-- EXPECTED_OUTPUT -->[@ section.text() @][!- include "subsections/all-blocks.neoj" -!]"#
-                .to_string(),
-        );
-        let _ = &self.templates.insert(
-            "sections/raw/neo-expected-output/end/default.neoj".to_string(),
-            "<!-- EXPECTED_OUTPUT -->".to_string(),
-        );
-        Ok(())
-    }
+// impl BuilderV42 {
+//     #[instrument(skip(self))]
+//     pub fn load_theme_test_templates(&mut self) -> Result<()> {
+//         event!(Level::INFO, "Adding theme test templates to config");
+//         let _ = &self.templates.insert(
+//             "sections/basic/neo-theme-test/start/default.neoj".to_string(),
+//             r#"
+// [!- import "helpers/theme.neoj" as theme -!]
+// <!-- START_THEME_TEST -->
+// [!- include "subsections/all-blocks.neoj" -!]
+// "#
+//             .to_string(),
+//         );
+//         let _ = &self.templates.insert(
+//             "sections/basic/neo-theme-test/end/default.neoj".to_string(),
+//             r#""#.to_string(),
+//         );
+//         let _ = &self.templates.insert(
+//             "sections/raw/neo-expected-output/start/default.neoj".to_string(),
+//             r#"[! import "helpers/theme.neoj" as theme !]
+//         <!-- EXPECTED_OUTPUT -->[@ section.text() @][!- include "subsections/all-blocks.neoj" -!]"#
+//                 .to_string(),
+//         );
+//         let _ = &self.templates.insert(
+//             "sections/raw/neo-expected-output/end/default.neoj".to_string(),
+//             "<!-- EXPECTED_OUTPUT -->".to_string(),
+//         );
+//         Ok(())
+//     }
+//     #[instrument(skip(self))]
+//     pub fn add_theme_test_templates_to_config(&mut self) -> Result<()> {
+//         event!(Level::INFO, "Adding theme test templates to config");
+//         self.site_config
+//             .sections
+//             .basic
+//             .push("neo-theme-test".to_string());
+//         self.site_config
+//             .sections
+//             .raw
+//             .push("neo-expected-output".to_string());
+//         Ok(())
+//     }
+//     #[instrument(skip(self))]
+//     pub fn load_theme_test_pages(&mut self) -> Result<()> {
+//         event!(Level::INFO, "Loading Theme Test Pages");
+//         self.raw_pages = vec![];
+//         for entry in WalkDir::new(&self.site_config.theme_dir()) {
+//             let path = entry?.path().to_path_buf();
+//             if path.is_file() {
+//                 if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
+//                     if ext.to_ascii_lowercase() == "neo" {
+//                         match PageV42::new_from_fs_path(&path) {
+//                             Ok(p) => {
+//                                 // event![Level::INFO, "Added raw page: {}", path.display()];
+//                                 self.raw_pages.push(p)
+//                             }
+//                             Err(e) => {
+//                                 event![Level::ERROR, "Error loading raw page: {}", path.display()];
+//                                 self.errors.push(e)
+//                             }
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//         Ok(())
+//     }
+//     pub fn new_from_site_config(site_config: &SiteConfigV42) -> Result<BuilderV42, NeoError> {
+//         let b = BuilderV42 {
+//             errors: vec![],
+//             raw_pages: vec![],
+//             site: None,
+//             site_config: site_config.clone(),
+//             templates: BTreeMap::new(),
+//         };
+//         Ok(b)
+//     }
+//     #[instrument(skip(self))]
+//     pub fn output_errors_for_source_files(&self) -> Result<()> {
+//         let _ = &self.errors.iter().for_each(|err| {
+//             match &err.kind {
+//                 NeoErrorKind::ParserError {
+//                     source_path,
+//                     line,
+//                     column,
+//                     remainder,
+//                     source,
+//                     message,
+//                 } => {
+//                     if let Ok(error_file_path) = replace_path(
+//                         source_path.as_ref().unwrap(),
+//                         &self.site_config.content_source_dir(),
+//                         &self.site_config.source_file_error_dir(),
+//                     ) {
+//                         let _ = write_file_with_mkdir(
+//                             &error_file_path,
+//                             format!(
+//                                 "{}\n\nLine: {} - Column: {}\n\n{}",
+//                                 message, line, column, remainder
+//                             )
+//                             .as_str(),
+//                         );
+//                     }
+//                     ()
+//                 }
+//                 NeoErrorKind::GenericErrorWithSourcePath { source_path, msg } => {
+//                     dbg!(source_path);
+//                     dbg!(msg);
+//                     ()
+//                 }
+//                 // TODO: cover the rest of the errors
+//                 _ => (),
+//             }
+//         });
+//         Ok(())
+//     }
+//     #[instrument(skip(self))]
+//     pub fn tmp_output_errors(&self) -> Result<()> {
+//         event!(Level::INFO, "Outputting errors");
+//         let mut env = Environment::new();
+//         env.set_syntax(
+//             SyntaxConfig::builder()
+//                 .block_delimiters("[!", "!]")
+//                 .variable_delimiters("[@", "@]")
+//                 .comment_delimiters("[#", "#]")
+//                 .build()
+//                 .unwrap(),
+//         );
+//         env.set_debug(true);
+//         env.set_lstrip_blocks(true);
+//         env.set_trim_blocks(true);
+//         let _ = env.add_template(
+//             "genericerrorwithsourcepath",
+//             include_str!("../error_templates/genericerrorwithsourcepath.neoj"),
+//         );
+//         let _ = env.add_template(
+//             "parsererror",
+//             include_str!("../error_templates/parsererror.neoj"),
+//         );
+//         let _ = env.add_template(
+//             "themetesterror",
+//             include_str!("../error_templates/themetesterror.neoj"),
+//         );
+//         let _ = env.add_template("_todo", include_str!("../error_templates/_todo.neoj"));
+//         env.add_template_owned(
+//             "tmp_status",
+//             r#"
+// <!DOCTYPE html>
+// <html><head><style>
+// body { background-color: #111; color: #aaa; }
+// </style></head><body>
+// <header><a href="/">Home</a></header>
+// <h1>Status</h1>
+// <h2>Errors</h2>
+// <ul>
+// [! for error in errors !]
+// <li>
+// [! include [error.kind.type, "_todo"] !]
+// [#
+// [! if error.kind.source_path !]<h4>Path: [@ error.kind.source_path @]</h4>[! endif !]
+// [! if error.kind.rel_source_path !]<h4>File Path: [@ error.kind.rel_source_path @]</h4>[! endif !]
+// [! if error.kind.type == "themetesterror" !]
+//     <h2>Theme Test Error</h2>
+//     <h3>Expected</h3>
+//     <pre>
+//     [! autoescape true !]
+//     [@ error.kind.expected@]
+//     [! endautoescape !]
+//     </pre>
+//     <h3>Got</h3>
+//     <pre>
+//     [! autoescape true !]
+//     [@ error.kind.got @]
+//     [! endautoescape !]
+//     </pre>
+//     <h3>Sections</h3>
+//     <pre>
+//     [@ error.kind.sections|tojson(true)@]
+//     </pre>
+// [! else !]
+//     <h2>[@ error.kind.type @]</h2>
+//     <pre>
+//     </pre>
+// [! endif !]
+// #]
+// </li>
+// [! endfor !]
+// </ul>
+// <h2>Config</h2>
+// <pre>[@ config|tojson(true) @]</pre>
+// </body></html>
+//         "#,
+//         )?;
+//         let tmpl = env.get_template("tmp_status")?;
+//         let output = tmpl.render(context!(
+//             config => Value::from_serialize(&self.site_config),
+//             errors => Value::from_serialize(&self.errors)
+//         ))?;
+//         let status_path = self.site_config.status_dest_dir().join("index.html");
+//         let _ = write_file_with_mkdir(&status_path, &output);
+//         Ok(())
+//     }
+// }
 
-    #[instrument(skip(self))]
-    pub fn add_theme_test_templates_to_config(&mut self) -> Result<()> {
-        event!(Level::INFO, "Adding theme test templates to config");
-        self.site_config
-            .sections
-            .basic
-            .push("neo-theme-test".to_string());
-        self.site_config
-            .sections
-            .raw
-            .push("neo-expected-output".to_string());
-        Ok(())
-    }
+//impl BuilderV42 {
+//
+//#[instrument(skip(self))]
+//pub fn load_pages_from_fs_v42(&mut self) -> Result<()> {
+//    event!(Level::INFO, "Loading Pages From FS");
+//    for entry in WalkDir::new(&self.site_config.content_source_dir()) {
+//        let path = entry?.path().to_path_buf();
+//        if path.is_file() {
+//            if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
+//                if ext.to_ascii_lowercase() == "neo"
+//                    && !filename.to_str().unwrap().starts_with(".")
+//                {
+//                    match PageV42::new_from_fs_path(&path) {
+//                        Ok(p) => {
+//                            //event![Level::INFO, "Added raw page: {}", path.display()];
+//                            self.raw_pages.push(p)
+//                        }
+//                        Err(e) => {
+//                            event![Level::ERROR, "Error loading raw page: {}", path.display()];
+//                            self.errors.push(e)
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//    Ok(())
+//}
 
-    #[instrument(skip(self))]
-    pub fn load_theme_test_pages(&mut self) -> Result<()> {
-        event!(Level::INFO, "Loading Theme Test Pages");
-        self.raw_pages = vec![];
-        for entry in WalkDir::new(&self.site_config.theme_dir()) {
-            let path = entry?.path().to_path_buf();
-            if path.is_file() {
-                if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
-                    if ext.to_ascii_lowercase() == "neo" {
-                        match PageV42::new_from_fs_path(&path) {
-                            Ok(p) => {
-                                // event![Level::INFO, "Added raw page: {}", path.display()];
-                                self.raw_pages.push(p)
-                            }
-                            Err(e) => {
-                                event![Level::ERROR, "Error loading raw page: {}", path.display()];
-                                self.errors.push(e)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        Ok(())
-    }
+//// TODO: Deprecated: Remove this when v42 is done
+//#[instrument(skip(self))]
+//pub fn load_pages_from_fs(&mut self) -> Result<()> {
+//    event!(Level::INFO, "Loading Pages From FS");
+//    for entry in WalkDir::new(&self.site_config.content_source_dir()) {
+//        let path = entry?.path().to_path_buf();
+//        if path.is_file() {
+//            if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
+//                if ext.to_ascii_lowercase() == "neo"
+//                    && !filename.to_str().unwrap().starts_with(".")
+//                {
+//                    match PageV42::new_from_fs_path(&path) {
+//                        Ok(p) => {
+//                            //event![Level::INFO, "Added raw page: {}", path.display()];
+//                            self.raw_pages.push(p)
+//                        }
+//                        Err(e) => {
+//                            event![Level::ERROR, "Error loading raw page: {}", path.display()];
+//                            self.errors.push(e)
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//    Ok(())
+//}
 
-    pub fn new_from_site_config(site_config: &SiteConfigV42) -> Result<BuilderV42, NeoError> {
-        let b = BuilderV42 {
-            errors: vec![],
-            raw_pages: vec![],
-            site: None,
-            site_config: site_config.clone(),
-            templates: BTreeMap::new(),
-        };
-        Ok(b)
-    }
+// #[instrument(skip(self, site_config))]
+// pub fn load_templates(&mut self, site_config: &SiteConfigV42) -> Result<()> {
+//     event!(Level::INFO, "Loading Templates");
+//     for entry in WalkDir::new(&self.site_config.theme_dir()) {
+//         let path = entry?.path().to_path_buf();
+//         if path.is_file() {
+//             if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
+//                 if ext.to_ascii_lowercase() == "neoj"
+//                     && !filename.to_str().unwrap().starts_with(".")
+//                 {
+//                     let template_name = &path.strip_prefix(&self.site_config.theme_dir());
+//                     let content = fs::read_to_string(&path)?;
+//                     self.templates.insert(
+//                         template_name
+//                             .as_ref()
+//                             .unwrap()
+//                             .to_string_lossy()
+//                             .to_string(),
+//                         content,
+//                     );
+//                 }
+//             }
+//         }
+//     }
+//     Ok(())
+// }
 
-    #[instrument(skip(self))]
-    pub fn output_errors_for_source_files(&self) -> Result<()> {
-        let _ = &self.errors.iter().for_each(|err| {
-            match &err.kind {
-                NeoErrorKind::ParserError {
-                    source_path,
-                    line,
-                    column,
-                    remainder,
-                    source,
-                    message,
-                } => {
-                    if let Ok(error_file_path) = replace_path(
-                        source_path.as_ref().unwrap(),
-                        &self.site_config.content_source_dir(),
-                        &self.site_config.source_file_error_dir(),
-                    ) {
-                        let _ = write_file_with_mkdir(
-                            &error_file_path,
-                            format!(
-                                "{}\n\nLine: {} - Column: {}\n\n{}",
-                                message, line, column, remainder
-                            )
-                            .as_str(),
-                        );
-                    }
-                    ()
-                }
-                NeoErrorKind::GenericErrorWithSourcePath { source_path, msg } => {
-                    dbg!(source_path);
-                    dbg!(msg);
-                    ()
-                }
-                // TODO: cover the rest of the errors
-                _ => (),
-            }
-        });
-        Ok(())
-    }
+// #[instrument(skip(self))]
+// pub fn make_asts_v42(&mut self) -> Result<()> {
+//     event!(Level::INFO, "Generating ASTs");
+//     // self.raw_pages
+//     //     .iter_mut()
+//     //     .for_each(|p| match p.generate_ast(&self.site_config) {
+//     //         Ok(()) => (),
+//     //         Err(e) => {
+//     //             // event!(
+//     //             //     Level::ERROR,
+//     //             //     "Error in make_asts: {}, {}",
+//     //             //     &p.fs_path.display(),
+//     //             //     &e
+//     //             // );
+//     //             self.errors.push(e)
+//     //         }
+//     //     });
+//     Ok(())
+// }
 
-    #[instrument(skip(self))]
-    pub fn tmp_output_errors(&self) -> Result<()> {
-        event!(Level::INFO, "Outputting errors");
-        let mut env = Environment::new();
-        env.set_syntax(
-            SyntaxConfig::builder()
-                .block_delimiters("[!", "!]")
-                .variable_delimiters("[@", "@]")
-                .comment_delimiters("[#", "#]")
-                .build()
-                .unwrap(),
-        );
-        env.set_debug(true);
-        env.set_lstrip_blocks(true);
-        env.set_trim_blocks(true);
-        let _ = env.add_template(
-            "genericerrorwithsourcepath",
-            include_str!("../error_templates/genericerrorwithsourcepath.neoj"),
-        );
-        let _ = env.add_template(
-            "parsererror",
-            include_str!("../error_templates/parsererror.neoj"),
-        );
-        let _ = env.add_template(
-            "themetesterror",
-            include_str!("../error_templates/themetesterror.neoj"),
-        );
-        let _ = env.add_template("_todo", include_str!("../error_templates/_todo.neoj"));
-        env.add_template_owned(
-            "tmp_status",
-            r#"
-<!DOCTYPE html>
-<html><head><style> 
-body { background-color: #111; color: #aaa; } 
-</style></head><body>
-<header><a href="/">Home</a></header>
-<h1>Status</h1>
-<h2>Errors</h2>
-<ul>
-[! for error in errors !]
-<li>
-[! include [error.kind.type, "_todo"] !]
-[#
-[! if error.kind.source_path !]<h4>Path: [@ error.kind.source_path @]</h4>[! endif !]
-[! if error.kind.rel_source_path !]<h4>File Path: [@ error.kind.rel_source_path @]</h4>[! endif !]
-[! if error.kind.type == "themetesterror" !]
-    <h2>Theme Test Error</h2>
-    <h3>Expected</h3>
-    <pre>
-    [! autoescape true !]
-    [@ error.kind.expected@]
-    [! endautoescape !]
-    </pre>
-    <h3>Got</h3>
-    <pre>
-    [! autoescape true !]
-    [@ error.kind.got @]
-    [! endautoescape !]
-    </pre>
-    <h3>Sections</h3>
-    <pre>
-    [@ error.kind.sections|tojson(true)@]
-    </pre>
-[! else !]
-    <h2>[@ error.kind.type @]</h2>
-    <pre>
-    </pre>
-[! endif !]
-#]
-</li>
-[! endfor !]
-</ul>
-<h2>Config</h2>
-<pre>[@ config|tojson(true) @]</pre>
-</body></html>
-        "#,
-        )?;
-        let tmpl = env.get_template("tmp_status")?;
-        let output = tmpl.render(context!(
-            config => Value::from_serialize(&self.site_config),
-            errors => Value::from_serialize(&self.errors)
-        ))?;
-        let status_path = self.site_config.status_dest_dir().join("index.html");
-        let _ = write_file_with_mkdir(&status_path, &output);
-        Ok(())
-    }
-}
+// // TODO: Deprecated: Remove this when v42 is done
+// #[instrument(skip(self))]
+// pub fn make_asts(&mut self) -> Result<()> {
+//     event!(Level::INFO, "Generating ASTs");
+//     self.raw_pages
+//         .iter_mut()
+//         .for_each(|p| match p.generate_ast(&self.site_config) {
+//             Ok(()) => (),
+//             Err(e) => {
+//                 // event!(
+//                 //     Level::ERROR,
+//                 //     "Error in make_asts: {}, {}",
+//                 //     &p.fs_path.display(),
+//                 //     &e
+//                 // );
+//                 self.errors.push(e)
+//             }
+//         });
+//     Ok(())
+// }
 
-impl BuilderV42 {
-    #[instrument(skip(self))]
-    pub fn load_pages_from_fs(&mut self) -> Result<()> {
-        event!(Level::INFO, "Loading Pages From FS");
-        for entry in WalkDir::new(&self.site_config.content_source_dir()) {
-            let path = entry?.path().to_path_buf();
-            if path.is_file() {
-                if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
-                    if ext.to_ascii_lowercase() == "neo"
-                        && !filename.to_str().unwrap().starts_with(".")
-                    {
-                        match PageV42::new_from_fs_path(&path) {
-                            Ok(p) => {
-                                //event![Level::INFO, "Added raw page: {}", path.display()];
-                                self.raw_pages.push(p)
-                            }
-                            Err(e) => {
-                                event![Level::ERROR, "Error loading raw page: {}", path.display()];
-                                self.errors.push(e)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        Ok(())
-    }
+//#[instrument(skip(self))]
+//pub fn output_pages(&mut self) -> Result<()> {
+//    event!(Level::INFO, "Outputting pages");
+//    let mut env = Environment::new();
+//    // env.add_function("highlight_code", highlight_code);
+//    // env.add_function("highlight_code_no_nums", highlight_code_no_nums);
+//    // env.add_function("highlight_span", highlight_span);
+//    env.set_syntax(
+//        SyntaxConfig::builder()
+//            .block_delimiters("[!", "!]")
+//            .variable_delimiters("[@", "@]")
+//            .comment_delimiters("[#", "#]")
+//            .build()
+//            .unwrap(),
+//    );
+//    self.templates.iter().for_each(|(k, v)| {
+//        let _ = env.add_template_owned(k, v);
+//    });
+//    let site_clone = Value::from_object(self.site.clone().unwrap());
+//    self.site
+//        .as_ref()
+//        .unwrap()
+//        .pages
+//        .iter()
+//        .for_each(|(id, page)| {
+//            let base_rel_path = PathBuf::from(self.site_config.default_language().unwrap());
+//            let file_rel_path = page.output_fs_rel_path(&base_rel_path);
+//            let absolute_output_path = &self
+//                .site_config
+//                .project_dir()
+//                .join(&self.site_config.output_directory)
+//                .join(file_rel_path.unwrap());
+//            if let Some(template) = page.template_list().iter().find_map(|name| {
+//                if let Ok(tmpl) = env.get_template(name) {
+//                    Some(tmpl)
+//                } else {
+//                    None
+//                }
+//            }) {
+//                match template.render(context!(
+//                    site => &site_clone,
+//                    page => Value::from_object(page.clone())
+//                )) {
+//                    Ok(output) => {
+//                        match write_file_with_mkdir(&absolute_output_path, output.as_str()) {
+//                            Ok(()) => {
+//                                //event!(Level::INFO, "Making file in output_pages",);
+//                            }
+//                            Err(e) => self.errors.push({
+//                                event!(
+//                                    Level::ERROR,
+//                                    "Error on page output in output_pages: {}",
+//                                    absolute_output_path.display()
+//                                );
+//                                NeoError {
+//                                    kind: NeoErrorKind::GenericErrorWithSourcePath {
+//                                        source_path: absolute_output_path.to_path_buf(),
+//                                        msg: e,
+//                                    },
+//                                }
+//                            }),
+//                        }
+//                    }
+//                    Err(e) => {
+//                        event!(
+//                            Level::ERROR,
+//                            "Error on page output in output_pages: {}",
+//                            page.fs_path.display()
+//                        );
+//                        self.errors.push(NeoError {
+//                            kind: NeoErrorKind::GenericErrorWithSourcePath {
+//                                source_path: page.fs_path.clone(),
+//                                msg: e.to_string(),
+//                            },
+//                        });
+//                    }
+//                }
+//            } else {
+//                event!(
+//                    Level::ERROR,
+//                    "Could not find template for: {} - Missing: {}",
+//                    page.fs_path.display(),
+//                    page.template_list().join(",")
+//                );
+//                self.errors.push(NeoError {
+//                    kind: NeoErrorKind::GenericErrorWithSourcePath {
+//                        source_path: page.fs_path.clone(),
+//                        msg: format!(
+//                            "Could not templates for page. {}",
+//                            page.template_list().join(",")
+//                        ),
+//                    },
+//                });
+//            }
+//        });
+//    Ok(())
+//}
 
-    #[instrument(skip(self, site_config))]
-    pub fn load_templates(&mut self, site_config: &SiteConfigV42) -> Result<()> {
-        event!(Level::INFO, "Loading Templates");
-        for entry in WalkDir::new(&self.site_config.theme_dir()) {
-            let path = entry?.path().to_path_buf();
-            if path.is_file() {
-                if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
-                    if ext.to_ascii_lowercase() == "neoj"
-                        && !filename.to_str().unwrap().starts_with(".")
-                    {
-                        let template_name = &path.strip_prefix(&self.site_config.theme_dir());
-                        let content = fs::read_to_string(&path)?;
-                        self.templates.insert(
-                            template_name
-                                .as_ref()
-                                .unwrap()
-                                .to_string_lossy()
-                                .to_string(),
-                            content,
-                        );
-                    }
-                }
-            }
-        }
-        Ok(())
-    }
+// #[instrument(skip(self, site_config))]
+// pub fn prep_site(&mut self, site_config: &SiteConfigV42) -> Result<()> {
+//     event!(Level::INFO, "Prepping Site");
+//     let mut site = SiteV42 {
+//         config: site_config.clone(),
+//         pages: BTreeMap::new(),
+//     };
+//     self.raw_pages.iter().for_each(|p| match p.raw_id() {
+//         Ok(id) => {
+//             site.pages.insert(id, p.clone());
+//             ()
+//         }
+//         Err(e) => {
+//             // event!(Level::ERROR, "prep_site Error: {}", e);
+//             self.errors.push(e)
+//         }
+//     });
+//     self.site = Some(site);
+//     Ok(())
+// }
 
-    #[instrument(skip(self))]
-    pub fn make_asts(&mut self) -> Result<()> {
-        event!(Level::INFO, "Generating ASTs");
-        self.raw_pages
-            .iter_mut()
-            .for_each(|p| match p.generate_ast(&self.site_config) {
-                Ok(()) => (),
-                Err(e) => {
-                    // event!(
-                    //     Level::ERROR,
-                    //     "Error in make_asts: {}, {}",
-                    //     &p.fs_path.display(),
-                    //     &e
-                    // );
+// #[instrument(skip(self, site_config))]
+// pub fn test_templates(&mut self, site_config: &SiteConfigV42) -> Result<()> {
+//     event!(Level::INFO, "Testing Templates");
+//     let mut env = Environment::new();
+//     // env.add_function("highlight_code", highlight_code);
+//     // env.add_function("highlight_code_no_nums", highlight_code_no_nums);
+//     // env.add_function("highlight_span", highlight_span);
+//     env.set_syntax(
+//         SyntaxConfig::builder()
+//             .block_delimiters("[!", "!]")
+//             .variable_delimiters("[@", "@]")
+//             .comment_delimiters("[#", "#]")
+//             .build()
+//             .unwrap(),
+//     );
+//     self.templates.iter().for_each(|(k, v)| {
+//         let _ = env.add_template_owned(k, v);
+//     });
+//     let site_clone = Value::from_object(self.site.clone().unwrap());
+//     self.site
+//         .as_ref()
+//         .unwrap()
+//         .pages
+//         .iter()
+//         .for_each(|(id, page)| {
+//             if let Some(template) = page.template_list().iter().find_map(|name| {
+//                 if let Ok(tmpl) = env.get_template(name) {
+//                     Some(tmpl)
+//                 } else {
+//                     None
+//                 }
+//             }) {
+//                 match template.render(context!(
+//                     site => &site_clone,
+//                     page => Value::from_object(page.clone())
+//                 )) {
+//                     Ok(output) => {
+//                         let tests = output
+//                             .split("<!-- START_THEME_TEST -->")
+//                             .collect::<Vec<&str>>();
+//                         tests.iter().skip(1).for_each(|t| {
+//                             let parts =
+//                                 t.split("<!-- EXPECTED_OUTPUT -->").collect::<Vec<&str>>();
+//                             if parts.len() == 3 {
+//                                 let got = format_html_for_theme_test_display(parts[0]);
+//                                 let expected = format_html_for_theme_test_display(parts[1]);
+//                                 let got_compare = got.replace("\n", "").replace(" ", "");
+//                                 let expected_compare =
+//                                     expected.replace("\n", "").replace(" ", "");
+//                                 if got_compare != expected_compare {
+//                                     self.errors.push(NeoError {
+//                                         kind: NeoErrorKind::ThemeTestError {
+//                                             expected: expected.to_string(),
+//                                             got: got.to_string(),
+//                                             sections: page.sections().unwrap().clone(),
+//                                             source_path: page.fs_path.clone(),
+//                                         },
+//                                     })
+//                                 }
+//                             }
+//                         });
+//                     }
+//                     Err(e) => {
+//                         event!(
+//                             Level::ERROR,
+//                             "Error on theme test: {}",
+//                             page.fs_path.display()
+//                         );
+//                         self.errors.push(NeoError {
+//                             kind: NeoErrorKind::GenericErrorWithSourcePath {
+//                                 source_path: page.fs_path.clone(),
+//                                 msg: e.to_string(),
+//                             },
+//                         });
+//                     }
+//                 }
+//             } else {
+//                 event!(
+//                     Level::ERROR,
+//                     "Could not find template for: {} - Missing: {}",
+//                     page.fs_path.display(),
+//                     page.template_list().join(",")
+//                 );
+//                 self.errors.push(NeoError {
+//                     kind: NeoErrorKind::GenericErrorWithSourcePath {
+//                         source_path: page.fs_path.clone(),
+//                         msg: format!(
+//                             "Could not templates for page. {}",
+//                             page.template_list().join(",")
+//                         ),
+//                     },
+//                 });
+//             }
+//         });
+//     Ok(())
+// }
 
-                    self.errors.push(e)
-                }
-            });
-        Ok(())
-    }
-
-    #[instrument(skip(self))]
-    pub fn output_pages(&mut self) -> Result<()> {
-        event!(Level::INFO, "Outputting pages");
-        let mut env = Environment::new();
-        // env.add_function("highlight_code", highlight_code);
-        // env.add_function("highlight_code_no_nums", highlight_code_no_nums);
-        // env.add_function("highlight_span", highlight_span);
-        env.set_syntax(
-            SyntaxConfig::builder()
-                .block_delimiters("[!", "!]")
-                .variable_delimiters("[@", "@]")
-                .comment_delimiters("[#", "#]")
-                .build()
-                .unwrap(),
-        );
-        self.templates.iter().for_each(|(k, v)| {
-            let _ = env.add_template_owned(k, v);
-        });
-        let site_clone = Value::from_object(self.site.clone().unwrap());
-        self.site
-            .as_ref()
-            .unwrap()
-            .pages
-            .iter()
-            .for_each(|(id, page)| {
-                let base_rel_path = PathBuf::from(self.site_config.default_language().unwrap());
-                let file_rel_path = page.output_fs_rel_path(&base_rel_path);
-                let absolute_output_path = &self
-                    .site_config
-                    .project_dir()
-                    .join(&self.site_config.output_directory)
-                    .join(file_rel_path.unwrap());
-                if let Some(template) = page.template_list().iter().find_map(|name| {
-                    if let Ok(tmpl) = env.get_template(name) {
-                        Some(tmpl)
-                    } else {
-                        None
-                    }
-                }) {
-                    match template.render(context!(
-                        site => &site_clone,
-                        page => Value::from_object(page.clone())
-                    )) {
-                        Ok(output) => {
-                            match write_file_with_mkdir(&absolute_output_path, output.as_str()) {
-                                Ok(()) => {
-                                    //event!(Level::INFO, "Making file in output_pages",);
-                                }
-                                Err(e) => self.errors.push({
-                                    event!(
-                                        Level::ERROR,
-                                        "Error on page output in output_pages: {}",
-                                        absolute_output_path.display()
-                                    );
-                                    NeoError {
-                                        kind: NeoErrorKind::GenericErrorWithSourcePath {
-                                            source_path: absolute_output_path.to_path_buf(),
-                                            msg: e,
-                                        },
-                                    }
-                                }),
-                            }
-                        }
-                        Err(e) => {
-                            event!(
-                                Level::ERROR,
-                                "Error on page output in output_pages: {}",
-                                page.fs_path.display()
-                            );
-                            self.errors.push(NeoError {
-                                kind: NeoErrorKind::GenericErrorWithSourcePath {
-                                    source_path: page.fs_path.clone(),
-                                    msg: e.to_string(),
-                                },
-                            });
-                        }
-                    }
-                } else {
-                    event!(
-                        Level::ERROR,
-                        "Could not find template for: {} - Missing: {}",
-                        page.fs_path.display(),
-                        page.template_list().join(",")
-                    );
-                    self.errors.push(NeoError {
-                        kind: NeoErrorKind::GenericErrorWithSourcePath {
-                            source_path: page.fs_path.clone(),
-                            msg: format!(
-                                "Could not templates for page. {}",
-                                page.template_list().join(",")
-                            ),
-                        },
-                    });
-                }
-            });
-        Ok(())
-    }
-
-    #[instrument(skip(self, site_config))]
-    pub fn prep_site(&mut self, site_config: &SiteConfigV42) -> Result<()> {
-        event!(Level::INFO, "Prepping Site");
-        let mut site = SiteV42 {
-            config: site_config.clone(),
-            pages: BTreeMap::new(),
-        };
-        self.raw_pages.iter().for_each(|p| match p.raw_id() {
-            Ok(id) => {
-                site.pages.insert(id, p.clone());
-                ()
-            }
-            Err(e) => {
-                // event!(Level::ERROR, "prep_site Error: {}", e);
-                self.errors.push(e)
-            }
-        });
-        self.site = Some(site);
-        Ok(())
-    }
-
-    #[instrument(skip(self, site_config))]
-    pub fn test_templates(&mut self, site_config: &SiteConfigV42) -> Result<()> {
-        event!(Level::INFO, "Testing Templates");
-        let mut env = Environment::new();
-        // env.add_function("highlight_code", highlight_code);
-        // env.add_function("highlight_code_no_nums", highlight_code_no_nums);
-        // env.add_function("highlight_span", highlight_span);
-        env.set_syntax(
-            SyntaxConfig::builder()
-                .block_delimiters("[!", "!]")
-                .variable_delimiters("[@", "@]")
-                .comment_delimiters("[#", "#]")
-                .build()
-                .unwrap(),
-        );
-        self.templates.iter().for_each(|(k, v)| {
-            let _ = env.add_template_owned(k, v);
-        });
-        let site_clone = Value::from_object(self.site.clone().unwrap());
-        self.site
-            .as_ref()
-            .unwrap()
-            .pages
-            .iter()
-            .for_each(|(id, page)| {
-                if let Some(template) = page.template_list().iter().find_map(|name| {
-                    if let Ok(tmpl) = env.get_template(name) {
-                        Some(tmpl)
-                    } else {
-                        None
-                    }
-                }) {
-                    match template.render(context!(
-                        site => &site_clone,
-                        page => Value::from_object(page.clone())
-                    )) {
-                        Ok(output) => {
-                            let tests = output
-                                .split("<!-- START_THEME_TEST -->")
-                                .collect::<Vec<&str>>();
-                            tests.iter().skip(1).for_each(|t| {
-                                let parts =
-                                    t.split("<!-- EXPECTED_OUTPUT -->").collect::<Vec<&str>>();
-                                if parts.len() == 3 {
-                                    let got = format_html_for_theme_test_display(parts[0]);
-                                    let expected = format_html_for_theme_test_display(parts[1]);
-                                    let got_compare = got.replace("\n", "").replace(" ", "");
-                                    let expected_compare =
-                                        expected.replace("\n", "").replace(" ", "");
-                                    if got_compare != expected_compare {
-                                        self.errors.push(NeoError {
-                                            kind: NeoErrorKind::ThemeTestError {
-                                                expected: expected.to_string(),
-                                                got: got.to_string(),
-                                                sections: page.sections().unwrap().clone(),
-                                                source_path: page.fs_path.clone(),
-                                            },
-                                        })
-                                    }
-                                }
-                            });
-                        }
-                        Err(e) => {
-                            event!(
-                                Level::ERROR,
-                                "Error on theme test: {}",
-                                page.fs_path.display()
-                            );
-                            self.errors.push(NeoError {
-                                kind: NeoErrorKind::GenericErrorWithSourcePath {
-                                    source_path: page.fs_path.clone(),
-                                    msg: e.to_string(),
-                                },
-                            });
-                        }
-                    }
-                } else {
-                    event!(
-                        Level::ERROR,
-                        "Could not find template for: {} - Missing: {}",
-                        page.fs_path.display(),
-                        page.template_list().join(",")
-                    );
-                    self.errors.push(NeoError {
-                        kind: NeoErrorKind::GenericErrorWithSourcePath {
-                            source_path: page.fs_path.clone(),
-                            msg: format!(
-                                "Could not templates for page. {}",
-                                page.template_list().join(",")
-                            ),
-                        },
-                    });
-                }
-            });
-
-        Ok(())
-    }
-
-    //
-}
+//
+//}
 
 // TODO: Deprecate Builder as BuilderV42 comes online
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]

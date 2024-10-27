@@ -1,6 +1,7 @@
 #![allow(unused_variables)]
 #![allow(unused_imports)]
 
+pub mod inits;
 pub mod mocks;
 
 use crate::neo_error::NeoError;
@@ -34,19 +35,19 @@ mod test {
     // use pretty_assertions::assert_eq;
     //use rstest::rstest;
 
-    #[test]
-    pub fn solo_check_1() {
-        let page = PageV42::valid_sample_mock("001-pagedata-only.neo");
-        // dbg!(page.ast().unwrap());
-        // dbg!(page);
-    }
+    // #[test]
+    // pub fn solo_check_1() {
+    //     let page = PageV42::valid_sample_mock("001-pagedata-only.neo");
+    //     // dbg!(page.ast().unwrap());
+    //     // dbg!(page);
+    // }
 
-    #[test]
-    pub fn solo_check_2() {
-        let page = PageV42::valid_sample_mock("002-basic-sample.neo");
-        dbg!(page.ast().unwrap());
-        // dbg!(page);
-    }
+    // #[test]
+    // pub fn solo_check_2() {
+    //     let page = PageV42::valid_sample_mock("002-basic-sample.neo");
+    //     dbg!(page.ast().unwrap());
+    //     // dbg!(page);
+    // }
 
     // fn valid_samples() -> BTreeMap<String, String> {
     //     let mut samples = BTreeMap::new();
