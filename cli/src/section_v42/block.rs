@@ -1,5 +1,6 @@
 use super::helpers::make_template_list::*;
 use crate::helpers::flatten_spans_v42;
+use crate::helpers::set_from_vec;
 use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
 use crate::span_v42::SpanV42;
@@ -10,17 +11,17 @@ use nom_supreme::error::ErrorTree;
 use nom_supreme::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
+use std::collections::BTreeSet;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct BlockSectionV42 {
     // Reminder: there won't be children for a block, but having
-    // the field keeps the API consistent which is most
-    // important
+    // the field keeps the API consistent which is most important
     pub children: Vec<SectionV42>,
     pub kind: String,
     pub spans: Vec<SpanV42>,
     pub text: String,
-    pub template_list: Vec<String>,
+    pub template_list: BTreeSet<String>,
 }
 
 pub fn generic_block_section_v42<'a>(
@@ -63,6 +64,7 @@ mod test {
             .unwrap()
             .trim()
             .to_string();
+        let template_list = set_from_vec(vec!["sections/unknown/generic/full/default.neoj"]);
         let left = (
             "",
             SectionV42::Block(BlockSectionV42 {
@@ -72,7 +74,7 @@ mod test {
                     output: "this is some text".to_string(),
                 })],
                 text: "this is some text".to_string(),
-                template_list: vec!["sections/block/generic/full/default.neoj".to_string()],
+                template_list,
             }),
         );
         let right = generic_block_section_v42(&source, &site_config, 0, 0, 0).unwrap();
@@ -89,6 +91,7 @@ mod test {
             .unwrap()
             .trim()
             .to_string();
+        let template_list = set_from_vec(vec!["sections/block/generic/full/default.neoj"]);
         let left = (
             "",
             SectionV42::Block(BlockSectionV42 {
@@ -106,7 +109,7 @@ mod test {
                     }),
                 ],
                 text: "multiple lines".to_string(),
-                template_list: vec!["sections/block/generic/full/default.neoj".to_string()],
+                template_list,
             }),
         );
         let right = generic_block_section_v42(&source, &site_config, 0, 0, 0).unwrap();

@@ -10,6 +10,7 @@ use rimage::image::imageops::FilterType;
 use rimage::image::DynamicImage;
 use rimage::Decoder;
 use rimage::Encoder;
+use std::collections::BTreeSet;
 use std::fs;
 use std::fs::File;
 use std::path::PathBuf;
@@ -531,6 +532,15 @@ pub fn scrub_rel_file_path(source: &str) -> Result<PathBuf, NeoError> {
         pb.to_path_buf()
     };
     Ok(pb.join("index.html"))
+}
+
+pub fn set_from_vec(items: Vec<&str>) -> BTreeSet<String> {
+    let mut data = BTreeSet::new();
+    items.iter().for_each(|item| {
+        data.insert(item.to_string());
+        ()
+    });
+    data
 }
 
 pub fn trim_empty_lines(source: &str) -> String {

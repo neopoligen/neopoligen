@@ -1,5 +1,6 @@
 use super::helpers::make_template_list::*;
 use crate::bound::Bound;
+use crate::helpers::set_from_vec;
 use crate::section_attr_v42::section_attr_v42;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
 use crate::section_v42::*;
@@ -19,6 +20,7 @@ use nom_supreme::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::BTreeMap;
+use std::collections::BTreeSet;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct UnknownSectionV42 {
@@ -27,7 +29,7 @@ pub struct UnknownSectionV42 {
     pub children: Vec<SectionV42>,
     pub flags: Vec<String>,
     pub kind: String,
-    pub template_list: Vec<String>,
+    pub template_list: BTreeSet<String>,
 }
 
 pub fn unknown_section_start_v42<'a>(
@@ -119,7 +121,7 @@ mod test {
                     output: "Content".to_string(),
                 })],
                 text: "Content".to_string(),
-                template_list: vec!["sections/block/generic/full/default.neoj".to_string()],
+                template_list: set_from_vec(vec!["sections/block/generic/full/default.neoj"]),
             }),
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
@@ -128,12 +130,13 @@ mod test {
                     output: "Blocks".to_string(),
                 })],
                 text: "Blocks".to_string(),
-                template_list: vec!["sections/block/generic/full/default.neoj".to_string()],
+                template_list: set_from_vec(vec!["sections/block/generic/full/default.neoj"]),
             }),
         ];
         let kind = "unknown-test-section".to_string();
         let flags = vec![];
-        let template_list = vec!["sections/unknown/generic/full/default.neoj".to_string()];
+        let mut template_list = BTreeSet::new();
+        template_list.insert("sections/unknown/generic/full/default.neoj".to_string());
         let left = (
             "",
             SectionV42::Unknown(UnknownSectionV42 {
@@ -163,7 +166,7 @@ mod test {
                     output: "Delta".to_string(),
                 })],
                 text: "Delta".to_string(),
-                template_list: vec!["sections/block/generic/full/default.neoj".to_string()],
+                template_list: set_from_vec(vec!["sections/block/generic/full/default.neoj"]),
             }),
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
@@ -172,12 +175,13 @@ mod test {
                     output: "Tango".to_string(),
                 })],
                 text: "Tango".to_string(),
-                template_list: vec!["sections/block/generic/full/default.neoj".to_string()],
+                template_list: set_from_vec(vec!["sections/block/generic/full/default.neoj"]),
             }),
         ];
         let kind = "unknown-test-section".to_string();
         let flags = vec![];
-        let template_list = vec!["sections/unknown/generic/start/default.neoj".to_string()];
+        let mut template_list = BTreeSet::new();
+        template_list.insert("sections/unknown/generic/start/default.neoj".to_string());
         let left = (
             "",
             SectionV42::Unknown(UnknownSectionV42 {

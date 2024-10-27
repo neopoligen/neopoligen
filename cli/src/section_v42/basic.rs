@@ -17,6 +17,7 @@ use nom_supreme::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::BTreeMap;
+use std::collections::BTreeSet;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct BasicSectionV42 {
@@ -25,7 +26,7 @@ pub struct BasicSectionV42 {
     pub children: Vec<SectionV42>,
     pub flags: Vec<String>,
     pub kind: String,
-    pub template_list: Vec<String>,
+    pub template_list: BTreeSet<String>,
 }
 
 pub fn basic_section_full_v42<'a>(

@@ -17,6 +17,7 @@ use nom_supreme::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::BTreeMap;
+use std::collections::BTreeSet;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct EndSectionV42 {
@@ -25,7 +26,7 @@ pub struct EndSectionV42 {
     pub children: Vec<SectionV42>,
     pub flags: Vec<String>,
     pub kind: String,
-    pub template_list: Vec<String>,
+    pub template_list: BTreeSet<String>,
 }
 
 pub fn end_section_basic_v42<'a>(
@@ -53,7 +54,7 @@ pub fn end_section_basic_v42<'a>(
     })
     .context("")
     .parse(source)?;
-    let section = SectionV42::Unknown(UnknownSectionV42 {
+    let section = SectionV42::End(EndSectionV42 {
         attrs,
         bounds: Bound::End,
         children,
@@ -67,6 +68,7 @@ pub fn end_section_basic_v42<'a>(
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::helpers::set_from_vec;
     use crate::{
         helpers::get_include_str_file,
         span_v42::{plaintext::PlainTextSpan, SpanV42},
@@ -82,6 +84,8 @@ mod test {
         let source = get_include_str_file(SAMPLES, "001-basic-unknown.neo");
         let attrs = BTreeMap::new();
         let bounds = Bound::End;
+        let mut block_template_list = BTreeSet::new();
+        block_template_list.insert("sections/block/generic/full/default.neoj".to_string());
         let children = vec![
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
@@ -90,7 +94,7 @@ mod test {
                     output: "Tango".to_string(),
                 })],
                 text: "Tango".to_string(),
-                template_list: vec!["sections/block/generic/full/default.neoj".to_string()],
+                template_list: set_from_vec(vec!["sections/block/generic/full/default.neoj"]),
             }),
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
@@ -99,18 +103,18 @@ mod test {
                     output: "Foxtrot".to_string(),
                 })],
                 text: "Foxtrot".to_string(),
-                template_list: vec!["sections/block/generic/full/default.neoj".to_string()],
+                template_list: set_from_vec(vec!["sections/block/generic/full/default.neoj"]),
             }),
         ];
         let kind = "unknown-test-section".to_string();
         let flags = vec![];
-        let template_list = vec![
-            "sections/ends/unknown-test-section/end/default.neoj".to_string(),
-            // "sections/end/generic/end/default.neoj".to_string(),
-        ];
+        let template_list = set_from_vec(vec![
+            "sections/ends/generic/end/default.neoj",
+            "sections/ends/unknown-test-section/end/default.neoj",
+        ]);
         let left = (
             "",
-            SectionV42::Unknown(UnknownSectionV42 {
+            SectionV42::End(EndSectionV42 {
                 attrs,
                 bounds,
                 children,

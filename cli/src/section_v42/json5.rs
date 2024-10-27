@@ -16,6 +16,7 @@ use nom_supreme::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::BTreeMap;
+use std::collections::BTreeSet;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Json5SectionV42 {
@@ -26,7 +27,7 @@ pub struct Json5SectionV42 {
     pub error: Option<String>,
     pub flags: Vec<String>,
     pub kind: String,
-    pub template_list: Vec<String>,
+    pub template_list: BTreeSet<String>,
 }
 
 pub fn json5_section_full_v42<'a>(
