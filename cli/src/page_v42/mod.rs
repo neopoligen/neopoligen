@@ -23,12 +23,43 @@ impl PageV42 {
         Ok(Value::from_serialize(&self.raw_ast))
     }
 
+    pub fn html_output_fs_rel_path(&self, _base_path: &PathBuf) -> Result<PathBuf, NeoError> {
+        Ok(PathBuf::from("index.html"))
+    }
+
     pub fn id(&self) -> Result<Value, Error> {
         Ok(Value::from("asdf"))
     }
 
-    pub fn html_output_fs_rel_path(&self, _base_path: &PathBuf) -> Result<PathBuf, NeoError> {
-        Ok(PathBuf::from("index.html"))
+    pub fn get_pagedata(&self, args: &[Value]) -> Result<Value, Error> {
+        if args.len() == 1 {
+            match self.get_raw_pagedata(args[0].to_string().as_str()) {
+                Ok(v) => Ok(Value::from(v)),
+                Err(_e) => Ok(Value::from("TODO_MAKE_PAGEDATA_ERROR")),
+            }
+        } else {
+            Ok(Value::from("TODO_MAKE_PAGEDATA_ERROR"))
+        }
+    }
+
+    pub fn get_raw_pagedata(&self, key: &str) -> Result<String, Error> {
+        match &self
+            .raw_ast
+            .iter()
+            .filter_map(|section| match section {
+                SectionV42::Json5(s) => Some(s),
+                _ => None,
+            })
+            .find_map(|section| match section.kind.as_str() {
+                "pagedata" => Some(&section.attrs),
+                _ => None,
+            })
+            .unwrap()
+            .get(key)
+        {
+            Some(v) => Ok(v.text.clone()),
+            None => Ok("TODO_MAKE_THIS_AN_ERROR".to_string()),
+        }
     }
 
     pub fn template_list(&self) -> Vec<String> {
@@ -41,11 +72,12 @@ impl Object for PageV42 {
         self: &Arc<PageV42>,
         _state: &minijinja::State,
         name: &str,
-        _args: &[Value],
+        args: &[Value],
     ) -> Result<Value, Error> {
         match name {
             "ast" => self.ast(),
-            // "id" => self.id(),
+            "get_pagedata" => self.get_pagedata(args),
+            "id" => self.id(),
             // "sections" => self.sections(),
             // "title" => self.title(),
             _ => Ok(Value::from("")),
