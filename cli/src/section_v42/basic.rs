@@ -1,18 +1,12 @@
-#![allow(unused_imports)]
 use super::make_template_list::make_template_list;
-use crate::section_attr_v42;
-use crate::section_attr_v42::flag::SectionFlagAttrV42;
-use crate::section_attr_v42::key_value::SectionKeyValueAttrV42;
 use crate::section_attr_v42::section_attr_v42;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
 use crate::section_v42::*;
 use crate::site_config::SiteConfigV42;
 use crate::span_v42::space0_line_ending_or_eof::space0_line_ending_or_eof;
-use crate::span_v42::SpanV42;
 use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;
 use nom::character::complete::space1;
-use nom::combinator::rest;
 use nom::multi::many0;
 use nom::sequence::pair;
 use nom::sequence::terminated;
@@ -41,7 +35,7 @@ pub fn basic_section_full_v42<'a>(
     list_level: usize,
     checklist_level: usize,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
-    // let _dbg_header = "BASIC_SECTION_START";
+    // let _dbg_header = "BASIC_SECTION_FULL";
     let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
     let (source, kind) = terminated(tag("title"), space0_line_ending_or_eof)
         .context("")
