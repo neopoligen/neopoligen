@@ -1,4 +1,3 @@
-use super::helpers::make_template_list::*;
 use crate::helpers::flatten_spans_v42;
 use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
@@ -10,7 +9,6 @@ use nom_supreme::error::ErrorTree;
 use nom_supreme::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
-use std::collections::BTreeSet;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct BlockSectionV42 {
