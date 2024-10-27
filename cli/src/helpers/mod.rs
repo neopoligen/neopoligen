@@ -1,8 +1,8 @@
 use crate::neo_error::{NeoError, NeoErrorKind};
 use crate::payload_span::PayloadSpan;
 use crate::span::*;
-// use crate::span_v42::plaintext::PlainTextSpan;
 use crate::span_v42::SpanV42;
+use include_dir::Dir;
 use minijinja::Value;
 use regex::Regex;
 use rimage::config::{Codec, EncoderConfig};
@@ -170,7 +170,6 @@ pub fn get_dirs_in_dir(dir: &PathBuf) -> Result<Vec<PathBuf>, NeoError> {
                 },
             })
         }
-
         //         fs::read_dir(dir)?
         //            .map(|entry| {
         //                let entry = entry?;
@@ -195,7 +194,6 @@ pub fn get_dirs_in_dir(dir: &PathBuf) -> Result<Vec<PathBuf>, NeoError> {
         //         }),
         // )
     }
-
     // Result::from_iter(
     //     fs::read_dir(dir)?
     //         .map(|entry| {
@@ -268,6 +266,14 @@ pub fn get_image_paths(source_dir: &PathBuf) -> Vec<PathBuf> {
             Err(_) => None,
         })
         .collect()
+}
+
+pub fn get_include_str_file(dir: Dir, name: &str) -> String {
+    dir.get_file(name)
+        .unwrap()
+        .contents_utf8()
+        .unwrap()
+        .to_string()
 }
 
 pub fn get_neo_files_in_dir_recursively(dir: &PathBuf) -> Vec<PathBuf> {

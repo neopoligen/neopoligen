@@ -66,6 +66,7 @@ mod test {
         let left = (
             "",
             SectionV42::Block(BlockSectionV42 {
+                children: vec![],
                 kind: "generic".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     output: "this is some text".to_string(),
@@ -93,6 +94,7 @@ mod test {
         let left = (
             "",
             SectionV42::Block(BlockSectionV42 {
+                children: vec![],
                 kind: "generic".to_string(),
                 spans: vec![
                     SpanV42::PlainText(PlainTextSpan {
@@ -105,7 +107,6 @@ mod test {
                         output: "lines".to_string(),
                     }),
                 ],
-
                 text: "multiple lines".to_string(),
                 template_list: vec!["sections/block/generic/full/default.neoj".to_string()],
             }),

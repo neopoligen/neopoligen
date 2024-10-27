@@ -62,6 +62,10 @@ impl PageV42 {
         }
     }
 
+    pub fn raw_id(&self) -> Result<String, Error> {
+        self.get_raw_pagedata("id")
+    }
+
     pub fn template_list(&self) -> Vec<String> {
         vec!["page-templates/post/done.neoj".to_string()]
     }
@@ -87,20 +91,17 @@ impl Object for PageV42 {
 
 #[cfg(test)]
 mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+    // use rstest::rstest;
 
-    use include_dir::{include_dir, Dir};
-
-    use super::PageV42;
-    // use super::*;
-    // use pretty_assertions::assert_eq;
-    //use rstest::rstest;
-
-    // #[test]
-    // pub fn solo_check_1() {
-    //     let page = PageV42::valid_sample_mock("001-pagedata-only.neo");
-    //     // dbg!(page.ast().unwrap());
-    //     // dbg!(page);
-    // }
+    #[test]
+    pub fn solo_id_check_basic() {
+        let page = PageV42::valid_sample_mock("001-pagedata-only.neo");
+        let left = "001-pagedata-only".to_string();
+        let right = page.raw_id().unwrap();
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // pub fn solo_check_2() {
