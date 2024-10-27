@@ -1,5 +1,3 @@
-use minijinja::Value;
-
 pub fn make_template_list(r#type: &str, kind: &str, bounds: &str, template: &str) -> Vec<String> {
     let mut result = vec![];
     result.push(format!(
@@ -17,8 +15,8 @@ mod test {
 
     #[test]
     fn check_make_template_list() {
-        let left = vec!["basic/title/full/default.neoj"];
+        let left = vec!["sections/basic/title/full/default.neoj"];
         let right = make_template_list("basic", "title", "full", "default");
-        // assert_eq!(left, right);
+        assert_eq!(left, right);
     }
 }

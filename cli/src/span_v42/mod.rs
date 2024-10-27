@@ -3,6 +3,7 @@
 
 pub mod any_colon;
 pub mod any_hyphen;
+pub mod block_line_ending;
 pub mod plaintext;
 pub mod single_line_ending;
 pub mod space0_line_ending_or_eof;
