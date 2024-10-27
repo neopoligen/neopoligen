@@ -27,44 +27,55 @@ impl PageV42 {
         Ok(PathBuf::from("index.html"))
     }
 
-    pub fn id(&self) -> Result<Value, Error> {
+    pub fn id(&self) -> Result<String, Error> {
         self.get_pagedata(&[Value::from("id")])
     }
 
-    pub fn get_pagedata(&self, args: &[Value]) -> Result<Value, Error> {
+    // pub fn get_pagedata(&self, args: &[Value]) -> Result<Value, Error> {
+    //     if args.len() == 1 {
+    //         match self.get_raw_pagedata(args[0].to_string().as_str()) {
+    //             Ok(v) => Ok(Value::from(v)),
+    //             Err(_e) => Ok(Value::from("TODO_MAKE_PAGEDATA_ERROR")),
+    //         }
+    //     } else {
+    //         Ok(Value::from("TODO_MAKE_PAGEDATA_ERROR"))
+    //     }
+    // }
+
+    pub fn get_pagedata(&self, args: &[Value]) -> Result<String, Error> {
         if args.len() == 1 {
-            match self.get_raw_pagedata(args[0].to_string().as_str()) {
-                Ok(v) => Ok(Value::from(v)),
-                Err(_e) => Ok(Value::from("TODO_MAKE_PAGEDATA_ERROR")),
+            match &self
+                .raw_ast
+                .iter()
+                .filter_map(|section| match section {
+                    SectionV42::Json5(s) => Some(s),
+                    _ => None,
+                })
+                .find_map(|section| match section.kind.as_str() {
+                    "pagedata" => Some(&section.attrs),
+                    _ => None,
+                })
+                .unwrap()
+                .get(&args[0].to_string())
+            {
+                Some(v) => Ok(v.text.clone()),
+                None => Ok("TODO_MAKE_THIS_AN_ERROR".to_string()),
             }
         } else {
-            Ok(Value::from("TODO_MAKE_PAGEDATA_ERROR"))
+            Ok("TODO_MAKE_THIS_AN_ERROR".to_string())
         }
     }
 
-    pub fn get_raw_pagedata(&self, key: &str) -> Result<String, Error> {
-        match &self
-            .raw_ast
-            .iter()
-            .filter_map(|section| match section {
-                SectionV42::Json5(s) => Some(s),
-                _ => None,
-            })
-            .find_map(|section| match section.kind.as_str() {
-                "pagedata" => Some(&section.attrs),
-                _ => None,
-            })
-            .unwrap()
-            .get(key)
-        {
-            Some(v) => Ok(v.text.clone()),
-            None => Ok("TODO_MAKE_THIS_AN_ERROR".to_string()),
+    pub fn make_value_from_string(&self, input: Result<String, Error>) -> Result<Value, Error> {
+        match input {
+            Ok(v) => Ok(Value::from(v)),
+            Err(_e) => Ok(Value::from("")),
         }
     }
 
-    pub fn raw_id(&self) -> Result<String, Error> {
-        self.get_raw_pagedata("id")
-    }
+    // pub fn raw_id(&self) -> Result<String, Error> {
+    //     self.get_raw_pagedata("id")
+    // }
 
     pub fn template_list(&self) -> Vec<String> {
         vec!["page-templates/post/done.neoj".to_string()]
@@ -80,8 +91,8 @@ impl Object for PageV42 {
     ) -> Result<Value, Error> {
         match name {
             "ast" => self.ast(),
-            "get_pagedata" => self.get_pagedata(args),
-            "id" => self.id(),
+            "get_pagedata" => self.make_value_from_string(self.get_pagedata(args)),
+            "id" => self.make_value_from_string(self.id()),
             // "sections" => self.sections(),
             // "title" => self.title(),
             _ => Ok(Value::from("")),
@@ -96,20 +107,20 @@ mod test {
     // use rstest::rstest;
 
     #[test]
-    pub fn solo_raw_id_check_basic() {
-        let page = PageV42::valid_sample_mock("001-pagedata-only.neo");
-        let left = "001-pagedata-only".to_string();
-        let right = page.raw_id().unwrap();
-        assert_eq!(left, right);
-    }
-
-    #[test]
     pub fn solo_id_check_basic() {
         let page = PageV42::valid_sample_mock("001-pagedata-only.neo");
-        let left = Value::from("001-pagedata-only".to_string());
+        let left = "001-pagedata-only".to_string();
         let right = page.id().unwrap();
         assert_eq!(left, right);
     }
+
+    // #[test]
+    // pub fn solo_id_check_basic() {
+    //     let page = PageV42::valid_sample_mock("001-pagedata-only.neo");
+    //     let left = Value::from("001-pagedata-only".to_string());
+    //     let right = page.id().unwrap();
+    //     assert_eq!(left, right);
+    // }
 
     // #[test]
     // pub fn solo_check_2() {

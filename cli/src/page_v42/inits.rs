@@ -5,10 +5,10 @@ use crate::neo_error::NeoErrorKind;
 use crate::site_config::SiteConfigV42;
 use std::fs;
 use std::path::PathBuf;
-use tracing::{event, instrument, Level};
+// use tracing::{event, instrument, Level};
 
 impl PageV42 {
-    #[instrument()]
+    //#[instrument()]
     pub fn new_from_fs_path(
         path: &PathBuf,
         site_config: &SiteConfigV42,
