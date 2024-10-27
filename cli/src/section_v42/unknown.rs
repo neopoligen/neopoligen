@@ -12,7 +12,6 @@ use nom::character::complete::space1;
 use nom::multi::many0;
 use nom::sequence::pair;
 use nom::sequence::terminated;
-use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;

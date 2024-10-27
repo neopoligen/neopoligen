@@ -1,11 +1,13 @@
 pub mod basic;
 pub mod block;
+pub mod end;
 pub mod json5;
 pub mod make_template_list;
 pub mod unknown;
 
 use crate::section_v42::basic::*;
 use crate::section_v42::block::*;
+use crate::section_v42::end::*;
 use crate::section_v42::json5::*;
 use crate::section_v42::unknown::*;
 use crate::site_config::SiteConfigV42;
@@ -26,6 +28,7 @@ use std::sync::Arc;
 pub enum SectionV42 {
     Basic(BasicSectionV42),
     Block(BlockSectionV42),
+    End(EndSectionV42),
     Json5(Json5SectionV42),
     Unknown(UnknownSectionV42),
 }
