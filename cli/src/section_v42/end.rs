@@ -1,4 +1,4 @@
-use super::make_template_list::make_template_list;
+use super::helpers::make_template_list::*;
 use crate::bound::Bound;
 use crate::section_attr_v42::section_attr_v42;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
@@ -46,12 +46,6 @@ pub fn end_section_basic_v42<'a>(
     ))
     .context("")
     .parse(source)?;
-    // let (source, kind) = terminated(
-    //     is_not(" /\t\r\n"),
-    //     pair(tag("/"), space0_line_ending_or_eof),
-    // )
-    // .context("")
-    // .parse(source)?;
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, children) = many0(|src| {

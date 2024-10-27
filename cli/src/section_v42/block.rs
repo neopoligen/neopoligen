@@ -1,4 +1,4 @@
-use super::make_template_list::make_template_list;
+use super::helpers::make_template_list::*;
 use crate::helpers::flatten_spans_v42;
 use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;

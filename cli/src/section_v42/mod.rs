@@ -1,8 +1,8 @@
 pub mod basic;
 pub mod block;
 pub mod end;
+pub mod helpers;
 pub mod json5;
-pub mod make_template_list;
 pub mod unknown;
 
 use crate::section_v42::basic::*;

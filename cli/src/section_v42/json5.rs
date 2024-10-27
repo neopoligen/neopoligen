@@ -1,6 +1,6 @@
+use super::helpers::make_template_list::*;
 use crate::section_attr_v42::section_attr_v42;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
-use crate::section_v42::make_template_list::make_template_list;
 use crate::section_v42::*;
 use crate::site_config::SiteConfigV42;
 use minijinja::Value;
