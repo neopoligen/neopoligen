@@ -39,7 +39,7 @@ pub fn unknown_section_full_v42<'a>(
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let _dbg_header = "UNKNOWN_SECTION_FULL";
     let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
-    let (source, kind) = terminated(is_not(" \t\r\n"), space0_line_ending_or_eof)
+    let (source, kind) = terminated(is_not("/ \t\r\n"), space0_line_ending_or_eof)
         .context("")
         .parse(source)?;
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
