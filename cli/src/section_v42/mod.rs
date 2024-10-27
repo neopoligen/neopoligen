@@ -69,6 +69,8 @@ pub fn start_or_full_section_v42<'a>(
     let (source, section) = alt((
         |src| basic_section_full_v42(src, &site_config, nest_level, list_level, checklist_level),
         |src| json5_section_full_v42(src, &site_config, nest_level, list_level, checklist_level),
+        |src| unknown_section_start_v42(src, &site_config, nest_level, list_level, checklist_level),
+        |src| unknown_section_full_v42(src, &site_config, nest_level, list_level, checklist_level),
     ))
     .context("")
     .parse(source)?;

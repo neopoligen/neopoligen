@@ -25,7 +25,6 @@ impl PageV42 {
 
     pub fn html_file_system_relative_path(&self, base_path: &PathBuf) -> Result<PathBuf, NeoError> {
         if let Ok(p) = self.get_pagedata(&[Value::from("path")]) {
-            dbg!(&p);
             if p != "" {
                 let new_base = p.strip_prefix("/").unwrap();
                 Ok(PathBuf::from(new_base))
@@ -143,6 +142,14 @@ mod test {
         let right = page
             .html_file_system_relative_path(&PathBuf::from("en"))
             .unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_unknown_start_end() {
+        let page = PageV42::valid_sample_mock("004-unknown-start-end.neo");
+        let left = "004-unknown-start-end".to_string();
+        let right = page.id().unwrap();
         assert_eq!(left, right);
     }
 

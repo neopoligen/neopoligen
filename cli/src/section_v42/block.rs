@@ -1,6 +1,5 @@
 use super::helpers::make_template_list::*;
 use crate::helpers::flatten_spans_v42;
-use crate::helpers::set_from_vec;
 use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
 use crate::span_v42::SpanV42;
@@ -48,6 +47,7 @@ pub fn generic_block_section_v42<'a>(
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::helpers::set_from_vec;
     use crate::span_v42::plaintext::PlainTextSpan;
     use include_dir::{include_dir, Dir};
     use pretty_assertions::assert_eq;
@@ -55,7 +55,7 @@ mod test {
     const SAMPLE_DIR: Dir = include_dir!("src/section_v42/samples/block/valid");
 
     #[test]
-    fn single_block_test() {
+    fn solo_single_block_test() {
         let site_config = SiteConfigV42::mock1_basic();
         let source = SAMPLE_DIR
             .get_file("001-single-block.neo")
@@ -64,7 +64,7 @@ mod test {
             .unwrap()
             .trim()
             .to_string();
-        let template_list = set_from_vec(vec!["sections/unknown/generic/full/default.neoj"]);
+        let template_list = set_from_vec(vec!["sections/block/generic/full/default.neoj"]);
         let left = (
             "",
             SectionV42::Block(BlockSectionV42 {

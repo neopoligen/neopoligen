@@ -1,6 +1,5 @@
 use super::helpers::make_template_list::*;
 use crate::bound::Bound;
-use crate::helpers::set_from_vec;
 use crate::section_attr_v42::section_attr_v42;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
 use crate::section_v42::*;
@@ -110,6 +109,7 @@ pub fn unknown_section_full_v42<'a>(
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::helpers::set_from_vec;
     use crate::{
         helpers::get_include_str_file,
         span_v42::{plaintext::PlainTextSpan, SpanV42},
