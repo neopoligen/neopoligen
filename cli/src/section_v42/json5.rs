@@ -88,13 +88,13 @@ pub fn json5_section_full_v42<'a>(
 
 #[cfg(test)]
 mod test {
-    use crate::span_v42::{plaintext::PlainTextSpan, SpanV42};
 
-    use super::*;
-    use include_dir::{include_dir, Dir};
-    // use pretty_assertions::assert_eq;
+    // use crate::span_v42::{plaintext::PlainTextSpan, SpanV42};
+    // use super::*;
+    // use include_dir::{include_dir, Dir};
+    // // use pretty_assertions::assert_eq;
 
-    const SAMPLE_DIR: Dir = include_dir!("src/section_v42/samples/json5/valid");
+    // const SAMPLE_DIR: Dir = include_dir!("src/section_v42/samples/json5/valid");
 
     // #[test]
     // fn solo_pagedata_with_extra_data() {
