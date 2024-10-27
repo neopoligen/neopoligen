@@ -1,3 +1,10 @@
 [! import "helpers/theme.neoj" as theme !]
 
-asdf
+[! for child in section.children !]
+[@ theme.output_section(site, page, child) @]
+[! endfor !]
+
+
+[! for end_section in section.end_sections!]
+[@ theme.output_section(site, page, end_section) @]
+[! endfor !]
