@@ -2,6 +2,9 @@
 
 This Is Basic Test
 
+This is more stuff
+
+
 -- pagedata
 -- created: 2024-10-26T20:36:55-04:00
 -- updated: 2024-10-26T20:36:55-04:00
@@ -9,7 +12,3 @@ This Is Basic Test
 -- template: post
 -- status: scratch
 
-
-{
-  "alfa": "bravo" 
-  }

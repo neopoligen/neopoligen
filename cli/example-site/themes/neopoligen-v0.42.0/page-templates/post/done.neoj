@@ -9,7 +9,6 @@ color: goldenrod;
 </style>
 </head>
 <body>
-<h1>Hello, World</h1>
 
 [! for section in page.ast() !]
 [!- include section.template_list ignore missing -!]

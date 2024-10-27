@@ -32,9 +32,9 @@ fn do_parse_v42<'a>(
         .context("")
         .parse(source)?;
 
-    if source != "" {
-        dbg!(&source);
-    }
+    // if source != "" {
+    //     dbg!(&source);
+    // }
 
     // let temp_debug_flag = false;
     // // The 0, 0, 0 below are for the nest, list, and checklist levels, they are followed by the

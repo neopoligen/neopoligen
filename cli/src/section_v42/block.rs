@@ -10,11 +10,14 @@ use nom_supreme::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
 
+use super::make_template_list::make_template_list;
+
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct BlockSectionV42 {
     pub kind: String,
     pub spans: Vec<SpanV42>,
     pub text: String,
+    pub template_list: Vec<String>,
 }
 
 pub fn generic_block_section_v42<'a>(
@@ -32,6 +35,7 @@ pub fn generic_block_section_v42<'a>(
             kind: "generic".to_string(),
             spans,
             text,
+            template_list: make_template_list("block", "generic", "full", "default"),
         }),
     ))
 }

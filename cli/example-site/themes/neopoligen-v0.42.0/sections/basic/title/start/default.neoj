@@ -1,2 +1,22 @@
 <section>
-<h1>This is a title section</h1>
+
+[! for child in section.children !]
+[! if loop.first !]
+<h1>
+[! for span in child.spans !]
+  [! include "spans/" + span.type + ".neoj" ignore missing !]
+[! endfor !]
+</h1>
+[! endif !]
+[! endfor !]
+
+
+[! for child in section.children !]
+[! if not loop.first !]
+<p>
+[! for span in child.spans !]
+  [! include "spans/" + span.type + ".neoj" ignore missing !]
+[! endfor !]
+</p>
+[! endif !]
+[! endfor !]
