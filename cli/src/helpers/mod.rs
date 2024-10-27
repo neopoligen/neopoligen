@@ -39,14 +39,12 @@ pub fn dump_parser_if_debug(debug: bool, dbg_header: &str, source: &str, count: 
             print!("█");
         }
         println!(" {}: {}", dbg_header, count);
-
         let l = source
             .lines()
             .take(5)
             .map(|line| line)
             .collect::<Vec<&str>>()
             .join(r#"\n"#);
-
         for _ in 0..count * 2 {
             print!("█");
         }

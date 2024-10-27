@@ -28,7 +28,7 @@ impl PageV42 {
     }
 
     pub fn id(&self) -> Result<Value, Error> {
-        Ok(Value::from("asdf"))
+        self.get_pagedata(&[Value::from("id")])
     }
 
     pub fn get_pagedata(&self, args: &[Value]) -> Result<Value, Error> {
@@ -96,10 +96,18 @@ mod test {
     // use rstest::rstest;
 
     #[test]
-    pub fn solo_id_check_basic() {
+    pub fn solo_raw_id_check_basic() {
         let page = PageV42::valid_sample_mock("001-pagedata-only.neo");
         let left = "001-pagedata-only".to_string();
         let right = page.raw_id().unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    pub fn solo_id_check_basic() {
+        let page = PageV42::valid_sample_mock("001-pagedata-only.neo");
+        let left = Value::from("001-pagedata-only".to_string());
+        let right = page.id().unwrap();
         assert_eq!(left, right);
     }
 
