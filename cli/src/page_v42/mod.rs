@@ -63,11 +63,14 @@ impl PageV42 {
                 .find_map(|section| match section.kind.as_str() {
                     "pagedata" => Some(&section.attrs),
                     _ => None,
-                })
-                .unwrap()
-                .get(&args[0].to_string())
-            {
-                Some(v) => Ok(v.text.clone()),
+                }) {
+                Some(x) => match x.get(&args[0].to_string()) {
+                    Some(v) => Ok(v.text.clone()),
+                    None => Err(Error::new(
+                        minijinja::ErrorKind::InvalidOperation,
+                        format!("Could not find {} in pagedata", &args[0]),
+                    )),
+                },
                 None => Err(Error::new(
                     minijinja::ErrorKind::InvalidOperation,
                     format!("Could not find {} in pagedata", &args[0]),
