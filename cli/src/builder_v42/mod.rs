@@ -103,7 +103,7 @@ impl BuilderV42 {
             .iter()
             .for_each(|(_id, page)| {
                 let base_rel_path = PathBuf::from(self.site_config.default_language().unwrap());
-                let file_rel_path = page.output_fs_rel_path(&base_rel_path);
+                let file_rel_path = page.html_output_fs_rel_path(&base_rel_path);
                 let absolute_output_path = &self
                     .site_config
                     .project_dir()

@@ -1,12 +1,8 @@
-#![allow(unused_variables)]
-#![allow(unused_imports)]
-
 pub mod inits;
 pub mod mocks;
 
 use crate::neo_error::NeoError;
 use crate::section_v42::SectionV42;
-use crate::site_config::SiteConfigV42;
 use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::Value;
@@ -31,7 +27,7 @@ impl PageV42 {
         Ok(Value::from("asdf"))
     }
 
-    pub fn output_fs_rel_path(&self, base_path: &PathBuf) -> Result<PathBuf, NeoError> {
+    pub fn html_output_fs_rel_path(&self, _base_path: &PathBuf) -> Result<PathBuf, NeoError> {
         Ok(PathBuf::from("index.html"))
     }
 
