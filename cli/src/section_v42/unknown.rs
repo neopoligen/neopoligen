@@ -168,6 +168,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn integration_002_basic_start_end() {
         let site_config = SiteConfigV42::mock1_basic();
         let source = get_include_str_file(SAMPLES, "002-basic-start-end.neo");

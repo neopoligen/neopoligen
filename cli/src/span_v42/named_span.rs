@@ -26,9 +26,22 @@ use std::collections::BTreeMap;
 
 // TODO: move this to its own file
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub struct SpanAttrV42 {
+pub struct KeyValueSpanAttrV42 {
     key: String,
     value: Vec<SpanV42>,
+}
+
+// TODO: move this to its own file
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub struct FlagSpanAttrV42 {
+    value: String,
+}
+
+// TODO: move this to its own file
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub enum SpanAttrV42 {
+    KeyValue(KeyValueSpanAttrV42),
+    Flag(FlagSpanAttrV42),
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -46,6 +59,7 @@ pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, spans) = opt(preceded(tag("|"), many0(named_span_content_span)))
         .context("")
         .parse(source)?;
+    let (source, (attrs, flags)) = named_span_attrs_and_flags.context("").parse(source)?;
     let (source, _) = tag(">>").context("").parse(source)?;
     let name = tokens.iter().join("");
     Ok((
@@ -55,6 +69,41 @@ pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
             flags: vec![],
             name,
             spans,
+        }),
+    ))
+}
+
+pub fn named_span_attrs_and_flags(
+    source: &str,
+) -> IResult<&str, (Vec<SpanAttrV42>, Vec<SpanAttrV42>), ErrorTree<&str>> {
+    let (source, attr_flags) = many0(named_span_attr_flag).context("").parse(source)?;
+    Ok((source, (vec![], vec![])))
+}
+
+pub fn named_span_attr_flag(source: &str) -> IResult<&str, Vec<SpanAttrV42>, ErrorTree<&str>> {
+    let (source, attrs) = many0(alt((named_span_key_value_attr, named_span_flag_attr)))
+        .context("")
+        .parse(source)?;
+    Ok((source, attrs))
+}
+
+pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttrV42, ErrorTree<&str>> {
+    let (source, attr) = tag("asdf").context("").parse(source)?;
+    Ok((
+        source,
+        SpanAttrV42::KeyValue(KeyValueSpanAttrV42 {
+            key: "asdf".to_string(),
+            value: vec![],
+        }),
+    ))
+}
+
+pub fn named_span_flag_attr(source: &str) -> IResult<&str, SpanAttrV42, ErrorTree<&str>> {
+    let (source, attr) = tag("asdf").context("").parse(source)?;
+    Ok((
+        source,
+        SpanAttrV42::Flag(FlagSpanAttrV42 {
+            value: "asdf".to_string(),
         }),
     ))
 }
@@ -73,7 +122,7 @@ mod test {
     use rstest::rstest;
 
     #[test]
-    fn solo_basic_test() {
+    fn basic_test() {
         let source = "<<sierra|tango>>";
         let left = (
             "",
@@ -90,13 +139,31 @@ mod test {
         assert_eq!(left, right);
     }
 
+    #[test]
+    fn solo_with_flag() {
+        let source = "<<delta|echo|foxtrot>>";
+        let left = (
+            "",
+            SpanV42::NamedSpan(NamedSpanV42 {
+                attrs: BTreeMap::new(),
+                flags: vec!["foxtrot".to_string()],
+                name: "sierra".to_string(),
+                spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
+                    output: "tango".to_string(),
+                })]),
+            }),
+        );
+        let right = named_span(source).unwrap();
+        assert_eq!(left, right);
+    }
+
     #[rstest]
     #[case("<<hr>>etc...", "etc...")]
     #[case("<<alfa-bravo>>etc...", "etc...")]
     #[case("<<em|alfa>>etc...", "etc...")]
     #[case("<<em|alfa-bravo>>etc...", "etc...")]
     #[case("<<em|charlie -- delta>>etc...", "etc...")]
-    fn solo_valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
+    fn valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
         match named_span(source) {
             Ok(data) => {
                 if data.0 == remainder {
@@ -131,7 +198,7 @@ mod test {
         "<<hr\\>>",
         "back slaches not allowed to prevent issues wtih file paths for templates"
     )]
-    fn solo_invalid_cases(#[case] source: &str, #[case] _note: &str) {
+    fn invalid_cases(#[case] source: &str, #[case] _note: &str) {
         match named_span(source) {
             Ok(data) => {
                 dbg!(data);
