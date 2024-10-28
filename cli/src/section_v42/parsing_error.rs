@@ -13,9 +13,11 @@ pub struct ParsingErrorSectionV42 {
     pub flags: Vec<String>,
     pub kind: String,
     pub template_list: Vec<String>,
-    pub source: String,
     pub line: usize,
     pub column: usize,
-    pub remainder: String,
+    pub output_remainder: String,
+    pub output_source: String,
+    pub raw_remainder: String,
+    pub raw_source: String,
     pub message: String,
 }

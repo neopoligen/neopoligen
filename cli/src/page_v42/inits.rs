@@ -112,6 +112,9 @@ impl PageV42 {
                         source,
                         message,
                     } => {
+                        let output_source = "THIS IS OUTPUT SOURCE".to_string();
+                        let output_remainder = "THIS IS OUTPUT REMAINDER".to_string();
+
                         page.raw_ast = vec![
                             SectionV42::Basic(BasicSectionV42 {
                                 attrs: BTreeMap::new(),
@@ -139,13 +142,15 @@ impl PageV42 {
                                 children: vec![],
                                 flags: vec![],
                                 kind: "parsing_error".to_string(),
-                                source: page.source.clone(),
                                 template_list: vec![
                                     "sections/built-in/parsing-error/full/default.neoj".to_string(),
                                 ],
                                 column: *column,
                                 line: *line,
-                                remainder: remainder.to_string(),
+                                output_source,
+                                output_remainder,
+                                raw_remainder: remainder.to_string(),
+                                raw_source: source.to_string(),
                                 message: message.to_string(),
                             }),
                         ];

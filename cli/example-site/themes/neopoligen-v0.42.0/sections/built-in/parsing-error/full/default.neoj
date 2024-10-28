@@ -1,3 +1,25 @@
+<div>Error: [@ section.message @]</div>
+<div>Occurred at line: [@ section.line @] column: [@ section.column @]</div>
+
+<h2>This parsed successfully</h2>
+<pre>
+[@ section.output_source @]
+</pre>
+
+<h2>The error occurred here</h2>
+
+<pre>
+[@ section.output_remainder @]
+</pre>
+
+
+<h2>Full source for reference</h2>
+
+<pre>
+[@ section.raw_source @]
+</pre>
+
+
 <pre>
 [@ section|tojson(true) @]
 </pre>
