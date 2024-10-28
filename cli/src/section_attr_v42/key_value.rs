@@ -2,7 +2,7 @@
 use crate::helpers::dump_parser_if_debug;
 use crate::section_attr_v42::SectionAttrV42;
 use crate::span_v42::any_colon::any_colon;
-use crate::span_v42::any_hyphen::any_hyphens;
+use crate::span_v42::any_hyphens::any_hyphens;
 use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::single_underscore::single_underscore;
 use crate::span_v42::*;

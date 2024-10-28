@@ -2,7 +2,7 @@
 #![allow(unused_imports)]
 
 pub mod any_colon;
-pub mod any_hyphen;
+pub mod any_hyphens;
 pub mod block_line_ending;
 pub mod named_span;
 pub mod plaintext;

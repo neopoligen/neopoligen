@@ -1,4 +1,4 @@
-use crate::span_v42::any_hyphen::any_hyphens;
+use crate::span_v42::any_hyphens::any_hyphens;
 use crate::span_v42::block_line_ending::block_line_ending;
 use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::single_exclamation::single_exclamation;
