@@ -6,7 +6,7 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
-pub fn any_colon(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+pub fn any_colons(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, result) = is_a(":").context("").parse(source)?;
     Ok((
         source,
@@ -30,7 +30,7 @@ mod test {
                 output: ":".to_string(),
             }),
         );
-        let right = any_colon(source).unwrap();
+        let right = any_colons(source).unwrap();
         assert_eq!(left, right);
     }
 
@@ -43,7 +43,7 @@ mod test {
                 output: "::".to_string(),
             }),
         );
-        let right = any_colon(source).unwrap();
+        let right = any_colons(source).unwrap();
         assert_eq!(left, right);
     }
 
