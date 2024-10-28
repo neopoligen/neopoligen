@@ -1,4 +1,5 @@
 use super::helpers::make_template_list::*;
+use crate::bound::Bound;
 use crate::section_attr_v42::section_attr_v42;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
 use crate::section_v42::*;
@@ -21,7 +22,7 @@ use std::collections::BTreeMap;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct BasicSectionV42 {
     pub attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42>,
-    pub bounds: String,
+    pub bounds: Bound,
     pub children: Vec<SectionV42>,
     pub flags: Vec<String>,
     pub kind: String,
@@ -49,7 +50,7 @@ pub fn basic_section_full_v42<'a>(
     .parse(source)?;
     let section = SectionV42::Basic(BasicSectionV42 {
         attrs,
-        bounds: "full".to_string(),
+        bounds: Bound::Full,
         children,
         kind: kind.to_string(),
         flags,

@@ -1,7 +1,11 @@
 use super::PageV42;
 use crate::ast_v42::parse_ast_v42;
+use crate::bound::Bound;
 use crate::neo_error::NeoError;
 use crate::neo_error::NeoErrorKind;
+use crate::section_v42::basic::BasicSectionV42;
+use crate::section_v42::helpers::make_template_list::make_template_list;
+use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
 use minijinja::Value;
 use nom::bytes::complete::is_a;
@@ -16,6 +20,7 @@ use nom::sequence::preceded;
 use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
+use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
 use tracing::{event, instrument, Level};
@@ -96,6 +101,16 @@ impl PageV42 {
                     source: source.to_string(),
                     fs_path: source_path.to_path_buf(),
                 };
+                page.raw_ast = vec![SectionV42::Basic(BasicSectionV42 {
+                    attrs: BTreeMap::new(),
+                    bounds: Bound::Full,
+                    children: vec![],
+                    flags: vec![],
+                    kind: "title".to_string(),
+                    template_list: make_template_list("basic", "title", "full", "default"),
+                })];
+                page.sections = Value::from_serialize(page.clone().raw_ast);
+
                 match parse_value_from_pagedata(source, "id") {
                     Ok((_, ids)) => match ids.last() {
                         Some(id) => {
