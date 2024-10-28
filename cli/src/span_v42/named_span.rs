@@ -1,3 +1,4 @@
+use crate::span_v42::any_hyphen::any_hyphens;
 use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::SpanV42;
 use crate::spans_v42;
@@ -11,6 +12,7 @@ use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::character::complete::alpha1;
 use nom::character::complete::space0;
+use nom::combinator::opt;
 use nom::multi::many0;
 use nom::multi::many1;
 use nom::sequence::pair;
@@ -34,14 +36,16 @@ pub struct NamedSpanV42 {
     attrs: BTreeMap<String, SpanAttrV42>,
     flags: Vec<String>,
     name: String,
-    spans: Vec<SpanV42>,
+    spans: Option<Vec<SpanV42>>,
 }
 
 pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, tokens) = preceded(pair(tag("<<"), space0), many1(alt((alpha1, is_a("-")))))
         .context("")
         .parse(source)?;
-    let (source, named_span_spans) = many0(named_span_content_span).context("").parse(source)?;
+    let (source, spans) = opt(preceded(tag("|"), many0(named_span_content_span)))
+        .context("")
+        .parse(source)?;
     let (source, _) = tag(">>").context("").parse(source)?;
     let name = tokens.iter().join("");
     Ok((
@@ -50,19 +54,20 @@ pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
             attrs: BTreeMap::new(),
             flags: vec![],
             name,
-            spans: vec![],
+            spans,
         }),
     ))
 }
 
 pub fn named_span_content_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, _) = tag("|").context("").parse(source)?;
-    let (source, span) = plaintext.context("").parse(source)?;
+    let (source, span) = alt((plaintext, any_hyphens)).context("").parse(source)?;
     Ok((source, span))
 }
 
 #[cfg(test)]
 mod test {
+    use crate::span_v42::PlainTextSpan;
+
     use super::*;
     use pretty_assertions::assert_eq;
     use rstest::rstest;
@@ -76,7 +81,9 @@ mod test {
                 attrs: BTreeMap::new(),
                 flags: vec![],
                 name: "sierra".to_string(),
-                spans: vec![],
+                spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
+                    output: "tango".to_string(),
+                })]),
             }),
         );
         let right = named_span(source).unwrap();
@@ -86,7 +93,9 @@ mod test {
     #[rstest]
     #[case("<<hr>>etc...", "etc...")]
     #[case("<<alfa-bravo>>etc...", "etc...")]
-    // #[case("<<em|alfa>>etc...", "etc...")]
+    #[case("<<em|alfa>>etc...", "etc...")]
+    #[case("<<em|alfa-bravo>>etc...", "etc...")]
+    #[case("<<em|charlie -- delta>>etc...", "etc...")]
     fn solo_valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
         match named_span(source) {
             Ok(data) => {
