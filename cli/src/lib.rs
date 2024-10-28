@@ -10,7 +10,6 @@ pub mod helpers;
 pub mod image;
 pub mod neo_error;
 pub mod page;
-pub mod page_error_v42;
 pub mod page_payload;
 pub mod page_v42;
 pub mod payload_section;

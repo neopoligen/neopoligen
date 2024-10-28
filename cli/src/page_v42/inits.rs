@@ -4,9 +4,12 @@ use crate::bound::Bound;
 use crate::neo_error::NeoError;
 use crate::neo_error::NeoErrorKind;
 use crate::section_v42::basic::BasicSectionV42;
+use crate::section_v42::block::BlockSectionV42;
 use crate::section_v42::helpers::make_template_list::make_template_list;
 use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
+use crate::span_v42::plaintext::PlainTextSpan;
+use crate::span_v42::SpanV42;
 use minijinja::Value;
 use nom::bytes::complete::is_a;
 use nom::bytes::complete::is_not;
@@ -56,7 +59,6 @@ impl PageV42 {
             Ok(raw_ast) => {
                 let mut page = PageV42 {
                     id: None,
-                    error: None,
                     html_output_path: None,
                     raw_ast,
                     sections: Value::from_serialize(vec![""]),
@@ -94,7 +96,6 @@ impl PageV42 {
             Err(_e) => {
                 let mut page = PageV42 {
                     id: None,
-                    error: None,
                     html_output_path: None,
                     raw_ast: vec![],
                     sections: Value::from_serialize(vec![""]),
@@ -104,13 +105,22 @@ impl PageV42 {
                 page.raw_ast = vec![SectionV42::Basic(BasicSectionV42 {
                     attrs: BTreeMap::new(),
                     bounds: Bound::Full,
-                    children: vec![],
+                    children: vec![SectionV42::Block(BlockSectionV42 {
+                        children: vec![],
+                        kind: "paragraph".to_string(),
+                        spans: vec![SpanV42::PlainText(PlainTextSpan {
+                            output: "Content Parsing Error".to_string(),
+                        })],
+                        text: "Delta".to_string(),
+                        template_list: vec![
+                            "sections/block/paragraph/full/default.neoj".to_string()
+                        ],
+                    })],
                     flags: vec![],
                     kind: "title".to_string(),
                     template_list: make_template_list("basic", "title", "full", "default"),
                 })];
                 page.sections = Value::from_serialize(page.clone().raw_ast);
-
                 match parse_value_from_pagedata(source, "id") {
                     Ok((_, ids)) => match ids.last() {
                         Some(id) => {

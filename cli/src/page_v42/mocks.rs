@@ -15,7 +15,6 @@ impl PageV42 {
         let raw_ast = parse_ast_v42(&source, &site_config).unwrap();
         PageV42 {
             id: Some("TODO_MAKE_MOCK_ID_HERE".to_string()),
-            error: None,
             html_output_path: None,
             raw_ast,
             sections: Value::from_serialize(vec![""]),

@@ -2,7 +2,6 @@ pub mod inits;
 pub mod mocks;
 
 use crate::neo_error::NeoError;
-use crate::page_error_v42::*;
 use crate::section_v42::SectionV42;
 use minijinja::value::Object;
 use minijinja::Error;
@@ -15,7 +14,6 @@ use std::sync::Arc;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PageV42 {
     pub id: Option<String>,
-    pub error: Option<PageError>,
     pub raw_ast: Vec<SectionV42>,
     pub sections: Value,
     pub source: String,

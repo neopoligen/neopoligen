@@ -3,12 +3,14 @@ pub mod block;
 pub mod end;
 pub mod helpers;
 pub mod json5;
+pub mod parsing_error;
 pub mod unknown;
 
 use crate::section_v42::basic::*;
 use crate::section_v42::block::*;
 use crate::section_v42::end::*;
 use crate::section_v42::json5::*;
+use crate::section_v42::parsing_error::*;
 use crate::section_v42::unknown::*;
 use crate::site_config::SiteConfigV42;
 use minijinja::value::Object;
@@ -31,6 +33,7 @@ pub enum SectionV42 {
     End(EndSectionV42),
     Json5(Json5SectionV42),
     Unknown(UnknownSectionV42),
+    ParsingError(ParsingErrorSectionV42),
 }
 
 impl SectionV42 {

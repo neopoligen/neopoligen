@@ -12,6 +12,12 @@ body {
 </head>
 <body>
 <div>ID: [@ page.id @]</div>
-[@ page.sections @]
+[! for section in page.sections !]
+[@ theme.output_section(site, page, section) @]
+[! endfor !]
+
+<pre>
+[@ page.sections|tojson(true) @]
+</pre>
 </body>
 </html>
