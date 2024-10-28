@@ -15,11 +15,14 @@ use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::character::complete::alpha1;
 use nom::character::complete::space0;
+use nom::character::complete::space1;
+use nom::combinator::not;
 use nom::combinator::opt;
 use nom::multi::many0;
 use nom::multi::many1;
 use nom::sequence::pair;
 use nom::sequence::preceded;
+use nom::sequence::terminated;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -32,6 +35,13 @@ use std::collections::BTreeMap;
 pub struct KeyValueSpanAttrV42 {
     key: String,
     value: Vec<SpanV42>,
+    text: String,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub struct NamedSpanKeyValueAttrPayloadV42 {
+    value: Vec<SpanV42>,
+    text: String,
 }
 
 // TODO: move this to its own file
@@ -49,7 +59,7 @@ pub enum NamedSpanAttrV42 {
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct NamedSpanV42 {
-    attrs: BTreeMap<String, NamedSpanAttrV42>,
+    attrs: BTreeMap<String, NamedSpanKeyValueAttrPayloadV42>,
     flags: Vec<String>,
     name: String,
     spans: Option<Vec<SpanV42>>,
@@ -68,7 +78,7 @@ pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::NamedSpan(NamedSpanV42 {
-            attrs: BTreeMap::new(),
+            attrs,
             flags,
             name,
             spans,
@@ -78,17 +88,43 @@ pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
 
 pub fn named_span_attrs_and_flags(
     source: &str,
-) -> IResult<&str, (Vec<NamedSpanAttrV42>, Vec<String>), ErrorTree<&str>> {
+) -> IResult<
+    &str,
+    (
+        BTreeMap<String, NamedSpanKeyValueAttrPayloadV42>,
+        Vec<String>,
+    ),
+    ErrorTree<&str>,
+> {
     let (source, attr_flags) = many0(named_span_attr_flag).context("").parse(source)?;
+    let mut attrs = BTreeMap::new();
     let flags = attr_flags
         .iter()
         .filter_map(|af| match af {
             NamedSpanAttrV42::Flag(f) => Some(f.value.clone()),
-            _ => None,
+            NamedSpanAttrV42::KeyValue(f) => {
+                attrs.insert(
+                    f.key.to_string(),
+                    NamedSpanKeyValueAttrPayloadV42 {
+                        value: f.value.clone(),
+                        text: f.text.clone(),
+                    },
+                );
+
+                None
+            }
         })
         .collect::<Vec<String>>();
 
-    Ok((source, (vec![], flags)))
+    // let attrs = attr_flags
+    //     .iter()
+    //     .filter_map(|af| match af {
+    //         NamedSpanAttrV42::KeyValue(f) => Some(f.clone()),
+    //         _ => None,
+    //     })
+    //     .collect::<Vec<KeyValueSpanAttrV42>>();
+
+    Ok((source, (attrs, flags)))
 }
 
 pub fn named_span_attr_flag(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
@@ -100,12 +136,21 @@ pub fn named_span_attr_flag(source: &str) -> IResult<&str, NamedSpanAttrV42, Err
 }
 
 pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
-    let (source, attr) = tag("asdf").context("").parse(source)?;
+    let (source, key_spans) = terminated(many1(alt((plaintext,))), pair(tag(":"), space1))
+        .context("")
+        .parse(source)?;
+    dbg!("---------------------------");
+    dbg!(&source);
+    let (source, spans) = many1(alt((plaintext,))).context("").parse(source)?;
+    dbg!("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+    dbg!(&source);
+    let (source, spans) = many1(alt((plaintext,))).context("").parse(source)?;
     Ok((
         source,
         NamedSpanAttrV42::KeyValue(KeyValueSpanAttrV42 {
-            key: "asdf".to_string(),
-            value: vec![],
+            key: flatten_spans_v42(&key_spans),
+            value: spans,
+            text: "".to_string(),
         }),
     ))
 }
@@ -118,6 +163,7 @@ pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, Err
     )))
     .context("")
     .parse(source)?;
+    let (source, _) = not(tag(":")).context("").parse(source)?;
     Ok((
         source,
         NamedSpanAttrV42::Flag(FlagSpanAttrV42 {
@@ -164,6 +210,32 @@ mod test {
             SpanV42::NamedSpan(NamedSpanV42 {
                 attrs: BTreeMap::new(),
                 flags: vec!["foxtrot".to_string()],
+                name: "delta".to_string(),
+                spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
+                    text: "echo".to_string(),
+                })]),
+            }),
+        );
+        let right = named_span(source).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_with_key_value_attr() {
+        let source = "<<delta|echo|class: red>>";
+        let mut attrs = BTreeMap::new();
+        attrs.insert(
+            "class".to_string(),
+            NamedSpanKeyValueAttrPayloadV42 {
+                value: vec![],
+                text: "".to_string(),
+            },
+        );
+        let left = (
+            "",
+            SpanV42::NamedSpan(NamedSpanV42 {
+                attrs,
+                flags: vec![],
                 name: "delta".to_string(),
                 spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
                     text: "echo".to_string(),
