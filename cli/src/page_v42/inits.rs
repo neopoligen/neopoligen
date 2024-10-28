@@ -11,6 +11,8 @@ use nom::character::complete::space1;
 use nom::combinator::not;
 use nom::combinator::opt;
 use nom::multi::many0;
+use nom::multi::many1;
+use nom::sequence::pair;
 use nom::sequence::preceded;
 use nom::sequence::tuple;
 use nom::IResult;
@@ -55,38 +57,14 @@ impl PageV42 {
                     fs_path: source_path.to_path_buf(),
                 };
                 // TODO: Handle pages with no ids
-                page.id = Some(page.get_pagedata(&[Value::from("id")]).unwrap());
-                match page.get_pagedata(&[Value::from("path")]) {
-                    Ok(html_output_path) => {
-                        page.html_output_path =
-                            Some(html_output_path.trim_start_matches("/").into())
-                    }
-                    Err(_e) => {
-                        page.html_output_path = Some(PathBuf::from(format!(
-                            "{}/{}/index.html",
-                            site_config.default_language().unwrap(),
-                            page.id.as_ref().unwrap()
-                        )));
-                    }
-                }
-                Ok(page)
-            }
-            Err(_e) => {
-                let mut page = PageV42 {
-                    id: None,
-                    error: None,
-                    html_output_path: None,
-                    raw_ast: vec![],
-                    source: source.to_string(),
-                    fs_path: source_path.to_path_buf(),
-                };
-                match get_id(&source) {
-                    Ok((_, id)) => {
+
+                match page.get_pagedata(&[Value::from("id")]) {
+                    Ok(id) => {
                         page.id = Some(id.to_string());
-                        match get_custom_path(&source) {
+                        match page.get_pagedata(&[Value::from("path")]) {
                             Ok(html_output_path) => {
                                 page.html_output_path =
-                                    Some(html_output_path.1.trim_start_matches("/").into());
+                                    Some(html_output_path.trim_start_matches("/").into())
                             }
                             Err(_e) => {
                                 page.html_output_path = Some(PathBuf::from(format!(
@@ -98,6 +76,7 @@ impl PageV42 {
                         }
                         Ok(page)
                     }
+
                     Err(e) => Err(NeoError {
                         kind: NeoErrorKind::ForwardErrorWithSourcePath {
                             source_path: source_path.clone(),
@@ -105,11 +84,171 @@ impl PageV42 {
                         },
                     }),
                 }
+
+                // page.id = Some(page.get_pagedata(&[Value::from("id")]).unwrap());
+                // match page.get_pagedata(&[Value::from("path")]) {
+                //     Ok(html_output_path) => {
+                //         page.html_output_path =
+                //             Some(html_output_path.trim_start_matches("/").into())
+                //     }
+                //     Err(_e) => {
+                //         page.html_output_path = Some(PathBuf::from(format!(
+                //             "{}/{}/index.html",
+                //             site_config.default_language().unwrap(),
+                //             page.id.as_ref().unwrap()
+                //         )));
+                //     }
+                // }
+
+                //
+
+                // Ok(page)
+
+                //
+            }
+            Err(_e) => {
+                let mut page = PageV42 {
+                    id: None,
+                    error: None,
+                    html_output_path: None,
+                    raw_ast: vec![],
+                    source: source.to_string(),
+                    fs_path: source_path.to_path_buf(),
+                };
+
+                //
+                page.html_output_path = Some(PathBuf::from(format!(
+                    "{}/{}/index.html",
+                    site_config.default_language().unwrap(),
+                    page.id.as_ref().unwrap()
+                )));
+
+                match parse_value_from_pagedata(source, "path") {
+                    Ok((_, html_output_paths)) => match html_output_paths.last() {
+                        Some(html_output_path) => {
+                            page.html_output_path =
+                                Some(html_output_path.trim_start_matches("/").into());
+                        }
+                        _ => (),
+                    },
+                    Err(_) => (),
+                }
+
+                match parse_value_from_pagedata(source, "id") {
+                    Ok((_, ids)) => match ids.last() {
+                        Some(id) => {
+                            page.id = Some(id.to_string());
+                            Ok(page)
+                        }
+                        None => Err(NeoError {
+                            kind: NeoErrorKind::ForwardErrorWithSourcePath {
+                                source_path: source_path.clone(),
+                                msg: "Could not find id in invalid parsed file".to_string(),
+                            },
+                        }),
+                    },
+                    Err(e) => Err(NeoError {
+                        kind: NeoErrorKind::ForwardErrorWithSourcePath {
+                            source_path: source_path.clone(),
+                            msg: e.to_string(),
+                        },
+                    }),
+                }
+
+                //
+
+                // match get_id(&source) {
+                //     Ok((_, id)) => {
+                //         page.id = Some(id.to_string());
+                //         match get_custom_path(&source) {
+                //             Ok(html_output_path) => {
+                //                 page.html_output_path =
+                //                     Some(html_output_path.1.trim_start_matches("/").into());
+                //             }
+                //             Err(_e) => {
+                //                 page.html_output_path = Some(PathBuf::from(format!(
+                //                     "{}/{}/index.html",
+                //                     site_config.default_language().unwrap(),
+                //                     page.id.as_ref().unwrap()
+                //                 )));
+                //             }
+                //         }
+                //         Ok(page)
+                //     }
+                //     Err(e) => Err(NeoError {
+                //         kind: NeoErrorKind::ForwardErrorWithSourcePath {
+                //             source_path: source_path.clone(),
+                //             msg: e.to_string(),
+                //         },
+                //     }),
+                // }
+
+                //
             }
         }
     }
 }
 
+fn parse_value_from_pagedata<'a>(
+    source: &'a str,
+    target: &'a str,
+) -> IResult<&'a str, Vec<&'a str>> {
+    let (source, _) =
+        many1(|src| move_parser_to_last_instance_of_section(src, "pagedata")).parse(source)?;
+    let (source, things) = many1(|src| parse_pagedata_attr(src, target)).parse(source)?;
+    Ok((source, things))
+}
+
+fn get_section_or_attr_name<'a>(source: &'a str, target: &'a str) -> IResult<&'a str, &'a str> {
+    let (source, _) = many0(tuple((
+        opt(is_not("-")),
+        not(tuple((tag("--"), space1, tag(target), opt(tag(":"))))),
+        is_a("-"),
+    )))
+    .parse(source)?;
+    let (source, thing) = preceded(
+        tuple((
+            opt(is_not("-")),
+            tag("--"),
+            space1,
+            tag(target),
+            opt(pair(tag(":"), space1)),
+            //space1,
+        )),
+        is_not("\n\r"),
+    )
+    .parse(source)?;
+    Ok((source, thing.trim()))
+}
+
+fn move_parser_to_last_instance_of_section<'a>(
+    source: &'a str,
+    target: &'a str,
+) -> IResult<&'a str, &'a str> {
+    let (source, _) = many0(tuple((
+        opt(is_not("-")),
+        not(tuple((tag("--"), space1, tag(target)))),
+        is_a("-"),
+    )))
+    .parse(source)?;
+    dbg!(&source);
+    let (source, _) = tuple((opt(is_not("-")), tag("--"), space1, tag(target))).parse(source)?;
+    dbg!(&source);
+    Ok((source, ""))
+}
+
+fn parse_pagedata_attr<'a>(source: &'a str, _target: &'a str) -> IResult<&'a str, &'a str> {
+    let (source, _) =
+        many0(tuple((opt(is_not("-")), not(tag("-- id:")), is_a("-")))).parse(source)?;
+    let (source, id) = preceded(
+        tuple((is_not("-"), tag("--"), space1, tag("id:"), space1)),
+        is_not("\n\r"),
+    )
+    .parse(source)?;
+    Ok((source, id.trim()))
+}
+
+// TODO: Deprecate in favor of generic approach
 fn get_id(source: &str) -> IResult<&str, &str> {
     let (source, _) =
         many0(tuple((opt(is_not("-")), not(tag("-- id:")), is_a("-")))).parse(source)?;
@@ -121,6 +260,7 @@ fn get_id(source: &str) -> IResult<&str, &str> {
     Ok((source, id.trim()))
 }
 
+// TODO: Deprecate in favor of generic approach
 fn get_custom_path(source: &str) -> IResult<&str, &str> {
     let (source, _) =
         many0(tuple((opt(is_not("-")), not(tag("-- path:")), is_a("-")))).parse(source)?;
@@ -166,7 +306,7 @@ mod test {
     }
 
     #[test]
-    fn solo_custom_html_output_path_from_pagedata_in_valid_file() {
+    fn custom_html_output_path_from_pagedata_in_valid_file() {
         let source = get_include_str_file(VALID_SAMPLES, "003-custom-path-in-pagedata.neo");
         let source_path = PathBuf::from("mock/source/path/file.neo");
         let site_config = SiteConfigV42::mock1_basic();
@@ -177,7 +317,7 @@ mod test {
     }
 
     #[test]
-    fn solo_custom_html_output_path_from_pagedata_in_invalid_file() {
+    fn custom_html_output_path_from_pagedata_in_invalid_file() {
         let source = get_include_str_file(INVALID_SAMPLES, "002-unclosed-with-path.neo");
         let source_path = PathBuf::from("mock/002-unclosed-with-path.neo");
         let site_config = SiteConfigV42::mock1_basic();
@@ -194,6 +334,18 @@ mod test {
         let site_config = SiteConfigV42::mock1_basic();
         let page = PageV42::new_from_str(&source, &source_path, &site_config).unwrap();
         let left = "001-unclosed-start-section.neo";
+        let right = page.id.clone().unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_get_id_when_there_is_an_error_and_something_else_also_has_an_id() {
+        let id = "003-unclosed-with-other-id.neo";
+        let source = get_include_str_file(INVALID_SAMPLES, id);
+        let source_path = PathBuf::from(format!("mock/{}", id));
+        let site_config = SiteConfigV42::mock1_basic();
+        let page = PageV42::new_from_str(&source, &source_path, &site_config).unwrap();
+        let left = id;
         let right = page.id.clone().unwrap();
         assert_eq!(left, right);
     }

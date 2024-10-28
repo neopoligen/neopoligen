@@ -1,0 +1,29 @@
+[! import "helpers/theme.neoj" as theme !]
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  background-color: #333;
+  color: goldenrod;
+}
+</style>
+</head>
+<body>
+
+[#
+<div>ID: [@ page.id @]</div>
+<div>pagedata: [@ page.get_pagedata("id") @]</div>
+
+[! for section in page.ast() !]
+    [@ theme.output_section(site, page, section) @]
+[! endfor !]
+
+<pre>
+[@ page.ast()|tojson(true) @]
+</pre>
+
+#]
+
+</body>
+</html>
