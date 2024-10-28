@@ -4,6 +4,7 @@
 pub mod any_colon;
 pub mod any_hyphen;
 pub mod block_line_ending;
+pub mod named_span;
 pub mod plaintext;
 pub mod single_hyphen;
 pub mod single_line_ending;
@@ -61,10 +62,13 @@ use std::sync::Arc;
 
 use crate::span_v42::plaintext::*;
 
+use self::named_span::NamedSpan;
+
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum SpanV42 {
     PlainText(PlainTextSpan),
+    NamedSpan(NamedSpan),
 }
 
 pub fn span_v42<'a>(source: &'a str) -> IResult<&'a str, SpanV42, ErrorTree<&'a str>> {

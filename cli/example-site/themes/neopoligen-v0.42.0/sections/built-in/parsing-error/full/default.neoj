@@ -9,7 +9,7 @@
 [@- section.output_source -@]
 [!- endautoescape -!]
 [!- autoescape true -!]
-<span class="parsing-error">[@- section.output_remainder -@]</span>
+<mark class="parser-error">[@- section.output_remainder -@]</mark>
 [!- endautoescape -!]
 </pre>
 </div>

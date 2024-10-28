@@ -32,7 +32,7 @@ mod test {
     #[rstest]
     #[case("001-plaintext.txt")]
     #[case("002-with-hyphen.txt")]
-    fn solo_verify_files(#[case] file: &str) {
+    fn verify_files(#[case] file: &str) {
         let source = get_include_str_file(VALID_SAMPLES, file);
         match spans_of_generic_block_content(&source) {
             Ok(_) => assert!(true),
