@@ -182,12 +182,12 @@ impl BuilderV42 {
             config: site_config.clone(),
             pages: BTreeMap::new(),
         };
-        self.pages.iter().for_each(|p| match p.id() {
-            Ok(id) => {
+        self.pages.iter().for_each(|p| match &p.id {
+            Some(id) => {
                 site.pages.insert(id.to_string(), p.clone());
                 ()
             }
-            Err(_e) => {
+            None => {
                 // event!(Level::ERROR, "prep_site Error: {}", e);
                 //self.errors.push(e)
             }
