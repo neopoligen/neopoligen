@@ -44,7 +44,7 @@ impl PageV42 {
     ) -> Result<PageV42, NeoError> {
         match parse_ast_v42(&source, site_config) {
             Ok(raw_ast) => {
-                let mut p = PageV42 {
+                let mut page = PageV42 {
                     id: None,
                     error: None,
                     html_output_path: None,
@@ -53,8 +53,13 @@ impl PageV42 {
                     fs_path: source_path.to_path_buf(),
                 };
                 // TODO: Handle pages with no ids
-                p.id = Some(p.get_pagedata(&[Value::from("id")]).unwrap());
-                Ok(p)
+                page.id = Some(page.get_pagedata(&[Value::from("id")]).unwrap());
+                page.html_output_path = Some(PathBuf::from(format!(
+                    "{}/{}/index.html",
+                    site_config.default_language().unwrap(),
+                    page.id.as_ref().unwrap()
+                )));
+                Ok(page)
             }
             Err(_e) => {
                 let mut p = PageV42 {
@@ -66,17 +71,17 @@ impl PageV42 {
                     fs_path: source_path.to_path_buf(),
                 };
                 match get_id(&source) {
-                    Ok((_, id)) => p.id = Some(id.to_string()),
-                    // TODO: Deal with this error
-                    Err(_e) => (),
+                    Ok((_, id)) => {
+                        p.id = Some(id.to_string());
+                        Ok(p)
+                    }
+                    Err(e) => Err(NeoError {
+                        kind: NeoErrorKind::ForwardErrorWithSourcePath {
+                            source_path: source_path.clone(),
+                            msg: e.to_string(),
+                        },
+                    }),
                 }
-                Ok(p)
-                // Err(NeoError {
-                //     kind: NeoErrorKind::ForwardErrorWithSourcePath {
-                //         source_path: source_path.to_path_buf(),
-                //         msg: e.to_string(),
-                //     },
-                // })
             }
         }
     }
@@ -105,7 +110,7 @@ mod test {
     const INVALID_SAMPLES: Dir = include_dir!("src/page_v42/samples/invalid");
 
     #[test]
-    fn basic_load_test() {
+    fn basic_load_test_get_id() {
         let source = get_include_str_file(VALID_SAMPLES, "001-pagedata-only.neo");
         let source_path = PathBuf::from("mock/source/path/file.neo");
         let site_config = SiteConfigV42::mock1_basic();
@@ -116,7 +121,18 @@ mod test {
     }
 
     #[test]
-    fn solo_get_id_when_there_is_an_error() {
+    fn solo_default_get_html_output_path() {
+        let source = get_include_str_file(VALID_SAMPLES, "001-pagedata-only.neo");
+        let source_path = PathBuf::from("mock/source/path/file.neo");
+        let site_config = SiteConfigV42::mock1_basic();
+        let page = PageV42::new_from_str(&source, &source_path, &site_config).unwrap();
+        let left = PathBuf::from("en/001-pagedata-only.neo/index.html");
+        let right = page.html_output_path.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn get_id_when_there_is_an_error() {
         let source = get_include_str_file(INVALID_SAMPLES, "001-unclosed-start-section.neo");
         let source_path = PathBuf::from("mock/source/path/file.neo");
         let site_config = SiteConfigV42::mock1_basic();
