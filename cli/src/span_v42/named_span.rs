@@ -139,11 +139,7 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42
     let (source, key_spans) = terminated(many1(alt((plaintext,))), pair(tag(":"), space1))
         .context("")
         .parse(source)?;
-    dbg!("---------------------------");
-    dbg!(&source);
     let (source, spans) = many1(alt((plaintext,))).context("").parse(source)?;
-    dbg!("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-    dbg!(&source);
     Ok((
         source,
         NamedSpanAttrV42::KeyValue(KeyValueSpanAttrV42 {
