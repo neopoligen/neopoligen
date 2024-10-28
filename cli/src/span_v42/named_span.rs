@@ -25,6 +25,8 @@ use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
+use super::plaintext_without_spaces::plaintext_without_spaces;
+
 // TODO: move this to its own file
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct KeyValueSpanAttrV42 {
@@ -109,8 +111,7 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42
 }
 
 pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
-    // TODO: Make plaintext_without_spaces
-    let (source, spans) = many1(plaintext).context("").parse(source)?;
+    let (source, spans) = many1(plaintext_without_spaces).context("").parse(source)?;
     Ok((
         source,
         NamedSpanAttrV42::Flag(FlagSpanAttrV42 {

@@ -6,6 +6,7 @@ pub mod any_hyphens;
 pub mod block_line_ending;
 pub mod named_span;
 pub mod plaintext;
+pub mod plaintext_without_spaces;
 pub mod single_exclamation;
 pub mod single_hyphen;
 pub mod single_line_ending;
