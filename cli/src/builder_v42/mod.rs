@@ -102,8 +102,8 @@ impl BuilderV42 {
             .pages
             .iter()
             .for_each(|(_id, page)| {
-                let base_rel_path = PathBuf::from(self.site_config.default_language().unwrap());
-                let file_rel_path = page.html_file_system_relative_path(&base_rel_path);
+                //let base_rel_path = PathBuf::from(self.site_config.default_language().unwrap());
+                let file_rel_path = page.html_output_path.clone();
                 let absolute_output_path = &self
                     .site_config
                     .project_dir()
