@@ -122,13 +122,11 @@ impl PageV42 {
                     Ok((_, ids)) => match ids.last() {
                         Some(id) => {
                             page.id = Some(id.to_string());
-
                             page.html_output_path = Some(PathBuf::from(format!(
                                 "{}/{}/index.html",
                                 site_config.default_language().unwrap(),
                                 page.id.as_ref().unwrap()
                             )));
-
                             match parse_value_from_pagedata(source, "path") {
                                 Ok((_, html_output_paths)) => match html_output_paths.last() {
                                     Some(html_output_path) => {
@@ -139,7 +137,6 @@ impl PageV42 {
                                 },
                                 Err(_) => (),
                             }
-
                             Ok(page)
                         }
                         None => Err(NeoError {
@@ -201,27 +198,27 @@ fn parse_value_from_pagedata<'a>(
     Ok((source, things))
 }
 
-fn get_section_or_attr_name<'a>(source: &'a str, target: &'a str) -> IResult<&'a str, &'a str> {
-    let (source, _) = many0(tuple((
-        opt(is_not("-")),
-        not(tuple((tag("--"), space1, tag(target), opt(tag(":"))))),
-        is_a("-"),
-    )))
-    .parse(source)?;
-    let (source, thing) = preceded(
-        tuple((
-            opt(is_not("-")),
-            tag("--"),
-            space1,
-            tag(target),
-            opt(pair(tag(":"), space1)),
-            //space1,
-        )),
-        is_not("\n\r"),
-    )
-    .parse(source)?;
-    Ok((source, thing.trim()))
-}
+//fn get_section_or_attr_name<'a>(source: &'a str, target: &'a str) -> IResult<&'a str, &'a str> {
+//    let (source, _) = many0(tuple((
+//        opt(is_not("-")),
+//        not(tuple((tag("--"), space1, tag(target), opt(tag(":"))))),
+//        is_a("-"),
+//    )))
+//    .parse(source)?;
+//    let (source, thing) = preceded(
+//        tuple((
+//            opt(is_not("-")),
+//            tag("--"),
+//            space1,
+//            tag(target),
+//            opt(pair(tag(":"), space1)),
+//            //space1,
+//        )),
+//        is_not("\n\r"),
+//    )
+//    .parse(source)?;
+//    Ok((source, thing.trim()))
+//}
 
 fn move_parser_to_last_instance_of_section<'a>(
     source: &'a str,
@@ -233,46 +230,55 @@ fn move_parser_to_last_instance_of_section<'a>(
         is_a("-"),
     )))
     .parse(source)?;
-    dbg!(&source);
     let (source, _) = tuple((opt(is_not("-")), tag("--"), space1, tag(target))).parse(source)?;
-    dbg!(&source);
     Ok((source, ""))
 }
 
-fn parse_pagedata_attr<'a>(source: &'a str, _target: &'a str) -> IResult<&'a str, &'a str> {
-    let (source, _) =
-        many0(tuple((opt(is_not("-")), not(tag("-- id:")), is_a("-")))).parse(source)?;
+fn parse_pagedata_attr<'a>(source: &'a str, target: &'a str) -> IResult<&'a str, &'a str> {
+    let (source, _) = many0(tuple((
+        opt(is_not("-")),
+        not(tuple((tag("--"), space1, tag(target), tag(":")))),
+        is_a("-"),
+    )))
+    .parse(source)?;
     let (source, id) = preceded(
-        tuple((is_not("-"), tag("--"), space1, tag("id:"), space1)),
+        tuple((
+            is_not("-"),
+            tag("--"),
+            space1,
+            tag(target),
+            tag(":"),
+            space1,
+        )),
         is_not("\n\r"),
     )
     .parse(source)?;
     Ok((source, id.trim()))
 }
 
-// TODO: Deprecate in favor of generic approach
-fn get_id(source: &str) -> IResult<&str, &str> {
-    let (source, _) =
-        many0(tuple((opt(is_not("-")), not(tag("-- id:")), is_a("-")))).parse(source)?;
-    let (source, id) = preceded(
-        tuple((is_not("-"), tag("--"), space1, tag("id:"), space1)),
-        is_not("\n\r"),
-    )
-    .parse(source)?;
-    Ok((source, id.trim()))
-}
+// // TODO: Deprecate in favor of generic approach
+// fn get_id(source: &str) -> IResult<&str, &str> {
+//     let (source, _) =
+//         many0(tuple((opt(is_not("-")), not(tag("-- id:")), is_a("-")))).parse(source)?;
+//     let (source, id) = preceded(
+//         tuple((is_not("-"), tag("--"), space1, tag("id:"), space1)),
+//         is_not("\n\r"),
+//     )
+//     .parse(source)?;
+//     Ok((source, id.trim()))
+// }
 
-// TODO: Deprecate in favor of generic approach
-fn get_custom_path(source: &str) -> IResult<&str, &str> {
-    let (source, _) =
-        many0(tuple((opt(is_not("-")), not(tag("-- path:")), is_a("-")))).parse(source)?;
-    let (source, path) = preceded(
-        tuple((is_not("-"), tag("--"), space1, tag("path:"), space1)),
-        is_not("\n\r"),
-    )
-    .parse(source)?;
-    Ok((source, path.trim()))
-}
+// // TODO: Deprecate in favor of generic approach
+// fn get_custom_path(source: &str) -> IResult<&str, &str> {
+//     let (source, _) =
+//         many0(tuple((opt(is_not("-")), not(tag("-- path:")), is_a("-")))).parse(source)?;
+//     let (source, path) = preceded(
+//         tuple((is_not("-"), tag("--"), space1, tag("path:"), space1)),
+//         is_not("\n\r"),
+//     )
+//     .parse(source)?;
+//     Ok((source, path.trim()))
+// }
 
 #[cfg(test)]
 mod test {
@@ -319,7 +325,7 @@ mod test {
     }
 
     #[test]
-    fn custom_html_output_path_from_pagedata_in_invalid_file() {
+    fn solo_custom_html_output_path_from_pagedata_in_invalid_file() {
         let source = get_include_str_file(INVALID_SAMPLES, "002-unclosed-with-path.neo");
         let source_path = PathBuf::from("mock/002-unclosed-with-path.neo");
         let site_config = SiteConfigV42::mock1_basic();
