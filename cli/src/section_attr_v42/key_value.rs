@@ -1,5 +1,6 @@
 #![allow(unused_imports)]
 use crate::helpers::dump_parser_if_debug;
+use crate::helpers::flatten_spans_v42;
 use crate::section_attr_v42::SectionAttrV42;
 use crate::span_v42::any_colons::any_colons;
 use crate::span_v42::any_hyphens::any_hyphens;
@@ -26,6 +27,8 @@ use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
 
+use self::any_underscores::any_underscores;
+
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SectionKeyValueAttrV42 {
     pub key: String,
@@ -42,12 +45,16 @@ pub fn section_key_value_attr_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, _) = space1.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
-    let (source, key_parts) = many1(alt((
-        is_not(": \n\t"),
-        pair(tag(":"), not(alt((space1, eof)))).map(|x| x.0),
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, key_parts) = many1(alt((plaintext, any_hyphens, any_underscores)))
+        .context("")
+        .parse(source)?;
+
+    // let (source, key_parts) = many1(alt((
+    //     is_not(": \n\t"),
+    //     pair(tag(":"), not(alt((space1, eof)))).map(|x| x.0),
+    // )))
+    // .context("")
+    // .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, _) = tag(":").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
@@ -59,13 +66,16 @@ pub fn section_key_value_attr_v42<'a>(
     let (source, _) = space0.context("").parse(source)?;
     let (source, _) = alt((line_ending, eof)).context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 7);
-    let key = key_parts
-        .iter()
-        .map(|part| part.to_string())
-        .collect::<Vec<String>>()
-        .join("")
-        .trim()
-        .to_string();
+    let key = flatten_spans_v42(&key_parts);
+
+    // let key = key_parts
+    //     .iter()
+    //     .map(|part| part.to_string())
+    //     .collect::<Vec<String>>()
+    //     .join("")
+    //     .trim()
+    //     .to_string();
+
     Ok((
         source,
         SectionAttrV42::KeyValueV42(SectionKeyValueAttrV42 { key, value }),
