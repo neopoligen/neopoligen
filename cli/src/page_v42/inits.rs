@@ -57,7 +57,10 @@ impl PageV42 {
                 // TODO: Handle pages with no ids
                 page.id = Some(page.get_pagedata(&[Value::from("id")]).unwrap());
                 match page.get_pagedata(&[Value::from("path")]) {
-                    Ok(html_output_path) => page.html_output_path = Some(html_output_path.into()),
+                    Ok(html_output_path) => {
+                        page.html_output_path =
+                            Some(html_output_path.trim_start_matches("/").into())
+                    }
                     Err(_e) => {
                         page.html_output_path = Some(PathBuf::from(format!(
                             "{}/{}/index.html",
@@ -69,7 +72,7 @@ impl PageV42 {
                 Ok(page)
             }
             Err(_e) => {
-                let mut p = PageV42 {
+                let mut page = PageV42 {
                     id: None,
                     error: None,
                     html_output_path: None,
@@ -79,8 +82,21 @@ impl PageV42 {
                 };
                 match get_id(&source) {
                     Ok((_, id)) => {
-                        p.id = Some(id.to_string());
-                        Ok(p)
+                        page.id = Some(id.to_string());
+                        match get_custom_path(&source) {
+                            Ok(html_output_path) => {
+                                page.html_output_path =
+                                    Some(html_output_path.1.trim_start_matches("/").into());
+                            }
+                            Err(_e) => {
+                                page.html_output_path = Some(PathBuf::from(format!(
+                                    "{}/{}/index.html",
+                                    site_config.default_language().unwrap(),
+                                    page.id.as_ref().unwrap()
+                                )));
+                            }
+                        }
+                        Ok(page)
                     }
                     Err(e) => Err(NeoError {
                         kind: NeoErrorKind::ForwardErrorWithSourcePath {
@@ -103,6 +119,17 @@ fn get_id(source: &str) -> IResult<&str, &str> {
     )
     .parse(source)?;
     Ok((source, id.trim()))
+}
+
+fn get_custom_path(source: &str) -> IResult<&str, &str> {
+    let (source, _) =
+        many0(tuple((opt(is_not("-")), not(tag("-- path:")), is_a("-")))).parse(source)?;
+    let (source, path) = preceded(
+        tuple((is_not("-"), tag("--"), space1, tag("path:"), space1)),
+        is_not("\n\r"),
+    )
+    .parse(source)?;
+    Ok((source, path.trim()))
 }
 
 #[cfg(test)]
@@ -139,12 +166,23 @@ mod test {
     }
 
     #[test]
-    fn solo_custom_html_output_path() {
+    fn solo_custom_html_output_path_from_pagedata_in_valid_file() {
         let source = get_include_str_file(VALID_SAMPLES, "003-custom-path-in-pagedata.neo");
         let source_path = PathBuf::from("mock/source/path/file.neo");
         let site_config = SiteConfigV42::mock1_basic();
         let page = PageV42::new_from_str(&source, &source_path, &site_config).unwrap();
-        let left = PathBuf::from("/index.html");
+        let left = PathBuf::from("index.html");
+        let right = page.html_output_path.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_custom_html_output_path_from_pagedata_in_invalid_file() {
+        let source = get_include_str_file(INVALID_SAMPLES, "002-unclosed-with-path.neo");
+        let source_path = PathBuf::from("mock/002-unclosed-with-path.neo");
+        let site_config = SiteConfigV42::mock1_basic();
+        let page = PageV42::new_from_str(&source, &source_path, &site_config).unwrap();
+        let left = PathBuf::from("some/custom/path/index.html");
         let right = page.html_output_path.unwrap();
         assert_eq!(left, right);
     }
