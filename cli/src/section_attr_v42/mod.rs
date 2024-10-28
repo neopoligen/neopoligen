@@ -1,41 +1,17 @@
-#![allow(unused_variables)]
-#![allow(unused_imports)]
-
 pub mod flag;
 pub mod key_value;
 
 use crate::helpers::flatten_spans_v42;
 use crate::section_attr_v42::flag::SectionFlagAttrV42;
 use crate::section_attr_v42::key_value::SectionKeyValueAttrV42;
-// use crate::section::block::block_of_main_content_v42;
-use crate::section::block::block_of_section_attr_value_v42;
-// use crate::span::colon::colon;
-// use crate::span::double_underscore::double_underscore;
-// use crate::span::escaped_pipe::escaped_pipe;
-// use crate::span::hyphen::hyphen;
-// use crate::span::pipe::pipe;
-// use crate::span::single_underscore::single_underscore;
-use crate::helpers::dump_parser_if_debug;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
-use crate::span::*;
-use crate::span_v42::SpanV42;
 use nom::branch::alt;
-use nom::bytes::complete::is_not;
-use nom::bytes::complete::tag;
-use nom::character::complete::anychar;
 use nom::character::complete::multispace0;
-use nom::character::complete::multispace1;
-use nom::character::complete::space1;
-use nom::combinator::eof;
-use nom::combinator::not;
 use nom::multi::many0;
-use nom::multi::many1;
-use nom::sequence::pair;
-use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
-use nom_supreme::parser_ext::ParserExt;
+use nom_supreme::ParserExt;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
@@ -81,6 +57,7 @@ pub fn section_attr_v42<'a>(
             _ => None,
         })
         .collect::<Vec<String>>();
+    let (source, _) = multispace0.context("").parse(source)?;
     Ok((source, (attrs, flags)))
 }
 
@@ -88,13 +65,48 @@ pub fn section_attr_v42<'a>(
 mod test {
 
     use super::*;
+    use crate::span_v42::plaintext::PlainTextSpan;
+    use crate::span_v42::SpanV42;
     use pretty_assertions::assert_eq;
     use rstest::rstest;
+
+    #[rstest]
+    #[case("-- from: alfa", "")]
+    #[case("-- from: bravo\n", "")]
+    #[case("-- from: charlie\n\n", "")]
+    #[case("-- from: 2ngym6up\n\n-- ping\n", "-- ping\n")]
+    fn solo_section_attr_integration(#[case] source: &str, #[case] remainder: &str) {
+        let result = section_attr_v42(source);
+        if result.as_ref().unwrap().0 == remainder {
+            assert!(true);
+        } else {
+            dbg!(&result);
+            assert!(false);
+        }
+    }
 
     #[test]
     fn solo_section_attr_v42_get_flag() {
         let source = "-- alfa-flag";
         let left = ("", (BTreeMap::new(), vec!["alfa-flag".to_string()]));
+        let right = section_attr_v42(source).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_section_attr_v42_get_key_value() {
+        let source = "-- alfa: bravo";
+        let mut attrs = BTreeMap::new();
+        attrs.insert(
+            "alfa".to_string(),
+            SectionKeyValueAttrPayloadV42 {
+                spans: vec![SpanV42::PlainText(PlainTextSpan {
+                    text: "bravo".to_string(),
+                })],
+                text: "bravo".to_string(),
+            },
+        );
+        let left = ("", (attrs, vec![]));
         let right = section_attr_v42(source).unwrap();
         assert_eq!(left, right);
     }
