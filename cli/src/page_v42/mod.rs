@@ -17,6 +17,7 @@ pub struct PageV42 {
     pub id: Option<String>,
     pub error: Option<PageError>,
     pub raw_ast: Vec<SectionV42>,
+    pub sections: Value,
     pub source: String,
     pub fs_path: PathBuf,
     pub html_output_path: Option<PathBuf>,
@@ -47,10 +48,10 @@ impl PageV42 {
         }
     }
 
-    // // TODO: Deprecate in favor of top level .id (field not method)
-    // pub fn id(&self) -> Result<String, Error> {
-    //     self.get_pagedata(&[Value::from("id")])
-    // }
+    // TODO: Deprecate in favor of top level .id (field not method)
+    pub fn tmp_id(&self) -> Result<String, Error> {
+        Ok(self.id.as_ref().unwrap().to_string())
+    }
 
     pub fn get_pagedata(&self, args: &[Value]) -> Result<String, Error> {
         if args.len() == 0 {
@@ -103,6 +104,14 @@ impl PageV42 {
 }
 
 impl Object for PageV42 {
+    fn get_value(self: &Arc<Self>, key: &Value) -> Option<Value> {
+        match key.as_str()? {
+            "id" => Some(Value::from(self.id.clone())),
+            "sections" => Some(self.sections.clone()),
+            _ => None,
+        }
+    }
+
     fn call_method(
         self: &Arc<PageV42>,
         _state: &minijinja::State,
@@ -110,9 +119,8 @@ impl Object for PageV42 {
         args: &[Value],
     ) -> Result<Value, Error> {
         match name {
-            "ast" => self.ast(),
+            // "sections" => self.ast(),
             "get_pagedata" => self.make_value_from_string(self.get_pagedata(args)),
-            // "id" => self.make_value_from_string(self.id.clone()),
             // "sections" => self.sections(),
             // "title" => self.title(),
             _ => Ok(Value::from("")),

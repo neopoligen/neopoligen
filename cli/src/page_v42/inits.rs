@@ -54,6 +54,7 @@ impl PageV42 {
                     error: None,
                     html_output_path: None,
                     raw_ast,
+                    sections: Value::from_serialize(vec![""]),
                     source: source.to_string(),
                     fs_path: source_path.to_path_buf(),
                 };
@@ -74,6 +75,7 @@ impl PageV42 {
                                 )));
                             }
                         }
+                        page.sections = Value::from_serialize(page.clone().raw_ast);
                         Ok(page)
                     }
                     Err(e) => Err(NeoError {
@@ -90,6 +92,7 @@ impl PageV42 {
                     error: None,
                     html_output_path: None,
                     raw_ast: vec![],
+                    sections: Value::from_serialize(vec![""]),
                     source: source.to_string(),
                     fs_path: source_path.to_path_buf(),
                 };

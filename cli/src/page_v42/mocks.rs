@@ -2,6 +2,7 @@ use super::PageV42;
 use crate::helpers::get_include_str_file;
 use crate::{ast_v42::parse_ast_v42, site_config::SiteConfigV42};
 use include_dir::{include_dir, Dir};
+use minijinja::Value;
 use std::path::PathBuf;
 
 impl PageV42 {
@@ -17,6 +18,7 @@ impl PageV42 {
             error: None,
             html_output_path: None,
             raw_ast,
+            sections: Value::from_serialize(vec![""]),
             source,
             fs_path: PathBuf::from("mock/path/file.neo"),
         }
