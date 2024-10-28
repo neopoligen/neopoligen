@@ -1,10 +1,15 @@
 use crate::span_v42::SpanV42;
+use itertools::Itertools;
 use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::Value;
+use nom::branch::alt;
+use nom::bytes::complete::is_a;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
+use nom::character::complete::alpha1;
 use nom::character::complete::space0;
+use nom::multi::many1;
 use nom::sequence::pair;
 use nom::sequence::preceded;
 use nom::IResult;
@@ -20,15 +25,16 @@ pub struct NamedSpan {
 }
 
 pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, name) = preceded(pair(tag("<<"), space0), is_not("> \t\r\n:/\\"))
+    let (source, tokens) = preceded(pair(tag("<<"), space0), many1(alt((alpha1, is_a("-")))))
         .context("")
         .parse(source)?;
     dbg!(source);
     let (source, _) = tag(">>").context("").parse(source)?;
+    let name = tokens.iter().join("");
     Ok((
         source,
         SpanV42::NamedSpan(NamedSpan {
-            name: name.to_string(),
+            name,
             children: vec![],
         }),
     ))
@@ -42,6 +48,7 @@ mod test {
 
     #[rstest]
     #[case("<<hr>>etc...", "etc...")]
+    #[case("<<alfa-bravo>>etc...", "etc...")]
     fn solo_valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
         match named_span(source) {
             Ok(data) => {
@@ -59,6 +66,11 @@ mod test {
         }
     }
 
+    // these are just quick tests, not exhaustive, they are
+    // just here to make sure something that shouldn't
+    // sneak through is being properly filtered. The
+    // only thing that's allowed is hyphens which matches
+    // the way HTML works.
     #[rstest]
     #[case(
         "<<hr:>>",
