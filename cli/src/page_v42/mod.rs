@@ -20,7 +20,6 @@ pub struct PageV42 {
     pub source: String,
     pub fs_path: PathBuf,
     pub html_output_path: Option<PathBuf>,
-    pub neo_output_path: Option<PathBuf>,
 }
 
 impl PageV42 {
