@@ -16,8 +16,10 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn parse_ast_v42(
     source: &str,
     site_config: &SiteConfigV42,
+    mut debug: bool,
 ) -> Result<Vec<SectionV42>, NeoError> {
-    match final_parser(|src| do_parse_v42(src, site_config))(source) {
+    debug = true;
+    match final_parser(|src| do_parse_v42(src, site_config, debug.clone()))(source) {
         Ok(data) => Ok(data),
         Err(e) => Err(get_error_v42(source, &e).into()),
     }
@@ -26,11 +28,13 @@ pub fn parse_ast_v42(
 fn do_parse_v42<'a>(
     source: &'a str,
     site_config: &'a SiteConfigV42,
+    debug: bool,
 ) -> IResult<&'a str, Vec<SectionV42>, ErrorTree<&'a str>> {
     let (source, _) = multispace0(source)?;
-    let (source, result) = many1(|src| start_or_full_section_v42(src, &site_config, 0, 0, 0))
-        .context("")
-        .parse(source)?;
+    let (source, result) =
+        many1(|src| start_or_full_section_v42(src, &site_config, 0, 0, 0, debug))
+            .context("")
+            .parse(source)?;
 
     // if source != "" {
     //     dbg!(&source);

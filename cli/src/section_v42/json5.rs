@@ -36,6 +36,7 @@ pub fn json5_section_full_v42<'a>(
     _nest_level: usize,
     _list_level: usize,
     _checklist_level: usize,
+    _debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let _dbg_header = "BASIC_SECTION_START";
     let (source, _) = tag("-- ").context("").parse(source)?;
@@ -129,7 +130,7 @@ mod test {
                 template_list,
             }),
         );
-        let right = json5_section_full_v42(&source, &site_config, 0, 0, 0).unwrap();
+        let right = json5_section_full_v42(&source, &site_config, 0, 0, 0, false).unwrap();
         assert_eq!(left, right);
     }
 

@@ -35,6 +35,7 @@ pub fn end_section_basic_v42<'a>(
     list_level: usize,
     checklist_level: usize,
     kind: &str,
+    debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let _dbg_header = "END_SECTION_BASIC";
     let (source, _) = tuple((
@@ -49,7 +50,14 @@ pub fn end_section_basic_v42<'a>(
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, children) = many0(|src| {
-        paragraph_block_section_v42(src, site_config, nest_level, list_level, checklist_level)
+        paragraph_block_section_v42(
+            src,
+            site_config,
+            nest_level,
+            list_level,
+            checklist_level,
+            debug,
+        )
     })
     .context("")
     .parse(source)?;
@@ -120,7 +128,8 @@ mod test {
                 template_list,
             }),
         );
-        let right = end_section_basic_v42(&source, &site_config, 0, 0, 0, kind.as_str()).unwrap();
+        let right =
+            end_section_basic_v42(&source, &site_config, 0, 0, 0, kind.as_str(), false).unwrap();
         assert_eq!(left, right);
     }
 

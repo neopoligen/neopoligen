@@ -12,7 +12,7 @@ impl PageV42 {
         const SAMPLES: Dir = include_dir!("src/page_v42/samples/valid");
         let site_config = SiteConfigV42::mock1_basic();
         let source = get_include_str_file(SAMPLES, name);
-        let raw_ast = parse_ast_v42(&source, &site_config).unwrap();
+        let raw_ast = parse_ast_v42(&source, &site_config, false).unwrap();
         PageV42 {
             id: Some("TODO_MAKE_MOCK_ID_HERE".to_string()),
             html_output_path: None,

@@ -27,6 +27,7 @@ pub fn paragraph_block_section_v42<'a>(
     _nest_level: usize,
     _list_level: usize,
     _checklist_level: usize,
+    _debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     let (source, spans) = spans_of_generic_block_content.context("").parse(source)?;
     let text = flatten_spans_v42(&spans);
@@ -74,7 +75,7 @@ mod test {
                 template_list,
             }),
         );
-        let right = paragraph_block_section_v42(&source, &site_config, 0, 0, 0).unwrap();
+        let right = paragraph_block_section_v42(&source, &site_config, 0, 0, 0, false).unwrap();
         assert_eq!(left, right);
     }
 
@@ -109,7 +110,7 @@ mod test {
                 template_list,
             }),
         );
-        let right = paragraph_block_section_v42(&source, &site_config, 0, 0, 0).unwrap();
+        let right = paragraph_block_section_v42(&source, &site_config, 0, 0, 0, false).unwrap();
         assert_eq!(left, right);
     }
 

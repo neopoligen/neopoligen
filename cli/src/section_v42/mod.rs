@@ -68,12 +68,49 @@ pub fn start_or_full_section_v42<'a>(
     nest_level: usize,
     list_level: usize,
     checklist_level: usize,
+    debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     let (source, section) = alt((
-        |src| basic_section_full_v42(src, &site_config, nest_level, list_level, checklist_level),
-        |src| json5_section_full_v42(src, &site_config, nest_level, list_level, checklist_level),
-        |src| unknown_section_start_v42(src, &site_config, nest_level, list_level, checklist_level),
-        |src| unknown_section_full_v42(src, &site_config, nest_level, list_level, checklist_level),
+        |src| {
+            basic_section_full_v42(
+                src,
+                &site_config,
+                nest_level,
+                list_level,
+                checklist_level,
+                debug,
+            )
+        },
+        |src| {
+            json5_section_full_v42(
+                src,
+                &site_config,
+                nest_level,
+                list_level,
+                checklist_level,
+                debug,
+            )
+        },
+        |src| {
+            unknown_section_start_v42(
+                src,
+                &site_config,
+                nest_level,
+                list_level,
+                checklist_level,
+                debug,
+            )
+        },
+        |src| {
+            unknown_section_full_v42(
+                src,
+                &site_config,
+                nest_level,
+                list_level,
+                checklist_level,
+                debug,
+            )
+        },
     ))
     .context("")
     .parse(source)?;

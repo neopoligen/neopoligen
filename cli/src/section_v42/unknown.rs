@@ -37,6 +37,7 @@ pub fn unknown_section_start_v42<'a>(
     nest_level: usize,
     list_level: usize,
     checklist_level: usize,
+    debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let _dbg_header = "UNKNOWN_SECTION_FULL";
     let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
@@ -49,7 +50,14 @@ pub fn unknown_section_start_v42<'a>(
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, children) = many0(|src| {
-        paragraph_block_section_v42(src, site_config, nest_level, list_level, checklist_level)
+        paragraph_block_section_v42(
+            src,
+            site_config,
+            nest_level,
+            list_level,
+            checklist_level,
+            debug,
+        )
     })
     .context("")
     .parse(source)?;
@@ -61,6 +69,7 @@ pub fn unknown_section_start_v42<'a>(
             list_level,
             checklist_level,
             kind,
+            debug,
         )
     })
     .context("")
@@ -83,6 +92,7 @@ pub fn unknown_section_full_v42<'a>(
     nest_level: usize,
     list_level: usize,
     checklist_level: usize,
+    debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let _dbg_header = "UNKNOWN_SECTION_FULL";
     let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
@@ -92,7 +102,14 @@ pub fn unknown_section_full_v42<'a>(
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, children) = many0(|src| {
-        paragraph_block_section_v42(src, site_config, nest_level, list_level, checklist_level)
+        paragraph_block_section_v42(
+            src,
+            site_config,
+            nest_level,
+            list_level,
+            checklist_level,
+            debug,
+        )
     })
     .context("")
     .parse(source)?;
@@ -163,7 +180,7 @@ mod test {
                 template_list,
             }),
         );
-        let right = unknown_section_full_v42(&source, &site_config, 0, 0, 0).unwrap();
+        let right = unknown_section_full_v42(&source, &site_config, 0, 0, 0, false).unwrap();
         assert_eq!(left, right);
     }
 
@@ -221,7 +238,7 @@ mod test {
                 template_list,
             }),
         );
-        let right = unknown_section_start_v42(&source, &site_config, 0, 0, 0).unwrap();
+        let right = unknown_section_start_v42(&source, &site_config, 0, 0, 0, false).unwrap();
         assert_eq!(left, right);
     }
 

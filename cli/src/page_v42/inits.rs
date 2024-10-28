@@ -56,7 +56,7 @@ impl PageV42 {
         site_config: &SiteConfigV42,
     ) -> Result<PageV42, NeoError> {
         event!(Level::DEBUG, "new_from_str");
-        match parse_ast_v42(&source, site_config) {
+        match parse_ast_v42(&source, site_config, false) {
             Ok(raw_ast) => {
                 let mut page = PageV42 {
                     id: None,
