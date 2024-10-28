@@ -41,6 +41,7 @@ mod test {
     #[rstest]
     #[case("001-plaintext.txt")]
     #[case("002-with-hyphen.txt")]
+    #[case("003-named-spans.txt")]
     fn verify_files(#[case] file: &str) {
         let source = get_include_str_file(VALID_SAMPLES, file);
         match spans_of_generic_block_content(&source) {
