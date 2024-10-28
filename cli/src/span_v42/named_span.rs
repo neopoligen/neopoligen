@@ -144,7 +144,6 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42
     let (source, spans) = many1(alt((plaintext,))).context("").parse(source)?;
     dbg!("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
     dbg!(&source);
-    let (source, spans) = many1(alt((plaintext,))).context("").parse(source)?;
     Ok((
         source,
         NamedSpanAttrV42::KeyValue(KeyValueSpanAttrV42 {
@@ -227,7 +226,9 @@ mod test {
         attrs.insert(
             "class".to_string(),
             NamedSpanKeyValueAttrPayloadV42 {
-                value: vec![],
+                value: vec![SpanV42::PlainText(PlainTextSpan {
+                    text: "red".to_string(),
+                })],
                 text: "".to_string(),
             },
         );
