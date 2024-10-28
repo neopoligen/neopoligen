@@ -7,7 +7,6 @@ use minijinja::Value;
 use nom::bytes::complete::is_a;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
-// use nom::character::complete::multispace1;
 use nom::character::complete::space1;
 use nom::combinator::not;
 use nom::combinator::opt;
@@ -22,7 +21,23 @@ use std::path::PathBuf;
 
 impl PageV42 {
     //#[instrument()]
+
     pub fn new_from_fs_path(
+        path: &PathBuf,
+        site_config: &SiteConfigV42,
+    ) -> Result<PageV42, NeoError> {
+        match fs::read_to_string(path) {
+            Ok(source) => PageV42::new_from_str(&source, path, site_config),
+            Err(e) => Err(NeoError {
+                kind: NeoErrorKind::ForwardErrorWithSourcePath {
+                    source_path: path.clone(),
+                    msg: e.to_string(),
+                },
+            }),
+        }
+    }
+
+    pub fn old_new_from_fs_path(
         path: &PathBuf,
         site_config: &SiteConfigV42,
     ) -> Result<PageV42, NeoError> {
@@ -31,6 +46,7 @@ impl PageV42 {
                 Ok(raw_ast) => Ok(PageV42 {
                     id: None,
                     error: None,
+                    html_output_path: None,
                     raw_ast,
                     source: source.to_string(),
                     fs_path: PathBuf::from("todo/add/fs_path/to/page_v42"),
@@ -61,11 +77,12 @@ impl PageV42 {
                 let mut p = PageV42 {
                     id: None,
                     error: None,
+                    html_output_path: None,
                     raw_ast,
                     source: source.to_string(),
                     fs_path: source_path.to_path_buf(),
                 };
-                // TODO: Handle missing page ids
+                // TODO: Handle pages with no ids
                 p.id = Some(p.get_pagedata(&[Value::from("id")]).unwrap());
                 Ok(p)
             }
@@ -73,6 +90,7 @@ impl PageV42 {
                 let mut p = PageV42 {
                     id: None,
                     error: None,
+                    html_output_path: None,
                     raw_ast: vec![],
                     source: source.to_string(),
                     fs_path: source_path.to_path_buf(),
@@ -97,7 +115,6 @@ impl PageV42 {
 fn get_id(source: &str) -> IResult<&str, &str> {
     let (source, _) =
         many0(tuple((opt(is_not("-")), not(tag("-- id:")), is_a("-")))).parse(source)?;
-    dbg!(&source);
     let (source, id) = preceded(
         tuple((is_not("-"), tag("--"), space1, tag("id:"), space1)),
         is_not("\n\r"),
@@ -105,8 +122,6 @@ fn get_id(source: &str) -> IResult<&str, &str> {
     .parse(source)?;
     Ok((source, id.trim()))
 }
-
-//p.id = Some("001-unclosed-start-section.neo".to_string());
 
 #[cfg(test)]
 mod test {
@@ -138,7 +153,6 @@ mod test {
         let page = PageV42::new_from_str(&source, &source_path, &site_config).unwrap();
         let left = "001-unclosed-start-section.neo";
         let right = page.id.clone().unwrap();
-        dbg!(&page.ast());
         assert_eq!(left, right);
     }
 }

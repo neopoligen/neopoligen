@@ -19,6 +19,7 @@ pub struct PageV42 {
     pub raw_ast: Vec<SectionV42>,
     pub source: String,
     pub fs_path: PathBuf,
+    pub html_output_path: Option<PathBuf>,
 }
 
 impl PageV42 {
@@ -26,6 +27,7 @@ impl PageV42 {
         Ok(Value::from_serialize(&self.raw_ast))
     }
 
+    // TODO: Deprecate in favor of the field
     pub fn html_file_system_relative_path(&self, base_path: &PathBuf) -> Result<PathBuf, NeoError> {
         if let Ok(p) = self.get_pagedata(&[Value::from("path")]) {
             if p != "" {
