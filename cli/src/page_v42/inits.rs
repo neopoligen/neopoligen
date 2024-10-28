@@ -12,7 +12,6 @@ use nom::combinator::not;
 use nom::combinator::opt;
 use nom::multi::many0;
 use nom::multi::many1;
-use nom::sequence::pair;
 use nom::sequence::preceded;
 use nom::sequence::tuple;
 use nom::IResult;
@@ -52,6 +51,7 @@ impl PageV42 {
                     id: None,
                     error: None,
                     html_output_path: None,
+                    neo_output_path: None,
                     raw_ast,
                     source: source.to_string(),
                     fs_path: source_path.to_path_buf(),
@@ -111,6 +111,7 @@ impl PageV42 {
                     id: None,
                     error: None,
                     html_output_path: None,
+                    neo_output_path: None,
                     raw_ast: vec![],
                     source: source.to_string(),
                     fs_path: source_path.to_path_buf(),

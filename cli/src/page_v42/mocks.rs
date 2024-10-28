@@ -5,6 +5,8 @@ use include_dir::{include_dir, Dir};
 use std::path::PathBuf;
 
 impl PageV42 {
+    // TODO: Load this thru the new_from_str method because
+    // that sets stuff up that will be needed for testing
     pub fn valid_sample_mock(name: &str) -> PageV42 {
         const SAMPLES: Dir = include_dir!("src/page_v42/samples/valid");
         let site_config = SiteConfigV42::mock1_basic();
@@ -14,6 +16,7 @@ impl PageV42 {
             id: Some("TODO_MAKE_MOCK_ID_HERE".to_string()),
             error: None,
             html_output_path: None,
+            neo_output_path: None,
             raw_ast,
             source,
             fs_path: PathBuf::from("mock/path/file.neo"),

@@ -9,7 +9,6 @@ use minijinja::Environment;
 use minijinja::{context, Value};
 use std::collections::BTreeMap;
 use std::fs;
-use std::path::PathBuf;
 use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 
@@ -109,12 +108,6 @@ impl BuilderV42 {
                     .project_dir()
                     .join(&self.site_config.output_directory)
                     .join(file_rel_path.unwrap());
-                event!(
-                    Level::INFO,
-                    "Ready to run: {}",
-                    absolute_output_path.display()
-                );
-
                 if let Some(template) = page.template_list().iter().find_map(|name| {
                     if let Ok(tmpl) = env.get_template(name) {
                         Some(tmpl)
@@ -123,8 +116,8 @@ impl BuilderV42 {
                     }
                 }) {
                     match template.render(context!(
-                        //site => &site_clone,
-                       // page => Value::from_object(page.clone())
+                        site => &site_clone,
+                        page => Value::from_object(page.clone())
                     )) {
                         Ok(output) => {
                             match write_file_with_mkdir(&absolute_output_path, output.as_str()) {
@@ -147,11 +140,11 @@ impl BuilderV42 {
                             }
                         }
                         Err(e) => {
-                            // event!(
-                            //     Level::ERROR,
-                            //     "Could not render output for: {}",
-                            //     page.fs_path.display()
-                            // );
+                            event!(
+                                Level::ERROR,
+                                "Could not render output for: {}",
+                                page.fs_path.display()
+                            );
                             self.errors.push(NeoError {
                                 kind: NeoErrorKind::GenericErrorWithSourcePath {
                                     source_path: page.fs_path.clone(),
