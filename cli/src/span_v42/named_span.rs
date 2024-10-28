@@ -39,14 +39,14 @@ pub struct FlagSpanAttrV42 {
 
 // TODO: move this to its own file
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub enum SpanAttrV42 {
+pub enum NamedSpanAttrV42 {
     KeyValue(KeyValueSpanAttrV42),
     Flag(FlagSpanAttrV42),
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct NamedSpanV42 {
-    attrs: BTreeMap<String, SpanAttrV42>,
+    attrs: BTreeMap<String, NamedSpanAttrV42>,
     flags: Vec<String>,
     name: String,
     spans: Option<Vec<SpanV42>>,
@@ -75,34 +75,34 @@ pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
 
 pub fn named_span_attrs_and_flags(
     source: &str,
-) -> IResult<&str, (Vec<SpanAttrV42>, Vec<SpanAttrV42>), ErrorTree<&str>> {
+) -> IResult<&str, (Vec<NamedSpanAttrV42>, Vec<NamedSpanAttrV42>), ErrorTree<&str>> {
     let (source, attr_flags) = many0(named_span_attr_flag).context("").parse(source)?;
     Ok((source, (vec![], vec![])))
 }
 
-pub fn named_span_attr_flag(source: &str) -> IResult<&str, Vec<SpanAttrV42>, ErrorTree<&str>> {
+pub fn named_span_attr_flag(source: &str) -> IResult<&str, Vec<NamedSpanAttrV42>, ErrorTree<&str>> {
     let (source, attrs) = many0(alt((named_span_key_value_attr, named_span_flag_attr)))
         .context("")
         .parse(source)?;
     Ok((source, attrs))
 }
 
-pub fn named_span_key_value_attr(source: &str) -> IResult<&str, SpanAttrV42, ErrorTree<&str>> {
+pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
     let (source, attr) = tag("asdf").context("").parse(source)?;
     Ok((
         source,
-        SpanAttrV42::KeyValue(KeyValueSpanAttrV42 {
+        NamedSpanAttrV42::KeyValue(KeyValueSpanAttrV42 {
             key: "asdf".to_string(),
             value: vec![],
         }),
     ))
 }
 
-pub fn named_span_flag_attr(source: &str) -> IResult<&str, SpanAttrV42, ErrorTree<&str>> {
+pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
     let (source, attr) = tag("asdf").context("").parse(source)?;
     Ok((
         source,
-        SpanAttrV42::Flag(FlagSpanAttrV42 {
+        NamedSpanAttrV42::Flag(FlagSpanAttrV42 {
             value: "asdf".to_string(),
         }),
     ))
