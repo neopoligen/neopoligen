@@ -32,8 +32,12 @@ body {
   margin-top: var(--flow-space, 1em);
 }
 
-.parsing-error {
+pre span.parsing-error {
   background-color: rgb(80 0 0 / .2);
+}
+
+main {
+  padding-bottom: 4rem;
 }
 
 </style>
@@ -48,12 +52,14 @@ body {
     [!- block body -!][!- endblock -!]
     [!- block endmatter -!][!- endblock -!]
   </main>
+    <!--
   <footer class="wrapper-medium">
       <div>Debug - Page ID: [@ page.id @]</div>
       <pre>
         [@- page.sections |tojson(true) -@]
       </pre>
   </footer>
+-->
 </body>
 </html>
 
