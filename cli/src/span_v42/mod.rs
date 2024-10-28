@@ -46,6 +46,8 @@ use minijinja::Error;
 use minijinja::Value;
 use nom::branch::alt;
 //use nom::bytes::complete::is_not;
+use self::named_span::NamedSpanV42;
+use crate::span_v42::plaintext::*;
 use nom::character::complete::line_ending;
 use nom::character::complete::multispace0;
 use nom::character::complete::space0;
@@ -60,15 +62,11 @@ use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
-use crate::span_v42::plaintext::*;
-
-use self::named_span::NamedSpan;
-
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum SpanV42 {
     PlainText(PlainTextSpan),
-    NamedSpan(NamedSpan),
+    NamedSpan(NamedSpanV42),
 }
 
 pub fn span_v42<'a>(source: &'a str) -> IResult<&'a str, SpanV42, ErrorTree<&'a str>> {
