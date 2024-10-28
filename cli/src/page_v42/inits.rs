@@ -6,6 +6,7 @@ use crate::neo_error::NeoErrorKind;
 use crate::section_v42::basic::BasicSectionV42;
 use crate::section_v42::block::BlockSectionV42;
 use crate::section_v42::helpers::make_template_list::make_template_list;
+use crate::section_v42::parsing_error::ParsingErrorSectionV42;
 use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
 use crate::span_v42::plaintext::PlainTextSpan;
@@ -93,7 +94,7 @@ impl PageV42 {
                     }),
                 }
             }
-            Err(_e) => {
+            Err(e) => {
                 let mut page = PageV42 {
                     id: None,
                     html_output_path: None,
@@ -102,24 +103,92 @@ impl PageV42 {
                     source: source.to_string(),
                     fs_path: source_path.to_path_buf(),
                 };
-                page.raw_ast = vec![SectionV42::Basic(BasicSectionV42 {
-                    attrs: BTreeMap::new(),
-                    bounds: Bound::Full,
-                    children: vec![SectionV42::Block(BlockSectionV42 {
-                        children: vec![],
-                        kind: "paragraph".to_string(),
-                        spans: vec![SpanV42::PlainText(PlainTextSpan {
-                            output: "Content Parsing Error".to_string(),
-                        })],
-                        text: "Delta".to_string(),
-                        template_list: vec![
-                            "sections/block/paragraph/full/default.neoj".to_string()
-                        ],
-                    })],
-                    flags: vec![],
-                    kind: "title".to_string(),
-                    template_list: make_template_list("basic", "title", "full", "default"),
-                })];
+
+                match &e.kind {
+                    NeoErrorKind::ParserErrorV42 {
+                        line,
+                        column,
+                        remainder,
+                        source,
+                        message,
+                    } => {
+                        page.raw_ast = vec![
+                            SectionV42::Basic(BasicSectionV42 {
+                                attrs: BTreeMap::new(),
+                                bounds: Bound::Full,
+                                children: vec![SectionV42::Block(BlockSectionV42 {
+                                    children: vec![],
+                                    kind: "paragraph".to_string(),
+                                    spans: vec![SpanV42::PlainText(PlainTextSpan {
+                                        output: "Content Parsing Error".to_string(),
+                                    })],
+                                    text: "Delta".to_string(),
+                                    template_list: vec![
+                                        "sections/block/paragraph/full/default.neoj".to_string(),
+                                    ],
+                                })],
+                                flags: vec![],
+                                kind: "title".to_string(),
+                                template_list: make_template_list(
+                                    "basic", "title", "full", "default",
+                                ),
+                            }),
+                            SectionV42::ParsingError(ParsingErrorSectionV42 {
+                                attrs: BTreeMap::new(),
+                                bounds: Bound::Full,
+                                children: vec![],
+                                flags: vec![],
+                                kind: "parsing_error".to_string(),
+                                source: page.source.clone(),
+                                template_list: vec![
+                                    "sections/built-in/parsing-error/full/default.neoj".to_string(),
+                                ],
+                                column: *column,
+                                line: *line,
+                                remainder: remainder.to_string(),
+                                message: message.to_string(),
+                            }),
+                        ];
+                    }
+                    _ => (),
+                };
+
+                // page.raw_ast = vec![
+                //     SectionV42::Basic(BasicSectionV42 {
+                //         attrs: BTreeMap::new(),
+                //         bounds: Bound::Full,
+                //         children: vec![SectionV42::Block(BlockSectionV42 {
+                //             children: vec![],
+                //             kind: "paragraph".to_string(),
+                //             spans: vec![SpanV42::PlainText(PlainTextSpan {
+                //                 output: "Content Parsing Error".to_string(),
+                //             })],
+                //             text: "Delta".to_string(),
+                //             template_list: vec![
+                //                 "sections/block/paragraph/full/default.neoj".to_string()
+                //             ],
+                //         })],
+                //         flags: vec![],
+                //         kind: "title".to_string(),
+                //         template_list: make_template_list("basic", "title", "full", "default"),
+                //     }),
+                //     SectionV42::ParsingError(ParsingErrorSectionV42 {
+                //         attrs: BTreeMap::new(),
+                //         bounds: Bound::Full,
+                //         children: vec![],
+                //         flags: vec![],
+                //         kind: "parsing_error".to_string(),
+                //         source: page.source.clone(),
+                //         template_list: vec![
+                //             "sections/built-in/parsing-error/full/default.neoj".to_string()
+                //         ],
+                //         column: 0,
+                //         line: 1,
+                //         remainder: "TODO".to_string(),
+                //         message: "TODO".to_string(),
+                //     }),
+                // ];
+
                 page.sections = Value::from_serialize(page.clone().raw_ast);
                 match parse_value_from_pagedata(source, "id") {
                     Ok((_, ids)) => match ids.last() {
