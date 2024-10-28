@@ -15,7 +15,7 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn solo_check_make_template_list() {
+    fn check_make_template_list() {
         let left = vec![
             "sections/basic/title/full/custom.neoj".to_string(),
             "sections/basic/title/full/default.neoj".to_string(),

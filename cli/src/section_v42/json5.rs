@@ -85,7 +85,7 @@ mod test {
     const SAMPLE_DIR: Dir = include_dir!("src/section_v42/samples/json5/valid");
 
     #[test]
-    fn solo_pagedata_with_extra_data() {
+    fn pagedata_with_extra_data() {
         let site_config = SiteConfigV42::mock1_basic();
         let source = SAMPLE_DIR
             .get_file("001-pagedata-without-extra-data.neo")

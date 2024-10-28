@@ -267,11 +267,13 @@ pub fn get_image_paths(source_dir: &PathBuf) -> Vec<PathBuf> {
 }
 
 pub fn get_include_str_file(dir: Dir, name: &str) -> String {
-    dir.get_file(name)
-        .unwrap()
-        .contents_utf8()
-        .unwrap()
-        .to_string()
+    match dir.get_file(name) {
+        Some(data) => data.contents_utf8().unwrap().to_string(),
+        None => {
+            dbg!(format!("Could not open file: {}", name));
+            "".to_string()
+        }
+    }
 }
 
 pub fn get_neo_files_in_dir_recursively(dir: &PathBuf) -> Vec<PathBuf> {

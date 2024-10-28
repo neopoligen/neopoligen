@@ -77,7 +77,7 @@ mod test {
     const SAMPLES: Dir = include_dir!("src/section_v42/samples/end/valid");
 
     #[test]
-    fn solo_integration_001_basic_unknown() {
+    fn integration_001_basic_unknown() {
         let site_config = SiteConfigV42::mock1_basic();
         let source = get_include_str_file(SAMPLES, "001-basic-unknown.neo");
         let attrs = BTreeMap::new();

@@ -121,7 +121,7 @@ mod test {
     const SAMPLES: Dir = include_dir!("src/section_v42/samples/unknown/valid");
 
     #[test]
-    fn solo_integration_001_basic_full() {
+    fn integration_001_basic_full() {
         let site_config = SiteConfigV42::mock1_basic();
         let source = get_include_str_file(SAMPLES, "001-basic-full.neo");
         let attrs = BTreeMap::new();
@@ -168,7 +168,7 @@ mod test {
     }
 
     #[test]
-    fn solo_integration_002_basic_start_end() {
+    fn integration_002_basic_start_end() {
         let site_config = SiteConfigV42::mock1_basic();
         let source = get_include_str_file(SAMPLES, "002-basic-start-end.neo");
         let attrs = BTreeMap::new();

@@ -35,7 +35,7 @@ mod test {
     }
 
     #[test]
-    fn solo_allow_multiple() {
+    fn allow_multiple() {
         let source = "::";
         let left = (
             "",

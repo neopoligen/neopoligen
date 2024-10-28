@@ -35,7 +35,7 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn solo_single_instance() {
+    fn single_instance() {
         let source = "\nx";
         let left = (
             "x",
@@ -48,7 +48,7 @@ mod test {
     }
 
     #[test]
-    fn solo_single_instance_at_eof() {
+    fn single_instance_at_eof() {
         let source = "\nx";
         let left = (
             "x",
@@ -61,25 +61,25 @@ mod test {
     }
 
     #[test]
-    fn solo_do_not_caputre_two() {
+    fn do_not_caputre_two() {
         let source = "\n\n";
         assert!(block_line_ending(source).is_err());
     }
 
     #[test]
-    fn solo_avoid_empty_lines() {
+    fn avoid_empty_lines() {
         let source = "\n        \n";
         assert!(block_line_ending(source).is_err());
     }
 
     #[test]
-    fn solo_avoid_eof() {
+    fn avoid_eof() {
         let source = "";
         assert!(block_line_ending(source).is_err());
     }
 
     #[test]
-    fn solo_avoid_new_line_before_eof() {
+    fn avoid_new_line_before_eof() {
         let source = "\n";
         assert!(block_line_ending(source).is_err());
     }

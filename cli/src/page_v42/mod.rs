@@ -2,6 +2,7 @@ pub mod inits;
 pub mod mocks;
 
 use crate::neo_error::NeoError;
+use crate::page_error_v42::*;
 use crate::section_v42::SectionV42;
 use minijinja::value::Object;
 use minijinja::Error;
@@ -13,6 +14,8 @@ use std::sync::Arc;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PageV42 {
+    pub id: Option<String>,
+    pub error: Option<PageError>,
     pub raw_ast: Vec<SectionV42>,
     pub source: String,
     pub fs_path: PathBuf,
@@ -42,6 +45,7 @@ impl PageV42 {
         }
     }
 
+    // TODO: Deprecate in favor of top level .id (field not method)
     pub fn id(&self) -> Result<String, Error> {
         self.get_pagedata(&[Value::from("id")])
     }
@@ -121,17 +125,17 @@ mod test {
     // use rstest::rstest;
 
     #[test]
-    fn solo_id_check_basic() {
+    fn id_check_basic() {
         let page = PageV42::valid_sample_mock("001-pagedata-only.neo");
-        let left = "001-pagedata-only".to_string();
+        let left = "001-pagedata-only.neo".to_string();
         let right = page.id().unwrap();
         assert_eq!(left, right);
     }
 
     #[test]
-    fn solo_default_html_file_system_relative_path_from_id() {
+    fn default_html_file_system_relative_path_from_id() {
         let page = PageV42::valid_sample_mock("001-pagedata-only.neo");
-        let left = PathBuf::from("en/001-pagedata-only/index.html");
+        let left = PathBuf::from("en/001-pagedata-only.neo/index.html");
         let right = page
             .html_file_system_relative_path(&PathBuf::from("en"))
             .unwrap();
@@ -139,7 +143,7 @@ mod test {
     }
 
     #[test]
-    fn solo_custom_path_in_pagedata() {
+    fn custom_path_in_pagedata() {
         let page = PageV42::valid_sample_mock("003-custom-path-in-pagedata.neo");
         let left = PathBuf::from("index.html");
         let right = page
@@ -149,9 +153,9 @@ mod test {
     }
 
     #[test]
-    fn solo_unknown_start_end() {
+    fn unknown_start_end() {
         let page = PageV42::valid_sample_mock("004-unknown-start-end.neo");
-        let left = "004-unknown-start-end".to_string();
+        let left = "004-unknown-start-end.neo".to_string();
         let right = page.id().unwrap();
         assert_eq!(left, right);
     }
