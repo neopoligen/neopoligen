@@ -20,6 +20,7 @@ impl PageV42 {
             sections: Value::from_serialize(vec![""]),
             source,
             fs_path: PathBuf::from("mock/path/file.neo"),
+            error: None,
         }
     }
 }

@@ -1,0 +1,227 @@
+-- title
+
+Hello and Welcome!  
+
+Hi, I'm Alan. 
+
+I've been running my site for a couple decades.
+There's a bunch here, but you caught me in the middle 
+of rebuilding and the main link list isn't redone yet. 
+Here's a few hand-picked posts that'll give you an 
+idea of what it's about in the mean time. 
+
+<<tlink|2zpdkpkw>>
+
+
+-- previews/
+
+-- preview
+-- from: 2ngym6up
+
+-- preview
+-- from: 2h1iv27a
+
+-- preview
+-- from: 2netgbql
+
+-- preview
+-- from: 2nekxway
+
+-- preview
+-- from: 2nuat8rm
+
+-- preview
+-- from: 2nezrjp5
+
+-- preview
+-- from: 20en8mvx
+
+-- preview
+-- from: 2h4ynhnr
+
+-- preview
+-- from: 20en9sxu
+
+-- preview
+-- from: 28dakarf
+
+-- preview
+-- from: 2gmkhvfr
+
+-- preview
+-- from: 2sozrezs
+
+-- preview
+-- from: 2nhvryt4
+
+-- /previews
+
+
+-- h2
+-- class: wrapper-medium
+
+Some Music
+
+A few selection for the stuff I like. This isn't
+really curated as a representative sample because 
+I don't really think that way. It's just a few
+things that I picked to get started as 
+I work on what I want to do for a full blown 
+music section.
+
+(NOTE TO SELF: The first link is a work in progress
+for a page that just has a ``-- song`` on it with
+``-- blurb`` for an attribute and no other content)
+
+-- previews/
+
+-- preview
+-- from: 2nj1o0s2
+
+-- preview
+-- from: 2nh2atgc
+
+-- preview
+-- from: 2nhazscg
+
+-- preview
+-- from: 2nhjfwwj
+
+-- preview
+-- from: 2nhershs
+
+-- preview
+-- from: 2nh3cfvd
+
+-- preview
+-- from: 2nhcmvvt
+
+-- preview
+-- from: 2nhjqcgw
+
+-- preview
+-- from: 2nhhdmoi
+
+-- /previews
+
+
+-- h2
+-- class: wrapper-medium
+
+Some Thoughts On Neopoligen
+
+These are some things I'm thinking about (and
+could use help thinking about) with Neopoligen:
+
+
+<<tlink|2nizlhej>>
+
+<<tlink|2nkexi4b>>
+
+<<tlink|2nmr7xms>>
+
+<<tlink|2npmi9ac>>
+
+<<tlink|2nvadl7z>>
+
+<<tlink|2nvgz18e>>
+
+<<tlink|2nvhnykp>>
+
+<<tlink|2nvhcz27>>
+
+-- h2
+-- class: wrapper-medium
+
+Some More Music
+
+I couldn't figure out what tracks to put on
+the home page. Eventually, I'll randomize
+it from a larger set. For now, here's a
+few more. 
+
+
+-- previews/
+
+-- comment 
+-- from: 2nkvoi7u
+
+-- comment
+-- from: 2nky8rkb
+
+-- preview
+-- from: 2nhegwpq
+
+-- preview
+-- from: 2nhdckiz
+
+-- preview
+-- from: 2nhi3d6i
+
+-- preview
+-- from: 2nhiufg0
+
+-- preview
+-- from: 2nhe5ilt
+
+-- preview
+-- from: 2nhdsudo
+
+-- preview
+-- from: 2nhigskj
+
+
+-- /previews
+
+
+
+-- h2
+-- class: wrapper-medium
+
+Other Sites
+
+-- previews/
+
+-- preview
+-- tablink: https://django.alanwsmith.com/
+-- title: My Django Notes
+
+I've started using Django to build a personal
+"new tab page" for my browser. This is where I'm putting my notes. It's 
+mainly copy/paste boilerplate code right now. I'll fill in more details
+on the specifics of how things work over time. 
+
+-- preview
+-- tablink: https://links.alanwsmith.com/
+-- title: My Links Page
+
+It used to be hard for me to experiment with ideas
+on this site because of the various frameworks 
+I used over the years. So, I started using other
+website. These are those. 
+
+
+-- /previews
+
+
+
+-- list
+-- title: links
+
+
+
+- <<link|Why I Built Neopoligen|
+https://www.neopoligen.com/en/2kn3czfj/?why-i-built-neopoligen>> - The reasons
+I designed my own markdown file format replacement and built a website
+builder for it
+
+
+
+-- pagedata 
+-- created: 2023-07-08T18:57:17-04:00
+-- id: 2sjfzivl
+-- type: home-page
+-- status: done
+-- path: /index.html
+
+

@@ -65,6 +65,7 @@ impl PageV42 {
                     sections: Value::from_serialize(vec![""]),
                     source: source.to_string(),
                     fs_path: source_path.to_path_buf(),
+                    error: None,
                 };
                 // TODO: Handle pages with no ids
                 match page.get_pagedata(&[Value::from("id")]) {
@@ -102,6 +103,7 @@ impl PageV42 {
                     sections: Value::from_serialize(vec![""]),
                     source: source.to_string(),
                     fs_path: source_path.to_path_buf(),
+                    error: Some(e.clone()),
                 };
 
                 match &e.kind {
@@ -115,12 +117,10 @@ impl PageV42 {
                         let mut output_remainder_with_padding =
                             format!("{:>width$}", "", width = column - 1);
                         output_remainder_with_padding.push_str(remainder.as_str());
-
                         let output_source = match source.strip_suffix(remainder.as_str()) {
                             Some(text) => text.to_string(),
                             None => "Could not properly get initial string".to_string(),
                         };
-
                         page.raw_ast = vec![
                             SectionV42::Basic(BasicSectionV42 {
                                 attrs: BTreeMap::new(),

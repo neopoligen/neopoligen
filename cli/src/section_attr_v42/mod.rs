@@ -57,7 +57,7 @@ pub fn section_attr_v42<'a>(
     ErrorTree<&'a str>,
 > {
     let (source, raw_attrs) =
-        many0(alt((section_flag_attr_v42, section_key_value_attr_v42)))(source)?;
+        many0(alt((section_key_value_attr_v42, section_flag_attr_v42)))(source)?;
     // TODO: Combine multiple attrs into the same one
     // if they have the same key
     let mut attrs = BTreeMap::new();
@@ -91,15 +91,13 @@ mod test {
     use pretty_assertions::assert_eq;
     use rstest::rstest;
 
-    // #[test]
-    // fn section_attr_v42_get_flag() {
-    //     let source = "-- alfa-flag";
-    //     let left = SectionAttrV42::FlagV42(SectionFlagAttrV42 {
-    //         value: "alfa-flag".to_string(),
-    //     });
-    //     let right = section_attr_v42(source);
-    //     assert_eq!(left, right.unwrap().1);
-    // }
+    #[test]
+    fn solo_section_attr_v42_get_flag() {
+        let source = "-- alfa-flag";
+        let left = ("", (BTreeMap::new(), vec!["alfa-flag".to_string()]));
+        let right = section_attr_v42(source).unwrap();
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // fn section_attr_v42_get_key_value() {
