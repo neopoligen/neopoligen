@@ -117,27 +117,29 @@ impl PageV42 {
                 };
 
                 //
-                page.html_output_path = Some(PathBuf::from(format!(
-                    "{}/{}/index.html",
-                    site_config.default_language().unwrap(),
-                    page.id.as_ref().unwrap()
-                )));
-
-                match parse_value_from_pagedata(source, "path") {
-                    Ok((_, html_output_paths)) => match html_output_paths.last() {
-                        Some(html_output_path) => {
-                            page.html_output_path =
-                                Some(html_output_path.trim_start_matches("/").into());
-                        }
-                        _ => (),
-                    },
-                    Err(_) => (),
-                }
 
                 match parse_value_from_pagedata(source, "id") {
                     Ok((_, ids)) => match ids.last() {
                         Some(id) => {
                             page.id = Some(id.to_string());
+
+                            page.html_output_path = Some(PathBuf::from(format!(
+                                "{}/{}/index.html",
+                                site_config.default_language().unwrap(),
+                                page.id.as_ref().unwrap()
+                            )));
+
+                            match parse_value_from_pagedata(source, "path") {
+                                Ok((_, html_output_paths)) => match html_output_paths.last() {
+                                    Some(html_output_path) => {
+                                        page.html_output_path =
+                                            Some(html_output_path.trim_start_matches("/").into());
+                                    }
+                                    _ => (),
+                                },
+                                Err(_) => (),
+                            }
+
                             Ok(page)
                         }
                         None => Err(NeoError {
