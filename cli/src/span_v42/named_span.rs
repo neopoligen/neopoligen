@@ -1,5 +1,7 @@
+use super::plaintext_without_spaces::plaintext_without_spaces;
 use crate::helpers::flatten_spans_v42;
 use crate::span_v42::any_hyphens::any_hyphens;
+use crate::span_v42::any_underscores::any_underscores;
 use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::SpanV42;
 use crate::spans_v42;
@@ -24,8 +26,6 @@ use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
-
-use super::plaintext_without_spaces::plaintext_without_spaces;
 
 // TODO: move this to its own file
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -111,7 +111,13 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42
 }
 
 pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
-    let (source, spans) = many1(plaintext_without_spaces).context("").parse(source)?;
+    let (source, spans) = many1(alt((
+        plaintext_without_spaces,
+        any_hyphens,
+        any_underscores,
+    )))
+    .context("")
+    .parse(source)?;
     Ok((
         source,
         NamedSpanAttrV42::Flag(FlagSpanAttrV42 {
@@ -174,6 +180,11 @@ mod test {
     #[case("<<em|alfa>>etc...", "etc...")]
     #[case("<<em|alfa-bravo>>etc...", "etc...")]
     #[case("<<em|charlie -- delta>>etc...", "etc...")]
+    #[case("<<alfa|bravo|charlie>>etc...", "etc...")]
+    #[case("<<alfa|bravo|charlie-delta>>etc...", "etc...")]
+    #[case("<<alfa|bravo|charlie--delta>>etc...", "etc...")]
+    #[case("<<alfa|bravo|charlie_delta>>etc...", "etc...")]
+    #[case("<<alfa|bravo|charlie__delta>>etc...", "etc...")]
     fn valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
         match named_span(source) {
             Ok(data) => {
