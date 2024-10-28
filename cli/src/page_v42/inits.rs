@@ -37,36 +37,6 @@ impl PageV42 {
         }
     }
 
-    pub fn old_new_from_fs_path(
-        path: &PathBuf,
-        site_config: &SiteConfigV42,
-    ) -> Result<PageV42, NeoError> {
-        match fs::read_to_string(path) {
-            Ok(source) => match parse_ast_v42(&source, site_config) {
-                Ok(raw_ast) => Ok(PageV42 {
-                    id: None,
-                    error: None,
-                    html_output_path: None,
-                    raw_ast,
-                    source: source.to_string(),
-                    fs_path: PathBuf::from("todo/add/fs_path/to/page_v42"),
-                }),
-                Err(e) => Err(NeoError {
-                    kind: NeoErrorKind::ForwardErrorWithSourcePath {
-                        source_path: path.to_path_buf(),
-                        msg: e.to_string(),
-                    },
-                }),
-            },
-            Err(e) => Err(NeoError {
-                kind: NeoErrorKind::ForwardErrorWithSourcePath {
-                    source_path: path.clone(),
-                    msg: e.to_string(),
-                },
-            }),
-        }
-    }
-
     pub fn new_from_str(
         source: &str,
         source_path: &PathBuf,
