@@ -25,7 +25,7 @@ pub struct UnknownSectionV42 {
     pub attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42>,
     pub bounds: Bound,
     pub children: Vec<SectionV42>,
-    pub end_sections: Vec<SectionV42>,
+    pub end_section: Option<Box<SectionV42>>,
     pub flags: Vec<String>,
     pub kind: String,
     pub template_list: Vec<String>,
@@ -53,7 +53,7 @@ pub fn unknown_section_start_v42<'a>(
     })
     .context("")
     .parse(source)?;
-    let (source, end_sections) = many0(|src| {
+    let (source, end_section) = (|src| {
         end_section_basic_v42(
             src,
             site_config,
@@ -69,7 +69,7 @@ pub fn unknown_section_start_v42<'a>(
         attrs,
         bounds: Bound::Start,
         children,
-        end_sections,
+        end_section: Some(Box::new(end_section)),
         kind: kind.to_string(),
         flags,
         template_list: make_template_list("unknown", "generic", "start", "default"),
@@ -100,7 +100,7 @@ pub fn unknown_section_full_v42<'a>(
         attrs,
         bounds: Bound::Full,
         children,
-        end_sections: vec![],
+        end_section: None,
         kind: kind.to_string(),
         flags,
         template_list: make_template_list("unknown", "generic", "full", "default"),
@@ -147,7 +147,7 @@ mod test {
                 template_list: block_templates.clone(),
             }),
         ];
-        let end_sections = vec![];
+        let end_section = None;
         let kind = "unknown-test-section".to_string();
         let flags = vec![];
         let template_list = vec!["sections/unknown/generic/full/default.neoj".to_string()];
@@ -157,7 +157,7 @@ mod test {
                 attrs,
                 bounds,
                 children,
-                end_sections,
+                end_section,
                 kind,
                 flags,
                 template_list,
@@ -194,7 +194,7 @@ mod test {
                 template_list: block_templates.clone(),
             }),
         ];
-        let end_sections = vec![SectionV42::End(EndSectionV42 {
+        let end_section = Some(Box::new(SectionV42::End(EndSectionV42 {
             attrs: BTreeMap::new(),
             bounds: Bound::End,
             children: vec![],
@@ -204,7 +204,7 @@ mod test {
                 "sections/ends/unknown-test-section/end/default.neoj".to_string(),
                 "sections/ends/generic/end/default.neoj".to_string(),
             ],
-        })];
+        })));
         let kind = "unknown-test-section".to_string();
         let flags = vec![];
         let template_list = vec!["sections/unknown/generic/start/default.neoj".to_string()];
@@ -214,7 +214,7 @@ mod test {
                 attrs,
                 bounds,
                 children,
-                end_sections,
+                end_section,
                 kind,
                 flags,
                 template_list,
