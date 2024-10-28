@@ -21,6 +21,8 @@ use std::path::PathBuf;
 use tracing::{event, instrument, Level};
 
 impl PageV42 {
+    //
+
     #[instrument(skip(site_config))]
     pub fn new_from_fs_path(
         path: &PathBuf,
@@ -38,7 +40,7 @@ impl PageV42 {
         }
     }
 
-    #[instrument(skip(site_config))]
+    #[instrument(skip(source, site_config))]
     pub fn new_from_str(
         source: &str,
         source_path: &PathBuf,
@@ -57,7 +59,6 @@ impl PageV42 {
                     fs_path: source_path.to_path_buf(),
                 };
                 // TODO: Handle pages with no ids
-
                 match page.get_pagedata(&[Value::from("id")]) {
                     Ok(id) => {
                         page.id = Some(id.to_string());
@@ -76,7 +77,6 @@ impl PageV42 {
                         }
                         Ok(page)
                     }
-
                     Err(e) => Err(NeoError {
                         kind: NeoErrorKind::ForwardErrorWithSourcePath {
                             source_path: source_path.clone(),
@@ -84,27 +84,6 @@ impl PageV42 {
                         },
                     }),
                 }
-
-                // page.id = Some(page.get_pagedata(&[Value::from("id")]).unwrap());
-                // match page.get_pagedata(&[Value::from("path")]) {
-                //     Ok(html_output_path) => {
-                //         page.html_output_path =
-                //             Some(html_output_path.trim_start_matches("/").into())
-                //     }
-                //     Err(_e) => {
-                //         page.html_output_path = Some(PathBuf::from(format!(
-                //             "{}/{}/index.html",
-                //             site_config.default_language().unwrap(),
-                //             page.id.as_ref().unwrap()
-                //         )));
-                //     }
-                // }
-
-                //
-
-                // Ok(page)
-
-                //
             }
             Err(_e) => {
                 let mut page = PageV42 {
@@ -116,9 +95,6 @@ impl PageV42 {
                     source: source.to_string(),
                     fs_path: source_path.to_path_buf(),
                 };
-
-                //
-
                 match parse_value_from_pagedata(source, "id") {
                     Ok((_, ids)) => match ids.last() {
                         Some(id) => {
@@ -154,39 +130,11 @@ impl PageV42 {
                         },
                     }),
                 }
-
-                //
-
-                // match get_id(&source) {
-                //     Ok((_, id)) => {
-                //         page.id = Some(id.to_string());
-                //         match get_custom_path(&source) {
-                //             Ok(html_output_path) => {
-                //                 page.html_output_path =
-                //                     Some(html_output_path.1.trim_start_matches("/").into());
-                //             }
-                //             Err(_e) => {
-                //                 page.html_output_path = Some(PathBuf::from(format!(
-                //                     "{}/{}/index.html",
-                //                     site_config.default_language().unwrap(),
-                //                     page.id.as_ref().unwrap()
-                //                 )));
-                //             }
-                //         }
-                //         Ok(page)
-                //     }
-                //     Err(e) => Err(NeoError {
-                //         kind: NeoErrorKind::ForwardErrorWithSourcePath {
-                //             source_path: source_path.clone(),
-                //             msg: e.to_string(),
-                //         },
-                //     }),
-                // }
-
-                //
             }
         }
     }
+
+    //
 }
 
 fn parse_value_from_pagedata<'a>(
@@ -198,28 +146,6 @@ fn parse_value_from_pagedata<'a>(
     let (source, things) = many1(|src| parse_pagedata_attr(src, target)).parse(source)?;
     Ok((source, things))
 }
-
-//fn get_section_or_attr_name<'a>(source: &'a str, target: &'a str) -> IResult<&'a str, &'a str> {
-//    let (source, _) = many0(tuple((
-//        opt(is_not("-")),
-//        not(tuple((tag("--"), space1, tag(target), opt(tag(":"))))),
-//        is_a("-"),
-//    )))
-//    .parse(source)?;
-//    let (source, thing) = preceded(
-//        tuple((
-//            opt(is_not("-")),
-//            tag("--"),
-//            space1,
-//            tag(target),
-//            opt(pair(tag(":"), space1)),
-//            //space1,
-//        )),
-//        is_not("\n\r"),
-//    )
-//    .parse(source)?;
-//    Ok((source, thing.trim()))
-//}
 
 fn move_parser_to_last_instance_of_section<'a>(
     source: &'a str,
@@ -256,30 +182,6 @@ fn parse_pagedata_attr<'a>(source: &'a str, target: &'a str) -> IResult<&'a str,
     .parse(source)?;
     Ok((source, id.trim()))
 }
-
-// // TODO: Deprecate in favor of generic approach
-// fn get_id(source: &str) -> IResult<&str, &str> {
-//     let (source, _) =
-//         many0(tuple((opt(is_not("-")), not(tag("-- id:")), is_a("-")))).parse(source)?;
-//     let (source, id) = preceded(
-//         tuple((is_not("-"), tag("--"), space1, tag("id:"), space1)),
-//         is_not("\n\r"),
-//     )
-//     .parse(source)?;
-//     Ok((source, id.trim()))
-// }
-
-// // TODO: Deprecate in favor of generic approach
-// fn get_custom_path(source: &str) -> IResult<&str, &str> {
-//     let (source, _) =
-//         many0(tuple((opt(is_not("-")), not(tag("-- path:")), is_a("-")))).parse(source)?;
-//     let (source, path) = preceded(
-//         tuple((is_not("-"), tag("--"), space1, tag("path:"), space1)),
-//         is_not("\n\r"),
-//     )
-//     .parse(source)?;
-//     Ok((source, path.trim()))
-// }
 
 #[cfg(test)]
 mod test {
