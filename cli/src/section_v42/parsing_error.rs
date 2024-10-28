@@ -16,6 +16,7 @@ pub struct ParsingErrorSectionV42 {
     pub line: usize,
     pub column: usize,
     pub output_remainder: String,
+    pub output_remainder_with_padding: String,
     pub output_source: String,
     pub raw_remainder: String,
     pub raw_source: String,

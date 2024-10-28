@@ -32,14 +32,8 @@ body {
   margin-top: var(--flow-space, 1em);
 }
 
-.parsing-success {
-  border-top: 1px solid green;
-  border-left: 1px solid green;
-  border-right: 1px solid green;
-}
-
 .parsing-error {
-  border: 1px solid red;
+  background-color: rgb(80 0 0 / .2);
 }
 
 </style>
@@ -55,9 +49,9 @@ body {
     [!- block endmatter -!][!- endblock -!]
   </main>
   <footer class="wrapper-medium">
+      <div>Debug - Page ID: [@ page.id @]</div>
       <pre>
-        Debug: page id: [@ page.id() @]
-        [@ page.ast()|tojson(true) @]
+        [@- page.sections |tojson(true) -@]
       </pre>
   </footer>
 </body>

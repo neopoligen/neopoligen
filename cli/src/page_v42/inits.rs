@@ -112,8 +112,9 @@ impl PageV42 {
                         source,
                         message,
                     } => {
-                        let mut output_remainder = format!("{:>width$}", "", width = column - 1);
-                        output_remainder.push_str(remainder.as_str());
+                        let mut output_remainder_with_padding =
+                            format!("{:>width$}", "", width = column - 1);
+                        output_remainder_with_padding.push_str(remainder.as_str());
 
                         let output_source = match source.strip_suffix(remainder.as_str()) {
                             Some(text) => text.to_string(),
@@ -153,7 +154,8 @@ impl PageV42 {
                                 column: *column,
                                 line: *line,
                                 output_source,
-                                output_remainder,
+                                output_remainder: remainder.to_string(),
+                                output_remainder_with_padding,
                                 raw_remainder: remainder.to_string(),
                                 raw_source: source.to_string(),
                                 message: message.to_string(),

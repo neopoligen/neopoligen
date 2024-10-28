@@ -4,14 +4,12 @@
 <h3>Details</h3>
 
 <div class="paring-error-report">
-<pre class="parsing-success">
+<pre>
 [!- autoescape true -!]
 [@- section.output_source -@]
 [!- endautoescape -!]
-</pre>
-<pre class="parsing-error">
 [!- autoescape true -!]
-[@- section.output_remainder -@]
+<span class="parsing-error">[@- section.output_remainder -@]</span>
 [!- endautoescape -!]
 </pre>
 </div>
