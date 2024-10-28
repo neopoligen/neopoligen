@@ -20,7 +20,7 @@ pub struct NamedSpan {
 }
 
 pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, name) = preceded(pair(tag("<<"), space0), is_not("> \t\r\n"))
+    let (source, name) = preceded(pair(tag("<<"), space0), is_not("> \t\r\n:/\\"))
         .context("")
         .parse(source)?;
     dbg!(source);
@@ -55,6 +55,31 @@ mod test {
             Err(e) => {
                 dbg!(e);
                 assert!(false)
+            }
+        }
+    }
+
+    #[rstest]
+    #[case(
+        "<<hr:>>",
+        "colon not allowed to prevent issues wtih file paths for templates"
+    )]
+    #[case(
+        "<<hr/>>",
+        "forward slaches not allowed to prevent issues wtih file paths for templates"
+    )]
+    #[case(
+        "<<hr\\>>",
+        "back slaches not allowed to prevent issues wtih file paths for templates"
+    )]
+    fn solo_invalid_cases(#[case] source: &str, #[case] _note: &str) {
+        match named_span(source) {
+            Ok(data) => {
+                dbg!(data);
+                assert!(false);
+            }
+            Err(e) => {
+                assert!(true)
             }
         }
     }
