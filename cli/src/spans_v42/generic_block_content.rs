@@ -1,6 +1,7 @@
+use crate::span_v42::any_hyphen::any_hyphens;
 use crate::span_v42::block_line_ending::block_line_ending;
 use crate::span_v42::plaintext::plaintext;
-use crate::span_v42::single_hyphen::single_hyphen;
+use crate::span_v42::single_exclamation::single_exclamation;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
 use nom::character::complete::multispace0;
@@ -13,9 +14,14 @@ use nom_supreme::ParserExt;
 pub fn spans_of_generic_block_content<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Vec<SpanV42>, ErrorTree<&'a str>> {
-    let (source, output) = many1(alt((plaintext, single_hyphen, block_line_ending)))
-        .context("")
-        .parse(source)?;
+    let (source, output) = many1(alt((
+        plaintext,
+        any_hyphens,
+        single_exclamation,
+        block_line_ending,
+    )))
+    .context("")
+    .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     Ok((source, output))
 }
