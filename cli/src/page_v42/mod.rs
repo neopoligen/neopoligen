@@ -36,21 +36,21 @@ impl PageV42 {
             } else {
                 Ok(base_path
                     .clone()
-                    .join(self.id().unwrap())
+                    .join(self.id.clone().unwrap())
                     .join("index.html"))
             }
         } else {
             Ok(base_path
                 .clone()
-                .join(self.id().unwrap())
+                .join(self.id.clone().unwrap())
                 .join("index.html"))
         }
     }
 
-    // TODO: Deprecate in favor of top level .id (field not method)
-    pub fn id(&self) -> Result<String, Error> {
-        self.get_pagedata(&[Value::from("id")])
-    }
+    // // TODO: Deprecate in favor of top level .id (field not method)
+    // pub fn id(&self) -> Result<String, Error> {
+    //     self.get_pagedata(&[Value::from("id")])
+    // }
 
     pub fn get_pagedata(&self, args: &[Value]) -> Result<String, Error> {
         if args.len() == 0 {
@@ -112,7 +112,7 @@ impl Object for PageV42 {
         match name {
             "ast" => self.ast(),
             "get_pagedata" => self.make_value_from_string(self.get_pagedata(args)),
-            "id" => self.make_value_from_string(self.id()),
+            // "id" => self.make_value_from_string(self.id.clone()),
             // "sections" => self.sections(),
             // "title" => self.title(),
             _ => Ok(Value::from("")),
