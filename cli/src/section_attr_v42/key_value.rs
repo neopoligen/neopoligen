@@ -1,17 +1,11 @@
 #![allow(unused_imports)]
-use crate::section_attr_v42::SectionAttrV42;
-use crate::span_v42::*;
-// use crate::section::block::block_of_main_content_v42;
-// use crate::section::block::block_of_section_attr_value_v42;
-// use crate::span::colon::colon;
-// use crate::span::double_underscore::double_underscore;
-// use crate::span::escaped_pipe::escaped_pipe;
-// use crate::span::hyphen::hyphen;
-// use crate::span::pipe::pipe;
-// use crate::span::single_underscore::single_underscore;
 use crate::helpers::dump_parser_if_debug;
-use crate::spans_v42::section_key_value_attr_value::spans_of_section_key_value_attr_value;
-// use crate::span::*;
+use crate::section_attr_v42::SectionAttrV42;
+use crate::span_v42::any_colon::any_colon;
+use crate::span_v42::any_hyphen::any_hyphens;
+use crate::span_v42::plaintext::plaintext;
+use crate::span_v42::single_underscore::single_underscore;
+use crate::span_v42::*;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
@@ -78,6 +72,15 @@ pub fn section_key_value_attr_v42<'a>(
     ))
 }
 
+pub fn spans_of_section_key_value_attr_value<'a>(
+    source: &'a str,
+) -> IResult<&'a str, Vec<SpanV42>, ErrorTree<&'a str>> {
+    let (source, output) = many1(alt((plaintext, any_colon, any_hyphens, single_underscore)))
+        .context("")
+        .parse(source)?;
+    Ok((source, output))
+}
+
 // pub fn section_flag_attr_v42<'a>(
 //     source: &'a str,
 // ) -> IResult<&'a str, SectionAttrV42, ErrorTree<&'a str>> {
@@ -127,7 +130,7 @@ mod test {
     // #[case("  leading_spaces_are_okay")]
     // #[case("trailing_spaces_are_okay   ")]
     // #[case("these_characters_are_okay:!@#$%^&*()[]<>|-")]
-    fn section_flag_attr_v42_valid_flags(#[case] left_key: &str, #[case] left_value: &str) {
+    fn solo_section_flag_attr_v42_valid_flags(#[case] left_key: &str, #[case] left_value: &str) {
         let source = format!("-- {}: {}", left_key, left_value);
         let response = section_key_value_attr_v42(source.as_str()).unwrap();
         let right = match response.1 {

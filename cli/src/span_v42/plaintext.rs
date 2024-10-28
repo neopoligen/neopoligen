@@ -16,7 +16,7 @@ pub struct PlainTextSpan {
 }
 
 pub fn plaintext(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, output) = is_not("\r\n<>`-|:\\").context("").parse(source)?;
+    let (source, output) = is_not("\r\n<>`-|:_!@#$^&*()\\").context("").parse(source)?;
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
