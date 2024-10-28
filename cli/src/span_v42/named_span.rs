@@ -1,3 +1,4 @@
+use crate::helpers::flatten_spans_v42;
 use crate::span_v42::any_hyphens::any_hyphens;
 use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::SpanV42;
@@ -66,7 +67,7 @@ pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
         source,
         SpanV42::NamedSpan(NamedSpanV42 {
             attrs: BTreeMap::new(),
-            flags: vec![],
+            flags,
             name,
             spans,
         }),
@@ -75,16 +76,25 @@ pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
 
 pub fn named_span_attrs_and_flags(
     source: &str,
-) -> IResult<&str, (Vec<NamedSpanAttrV42>, Vec<NamedSpanAttrV42>), ErrorTree<&str>> {
+) -> IResult<&str, (Vec<NamedSpanAttrV42>, Vec<String>), ErrorTree<&str>> {
     let (source, attr_flags) = many0(named_span_attr_flag).context("").parse(source)?;
-    Ok((source, (vec![], vec![])))
+    let flags = attr_flags
+        .iter()
+        .filter_map(|af| match af {
+            NamedSpanAttrV42::Flag(f) => Some(f.value.clone()),
+            _ => None,
+        })
+        .collect::<Vec<String>>();
+
+    Ok((source, (vec![], flags)))
 }
 
-pub fn named_span_attr_flag(source: &str) -> IResult<&str, Vec<NamedSpanAttrV42>, ErrorTree<&str>> {
-    let (source, attrs) = many0(alt((named_span_key_value_attr, named_span_flag_attr)))
+pub fn named_span_attr_flag(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
+    let (source, _) = tag("|").context("").parse(source)?;
+    let (source, attr) = alt((named_span_key_value_attr, named_span_flag_attr))
         .context("")
         .parse(source)?;
-    Ok((source, attrs))
+    Ok((source, attr))
 }
 
 pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
@@ -99,11 +109,12 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42
 }
 
 pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
-    let (source, attr) = tag("asdf").context("").parse(source)?;
+    // TODO: Make plaintext_without_spaces
+    let (source, spans) = many1(plaintext).context("").parse(source)?;
     Ok((
         source,
         NamedSpanAttrV42::Flag(FlagSpanAttrV42 {
-            value: "asdf".to_string(),
+            value: flatten_spans_v42(&spans),
         }),
     ))
 }
@@ -115,9 +126,8 @@ pub fn named_span_content_span(source: &str) -> IResult<&str, SpanV42, ErrorTree
 
 #[cfg(test)]
 mod test {
-    use crate::span_v42::PlainTextSpan;
-
     use super::*;
+    use crate::span_v42::PlainTextSpan;
     use pretty_assertions::assert_eq;
     use rstest::rstest;
 
@@ -147,9 +157,9 @@ mod test {
             SpanV42::NamedSpan(NamedSpanV42 {
                 attrs: BTreeMap::new(),
                 flags: vec!["foxtrot".to_string()],
-                name: "sierra".to_string(),
+                name: "delta".to_string(),
                 spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
-                    output: "tango".to_string(),
+                    output: "echo".to_string(),
                 })]),
             }),
         );
