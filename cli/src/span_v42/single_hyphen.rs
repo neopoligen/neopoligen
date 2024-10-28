@@ -13,7 +13,7 @@ pub fn single_hyphen(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            output: output.to_string(),
+            text: output.to_string(),
         }),
     ))
 }
@@ -29,7 +29,7 @@ mod test {
         let left = (
             "",
             SpanV42::PlainText(PlainTextSpan {
-                output: "-".to_string(),
+                text: "-".to_string(),
             }),
         );
         let right = single_hyphen(source).unwrap();
@@ -42,7 +42,7 @@ mod test {
         let left = (
             "alfa",
             SpanV42::PlainText(PlainTextSpan {
-                output: "-".to_string(),
+                text: "-".to_string(),
             }),
         );
         let right = single_hyphen(source).unwrap();

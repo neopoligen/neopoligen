@@ -11,7 +11,7 @@ pub fn any_hyphens(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            output: result.to_string(),
+            text: result.to_string(),
         }),
     ))
 }
@@ -27,7 +27,7 @@ mod test {
         let left = (
             "",
             SpanV42::PlainText(PlainTextSpan {
-                output: "-".to_string(),
+                text: "-".to_string(),
             }),
         );
         let right = any_hyphens(source).unwrap();
@@ -40,7 +40,7 @@ mod test {
         let left = (
             "",
             SpanV42::PlainText(PlainTextSpan {
-                output: "--".to_string(),
+                text: "--".to_string(),
             }),
         );
         let right = any_hyphens(source).unwrap();

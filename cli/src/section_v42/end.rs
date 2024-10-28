@@ -88,7 +88,7 @@ mod test {
                 children: vec![],
                 kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
-                    output: "Tango".to_string(),
+                    text: "Tango".to_string(),
                 })],
                 text: "Tango".to_string(),
                 template_list: block_templates.clone(),
@@ -97,7 +97,7 @@ mod test {
                 children: vec![],
                 kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
-                    output: "Foxtrot".to_string(),
+                    text: "Foxtrot".to_string(),
                 })],
                 text: "Foxtrot".to_string(),
                 template_list: block_templates.clone(),

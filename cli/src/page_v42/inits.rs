@@ -129,7 +129,7 @@ impl PageV42 {
                                     children: vec![],
                                     kind: "paragraph".to_string(),
                                     spans: vec![SpanV42::PlainText(PlainTextSpan {
-                                        output: "Content Parsing Error".to_string(),
+                                        text: "Content Parsing Error".to_string(),
                                     })],
                                     text: "Delta".to_string(),
                                     template_list: vec![
@@ -173,7 +173,7 @@ impl PageV42 {
                 //             children: vec![],
                 //             kind: "paragraph".to_string(),
                 //             spans: vec![SpanV42::PlainText(PlainTextSpan {
-                //                 output: "Content Parsing Error".to_string(),
+                //                 text: "Content Parsing Error".to_string(),
                 //             })],
                 //             text: "Delta".to_string(),
                 //             template_list: vec![

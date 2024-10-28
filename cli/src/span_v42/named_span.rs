@@ -142,7 +142,7 @@ mod test {
                 flags: vec![],
                 name: "sierra".to_string(),
                 spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
-                    output: "tango".to_string(),
+                    text: "tango".to_string(),
                 })]),
             }),
         );
@@ -160,7 +160,7 @@ mod test {
                 flags: vec!["foxtrot".to_string()],
                 name: "delta".to_string(),
                 spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
-                    output: "echo".to_string(),
+                    text: "echo".to_string(),
                 })]),
             }),
         );

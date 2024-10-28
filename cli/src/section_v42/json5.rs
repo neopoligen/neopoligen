@@ -99,7 +99,7 @@ mod test {
             SectionKeyValueAttrPayloadV42 {
                 text: "abcd1234".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
-                    output: "abcd1234".to_string(),
+                    text: "abcd1234".to_string(),
                 })],
             },
         );
@@ -108,7 +108,7 @@ mod test {
             SectionKeyValueAttrPayloadV42 {
                 text: "draft".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
-                    output: "draft".to_string(),
+                    text: "draft".to_string(),
                 })],
             },
         );

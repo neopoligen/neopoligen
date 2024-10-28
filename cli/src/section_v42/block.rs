@@ -68,7 +68,7 @@ mod test {
                 children: vec![],
                 kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
-                    output: "this is some text".to_string(),
+                    text: "this is some text".to_string(),
                 })],
                 text: "this is some text".to_string(),
                 template_list,
@@ -96,13 +96,13 @@ mod test {
                 kind: "paragraph".to_string(),
                 spans: vec![
                     SpanV42::PlainText(PlainTextSpan {
-                        output: "multiple".to_string(),
+                        text: "multiple".to_string(),
                     }),
                     SpanV42::PlainText(PlainTextSpan {
-                        output: " ".to_string(),
+                        text: " ".to_string(),
                     }),
                     SpanV42::PlainText(PlainTextSpan {
-                        output: "lines".to_string(),
+                        text: "lines".to_string(),
                     }),
                 ],
                 text: "multiple lines".to_string(),

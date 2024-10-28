@@ -21,7 +21,7 @@ pub fn plaintext_without_spaces(source: &str) -> IResult<&str, SpanV42, ErrorTre
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            output: output.to_string(),
+            text: output.to_string(),
         }),
     ))
 }

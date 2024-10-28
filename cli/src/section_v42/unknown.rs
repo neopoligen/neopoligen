@@ -132,7 +132,7 @@ mod test {
                 children: vec![],
                 kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
-                    output: "Content".to_string(),
+                    text: "Content".to_string(),
                 })],
                 text: "Content".to_string(),
                 template_list: block_templates.clone(),
@@ -141,7 +141,7 @@ mod test {
                 children: vec![],
                 kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
-                    output: "Blocks".to_string(),
+                    text: "Blocks".to_string(),
                 })],
                 text: "Blocks".to_string(),
                 template_list: block_templates.clone(),
@@ -180,7 +180,7 @@ mod test {
                 children: vec![],
                 kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
-                    output: "Delta".to_string(),
+                    text: "Delta".to_string(),
                 })],
                 text: "Delta".to_string(),
                 template_list: block_templates.clone(),
@@ -189,7 +189,7 @@ mod test {
                 children: vec![],
                 kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
-                    output: "Tango".to_string(),
+                    text: "Tango".to_string(),
                 })],
                 text: "Tango".to_string(),
                 template_list: block_templates.clone(),
@@ -240,7 +240,7 @@ mod test {
     //             attrs: vec![SectionKeyValueAttrV42 {
     //                 key: "test-key".to_string(),
     //                 value: vec![SpanV42::PlainText(PlainTextSpan {
-    //                     output: "testValue".to_string(),
+    //                     text: "testValue".to_string(),
     //                 })],
     //             }],
     //             children: vec![],

@@ -69,7 +69,7 @@ pub fn flatten_spans_v42(spans: &Vec<SpanV42>) -> String {
     spans
         .iter()
         .map(|span| match span {
-            SpanV42::PlainText(s) => s.output.to_string(),
+            SpanV42::PlainText(s) => s.text.to_string(),
             SpanV42::NamedSpan(_s) => {
                 "NEO_TODO: Cover NamedSpan in flatten_spans_v42 in helpers/mod.rs".to_string()
             }

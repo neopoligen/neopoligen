@@ -12,7 +12,7 @@ use std::sync::Arc;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PlainTextSpan {
-    pub output: String,
+    pub text: String,
 }
 
 pub fn plaintext(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
@@ -23,7 +23,7 @@ pub fn plaintext(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            output: output.to_string(),
+            text: output.to_string(),
         }),
     ))
 }

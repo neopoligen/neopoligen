@@ -107,7 +107,7 @@ mod test {
     //             attrs: vec![SectionKeyValueAttrV42 {
     //                 key: "test-key".to_string(),
     //                 value: vec![SpanV42::PlainText(PlainTextSpan {
-    //                     output: "testValue".to_string(),
+    //                     text: "testValue".to_string(),
     //                 })],
     //             }],
     //             children: vec![],

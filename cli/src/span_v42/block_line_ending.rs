@@ -24,7 +24,7 @@ pub fn block_line_ending(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            output: " ".to_string(),
+            text: " ".to_string(),
         }),
     ))
 }
@@ -40,7 +40,7 @@ mod test {
         let left = (
             "x",
             SpanV42::PlainText(PlainTextSpan {
-                output: " ".to_string(),
+                text: " ".to_string(),
             }),
         );
         let right = block_line_ending(source).unwrap();
@@ -53,7 +53,7 @@ mod test {
         let left = (
             "x",
             SpanV42::PlainText(PlainTextSpan {
-                output: " ".to_string(),
+                text: " ".to_string(),
             }),
         );
         let right = block_line_ending(source).unwrap();

@@ -21,7 +21,7 @@ pub fn single_line_ending<'a>(source: &'a str) -> IResult<&'a str, SpanV42, Erro
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            output: " ".to_string(),
+            text: " ".to_string(),
         }),
     ))
 }
@@ -37,7 +37,7 @@ mod test {
         let left = (
             "x",
             SpanV42::PlainText(PlainTextSpan {
-                output: " ".to_string(),
+                text: " ".to_string(),
             }),
         );
         let right = single_line_ending(source).unwrap();
