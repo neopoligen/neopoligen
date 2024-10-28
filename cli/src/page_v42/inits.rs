@@ -17,15 +17,15 @@ use nom::IResult;
 use nom::Parser;
 use std::fs;
 use std::path::PathBuf;
-// use tracing::{event, instrument, Level};
+use tracing::{event, instrument, Level};
 
 impl PageV42 {
-    //#[instrument()]
-
+    #[instrument(skip(site_config))]
     pub fn new_from_fs_path(
         path: &PathBuf,
         site_config: &SiteConfigV42,
     ) -> Result<PageV42, NeoError> {
+        event!(Level::DEBUG, "new_from_fs_path");
         match fs::read_to_string(path) {
             Ok(source) => PageV42::new_from_str(&source, path, site_config),
             Err(e) => Err(NeoError {
@@ -37,11 +37,13 @@ impl PageV42 {
         }
     }
 
+    #[instrument(skip(site_config))]
     pub fn new_from_str(
         source: &str,
         source_path: &PathBuf,
         site_config: &SiteConfigV42,
     ) -> Result<PageV42, NeoError> {
+        event!(Level::DEBUG, "new_from_str");
         match parse_ast_v42(&source, site_config) {
             Ok(raw_ast) => {
                 let mut page = PageV42 {
@@ -54,11 +56,16 @@ impl PageV42 {
                 };
                 // TODO: Handle pages with no ids
                 page.id = Some(page.get_pagedata(&[Value::from("id")]).unwrap());
-                page.html_output_path = Some(PathBuf::from(format!(
-                    "{}/{}/index.html",
-                    site_config.default_language().unwrap(),
-                    page.id.as_ref().unwrap()
-                )));
+                match page.get_pagedata(&[Value::from("path")]) {
+                    Ok(html_output_path) => page.html_output_path = Some(html_output_path.into()),
+                    Err(_e) => {
+                        page.html_output_path = Some(PathBuf::from(format!(
+                            "{}/{}/index.html",
+                            site_config.default_language().unwrap(),
+                            page.id.as_ref().unwrap()
+                        )));
+                    }
+                }
                 Ok(page)
             }
             Err(_e) => {
@@ -121,12 +128,23 @@ mod test {
     }
 
     #[test]
-    fn solo_default_get_html_output_path() {
+    fn default_get_html_output_path() {
         let source = get_include_str_file(VALID_SAMPLES, "001-pagedata-only.neo");
         let source_path = PathBuf::from("mock/source/path/file.neo");
         let site_config = SiteConfigV42::mock1_basic();
         let page = PageV42::new_from_str(&source, &source_path, &site_config).unwrap();
         let left = PathBuf::from("en/001-pagedata-only.neo/index.html");
+        let right = page.html_output_path.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_custom_html_output_path() {
+        let source = get_include_str_file(VALID_SAMPLES, "003-custom-path-in-pagedata.neo");
+        let source_path = PathBuf::from("mock/source/path/file.neo");
+        let site_config = SiteConfigV42::mock1_basic();
+        let page = PageV42::new_from_str(&source, &source_path, &site_config).unwrap();
+        let left = PathBuf::from("/index.html");
         let right = page.html_output_path.unwrap();
         assert_eq!(left, right);
     }
