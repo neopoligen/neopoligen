@@ -12,6 +12,17 @@ body {
 .unknown-section {
   background-color: green;
 }
+
+*, 
+*::before, 
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
 </style>
 </head>
 <body>

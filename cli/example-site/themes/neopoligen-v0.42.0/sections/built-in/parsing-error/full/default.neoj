@@ -1,25 +1,18 @@
 <div>Error: [@ section.message @]</div>
 <div>Occurred at line: [@ section.line @] column: [@ section.column @]</div>
 
-<h2>This parsed successfully</h2>
-<pre>
-[@ section.output_source @]
+<h3>Details</h3>
+
+<div class="paring-error-report">
+<pre class="parsing-success">
+[!- autoescape true -!]
+[@- section.output_source -@]
+[!- endautoescape -!]
 </pre>
-
-<h2>The error occurred here</h2>
-
-<pre>
-[@ section.output_remainder @]
+<pre class="parsing-error">
+[!- autoescape true -!]
+[@- section.output_remainder -@]
+[!- endautoescape -!]
 </pre>
+</div>
 
-
-<h2>Full source for reference</h2>
-
-<pre>
-[@ section.raw_source @]
-</pre>
-
-
-<pre>
-[@ section|tojson(true) @]
-</pre>

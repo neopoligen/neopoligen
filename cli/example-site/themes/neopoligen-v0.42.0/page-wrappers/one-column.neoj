@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+body {
+  xbackground-color: #333;
+  xcolor: #aaa;
+}
+
+.unknown-section {
+  background-color: green;
+}
+
+*, 
+*::before, 
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+.wrapper-medium {
+  max-width: 64ch;
+  margin: auto;
+}
+
+.flow > :where(:not(:first-child)) {
+  margin-top: var(--flow-space, 1em);
+}
+
+.parsing-success {
+  border-top: 1px solid green;
+  border-left: 1px solid green;
+  border-right: 1px solid green;
+}
+
+.parsing-error {
+  border: 1px solid red;
+}
+
+</style>
+</head>
+<body>
+  <header class="wrapper-medium">
+    <nav class="global-nav">
+      <a href="/">Home</a></li>
+    </nav>
+  </header>
+  <main class="wrapper-medium flow">
+    [!- block body -!][!- endblock -!]
+    [!- block endmatter -!][!- endblock -!]
+  </main>
+  <footer class="wrapper-medium">
+      <pre>
+        Debug: page id: [@ page.id() @]
+        [@ page.ast()|tojson(true) @]
+      </pre>
+  </footer>
+</body>
+</html>
+
+

@@ -1,23 +1,9 @@
-[! import "helpers/theme.neoj" as theme !]
+[!- extends "page-wrappers/one-column.neoj" -!]
+[!- import "helpers/theme.neoj" as theme -!]
 
-<!DOCTYPE html>
-<html>
-<head>
-<style>
-body {
-  background-color: #333;
-  color: goldenrod;
-}
-</style>
-</head>
-<body>
-<div>ID: [@ page.id @]</div>
+[!- block body -!]
 [! for section in page.sections !]
 [@ theme.output_section(site, page, section) @]
 [! endfor !]
+[!- endblock -!]
 
-<pre>
-[@ page.sections|tojson(true) @]
-</pre>
-</body>
-</html>

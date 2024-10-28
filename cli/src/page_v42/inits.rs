@@ -112,8 +112,13 @@ impl PageV42 {
                         source,
                         message,
                     } => {
-                        let output_source = "THIS IS OUTPUT SOURCE".to_string();
-                        let output_remainder = "THIS IS OUTPUT REMAINDER".to_string();
+                        let mut output_remainder = format!("{:>width$}", "", width = column - 1);
+                        output_remainder.push_str(remainder.as_str());
+
+                        let output_source = match source.strip_suffix(remainder.as_str()) {
+                            Some(text) => text.to_string(),
+                            None => "Could not properly get initial string".to_string(),
+                        };
 
                         page.raw_ast = vec![
                             SectionV42::Basic(BasicSectionV42 {
