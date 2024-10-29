@@ -66,10 +66,10 @@ fn solo_test_named_spans() {
     valid.iter().for_each(|ti| {
         let parsed = named_span(&ti.source);
         if parsed.is_ok() {
-            let check = Value::from_serialize(&parsed.unwrap().1);
-            let against =
+            let expected =
                 serde_json5::from_str::<Value>(ti.result.clone().unwrap().as_str()).unwrap();
-            assert_eq!(check, against);
+            let got = Value::from_serialize(&parsed.unwrap().1);
+            assert_eq!(expected, got);
         } else {
             dbg!(&ti.description);
             assert!(false);

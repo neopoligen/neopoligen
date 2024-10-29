@@ -2,6 +2,8 @@ use super::not_pipe_or_greater_than_or_less_than_or_escape::not_pipe_or_greater_
 use super::single_greater_than::single_greater_than;
 use super::single_less_than::single_less_than;
 use crate::helpers::flatten_spans_v42;
+use crate::span_v42::any_hyphens::any_hyphens;
+use crate::span_v42::any_underscores::any_underscores;
 use crate::span_v42::escaped_character::*;
 use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::SpanV42;
@@ -129,6 +131,10 @@ pub fn named_span_attrs_and_flags(
 
 pub fn named_span_attr_flag(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
+    // NOTE: key/value must come first so that flags with any
+    // content including colons will work as expected. It's
+    // only a key/value if the initial string is alphanumeric
+    // plus hyphen plus underscore
     let (source, attr) = alt((named_span_key_value_attr, named_span_flag_attr))
         .context("")
         .parse(source)?;
@@ -136,9 +142,12 @@ pub fn named_span_attr_flag(source: &str) -> IResult<&str, NamedSpanAttrV42, Err
 }
 
 pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
-    let (source, key_spans) = terminated(many1(alt((plaintext,))), pair(tag(":"), space1))
-        .context("")
-        .parse(source)?;
+    let (source, key_spans) = terminated(
+        many1(alt((plaintext, any_hyphens, any_underscores))),
+        pair(tag(":"), space1),
+    )
+    .context("")
+    .parse(source)?;
     let (source, spans) = many1(alt((not_pipe_or_greater_than_or_less_than_or_escape,)))
         .context("")
         .parse(source)?;
