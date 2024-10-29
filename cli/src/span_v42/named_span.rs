@@ -58,11 +58,11 @@ pub enum NamedSpanAttrV42 {
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct NamedSpanV42 {
-    attrs: BTreeMap<String, NamedSpanKeyValueAttrPayloadV42>,
-    flags: Vec<String>,
-    kind: String,
-    spans: Option<Vec<SpanV42>>,
-    text: Option<String>,
+    pub attrs: BTreeMap<String, NamedSpanKeyValueAttrPayloadV42>,
+    pub flags: Vec<String>,
+    pub kind: String,
+    pub spans: Option<Vec<SpanV42>>,
+    pub text: Option<String>,
 }
 
 pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
@@ -189,6 +189,7 @@ pub fn named_span_content_span(source: &str) -> IResult<&str, SpanV42, ErrorTree
         escaped_less_than,
         escaped_pipe,
         escaped_backslash,
+        named_span,
     ))
     .context("")
     .parse(source)?;

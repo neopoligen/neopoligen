@@ -143,12 +143,12 @@ Valid Named Spans
         "description": "Flags can come after content",
         "source": "<<alfa|bravo|charlie>>",
         "result": '{ "attrs": {}, "flags": ["charlie"], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
-        "notes": ["Flages are any valid content value that doesn't have a ':' followed by a space in it (which would make it a key for a key/value pair instead)"],
+        "notes": [],
       },
       {
         "description": "Flags can have any basic content",
-        "source": "<<alfa|bravo|https://www.example.com/?ping=@pong>>",
-        "result": '{ "attrs": {}, "flags": ["https://www.example.com/?ping=@pong"], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
+        "source": "<<alfa|bravo|charlie ~!@#$:x>>",
+        "result": '{ "attrs": {}, "flags": ["charlie ~!@#$:x"], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
         "notes": [],
       },
       {
@@ -185,6 +185,25 @@ Valid Named Spans
           ],
       },
       {
+        "description": "Key value keys can be be alphanumeric",
+        "source": "<<alfa|bravo|charlie1: delta>>",
+        "result": '{ "attrs": { "charlie1": { "text": "delta", "spans": [{"text": "delta", "type": "plaintext"}]}}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
+        "notes": [
+          "Key/value attributes are identivied by having a string that ends with a ':' followed by whitespace then a string of content",
+          "The same rules that apply for the names of the spans themselves as well as the flags applie to the keys too",
+          ],
+      },
+      {
+        "description": "Key value keys can have hyphens",
+        "source": "<<alfa|bravo|charlie-delta: echo>>",
+        "result": '{ "attrs": { "charlie-delta": { "text": "echo", "spans": [{"text": "echo", "type": "plaintext"}]}}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
+        "notes": [
+          "Key/value attributes are identivied by having a string that ends with a ':' followed by whitespace then a string of content",
+          "The same rules that apply for the names of the spans themselves as well as the flags applie to the keys too",
+          ],
+      },
+
+      {
         "description": "Key value attribute values can have any content except pipes or double greater thans",
         "source": "<<alfa|bravo|charlie: ~!@#$%>>",
         "result": '{ "attrs": { "charlie": { "text": "~!@#$%", "spans": [{"text": "~!@#$%", "type": "plaintext"}]}}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
@@ -192,6 +211,13 @@ Valid Named Spans
           "Key/value attributes are identivied by having a string that ends with a ':' followed by whitespace then a string of content",
           "The same rules that apply for the names of the spans themselves as well as the flags applie to the keys too",
           ],
+      },
+
+      {
+        "description": "Named spans can nest",
+        "source": "<<alfa|bravo <<charlie|delta>> echo>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo ", "type": "plaintext"}, {"attrs": {}, "flags": [], "kind": "charlie", "spans": [{"text": "delta", "type": "plaintext"}], "text": "delta", "type": "namedspan" }, { "text": " echo", "type": "plaintext" }], "text": "bravo delta echo", "type": "namedspan" }',
+        "notes": [],
       },
 
     ],
