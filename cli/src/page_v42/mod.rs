@@ -190,6 +190,14 @@ mod test {
     }
 
     #[test]
+    fn id_from_invalid_page() {
+        let page = PageV42::test_from_sample_file("006-unclosed-start-section.neo");
+        let left = "006-unclosed-start-section.neo".to_string();
+        let right = page.id.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
     fn title_from_pagedata_id() {
         let page = PageV42::test_from_sample_file("001-pagedata-only.neo");
         let left = Value::from_serialize(PageTitleV42 {
@@ -241,16 +249,6 @@ mod test {
         let page = PageV42::test_from_sample_file("003-custom-path-in-pagedata.neo");
         let left = PathBuf::from("index.html");
         let right = page.html_output_path.unwrap();
-        assert_eq!(left, right);
-    }
-
-    // TODO: Redo so it calls the new build method
-    #[test]
-    #[ignore]
-    fn unknown_start_end() {
-        let page = PageV42::valid_sample_mock("004-unknown-start-end.neo");
-        let left = "004-unknown-start-end.neo".to_string();
-        let right = page.id.unwrap();
         assert_eq!(left, right);
     }
 
