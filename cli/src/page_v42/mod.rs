@@ -145,10 +145,6 @@ impl PageV42 {
     }
 }
 
-// pub fn get_id_from_invalid_page(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
-//     Ok((source, "no id"))
-// }
-
 impl Object for PageV42 {
     fn get_value(self: &Arc<Self>, key: &Value) -> Option<Value> {
         match key.as_str()? {
