@@ -157,9 +157,15 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42
 }
 
 pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
-    let (source, spans) = many1(alt((not_pipe_or_greater_than_or_escape,)))
-        .context("")
-        .parse(source)?;
+    let (source, spans) = many1(alt((
+        not_pipe_or_greater_than_or_escape,
+        single_greater_than,
+        escaped_pipe,
+        escaped_greater_than,
+        escaped_backslash,
+    )))
+    .context("")
+    .parse(source)?;
     let (source, _) = not(tag(":")).context("").parse(source)?;
     Ok((
         source,

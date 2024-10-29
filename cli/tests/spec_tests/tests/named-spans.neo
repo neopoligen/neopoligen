@@ -137,6 +137,30 @@ Valid Named Spans
         "notes": [],
       },
       {
+        "description": "Flags can have escaped pipes",
+        "source": "<<alfa|bravo|charlie\\|delta>>",
+        "result": '{ "attrs": {}, "flags": ["charlie|delta"], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
+        "notes": [],
+      },
+      {
+        "description": "Flags can have single greater thans",
+        "source": "<<alfa|bravo|charlie>delta>>",
+        "result": '{ "attrs": {}, "flags": ["charlie>delta"], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
+        "notes": [],
+      },
+      {
+        "description": "Flags can have escaped greater thans",
+        "source": "<<alfa|bravo|charlie\\>>delta>>",
+        "result": '{ "attrs": {}, "flags": ["charlie>>delta"], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
+        "notes": [],
+      },
+      {
+        "description": "Flags can have escaped backslashes",
+        "source": "<<alfa|bravo|charlie\\\\delta>>",
+        "result": '{ "attrs": {}, "flags": ["charlie\\\\delta"], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
+        "notes": [],
+      },
+      {
         "description": "Key value attributes can come after content",
         "source": "<<alfa|bravo|charlie: delta>>",
         "result": '{ "attrs": { "charlie": { "text": "delta", "spans": [{"text": "delta", "type": "plaintext"}]}}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
