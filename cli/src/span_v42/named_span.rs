@@ -4,14 +4,9 @@ use crate::span_v42::any_hyphens::any_hyphens;
 use crate::span_v42::any_underscores::any_underscores;
 use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::SpanV42;
-use crate::spans_v42;
 use itertools::Itertools;
-use minijinja::value::Object;
-use minijinja::Error;
-use minijinja::Value;
 use nom::branch::alt;
 use nom::bytes::complete::is_a;
-use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::character::complete::alpha1;
 use nom::character::complete::space0;
@@ -295,7 +290,7 @@ mod test {
                 dbg!(data);
                 assert!(false);
             }
-            Err(e) => {
+            Err(_e) => {
                 assert!(true)
             }
         }
