@@ -60,6 +60,7 @@ pub struct NamedSpanV42 {
     flags: Vec<String>,
     kind: String,
     spans: Option<Vec<SpanV42>>,
+    text: Option<String>,
 }
 
 pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
@@ -72,6 +73,10 @@ pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, (attrs, flags)) = named_span_attrs_and_flags.context("").parse(source)?;
     let (source, _) = tag(">>").context("").parse(source)?;
     let kind = tokens.iter().join("");
+    let text = match &spans {
+        Some(spns) => Some(flatten_spans_v42(spns)),
+        None => None,
+    };
     Ok((
         source,
         SpanV42::NamedSpan(NamedSpanV42 {
@@ -79,6 +84,7 @@ pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
             flags,
             kind,
             spans,
+            text,
         }),
     ))
 }
@@ -107,20 +113,10 @@ pub fn named_span_attrs_and_flags(
                         text: f.text.clone(),
                     },
                 );
-
                 None
             }
         })
         .collect::<Vec<String>>();
-
-    // let attrs = attr_flags
-    //     .iter()
-    //     .filter_map(|af| match af {
-    //         NamedSpanAttrV42::KeyValue(f) => Some(f.clone()),
-    //         _ => None,
-    //     })
-    //     .collect::<Vec<KeyValueSpanAttrV42>>();
-
     Ok((source, (attrs, flags)))
 }
 
@@ -190,6 +186,7 @@ mod test {
                 spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
                     text: "tango".to_string(),
                 })]),
+                text: Some("tango".to_string()),
             }),
         );
         let right = named_span(source).unwrap();
@@ -208,6 +205,7 @@ mod test {
                 spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
                     text: "echo".to_string(),
                 })]),
+                text: Some("echo".to_string()),
             }),
         );
         let right = named_span(source).unwrap();
@@ -236,6 +234,7 @@ mod test {
                 spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
                     text: "echo".to_string(),
                 })]),
+                text: Some("echo".to_string()),
             }),
         );
         let right = named_span(source).unwrap();
