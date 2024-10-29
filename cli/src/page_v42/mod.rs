@@ -212,6 +212,19 @@ mod test {
     }
 
     #[test]
+    fn solo_title_from_pagedata_title() {
+        let page = PageV42::test_from_sample_file("005-title-in-pagedata.neo");
+        let left = Value::from_serialize(PageTitleV42 {
+            spans: vec![SpanV42::PlainText(PlainTextSpan {
+                text: "Title In Pagedata".to_string(),
+            })],
+            text: "Title In Pagedata".to_string(),
+        });
+        let right = page.title().unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
     fn solo_title_from_invalid_page() {
         let page = PageV42::test_from_sample_file("006-unclosed-start-section.neo");
         let left = Value::from_serialize(PageTitleV42 {
