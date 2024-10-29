@@ -87,12 +87,20 @@ impl PageV42 {
                         page.sections = Value::from_serialize(page.clone().raw_ast);
                         Ok(page)
                     }
-                    Err(e) => Err(NeoError {
-                        kind: NeoErrorKind::ForwardErrorWithSourcePath {
-                            source_path: source_path.clone(),
-                            msg: e.to_string(),
-                        },
-                    }),
+                    Err(e) => {
+                        event!(
+                            Level::ERROR,
+                            "Could not get ID for:{}",
+                            page.fs_path.display()
+                        );
+
+                        Err(NeoError {
+                            kind: NeoErrorKind::ForwardErrorWithSourcePath {
+                                source_path: source_path.clone(),
+                                msg: e.to_string(),
+                            },
+                        })
+                    }
                 }
             }
             Err(e) => {
