@@ -50,7 +50,7 @@ pub fn basic_section_full_v42<'a>(
     let (source, _) = multispace0.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, children) =
-        many0(|src| paragraph_block_section_v42(src, site_config, 0, 0, 0, debug))
+        many0(|src| paragraph_block_section_v42(src, site_config, parent.clone(), debug))
             .context("")
             .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 6);

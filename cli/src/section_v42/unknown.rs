@@ -50,11 +50,11 @@ pub fn unknown_section_start_v42<'a>(
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
     let (source, children) =
-        many0(|src| paragraph_block_section_v42(src, site_config, 0, 0, 0, debug))
+        many0(|src| paragraph_block_section_v42(src, site_config, parent.clone(), debug))
             .context("")
             .parse(source)?;
     let (source, end_section) =
-        (|src| end_section_basic_v42(src, site_config, SectionParent::Page, kind, debug))
+        (|src| end_section_basic_v42(src, site_config, parent.clone(), kind, debug))
             .context("")
             .parse(source)?;
     let section = SectionV42::Unknown(UnknownSectionV42 {
@@ -89,7 +89,7 @@ pub fn unknown_section_full_v42<'a>(
     let (source, _) = multispace0.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, children) =
-        many0(|src| paragraph_block_section_v42(src, site_config, 0, 0, 0, debug))
+        many0(|src| paragraph_block_section_v42(src, site_config, parent.clone(), debug))
             .context("")
             .parse(source)?;
     let section = SectionV42::Unknown(UnknownSectionV42 {

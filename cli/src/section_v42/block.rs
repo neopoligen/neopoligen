@@ -14,6 +14,8 @@ use nom_supreme::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
 
+use super::SectionParent;
+
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct BlockSectionV42 {
     // Reminder: there won't be children for a block, but having
@@ -28,9 +30,7 @@ pub struct BlockSectionV42 {
 pub fn paragraph_block_section_v42<'a>(
     source: &'a str,
     _site_config: &'a SiteConfigV42,
-    _nest_level: usize,
-    _list_level: usize,
-    _checklist_level: usize,
+    _parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let debug = true;
@@ -85,7 +85,8 @@ mod test {
                 template_list,
             }),
         );
-        let right = paragraph_block_section_v42(&source, &site_config, 0, 0, 0, false).unwrap();
+        let right =
+            paragraph_block_section_v42(&source, &site_config, SectionParent::Page, false).unwrap();
         assert_eq!(left, right);
     }
 
@@ -120,7 +121,8 @@ mod test {
                 template_list,
             }),
         );
-        let right = paragraph_block_section_v42(&source, &site_config, 0, 0, 0, false).unwrap();
+        let right =
+            paragraph_block_section_v42(&source, &site_config, SectionParent::Page, false).unwrap();
         assert_eq!(left, right);
     }
 
