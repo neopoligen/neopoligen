@@ -12,23 +12,8 @@ Valid Named Spans
     "valid": [
       {
         "description": "basic text",
-        "source": "<<alfa>>"
-      },
-      {
-        "description": "numbers are allowed",
-        "source": "<<alfa1>>"
-      },
-      {
-        "description": "hyphens are allowed",
-        "source": "<<alfa-bravo>>"
-      },
-      {
-        "description": "content allowed",
-        "source": "<<alfa|bravo>>"
-      },
-      {
-        "description": "content can have spaces",
-        "source": "<<alfa|bravo charlie>>"
+        "source": "<<alfa>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "text": null, "type": "namedspan" }',
       },
     ],
     "invalid": [

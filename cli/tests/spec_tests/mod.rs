@@ -1,4 +1,5 @@
 use include_dir::{include_dir, Dir};
+use minijinja::Value;
 use neopoligengine::helpers::get_include_str_file;
 use neopoligengine::section_v42::SectionV42;
 use neopoligengine::span_v42::named_span::named_span;
@@ -12,6 +13,7 @@ const TEST_FILES: Dir = include_dir!("tests/spec_tests/tests");
 pub struct TestItem {
     description: String,
     source: String,
+    result: Option<String>,
 }
 
 fn load_tests(file_name: &str) -> (Vec<TestItem>, Vec<TestItem>) {
@@ -39,6 +41,7 @@ fn load_tests(file_name: &str) -> (Vec<TestItem>, Vec<TestItem>) {
             .map(|obj| TestItem {
                 description: obj["description"].as_str().unwrap().to_string(),
                 source: obj["source"].as_str().unwrap().to_string(),
+                result: Some(obj["result"].as_str().unwrap().to_string()),
             })
             .collect::<Vec<TestItem>>();
         let invalid_tests = &v.as_object().unwrap()["tests"]["invalid"]
@@ -48,6 +51,7 @@ fn load_tests(file_name: &str) -> (Vec<TestItem>, Vec<TestItem>) {
             .map(|obj| TestItem {
                 description: obj["description"].as_str().unwrap().to_string(),
                 source: obj["source"].as_str().unwrap().to_string(),
+                result: None,
             })
             .collect::<Vec<TestItem>>();
         (valid_tests.to_vec(), invalid_tests.to_vec())
@@ -60,8 +64,16 @@ fn load_tests(file_name: &str) -> (Vec<TestItem>, Vec<TestItem>) {
 fn solo_test_named_spans() {
     let (valid, invalid) = load_tests("named-spans.neo");
     valid.iter().for_each(|ti| {
-        let result = named_span(&ti.source);
-        if result.is_ok() {
+        let parsed = named_span(&ti.source);
+        if parsed.is_ok() {
+            let check = Value::from_serialize(&parsed.unwrap().1);
+            let against =
+                serde_json5::from_str::<Value>(ti.result.clone().unwrap().as_str()).unwrap();
+            assert_eq!(check, against);
+
+            dbg!(check);
+            dbg!(against);
+            //dbg!(serde_json5::from_::<Value>(&result.unwrap()));
             assert!(true)
         } else {
             dbg!(&ti.description);
