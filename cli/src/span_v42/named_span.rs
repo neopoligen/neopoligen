@@ -1,13 +1,8 @@
 use super::not_pipe_or_greater_than_or_escape::not_pipe_or_greater_than_or_escape;
-use super::plaintext_without_spaces::plaintext_without_spaces;
 use super::single_greater_than::single_greater_than;
 use crate::helpers::flatten_spans_v42;
-use crate::span_v42::any_colons::any_colons;
-use crate::span_v42::any_hyphens::any_hyphens;
-use crate::span_v42::any_underscores::any_underscores;
 use crate::span_v42::escaped_character::*;
 use crate::span_v42::plaintext::plaintext;
-use crate::span_v42::single_line_ending::single_line_ending;
 use crate::span_v42::SpanV42;
 use itertools::Itertools;
 use nom::branch::alt;
