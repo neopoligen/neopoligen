@@ -128,14 +128,11 @@ impl PageV42 {
             }) {
             Some(attrs) => {
                 //dbg!(&attrs);
-                match attrs.get("id") {
-                    Some(attr) => {
-                        dbg!(&attr);
-                        Some(Ok(Value::from_serialize(PageTitleV42 {
-                            spans: attr.spans.clone(),
-                            text: attr.text.to_string(),
-                        })))
-                    }
+                match attrs.get("title") {
+                    Some(attr) => Some(Ok(Value::from_serialize(PageTitleV42 {
+                        spans: attr.spans.clone(),
+                        text: attr.text.to_string(),
+                    }))),
                     None => None,
                 }
             }
@@ -205,23 +202,9 @@ mod test {
     fn solo_title_from_pagedata_id() {
         let page = PageV42::test_from_sample_file("001-pagedata-only.neo");
         let left = Value::from_serialize(PageTitleV42 {
-            spans: vec![
-                SpanV42::PlainText(PlainTextSpan {
-                    text: "001".to_string(),
-                }),
-                SpanV42::PlainText(PlainTextSpan {
-                    text: "-".to_string(),
-                }),
-                SpanV42::PlainText(PlainTextSpan {
-                    text: "pagedata".to_string(),
-                }),
-                SpanV42::PlainText(PlainTextSpan {
-                    text: "-".to_string(),
-                }),
-                SpanV42::PlainText(PlainTextSpan {
-                    text: "only.neo".to_string(),
-                }),
-            ],
+            spans: vec![SpanV42::PlainText(PlainTextSpan {
+                text: "001-pagedata-only.neo".to_string(),
+            })],
             text: "001-pagedata-only.neo".to_string(),
         });
         let right = page.title().unwrap();
