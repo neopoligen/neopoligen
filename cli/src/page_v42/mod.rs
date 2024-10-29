@@ -7,6 +7,8 @@ use crate::span_v42::SpanV42;
 use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::Value;
+use nom::IResult;
+use nom_supreme::error::ErrorTree;
 use serde::Deserialize;
 use serde::Serialize;
 use std::path::PathBuf;
@@ -139,10 +141,16 @@ impl PageV42 {
             None => None,
         } {
             page_title
+        } else if let Ok((_, _page_title)) = get_id_from_invalid_page(&self.source) {
+            Ok(Value::from("No ID"))
         } else {
             Ok(Value::from("xTODO_PAGE_TITLE"))
         }
     }
+}
+
+pub fn get_id_from_invalid_page(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
+    Ok((source, "no id"))
 }
 
 impl Object for PageV42 {
@@ -218,7 +226,7 @@ mod test {
 
     #[test]
     fn solo_title_from_invalid_page() {
-        let page = PageV42::test_from_sample_file("001-pagedata-only.neo");
+        let page = PageV42::test_from_sample_file("006-unclosed-start-section.neo");
         let left = Value::from_serialize(PageTitleV42 {
             spans: vec![
                 SpanV42::PlainText(PlainTextSpan {
@@ -237,7 +245,7 @@ mod test {
                     text: "only.neo".to_string(),
                 }),
             ],
-            text: "001-pagedata-only.neo".to_string(),
+            text: "006-unclosed-start-section.neo".to_string(),
         });
         let right = page.title().unwrap();
         assert_eq!(left, right);
