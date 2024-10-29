@@ -37,29 +37,24 @@ impl PageV42 {
         Ok(Value::from_serialize(&self.raw_ast))
     }
 
-    // TODO: Deprecate in favor of the field
-    pub fn html_file_system_relative_path(&self, base_path: &PathBuf) -> Result<PathBuf, NeoError> {
-        if let Ok(p) = self.get_pagedata(&[Value::from("path")]) {
-            if p != "" {
-                let new_base = p.strip_prefix("/").unwrap();
-                Ok(PathBuf::from(new_base))
-            } else {
-                Ok(base_path
-                    .clone()
-                    .join(self.id.clone().unwrap())
-                    .join("index.html"))
-            }
-        } else {
-            Ok(base_path
-                .clone()
-                .join(self.id.clone().unwrap())
-                .join("index.html"))
-        }
-    }
-
-    // // TODO: Deprecate in favor of top level .id (field not method)
-    // pub fn tmp_id(&self) -> Result<String, Error> {
-    //     Ok(self.id.as_ref().unwrap().to_string())
+    // // TODO: Deprecate in favor of the field
+    // pub fn html_file_system_relative_path(&self, base_path: &PathBuf) -> Result<PathBuf, NeoError> {
+    //     if let Ok(p) = self.get_pagedata(&[Value::from("path")]) {
+    //         if p != "" {
+    //             let new_base = p.strip_prefix("/").unwrap();
+    //             Ok(PathBuf::from(new_base))
+    //         } else {
+    //             Ok(base_path
+    //                 .clone()
+    //                 .join(self.id.clone().unwrap())
+    //                 .join("index.html"))
+    //         }
+    //     } else {
+    //         Ok(base_path
+    //             .clone()
+    //             .join(self.id.clone().unwrap())
+    //             .join("index.html"))
+    //     }
     // }
 
     pub fn get_pagedata(&self, args: &[Value]) -> Result<String, Error> {
@@ -232,20 +227,6 @@ mod test {
                 text: "006-unclosed-start-section.neo".to_string(),
             })],
             text: "006-unclosed-start-section.neo".to_string(),
-        });
-        let right = page.title().unwrap();
-        assert_eq!(left, right);
-    }
-
-    #[test]
-    #[ignore]
-    fn title_in_pagedata() {
-        let page = PageV42::test_from_sample_file("005-title-in-pagedata.neo");
-        let left = Value::from_serialize(PageTitleV42 {
-            spans: vec![SpanV42::PlainText(PlainTextSpan {
-                text: "Title In Pagedata".to_string(),
-            })],
-            text: "Title In Pagedata".to_string(),
         });
         let right = page.title().unwrap();
         assert_eq!(left, right);
