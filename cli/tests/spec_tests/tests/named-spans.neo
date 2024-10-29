@@ -5,6 +5,7 @@ Valid Named Spans
 -- neopoligen-spec-test/
 
 {
+  "version": "0.42.0",
   "name": "Valid Named Spans",
   "note": "This is just getting started, there are more to test that I'll add in the next iteration",
   "tests": {
@@ -21,13 +22,20 @@ Valid Named Spans
         "description": "hyphens are allowed",
         "source": "<<alfa-bravo>>"
       },
+      {
+        "description": "content allowed",
+        "source": "<<alfa|bravo>>"
+      },
+      {
+        "description": "content can have spaces",
+        "source": "<<alfa|bravo charlie>>"
+      },
     ],
     "invalid": [
       {
         "description": "no spaces in name",
         "source": "<<alfa bravo>>"
       },
-
     ]
   }
 }
