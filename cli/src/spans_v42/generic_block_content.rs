@@ -6,7 +6,6 @@ use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::single_exclamation::single_exclamation;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
-use nom::character::complete::multispace0;
 use nom::multi::many1;
 use nom::IResult;
 use nom::Parser;

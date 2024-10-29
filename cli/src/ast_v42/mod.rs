@@ -18,7 +18,6 @@ pub fn parse_ast_v42(
     site_config: &SiteConfigV42,
     debug: bool,
 ) -> Result<Vec<SectionV42>, NeoError> {
-    // debug = true;
     match final_parser(|src| do_parse_v42(src, site_config, debug.clone()))(source) {
         Ok(data) => Ok(data),
         Err(e) => Err(get_error_v42(source, &e).into()),

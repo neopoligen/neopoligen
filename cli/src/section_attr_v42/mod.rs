@@ -75,7 +75,7 @@ mod test {
     #[case("-- from: bravo\n", "")]
     #[case("-- from: charlie\n\n", "")]
     #[case("-- from: 2ngym6up\n\n-- ping\n", "-- ping\n")]
-    fn solo_section_attr_integration(#[case] source: &str, #[case] remainder: &str) {
+    fn section_attr_integration(#[case] source: &str, #[case] remainder: &str) {
         let result = section_attr_v42(source);
         if result.as_ref().unwrap().0 == remainder {
             assert!(true);
@@ -86,7 +86,7 @@ mod test {
     }
 
     #[test]
-    fn solo_section_attr_v42_get_flag() {
+    fn section_attr_v42_get_flag() {
         let source = "-- alfa-flag";
         let left = ("", (BTreeMap::new(), vec!["alfa-flag".to_string()]));
         let right = section_attr_v42(source).unwrap();
@@ -94,7 +94,7 @@ mod test {
     }
 
     #[test]
-    fn solo_section_attr_v42_get_key_value() {
+    fn section_attr_v42_get_key_value() {
         let source = "-- alfa: bravo";
         let mut attrs = BTreeMap::new();
         attrs.insert(
@@ -131,7 +131,7 @@ mod test {
     // #[case("alfa")]
     // #[case("bravo-charlie")]
     // #[case("https://www.example.com/")]
-    // fn solo_valid_section_flags(#[case] left: &str) {
+    // fn valid_section_flags(#[case] left: &str) {
     //     let source = format!("-- {}", left);
     //     let response = section_flag(source.as_str()).unwrap();
     //     let right = match response.1.kind {

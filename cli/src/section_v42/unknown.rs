@@ -38,25 +38,35 @@ pub fn unknown_section_start_v42<'a>(
     parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
-    //let debug = true;
-    let _dbg_header = "UNKNOWN_SECTION_FULL";
+    let dbg_header = "UNKNOWN_SECTION_START";
+    dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, kind) = terminated(
         is_not(" /\t\r\n"),
         pair(tag("/"), space0_line_ending_or_eof),
     )
     .context("")
     .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) =
-        many0(|src| paragraph_block_section_v42(src, site_config, parent.clone(), debug))
-            .context("")
-            .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 5);
+    // TODO: Handle if you're in a list or a checklist here.
+    let (source, children) = many0(alt((
+        |src| paragraph_block_section_v42(src, site_config, SectionParent::Basic, debug),
+        |src| start_or_full_section_v42(src, site_config, SectionParent::Basic, debug),
+    )))
+    .context("")
+    .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 6);
+
     let (source, end_section) =
         (|src| end_section_basic_v42(src, site_config, parent.clone(), kind, debug))
             .context("")
             .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 7);
     let section = SectionV42::Unknown(UnknownSectionV42 {
         attrs,
         bounds: Bound::Start,
@@ -113,13 +123,29 @@ mod test {
     };
     use include_dir::{include_dir, Dir};
     use pretty_assertions::assert_eq;
+    use rstest::rstest;
 
-    const SAMPLES: Dir = include_dir!("src/section_v42/samples/unknown/valid");
+    const VALID_SAMPLES: Dir = include_dir!("src/section_v42/samples/unknown/valid");
+
+    #[rstest]
+    #[case("003-check-preview.neo", "")]
+    fn solo_integration_run_for_unknown_sections(#[case] file: &str, #[case] remainder: &str) {
+        let site_config = SiteConfigV42::mock1_basic();
+        let source = get_include_str_file(VALID_SAMPLES, file);
+        let result =
+            start_or_full_section_v42(&source, &site_config, SectionParent::Page, true).unwrap();
+        if result.clone().0 == remainder {
+            assert!(true);
+        } else {
+            dbg!(result);
+            assert!(false);
+        }
+    }
 
     #[test]
     fn integration_001_basic_full() {
         let site_config = SiteConfigV42::mock1_basic();
-        let source = get_include_str_file(SAMPLES, "001-basic-full.neo");
+        let source = get_include_str_file(VALID_SAMPLES, "001-basic-full.neo");
         let attrs = BTreeMap::new();
         let bounds = Bound::Full;
         let block_templates = vec!["sections/block/paragraph/full/default.neoj".to_string()];
@@ -165,10 +191,9 @@ mod test {
     }
 
     #[test]
-    #[ignore]
     fn integration_002_basic_start_end() {
         let site_config = SiteConfigV42::mock1_basic();
-        let source = get_include_str_file(SAMPLES, "002-basic-start-end.neo");
+        let source = get_include_str_file(VALID_SAMPLES, "002-basic-start-end.neo");
         let attrs = BTreeMap::new();
         let bounds = Bound::Start;
         let block_templates = vec!["sections/block/paragraph/full/default.neoj".to_string()];

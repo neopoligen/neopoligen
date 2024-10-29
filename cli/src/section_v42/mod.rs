@@ -6,7 +6,6 @@ pub mod json5;
 pub mod parsing_error;
 pub mod unknown;
 
-use crate::section::Section;
 use crate::section_v42::basic::*;
 use crate::section_v42::block::*;
 use crate::section_v42::end::*;
@@ -29,6 +28,7 @@ use std::sync::Arc;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum SectionParent {
+    Basic,
     Checklist,
     List,
     Page,
@@ -74,7 +74,7 @@ impl Object for SectionV42 {
 pub fn start_or_full_section_v42<'a>(
     source: &'a str,
     site_config: &'a SiteConfigV42,
-    parent: SectionParent,
+    _parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     let (source, section) = alt((

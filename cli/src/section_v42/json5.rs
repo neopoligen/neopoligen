@@ -34,7 +34,7 @@ pub struct Json5SectionV42 {
 pub fn json5_section_full_v42<'a>(
     source: &'a str,
     _site_config: &'a SiteConfigV42,
-    parent: SectionParent,
+    _parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let debug = true;
