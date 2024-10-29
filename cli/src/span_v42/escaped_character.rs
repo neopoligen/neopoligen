@@ -32,6 +32,16 @@ pub fn escaped_pipe(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     ))
 }
 
+pub fn escaped_backslash(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+    let (source, _) = tag("\\\\").context("").parse(source)?;
+    Ok((
+        source,
+        SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
+            text: "\\".to_string(),
+        }),
+    ))
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -60,6 +70,19 @@ mod test {
             }),
         );
         let right = escaped_pipe(source).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn check_escaped_backslash() {
+        let source = "\\\\";
+        let left = (
+            "",
+            SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
+                text: "\\".to_string(),
+            }),
+        );
+        let right = escaped_backslash(source).unwrap();
         assert_eq!(left, right);
     }
 

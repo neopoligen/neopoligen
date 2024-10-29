@@ -102,7 +102,7 @@ Valid Named Spans
         ],
       },
       {
-        "description": "Content can have escaped greater thans (which allows output to have double or more",
+        "description": "Content can have escaped greater thans (which allows output to have double or more)",
         "source": "<<alfa|bravo \\>> charlie>>",
         "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo ", "type": "plaintext"}, {"text": ">", "type": "escapedcharacter" }, {"text": ">", "type": "plaintext"}, {"text": " charlie", "type": "plaintext"}], "text": "bravo >> charlie", "type": "namedspan" }',
         "notes": [
@@ -114,7 +114,13 @@ Valid Named Spans
         "source": "<<alfa|bravo \\| charlie>>",
         "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo ", "type": "plaintext"}, {"text": "|", "type": "escapedcharacter" }, {"text": " charlie", "type": "plaintext"}], "text": "bravo | charlie", "type": "namedspan" }',
         "notes": [
-          "Since both single greater than and less than characters can be used it's easy to make example of HTML <elements>", 
+        ],
+      },
+      {
+        "description": "Content can have escaped backslahes",
+        "source": "<<alfa|bravo \\\\ charlie>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo ", "type": "plaintext"}, {"text": "\\\\", "type": "escapedcharacter" }, {"text": " charlie", "type": "plaintext"}], "text": "bravo \\\\ charlie", "type": "namedspan" }',
+        "notes": [
         ],
       },
       {
