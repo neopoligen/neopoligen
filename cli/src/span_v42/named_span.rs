@@ -1,5 +1,6 @@
-use super::not_pipe_or_greater_than_or_escape::not_pipe_or_greater_than_or_escape;
+use super::not_pipe_or_greater_than_or_less_than_or_escape::not_pipe_or_greater_than_or_less_than_or_escape;
 use super::single_greater_than::single_greater_than;
+use super::single_less_than::single_less_than;
 use crate::helpers::flatten_spans_v42;
 use crate::span_v42::escaped_character::*;
 use crate::span_v42::plaintext::plaintext;
@@ -138,7 +139,7 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42
     let (source, key_spans) = terminated(many1(alt((plaintext,))), pair(tag(":"), space1))
         .context("")
         .parse(source)?;
-    let (source, spans) = many1(alt((not_pipe_or_greater_than_or_escape,)))
+    let (source, spans) = many1(alt((not_pipe_or_greater_than_or_less_than_or_escape,)))
         .context("")
         .parse(source)?;
     Ok((
@@ -153,7 +154,7 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42
 
 pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
     let (source, spans) = many1(alt((
-        not_pipe_or_greater_than_or_escape,
+        not_pipe_or_greater_than_or_less_than_or_escape,
         single_greater_than,
         escaped_pipe,
         escaped_greater_than,
@@ -172,8 +173,9 @@ pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, Err
 
 pub fn named_span_content_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, span) = alt((
-        not_pipe_or_greater_than_or_escape,
+        not_pipe_or_greater_than_or_less_than_or_escape,
         single_greater_than,
+        single_less_than,
         escaped_greater_than,
         escaped_pipe,
         escaped_backslash,

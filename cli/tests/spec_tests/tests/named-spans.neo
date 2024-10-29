@@ -86,16 +86,23 @@ Valid Named Spans
         "notes": [],
       },
       {
-        "description": "Content can have any regular characters except pipes or double greater thans or single backslashes",
-        "source": "<<alfa|bravo <~!@#$%^&*(),.?:;>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo <~!@#$%^&*(),.?:;", "type": "plaintext"}], "text": "bravo <~!@#$%^&*(),.?:;", "type": "namedspan" }',
+        "description": "Content can have any regular characters except pipes or double greater thans or doulbe less thans or single backslashes",
+        "source": "<<alfa|bravo ~!@#$%^&*(),.?:;>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo ~!@#$%^&*(),.?:;", "type": "plaintext"}], "text": "bravo ~!@#$%^&*(),.?:;", "type": "namedspan" }',
         "notes": [
           "this is not an exaustive list (i.e. not ever possible character is tested). It's meant only to be representative",
           "Doulbe '<' are allowed as long as they are the start of a new, nested named span",
         ],
       },
       {
-        "description": "Content can have singel greater thans",
+        "description": "Content can have single less thans",
+        "source": "<<alfa|bravo < charlie>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo ", "type": "plaintext"}, {"text": "<", "type": "plaintext"}, {"text": " charlie", "type": "plaintext"}], "text": "bravo < charlie", "type": "namedspan" }',
+        "notes": [
+        ],
+      },
+      {
+        "description": "Content can have single greater thans",
         "source": "<<alfa|bravo > charlie>>",
         "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo ", "type": "plaintext"}, {"text": ">", "type": "plaintext"}, {"text": " charlie", "type": "plaintext"}], "text": "bravo > charlie", "type": "namedspan" }',
         "notes": [
