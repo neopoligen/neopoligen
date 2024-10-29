@@ -85,10 +85,16 @@ Valid Named Spans
         "notes": [],
       },
       {
-        "description": "content can have any regular characters except pipes or greater thans",
+        "description": "content can have any regular characters except pipes or double greater thans",
         "source": "<<alfa|bravo ~!@#$%^&*(),.?:;>>",
         "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo ~!@#$%^&*(),.?:;", "type": "plaintext"}], "text": "bravo ~!@#$%^&*(),.?:;", "type": "namedspan" }',
         "notes": ["this is not an exaustive list (i.e. not ever possible character is tested). It's meant only to be representative"],
+      },
+      {
+        "description": "content can have singel greater thans",
+        "source": "<<alfa|bravo > charlie>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo ", "type": "plaintext"}, {"text": ">", "type": "plaintext"}, {"text": " charlie", "type": "plaintext"}], "text": "bravo > charlie", "type": "namedspan" }',
+        "notes": [],
       },
       {
         "description": "flags can come after content",
@@ -114,7 +120,6 @@ Valid Named Spans
           "The same rules that apply for the names of the spans themselves as well as the flags applie to the keys too",
           ],
       },
-
 
     ],
 

@@ -1,5 +1,6 @@
 use super::not_pipe_or_greater_than::not_pipe_or_greater_than;
 use super::plaintext_without_spaces::plaintext_without_spaces;
+use super::single_greater_than::single_greater_than;
 use crate::helpers::flatten_spans_v42;
 use crate::span_v42::any_colons::any_colons;
 use crate::span_v42::any_hyphens::any_hyphens;
@@ -176,7 +177,9 @@ pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, Err
 }
 
 pub fn named_span_content_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, span) = alt((not_pipe_or_greater_than,)).context("").parse(source)?;
+    let (source, span) = alt((not_pipe_or_greater_than, single_greater_than))
+        .context("")
+        .parse(source)?;
     Ok((source, span))
 }
 

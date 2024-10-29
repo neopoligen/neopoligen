@@ -10,6 +10,7 @@ pub mod not_pipe_or_greater_than;
 pub mod plaintext;
 pub mod plaintext_without_spaces;
 pub mod single_exclamation;
+pub mod single_greater_than;
 pub mod single_hyphen;
 pub mod single_line_ending;
 pub mod single_underscore;
