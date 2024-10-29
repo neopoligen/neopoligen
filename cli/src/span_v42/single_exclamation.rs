@@ -24,7 +24,7 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn solo_single_at_eof() {
+    fn single_at_eof() {
         let source = "!";
         let left = (
             "",
@@ -37,7 +37,7 @@ mod test {
     }
 
     #[test]
-    fn solo_single_with_more_content() {
+    fn single_with_more_content() {
         let source = "!alfa";
         let left = (
             "alfa",
@@ -50,7 +50,7 @@ mod test {
     }
 
     #[test]
-    fn solo_prevent_mutiple() {
+    fn prevent_mutiple() {
         let source = "!!";
         assert!(single_exclamation(source).is_err());
     }

@@ -150,7 +150,7 @@ mod test {
     #[case("``alfa|bravo``etc...", "etc...")]
     #[case("``alfa|bravo: charlie``etc...", "etc...")]
     #[case("``-- neo sections are allowed``etc...", "etc...")]
-    fn solo_code_shorthand_test_run(#[case] source: &str, #[case] remainder: &str) {
+    fn code_shorthand_test_run(#[case] source: &str, #[case] remainder: &str) {
         let result = code_shorthand_span(source).unwrap();
         if result.clone().0 == remainder {
             assert!(true);
