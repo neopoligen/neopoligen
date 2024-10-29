@@ -74,9 +74,7 @@ impl Object for SectionV42 {
 pub fn start_or_full_section_v42<'a>(
     source: &'a str,
     site_config: &'a SiteConfigV42,
-    nest_level: usize,
-    list_level: usize,
-    checklist_level: usize,
+    parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     let (source, section) = alt((

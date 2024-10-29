@@ -32,7 +32,7 @@ fn do_parse_v42<'a>(
 ) -> IResult<&'a str, Vec<SectionV42>, ErrorTree<&'a str>> {
     let (source, _) = multispace0(source)?;
     let (source, result) =
-        many1(|src| start_or_full_section_v42(src, &site_config, 0, 0, 0, debug))
+        many1(|src| start_or_full_section_v42(src, &site_config, SectionParent::Page, debug))
             .context("")
             .parse(source)?;
 
