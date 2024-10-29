@@ -7,9 +7,14 @@ Valid Named Spans
 {
   "version": "0.42.0",
   "name": "Valid Named Spans",
-  "note": "This is just getting started, there are more to test that I'll add in the next iteration",
+  "notes": [
+    "This is just getting started, there are more to test that I'll add in the next iteration",
+    "The invalid cases aren't exhaustive (i.e. they don't test every possible character that's not allowed). They're just meant to be representative",
+  ],
   "tests": {
-    "todo": [
+    "todo_valid": [
+    ],
+    "todo_invalid": [
     ],
     "valid": [
       {
@@ -62,12 +67,84 @@ Valid Named Spans
         "source": "<<alfa\n>>",
         "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "text": null, "type": "namedspan" }',
       },
-
     ],
     "invalid": [
       {
         "description": "no spaces in name",
         "source": "<<alfa bravo>>"
+      },
+      {
+        "description": "no trailing pipes",
+        "source": "<<alfa|>>"
+      },
+      {
+        "description": "no colons in name",
+        "source": "<<alfa:bravo>>"
+      },
+      {
+        "description": "no forward slashes in name",
+        "source": "<<alfa/bravo>>"
+      },
+      {
+        "description": "no '~' in name",
+        "source": "<<alfa~bravo>>"
+      },
+      {
+        "description": "no '!' in name",
+        "source": "<<alfa!bravo>>"
+      },
+      {
+        "description": "no '@' in name",
+        "source": "<<alfa@bravo>>"
+      },
+      {
+        "description": "no '#' in name",
+        "source": "<<alfa#bravo>>"
+      },
+      {
+        "description": "no '$' in name",
+        "source": "<<alfa$bravo>>"
+      },
+      {
+        "description": "no '%' in name",
+        "source": "<<alfa%bravo>>"
+      },
+
+      {
+        "description": "no '^' in name",
+        "source": "<<alfa^bravo>>"
+      },
+      {
+        "description": "no '&' in name",
+        "source": "<<alfa&bravo>>"
+      },
+      {
+        "description": "no '*' in name",
+        "source": "<<alfa*bravo>>"
+      },
+      {
+        "description": "no '(' in name",
+        "source": "<<alfa(bravo>>"
+      },
+      {
+        "description": "no ')' in name",
+        "source": "<<alfa)bravo>>"
+      },
+      {
+        "description": "no ',' in name",
+        "source": "<<alfa,bravo>>"
+      },
+      {
+        "description": "no '.' in name",
+        "source": "<<alfa.bravo>>"
+      },
+      {
+        "description": "no '?' in name",
+        "source": "<<alfa?bravo>>"
+      },
+      {
+        "description": "no ';' in name",
+        "source": "<<alfa;bravo>>"
       },
     ]
   }

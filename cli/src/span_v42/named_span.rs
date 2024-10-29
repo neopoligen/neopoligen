@@ -21,6 +21,7 @@ use nom::multi::many1;
 use nom::sequence::pair;
 use nom::sequence::preceded;
 use nom::sequence::terminated;
+use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -72,6 +73,9 @@ pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     .context("")
     .parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
+    let (source, _) = not(tuple((tag("|"), multispace0, tag(">"))))
+        .context("")
+        .parse(source)?;
     let (source, spans) = opt(preceded(tag("|"), many0(named_span_content_span)))
         .context("")
         .parse(source)?;
