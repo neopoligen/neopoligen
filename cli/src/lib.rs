@@ -23,6 +23,7 @@ pub mod section_key_value_attr_payload_v42;
 pub mod section_v42;
 pub mod site;
 pub mod site_config;
+pub mod site_v42;
 pub mod source_page;
 pub mod span;
 pub mod span_attr;

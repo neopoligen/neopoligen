@@ -1,1 +1,1 @@
-TLINK
+[@ site.get_page_title(span.text) @]

@@ -2,7 +2,9 @@ pub mod inits;
 
 use crate::helpers::write_file_with_mkdir;
 use crate::neo_error::NeoErrorKind;
-use crate::{neo_error::NeoError, page_v42::PageV42, site::SiteV42, site_config::SiteConfigV42};
+use crate::{
+    neo_error::NeoError, page_v42::PageV42, site_config::SiteConfigV42, site_v42::SiteV42,
+};
 use anyhow::Result;
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;

@@ -7,9 +7,10 @@ use crate::image::{Image, ImageSize};
 use crate::neo_error::{NeoError, NeoErrorKind};
 use crate::page_payload::{PagePayload, ThemeTestOrPage};
 use crate::page_v42::PageV42;
-use crate::site::{Site, SiteV42};
+use crate::site::Site;
 use crate::site_config::SiteConfig;
 use crate::site_config::SiteConfigV42;
+use crate::site_v42::SiteV42;
 use crate::source_page::SourcePage;
 use crate::theme_test::ThemeTest; // this might be deprecated
 use anyhow::Result;
