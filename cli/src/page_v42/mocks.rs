@@ -5,11 +5,11 @@ use include_dir::{include_dir, Dir};
 use minijinja::Value;
 use std::path::PathBuf;
 
-const VALID_SAMPLES: Dir = include_dir!("src/page_v42/samples/valid");
+const SAMPLES: Dir = include_dir!("src/page_v42/samples");
 
 impl PageV42 {
     pub fn test_from_sample_file(file: &str) -> PageV42 {
-        let source = get_include_str_file(VALID_SAMPLES, file);
+        let source = get_include_str_file(SAMPLES, file);
         let source_path = PathBuf::from(format!("mocks/{}", file));
         let site_config = SiteConfigV42::mock1_basic();
         PageV42::new_from_str(&source, &source_path, &site_config).unwrap()
@@ -18,7 +18,6 @@ impl PageV42 {
     // TODO: Load this thru the new_from_str method because
     // that sets stuff up that will be needed for testing
     pub fn valid_sample_mock(name: &str) -> PageV42 {
-        const SAMPLES: Dir = include_dir!("src/page_v42/samples/valid");
         let site_config = SiteConfigV42::mock1_basic();
         let source = get_include_str_file(SAMPLES, name);
         let raw_ast = parse_ast_v42(&source, &site_config, false).unwrap();

@@ -298,12 +298,11 @@ mod test {
     use include_dir::{include_dir, Dir};
     use pretty_assertions::assert_eq;
 
-    const VALID_SAMPLES: Dir = include_dir!("src/page_v42/samples/valid");
-    const INVALID_SAMPLES: Dir = include_dir!("src/page_v42/samples/invalid");
+    const SAMPLES: Dir = include_dir!("src/page_v42/samples");
 
     #[test]
     fn basic_load_test_get_id() {
-        let source = get_include_str_file(VALID_SAMPLES, "001-pagedata-only.neo");
+        let source = get_include_str_file(SAMPLES, "001-pagedata-only.neo");
         let source_path = PathBuf::from("mock/source/path/file.neo");
         let site_config = SiteConfigV42::mock1_basic();
         let page = PageV42::new_from_str(&source, &source_path, &site_config).unwrap();
@@ -314,7 +313,7 @@ mod test {
 
     #[test]
     fn default_get_html_output_path() {
-        let source = get_include_str_file(VALID_SAMPLES, "001-pagedata-only.neo");
+        let source = get_include_str_file(SAMPLES, "001-pagedata-only.neo");
         let source_path = PathBuf::from("mock/source/path/file.neo");
         let site_config = SiteConfigV42::mock1_basic();
         let page = PageV42::new_from_str(&source, &source_path, &site_config).unwrap();
@@ -325,7 +324,7 @@ mod test {
 
     #[test]
     fn custom_html_output_path_from_pagedata_in_valid_file() {
-        let source = get_include_str_file(VALID_SAMPLES, "003-custom-path-in-pagedata.neo");
+        let source = get_include_str_file(SAMPLES, "003-custom-path-in-pagedata.neo");
         let source_path = PathBuf::from("mock/source/path/file.neo");
         let site_config = SiteConfigV42::mock1_basic();
         let page = PageV42::new_from_str(&source, &source_path, &site_config).unwrap();
@@ -336,8 +335,8 @@ mod test {
 
     #[test]
     fn custom_html_output_path_from_pagedata_in_invalid_file() {
-        let source = get_include_str_file(INVALID_SAMPLES, "002-unclosed-with-path.neo");
-        let source_path = PathBuf::from("mock/002-unclosed-with-path.neo");
+        let source = get_include_str_file(SAMPLES, "007-unclosed-with-path.neo");
+        let source_path = PathBuf::from("mock/007-unclosed-with-path.neo");
         let site_config = SiteConfigV42::mock1_basic();
         let page = PageV42::new_from_str(&source, &source_path, &site_config).unwrap();
         let left = PathBuf::from("some/custom/path/index.html");
@@ -347,19 +346,19 @@ mod test {
 
     #[test]
     fn get_id_when_there_is_an_error() {
-        let source = get_include_str_file(INVALID_SAMPLES, "001-unclosed-start-section.neo");
+        let source = get_include_str_file(SAMPLES, "006-unclosed-start-section.neo");
         let source_path = PathBuf::from("mock/source/path/file.neo");
         let site_config = SiteConfigV42::mock1_basic();
         let page = PageV42::new_from_str(&source, &source_path, &site_config).unwrap();
-        let left = "001-unclosed-start-section.neo";
+        let left = "006-unclosed-start-section.neo";
         let right = page.id.clone().unwrap();
         assert_eq!(left, right);
     }
 
     #[test]
-    fn get_id_when_there_is_an_error_and_something_else_also_has_an_id() {
-        let id = "003-unclosed-with-other-id.neo";
-        let source = get_include_str_file(INVALID_SAMPLES, id);
+    fn solo_get_id_when_there_is_an_error_and_something_else_also_has_an_id() {
+        let id = "008-unclosed-with-other-id.neo";
+        let source = get_include_str_file(SAMPLES, id);
         let source_path = PathBuf::from(format!("mock/{}", id));
         let site_config = SiteConfigV42::mock1_basic();
         let page = PageV42::new_from_str(&source, &source_path, &site_config).unwrap();

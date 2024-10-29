@@ -109,7 +109,7 @@ impl PageV42 {
     }
 
     pub fn title(&self) -> Result<Value, Error> {
-        if let Some(t) = match &self
+        if let Some(page_title) = match &self
             .raw_ast
             .iter()
             .filter_map(|section| match section {
@@ -117,21 +117,30 @@ impl PageV42 {
                 _ => None,
             })
             .find_map(|section| match section.kind.as_str() {
-                "pagedata" => Some(&section.attrs),
+                "pagedata" => {
+                    //dbg!(&section.attrs);
+                    Some(&section.attrs)
+                }
                 _ => None,
             }) {
-            Some(x) => match x.get("id") {
-                Some(v) => Some(Ok(Value::from_serialize(PageTitleV42 {
-                    spans: v.spans.clone(),
-                    text: v.text.to_string(),
-                }))),
-                None => None,
-            },
+            Some(attrs) => {
+                //dbg!(&attrs);
+                match attrs.get("id") {
+                    Some(attr) => {
+                        dbg!(&attr);
+                        Some(Ok(Value::from_serialize(PageTitleV42 {
+                            spans: attr.spans.clone(),
+                            text: attr.text.to_string(),
+                        })))
+                    }
+                    None => None,
+                }
+            }
             None => None,
         } {
-            t
+            page_title
         } else {
-            Ok(Value::from("TODO_PAGE_TITLE"))
+            Ok(Value::from("xTODO_PAGE_TITLE"))
         }
     }
 }
@@ -182,6 +191,33 @@ mod test {
 
     #[test]
     fn solo_title_from_pagedata_id() {
+        let page = PageV42::test_from_sample_file("001-pagedata-only.neo");
+        let left = Value::from_serialize(PageTitleV42 {
+            spans: vec![
+                SpanV42::PlainText(PlainTextSpan {
+                    text: "001".to_string(),
+                }),
+                SpanV42::PlainText(PlainTextSpan {
+                    text: "-".to_string(),
+                }),
+                SpanV42::PlainText(PlainTextSpan {
+                    text: "pagedata".to_string(),
+                }),
+                SpanV42::PlainText(PlainTextSpan {
+                    text: "-".to_string(),
+                }),
+                SpanV42::PlainText(PlainTextSpan {
+                    text: "only.neo".to_string(),
+                }),
+            ],
+            text: "001-pagedata-only.neo".to_string(),
+        });
+        let right = page.title().unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_title_from_invalid_page() {
         let page = PageV42::test_from_sample_file("001-pagedata-only.neo");
         let left = Value::from_serialize(PageTitleV42 {
             spans: vec![

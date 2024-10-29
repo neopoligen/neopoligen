@@ -30,6 +30,23 @@ impl SiteV42 {
     }
 }
 
+impl Object for SiteV42 {
+    fn call_method(
+        self: &Arc<SiteV42>,
+        _state: &minijinja::State,
+        name: &str,
+        args: &[Value],
+    ) -> Result<Value, Error> {
+        match name {
+            "get_page_title" => self.get_page_title(args),
+            // "page_title" => self.page_title(args),
+            // "page_url" => self.page_url(args),
+            // "ping" => Ok(Value::from(self.ping(args))),
+            _ => Ok(Value::from("")),
+        }
+    }
+}
+
 impl SiteV42 {
     //pub fn ping(&self, args: &[Value]) -> Value {
     //    self.pages.get("dev-alfa").unwrap().dev_ping(args)
@@ -104,21 +121,4 @@ impl SiteV42 {
     // }
 
     //
-}
-
-impl Object for SiteV42 {
-    fn call_method(
-        self: &Arc<SiteV42>,
-        _state: &minijinja::State,
-        name: &str,
-        args: &[Value],
-    ) -> Result<Value, Error> {
-        match name {
-            "get_page_title" => self.get_page_title(args),
-            // "page_title" => self.page_title(args),
-            // "page_url" => self.page_url(args),
-            // "ping" => Ok(Value::from(self.ping(args))),
-            _ => Ok(Value::from("")),
-        }
-    }
 }
