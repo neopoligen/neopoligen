@@ -1,3 +1,4 @@
+use super::not_pipe_or_greater_than::not_pipe_or_greater_than;
 use super::plaintext_without_spaces::plaintext_without_spaces;
 use crate::helpers::flatten_spans_v42;
 use crate::span_v42::any_colons::any_colons;
@@ -9,6 +10,7 @@ use crate::span_v42::SpanV42;
 use itertools::Itertools;
 use nom::branch::alt;
 use nom::bytes::complete::is_a;
+use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::character::complete::alphanumeric1;
 use nom::character::complete::multispace0;
@@ -172,7 +174,8 @@ pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, Err
 }
 
 pub fn named_span_content_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, span) = alt((plaintext, any_hyphens)).context("").parse(source)?;
+    let (source, span) = alt((not_pipe_or_greater_than,)).context("").parse(source)?;
+    //let (source, span) = alt((is_not("|>"),)).context("").parse(source)?;
     Ok((source, span))
 }
 

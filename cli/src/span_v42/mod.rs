@@ -6,6 +6,7 @@ pub mod any_underscores;
 pub mod block_line_ending;
 pub mod code_shorthand;
 pub mod named_span;
+pub mod not_pipe_or_greater_than;
 pub mod plaintext;
 pub mod plaintext_without_spaces;
 pub mod single_exclamation;

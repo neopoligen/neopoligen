@@ -13,6 +13,11 @@ Valid Named Spans
   ],
   "tests": {
     "todo_valid": [
+      {
+        "description": "content can have any regular characters except pipes or greater thans",
+        "source": "<<alfa|bravo ~!@#$%^&*(),.?:;>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
+      },
     ],
     "todo_invalid": [
     ],
