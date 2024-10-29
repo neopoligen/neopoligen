@@ -190,7 +190,7 @@ mod test {
     }
 
     #[test]
-    fn solo_title_from_pagedata_id() {
+    fn title_from_pagedata_id() {
         let page = PageV42::test_from_sample_file("001-pagedata-only.neo");
         let left = Value::from_serialize(PageTitleV42 {
             spans: vec![SpanV42::PlainText(PlainTextSpan {
@@ -203,7 +203,7 @@ mod test {
     }
 
     #[test]
-    fn solo_title_from_pagedata_title() {
+    fn title_from_pagedata_title() {
         let page = PageV42::test_from_sample_file("005-title-in-pagedata.neo");
         let left = Value::from_serialize(PageTitleV42 {
             spans: vec![SpanV42::PlainText(PlainTextSpan {
@@ -216,7 +216,7 @@ mod test {
     }
 
     #[test]
-    fn solo_title_from_invalid_page() {
+    fn title_from_invalid_page() {
         let page = PageV42::test_from_sample_file("006-unclosed-start-section.neo");
         let left = Value::from_serialize(PageTitleV42 {
             spans: vec![SpanV42::PlainText(PlainTextSpan {
@@ -228,25 +228,21 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // fn default_html_file_system_relative_path_from_id() {
-    //     let page = PageV42::valid_sample_mock("001-pagedata-only.neo");
-    //     let left = PathBuf::from("en/001-pagedata-only.neo/index.html");
-    //     let right = page
-    //         .html_file_system_relative_path(&PathBuf::from("en"))
-    //         .unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn default_html_file_system_relative_path_from_id() {
+        let page = PageV42::test_from_sample_file("001-pagedata-only.neo");
+        let left = PathBuf::from("en/001-pagedata-only.neo/index.html");
+        let right = page.html_output_path.unwrap();
+        assert_eq!(left, right);
+    }
 
-    // #[test]
-    // fn custom_path_in_pagedata() {
-    //     let page = PageV42::valid_sample_mock("003-custom-path-in-pagedata.neo");
-    //     let left = PathBuf::from("index.html");
-    //     let right = page
-    //         .html_file_system_relative_path(&PathBuf::from("en"))
-    //         .unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn custom_path_in_pagedata() {
+        let page = PageV42::test_from_sample_file("003-custom-path-in-pagedata.neo");
+        let left = PathBuf::from("index.html");
+        let right = page.html_output_path.unwrap();
+        assert_eq!(left, right);
+    }
 
     // TODO: Redo so it calls the new build method
     #[test]
