@@ -143,7 +143,7 @@ impl PageV42 {
         }
     }
 
-    pub fn url_path(&self) -> Result<Value, Error> {
+    pub fn href(&self) -> Result<Value, Error> {
         if let Some(original_path) = self.html_output_path.clone() {
             let base_path = original_path
                 .to_string_lossy()
@@ -153,7 +153,7 @@ impl PageV42 {
         } else {
             Err(Error::new(
                 ErrorKind::InvalidOperation,
-                format!("could not get url_path: "),
+                format!("could not get href: "),
             ))
         }
     }
@@ -269,18 +269,18 @@ mod test {
     }
 
     #[test]
-    fn url_path_from_id_default() {
+    fn href_from_id_default() {
         let page = PageV42::test_from_sample_file("001-pagedata-only.neo");
         let left = Value::from("/en/001-pagedata-only.neo/".to_string());
-        let right = page.url_path().unwrap();
+        let right = page.href().unwrap();
         assert_eq!(left, right);
     }
 
     #[test]
-    fn url_path_from_pagedata() {
+    fn href_from_pagedata() {
         let page = PageV42::test_from_sample_file("003-custom-path-in-pagedata.neo");
         let left = Value::from("/".to_string());
-        let right = page.url_path().unwrap();
+        let right = page.href().unwrap();
         assert_eq!(left, right);
     }
 
