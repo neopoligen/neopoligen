@@ -112,6 +112,7 @@ header, main, footer {
 <div>NOTE: Templates for this file did not render properly. Showing source instead.</div>
 <div>ERROR: [@ builder_error.kind.msg @]</div>
 <div><pre>[! autoescape true !][@ page.source @][! endautoescape !]</pre></div>
+<div><pre>[! autoescape true !][@ page.sections|tojson(true) @][! endautoescape !]</pre></div>
 </body>
 </html>"#,
         );

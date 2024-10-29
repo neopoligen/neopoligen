@@ -1,9 +1,8 @@
   </main>
-  <footer class="wrapper-medium">
-      <div>Debug - Page ID: [@ page.id @]</div>
-      <pre>
-        [@- page.sections |tojson(true) -@]
-      </pre>
+  <footer class="wrapper-medium flow">
+      <pre>[!- autoescape true -!][@- page.source -@][!- endautoescape -!]</pre>
+      <div>Page ID: [@ page.id @]</div>
+      <pre>[!- autoescape true -!][@- page.sections|tojson(true) -@][!- endautoescape -!]</pre>
   </footer>
 </body>
 </html>

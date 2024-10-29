@@ -8,4 +8,4 @@
 [!- endfor -!]
 [!- endblock -!]
 
-[!- include "page-includes/main-footerx.neoj" -!]
+[!- include "page-includes/main-footer.neoj" -!]
