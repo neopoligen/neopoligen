@@ -1,23 +1,76 @@
 use include_dir::{include_dir, Dir};
 use neopoligengine::helpers::get_include_str_file;
+use neopoligengine::section_v42::SectionV42;
 use neopoligengine::{page_v42::PageV42, site_config::SiteConfigV42};
+use serde::Deserialize;
 use std::path::PathBuf;
 
 const TEST_FILES: Dir = include_dir!("tests/spec_tests/tests");
 
-fn load_tests(file_name: &str) -> (String, String) {
+#[derive(Debug)]
+pub struct TestItem {}
+
+fn load_tests(file_name: &str) -> (Vec<TestItem>, Vec<TestItem>) {
     let source = get_include_str_file(TEST_FILES, file_name);
     let path = PathBuf::from("mock/path.neo");
     let site_config = SiteConfigV42::config_for_spec_tests();
     let page = PageV42::new_from_str(&source, &path, &site_config).unwrap();
-    dbg!(page);
-    ("asdf".to_string(), "wqer".to_string())
+    dbg!(&page.raw_ast);
+    if let Some(data) = page
+        .raw_ast
+        .iter()
+        .filter_map(|section| match section {
+            SectionV42::Json5(sec) => Some(sec.clone()),
+            _ => None,
+        })
+        .find_map(|section| match section.kind.clone().as_str() {
+            "neopoligen-spec-test" => Some(section.data),
+            _ => None,
+        })
+    {
+        dbg!(&data);
+
+        let v: serde_json::Value = serde_json::Value::deserialize(data).unwrap();
+        dbg!(&v.as_object().unwrap()["tests"]["valid"].as_array().unwrap());
+        let valid_tests = &v.as_object().unwrap()["tests"]["valid"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|obj| TestItem {})
+            .collect::<Vec<TestItem>>();
+        dbg!(valid_tests);
+        //let t = v[
+
+        //let valid_items =
+        //   &<serde_json::Value as TryInto<Vec<TestItem>>>::try_into(v["tests"]["valid"]);
+        // .try_into()
+        // .unwrap()
+        // .map(|i| TestItem {})
+        // .collect();
+        //dbg!(valid_items);
+        //iter().map(|i| TestItem {}).collect();
+        //let data_iter = data.try_iter();
+        //dbg!(data.get_item("tests"));
+
+        // dbg!(data.try_iter()?.find_map(|k, v| {
+        //     dbg!(k);
+        //     true
+        // }));
+    }
+    //.collect::<Vec<Value>>()
+    //.iter()
+    //.for_each(|data| {
+    //  dbg!(data);
+    //});
+
+    //dbg!(valid_tests);
+
+    (vec![], vec![])
 }
 
 #[test]
 fn solo_test_named_spans() {
     let (valid, invalid) = load_tests("named-spans.neo");
-
     // let source_path = PathBuf::from(format!("mocks/{}", file));
     // let site_config = SiteConfigV42::mock1_basic();
     // match PageV42::new_from_str(&source, &source_path, &site_config) {
