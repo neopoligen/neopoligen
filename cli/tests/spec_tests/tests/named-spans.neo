@@ -131,21 +131,9 @@ Valid Named Spans
         "notes": ["Flages are any valid content value that doesn't have a ':' followed by a space in it (which would make it a key for a key/value pair instead)"],
       },
       {
-        "description": "Flags can have numbers",
-        "source": "<<alfa|bravo|charlie1>>",
-        "result": '{ "attrs": {}, "flags": ["charlie1"], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
-        "notes": [],
-      },
-      {
-        "description": "Flags can have hyphens",
-        "source": "<<alfa|bravo|charlie-delta>>",
-        "result": '{ "attrs": {}, "flags": ["charlie-delta"], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
-        "notes": [],
-      },
-      {
-        "description": "Flags can have underscores",
-        "source": "<<alfa|bravo|charlie_delta>>",
-        "result": '{ "attrs": {}, "flags": ["charlie_delta"], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
+        "description": "Flags can have any basic content",
+        "source": "<<alfa|bravo|https://www.example.com/?ping=@pong>>",
+        "result": '{ "attrs": {}, "flags": ["https://www.example.com/?ping=@pong"], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
         "notes": [],
       },
       {
@@ -263,16 +251,6 @@ Valid Named Spans
       {
         "description": "No ';' in name",
         "source": "<<alfa;bravo>>",
-        "notes": [],
-      },
-      {
-        "description": "Flags can't have spaces",
-        "source": "<<alfa|bravo|charlie delta>>",
-        "notes": [],
-      },
-      {
-        "description": "Flags can't have non-alphanumeric characters other than underscore and hyphen",
-        "source": "<<alfa|bravo|charlie:delta>>",
         "notes": [],
       },
     ]
