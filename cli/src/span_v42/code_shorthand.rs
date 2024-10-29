@@ -23,7 +23,7 @@ use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct CodeShorthandKeyValueAttrPayloadV42 {
-    pub value: Vec<SpanV42>,
+    pub spans: Vec<SpanV42>,
     pub text: String,
 }
 
@@ -96,7 +96,7 @@ pub struct CodeShorthandFlagV42 {
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct CodeShorthandKeyValueAttrV42 {
     key: String,
-    value: Vec<SpanV42>,
+    spans: Vec<SpanV42>,
     text: String,
 }
 
@@ -132,7 +132,7 @@ pub fn code_shorthand_key_value_attr(
         source,
         CodeShorthandBaseAttrV42::KeyValue(CodeShorthandKeyValueAttrV42 {
             key: flatten_spans_v42(&key_spans),
-            value: spans,
+            spans,
             text: "".to_string(),
         }),
     ))
