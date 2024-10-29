@@ -54,7 +54,7 @@ pub fn unknown_section_start_v42<'a>(
             .context("")
             .parse(source)?;
     let (source, end_section) =
-        (|src| end_section_basic_v42(src, site_config, 0, 0, 0, kind, debug))
+        (|src| end_section_basic_v42(src, site_config, SectionParent::Page, kind, debug))
             .context("")
             .parse(source)?;
     let section = SectionV42::Unknown(UnknownSectionV42 {

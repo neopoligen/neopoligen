@@ -31,9 +31,7 @@ pub struct EndSectionV42 {
 pub fn end_section_basic_v42<'a>(
     source: &'a str,
     site_config: &'a SiteConfigV42,
-    nest_level: usize,
-    list_level: usize,
-    checklist_level: usize,
+    parent: SectionParent,
     kind: &str,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
@@ -49,18 +47,10 @@ pub fn end_section_basic_v42<'a>(
     .parse(source)?;
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) = many0(|src| {
-        paragraph_block_section_v42(
-            src,
-            site_config,
-            nest_level,
-            list_level,
-            checklist_level,
-            debug,
-        )
-    })
-    .context("")
-    .parse(source)?;
+    let (source, children) =
+        many0(|src| paragraph_block_section_v42(src, site_config, 0, 0, 0, debug))
+            .context("")
+            .parse(source)?;
     let section = SectionV42::End(EndSectionV42 {
         attrs,
         bounds: Bound::End,
@@ -128,8 +118,14 @@ mod test {
                 template_list,
             }),
         );
-        let right =
-            end_section_basic_v42(&source, &site_config, 0, 0, 0, kind.as_str(), false).unwrap();
+        let right = end_section_basic_v42(
+            &source,
+            &site_config,
+            SectionParent::Page,
+            kind.as_str(),
+            false,
+        )
+        .unwrap();
         assert_eq!(left, right);
     }
 
