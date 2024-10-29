@@ -47,10 +47,10 @@ impl PageV42 {
         }
     }
 
-    // TODO: Deprecate in favor of top level .id (field not method)
-    pub fn tmp_id(&self) -> Result<String, Error> {
-        Ok(self.id.as_ref().unwrap().to_string())
-    }
+    // // TODO: Deprecate in favor of top level .id (field not method)
+    // pub fn tmp_id(&self) -> Result<String, Error> {
+    //     Ok(self.id.as_ref().unwrap().to_string())
+    // }
 
     pub fn get_pagedata(&self, args: &[Value]) -> Result<String, Error> {
         if args.len() == 0 {
@@ -100,6 +100,10 @@ impl PageV42 {
     pub fn template_list(&self) -> Vec<String> {
         vec!["page-templates/post/done.neoj".to_string()]
     }
+
+    pub fn title(&self) -> Result<Value, Error> {
+        Ok(Value::from("TODO_PAGE_TITLE"))
+    }
 }
 
 impl Object for PageV42 {
@@ -126,7 +130,7 @@ impl Object for PageV42 {
             // "sections" => self.ast(),
             "get_pagedata" => self.make_value_from_string(self.get_pagedata(args)),
             // "sections" => self.sections(),
-            // "title" => self.title(),
+            "title" => self.title(),
             _ => Ok(Value::from("")),
         }
     }

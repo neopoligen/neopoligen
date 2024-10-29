@@ -1,23 +1,33 @@
-use crate::image::Image;
-use crate::neo_error::NeoError;
+use crate::page_v42::PageV42;
+use crate::site_config::SiteConfigV42;
 use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::Value;
-use std::sync::Arc;
-// use crate::neo_error::{NeoError, NeoErrorKind};
-use crate::page_payload::PagePayload;
-use crate::page_v42::PageV42;
-use crate::site_config::SiteConfig; // TODO: Deprecate SiteConfig In Favor Of SiteConfigV42
-use crate::site_config::SiteConfigV42;
-use crate::source_page::SourcePage;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
-use std::path::PathBuf;
+use std::sync::Arc;
+// use crate::neo_error::{NeoError, NeoErrorKind};
+// use crate::image::Image;
+// use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SiteV42 {
     pub config: SiteConfigV42,
     pub pages: BTreeMap<String, PageV42>,
+}
+
+impl SiteV42 {
+    pub fn get_page_title(&self, args: &[Value]) -> Result<Value, Error> {
+        if args.len() == 1 {
+            let page_id = &args[0].to_string().trim().to_string();
+            match self.pages.get(page_id) {
+                Some(page) => page.title(),
+                None => Ok(Value::from(page_id)),
+            }
+        } else {
+            Ok(Value::from("ERROR_NO_ID_FOR_PAGE_TITLE"))
+        }
+    }
 }
 
 impl SiteV42 {
@@ -104,6 +114,7 @@ impl Object for SiteV42 {
         args: &[Value],
     ) -> Result<Value, Error> {
         match name {
+            "get_page_title" => self.get_page_title(args),
             // "page_title" => self.page_title(args),
             // "page_url" => self.page_url(args),
             // "ping" => Ok(Value::from(self.ping(args))),
