@@ -110,7 +110,7 @@ header, main, footer {
 <header><a href="/">Home</a></header>
 <main>
 <div>NOTE: Templates for this file did not render properly. Showing source instead.</div>
-<div>[@ page.error @]</div>
+<div>ERROR: [@ builder_error.kind.msg @]</div>
 <div><pre>[! autoescape true !][@ page.source @][! endautoescape !]</pre></div>
 </body>
 </html>"#,
@@ -122,6 +122,7 @@ header, main, footer {
             .pages
             .iter()
             .for_each(|(_id, page)| {
+                let builder_error: Option<NeoError>;
                 //let base_rel_path = PathBuf::from(self.site_config.default_language().unwrap());
                 let file_rel_path = page.html_output_path.clone();
                 let absolute_output_path = &self
@@ -166,12 +167,21 @@ header, main, footer {
                                 "Could not render output for: {}",
                                 page.fs_path.display()
                             );
+
+                            builder_error = Some(NeoError {
+                                kind: NeoErrorKind::GenericErrorWithSourcePath {
+                                    source_path: absolute_output_path.to_path_buf(),
+                                    msg: e.to_string(),
+                                },
+                            });
+
                             if let Ok(template) =
                                 env.get_template("neopoligen-built-in-template-error")
                             {
                                 match template.render(context!(
                                     site => &site_clone,
-                                    page => Value::from_object(page.clone())
+                                    page => Value::from_object(page.clone()),
+                                        builder_error => Value::from_serialize(builder_error),
                                 )) {
                                     Ok(output) => {
                                         match write_file_with_mkdir(
@@ -198,7 +208,14 @@ header, main, footer {
                                             }),
                                         }
                                     }
-                                    Err(_e) => (),
+                                    Err(_e) => {
+                                        // page.error = Some(NeoError {
+                                        //     kind: NeoErrorKind::GenericErrorWithSourcePath {
+                                        //         source_path: absolute_output_path.to_path_buf(),
+                                        //         msg: e.to_string(),
+                                        //     },
+                                        // });
+                                    }
                                 }
                             }
                             self.errors.push(NeoError {
