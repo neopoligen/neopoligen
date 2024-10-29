@@ -129,10 +129,11 @@ mod test {
     #[rstest]
     #[case("003-check-preview.neo", "")]
     fn solo_integration_run_for_unknown_sections(#[case] file: &str, #[case] remainder: &str) {
+        let debug = false;
         let site_config = SiteConfigV42::mock1_basic();
         let source = get_include_str_file(VALID_SAMPLES, file);
         let result =
-            start_or_full_section_v42(&source, &site_config, SectionParent::Page, true).unwrap();
+            start_or_full_section_v42(&source, &site_config, SectionParent::Page, debug).unwrap();
         if result.clone().0 == remainder {
             assert!(true);
         } else {
