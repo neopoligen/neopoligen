@@ -284,5 +284,13 @@ mod test {
         assert_eq!(left, right);
     }
 
+    #[test]
+    fn href_for_non_index_html_file() {
+        let page = PageV42::test_from_sample_file("009-non-index-custom-path.neo");
+        let left = Value::from("/somewhere/custom.html".to_string());
+        let right = page.href().unwrap();
+        assert_eq!(left, right);
+    }
+
     //
 }
