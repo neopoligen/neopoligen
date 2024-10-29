@@ -41,7 +41,7 @@ pub struct KeyValueSpanAttrV42 {
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct NamedSpanKeyValueAttrPayloadV42 {
-    value: Vec<SpanV42>,
+    spans: Vec<SpanV42>,
     text: String,
 }
 
@@ -120,7 +120,7 @@ pub fn named_span_attrs_and_flags(
                 attrs.insert(
                     f.key.to_string(),
                     NamedSpanKeyValueAttrPayloadV42 {
-                        value: f.value.clone(),
+                        spans: f.value.clone(),
                         text: f.text.clone(),
                     },
                 );
@@ -148,8 +148,8 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42
         source,
         NamedSpanAttrV42::KeyValue(KeyValueSpanAttrV42 {
             key: flatten_spans_v42(&key_spans),
-            value: spans,
-            text: "".to_string(),
+            value: spans.clone(),
+            text: flatten_spans_v42(&spans),
         }),
     ))
 }
@@ -230,10 +230,10 @@ mod test {
         attrs.insert(
             "class".to_string(),
             NamedSpanKeyValueAttrPayloadV42 {
-                value: vec![SpanV42::PlainText(PlainTextSpan {
+                spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "red".to_string(),
                 })],
-                text: "".to_string(),
+                text: "red".to_string(),
             },
         );
         let left = (

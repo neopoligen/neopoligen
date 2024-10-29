@@ -90,6 +90,23 @@ Valid Named Spans
         "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo ~!@#$%^&*(),.?:;", "type": "plaintext"}], "text": "bravo ~!@#$%^&*(),.?:;", "type": "namedspan" }',
         "notes": ["this is not an exaustive list (i.e. not ever possible character is tested). It's meant only to be representative"],
       },
+      {
+        "description": "flags can come after content",
+        "source": "<<alfa|bravo|charlie>>",
+        "result": '{ "attrs": {}, "flags": ["charlie"], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
+        "notes": ["Flages are any valid content value that doesn't have a ':' followed by a space in it (which would make it a key for a key/value pair instead)"],
+      },
+      {
+        "description": "key value attributes can come after content",
+        "source": "<<alfa|bravo|charlie: delta>>",
+        "result": '{ "attrs": { "charlie": { "text": "delta", "spans": [{"text": "delta", "type": "plaintext"}]}}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
+        "notes": [
+          "Key/value attributes are identivied by having a string that ends with a ':' followed by whitespace then a string of content",
+          "The same rules that apply for the names of the spans themselves as well as the flags applie to the keys too",
+          ],
+      },
+
+
     ],
 
     "invalid": [
