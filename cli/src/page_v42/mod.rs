@@ -3,6 +3,7 @@ pub mod mocks;
 
 use crate::neo_error::NeoError;
 use crate::section_v42::SectionV42;
+use crate::span_v42::plaintext::PlainTextSpan;
 use crate::span_v42::SpanV42;
 use minijinja::value::Object;
 use minijinja::Error;
@@ -141,17 +142,20 @@ impl PageV42 {
             None => None,
         } {
             page_title
-        } else if let Ok((_, _page_title)) = get_id_from_invalid_page(&self.source) {
-            Ok(Value::from("No ID"))
+        } else if let Some(id) = &self.id.clone() {
+            Ok(Value::from_serialize(PageTitleV42 {
+                spans: vec![SpanV42::PlainText(PlainTextSpan { text: id.clone() })],
+                text: id.to_string(),
+            }))
         } else {
             Ok(Value::from("xTODO_PAGE_TITLE"))
         }
     }
 }
 
-pub fn get_id_from_invalid_page(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
-    Ok((source, "no id"))
-}
+// pub fn get_id_from_invalid_page(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
+//     Ok((source, "no id"))
+// }
 
 impl Object for PageV42 {
     fn get_value(self: &Arc<Self>, key: &Value) -> Option<Value> {
@@ -228,23 +232,9 @@ mod test {
     fn solo_title_from_invalid_page() {
         let page = PageV42::test_from_sample_file("006-unclosed-start-section.neo");
         let left = Value::from_serialize(PageTitleV42 {
-            spans: vec![
-                SpanV42::PlainText(PlainTextSpan {
-                    text: "001".to_string(),
-                }),
-                SpanV42::PlainText(PlainTextSpan {
-                    text: "-".to_string(),
-                }),
-                SpanV42::PlainText(PlainTextSpan {
-                    text: "pagedata".to_string(),
-                }),
-                SpanV42::PlainText(PlainTextSpan {
-                    text: "-".to_string(),
-                }),
-                SpanV42::PlainText(PlainTextSpan {
-                    text: "only.neo".to_string(),
-                }),
-            ],
+            spans: vec![SpanV42::PlainText(PlainTextSpan {
+                text: "006-unclosed-start-section.neo".to_string(),
+            })],
             text: "006-unclosed-start-section.neo".to_string(),
         });
         let right = page.title().unwrap();
