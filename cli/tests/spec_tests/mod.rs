@@ -70,11 +70,6 @@ fn solo_test_named_spans() {
             let against =
                 serde_json5::from_str::<Value>(ti.result.clone().unwrap().as_str()).unwrap();
             assert_eq!(check, against);
-
-            dbg!(check);
-            dbg!(against);
-            //dbg!(serde_json5::from_::<Value>(&result.unwrap()));
-            assert!(true)
         } else {
             dbg!(&ti.description);
             assert!(false);

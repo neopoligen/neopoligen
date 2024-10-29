@@ -66,7 +66,7 @@ pub struct NamedSpanV42 {
 pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, tokens) = preceded(
         pair(tag("<<"), space0),
-        many1(alt((alphanumeric1, is_a("-")))),
+        many1(alt((alphanumeric1, is_a("-_")))),
     )
     .context("")
     .parse(source)?;

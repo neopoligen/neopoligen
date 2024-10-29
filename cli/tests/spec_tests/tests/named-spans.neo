@@ -15,6 +15,31 @@ Valid Named Spans
         "source": "<<alfa>>",
         "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "text": null, "type": "namedspan" }',
       },
+      {
+        "description": "names can have numbers",
+        "source": "<<alfa1>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa1", "spans": null, "text": null, "type": "namedspan" }',
+      },
+      {
+        "description": "names can have hyphens",
+        "source": "<<alfa-bravo>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa-bravo", "spans": null, "text": null, "type": "namedspan" }',
+      },
+      {
+        "description": "names can have multiple hyphens",
+        "source": "<<alfa--bravo>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa--bravo", "spans": null, "text": null, "type": "namedspan" }',
+      },
+      {
+        "description": "names can have underscores",
+        "source": "<<alfa_bravo>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa_bravo", "spans": null, "text": null, "type": "namedspan" }',
+      },
+      {
+        "description": "names can have multiple underscores",
+        "source": "<<alfa__bravo>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa__bravo", "spans": null, "text": null, "type": "namedspan" }',
+      },
     ],
     "invalid": [
       {
