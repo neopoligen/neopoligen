@@ -33,9 +33,7 @@ pub struct BasicSectionV42 {
 pub fn basic_section_full_v42<'a>(
     source: &'a str,
     site_config: &'a SiteConfigV42,
-    nest_level: usize,
-    list_level: usize,
-    checklist_level: usize,
+    parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let debug = true;
@@ -51,18 +49,10 @@ pub fn basic_section_full_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, _) = multispace0.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
-    let (source, children) = many0(|src| {
-        paragraph_block_section_v42(
-            src,
-            site_config,
-            nest_level,
-            list_level,
-            checklist_level,
-            debug,
-        )
-    })
-    .context("")
-    .parse(source)?;
+    let (source, children) =
+        many0(|src| paragraph_block_section_v42(src, site_config, 0, 0, 0, debug))
+            .context("")
+            .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 6);
     let section = SectionV42::Basic(BasicSectionV42 {
         attrs,
