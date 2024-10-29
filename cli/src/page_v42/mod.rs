@@ -7,9 +7,8 @@ use crate::span_v42::plaintext::PlainTextSpan;
 use crate::span_v42::SpanV42;
 use minijinja::value::Object;
 use minijinja::Error;
+use minijinja::ErrorKind;
 use minijinja::Value;
-use nom::IResult;
-use nom_supreme::error::ErrorTree;
 use serde::Deserialize;
 use serde::Serialize;
 use std::path::PathBuf;
@@ -143,6 +142,23 @@ impl PageV42 {
             Ok(Value::from("xTODO_PAGE_TITLE"))
         }
     }
+
+    pub fn url_path(&self) -> Result<Value, Error> {
+        if let Some(original_path) = self.html_output_path.clone() {
+            let base_path = original_path
+                .to_string_lossy()
+                .trim_end_matches("index.html")
+                .to_string();
+            Ok(Value::from(format!("/{}", base_path)))
+        } else {
+            Err(Error::new(
+                ErrorKind::InvalidOperation,
+                format!("could not get url_path: "),
+            ))
+        }
+    }
+
+    //
 }
 
 impl Object for PageV42 {
@@ -249,6 +265,14 @@ mod test {
         let page = PageV42::test_from_sample_file("003-custom-path-in-pagedata.neo");
         let left = PathBuf::from("index.html");
         let right = page.html_output_path.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn url_path_from_id_default() {
+        let page = PageV42::test_from_sample_file("001-pagedata-only.neo");
+        let left = Value::from("/en/001-pagedata-only.neo/".to_string());
+        let right = page.url_path().unwrap();
         assert_eq!(left, right);
     }
 
