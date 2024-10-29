@@ -73,6 +73,9 @@ pub fn flatten_spans_v42(spans: &Vec<SpanV42>) -> String {
             SpanV42::NamedSpan(_s) => {
                 "NEO_TODO: Cover NamedSpan in flatten_spans_v42 in helpers/mod.rs".to_string()
             }
+            SpanV42::CodeShorthand(_s) => {
+                "NEO_TODO: Cover CodeShorthand in flatten_spans_v42 in helpers/mod.rs".to_string()
+            }
         })
         .collect::<Vec<String>>()
         .join("")

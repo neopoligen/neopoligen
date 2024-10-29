@@ -4,6 +4,7 @@ pub mod any_paren_closes;
 pub mod any_paren_opens;
 pub mod any_underscores;
 pub mod block_line_ending;
+pub mod code_shorthand;
 pub mod named_span;
 pub mod plaintext;
 pub mod plaintext_without_spaces;
@@ -14,6 +15,7 @@ pub mod single_underscore;
 pub mod space0_line_ending_or_eof;
 
 use self::named_span::NamedSpanV42;
+use crate::span_v42::code_shorthand::CodeShorthandV42;
 use crate::span_v42::plaintext::*;
 use nom::branch::alt;
 use nom::combinator::not;
@@ -28,6 +30,7 @@ use serde::{Deserialize, Serialize};
 pub enum SpanV42 {
     PlainText(PlainTextSpan),
     NamedSpan(NamedSpanV42),
+    CodeShorthand(CodeShorthandV42),
 }
 
 pub fn span_v42<'a>(source: &'a str) -> IResult<&'a str, SpanV42, ErrorTree<&'a str>> {

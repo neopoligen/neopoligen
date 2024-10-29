@@ -1,3 +1,4 @@
+use crate::span_v42::any_colons::any_colons;
 // use crate::span::named_span::named_span_type_span_v42;
 use crate::span_v42::any_hyphens::any_hyphens;
 use crate::span_v42::any_paren_closes::any_paren_closes;
@@ -20,6 +21,7 @@ pub fn spans_of_generic_block_content<'a>(
     let (source, output) = many1(alt((
         plaintext,
         any_hyphens,
+        any_colons,
         single_exclamation,
         block_line_ending,
         named_span,
@@ -39,6 +41,36 @@ mod test {
     use rstest::rstest;
 
     const VALID_SAMPLES: Dir = include_dir!("src/spans_v42/samples/generic_block_content/valid");
+
+    // TODO: Test these: \r<>`|_!@#$^&*\\
+    #[rstest]
+    #[case("alfa", "")]
+    #[case("alfa bravo", "")]
+    #[case("alfa-bravo", "")]
+    #[case("alfa -- bravo", "")]
+    #[case("alfa\nbravo", "")]
+    #[case("alfa\n\nbravo", "\n\nbravo")]
+    #[case("alfa\n\n-- bravo", "\n\n-- bravo")]
+    #[case("alfa (bravo) charlie", "")]
+    #[case("alfa ((bravo)) charlie", "")]
+    #[case("alfa:bravo", "")]
+    #[case("alfa::bravo", "")]
+    fn verify_strings(#[case] source: &str, #[case] remainder: &str) {
+        match spans_of_generic_block_content(source) {
+            Ok(result) => {
+                if result.clone().0 == remainder {
+                    assert!(true)
+                } else {
+                    dbg!(result);
+                    assert!(false)
+                }
+            }
+            Err(e) => {
+                dbg!(e);
+                assert!(false)
+            }
+        }
+    }
 
     #[rstest]
     #[case("001-plaintext.txt")]
