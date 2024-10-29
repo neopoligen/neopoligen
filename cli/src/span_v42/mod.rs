@@ -3,6 +3,8 @@
 
 pub mod any_colons;
 pub mod any_hyphens;
+pub mod any_paren_closes;
+pub mod any_paren_opens;
 pub mod any_underscores;
 pub mod block_line_ending;
 pub mod named_span;

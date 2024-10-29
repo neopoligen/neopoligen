@@ -13,6 +13,7 @@ const VALID_SAMPLES: Dir = include_dir!("tests/parser_tests/full_page_tests");
 #[rstest]
 #[case("1.neo")]
 #[case("2.neo")]
+#[case("3.neo")]
 fn solo_integration_parser_test(#[case] file: &str) {
     let source = get_include_str_file(VALID_SAMPLES, file);
     let source_path = PathBuf::from(format!("mocks/{}", file));

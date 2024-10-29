@@ -1,5 +1,7 @@
 // use crate::span::named_span::named_span_type_span_v42;
 use crate::span_v42::any_hyphens::any_hyphens;
+use crate::span_v42::any_paren_closes::any_paren_closes;
+use crate::span_v42::any_paren_opens::any_paren_opens;
 use crate::span_v42::block_line_ending::block_line_ending;
 use crate::span_v42::named_span::named_span;
 use crate::span_v42::plaintext::plaintext;
@@ -21,6 +23,8 @@ pub fn spans_of_generic_block_content<'a>(
         single_exclamation,
         block_line_ending,
         named_span,
+        any_paren_opens,
+        any_paren_closes,
     )))
     .context("")
     .parse(source)?;
