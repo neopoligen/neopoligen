@@ -1,14 +1,10 @@
 use crate::span_v42::SpanV42;
-use minijinja::value::Object;
-use minijinja::Error;
-use minijinja::Value;
 use nom::bytes::complete::is_not;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PlainTextSpan {
