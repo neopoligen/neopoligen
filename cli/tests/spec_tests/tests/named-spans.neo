@@ -9,6 +9,8 @@ Valid Named Spans
   "name": "Valid Named Spans",
   "note": "This is just getting started, there are more to test that I'll add in the next iteration",
   "tests": {
+    "todo": [
+    ],
     "valid": [
       {
         "description": "basic text",
@@ -40,6 +42,27 @@ Valid Named Spans
         "source": "<<alfa__bravo>>",
         "result": '{ "attrs": {}, "flags": [], "kind": "alfa__bravo", "spans": null, "text": null, "type": "namedspan" }',
       },
+      {
+        "description": "there can be leading spaces",
+        "source": "<< alfa>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "text": null, "type": "namedspan" }',
+      },
+      {
+        "description": "there can be trailing spaces",
+        "source": "<<alfa >>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "text": null, "type": "namedspan" }',
+      },
+      {
+        "description": "there can be leading newlines",
+        "source": "<<\nalfa>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "text": null, "type": "namedspan" }',
+      },
+      {
+        "description": "there can be trailing newlines",
+        "source": "<<alfa\n>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "text": null, "type": "namedspan" }',
+      },
+
     ],
     "invalid": [
       {
