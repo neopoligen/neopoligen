@@ -1,18 +1,14 @@
 use crate::section::Section;
 use crate::section::SectionBounds;
 use crate::section::SectionKind;
-// use crate::span::hyphen_with_trailing_non_hyphen::hyphen_with_trailing_non_hyphen;
+use crate::span::escaped_lessthan::*;
 use crate::span::pipe::*;
+use crate::span::plaintext::plaintext;
+use crate::span::single_lessthan::*;
 use crate::span::*;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;
-// use nom::character::complete::space1;
-//use crate::span::escaped_exclamation::escaped_exclamation;
-use crate::span::escaped_lessthan::*;
-// use crate::span::single_exclamation::single_exclamation;
-use crate::span::plaintext::plaintext;
-use crate::span::single_lessthan::*;
 use nom::combinator::eof;
 use nom::combinator::not;
 use nom::multi::many1;
@@ -31,17 +27,12 @@ use self::escaped_backtick::escaped_backtick;
 use self::escaped_caret::escaped_caret;
 use self::escaped_greaterthan::escaped_greaterthan;
 use self::escaped_underscore::escaped_underscore;
-// use self::footnote_shorthand::footnote_shorthand;
-// use self::escaped_hashtag::escaped_hashtag;
-// use self::escaped_hyphen::escaped_hyphen;
 use self::named_span::named_span_v42;
 use self::single_asterisk::single_asterisk;
 use self::single_backtick::single_backtick;
 use self::single_caret::single_caret;
 use self::single_greaterthan::single_greaterthan;
 use self::single_underscore::single_underscore;
-// use self::single_hashtag::single_hashtag;
-// use self::single_hyphen::single_hyphen;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Block {}

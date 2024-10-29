@@ -1,9 +1,11 @@
 use super::helpers::make_template_list::*;
 use crate::bound::Bound;
+use crate::helpers::dump_parser_if_debug;
 use crate::section_attr_v42::section_attr_v42;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
 use crate::section_v42::*;
 use crate::site_config::SiteConfigV42;
+use crate::span_v42::space0_line_ending_or_eof::space0_line_ending_or_eof;
 use minijinja::Value;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
@@ -36,16 +38,22 @@ pub fn json5_section_full_v42<'a>(
     _nest_level: usize,
     _list_level: usize,
     _checklist_level: usize,
-    _debug: bool,
+    debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
-    // let _dbg_header = "BASIC_SECTION_START";
+    // let debug = true;
+    let dbg_header = "JSON_SECTION_FULL";
+    dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, kind) = alt((tag("pagedata"), tag("json5-test"), tag("dev")))
         .context("")
         .parse(source)?;
-    let (source, _) = line_ending.context("").parse(source)?;
+    let (source, _) = space0_line_ending_or_eof.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, json_text) = alt((take_until("-- "), rest)).context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 5);
     let mut error = None;
     let data;
     if json_text.trim() != "" {

@@ -16,9 +16,9 @@ use nom_supreme::parser_ext::ParserExt;
 pub fn parse_ast_v42(
     source: &str,
     site_config: &SiteConfigV42,
-    mut debug: bool,
+    debug: bool,
 ) -> Result<Vec<SectionV42>, NeoError> {
-    debug = true;
+    // debug = true;
     match final_parser(|src| do_parse_v42(src, site_config, debug.clone()))(source) {
         Ok(data) => Ok(data),
         Err(e) => Err(get_error_v42(source, &e).into()),

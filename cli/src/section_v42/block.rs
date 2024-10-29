@@ -1,8 +1,12 @@
+use crate::helpers::dump_parser_if_debug;
 use crate::helpers::flatten_spans_v42;
 use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
 use crate::span_v42::SpanV42;
 use crate::spans_v42::generic_block_content::spans_of_generic_block_content;
+use nom::bytes::complete::tag;
+use nom::character::complete::multispace0;
+use nom::combinator::not;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -27,9 +31,15 @@ pub fn paragraph_block_section_v42<'a>(
     _nest_level: usize,
     _list_level: usize,
     _checklist_level: usize,
-    _debug: bool,
+    debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
+    // let debug = true;
+    let dbg_header = "PARAGRAPH_BLOCK_SECTION";
+    dump_parser_if_debug(debug, dbg_header, source, 1);
+    let (source, _) = not(tag("--")).context("").parse(source)?;
     let (source, spans) = spans_of_generic_block_content.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 2);
+    let (source, _) = multispace0.context("").parse(source)?;
     let text = flatten_spans_v42(&spans);
     Ok((
         source,

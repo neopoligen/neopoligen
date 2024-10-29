@@ -25,7 +25,6 @@ pub fn spans_of_generic_block_content<'a>(
     )))
     .context("")
     .parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
     Ok((source, output))
 }
 

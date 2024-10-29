@@ -1,5 +1,6 @@
 use super::helpers::make_template_list::*;
 use crate::bound::Bound;
+use crate::helpers::dump_parser_if_debug;
 use crate::section_attr_v42::section_attr_v42;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
 use crate::section_v42::*;
@@ -37,13 +38,19 @@ pub fn basic_section_full_v42<'a>(
     checklist_level: usize,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
-    // let _dbg_header = "BASIC_SECTION_FULL";
+    // let debug = true;
+    let dbg_header = "BASIC_SECTION_FULL";
+    dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, kind) = terminated(tag("title"), space0_line_ending_or_eof)
         .context("")
         .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, _) = multispace0.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, children) = many0(|src| {
         paragraph_block_section_v42(
             src,
@@ -56,6 +63,7 @@ pub fn basic_section_full_v42<'a>(
     })
     .context("")
     .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 6);
     let section = SectionV42::Basic(BasicSectionV42 {
         attrs,
         bounds: Bound::Full,
