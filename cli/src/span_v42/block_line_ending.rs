@@ -1,9 +1,5 @@
 use crate::span_v42::PlainTextSpan;
 use crate::span_v42::SpanV42;
-use minijinja::value::Object;
-use minijinja::Error;
-use minijinja::Value;
-use nom::bytes::complete::is_not;
 use nom::character::complete::line_ending;
 use nom::character::complete::space0;
 use nom::combinator::eof;
@@ -14,8 +10,6 @@ use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-use serde::{Deserialize, Serialize};
-use std::sync::Arc;
 
 pub fn block_line_ending(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, _) = tuple((line_ending, not(eof), not(pair(space0, line_ending))))

@@ -1,6 +1,3 @@
-#![allow(unused_variables)]
-#![allow(unused_imports)]
-
 pub mod any_colons;
 pub mod any_hyphens;
 pub mod any_paren_closes;
@@ -18,23 +15,13 @@ pub mod space0_line_ending_or_eof;
 
 use self::named_span::NamedSpanV42;
 use crate::span_v42::plaintext::*;
-use minijinja::value::Object;
-use minijinja::Error;
-use minijinja::Value;
 use nom::branch::alt;
-use nom::character::complete::line_ending;
-use nom::character::complete::multispace0;
-use nom::character::complete::space0;
-use nom::character::complete::space1;
-use nom::combinator::eof;
 use nom::combinator::not;
-use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
