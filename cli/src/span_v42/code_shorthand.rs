@@ -39,39 +39,54 @@ pub fn code_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&st
     let (source, tokens) = preceded(pair(tag("``"), space0), many1(code_shorthand_content))
         .context("")
         .parse(source)?;
-    let (source, (attrs, flags)) = get_code_shorthand_attrs_and_flags.context("").parse(source)?;
+    let (source, (attrs, flags)) = get_code_shorthand_attrs_and_flags
+        .context("")
+        .parse(source)?;
     let (source, _) = tag("``").context("").parse(source)?;
-    Ok((source, SpanV42::CodeShorthand(CodeShorthandV42{
-        attrs: BTreeMap::new(),
-        flags: vec![],
-        text: flatten_spans_v42(&tokens),
-        styled: None
-    })))
+    Ok((
+        source,
+        SpanV42::CodeShorthand(CodeShorthandV42 {
+            attrs: BTreeMap::new(),
+            flags: vec![],
+            text: flatten_spans_v42(&tokens),
+            styled: None,
+        }),
+    ))
 }
 
-
-pub fn get_code_shorthand_attrs_and_flags(source: &str) -> IResult<&str, (BTreeMap<String, CodeShorthandKeyValueAttrPayloadV42>, Vec<String>), ErrorTree<&str>> {
-    let (source, attrs_and_flags) = many0(code_shorthand_attr_or_flag).context("").parse(source)?;
+pub fn get_code_shorthand_attrs_and_flags(
+    source: &str,
+) -> IResult<
+    &str,
+    (
+        BTreeMap<String, CodeShorthandKeyValueAttrPayloadV42>,
+        Vec<String>,
+    ),
+    ErrorTree<&str>,
+> {
+    let (source, attrs_and_flags) = many0(code_shorthand_attr_or_flag)
+        .context("")
+        .parse(source)?;
     let attrs = BTreeMap::new();
     let flags = vec![];
     Ok((source, (attrs, flags)))
 }
 
-pub fn code_shorthand_attr_or_flag(source: &str) -> IResult<&str, CodeShorthandBaseAttrV42, ErrorTree<&str>> {
+pub fn code_shorthand_attr_or_flag(
+    source: &str,
+) -> IResult<&str, CodeShorthandBaseAttrV42, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
-    let (source, attr_or_flag) = alt((code_shorthand_span_flag_attr,
-
-        code_shorthand_key_value_attr,
-    )).context("").parse(source)?;
+    let (source, attr_or_flag) =
+        alt((code_shorthand_span_flag_attr, code_shorthand_key_value_attr))
+            .context("")
+            .parse(source)?;
     Ok((source, attr_or_flag))
 }
 
-
 pub fn code_shorthand_content(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, token) = plaintext.context("").parse(source)?;
+    let (source, token) = alt((plaintext, any_hyphens)).context("").parse(source)?;
     Ok((source, token))
 }
-
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct CodeShorthandFlagV42 {
@@ -85,21 +100,18 @@ pub struct CodeShorthandKeyValueAttrV42 {
     text: String,
 }
 
-
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub enum CodeShorthandBaseAttrV42 {
     Flag(CodeShorthandFlagV42),
     KeyValue(CodeShorthandKeyValueAttrV42),
 }
 
-pub fn code_shorthand_span_flag_attr(source: &str) -> IResult<&str, CodeShorthandBaseAttrV42, ErrorTree<&str>> {
-    let (source, spans) = many1(alt((
-        plaintext,
-        any_hyphens,
-        any_underscores,
-    )))
-    .context("")
-    .parse(source)?;
+pub fn code_shorthand_span_flag_attr(
+    source: &str,
+) -> IResult<&str, CodeShorthandBaseAttrV42, ErrorTree<&str>> {
+    let (source, spans) = many1(alt((plaintext, any_hyphens, any_underscores)))
+        .context("")
+        .parse(source)?;
     let (source, _) = not(tag(":")).context("").parse(source)?;
     Ok((
         source,
@@ -109,7 +121,9 @@ pub fn code_shorthand_span_flag_attr(source: &str) -> IResult<&str, CodeShorthan
     ))
 }
 
-pub fn code_shorthand_key_value_attr(source: &str) -> IResult<&str, CodeShorthandBaseAttrV42, ErrorTree<&str>> {
+pub fn code_shorthand_key_value_attr(
+    source: &str,
+) -> IResult<&str, CodeShorthandBaseAttrV42, ErrorTree<&str>> {
     let (source, key_spans) = terminated(many1(alt((plaintext,))), pair(tag(":"), space1))
         .context("")
         .parse(source)?;
@@ -135,17 +149,14 @@ mod test {
     #[case("``alfa``etc...", "etc...")]
     #[case("``alfa|bravo``etc...", "etc...")]
     #[case("``alfa|bravo: charlie``etc...", "etc...")]
+    #[case("``-- neo sections are allowed``etc...", "etc...")]
     fn solo_code_shorthand_test_run(#[case] source: &str, #[case] remainder: &str) {
         let result = code_shorthand_span(source).unwrap();
-        if result.clone().0 == remainder{
+        if result.clone().0 == remainder {
             assert!(true);
         } else {
             dbg!(&result);
             assert!(false);
         }
-
     }
-
 }
-
-
