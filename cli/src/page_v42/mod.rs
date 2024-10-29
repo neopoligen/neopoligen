@@ -105,8 +105,13 @@ impl PageV42 {
 impl Object for PageV42 {
     fn get_value(self: &Arc<Self>, key: &Value) -> Option<Value> {
         match key.as_str()? {
+            "error" => match &self.error {
+                Some(e) => Some(Value::from_serialize(e.clone())),
+                None => Some(Value::from("TODO: output specific error here")),
+            },
             "id" => Some(Value::from(self.id.clone())),
             "sections" => Some(self.sections.clone()),
+            "source" => Some(Value::from(self.source.clone())),
             _ => None,
         }
     }

@@ -94,6 +94,27 @@ impl BuilderV42 {
         self.templates.iter().for_each(|(k, v)| {
             let _ = env.add_template_owned(k, v);
         });
+        let _ = env.add_template_owned(
+            "neopoligen-built-in-template-error",
+            r#"<!DOCTYPE html>
+<html>
+<head>
+<style>
+header, main, footer {
+    max-width: 62ch;
+    margin: auto;
+}
+</style>
+</head>
+<body>
+<header><a href="/">Home</a></header>
+<main>
+<div>NOTE: Templates for this file did not render properly. Showing source instead.</div>
+<div>[@ page.error @]</div>
+<div><pre>[! autoescape true !][@ page.source @][! endautoescape !]</pre></div>
+</body>
+</html>"#,
+        );
         let site_clone = Value::from_object(self.site.clone().unwrap());
         self.site
             .as_ref()
@@ -127,7 +148,7 @@ impl BuilderV42 {
                                 Err(e) => self.errors.push({
                                     event!(
                                         Level::ERROR,
-                                        "Error on page output in output_pages: {}",
+                                        "Could not write file: {}",
                                         absolute_output_path.display()
                                     );
                                     NeoError {
@@ -145,6 +166,41 @@ impl BuilderV42 {
                                 "Could not render output for: {}",
                                 page.fs_path.display()
                             );
+                            if let Ok(template) =
+                                env.get_template("neopoligen-built-in-template-error")
+                            {
+                                match template.render(context!(
+                                    site => &site_clone,
+                                    page => Value::from_object(page.clone())
+                                )) {
+                                    Ok(output) => {
+                                        match write_file_with_mkdir(
+                                            &absolute_output_path,
+                                            output.as_str(),
+                                        ) {
+                                            Ok(()) => {
+                                                //event!(Level::INFO, "Making file in output_pages",);
+                                            }
+                                            Err(e) => self.errors.push({
+                                                event!(
+                                                    Level::ERROR,
+                                                    "Could not write file: {}",
+                                                    absolute_output_path.display()
+                                                );
+                                                NeoError {
+                                                    kind:
+                                                        NeoErrorKind::GenericErrorWithSourcePath {
+                                                            source_path: absolute_output_path
+                                                                .to_path_buf(),
+                                                            msg: e,
+                                                        },
+                                                }
+                                            }),
+                                        }
+                                    }
+                                    Err(_e) => (),
+                                }
+                            }
                             self.errors.push(NeoError {
                                 kind: NeoErrorKind::GenericErrorWithSourcePath {
                                     source_path: page.fs_path.clone(),

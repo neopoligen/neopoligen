@@ -49,18 +49,4 @@ main {
     </nav>
   </header>
   <main class="wrapper-medium flow">
-    [!- block body -!][!- endblock -!]
-    [!- block endmatter -!][!- endblock -!]
-  </main>
-    <!--
-  <footer class="wrapper-medium">
-      <div>Debug - Page ID: [@ page.id @]</div>
-      <pre>
-        [@- page.sections |tojson(true) -@]
-      </pre>
-  </footer>
--->
-</body>
-</html>
-
 

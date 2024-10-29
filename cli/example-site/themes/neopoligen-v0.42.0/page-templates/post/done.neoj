@@ -1,9 +1,11 @@
-[!- extends "page-wrappers/one-column.neoj" -!]
 [!- import "helpers/theme.neoj" as theme -!]
 
+[!- include "page-includes/main-header.neoj" -!]
+
 [!- block body -!]
-[! for section in page.sections !]
-[@ theme.output_section(site, page, section) @]
-[! endfor !]
+[!- for section in page.sections -!]
+[@- theme.output_section(site, page, section) -@]
+[!- endfor -!]
 [!- endblock -!]
 
+[!- include "page-includes/main-footerx.neoj" -!]
