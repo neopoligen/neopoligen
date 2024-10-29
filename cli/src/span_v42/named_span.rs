@@ -10,7 +10,7 @@ use itertools::Itertools;
 use nom::branch::alt;
 use nom::bytes::complete::is_a;
 use nom::bytes::complete::tag;
-use nom::character::complete::alpha1;
+use nom::character::complete::alphanumeric1;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::not;
@@ -64,9 +64,12 @@ pub struct NamedSpanV42 {
 }
 
 pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, tokens) = preceded(pair(tag("<<"), space0), many1(alt((alpha1, is_a("-")))))
-        .context("")
-        .parse(source)?;
+    let (source, tokens) = preceded(
+        pair(tag("<<"), space0),
+        many1(alt((alphanumeric1, is_a("-")))),
+    )
+    .context("")
+    .parse(source)?;
     let (source, spans) = opt(preceded(tag("|"), many0(named_span_content_span)))
         .context("")
         .parse(source)?;

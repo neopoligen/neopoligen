@@ -11,15 +11,24 @@ Valid Named Spans
     "valid": [
       {
         "description": "basic text",
-        "source": "<<alfa>>>"
+        "source": "<<alfa>>"
       },
       {
         "description": "numbers are allowed",
-        "source": "<<alfa1>>>"
+        "source": "<<alfa1>>"
+      },
+      {
+        "description": "hyphens are allowed",
+        "source": "<<alfa-bravo>>"
+      },
+    ],
+    "invalid": [
+      {
+        "description": "no spaces in name",
+        "source": "<<alfa bravo>>"
       },
 
-    ],
-    "invalid": []
+    ]
   }
 }
 
