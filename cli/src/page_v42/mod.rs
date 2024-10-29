@@ -3,6 +3,7 @@ pub mod mocks;
 
 use crate::neo_error::NeoError;
 use crate::section_v42::SectionV42;
+use crate::span_v42::SpanV42;
 use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::Value;
@@ -10,6 +11,12 @@ use serde::Deserialize;
 use serde::Serialize;
 use std::path::PathBuf;
 use std::sync::Arc;
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub struct PageTitleV42 {
+    spans: Vec<SpanV42>,
+    text: String,
+}
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PageV42 {
@@ -102,7 +109,30 @@ impl PageV42 {
     }
 
     pub fn title(&self) -> Result<Value, Error> {
-        Ok(Value::from("TODO_PAGE_TITLE"))
+        if let Some(t) = match &self
+            .raw_ast
+            .iter()
+            .filter_map(|section| match section {
+                SectionV42::Json5(s) => Some(s),
+                _ => None,
+            })
+            .find_map(|section| match section.kind.as_str() {
+                "pagedata" => Some(&section.attrs),
+                _ => None,
+            }) {
+            Some(x) => match x.get("id") {
+                Some(v) => Some(Ok(Value::from_serialize(PageTitleV42 {
+                    spans: v.spans.clone(),
+                    text: v.text.to_string(),
+                }))),
+                None => None,
+            },
+            None => None,
+        } {
+            t
+        } else {
+            Ok(Value::from("TODO_PAGE_TITLE"))
+        }
     }
 }
 
@@ -139,14 +169,55 @@ impl Object for PageV42 {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::span_v42::{plaintext::PlainTextSpan, SpanV42};
     use pretty_assertions::assert_eq;
 
-    // TODO: Redo so it calls the new build method
     #[test]
-    fn solo_id_check_basic() {
+    fn id_basic_check() {
         let page = PageV42::test_from_sample_file("001-pagedata-only.neo");
         let left = "001-pagedata-only.neo".to_string();
         let right = page.id.unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_title_from_pagedata_id() {
+        let page = PageV42::test_from_sample_file("001-pagedata-only.neo");
+        let left = Value::from_serialize(PageTitleV42 {
+            spans: vec![
+                SpanV42::PlainText(PlainTextSpan {
+                    text: "001".to_string(),
+                }),
+                SpanV42::PlainText(PlainTextSpan {
+                    text: "-".to_string(),
+                }),
+                SpanV42::PlainText(PlainTextSpan {
+                    text: "pagedata".to_string(),
+                }),
+                SpanV42::PlainText(PlainTextSpan {
+                    text: "-".to_string(),
+                }),
+                SpanV42::PlainText(PlainTextSpan {
+                    text: "only.neo".to_string(),
+                }),
+            ],
+            text: "001-pagedata-only.neo".to_string(),
+        });
+        let right = page.title().unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    #[ignore]
+    fn title_in_pagedata() {
+        let page = PageV42::test_from_sample_file("005-title-in-pagedata.neo");
+        let left = Value::from_serialize(PageTitleV42 {
+            spans: vec![SpanV42::PlainText(PlainTextSpan {
+                text: "Title In Pagedata".to_string(),
+            })],
+            text: "Title In Pagedata".to_string(),
+        });
+        let right = page.title().unwrap();
         assert_eq!(left, right);
     }
 

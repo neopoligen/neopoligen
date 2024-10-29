@@ -39,7 +39,7 @@ pub fn code_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&st
     let (source, tokens) = preceded(pair(tag("``"), space0), many1(code_shorthand_content))
         .context("")
         .parse(source)?;
-    let (source, (attrs, flags)) = get_code_shorthand_attrs_and_flags
+    let (source, (_attrs, _flags)) = get_code_shorthand_attrs_and_flags
         .context("")
         .parse(source)?;
     let (source, _) = tag("``").context("").parse(source)?;
@@ -64,7 +64,7 @@ pub fn get_code_shorthand_attrs_and_flags(
     ),
     ErrorTree<&str>,
 > {
-    let (source, attrs_and_flags) = many0(code_shorthand_attr_or_flag)
+    let (source, _attrs_and_flags) = many0(code_shorthand_attr_or_flag)
         .context("")
         .parse(source)?;
     let attrs = BTreeMap::new();

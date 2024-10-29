@@ -335,7 +335,7 @@ mod test {
     }
 
     #[test]
-    fn solo_custom_html_output_path_from_pagedata_in_invalid_file() {
+    fn custom_html_output_path_from_pagedata_in_invalid_file() {
         let source = get_include_str_file(INVALID_SAMPLES, "002-unclosed-with-path.neo");
         let source_path = PathBuf::from("mock/002-unclosed-with-path.neo");
         let site_config = SiteConfigV42::mock1_basic();
@@ -357,7 +357,7 @@ mod test {
     }
 
     #[test]
-    fn solo_get_id_when_there_is_an_error_and_something_else_also_has_an_id() {
+    fn get_id_when_there_is_an_error_and_something_else_also_has_an_id() {
         let id = "003-unclosed-with-other-id.neo";
         let source = get_include_str_file(INVALID_SAMPLES, id);
         let source_path = PathBuf::from(format!("mock/{}", id));
