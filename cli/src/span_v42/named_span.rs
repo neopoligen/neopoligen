@@ -175,7 +175,6 @@ pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, Err
 
 pub fn named_span_content_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, span) = alt((not_pipe_or_greater_than,)).context("").parse(source)?;
-    //let (source, span) = alt((is_not("|>"),)).context("").parse(source)?;
     Ok((source, span))
 }
 

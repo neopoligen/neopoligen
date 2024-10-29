@@ -13,11 +13,6 @@ Valid Named Spans
   ],
   "tests": {
     "todo_valid": [
-      {
-        "description": "content can have any regular characters except pipes or greater thans",
-        "source": "<<alfa|bravo ~!@#$%^&*(),.?:;>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
-      },
     ],
     "todo_invalid": [
     ],
@@ -27,135 +22,171 @@ Valid Named Spans
         "description": "basic text",
         "source": "<<alfa>>",
         "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "text": null, "type": "namedspan" }',
+        "notes": [],
       },
       {
         "description": "names can have numbers",
         "source": "<<alfa1>>",
         "result": '{ "attrs": {}, "flags": [], "kind": "alfa1", "spans": null, "text": null, "type": "namedspan" }',
+        "notes": [],
       },
       {
         "description": "names can have hyphens",
         "source": "<<alfa-bravo>>",
         "result": '{ "attrs": {}, "flags": [], "kind": "alfa-bravo", "spans": null, "text": null, "type": "namedspan" }',
+        "notes": [],
       },
       {
         "description": "names can have multiple hyphens",
         "source": "<<alfa--bravo>>",
         "result": '{ "attrs": {}, "flags": [], "kind": "alfa--bravo", "spans": null, "text": null, "type": "namedspan" }',
+        "notes": [],
       },
       {
         "description": "names can have underscores",
         "source": "<<alfa_bravo>>",
         "result": '{ "attrs": {}, "flags": [], "kind": "alfa_bravo", "spans": null, "text": null, "type": "namedspan" }',
+        "notes": [],
       },
       {
         "description": "names can have multiple underscores",
         "source": "<<alfa__bravo>>",
         "result": '{ "attrs": {}, "flags": [], "kind": "alfa__bravo", "spans": null, "text": null, "type": "namedspan" }',
+        "notes": [],
       },
       {
         "description": "there can be leading spaces",
         "source": "<< alfa>>",
         "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "text": null, "type": "namedspan" }',
+        "notes": [],
       },
       {
         "description": "there can be trailing spaces",
         "source": "<<alfa >>",
         "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "text": null, "type": "namedspan" }',
+        "notes": [],
       },
       {
         "description": "there can be leading newlines",
         "source": "<<\nalfa>>",
         "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "text": null, "type": "namedspan" }',
+        "notes": [],
       },
       {
         "description": "there can be trailing newlines",
         "source": "<<alfa\n>>",
         "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "text": null, "type": "namedspan" }',
+        "notes": [],
       },
       {
         "description": "basic content is separated by a pipe",
         "source": "<<alfa|bravo>>",
         "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
+        "notes": [],
+      },
+      {
+        "description": "content can have any regular characters except pipes or greater thans",
+        "source": "<<alfa|bravo ~!@#$%^&*(),.?:;>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo ~!@#$%^&*(),.?:;", "type": "plaintext"}], "text": "bravo ~!@#$%^&*(),.?:;", "type": "namedspan" }',
+        "notes": ["this is not an exaustive list (i.e. not ever possible character is tested). It's meant only to be representative"],
       },
     ],
 
     "invalid": [
       {
         "description": "no spaces in name",
-        "source": "<<alfa bravo>>"
+        "source": "<<alfa bravo>>",
+        "notes": [],
       },
       {
         "description": "no trailing pipes",
-        "source": "<<alfa|>>"
+        "source": "<<alfa|>>",
+        "notes": [],
       },
       {
         "description": "no colons in name",
-        "source": "<<alfa:bravo>>"
+        "source": "<<alfa:bravo>>",
+        "notes": [],
       },
       {
         "description": "no forward slashes in name",
-        "source": "<<alfa/bravo>>"
+        "source": "<<alfa/bravo>>",
+        "notes": [],
       },
       {
         "description": "no '~' in name",
-        "source": "<<alfa~bravo>>"
+        "source": "<<alfa~bravo>>",
+        "notes": [],
       },
       {
         "description": "no '!' in name",
-        "source": "<<alfa!bravo>>"
+        "source": "<<alfa!bravo>>",
+        "notes": [],
       },
       {
         "description": "no '@' in name",
-        "source": "<<alfa@bravo>>"
+        "source": "<<alfa@bravo>>",
+        "notes": [],
       },
       {
         "description": "no '#' in name",
-        "source": "<<alfa#bravo>>"
+        "source": "<<alfa#bravo>>",
+        "notes": [],
       },
       {
         "description": "no '$' in name",
-        "source": "<<alfa$bravo>>"
+        "source": "<<alfa$bravo>>",
+        "notes": [],
       },
       {
         "description": "no '%' in name",
-        "source": "<<alfa%bravo>>"
+        "source": "<<alfa%bravo>>",
+        "notes": [],
       },
       {
         "description": "no '^' in name",
-        "source": "<<alfa^bravo>>"
+        "source": "<<alfa^bravo>>",
+        "notes": [],
       },
       {
         "description": "no '&' in name",
-        "source": "<<alfa&bravo>>"
+        "source": "<<alfa&bravo>>",
+        "notes": [],
       },
       {
         "description": "no '*' in name",
-        "source": "<<alfa*bravo>>"
+        "source": "<<alfa*bravo>>",
+        "notes": [],
       },
       {
         "description": "no '(' in name",
-        "source": "<<alfa(bravo>>"
+        "source": "<<alfa(bravo>>",
+        "notes": [],
       },
       {
         "description": "no ')' in name",
-        "source": "<<alfa)bravo>>"
+        "source": "<<alfa)bravo>>",
+        "notes": [],
       },
       {
         "description": "no ',' in name",
-        "source": "<<alfa,bravo>>"
+        "source": "<<alfa,bravo>>",
+        "notes": [],
       },
       {
         "description": "no '.' in name",
-        "source": "<<alfa.bravo>>"
+        "source": "<<alfa.bravo>>",
+        "notes": [],
       },
       {
         "description": "no '?' in name",
-        "source": "<<alfa?bravo>>"
+        "source": "<<alfa?bravo>>",
+        "notes": [],
       },
       {
         "description": "no ';' in name",
-        "source": "<<alfa;bravo>>"
+        "source": "<<alfa;bravo>>",
+        "notes": [],
       },
     ]
 
