@@ -1,8 +1,5 @@
-use neopoligengine::{page_v42::PageV42, site_config::SiteConfigV42};
-// use neopoligengine::site_config::SiteConfigV42;
-// use neopoligengine::span::*;
-// use neopoligengine::span_attr::*;
 use neopoligengine::helpers::get_include_str_file;
+use neopoligengine::{page_v42::PageV42, site_config::SiteConfigV42};
 use rstest::rstest;
 use std::path::PathBuf;
 
