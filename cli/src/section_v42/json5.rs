@@ -10,7 +10,6 @@ use minijinja::Value;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::bytes::complete::take_until;
-use nom::character::complete::line_ending;
 use nom::combinator::rest;
 use nom::IResult;
 use nom::Parser;
@@ -35,9 +34,7 @@ pub struct Json5SectionV42 {
 pub fn json5_section_full_v42<'a>(
     source: &'a str,
     _site_config: &'a SiteConfigV42,
-    _nest_level: usize,
-    _list_level: usize,
-    _checklist_level: usize,
+    parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let debug = true;
@@ -138,7 +135,8 @@ mod test {
                 template_list,
             }),
         );
-        let right = json5_section_full_v42(&source, &site_config, 0, 0, 0, false).unwrap();
+        let right =
+            json5_section_full_v42(&source, &site_config, SectionParent::Page, false).unwrap();
         assert_eq!(left, right);
     }
 

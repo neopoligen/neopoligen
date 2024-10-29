@@ -27,6 +27,14 @@ use std::sync::Arc;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
+pub enum SectionParent {
+    Checklist,
+    List,
+    Page,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[serde(tag = "type", rename_all = "lowercase")]
 pub enum SectionV42 {
     Basic(BasicSectionV42),
     Block(BlockSectionV42),
@@ -81,16 +89,7 @@ pub fn start_or_full_section_v42<'a>(
                 debug,
             )
         },
-        |src| {
-            json5_section_full_v42(
-                src,
-                &site_config,
-                nest_level,
-                list_level,
-                checklist_level,
-                debug,
-            )
-        },
+        |src| json5_section_full_v42(src, &site_config, SectionParent::Page, debug),
         |src| {
             unknown_section_start_v42(
                 src,
