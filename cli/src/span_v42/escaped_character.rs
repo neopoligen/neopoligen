@@ -12,6 +12,16 @@ pub struct EscapedCharacterSpanV42 {
     pub text: String,
 }
 
+pub fn escaped_less_than(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+    let (source, _) = tag("\\<").context("").parse(source)?;
+    Ok((
+        source,
+        SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
+            text: "<".to_string(),
+        }),
+    ))
+}
+
 pub fn escaped_greater_than(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, _) = tag("\\>").context("").parse(source)?;
     Ok((
@@ -46,6 +56,19 @@ pub fn escaped_backslash(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>
 mod test {
     use super::*;
     use pretty_assertions::assert_eq;
+
+    #[test]
+    fn check_escaped_less_than() {
+        let source = "\\<";
+        let left = (
+            "",
+            SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
+                text: "<".to_string(),
+            }),
+        );
+        let right = escaped_less_than(source).unwrap();
+        assert_eq!(left, right);
+    }
 
     #[test]
     fn check_escaped_greater_than() {

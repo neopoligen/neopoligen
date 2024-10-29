@@ -177,6 +177,7 @@ pub fn named_span_content_span(source: &str) -> IResult<&str, SpanV42, ErrorTree
         single_greater_than,
         single_less_than,
         escaped_greater_than,
+        escaped_less_than,
         escaped_pipe,
         escaped_backslash,
     ))
