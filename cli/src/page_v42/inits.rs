@@ -332,7 +332,7 @@ mod test {
 
     #[test]
     fn custom_html_output_path_from_pagedata_in_valid_file() {
-        let source = get_include_str_file(SAMPLES, "003-custom-path-in-pagedata.neo");
+        let source = get_include_str_file(SAMPLES, "003-custom-href-in-pagedata.neo");
         let source_path = PathBuf::from("mock/source/path/file.neo");
         let site_config = SiteConfigV42::mock1_basic();
         let page = PageV42::new_from_str(&source, &source_path, &site_config).unwrap();

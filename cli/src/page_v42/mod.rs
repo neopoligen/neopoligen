@@ -262,7 +262,7 @@ mod test {
 
     #[test]
     fn custom_path_in_pagedata() {
-        let page = PageV42::test_from_sample_file("003-custom-path-in-pagedata.neo");
+        let page = PageV42::test_from_sample_file("003-custom-href-in-pagedata.neo");
         let left = PathBuf::from("index.html");
         let right = page.html_output_path.unwrap();
         assert_eq!(left, right);
@@ -278,7 +278,7 @@ mod test {
 
     #[test]
     fn href_from_pagedata() {
-        let page = PageV42::test_from_sample_file("003-custom-path-in-pagedata.neo");
+        let page = PageV42::test_from_sample_file("003-custom-href-in-pagedata.neo");
         let left = Value::from("/".to_string());
         let right = page.href().unwrap();
         assert_eq!(left, right);
@@ -286,7 +286,7 @@ mod test {
 
     #[test]
     fn href_for_non_index_html_file() {
-        let page = PageV42::test_from_sample_file("009-non-index-custom-path.neo");
+        let page = PageV42::test_from_sample_file("009-non-index-custom-href.neo");
         let left = Value::from("/somewhere/custom.html".to_string());
         let right = page.href().unwrap();
         assert_eq!(left, right);
