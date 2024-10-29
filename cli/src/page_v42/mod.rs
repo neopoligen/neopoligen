@@ -252,31 +252,5 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // pub fn solo_id_check_basic() {
-    //     let page = PageV42::valid_sample_mock("001-pagedata-only.neo");
-    //     let left = Value::from("001-pagedata-only".to_string());
-    //     let right = page.id().unwrap();
-    //     assert_eq!(left, right);
-    // }
-
-    // #[test]
-    // pub fn solo_check_2() {
-    //     let page = PageV42::valid_sample_mock("002-basic-sample.neo");
-    //     dbg!(page.ast().unwrap());
-    //     // dbg!(page);
-    // }
-
-    // fn valid_samples() -> BTreeMap<String, String> {
-    //     let mut samples = BTreeMap::new();
-    //     samples.insert(
-    //         "000-pagedata-only".to_string(),
-    //         include_str!("samples/valid/000-pagedata-only.neo").to_string(),
-    //     );
-    //     samples.insert(
-    //         "001-basic-sample".to_string(),
-    //         include_str!("samples/valid/001-basic-sample.neo").to_string(),
-    //     );
-    //     samples
-    // }
+    //
 }
