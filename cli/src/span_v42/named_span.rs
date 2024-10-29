@@ -1,8 +1,10 @@
 use super::plaintext_without_spaces::plaintext_without_spaces;
 use crate::helpers::flatten_spans_v42;
+use crate::span_v42::any_colons::any_colons;
 use crate::span_v42::any_hyphens::any_hyphens;
 use crate::span_v42::any_underscores::any_underscores;
 use crate::span_v42::plaintext::plaintext;
+use crate::span_v42::single_line_ending::single_line_ending;
 use crate::span_v42::SpanV42;
 use itertools::Itertools;
 use nom::branch::alt;
@@ -150,6 +152,8 @@ pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, Err
         plaintext_without_spaces,
         any_hyphens,
         any_underscores,
+        any_colons,
+        single_line_ending,
     )))
     .context("")
     .parse(source)?;
@@ -193,7 +197,7 @@ mod test {
     }
 
     #[test]
-    fn solo_with_flag() {
+    fn with_flag() {
         let source = "<<delta|echo|foxtrot>>";
         let left = (
             "",
@@ -211,7 +215,7 @@ mod test {
     }
 
     #[test]
-    fn solo_with_key_value_attr() {
+    fn with_key_value_attr() {
         let source = "<<delta|echo|class: red>>";
         let mut attrs = BTreeMap::new();
         attrs.insert(
@@ -249,7 +253,9 @@ mod test {
     #[case("<<alfa|bravo|charlie--delta>>etc...", "etc...")]
     #[case("<<alfa|bravo|charlie_delta>>etc...", "etc...")]
     #[case("<<alfa|bravo|charlie__delta>>etc...", "etc...")]
-    fn valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
+    #[case("<<link|text|https://www.example.com/?ping=pong>>etc...", "etc...")]
+    #[case("<<link|text|\nhttps://www.example.com/?ping=pong>>etc...", "etc...")]
+    fn solo_valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
         match named_span(source) {
             Ok(data) => {
                 if data.0 == remainder {
