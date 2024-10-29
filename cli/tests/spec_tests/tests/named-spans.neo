@@ -1,0 +1,22 @@
+-- title
+
+Valid Named Spans
+
+-- neopoligen-spec-test/
+{
+  "name": "Valid Named Spans",
+  "note": "This is just getting started, there are more to test that I'll add in the next iteration",
+  "tests": {
+    "valid": [],
+    "invalid": []
+  }
+}
+
+-- /neopoligen-spec-test
+
+
+-- pagedata
+-- id: 2o7twyhz
+-- status: scratch
+
+

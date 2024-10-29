@@ -71,7 +71,7 @@ impl PageV42 {
                 match page.get_pagedata(&[Value::from("id")]) {
                     Ok(id) => {
                         page.id = Some(id.to_string());
-                        match page.get_pagedata(&[Value::from("path")]) {
+                        match page.get_pagedata(&[Value::from("href")]) {
                             Ok(html_output_path) => {
                                 page.html_output_path =
                                     Some(html_output_path.trim_start_matches("/").into())
@@ -219,7 +219,7 @@ impl PageV42 {
                                 site_config.default_language().unwrap(),
                                 page.id.as_ref().unwrap()
                             )));
-                            match parse_value_from_pagedata(source, "path") {
+                            match parse_value_from_pagedata(source, "href") {
                                 Ok((_, html_output_paths)) => match html_output_paths.last() {
                                     Some(html_output_path) => {
                                         page.html_output_path =

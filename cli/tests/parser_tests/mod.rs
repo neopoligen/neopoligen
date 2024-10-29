@@ -11,7 +11,7 @@ const VALID_SAMPLES: Dir = include_dir!("tests/parser_tests/full_page_tests");
 #[case("2.neo")]
 #[case("3.neo")]
 #[case("4.neo")]
-fn solo_integration_parser_test(#[case] file: &str) {
+fn integration_parser_test(#[case] file: &str) {
     let source = get_include_str_file(VALID_SAMPLES, file);
     let source_path = PathBuf::from(format!("mocks/{}", file));
     let site_config = SiteConfigV42::mock1_basic();

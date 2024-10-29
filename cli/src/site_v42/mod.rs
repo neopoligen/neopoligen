@@ -2,6 +2,7 @@ use crate::page_v42::PageV42;
 use crate::site_config::SiteConfigV42;
 use minijinja::value::Object;
 use minijinja::Error;
+use minijinja::ErrorKind;
 use minijinja::Value;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -17,6 +18,21 @@ pub struct SiteV42 {
 }
 
 impl SiteV42 {
+    pub fn get_page_href(&self, args: &[Value]) -> Result<Value, Error> {
+        if args.len() == 1 {
+            let page_id = &args[0].to_string().trim().to_string();
+            match self.pages.get(page_id) {
+                Some(page) => page.href(),
+                None => Ok(Value::from(page_id)),
+            }
+        } else {
+            Err(Error::new(
+                ErrorKind::InvalidOperation,
+                "COULD_NOT_GET_HREF",
+            ))
+        }
+    }
+
     pub fn get_page_title(&self, args: &[Value]) -> Result<Value, Error> {
         if args.len() == 1 {
             let page_id = &args[0].to_string().trim().to_string();
@@ -25,7 +41,10 @@ impl SiteV42 {
                 None => Ok(Value::from(page_id)),
             }
         } else {
-            Ok(Value::from("ERROR_NO_ID_FOR_PAGE_TITLE"))
+            Err(Error::new(
+                ErrorKind::InvalidOperation,
+                "NO_ID_FOR_PAGE_TITLE",
+            ))
         }
     }
 }
@@ -38,10 +57,8 @@ impl Object for SiteV42 {
         args: &[Value],
     ) -> Result<Value, Error> {
         match name {
+            "get_page_href" => self.get_page_href(args),
             "get_page_title" => self.get_page_title(args),
-            // "page_title" => self.page_title(args),
-            // "page_url" => self.page_url(args),
-            // "ping" => Ok(Value::from(self.ping(args))),
             _ => Ok(Value::from("")),
         }
     }

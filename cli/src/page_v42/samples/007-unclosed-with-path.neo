@@ -3,5 +3,5 @@
 -- pagedata
 -- id: 007-unclosed-with-path.neo
 -- status: draft
--- path: /some/custom/path/index.html
+-- href: /some/custom/path/index.html
 

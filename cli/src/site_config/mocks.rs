@@ -9,6 +9,40 @@ use std::collections::BTreeMap;
 // use std::path::PathBuf;
 
 impl SiteConfigV42 {
+    pub fn config_for_spec_tests() -> SiteConfigV42 {
+        let sections = ConfigSections {
+            basic: vec!["title".to_string(), "previews".to_string()],
+            block: vec![],
+            checklist: vec![],
+            checklist_item: vec![],
+            json5: vec!["pagedata".to_string()],
+            list: vec![],
+            list_item: vec![],
+            raw: vec![],
+        };
+        let config = SiteConfigV42 {
+            debug_parser: false,
+            default_language: "en".to_string(),
+            base_url: "testsite.localhost:1999".to_string(),
+            output_directory: "_site".to_string(),
+            project_root: Some(PathBuf::from("/test/mocks")),
+            sections,
+            attr_flag_lists: Some(ConfigLists {
+                basic: BTreeMap::new(),
+                block: BTreeMap::new(),
+                checklist: BTreeMap::new(),
+                checklist_item: BTreeMap::new(),
+                json5: BTreeMap::new(),
+                list: BTreeMap::new(),
+                list_item: BTreeMap::new(),
+                raw: BTreeMap::new(),
+                unknow: BTreeMap::new(),
+            }),
+            theme: "test-theme".to_string(),
+        };
+        config
+    }
+
     pub fn mock1_basic() -> SiteConfigV42 {
         let sections = ConfigSections {
             basic: vec!["title".to_string(), "previews".to_string()],
