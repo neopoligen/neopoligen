@@ -1,9 +1,8 @@
+use include_dir::{include_dir, Dir};
 use neopoligengine::helpers::get_include_str_file;
 use neopoligengine::{page_v42::PageV42, site_config::SiteConfigV42};
 use rstest::rstest;
 use std::path::PathBuf;
-
-use include_dir::{include_dir, Dir};
 
 const VALID_SAMPLES: Dir = include_dir!("tests/parser_tests/full_page_tests");
 

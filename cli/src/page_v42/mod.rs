@@ -140,13 +140,11 @@ impl Object for PageV42 {
 mod test {
     use super::*;
     use pretty_assertions::assert_eq;
-    // use rstest::rstest;
 
     // TODO: Redo so it calls the new build method
     #[test]
-    #[ignore]
-    fn id_check_basic() {
-        let page = PageV42::valid_sample_mock("001-pagedata-only.neo");
+    fn solo_id_check_basic() {
+        let page = PageV42::test_from_sample_file("001-pagedata-only.neo");
         let left = "001-pagedata-only.neo".to_string();
         let right = page.id.unwrap();
         assert_eq!(left, right);
