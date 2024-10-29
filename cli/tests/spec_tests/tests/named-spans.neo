@@ -105,6 +105,15 @@ Valid Named Spans
           "The same rules that apply for the names of the spans themselves as well as the flags applie to the keys too",
           ],
       },
+      {
+        "description": "key value attribute values can have any content except pipes or double greater thans",
+        "source": "<<alfa|bravo|charlie: ~!@#$%>>",
+        "result": '{ "attrs": { "charlie": { "text": "~!@#$%", "spans": [{"text": "~!@#$%", "type": "plaintext"}]}}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo", "type": "plaintext"}], "text": "bravo", "type": "namedspan" }',
+        "notes": [
+          "Key/value attributes are identivied by having a string that ends with a ':' followed by whitespace then a string of content",
+          "The same rules that apply for the names of the spans themselves as well as the flags applie to the keys too",
+          ],
+      },
 
 
     ],
