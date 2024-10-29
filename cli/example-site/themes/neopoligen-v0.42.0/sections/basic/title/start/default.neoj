@@ -1,22 +1,6 @@
-<section>
+[!- import "helpers/theme.neoj" as theme -!]
+<section class="flow">
 
-[! for child in section.children !]
-[! if loop.first !]
-<h1>
-[! for span in child.spans !]
-  [! include "spans/" + span.type + ".neoj" ignore missing !]
-[! endfor !]
-</h1>
-[! endif !]
-[! endfor !]
+<h1>[!- include "subsections/just-first-spans.neoj" -!]</h1>
 
-
-[! for child in section.children !]
-[! if not loop.first !]
-<p>
-[! for span in child.spans !]
-  [! include "spans/" + span.type + ".neoj" ignore missing !]
-[! endfor !]
-</p>
-[! endif !]
-[! endfor !]
+[!- include "subsections/skip-first-section.neoj" -!]

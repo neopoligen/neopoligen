@@ -58,7 +58,7 @@ pub enum NamedSpanAttrV42 {
 pub struct NamedSpanV42 {
     attrs: BTreeMap<String, NamedSpanKeyValueAttrPayloadV42>,
     flags: Vec<String>,
-    name: String,
+    kind: String,
     spans: Option<Vec<SpanV42>>,
 }
 
@@ -71,13 +71,13 @@ pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
         .parse(source)?;
     let (source, (attrs, flags)) = named_span_attrs_and_flags.context("").parse(source)?;
     let (source, _) = tag(">>").context("").parse(source)?;
-    let name = tokens.iter().join("");
+    let kind = tokens.iter().join("");
     Ok((
         source,
         SpanV42::NamedSpan(NamedSpanV42 {
             attrs,
             flags,
-            name,
+            kind,
             spans,
         }),
     ))
@@ -186,7 +186,7 @@ mod test {
             SpanV42::NamedSpan(NamedSpanV42 {
                 attrs: BTreeMap::new(),
                 flags: vec![],
-                name: "sierra".to_string(),
+                kind: "sierra".to_string(),
                 spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
                     text: "tango".to_string(),
                 })]),
@@ -204,7 +204,7 @@ mod test {
             SpanV42::NamedSpan(NamedSpanV42 {
                 attrs: BTreeMap::new(),
                 flags: vec!["foxtrot".to_string()],
-                name: "delta".to_string(),
+                kind: "delta".to_string(),
                 spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
                     text: "echo".to_string(),
                 })]),
@@ -232,7 +232,7 @@ mod test {
             SpanV42::NamedSpan(NamedSpanV42 {
                 attrs,
                 flags: vec![],
-                name: "delta".to_string(),
+                kind: "delta".to_string(),
                 spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
                     text: "echo".to_string(),
                 })]),

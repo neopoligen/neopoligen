@@ -1,0 +1,7 @@
+[!- import "helpers/theme.neoj" as theme !]
+[!- for child in section.children -!]
+[!- if loop.first -!]
+[@ theme.output_section(site, page, child) @]
+[!- endif -!]
+[!- endfor -!]
+
