@@ -23,8 +23,8 @@ use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct CodeShorthandKeyValueAttrPayloadV42 {
-    value: Vec<SpanV42>,
-    text: String,
+    pub value: Vec<SpanV42>,
+    pub text: String,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]

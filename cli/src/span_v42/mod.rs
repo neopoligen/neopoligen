@@ -5,8 +5,9 @@ pub mod any_paren_opens;
 pub mod any_underscores;
 pub mod block_line_ending;
 pub mod code_shorthand;
+pub mod escaped_character;
 pub mod named_span;
-pub mod not_pipe_or_greater_than;
+pub mod not_pipe_or_greater_than_or_escape;
 pub mod plaintext;
 pub mod plaintext_without_spaces;
 pub mod single_exclamation;
@@ -18,6 +19,7 @@ pub mod space0_line_ending_or_eof;
 
 use self::named_span::NamedSpanV42;
 use crate::span_v42::code_shorthand::CodeShorthandV42;
+use crate::span_v42::escaped_character::*;
 use crate::span_v42::plaintext::*;
 use nom::branch::alt;
 use nom::combinator::not;
@@ -30,6 +32,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum SpanV42 {
+    EscapedCharacter(EscapedCharacterSpanV42),
     PlainText(PlainTextSpan),
     NamedSpan(NamedSpanV42),
     CodeShorthand(CodeShorthandV42),
