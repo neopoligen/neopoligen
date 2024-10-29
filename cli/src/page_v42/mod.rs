@@ -276,5 +276,13 @@ mod test {
         assert_eq!(left, right);
     }
 
+    #[test]
+    fn url_path_from_pagedata() {
+        let page = PageV42::test_from_sample_file("003-custom-path-in-pagedata.neo");
+        let left = Value::from("/".to_string());
+        let right = page.url_path().unwrap();
+        assert_eq!(left, right);
+    }
+
     //
 }
