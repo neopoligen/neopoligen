@@ -1,13 +1,14 @@
 use super::not_pipe_or_greater_than_or_escape::not_pipe_or_greater_than_or_escape;
-use super::plaintext_without_spaces::plaintext_without_spaces;
+// use super::plaintext_without_spaces::plaintext_without_spaces;
 use super::single_greater_than::single_greater_than;
 use crate::helpers::flatten_spans_v42;
-use crate::span_v42::any_colons::any_colons;
+use crate::span_v42::any_alphanumeric::any_alphanumeric;
+// use crate::span_v42::any_colons::any_colons;
 use crate::span_v42::any_hyphens::any_hyphens;
 use crate::span_v42::any_underscores::any_underscores;
 use crate::span_v42::escaped_character::*;
 use crate::span_v42::plaintext::plaintext;
-use crate::span_v42::single_line_ending::single_line_ending;
+// use crate::span_v42::single_line_ending::single_line_ending;
 use crate::span_v42::SpanV42;
 use itertools::Itertools;
 use nom::branch::alt;
@@ -157,15 +158,9 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42
 }
 
 pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
-    let (source, spans) = many1(alt((
-        plaintext_without_spaces,
-        any_hyphens,
-        any_underscores,
-        any_colons,
-        single_line_ending,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, spans) = many1(alt((any_alphanumeric, any_hyphens, any_underscores)))
+        .context("")
+        .parse(source)?;
     let (source, _) = not(tag(":")).context("").parse(source)?;
     Ok((
         source,
@@ -273,8 +268,6 @@ mod test {
     #[case("<<alfa|bravo|charlie--delta>>etc...", "etc...")]
     #[case("<<alfa|bravo|charlie_delta>>etc...", "etc...")]
     #[case("<<alfa|bravo|charlie__delta>>etc...", "etc...")]
-    #[case("<<link|text|https://www.example.com/?ping=pong>>etc...", "etc...")]
-    #[case("<<link|text|\nhttps://www.example.com/?ping=pong>>etc...", "etc...")]
     fn valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
         match named_span(source) {
             Ok(data) => {
