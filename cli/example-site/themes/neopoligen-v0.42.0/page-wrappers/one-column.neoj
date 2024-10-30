@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+
+body {
+  background-color: #122;
+  color: #ddb;
+}
+
+*, 
+*::before, 
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+.blue { 
+  color: blue;
+} 
+
+.flow > :where(:not(:first-child)) {
+  margin-top: var(--flow-space, 1em);
+}
+
+.green { 
+  color: green;
+} 
+
+main {
+  padding-bottom: 4rem;
+}
+
+.medium-wrapper {
+  max-width: 64ch;
+  margin: auto;
+}
+
+.red { 
+  color: red;
+} 
+
+.unknown-section {
+  background-color: green;
+}
+
+</style>
+</head>
+<body>
+  <header class="medium-wrapper">
+    <nav>
+      <a href="/">Home</a></li>
+    </nav>
+  </header>
+  <main class="medium-wrapper flow">
+    [!- block body -!][!- endblock -!]
+    [!- block endmatter -!][!- endblock -!]
+  </main>
+
+  <footer class="medium-wrapper flow">
+      <h2>Debugging: Neopolitan Source File</h2>
+      <pre>[!- autoescape true -!][@- page.source -@][!- endautoescape -!]</pre>
+      <div>Page ID: [@ page.id @]</div>
+      <pre>[!- autoescape true -!][@- page.sections|tojson(true) -@][!- endautoescape -!]</pre>
+  </footer>
+</body>
+</html>

@@ -19,6 +19,10 @@ pub struct SiteV42 {
 }
 
 impl SiteV42 {
+    pub fn get_attrs_with_class(&self, _args: &[Value]) -> Result<Value, Error> {
+        Ok(Value::from(r#"class="red""#))
+    }
+
     pub fn get_page_href_from_id(&self, args: &[Value]) -> Result<Value, Error> {
         if args.len() == 1 {
             let page_id = &args[0].to_string().trim().to_string();
@@ -29,7 +33,7 @@ impl SiteV42 {
         } else {
             Err(Error::new(
                 ErrorKind::InvalidOperation,
-                "COULD_NOT_GET_HREF",
+                "ERROR_COULD_NOT_GET_HREF",
             ))
         }
     }
@@ -82,20 +86,6 @@ impl SiteV42 {
             ))
         }
     }
-
-    // if args.len() == 1 {
-    //     let x: &String = &args[0]
-    //         .try_iter()?
-    //         .map(|v| v.get_item(&Value::from("text")).unwrap().to_string())
-    //         .collect::<Vec<_>>()
-    //         .join("");
-    //     Ok(Value::from(x))
-    // } else {
-    //     Err(Error::new(
-    //         ErrorKind::InvalidOperation,
-    //         "Missing argument for flatten_spans in template".to_string(),
-    //     ))
-    // }
 }
 
 impl Object for SiteV42 {
@@ -106,6 +96,7 @@ impl Object for SiteV42 {
         args: &[Value],
     ) -> Result<Value, Error> {
         match name {
+            "get_attrs_with_class" => self.get_attrs_with_class(args),
             "get_page_href_from_id" => self.get_page_href_from_id(args),
             "get_page_href_from_span" => self.get_page_href_from_span(args),
             "get_page_title_from_id" => self.get_page_title_from_id(args),

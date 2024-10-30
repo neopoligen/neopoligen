@@ -1,1 +1,5 @@
-[TODO_STRONG_SHORTHAND]
+<strong >[@ span.text @]</strong>
+
+[@ span @]
+
+
