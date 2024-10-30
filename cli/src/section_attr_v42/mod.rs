@@ -102,7 +102,7 @@ mod test {
             SectionKeyValueAttrPayloadV42 {
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "bravo".to_string(),
-                    kind: "plaintext".to_string(),
+                    kind: "plain_text".to_string(),
                 })],
                 text: "bravo".to_string(),
             },

@@ -12,7 +12,7 @@ pub fn any_paren_opens(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> 
         source,
         SpanV42::PlainText(PlainTextSpan {
             text: result.to_string(),
-            kind: "plaintext".to_string(),
+            kind: "plain_text".to_string(),
         }),
     ))
 }
@@ -29,7 +29,7 @@ mod test {
             "",
             SpanV42::PlainText(PlainTextSpan {
                 text: "(".to_string(),
-                kind: "plaintext".to_string(),
+                kind: "plain_text".to_string(),
             }),
         );
         let right = any_paren_opens(source).unwrap();
@@ -43,7 +43,7 @@ mod test {
             "",
             SpanV42::PlainText(PlainTextSpan {
                 text: "((".to_string(),
-                kind: "plaintext".to_string(),
+                kind: "plain_text".to_string(),
             }),
         );
         let right = any_paren_opens(source).unwrap();

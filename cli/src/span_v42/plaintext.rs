@@ -21,7 +21,7 @@ pub fn plaintext(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
         source,
         SpanV42::PlainText(PlainTextSpan {
             text: output.to_string(),
-            kind: "plaintext".to_string(),
+            kind: "plain_text".to_string(),
         }),
     ))
 }
