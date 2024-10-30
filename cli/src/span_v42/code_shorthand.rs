@@ -1,10 +1,10 @@
+use super::single_backtick::single_backtick;
 use super::PlainTextSpan;
 use crate::helpers::flatten_spans_v42;
 use crate::span_attrs_and_flags_v42::SpanBaseAttrV42;
 use crate::span_attrs_and_flags_v42::SpanFlagAttrV42;
 use crate::span_attrs_and_flags_v42::SpanKeyValueAttrV42;
-use crate::span_v42::any_hyphens::any_hyphens;
-use crate::span_v42::any_underscores::any_underscores;
+use crate::span_v42::escaped_character::*;
 use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
@@ -28,16 +28,16 @@ use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct CodeShorthandV42 {
-    attrs: BTreeMap<String, CodeShorthandKeyValueAttrPayloadV42>,
+    attrs: BTreeMap<String, SpanKeyValueAttrV42>,
     flags: Vec<String>,
     text: String,
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub struct CodeShorthandKeyValueAttrPayloadV42 {
-    pub spans: Vec<SpanV42>,
-    pub text: String,
-}
+// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+// pub struct CodeShorthandKeyValueAttrPayloadV42 {
+//     pub spans: Vec<SpanV42>,
+//     pub text: String,
+// }
 
 pub fn code_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, tokens) = preceded(pair(tag("``"), space0), many1(code_shorthand_content))
@@ -59,32 +59,18 @@ pub fn code_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&st
 
 pub fn get_code_shorthand_attrs_and_flags(
     source: &str,
-) -> IResult<
-    &str,
-    (
-        BTreeMap<String, CodeShorthandKeyValueAttrPayloadV42>,
-        Vec<String>,
-    ),
-    ErrorTree<&str>,
-> {
+) -> IResult<&str, (BTreeMap<String, SpanKeyValueAttrV42>, Vec<String>), ErrorTree<&str>> {
     let (source, attrs_and_flags) = many0(code_shorthand_attr_or_flag)
         .context("")
         .parse(source)?;
-    let attrs = BTreeMap::new();
+    let mut attrs = BTreeMap::new();
     let flags = attrs_and_flags
         .iter()
-        .filter_map(|af| {
-            match af {
-                SpanBaseAttrV42::Flag(f) => Some(f.text.clone()),
-                _ => None, //NamedSpanAttrV42::Flag(f) => Some(f.value.clone()),
-                           //NamedSpanAttrV42::KeyValue(f) => {
-                           //   attrs.insert(
-                           //      f.key.to_string(),
-                           //     NamedSpanKeyValueAttrPayloadV42 {
-                           //        spans: f.value.clone(),
-                           //       text: f.text.clone(),
-                           //  },
-                           //);
+        .filter_map(|af| match af {
+            SpanBaseAttrV42::Flag(f) => Some(f.text.clone()),
+            SpanBaseAttrV42::KeyValue(kv) => {
+                attrs.insert(kv.key.to_string(), kv.clone());
+                None
             }
         })
         .collect::<Vec<String>>();
@@ -95,20 +81,23 @@ pub fn code_shorthand_attr_or_flag(
     source: &str,
 ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
+    // Reminder: Make sure to look for key_value first so flags work properly
     let (source, attr_or_flag) =
-        alt((code_shorthand_span_flag_attr, code_shorthand_key_value_attr))
+        alt((code_shorthand_key_value_attr, code_shorthand_span_flag_attr))
             .context("")
             .parse(source)?;
     Ok((source, attr_or_flag))
 }
 
 pub fn code_shorthand_content(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, token) = alt((not_backtick_or_pipe,)).context("").parse(source)?;
+    let (source, token) = alt((not_backtick_or_pipe_or_escape,))
+        .context("")
+        .parse(source)?;
     Ok((source, token))
 }
 
-pub fn not_backtick_or_pipe(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, result) = is_not("`|").context("").parse(source)?;
+pub fn not_backtick_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+    let (source, result) = is_not("`\\|").context("").parse(source)?;
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
@@ -117,30 +106,29 @@ pub fn not_backtick_or_pipe(source: &str) -> IResult<&str, SpanV42, ErrorTree<&s
     ))
 }
 
-// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-// pub struct CodeShorthandFlagV42 {
-//     value: String,
-// }
-
-// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-// pub struct CodeShorthandKeyValueAttrV42 {
-//     key: String,
-//     spans: Vec<SpanV42>,
-//     text: String,
-// }
-
-// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-// pub enum CodeShorthandBaseAttrV42 {
-//     Flag(CodeShorthandFlagV42),
-//     KeyValue(CodeShorthandKeyValueAttrV42),
+// pub fn not_backtick_or_pipe_or_colon_or_escape(
+//     source: &str,
+// ) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+//     let (source, result) = is_not("`|\\:").context("").parse(source)?;
+//     Ok((
+//         source,
+//         SpanV42::PlainText(PlainTextSpan {
+//             text: result.to_string(),
+//         }),
+//     ))
 // }
 
 pub fn code_shorthand_span_flag_attr(
     source: &str,
 ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
-    let (source, spans) = many1(alt((plaintext, any_hyphens, any_underscores)))
-        .context("")
-        .parse(source)?;
+    let (source, spans) = many1(alt((
+        not_backtick_or_pipe_or_escape,
+        escaped_pipe,
+        escaped_backtick,
+        single_backtick,
+    )))
+    .context("")
+    .parse(source)?;
     let (source, _) = not(tag(":")).context("").parse(source)?;
     Ok((
         source,

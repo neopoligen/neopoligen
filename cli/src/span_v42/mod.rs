@@ -11,6 +11,7 @@ pub mod named_span;
 pub mod not_pipe_or_greater_than_or_less_than_or_escape;
 pub mod plaintext;
 pub mod plaintext_without_spaces;
+pub mod single_backtick;
 pub mod single_exclamation;
 pub mod single_greater_than;
 pub mod single_hyphen;

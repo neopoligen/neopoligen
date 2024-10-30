@@ -37,6 +37,33 @@ Code Shorthand Spec Tests
         "result": '{ "attrs": {}, "flags": ["bravo"], "text": "alfa", "type": "code_shorthand"}',
         "notes": [],
       },
+      {
+        "description": "Flags can have any content besides unescaped pipes, unescaped backticks, and unescaped escapes",
+        "source": "``alfa|bravo ~!@# : ``",
+        "result": '{ "attrs": {}, "flags": ["bravo ~!@# : "], "text": "alfa", "type": "code_shorthand"}',
+        "notes": [
+          "Note colons followed by whitespace are allowed since key values will have already been parsed based on the intentional order of operation in the parser"
+        ],
+      },
+      {
+        "description": "Flags can have escaped pipes",
+        "source": "``alfa|bravo \\| charlie``",
+        "result": '{ "attrs": {}, "flags": ["bravo | charlie"], "text": "alfa", "type": "code_shorthand"}',
+        "notes": [],
+      },
+      {
+        "description": "Flags can have escaped backticks",
+        "source": "``alfa|bravo \\` charlie``",
+        "result": '{ "attrs": {}, "flags": ["bravo ` charlie"], "text": "alfa", "type": "code_shorthand"}',
+        "notes": [],
+      },
+
+      {
+        "description": "Flags can have single backticks",
+        "source": "``alfa|bravo ` charlie``",
+        "result": '{ "attrs": {}, "flags": ["bravo ` charlie"], "text": "alfa", "type": "code_shorthand"}',
+        "notes": [],
+      },
 
     ],
 
