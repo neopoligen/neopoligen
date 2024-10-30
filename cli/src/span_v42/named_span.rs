@@ -35,7 +35,6 @@ pub struct NamedSpanV42 {
     pub flags: Vec<String>,
     pub kind: String,
     pub spans: Option<Vec<SpanV42>>,
-    pub flattened_text: Option<String>,
 }
 
 // TODO: move this to its own file
@@ -82,10 +81,10 @@ pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, (attrs, flags)) = named_span_attrs_and_flags.context("").parse(source)?;
     let (source, _) = tag(">>").context("").parse(source)?;
     let kind = tokens.iter().join("");
-    let flattened_text = match &spans {
-        Some(spns) => Some(flatten_spans_v42(spns)),
-        None => None,
-    };
+    // let flattened_text = match &spans {
+    //     Some(spns) => Some(flatten_spans_v42(spns)),
+    //     None => None,
+    // };
     Ok((
         source,
         SpanV42::NamedSpan(NamedSpanV42 {
@@ -93,7 +92,6 @@ pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
             flags,
             kind,
             spans,
-            flattened_text,
         }),
     ))
 }
@@ -214,9 +212,7 @@ mod test {
                 kind: "sierra".to_string(),
                 spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
                     text: "tango".to_string(),
-                    
                 })]),
-                flattened_text: Some("tango".to_string()),
             }),
         );
         let right = named_span(source).unwrap();
@@ -234,9 +230,7 @@ mod test {
                 kind: "delta".to_string(),
                 spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
                     text: "echo".to_string(),
-                    
                 })]),
-                flattened_text: Some("echo".to_string()),
             }),
         );
         let right = named_span(source).unwrap();
@@ -252,7 +246,6 @@ mod test {
             NamedSpanKeyValueAttrPayloadV42 {
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "red".to_string(),
-                    
                 })],
                 text: "red".to_string(),
             },
@@ -265,9 +258,7 @@ mod test {
                 kind: "delta".to_string(),
                 spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
                     text: "echo".to_string(),
-                    
                 })]),
-                flattened_text: Some("echo".to_string()),
             }),
         );
         let right = named_span(source).unwrap();
