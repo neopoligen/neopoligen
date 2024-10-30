@@ -76,7 +76,6 @@ pub fn flatten_spans_v42(spans: &Vec<SpanV42>) -> String {
                 Some(spans) => flatten_spans_v42(spans),
                 None => "".to_string(),
             },
-            //flatten_spans_v42(&s.spans.clone().unwrap()),
             SpanV42::CodeShorthand(_s) => {
                 "NEO_TODO: Cover CodeShorthand in flatten_spans_v42 in helpers/mod.rs".to_string()
             }

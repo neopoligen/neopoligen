@@ -19,10 +19,37 @@ pub struct SiteV42 {
 }
 
 impl SiteV42 {
-    pub fn get_attrs_with_class(&self, _args: &[Value]) -> Result<Value, Error> {
-        Ok(Value::from(r#"class="red""#))
+    // TODO: Add tests to this and error handling
+    // TODO: escape for html
+    // TODO: Set up config of specific attrs/flags to hoist
+    //       and only add those to the output
+    pub fn get_span_attrs(&self, args: &[Value]) -> Result<Value, Error> {
+        let mut attr_string: Vec<String> = vec![];
+        if args.len() > 0 {
+            let attrs = args[0].get_item(&Value::from("attrs")).unwrap();
+            //dbg!(attrs);
+            for key in attrs.try_iter()? {
+                let spans = attrs.get_item(&key)?;
+                let mut items = spans
+                    .try_iter()?
+                    .map(|v| v.get_item(&Value::from("text")).unwrap().to_string())
+                    .collect::<Vec<String>>();
+                if args.len() == 2 && key.to_string() == "class".to_string() {
+                    items.push(args[1].to_string());
+                }
+                attr_string.push(format!(r#"{}="{}""#, key.to_string(), items.join(" ")));
+
+                dbg!(key);
+                dbg!(spans);
+                dbg!(items);
+            }
+
+            dbg!(attr_string.join(" "));
+        }
+        Ok(Value::from(r#"class="blue""#))
     }
 
+    // TODO: Add error handling here
     pub fn get_page_href_from_id(&self, args: &[Value]) -> Result<Value, Error> {
         if args.len() == 1 {
             let page_id = &args[0].to_string().trim().to_string();
@@ -55,6 +82,7 @@ impl SiteV42 {
         }
     }
 
+    // TODO: Add error handling here
     pub fn get_page_title_from_id(&self, args: &[Value]) -> Result<Value, Error> {
         if args.len() == 1 {
             let page_id = &args[0].to_string().trim().to_string();
@@ -96,7 +124,7 @@ impl Object for SiteV42 {
         args: &[Value],
     ) -> Result<Value, Error> {
         match name {
-            "get_attrs_with_class" => self.get_attrs_with_class(args),
+            "get_span_attrs" => self.get_span_attrs(args),
             "get_page_href_from_id" => self.get_page_href_from_id(args),
             "get_page_href_from_span" => self.get_page_href_from_span(args),
             "get_page_title_from_id" => self.get_page_title_from_id(args),

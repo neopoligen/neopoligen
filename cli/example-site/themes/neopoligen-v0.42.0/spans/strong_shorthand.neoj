@@ -2,4 +2,8 @@
 
 [@ span @]
 
+<h3>
+[@ site.get_span_attrs(span, "red") @]
+</h3>
+
 
