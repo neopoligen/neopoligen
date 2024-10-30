@@ -1,3 +1,3 @@
-<a href="[@ site.get_page_href(flatten_spans(span.spans)) @]">
-[@- site.get_page_title(flatten_spans(span.spans)).text -@]
+<a href="[@ site.get_page_href_from_id(flatten_spans(span.spans)) @]">
+[@- site.get_page_title_from_span(span).text -@]
 </a>

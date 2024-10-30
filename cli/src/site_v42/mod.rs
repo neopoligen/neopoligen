@@ -1,3 +1,4 @@
+use crate::helpers::flatten_spans_in_template_v42;
 use crate::page_v42::PageV42;
 use crate::site_config::SiteConfigV42;
 use minijinja::value::Object;
@@ -18,7 +19,7 @@ pub struct SiteV42 {
 }
 
 impl SiteV42 {
-    pub fn get_page_href(&self, args: &[Value]) -> Result<Value, Error> {
+    pub fn get_page_href_from_id(&self, args: &[Value]) -> Result<Value, Error> {
         if args.len() == 1 {
             let page_id = &args[0].to_string().trim().to_string();
             match self.pages.get(page_id) {
@@ -33,7 +34,7 @@ impl SiteV42 {
         }
     }
 
-    pub fn get_page_title(&self, args: &[Value]) -> Result<Value, Error> {
+    pub fn get_page_title_from_id(&self, args: &[Value]) -> Result<Value, Error> {
         if args.len() == 1 {
             let page_id = &args[0].to_string().trim().to_string();
             match self.pages.get(page_id) {
@@ -47,6 +48,37 @@ impl SiteV42 {
             ))
         }
     }
+
+    // TODO: Add error handling here
+    pub fn get_page_title_from_span(&self, args: &[Value]) -> Result<Value, Error> {
+        if args.len() == 1 {
+            let x = &args[0].get_item(&Value::from("spans")).unwrap();
+            let page_id = flatten_spans_in_template_v42(&[x.to_owned()]).unwrap();
+            match self.pages.get(&page_id.to_string()) {
+                Some(page) => page.title(),
+                None => Ok(Value::from(page_id)),
+            }
+        } else {
+            Err(Error::new(
+                ErrorKind::InvalidOperation,
+                "NO_ID_FOR_PAGE_TITLE",
+            ))
+        }
+    }
+
+    // if args.len() == 1 {
+    //     let x: &String = &args[0]
+    //         .try_iter()?
+    //         .map(|v| v.get_item(&Value::from("text")).unwrap().to_string())
+    //         .collect::<Vec<_>>()
+    //         .join("");
+    //     Ok(Value::from(x))
+    // } else {
+    //     Err(Error::new(
+    //         ErrorKind::InvalidOperation,
+    //         "Missing argument for flatten_spans in template".to_string(),
+    //     ))
+    // }
 }
 
 impl Object for SiteV42 {
@@ -57,8 +89,9 @@ impl Object for SiteV42 {
         args: &[Value],
     ) -> Result<Value, Error> {
         match name {
-            "get_page_href" => self.get_page_href(args),
-            "get_page_title" => self.get_page_title(args),
+            "get_page_href_from_id" => self.get_page_href_from_id(args),
+            "get_page_title_from_id" => self.get_page_title_from_id(args),
+            "get_page_title_from_span" => self.get_page_title_from_span(args),
             _ => Ok(Value::from("")),
         }
     }
