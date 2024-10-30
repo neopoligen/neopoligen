@@ -25,8 +25,7 @@ use std::collections::BTreeMap;
 pub struct CodeShorthandV42 {
     attrs: BTreeMap<String, CodeShorthandKeyValueAttrPayloadV42>,
     flags: Vec<String>,
-    kind: String,
-    styled: Option<String>,
+    text: String,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -48,8 +47,7 @@ pub fn code_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&st
         SpanV42::CodeShorthand(CodeShorthandV42 {
             attrs: BTreeMap::new(),
             flags: vec![],
-            kind: flatten_spans_v42(&tokens),
-            styled: None,
+            text: flatten_spans_v42(&tokens),
         }),
     ))
 }
