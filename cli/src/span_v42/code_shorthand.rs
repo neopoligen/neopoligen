@@ -83,9 +83,10 @@ pub fn code_shorthand_attr_or_flag(
 ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
     // Reminder: Make sure to look for key_value first so flags work properly
-    let (source, attr_or_flag) = alt((span_key_value_attr_key, code_shorthand_span_flag_attr))
-        .context("")
-        .parse(source)?;
+    let (source, attr_or_flag) =
+        alt((code_shorthand_key_value_attr, code_shorthand_span_flag_attr))
+            .context("")
+            .parse(source)?;
     Ok((source, attr_or_flag))
 }
 
@@ -123,6 +124,27 @@ pub fn code_shorthand_span_flag_attr(
         SpanBaseAttrV42::Flag(SpanFlagAttrV42 {
             text: flatten_spans_v42(&spans),
         }),
+    ))
+}
+
+pub fn code_shorthand_key_value_attr(
+    source: &str,
+) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
+    let (source, key_spans) = terminated(
+        many1(alt((alphanumeric1, is_a("-_")))),
+        pair(tag(":"), space1),
+    )
+    .context("")
+    .parse(source)?;
+    let (source, spans) = many1(alt((not_backtick_or_pipe_or_escape,)))
+        .context("")
+        .parse(source)?;
+    Ok((
+        source,
+        SpanBaseAttrV42::KeyValue {
+            key: key_spans.join(""),
+            spans,
+        },
     ))
 }
 

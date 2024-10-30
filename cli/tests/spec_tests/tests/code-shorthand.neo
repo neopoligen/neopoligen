@@ -2,7 +2,6 @@
 
 Code Shorthand Spec Tests
 
-
 -- neopoligen-spec-test/
 
 {
@@ -79,6 +78,18 @@ Code Shorthand Spec Tests
         "description": "Key/value keys can have hyphens",
         "source": "``alfa|bravo--charlie: delta``",
         "result": '{ "attrs": {"bravo--charlie": [{"text": "delta", "type": "plain_text"}]}, "flags": [], "text": "alfa", "type": "code_shorthand"}',
+        "notes": [],
+      },
+      {
+        "description": "Key/value keys can have underscores",
+        "source": "``alfa|bravo__charlie: delta``",
+        "result": '{ "attrs": {"bravo__charlie": [{"text": "delta", "type": "plain_text"}]}, "flags": [], "text": "alfa", "type": "code_shorthand"}',
+        "notes": [],
+      },
+      {
+        "description": "Key/value values can be anything other than unescaped pipes, unescaped double backticks, or unescaped escapes",
+        "source": "``alfa|bravo__charlie: delta ~!@# <html> <<named_span>>``",
+        "result": '{ "attrs": {"bravo__charlie": [{"text": "delta", "type": "plain_text"}]}, "flags": [], "text": "alfa", "type": "code_shorthand"}',
         "notes": [],
       },
     ],
