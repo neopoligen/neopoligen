@@ -1,9 +1,1 @@
-<strong >[@ span.text @]</strong>
-
-[@ span @]
-
-<h3>
-[@ site.get_span_attrs(span, "red") @]
-</h3>
-
-
+<strong [@- site.get_span_attrs(span) -@]>[@ span.text @]</strong>

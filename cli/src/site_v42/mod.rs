@@ -27,7 +27,6 @@ impl SiteV42 {
         let mut attr_string: Vec<String> = vec![];
         if args.len() > 0 {
             let attrs = args[0].get_item(&Value::from("attrs")).unwrap();
-            //dbg!(attrs);
             for key in attrs.try_iter()? {
                 let spans = attrs.get_item(&key)?;
                 let mut items = spans
@@ -38,15 +37,15 @@ impl SiteV42 {
                     items.push(args[1].to_string());
                 }
                 attr_string.push(format!(r#"{}="{}""#, key.to_string(), items.join(" ")));
-
-                dbg!(key);
-                dbg!(spans);
-                dbg!(items);
             }
-
-            dbg!(attr_string.join(" "));
+            let flags = args[0].get_item(&Value::from("flags")).unwrap();
+            for flag in flags.try_iter()? {
+                attr_string.push(format!(r#"{}"#, flag));
+            }
+            Ok(Value::from(format!(" {}", attr_string.join(" "))))
+        } else {
+            Ok(Value::from(""))
         }
-        Ok(Value::from(r#"class="blue""#))
     }
 
     // TODO: Add error handling here
