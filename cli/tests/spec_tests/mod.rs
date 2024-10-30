@@ -2,6 +2,7 @@ use include_dir::{include_dir, Dir};
 use minijinja::Value;
 use neopoligengine::helpers::get_include_str_file;
 use neopoligengine::section_v42::SectionV42;
+use neopoligengine::span_v42::code_shorthand::code_shorthand_span;
 use neopoligengine::span_v42::named_span::named_span;
 use neopoligengine::{page_v42::PageV42, site_config::SiteConfigV42};
 use serde::Deserialize;
@@ -61,11 +62,38 @@ fn load_tests(file_name: &str) -> (Vec<TestItem>, Vec<TestItem>) {
 }
 
 #[test]
-fn solo_test_named_spans() {
+fn test_named_spans() {
     let (valid, invalid) = load_tests("named-spans.neo");
     valid.iter().for_each(|ti| {
         dbg!(&ti.description);
         let parsed = named_span(&ti.source);
+        if parsed.is_ok() {
+            let expected =
+                serde_json5::from_str::<Value>(ti.result.clone().unwrap().as_str()).unwrap();
+            let got = Value::from_serialize(&parsed.unwrap().1);
+            assert_eq!(expected, got);
+        } else {
+            dbg!(&ti.description);
+            assert!(false);
+        }
+    });
+    invalid.iter().for_each(|ti| {
+        let result = named_span(&ti.source);
+        if result.is_err() {
+            assert!(true)
+        } else {
+            dbg!(&ti.description);
+            assert!(false);
+        }
+    });
+}
+
+#[test]
+fn solo_test_code_shorthands() {
+    let (valid, invalid) = load_tests("code-shorthand.neo");
+    valid.iter().for_each(|ti| {
+        dbg!(&ti.description);
+        let parsed = code_shorthand_span(&ti.source);
         if parsed.is_ok() {
             let expected =
                 serde_json5::from_str::<Value>(ti.result.clone().unwrap().as_str()).unwrap();

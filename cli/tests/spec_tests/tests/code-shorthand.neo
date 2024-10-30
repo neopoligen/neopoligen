@@ -1,0 +1,59 @@
+-- title
+
+Code Shorthand Spec Tests
+
+
+-- neopoligen-spec-test/
+
+{
+  "version": "0.42.0",
+  "name": "Valid Named Spans",
+  "notes": [
+    "This is just getting started, there are more to test that I'll add in the next iteration",
+    "The invalid cases aren't exhaustive (i.e. they don't test every possible character that's not allowed). They're just meant to be representative",
+    "This is the first version of the parse and only deals with English. I'm working on figuring out how to do other character sets", 
+  ],
+  "tests": {
+    "todo_valid": [
+    ],
+    "todo_invalid": [
+    ],
+    "valid": [
+      {
+        "description": "Basic tag",
+        "source": "``alfa``",
+        "result": '{ "attrs": {}, "flags": [], "text": "alfa", "type": "code_shorthand"}',
+        "notes": [],
+      },
+      {
+        "description": "Can have any content other than unescaped pipes or unescaped backticks",
+        "source": "``alfa ~!@#$ <html> <<named_span>>``",
+        "result": '{ "attrs": {}, "flags": [], "text": "alfa ~!@#$ <html> <<named_span>>", "type": "code_shorthand"}',
+        "notes": [],
+      },
+      {
+        "description": "Can have flags",
+        "source": "``alfa|bravo``",
+        "result": '{ "attrs": {}, "flags": ["bravo"], "text": "alfa", "type": "code_shorthand"}',
+        "notes": [],
+      },
+
+    ],
+
+    "invalid": [
+
+    ],
+  },
+}
+
+-- /neopoligen-spec-test
+
+
+-- pagedata
+-- created: 2024-10-30T11:14:30-04:00
+-- updated: 2024-10-30T11:14:30-04:00
+-- id: 2oa8y5gi
+-- template: post
+-- status: scratch
+
+

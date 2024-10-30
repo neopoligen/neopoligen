@@ -14,7 +14,6 @@ pub fn not_pipe_or_greater_than_or_less_than_or_escape(
         source,
         SpanV42::PlainText(PlainTextSpan {
             text: result.to_string(),
-            
         }),
     ))
 }
@@ -31,7 +30,6 @@ mod test {
             "\\>",
             SpanV42::PlainText(PlainTextSpan {
                 text: "alfa".to_string(),
-                
             }),
         );
         let right = not_pipe_or_greater_than_or_less_than_or_escape(source).unwrap();
@@ -45,7 +43,6 @@ mod test {
             "|",
             SpanV42::PlainText(PlainTextSpan {
                 text: "!@#$".to_string(),
-                
             }),
         );
         let right = not_pipe_or_greater_than_or_less_than_or_escape(source).unwrap();
@@ -59,7 +56,6 @@ mod test {
             ">",
             SpanV42::PlainText(PlainTextSpan {
                 text: "alfa bravo\ncharlie ".to_string(),
-                
             }),
         );
         let right = not_pipe_or_greater_than_or_less_than_or_escape(source).unwrap();
@@ -73,7 +69,6 @@ mod test {
             "<bravo",
             SpanV42::PlainText(PlainTextSpan {
                 text: "alfa".to_string(),
-                
             }),
         );
         let right = not_pipe_or_greater_than_or_less_than_or_escape(source).unwrap();

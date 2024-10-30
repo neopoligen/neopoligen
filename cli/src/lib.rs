@@ -27,6 +27,7 @@ pub mod site_v42;
 pub mod source_page;
 pub mod span;
 pub mod span_attr;
+pub mod span_attrs_and_flags_v42;
 pub mod span_v42;
 pub mod spans_v42;
 pub mod theme_test;
