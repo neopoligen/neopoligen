@@ -3,6 +3,8 @@ use crate::payload_span::PayloadSpan;
 use crate::span::*;
 use crate::span_v42::SpanV42;
 use include_dir::Dir;
+use minijinja::Error;
+use minijinja::ErrorKind;
 use minijinja::Value;
 use regex::Regex;
 use rimage::config::{Codec, EncoderConfig};
@@ -82,6 +84,24 @@ pub fn flatten_spans_v42(spans: &Vec<SpanV42>) -> String {
         })
         .collect::<Vec<String>>()
         .join("")
+}
+
+// TODO: Fix this so it won't crash if you send in something
+// other than spans
+pub fn flatten_spans_in_template_v42(args: &[Value]) -> Result<Value, Error> {
+    if args.len() == 1 {
+        let x: &String = &args[0]
+            .try_iter()?
+            .map(|v| v.get_item(&Value::from("text")).unwrap().to_string())
+            .collect::<Vec<_>>()
+            .join("");
+        Ok(Value::from(x))
+    } else {
+        Err(Error::new(
+            ErrorKind::InvalidOperation,
+            "Missing argument for flatten_spans in template".to_string(),
+        ))
+    }
 }
 
 // TODO: Deprecated - remove when v42 is done

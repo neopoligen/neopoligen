@@ -1,6 +1,6 @@
 pub mod inits;
 
-use crate::helpers::write_file_with_mkdir;
+use crate::helpers::*;
 use crate::neo_error::NeoErrorKind;
 use crate::{
     neo_error::NeoError, page_v42::PageV42, site_config::SiteConfigV42, site_v42::SiteV42,
@@ -82,6 +82,7 @@ impl BuilderV42 {
     pub fn output_pages(&mut self) -> Result<()> {
         event!(Level::INFO, "Outputting pages");
         let mut env = Environment::new();
+        env.add_function("flatten_spans", flatten_spans_in_template_v42);
         // env.add_function("highlight_code", highlight_code);
         // env.add_function("highlight_code_no_nums", highlight_code_no_nums);
         // env.add_function("highlight_span", highlight_span);
