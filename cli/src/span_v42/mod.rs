@@ -1,4 +1,3 @@
-pub mod any_alphanumeric;
 pub mod any_colons;
 pub mod any_hyphens;
 pub mod any_paren_closes;
@@ -7,11 +6,13 @@ pub mod any_underscores;
 pub mod block_line_ending;
 pub mod code_shorthand;
 pub mod escaped_character;
+pub mod footnote_shorthand;
 pub mod named_span;
 pub mod not_pipe_or_greater_than_or_less_than_or_escape;
 pub mod plaintext;
 pub mod plaintext_without_spaces;
 pub mod single_backtick;
+pub mod single_caret;
 pub mod single_exclamation;
 pub mod single_greater_than;
 pub mod single_hyphen;
@@ -23,6 +24,7 @@ pub mod space0_line_ending_or_eof;
 use self::named_span::NamedSpanV42;
 use crate::span_v42::code_shorthand::CodeShorthandV42;
 use crate::span_v42::escaped_character::*;
+use crate::span_v42::footnote_shorthand::FootnoteShorthandV42;
 use crate::span_v42::plaintext::*;
 use nom::branch::alt;
 use nom::combinator::not;
@@ -35,14 +37,16 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum SpanV42 {
-    #[serde(rename = "escaped_character")]
-    EscapedCharacter(EscapedCharacterSpanV42),
-    #[serde(rename = "plain_text")]
-    PlainText(PlainTextSpan),
-    #[serde(rename = "named_span")]
-    NamedSpan(NamedSpanV42),
     #[serde(rename = "code_shorthand")]
     CodeShorthand(CodeShorthandV42),
+    #[serde(rename = "escaped_character")]
+    EscapedCharacter(EscapedCharacterSpanV42),
+    #[serde(rename = "footnote_shorthand")]
+    FootnoteShorthand(FootnoteShorthandV42),
+    #[serde(rename = "named_span")]
+    NamedSpan(NamedSpanV42),
+    #[serde(rename = "plain_text")]
+    PlainText(PlainTextSpan),
 }
 
 pub fn span_v42<'a>(source: &'a str) -> IResult<&'a str, SpanV42, ErrorTree<&'a str>> {

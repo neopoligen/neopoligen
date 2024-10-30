@@ -80,6 +80,10 @@ pub fn flatten_spans_v42(spans: &Vec<SpanV42>) -> String {
             SpanV42::CodeShorthand(_s) => {
                 "NEO_TODO: Cover CodeShorthand in flatten_spans_v42 in helpers/mod.rs".to_string()
             }
+            SpanV42::FootnoteShorthand(_s) => {
+                "NEO_TODO: Cover FootnoteShorthand in flatten_spans_v42 in helpers/mod.rs"
+                    .to_string()
+            }
             SpanV42::EscapedCharacter(s) => s.text.to_string(),
         })
         .collect::<Vec<String>>()

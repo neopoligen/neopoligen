@@ -6,7 +6,7 @@ Code Shorthand Spec Tests
 
 {
   "version": "0.42.0",
-  "name": "Valid Named Spans",
+  "name": "Valid Code Shorthand Spans",
   "notes": [
     "This is just getting started, there are more to test that I'll add in the next iteration",
     "The invalid cases aren't exhaustive (i.e. they don't test every possible character that's not allowed). They're just meant to be representative",
