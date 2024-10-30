@@ -10,7 +10,6 @@ use serde::Serialize;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct EscapedCharacterSpanV42 {
     pub text: String,
-    pub kind: String,
 }
 
 pub fn escaped_less_than(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
@@ -19,7 +18,6 @@ pub fn escaped_less_than(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
             text: "<".to_string(),
-            kind: "escaped_character".to_string(),
         }),
     ))
 }
@@ -30,7 +28,6 @@ pub fn escaped_greater_than(source: &str) -> IResult<&str, SpanV42, ErrorTree<&s
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
             text: ">".to_string(),
-            kind: "escaped_character".to_string(),
         }),
     ))
 }
@@ -41,7 +38,6 @@ pub fn escaped_pipe(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
             text: "|".to_string(),
-            kind: "escaped_character".to_string(),
         }),
     ))
 }
@@ -52,7 +48,6 @@ pub fn escaped_backslash(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
             text: "\\".to_string(),
-            kind: "escaped_character".to_string(),
         }),
     ))
 }
@@ -69,7 +64,6 @@ mod test {
             "",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
                 text: "<".to_string(),
-                kind: "escaped_character".to_string(),
             }),
         );
         let right = escaped_less_than(source).unwrap();
@@ -83,7 +77,6 @@ mod test {
             "",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
                 text: ">".to_string(),
-                kind: "escaped_character".to_string(),
             }),
         );
         let right = escaped_greater_than(source).unwrap();
@@ -97,7 +90,6 @@ mod test {
             "",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
                 text: "|".to_string(),
-                kind: "escaped_character".to_string(),
             }),
         );
         let right = escaped_pipe(source).unwrap();
@@ -111,7 +103,6 @@ mod test {
             "",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
                 text: "\\".to_string(),
-                kind: "escaped_character".to_string(),
             }),
         );
         let right = escaped_backslash(source).unwrap();
