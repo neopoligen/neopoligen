@@ -26,7 +26,7 @@ use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct CodeShorthandV42 {
-    attrs: BTreeMap<String, SpanKeyValueAttrV42>,
+    attrs: BTreeMap<String, Vec<SpanV42>>,
     flags: Vec<String>,
     text: String,
 }
@@ -41,14 +41,14 @@ pub fn code_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&st
     let (source, tokens) = preceded(pair(tag("``"), space0), many1(code_shorthand_content))
         .context("")
         .parse(source)?;
-    let (source, (_attrs, flags)) = get_code_shorthand_attrs_and_flags
+    let (source, (attrs, flags)) = get_code_shorthand_attrs_and_flags
         .context("")
         .parse(source)?;
     let (source, _) = tag("``").context("").parse(source)?;
     Ok((
         source,
         SpanV42::CodeShorthand(CodeShorthandV42 {
-            attrs: BTreeMap::new(),
+            attrs,
             flags,
             text: flatten_spans_v42(&tokens),
         }),
@@ -57,21 +57,24 @@ pub fn code_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&st
 
 pub fn get_code_shorthand_attrs_and_flags(
     source: &str,
-) -> IResult<&str, (BTreeMap<String, SpanKeyValueAttrV42>, Vec<String>), ErrorTree<&str>> {
+) -> IResult<&str, (BTreeMap<String, Vec<SpanV42>>, Vec<String>), ErrorTree<&str>> {
     let (source, attrs_and_flags) = many0(code_shorthand_attr_or_flag)
         .context("")
         .parse(source)?;
-    let mut attrs = BTreeMap::new();
-    let flags = attrs_and_flags
-        .iter()
-        .filter_map(|af| match af {
-            SpanBaseAttrV42::Flag(f) => Some(f.text.clone()),
-            SpanBaseAttrV42::KeyValue(kv) => {
-                attrs.insert(kv.key.to_string(), kv.clone());
-                None
-            }
-        })
-        .collect::<Vec<String>>();
+    let attrs = BTreeMap::new();
+    let flags = vec![];
+
+    // let mut attrs = BTreeMap::new();
+    // let flags = attrs_and_flags
+    //     .iter()
+    //     .filter_map(|af| match af {
+    //         SpanBaseAttrV42::Flag(f) => Some(f.text.clone()),
+    //         SpanBaseAttrV42::KeyValue{key, value} => {
+    //             attrs.insert(key.to_string());
+    //             None
+    //         }
+    //     })
+    //     .collect::<Vec<String>>();
     Ok((source, (attrs, flags)))
 }
 
@@ -133,10 +136,10 @@ pub fn code_shorthand_key_value_attr(
     let (source, spans) = many1(alt((plaintext,))).context("").parse(source)?;
     Ok((
         source,
-        SpanBaseAttrV42::KeyValue(SpanKeyValueAttrV42 {
+        SpanBaseAttrV42::KeyValue {
             key: flatten_spans_v42(&key_spans),
             spans,
-        }),
+        },
     ))
 }
 
