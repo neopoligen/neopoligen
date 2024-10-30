@@ -167,8 +167,9 @@ header, main, footer {
                         Err(e) => {
                             event!(
                                 Level::ERROR,
-                                "Could not render output for: {}",
-                                page.fs_path.display()
+                                "Could not render output for: {} - {}",
+                                page.fs_path.display(),
+                                e.to_string()
                             );
 
                             builder_error = Some(NeoError {
