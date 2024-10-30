@@ -172,6 +172,7 @@ mod test {
                 text: "abcd1234".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "abcd1234".to_string(),
+                    kind: "plaintext".to_string(),
                 })],
             },
         );
@@ -181,6 +182,7 @@ mod test {
                 text: "draft".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "draft".to_string(),
+                    kind: "plaintext".to_string(),
                 })],
             },
         );

@@ -16,6 +16,7 @@ pub fn single_line_ending<'a>(source: &'a str) -> IResult<&'a str, SpanV42, Erro
         source,
         SpanV42::PlainText(PlainTextSpan {
             text: " ".to_string(),
+            kind: "plaintext".to_string(),
         }),
     ))
 }
@@ -32,6 +33,7 @@ mod test {
             "x",
             SpanV42::PlainText(PlainTextSpan {
                 text: " ".to_string(),
+                kind: "plaintext".to_string(),
             }),
         );
         let right = single_line_ending(source).unwrap();

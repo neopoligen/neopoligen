@@ -155,6 +155,7 @@ mod test {
                 kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "Content".to_string(),
+                    kind: "plaintext".to_string(),
                 })],
                 text: "Content".to_string(),
                 template_list: block_templates.clone(),
@@ -164,6 +165,7 @@ mod test {
                 kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "Blocks".to_string(),
+                    kind: "plaintext".to_string(),
                 })],
                 text: "Blocks".to_string(),
                 template_list: block_templates.clone(),
@@ -203,6 +205,7 @@ mod test {
                 kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "Delta".to_string(),
+                    kind: "plaintext".to_string(),
                 })],
                 text: "Delta".to_string(),
                 template_list: block_templates.clone(),
@@ -212,6 +215,7 @@ mod test {
                 kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "Tango".to_string(),
+                    kind: "plaintext".to_string(),
                 })],
                 text: "Tango".to_string(),
                 template_list: block_templates.clone(),

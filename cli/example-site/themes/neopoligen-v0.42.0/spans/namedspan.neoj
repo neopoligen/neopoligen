@@ -1,0 +1,5 @@
+[!- import "helpers/theme.neoj" as theme -!]
+<[@ span.kind @]>
+[@- theme.output_spans(site, page, span.spans) -@]
+</[@ span.kind @]>
+[@- "" -@]

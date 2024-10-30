@@ -135,7 +135,8 @@ impl PageV42 {
             page_title
         } else if let Some(id) = &self.id.clone() {
             Ok(Value::from_serialize(PageTitleV42 {
-                spans: vec![SpanV42::PlainText(PlainTextSpan { text: id.clone() })],
+                spans: vec![SpanV42::PlainText(PlainTextSpan { 
+                    kind: "plaintext".to_string(),text: id.clone() })],
                 text: id.to_string(),
             }))
         } else {
@@ -219,6 +220,7 @@ mod test {
         let left = Value::from_serialize(PageTitleV42 {
             spans: vec![SpanV42::PlainText(PlainTextSpan {
                 text: "001-pagedata-only.neo".to_string(),
+                kind: "plaintext".to_string(),
             })],
             text: "001-pagedata-only.neo".to_string(),
         });
@@ -232,6 +234,7 @@ mod test {
         let left = Value::from_serialize(PageTitleV42 {
             spans: vec![SpanV42::PlainText(PlainTextSpan {
                 text: "Title In Pagedata".to_string(),
+                kind: "plaintext".to_string(),
             })],
             text: "Title In Pagedata".to_string(),
         });
@@ -245,6 +248,7 @@ mod test {
         let left = Value::from_serialize(PageTitleV42 {
             spans: vec![SpanV42::PlainText(PlainTextSpan {
                 text: "006-unclosed-start-section.neo".to_string(),
+                kind: "plaintext".to_string(),
             })],
             text: "006-unclosed-start-section.neo".to_string(),
         });

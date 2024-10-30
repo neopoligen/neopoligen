@@ -17,6 +17,7 @@ pub fn plaintext_without_spaces(source: &str) -> IResult<&str, SpanV42, ErrorTre
         source,
         SpanV42::PlainText(PlainTextSpan {
             text: output.to_string(),
+            kind: "plaintext".to_string(),
         }),
     ))
 }

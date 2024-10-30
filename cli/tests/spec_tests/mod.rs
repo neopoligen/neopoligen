@@ -64,6 +64,7 @@ fn load_tests(file_name: &str) -> (Vec<TestItem>, Vec<TestItem>) {
 fn solo_test_named_spans() {
     let (valid, invalid) = load_tests("named-spans.neo");
     valid.iter().for_each(|ti| {
+        dbg!(&ti.description);
         let parsed = named_span(&ti.source);
         if parsed.is_ok() {
             let expected =

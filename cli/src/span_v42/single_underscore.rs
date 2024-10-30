@@ -14,6 +14,7 @@ pub fn single_underscore(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>
         source,
         SpanV42::PlainText(PlainTextSpan {
             text: output.to_string(),
+            kind: "plaintext".to_string(),
         }),
     ))
 }
@@ -30,6 +31,7 @@ mod test {
             "",
             SpanV42::PlainText(PlainTextSpan {
                 text: "_".to_string(),
+                kind: "plaintext".to_string(),
             }),
         );
         let right = single_underscore(source).unwrap();
@@ -43,6 +45,7 @@ mod test {
             "alfa",
             SpanV42::PlainText(PlainTextSpan {
                 text: "_".to_string(),
+                kind: "plaintext".to_string(),
             }),
         );
         let right = single_underscore(source).unwrap();

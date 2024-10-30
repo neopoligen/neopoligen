@@ -70,7 +70,11 @@ pub fn flatten_spans_v42(spans: &Vec<SpanV42>) -> String {
         .iter()
         .map(|span| match span {
             SpanV42::PlainText(s) => s.text.to_string(),
-            SpanV42::NamedSpan(s) => flatten_spans_v42(&s.spans.clone().unwrap()),
+            SpanV42::NamedSpan(s) => match &s.spans.clone() {
+                Some(spans) => flatten_spans_v42(spans),
+                None => "".to_string(),
+            },
+            //flatten_spans_v42(&s.spans.clone().unwrap()),
             SpanV42::CodeShorthand(_s) => {
                 "NEO_TODO: Cover CodeShorthand in flatten_spans_v42 in helpers/mod.rs".to_string()
             }
