@@ -66,13 +66,13 @@ Code Shorthand Spec Tests
       {
         "description": "Key/value attrs are allowed",
         "source": "``alfa|bravo: charlie``",
-        "result": '{ "attrs": {"bravo": {}}, "flags": [], "text": "alfa", "type": "code_shorthand"}',
+        "result": '{ "attrs": {"bravo": [{"text": "charlie", "type": "plain_text"}]}, "flags": [], "text": "alfa", "type": "code_shorthand"}',
         "notes": [],
       },
       {
         "description": "Key/value keys can have numbers",
         "source": "``alfa|bravo1: charlie``",
-        "result": '{ "attrs": {}, "flags": [], "text": "alfa", "type": "code_shorthand"}',
+        "result": '{ "attrs": {"bravo1": [{"text": "charlie", "type": "plain_text"}]}, "flags": [], "text": "alfa", "type": "code_shorthand"}',
         "notes": [],
       },
     ],

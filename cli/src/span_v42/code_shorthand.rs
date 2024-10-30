@@ -61,20 +61,21 @@ pub fn get_code_shorthand_attrs_and_flags(
     let (source, attrs_and_flags) = many0(code_shorthand_attr_or_flag)
         .context("")
         .parse(source)?;
-    let attrs = BTreeMap::new();
-    let flags = vec![];
+    // let attrs: BTreeMap<String, Vec<SpanV42>> = BTreeMap::new();
+    // let flags: Vec<String> = vec![];
 
-    // let mut attrs = BTreeMap::new();
-    // let flags = attrs_and_flags
-    //     .iter()
-    //     .filter_map(|af| match af {
-    //         SpanBaseAttrV42::Flag(f) => Some(f.text.clone()),
-    //         SpanBaseAttrV42::KeyValue{key, value} => {
-    //             attrs.insert(key.to_string());
-    //             None
-    //         }
-    //     })
-    //     .collect::<Vec<String>>();
+    let mut attrs = BTreeMap::new();
+    let flags = attrs_and_flags
+        .iter()
+        .filter_map(|af| match af {
+            SpanBaseAttrV42::Flag(f) => Some(f.text.clone()),
+            SpanBaseAttrV42::KeyValue { key, spans } => {
+                attrs.insert(key.to_string(), spans.clone());
+                None
+            }
+        })
+        .collect::<Vec<String>>();
+
     Ok((source, (attrs, flags)))
 }
 
