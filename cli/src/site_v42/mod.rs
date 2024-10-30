@@ -1,6 +1,7 @@
 use crate::helpers::flatten_spans_in_template_v42;
 use crate::page_v42::PageV42;
 use crate::site_config::SiteConfigV42;
+use html_escape::*;
 use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::ErrorKind;
@@ -8,9 +9,6 @@ use minijinja::Value;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::sync::Arc;
-// use crate::neo_error::{NeoError, NeoErrorKind};
-// use crate::image::Image;
-// use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SiteV42 {
@@ -29,14 +27,19 @@ impl SiteV42 {
             let attrs = args[0].get_item(&Value::from("attrs")).unwrap();
             for key in attrs.try_iter()? {
                 let spans = attrs.get_item(&key)?;
-                let mut items = spans
+                let mut values = spans
                     .try_iter()?
-                    .map(|v| v.get_item(&Value::from("text")).unwrap().to_string())
+                    .map(|v| {
+                        encode_quoted_attribute(
+                            &v.get_item(&Value::from("text")).unwrap().to_string(),
+                        )
+                        .to_string()
+                    })
                     .collect::<Vec<String>>();
                 if args.len() == 2 && key.to_string() == "class".to_string() {
-                    items.push(args[1].to_string());
+                    values.push(encode_quoted_attribute(&args[1].to_string()).to_string());
                 }
-                attr_string.push(format!(r#"{}="{}""#, key.to_string(), items.join(" ")));
+                attr_string.push(format!(r#"{}="{}""#, key.to_string(), values.join(" ")));
             }
             let flags = args[0].get_item(&Value::from("flags")).unwrap();
             for flag in flags.try_iter()? {
