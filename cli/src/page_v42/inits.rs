@@ -132,7 +132,7 @@ impl PageV42 {
                         page.raw_ast = vec![
                             SectionV42::Basic(BasicSectionV42 {
                                 attrs: BTreeMap::new(),
-                                bounds: Bound::Full,
+                                bound: Bound::Full,
                                 children: vec![SectionV42::Block(BlockSectionV42 {
                                     children: vec![],
                                     kind: "paragraph".to_string(),
@@ -152,7 +152,7 @@ impl PageV42 {
                             }),
                             SectionV42::ParsingError(ParsingErrorSectionV42 {
                                 attrs: BTreeMap::new(),
-                                bounds: Bound::Full,
+                                bound: Bound::Full,
                                 children: vec![],
                                 flags: vec![],
                                 kind: "parsing_error".to_string(),

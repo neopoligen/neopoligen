@@ -26,7 +26,7 @@ use std::collections::BTreeMap;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Json5SectionV42 {
     pub attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42>,
-    pub bounds: Bound,
+    pub bound: Bound,
     pub children: Vec<SectionV42>,
     pub data: Value,
     pub error: Option<String>,
@@ -75,7 +75,7 @@ pub fn json5_section_full_v42<'a>(
     }
     let section = SectionV42::Json5(Json5SectionV42 {
         attrs,
-        bounds: Bound::Full,
+        bound: Bound::Full,
         children: vec![],
         data,
         error,
@@ -134,7 +134,7 @@ pub fn json5_section_start_v42<'a>(
         SectionV42::Json5(Json5SectionV42 {
             attrs: BTreeMap::new(),
             flags: vec![],
-            bounds: Bound::Start,
+            bound: Bound::Start,
             data,
             children: vec![end_section],
             error,
@@ -172,7 +172,6 @@ mod test {
                 text: "abcd1234".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "abcd1234".to_string(),
-                    
                 })],
             },
         );
@@ -182,7 +181,6 @@ mod test {
                 text: "draft".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "draft".to_string(),
-                    
                 })],
             },
         );
@@ -194,7 +192,7 @@ mod test {
             "",
             SectionV42::Json5(Json5SectionV42 {
                 attrs,
-                bounds: Bound::Full,
+                bound: Bound::Full,
                 children: vec![],
                 data: serde_json5::from_str::<Value>("{}").unwrap(),
                 error: None,
@@ -226,11 +224,11 @@ mod test {
             "",
             SectionV42::Json5(Json5SectionV42 {
                 attrs,
-                bounds: Bound::Start,
+                bound: Bound::Start,
                 children: vec![SectionV42::End(EndSectionV42 {
                     attrs: BTreeMap::new(),
                     flags: vec![],
-                    bounds: Bound::End,
+                    bound: Bound::End,
                     children: vec![],
                     kind: "pagedata".to_string(),
                     template_list: vec![

@@ -80,7 +80,6 @@ mod test {
                 kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "this is some text".to_string(),
-                    
                 })],
                 text: "this is some text".to_string(),
                 template_list,
@@ -110,15 +109,12 @@ mod test {
                 spans: vec![
                     SpanV42::PlainText(PlainTextSpan {
                         text: "multiple".to_string(),
-                        
                     }),
                     SpanV42::PlainText(PlainTextSpan {
                         text: " ".to_string(),
-                        
                     }),
                     SpanV42::PlainText(PlainTextSpan {
                         text: "lines".to_string(),
-                        
                     }),
                 ],
                 text: "multiple lines".to_string(),

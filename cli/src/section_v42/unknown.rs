@@ -24,7 +24,7 @@ use std::collections::BTreeMap;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct UnknownSectionV42 {
     pub attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42>,
-    pub bounds: Bound,
+    pub bound: Bound,
     pub children: Vec<SectionV42>,
     pub end_section: Option<Box<SectionV42>>,
     pub flags: Vec<String>,
@@ -68,7 +68,7 @@ pub fn unknown_section_start_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 7);
     let section = SectionV42::Unknown(UnknownSectionV42 {
         attrs,
-        bounds: Bound::Start,
+        bound: Bound::Start,
         children,
         end_section: Some(Box::new(end_section)),
         kind: kind.to_string(),
@@ -103,7 +103,7 @@ pub fn unknown_section_full_v42<'a>(
             .parse(source)?;
     let section = SectionV42::Unknown(UnknownSectionV42 {
         attrs,
-        bounds: Bound::Full,
+        bound: Bound::Full,
         children,
         end_section: None,
         kind: kind.to_string(),
@@ -147,7 +147,7 @@ mod test {
         let site_config = SiteConfigV42::mock1_basic();
         let source = get_include_str_file(VALID_SAMPLES, "001-basic-full.neo");
         let attrs = BTreeMap::new();
-        let bounds = Bound::Full;
+        let bound = Bound::Full;
         let block_templates = vec!["sections/block/paragraph/full/default.neoj".to_string()];
         let children = vec![
             SectionV42::Block(BlockSectionV42 {
@@ -177,7 +177,7 @@ mod test {
             "",
             SectionV42::Unknown(UnknownSectionV42 {
                 attrs,
-                bounds,
+                bound,
                 children,
                 end_section,
                 kind,
@@ -195,7 +195,7 @@ mod test {
         let site_config = SiteConfigV42::mock1_basic();
         let source = get_include_str_file(VALID_SAMPLES, "002-basic-start-end.neo");
         let attrs = BTreeMap::new();
-        let bounds = Bound::Start;
+        let bound = Bound::Start;
         let block_templates = vec!["sections/block/paragraph/full/default.neoj".to_string()];
         let children = vec![
             SectionV42::Block(BlockSectionV42 {
@@ -203,7 +203,6 @@ mod test {
                 kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "Delta".to_string(),
-                    
                 })],
                 text: "Delta".to_string(),
                 template_list: block_templates.clone(),
@@ -213,7 +212,6 @@ mod test {
                 kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "Tango".to_string(),
-                    
                 })],
                 text: "Tango".to_string(),
                 template_list: block_templates.clone(),
@@ -221,7 +219,7 @@ mod test {
         ];
         let end_section = Some(Box::new(SectionV42::End(EndSectionV42 {
             attrs: BTreeMap::new(),
-            bounds: Bound::End,
+            bound: Bound::End,
             children: vec![],
             flags: vec![],
             kind: "unknown-test-section".to_string(),
@@ -237,7 +235,7 @@ mod test {
             "",
             SectionV42::Unknown(UnknownSectionV42 {
                 attrs,
-                bounds,
+                bound,
                 children,
                 end_section,
                 kind,

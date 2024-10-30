@@ -8,7 +8,7 @@ use std::collections::BTreeMap;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct ParsingErrorSectionV42 {
     pub attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42>,
-    pub bounds: Bound,
+    pub bound: Bound,
     pub children: Vec<SectionV42>,
     pub flags: Vec<String>,
     pub kind: String,

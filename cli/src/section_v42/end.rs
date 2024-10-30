@@ -21,7 +21,7 @@ use std::collections::BTreeMap;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct EndSectionV42 {
     pub attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42>,
-    pub bounds: Bound,
+    pub bound: Bound,
     pub children: Vec<SectionV42>,
     pub flags: Vec<String>,
     pub kind: String,
@@ -53,7 +53,7 @@ pub fn end_section_basic_v42<'a>(
             .parse(source)?;
     let section = SectionV42::End(EndSectionV42 {
         attrs,
-        bounds: Bound::End,
+        bound: Bound::End,
         children,
         kind: kind.to_string(),
         flags,
@@ -79,7 +79,7 @@ mod test {
         let site_config = SiteConfigV42::mock1_basic();
         let source = get_include_str_file(SAMPLES, "001-basic-unknown.neo");
         let attrs = BTreeMap::new();
-        let bounds = Bound::End;
+        let bound = Bound::End;
         let block_templates = vec!["sections/block/paragraph/full/default.neoj".to_string()];
         let children = vec![
             SectionV42::Block(BlockSectionV42 {
@@ -87,7 +87,6 @@ mod test {
                 kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "Tango".to_string(),
-                    
                 })],
                 text: "Tango".to_string(),
                 template_list: block_templates.clone(),
@@ -97,7 +96,6 @@ mod test {
                 kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "Foxtrot".to_string(),
-                    
                 })],
                 text: "Foxtrot".to_string(),
                 template_list: block_templates.clone(),
@@ -113,7 +111,7 @@ mod test {
             "",
             SectionV42::End(EndSectionV42 {
                 attrs,
-                bounds,
+                bound,
                 children,
                 kind: kind.clone(),
                 flags,

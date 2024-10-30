@@ -23,7 +23,7 @@ use std::collections::BTreeMap;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct BasicSectionV42 {
     pub attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42>,
-    pub bounds: Bound,
+    pub bound: Bound,
     pub children: Vec<SectionV42>,
     pub flags: Vec<String>,
     pub kind: String,
@@ -56,7 +56,7 @@ pub fn basic_section_full_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 6);
     let section = SectionV42::Basic(BasicSectionV42 {
         attrs,
-        bounds: Bound::Full,
+        bound: Bound::Full,
         children,
         kind: kind.to_string(),
         flags,
