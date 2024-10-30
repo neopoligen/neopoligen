@@ -88,8 +88,8 @@ Code Shorthand Spec Tests
       },
       {
         "description": "Key/value values can be anything other than unescaped pipes, unescaped double backticks, or unescaped escapes",
-        "source": "``alfa|bravo__charlie: delta ~!@# <html> <<named_span>>``",
-        "result": '{ "attrs": {"bravo__charlie": [{"text": "delta", "type": "plain_text"}]}, "flags": [], "text": "alfa", "type": "code_shorthand"}',
+        "source": "``alfa|bravo: charlie ~!@# <html> <<named_span>>``",
+        "result": '{ "attrs": {"bravo": [{"text": "charlie ~!@# <html> <<named_span>>", "type": "plain_text"}]}, "flags": [], "text": "alfa", "type": "code_shorthand"}',
         "notes": [],
       },
     ],
