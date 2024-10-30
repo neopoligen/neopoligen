@@ -57,18 +57,28 @@ Code Shorthand Spec Tests
         "result": '{ "attrs": {}, "flags": ["bravo ` charlie"], "text": "alfa", "type": "code_shorthand"}',
         "notes": [],
       },
-
       {
         "description": "Flags can have single backticks",
         "source": "``alfa|bravo ` charlie``",
         "result": '{ "attrs": {}, "flags": ["bravo ` charlie"], "text": "alfa", "type": "code_shorthand"}',
         "notes": [],
       },
+      {
+        "description": "Key/value attrs are allowed",
+        "source": "``alfa|bravo: charlie``",
+        "result": '{ "attrs": {}, "flags": [], "text": "alfa", "type": "code_shorthand"}',
+        "notes": [],
+      },
+
+
 
     ],
-
     "invalid": [
-
+      {
+        "description": "Can't end with an unescaped pipe",
+        "source": "``alfa|``",
+        "notes": [],
+      },
     ],
   },
 }

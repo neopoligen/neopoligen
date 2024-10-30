@@ -1,9 +1,7 @@
 use super::single_backtick::single_backtick;
 use super::PlainTextSpan;
 use crate::helpers::flatten_spans_v42;
-use crate::span_attrs_and_flags_v42::SpanBaseAttrV42;
-use crate::span_attrs_and_flags_v42::SpanFlagAttrV42;
-use crate::span_attrs_and_flags_v42::SpanKeyValueAttrV42;
+use crate::span_attrs_v42::*;
 use crate::span_v42::escaped_character::*;
 use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::SpanV42;
@@ -105,18 +103,6 @@ pub fn not_backtick_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV42, Er
         }),
     ))
 }
-
-// pub fn not_backtick_or_pipe_or_colon_or_escape(
-//     source: &str,
-// ) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-//     let (source, result) = is_not("`|\\:").context("").parse(source)?;
-//     Ok((
-//         source,
-//         SpanV42::PlainText(PlainTextSpan {
-//             text: result.to_string(),
-//         }),
-//     ))
-// }
 
 pub fn code_shorthand_span_flag_attr(
     source: &str,

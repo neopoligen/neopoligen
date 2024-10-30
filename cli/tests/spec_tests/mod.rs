@@ -105,7 +105,7 @@ fn solo_test_code_shorthands() {
         }
     });
     invalid.iter().for_each(|ti| {
-        let result = named_span(&ti.source);
+        let result = code_shorthand_span(&ti.source);
         if result.is_err() {
             assert!(true)
         } else {
