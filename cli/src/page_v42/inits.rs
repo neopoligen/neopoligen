@@ -139,7 +139,7 @@ impl PageV42 {
                                     spans: vec![SpanV42::PlainText(PlainTextSpan {
                                         text: "Content Parsing Error".to_string(),
                                     })],
-                                    text: "Delta".to_string(),
+                                    flattened_text: "Delta".to_string(),
                                     template_list: vec![
                                         "sections/block/paragraph/full/default.neoj".to_string(),
                                     ],

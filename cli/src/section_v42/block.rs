@@ -23,7 +23,7 @@ pub struct BlockSectionV42 {
     pub children: Vec<SectionV42>,
     pub kind: String,
     pub spans: Vec<SpanV42>,
-    pub text: String,
+    pub flattened_text: String,
     pub template_list: Vec<String>,
 }
 
@@ -40,14 +40,14 @@ pub fn paragraph_block_section_v42<'a>(
     let (source, spans) = spans_of_generic_block_content.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, _) = multispace0.context("").parse(source)?;
-    let text = flatten_spans_v42(&spans);
+    let flattened_text = flatten_spans_v42(&spans);
     Ok((
         source,
         SectionV42::Block(BlockSectionV42 {
             children: vec![],
             kind: "paragraph".to_string(),
             spans,
-            text,
+            flattened_text,
             template_list: vec!["sections/block/paragraph/full/default.neoj".to_string()],
         }),
     ))
@@ -81,7 +81,7 @@ mod test {
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "this is some text".to_string(),
                 })],
-                text: "this is some text".to_string(),
+                flattened_text: "this is some text".to_string(),
                 template_list,
             }),
         );
@@ -117,7 +117,7 @@ mod test {
                         text: "lines".to_string(),
                     }),
                 ],
-                text: "multiple lines".to_string(),
+                flattened_text: "multiple lines".to_string(),
                 template_list,
             }),
         );

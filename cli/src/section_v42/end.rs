@@ -88,7 +88,7 @@ mod test {
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "Tango".to_string(),
                 })],
-                text: "Tango".to_string(),
+                flattened_text: "Tango".to_string(),
                 template_list: block_templates.clone(),
             }),
             SectionV42::Block(BlockSectionV42 {
@@ -97,7 +97,7 @@ mod test {
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "Foxtrot".to_string(),
                 })],
-                text: "Foxtrot".to_string(),
+                flattened_text: "Foxtrot".to_string(),
                 template_list: block_templates.clone(),
             }),
         ];

@@ -156,7 +156,7 @@ mod test {
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "Content".to_string(),
                 })],
-                text: "Content".to_string(),
+                flattened_text: "Content".to_string(),
                 template_list: block_templates.clone(),
             }),
             SectionV42::Block(BlockSectionV42 {
@@ -165,7 +165,7 @@ mod test {
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "Blocks".to_string(),
                 })],
-                text: "Blocks".to_string(),
+                flattened_text: "Blocks".to_string(),
                 template_list: block_templates.clone(),
             }),
         ];
@@ -204,7 +204,7 @@ mod test {
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "Delta".to_string(),
                 })],
-                text: "Delta".to_string(),
+                flattened_text: "Delta".to_string(),
                 template_list: block_templates.clone(),
             }),
             SectionV42::Block(BlockSectionV42 {
@@ -213,7 +213,7 @@ mod test {
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "Tango".to_string(),
                 })],
-                text: "Tango".to_string(),
+                flattened_text: "Tango".to_string(),
                 template_list: block_templates.clone(),
             }),
         ];
