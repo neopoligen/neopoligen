@@ -6,8 +6,10 @@ use crate::span_v42::escaped_character::*;
 use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
+use nom::bytes::complete::is_a;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
+use nom::character::complete::alphanumeric1;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::not;
@@ -61,9 +63,6 @@ pub fn get_code_shorthand_attrs_and_flags(
     let (source, attrs_and_flags) = many0(code_shorthand_attr_or_flag)
         .context("")
         .parse(source)?;
-    // let attrs: BTreeMap<String, Vec<SpanV42>> = BTreeMap::new();
-    // let flags: Vec<String> = vec![];
-
     let mut attrs = BTreeMap::new();
     let flags = attrs_and_flags
         .iter()
@@ -84,10 +83,9 @@ pub fn code_shorthand_attr_or_flag(
 ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
     // Reminder: Make sure to look for key_value first so flags work properly
-    let (source, attr_or_flag) =
-        alt((code_shorthand_key_value_attr, code_shorthand_span_flag_attr))
-            .context("")
-            .parse(source)?;
+    let (source, attr_or_flag) = alt((span_key_value_attr_key, code_shorthand_span_flag_attr))
+        .context("")
+        .parse(source)?;
     Ok((source, attr_or_flag))
 }
 
@@ -128,21 +126,24 @@ pub fn code_shorthand_span_flag_attr(
     ))
 }
 
-pub fn code_shorthand_key_value_attr(
-    source: &str,
-) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
-    let (source, key_spans) = terminated(many1(alt((plaintext,))), pair(tag(":"), space1))
-        .context("")
-        .parse(source)?;
-    let (source, spans) = many1(alt((plaintext,))).context("").parse(source)?;
-    Ok((
-        source,
-        SpanBaseAttrV42::KeyValue {
-            key: flatten_spans_v42(&key_spans),
-            spans,
-        },
-    ))
-}
+// pub fn code_shorthand_key_value_attr(
+//     source: &str,
+// ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
+//     let (source, key_spans) = terminated(
+//         many1(alt((alphanumeric1, is_a("-_")))),
+//         pair(tag(":"), space1),
+//     )
+//     .context("")
+//     .parse(source)?;
+//     let (source, spans) = many1(alt((plaintext,))).context("").parse(source)?;
+//     Ok((
+//         source,
+//         SpanBaseAttrV42::KeyValue {
+//             key: key_spans.join(""),
+//             spans,
+//         },
+//     ))
+// }
 
 #[cfg(test)]
 mod test {

@@ -75,6 +75,12 @@ Code Shorthand Spec Tests
         "result": '{ "attrs": {"bravo1": [{"text": "charlie", "type": "plain_text"}]}, "flags": [], "text": "alfa", "type": "code_shorthand"}',
         "notes": [],
       },
+      {
+        "description": "Key/value keys can have hyphens",
+        "source": "``alfa|bravo--charlie: delta``",
+        "result": '{ "attrs": {"bravo--charlie": [{"text": "delta", "type": "plain_text"}]}, "flags": [], "text": "alfa", "type": "code_shorthand"}',
+        "notes": [],
+      },
     ],
     "invalid": [
       {
