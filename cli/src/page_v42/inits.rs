@@ -138,7 +138,6 @@ impl PageV42 {
                                     kind: "paragraph".to_string(),
                                     spans: vec![SpanV42::PlainText(PlainTextSpan {
                                         text: "Content Parsing Error".to_string(),
-                                        kind: "plaintext".to_string(),
                                     })],
                                     text: "Delta".to_string(),
                                     template_list: vec![

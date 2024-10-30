@@ -214,7 +214,7 @@ mod test {
                 kind: "sierra".to_string(),
                 spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
                     text: "tango".to_string(),
-                    kind: "plain_text".to_string(),
+                    
                 })]),
                 flattened_text: Some("tango".to_string()),
             }),
@@ -234,7 +234,7 @@ mod test {
                 kind: "delta".to_string(),
                 spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
                     text: "echo".to_string(),
-                    kind: "plain_text".to_string(),
+                    
                 })]),
                 flattened_text: Some("echo".to_string()),
             }),
@@ -252,7 +252,7 @@ mod test {
             NamedSpanKeyValueAttrPayloadV42 {
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "red".to_string(),
-                    kind: "plain_text".to_string(),
+                    
                 })],
                 text: "red".to_string(),
             },
@@ -265,7 +265,7 @@ mod test {
                 kind: "delta".to_string(),
                 spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
                     text: "echo".to_string(),
-                    kind: "plain_text".to_string(),
+                    
                 })]),
                 flattened_text: Some("echo".to_string()),
             }),

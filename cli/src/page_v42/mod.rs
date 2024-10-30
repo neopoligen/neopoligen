@@ -135,14 +135,11 @@ impl PageV42 {
             page_title
         } else if let Some(id) = &self.id.clone() {
             Ok(Value::from_serialize(PageTitleV42 {
-                spans: vec![SpanV42::PlainText(PlainTextSpan {
-                    kind: "plain_text".to_string(),
-                    text: id.clone(),
-                })],
+                spans: vec![SpanV42::PlainText(PlainTextSpan { text: id.clone() })],
                 text: id.to_string(),
             }))
         } else {
-            Ok(Value::from("xTODO_PAGE_TITLE"))
+            Ok(Value::from("[NEO_TODO_PAGE_TITLE]"))
         }
     }
 
