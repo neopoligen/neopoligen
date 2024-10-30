@@ -9,7 +9,6 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PlainTextSpan {
     pub text: String,
-    pub kind: String,
 }
 
 pub fn plaintext(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
@@ -21,7 +20,6 @@ pub fn plaintext(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
         source,
         SpanV42::PlainText(PlainTextSpan {
             text: output.to_string(),
-            kind: "plain_text".to_string(),
         }),
     ))
 }
