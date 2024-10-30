@@ -92,6 +92,30 @@ Code Shorthand Spec Tests
         "result": '{ "attrs": {"bravo": [{"text": "charlie ~!@# <html> <<named_span>>", "type": "plain_text"}]}, "flags": [], "text": "alfa", "type": "code_shorthand"}',
         "notes": [],
       },
+      {
+        "description": "Key/value values can have single backticks",
+        "source": "``alfa|bravo: charlie ` delta``",
+        "result": '{ "attrs": {"bravo": [{"text": "charlie ", "type": "plain_text"}, {"text": "`", "type": "plain_text"}, {"text": " delta", "type": "plain_text"}]}, "flags": [], "text": "alfa", "type": "code_shorthand"}',
+        "notes": [],
+      },
+      {
+        "description": "Key/value values can have escaped backticks",
+        "source": "``alfa|bravo: charlie \\`` delta``",
+        "result": '{ "attrs": {"bravo": [{"text": "charlie ", "type": "plain_text"}, {"text": "`", "type": "escaped_character" }, {"text": "`", "type": "plain_text"}, {"text": " delta", "type": "plain_text"}]}, "flags": [], "text": "alfa", "type": "code_shorthand"}',
+        "notes": [],
+      },
+      {
+        "description": "Key/value values can have escaped pipes",
+        "source": "``alfa|bravo: charlie \\| delta``",
+        "result": '{ "attrs": {"bravo": [{"text": "charlie ", "type": "plain_text"}, {"text": "|", "type": "escaped_character" }, {"text": " delta", "type": "plain_text"}]}, "flags": [], "text": "alfa", "type": "code_shorthand"}',
+        "notes": [],
+      },
+      {
+        "description": "Key/value values can have escaped escapes",
+        "source": "``alfa|bravo: charlie \\\\ delta``",
+        "result": '{ "attrs": {"bravo": [{"text": "charlie ", "type": "plain_text"}, {"text": "\\\\", "type": "escaped_character" }, {"text": " delta", "type": "plain_text"}]}, "flags": [], "text": "alfa", "type": "code_shorthand"}',
+        "notes": ["Note: I'm not sure this one renders correctly in the output based of the loop I'm testing with. It should just be a single backslash for the text"],
+      },
     ],
     "invalid": [
       {

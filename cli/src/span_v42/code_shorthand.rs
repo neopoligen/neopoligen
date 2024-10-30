@@ -136,9 +136,15 @@ pub fn code_shorthand_key_value_attr(
     )
     .context("")
     .parse(source)?;
-    let (source, spans) = many1(alt((not_backtick_or_pipe_or_escape,)))
-        .context("")
-        .parse(source)?;
+    let (source, spans) = many1(alt((
+        not_backtick_or_pipe_or_escape,
+        single_backtick,
+        escaped_backtick,
+        escaped_pipe,
+        escaped_backslash,
+    )))
+    .context("")
+    .parse(source)?;
     Ok((
         source,
         SpanBaseAttrV42::KeyValue {
