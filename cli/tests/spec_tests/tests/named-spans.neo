@@ -22,73 +22,73 @@ Valid Named Spans
       {
         "description": "Basic tag",
         "source": "<<alfa>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "type": "namedspan", "flattened_text": null}',
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "type": "named_span", "flattened_text": null}',
         "notes": [],
       },
       {
         "description": "Tag names can have numbers",
         "source": "<<alfa1>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa1", "spans": null, "type": "namedspan", "flattened_text": null}',
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa1", "spans": null, "type": "named_span", "flattened_text": null}',
         "notes": [],
       },
       {
         "description": "Tag names can have hyphens",
         "source": "<<alfa-bravo>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa-bravo", "spans": null, "type": "namedspan", "flattened_text": null }',
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa-bravo", "spans": null, "type": "named_span", "flattened_text": null }',
         "notes": [],
       },
       {
         "description": "Tag names can have multiple hyphens",
         "source": "<<alfa--bravo>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa--bravo", "spans": null, "type": "namedspan", "flattened_text": null }',
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa--bravo", "spans": null, "type": "named_span", "flattened_text": null }',
         "notes": [],
       },
       {
         "description": "Tag names can have underscores",
         "source": "<<alfa_bravo>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa_bravo", "spans": null, "type": "namedspan", "flattened_text": null }',
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa_bravo", "spans": null, "type": "named_span", "flattened_text": null }',
         "notes": [],
       },
       {
         "description": "Tag names can have multiple underscores",
         "source": "<<alfa__bravo>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa__bravo", "spans": null, "type": "namedspan", "flattened_text": null }',
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa__bravo", "spans": null, "type": "named_span", "flattened_text": null }',
         "notes": [],
       },
       {
         "description": "Tag names can have leading spaces",
         "source": "<< alfa>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "type": "namedspan", "flattened_text": null }',
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "type": "named_span", "flattened_text": null }',
         "notes": [],
       },
       {
         "description": "Tag names can have trailing spaces",
         "source": "<<alfa >>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "type": "namedspan", "flattened_text": null }',
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "type": "named_span", "flattened_text": null }',
         "notes": [],
       },
       {
         "description": "Tag names can have leading newlines",
         "source": "<<\nalfa>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "type": "namedspan", "flattened_text": null }',
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "type": "named_span", "flattened_text": null }',
         "notes": [],
       },
       {
         "description": "There can be trailing newlines",
         "source": "<<alfa\n>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "type": "namedspan", "flattened_text": null }',
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "type": "named_span", "flattened_text": null }',
         "notes": [],
       },
       {
         "description": "Basic content is separated by a pipe",
         "source": "<<alfa|bravo>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"kind": "plaintext", "text": "bravo", "type": "plaintext"}], "type": "namedspan", "flattened_text": "bravo" }',
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"kind": "plain_text", "text": "bravo", "type": "plain_text"}], "type": "named_span", "flattened_text": "bravo" }',
         "notes": [],
       },
       {
         "description": "Content can have any regular characters except pipes or double greater thans or doulbe less thans or single backslashes",
         "source": "<<alfa|bravo ~!@#$%^&*(),.?:;>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"kind": "plaintext", "text": "bravo ~!@#$%^&*(),.?:;", "type": "plaintext"}],  "type": "namedspan", "flattened_text": "bravo ~!@#$%^&*(),.?:;" }',
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"kind": "plain_text", "text": "bravo ~!@#$%^&*(),.?:;", "type": "plain_text"}],  "type": "named_span", "flattened_text": "bravo ~!@#$%^&*(),.?:;" }',
         "notes": [
           "this is not an exaustive list (i.e. not ever possible character is tested). It's meant only to be representative",
           "Doulbe '<' are allowed as long as they are the start of a new, nested named span",
@@ -97,14 +97,14 @@ Valid Named Spans
       {
         "description": "Content can have single less thans",
         "source": "<<alfa|bravo < charlie>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"kind": "plaintext", "text": "bravo ", "type": "plaintext"}, {"kind": "plaintext", "text": "<", "type": "plaintext"}, {"kind": "plaintext", "text": " charlie", "type": "plaintext"}], "type": "namedspan", "flattened_text": "bravo < charlie" }',
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"kind": "plain_text", "text": "bravo ", "type": "plain_text"}, {"kind": "plain_text", "text": "<", "type": "plain_text"}, {"kind": "plain_text", "text": " charlie", "type": "plain_text"}], "type": "named_span", "flattened_text": "bravo < charlie" }',
         "notes": [
         ],
       },
       {
         "description": "Content can have single greater thans",
         "source": "<<alfa|bravo > charlie>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"kind": "plaintext", "text": "bravo ", "type": "plaintext"}, {"kind": "plaintext", "text": ">", "type": "plaintext"}, {"kind": "plaintext", "text": " charlie", "type": "plaintext"}], "type": "namedspan", "flattened_text": "bravo > charlie" }',
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"kind": "plain_text", "text": "bravo ", "type": "plain_text"}, {"kind": "plain_text", "text": ">", "type": "plain_text"}, {"kind": "plain_text", "text": " charlie", "type": "plain_text"}], "type": "named_span", "flattened_text": "bravo > charlie" }',
         "notes": [
           "Since both single greater than and less than characters can be used it's easy to make example of HTML <elements>", 
         ],
@@ -112,7 +112,7 @@ Valid Named Spans
       {
         "description": "Content can have escaped less thans (which allows output to have double or more)",
         "source": "<<alfa|bravo \\<< charlie>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"kind": "plaintext", "text": "bravo ", "type": "plaintext"}, {"kind": "escapedcharacter", "text": "<", "type": "escapedcharacter" }, {"kind": "plaintext", "text": "<", "type": "plaintext"}, {"kind": "plaintext", "text": " charlie", "type": "plaintext"}], "type": "namedspan", "flattened_text": "bravo << charlie" }',
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"kind": "plain_text", "text": "bravo ", "type": "plain_text"}, {"kind": "escaped_character", "text": "<", "type": "escaped_character" }, {"kind": "plain_text", "text": "<", "type": "plain_text"}, {"kind": "plain_text", "text": " charlie", "type": "plain_text"}], "type": "named_span", "flattened_text": "bravo << charlie" }',
         "notes": [
           "Since both single greater than and less than characters can be used it's easy to make example of HTML <elements>", 
         ],
@@ -120,7 +120,7 @@ Valid Named Spans
       {
         "description": "Content can have escaped greater thans (which allows output to have double or more)",
         "source": "<<alfa|bravo \\>> charlie>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"kind": "plaintext", "text": "bravo ", "type": "plaintext"}, {"kind": "escapedcharacter", "text": ">", "type": "escapedcharacter" }, {"kind": "plaintext", "text": ">", "type": "plaintext"}, {"kind": "plaintext", "text": " charlie", "type": "plaintext"}], "type": "namedspan", "flattened_text": "bravo >> charlie" }',
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"kind": "plain_text", "text": "bravo ", "type": "plain_text"}, {"kind": "escaped_character", "text": ">", "type": "escaped_character" }, {"kind": "plain_text", "text": ">", "type": "plain_text"}, {"kind": "plain_text", "text": " charlie", "type": "plain_text"}], "type": "named_span", "flattened_text": "bravo >> charlie" }',
         "notes": [
           "Since both single greater than and less than characters can be used it's easy to make example of HTML <elements>", 
         ],
@@ -128,57 +128,57 @@ Valid Named Spans
       {
         "description": "Content can have escaped pipes",
         "source": "<<alfa|bravo \\| charlie>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"kind": "plaintext", "text": "bravo ", "type": "plaintext"}, {"kind": "escapedcharacter", "text": "|", "type": "escapedcharacter" }, {"kind": "plaintext", "text": " charlie", "type": "plaintext"}], "type": "namedspan", "flattened_text": "bravo | charlie" }',
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"kind": "plain_text", "text": "bravo ", "type": "plain_text"}, {"kind": "escaped_character", "text": "|", "type": "escaped_character" }, {"kind": "plain_text", "text": " charlie", "type": "plain_text"}], "type": "named_span", "flattened_text": "bravo | charlie" }',
         "notes": [
         ],
       },
       {
         "description": "Content can have escaped backslahes",
         "source": "<<alfa|bravo \\\\ charlie>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"kind": "plaintext", "text": "bravo ", "type": "plaintext"}, {"kind": "escapedcharacter", "text": "\\\\", "type": "escapedcharacter" }, {"kind": "plaintext", "text": " charlie", "type": "plaintext"}], "type": "namedspan", "flattened_text": "bravo \\\\ charlie" }',
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"kind": "plain_text", "text": "bravo ", "type": "plain_text"}, {"kind": "escaped_character", "text": "\\\\", "type": "escaped_character" }, {"kind": "plain_text", "text": " charlie", "type": "plain_text"}], "type": "named_span", "flattened_text": "bravo \\\\ charlie" }',
         "notes": [
         ],
       },
       {
         "description": "Flags can come after content",
         "source": "<<alfa|bravo|charlie>>",
-        "result": '{ "attrs": {}, "flags": ["charlie"], "kind": "alfa", "spans": [{"kind": "plaintext", "text": "bravo", "type": "plaintext"}], "type": "namedspan", "flattened_text": "bravo" }',
+        "result": '{ "attrs": {}, "flags": ["charlie"], "kind": "alfa", "spans": [{"kind": "plain_text", "text": "bravo", "type": "plain_text"}], "type": "named_span", "flattened_text": "bravo" }',
         "notes": [],
       },
       {
         "description": "Flags can have any basic content",
         "source": "<<alfa|bravo|charlie ~!@#$:x>>",
-        "result": '{ "attrs": {}, "flags": ["charlie ~!@#$:x"], "kind": "alfa", "spans": [{"kind": "plaintext", "text": "bravo", "type": "plaintext"}], "type": "namedspan", "flattened_text": "bravo" }',
+        "result": '{ "attrs": {}, "flags": ["charlie ~!@#$:x"], "kind": "alfa", "spans": [{"kind": "plain_text", "text": "bravo", "type": "plain_text"}], "type": "named_span", "flattened_text": "bravo" }',
         "notes": [],
       },
       {
         "description": "Flags can have escaped pipes",
         "source": "<<alfa|bravo|charlie\\|delta>>",
-        "result": '{ "attrs": {}, "flags": ["charlie|delta"], "kind": "alfa", "spans": [{"kind": "plaintext", "text": "bravo", "type": "plaintext"}], "type": "namedspan", "flattened_text": "bravo" }',
+        "result": '{ "attrs": {}, "flags": ["charlie|delta"], "kind": "alfa", "spans": [{"kind": "plain_text", "text": "bravo", "type": "plain_text"}], "type": "named_span", "flattened_text": "bravo" }',
         "notes": [],
       },
       {
         "description": "Flags can have single greater thans",
         "source": "<<alfa|bravo|charlie>delta>>",
-        "result": '{ "attrs": {}, "flags": ["charlie>delta"], "kind": "alfa", "spans": [{"kind": "plaintext", "text": "bravo", "type": "plaintext"}], "type": "namedspan", "flattened_text": "bravo" }',
+        "result": '{ "attrs": {}, "flags": ["charlie>delta"], "kind": "alfa", "spans": [{"kind": "plain_text", "text": "bravo", "type": "plain_text"}], "type": "named_span", "flattened_text": "bravo" }',
         "notes": [],
       },
       {
         "description": "Flags can have escaped greater thans",
         "source": "<<alfa|bravo|charlie\\>>delta>>",
-        "result": '{ "attrs": {}, "flags": ["charlie>>delta"], "kind": "alfa", "spans": [{"kind": "plaintext", "text": "bravo", "type": "plaintext"}], "type": "namedspan", "flattened_text": "bravo" }',
+        "result": '{ "attrs": {}, "flags": ["charlie>>delta"], "kind": "alfa", "spans": [{"kind": "plain_text", "text": "bravo", "type": "plain_text"}], "type": "named_span", "flattened_text": "bravo" }',
         "notes": [],
       },
       {
         "description": "Flags can have escaped backslashes",
         "source": "<<alfa|bravo|charlie\\\\delta>>",
-        "result": '{ "attrs": {}, "flags": ["charlie\\\\delta"], "kind": "alfa", "spans": [{"kind": "plaintext", "text": "bravo", "type": "plaintext"}], "type": "namedspan", "flattened_text": "bravo" }',
+        "result": '{ "attrs": {}, "flags": ["charlie\\\\delta"], "kind": "alfa", "spans": [{"kind": "plain_text", "text": "bravo", "type": "plain_text"}], "type": "named_span", "flattened_text": "bravo" }',
         "notes": [],
       },
       {
         "description": "Key value attributes can come after content",
         "source": "<<alfa|bravo|charlie: delta>>",
-        "result": '{ "attrs": { "charlie": { "text": "delta", "spans": [{"kind": "plaintext", "text": "delta", "type": "plaintext"}]}}, "flags": [], "kind": "alfa", "spans": [{"kind": "plaintext", "text": "bravo", "type": "plaintext"}], "type": "namedspan", "flattened_text": "bravo" }',
+        "result": '{ "attrs": { "charlie": { "text": "delta", "spans": [{"kind": "plain_text", "text": "delta", "type": "plain_text"}]}}, "flags": [], "kind": "alfa", "spans": [{"kind": "plain_text", "text": "bravo", "type": "plain_text"}], "type": "named_span", "flattened_text": "bravo" }',
         "notes": [
           "Key/value attributes are identified by having a string that ends with a ':' followed by whitespace then a string of content",
           "The same rules that apply for the names of the spans themselves as well as the flags applie to the keys too",
@@ -187,27 +187,27 @@ Valid Named Spans
       {
         "description": "Key value keys can be be alphanumeric",
         "source": "<<alfa|bravo|charlie1: delta>>",
-        "result": '{ "attrs": { "charlie1": { "text": "delta", "spans": [{"kind": "plaintext", "text": "delta", "type": "plaintext"}]}}, "flags": [], "kind": "alfa", "spans": [{"kind": "plaintext", "text": "bravo", "type": "plaintext"}], "type": "namedspan", "flattened_text": "bravo" }',
+        "result": '{ "attrs": { "charlie1": { "text": "delta", "spans": [{"kind": "plain_text", "text": "delta", "type": "plain_text"}]}}, "flags": [], "kind": "alfa", "spans": [{"kind": "plain_text", "text": "bravo", "type": "plain_text"}], "type": "named_span", "flattened_text": "bravo" }',
         "notes": [],
       },
       {
         "description": "Key value keys can have hyphens",
         "source": "<<alfa|bravo|charlie-delta: echo>>",
-        "result": '{ "attrs": { "charlie-delta": { "text": "echo", "spans": [{"kind": "plaintext", "text": "echo", "type": "plaintext"}]}}, "flags": [], "kind": "alfa", "spans": [{"kind": "plaintext", "text": "bravo", "type": "plaintext"}], "type": "namedspan", "flattened_text": "bravo" }',
+        "result": '{ "attrs": { "charlie-delta": { "text": "echo", "spans": [{"kind": "plain_text", "text": "echo", "type": "plain_text"}]}}, "flags": [], "kind": "alfa", "spans": [{"kind": "plain_text", "text": "bravo", "type": "plain_text"}], "type": "named_span", "flattened_text": "bravo" }',
         "notes": [],
       },
 
       {
         "description": "Key value attribute values can have any content except pipes or double greater thans",
         "source": "<<alfa|bravo|charlie: ~!@#$%>>",
-        "result": '{ "attrs": { "charlie": { "text": "~!@#$%", "spans": [{"kind": "plaintext", "text": "~!@#$%", "type": "plaintext"}]}}, "flags": [], "kind": "alfa", "spans": [{"kind": "plaintext", "text": "bravo", "type": "plaintext"}], "type": "namedspan", "flattened_text": "bravo" }',
+        "result": '{ "attrs": { "charlie": { "text": "~!@#$%", "spans": [{"kind": "plain_text", "text": "~!@#$%", "type": "plain_text"}]}}, "flags": [], "kind": "alfa", "spans": [{"kind": "plain_text", "text": "bravo", "type": "plain_text"}], "type": "named_span", "flattened_text": "bravo" }',
         "notes": [],
       },
 
       {
         "description": "Named spans can nest",
         "source": "<<alfa|bravo <<charlie|delta>> echo>>",
-        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"kind": "plaintext", "text": "bravo ", "type": "plaintext"}, {"attrs": {}, "flags": [], "flattened_text": "delta", "kind": "charlie", "spans": [{"kind": "plaintext", "text": "delta", "type": "plaintext"}], "type": "namedspan" }, {"kind": "plaintext",  "text": " echo", "type": "plaintext" }], "type": "namedspan", "flattened_text": "bravo delta echo" }',
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"kind": "plain_text", "text": "bravo ", "type": "plain_text"}, {"attrs": {}, "flags": [], "flattened_text": "delta", "kind": "charlie", "spans": [{"kind": "plain_text", "text": "delta", "type": "plain_text"}], "type": "named_span" }, {"kind": "plain_text",  "text": " echo", "type": "plain_text" }], "type": "named_span", "flattened_text": "bravo delta echo" }',
         "notes": [],
       },
 

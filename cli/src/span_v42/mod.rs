@@ -34,9 +34,13 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum SpanV42 {
+    #[serde(rename = "escaped_character")]
     EscapedCharacter(EscapedCharacterSpanV42),
+    #[serde(rename = "plain_text")]
     PlainText(PlainTextSpan),
+    #[serde(rename = "named_span")]
     NamedSpan(NamedSpanV42),
+    #[serde(rename = "code_shorthand")]
     CodeShorthand(CodeShorthandV42),
 }
 

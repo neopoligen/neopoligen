@@ -29,6 +29,15 @@ use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub struct NamedSpanV42 {
+    pub attrs: BTreeMap<String, NamedSpanKeyValueAttrPayloadV42>,
+    pub flags: Vec<String>,
+    pub kind: String,
+    pub spans: Option<Vec<SpanV42>>,
+    pub flattened_text: Option<String>,
+}
+
 // TODO: move this to its own file
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct KeyValueSpanAttrV42 {
@@ -54,15 +63,6 @@ pub struct FlagSpanAttrV42 {
 pub enum NamedSpanAttrV42 {
     KeyValue(KeyValueSpanAttrV42),
     Flag(FlagSpanAttrV42),
-}
-
-#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub struct NamedSpanV42 {
-    pub attrs: BTreeMap<String, NamedSpanKeyValueAttrPayloadV42>,
-    pub flags: Vec<String>,
-    pub kind: String,
-    pub spans: Option<Vec<SpanV42>>,
-    pub flattened_text: Option<String>,
 }
 
 pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
