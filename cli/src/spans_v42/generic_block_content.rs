@@ -8,6 +8,7 @@ use crate::span_v42::footnote_shorthand::footnote_shorthand_span;
 use crate::span_v42::named_span::named_span;
 use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::single_exclamation::single_exclamation;
+use crate::span_v42::strong_shorthand::strong_shorthand_span;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
 use nom::multi::many1;
@@ -23,13 +24,14 @@ pub fn spans_of_generic_block_content<'a>(
         plaintext,
         any_hyphens,
         any_colons,
+        named_span,
+        code_shorthand_span,
+        strong_shorthand_span,
+        footnote_shorthand_span,
+        any_paren_opens,
+        any_paren_closes,
         single_exclamation,
         block_line_ending,
-        named_span,
-        any_paren_opens,
-        code_shorthand_span,
-        footnote_shorthand_span,
-        any_paren_closes,
     )))
     .context("")
     .parse(source)?;

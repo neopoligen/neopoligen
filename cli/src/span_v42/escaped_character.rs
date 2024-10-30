@@ -12,6 +12,16 @@ pub struct EscapedCharacterSpanV42 {
     pub text: String,
 }
 
+pub fn escaped_asterisk(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+    let (source, _) = tag("\\*").context("").parse(source)?;
+    Ok((
+        source,
+        SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
+            text: "*".to_string(),
+        }),
+    ))
+}
+
 pub fn escaped_caret(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, _) = tag("\\^").context("").parse(source)?;
     Ok((

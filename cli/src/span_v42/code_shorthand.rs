@@ -174,23 +174,5 @@ pub fn code_shorthand_key_value_attr(
 
 #[cfg(test)]
 mod test {
-
-    use super::*;
-    //use pretty_assertions::assert_eq;
-    use rstest::rstest;
-
-    #[rstest]
-    #[case("``alfa``etc...", "etc...")]
-    #[case("``alfa|bravo``etc...", "etc...")]
-    #[case("``alfa|bravo: charlie``etc...", "etc...")]
-    #[case("``-- neo sections are allowed``etc...", "etc...")]
-    fn code_shorthand_test_run(#[case] source: &str, #[case] remainder: &str) {
-        let result = code_shorthand_span(source).unwrap();
-        if result.clone().0 == remainder {
-            assert!(true);
-        } else {
-            dbg!(&result);
-            assert!(false);
-        }
-    }
+    // tests are in the top level spec tests
 }
