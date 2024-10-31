@@ -1,16 +1,5 @@
 use super::generic_base_content::generic_base_content;
-use crate::span_v42::any_colons::any_colons;
-use crate::span_v42::any_hyphens::any_hyphens;
-use crate::span_v42::any_paren_closes::any_paren_closes;
-use crate::span_v42::any_paren_opens::any_paren_opens;
 use crate::span_v42::block_line_ending::block_line_ending;
-use crate::span_v42::code_shorthand::*;
-use crate::span_v42::emphasis_shorthand::*;
-use crate::span_v42::footnote_shorthand::footnote_shorthand_span;
-use crate::span_v42::named_span::named_span;
-use crate::span_v42::plaintext::plaintext;
-use crate::span_v42::single_exclamation::single_exclamation;
-use crate::span_v42::strong_shorthand::strong_shorthand_span;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
 use nom::multi::many1;

@@ -1,5 +1,4 @@
 use crate::neo_error::{NeoError, NeoErrorKind};
-use crate::payload_span::PayloadSpan;
 use crate::span::*;
 use crate::span_v42::SpanV42;
 use include_dir::Dir;
@@ -112,20 +111,6 @@ pub fn flatten_spans_in_template_v42(args: &[Value]) -> Result<Value, Error> {
             "Missing argument for flatten_spans in template".to_string(),
         ))
     }
-}
-
-// TODO: Deprecated - remove when v42 is done
-pub fn flatten_payload_spans(spans: &Vec<PayloadSpan>) -> String {
-    spans
-        .iter()
-        .map(|span| flatten_payload_parsed_text(span))
-        .collect::<Vec<String>>()
-        .join("")
-}
-
-// TODO: Deprecated - remove when v42 is done
-pub fn flatten_payload_parsed_text(span: &PayloadSpan) -> String {
-    span.parsed_text.clone()
 }
 
 // TODO: Deprecated - remove when v42 is done
