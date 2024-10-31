@@ -36,6 +36,8 @@ characters = [
         ("?", "question_mark", "question_marks"), 
         ]
 
+###################################################################
+
 any_functions_skeleton = """
 pub fn any_$NAME2(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, result) = is_a("$CHAR").context("").parse(source)?;
@@ -76,10 +78,6 @@ any_tests_skeleton = """
     }
 """
 
-#output = template.substitute(data)
-#print(output)
-
-
 
 with open("any_characters.rs", "w") as f:
     f.write("""use super::PlainTextSpan;
@@ -91,6 +89,7 @@ use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
 """)
+
     for character in characters:
         data = { "CHAR": character[0], "NAME1": character[1], "NAME2": character[2] }
         template = Template(any_functions_skeleton)
@@ -114,4 +113,63 @@ mod test {
     f.write("\n\n")
 
     f.write("""}""")
+
+
+###################################################################
+
+escaped_functions_skeleton = '''
+pub fn escaped_$NAME1(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+    let (source, _) = tag("\\\\$CHAR").context("").parse(source)?;
+    Ok((
+        source,
+        SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
+            text: "$CHAR".to_string(),
+        }),
+    ))
+}
+'''
+
+
+with open("escaped_characters.rs", "w") as f:
+    f.write("""use super::SpanV42;
+use nom::bytes::complete::tag;
+use nom::IResult;
+use nom::Parser;
+use nom_supreme::error::ErrorTree;
+use nom_supreme::parser_ext::ParserExt;
+use serde::Deserialize;
+use serde::Serialize;
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub struct EscapedCharacterSpanV42 {
+    pub text: String,
+}
+
+""")
+
+    for character in characters:
+        data = { "CHAR": character[0], "NAME1": character[1], "NAME2": character[2] }
+        template = Template(escaped_functions_skeleton)
+        output = template.substitute(data)
+        f.write(output)
+    f.write("\n\n")
+
+
+    f.write("""#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+""")
+
+    # for character in characters:
+    #     data2 = { "CHAR": character[0], "NAME1": character[1], "NAME2": character[2] }
+    #     template2 = Template(any_tests_skeleton)
+    #     output2 = template2.substitute(data2)
+    #     f.write(output2)
+    # f.write("\n\n")
+
+    f.write("""}""")
+
+
 

@@ -1,4 +1,5 @@
 use super::SpanV42;
+use crate::span_v42::escaped_characters::EscapedCharacterSpanV42;
 use nom::bytes::complete::tag;
 use nom::IResult;
 use nom::Parser;
@@ -7,10 +8,10 @@ use nom_supreme::parser_ext::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
 
-#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub struct EscapedCharacterSpanV42 {
-    pub text: String,
-}
+// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+// pub struct EscapedCharacterSpanV42 {
+//     pub text: String,
+// }
 
 pub fn escaped_asterisk(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, _) = tag("\\*").context("").parse(source)?;
