@@ -130,6 +130,23 @@ pub fn escaped_$NAME1(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
 '''
 
 
+
+escaped_tests_skeleton = '''
+    #[test]
+    fn check_escaped_$NAME1() {
+        let source = "\\\\$CHAR alfa";
+        let left = (
+            " alfa",
+            SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
+                text: "$CHAR".to_string(),
+            }),
+        );
+        let right = escaped_$NAME1(source).unwrap();
+        assert_eq!(left, right);
+    }
+'''
+
+
 with open("escaped_characters.rs", "w") as f:
     f.write("""use super::SpanV42;
 use nom::bytes::complete::tag;
@@ -162,12 +179,12 @@ mod test {
 
 """)
 
-    # for character in characters:
-    #     data2 = { "CHAR": character[0], "NAME1": character[1], "NAME2": character[2] }
-    #     template2 = Template(any_tests_skeleton)
-    #     output2 = template2.substitute(data2)
-    #     f.write(output2)
-    # f.write("\n\n")
+    for character in characters:
+        data2 = { "CHAR": character[0], "NAME1": character[1], "NAME2": character[2] }
+        template2 = Template(escaped_tests_skeleton)
+        output2 = template2.substitute(data2)
+        f.write(output2)
+    f.write("\n\n")
 
     f.write("""}""")
 
