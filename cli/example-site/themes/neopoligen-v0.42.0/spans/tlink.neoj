@@ -1,5 +1,5 @@
-[@ span @]
----<a href="[@ site.get_page_href_from_span(span) @]">
-[@- site.get_page_title_from_span(span)-@]
+[! import "helpers/theme.neoj" as neo !]
+<a href="[@ site.get_page_href_from_span(span) @]">
+[@- neo.output_spans(site, page, site.get_page_title_from_span(span)) -@]
 </a>
 
