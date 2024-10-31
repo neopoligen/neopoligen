@@ -1,3 +1,4 @@
+use super::generic_base_content::generic_base_content;
 use crate::span_v42::any_colons::any_colons;
 use crate::span_v42::any_hyphens::any_hyphens;
 use crate::span_v42::any_paren_closes::any_paren_closes;
@@ -21,22 +22,9 @@ use nom_supreme::ParserExt;
 pub fn spans_of_generic_block_content<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Vec<SpanV42>, ErrorTree<&'a str>> {
-    let (source, output) = many1(alt((
-        plaintext,
-        any_hyphens,
-        any_colons,
-        named_span,
-        code_shorthand_span,
-        emphasis_shorthand_span,
-        footnote_shorthand_span,
-        strong_shorthand_span,
-        any_paren_opens,
-        any_paren_closes,
-        single_exclamation,
-        block_line_ending,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, output) = many1(alt((generic_base_content, block_line_ending)))
+        .context("")
+        .parse(source)?;
     Ok((source, output))
 }
 

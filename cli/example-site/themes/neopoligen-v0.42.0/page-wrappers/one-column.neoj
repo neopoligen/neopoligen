@@ -38,7 +38,6 @@ main {
   padding-bottom: 4rem;
 }
 
-
 .red { 
   color: red;
 } 
@@ -47,6 +46,7 @@ main {
   max-width: 64ch;
   margin: auto;
 }
+
 .unknown-section {
   background-color: green;
 }

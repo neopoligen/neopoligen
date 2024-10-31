@@ -140,7 +140,8 @@ impl PageV42 {
                                         text: "Content Parsing Error".to_string(),
                                     })],
                                     template_list: vec![
-                                        "sections/block/paragraph/full/default.neoj".to_string(),
+                                        "sections/title/default.neoj".to_string(),
+                                        "sections/generic-basic/default.neoj".to_string(),
                                     ],
                                 })],
                                 end_section: None,
@@ -155,7 +156,7 @@ impl PageV42 {
                                 flags: vec![],
                                 kind: "parsing_error".to_string(),
                                 template_list: vec![
-                                    "sections/built-in/parsing-error/full/default.neoj".to_string(),
+                                    "sections/error-parsing/default.neoj".to_string()
                                 ],
                                 column: *column,
                                 line: *line,

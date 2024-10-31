@@ -47,6 +47,11 @@ pub fn json5_section_full_v42<'a>(
     let (source, _) = tag("-- ").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, kind) = alt((
+        // make sure to keep "pagadata" here so that
+        // even if there isn't a template for it it
+        // still gets picked up. Same for "neopoligen-spec-test"
+        // which maybe should be renamed to "built-in-spec-test"
+        // to match the other "built-in-" style namespaced stuff
         tag("pagedata"),
         tag("json5-test"),
         tag("dev"),
