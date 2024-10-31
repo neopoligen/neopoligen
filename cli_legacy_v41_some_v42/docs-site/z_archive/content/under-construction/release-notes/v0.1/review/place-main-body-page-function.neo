@@ -1,0 +1,28 @@
+-- title
+
+Place Main Body Page Function
+
+-- h2
+
+Overview
+
+Provides `page.main_body()`` to page
+templates
+
+-- todo
+-- title: Requirements
+
+[x] Define which sections to exclude from the 
+main body via:
+
+`themes/THEME_NAME/configuration/main-body-section-excludes.txt``
+
+[x] `page.main_body()`` returns a list of the 
+sections that aren't excluded from the main body
+via the
+
+-- metadata
+-- date: 2024-02-13
+-- id: 2ckrkhob
+-- status: scratch
+

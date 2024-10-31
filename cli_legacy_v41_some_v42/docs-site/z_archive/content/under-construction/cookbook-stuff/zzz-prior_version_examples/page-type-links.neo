@@ -1,0 +1,23 @@
+-- title
+
+Page Type Links
+
+The `site`` object has:
+
+-- code
+-- class: example
+
+site.page_types.TYPE.SORT
+
+-- p
+
+That can be used for creating lists of links like
+this marco. It's what powers the links in the sidebar. 
+(Note that the current page isn't linked by default)
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2ay6azqa
+-- status: published
+

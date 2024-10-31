@@ -1,0 +1,35 @@
+-- title
+
+This Site Works
+
+-- h2
+
+Overview
+
+This site is the integration test
+for the builder. When everything
+listed in the release notes
+for a specific version works it's
+ready to publish
+
+-- todo
+
+[] All the content on this site
+works for version 0.1.0
+
+-- h2
+
+Examples
+
+The entire site _is__ the example :-)
+
+
+-- tags
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 10:12:07
+-- id: 2bpg6ttl
+-- status: published
+

@@ -1,0 +1,25 @@
+-- start-theme-test 
+
+-- h6
+-- aria-description: this is some 
+-- aria-description: aria text 
+
+Alfa Bravo Charlie
+
+-- expected-output/
+
+<section class="h6-section flow" aria-description="this is some aria text">
+<hgroup>
+  <h6 class="section-heading">
+    Alfa Bravo Charlie
+  </h6>
+</hgroup>
+</section>
+
+
+-- /expected-output
+
+
+-- metadata
+-- updated: 2024-06-12T20:45:27-04:00
+-- id: 2hnp7qp3_h6

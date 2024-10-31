@@ -1,0 +1,10 @@
+[! import "built-in-helpers" as neo !]
+
+
+<section class="end-section flow">
+[! for child in section.children !]
+[@ neo.output_section(site, page, child) @]
+[! endfor !]
+</section>
+
+

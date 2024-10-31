@@ -1,0 +1,51 @@
+-- title
+
+Last Edit Page
+
+-- h2
+
+Overview
+
+This is to make it easier to see what you're working
+on without having to go find the page
+
+-- todo
+
+[] A single URL, specifically `/last-edit/``, that can 
+be bookmarked where a copy of the last page the builder 
+made shows up automatically
+
+[] The page automatically updates when you make
+changes to the file
+
+[] If you start editing a new file the last-edit 
+page starts showing it instead
+
+-- notes
+
+- Currently the `/last-edit/`` file is included 
+in the output of the site when it's published. 
+That means folks can go to the page address
+and see the last thing you did
+
+- I don't consider that a big deal since the
+page will be somewhere else on the site as well
+and there isn't currently a mechanism to 
+lock pages down for only select access
+
+-- h2
+
+Examples
+
+<<link|This sites last-edit page|/last-edit/>>
+
+
+
+-- tags
+
+
+-- metadata
+-- date: 2024-01-24
+-- id: 2bpbkwsp
+-- status: published
+

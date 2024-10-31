@@ -1,0 +1,52 @@
+[#############################################################################]
+[! macro output_section(site, page_id, section) !]
+
+wwwwxxxx----------------------
+[#
+[! set tmp = "pages/" + section.type + "/" + section.bounds + "/" + section.template ".neoj" !]
+#]
+[! set tmp = "pages/" + section.type + "/" + section.bounds.type !]
+[@ tmp @]
+
+<pre>
+[@ section|tojson(true) @]
+</pre>
+[! endmacro !]
+
+[#############################################################################]
+[! macro output_span(site, page_id, span) !]
+[! include span.template_list() ignore missing !]
+[! endmacro !]
+
+[#############################################################################]
+[! macro section_classes(section) !]
+[# TODO: get the specific list of section classes
+based off config #]
+[! endmacro !]
+
+[#############################################################################]
+[! macro span_attrs(span) !]
+[! for attr in span.attrs() !]
+[! set key = attr.key() !]
+[! if key != "class" !]
+[@- ' ' @]
+[@ attr.key() @]="[@ attr.value() @]"
+[! endif !]
+[! endfor !]
+[! endmacro !]
+
+[#############################################################################]
+[! macro span_classes(span, extras="") !]
+[! for c in span.classes(extras) !]
+[! if loop.first !]
+[@- ' ' -@]
+class="
+[! endif !]
+[@ c @]
+[! if loop.last !]
+"
+[! endif !]
+[! endfor !]
+[! endmacro !]
+
+

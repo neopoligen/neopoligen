@@ -1,0 +1,23 @@
+-- title
+
+TODO: JavaScript Examples 
+
+Scripts can be set up as examples that show on 
+the page as well as being added to the head of
+the document. This is designed to make sure that
+any examples actually work because what's shown
+on the page is that actual code that's being run.
+
+-- script
+-- template: show
+-- class: example
+
+console.log("here")
+
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2avpakpj
+-- status: published
+

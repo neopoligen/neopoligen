@@ -1,0 +1,34 @@
+-- title
+
+Default Site Title
+
+-- h2
+
+Overview
+
+This feature creates a default site title
+file in the config to be used as a final
+fallback if no other title can be determined
+for a page
+
+-- todo
+-- title: Details
+
+[] Add a `site-title.txt`` config file to the
+`_configuration`` directory
+
+[] Use the value of the `site-title.txt`` file
+as the last fallback for page titles if no
+other one can be determined
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-26
+-- updated: 2024-01-26 15:19:49
+-- id: 2bvvm9ab
+-- status: scratch
+

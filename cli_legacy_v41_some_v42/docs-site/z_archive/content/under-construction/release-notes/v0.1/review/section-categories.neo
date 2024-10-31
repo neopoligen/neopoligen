@@ -1,0 +1,150 @@
+-- title
+
+Section Names And Categories
+
+-- h2
+
+Overview
+
+This feature create the base Neopolitan
+parser for processing content files.
+
+-- h2
+
+Introduction
+
+Neopolitan documents are made of sections.
+Each one start with two dashes followed by
+the section's name. For example, a 
+"title" section start with:
+
+-- code/
+-- neo
+
+-- title
+
+-- /code
+
+Each type of section belongs to a "section category"
+that determines how the content inside the section
+is treated when the site is published. For example,
+`-- p`` (for paragraph) and `-- afterword`` sections
+belong to the `standard`` category. The content inside
+them gets treated as paragraphs. The look like
+this:
+
+-- code/
+-- neo
+
+-- p
+
+This is a basic paragraph to provide
+an example.
+
+And here's another one just to show 
+two of them in the same example.
+
+-- /code
+
+
+Another section is `-- todo``. It belongs to the
+`checklist`` category which breaks content 
+up into items that each start with a `[]``. 
+The `[]`` can have an `x`` in it do mark the 
+item as done. For example:
+
+-- code/
+
+-- todo
+
+[x] Create this checklist example
+
+[x] Publishes this version of Neopoligen
+
+[] Publish the next version of Neopoligen
+
+-- /code
+
+
+-- h2
+
+The Categories
+
+There are nine section categories the
+individual sections can belong to. Details
+on each category can be found on their
+individual pages. They are: 
+
+-- list
+-- title: The Categories
+
+- <<ilink|Checklist|2bpfldk3>>
+
+- <<ilink|Comment|2bpfthvk>>
+
+- <<ilink|JSON|2bphopxo>>
+
+- <<ilink|JSON Plugin|2bpi3lw8>>
+
+- <<ilink|List|2bpiba4h>>
+ 
+- <<ilink|Preformatted|2bpk1fpr>>
+
+- <<ilink|Standard|2bpfw68f>>
+
+- <<ilink|Text Plugin|2bpkiphj>>
+
+- <<ilink|YAML|2bpkvula>>
+
+-- h2
+
+The Specifics
+
+
+-- todo
+
+[x] `-- $SECTION$``
+
+[x] Sections continue to go until the see an
+empty line followed by two dashes (i.e. `--`)
+which indicates the start of a new section
+
+[x] The last section on the page ends at the
+end of the page (i.e. it stops at the end of
+the file since there isn't a `--` to stop it)
+
+[x] Section types/names are defined in the 
+`_configuration`` folder
+
+[] There are currently nine categories
+of sections:
+
+[x] Each category provides content
+to the templates in a different way for
+processing 
+
+[x] All section types belong to a single
+section category (e.g. A `-- post`` is
+in the "standard" category)
+
+[x] See <<ilink|2bpdha4g>> for details on 
+how to define the custom sections
+
+[x] Several types ship with Neopoligen by 
+default. They include most standard HTML
+section tags as well as some examples of
+custom tags
+
+[x] If an unknown section is found the page
+does not render
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 09:44:00
+-- id: 2bpcgsxt
+-- status: published
+

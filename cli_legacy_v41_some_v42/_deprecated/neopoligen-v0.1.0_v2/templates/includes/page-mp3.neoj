@@ -1,0 +1,14 @@
+[!- for section in site.page_sections(page_id) -!]
+[!- if section.type == "metadata" -!]
+[!- if section.attrs.mp3 -!]
+[! set mp3 = namespace() -!]
+<div class="page-mp3">
+[! set mp3.data = site.get_mp3(section.attrs.mp3) !]
+<audio controls src="/mp3s/[@ mp3.data.key @].mp3"></audio>
+[! if mp3.key !]
+[@ mp3.key @]
+[! endif !]
+</div>
+[!- endif -!]
+[!- endif -!]
+[!- endfor -!]

@@ -1,0 +1,34 @@
+DESCRIPTION:
+
+This tests the `list_filtered_pages_alpha()``
+macro
+
+INPUT:
+
+-- title
+
+List Filtered Page Alpha Test
+
+-- metadata
+-- id: 20source
+-- date: 2024-02-18 13:47:17
+-- type: theme-test
+-- status: macro_list_filtered_pages_alpha
+
+TARGET:
+
+<ul>
+  <li>List Filtered Page Alpha Test</li>
+  <li><a href="/en/id00alfa/?alfa-test-file">Alfa Test File</a></li>
+  <li><a href="/en/id00brav/?bravo-test-file">Bravo Test File</a></li>
+  <li><a href="/en/id00char/?charlie-test-file">Charlie Test File</a></li>
+  <li><a href="/en/id00foxt/?foxtrot-test-file ">Foxtrot Test File </a></li>
+  <li><a href="/en/id00golf/?golf-test-file ">Golf Test File </a></li>
+  <li><a href="/en/id00hote/?hotel-test-file">Hotel Test File</a></li>
+  <li><a href="/en/id00mike/?mike-test-file">Mike Test File</a></li>
+  <li><a href="/en/id00nove/?november-test-file ">November Test File </a></li>
+  <li><a href="/en/id00osca/?oscar-test-file ">Oscar Test File </a></li>
+  <li><a href="/en/id00whis/?whiskey-test-file">Whiskey Test File</a></li>
+  <li><a href="/en/id00xray/?xray-test-file ">XRay Test File </a></li>
+  <li><a href="/en/id00yank/?yankee-test-file ">Yankee Test File </a></li>
+</ul>

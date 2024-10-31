@@ -1,0 +1,53 @@
+-- title
+
+Section Category: Checklist
+
+-- h2
+
+Overview
+
+This feature creates the "checklist" section 
+category. 
+
+-- list
+-- title: Details
+
+- Checklists use `[]`` brackets starting on a 
+line after an empty line to create a checklist
+item. 
+
+- Anything inside the brackets is passed to 
+the template to identify if the item has
+been checked off or not
+
+
+-- todo
+
+[x] Full section tags work (e.g. `-- todo``) 
+
+[x] Full sections have key/value attributes
+
+[x] Full sections have flag attributes
+
+[x] Start section tags work (e.g. `-- todo/``)
+
+[x] Start sections key/value attributes
+
+[x] Start sections flag attributes
+
+[x] End section tags work (e.g. `-- todo/``)
+
+[x] End sections key/value attributes
+
+[x] End sections flag attributes
+
+-- p
+
+See: <<tlink|2bn4fdhe>> and <<tlink|2bn4s656>> 
+for examples
+
+
+-- metadata
+-- date: 2024-01-24
+-- id: 2bpfldk3
+

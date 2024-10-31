@@ -1,0 +1,27 @@
+-- title
+
+Span Example: c (custom type example)
+
+-- subtitle
+
+The Custom Class (c) Spans
+
+-- p
+
+Basic Example:  c: green|Lorem ipsum
+
+
+-- todo
+
+[] Get attributes working like: 
+
+`c: green PIPEHERE Lorem ipsum PIPEHERE id: some_id``
+
+See: <<tlink|2bs9rh6c>>
+
+
+
+-- metadata
+-- date: 2024-02-03
+-- id: 2bs4epga
+-- status: published

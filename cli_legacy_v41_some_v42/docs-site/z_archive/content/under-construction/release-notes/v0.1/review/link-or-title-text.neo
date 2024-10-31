@@ -1,0 +1,51 @@
+-- title
+
+Link Or Title Text Template Output
+
+-- h2
+
+Overview
+
+This feature provides a site template function
+to output either a link to a page with the
+page title or just the page title without
+a link if you're already on the page
+
+-- todo
+-- title: Requirements
+
+[x] `{{ site.link_or_title("2cglug42", page.id())}}`jinja`
+outputs a link with the title text to a page if
+the `page.id()`` is not the current page
+
+[x] `{{ site.link_or_title("2cglug42", page.id())}}`jinja`
+outputs only the title text for a page if the 
+`page.id()`` is the current page
+
+[x] An optional third value can be sent that overrides
+the default title text (linking behavior is not 
+effected). So: 
+
+`{{ site.link_or_title("2cglug42", page.id(), "Alfa Bravo")}}`jinja`
+
+would output something like this if `page.id()`` is not
+the current page:
+
+`<a href="/pages/2cglug42/?link-or-title">Alfa Bravo</a>``
+
+Or, it outputs just the title if the `page.id()`` is
+the current page. i.e.
+
+`Alfa Bravo``
+
+-- notes
+
+- This is what I'm using for the global nav links
+
+
+
+-- metadata
+-- date: 2024-02-12
+-- id: 2cglug42
+-- status: published
+

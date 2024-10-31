@@ -1,0 +1,39 @@
+-- title
+
+em Shorthand
+
+-- start-template-test
+
+__this is em__
+
+
+-- expected-output/
+
+<p>
+    <em>this is em</em>
+</p>
+
+-- /expected-output
+
+
+
+-- start-template-test
+
+__this is em|class: green__
+
+
+-- expected-output/
+
+<p>
+    <em class="green">this is em</em>
+</p>
+
+-- /expected-output
+
+
+
+-- metadata
+-- date: 2024-05-21 04:25:02
+-- id: 2gllafkw
+
+

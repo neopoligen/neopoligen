@@ -1,0 +1,45 @@
+-- title
+
+CSS Class Style Spans
+
+
+-- h2
+
+Overview
+
+
+
+-- todo
+
+[] TKTKTKT
+
+[] Link over to key-value spans
+they are the same thing, this is 
+just broken out explicitly to highlight
+it as a usage and because the feature
+is really handy
+
+
+-- h2
+
+Examples
+
+
+-- code
+
+<<class: green|some thing here>>
+
+<<class: blue|some thing here|id: alfa>>
+
+
+
+
+-- tags
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 14:00:33
+-- id: 2bphtagx
+-- status: scratch
+

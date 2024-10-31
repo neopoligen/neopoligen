@@ -1,0 +1,55 @@
+-- title
+
+Default Page Type And Status
+
+-- h2
+
+Overview
+
+This feature defines the default page
+type as "post" and the default status
+as "published"
+
+That is, if the `-- metadata`` `-- type`` attribute 
+doesn't match a template then the `post``
+template set gets used.
+
+The status is set to a default of "published"
+
+That is, if the `-- metadata`` `-- status`` attribute 
+doesn't match a template then the `published``
+template gets used.
+
+This is done to make sure pages show up even
+if a specific template hasn't been created
+for the type or status yet
+
+-- todo
+-- title: Details
+
+[x] If a page's `-- metadata`` `-- type``
+attribute doesn't match a template set
+use `post`` instead
+
+[x] If a page's `-- metadata`` `-- status``
+attribute doesn't match a template set
+use `published`` instead
+
+[x] The defaults are defined independently. 
+That is, they can either both be used, or
+the "type" can be used by itself, or the
+"status" can be used by itself, or they'll
+both be used if neither is set
+
+-- notes
+-- title: Notes
+
+- Moving this values to a config was considered
+but decided against in favor of reducing
+the number of items require in the config. 
+
+
+
+-- metadata
+-- date: 2024-01-26
+-- id: 2bvupido

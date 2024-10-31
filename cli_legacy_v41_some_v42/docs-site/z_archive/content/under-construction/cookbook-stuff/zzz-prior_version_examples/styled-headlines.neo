@@ -1,0 +1,20 @@
+-- title
+
+Styled Headlines 
+
+
+Any content inside one of the basic sections
+can be styled. For example, it's possible
+to add style spans to headlines
+
+-- h2
+
+<<span|Alfa Bravo|class: green>> Charlie
+<<span|delta echo|class: red>>
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2avtjtxg
+-- status: published
+

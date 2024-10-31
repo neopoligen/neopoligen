@@ -1,0 +1,7 @@
+[!- import "includes/theme.neoj" as theme -!]
+
+<li class="flow">[! for child in section.children !]
+[@ theme.output_section(site, page_id, child) @]
+[! endfor !]
+
+

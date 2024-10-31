@@ -1,0 +1,23 @@
+-- title
+
+Add An Attribute To Use `type="module"`` In `-- srcscript`` Scripts
+
+-- h2
+
+Overview
+
+<<s|Send `type="module"`` to `-- srcscript`` sections>>
+
+There's no longer srcscript section function in the default
+implementation. The `-- head`` section is used instead. Things
+are copied directly from there to the head of the page. Any
+necessary attributes can be included that way.
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- id: 2bpaexax
+-- status: published
+
+

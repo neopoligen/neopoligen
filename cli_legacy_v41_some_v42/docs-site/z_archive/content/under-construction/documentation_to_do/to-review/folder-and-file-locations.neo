@@ -1,0 +1,49 @@
+-- title
+
+Folder And File Locations
+
+-- h2
+
+Overview
+
+There are two types of folders and files
+defined in this proposal: input and output.
+
+The contents of the inputs are read by 
+the builder. It then publishes them
+to the output locations. 
+
+In the examples below "SITE" stands in
+for the name of the folder for the
+specific site
+
+-- todo
+
+[] Neopoligen/SITE/_configuration
+
+[] Neopoligen/SITE/_content
+
+[] Neopoligen/SITE/_miscellaneous
+
+[] Neopoligen/SITE/_plugins
+
+[] Neopoligen/SITE/_themes
+
+[] Neopoligen/SITE/assets
+
+[] Neopoligen/SITE/feeds
+
+[] Neopoligen/SITE/images
+
+[] Neopoligen/SITE/pages
+
+
+-- tags
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 14:30:10
+-- id: 2bpluwm9
+-- status: draft
+

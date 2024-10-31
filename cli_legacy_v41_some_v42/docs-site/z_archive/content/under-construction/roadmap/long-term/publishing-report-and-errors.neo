@@ -1,0 +1,18 @@
+-- title
+
+Publishing Reports And Errors
+
+-- h2
+
+Overview
+
+This feature adds a report that's produced
+each time a site is published. It contains
+basic stats and error messages.
+
+
+-- metadata
+-- date: 2024-02-12
+-- id: 2chn8tbg
+-- status: scratch
+

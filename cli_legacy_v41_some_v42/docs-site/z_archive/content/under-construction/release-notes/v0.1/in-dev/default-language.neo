@@ -1,0 +1,49 @@
+-- title
+
+Default Language
+
+-- h2
+
+Overview
+
+Neopoligen has been designed with internationalization
+and localization in mind. The initial feature
+defines a "SITE_FOLDER/configuration/general/default-language.txt"
+file that holds the language code to use by default. 
+Any content pages that don't have an explicit path
+set in their metadata are generated under a
+folder with that name. 
+
+Supporting the output of multiple languages is
+still in the design phase. By starting with the default
+language those features will be able to 
+be added with a minimal amount of impact
+on the existing content.
+
+-- todo
+-- title: Requirements
+
+[x] The language code is defined in the
+"SITE_FOLDER/configuration/general/default-language.txt" 
+file
+
+[x] The language code is used to define the 
+folder for any page content that doesn't have
+and explicit path set in its metadata
+
+[x] If a file with page content has an 
+explicit path defined it's used without
+any alteration to add the language folder
+to its path
+
+[x] The content in the "files" folder is
+not effected by the default language. Responsibility 
+for changing paths for internationalization/localization 
+in that folder lies with the content owner
+
+
+
+-- metadata
+-- date: 2024-02-19
+-- id: 2cblikka
+

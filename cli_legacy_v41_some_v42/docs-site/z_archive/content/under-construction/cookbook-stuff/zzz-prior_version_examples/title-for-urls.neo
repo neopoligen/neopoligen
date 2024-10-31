@@ -1,0 +1,18 @@
+-- title
+
+Title For URLs 
+
+A formatted title that can be added to URLs for things
+like cloudinary and other API calls:
+
+-- code
+-- jinja
+
+{{ page.title_as_url }}
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2aytveuq
+-- status: published
+

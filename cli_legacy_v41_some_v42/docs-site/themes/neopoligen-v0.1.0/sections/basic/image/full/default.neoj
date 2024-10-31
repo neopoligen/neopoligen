@@ -1,0 +1,5 @@
+[! if site.images[section.flags[0]] !]
+[! set img = site.images[section.flags[0]] !]
+<img 
+src="[@- img.dir -@]/[@- img.raw_width-@]w.[@- img.extension -@]" />
+[! endif !]

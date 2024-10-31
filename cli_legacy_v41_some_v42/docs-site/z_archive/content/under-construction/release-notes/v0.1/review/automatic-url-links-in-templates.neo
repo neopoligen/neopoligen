@@ -1,0 +1,29 @@
+-- title
+
+Automatic URL Links In Templates
+
+-- h2
+
+Overview
+
+This feature provides for the ability to 
+pass a page ID to a template function to
+output the page's URL
+
+
+-- todo
+-- title: Details
+
+[x] Doing something like:
+
+`{{ site.url_for_page("2cgatp9q") }}`jinja`
+
+Produces something like:
+
+`<a href="/pages/2cgatp9q/?auto-urls">Auto URLs</a>`html`
+
+
+-- metadata
+-- date: 2024-02-12
+-- id: 2cgatp9q
+

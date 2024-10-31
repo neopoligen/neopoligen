@@ -1,0 +1,5 @@
+[#- type: internal -#]
+<sup><a 
+    href="#footnote-[@- span.content.spans[0].content.text -@]"
+    id="footnote-[@- span.content.spans[0].content.text -@]-ref"
+    >[@- span.content.spans[0].content.text -@]</a></sup>

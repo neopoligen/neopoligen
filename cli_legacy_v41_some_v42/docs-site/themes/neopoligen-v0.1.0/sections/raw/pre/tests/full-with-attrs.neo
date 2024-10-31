@@ -1,0 +1,30 @@
+-- start-theme-test
+
+-- pre
+-- class: alfa
+
+This is some classed pre stuff
+
+
+-- expected-output/
+
+<section class="alfa pre-section">
+<pre>This is some classed pre stuff</pre>
+</section>
+
+
+-- /expected-output
+
+
+
+
+
+-- metadata
+-- created: 2024-08-15T14:19:56-04:00
+-- updated: 2024-08-15T14:19:56-04:00
+-- id: 2khq8tbk
+-- type: post
+-- status: scratch
+-- tag: blender
+
+

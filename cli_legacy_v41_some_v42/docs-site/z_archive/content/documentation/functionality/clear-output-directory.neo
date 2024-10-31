@@ -1,0 +1,18 @@
+-- title
+
+Clear Output Directory Before Each Build
+
+-- goal
+
+The contents of the `./docs`` output 
+directory are deleted before each build. 
+This is done to remove any cruft that
+would otherwise be left from deleted
+or moved files. 
+
+
+
+-- metadata
+-- date: 2024-04-19
+-- id: 2fjr68zx
+

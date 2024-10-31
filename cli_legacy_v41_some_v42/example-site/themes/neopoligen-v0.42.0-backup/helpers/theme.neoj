@@ -1,0 +1,16 @@
+[#############################################################################]
+[!- macro output_section(site, page, section) -!]
+[!- include section.template_list() ignore missing -!]
+[!- endmacro -!]
+
+[#############################################################################]
+[!- macro output_span(site, page, span) -!]
+[!- include span.template_list() ignore missing -!]
+[!- endmacro -!]
+
+[#############################################################################]
+[!- macro output_spans(site, page, spans) -!]
+[!- for span in spans -!]
+[@- output_span(site, page, span) -@]
+[!- endfor -!]
+[!- endmacro -!]

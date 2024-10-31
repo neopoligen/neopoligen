@@ -1,0 +1,58 @@
+##################################################################################
+DESCRIPTION
+##################################################################################
+
+Ensure `ilink`` links work
+
+###
+TEMPLATE
+PATH: pages/testing/published.jinja
+CONTENT:
+
+[!- import "includes/macros.jinja" as macros -!]
+[@- macros.place_section(page_id, "title") -@]
+[@- macros.place_section(page_id, "forward") -@]
+[@- macros.main_body(page_id) -@]
+
+
+##################################################################################
+SUPPORT_PAGE
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/target-page.neo
+##################################################################################
+
+-- title
+
+Target Page
+
+-- metadata
+-- id: target-page-id
+-- data: 2024-01-01 01:01:01
+
+
+
+##################################################################################
+INPUT
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/index.neo
+##################################################################################
+
+-- p
+
+<<ilink: target-page-id|link to target page>>
+
+-- metadata
+-- id: file-under-test
+-- data: 2024-01-01 01:01:01
+-- type: testing
+-- status: published
+
+
+
+##################################################################################
+EXPECTED_OUTPUT
+##################################################################################
+
+<section class="p_section flow">
+    <div class="content">
+        <p><a href="/en/target-page-id/?target-page">link to target page</a></p>
+    </div>
+</section>

@@ -1,0 +1,39 @@
+[!- import "macros.neojinja" as theme -!]
+
+<div 
+    [@ theme.section_attrs(site, page_id, section, ["endnote_default_section", "standard_section", "flow"]) -@]
+>
+    [! include "subsections/forward.neojinja" !]
+
+[! if section.content.key_value_attributes.title or section.content.key_value_attributes.subtitle !]
+<div class="heading_subsection endnote_heading" 
+[! if section.content.key_value_attributes.id !]
+id="endnote-[@ section.content.key_value_attributes.id @]"
+[! endif !]
+>
+
+
+    [! if section.content.key_value_attributes.title !]
+    <div class="title_subsection">
+        [! if section.content.key_value_attributes.url !]
+            <a href="[@ section.content.key_value_attributes.url @]">
+        [! endif !]
+        [@ section.content.key_value_attributes.title @]
+        [! if section.content.key_value_attributes.url !]
+            </a>
+        [! endif !]
+        [! if section.content.key_value_attributes.subtitle !]
+        - 
+        <span class="subtitle_subsection">[@ section.content.key_value_attributes.subtitle @]</span>
+        [! endif !]
+    </div>
+    [! endif !]
+
+</div>
+[! endif !]
+
+    [! include "subsections/preface.neojinja" !]
+
+    [! include "subsections/content_index0.neojinja" !]
+
+    [! include "subsections/afterword.neojinja" !]

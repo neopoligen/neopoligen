@@ -1,0 +1,27 @@
+-- title
+
+Fixed Bug: Last metadata attribute doesn't work
+
+-- h2
+
+Overview
+
+It looks like if there's an an empty lines after the
+last `-- metadata`` attribute that it doesn't get
+processed. 
+
+
+-- todo
+-- title: Requirements
+
+[] Investigate
+
+[] Fix it, or figure out what else is going on
+
+
+-- metadata
+-- date: 2024-02-18
+-- id: 2cytk6hu
+-- type: release-notes
+-- status: scratch
+

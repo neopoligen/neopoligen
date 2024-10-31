@@ -1,0 +1,28 @@
+-- title
+
+Access Page metadata
+
+-- h2
+
+Overview
+
+This feature adds `page.metadata()`` to the
+templates which can be used to get any
+key/value data from the page's `-- metadata``
+section
+
+-- todo
+-- title: Details
+
+[x] Using: `{{ page.metadata().date }}`` works
+
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-02-12
+-- id: 2cfqtx9h
+

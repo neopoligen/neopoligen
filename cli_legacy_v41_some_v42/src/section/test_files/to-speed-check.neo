@@ -1,0 +1,183 @@
+-- title
+
+Hello and Welcome!  
+
+Hi, I'm Alan. 
+
+I've been running my site for a couple decades.
+There's a bunch here, but you caught me in the middle of 
+rebuilding it. To start, here's a few hand-picked posts
+that'll give you an idea of what I'm about. Below
+are all the posts on the site reverse-chronologically. 
+They're split into Published, Drafts, and Scratch Notes
+depending on how complete they are. 
+
+
+-- list
+-- title: links
+
+- <<link|Photoshop and Lightroom get alt text editing|/en/2h4ynhnr>> - This 
+is great. You can now add and edit image alt text directly in photoshop and lightroom.
+If we can get the social networks on board this will be a huge benefit to folks
+who use assistive tech.
+
+- <<link|The Clicky Sound|/en/20en9sxu/?the-clicky-sound>> - I discovered I have bipolar disorder 
+at the end of 2017. It started with a manic episode that sent me to the psych 
+ward. It was followed by two years of bipolar depression that landed me back there for
+my own safety. This is the first thing I wrote when I was finally 
+recovered enough to start making things again. 
+
+
+
+- <<link|How Computers Work: The 1s And 0s|/en/20en8mvx/>> - 
+Starting with a light switch, this post shows the basics of
+how computers work. It all comes down to __1s__ and __0s__
+
+- <<link|How To Grow Your Digital Garden With Sub-Domains|/en/28dakarf/?how-to-grow-your-digital-garden-with-subdomains>> -
+I was struggling with my website. I kept wanting to do things, but
+the framework I was using added so much friction I rarely
+made progress. Then, I had an idea. What about sub-domains...
+
+
+- <<link|Thoughts On Digital Gardens In 2024|/en/2gmkhvfr/>> - 
+A big part of the reason I wrote my own website builder was
+to make it easier to experiment with my site. I don't tend
+to think of it as a "digital garden" these days, but I still
+like the term and it's a good framing for thinking about 
+the work that goes into a site
+
+- <<link|My links page|https://links.alanwsmith.com/>> - this
+is a collection of projects I've worked on in the past. Most
+of the projects are built on sub-domains which I was using for
+my digital garden a few years ago. (The goal is to get most things
+moved here over time now that I have a website builder
+that's easier to use)
+
+
+
+-- comment
+
+Right now, the main thing I'm working on is <<ilink|my color
+picker|2etmrmai>>
+
+
+
+-- comment 
+-- selfie-in-mirror-spikes-aws-2022-0420-1218-0448
+-- class: photo
+
+-- comment
+
+In Progress
+
+Before we get to the mass link list, here's some of what I've 
+been working on recently:
+
+
+
+-- comment
+
+ASCIIShop
+
+This is the tool I built to make an animated
+ASCII Art avatar for streaming on Twitch. 
+
+<<link|asciishop|/asciishop/index.html>>
+
+
+-- comment
+
+Neopolitan
+
+The biggest thing I've been working on over the past year is
+a new plain-text format called neopolitan. Inspired by 
+markdown, mdx, org-mode, and the rest, it's designed to manage 
+the content for my site. I'm using it full time and couldn't be
+happier. 
+
+You can <<link|learn more about it here|/neopolitan/>>
+
+
+-- comment
+
+Neopoligen
+
+The static site generator I built for neopolitan is called called neopoligen. 
+I don't really have a page for it yet, but the
+<<link|source code is here|https://github.com/alanwsmith/neopoligen>> 
+if you'd like to take a peak. 
+
+
+-- comment 
+
+Tree-Sitter Syntax Highlighting
+
+With one exception, neopolitan doesn't need much of a 
+syntax highlighter. That exception is embedded code blocks
+of another language. Seeing native syntax highlighting
+is a huge quality-of-life improvement. Even for the smallest
+of samples. 
+
+I've got a solid start on a Tree-sitter parser to 
+add neopolitan (and embedded language) highlighting
+to Neovim. It took learning a little "C", but it's been
+worth it. 
+
+You can <<link|see an example here|/tree-sitter-neopolitan/index.html>>
+
+
+
+-- comment 
+
+Grimoire Code Block Execution
+
+I call my notes app my Grimoire. There's no magic in computers, 
+but there's a lot that's magical. I love the idea of 
+naming my collection of incantations in that light. 
+
+I used to use emacs org-mode for my grimoire primarily because 
+of it's ability to run code blocks inside notes directly. Think
+Jupyter Notebooks, but in plain-text and for any language.
+I ended up moving back to Neovim full time but didn't want to 
+give that functionality. So, I'm working on a prototype. 
+
+I've got the basics working. The results for the code
+block below were generated automatically inside the file.
+
+Details for that will go in the tree-sitter link when
+I get things updated
+
+-- comment
+
+Search 
+
+This is a test run with <<link|pagefind search|https://pagefind.app/docs/>>
+
+-- comment
+
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+<script src="/pagefind/pagefind-ui.js"></script>
+<div id="search"></div>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ element: "#search", showSubResults: true });
+    });
+</script>
+
+
+-- comment
+
+And Now, Links:
+
+To close off this page, here's the as-yet-unsorted set
+of links on the site.
+
+
+
+-- metadata 
+-- path: /
+-- created: 2023-07-08T18:57:17-04:00
+-- id: 2sjfzivl
+-- type: post
+-- tag: home-page
+-- status: published

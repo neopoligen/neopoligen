@@ -1,0 +1,31 @@
+-- title
+
+Unpublished Status
+
+-- h2
+
+Overview
+
+Pages with `-- status: unpublished`` don't get
+output directly to the site. The primary goal
+is to use unpublished pages as containers
+for sections that get included in other pages
+
+-- todo
+-- title: Requirements
+
+[] Pages with `-- status: unpublished`` in the 
+`-- metadata`` section don't get published
+to the site
+
+[] Sections inside pages with 
+`-- status: unpublished`` in the 
+`-- metadata`` section can be included in
+other pages
+
+
+-- metadata
+-- date: 2024-02-17
+-- id: 2cvh1abs
+-- status: scratch
+

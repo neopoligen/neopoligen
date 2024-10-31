@@ -1,0 +1,41 @@
+-- title
+
+Syntax Highlighting Themes
+
+The syntax highlighter uses classes instead of inline
+styles. There are seven CSS files with matching styles
+included:
+
+-- list
+
+- code-base16-eighties-dark.css
+
+- code-base16-mocha-dark.css
+
+- code-base16-ocean-dark.css
+
+- code-base16-ocean-light.css
+
+- code-inspired-github.css
+
+- code-solarized-dark.css
+
+- code-solarized-light.css
+
+-- p
+
+They can be called via style tags. For example:
+
+-- code
+-- html
+
+<link rel="stylesheet" href="/_assets/styles/code-solarized-dark.css">
+
+
+
+
+-- metadata
+-- date: 2024-01-16
+-- id: 2b1harkx
+-- status: published
+

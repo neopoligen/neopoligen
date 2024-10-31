@@ -1,0 +1,33 @@
+-- title
+
+Create The Neopoligen Directory If It Doesn't Exist
+
+-- h2
+
+Overview
+
+Neopoligen uses the `Neopoligen`` folder in a
+creators home folder for storage. This proposal
+creates that directory if it doesn't exist
+
+-- todo
+
+[] Create the `~/Neopolitan`` directory on 
+launch if it doesn't already exist on mac
+
+[] Create the `~/Neopolitan`` directory on 
+launch if it doesn't already exist on windows
+
+[] Create the `~/Neopolitan`` directory on 
+launch if it doesn't already exist on linux
+
+
+-- tags
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 13:20:39
+-- id: 2bpd2nac
+-- status: draft
+

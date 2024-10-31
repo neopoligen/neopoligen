@@ -1,0 +1,25 @@
+-- title
+
+Span: del 
+
+-- subtitle
+
+The Deleted Text Span
+
+-- p
+
+Basic Example: 
+
+<<del|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<del|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03
+-- id: 2bqphhlz
+-- status: published
+

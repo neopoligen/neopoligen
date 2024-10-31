@@ -1,0 +1,3 @@
+#!/bin/bash
+
+watchexec -e rs,py -e neojinja ./build_standard_spans.py

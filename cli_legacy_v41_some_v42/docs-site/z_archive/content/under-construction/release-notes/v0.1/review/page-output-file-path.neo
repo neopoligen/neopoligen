@@ -1,0 +1,62 @@
+-- title
+
+Page Output File Path (Builder Side)
+
+-- h2
+
+Overview
+
+This feature implements `.output_file_path()``
+on builder `Page`` object get the output
+path to write the file to. 
+
+If a `-- path`` attribute exists in the
+`-- metadata`` section, it's used directly. 
+
+If there is no `-- path`` the output location
+is built from the `-- id`` attribute in the
+`-- metadata`` section instead
+
+This value is not sent over to the templates
+
+-- todo
+
+[x] Create the output_file_path by combining the
+`.id()`` with the site's local directory root
+and hard coded `pages`` and `index.html``
+
+[x] Get the site's local root directory 
+from the `Config`` that gets passed in
+
+[x] The `pages`` directory name is hard
+coded intentionally for easier management
+
+[x] `.output_file_path()`` returns an 
+`Option<PathBuf>``
+
+[x] If the path can be made the value is:
+`Some(PathBuf)``
+
+[x] Otherwise it's `None``
+
+[x] If a `-- path`` exist in `-- metadata``
+it overrides the ID based path.
+
+[x] Any `-- path`` is expected to be a directory
+and `index.html`` is appended to it
+
+See the <<tlink|2bqd8t9o>> feature for dealing
+with files instead of directories in the
+`-- path`` attribute
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 17:23:46
+-- id: 2bq6bsvh
+-- status: published
+

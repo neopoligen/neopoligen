@@ -1,0 +1,73 @@
+-- title
+
+Output To A Specific Location
+
+-- h2
+
+Overview
+
+You can use ``-- path`` and ``-- full-path``
+attributes in the ``-- metadata`` section to 
+override the default output location of the 
+page. 
+
+-- h2
+
+Basic Path
+
+The ``-- path`` will create a folder and 
+corresponding ``index.html`` file at the 
+location to serve the page with the 
+specific path. For example 
+
+-- code/
+-- neo
+
+-- metadata
+-- created: 2024-06-24T15:47:34-04:00
+-- id: abcd1234
+-- path: /some/path
+
+-- /code
+
+Outputs to "/some/path/index.html" which lets
+the page be served from this location by default
+on most hosts: 
+
+https://www.example.com/some/path
+
+
+-- h2
+
+Full Path
+
+If you need to put a file at a specific location
+with appending "index.html" use ``-- full-path``. 
+For example, a GitHub "CNAME" file can be placed
+with:
+
+-- code/
+-- neo
+
+-- metadata
+-- created: 2024-06-24T15:47:34-04:00
+-- id: abcd1234
+-- full-path: /CNAME
+
+-- /code
+
+That will output the file to be served at:
+
+https://www.example.com/CNAME
+
+
+
+
+
+-- metadata
+-- created: 2024-06-24T15:38:49-04:00
+-- updated: 2024-06-24T15:38:49-04:00
+-- id: 2il7jdx8
+-- type: post
+-- status: draft
+

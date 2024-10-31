@@ -1,0 +1,20 @@
+-- title
+
+Subtitles 
+
+Subtitle sections are pulled out independently 
+the same way `-- title`` sections are. That 
+allows them to be placed and styles without
+tieing them to anything else
+
+-- subtitle
+
+for that second level
+
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2aww5grn
+-- status: published
+

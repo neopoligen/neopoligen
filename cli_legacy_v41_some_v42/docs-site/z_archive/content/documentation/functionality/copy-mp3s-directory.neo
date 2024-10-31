@@ -1,0 +1,14 @@
+-- title
+
+Copy mp3s Directory 
+
+-- goal
+
+Copy the `./mp3s`` directory to 
+`./docs/mp3s`` for each build
+
+
+
+-- metadata
+-- date: 2024-04-19
+-- id: 2fjqortf

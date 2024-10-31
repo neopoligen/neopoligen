@@ -1,0 +1,28 @@
+-- title
+
+Configuration Loader
+
+-- h2
+
+Overview
+
+This feature creates the configuration loader
+the processes the files in the `configuration``
+directory and provides them to the Builder
+
+-- todo
+-- title: Details
+
+[x] Configuration files are loaded and the
+details are available to the Builder
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-26
+-- updated: 2024-01-26 14:38:48
+-- id: 2bvqmwyc
+-- status: published
+

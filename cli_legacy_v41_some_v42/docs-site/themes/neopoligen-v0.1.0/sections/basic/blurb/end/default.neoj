@@ -1,0 +1,11 @@
+[! import "includes/theme.neoj" as theme !]
+
+[# Don't output anything for comments #]
+[# But show the children if they exist #]
+
+[! for child in section.children !]
+[! if loop.first !]<section class="p-section flow">[! endif !]
+[! include "subsections/content-all-blocks.neoj" !]
+[! if loop.last!]</section>[! endif !]
+[! endfor !]
+

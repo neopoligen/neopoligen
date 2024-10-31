@@ -1,0 +1,48 @@
+-- title
+
+Create Feed Proposals
+
+
+-- todo
+-- title: Scratch Notes
+
+[] Every site has a `/index.json``, file that provide 
+details on all the available feeds as well
+as other site details
+
+[] There's a `/feeds/`` page that provides
+a human readable version of it too
+
+[] Defined in config
+
+[] Format in config TBD
+
+[] Always goes to the feeds directory
+
+[] You just name the feed and it'll get the .xml applied
+to it
+
+[] Feeds are atom format
+
+[] Define feeds based of any combination of categories and 
+page types, and statuses. The status must pass for the
+other two to take effect
+
+[] Ability name add more details to feeds like 
+descriptions and images for the intro page
+
+
+-- h2
+
+Examples
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-22
+-- id: 2bidfdmt
+-- status: scratch
+

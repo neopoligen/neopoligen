@@ -1,0 +1,28 @@
+-- start-theme-test 
+
+-- blockquote
+-- id: some-id 
+
+Alfa bravo charlie 
+
+Delta echo foxtrot
+
+
+-- expected-output/
+
+<section class="blockquote-section flow" id="some-id">
+    <blockquote>
+        <p>Alfa bravo charlie</p>
+        <p>Delta echo foxtrot</p>
+    </blockquote>
+</section>
+
+-- /expected-output
+
+
+
+-- metadata
+-- updated: 2024-06-12T21:57:46-04:00
+-- id: 2hnxudf_blockquote
+
+

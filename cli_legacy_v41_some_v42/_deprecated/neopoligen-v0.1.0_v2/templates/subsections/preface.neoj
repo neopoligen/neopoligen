@@ -1,0 +1,3 @@
+[! if section.attrs.preface !]
+<div class="section-preface">[@ section.attrs.preface @]</div>
+[! endif !]

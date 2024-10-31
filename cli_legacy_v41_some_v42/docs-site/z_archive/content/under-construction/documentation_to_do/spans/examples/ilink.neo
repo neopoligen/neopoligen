@@ -1,0 +1,30 @@
+-- title
+
+Span Example: ilink
+
+-- subtitle
+
+The Internal Link Span
+
+This links your text over to the page with the
+given ID automatically
+
+-- p
+
+Basic Example: <<ilink: 2auhjdnh|To Home Page Via ID>>
+
+
+-- p
+
+Attribute Example: <<ilink: 2auhjdnh|To Home Page Via ID|class: green>>
+
+-- p
+
+Attribute Example: <<ilink: 2auhjdnh|To Home Page Via ID|class: green|example_flag>>
+
+
+
+-- metadata
+-- date: 2024-02-03
+-- id: 2brmhwxs
+-- status: published

@@ -1,0 +1,33 @@
+-- title
+
+Allow Flag Attributes In link Spans
+
+-- h2
+
+Overview
+
+
+-- todo
+-- title: Details
+
+[] Make this not break the attributes in
+the output
+
+-- code
+
+<<link|Lorem ipsum|https://www.example.com/|class: green|example_flag>>
+
+
+
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-02-03
+-- updated: 2024-02-03 17:04:07
+-- id: 2bsjrpd5
+-- status: scratch
+

@@ -1,0 +1,25 @@
+-- title
+
+Span: var 
+
+-- subtitle
+
+The Variable Span
+
+-- p
+
+Basic Example: 
+
+<<var|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<var|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03
+-- id: 2bqpqxec
+-- status: published
+

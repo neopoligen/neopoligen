@@ -1,0 +1,35 @@
+-- title
+
+Standard Error Output Convention
+
+-- h2
+
+Overview
+
+If a recoverable error occurs in a 
+template macro the standard response
+should be to output:
+
+-- pre/
+
+~e~
+
+-- /pre
+
+That makes it easier to see that something
+went wrong when authoring content or 
+adjusting templates without publishing 
+a full error message (which should be
+handled via logging)
+
+-- note
+-- title: Requirements
+
+This is a convention. It's up to
+each macro to implement as part
+of their requirements
+
+-- metadata
+-- date: 2024-02-21
+-- id: 2cglszh8
+

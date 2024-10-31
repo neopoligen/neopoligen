@@ -1,0 +1,4 @@
+[#- type: standard -#]
+[!- import "macros.neojinja" as theme -!]
+
+[Inline img spans are not yet implemented]

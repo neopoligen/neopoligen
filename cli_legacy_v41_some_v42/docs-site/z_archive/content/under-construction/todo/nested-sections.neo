@@ -1,0 +1,33 @@
+-- title
+
+Nested Sections
+
+This is how section can be nested for things like 
+putting `divs`` in columns:
+
+
+-- section/
+-- class: example_nested_grid
+
+-- div
+-- class: red
+
+this is red
+
+-- div
+-- class: green
+
+this is green
+
+-- div
+-- class: blue
+
+this is blue
+
+-- /section
+
+
+-- metadata
+-- date: 2024-01-29
+-- id: 2bepsi7p
+

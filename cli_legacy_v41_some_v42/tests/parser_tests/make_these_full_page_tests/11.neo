@@ -1,0 +1,14 @@
+-- javascript
+-- class: widget
+-- tag: text/template
+
+  const lines = source.split("\n")
+
+
+
+-- pagedata
+-- id: 2fc2qq4v
+-- status: draft 
+
+
+

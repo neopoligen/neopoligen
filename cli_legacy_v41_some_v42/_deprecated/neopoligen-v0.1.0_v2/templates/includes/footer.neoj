@@ -1,0 +1,21 @@
+<footer>
+<div class="footer-line">
+  <a href="/">alanwsmith.com</a>
+  <a href="https://hachyderm.io/deck/@TheIdOfAlan">mastodon</a>
+  <a href="/feeds/full.xml">rss feed</a>
+</div>
+<div class="footer-line">
+  <div class="permalink center">Permalink<br>[@ site.page_permalink(page_id) @]</div>
+  <div>Debugging -  Page Type: [@ page.type() @]</div>
+</div>
+
+
+[! if config.debug == true !]
+<code-block2>
+<pre slot="the-code">
+[@ site.page_sections(page_id)|tojson(true) @]
+</pre>
+</code-block2>
+[! endif !]
+
+</footer>

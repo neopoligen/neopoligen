@@ -1,0 +1,21 @@
+-- title
+
+Photos And Images
+
+There are two sections in the default
+theme called ``-- image`` and ``-- photo``
+
+The ``-- image`` section is for outputting
+a basic image. The ``-- photo`` section
+wraps the image in a ``<div>|html`` with 
+a ``class="photo"|html`` attribute which
+is set up with a corresponding style
+in the css. 
+
+
+-- metadata
+-- created: 2024-06-25T21:27:24-04:00
+-- updated: 2024-06-25T21:27:24-04:00
+-- id: 2iocpaio
+-- status: draft
+

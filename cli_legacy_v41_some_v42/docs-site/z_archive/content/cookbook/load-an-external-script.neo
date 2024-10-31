@@ -1,0 +1,126 @@
+-- title
+
+Load An External Script
+
+This is an example of how to load an external script using
+the `-- head`` section. Anything in that section gets
+added directly to the `<head>`` element of the page. In 
+this case, loading the <<link|p5.js|https://p5js.org/>>
+creating coding library like this:
+
+-- code/
+-- title: Example Content
+
+-- head
+
+<script src="/files/scripts/p5/p5.min.js"></script>
+
+-- /code
+
+-- note
+
+I download the p5.js files and put them in my site's
+"files" folder which is made available automatically. 
+
+
+
+
+
+-- head
+
+<script src="/files/scripts/p5/p5.min.js"></script>
+
+
+-- p
+
+Once that's in place, I'm using this `-- html`` section
+to make the animation shown below:
+
+-- code/
+
+-- html
+
+<div class="example center">
+  <div id="p5_output"></div>
+</div>
+
+<script>
+let rad = 20
+let xpos, ypos
+let xspeed = 2.8
+let yspeed = 2.2
+let xdirection = 1
+let ydirection = 1
+
+function setup() {
+  var canvas = createCanvas(300, 100)
+  canvas.parent('p5_output')
+  noStroke()
+  frameRate(30)
+  ellipseMode(RADIUS)
+  xpos = width / 2
+  ypos = height / 2
+}
+
+function draw() {
+  background(101)
+  xpos = xpos + xspeed * xdirection
+  ypos = ypos + yspeed * ydirection
+  if (xpos > width - rad || xpos < rad) {
+    xdirection *= -1
+  }
+  if (ypos > height - rad || ypos < rad) {
+    ydirection *= -1
+  }
+  ellipse(xpos, ypos, rad, rad)
+}
+</script>
+
+-- /code
+
+-- html
+
+<div class="example center">
+  <div id="p5_output"></div>
+</div>
+
+<script>
+let rad = 20
+let xpos, ypos
+let xspeed = 2.8
+let yspeed = 2.2
+let xdirection = 1
+let ydirection = 1
+
+function setup() {
+  var canvas = createCanvas(300, 100)
+  canvas.parent('p5_output')
+  noStroke()
+  frameRate(30)
+  ellipseMode(RADIUS)
+  xpos = width / 2
+  ypos = height / 2
+}
+
+function draw() {
+  background(101)
+  xpos = xpos + xspeed * xdirection
+  ypos = ypos + yspeed * ydirection
+  if (xpos > width - rad || xpos < rad) {
+    xdirection *= -1
+  }
+  if (ypos > height - rad || ypos < rad) {
+    ydirection *= -1
+  }
+  ellipse(xpos, ypos, rad, rad)
+}
+</script>
+
+
+
+
+-- metadata
+-- date: 2024-03-07
+-- id: 2dnxx4f9
+-- status: scratch
+

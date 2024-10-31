@@ -1,0 +1,57 @@
+-- title
+
+Section Has Flag Attributes Template Macro
+
+-- h2
+
+Overview
+
+Section flag attributes don't have keys to
+match on. They must be checked for by name.
+This is done with the template macro:
+
+-- code/
+-- jinja
+
+section_has_flag(section,"FLAG_NAME")
+
+-- /code
+
+For example:
+
+-- code/
+
+{%- if section_has_flag(section, "example_flag") == "true" -%}
+Found the flag
+{%- endif -%}
+
+-- todo
+-- title: Requirements
+
+[x] `section_has_flag(section, "example_flag")`jinja`
+returns "true" (as a string) if the passed in `section`` has a
+flag attributed named "example_flag"
+
+Otherwise, it returns "false" (as a string)
+
+-- notes
+-- title: Notes
+
+- MiniJinja doesn't appear to have a way to 
+return a true/false literal from a macro. This means
+you have to do:
+
+`{%- if section_has_flag(section, "example_flag") == "true" -%}``
+
+Instead of this approach without the `== "true"`` portion:
+
+`{%- if section_has_flag(section, "example_flag") -%}``
+
+
+
+
+-- metadata
+-- date: 2024-01-26
+-- id: 2bvzhm8a
+-- status: scratch
+

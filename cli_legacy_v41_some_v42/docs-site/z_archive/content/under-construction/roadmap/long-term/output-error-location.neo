@@ -1,0 +1,27 @@
+-- title
+
+Output The Location Of An Error If The Parser Encounters One
+
+-- h2
+
+Overview
+
+This proposal produces output which shows the
+remainder of a file if an error occurs during
+parsing to help pinpoint the issue
+
+-- todo
+
+[] Error message show the spot where 
+parsing failed
+
+
+-- tags
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 21:09:26
+-- id: 2bqy31wv
+-- status: scratch
+

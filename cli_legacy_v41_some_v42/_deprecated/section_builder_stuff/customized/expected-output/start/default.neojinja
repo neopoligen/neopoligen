@@ -1,0 +1,11 @@
+[# 
+WARNING: This is maily used for testing, not output to a page. 
+If you change this, it'll probably break all the template
+tests 
+#]
+
+<div class="expected-output">
+
+[@- section.content.category.content.text -@]
+
+</div><!-- /expected-output -->

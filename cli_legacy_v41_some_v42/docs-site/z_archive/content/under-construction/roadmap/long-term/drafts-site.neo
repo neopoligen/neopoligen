@@ -1,0 +1,47 @@
+-- title
+
+Preview Site
+
+-- h2
+
+Overview
+
+This feature creates a second site for pending 
+content. Content files are stored in a "preview"
+folder next to the "pages" folder. The site 
+is built by first copying all the live "pages"
+and then the "preview files" into a site 
+build. That gets the content to show up
+the same way it will on the live site when
+the content files is moved from "preview"
+to "pages".
+
+This can also be used to store pages that don't
+ever need to be published (e.g. design tests)
+
+Content from "preview" take precedence of content
+from "pages". That allows for things like 
+making a specific home page for the preview site
+that makes it clear that's what you're working on
+
+-- todo
+-- title: Details
+
+
+
+-- h2
+
+Examples
+
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-02-02
+-- updated: 2024-02-02 13:15:52
+-- id: 2bp2zavs
+-- status: scratch
+

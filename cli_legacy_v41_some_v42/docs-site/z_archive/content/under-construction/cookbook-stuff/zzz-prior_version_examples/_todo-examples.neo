@@ -1,0 +1,22 @@
+-- title
+
+TODO Examples
+
+-- list
+
+- page date stuff:  pub mod page_links_by_date_except;
+
+- metadata section that's yaml data or json data
+
+- maybe add toml to metadata section or other formats too
+
+
+
+
+
+
+-- metadata
+-- date: 2024-01-18
+-- id: 2b7smhz2
+-- status: published
+

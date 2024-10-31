@@ -1,0 +1,31 @@
+-- title
+
+Disable Internet Access For Plugins By Default
+
+-- h2
+
+Overview
+
+-- todo
+
+[] Plugins can't access the internet
+unless `_configurations/plugin-internet-access``
+file has been updated to include their name
+
+
+-- h2
+
+Examples
+
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 11:33:51
+-- id: 2bpq34uq
+-- status: draft
+

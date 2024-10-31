@@ -1,0 +1,3 @@
+#!/bin/bash
+
+watchexec -e rs -e jinja ./build_sections.rs

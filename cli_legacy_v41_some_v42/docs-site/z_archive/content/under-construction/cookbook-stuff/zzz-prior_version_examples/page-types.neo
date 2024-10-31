@@ -1,0 +1,24 @@
+-- title
+
+Page Types
+
+The `-- type`` attribute in the `-- metadata`` section
+defines the page type. It's combined with the 
+`-- status`` to determine the template to use
+to render the page. 
+
+For example, all the pages in this "Examples"
+section of the site use `-- type: examples`` except this
+one which uses `-- type: post`` that puts
+that puts the links on the right.
+
+
+
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2avstttx
+-- type: post
+-- status: published
+

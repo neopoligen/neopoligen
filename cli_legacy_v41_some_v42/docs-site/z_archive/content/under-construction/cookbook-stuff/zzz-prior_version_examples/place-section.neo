@@ -1,0 +1,37 @@
+-- title
+
+Place Section 
+
+Any section can be placed anywhere on the page with:
+
+-- code
+-- jinja
+
+{{ place_section(page, SECTION_NAME) }}
+
+-- p
+
+The output will be all instances of that section on the
+page
+
+-- list
+-- title: Possible Use Cases
+
+- Reference, footnote, and related links sections to
+put them at the bottom of the page
+
+- Forward and afterword section placement
+
+
+-- ref
+-- title: Some reference here
+
+-- ref
+-- title: Another reference here
+
+
+-- metadata
+-- date: 2024-01-15
+-- id: 2b1i8qxa
+-- status: published
+

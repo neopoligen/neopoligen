@@ -1,0 +1,30 @@
+[!- import "includes/macros.jinja" as macros -!]
+
+<section [@- section_attributes(page_id, {"section": section, "classes": "html_code_example_section code_example flow" } ) -@]>
+
+    [!- include "section-parts/forward.jinja" -!]
+
+    <div class="heading_group">
+        <h3>
+        [!- if section.key_value_attributes.title -!]
+            [@- section.key_value_attributes.title -@]
+        [!- else -!]
+            HTML Source
+        [!- endif -!]
+        </h3>
+        [!- if section.key_value_attributes.subtitle -!]
+        <div class="subtitle">
+            [@- section.key_value_attributes.subtitle -@]
+        </div>
+        [!- endif -!]
+    </div>
+
+    [!- include "section-parts/preface.jinja" -!]
+
+    <pre><code>
+        [!- autoescape true -!]
+            [@- section.category.content.text|trim -@]
+        [!- endautoescape -!]
+    </code></pre>
+
+    [!- include "section-parts/afterword.jinja" -!]

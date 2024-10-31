@@ -1,0 +1,48 @@
+-- title
+
+Template Macro: list_filtered_pages_alpha()
+
+-- h2
+
+Overview
+
+
+-- code/
+-- jinja
+-- title: Example
+
+{%- import "includes/macros.jinja" as macros -%}
+
+<ul>
+    {{- macros.list_filtered_pages_alpha(
+        page_id, { 
+            "include_tags": ["test-sample"], 
+            "exclude_tags": ["id0bravo"]
+        }) 
+    -}}
+</ul>
+
+-- /code
+
+Produces something like:
+
+-- code/
+
+<ul>
+  <li><a href="/en/id00alfa/?sample-alfa">Sample Alfa</a></li>
+  <li><a href="/en/id0delta/?sample-delta">Sample Delta</a></li>
+</ul>
+
+-- /code
+
+
+-- todo
+-- title: Requirements
+
+
+
+-- metadata
+-- date: 2024-02-20
+-- id: 2cenn98c
+-- status: scratch
+

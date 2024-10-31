@@ -1,0 +1,30 @@
+-- title
+
+Text Plugins
+
+-- h2
+
+Overview
+
+-- todo
+
+[x] Provides the ability to create sections
+that call out to plugins in the plugin
+directory that return text strings for
+display in the templates
+
+[] Arguments can be passed to the plugin
+via `-- param`` attributes (NOTE: `-- param``
+not `-- arg`` which is what it started out as)
+
+-- tags
+
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 08:47:23
+-- id: 2bp5ntba
+-- status: draft
+

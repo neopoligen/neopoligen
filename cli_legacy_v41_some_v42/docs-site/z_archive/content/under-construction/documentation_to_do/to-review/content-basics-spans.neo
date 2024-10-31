@@ -1,0 +1,49 @@
+-- title
+
+Content Basics: Spans
+
+
+Spans
+
+Neopoligen also provides "spans". They're text between
+two less than and two greater than signs (called tags). Each
+span changes the content in some way when it's published. 
+For example, making text bold looks like this:
+
+-- code/
+
+This is TKTKTKT:bold|some bold text:TKTKTKT
+
+-- /code
+
+
+-- p
+
+Which produces
+
+This is TKTKTKT:bold_PIPE_GOES_HERE_some bold textTKTKTKT
+
+All the standard formatting options (like bold, italic, underline, etc...)
+are available. There's also a "c" span tag for applying
+styles to spans. For example:
+
+-- code
+
+This is TKTKTKTc: green_PIPE_GOES_HERE_some green textTKTKTKT
+
+-- p
+
+produces
+
+This is TKTKTKTc: green_PIPE_GOES_HERE_some green textTKTKTKT
+
+
+
+
+-- metadata
+-- date: 2024-02-02
+-- updated: 2024-02-02 20:38:38
+-- id: 2bpupcg8
+-- type: intro
+-- status: scratch
+

@@ -1,0 +1,10 @@
+<h3>Theme Test Error</h3>
+<div>Path: [@ error.kind.source_path @]</div>
+<h4>Expected:</h4>
+<pre>
+[@ error.kind.expected|escape @]
+</pre>
+<h4>Got:</h4>
+<pre>
+[@ error.kind.got|escape @]
+</pre>

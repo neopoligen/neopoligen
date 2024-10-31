@@ -1,0 +1,42 @@
+-- title
+
+Link Or Title Text With Filters 
+
+
+-- h2
+
+Overview
+
+This feature is an expansion of <<tlink|2cglug42>>. 
+That feature shows a link to another page unless
+you're already on that page. 
+
+This feature expands that with the ability to 
+add a filter to determine if the text should be 
+linked or not.
+
+Filtering is the same as in <<tlink|2cejgspr>>
+
+-- todo
+-- title: Requirements
+
+[x] The feature looks like this:
+
+-- code/
+-- jinja
+
+{{ site.link_or_title_filtered(
+    "2cgqohce", 
+    page.id(),
+    ["v0.1.0"]
+) }}
+
+-- /code
+
+[x] Filtering is case-insensitive
+
+-- metadata
+-- date: 2024-02-12
+-- id: 2cgqohce
+-- status: draft
+

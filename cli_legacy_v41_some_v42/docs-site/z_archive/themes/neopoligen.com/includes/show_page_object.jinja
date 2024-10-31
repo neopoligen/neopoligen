@@ -1,0 +1,17 @@
+<div class="ast_section_wrapper">
+    <div class="ast_section_output_wrapper">
+        <pre id="page_ast_code" class="ast_section_pre" hidden>[!- autoescape true -!][@- payload.place_everything() -@][!- endautoescape -!]</pre>
+    </div>
+</div>
+
+<script>
+console.log("NOTE: includes/tools/show_object_payload.jinja might throw an error if the word 'none' is in the text") 
+document.addEventListener("DOMContentLoaded", () => {
+    const el = document.querySelector("#page_ast_code")
+    const initial_code = el.innerHTML
+    const updated_code = initial_code.replaceAll(` none`, ` "none"`)
+    const code = JSON.parse(updated_code)
+    el.innerHTML = JSON.stringify(code, null, 2)
+    el.hidden = false
+})
+</script>

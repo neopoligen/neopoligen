@@ -1,0 +1,25 @@
+-- title
+
+Span: pre 
+
+-- subtitle
+
+The Preformatted Text Span
+
+-- p
+
+Basic Example: 
+
+<<pre|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<pre|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03
+-- id: 2bqpmstw
+-- status: published
+

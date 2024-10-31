@@ -1,0 +1,13 @@
+-- title
+
+Title Section - Title Only 
+
+{{ page.title_section }}
+
+Includes any paragraphs after the title
+
+-- metadata
+-- date: 2024-01-15
+-- id: 2aygxfkb
+-- status: published
+

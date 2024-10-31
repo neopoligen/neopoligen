@@ -1,0 +1,37 @@
+-- title
+
+Check Section 
+
+Used the check if a section exists
+
+-- code
+-- class: example
+
+{{ check_section(page, "SECTION_NAME") }}
+
+
+-- list
+-- title: Use Case
+
+- Check if refernces exist and output a header
+if they do before using `place_section(page, "ref")``
+to output them
+
+- I use this for my references like:
+
+-- code
+-- jinja
+-- class: example
+
+{% from "macros/check_section.jinja" import check_section %}
+{% if check_section(page, "ref") %}
+<h2 class="references_title">References</h2>
+<ul>{{ place_section(page, "ref") }}</ul>
+{% endif %}
+
+
+-- metadata
+-- date: 2024-01-15
+-- id: 2b1kqiig
+-- status: published
+

@@ -1,0 +1,49 @@
+-- title
+
+strong shorthand tests
+
+-- start-template-test
+
+**this is strong text**
+
+-- expected-output/
+
+<p>
+    <strong>this is strong text</strong>
+</p>
+
+-- /expected-output
+
+
+-- start-template-test
+
+**this is strong text|class: green**
+
+-- expected-output/
+
+<p>
+    <strong class="green">this is strong text</strong>
+</p>
+
+-- /expected-output
+
+
+-- start-template-test
+
+**this is strong text|flag-attr**
+
+-- expected-output/
+
+<p>
+    <strong flag-attr>this is strong text</strong>
+</p>
+
+-- /expected-output
+
+
+
+-- metadata
+-- date: 2024-05-18 15:12:11
+-- id: 2geyvavk
+
+

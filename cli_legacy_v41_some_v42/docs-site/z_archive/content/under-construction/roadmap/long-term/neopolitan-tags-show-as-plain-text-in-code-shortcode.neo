@@ -1,0 +1,35 @@
+-- title
+
+Inline Neopolitan Tags Show Up Directly In
+Inline Shorthand Spans
+
+-- h2
+
+Overview
+
+-- todo
+
+[] Placing an Neopolitan tag inside
+a code shorthand span doesn't break
+
+[] Placing an Neopolitan tag inside
+a code shorthand span prevents the
+tag from being processed so it outputs
+directly in the template
+
+
+-- h2
+
+Examples
+
+
+
+-- tags
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 11:27:46
+-- id: 2bppjc1z
+-- status: scratch
+

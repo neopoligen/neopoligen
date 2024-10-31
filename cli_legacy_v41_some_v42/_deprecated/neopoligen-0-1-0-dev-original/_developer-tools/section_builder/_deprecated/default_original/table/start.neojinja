@@ -1,0 +1,4 @@
+[!- import "macros.neojinja" as theme -!]
+
+<section [@- section_attributes(page_id, {"section": section, "classes": "SECTIONTYPE_default_section table_section flow" } ) -@]>
+<!-- Tables have not yet been defined -->

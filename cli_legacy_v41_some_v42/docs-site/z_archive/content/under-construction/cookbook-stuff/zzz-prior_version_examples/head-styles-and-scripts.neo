@@ -1,0 +1,60 @@
+-- title
+
+Head Styles And Scripts 
+
+The `-- head`` tag allows for dropping anything
+into the head tag of the document. For example, 
+this page loads `p5`` and then uses an `-- html``
+section to render the example
+
+
+-- head
+
+<script src="/_assets/p5/p5.min.js"></script>
+
+-- html
+
+<div class="example center">
+  <div id="p5_output"></div>
+</div>
+
+<script>
+let rad = 20
+let xpos, ypos
+let xspeed = 2.8
+let yspeed = 2.2
+let xdirection = 1
+let ydirection = 1
+
+function setup() {
+  var canvas = createCanvas(300, 100)
+  canvas.parent('p5_output')
+  noStroke()
+  frameRate(30)
+  ellipseMode(RADIUS)
+  xpos = width / 2
+  ypos = height / 2
+}
+
+function draw() {
+  background(101)
+  xpos = xpos + xspeed * xdirection
+  ypos = ypos + yspeed * ydirection
+  if (xpos > width - rad || xpos < rad) {
+    xdirection *= -1
+  }
+  if (ypos > height - rad || ypos < rad) {
+    ydirection *= -1
+  }
+  ellipse(xpos, ypos, rad, rad)
+}
+
+</script>
+
+
+
+-- metadata
+-- date: 2024-01-13
+-- id: 2avodbwt
+-- status: published
+

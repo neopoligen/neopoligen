@@ -1,0 +1,31 @@
+-- title
+
+Include Sections From Other Pages
+
+-- h2
+
+Overview
+
+Any section from any page that has an `-- id:`` attribute
+can be included in a template via:
+
+-- code/
+-- jinja
+
+ macros.include_section_from_page(page_id, section_id) 
+
+-- /code
+
+
+-- todo
+-- title: Requirements
+
+[] Calling ` macros.include_section_from_page(page_id, section_id) ``
+in a template includes the section from the page
+
+
+-- metadata
+-- date: 2024-02-17
+-- id: 2cvhjp4v
+-- status: draft
+

@@ -1,0 +1,49 @@
+##################################################################################
+TEMPLATE
+PATH: pages/testing/published.jinja
+##################################################################################
+
+[@- site.ilink(page_id, "aabb0001", "This should not be a link") -@]
+
+[@- site.ilink(page_id, "aabb0002", "This should be a link") -@]
+
+
+##################################################################################
+SUPPORT_PAGE
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/target-page.neo
+##################################################################################
+
+
+-- title
+
+Target Page
+
+-- metadata
+-- id: aabb0002
+-- type: testing
+
+
+##################################################################################
+INPUT
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/file-under-test.neo
+##################################################################################
+
+
+-- title
+
+File Under Test
+
+-- metadata
+-- id: aabb0001
+-- type: testing
+
+
+
+##################################################################################
+EXPECTED_OUTPUT
+##################################################################################
+
+
+This should not be a link
+
+<a href="/en/aabb0002/?target-page">This should be a link</a>

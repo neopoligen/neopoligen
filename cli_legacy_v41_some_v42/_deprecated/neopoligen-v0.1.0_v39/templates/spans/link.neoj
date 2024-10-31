@@ -1,0 +1,26 @@
+[!- import "includes/theme.neoj" as theme -!]
+
+<a 
+[!- for flag in span.flags -!]
+[!- if loop.first -!]
+[@- ' ' -@]href="[@- flag -@]"
+[!- endif -!]
+[!- endfor -!]
+
+[! for attr in span.attrs!]
+[@ ' ' @][@ attr @]="[@ span.attrs[attr] @]"
+[! endfor !]
+
+[!- for flag in span.flags -!]
+[!- if not loop.first -!]
+[@- ' ' -@][@- flag -@]
+[!- endif -!]
+[!- endfor -!]
+>
+
+[! for child in span.spans !]
+[@ theme.output_span(site, page_id, child) @]
+[! endfor !]
+</a>
+
+

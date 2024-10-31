@@ -1,0 +1,25 @@
+-- title
+
+www.neopoligen.com overrides
+
+This directory gets synced to:
+
+~/Document/Neopoligen/neopoligen.github.io/...
+
+after the main `thems/neopoligen-v0.1.0` theme. 
+
+The reason for that is that right now, everything
+is coming off the neopoligen-v0.1.0 theme to start
+with as we build it out and the sync process
+will delete anything it points to for the
+time being. 
+
+
+-- metadata
+-- created: 2024-10-18T20:33:03-04:00
+-- updated: 2024-10-18T20:33:03-04:00
+-- id: 2ndlpilx
+-- type: post
+-- status: scratch
+
+

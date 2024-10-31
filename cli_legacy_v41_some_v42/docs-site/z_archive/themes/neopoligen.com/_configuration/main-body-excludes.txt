@@ -1,0 +1,14 @@
+# Don't put `comment`` in the file unless you're
+# okay with content directly after `-- /comment``
+# not showing up (which can be dealt with by 
+# making an explicit `-- p`` tag after it if
+# you want to go that way)
+
+comment
+footnote
+forward
+metadata
+ref
+subtitle
+tags
+title

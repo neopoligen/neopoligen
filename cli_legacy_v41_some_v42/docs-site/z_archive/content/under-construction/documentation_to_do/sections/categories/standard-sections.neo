@@ -1,0 +1,45 @@
+-- title
+
+Standard Sections
+
+-- p
+
+This is a standard-full test
+
+with a few paragraphs
+worth of stuff
+
+Lorem ipsum eget hendrerit. Pellentesque vestibulum 
+elit vitae tortor efficitur, sed faucibus augue 
+dignissim. Sed sit amet nisi sapien. Phasellus 
+convallis hendrerit justo, in ullamcorper felis.
+
+
+-- p
+-- example_flag
+-- title: Some Section Title
+-- subtitle: And a subtitle
+-- class: green
+-- forward: This is the forward text
+-- forward: that sometimes makes sense
+-- preface: Sometimes adding a preface will
+-- preface: make sense even if it doesn't always
+-- afterword: Afterwords may make sense in
+-- afterword: some cases too
+
+This is a standard-full test
+
+with a few paragraphs
+worth of stuff
+
+Lorem ipsum eget hendrerit. Pellentesque vestibulum 
+elit vitae tortor efficitur, sed faucibus augue 
+dignissim. Sed sit amet nisi sapien. Phasellus 
+convallis hendrerit justo, in ullamcorper felis.
+
+
+
+-- metadata
+-- date: 2024-02-01
+-- id: 2bmmefot
+

@@ -1,0 +1,20 @@
+-- title
+
+Links (with page IDs) 
+
+alfa
+
+asdf
+
+<<ilink|this goes to a page with a standard path|2b0vtgfr>>
+
+<<ilink|this one has a class and an id as well|2b0vtgfr|class: green|id: tango>>
+
+<<ilink|this link is defined by id going to a page with a custom path|2avk93c0>>
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2awrcwi5
+-- status: published
+

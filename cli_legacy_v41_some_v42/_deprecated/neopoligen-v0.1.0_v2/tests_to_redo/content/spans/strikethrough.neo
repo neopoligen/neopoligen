@@ -1,0 +1,27 @@
+-- title
+
+button Test
+
+-- start-template-test
+
+~~this is a strikethrough~~
+
+
+-- expected-output/
+
+<p>
+    <s>this is a strikethrough</s>
+</p>
+
+-- /expected-output
+
+
+
+
+
+
+-- metadata
+-- date: 2024-05-21 07:08:57
+-- id: 2gm56cbl
+
+

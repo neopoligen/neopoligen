@@ -1,0 +1,89 @@
+-- title
+
+Quick Start
+
+-- h2 
+
+Introduction
+
+Welcome to the initial release of Neopoligen. I'm 
+doing the "build in public" thing and this is a very
+early release of the software. It's more in the 
+"play around with it" phase than the "use it 
+for real" phase.
+
+-- h2
+
+Installation
+
+You'll need to have
+<<link|Rust|https://www.rust-lang.org/>> installed 
+in order to build and run things for now. You'll
+also need to grab a copy of this website
+as the starting point. Here's what to do:
+
+-- list
+
+- Create a folder called "Neopoligen" (with a capital "N")
+in your home folder (i.e. "~/Neopoligen")
+
+- Create a "config.toml" file in the Neopoligen folder 
+(i.e. "~/Neopoligen/config.toml") with the contents:
+
+-- code
+-- toml
+
+[settings]
+active_site = "neopoligen.github.io"
+
+-- list
+
+- Clone the <<link| neopoligen website|https://github.com/neopoligen/neopoligen.github.io>>
+into the "Neopoligen" folder
+
+- <<link|Clone the neopoligen repo|https://github.com/neopoligen/neopoligen>>
+to wherever you want to work with it on your
+machine
+
+- Run "cargo run" inside the neopoligen project (i.e. the folder
+with the "Cargo.toml" file). That will generate a local copy of the 
+Neopoligen site and make it available at:
+
+<<link|http://localhost:1989/|http://localhost:1989>>
+
+-- h2
+
+Making Changes
+
+The content files are in:
+
+~/Neopoligen/neopoligen.github.io/content
+
+And the templates are in 
+
+~/Neopoligen/neopoligen.github.io/themes/neopoligen-site
+
+More documentation about them and the rest of the
+the engine is one the way. You can poke around the
+files in the mean time if you're interested in
+that type of thing. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- metadata
+-- date: 2024-02-13
+-- id: 2cizgxp9
+-- status: scratch
+
+

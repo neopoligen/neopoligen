@@ -1,0 +1,37 @@
+[!- import "includes/theme.neoj" as theme -!]
+<section
+    [@- theme.section_classes(section, "html-section-show") -@] 
+    [@- section.attr_string -@]>
+    
+
+<div class="html-show-wrapper">
+<h3>HTML</h3>
+
+<aws-code-block 
+  [# TODO: Implement no-buttons and no-copy features
+  [!- if "no-buttons" in section.flags -!][@- ' ' -@]data-buttons="off"[!- endif -!]
+  #]>
+[! if "no-title" not in section.flags !]
+  [! if "title" in section.attr_spans !]
+    <div class="aws-code-block-title">
+      [@ theme.output_spans(site, page_id, section.attr_spans.title) @]
+    </div>
+  [!- endif -!]
+  [! if "subtitle" in section.attr_spans !]
+    <div class="aws-code-block-subtitle">[@ theme.output_spans(site, page_id, section.attr_spans.subtitle) @]</div>
+  [! endif !]
+[! endif !]
+<div class="aws-code-block-wrapper">
+    <div class="aws-code-block-sidebar"></div>
+<pre class="aws-code-block-show-nums"><code>[@- highlight_code(section.text, "html") -@]</code></pre></div>
+</aws-code-block>
+
+<h3>Output</h3>
+
+<div>
+[! autoescape false !]
+[@ section.text @]
+[! endautoescape !]
+</div>
+
+</div>

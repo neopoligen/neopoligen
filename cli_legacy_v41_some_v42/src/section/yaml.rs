@@ -1,0 +1,52 @@
+// NOTE: yaml is deprecated and won't be used for V42 and it'll
+// take a compelling argument to add it in instead of just
+// standardizing on json5 everywhere.
+//
+// TODO: Delete yaml.rs when V42 is live
+use crate::section::*;
+use crate::section_attr::*;
+use crate::span::*;
+use nom::branch::alt;
+use nom::bytes::complete::tag;
+use nom::bytes::complete::take_until;
+use nom::character::complete::multispace0;
+use nom::combinator::rest;
+use nom::multi::many0;
+use nom::IResult;
+use nom::Parser;
+use nom_supreme::error::ErrorTree;
+use nom_supreme::parser_ext::ParserExt;
+
+pub fn yaml_section_full<'a>(
+    source: &'a str,
+    sections: &'a ConfigSections,
+    _nest_level: usize,
+    list_level: usize,
+) -> IResult<&'a str, Section, ErrorTree<&'a str>> {
+    let (source, _) = tag("-- ").context("").parse(source)?;
+    let (source, r#type) = (|src| tag_finder_full(src, &sections.yaml))
+        .context("")
+        .parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
+    let (source, attrs) = many0(section_attr).context("").parse(source)?;
+    let (source, _) = structure_empty_until_newline_or_eof
+        .context("")
+        .parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
+    let (source, _text) = alt((take_until("\n--"), rest, eof))
+        .context("")
+        .parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
+    // TODO: convert text to data.
+    Ok((
+        source,
+        Section {
+            attrs,
+            bounds: SectionBounds::Full,
+            kind: SectionKind::Yaml {},
+            r#type: r#type.to_string(),
+        },
+    ))
+}

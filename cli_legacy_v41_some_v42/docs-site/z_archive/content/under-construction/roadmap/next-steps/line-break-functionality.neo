@@ -1,0 +1,36 @@
+-- title
+
+Line Break Functionality
+
+-- h2
+
+Overview
+
+This feature makes `\n`` turn
+into an HTML `<br />`` tag
+when the file is output
+
+
+-- todo
+-- title: Details
+
+
+
+
+
+-- h2
+
+Examples
+
+
+
+-- tags
+-- v0.1.0
+-- feature-proposal
+
+-- metadata
+-- date: 2024-02-13
+-- updated: 2024-02-13 02:58:39
+-- id: 2citrwql
+-- status: scratch
+
