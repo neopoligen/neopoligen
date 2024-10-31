@@ -50,10 +50,10 @@ pub fn any_$NAME2(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
 
 any_tests_skeleton = """
     #[test]
-    fn single_character() {
-        let source = "$CHARalfa";
+    fn single_character_$NAME1() {
+        let source = "$CHAR alfa";
         let left = (
-            "alfa",
+            " alfa",
             SpanV42::PlainText(PlainTextSpan {
                 text: "$CHAR".to_string(),
             }),
@@ -63,10 +63,10 @@ any_tests_skeleton = """
     }
 
     #[test]
-    fn allow_multiple() {
-        let source = "$CHAR$CHARbravo";
+    fn allow_multiple_$NAME1() {
+        let source = "$CHAR$CHAR bravo";
         let left = (
-            "bravo",
+            " bravo",
             SpanV42::PlainText(PlainTextSpan {
                 text: "$CHAR$CHAR".to_string(),
             }),
@@ -96,4 +96,22 @@ use nom_supreme::parser_ext::ParserExt;
         template = Template(any_functions_skeleton)
         output = template.substitute(data)
         f.write(output)
+    f.write("\n\n")
+
+
+    f.write("""#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+""")
+
+    for character in characters:
+        data2 = { "CHAR": character[0], "NAME1": character[1], "NAME2": character[2] }
+        template2 = Template(any_tests_skeleton)
+        output2 = template2.substitute(data2)
+        f.write(output2)
+    f.write("\n\n")
+
+    f.write("""}""")
 
