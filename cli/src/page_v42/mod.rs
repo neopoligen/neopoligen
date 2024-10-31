@@ -17,7 +17,6 @@ use std::sync::Arc;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PageTitleV42 {
     spans: Vec<SpanV42>,
-    text: String,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -125,7 +124,6 @@ impl PageV42 {
                 match attrs.get("title") {
                     Some(attr) => Some(Ok(Value::from_serialize(PageTitleV42 {
                         spans: attr.spans.clone(),
-                        text: attr.text.to_string(),
                     }))),
                     None => None,
                 }
@@ -136,7 +134,6 @@ impl PageV42 {
         } else if let Some(id) = &self.id.clone() {
             Ok(Value::from_serialize(PageTitleV42 {
                 spans: vec![SpanV42::PlainText(PlainTextSpan { text: id.clone() })],
-                text: id.to_string(),
             }))
         } else {
             Ok(Value::from("[NEO_TODO_PAGE_TITLE]"))
@@ -220,7 +217,6 @@ mod test {
             spans: vec![SpanV42::PlainText(PlainTextSpan {
                 text: "001-pagedata-only.neo".to_string(),
             })],
-            text: "001-pagedata-only.neo".to_string(),
         });
         let right = page.title().unwrap();
         assert_eq!(left, right);
@@ -233,7 +229,6 @@ mod test {
             spans: vec![SpanV42::PlainText(PlainTextSpan {
                 text: "Title In Pagedata".to_string(),
             })],
-            text: "Title In Pagedata".to_string(),
         });
         let right = page.title().unwrap();
         assert_eq!(left, right);
@@ -246,11 +241,22 @@ mod test {
             spans: vec![SpanV42::PlainText(PlainTextSpan {
                 text: "006-unclosed-start-section.neo".to_string(),
             })],
-            text: "006-unclosed-start-section.neo".to_string(),
         });
         let right = page.title().unwrap();
         assert_eq!(left, right);
     }
+
+    // #[test]
+    // fn title_from_title_section() {
+    //     let page = PageV42::test_from_sample_file("002-basic-sample.neo");
+    //     let left = Value::from_serialize(PageTitleV42 {
+    //         spans: vec![SpanV42::PlainText(PlainTextSpan {
+    //             text: "Basic Sample".to_string(),
+    //         })],
+    //     });
+    //     let right = page.title().unwrap();
+    //     assert_eq!(left, right);
+    // }
 
     #[test]
     fn default_html_file_system_relative_path_from_id() {
