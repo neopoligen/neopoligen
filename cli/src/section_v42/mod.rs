@@ -78,7 +78,6 @@ pub fn start_or_full_section_v42<'a>(
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     let (source, section) = alt((
-        // |src| basic_section_start_v42(src, &site_config, SectionParent::Page, debug),
         // |src| checklist_section_full_v42(src, &site_config, SectionParent::Page, debug),
         // |src| checklist_section_start_v42(src, &site_config, SectionParent::Page, debug),
         // |src| css_section_full_v42(src, &site_config, SectionParent::Page, debug),
@@ -95,8 +94,6 @@ pub fn start_or_full_section_v42<'a>(
         // |src| raw_section_start_v42(src, &site_config, SectionParent::Page, debug),
         // |src| script_section_full_v42(src, &site_config, SectionParent::Page, debug),
         // |src| script_section_start_v42(src, &site_config, SectionParent::Page, debug),
-        // |src| unknown_section_start_v42(src, &site_config, SectionParent::Page, debug),
-        // |src| unknown_section_full_v42(src, &site_config, SectionParent::Page, debug),
         |src| basic_section_start_v42(src, &site_config, SectionParent::Page, debug),
         |src| basic_section_full_v42(src, &site_config, SectionParent::Page, debug),
     ))
