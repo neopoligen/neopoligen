@@ -120,11 +120,11 @@ mod test {
     //     helpers::get_include_str_file,
     //     span_v42::{plaintext::PlainTextSpan, SpanV42},
     // };
-    use include_dir::{include_dir, Dir};
+    // use include_dir::{include_dir, Dir};
     // use pretty_assertions::assert_eq;
     // use rstest::rstest;
 
-    const VALID_SAMPLES: Dir = include_dir!("src/section_v42/samples/unknown/valid");
+    // const VALID_SAMPLES: Dir = include_dir!("src/section_v42/samples/unknown/valid");
 
     // #[rstest]
     // #[case("003-check-preview.neo", "")]

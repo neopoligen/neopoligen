@@ -1,5 +1,4 @@
 use crate::neo_error::{NeoError, NeoErrorKind};
-use crate::span::*;
 use crate::span_v42::SpanV42;
 use include_dir::Dir;
 use minijinja::Error;
@@ -110,29 +109,6 @@ pub fn flatten_spans_in_template_v42(args: &[Value]) -> Result<Value, Error> {
             ErrorKind::InvalidOperation,
             "Missing argument for flatten_spans in template".to_string(),
         ))
-    }
-}
-
-// TODO: Deprecated - remove when v42 is done
-pub fn flatten_spans(spans: &Vec<Span>) -> String {
-    spans
-        .iter()
-        .map(|span| flatten_parsed_text(span))
-        .collect::<Vec<String>>()
-        .join("")
-}
-
-// TODO: Deprecated - remove when v42 is done
-pub fn flatten_parsed_text(span: &Span) -> String {
-    match &span.kind {
-        //SpanKind::NamedSpanV42 { .. } => span.value().unwrap().into(),
-        SpanKind::NamedSpanV42 { value, .. } => flatten_spans(value),
-        // SpanKind::NamedSpan { children, .. } => children
-        //     .iter()
-        //     .map(|span| flatten_parsed_text(span))
-        //     .collect::<Vec<String>>()
-        //     .join(""),
-        _ => span.parsed_text.clone(),
     }
 }
 

@@ -13,8 +13,6 @@ pub mod section_key_value_attr_payload_v42;
 pub mod section_v42;
 pub mod site_config;
 pub mod site_v42;
-pub mod span;
-pub mod span_attr;
 pub mod span_attrs_v42;
 pub mod span_v42;
 pub mod spans_v42;

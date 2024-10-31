@@ -1,9 +1,10 @@
 use crate::section_attr_v42::SectionAttrV42;
-use crate::span::*;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
+use nom::character::complete::line_ending;
 use nom::character::complete::multispace1;
+use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::eof;
 use nom::combinator::not;
@@ -31,7 +32,7 @@ pub fn section_flag_attr_v42<'a>(
     )))
     .context("")
     .parse(source)?;
-    let (source, _) = structure_empty_until_newline_or_eof
+    let (source, _) = alt((pair(space0, line_ending), pair(space0, eof)))
         .context("")
         .parse(source)?;
     let value = parts
