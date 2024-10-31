@@ -1,7 +1,4 @@
-use crate::span_v42::any_colons::any_colons;
-use crate::span_v42::any_hyphens::any_hyphens;
-use crate::span_v42::any_paren_closes::any_paren_closes;
-use crate::span_v42::any_paren_opens::any_paren_opens;
+use crate::span_v42::any_characters::*;
 use crate::span_v42::code_shorthand::*;
 use crate::span_v42::emphasis_shorthand::*;
 use crate::span_v42::footnote_shorthand::footnote_shorthand_span;
@@ -24,21 +21,21 @@ pub fn generic_base_content<'a>(source: &'a str) -> IResult<&'a str, SpanV42, Er
     let (source, output) = alt((
         // "<>`-|:_!@#$^&*()~\\"
         plaintext,
-        single_less_than,
-        single_greater_than,
-        single_backtick,
-        // Reminder: don't do single_pipe here, but in block content instead
-        single_underscore,
-        single_exclamation,
-        named_span,
         code_shorthand_span,
         emphasis_shorthand_span,
         footnote_shorthand_span,
         strong_shorthand_span,
         any_hyphens,
         any_colons,
-        any_paren_opens,
-        any_paren_closes,
+        any_open_parens,
+        any_close_parens,
+        // Reminder: don't do single_pipe, put it in block content instead
+        single_less_than,
+        single_greater_than,
+        single_backtick,
+        single_underscore,
+        single_exclamation,
+        named_span,
     ))
     .context("")
     .parse(source)?;

@@ -2,8 +2,7 @@ use super::not_pipe_or_greater_than_or_less_than_or_escape::not_pipe_or_greater_
 use super::single_greater_than::single_greater_than;
 use super::single_less_than::single_less_than;
 use crate::helpers::flatten_spans_v42;
-use crate::span_v42::any_hyphens::any_hyphens;
-use crate::span_v42::any_underscores::any_underscores;
+use crate::span_v42::any_characters::*;
 use crate::span_v42::escaped_character::*;
 use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::SpanV42;

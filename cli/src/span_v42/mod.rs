@@ -1,9 +1,9 @@
 pub mod any_characters;
-pub mod any_colons;
-pub mod any_hyphens;
-pub mod any_paren_closes;
-pub mod any_paren_opens;
-pub mod any_underscores;
+// pub mod any_colons;
+// pub mod any_hyphens;
+// pub mod any_paren_closes;
+// pub mod any_paren_opens;
+// pub mod any_underscores;
 pub mod block_line_ending;
 pub mod code_shorthand;
 pub mod emphasis_shorthand;

@@ -2,8 +2,7 @@
 use crate::helpers::dump_parser_if_debug;
 use crate::helpers::flatten_spans_v42;
 use crate::section_attr_v42::SectionAttrV42;
-use crate::span_v42::any_colons::any_colons;
-use crate::span_v42::any_hyphens::any_hyphens;
+use crate::span_v42::any_characters::*;
 use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::single_underscore::single_underscore;
 use crate::span_v42::*;
@@ -27,8 +26,6 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
-
-use self::any_underscores::any_underscores;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SectionKeyValueAttrV42 {
