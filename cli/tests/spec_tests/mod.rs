@@ -171,7 +171,7 @@ fn test_strong_shorthands() {
 }
 
 #[test]
-fn solo_test_strong_shorthands() {
+fn test_emphasis_shorthands() {
     let (valid, invalid) = load_tests("emphasis-shorthand.neo");
     valid.iter().for_each(|ti| {
         let parsed = emphasis_shorthand_span(&ti.source);
