@@ -14,11 +14,6 @@ use serde::Serialize;
 use std::path::PathBuf;
 use std::sync::Arc;
 
-// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-// pub struct PageTitleV42 {
-//     spans: Vec<SpanV42>,
-// }
-
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PageV42 {
     pub id: Option<String>,
@@ -229,11 +224,9 @@ mod test {
     #[test]
     fn title_from_pagedata_id() {
         let page = PageV42::test_from_sample_file("001-pagedata-only.neo");
-        let left = Value::from_serialize(PageTitleV42 {
-            spans: vec![SpanV42::PlainText(PlainTextSpan {
-                text: "001-pagedata-only.neo".to_string(),
-            })],
-        });
+        let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
+            text: "001-pagedata-only.neo".to_string(),
+        })]);
         let right = page.title().unwrap();
         assert_eq!(left, right);
     }
@@ -241,11 +234,9 @@ mod test {
     #[test]
     fn title_from_pagedata_title() {
         let page = PageV42::test_from_sample_file("005-title-in-pagedata.neo");
-        let left = Value::from_serialize(PageTitleV42 {
-            spans: vec![SpanV42::PlainText(PlainTextSpan {
-                text: "Title In Pagedata".to_string(),
-            })],
-        });
+        let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
+            text: "Title In Pagedata".to_string(),
+        })]);
         let right = page.title().unwrap();
         assert_eq!(left, right);
     }
@@ -253,11 +244,9 @@ mod test {
     #[test]
     fn title_from_invalid_page() {
         let page = PageV42::test_from_sample_file("006-unclosed-start-section.neo");
-        let left = Value::from_serialize(PageTitleV42 {
-            spans: vec![SpanV42::PlainText(PlainTextSpan {
-                text: "006-unclosed-start-section.neo".to_string(),
-            })],
-        });
+        let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
+            text: "006-unclosed-start-section.neo".to_string(),
+        })]);
         let right = page.title().unwrap();
         assert_eq!(left, right);
     }
@@ -265,11 +254,9 @@ mod test {
     #[test]
     fn solo_title_from_title_section() {
         let page = PageV42::test_from_sample_file("002-basic-sample.neo");
-        let left = Value::from_serialize(PageTitleV42 {
-            spans: vec![SpanV42::PlainText(PlainTextSpan {
-                text: "Basic Sample".to_string(),
-            })],
-        });
+        let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
+            text: "Basic Sample".to_string(),
+        })]);
         let right = page.title().unwrap();
         assert_eq!(left, right);
     }
