@@ -22,25 +22,60 @@ impl SiteV42 {
     // TODO: Set up config of specific attrs/flags to hoist
     //       and only add those to the output
     pub fn get_span_attrs(&self, args: &[Value]) -> Result<Value, Error> {
+        //let mut classes: Vec<String> = vec![];
         let mut attr_string: Vec<String> = vec![];
         if args.len() > 0 {
             let attrs = args[0].get_item(&Value::from("attrs")).unwrap();
             for key in attrs.try_iter()? {
                 let spans = attrs.get_item(&key)?;
-                let mut values = spans
+                let values = spans
                     .try_iter()?
-                    .map(|v| {
-                        encode_quoted_attribute(
-                            &v.get_item(&Value::from("text")).unwrap().to_string(),
-                        )
-                        .to_string()
+                    .filter_map(|v| {
+                        if key.to_string() != "class".to_string() {
+                            Some(
+                                encode_quoted_attribute(
+                                    &v.get_item(&Value::from("text")).unwrap().to_string(),
+                                )
+                                .to_string(),
+                            )
+                        } else {
+                            None
+                        }
                     })
                     .collect::<Vec<String>>();
-                if args.len() == 2 && key.to_string() == "class".to_string() {
-                    values.push(encode_quoted_attribute(&args[1].to_string()).to_string());
+                if values.len() > 0 {
+                    attr_string.push(format!(r#"{}="{}""#, key.to_string(), values.join(" ")));
                 }
-                attr_string.push(format!(r#"{}="{}""#, key.to_string(), values.join(" ")));
+
+                // let mut classes = spans
+                //     .try_iter()?
+                //     .filter_map(|v| {
+                //         if key.to_string() != "class".to_string() {
+                //             Some(
+                //                 encode_quoted_attribute(
+                //                     &v.get_item(&Value::from("text")).unwrap().to_string(),
+                //                 )
+                //                 .to_string(),
+                //             )
+                //         } else {
+                //             None
+                //         }
+                //     })
+                //     .collect::<Vec<String>>();
+
+                //if args.len() == 2 && key.to_string() == "class".to_string() {
+                // if key.to_string() == "class".to_string() {
+                //     classes.push(encode_quoted_attribute(&args[1].to_string()).to_string());
+                // }
             }
+
+            // if args.len() == 2 {
+            //     classes.push(args[1].to_string());
+            // }
+            // if classes.len() > 0 {
+            //     attr_string.push(format!(r#"class="{}""#, classes.join(" ")));
+            // }
+
             let flags = args[0].get_item(&Value::from("flags")).unwrap();
             for flag in flags.try_iter()? {
                 attr_string.push(format!(r#"{}"#, flag));
