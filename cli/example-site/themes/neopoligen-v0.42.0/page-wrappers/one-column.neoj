@@ -64,9 +64,13 @@ main {
   </main>
 
   <footer class="medium-wrapper flow">
+      <hr/>
       <h2>Debugging: Neopolitan Source File</h2>
-      <pre>[!- autoescape true -!][@- page.source -@][!- endautoescape -!]</pre>
+      <hr/>
       <div>Page ID: [@ page.id @]</div>
+      <hr/>
+      <pre>[!- autoescape true -!][@- page.source -@][!- endautoescape -!]</pre>
+      <hr/>
       <pre>[!- autoescape true -!][@- page.sections|tojson(true) -@][!- endautoescape -!]</pre>
   </footer>
 </body>
