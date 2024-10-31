@@ -8,6 +8,7 @@ pub mod plaintext_without_spaces;
 pub mod shorthand_code;
 pub mod shorthand_emphasis;
 pub mod shorthand_footnote;
+pub mod shorthand_strikethrough;
 pub mod shorthand_strong;
 pub mod single_characters;
 pub mod space0_line_ending_or_eof;
@@ -18,6 +19,7 @@ use crate::span_v42::plaintext::*;
 use crate::span_v42::shorthand_code::CodeShorthandV42;
 use crate::span_v42::shorthand_emphasis::EmphasisShorthandV42;
 use crate::span_v42::shorthand_footnote::FootnoteShorthandV42;
+use crate::span_v42::shorthand_strikethrough::StrikethroughShorthandV42;
 use crate::span_v42::shorthand_strong::StrongShorthandV42;
 use nom::branch::alt;
 use nom::combinator::not;
@@ -30,20 +32,22 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum SpanV42 {
-    #[serde(rename = "shorthand_code")]
+    #[serde(rename = "shorthand-code")]
     CodeShorthand(CodeShorthandV42),
-    #[serde(rename = "shorthand_emphasis")]
+    #[serde(rename = "shorthand-emphasis")]
     EmphasisShorthand(EmphasisShorthandV42),
-    #[serde(rename = "escaped_character")]
+    #[serde(rename = "escaped-character")]
     EscapedCharacter(EscapedCharacterSpanV42),
-    #[serde(rename = "shorthand_footnote")]
+    #[serde(rename = "shorthand-footnote")]
     FootnoteShorthand(FootnoteShorthandV42),
-    #[serde(rename = "named_span")]
+    #[serde(rename = "named-span")]
     NamedSpan(NamedSpanV42),
-    #[serde(rename = "plain_text")]
+    #[serde(rename = "plain-text")]
     PlainText(PlainTextSpan),
-    #[serde(rename = "shorthand_strong")]
+    #[serde(rename = "shorthand-strong")]
     StrongShorthand(StrongShorthandV42),
+    #[serde(rename = "shorthand-strikethrough")]
+    StrikethroughShorthand(StrikethroughShorthandV42),
 }
 
 pub fn span_v42<'a>(source: &'a str) -> IResult<&'a str, SpanV42, ErrorTree<&'a str>> {

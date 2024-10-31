@@ -89,6 +89,7 @@ pub fn flatten_spans_v42(spans: &Vec<SpanV42>) -> String {
                 "NEO_TODO: Cover StrongShorthand in flatten_spans_v42 in helpers/mod.rs".to_string()
             }
             SpanV42::EscapedCharacter(s) => s.text.to_string(),
+            _ => "TODO_IN_HELPERS_MOD".to_string(),
         })
         .collect::<Vec<String>>()
         .join("")

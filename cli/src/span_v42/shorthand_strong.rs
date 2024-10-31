@@ -32,12 +32,6 @@ pub struct StrongShorthandV42 {
     text: String,
 }
 
-// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-// pub struct StrongShorthandKeyValueAttrPayloadV42 {
-//     pub spans: Vec<SpanV42>,
-//     pub text: String,
-// }
-
 pub fn strong_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, tokens) = preceded(pair(tag("**"), space0), many1(strong_shorthand_content))
         .context("")

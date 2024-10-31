@@ -4,6 +4,7 @@ use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::shorthand_code::*;
 use crate::span_v42::shorthand_emphasis::*;
 use crate::span_v42::shorthand_footnote::*;
+use crate::span_v42::shorthand_strikethrough::*;
 use crate::span_v42::shorthand_strong::*;
 use crate::span_v42::single_characters::*;
 use crate::span_v42::SpanV42;
@@ -21,6 +22,7 @@ pub fn generic_base_content<'a>(source: &'a str) -> IResult<&'a str, SpanV42, Er
         emphasis_shorthand_span,
         footnote_shorthand_span,
         strong_shorthand_span,
+        strikethrough_shorthand_span,
         any_hyphens,
         any_colons,
         any_open_parens,
