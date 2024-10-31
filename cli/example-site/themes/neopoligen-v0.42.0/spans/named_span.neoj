@@ -1,5 +1,8 @@
 [!- import "built-in-helpers" as neo -!]
+[@- '' -@]
+
 <[@ span.kind @]>
-[@- neo.output_spans(site, span.spans) -@]
+[@- neo.output_spans(site, page, span.spans) -@]
 </[@ span.kind @]>
-[@- "" -@]
+
+[@- '' -@]
