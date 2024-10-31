@@ -14,10 +14,10 @@ use serde::Serialize;
 use std::path::PathBuf;
 use std::sync::Arc;
 
-#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub struct PageTitleV42 {
-    spans: Vec<SpanV42>,
-}
+// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+// pub struct PageTitleV42 {
+//     spans: Vec<SpanV42>,
+// }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PageV42 {
@@ -105,6 +105,12 @@ impl PageV42 {
     }
 
     pub fn title(&self) -> Result<Value, Error> {
+        // ORDER:
+        // pagedata--title
+        // -- title section first block
+        // --section--title attr on first block if it has one
+        // first number of n words from first block
+        // pagedata--id
         if let Some(page_title) = match &self
             .raw_ast
             .iter()
@@ -119,22 +125,32 @@ impl PageV42 {
                 }
                 _ => None,
             }) {
-            Some(attrs) => {
-                //dbg!(&attrs);
-                match attrs.get("title") {
-                    Some(attr) => Some(Ok(Value::from_serialize(PageTitleV42 {
-                        spans: attr.spans.clone(),
-                    }))),
-                    None => None,
-                }
-            }
+            Some(attrs) => match attrs.get("title") {
+                Some(attr) => Some(Ok(Value::from_serialize(attr.spans.clone()))),
+                None => None,
+            },
             None => None,
         } {
             page_title
+        } else if let Some(spans) = &self.raw_ast.iter().find_map(|section| match section {
+            SectionV42::Basic(sec) => match sec.kind.as_str() {
+                "title" => sec.children.iter().find_map(|child| match child {
+                    SectionV42::Block(c) => match c.kind.as_str() {
+                        "paragraph" => Some(c.spans.clone()),
+                        _ => None,
+                    },
+                    _ => None,
+                }),
+                _ => None,
+            },
+            _ => None,
+        }) {
+            //dbg!(spans);
+            Ok(Value::from_serialize(spans))
         } else if let Some(id) = &self.id.clone() {
-            Ok(Value::from_serialize(PageTitleV42 {
-                spans: vec![SpanV42::PlainText(PlainTextSpan { text: id.clone() })],
-            }))
+            Ok(Value::from_serialize(vec![SpanV42::PlainText(
+                PlainTextSpan { text: id.clone() },
+            )]))
         } else {
             Ok(Value::from("[NEO_TODO_PAGE_TITLE]"))
         }
@@ -246,17 +262,17 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // fn title_from_title_section() {
-    //     let page = PageV42::test_from_sample_file("002-basic-sample.neo");
-    //     let left = Value::from_serialize(PageTitleV42 {
-    //         spans: vec![SpanV42::PlainText(PlainTextSpan {
-    //             text: "Basic Sample".to_string(),
-    //         })],
-    //     });
-    //     let right = page.title().unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn solo_title_from_title_section() {
+        let page = PageV42::test_from_sample_file("002-basic-sample.neo");
+        let left = Value::from_serialize(PageTitleV42 {
+            spans: vec![SpanV42::PlainText(PlainTextSpan {
+                text: "Basic Sample".to_string(),
+            })],
+        });
+        let right = page.title().unwrap();
+        assert_eq!(left, right);
+    }
 
     #[test]
     fn default_html_file_system_relative_path_from_id() {

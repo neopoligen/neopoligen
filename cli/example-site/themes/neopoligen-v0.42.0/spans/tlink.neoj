@@ -1,3 +1,5 @@
-<a href="[@ site.get_page_href_from_span(span) @]">
-[@- site.get_page_title_from_span(span).text -@]
+[@ span @]
+---<a href="[@ site.get_page_href_from_span(span) @]">
+[@- site.get_page_title_from_span(span)-@]
 </a>
+
