@@ -1,13 +1,8 @@
 pub mod any_characters;
-// pub mod any_colons;
-// pub mod any_hyphens;
-// pub mod any_paren_closes;
-// pub mod any_paren_opens;
-// pub mod any_underscores;
 pub mod block_line_ending;
 pub mod code_shorthand;
 pub mod emphasis_shorthand;
-pub mod escaped_character;
+// pub mod escaped_character;
 pub mod escaped_characters;
 pub mod footnote_shorthand;
 pub mod named_span;

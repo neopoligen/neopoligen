@@ -23,7 +23,7 @@ characters = [
         ("[", "open_bracket", "open_brackets"), 
         ("]", "close_bracket", "close_brackets"), 
         ("|", "pipe", "pipes"), 
-        ("\\\\", "back_slash", "back_slashes"), 
+        ("\\\\", "backslash", "backslashes"), 
         (":", "colon", "colons"), 
         (";", "semicolon", "semicolons"), 
         ('\\"', "double_quote", "double_quotes"), 
@@ -34,6 +34,7 @@ characters = [
         (".", "period", "periods"), 
         ("/", "forward_slash", "forward_slashes"), 
         ("?", "question_mark", "question_marks"), 
+        ("`", "backtick", "backticks"), 
         ]
 
 ###################################################################

@@ -213,7 +213,7 @@ pub fn escaped_pipe(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     ))
 }
 
-pub fn escaped_back_slash(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+pub fn escaped_backslash(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, _) = tag("\\\\").context("").parse(source)?;
     Ok((
         source,
@@ -319,6 +319,16 @@ pub fn escaped_question_mark(source: &str) -> IResult<&str, SpanV42, ErrorTree<&
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
             text: "?".to_string(),
+        }),
+    ))
+}
+
+pub fn escaped_backtick(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+    let (source, _) = tag("\\`").context("").parse(source)?;
+    Ok((
+        source,
+        SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
+            text: "`".to_string(),
         }),
     ))
 }
@@ -591,7 +601,7 @@ mod test {
     }
 
     #[test]
-    fn check_escaped_back_slash() {
+    fn check_escaped_backslash() {
         let source = "\\\\ alfa";
         let left = (
             " alfa",
@@ -599,7 +609,7 @@ mod test {
                 text: "\\".to_string(),
             }),
         );
-        let right = escaped_back_slash(source).unwrap();
+        let right = escaped_backslash(source).unwrap();
         assert_eq!(left, right);
     }
 
@@ -730,6 +740,19 @@ mod test {
             }),
         );
         let right = escaped_question_mark(source).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn check_escaped_backtick() {
+        let source = "\\` alfa";
+        let left = (
+            " alfa",
+            SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
+                text: "`".to_string(),
+            }),
+        );
+        let right = escaped_backtick(source).unwrap();
         assert_eq!(left, right);
     }
 

@@ -207,7 +207,7 @@ pub fn any_pipes(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     ))
 }
 
-pub fn any_back_slashes(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+pub fn any_backslashes(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, result) = is_a("\\").context("").parse(source)?;
     Ok((
         source,
@@ -309,6 +309,16 @@ pub fn any_forward_slashes(source: &str) -> IResult<&str, SpanV42, ErrorTree<&st
 
 pub fn any_question_marks(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, result) = is_a("?").context("").parse(source)?;
+    Ok((
+        source,
+        SpanV42::PlainText(PlainTextSpan {
+            text: result.to_string(),
+        }),
+    ))
+}
+
+pub fn any_backticks(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+    let (source, result) = is_a("`").context("").parse(source)?;
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
@@ -845,7 +855,7 @@ mod test {
     }
 
     #[test]
-    fn single_character_back_slash() {
+    fn single_character_backslash() {
         let source = "\\ alfa";
         let left = (
             " alfa",
@@ -853,12 +863,12 @@ mod test {
                 text: "\\".to_string(),
             }),
         );
-        let right = any_back_slashes(source).unwrap();
+        let right = any_backslashes(source).unwrap();
         assert_eq!(left, right);
     }
 
     #[test]
-    fn allow_multiple_back_slash() {
+    fn allow_multiple_backslash() {
         let source = "\\\\ bravo";
         let left = (
             " bravo",
@@ -866,7 +876,7 @@ mod test {
                 text: "\\\\".to_string(),
             }),
         );
-        let right = any_back_slashes(source).unwrap();
+        let right = any_backslashes(source).unwrap();
         assert_eq!(left, right);
     }
 
@@ -1127,6 +1137,32 @@ mod test {
             }),
         );
         let right = any_question_marks(source).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn single_character_backtick() {
+        let source = "` alfa";
+        let left = (
+            " alfa",
+            SpanV42::PlainText(PlainTextSpan {
+                text: "`".to_string(),
+            }),
+        );
+        let right = any_backticks(source).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn allow_multiple_backtick() {
+        let source = "`` bravo";
+        let left = (
+            " bravo",
+            SpanV42::PlainText(PlainTextSpan {
+                text: "``".to_string(),
+            }),
+        );
+        let right = any_backticks(source).unwrap();
         assert_eq!(left, right);
     }
 
