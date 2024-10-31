@@ -1,6 +1,7 @@
 [!- import "built-in-helpers" as neo -!]
+
 <section class="flow">
 
-<h1>[!- include "subsections/just-first-spans.neoj" -!]</h1>
+<h1>[@- neo.output_just_first_block_spans(site, page, section) -@]</h1>
 
-[!- include "subsections/skip-first-section.neoj" -!]
+[@- neo.output_skip_first_block(site, page, section) -@]

@@ -1,6 +1,2 @@
-[! import "built-in-helpers" as neo -!]
-
-[! for child in section.children !]
-[@ neo.output_section(site, page, child) @]
-[! endfor !]
-
+[! include "sections/unknown/generic/start/default.neoj" -!]
+</section>

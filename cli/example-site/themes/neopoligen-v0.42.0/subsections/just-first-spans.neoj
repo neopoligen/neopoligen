@@ -1,8 +1,10 @@
+[#
 [!- import "built-in-helpers" as neo -!]
 [!- for child in section.children -!]
 [!- if loop.first -!]
 [@ neo.output_spans(site, page, child.spans) @]
 [!- endif -!]
 [!- endfor -!]
+#]
 
 

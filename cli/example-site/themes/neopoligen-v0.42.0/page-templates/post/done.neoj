@@ -1,9 +1,8 @@
 [!- extends "page-wrappers/one-column.neoj" -!]
 [!- import "built-in-helpers" as neo -!]
+
 [!- block body -!]
-[!- for section in page.sections -!]
-[@- neo.output_section(site, page, section) -@]
-[!- endfor -!]
+[@- neo.output_all_sections(site, page, page.sections) -@]
 [!- endblock -!]
 
 

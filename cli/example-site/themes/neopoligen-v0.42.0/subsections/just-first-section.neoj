@@ -1,3 +1,5 @@
+[#
+
 [!- import "built-in-helper" as neo -!]
 [!- for child in section.children -!]
 [!- if loop.first -!]
@@ -5,3 +7,4 @@
 [!- endif -!]
 [!- endfor -!]
 
+#]

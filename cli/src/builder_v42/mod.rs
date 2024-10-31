@@ -100,9 +100,41 @@ impl BuilderV42 {
         let _ = env.add_template_owned(
             "built-in-helpers",
             r#"
+
+[!- macro output_all_sections(site, page, sections) -!]
+[!- for section in sections -!]
+[@- output_section(site, page, section) -@]
+[!- endfor -!]
+[!- endmacro -!]
+
+[!- macro output_just_first_section(site, page, sections) -!]
+[!- for section in sections -!]
+[!- if loop.first -!]
+[@- output_section(site, page, section) -@]
+[!- endif -!]
+[!- endfor -!]
+[!- endmacro -!]
+
+[!- macro output_skip_first_block(site, page, section) -!]
+[!- for child in section.children -!]
+[!- if not loop.first -!]
+[@- output_section(site, page, child) -@]
+[!- endif -!]
+[!- endfor -!]
+[!- endmacro -!]
+
+[!- macro output_just_first_block_spans(site, page, section) -!]
+[!- for child in section.children -!]
+[!- if loop.first -!]
+[@- output_spans(site, page, child.spans) -@]
+[!- endif -!]
+[!- endfor -!]
+[!- endmacro -!]
+
 [!- macro output_section(site, page, section) -!]
 [!- include section.template_list ignore missing -!]
 [!- endmacro -!]
+
 
 [!- macro output_span(site, page, span) -!]
 [!- if span.kind -!]
@@ -117,8 +149,9 @@ impl BuilderV42 {
 [@- output_span(site, page, span) -@]
 [!- endfor -!]
 [!- endmacro -!]
-            "#
-            .to_string(),
+
+[# End Of Helpers #]"#
+                .to_string(),
         );
         let _ = env.add_template_owned(
             "built-in-template-error",
