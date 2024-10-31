@@ -67,7 +67,6 @@ pub fn get_strikethrough_shorthand_attrs_and_flags(
             }
         })
         .collect::<Vec<String>>();
-
     Ok((source, (attrs, flags)))
 }
 
