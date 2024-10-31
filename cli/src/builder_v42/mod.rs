@@ -101,10 +101,10 @@ impl BuilderV42 {
             "built-in-helpers",
             r#"
 
-[!- macro output_all_sections(site, page, sections) -!]
-[!- for section in sections -!]
-[@- output_section(site, page, section) -@]
-[!- endfor -!]
+[!- macro output_end_section(site, page, section) -!]
+[!- if section.end_section -!]
+[@- output_sections(site, page, section.end_section.children) -@]
+[!- endif -!]
 [!- endmacro -!]
 
 [!- macro output_just_first_block(site, page, section) -!]
@@ -122,17 +122,23 @@ impl BuilderV42 {
 [!- endif -!]
 [!- endfor -!]
 [!- endmacro -!]
-[!- macro output_skip_first_block(site, page, section) -!]
 
+[!- macro output_section(site, page, section) -!]
+[!- include section.template_list ignore missing -!]
+[!- endmacro -!]
+
+[!- macro output_sections(site, page, sections) -!]
+[!- for section in sections -!]
+[@- output_section(site, page, section) -@]
+[!- endfor -!]
+[!- endmacro -!]
+
+[!- macro output_skip_first_block(site, page, section) -!]
 [!- for child in section.children -!]
 [!- if not loop.first -!]
 [@- output_section(site, page, child) -@]
 [!- endif -!]
 [!- endfor -!]
-[!- endmacro -!]
-
-[!- macro output_section(site, page, section) -!]
-[!- include section.template_list ignore missing -!]
 [!- endmacro -!]
 
 [!- macro output_span(site, page, span) -!]

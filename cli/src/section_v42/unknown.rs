@@ -73,7 +73,7 @@ pub fn unknown_section_start_v42<'a>(
         end_section: Some(Box::new(end_section)),
         kind: kind.to_string(),
         flags,
-        template_list: make_template_list("unknown", "generic-unknown", "default"),
+        template_list: make_template_list("basic", "generic-basic", "default"),
     });
     Ok((source, section))
 }
@@ -108,7 +108,7 @@ pub fn unknown_section_full_v42<'a>(
         end_section: None,
         kind: kind.to_string(),
         flags,
-        template_list: make_template_list("unknown", "generic-unknown", "default"),
+        template_list: make_template_list("basic", "generic-basic", "default"),
     });
     Ok((source, section))
 }
@@ -143,7 +143,7 @@ mod test {
     }
 
     #[test]
-    fn integration_001_basic_full() {
+    fn solo_integration_001_basic_full() {
         let site_config = SiteConfigV42::mock1_basic();
         let source = get_include_str_file(VALID_SAMPLES, "001-basic-full.neo");
         let attrs = BTreeMap::new();
@@ -170,7 +170,7 @@ mod test {
         let end_section = None;
         let kind = "unknown-test-section".to_string();
         let flags = vec![];
-        let template_list = vec!["sections/generic-unknown/default.neoj".to_string()];
+        let template_list = vec!["sections/generic-basic/default.neoj".to_string()];
         let left = (
             "",
             SectionV42::Unknown(UnknownSectionV42 {
@@ -189,7 +189,7 @@ mod test {
     }
 
     #[test]
-    fn solo_integration_002_basic_start_end() {
+    fn integration_002_basic_start_end() {
         let site_config = SiteConfigV42::mock1_basic();
         let source = get_include_str_file(VALID_SAMPLES, "002-basic-start-end.neo");
         let attrs = BTreeMap::new();
@@ -223,7 +223,7 @@ mod test {
         })));
         let kind = "unknown-test-section".to_string();
         let flags = vec![];
-        let template_list = vec!["sections/generic-unknown/default.neoj".to_string()];
+        let template_list = vec!["sections/generic-basic/default.neoj".to_string()];
         let left = (
             "",
             SectionV42::Unknown(UnknownSectionV42 {

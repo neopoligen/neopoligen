@@ -2,7 +2,7 @@
 [!- import "built-in-helpers" as neo -!]
 
 [!- block body -!]
-[@- neo.output_all_sections(site, page, page.sections) -@]
+[@- neo.output_sections(site, page, page.sections) -@]
 [!- endblock -!]
 
 
