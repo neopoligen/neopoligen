@@ -12,7 +12,6 @@ use crate::span_v42::single_exclamation::single_exclamation;
 use crate::span_v42::strong_shorthand::strong_shorthand_span;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
-use nom::multi::many1;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -31,7 +30,6 @@ pub fn generic_base_content<'a>(source: &'a str) -> IResult<&'a str, SpanV42, Er
         any_paren_opens,
         any_paren_closes,
         single_exclamation,
-        block_line_ending,
     ))
     .context("")
     .parse(source)?;

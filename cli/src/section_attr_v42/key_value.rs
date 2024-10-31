@@ -7,6 +7,7 @@ use crate::span_v42::any_hyphens::any_hyphens;
 use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::single_underscore::single_underscore;
 use crate::span_v42::*;
+use crate::spans_v42::generic_base_content::generic_base_content;
 use nom::branch::alt;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
@@ -85,9 +86,7 @@ pub fn section_key_value_attr_v42<'a>(
 pub fn spans_of_section_key_value_attr_value<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Vec<SpanV42>, ErrorTree<&'a str>> {
-    let (source, output) = many1(alt((plaintext, any_colons, any_hyphens, single_underscore)))
-        .context("")
-        .parse(source)?;
+    let (source, output) = many1(generic_base_content).context("").parse(source)?;
     Ok((source, output))
 }
 
