@@ -98,7 +98,30 @@ impl BuilderV42 {
             let _ = env.add_template_owned(k, v);
         });
         let _ = env.add_template_owned(
-            "neopoligen-built-in-template-error",
+            "built-in-helpers",
+            r#"
+[!- macro output_section(site, page, section) -!]
+[!- include section.template_list ignore missing -!]
+[!- endmacro -!]
+
+[!- macro output_span(site, page, span) -!]
+[!- if span.kind -!]
+[!- include ["spans/" + span.kind + ".neoj", "spans/" + span.type + ".neoj"] ignore missing -!]
+[!- else -!]
+[!- include ["spans/" + span.type + ".neoj"] ignore missing -!]
+[!- endif -!]
+[!- endmacro -!]
+
+[!- macro output_spans(site, page, spans) -!]
+[!- for span in spans -!]
+[@- output_span(site, page, span) -@]
+[!- endfor -!]
+[!- endmacro -!]
+            "#
+            .to_string(),
+        );
+        let _ = env.add_template_owned(
+            "built-in-template-error",
             r#"<!DOCTYPE html>
 <html>
 <head>
@@ -180,9 +203,7 @@ header, main, footer {
                                 },
                             });
 
-                            if let Ok(template) =
-                                env.get_template("neopoligen-built-in-template-error")
-                            {
+                            if let Ok(template) = env.get_template("built-in-template-error") {
                                 match template.render(context!(
                                     site => &site_clone,
                                     page => Value::from_object(page.clone()),

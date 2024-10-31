@@ -135,16 +135,11 @@ impl SiteV42 {
 
     // TODO: Add error handling here
     pub fn get_page_title_from_span(&self, args: &[Value]) -> Result<Value, Error> {
-        dbg!(args);
         if args.len() == 1 {
             let x = &args[0].get_item(&Value::from("spans")).unwrap();
             let page_id = flatten_spans_in_template_v42(&[x.to_owned()]).unwrap();
-            dbg!(&page_id);
             match self.pages.get(&page_id.to_string()) {
-                Some(page) => {
-                    dbg!(&page);
-                    page.title()
-                }
+                Some(page) => page.title(),
                 None => Ok(Value::from(page_id)),
             }
         } else {
