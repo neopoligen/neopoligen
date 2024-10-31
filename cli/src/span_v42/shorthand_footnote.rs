@@ -1,8 +1,8 @@
+use super::single_characters::*;
 use super::PlainTextSpan;
 use crate::helpers::flatten_spans_v42;
 use crate::span_attrs_v42::*;
 use crate::span_v42::escaped_characters::*;
-use crate::span_v42::single_characters::*;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
 use nom::bytes::complete::is_a;
@@ -31,12 +31,6 @@ pub struct FootnoteShorthandV42 {
     flags: Vec<String>,
     text: String,
 }
-
-// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-// pub struct CodeShorthandKeyValueAttrPayloadV42 {
-//     pub spans: Vec<SpanV42>,
-//     pub text: String,
-// }
 
 pub fn footnote_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, tokens) = preceded(pair(tag("^^"), space0), many1(footnote_shorthand_content))
@@ -73,7 +67,6 @@ pub fn get_footnote_shorthand_attrs_and_flags(
             }
         })
         .collect::<Vec<String>>();
-
     Ok((source, (attrs, flags)))
 }
 
@@ -163,5 +156,4 @@ pub fn footnote_shorthand_key_value_attr(
 
 #[cfg(test)]
 mod test {
-    // Tests are done in the spec test file
 }

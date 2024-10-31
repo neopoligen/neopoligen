@@ -32,12 +32,6 @@ pub struct EmphasisShorthandV42 {
     text: String,
 }
 
-// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-// pub struct EmphasisShorthandKeyValueAttrPayloadV42 {
-//     pub spans: Vec<SpanV42>,
-//     pub text: String,
-// }
-
 pub fn emphasis_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, tokens) = preceded(pair(tag("__"), space0), many1(emphasis_shorthand_content))
         .context("")
@@ -73,7 +67,6 @@ pub fn get_emphasis_shorthand_attrs_and_flags(
             }
         })
         .collect::<Vec<String>>();
-
     Ok((source, (attrs, flags)))
 }
 
@@ -161,26 +154,6 @@ pub fn emphasis_shorthand_key_value_attr(
     ))
 }
 
-// pub fn emphasis_shorthand_key_value_attr(
-//     source: &str,
-// ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
-//     let (source, key_spans) = terminated(
-//         many1(alt((alphanumeric1, is_a("-_")))),
-//         pair(tag(":"), space1),
-//     )
-//     .context("")
-//     .parse(source)?;
-//     let (source, spans) = many1(alt((plaintext,))).context("").parse(source)?;
-//     Ok((
-//         source,
-//         SpanBaseAttrV42::KeyValue {
-//             key: key_spans.join(""),
-//             spans,
-//         },
-//     ))
-// }
-
 #[cfg(test)]
 mod test {
-    // tests are in the top level spec tests
 }

@@ -75,10 +75,12 @@ pub fn code_shorthand_attr_or_flag(
 ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
     // Reminder: Make sure to look for key_value first so flags work properly
-    let (source, attr_or_flag) =
-        alt((code_shorthand_key_value_attr, code_shorthand_span_flag_attr))
-            .context("")
-            .parse(source)?;
+    let (source, attr_or_flag) = alt((
+        code_shorthand_key_value_attr,
+        code_shorthand_span_flag_attr,
+    ))
+    .context("")
+    .parse(source)?;
     Ok((source, attr_or_flag))
 }
 
@@ -153,4 +155,5 @@ pub fn code_shorthand_key_value_attr(
 }
 
 #[cfg(test)]
-mod test {}
+mod test {
+}

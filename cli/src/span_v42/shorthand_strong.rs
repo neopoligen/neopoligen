@@ -67,7 +67,6 @@ pub fn get_strong_shorthand_attrs_and_flags(
             }
         })
         .collect::<Vec<String>>();
-
     Ok((source, (attrs, flags)))
 }
 
@@ -155,26 +154,6 @@ pub fn strong_shorthand_key_value_attr(
     ))
 }
 
-// pub fn strong_shorthand_key_value_attr(
-//     source: &str,
-// ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
-//     let (source, key_spans) = terminated(
-//         many1(alt((alphanumeric1, is_a("-_")))),
-//         pair(tag(":"), space1),
-//     )
-//     .context("")
-//     .parse(source)?;
-//     let (source, spans) = many1(alt((plaintext,))).context("").parse(source)?;
-//     Ok((
-//         source,
-//         SpanBaseAttrV42::KeyValue {
-//             key: key_spans.join(""),
-//             spans,
-//         },
-//     ))
-// }
-
 #[cfg(test)]
 mod test {
-    // tests are in the top level spec tests
 }

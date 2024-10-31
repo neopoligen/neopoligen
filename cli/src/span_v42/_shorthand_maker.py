@@ -4,7 +4,10 @@ from string import Template
 
 shorthands = [
         ("~~", "~~", "strikethrough", "Strikethrough", "tilde", "~"),
-        ("``", "``", "code", "Code", "backtick", "`")
+        ("``", "``", "code", "Code", "backtick", "`"),
+        ("__", "__", "emphasis", "Emphasis", "underscore", "_"),
+        ("^^", "^^", "footnote", "Footnote", "caret", "^"),
+        ("**", "**", "strong", "Strong", "asterisk", "*"),
         ]
 
 
