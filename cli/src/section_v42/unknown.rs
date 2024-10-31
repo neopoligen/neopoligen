@@ -73,7 +73,7 @@ pub fn unknown_section_start_v42<'a>(
         end_section: Some(Box::new(end_section)),
         kind: kind.to_string(),
         flags,
-        template_list: make_template_list("unknown", "generic", "start", "default"),
+        template_list: make_template_list("unknown", "generic", "default"),
     });
     Ok((source, section))
 }
@@ -108,7 +108,7 @@ pub fn unknown_section_full_v42<'a>(
         end_section: None,
         kind: kind.to_string(),
         flags,
-        template_list: make_template_list("unknown", "generic", "full", "default"),
+        template_list: make_template_list("unknown", "generic", "default"),
     });
     Ok((source, section))
 }

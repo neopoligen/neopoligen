@@ -81,7 +81,7 @@ pub fn json5_section_full_v42<'a>(
         error,
         flags,
         kind: kind.to_string(),
-        template_list: make_template_list("json5", kind, "full", "default"),
+        template_list: make_template_list("json5", kind, "default"),
     });
     Ok((source, section))
 }
@@ -139,7 +139,7 @@ pub fn json5_section_start_v42<'a>(
             children: vec![end_section],
             error,
             kind: kind.to_string(),
-            template_list: make_template_list("json5", kind, "start", "default"),
+            template_list: make_template_list("json5", kind, "default"),
         }),
     ))
 }

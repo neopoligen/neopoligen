@@ -4,6 +4,8 @@
 
 [@- neo.output_all_sections(site, page, section.children) -@]
 
+</section>
+
 [#
 [! for child in section.children !]
 [@ neo.output_section(site, child) @]

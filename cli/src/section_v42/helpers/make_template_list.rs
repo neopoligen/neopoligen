@@ -1,10 +1,10 @@
 use itertools::Itertools;
 
-pub fn make_template_list(r#type: &str, kind: &str, bounds: &str, template: &str) -> Vec<String> {
+pub fn make_template_list(r#type: &str, kind: &str, template: &str) -> Vec<String> {
     let templates = vec![
-        format!("sections/{}/{}/{}/{}.neoj", r#type, kind, bounds, template),
-        format!("sections/{}/{}/{}/default.neoj", r#type, kind, bounds),
-        format!("sections/{}/generic/{}/default.neoj", r#type, bounds),
+        format!("sections/{}/{}/{}.neoj", r#type, kind, template),
+        format!("sections/{}/{}/default.neoj", r#type, kind),
+        format!("sections/{}/generic/default.neoj", r#type),
     ];
     templates.into_iter().unique().collect()
 }
@@ -17,11 +17,11 @@ mod test {
     #[test]
     fn check_make_template_list() {
         let left = vec![
-            "sections/basic/title/full/custom.neoj".to_string(),
-            "sections/basic/title/full/default.neoj".to_string(),
-            "sections/basic/generic/full/default.neoj".to_string(),
+            "sections/basic/title/custom.neoj".to_string(),
+            "sections/basic/title/default.neoj".to_string(),
+            "sections/basic/generic/default.neoj".to_string(),
         ];
-        let right = make_template_list("basic", "title", "full", "custom");
+        let right = make_template_list("basic", "title", "custom");
         assert_eq!(left, right);
     }
 }

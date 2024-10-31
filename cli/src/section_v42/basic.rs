@@ -60,7 +60,7 @@ pub fn basic_section_full_v42<'a>(
         children,
         kind: kind.to_string(),
         flags,
-        template_list: make_template_list("basic", kind, "full", "default"),
+        template_list: make_template_list("basic", kind, "default"),
     });
     Ok((source, section))
 }

@@ -145,9 +145,7 @@ impl PageV42 {
                                 })],
                                 flags: vec![],
                                 kind: "title".to_string(),
-                                template_list: make_template_list(
-                                    "basic", "title", "full", "default",
-                                ),
+                                template_list: make_template_list("basic", "title", "default"),
                             }),
                             SectionV42::ParsingError(ParsingErrorSectionV42 {
                                 attrs: BTreeMap::new(),

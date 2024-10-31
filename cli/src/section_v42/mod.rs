@@ -45,13 +45,13 @@ pub enum SectionV42 {
     ParsingError(ParsingErrorSectionV42),
 }
 
-impl SectionV42 {
-    pub fn template_list(&self) -> Result<Value, Error> {
-        Ok(Value::from_serialize(vec![
-            "sections/basic/title/full/default.neoj".to_string(),
-        ]))
-    }
-}
+// impl SectionV42 {
+//     pub fn template_list(&self) -> Result<Value, Error> {
+//         Ok(Value::from_serialize(vec![
+//             "sections/basic/title/full/default.neoj".to_string(),
+//         ]))
+//     }
+// }
 
 impl Object for SectionV42 {
     fn call_method(
@@ -61,7 +61,7 @@ impl Object for SectionV42 {
         _args: &[Value],
     ) -> Result<Value, Error> {
         match name {
-            "template_list" => self.template_list(),
+            //"template_list" => self.template_list(),
             //"ast" => self.ast(),
             // "id" => self.id(),
             // "sections" => self.sections(),

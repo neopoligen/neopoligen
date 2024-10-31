@@ -131,7 +131,6 @@ impl BuilderV42 {
 [!- endfor -!]
 [!- endmacro -!]
 
-
 [!- macro output_section(site, page, section) -!]
 [!- include section.template_list ignore missing -!]
 [!- endmacro -!]

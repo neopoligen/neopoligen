@@ -57,7 +57,7 @@ pub fn end_section_basic_v42<'a>(
         children,
         kind: kind.to_string(),
         flags,
-        template_list: make_template_list("ends", kind.to_string().as_str(), "end", "default"),
+        template_list: make_template_list("ends", kind.to_string().as_str(), "default"),
     });
     Ok((source, section))
 }
