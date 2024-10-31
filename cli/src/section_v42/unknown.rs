@@ -73,7 +73,7 @@ pub fn unknown_section_start_v42<'a>(
         end_section: Some(Box::new(end_section)),
         kind: kind.to_string(),
         flags,
-        template_list: make_template_list("unknown", "generic", "default"),
+        template_list: make_template_list("unknown", "generic-unknown", "default"),
     });
     Ok((source, section))
 }
@@ -108,7 +108,7 @@ pub fn unknown_section_full_v42<'a>(
         end_section: None,
         kind: kind.to_string(),
         flags,
-        template_list: make_template_list("unknown", "generic", "default"),
+        template_list: make_template_list("unknown", "generic-unknown", "default"),
     });
     Ok((source, section))
 }
@@ -148,7 +148,7 @@ mod test {
         let source = get_include_str_file(VALID_SAMPLES, "001-basic-full.neo");
         let attrs = BTreeMap::new();
         let bound = Bound::Full;
-        let block_templates = vec!["sections/block/paragraph/full/default.neoj".to_string()];
+        let block_templates = vec!["sections/block-paragraph/default.neoj".to_string()];
         let children = vec![
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
@@ -170,7 +170,7 @@ mod test {
         let end_section = None;
         let kind = "unknown-test-section".to_string();
         let flags = vec![];
-        let template_list = vec!["sections/unknown/generic/full/default.neoj".to_string()];
+        let template_list = vec!["sections/generic-unknown/default.neoj".to_string()];
         let left = (
             "",
             SectionV42::Unknown(UnknownSectionV42 {
@@ -189,12 +189,12 @@ mod test {
     }
 
     #[test]
-    fn integration_002_basic_start_end() {
+    fn solo_integration_002_basic_start_end() {
         let site_config = SiteConfigV42::mock1_basic();
         let source = get_include_str_file(VALID_SAMPLES, "002-basic-start-end.neo");
         let attrs = BTreeMap::new();
         let bound = Bound::Start;
-        let block_templates = vec!["sections/block/paragraph/full/default.neoj".to_string()];
+        let block_templates = vec!["sections/block-paragraph/default.neoj".to_string()];
         let children = vec![
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
@@ -219,14 +219,11 @@ mod test {
             children: vec![],
             flags: vec![],
             kind: "unknown-test-section".to_string(),
-            template_list: vec![
-                "sections/ends/unknown-test-section/end/default.neoj".to_string(),
-                "sections/ends/generic/end/default.neoj".to_string(),
-            ],
+            template_list: vec!["sections/generic-ends/default.neoj".to_string()],
         })));
         let kind = "unknown-test-section".to_string();
         let flags = vec![];
-        let template_list = vec!["sections/unknown/generic/start/default.neoj".to_string()];
+        let template_list = vec!["sections/generic-unknown/default.neoj".to_string()];
         let left = (
             "",
             SectionV42::Unknown(UnknownSectionV42 {

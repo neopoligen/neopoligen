@@ -44,7 +44,7 @@ pub fn paragraph_block_section_v42<'a>(
             children: vec![],
             kind: "paragraph".to_string(),
             spans,
-            template_list: vec!["sections/block/paragraph/default.neoj".to_string()],
+            template_list: vec!["sections/block-paragraph/default.neoj".to_string()],
         }),
     ))
 }
@@ -68,7 +68,7 @@ mod test {
             .unwrap()
             .trim()
             .to_string();
-        let template_list = vec!["sections/block/paragraph/full/default.neoj".to_string()];
+        let template_list = vec!["sections/block-paragraph/default.neoj".to_string()];
         let left = (
             "",
             SectionV42::Block(BlockSectionV42 {
@@ -95,7 +95,7 @@ mod test {
             .unwrap()
             .trim()
             .to_string();
-        let template_list = vec!["sections/block/paragraph/full/default.neoj".to_string()];
+        let template_list = vec!["sections/block-paragraph/default.neoj".to_string()];
         let left = (
             "",
             SectionV42::Block(BlockSectionV42 {

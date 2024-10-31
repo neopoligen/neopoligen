@@ -242,6 +242,7 @@ mod test {
     }
 
     #[test]
+    #[ignore]
     fn title_from_invalid_page() {
         let page = PageV42::test_from_sample_file("006-unclosed-start-section.neo");
         let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {

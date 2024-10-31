@@ -57,7 +57,7 @@ pub fn end_section_basic_v42<'a>(
         children,
         kind: kind.to_string(),
         flags,
-        template_list: make_template_list("ends", kind.to_string().as_str(), "default"),
+        template_list: vec!["sections/generic-ends/default.neoj".to_string()],
     });
     Ok((source, section))
 }
@@ -80,7 +80,7 @@ mod test {
         let source = get_include_str_file(SAMPLES, "001-basic-unknown.neo");
         let attrs = BTreeMap::new();
         let bound = Bound::End;
-        let block_templates = vec!["sections/block/paragraph/full/default.neoj".to_string()];
+        let block_templates = vec!["sections/block-paragraph/default.neoj".to_string()];
         let children = vec![
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
@@ -101,10 +101,7 @@ mod test {
         ];
         let kind = "unknown-test-section".to_string();
         let flags = vec![];
-        let template_list = vec![
-            "sections/ends/unknown-test-section/end/default.neoj".to_string(),
-            "sections/ends/generic/end/default.neoj".to_string(),
-        ];
+        let template_list = vec!["sections/generic-ends/default.neoj".to_string()];
         let left = (
             "",
             SectionV42::End(EndSectionV42 {

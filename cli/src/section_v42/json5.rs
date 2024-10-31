@@ -185,8 +185,8 @@ mod test {
             },
         );
         let template_list = vec![
-            "sections/json5/pagedata/full/default.neoj".to_string(),
-            "sections/json5/generic/full/default.neoj".to_string(),
+            "sections/pagedata/default.neoj".to_string(),
+            "sections/generic-json5/default.neoj".to_string(),
         ];
         let left = (
             "",
@@ -207,7 +207,7 @@ mod test {
     }
 
     #[test]
-    fn solo_basic_start_end() {
+    fn basic_start_end() {
         let site_config = SiteConfigV42::mock1_basic();
         let source = SAMPLE_DIR
             .get_file("003-start-end.neo")
@@ -217,8 +217,8 @@ mod test {
             .to_string();
         let attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
         let template_list = vec![
-            "sections/json5/pagedata/start/default.neoj".to_string(),
-            "sections/json5/generic/start/default.neoj".to_string(),
+            "sections/pagedata/default.neoj".to_string(),
+            "sections/generic-json5/default.neoj".to_string(),
         ];
         let left = (
             "",
@@ -231,10 +231,7 @@ mod test {
                     bound: Bound::End,
                     children: vec![],
                     kind: "pagedata".to_string(),
-                    template_list: vec![
-                        "sections/ends/pagedata/end/default.neoj".to_string(),
-                        "sections/ends/generic/end/default.neoj".to_string(),
-                    ],
+                    template_list: vec!["sections/generic-ends/default.neoj".to_string()],
                 })],
                 data: serde_json5::from_str::<Value>(r#"{ "alfa": "bravo"}"#).unwrap(),
                 error: None,
