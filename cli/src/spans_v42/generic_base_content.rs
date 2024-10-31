@@ -1,11 +1,11 @@
 use crate::span_v42::any_characters::*;
-use crate::span_v42::code_shorthand::*;
-use crate::span_v42::emphasis_shorthand::*;
-use crate::span_v42::footnote_shorthand::footnote_shorthand_span;
 use crate::span_v42::named_span::named_span;
 use crate::span_v42::plaintext::plaintext;
+use crate::span_v42::shorthand_code::*;
+use crate::span_v42::shorthand_emphasis::*;
+use crate::span_v42::shorthand_footnote::*;
+use crate::span_v42::shorthand_strong::*;
 use crate::span_v42::single_characters::*;
-use crate::span_v42::strong_shorthand::strong_shorthand_span;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
 use nom::IResult;
