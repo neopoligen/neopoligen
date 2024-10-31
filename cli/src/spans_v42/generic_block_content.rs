@@ -1,6 +1,6 @@
 use super::generic_base_content::generic_base_content;
 use crate::span_v42::block_line_ending::block_line_ending;
-use crate::span_v42::single_pipe::single_pipe;
+use crate::span_v42::single_characters::*;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
 use nom::multi::many1;

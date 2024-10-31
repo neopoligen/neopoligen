@@ -1,4 +1,4 @@
-use super::single_underscore::single_underscore;
+use super::single_characters::*;
 use super::PlainTextSpan;
 use crate::helpers::flatten_spans_v42;
 use crate::span_attrs_v42::*;

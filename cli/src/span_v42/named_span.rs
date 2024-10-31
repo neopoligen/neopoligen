@@ -1,6 +1,5 @@
 use super::not_pipe_or_greater_than_or_less_than_or_escape::not_pipe_or_greater_than_or_less_than_or_escape;
-use super::single_greater_than::single_greater_than;
-use super::single_less_than::single_less_than;
+use super::single_characters::*;
 use crate::helpers::flatten_spans_v42;
 use crate::span_v42::any_characters::*;
 use crate::span_v42::escaped_characters::*;

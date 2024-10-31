@@ -2,7 +2,7 @@ use super::PlainTextSpan;
 use crate::helpers::flatten_spans_v42;
 use crate::span_attrs_v42::*;
 use crate::span_v42::escaped_characters::*;
-use crate::span_v42::single_caret::single_caret;
+use crate::span_v42::single_characters::*;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
 use nom::bytes::complete::is_a;

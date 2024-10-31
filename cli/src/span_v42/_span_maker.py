@@ -191,3 +191,92 @@ mod test {
 
 
 
+###################################################################
+
+single_functions_skeleton = '''
+pub fn single_$NAME1(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+    let (source, output) = terminated(tag("$CHAR"), not(tag("$CHAR")))
+        .context("")
+        .parse(source)?;
+    Ok((
+        source,
+        SpanV42::PlainText(PlainTextSpan {
+            text: output.to_string(),
+        }),
+    ))
+}
+'''
+
+
+single_tests_skeleton = '''
+    #[test]
+    fn single_at_eof_$NAME1() {
+        let source = "$CHAR";
+        let left = (
+            "",
+            SpanV42::PlainText(PlainTextSpan {
+                text: "$CHAR".to_string(),
+            }),
+        );
+        let right = single_$NAME1(source).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn single_with_more_content_$NAME1() {
+        let source = "$CHAR alfa";
+        let left = (
+            " alfa",
+            SpanV42::PlainText(PlainTextSpan {
+                text: "$CHAR".to_string(),
+            }),
+        );
+        let right = single_$NAME1(source).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn prevent_mutiple_$NAME2() {
+        let source = "$CHAR$CHAR";
+        assert!(single_$NAME1(source).is_err());
+    }
+
+'''
+
+
+with open("single_characters.rs", "w") as f:
+    f.write("""use crate::span_v42::*;
+use nom::bytes::complete::tag;
+use nom::sequence::terminated;
+use nom::IResult;
+use nom::Parser;
+use nom_supreme::error::ErrorTree;
+use nom_supreme::parser_ext::ParserExt;
+
+""")
+
+    for character in characters:
+        data = { "CHAR": character[0], "NAME1": character[1], "NAME2": character[2] }
+        template = Template(single_functions_skeleton)
+        output = template.substitute(data)
+        f.write(output)
+    f.write("\n\n")
+
+
+    f.write("""#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+""")
+
+    for character in characters:
+        data2 = { "CHAR": character[0], "NAME1": character[1], "NAME2": character[2] }
+        template2 = Template(single_tests_skeleton)
+        output2 = template2.substitute(data2)
+        f.write(output2)
+    f.write("\n\n")
+
+    f.write("""}""")
+
+

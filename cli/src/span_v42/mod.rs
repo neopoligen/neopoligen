@@ -9,17 +9,7 @@ pub mod named_span;
 pub mod not_pipe_or_greater_than_or_less_than_or_escape;
 pub mod plaintext;
 pub mod plaintext_without_spaces;
-pub mod single_asterisk;
-pub mod single_at;
-pub mod single_backtick;
-pub mod single_caret;
-pub mod single_exclamation;
-pub mod single_greater_than;
-pub mod single_hyphen;
-pub mod single_less_than;
-pub mod single_line_ending;
-pub mod single_pipe;
-pub mod single_underscore;
+pub mod single_characters;
 pub mod space0_line_ending_or_eof;
 pub mod strong_shorthand;
 
