@@ -107,18 +107,10 @@ impl BuilderV42 {
 [!- endfor -!]
 [!- endmacro -!]
 
-[!- macro output_just_first_section(site, page, sections) -!]
-[!- for section in sections -!]
+[!- macro output_just_first_block(site, page, section) -!]
+[!- for section in section.children -!]
 [!- if loop.first -!]
 [@- output_section(site, page, section) -@]
-[!- endif -!]
-[!- endfor -!]
-[!- endmacro -!]
-
-[!- macro output_skip_first_block(site, page, section) -!]
-[!- for child in section.children -!]
-[!- if not loop.first -!]
-[@- output_section(site, page, child) -@]
 [!- endif -!]
 [!- endfor -!]
 [!- endmacro -!]
@@ -130,11 +122,19 @@ impl BuilderV42 {
 [!- endif -!]
 [!- endfor -!]
 [!- endmacro -!]
+[!- macro output_skip_first_block(site, page, section) -!]
+
+[!- for child in section.children -!]
+[!- if not loop.first -!]
+[@- output_section(site, page, child) -@]
+[!- endif -!]
+[!- endfor -!]
+[!- endmacro -!]
+
 
 [!- macro output_section(site, page, section) -!]
 [!- include section.template_list ignore missing -!]
 [!- endmacro -!]
-
 
 [!- macro output_span(site, page, span) -!]
 [!- if span.kind -!]
