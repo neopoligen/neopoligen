@@ -4,6 +4,7 @@ use crate::span_v42::any_paren_closes::any_paren_closes;
 use crate::span_v42::any_paren_opens::any_paren_opens;
 use crate::span_v42::block_line_ending::block_line_ending;
 use crate::span_v42::code_shorthand::*;
+use crate::span_v42::emphasis_shorthand::*;
 use crate::span_v42::footnote_shorthand::footnote_shorthand_span;
 use crate::span_v42::named_span::named_span;
 use crate::span_v42::plaintext::plaintext;
@@ -26,8 +27,9 @@ pub fn spans_of_generic_block_content<'a>(
         any_colons,
         named_span,
         code_shorthand_span,
-        strong_shorthand_span,
+        emphasis_shorthand_span,
         footnote_shorthand_span,
+        strong_shorthand_span,
         any_paren_opens,
         any_paren_closes,
         single_exclamation,
