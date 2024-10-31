@@ -1,4 +1,4 @@
-[!- import "helpers/theme.neoj" as theme -!]
+[!- import "built-in-helpers" as neo -!]
 <section class="flow">
 
 <h1>[!- include "subsections/just-first-spans.neoj" -!]</h1>

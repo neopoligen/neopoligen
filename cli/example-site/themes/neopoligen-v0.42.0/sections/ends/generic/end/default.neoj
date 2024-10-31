@@ -1,7 +1,7 @@
-[! import "helpers/theme.neoj" as theme !]
+[! import "built-in-helpers" as neo !]
 
 [! for child in section.children !]
-[@ theme.output_section(site, page, child) @]
+[@ neo.output_section(site, page, child) @]
 [! endfor !]
 
 

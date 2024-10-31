@@ -1,5 +1,5 @@
-[!- import "helpers/theme.neoj" as theme -!]
+[!- import "built-in-helpers" as neo -!]
 <[@ span.kind @]>
-[@- theme.output_spans(site, page, span.spans) -@]
+[@- neo.output_spans(site, page, span.spans) -@]
 </[@ span.kind @]>
 [@- "" -@]
