@@ -3,7 +3,8 @@
 from string import Template
 
 shorthands = [
-        ("~~", "~~", "strikethrough", "Strikethrough", "tilde", "~")
+        ("~~", "~~", "strikethrough", "Strikethrough", "tilde", "~"),
+        ("``", "``", "code", "Code", "backtick", "`")
         ]
 
 
@@ -76,7 +77,6 @@ pub fn get_${NAME1}_shorthand_attrs_and_flags(
             }
         })
         .collect::<Vec<String>>();
-
     Ok((source, (attrs, flags)))
 }
 
