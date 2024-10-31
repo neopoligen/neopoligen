@@ -103,7 +103,7 @@ impl BuilderV42 {
 
 [!- macro output_end_section(site, page, section) -!]
 [!- if section.end_section -!]
-[@- output_sections(site, page, section.end_section.children) -@]
+[@- output_section(site, page, section.end_section) -@]
 [!- endif -!]
 [!- endmacro -!]
 
