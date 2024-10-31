@@ -3,6 +3,7 @@ use minijinja::Value;
 use neopoligengine::helpers::get_include_str_file;
 use neopoligengine::section_v42::SectionV42;
 use neopoligengine::span_v42::code_shorthand::code_shorthand_span;
+use neopoligengine::span_v42::emphasis_shorthand::emphasis_shorthand_span;
 use neopoligengine::span_v42::footnote_shorthand::footnote_shorthand_span;
 use neopoligengine::span_v42::named_span::named_span;
 use neopoligengine::span_v42::strong_shorthand::strong_shorthand_span;
@@ -144,7 +145,7 @@ fn test_footnote_shorthands() {
 }
 
 #[test]
-fn solo_test_strong_shorthands() {
+fn test_strong_shorthands() {
     let (valid, invalid) = load_tests("strong-shorthand.neo");
     valid.iter().for_each(|ti| {
         let parsed = strong_shorthand_span(&ti.source);
@@ -160,6 +161,32 @@ fn solo_test_strong_shorthands() {
     });
     invalid.iter().for_each(|ti| {
         let result = strong_shorthand_span(&ti.source);
+        if result.is_err() {
+            assert!(true)
+        } else {
+            dbg!(&ti.description);
+            assert!(false);
+        }
+    });
+}
+
+#[test]
+fn solo_test_strong_shorthands() {
+    let (valid, invalid) = load_tests("emphasis-shorthand.neo");
+    valid.iter().for_each(|ti| {
+        let parsed = emphasis_shorthand_span(&ti.source);
+        if parsed.is_ok() {
+            let expected =
+                serde_json5::from_str::<Value>(ti.result.clone().unwrap().as_str()).unwrap();
+            let got = Value::from_serialize(&parsed.unwrap().1);
+            assert_eq!(expected, got);
+        } else {
+            dbg!(&ti.description);
+            assert!(false);
+        }
+    });
+    invalid.iter().for_each(|ti| {
+        let result = emphasis_shorthand_span(&ti.source);
         if result.is_err() {
             assert!(true)
         } else {

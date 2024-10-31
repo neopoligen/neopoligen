@@ -5,6 +5,7 @@ pub mod any_paren_opens;
 pub mod any_underscores;
 pub mod block_line_ending;
 pub mod code_shorthand;
+pub mod emphasis_shorthand;
 pub mod escaped_character;
 pub mod footnote_shorthand;
 pub mod named_span;
@@ -25,6 +26,7 @@ pub mod strong_shorthand;
 
 use self::named_span::NamedSpanV42;
 use crate::span_v42::code_shorthand::CodeShorthandV42;
+use crate::span_v42::emphasis_shorthand::EmphasisShorthandV42;
 use crate::span_v42::escaped_character::*;
 use crate::span_v42::footnote_shorthand::FootnoteShorthandV42;
 use crate::span_v42::plaintext::*;
@@ -42,6 +44,8 @@ use serde::{Deserialize, Serialize};
 pub enum SpanV42 {
     #[serde(rename = "code_shorthand")]
     CodeShorthand(CodeShorthandV42),
+    #[serde(rename = "emphasis_shorthand")]
+    EmphasisShorthand(EmphasisShorthandV42),
     #[serde(rename = "escaped_character")]
     EscapedCharacter(EscapedCharacterSpanV42),
     #[serde(rename = "footnote_shorthand")]

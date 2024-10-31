@@ -82,6 +82,16 @@ pub fn escaped_backtick(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>>
     ))
 }
 
+pub fn escaped_underscore(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+    let (source, _) = tag("\\_").context("").parse(source)?;
+    Ok((
+        source,
+        SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
+            text: "_".to_string(),
+        }),
+    ))
+}
+
 #[cfg(test)]
 mod test {
     use super::*;

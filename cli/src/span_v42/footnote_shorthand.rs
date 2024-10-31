@@ -92,9 +92,15 @@ pub fn footnote_shorthand_attr_or_flag(
 }
 
 pub fn footnote_shorthand_content(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, token) = alt((not_caret_or_pipe_or_escape,))
-        .context("")
-        .parse(source)?;
+    let (source, token) = alt((
+        not_caret_or_pipe_or_escape,
+        single_caret,
+        escaped_caret,
+        escaped_pipe,
+        escaped_backslash,
+    ))
+    .context("")
+    .parse(source)?;
     Ok((source, token))
 }
 

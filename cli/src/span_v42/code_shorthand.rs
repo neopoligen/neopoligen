@@ -90,9 +90,15 @@ pub fn code_shorthand_attr_or_flag(
 }
 
 pub fn code_shorthand_content(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, token) = alt((not_backtick_or_pipe_or_escape,))
-        .context("")
-        .parse(source)?;
+    let (source, token) = alt((
+        not_backtick_or_pipe_or_escape,
+        single_backtick,
+        escaped_backtick,
+        escaped_pipe,
+        escaped_backslash,
+    ))
+    .context("")
+    .parse(source)?;
     Ok((source, token))
 }
 

@@ -92,9 +92,15 @@ pub fn strong_shorthand_attr_or_flag(
 }
 
 pub fn strong_shorthand_content(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, token) = alt((not_asterisk_or_pipe_or_escape,))
-        .context("")
-        .parse(source)?;
+    let (source, token) = alt((
+        not_asterisk_or_pipe_or_escape,
+        single_asterisk,
+        escaped_asterisk,
+        escaped_pipe,
+        escaped_backslash,
+    ))
+    .context("")
+    .parse(source)?;
     Ok((source, token))
 }
 
