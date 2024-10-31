@@ -143,6 +143,7 @@ impl PageV42 {
                                         "sections/block/paragraph/full/default.neoj".to_string(),
                                     ],
                                 })],
+                                end_section: None,
                                 flags: vec![],
                                 kind: "title".to_string(),
                                 template_list: make_template_list("basic", "title", "default"),
