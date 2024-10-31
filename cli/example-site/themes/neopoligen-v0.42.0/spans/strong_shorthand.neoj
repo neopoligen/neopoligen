@@ -1,1 +1,1 @@
-<strong [@- site.get_span_attrs(span) -@]>[@ span.text @]</strong>
+<strong [@- site.get_span_attrs(span, "blue") -@]>[@ span.text @]</strong>

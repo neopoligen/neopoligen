@@ -20,6 +20,7 @@ body {
   margin: 0;
 }
 
+
 .blue { 
   color: blue;
 } 
@@ -36,15 +37,15 @@ main {
   padding-bottom: 4rem;
 }
 
-.medium-wrapper {
-  max-width: 64ch;
-  margin: auto;
-}
 
 .red { 
   color: red;
 } 
 
+.medium-wrapper {
+  max-width: 64ch;
+  margin: auto;
+}
 .unknown-section {
   background-color: green;
 }

@@ -47,21 +47,30 @@ impl SiteV42 {
                     attr_string.push(format!(r#"{}="{}""#, key.to_string(), values.join(" ")));
                 }
 
-                // let mut classes = spans
-                //     .try_iter()?
-                //     .filter_map(|v| {
-                //         if key.to_string() != "class".to_string() {
-                //             Some(
-                //                 encode_quoted_attribute(
-                //                     &v.get_item(&Value::from("text")).unwrap().to_string(),
-                //                 )
-                //                 .to_string(),
-                //             )
-                //         } else {
-                //             None
-                //         }
-                //     })
-                //     .collect::<Vec<String>>();
+                for key in attrs.try_iter()? {
+                    let spans = attrs.get_item(&key)?;
+                    let mut classes = spans
+                        .try_iter()?
+                        .filter_map(|v| {
+                            if key.to_string() == "class".to_string() {
+                                Some(
+                                    encode_quoted_attribute(
+                                        &v.get_item(&Value::from("text")).unwrap().to_string(),
+                                    )
+                                    .to_string(),
+                                )
+                            } else {
+                                None
+                            }
+                        })
+                        .collect::<Vec<String>>();
+                    if args.len() == 2 {
+                        classes.push(args[1].to_string());
+                    }
+                    if classes.len() > 0 {
+                        attr_string.push(format!(r#"class="{}""#, classes.join(" ")));
+                    }
+                }
 
                 //if args.len() == 2 && key.to_string() == "class".to_string() {
                 // if key.to_string() == "class".to_string() {
