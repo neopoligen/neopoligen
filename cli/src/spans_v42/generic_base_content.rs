@@ -7,7 +7,10 @@ use crate::span_v42::emphasis_shorthand::*;
 use crate::span_v42::footnote_shorthand::footnote_shorthand_span;
 use crate::span_v42::named_span::named_span;
 use crate::span_v42::plaintext::plaintext;
+use crate::span_v42::single_backtick::single_backtick;
 use crate::span_v42::single_exclamation::single_exclamation;
+use crate::span_v42::single_greater_than::single_greater_than;
+use crate::span_v42::single_less_than::single_less_than;
 use crate::span_v42::single_underscore::single_underscore;
 use crate::span_v42::strong_shorthand::strong_shorthand_span;
 use crate::span_v42::SpanV42;
@@ -19,18 +22,23 @@ use nom_supreme::ParserExt;
 
 pub fn generic_base_content<'a>(source: &'a str) -> IResult<&'a str, SpanV42, ErrorTree<&'a str>> {
     let (source, output) = alt((
+        // "<>`-|:_!@#$^&*()~\\"
         plaintext,
-        any_hyphens,
-        any_colons,
+        single_less_than,
+        single_greater_than,
+        single_backtick,
+        // Reminder: don't do single_pipe here, but in block content instead
+        single_underscore,
+        single_exclamation,
         named_span,
         code_shorthand_span,
         emphasis_shorthand_span,
         footnote_shorthand_span,
         strong_shorthand_span,
+        any_hyphens,
+        any_colons,
         any_paren_opens,
         any_paren_closes,
-        single_exclamation,
-        single_underscore,
     ))
     .context("")
     .parse(source)?;

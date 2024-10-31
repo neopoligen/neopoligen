@@ -12,7 +12,6 @@ pub fn any_colons(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
         source,
         SpanV42::PlainText(PlainTextSpan {
             text: result.to_string(),
-            
         }),
     ))
 }
@@ -29,7 +28,6 @@ mod test {
             "",
             SpanV42::PlainText(PlainTextSpan {
                 text: ":".to_string(),
-                
             }),
         );
         let right = any_colons(source).unwrap();
@@ -43,7 +41,6 @@ mod test {
             "",
             SpanV42::PlainText(PlainTextSpan {
                 text: "::".to_string(),
-                
             }),
         );
         let right = any_colons(source).unwrap();

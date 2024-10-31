@@ -51,7 +51,7 @@ mod test {
 
     #[test]
     fn prevent_mutiple() {
-        let source = "--";
+        let source = "**";
         assert!(single_asterisk(source).is_err());
     }
 }
