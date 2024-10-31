@@ -1,4 +1,5 @@
 use crate::helpers::flatten_spans_in_template_v42;
+use crate::helpers::highlight_span_v42;
 use crate::page_v42::PageV42;
 use crate::site_config::SiteConfigV42;
 use html_escape::*;
@@ -46,45 +47,33 @@ impl SiteV42 {
                 if values.len() > 0 {
                     attr_string.push(format!(r#"{}="{}""#, key.to_string(), values.join(" ")));
                 }
-
-                for key in attrs.try_iter()? {
-                    let spans = attrs.get_item(&key)?;
-                    let mut classes = spans
-                        .try_iter()?
-                        .filter_map(|v| {
-                            if key.to_string() == "class".to_string() {
-                                Some(
-                                    encode_quoted_attribute(
-                                        &v.get_item(&Value::from("text")).unwrap().to_string(),
-                                    )
-                                    .to_string(),
-                                )
-                            } else {
-                                None
-                            }
-                        })
-                        .collect::<Vec<String>>();
-                    if args.len() == 2 {
-                        classes.push(args[1].to_string());
-                    }
-                    if classes.len() > 0 {
-                        attr_string.push(format!(r#"class="{}""#, classes.join(" ")));
-                    }
-                }
-
-                //if args.len() == 2 && key.to_string() == "class".to_string() {
-                // if key.to_string() == "class".to_string() {
-                //     classes.push(encode_quoted_attribute(&args[1].to_string()).to_string());
-                // }
             }
 
-            // if args.len() == 2 {
-            //     classes.push(args[1].to_string());
-            // }
-            // if classes.len() > 0 {
-            //     attr_string.push(format!(r#"class="{}""#, classes.join(" ")));
-            // }
-
+            let mut classes: Vec<String> = vec![];
+            for key in attrs.try_iter()? {
+                let spans = attrs.get_item(&key)?;
+                classes = spans
+                    .try_iter()?
+                    .filter_map(|v| {
+                        if key.to_string() == "class".to_string() {
+                            Some(
+                                encode_quoted_attribute(
+                                    &v.get_item(&Value::from("text")).unwrap().to_string(),
+                                )
+                                .to_string(),
+                            )
+                        } else {
+                            None
+                        }
+                    })
+                    .collect::<Vec<String>>();
+            }
+            if args.len() == 2 {
+                classes.push(args[1].to_string());
+            }
+            if classes.len() > 0 {
+                attr_string.push(format!(r#"class="{}""#, classes.join(" ")));
+            }
             let flags = args[0].get_item(&Value::from("flags")).unwrap();
             for flag in flags.try_iter()? {
                 attr_string.push(format!(r#"{}"#, flag));
@@ -160,6 +149,31 @@ impl SiteV42 {
             ))
         }
     }
+
+    pub fn highlight_syntax(&self, args: &[Value]) -> Result<Value, Error> {
+        if args.len() == 1 {
+            let span_type = &args[0].get_item(&Value::from("type")).unwrap();
+            if span_type.to_string() == "code_shorthand".to_string() {
+                let code = &args[0].get_item(&Value::from("text")).unwrap();
+                let lang = &args[0]
+                    .get_item(&Value::from("flags"))
+                    .unwrap()
+                    .try_iter()?
+                    .nth(0);
+                match lang {
+                    Some(l) => Ok(Value::from(highlight_span_v42(
+                        &code.to_string(),
+                        &l.to_string(),
+                    ))),
+                    None => Ok(Value::from(highlight_span_v42(&code.to_string(), "txt"))),
+                }
+            } else {
+                Ok(Value::from("ERROR_IN_CODE_HIGHLIGHT"))
+            }
+        } else {
+            Ok(Value::from("ERROR_IN_CODE_HIGHLIGHT"))
+        }
+    }
 }
 
 impl Object for SiteV42 {
@@ -175,6 +189,7 @@ impl Object for SiteV42 {
             "get_page_href_from_span" => self.get_page_href_from_span(args),
             "get_page_title_from_id" => self.get_page_title_from_id(args),
             "get_page_title_from_span" => self.get_page_title_from_span(args),
+            "highlight_syntax" => self.highlight_syntax(args),
             _ => Ok(Value::from("")),
         }
     }

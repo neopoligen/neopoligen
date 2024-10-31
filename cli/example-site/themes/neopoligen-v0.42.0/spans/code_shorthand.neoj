@@ -1,1 +1,1 @@
-[NEO_TODO_CODE_SHORTHAND]
+<code [@- site.get_span_attrs(span) -@]>[@ site.highlight_syntax(span) @]</code>

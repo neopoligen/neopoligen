@@ -339,6 +339,11 @@ pub fn get_neo_files_in_dir_recursively(dir: &PathBuf) -> Vec<PathBuf> {
         .collect()
 }
 
+pub fn highlight_code_section(args: &[Value]) -> String {
+    highlight_code(args)
+}
+
+// TODO: Move this to highlight_code_section
 pub fn highlight_code(args: &[Value]) -> String {
     let code = args[0].to_string();
     let lang = args[1].to_string();
@@ -424,6 +429,25 @@ pub fn highlight_code_no_nums(args: &[Value]) -> String {
     }
 }
 
+pub fn highlight_span_v42(code: &str, lang: &str) -> String {
+    let syntax_set = SyntaxSet::load_defaults_newlines();
+    let syntax = syntax_set
+        .find_syntax_by_token(lang)
+        .unwrap_or_else(|| syntax_set.find_syntax_plain_text());
+    let mut html_generator =
+        ClassedHTMLGenerator::new_with_class_style(syntax, &syntax_set, ClassStyle::Spaced);
+    for line in LinesWithEndings::from(code) {
+        let _ = html_generator.parse_html_for_line_which_includes_newline(line);
+    }
+    let initial_html = html_generator.finalize();
+    let output_html: Vec<_> = initial_html
+        .lines()
+        .map(|line| format!(r#"{}"#, line))
+        .collect();
+    output_html.join("\n")
+}
+
+// TODO: Deprecate in favor of V42
 pub fn highlight_span(args: &[Value]) -> String {
     let code = args[0].to_string();
     let lang = args[1].to_string();
