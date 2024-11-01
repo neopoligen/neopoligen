@@ -11,6 +11,8 @@ use minijinja::Value;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::bytes::complete::take_until;
+use nom::character::complete::line_ending;
+use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::rest;
 use nom::sequence::preceded;
@@ -97,7 +99,7 @@ pub fn json5_section_start_v42<'a>(
     _parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
-    // let debug = true;
+    let debug = true;
     let dbg_header = "JSON_SECTION_START";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, kind) = preceded(
@@ -111,7 +113,10 @@ pub fn json5_section_start_v42<'a>(
     )
     .context("")
     .parse(source)?;
-    let (source, _) = tag("/").context("").parse(source)?;
+    let (source, _) = tuple((tag("/"), space0, line_ending))
+        .context("")
+        .parse(source)?;
+    let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, json_text) = take_until(format!("-- /{}", kind).as_str())
         .context("")
@@ -137,8 +142,8 @@ pub fn json5_section_start_v42<'a>(
     Ok((
         source,
         SectionV42::Json5(Json5SectionV42 {
-            attrs: BTreeMap::new(),
-            flags: vec![],
+            attrs,
+            flags,
             bound: Bound::Start,
             data,
             end_section: Some(Box::new(end_section)),
