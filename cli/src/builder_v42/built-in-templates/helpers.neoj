@@ -1,3 +1,11 @@
+[!- macro output_css(site, page) -!]
+[!- for section in page.sections -!]
+[!- if section.kind == "css" -!]
+[!- include "built-in-css-output" -!]
+[!- endif -!]
+[!- endfor -!]
+[!- endmacro -!]
+
 [!- macro output_end_section(site, page, section) -!]
 [!- if section.end_section -!]
 [@- output_section(site, page, section.end_section) -@]
@@ -20,16 +28,6 @@
 [!- endfor -!]
 [!- endmacro -!]
 
-[!- macro output_section(site, page, section) -!]
-[!- include section.template_list -!]
-[!- endmacro -!]
-
-[!- macro output_sections(site, page, sections) -!]
-[!- for section in sections -!]
-[@- output_section(site, page, section) -@]
-[!- endfor -!]
-[!- endmacro -!]
-
 [!- macro output_only_sections(site, page, list_as_string) -!]
 [! set list = list_as_string|split|list !]
 [!- for section in page.sections -!]
@@ -44,6 +42,16 @@
 [!- if section.kind == "script" -!]
 [!- include "built-in-script-output" -!]
 [!- endif -!]
+[!- endfor -!]
+[!- endmacro -!]
+
+[!- macro output_section(site, page, section) -!]
+[!- include section.template_list -!]
+[!- endmacro -!]
+
+[!- macro output_sections(site, page, sections) -!]
+[!- for section in sections -!]
+[@- output_section(site, page, section) -@]
 [!- endfor -!]
 [!- endmacro -!]
 

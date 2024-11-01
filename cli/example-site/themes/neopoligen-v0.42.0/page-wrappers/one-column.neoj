@@ -58,11 +58,12 @@ main {
 }
 
 </style>
+[@ neo.output_css(site, page) @]
 </head>
 <body>
 
-<div class="medium-wrapper dev-area">
-[@ neo.output_scripts(site, page) @]
+<div class="medium-wrapper dev-area flow">
+<div>Dev Area</div>
 </div>
 
   <header class="medium-wrapper">
@@ -74,7 +75,6 @@ main {
     [!- block body -!][!- endblock -!]
     [!- block endmatter -!][!- endblock -!]
   </main>
-
   <footer class="medium-wrapper flow">
       <hr/>
       <h2>Debugging: Neopolitan Source File</h2>
@@ -85,7 +85,6 @@ main {
       <hr/>
       <pre>[!- autoescape true -!][@- page.sections|tojson(true) -@][!- endautoescape -!]</pre>
   </footer>
-
-
+[@ neo.output_scripts(site, page) @]
 </body>
 </html>

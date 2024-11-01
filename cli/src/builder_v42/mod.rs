@@ -107,16 +107,20 @@ impl BuilderV42 {
             let _ = env.add_template_owned(k, v);
         });
         let _ = env.add_template_owned(
-            "built-in-span-text",
-            include_str!("built-in-templates/span-text.neoj"),
+            "built-in-css-output",
+            include_str!("built-in-templates/css-output.neoj"),
+        );
+        let _ = env.add_template_owned(
+            "built-in-helpers",
+            include_str!("built-in-templates/helpers.neoj"),
         );
         let _ = env.add_template_owned(
             "built-in-script-output",
             include_str!("built-in-templates/script-output.neoj"),
         );
         let _ = env.add_template_owned(
-            "built-in-helpers",
-            include_str!("built-in-templates/helpers.neoj"),
+            "built-in-span-text",
+            include_str!("built-in-templates/span-text.neoj"),
         );
         let _ = env.add_template_owned(
             "built-in-template-error",

@@ -2,19 +2,21 @@
 
 This Is Basic Test
 
-Before full script
+Before full css 
 
--- script
+-- css 
 
-console.log('alfa')
+body { color: blue;}
 
--- script/
+-- css/
 
-console.log('bravo')
+body {
+  background-color: purple;
+}
 
--- /script
+-- /css
 
-After close script
+After css close 
 
 
 -- pagedata
