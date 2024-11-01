@@ -1,4 +1,5 @@
 use super::SpanV42;
+use html_escape::*;
 use nom::bytes::complete::tag;
 use nom::IResult;
 use nom::Parser;
@@ -18,7 +19,7 @@ pub fn escaped_tilde(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "~".to_string(),
+            text: encode_quoted_attribute("~").to_string(),
         }),
     ))
 }
@@ -28,7 +29,7 @@ pub fn escaped_exclamation(source: &str) -> IResult<&str, SpanV42, ErrorTree<&st
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "!".to_string(),
+            text: encode_quoted_attribute("!").to_string(),
         }),
     ))
 }
@@ -38,7 +39,7 @@ pub fn escaped_at(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "@".to_string(),
+            text: encode_quoted_attribute("@").to_string(),
         }),
     ))
 }
@@ -48,7 +49,7 @@ pub fn escaped_pound_sign(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "#".to_string(),
+            text: encode_quoted_attribute("#").to_string(),
         }),
     ))
 }
@@ -58,7 +59,7 @@ pub fn escaped_dollar_sign(source: &str) -> IResult<&str, SpanV42, ErrorTree<&st
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "$".to_string(),
+            text: encode_quoted_attribute("$").to_string(),
         }),
     ))
 }
@@ -68,7 +69,7 @@ pub fn escaped_percent_sign(source: &str) -> IResult<&str, SpanV42, ErrorTree<&s
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "%".to_string(),
+            text: encode_quoted_attribute("%").to_string(),
         }),
     ))
 }
@@ -78,7 +79,7 @@ pub fn escaped_caret(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "^".to_string(),
+            text: encode_quoted_attribute("^").to_string(),
         }),
     ))
 }
@@ -88,7 +89,7 @@ pub fn escaped_ampersand(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "&".to_string(),
+            text: encode_quoted_attribute("&").to_string(),
         }),
     ))
 }
@@ -98,7 +99,7 @@ pub fn escaped_asterisk(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>>
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "*".to_string(),
+            text: encode_quoted_attribute("*").to_string(),
         }),
     ))
 }
@@ -108,7 +109,7 @@ pub fn escaped_open_paren(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "(".to_string(),
+            text: encode_quoted_attribute("(").to_string(),
         }),
     ))
 }
@@ -118,7 +119,7 @@ pub fn escaped_close_paren(source: &str) -> IResult<&str, SpanV42, ErrorTree<&st
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: ")".to_string(),
+            text: encode_quoted_attribute(")").to_string(),
         }),
     ))
 }
@@ -128,7 +129,7 @@ pub fn escaped_underscore(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "_".to_string(),
+            text: encode_quoted_attribute("_").to_string(),
         }),
     ))
 }
@@ -138,7 +139,7 @@ pub fn escaped_hyphen(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "-".to_string(),
+            text: encode_quoted_attribute("-").to_string(),
         }),
     ))
 }
@@ -148,7 +149,7 @@ pub fn escaped_plus_sign(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "+".to_string(),
+            text: encode_quoted_attribute("+").to_string(),
         }),
     ))
 }
@@ -158,7 +159,7 @@ pub fn escaped_equal_sign(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "=".to_string(),
+            text: encode_quoted_attribute("=").to_string(),
         }),
     ))
 }
@@ -168,7 +169,7 @@ pub fn escaped_open_brace(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "{".to_string(),
+            text: encode_quoted_attribute("{").to_string(),
         }),
     ))
 }
@@ -178,7 +179,7 @@ pub fn escaped_close_brace(source: &str) -> IResult<&str, SpanV42, ErrorTree<&st
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "}".to_string(),
+            text: encode_quoted_attribute("}").to_string(),
         }),
     ))
 }
@@ -188,7 +189,7 @@ pub fn escaped_open_bracket(source: &str) -> IResult<&str, SpanV42, ErrorTree<&s
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "[".to_string(),
+            text: encode_quoted_attribute("[").to_string(),
         }),
     ))
 }
@@ -198,7 +199,7 @@ pub fn escaped_close_bracket(source: &str) -> IResult<&str, SpanV42, ErrorTree<&
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "]".to_string(),
+            text: encode_quoted_attribute("]").to_string(),
         }),
     ))
 }
@@ -208,7 +209,7 @@ pub fn escaped_pipe(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "|".to_string(),
+            text: encode_quoted_attribute("|").to_string(),
         }),
     ))
 }
@@ -218,7 +219,7 @@ pub fn escaped_backslash(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "\\".to_string(),
+            text: encode_quoted_attribute("\\").to_string(),
         }),
     ))
 }
@@ -228,7 +229,7 @@ pub fn escaped_colon(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: ":".to_string(),
+            text: encode_quoted_attribute(":").to_string(),
         }),
     ))
 }
@@ -238,7 +239,7 @@ pub fn escaped_semicolon(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: ";".to_string(),
+            text: encode_quoted_attribute(";").to_string(),
         }),
     ))
 }
@@ -248,7 +249,7 @@ pub fn escaped_double_quote(source: &str) -> IResult<&str, SpanV42, ErrorTree<&s
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "\"".to_string(),
+            text: encode_quoted_attribute("\"").to_string(),
         }),
     ))
 }
@@ -258,7 +259,7 @@ pub fn escaped_single_quote(source: &str) -> IResult<&str, SpanV42, ErrorTree<&s
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "'".to_string(),
+            text: encode_quoted_attribute("'").to_string(),
         }),
     ))
 }
@@ -268,7 +269,7 @@ pub fn escaped_comma(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: ",".to_string(),
+            text: encode_quoted_attribute(",").to_string(),
         }),
     ))
 }
@@ -278,7 +279,7 @@ pub fn escaped_less_than(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "<".to_string(),
+            text: encode_quoted_attribute("<").to_string(),
         }),
     ))
 }
@@ -288,7 +289,7 @@ pub fn escaped_greater_than(source: &str) -> IResult<&str, SpanV42, ErrorTree<&s
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: ">".to_string(),
+            text: encode_quoted_attribute(">").to_string(),
         }),
     ))
 }
@@ -298,7 +299,7 @@ pub fn escaped_period(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: ".".to_string(),
+            text: encode_quoted_attribute(".").to_string(),
         }),
     ))
 }
@@ -308,7 +309,7 @@ pub fn escaped_forward_slash(source: &str) -> IResult<&str, SpanV42, ErrorTree<&
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "/".to_string(),
+            text: encode_quoted_attribute("/").to_string(),
         }),
     ))
 }
@@ -318,7 +319,7 @@ pub fn escaped_question_mark(source: &str) -> IResult<&str, SpanV42, ErrorTree<&
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "?".to_string(),
+            text: encode_quoted_attribute("?").to_string(),
         }),
     ))
 }
@@ -328,7 +329,7 @@ pub fn escaped_backtick(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>>
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "`".to_string(),
+            text: encode_quoted_attribute("`").to_string(),
         }),
     ))
 }
@@ -339,14 +340,13 @@ mod test {
     use super::*;
     use pretty_assertions::assert_eq;
 
-
     #[test]
     fn check_escaped_tilde() {
         let source = "\\~ alfa";
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "~".to_string(),
+                text: encode_quoted_attribute("~").to_string(),
             }),
         );
         let right = escaped_tilde(source).unwrap();
@@ -359,7 +359,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "!".to_string(),
+                text: encode_quoted_attribute("!").to_string(),
             }),
         );
         let right = escaped_exclamation(source).unwrap();
@@ -372,7 +372,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "@".to_string(),
+                text: encode_quoted_attribute("@").to_string(),
             }),
         );
         let right = escaped_at(source).unwrap();
@@ -385,7 +385,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "#".to_string(),
+                text: encode_quoted_attribute("#").to_string(),
             }),
         );
         let right = escaped_pound_sign(source).unwrap();
@@ -398,7 +398,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "$".to_string(),
+                text: encode_quoted_attribute("$").to_string(),
             }),
         );
         let right = escaped_dollar_sign(source).unwrap();
@@ -411,7 +411,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "%".to_string(),
+                text: encode_quoted_attribute("%").to_string(),
             }),
         );
         let right = escaped_percent_sign(source).unwrap();
@@ -424,7 +424,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "^".to_string(),
+                text: encode_quoted_attribute("^").to_string(),
             }),
         );
         let right = escaped_caret(source).unwrap();
@@ -437,7 +437,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "&".to_string(),
+                text: encode_quoted_attribute("&").to_string(),
             }),
         );
         let right = escaped_ampersand(source).unwrap();
@@ -450,7 +450,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "*".to_string(),
+                text: encode_quoted_attribute("*").to_string(),
             }),
         );
         let right = escaped_asterisk(source).unwrap();
@@ -463,7 +463,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "(".to_string(),
+                text: encode_quoted_attribute("(").to_string(),
             }),
         );
         let right = escaped_open_paren(source).unwrap();
@@ -476,7 +476,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: ")".to_string(),
+                text: encode_quoted_attribute(")").to_string(),
             }),
         );
         let right = escaped_close_paren(source).unwrap();
@@ -489,7 +489,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "_".to_string(),
+                text: encode_quoted_attribute("_").to_string(),
             }),
         );
         let right = escaped_underscore(source).unwrap();
@@ -502,7 +502,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "-".to_string(),
+                text: encode_quoted_attribute("-").to_string(),
             }),
         );
         let right = escaped_hyphen(source).unwrap();
@@ -515,7 +515,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "+".to_string(),
+                text: encode_quoted_attribute("+").to_string(),
             }),
         );
         let right = escaped_plus_sign(source).unwrap();
@@ -528,7 +528,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "=".to_string(),
+                text: encode_quoted_attribute("=").to_string(),
             }),
         );
         let right = escaped_equal_sign(source).unwrap();
@@ -541,7 +541,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "{".to_string(),
+                text: encode_quoted_attribute("{").to_string(),
             }),
         );
         let right = escaped_open_brace(source).unwrap();
@@ -554,7 +554,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "}".to_string(),
+                text: encode_quoted_attribute("}").to_string(),
             }),
         );
         let right = escaped_close_brace(source).unwrap();
@@ -567,7 +567,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "[".to_string(),
+                text: encode_quoted_attribute("[").to_string(),
             }),
         );
         let right = escaped_open_bracket(source).unwrap();
@@ -580,7 +580,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "]".to_string(),
+                text: encode_quoted_attribute("]").to_string(),
             }),
         );
         let right = escaped_close_bracket(source).unwrap();
@@ -593,7 +593,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "|".to_string(),
+                text: encode_quoted_attribute("|").to_string(),
             }),
         );
         let right = escaped_pipe(source).unwrap();
@@ -606,7 +606,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "\\".to_string(),
+                text: encode_quoted_attribute("\\").to_string(),
             }),
         );
         let right = escaped_backslash(source).unwrap();
@@ -619,7 +619,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: ":".to_string(),
+                text: encode_quoted_attribute(":").to_string(),
             }),
         );
         let right = escaped_colon(source).unwrap();
@@ -632,7 +632,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: ";".to_string(),
+                text: encode_quoted_attribute(";").to_string(),
             }),
         );
         let right = escaped_semicolon(source).unwrap();
@@ -645,7 +645,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "\"".to_string(),
+                text: encode_quoted_attribute("\"").to_string(),
             }),
         );
         let right = escaped_double_quote(source).unwrap();
@@ -658,7 +658,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "'".to_string(),
+                text: encode_quoted_attribute("'").to_string(),
             }),
         );
         let right = escaped_single_quote(source).unwrap();
@@ -671,7 +671,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: ",".to_string(),
+                text: encode_quoted_attribute(",").to_string(),
             }),
         );
         let right = escaped_comma(source).unwrap();
@@ -684,7 +684,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "<".to_string(),
+                text: encode_quoted_attribute("<").to_string(),
             }),
         );
         let right = escaped_less_than(source).unwrap();
@@ -697,7 +697,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: ">".to_string(),
+                text: encode_quoted_attribute(">").to_string(),
             }),
         );
         let right = escaped_greater_than(source).unwrap();
@@ -710,7 +710,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: ".".to_string(),
+                text: encode_quoted_attribute(".").to_string(),
             }),
         );
         let right = escaped_period(source).unwrap();
@@ -723,7 +723,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "/".to_string(),
+                text: encode_quoted_attribute("/").to_string(),
             }),
         );
         let right = escaped_forward_slash(source).unwrap();
@@ -736,7 +736,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "?".to_string(),
+                text: encode_quoted_attribute("?").to_string(),
             }),
         );
         let right = escaped_question_mark(source).unwrap();
@@ -749,7 +749,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "`".to_string(),
+                text: encode_quoted_attribute("`").to_string(),
             }),
         );
         let right = escaped_backtick(source).unwrap();

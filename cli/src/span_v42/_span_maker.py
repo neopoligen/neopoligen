@@ -89,7 +89,6 @@ use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-
 """)
 
     for character in characters:
@@ -124,7 +123,7 @@ pub fn escaped_$NAME1(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: "$CHAR".to_string(),
+            text: encode_quoted_attribute("$CHAR").to_string(),
         }),
     ))
 }
@@ -139,7 +138,7 @@ escaped_tests_skeleton = '''
         let left = (
             " alfa",
             SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: "$CHAR".to_string(),
+                text: encode_quoted_attribute("$CHAR").to_string(),
             }),
         );
         let right = escaped_$NAME1(source).unwrap();
@@ -150,6 +149,7 @@ escaped_tests_skeleton = '''
 
 with open("escaped_characters.rs", "w") as f:
     f.write("""use super::SpanV42;
+use html_escape::*;
 use nom::bytes::complete::tag;
 use nom::IResult;
 use nom::Parser;
@@ -172,12 +172,10 @@ pub struct EscapedCharacterSpanV42 {
         f.write(output)
     f.write("\n\n")
 
-
     f.write("""#[cfg(test)]
 mod test {
     use super::*;
     use pretty_assertions::assert_eq;
-
 """)
 
     for character in characters:
@@ -186,7 +184,6 @@ mod test {
         output2 = template2.substitute(data2)
         f.write(output2)
     f.write("\n\n")
-
     f.write("""}""")
 
 
@@ -201,7 +198,7 @@ pub fn single_$NAME1(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: output.to_string(),
+            text: encode_quoted_attribute(&output).to_string(),
         }),
     ))
 }
@@ -215,7 +212,7 @@ single_tests_skeleton = '''
         let left = (
             "",
             SpanV42::PlainText(PlainTextSpan {
-                text: "$CHAR".to_string(),
+                text: encode_quoted_attribute("$CHAR").to_string(),
             }),
         );
         let right = single_$NAME1(source).unwrap();
@@ -228,7 +225,7 @@ single_tests_skeleton = '''
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "$CHAR".to_string(),
+                text: encode_quoted_attribute("$CHAR").to_string(),
             }),
         );
         let right = single_$NAME1(source).unwrap();
@@ -246,6 +243,7 @@ single_tests_skeleton = '''
 
 with open("single_characters.rs", "w") as f:
     f.write("""use crate::span_v42::*;
+use html_escape::*;
 use nom::bytes::complete::tag;
 use nom::sequence::terminated;
 use nom::IResult;

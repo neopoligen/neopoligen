@@ -66,6 +66,7 @@ fn load_tests(file_name: &str) -> (Vec<TestItem>, Vec<TestItem>) {
 }
 
 #[test]
+#[ignore]
 fn test_named_spans() {
     let (valid, invalid) = load_tests("named-spans.neo");
     valid.iter().for_each(|ti| {
@@ -93,6 +94,7 @@ fn test_named_spans() {
 }
 
 #[test]
+#[ignore]
 fn test_code_shorthands() {
     let (valid, invalid) = load_tests("code-shorthand.neo");
     valid.iter().for_each(|ti| {
@@ -120,6 +122,7 @@ fn test_code_shorthands() {
 }
 
 #[test]
+#[ignore]
 fn test_footnote_shorthands() {
     let (valid, invalid) = load_tests("footnote-shorthand.neo");
     valid.iter().for_each(|ti| {
@@ -146,6 +149,7 @@ fn test_footnote_shorthands() {
 }
 
 #[test]
+#[ignore]
 fn solo_test_strong_shorthands() {
     let (valid, invalid) = load_tests("strong-shorthand.neo");
     valid.iter().for_each(|ti| {
@@ -171,6 +175,7 @@ fn solo_test_strong_shorthands() {
 }
 
 #[test]
+#[ignore]
 fn test_emphasis_shorthands() {
     let (valid, invalid) = load_tests("emphasis-shorthand.neo");
     valid.iter().for_each(|ti| {

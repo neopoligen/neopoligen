@@ -7,7 +7,6 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
-
 pub fn any_tildies(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, result) = is_a("~").context("").parse(source)?;
     Ok((
