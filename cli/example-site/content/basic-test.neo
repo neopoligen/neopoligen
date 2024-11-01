@@ -6,11 +6,11 @@ Before full html
 
 -- html 
 
-<div>INSIDE FULL</div>
+alfa <strong><em>bravo</em></strong>
 
 -- html/
 
-<div>INSIDE START</div>
+alfa <strong><em>bravo</em></strong>
 
 -- /html
 

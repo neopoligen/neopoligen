@@ -3,6 +3,7 @@ pub mod block;
 pub mod css;
 pub mod end;
 pub mod helpers;
+pub mod html;
 pub mod json5;
 pub mod parsing_error;
 pub mod raw;
@@ -12,6 +13,7 @@ use crate::section_v42::basic::*;
 use crate::section_v42::block::*;
 use crate::section_v42::css::*;
 use crate::section_v42::end::*;
+use crate::section_v42::html::*;
 use crate::section_v42::json5::*;
 use crate::section_v42::parsing_error::*;
 use crate::section_v42::raw::*;
@@ -42,6 +44,7 @@ pub enum SectionV42 {
     Block(BlockSectionV42),
     Css(CssSectionV42),
     End(EndSectionV42),
+    Html(HtmlSectionV42),
     Json5(Json5SectionV42),
     ParsingError(ParsingErrorSectionV42),
     Raw(RawSectionV42),
@@ -72,8 +75,10 @@ pub fn start_or_full_section_v42<'a>(
         // |src| checklist_section_start_v42(src, &site_config, SectionParent::Page, debug),
         |src| css_section_full_v42(src, &site_config, SectionParent::Page, debug),
         |src| css_section_start_v42(src, &site_config, SectionParent::Page, debug),
-        // |src| html_section_full_v42(src, &site_config, SectionParent::Page, debug),
-        // |src| html_section_start_v42(src, &site_config, SectionParent::Page, debug),
+        // |src| detail_list_section_full_v42(src, &site_config, SectionParent::Page, debug),
+        // |src| detail_list_section_start_v42(src, &site_config, SectionParent::Page, debug),
+        |src| html_section_full_v42(src, &site_config, SectionParent::Page, debug),
+        |src| html_section_start_v42(src, &site_config, SectionParent::Page, debug),
         |src| json5_section_start_v42(src, &site_config, SectionParent::Page, debug),
         |src| json5_section_full_v42(src, &site_config, SectionParent::Page, debug),
         // |src| list_section_full_v42(src, &site_config, SectionParent::Page, debug),
