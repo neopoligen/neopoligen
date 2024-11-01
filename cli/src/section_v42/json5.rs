@@ -99,7 +99,7 @@ pub fn json5_section_start_v42<'a>(
     _parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
-    let debug = true;
+    // let debug = true;
     let dbg_header = "JSON_SECTION_START";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, kind) = preceded(
