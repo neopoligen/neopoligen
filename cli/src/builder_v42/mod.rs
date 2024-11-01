@@ -135,7 +135,7 @@ impl BuilderV42 {
 [!- endmacro -!]
 
 [!- macro output_section(site, page, section) -!]
-[!- include section.template_list ignore missing -!]
+[!- include section.template_list -!]
 [!- endmacro -!]
 
 [!- macro output_sections(site, page, sections) -!]
@@ -154,9 +154,9 @@ impl BuilderV42 {
 
 [!- macro output_span(site, page, span) -!]
 [!- if span.kind -!]
-[!- include ["spans/" + span.kind + ".neoj", "spans/" + span.type + ".neoj", "built-in-span-text"] ignore missing -!]
+[!- include ["spans/" + span.kind + ".neoj", "spans/" + span.type + ".neoj", "built-in-span-text"] -!]
 [!- else -!]
-[!- include ["spans/" + span.type + ".neoj", "built-in-span-text"] ignore missing -!]
+[!- include ["spans/" + span.type + ".neoj", "built-in-span-text"] -!]
 [!- endif -!]
 [!- endmacro -!]
 
@@ -175,19 +175,33 @@ impl BuilderV42 {
 <html>
 <head>
 <style>
+body {
+    background-color: #200;
+    color: #dfd;
+    line-height: 1.3;
+}
 header, main, footer {
     max-width: 62ch;
     margin: auto;
+}
+.bordered {
+    padding: 1rem;
+    border: 1px solid #dfd;
+}
+.flow > :where(:not(:first-child)) {
+  margin-top: var(--flow-space, 1em);
 }
 </style>
 </head>
 <body>
 <header><a href="/">Home</a></header>
-<main>
-<div>NOTE: Templates for this file did not render properly. Showing source instead.</div>
-<div>ERROR: [@ builder_error.kind.msg @]</div>
-<div><pre>[! autoescape true !][@ page.source @][! endautoescape !]</pre></div>
-<div><pre>[! autoescape true !][@ page.sections|tojson(true) @][! endautoescape !]</pre></div>
+<main class="flow">
+<p>NOTE: Templates for this file did not render properly. Showing source instead.</p>
+<p>ERROR: [@ builder_error.kind.msg @]</p>
+<h3>Source</h3>
+<div class="bordered"><pre>[! autoescape true !][@ page.source @][! endautoescape !]</pre></div>
+<h3>Raw Data</h3>
+<div class="bordered"><pre>[! autoescape true !][@ page.sections|tojson(true) @][! endautoescape !]</pre></div>
 </body>
 </html>"#,
         );
