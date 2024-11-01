@@ -14,21 +14,6 @@ shorthands = [
         ("@@", "@@", "mark", "Mark", "ampersand", "@"),
         ]
 
-# possible things to add:
-# mark
-# q
-# sub 
-# sup 
-# small
-
-
-
-
-
-
-
-
-
 skeleton = """use super::single_characters::*;
 use super::PlainTextSpan;
 use crate::helpers::flatten_spans_v42;
