@@ -243,7 +243,7 @@ mod test {
                     kind: "pagedata-end".to_string(),
                     template_list: vec![
                         "sections/pagedata-end/default.neoj".to_string(),
-                        "sections/generic-ends/default.neoj".to_string(),
+                        "sections/generic-end/default.neoj".to_string(),
                     ],
                 }))),
                 data: serde_json5::from_str::<Value>(r#"{ "alfa": "bravo"}"#).unwrap(),

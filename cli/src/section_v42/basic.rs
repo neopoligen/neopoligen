@@ -219,7 +219,7 @@ mod test {
     //         children: vec![],
     //         flags: vec![],
     //         kind: "unknown-test-section".to_string(),
-    //         template_list: vec!["sections/generic-ends/default.neoj".to_string()],
+    //         template_list: vec!["sections/generic-end/default.neoj".to_string()],
     //     })));
     //     let kind = "unknown-test-section".to_string();
     //     let flags = vec![];

@@ -58,7 +58,7 @@ pub fn end_section_basic_v42<'a>(
         flags,
         template_list: vec![
             format!("sections/{}-end/default.neoj", kind),
-            "sections/generic-ends/default.neoj".to_string(),
+            "sections/generic-end/default.neoj".to_string(),
         ],
     });
     Ok((source, section))
@@ -105,7 +105,7 @@ mod test {
         let flags = vec![];
         let template_list = vec![
             "sections/unknown-test-section-end/default.neoj".to_string(),
-            "sections/generic-ends/default.neoj".to_string(),
+            "sections/generic-end/default.neoj".to_string(),
         ];
         let left = (
             "",

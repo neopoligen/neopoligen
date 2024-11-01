@@ -181,7 +181,7 @@ mod test {
                     kind: "pre-end".to_string(),
                     template_list: vec![
                         "sections/pre-end/default.neoj".to_string(),
-                        "sections/generic-ends/default.neoj".to_string(),
+                        "sections/generic-end/default.neoj".to_string(),
                     ],
                 }))),
                 flags: vec![],
