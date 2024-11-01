@@ -1,14 +1,9 @@
-#![allow(unused_variables)]
-#![allow(unused_imports)]
-#![allow(unused_mut)]
-
 use axum::Router;
 use dirs::config_dir;
 use dirs::data_local_dir;
 use neopoligengine::builder_v42::BuilderV42;
 use neopoligengine::engine_config::EngineConfig;
 use neopoligengine::file_watcher::FileWatcher;
-use neopoligengine::site_config::SiteConfig; // TODO: Deprecate when v42 is done
 use neopoligengine::site_config::SiteConfigV42;
 use std::path::PathBuf;
 use tokio::sync::mpsc;
