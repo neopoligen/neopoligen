@@ -188,7 +188,7 @@ impl SiteConfigV42 {
     }
 
     pub fn output_dest_dir(&self) -> PathBuf {
-        self.project_dir().join("_site")
+        self.project_dir().join(self.output_directory_name.clone())
     }
 
     pub fn project_dir(&self) -> PathBuf {
