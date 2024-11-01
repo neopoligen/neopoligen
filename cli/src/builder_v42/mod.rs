@@ -106,104 +106,21 @@ impl BuilderV42 {
         self.templates.iter().for_each(|(k, v)| {
             let _ = env.add_template_owned(k, v);
         });
-
-        let _ = env.add_template_owned("built-in-span-text", "[@- span.text -@]");
+        let _ = env.add_template_owned(
+            "built-in-span-text",
+            include_str!("built-in-templates/span-text.neoj"),
+        );
+        let _ = env.add_template_owned(
+            "built-in-script-output",
+            include_str!("built-in-templates/script-output.neoj"),
+        );
         let _ = env.add_template_owned(
             "built-in-helpers",
-            r#"
-
-[!- macro output_end_section(site, page, section) -!]
-[!- if section.end_section -!]
-[@- output_section(site, page, section.end_section) -@]
-[!- endif -!]
-[!- endmacro -!]
-
-[!- macro output_just_first_block(site, page, section) -!]
-[!- for section in section.children -!]
-[!- if loop.first -!]
-[@- output_section(site, page, section) -@]
-[!- endif -!]
-[!- endfor -!]
-[!- endmacro -!]
-
-[!- macro output_just_first_block_spans(site, page, section) -!]
-[!- for child in section.children -!]
-[!- if loop.first -!]
-[@- output_spans(site, page, child.spans) -@]
-[!- endif -!]
-[!- endfor -!]
-[!- endmacro -!]
-
-[!- macro output_section(site, page, section) -!]
-[!- include section.template_list -!]
-[!- endmacro -!]
-
-[!- macro output_sections(site, page, sections) -!]
-[!- for section in sections -!]
-[@- output_section(site, page, section) -@]
-[!- endfor -!]
-[!- endmacro -!]
-
-[!- macro output_skip_first_block(site, page, section) -!]
-[!- for child in section.children -!]
-[!- if not loop.first -!]
-[@- output_section(site, page, child) -@]
-[!- endif -!]
-[!- endfor -!]
-[!- endmacro -!]
-
-[!- macro output_span(site, page, span) -!]
-[!- if span.kind -!]
-[!- include ["spans/" + span.kind + ".neoj", "spans/" + span.type + ".neoj", "built-in-span-text"] -!]
-[!- else -!]
-[!- include ["spans/" + span.type + ".neoj", "built-in-span-text"] -!]
-[!- endif -!]
-[!- endmacro -!]
-
-[!- macro output_spans(site, page, spans) -!]
-[!- for span in spans -!]
-[@- output_span(site, page, span) -@]
-[!- endfor -!]
-[!- endmacro -!]
-
-[# End Of Helpers #]"#
-                .to_string(),
+            include_str!("built-in-templates/helpers.neoj"),
         );
         let _ = env.add_template_owned(
             "built-in-template-error",
-            r#"<!DOCTYPE html>
-<html>
-<head>
-<style>
-body {
-    background-color: #200;
-    color: #dfd;
-    line-height: 1.3;
-}
-header, main, footer {
-    max-width: 62ch;
-    margin: auto;
-}
-.bordered {
-    padding: 1rem;
-    border: 1px solid #dfd;
-}
-.flow > :where(:not(:first-child)) {
-  margin-top: var(--flow-space, 1em);
-}
-</style>
-</head>
-<body>
-<header><a href="/">Home</a></header>
-<main class="flow">
-<p>NOTE: Templates for this file did not render properly. Showing source instead.</p>
-<p>ERROR: [@ builder_error.kind.msg @]</p>
-<h3>Source</h3>
-<div class="bordered"><pre>[! autoescape true !][@ page.source @][! endautoescape !]</pre></div>
-<h3>Raw Data</h3>
-<div class="bordered"><pre>[! autoescape true !][@ page.sections|tojson(true) @][! endautoescape !]</pre></div>
-</body>
-</html>"#,
+            include_str!("built-in-templates/template-error.neoj"),
         );
         let site_clone = Value::from_object(self.site.clone().unwrap());
         self.site

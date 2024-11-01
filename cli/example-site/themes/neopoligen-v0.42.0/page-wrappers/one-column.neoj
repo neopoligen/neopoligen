@@ -21,10 +21,16 @@ body {
   margin: 0;
 }
 
-
 .blue { 
   color: blue;
 } 
+
+.dev-area {
+  margin-block: 1.6rem;
+  padding: 1rem;
+  border: 1px solid #678;
+  min-height: 1rem;
+}
 
 .flow > :where(:not(:first-child)) {
   margin-top: var(--flow-space, 1em);
@@ -38,14 +44,14 @@ main {
   padding-bottom: 4rem;
 }
 
+.medium-wrapper {
+  max-width: 64ch;
+  margin-inline: auto;
+}
+
 .red { 
   color: red;
 } 
-
-.medium-wrapper {
-  max-width: 64ch;
-  margin: auto;
-}
 
 .unknown-section {
   background-color: green;
@@ -54,6 +60,11 @@ main {
 </style>
 </head>
 <body>
+
+<div class="medium-wrapper dev-area">
+[@ neo.output_scripts(site, page) @]
+</div>
+
   <header class="medium-wrapper">
     <nav>
       <a href="/">Home</a></li>
@@ -74,5 +85,7 @@ main {
       <hr/>
       <pre>[!- autoescape true -!][@- page.sections|tojson(true) -@][!- endautoescape -!]</pre>
   </footer>
+
+
 </body>
 </html>
