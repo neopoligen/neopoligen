@@ -1,1 +1,1 @@
-THIS IS SCRIPT OUTPUT
+<script>[!- autoescape false -!][@- section.text -@][!- endautoescape -!]</script>

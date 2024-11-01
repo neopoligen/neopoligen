@@ -41,8 +41,8 @@
 
 [!- macro output_scripts(site, page) -!]
 [!- for section in page.sections -!]
-[!- if section.kind == "script" -!]---
-[@- output_section(site, page, section) -@]
+[!- if section.kind == "script" -!]
+[!- include "built-in-script-output" -!]
 [!- endif -!]
 [!- endfor -!]
 [!- endmacro -!]
