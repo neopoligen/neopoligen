@@ -45,7 +45,7 @@ pub fn any_$NAME2(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -58,7 +58,7 @@ any_tests_skeleton = """
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "$CHAR".to_string(),
+                text: encode_quoted_attribute("$CHAR").to_string(),
             }),
         );
         let right = any_$NAME2(source).unwrap();
@@ -71,7 +71,7 @@ any_tests_skeleton = """
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "$CHAR$CHAR".to_string(),
+                text: encode_quoted_attribute("$CHAR$CHAR").to_string(),
             }),
         );
         let right = any_$NAME2(source).unwrap();
@@ -83,6 +83,7 @@ any_tests_skeleton = """
 with open("any_characters.rs", "w") as f:
     f.write("""use super::PlainTextSpan;
 use super::SpanV42;
+use html_escape::*;
 use nom::bytes::complete::is_a;
 use nom::IResult;
 use nom::Parser;
@@ -97,7 +98,6 @@ use nom_supreme::parser_ext::ParserExt;
         output = template.substitute(data)
         f.write(output)
     f.write("\n\n")
-
 
     f.write("""#[cfg(test)]
 mod test {

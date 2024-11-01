@@ -1,4 +1,5 @@
 use crate::span_v42::SpanV42;
+use html_escape::*;
 use nom::bytes::complete::is_not;
 use nom::IResult;
 use nom::Parser;
@@ -12,14 +13,11 @@ pub struct PlainTextSpan {
 }
 
 pub fn plaintext(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    // Remember: some of these characters aren't used in
-    // shortcodes but are here to prevent them being used in
-    // things that might touch file paths.
     let (source, output) = is_not("\r\n~`*^![]{}<>|:\\").context("").parse(source)?;
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: output.to_string(),
+            text: encode_quoted_attribute(&output).to_string(),
         }),
     ))
 }

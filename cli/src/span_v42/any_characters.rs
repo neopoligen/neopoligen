@@ -1,5 +1,6 @@
 use super::PlainTextSpan;
 use super::SpanV42;
+use html_escape::*;
 use nom::bytes::complete::is_a;
 use nom::IResult;
 use nom::Parser;
@@ -12,7 +13,7 @@ pub fn any_tildies(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -22,7 +23,7 @@ pub fn any_exclamations(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>>
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -32,7 +33,7 @@ pub fn any_ats(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -42,7 +43,7 @@ pub fn any_pound_signs(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> 
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -52,7 +53,7 @@ pub fn any_dollar_signs(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>>
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -62,7 +63,7 @@ pub fn any_percent_signs(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -72,7 +73,7 @@ pub fn any_carets(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -82,7 +83,7 @@ pub fn any_ampersands(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -92,7 +93,7 @@ pub fn any_asterisks(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -102,7 +103,7 @@ pub fn any_open_parens(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> 
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -112,7 +113,7 @@ pub fn any_close_parens(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>>
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -122,7 +123,7 @@ pub fn any_underscores(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> 
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -132,7 +133,7 @@ pub fn any_hyphens(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -142,7 +143,7 @@ pub fn any_plus_signs(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -152,7 +153,7 @@ pub fn any_equal_signs(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> 
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -162,7 +163,7 @@ pub fn any_open_braces(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> 
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -172,7 +173,7 @@ pub fn any_close_braces(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>>
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -182,7 +183,7 @@ pub fn any_open_brackets(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -192,7 +193,7 @@ pub fn any_close_brackets(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -202,7 +203,7 @@ pub fn any_pipes(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -212,7 +213,7 @@ pub fn any_backslashes(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> 
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -222,7 +223,7 @@ pub fn any_colons(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -232,7 +233,7 @@ pub fn any_semicolons(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -242,7 +243,7 @@ pub fn any_double_quotes(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -252,7 +253,7 @@ pub fn any_single_quotes(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -262,7 +263,7 @@ pub fn any_commas(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -272,7 +273,7 @@ pub fn any_less_thans(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -282,7 +283,7 @@ pub fn any_greater_thans(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -292,7 +293,7 @@ pub fn any_periods(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -302,7 +303,7 @@ pub fn any_forward_slashes(source: &str) -> IResult<&str, SpanV42, ErrorTree<&st
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -312,7 +313,7 @@ pub fn any_question_marks(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -322,7 +323,7 @@ pub fn any_backticks(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
-            text: result.to_string(),
+            text: encode_quoted_attribute(&result).to_string(),
         }),
     ))
 }
@@ -340,7 +341,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "~".to_string(),
+                text: encode_quoted_attribute("~").to_string(),
             }),
         );
         let right = any_tildies(source).unwrap();
@@ -353,7 +354,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "~~".to_string(),
+                text: encode_quoted_attribute("~~").to_string(),
             }),
         );
         let right = any_tildies(source).unwrap();
@@ -366,7 +367,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "!".to_string(),
+                text: encode_quoted_attribute("!").to_string(),
             }),
         );
         let right = any_exclamations(source).unwrap();
@@ -379,7 +380,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "!!".to_string(),
+                text: encode_quoted_attribute("!!").to_string(),
             }),
         );
         let right = any_exclamations(source).unwrap();
@@ -392,7 +393,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "@".to_string(),
+                text: encode_quoted_attribute("@").to_string(),
             }),
         );
         let right = any_ats(source).unwrap();
@@ -405,7 +406,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "@@".to_string(),
+                text: encode_quoted_attribute("@@").to_string(),
             }),
         );
         let right = any_ats(source).unwrap();
@@ -418,7 +419,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "#".to_string(),
+                text: encode_quoted_attribute("#").to_string(),
             }),
         );
         let right = any_pound_signs(source).unwrap();
@@ -431,7 +432,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "##".to_string(),
+                text: encode_quoted_attribute("##").to_string(),
             }),
         );
         let right = any_pound_signs(source).unwrap();
@@ -444,7 +445,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "$".to_string(),
+                text: encode_quoted_attribute("$").to_string(),
             }),
         );
         let right = any_dollar_signs(source).unwrap();
@@ -457,7 +458,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "$$".to_string(),
+                text: encode_quoted_attribute("$$").to_string(),
             }),
         );
         let right = any_dollar_signs(source).unwrap();
@@ -470,7 +471,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "%".to_string(),
+                text: encode_quoted_attribute("%").to_string(),
             }),
         );
         let right = any_percent_signs(source).unwrap();
@@ -483,7 +484,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "%%".to_string(),
+                text: encode_quoted_attribute("%%").to_string(),
             }),
         );
         let right = any_percent_signs(source).unwrap();
@@ -496,7 +497,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "^".to_string(),
+                text: encode_quoted_attribute("^").to_string(),
             }),
         );
         let right = any_carets(source).unwrap();
@@ -509,7 +510,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "^^".to_string(),
+                text: encode_quoted_attribute("^^").to_string(),
             }),
         );
         let right = any_carets(source).unwrap();
@@ -522,7 +523,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "&".to_string(),
+                text: encode_quoted_attribute("&").to_string(),
             }),
         );
         let right = any_ampersands(source).unwrap();
@@ -535,7 +536,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "&&".to_string(),
+                text: encode_quoted_attribute("&&").to_string(),
             }),
         );
         let right = any_ampersands(source).unwrap();
@@ -548,7 +549,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "*".to_string(),
+                text: encode_quoted_attribute("*").to_string(),
             }),
         );
         let right = any_asterisks(source).unwrap();
@@ -561,7 +562,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "**".to_string(),
+                text: encode_quoted_attribute("**").to_string(),
             }),
         );
         let right = any_asterisks(source).unwrap();
@@ -574,7 +575,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "(".to_string(),
+                text: encode_quoted_attribute("(").to_string(),
             }),
         );
         let right = any_open_parens(source).unwrap();
@@ -587,7 +588,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "((".to_string(),
+                text: encode_quoted_attribute("((").to_string(),
             }),
         );
         let right = any_open_parens(source).unwrap();
@@ -600,7 +601,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: ")".to_string(),
+                text: encode_quoted_attribute(")").to_string(),
             }),
         );
         let right = any_close_parens(source).unwrap();
@@ -613,7 +614,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "))".to_string(),
+                text: encode_quoted_attribute("))").to_string(),
             }),
         );
         let right = any_close_parens(source).unwrap();
@@ -626,7 +627,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "_".to_string(),
+                text: encode_quoted_attribute("_").to_string(),
             }),
         );
         let right = any_underscores(source).unwrap();
@@ -639,7 +640,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "__".to_string(),
+                text: encode_quoted_attribute("__").to_string(),
             }),
         );
         let right = any_underscores(source).unwrap();
@@ -652,7 +653,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "-".to_string(),
+                text: encode_quoted_attribute("-").to_string(),
             }),
         );
         let right = any_hyphens(source).unwrap();
@@ -665,7 +666,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "--".to_string(),
+                text: encode_quoted_attribute("--").to_string(),
             }),
         );
         let right = any_hyphens(source).unwrap();
@@ -678,7 +679,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "+".to_string(),
+                text: encode_quoted_attribute("+").to_string(),
             }),
         );
         let right = any_plus_signs(source).unwrap();
@@ -691,7 +692,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "++".to_string(),
+                text: encode_quoted_attribute("++").to_string(),
             }),
         );
         let right = any_plus_signs(source).unwrap();
@@ -704,7 +705,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "=".to_string(),
+                text: encode_quoted_attribute("=").to_string(),
             }),
         );
         let right = any_equal_signs(source).unwrap();
@@ -717,7 +718,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "==".to_string(),
+                text: encode_quoted_attribute("==").to_string(),
             }),
         );
         let right = any_equal_signs(source).unwrap();
@@ -730,7 +731,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "{".to_string(),
+                text: encode_quoted_attribute("{").to_string(),
             }),
         );
         let right = any_open_braces(source).unwrap();
@@ -743,7 +744,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "{{".to_string(),
+                text: encode_quoted_attribute("{{").to_string(),
             }),
         );
         let right = any_open_braces(source).unwrap();
@@ -756,7 +757,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "}".to_string(),
+                text: encode_quoted_attribute("}").to_string(),
             }),
         );
         let right = any_close_braces(source).unwrap();
@@ -769,7 +770,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "}}".to_string(),
+                text: encode_quoted_attribute("}}").to_string(),
             }),
         );
         let right = any_close_braces(source).unwrap();
@@ -782,7 +783,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "[".to_string(),
+                text: encode_quoted_attribute("[").to_string(),
             }),
         );
         let right = any_open_brackets(source).unwrap();
@@ -795,7 +796,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "[[".to_string(),
+                text: encode_quoted_attribute("[[").to_string(),
             }),
         );
         let right = any_open_brackets(source).unwrap();
@@ -808,7 +809,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "]".to_string(),
+                text: encode_quoted_attribute("]").to_string(),
             }),
         );
         let right = any_close_brackets(source).unwrap();
@@ -821,7 +822,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "]]".to_string(),
+                text: encode_quoted_attribute("]]").to_string(),
             }),
         );
         let right = any_close_brackets(source).unwrap();
@@ -834,7 +835,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "|".to_string(),
+                text: encode_quoted_attribute("|").to_string(),
             }),
         );
         let right = any_pipes(source).unwrap();
@@ -847,7 +848,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "||".to_string(),
+                text: encode_quoted_attribute("||").to_string(),
             }),
         );
         let right = any_pipes(source).unwrap();
@@ -860,7 +861,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "\\".to_string(),
+                text: encode_quoted_attribute("\\").to_string(),
             }),
         );
         let right = any_backslashes(source).unwrap();
@@ -873,7 +874,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "\\\\".to_string(),
+                text: encode_quoted_attribute("\\\\").to_string(),
             }),
         );
         let right = any_backslashes(source).unwrap();
@@ -886,7 +887,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: ":".to_string(),
+                text: encode_quoted_attribute(":").to_string(),
             }),
         );
         let right = any_colons(source).unwrap();
@@ -899,7 +900,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "::".to_string(),
+                text: encode_quoted_attribute("::").to_string(),
             }),
         );
         let right = any_colons(source).unwrap();
@@ -912,7 +913,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: ";".to_string(),
+                text: encode_quoted_attribute(";").to_string(),
             }),
         );
         let right = any_semicolons(source).unwrap();
@@ -925,7 +926,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: ";;".to_string(),
+                text: encode_quoted_attribute(";;").to_string(),
             }),
         );
         let right = any_semicolons(source).unwrap();
@@ -938,7 +939,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "\"".to_string(),
+                text: encode_quoted_attribute("\"").to_string(),
             }),
         );
         let right = any_double_quotes(source).unwrap();
@@ -951,7 +952,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "\"\"".to_string(),
+                text: encode_quoted_attribute("\"\"").to_string(),
             }),
         );
         let right = any_double_quotes(source).unwrap();
@@ -964,7 +965,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "'".to_string(),
+                text: encode_quoted_attribute("'").to_string(),
             }),
         );
         let right = any_single_quotes(source).unwrap();
@@ -977,7 +978,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "''".to_string(),
+                text: encode_quoted_attribute("''").to_string(),
             }),
         );
         let right = any_single_quotes(source).unwrap();
@@ -990,7 +991,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: ",".to_string(),
+                text: encode_quoted_attribute(",").to_string(),
             }),
         );
         let right = any_commas(source).unwrap();
@@ -1003,7 +1004,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: ",,".to_string(),
+                text: encode_quoted_attribute(",,").to_string(),
             }),
         );
         let right = any_commas(source).unwrap();
@@ -1016,7 +1017,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "<".to_string(),
+                text: encode_quoted_attribute("<").to_string(),
             }),
         );
         let right = any_less_thans(source).unwrap();
@@ -1029,7 +1030,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "<<".to_string(),
+                text: encode_quoted_attribute("<<").to_string(),
             }),
         );
         let right = any_less_thans(source).unwrap();
@@ -1042,7 +1043,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: ">".to_string(),
+                text: encode_quoted_attribute(">").to_string(),
             }),
         );
         let right = any_greater_thans(source).unwrap();
@@ -1055,7 +1056,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: ">>".to_string(),
+                text: encode_quoted_attribute(">>").to_string(),
             }),
         );
         let right = any_greater_thans(source).unwrap();
@@ -1068,7 +1069,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: ".".to_string(),
+                text: encode_quoted_attribute(".").to_string(),
             }),
         );
         let right = any_periods(source).unwrap();
@@ -1081,7 +1082,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "..".to_string(),
+                text: encode_quoted_attribute("..").to_string(),
             }),
         );
         let right = any_periods(source).unwrap();
@@ -1094,7 +1095,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "/".to_string(),
+                text: encode_quoted_attribute("/").to_string(),
             }),
         );
         let right = any_forward_slashes(source).unwrap();
@@ -1107,7 +1108,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "//".to_string(),
+                text: encode_quoted_attribute("//").to_string(),
             }),
         );
         let right = any_forward_slashes(source).unwrap();
@@ -1120,7 +1121,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "?".to_string(),
+                text: encode_quoted_attribute("?").to_string(),
             }),
         );
         let right = any_question_marks(source).unwrap();
@@ -1133,7 +1134,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "??".to_string(),
+                text: encode_quoted_attribute("??").to_string(),
             }),
         );
         let right = any_question_marks(source).unwrap();
@@ -1146,7 +1147,7 @@ mod test {
         let left = (
             " alfa",
             SpanV42::PlainText(PlainTextSpan {
-                text: "`".to_string(),
+                text: encode_quoted_attribute("`").to_string(),
             }),
         );
         let right = any_backticks(source).unwrap();
@@ -1159,7 +1160,7 @@ mod test {
         let left = (
             " bravo",
             SpanV42::PlainText(PlainTextSpan {
-                text: "``".to_string(),
+                text: encode_quoted_attribute("``").to_string(),
             }),
         );
         let right = any_backticks(source).unwrap();

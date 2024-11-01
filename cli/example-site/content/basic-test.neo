@@ -2,21 +2,20 @@
 
 This Is Basic Test
 
-Before full css 
+Before full html 
 
--- css 
+-- html 
 
-body { color: blue;}
+<div>INSIDE FULL</div>
 
--- css/
+-- html/
 
-body {
-  background-color: purple;
-}
+<div>INSIDE START</div>
 
--- /css
+-- /html
 
-After css close 
+After end
+
 
 
 -- pagedata
