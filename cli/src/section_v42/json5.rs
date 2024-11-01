@@ -44,7 +44,7 @@ pub fn json5_section_full_v42<'a>(
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let debug = true;
-    let dbg_header = "JSON_SECTION_FULL";
+    let dbg_header = "JSON5_SECTION_FULL";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
@@ -100,7 +100,7 @@ pub fn json5_section_start_v42<'a>(
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let debug = true;
-    let dbg_header = "JSON_SECTION_START";
+    let dbg_header = "JSON5_SECTION_START";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, kind) = preceded(
         tuple((tag("--"), space1)),
