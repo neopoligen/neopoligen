@@ -24,6 +24,13 @@ pub struct BuilderV42 {
 
 impl BuilderV42 {
     #[instrument(skip(self))]
+    pub fn empty_output_dirs(&self) {
+        event!(Level::DEBUG, "Emptying output dirs");
+        let _ = empty_dir(&self.site_config.status_dest_dir());
+        let _ = empty_dir(&self.site_config.output_dest_dir());
+    }
+
+    #[instrument(skip(self))]
     pub fn load_pages_from_file_system(&mut self) -> Result<()> {
         event!(Level::INFO, "Loading Pages From FS");
         for entry in WalkDir::new(&self.site_config.content_source_dir()) {
@@ -83,9 +90,6 @@ impl BuilderV42 {
         event!(Level::INFO, "Outputting pages");
         let mut env = Environment::new();
         env.add_function("flatten_spans", flatten_spans_in_template_v42);
-        // env.add_function("highlight_code", highlight_code);
-        // env.add_function("highlight_code_no_nums", highlight_code_no_nums);
-        // env.add_function("highlight_span", highlight_span);
         env.set_syntax(
             SyntaxConfig::builder()
                 .block_delimiters("[!", "!]")
@@ -244,20 +248,26 @@ header, main, footer {
                             });
 
                             if let Ok(template) = env.get_template("built-in-template-error") {
+                                dbg!("1111111111111111111111111111111");
                                 match template.render(context!(
                                     site => &site_clone,
                                     page => Value::from_object(page.clone()),
                                         builder_error => Value::from_serialize(builder_error),
                                 )) {
                                     Ok(output) => {
+                                        dbg!("222222222222222222222222222");
                                         match write_file_with_mkdir(
                                             &absolute_output_path,
                                             output.as_str(),
                                         ) {
                                             Ok(()) => {
+                                                dbg!("333333333333333333333333333333333");
+                                                dbg!(&absolute_output_path);
+                                                ()
                                                 //event!(Level::INFO, "Making file in output_pages",);
                                             }
                                             Err(e) => self.errors.push({
+                                                dbg!("444444444444444444444444444444");
                                                 event!(
                                                     Level::ERROR,
                                                     "Could not write file: {}",
@@ -274,7 +284,8 @@ header, main, footer {
                                             }),
                                         }
                                     }
-                                    Err(_e) => {
+                                    Err(e) => {
+                                        dbg!(e);
                                         // page.error = Some(NeoError {
                                         //     kind: NeoErrorKind::GenericErrorWithSourcePath {
                                         //         source_path: absolute_output_path.to_path_buf(),
