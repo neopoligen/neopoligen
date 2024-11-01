@@ -1,4 +1,4 @@
-use crate::span_v42::any_characters::*;
+use crate::span_v42::escaped_characters::*;
 use crate::span_v42::named_span::named_span;
 use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::shorthand_code::*;
@@ -20,28 +20,51 @@ use nom_supreme::ParserExt;
 
 pub fn generic_base_content<'a>(source: &'a str) -> IResult<&'a str, SpanV42, ErrorTree<&'a str>> {
     let (source, output) = alt((
-        // "<>`-|:_!@#$^&*()~\\"
-        plaintext,
-        code_shorthand_span,
-        emphasis_shorthand_span,
-        footnote_shorthand_span,
-        html_shorthand_span,
-        image_shorthand_span,
-        mark_shorthand_span,
-        strong_shorthand_span,
-        strikethrough_shorthand_span,
-        underline_shorthand_span,
-        any_hyphens,
-        any_colons,
-        any_open_parens,
-        any_close_parens,
-        // Reminder: don't do single_pipe, put it in block content instead
-        single_less_than,
-        single_greater_than,
-        single_backtick,
-        single_underscore,
-        single_exclamation,
-        named_span,
+        alt((
+            plaintext,
+            code_shorthand_span,
+            emphasis_shorthand_span,
+            footnote_shorthand_span,
+            html_shorthand_span,
+            image_shorthand_span,
+            mark_shorthand_span,
+            named_span,
+            strikethrough_shorthand_span,
+            strong_shorthand_span,
+            underline_shorthand_span,
+        )),
+        alt((
+            // Reminder: don't do single_pipe or single_colon
+            // those go in higher level parsers
+            single_tilde,
+            single_backtick,
+            single_asterisk,
+            single_caret,
+            single_exclamation,
+            single_open_bracket,
+            single_close_bracket,
+            single_open_brace,
+            single_close_brace,
+            single_underscore,
+            single_ampersand,
+            single_less_than,
+            single_greater_than,
+        )),
+        alt((
+            escaped_tilde,
+            escaped_backtick,
+            escaped_asterisk,
+            escaped_caret,
+            escaped_exclamation,
+            escaped_open_bracket,
+            escaped_close_bracket,
+            escaped_open_brace,
+            escaped_close_brace,
+            escaped_underscore,
+            escaped_ampersand,
+            escaped_less_than,
+            escaped_greater_than,
+        )),
     ))
     .context("")
     .parse(source)?;

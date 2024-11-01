@@ -2,12 +2,13 @@ use include_dir::{include_dir, Dir};
 use minijinja::Value;
 use neopoligengine::helpers::get_include_str_file;
 use neopoligengine::section_v42::SectionV42;
-use neopoligengine::span_v42::code_shorthand::code_shorthand_span;
-use neopoligengine::span_v42::emphasis_shorthand::emphasis_shorthand_span;
-use neopoligengine::span_v42::footnote_shorthand::footnote_shorthand_span;
 use neopoligengine::span_v42::named_span::named_span;
-use neopoligengine::span_v42::strong_shorthand::strong_shorthand_span;
+use neopoligengine::span_v42::shorthand_code::code_shorthand_span;
+use neopoligengine::span_v42::shorthand_emphasis::emphasis_shorthand_span;
+use neopoligengine::span_v42::shorthand_footnote::footnote_shorthand_span;
+use neopoligengine::span_v42::shorthand_strong::strong_shorthand_span;
 use neopoligengine::{page_v42::PageV42, site_config::SiteConfigV42};
+use pretty_assertions::assert_eq;
 use serde::Deserialize;
 use std::path::PathBuf;
 
@@ -145,7 +146,7 @@ fn test_footnote_shorthands() {
 }
 
 #[test]
-fn test_strong_shorthands() {
+fn solo_test_strong_shorthands() {
     let (valid, invalid) = load_tests("strong-shorthand.neo");
     valid.iter().for_each(|ti| {
         let parsed = strong_shorthand_span(&ti.source);
@@ -153,7 +154,7 @@ fn test_strong_shorthands() {
             let expected =
                 serde_json5::from_str::<Value>(ti.result.clone().unwrap().as_str()).unwrap();
             let got = Value::from_serialize(&parsed.unwrap().1);
-            assert_eq!(expected, got);
+            assert_eq!(expected, got, "{}", &ti.description);
         } else {
             dbg!(&ti.description);
             assert!(false);
@@ -162,10 +163,9 @@ fn test_strong_shorthands() {
     invalid.iter().for_each(|ti| {
         let result = strong_shorthand_span(&ti.source);
         if result.is_err() {
-            assert!(true)
+            assert!(true, "{}", ti.description);
         } else {
-            dbg!(&ti.description);
-            assert!(false);
+            assert!(false, "{}", ti.description);
         }
     });
 }
@@ -179,7 +179,7 @@ fn test_emphasis_shorthands() {
             let expected =
                 serde_json5::from_str::<Value>(ti.result.clone().unwrap().as_str()).unwrap();
             let got = Value::from_serialize(&parsed.unwrap().1);
-            assert_eq!(expected, got);
+            assert_eq!(expected, got, "{}", &ti.description);
         } else {
             dbg!(&ti.description);
             assert!(false);

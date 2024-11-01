@@ -1,6 +1,6 @@
 use super::generic_base_content::generic_base_content;
+use crate::span_v42::any_characters::*;
 use crate::span_v42::block_line_ending::block_line_ending;
-use crate::span_v42::single_characters::*;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
 use nom::multi::many1;
@@ -12,9 +12,14 @@ use nom_supreme::ParserExt;
 pub fn spans_of_generic_block_content<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Vec<SpanV42>, ErrorTree<&'a str>> {
-    let (source, output) = many1(alt((generic_base_content, block_line_ending, single_pipe)))
-        .context("")
-        .parse(source)?;
+    let (source, output) = many1(alt((
+        generic_base_content,
+        block_line_ending,
+        any_pipes,
+        any_colons,
+    )))
+    .context("")
+    .parse(source)?;
     Ok((source, output))
 }
 

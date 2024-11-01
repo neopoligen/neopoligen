@@ -86,6 +86,11 @@ impl BuilderV42 {
     }
 
     #[instrument(skip(self))]
+    pub fn output_errors(&mut self) -> Result<()> {
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn output_pages(&mut self) -> Result<()> {
         event!(Level::INFO, "Outputting pages");
         let mut env = Environment::new();
@@ -199,7 +204,7 @@ header, main, footer {
                 let absolute_output_path = &self
                     .site_config
                     .project_dir()
-                    .join(&self.site_config.output_directory)
+                    .join(&self.site_config.output_directory_name)
                     .join(file_rel_path.unwrap());
                 if let Some(template) = page.template_list().iter().find_map(|name| {
                     if let Ok(tmpl) = env.get_template(name) {

@@ -155,5 +155,4 @@ pub fn emphasis_shorthand_key_value_attr(
 }
 
 #[cfg(test)]
-mod test {
-}
+mod test {}

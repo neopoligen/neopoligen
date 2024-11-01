@@ -114,12 +114,12 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
     match BuilderV42::new_from_site_config(site_config) {
         Ok(mut builder) => {
             // Build Site
-
             let _ = builder.load_pages_from_file_system();
             let _ = builder.prep_site(&site_config);
             let _ = builder.load_templates(&site_config);
             let _ = builder.empty_output_dirs();
             let _ = builder.output_pages();
+            let _ = builder.output_errors();
 
             event!(Level::INFO, "Reloading Browser");
             reloader.reload();
@@ -151,14 +151,11 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
     //// Prep
     ////
     //let _ = builder.prep_output_dirs();
-    //let _ = builder.load_templates();
     //// TODO: Turn image cache back on when dev is done
     //// let _ = builder.build_image_cache();
     //// Site
 
     // builder.generate_payloads(ThemeTestOrPage::Page);
-    // let _ = builder.empty_output_dirs();
-    // let _ = builder.output_pages();
     // let _ = builder.deploy_images();
 
     // // Theme Test

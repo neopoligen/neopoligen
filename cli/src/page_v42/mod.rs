@@ -253,7 +253,7 @@ mod test {
     }
 
     #[test]
-    fn solo_title_from_title_section() {
+    fn title_from_title_section() {
         let page = PageV42::test_from_sample_file("002-basic-sample.neo");
         let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
             text: "Basic Sample".to_string(),

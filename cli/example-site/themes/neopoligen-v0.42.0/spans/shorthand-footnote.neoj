@@ -1,5 +1,5 @@
 [@- '' -@]
 
-[TODO_FOOTNOTE_SHORTHAND]
+<sup><a href="#">[@- span.text -@]</a></sup>
 
 [@- '' -@]

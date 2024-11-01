@@ -6,8 +6,6 @@ use crate::helpers::get_dirs_in_dir;
 use crate::neo_error::NeoError;
 use crate::neo_error::NeoErrorKind;
 use anyhow::Result;
-// use itertools::Itertools;
-// use regex::Regex;
 use serde::Deserialize;
 use serde::Serialize;
 use std::fs::{self};
@@ -16,37 +14,22 @@ use tracing::{event, instrument, Level};
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SiteConfigV42 {
+    pub attr_flag_lists: Option<ConfigLists>,
     pub base_url: String,
     pub default_language: String,
-    #[serde(default = "output_dir_name_v41")]
-    pub output_directory: String,
     pub theme: String,
-    //pub theme_options: Option<serde_json::Value>,
+    // REMINDER: project_root is set internally
+    pub project_root: Option<PathBuf>,
+    #[serde(default = "output_dir_name")]
+    pub output_directory_name: String,
     #[serde(default = "empty_sections_v41")]
     pub sections: ConfigSections,
-    pub attr_flag_lists: Option<ConfigLists>,
     #[serde(default = "debug_parser_default")]
     pub debug_parser: bool,
-    //
-    // Reminder: ``project_root`` isn't expected to come from the
-    // JSON file. The process sets it internally
-    pub project_root: Option<PathBuf>,
-    //
-    // section_attrs
-    //
-    // The key/value and flag attrs to include
-    // in the defatul ``attr_string`` for sections
-    //
-    // TODO: Load this from admin/attrs/section.txt
-    // #[serde(default = "empty_vec_v41")]
-    // pub section_attrs: Vec<String>,
-    // span_attrs
-    // The key value and flag attrs to include
-    // in the default ``attr_string`` for spans
-    //
-    // TODO: Load this from admin/attrs/span.txt
-    // #[serde(default = "empty_vec_v41")]
-    // pub span_attrs: Vec<String>,
+}
+
+fn output_dir_name() -> String {
+    "site".to_string()
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -54,27 +37,6 @@ pub struct SectionSettings {
     pub attrs: Vec<String>,
     pub flags: Vec<String>,
 }
-
-// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-// pub struct SectionSettingsAttrFlags {
-//     pub primary: Vec<String>,
-//     pub secondary: Vec<String>,
-// }
-
-// NOTE: This isn't being used since it would
-// require updating every parser file.
-// TODO: Delete this when SiteConfigV42 is done
-// #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-// pub struct SiteConfigSectionsV42 {
-//     pub basic: Vec<String>,
-//     pub block: Vec<String>,
-//     pub checklist: Vec<String>,
-//     pub checklist_item: Vec<String>,
-//     pub json5: Vec<String>,
-//     pub list: Vec<String>,
-//     pub list_item: Vec<String>,
-//     pub raw: Vec<String>,
-// }
 
 impl SiteConfigV42 {
     pub fn new_from_engine_config(engine_config: &EngineConfig) -> Result<SiteConfigV42, NeoError> {
@@ -266,10 +228,6 @@ fn empty_sections_v41() -> ConfigSections {
 // fn empty_vec_v41() -> Vec<String> {
 //     vec![]
 // }
-
-fn output_dir_name_v41() -> String {
-    "_site".to_string()
-}
 
 // //////////////////////////////////////////////////////////////////////////
 

@@ -4,18 +4,15 @@ pub mod end;
 pub mod helpers;
 pub mod json5;
 pub mod parsing_error;
-// pub mod unknown;
+pub mod raw;
 
 use crate::section_v42::basic::*;
 use crate::section_v42::block::*;
 use crate::section_v42::end::*;
 use crate::section_v42::json5::*;
 use crate::section_v42::parsing_error::*;
-// use crate::section_v42::unknown::*;
 use crate::site_config::SiteConfigV42;
 use minijinja::value::Object;
-use minijinja::Error;
-use minijinja::Value;
 use nom::branch::alt;
 use nom::IResult;
 use nom::Parser;
@@ -23,7 +20,6 @@ use nom_supreme::error::ErrorTree;
 use nom_supreme::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
-use std::sync::Arc;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
@@ -41,34 +37,21 @@ pub enum SectionV42 {
     Block(BlockSectionV42),
     End(EndSectionV42),
     Json5(Json5SectionV42),
-    // Unknown(UnknownSectionV42),
     ParsingError(ParsingErrorSectionV42),
+    // Raw(RawSectionV42),
 }
 
-// impl SectionV42 {
-//     pub fn template_list(&self) -> Result<Value, Error> {
-//         Ok(Value::from_serialize(vec![
-//             "sections/basic/title/full/default.neoj".to_string(),
-//         ]))
-//     }
-// }
-
 impl Object for SectionV42 {
-    fn call_method(
-        self: &Arc<SectionV42>,
-        _state: &minijinja::State,
-        name: &str,
-        _args: &[Value],
-    ) -> Result<Value, Error> {
-        match name {
-            //"template_list" => self.template_list(),
-            //"ast" => self.ast(),
-            // "id" => self.id(),
-            // "sections" => self.sections(),
-            // "title" => self.title(),
-            _ => Ok(Value::from("")),
-        }
-    }
+    // fn call_method(
+    //     self: &Arc<SectionV42>,
+    //     _state: &minijinja::State,
+    //     name: &str,
+    //     _args: &[Value],
+    // ) -> Result<Value, Error> {
+    //     match name {
+    //         _ => Ok(Value::from("")),
+    //     }
+    // }
 }
 
 pub fn start_or_full_section_v42<'a>(
@@ -99,117 +82,5 @@ pub fn start_or_full_section_v42<'a>(
     ))
     .context("")
     .parse(source)?;
-
-    // dbg!(&source);
-
-    //let (source, section) = alt((
-    //    |src| {
-    //        basic_section_start(
-    //            src,
-    //            &sections,
-    //            nest_level,
-    //            list_level,
-    //            checklist_level,
-    //            debug,
-    //        )
-    //    },
-    //    |src| {
-    //        basic_section_full(
-    //            src,
-    //            &sections,
-    //            nest_level,
-    //            list_level,
-    //            checklist_level,
-    //            debug,
-    //        )
-    //    },
-    //    // TODO: Checklist start
-    //    //|src| checklist_section_start(src, &sections, nest_level, list_level),
-    //    |src| {
-    //        checklist_section_full(
-    //            src,
-    //            &sections,
-    //            nest_level,
-    //            list_level,
-    //            checklist_level,
-    //            debug,
-    //        )
-    //    },
-    //    // TODO: Add json5 start
-    //    |src| {
-    //        json5_section_full(
-    //            src,
-    //            &sections,
-    //            nest_level,
-    //            list_level,
-    //            checklist_level,
-    //            debug,
-    //        )
-    //    },
-    //    |src| {
-    //        list_section_start(
-    //            src,
-    //            &sections,
-    //            nest_level,
-    //            list_level,
-    //            checklist_level,
-    //            debug,
-    //        )
-    //    },
-    //    |src| {
-    //        list_section_full(
-    //            src,
-    //            &sections,
-    //            nest_level,
-    //            list_level,
-    //            checklist_level,
-    //            debug,
-    //        )
-    //    },
-    //    |src| {
-    //        raw_section_start(
-    //            src,
-    //            &sections,
-    //            nest_level,
-    //            list_level,
-    //            checklist_level,
-    //            debug,
-    //        )
-    //    },
-    //    |src| {
-    //        raw_section_full(
-    //            src,
-    //            &sections,
-    //            nest_level,
-    //            list_level,
-    //            checklist_level,
-    //            debug,
-    //        )
-    //    },
-    //    // Reminder: do unknown last since it slurps everything
-    //    |src| {
-    //        unknown_section_start(
-    //            src,
-    //            &sections,
-    //            nest_level,
-    //            list_level,
-    //            checklist_level,
-    //            debug,
-    //        )
-    //    },
-    //    |src| {
-    //        unknown_section_full(
-    //            src,
-    //            &sections,
-    //            nest_level,
-    //            list_level,
-    //            checklist_level,
-    //            debug,
-    //        )
-    //    },
-    //))
-    //.context("")
-    //.parse(source)?;
-
     Ok((source, section))
 }

@@ -1,26 +1,17 @@
-#![allow(unused_imports)]
 use crate::helpers::dump_parser_if_debug;
 use crate::helpers::flatten_spans_v42;
 use crate::section_attr_v42::SectionAttrV42;
 use crate::span_v42::any_characters::*;
 use crate::span_v42::plaintext::plaintext;
-use crate::span_v42::single_characters::*;
 use crate::span_v42::*;
-use crate::spans_v42::generic_base_content::generic_base_content;
+use crate::spans_v42::generic_span_attr_content::generic_span_attr_content;
 use nom::branch::alt;
-use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
-use nom::character::complete::anychar;
 use nom::character::complete::line_ending;
-use nom::character::complete::multispace0;
-use nom::character::complete::multispace1;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::eof;
-use nom::combinator::not;
 use nom::multi::many1;
-use nom::sequence::pair;
-use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -83,7 +74,7 @@ pub fn section_key_value_attr_v42<'a>(
 pub fn spans_of_section_key_value_attr_value<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Vec<SpanV42>, ErrorTree<&'a str>> {
-    let (source, output) = many1(generic_base_content).context("").parse(source)?;
+    let (source, output) = generic_span_attr_content.context("").parse(source)?;
     Ok((source, output))
 }
 

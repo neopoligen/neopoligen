@@ -73,13 +73,8 @@ pub fn span_v42<'a>(source: &'a str) -> IResult<&'a str, SpanV42, ErrorTree<&'a 
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use pretty_assertions::assert_eq;
-    use rstest::rstest;
 
-    #[rstest]
-    #[case("alfa-bravo", "-bravo")]
-    fn valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
-        assert_eq!(remainder, plaintext(source).unwrap().0);
-    }
+    // use super::*;
+    // use pretty_assertions::assert_eq;
+    // use rstest::rstest;
 }

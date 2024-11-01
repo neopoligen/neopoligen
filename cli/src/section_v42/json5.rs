@@ -27,8 +27,8 @@ use std::collections::BTreeMap;
 pub struct Json5SectionV42 {
     pub attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42>,
     pub bound: Bound,
-    pub children: Vec<SectionV42>,
     pub data: Value,
+    pub end_section: Option<Box<SectionV42>>,
     pub error: Option<String>,
     pub flags: Vec<String>,
     pub kind: String,
@@ -81,8 +81,8 @@ pub fn json5_section_full_v42<'a>(
     let section = SectionV42::Json5(Json5SectionV42 {
         attrs,
         bound: Bound::Full,
-        children: vec![],
         data,
+        end_section: None,
         error,
         flags,
         kind: kind.to_string(),
@@ -141,7 +141,7 @@ pub fn json5_section_start_v42<'a>(
             flags: vec![],
             bound: Bound::Start,
             data,
-            children: vec![end_section],
+            end_section: Some(Box::new(end_section)),
             error,
             kind: kind.to_string(),
             template_list: make_template_list("json5", kind, "default"),
@@ -198,8 +198,8 @@ mod test {
             SectionV42::Json5(Json5SectionV42 {
                 attrs,
                 bound: Bound::Full,
-                children: vec![],
                 data: serde_json5::from_str::<Value>("{}").unwrap(),
+                end_section: None,
                 error: None,
                 flags: vec![],
                 kind: "pagedata".to_string(),
@@ -230,14 +230,14 @@ mod test {
             SectionV42::Json5(Json5SectionV42 {
                 attrs,
                 bound: Bound::Start,
-                children: vec![SectionV42::End(EndSectionV42 {
+                end_section: Some(Box::new(SectionV42::End(EndSectionV42 {
                     attrs: BTreeMap::new(),
                     flags: vec![],
                     bound: Bound::End,
                     children: vec![],
                     kind: "pagedata".to_string(),
                     template_list: vec!["sections/generic-ends/default.neoj".to_string()],
-                })],
+                }))),
                 data: serde_json5::from_str::<Value>(r#"{ "alfa": "bravo"}"#).unwrap(),
                 error: None,
                 flags: vec![],

@@ -363,7 +363,7 @@ mod test {
     }
 
     #[test]
-    fn solo_get_id_when_there_is_an_error_and_something_else_also_has_an_id() {
+    fn get_id_when_there_is_an_error_and_something_else_also_has_an_id() {
         let id = "008-unclosed-with-other-id.neo";
         let source = get_include_str_file(SAMPLES, id);
         let source_path = PathBuf::from(format!("mock/{}", id));
