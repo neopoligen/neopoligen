@@ -42,7 +42,7 @@ pub fn paragraph_block_section_v42<'a>(
         source,
         SectionV42::Block(BlockSectionV42 {
             children: vec![],
-            kind: "paragraph".to_string(),
+            kind: "block-paragraph".to_string(),
             spans,
             template_list: vec!["sections/block-paragraph/default.neoj".to_string()],
         }),
@@ -73,7 +73,7 @@ mod test {
             "",
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
-                kind: "paragraph".to_string(),
+                kind: "block-paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "this is some text".to_string(),
                 })],
@@ -100,7 +100,7 @@ mod test {
             "",
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
-                kind: "paragraph".to_string(),
+                kind: "block-paragraph".to_string(),
                 spans: vec![
                     SpanV42::PlainText(PlainTextSpan {
                         text: "multiple".to_string(),

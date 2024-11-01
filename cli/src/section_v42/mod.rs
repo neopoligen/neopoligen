@@ -75,7 +75,7 @@ pub fn start_or_full_section_v42<'a>(
         // |src| ordered_list_section_full_v42(src, &site_config, SectionParent::Page, debug),
         // |src| ordered_list_section_start_v42(src, &site_config, SectionParent::Page, debug),
         |src| raw_section_full_v42(src, &site_config, SectionParent::Page, debug),
-        // |src| raw_section_start_v42(src, &site_config, SectionParent::Page, debug),
+        |src| raw_section_start_v42(src, &site_config, SectionParent::Page, debug),
         // |src| script_section_full_v42(src, &site_config, SectionParent::Page, debug),
         // |src| script_section_start_v42(src, &site_config, SectionParent::Page, debug),
         |src| basic_section_start_v42(src, &site_config, SectionParent::Page, debug),

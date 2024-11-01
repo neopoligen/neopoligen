@@ -54,9 +54,12 @@ pub fn end_section_basic_v42<'a>(
         attrs,
         bound: Bound::End,
         children,
-        kind: kind.to_string(),
+        kind: format!("{}-end", kind.to_string()),
         flags,
-        template_list: vec!["sections/generic-ends/default.neoj".to_string()],
+        template_list: vec![
+            format!("sections/{}-end/default.neoj", kind),
+            "sections/generic-ends/default.neoj".to_string(),
+        ],
     });
     Ok((source, section))
 }
@@ -83,7 +86,7 @@ mod test {
         let children = vec![
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
-                kind: "paragraph".to_string(),
+                kind: "block-paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "Tango".to_string(),
                 })],
@@ -91,7 +94,7 @@ mod test {
             }),
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
-                kind: "paragraph".to_string(),
+                kind: "block-paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "Foxtrot".to_string(),
                 })],
@@ -100,14 +103,17 @@ mod test {
         ];
         let kind = "unknown-test-section".to_string();
         let flags = vec![];
-        let template_list = vec!["sections/generic-ends/default.neoj".to_string()];
+        let template_list = vec![
+            "sections/unknown-test-section-end/default.neoj".to_string(),
+            "sections/generic-ends/default.neoj".to_string(),
+        ];
         let left = (
             "",
             SectionV42::End(EndSectionV42 {
                 attrs,
                 bound,
                 children,
-                kind: kind.clone(),
+                kind: format!("{}-end", kind.clone()),
                 flags,
                 template_list,
             }),

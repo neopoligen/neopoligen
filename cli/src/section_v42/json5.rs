@@ -217,7 +217,7 @@ mod test {
     }
 
     #[test]
-    fn basic_start_end() {
+    fn solo_basic_start_end() {
         let site_config = SiteConfigV42::mock1_basic();
         let source = SAMPLE_DIR
             .get_file("003-start-end.neo")
@@ -240,8 +240,11 @@ mod test {
                     flags: vec![],
                     bound: Bound::End,
                     children: vec![],
-                    kind: "pagedata".to_string(),
-                    template_list: vec!["sections/generic-ends/default.neoj".to_string()],
+                    kind: "pagedata-end".to_string(),
+                    template_list: vec![
+                        "sections/pagedata-end/default.neoj".to_string(),
+                        "sections/generic-ends/default.neoj".to_string(),
+                    ],
                 }))),
                 data: serde_json5::from_str::<Value>(r#"{ "alfa": "bravo"}"#).unwrap(),
                 error: None,

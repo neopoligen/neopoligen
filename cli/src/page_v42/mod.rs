@@ -131,7 +131,7 @@ impl PageV42 {
             SectionV42::Basic(sec) => match sec.kind.as_str() {
                 "title" => sec.children.iter().find_map(|child| match child {
                     SectionV42::Block(c) => match c.kind.as_str() {
-                        "paragraph" => Some(c.spans.clone()),
+                        "block-paragraph" => Some(c.spans.clone()),
                         _ => None,
                     },
                     _ => None,
