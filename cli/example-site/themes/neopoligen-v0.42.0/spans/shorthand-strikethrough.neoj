@@ -1,5 +1,5 @@
 [@- '' -@]
 
-<strike [@- site.get_span_attrs(span) -@]>[@ span.text @]</strike>
+<s [@- site.get_span_attrs(span) -@]>[@ span.text @]</s>
 
 [@- '' -@]

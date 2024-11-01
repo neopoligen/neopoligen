@@ -33,13 +33,13 @@ pub struct StrongShorthandV42 {
 }
 
 pub fn strong_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, tokens) = preceded(pair(tag("**"), space0), many1(strong_shorthand_content))
+    let (source, tokens) = preceded(pair(tag("!!"), space0), many1(strong_shorthand_content))
         .context("")
         .parse(source)?;
     let (source, (attrs, flags)) = get_strong_shorthand_attrs_and_flags
         .context("")
         .parse(source)?;
-    let (source, _) = tag("**").context("").parse(source)?;
+    let (source, _) = tag("!!").context("").parse(source)?;
     Ok((
         source,
         SpanV42::StrongShorthand(StrongShorthandV42 {
@@ -86,9 +86,9 @@ pub fn strong_shorthand_attr_or_flag(
 
 pub fn strong_shorthand_content(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, token) = alt((
-        not_asterisk_or_pipe_or_escape,
-        single_asterisk,
-        escaped_asterisk,
+        not_exclamation_or_pipe_or_escape,
+        single_exclamation,
+        escaped_exclamation,
         escaped_pipe,
         escaped_backslash,
     ))
@@ -97,8 +97,8 @@ pub fn strong_shorthand_content(source: &str) -> IResult<&str, SpanV42, ErrorTre
     Ok((source, token))
 }
 
-pub fn not_asterisk_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, result) = is_not("*\\|").context("").parse(source)?;
+pub fn not_exclamation_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+    let (source, result) = is_not("!\\|").context("").parse(source)?;
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
@@ -111,10 +111,10 @@ pub fn strong_shorthand_span_flag_attr(
     source: &str,
 ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
     let (source, spans) = many1(alt((
-        not_asterisk_or_pipe_or_escape,
+        not_exclamation_or_pipe_or_escape,
         escaped_pipe,
-        escaped_asterisk,
-        single_asterisk,
+        escaped_exclamation,
+        single_exclamation,
     )))
     .context("")
     .parse(source)?;
@@ -137,9 +137,9 @@ pub fn strong_shorthand_key_value_attr(
     .context("")
     .parse(source)?;
     let (source, spans) = many1(alt((
-        not_asterisk_or_pipe_or_escape,
-        single_asterisk,
-        escaped_asterisk,
+        not_exclamation_or_pipe_or_escape,
+        single_exclamation,
+        escaped_exclamation,
         escaped_pipe,
         escaped_backslash,
     )))

@@ -5,10 +5,28 @@ from string import Template
 shorthands = [
         ("~~", "~~", "strikethrough", "Strikethrough", "tilde", "~"),
         ("``", "``", "code", "Code", "backtick", "`"),
-        ("__", "__", "emphasis", "Emphasis", "underscore", "_"),
+        ("**", "**", "emphasis", "Emphasis", "asterisk", "*"),
         ("^^", "^^", "footnote", "Footnote", "caret", "^"),
-        ("**", "**", "strong", "Strong", "asterisk", "*"),
+        ("!!", "!!", "strong", "Strong", "exclamation", "!"),
+        ("[[", "]]", "html", "Html", "close_bracket", "]"),
+        ("{{", "}}", "image", "Image", "close_brace", "}"),
+        ("__", "__", "underline", "Underline", "underscore", "_"),
+        ("@@", "@@", "mark", "Mark", "ampersand", "@"),
         ]
+
+# possible things to add:
+# mark
+# q
+# sub 
+# sup 
+# small
+
+
+
+
+
+
+
 
 
 skeleton = """use super::single_characters::*;

@@ -4,8 +4,12 @@ use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::shorthand_code::*;
 use crate::span_v42::shorthand_emphasis::*;
 use crate::span_v42::shorthand_footnote::*;
+use crate::span_v42::shorthand_html::*;
+use crate::span_v42::shorthand_image::*;
+use crate::span_v42::shorthand_mark::*;
 use crate::span_v42::shorthand_strikethrough::*;
 use crate::span_v42::shorthand_strong::*;
+use crate::span_v42::shorthand_underline::*;
 use crate::span_v42::single_characters::*;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
@@ -21,8 +25,12 @@ pub fn generic_base_content<'a>(source: &'a str) -> IResult<&'a str, SpanV42, Er
         code_shorthand_span,
         emphasis_shorthand_span,
         footnote_shorthand_span,
+        html_shorthand_span,
+        image_shorthand_span,
+        mark_shorthand_span,
         strong_shorthand_span,
         strikethrough_shorthand_span,
+        underline_shorthand_span,
         any_hyphens,
         any_colons,
         any_open_parens,

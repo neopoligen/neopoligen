@@ -8,8 +8,12 @@ pub mod plaintext_without_spaces;
 pub mod shorthand_code;
 pub mod shorthand_emphasis;
 pub mod shorthand_footnote;
+pub mod shorthand_html;
+pub mod shorthand_image;
+pub mod shorthand_mark;
 pub mod shorthand_strikethrough;
 pub mod shorthand_strong;
+pub mod shorthand_underline;
 pub mod single_characters;
 pub mod space0_line_ending_or_eof;
 
@@ -19,8 +23,12 @@ use crate::span_v42::plaintext::*;
 use crate::span_v42::shorthand_code::CodeShorthandV42;
 use crate::span_v42::shorthand_emphasis::EmphasisShorthandV42;
 use crate::span_v42::shorthand_footnote::FootnoteShorthandV42;
+use crate::span_v42::shorthand_html::HtmlShorthandV42;
+use crate::span_v42::shorthand_image::ImageShorthandV42;
+use crate::span_v42::shorthand_mark::MarkShorthandV42;
 use crate::span_v42::shorthand_strikethrough::StrikethroughShorthandV42;
 use crate::span_v42::shorthand_strong::StrongShorthandV42;
+use crate::span_v42::shorthand_underline::UnderlineShorthandV42;
 use nom::branch::alt;
 use nom::combinator::not;
 use nom::IResult;
@@ -40,6 +48,12 @@ pub enum SpanV42 {
     EscapedCharacter(EscapedCharacterSpanV42),
     #[serde(rename = "shorthand-footnote")]
     FootnoteShorthand(FootnoteShorthandV42),
+    #[serde(rename = "shorthand-html")]
+    HtmlShorthand(HtmlShorthandV42),
+    #[serde(rename = "shorthand-image")]
+    ImageShorthand(ImageShorthandV42),
+    #[serde(rename = "shorthand-mark")]
+    MarkShorthand(MarkShorthandV42),
     #[serde(rename = "named-span")]
     NamedSpan(NamedSpanV42),
     #[serde(rename = "plain-text")]
@@ -48,6 +62,8 @@ pub enum SpanV42 {
     StrongShorthand(StrongShorthandV42),
     #[serde(rename = "shorthand-strikethrough")]
     StrikethroughShorthand(StrikethroughShorthandV42),
+    #[serde(rename = "shorthand-underline")]
+    UnderlineShorthand(UnderlineShorthandV42),
 }
 
 pub fn span_v42<'a>(source: &'a str) -> IResult<&'a str, SpanV42, ErrorTree<&'a str>> {

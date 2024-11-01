@@ -97,6 +97,8 @@ impl BuilderV42 {
         self.templates.iter().for_each(|(k, v)| {
             let _ = env.add_template_owned(k, v);
         });
+
+        let _ = env.add_template_owned("built-in-span-text", "[@- span.text -@]");
         let _ = env.add_template_owned(
             "built-in-helpers",
             r#"
@@ -143,9 +145,9 @@ impl BuilderV42 {
 
 [!- macro output_span(site, page, span) -!]
 [!- if span.kind -!]
-[!- include ["spans/" + span.kind + ".neoj", "spans/" + span.type + ".neoj"] ignore missing -!]
+[!- include ["spans/" + span.kind + ".neoj", "spans/" + span.type + ".neoj", "built-in-span-text"] ignore missing -!]
 [!- else -!]
-[!- include ["spans/" + span.type + ".neoj"] ignore missing -!]
+[!- include ["spans/" + span.type + ".neoj", "built-in-span-text"] ignore missing -!]
 [!- endif -!]
 [!- endmacro -!]
 
