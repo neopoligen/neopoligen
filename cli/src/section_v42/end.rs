@@ -46,10 +46,27 @@ pub fn end_section_basic_v42<'a>(
     .parse(source)?;
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     let (source, _) = multispace0.context("").parse(source)?;
-    let (source, children) =
-        many0(|src| paragraph_block_section_v42(src, site_config, parent.clone(), debug))
-            .context("")
-            .parse(source)?;
+
+    let (source, children) = match parent {
+        SectionParent::ListItem => many0(alt((
+            |src| list_item_paragraph_block(src, site_config, parent.clone(), debug),
+            |src| start_or_full_section_v42(src, site_config, parent.clone(), debug),
+        )))
+        .context("")
+        .parse(source)?,
+        _ => many0(alt((
+            |src| paragraph_block_section_v42(src, site_config, parent.clone(), debug),
+            |src| start_or_full_section_v42(src, site_config, parent.clone(), debug),
+        )))
+        .context("")
+        .parse(source)?,
+    };
+
+    // let (source, children) =
+    //     many0(|src| paragraph_block_section_v42(src, site_config, parent.clone(), debug))
+    //         .context("")
+    //         .parse(source)?;
+
     let section = SectionV42::End(EndSectionV42 {
         attrs,
         bound: Bound::End,

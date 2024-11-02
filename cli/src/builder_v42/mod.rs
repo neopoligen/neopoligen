@@ -1,7 +1,7 @@
 pub mod inits;
 
 use crate::helpers::*;
-use crate::neo_error::NeoErrorKind;
+use crate::neo_error::{NeoErrorKind, NeoErrorV42};
 use crate::{
     neo_error::NeoError, page_v42::PageV42, site_config::SiteConfigV42, site_v42::SiteV42,
 };
@@ -16,6 +16,7 @@ use walkdir::WalkDir;
 
 pub struct BuilderV42 {
     pub errors: Vec<NeoError>,
+    pub errors_v42: Vec<NeoErrorV42>,
     pub pages: Vec<PageV42>,
     pub site_config: SiteConfigV42,
     pub site: Option<SiteV42>,
@@ -106,6 +107,8 @@ impl BuilderV42 {
         self.templates.iter().for_each(|(k, v)| {
             let _ = env.add_template_owned(k, v);
         });
+        let _ =
+            env.add_template_owned("axum-404", include_str!("built-in-templates/axum-404.neoj"));
         let _ = env.add_template_owned(
             "built-in-generic-basic",
             include_str!("built-in-templates/generic-basic.neoj"),
@@ -213,12 +216,34 @@ impl BuilderV42 {
                             }
                         }
                         Err(e) => {
-                            event!(
-                                Level::ERROR,
-                                "Could not render output for: {} - {}",
-                                page.fs_path.display(),
-                                e.to_string()
-                            );
+                            self.errors_v42.push(NeoErrorV42::FullPathWith {
+                                path: page.fs_path.clone(),
+                                err: e.display_debug_info().to_string(),
+                            });
+
+                            if let Ok(tmpl404) = env.get_template("axum-404") {
+                                match tmpl404.render(context!(
+                                    site => &site_clone,
+                                    page => Value::from_object(page.clone()),
+                                    error => e.display_debug_info().to_string()))
+                                {
+                                    Ok(output) => {
+                                        let _ = write_file_with_mkdir(
+                                            &self.site_config.error_page_404(),
+                                            output.as_str(),
+                                        );
+                                    }
+                                    Err(_) => {}
+                                }
+                            }
+
+                            // event!(
+                            //     Level::ERROR,
+                            //     "Could not render output for: {} - {} - {}",
+                            //     page.fs_path.display(),
+                            //     e.to_string(),
+                            //     e.display_debug_info(),
+                            // );
 
                             builder_error = Some(NeoError {
                                 kind: NeoErrorKind::GenericErrorWithSourcePath {

@@ -7,6 +7,11 @@ pub struct NeoError {
     pub kind: NeoErrorKind,
 }
 
+#[derive(Debug)]
+pub enum NeoErrorV42 {
+    FullPathWith { path: PathBuf, err: String },
+}
+
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum NeoErrorKind {

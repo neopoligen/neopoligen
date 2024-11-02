@@ -32,7 +32,7 @@ pub fn list_item_section_full_v42<'a>(
     let (source, _) = tag("- ").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, paragraphs) =
-        many1(|src| list_item_paragraph_block(src, site_config, SectionParent::Basic, debug))
+        many1(|src| list_item_paragraph_block(src, site_config, SectionParent::ListItem, debug))
             .context("")
             .parse(source)?;
     let section = SectionV42::ListItem(ListItemSectionV42 {
@@ -43,46 +43,6 @@ pub fn list_item_section_full_v42<'a>(
     });
     Ok((source, section))
 }
-
-// pub fn listitem_section_start_v42<'a>(
-//     source: &'a str,
-//     site_config: &'a SiteConfigV42,
-//     _parent: SectionParent,
-//     debug: bool,
-// ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
-//     // let debug = true;
-//     let dbg_header = "LISTITEM_SECTION_START";
-//     dump_parser_if_debug(debug, dbg_header, source, 1);
-//     // TODO: Get section kind list dynamically
-//     let (source, kind) = preceded(tuple((tag("--"), space1)), alt((tag("listitem"),)))
-//         .context("")
-//         .parse(source)?;
-//     let (source, _) = tuple((tag("/"), space0, line_ending))
-//         .context("")
-//         .parse(source)?;
-//     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
-//     dump_parser_if_debug(debug, dbg_header, source, 2);
-//     let (source, text) = take_until(format!("-- /{}", kind).as_str())
-//         .context("")
-//         .parse(source)?;
-//     let (source, end_section) =
-//         (|src| end_section_basic_v42(src, site_config, SectionParent::Basic, kind, debug))
-//             .context("")
-//             .parse(source)?;
-//     dump_parser_if_debug(debug, dbg_header, source, 3);
-//     Ok((
-//         source,
-//         SectionV42::ListItem(ListItemSectionV42 {
-//             attrs,
-//             flags,
-//             bound: Bound::Start,
-//             end_section: Some(Box::new(end_section)),
-//             kind: kind.to_string(),
-//             template_list: make_template_list("list-item", kind, "default"),
-//             text: text.trim().to_string(),
-//         }),
-//     ))
-// }
 
 #[cfg(test)]
 mod test {

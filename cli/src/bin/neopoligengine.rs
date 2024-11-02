@@ -8,6 +8,7 @@ use neopoligengine::site_config::SiteConfigV42;
 use std::path::PathBuf;
 use tokio::sync::mpsc;
 use tower_http::services::ServeDir;
+use tower_http::services::ServeFile;
 use tower_livereload::LiveReloadLayer;
 use tower_livereload::Reloader;
 use tracing::{event, instrument, Level};
@@ -80,9 +81,13 @@ async fn run_web_server(engine_config: EngineConfig, site_config: SiteConfigV42)
     let reloader = livereload.reloader();
     build_site(&reloader, &site_config);
     let localhost_domain = format!("localhost:{}", engine_config.port);
+    let serve_dir = ServeDir::new(&site_config.output_dest_dir())
+        .not_found_service(ServeFile::new(&site_config.error_page_404()));
+    //.not_found_service(ServeFile::new("/Users/alan/Desktop/404.html"));
+    //.not_found_service(ServeFile::new(".built-in/error-pages/404.html"));
     let app = Router::new()
-        .nest_service("/neo-status", ServeDir::new(&site_config.status_dest_dir()))
-        .nest_service("/", ServeDir::new(&site_config.output_dest_dir()))
+        //.nest_service("/built-in", ServeDir::new()))
+        .nest_service("/", serve_dir)
         .layer(livereload);
     let (tx, rx) = mpsc::channel(1);
     let _content_watcher = FileWatcher::new(&site_config.content_source_dir(), tx.clone()).await;

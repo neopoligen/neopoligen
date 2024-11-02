@@ -38,6 +38,7 @@ pub enum SectionParent {
     Basic,
     Checklist,
     List,
+    ListItem,
     Page,
 }
 

@@ -90,7 +90,7 @@ pub fn list_section_start_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 5);
     // TODO: Handle if you're in a list or a checklist here.
     let (source, children) = many0(alt((
-        |src| list_item_section_full_v42(src, site_config, parent.clone(), debug),
+        |src| list_item_section_full_v42(src, site_config, SectionParent::List, debug),
         |src| start_or_full_section_v42(src, site_config, SectionParent::List, debug),
     )))
     .context("")

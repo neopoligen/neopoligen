@@ -175,6 +175,10 @@ impl SiteConfigV42 {
         self.project_dir().join("admin")
     }
 
+    pub fn built_in_dir(&self) -> PathBuf {
+        self.project_dir().join(".built-in")
+    }
+
     pub fn content_source_dir(&self) -> PathBuf {
         self.project_dir().join("content")
     }
@@ -185,6 +189,10 @@ impl SiteConfigV42 {
 
     pub fn errors_dir(&self) -> PathBuf {
         self.project_dir().join("_errors")
+    }
+
+    pub fn error_page_404(&self) -> PathBuf {
+        self.built_in_dir().join("error-pages").join("404.html")
     }
 
     pub fn output_dest_dir(&self) -> PathBuf {
