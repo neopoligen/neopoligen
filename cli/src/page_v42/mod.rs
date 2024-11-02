@@ -1,3 +1,4 @@
+pub mod helpers;
 pub mod inits;
 pub mod mocks;
 
@@ -5,6 +6,7 @@ use crate::ast_v42::parse_ast_v42;
 use crate::helpers::flatten_spans_v42;
 use crate::neo_error::NeoError;
 use crate::neo_error_v42::NeoErrorV42;
+use crate::page_v42::helpers::*;
 use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
 use crate::span_v42::plaintext::PlainTextSpan;
@@ -37,6 +39,24 @@ impl PageV42b {
             }
             Err(_e) => {
                 self.ast_error = Some(NeoErrorV42::AstParsingError);
+            }
+        }
+    }
+
+    pub fn generate_fallback_id(&mut self) {
+        if let None = &self.id {
+            match get_value_from_raw_pagedata_parsing(&self.source, "id") {
+                Ok(v) => {
+                    // TODO: Add note to error stack that the id came from
+                    // this parsing
+                    self.id = Some(v.1.join("").trim().to_string());
+                    ()
+                }
+                Err(e) => {
+                    dbg!("TODO: Add this error to the page stack");
+                    dbg!(e);
+                    ()
+                }
             }
         }
     }

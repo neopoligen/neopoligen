@@ -122,6 +122,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             let _ = builder.ingest_source_files();
             let _ = builder.generate_asts();
             let _ = builder.generate_ids_from_ast();
+            let _ = builder.generate_fallback_ids();
             // let _ = builder.generate_outputs();
             // let _ = builder.generate_base_pages();
             //let _ = builder.empty_output_dirs();
