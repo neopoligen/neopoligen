@@ -38,6 +38,7 @@ impl BuilderV42<'_> {
             "generic-script",
             "helpers",
             "pages-problems-index-page",
+            "pages-issue-page",
             "script-output",
             "section-tree",
             "span-text",

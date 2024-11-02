@@ -158,9 +158,6 @@ impl BuilderV42<'_> {
     pub fn generate_site(&mut self) -> Result<()> {
         let site = SiteV42b::new_with_pages(&self.site_config, &self.pages_v42);
         self.site_v42b = Some(site);
-        // for (_, page) in &mut self.pages_v42 {
-        //     page.generate_id_from_ast();
-        // }
         Ok(())
     }
 
@@ -473,11 +470,52 @@ impl BuilderV42<'_> {
         Ok(())
     }
 
+    // let skeleton = env.get_template("hello").unwrap();
+    // let output = skeleton.render(context!(name => "World")).unwrap();
+    // println!("{}", output);
+
     #[instrument(skip(self))]
-    pub fn output_individual_error_pages(&mut self) -> Result<()> {
-        // for (_, page) in &mut self.pages_v42 {
-        //     if let (None, Some(errors)) = (&page.output, &page.errors) {}
-        // }
+    pub fn output_issue_pages(&mut self) -> Result<()> {
+        for (_, page) in &mut self.pages_v42 {
+            if page.errors.len() > 0 {
+                if let Some(href) = &page.href {
+                    let rel_output_path = match href.strip_prefix("/") {
+                        Ok(p) => p,
+                        Err(_) => &href,
+                    };
+                    let absolute_output_path =
+                        &self.site_config.output_dest_dir().join(rel_output_path);
+                    match self.env.get_template("built-in/pages-issue-page.neoj") {
+                        Ok(template) => match template.render(context!()) {
+                            Ok(output) => {
+                                match write_file_with_mkdir(&absolute_output_path, &output) {
+                                    Ok(()) => {
+                                        //event!(Level::INFO, "Making file in output_pages",);
+                                    }
+                                    Err(_e) => {
+                                        dbg!("TODO: Hoist this error in output_page_v42");
+                                        ()
+                                    }
+                                }
+                            }
+                            Err(e) => {
+                                dbg!(e);
+                                ()
+                            }
+                        },
+                        Err(e) => {
+                            dbg!(e);
+                            ()
+                        }
+                    }
+                }
+                ()
+            }
+
+            // if let (None, Some(errors)) = (&page.output, &page.errors) {
+            //     dbg!(errors);
+            // }
+        }
 
         Ok(())
     }
