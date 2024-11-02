@@ -6,5 +6,5 @@ use serde::{Deserialize, Serialize};
 pub enum NeoErrorV42 {
     AstParsingError,
     NoParsedPageDataForKey(String),
-    // FullPathWith { path: PathBuf, err: String },
+    TemplateLoadError { message: String, details: String }, // FullPathWith { path: PathBuf, err: String },
 }

@@ -39,7 +39,7 @@ pub struct BuilderV42<'a> {
     pub site_config: SiteConfigV42,
     pub site: Option<SiteV42>,
     pub templates: BTreeMap<String, String>,
-    pub template_load_errors: Vec<TemplateLoadError>,
+    pub template_load_errors: Vec<NeoErrorV42>,
 }
 
 impl BuilderV42<'_> {
@@ -145,10 +145,11 @@ impl BuilderV42<'_> {
             ) {
                 Ok(()) => (),
                 Err(e) => {
-                    self.template_load_errors.push(TemplateLoadError {
-                        message: e.to_string(),
-                        details: e.display_debug_info().to_string(),
-                    });
+                    self.template_load_errors
+                        .push(NeoErrorV42::TemplateLoadError {
+                            message: e.to_string(),
+                            details: e.display_debug_info().to_string(),
+                        });
                     event!(Level::ERROR, "{}", e.display_debug_info().to_string());
                     ()
                 }
@@ -159,10 +160,11 @@ impl BuilderV42<'_> {
             .for_each(|(k, v)| match env.add_template_owned(k, v) {
                 Ok(()) => (),
                 Err(e) => {
-                    self.template_load_errors.push(TemplateLoadError {
-                        message: e.to_string(),
-                        details: e.display_debug_info().to_string(),
-                    });
+                    self.template_load_errors
+                        .push(NeoErrorV42::TemplateLoadError {
+                            message: e.to_string(),
+                            details: e.display_debug_info().to_string(),
+                        });
                     event!(Level::ERROR, "{}", e.display_debug_info().to_string());
                     ()
                 }
@@ -239,10 +241,11 @@ impl BuilderV42<'_> {
                         e.to_string(),
                         e.display_debug_info().to_string()
                     );
-                    self.template_load_errors.push(TemplateLoadError {
-                        message: e.to_string(),
-                        details: e.display_debug_info().to_string(),
-                    });
+                    self.template_load_errors
+                        .push(NeoErrorV42::TemplateLoadError {
+                            message: e.to_string(),
+                            details: e.display_debug_info().to_string(),
+                        });
                     ()
                 }
             }
@@ -274,10 +277,11 @@ impl BuilderV42<'_> {
                                     e.to_string(),
                                     e.display_debug_info().to_string()
                                 );
-                                self.template_load_errors.push(TemplateLoadError {
-                                    message: e.to_string(),
-                                    details: e.display_debug_info().to_string(),
-                                });
+                                self.template_load_errors
+                                    .push(NeoErrorV42::TemplateLoadError {
+                                        message: e.to_string(),
+                                        details: e.display_debug_info().to_string(),
+                                    });
                             }
                         }
                     }
