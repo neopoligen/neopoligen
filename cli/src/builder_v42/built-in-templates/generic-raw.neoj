@@ -1,0 +1,7 @@
+[!- import "built-in-helpers" as neo -!]
+
+<section class="generic-raw-section flow">
+<pre>[@ section.text @]</pre>
+</section>
+
+[@- neo.output_end_section(site, page, section) -@]

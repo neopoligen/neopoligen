@@ -106,6 +106,39 @@ impl BuilderV42 {
         self.templates.iter().for_each(|(k, v)| {
             let _ = env.add_template_owned(k, v);
         });
+
+        let _ = env.add_template_owned(
+            "built-in-generic-basic",
+            include_str!("built-in-templates/generic-basic.neoj"),
+        );
+        let _ = env.add_template_owned(
+            "built-in-generic-css",
+            include_str!("built-in-templates/generic-css.neoj"),
+        );
+        let _ = env.add_template_owned(
+            "built-in-generic-html",
+            include_str!("built-in-templates/generic-html.neoj"),
+        );
+        let _ = env.add_template_owned(
+            "built-in-generic-json5",
+            include_str!("built-in-templates/generic-json5.neoj"),
+        );
+        let _ = env.add_template_owned(
+            "built-in-generic-list",
+            include_str!("built-in-templates/generic-list.neoj"),
+        );
+        let _ = env.add_template_owned(
+            "built-in-generic-list-item",
+            include_str!("built-in-templates/generic-list-item.neoj"),
+        );
+        let _ = env.add_template_owned(
+            "built-in-generic-raw",
+            include_str!("built-in-templates/generic-raw.neoj"),
+        );
+        let _ = env.add_template_owned(
+            "built-in-generic-script",
+            include_str!("built-in-templates/generic-script.neoj"),
+        );
         let _ = env.add_template_owned(
             "built-in-css-output",
             include_str!("built-in-templates/css-output.neoj"),
