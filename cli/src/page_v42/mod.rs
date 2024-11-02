@@ -45,6 +45,22 @@ impl PageV42b {
         }
     }
 
+    pub fn generate_fallback_href(&mut self) {
+        if let None = &self.href {
+            match get_value_from_raw_pagedata_parsing(&self.source, "href") {
+                Ok(v) => {
+                    dbg!("TODO: Hoist message that this href came from direct parsing and not ast");
+                    self.href = Some(v.1.join("").trim().to_string().into());
+                }
+                Err(e) => {
+                    dbg!("TODO: Add this error to the page stack");
+                    dbg!(e);
+                    ()
+                }
+            }
+        }
+    }
+
     pub fn generate_fallback_id(&mut self) {
         if let None = &self.id {
             match get_value_from_raw_pagedata_parsing(&self.source, "id") {

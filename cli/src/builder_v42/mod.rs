@@ -59,6 +59,14 @@ impl BuilderV42<'_> {
     }
 
     #[instrument(skip(self))]
+    pub fn generate_fallback_hrefs(&mut self) -> Result<()> {
+        for (_, page) in &mut self.pages_v42 {
+            page.generate_fallback_href();
+        }
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn generate_fallback_ids(&mut self) -> Result<()> {
         for (_, page) in &mut self.pages_v42 {
             page.generate_fallback_id();
