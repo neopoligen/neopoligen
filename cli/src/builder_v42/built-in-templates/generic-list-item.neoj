@@ -1,1 +1,3 @@
-<li>[@ section @]</li>
+[!- import "built-in-helpers" as neo -!]
+
+<li>[@- neo.output_sections(site, page, section.children) -@]</li>
