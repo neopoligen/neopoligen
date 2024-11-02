@@ -29,6 +29,8 @@ header, main, footer {
 <div class="bordered"><pre>[! autoescape true !][@ page.source @][! endautoescape !]</pre></div>
 <h3>Raw Data</h3>
 <div class="bordered"><pre>[! autoescape true !][@ page.sections|tojson(true) @][! endautoescape !]</pre></div>
+<h3>Tree</h3>
+<div class="bordered"><pre>[! autoescape true !][@ ast|tojson(true) @][! endautoescape !]</pre></div>
 </main>
 </body>
 </html>

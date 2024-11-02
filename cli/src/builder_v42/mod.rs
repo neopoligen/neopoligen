@@ -220,11 +220,11 @@ impl BuilderV42 {
                                 path: page.fs_path.clone(),
                                 err: e.display_debug_info().to_string(),
                             });
-
                             if let Ok(tmpl404) = env.get_template("axum-404") {
                                 match tmpl404.render(context!(
                                     site => &site_clone,
                                     page => Value::from_object(page.clone()),
+                                    ast => page.raw_ast.clone(),
                                     error => e.display_debug_info().to_string()))
                                 {
                                     Ok(output) => {
@@ -237,13 +237,13 @@ impl BuilderV42 {
                                 }
                             }
 
-                            // event!(
-                            //     Level::ERROR,
-                            //     "Could not render output for: {} - {} - {}",
-                            //     page.fs_path.display(),
-                            //     e.to_string(),
-                            //     e.display_debug_info(),
-                            // );
+                            event!(
+                                Level::ERROR,
+                                "Could not render output for: {} - {} - {}",
+                                page.fs_path.display(),
+                                e.to_string(),
+                                e.display_debug_info(),
+                            );
 
                             builder_error = Some(NeoError {
                                 kind: NeoErrorKind::GenericErrorWithSourcePath {
