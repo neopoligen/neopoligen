@@ -73,6 +73,7 @@ impl BuilderV42<'_> {
             pages_v42: BTreeMap::new(),
             site_config: site_config.clone(),
             site: None,
+            site_v42b: None,
             templates: BTreeMap::new(),
             template_load_errors,
         })

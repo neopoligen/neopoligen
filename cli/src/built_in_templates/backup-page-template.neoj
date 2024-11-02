@@ -1,7 +1,24 @@
+[!- import "built-in/helpers.neoj" as new -!]
+
 <!DOCTYPE html>
 <html>
-<head></head>
+<head>
+<style>
+body {
+  background-color: #0d1229;
+  color: #f0e5d8;
+}
+
+</style>
+</head>
 <body>
-This is the back up template. 
+<div>Head's up: this page is missing it's main page templates.</div>
+<hr>
+[@ site @]
+<hr>
+[@ page.sections @]
+<div>Generated on: [@ site.generated_at("%a. %B %-d - %-I:%M:%S%p") @]</div>
 </body>
 </html>
+
+

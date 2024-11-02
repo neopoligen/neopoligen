@@ -6,5 +6,5 @@ watchexec\
   --workdir "../cli"\
   -c\
   -r\
-  -e rs,neo\
+  -e rs,neo,neoj\
   "bash -c 'cargo run -- --nocapture'"

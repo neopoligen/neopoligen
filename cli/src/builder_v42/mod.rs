@@ -9,6 +9,7 @@ use crate::helpers::*;
 use crate::neo_error::NeoErrorKind;
 use crate::neo_error_v42::NeoErrorV42;
 use crate::page_v42::PageV42b;
+use crate::site_v42::b::SiteV42b;
 use crate::{
     neo_error::NeoError, page_v42::PageV42, site_config::SiteConfigV42, site_v42::SiteV42,
 };
@@ -37,7 +38,9 @@ pub struct BuilderV42<'a> {
     pub pages: Vec<PageV42>,
     pub pages_v42: BTreeMap<PathBuf, PageV42b>,
     pub site_config: SiteConfigV42,
+    // TODO: Deprecate in favor of StiV42b
     pub site: Option<SiteV42>,
+    pub site_v42b: Option<SiteV42b>,
     pub templates: BTreeMap<String, String>,
     pub template_load_errors: Vec<NeoErrorV42>,
 }
@@ -90,31 +93,44 @@ impl BuilderV42<'_> {
         Ok(())
     }
 
-    // let skeleton = env.get_template("hello").unwrap();
-    // let output = skeleton.render(context!(name => "World")).unwrap();
-    // println!("{}", output);
-    // }
-
     #[instrument(skip(self))]
     pub fn generate_outputs(&mut self) -> Result<()> {
+        let site_clone = Value::from_object(self.site_v42b.clone().unwrap());
         for (_, page) in &mut self.pages_v42 {
             match self.env.get_template("built-in/backup-page-template.neoj") {
-                Ok(template) => match template.render(context!()) {
-                    Ok(output) => {
-                        page.output = Some(output);
-                        ()
+                Ok(template) => {
+                    match template.render(
+                        context!(page => Value::from_object(page.clone()), site => site_clone),
+                    ) {
+                        Ok(output) => {
+                            page.output = Some(output);
+                            ()
+                        }
+                        Err(e) => {
+                            dbg!("TODO: Hoist this error from generate_outputs");
+                            ()
+                        }
                     }
-                    Err(e) => {
-                        dbg!("TODO: Hoist this error from generate_outputs");
-                        ()
-                    }
-                },
+                }
                 Err(e) => {
                     dbg!("TODO: Hoist this error from generate_outputs");
                     ()
                 }
             }
         }
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn generate_site(&mut self) -> Result<()> {
+        let site = SiteV42b {
+            config: self.site_config.clone(),
+            pages: BTreeMap::new(),
+        };
+        self.site_v42b = Some(site);
+        // for (_, page) in &mut self.pages_v42 {
+        //     page.generate_id_from_ast();
+        // }
         Ok(())
     }
 

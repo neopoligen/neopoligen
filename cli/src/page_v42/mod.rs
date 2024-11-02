@@ -33,6 +33,32 @@ pub struct PageV42b {
     pub source_path: PathBuf,
 }
 
+impl Object for PageV42b {
+    fn get_value(self: &Arc<Self>, key: &Value) -> Option<Value> {
+        match key.as_str()? {
+            "sections" => self.sections.clone(),
+            _ => None,
+        }
+    }
+
+    // fn call_method(
+    //     self: &Arc<PageV42>,
+    //     _state: &minijinja::State,
+    //     name: &str,
+    //     args: &[Value],
+    // ) -> Result<Value, Error> {
+    //     match name {
+    //         // "sections" => self.ast(),
+    //         "get_pagedata" => self.make_value_from_string(self.get_pagedata(args)),
+    //         // "sections" => self.sections(),
+    //         "title" => self.title(),
+    //         _ => Ok(Value::from("")),
+    //     }
+    // }
+
+    //
+}
+
 impl PageV42b {
     pub fn generate_ast(&mut self, site_config: &SiteConfigV42) {
         match parse_ast_v42(&self.source, site_config, false) {
@@ -300,7 +326,6 @@ impl Object for PageV42 {
             _ => None,
         }
     }
-
     fn call_method(
         self: &Arc<PageV42>,
         _state: &minijinja::State,

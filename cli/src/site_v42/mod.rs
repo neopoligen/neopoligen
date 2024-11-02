@@ -13,12 +13,14 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
+// TODO: Deprecate in favor of SiteV42b
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SiteV42 {
     pub config: SiteConfigV42,
     pub pages: BTreeMap<String, PageV42>,
 }
 
+// TODO: Deprecate in favor of SiteV42b
 impl SiteV42 {
     // TODO: Add tests to this and error handling
     // TODO: escape for html
