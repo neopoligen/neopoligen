@@ -1,8 +1,0 @@
-{# type: standard #}
-{%- import "includes/theme-macros.neojinja" as theme -%}
-
-<kbd>
-{% for span in span.content.spans %}
-{{- theme.output_spans(site, page_id, span) -}}
-{% endfor %}
-</kbd>

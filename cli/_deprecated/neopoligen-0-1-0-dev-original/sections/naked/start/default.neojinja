@@ -1,3 +1,0 @@
-[! for content in section.content.category.content.containers !]
-[@- output_payload(site, page_id, content) -@]
-[! endfor !]

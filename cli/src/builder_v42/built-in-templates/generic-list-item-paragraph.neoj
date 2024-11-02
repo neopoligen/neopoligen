@@ -1,1 +1,2 @@
-list item paragram
+[!- import "built-in-helpers" as neo -!]
+<p>[#- neo.output_spans(site, page, section.spans) -#]</p>

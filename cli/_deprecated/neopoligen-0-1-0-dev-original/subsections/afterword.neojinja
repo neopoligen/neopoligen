@@ -1,5 +1,0 @@
-[!- if section.content.key_value_attributes.afterword -!]
-    <div class="afterword_subsection flow">
-        [@- section.content.key_value_attributes.afterword -@]
-    </div>
-[!- endif -!]

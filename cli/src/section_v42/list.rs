@@ -120,7 +120,7 @@ mod test {
     const SAMPLE_DIR: Dir = include_dir!("src/section_v42/samples/list");
 
     #[test]
-    fn solo_basic_full() {
+    fn basic_full() {
         let site_config = SiteConfigV42::mock1_basic();
         let source = SAMPLE_DIR
             .get_file("001-basic-full.neo")
@@ -134,7 +134,7 @@ mod test {
             "sections/generic-list/default.neoj".to_string(),
         ];
         let left = (
-            "-- p\n\nasdf\n",
+            "-- p\n\npost list\n",
             SectionV42::List(ListSectionV42 {
                 attrs,
                 bound: Bound::Full,

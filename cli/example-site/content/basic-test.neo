@@ -8,22 +8,6 @@ This Is Basic Test
 
 - item 2
 
--- p
-
-Before full html 
-
--- html 
-
-alfa <strong><em>bravo</em></strong>
-
--- html/
-
-alfa <strong><em>bravo</em></strong>
-
--- /html
-
-After end
-
 
 
 -- pagedata

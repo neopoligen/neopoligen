@@ -613,10 +613,10 @@ mod test {
     #[test]
     fn check_highlight_code_no_nums() {
         let left = highlight_code_no_nums(&[
-            minijinja::Value::from("asdf".to_string()),
+            minijinja::Value::from("sierra foxtrot".to_string()),
             minijinja::Value::from("txt".to_string()),
         ]);
-        let right = r#"<span class="text plain">asdf</span>"#.to_string();
+        let right = r#"<span class="text plain">sierra foxtrot</span>"#.to_string();
         assert_eq!(left, right);
     }
 }
