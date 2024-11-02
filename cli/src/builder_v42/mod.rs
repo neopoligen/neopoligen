@@ -106,7 +106,6 @@ impl BuilderV42 {
         self.templates.iter().for_each(|(k, v)| {
             let _ = env.add_template_owned(k, v);
         });
-
         let _ = env.add_template_owned(
             "built-in-generic-basic",
             include_str!("built-in-templates/generic-basic.neoj"),
@@ -130,6 +129,10 @@ impl BuilderV42 {
         let _ = env.add_template_owned(
             "built-in-generic-list-item",
             include_str!("built-in-templates/generic-list-item.neoj"),
+        );
+        let _ = env.add_template_owned(
+            "built-in-generic-list-item-paragraph",
+            include_str!("built-in-templates/generic-list-item-paragraph.neoj"),
         );
         let _ = env.add_template_owned(
             "built-in-generic-raw",

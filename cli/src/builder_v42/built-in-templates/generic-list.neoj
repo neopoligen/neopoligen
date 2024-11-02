@@ -1,1 +1,40 @@
-This is generic list
+[!- import "built-in-helpers" as neo -!]
+
+<ul>
+[!- for child in section.children -!]
+<li>
+
+[@- neo.output_sections(site, page, child.children) -@]
+
+[!- for lower in child.children -!]
+
+<pre>
+LOWER:
+[@ lower|tojson(true) @]
+</pre>
+[#- neo.output_section(site, page, lower) -#]
+[@ lower.template_list @]
+[#- include lower.template_list -#]
+<hr>
+
+[!- endfor -!]
+
+[#- neo.output_sections(site, page, child.children) -#]
+
+
+<pre>
+[@ child.children|tojson(true) @]
+</pre>
+
+<pre>
+[@ child|tojson(true) @]
+</pre>
+
+</li>
+[! endfor !]
+</ul>
+
+
+<pre>
+[@ section|tojson(true) @]
+</pre>

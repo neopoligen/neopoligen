@@ -6,9 +6,9 @@ use crate::span_v42::SpanV42;
 use crate::spans_v42::generic_block_content::spans_of_generic_block_content;
 use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;
-use nom::character::complete::space1;
+//use nom::character::complete::space1;
 use nom::combinator::not;
-use nom::sequence::pair;
+// use nom::sequence::pair;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -46,7 +46,7 @@ pub fn list_item_paragraph_block<'a>(
             children: vec![],
             kind: "block-list-item-paragraph".to_string(),
             spans,
-            template_list: vec!["sections/block-list-item-paragraph/default.neoj".to_string()],
+            template_list: vec!["built-in-generic-list-item-paragraph".to_string()],
         }),
     ))
 }
