@@ -36,6 +36,7 @@ impl PageV42b {
         PageV42b {
             ast: None,
             ast_error: None,
+            href: None,
             id: None,
             sections: None,
             source: source.to_string(),

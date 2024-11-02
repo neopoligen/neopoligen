@@ -24,6 +24,7 @@ use std::sync::Arc;
 pub struct PageV42b {
     pub ast: Option<Vec<SectionV42>>,
     pub ast_error: Option<NeoErrorV42>,
+    pub href: Option<PathBuf>,
     pub id: Option<String>,
     pub sections: Option<Value>,
     pub source: String,
@@ -47,10 +48,8 @@ impl PageV42b {
         if let None = &self.id {
             match get_value_from_raw_pagedata_parsing(&self.source, "id") {
                 Ok(v) => {
-                    // TODO: Add note to error stack that the id came from
-                    // this parsing
+                    dbg!("TODO: Hoist message that ID came from direct parsing and not ast");
                     self.id = Some(v.1.join("").trim().to_string());
-                    ()
                 }
                 Err(e) => {
                     dbg!("TODO: Add this error to the page stack");
@@ -61,12 +60,35 @@ impl PageV42b {
         }
     }
 
+    pub fn generate_href_from_ast(&mut self) {
+        if let Ok(spans) = self.get_pagedata_from_ast("href") {
+            self.href = Some(flatten_spans_v42(&spans).into());
+        } else if let Some(id) = &self.id {
+            self.href = Some(PathBuf::from(format!("/en/{}/index.html", id)));
+        }
+
+        // match self.get_pagedata_from_ast("href") {
+        //     Ok(spans) => {
+        //         self.href = Some(flatten_spans_v42(&spans).into());
+        //     }
+        //     Err(e) => {
+        //         dbg!("TODO: Hoist Error");
+        //         dbg!(e);
+        //         ()
+        //     }
+        // }
+    }
+
     pub fn generate_id_from_ast(&mut self) {
         match self.get_pagedata_from_ast("id") {
             Ok(spans) => {
                 self.id = Some(flatten_spans_v42(&spans));
             }
-            Err(_e) => {}
+            Err(e) => {
+                dbg!("TODO: Hoist Error");
+                dbg!(e);
+                ()
+            }
         }
     }
 
@@ -83,13 +105,12 @@ impl PageV42b {
                 {
                     Some(s) => match &s.attrs.get(key) {
                         Some(attr) => Ok(attr.spans.clone()),
-                        None => Ok(vec![]),
+                        None => Err(NeoErrorV42::NoParsedPageDataForKey(key.to_string())),
                     },
-                    None => Ok(vec![]),
+                    None => Err(NeoErrorV42::NoParsedPageDataForKey(key.to_string())),
                 }
             }
-
-            None => Ok(vec![]),
+            None => Err(NeoErrorV42::NoParsedPageDataForKey(key.to_string())),
         }
     }
 
