@@ -1,27 +1,5 @@
 [!- import "built-in-helpers" as neo -!]
 
-
 <ul>
-
-[! for c in section.children !]
-<li>
-[@ neo.output_section(site, page, c) @]
-<pre>
-[@ c|tojson(true) @]
-</pre>
-</li>
-[! endfor !]
-
-
-[#- neo.output_sections(site, page, section.children] -#]
+[@- neo.output_sections(site, page, section.children) -@]
 </ul>
-
-
-<ul>
-[!- for child in section.children -!]
-<li>
-[@- neo.output_sections(site, page, child.children) -@]
-</li>
-[! endfor !]
-</ul>
-
