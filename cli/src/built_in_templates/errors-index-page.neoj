@@ -12,30 +12,47 @@ header, main, footer {
     margin: auto;
 }
 .bordered {
+    border-bottom: 1px solid #dfd;
+    border-top: 1px solid #dfd;
     padding: 1rem;
-    border: 1px solid #dfd;
 }
 .flow > :where(:not(:first-child)) {
   margin-top: var(--flow-space, 1em);
+}
+pre {
+    font-size: 0.72rem;
 }
 </style>
 </head>
 <body>
 <header><a href="/">Home</a></header>
 <main class="flow">
-<h3>Error---</h3>
-<div class="bordered"><pre>[! autoescape true !][@ error @][! endautoescape !]</pre></div>
-<h3>Template Load Errors</h3>
-<div class="bordered"><ul>
-<pre>[! autoescape true !][@ error @][! endautoescape !]</pre>
-</ul>
+
+[! for template_load_error in template_load_errors !]
+[! if loop.first !]
+<h3>Problems Loading Templates</h3>
+<div class="bordered">
+[! endif !]
+<div>[@ template_load_error.message @]</div>
+                <div><pre>[@ template_load_error.details@]</pre></div>
+[! if loop.last!]
 </div>
+[! endif !]
+[! endfor !]
+
+
+
+            [#
+<h3>Error</h3>
+<div class="bordered"><pre>[! autoescape true !][@ '' @][! endautoescape !]</pre></div>
 <h3>Source</h3>
 <div class="bordered"><pre>[! autoescape true !][@ page.source @][! endautoescape !]</pre></div>
 <h3>Raw Data</h3>
 <div class="bordered"><pre>[! autoescape true !][@ page.sections|tojson(true) @][! endautoescape !]</pre></div>
 <h3>Tree</h3>
 <div class="bordered"><pre>[! autoescape true !][@ ast|tojson(true) @][! endautoescape !]</pre></div>
+            #]
 </main>
+        <pre>This is built-in/error-index-page.neoj</pre>
 </body>
 </html>

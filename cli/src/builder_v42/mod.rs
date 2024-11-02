@@ -1,5 +1,9 @@
+#![allow(unused_imports)]
+#![allow(unused_variables)]
+
 pub mod inits;
 
+use crate::error::page_error::PageError;
 use crate::error::template_load_error::TemplateLoadError;
 use crate::helpers::*;
 use crate::neo_error::{NeoErrorKind, NeoErrorV42};
@@ -14,12 +18,19 @@ use minijinja::Environment;
 use minijinja::{context, Value};
 use std::collections::BTreeMap;
 use std::fs;
+use std::path::PathBuf;
 use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 
-pub struct BuilderV42 {
+pub struct BuilderV42<'a> {
+    pub env: Environment<'a>,
+    // TODO: Deprecate, errors and errors_v42 in favor of
+    // page_errors and template_load_errors (and anything
+    // else that needs to be created)
     pub errors: Vec<NeoError>,
     pub errors_v42: Vec<NeoErrorV42>,
+    pub generated_pages: BTreeMap<PathBuf, PageV42>,
+    pub page_errors: Vec<PageError>,
     pub pages: Vec<PageV42>,
     pub site_config: SiteConfigV42,
     pub site: Option<SiteV42>,
@@ -27,7 +38,7 @@ pub struct BuilderV42 {
     pub template_load_errors: Vec<TemplateLoadError>,
 }
 
-impl BuilderV42 {
+impl BuilderV42<'_> {
     #[instrument(skip(self))]
     pub fn empty_output_dirs(&self) {
         event!(Level::DEBUG, "Emptying output dirs");
@@ -36,9 +47,17 @@ impl BuilderV42 {
     }
 
     #[instrument(skip(self))]
+    pub fn generate_pages(&mut self) -> Result<()> {
+        // let env = &self.get_minijinja_environment();
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn get_minijinja_environment(&mut self) -> Environment {
         event!(Level::INFO, "Making Template Environment");
         let mut env = Environment::new();
+        // TODO: Deprecate this flatten_spans and move it to
+        // the site struct/object
         env.add_function("flatten_spans", flatten_spans_in_template_v42);
         env.set_syntax(
             SyntaxConfig::builder()
@@ -105,6 +124,93 @@ impl BuilderV42 {
     }
 
     #[instrument(skip(self))]
+    pub fn load_built_in_templates(&mut self) -> Result<()> {
+        const BUILT_IN_TEMPLATE_DIR: Dir = include_dir!("src/built_in_templates");
+        let built_in_tempates_list = vec![
+            "css-output",
+            "errors-index-page",
+            "generic-basic",
+            "generic-css",
+            "generic-html",
+            "generic-json5",
+            "generic-list-item-paragraph",
+            "generic-list-item-single",
+            "generic-list-item",
+            "generic-list",
+            "generic-raw",
+            "generic-script",
+            "helpers",
+            "script-output",
+            "section-tree",
+            "span-text",
+            "template-error",
+        ];
+        built_in_tempates_list.iter().for_each(|name| {
+            let data = BUILT_IN_TEMPLATE_DIR.get_file(format!("{}.neoj", name));
+            match self.env.add_template_owned(
+                format!("built-in/{}.neoj", name),
+                data.expect(format!("Could not open built-in template: {}", name).as_str())
+                    .contents_utf8()
+                    .unwrap()
+                    .to_string(),
+            ) {
+                Ok(()) => (),
+                Err(e) => {
+                    event!(
+                        Level::ERROR,
+                        "{}\n{}",
+                        e.to_string(),
+                        e.display_debug_info().to_string()
+                    );
+                    self.template_load_errors.push(TemplateLoadError {
+                        message: e.to_string(),
+                        details: e.display_debug_info().to_string(),
+                    });
+                    ()
+                }
+            }
+        });
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn load_file_system_templates(&mut self) -> Result<()> {
+        event!(Level::INFO, "Loading Templates");
+        for entry in WalkDir::new(&self.site_config.theme_dir()) {
+            let path = entry?.path().to_path_buf();
+            if path.is_file() {
+                if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
+                    if ext.to_ascii_lowercase() == "neoj"
+                        && !filename.to_str().unwrap().starts_with(".")
+                    {
+                        let template_name = &path.strip_prefix(&self.site_config.theme_dir());
+                        let content = fs::read_to_string(&path)?;
+                        match self.env.add_template_owned(
+                            template_name.clone().unwrap().display().to_string(),
+                            content,
+                        ) {
+                            Ok(()) => (),
+                            Err(e) => {
+                                event!(
+                                    Level::ERROR,
+                                    "{}\n{}",
+                                    e.to_string(),
+                                    e.display_debug_info().to_string()
+                                );
+                                self.template_load_errors.push(TemplateLoadError {
+                                    message: e.to_string(),
+                                    details: e.display_debug_info().to_string(),
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn load_pages_from_file_system(&mut self) -> Result<()> {
         event!(Level::INFO, "Loading Pages From FS");
         for entry in WalkDir::new(&self.site_config.content_source_dir()) {
@@ -132,8 +238,8 @@ impl BuilderV42 {
         Ok(())
     }
 
-    #[instrument(skip(self, _site_config))]
-    pub fn load_templates(&mut self, _site_config: &SiteConfigV42) -> Result<()> {
+    #[instrument(skip(self))]
+    pub fn load_templates(&mut self) -> Result<()> {
         event!(Level::INFO, "Loading Templates");
         for entry in WalkDir::new(&self.site_config.theme_dir()) {
             let path = entry?.path().to_path_buf();
@@ -160,11 +266,14 @@ impl BuilderV42 {
     }
 
     #[instrument(skip(self))]
-    pub fn output_errors_index_page(&mut self) -> Result<()> {
-        let env = self.get_minijinja_environment();
-        match env.get_template("built-in/errors-index-page.neoj") {
+    pub fn output_errors_index_page(&self) -> Result<()> {
+        // let env = &self.get_minijinja_environment();
+        // self.template_load_errors = template_load_errors;
+        match self.env.get_template("built-in/errors-index-page.neoj") {
             Ok(template) => {
-                match template.render(context!()) {
+                match template.render(context!(
+                     template_load_errors => self.template_load_errors.clone(),
+                )) {
                     Ok(output) => {
                         match write_file_with_mkdir(
                             &self.site_config.errors_index_page(),
@@ -220,62 +329,68 @@ impl BuilderV42 {
     #[instrument(skip(self))]
     pub fn output_pages(&mut self) -> Result<()> {
         event!(Level::INFO, "Outputting pages");
-        let mut env = Environment::new();
-        env.add_function("flatten_spans", flatten_spans_in_template_v42);
-        env.set_syntax(
-            SyntaxConfig::builder()
-                .block_delimiters("[!", "!]")
-                .variable_delimiters("[@", "@]")
-                .comment_delimiters("[#", "#]")
-                .build()
-                .unwrap(),
-        );
 
-        const BUILT_IN_TEMPLATE_DIR: Dir = include_dir!("src/built_in_templates");
-        let built_in_tempates_list = vec![
-            "css-output",
-            "errors-index-page",
-            "generic-basic",
-            "generic-css",
-            "generic-html",
-            "generic-json5",
-            "generic-list-item-paragraph",
-            "generic-list-item-single",
-            "generic-list-item",
-            "generic-list",
-            "generic-raw",
-            "generic-script",
-            "helpers",
-            "script-output",
-            "section-tree",
-            "span-text",
-            "template-error",
-        ];
-        built_in_tempates_list.iter().for_each(|name| {
-            let data = BUILT_IN_TEMPLATE_DIR.get_file(format!("{}.neoj", name));
-            match env.add_template_owned(
-                name.to_string(),
-                data.expect(format!("Could not open built-in include: {}", name).as_str())
-                    .contents_utf8()
-                    .unwrap()
-                    .to_string(),
-            ) {
-                Ok(()) => (),
-                Err(e) => {
-                    self.template_load_errors.push(TemplateLoadError {
-                        message: e.to_string(),
-                        details: e.display_debug_info().to_string(),
-                    });
-                    event!(Level::ERROR, "{}", e.display_debug_info().to_string());
-                    ()
-                }
-            }
-        });
+        // let site_clone = Value::from_object(self.site.clone().unwrap());
+        // let site_clone2 = self.site.clone().unwrap();
+        // let site_config = &self.site_config.clone();
+        // let env = &self.get_minijinja_environment();
 
-        self.templates.iter().for_each(|(k, v)| {
-            let _ = env.add_template_owned(k, v);
-        });
-
+        // // TODO: Figure out how to move this to get_minijinja_environment
+        // let mut env = Environment::new();
+        // // TODO: Remove flatten_spans from here and move it
+        // // to the site struct/object
+        // env.add_function("flatten_spans", flatten_spans_in_template_v42);
+        // env.set_syntax(
+        //     SyntaxConfig::builder()
+        //         .block_delimiters("[!", "!]")
+        //         .variable_delimiters("[@", "@]")
+        //         .comment_delimiters("[#", "#]")
+        //         .build()
+        //         .unwrap(),
+        // );
+        // const BUILT_IN_TEMPLATE_DIR: Dir = include_dir!("src/built_in_templates");
+        // let built_in_tempates_list = vec![
+        //     "css-output",
+        //     "error-page",
+        //     "generic-basic",
+        //     "generic-css",
+        //     "generic-html",
+        //     "generic-json5",
+        //     "generic-list-item-paragraph",
+        //     "generic-list-item-single",
+        //     "generic-list-item",
+        //     "generic-list",
+        //     "generic-raw",
+        //     "generic-script",
+        //     "helpers",
+        //     "script-output",
+        //     "section-tree",
+        //     "span-text",
+        //     "template-error",
+        // ];
+        // built_in_tempates_list.iter().for_each(|name| {
+        //     let data = BUILT_IN_TEMPLATE_DIR.get_file(format!("{}.neoj", name));
+        //     match env.add_template_owned(
+        //         name.to_string(),
+        //         data.expect(format!("Could not open built-in include: {}", name).as_str())
+        //             .contents_utf8()
+        //             .unwrap()
+        //             .to_string(),
+        //     ) {
+        //         Ok(()) => (),
+        //         Err(e) => {
+        //             self.template_load_errors.push(TemplateLoadError {
+        //                 message: e.to_string(),
+        //                 details: e.display_debug_info().to_string(),
+        //             });
+        //             event!(Level::ERROR, "{}", e.display_debug_info().to_string());
+        //             ()
+        //         }
+        //     }
+        // });
+        // self.templates.iter().for_each(|(k, v)| {
+        //     let _ = env.add_template_owned(k, v);
+        // });
         // let _ =
         //     env.add_template_owned("axum-404", include_str!("built-in-templates/axum-404.neoj"));
         // let _ = env.add_template_owned(
@@ -343,165 +458,153 @@ impl BuilderV42 {
         //     include_str!("built-in-templates/template-error.neoj"),
         // );
 
-        let site_clone = Value::from_object(self.site.clone().unwrap());
-        self.site
-            .as_ref()
-            .unwrap()
-            .pages
-            .iter()
-            .for_each(|(_id, page)| {
-                let builder_error: Option<NeoError>;
-                //let base_rel_path = PathBuf::from(self.site_config.default_language().unwrap());
-                let file_rel_path = page.html_output_path.clone();
-                let absolute_output_path = &self
-                    .site_config
-                    .project_dir()
-                    .join(&self.site_config.output_directory_name)
-                    .join(file_rel_path.unwrap());
-                if let Some(template) = page.template_list().iter().find_map(|name| {
-                    if let Ok(tmpl) = env.get_template(name) {
-                        Some(tmpl)
-                    } else {
-                        None
-                    }
-                }) {
-                    match template.render(context!(
-                        site => &site_clone,
-                        page => Value::from_object(page.clone())
-                    )) {
-                        Ok(output) => {
-                            match write_file_with_mkdir(&absolute_output_path, output.as_str()) {
-                                Ok(()) => {
-                                    //event!(Level::INFO, "Making file in output_pages",);
-                                }
-                                Err(e) => self.errors.push({
-                                    event!(
-                                        Level::ERROR,
-                                        "Could not write file: {}",
-                                        absolute_output_path.display()
-                                    );
-                                    NeoError {
-                                        kind: NeoErrorKind::GenericErrorWithSourcePath {
-                                            source_path: absolute_output_path.to_path_buf(),
-                                            msg: e,
-                                        },
-                                    }
-                                }),
-                            }
-                        }
-                        Err(e) => {
-                            self.errors_v42.push(NeoErrorV42::FullPathWith {
-                                path: page.fs_path.clone(),
-                                err: e.display_debug_info().to_string(),
-                            });
+        //site_clone2.pages.iter().for_each(|(_id, page)| {
+        //    let builder_error: Option<NeoError>;
+        //    //let base_rel_path = PathBuf::from(self.site_config.default_language().unwrap());
+        //    let file_rel_path = page.html_output_path.clone();
+        //    let absolute_output_path = site_config
+        //        .project_dir()
+        //        .join(&site_config.output_directory_name)
+        //        .join(file_rel_path.unwrap());
+        //    if let Some(template) = page.template_list().iter().find_map(|name| {
+        //        if let Ok(tmpl) = env.get_template(name) {
+        //            Some(tmpl)
+        //        } else {
+        //            None
+        //        }
+        //    }) {
+        //        match template.render(context!(
+        //            site => &site_clone,
+        //            page => Value::from_object(page.clone())
+        //        )) {
+        //            Ok(output) => {
+        //                match write_file_with_mkdir(&absolute_output_path, output.as_str()) {
+        //                    Ok(()) => {
+        //                        //event!(Level::INFO, "Making file in output_pages",);
+        //                    }
+        //                    Err(e) => self.errors.push({
+        //                        event!(
+        //                            Level::ERROR,
+        //                            "Could not write file: {}",
+        //                            absolute_output_path.display()
+        //                        );
+        //                        NeoError {
+        //                            kind: NeoErrorKind::GenericErrorWithSourcePath {
+        //                                source_path: absolute_output_path.to_path_buf(),
+        //                                msg: e,
+        //                            },
+        //                        }
+        //                    }),
+        //                }
+        //            }
+        //            Err(e) => {
+        //                self.errors_v42.push(NeoErrorV42::FullPathWith {
+        //                    path: page.fs_path.clone(),
+        //                    err: e.display_debug_info().to_string(),
+        //                });
+        //                // if let Ok(tmpl404) = env.get_template("axum-404") {
+        //                //     match tmpl404.render(context!(
+        //                //         site => &site_clone,
+        //                //         page => Value::from_object(page.clone()),
+        //                //         ast => page.raw_ast.clone(),
+        //                //         error => e.display_debug_info().to_string(),
+        //                //         template_load_errors => &self.template_load_errors.clone(),
+        //                //     )) {
+        //                //         Ok(output) => {
+        //                //             let _ = write_file_with_mkdir(
+        //                //                 &self.site_config.error_page_404(),
+        //                //                 output.as_str(),
+        //                //             );
+        //                //         }
+        //                //         Err(_) => {}
+        //                //     }
+        //                // }
+        //                event!(
+        //                    Level::ERROR,
+        //                    "Could not render output for: {} - {} - {}",
+        //                    page.fs_path.display(),
+        //                    e.to_string(),
+        //                    e.display_debug_info(),
+        //                );
+        //                builder_error = Some(NeoError {
+        //                    kind: NeoErrorKind::GenericErrorWithSourcePath {
+        //                        source_path: absolute_output_path.to_path_buf(),
+        //                        msg: e.to_string(),
+        //                    },
+        //                });
+        //                if let Ok(template) = env.get_template("built-in-template-error") {
+        //                    dbg!("1111111111111111111111111111111");
+        //                    match template.render(context!(
+        //                        site => &site_clone,
+        //                        page => Value::from_object(page.clone()),
+        //                        builder_error => Value::from_serialize(builder_error),
+        //                    )) {
+        //                        Ok(output) => {
+        //                            dbg!("222222222222222222222222222");
+        //                            match write_file_with_mkdir(
+        //                                &absolute_output_path,
+        //                                output.as_str(),
+        //                            ) {
+        //                                Ok(()) => {
+        //                                    dbg!("333333333333333333333333333333333");
+        //                                    dbg!(&absolute_output_path);
+        //                                    ()
+        //                                    //event!(Level::INFO, "Making file in output_pages",);
+        //                                }
+        //                                Err(e) => self.errors.push({
+        //                                    dbg!("444444444444444444444444444444");
+        //                                    event!(
+        //                                        Level::ERROR,
+        //                                        "Could not write file: {}",
+        //                                        absolute_output_path.display()
+        //                                    );
+        //                                    NeoError {
+        //                                        kind: NeoErrorKind::GenericErrorWithSourcePath {
+        //                                            source_path: absolute_output_path.to_path_buf(),
+        //                                            msg: e,
+        //                                        },
+        //                                    }
+        //                                }),
+        //                            }
+        //                        }
+        //                        Err(e) => {
+        //                            dbg!(e);
+        //                            // page.error = Some(NeoError {
+        //                            //     kind: NeoErrorKind::GenericErrorWithSourcePath {
+        //                            //         source_path: absolute_output_path.to_path_buf(),
+        //                            //         msg: e.to_string(),
+        //                            //     },
+        //                            // });
+        //                        }
+        //                    }
+        //                }
+        //                self.errors.push(NeoError {
+        //                    kind: NeoErrorKind::GenericErrorWithSourcePath {
+        //                        source_path: page.fs_path.clone(),
+        //                        msg: e.to_string(),
+        //                    },
+        //                });
+        //            }
+        //        }
+        //    } else {
+        //        event!(
+        //            Level::ERROR,
+        //            "Could not find template for: {} - Missing: {}",
+        //            page.fs_path.display(),
+        //            page.template_list().join(",")
+        //        );
+        //        self.errors.push(NeoError {
+        //            kind: NeoErrorKind::GenericErrorWithSourcePath {
+        //                source_path: page.fs_path.clone(),
+        //                msg: format!(
+        //                    "Could not templates for page. {}",
+        //                    page.template_list().join(",")
+        //                ),
+        //            },
+        //        });
+        //    }
+        //});
 
-                            // if let Ok(tmpl404) = env.get_template("axum-404") {
-                            //     match tmpl404.render(context!(
-                            //         site => &site_clone,
-                            //         page => Value::from_object(page.clone()),
-                            //         ast => page.raw_ast.clone(),
-                            //         error => e.display_debug_info().to_string(),
-                            //         template_load_errors => &self.template_load_errors.clone(),
-                            //     )) {
-                            //         Ok(output) => {
-                            //             let _ = write_file_with_mkdir(
-                            //                 &self.site_config.error_page_404(),
-                            //                 output.as_str(),
-                            //             );
-                            //         }
-                            //         Err(_) => {}
-                            //     }
-                            // }
-
-                            event!(
-                                Level::ERROR,
-                                "Could not render output for: {} - {} - {}",
-                                page.fs_path.display(),
-                                e.to_string(),
-                                e.display_debug_info(),
-                            );
-
-                            builder_error = Some(NeoError {
-                                kind: NeoErrorKind::GenericErrorWithSourcePath {
-                                    source_path: absolute_output_path.to_path_buf(),
-                                    msg: e.to_string(),
-                                },
-                            });
-
-                            if let Ok(template) = env.get_template("built-in-template-error") {
-                                dbg!("1111111111111111111111111111111");
-                                match template.render(context!(
-                                    site => &site_clone,
-                                    page => Value::from_object(page.clone()),
-                                    builder_error => Value::from_serialize(builder_error),
-                                )) {
-                                    Ok(output) => {
-                                        dbg!("222222222222222222222222222");
-                                        match write_file_with_mkdir(
-                                            &absolute_output_path,
-                                            output.as_str(),
-                                        ) {
-                                            Ok(()) => {
-                                                dbg!("333333333333333333333333333333333");
-                                                dbg!(&absolute_output_path);
-                                                ()
-                                                //event!(Level::INFO, "Making file in output_pages",);
-                                            }
-                                            Err(e) => self.errors.push({
-                                                dbg!("444444444444444444444444444444");
-                                                event!(
-                                                    Level::ERROR,
-                                                    "Could not write file: {}",
-                                                    absolute_output_path.display()
-                                                );
-                                                NeoError {
-                                                    kind:
-                                                        NeoErrorKind::GenericErrorWithSourcePath {
-                                                            source_path: absolute_output_path
-                                                                .to_path_buf(),
-                                                            msg: e,
-                                                        },
-                                                }
-                                            }),
-                                        }
-                                    }
-                                    Err(e) => {
-                                        dbg!(e);
-                                        // page.error = Some(NeoError {
-                                        //     kind: NeoErrorKind::GenericErrorWithSourcePath {
-                                        //         source_path: absolute_output_path.to_path_buf(),
-                                        //         msg: e.to_string(),
-                                        //     },
-                                        // });
-                                    }
-                                }
-                            }
-                            self.errors.push(NeoError {
-                                kind: NeoErrorKind::GenericErrorWithSourcePath {
-                                    source_path: page.fs_path.clone(),
-                                    msg: e.to_string(),
-                                },
-                            });
-                        }
-                    }
-                } else {
-                    event!(
-                        Level::ERROR,
-                        "Could not find template for: {} - Missing: {}",
-                        page.fs_path.display(),
-                        page.template_list().join(",")
-                    );
-                    self.errors.push(NeoError {
-                        kind: NeoErrorKind::GenericErrorWithSourcePath {
-                            source_path: page.fs_path.clone(),
-                            msg: format!(
-                                "Could not templates for page. {}",
-                                page.template_list().join(",")
-                            ),
-                        },
-                    });
-                }
-            });
         Ok(())
     }
 
