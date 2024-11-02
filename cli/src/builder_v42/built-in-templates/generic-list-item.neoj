@@ -1,3 +1,12 @@
 [!- import "built-in-helpers" as neo -!]
 
-<li>[@- neo.output_sections(site, page, section.children) -@]</li>
+<li class="generic-list-item flow">
+[!- for child in section.children -!] 
+[!- if loop.length == 1 -!]
+[@- neo.output_section_with_template(site, page, child, "built-in-generic-list-item-single") -@]
+[!- else -!]
+[@- neo.output_section(site, page, child) -@]
+[!- endif -!]
+[!- endfor -!]
+
+</li>

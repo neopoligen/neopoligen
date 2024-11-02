@@ -135,6 +135,10 @@ impl BuilderV42 {
             include_str!("built-in-templates/generic-list-item-paragraph.neoj"),
         );
         let _ = env.add_template_owned(
+            "built-in-generic-list-item-single",
+            include_str!("built-in-templates/generic-list-item-single.neoj"),
+        );
+        let _ = env.add_template_owned(
             "built-in-generic-raw",
             include_str!("built-in-templates/generic-raw.neoj"),
         );

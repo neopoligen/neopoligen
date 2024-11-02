@@ -1,5 +1,7 @@
 [!- import "built-in-helpers" as neo -!]
 
-<ul>
+<section class="generic-list flow">
+<ul class="flow">
 [@- neo.output_sections(site, page, section.children) -@]
 </ul>
+</section>

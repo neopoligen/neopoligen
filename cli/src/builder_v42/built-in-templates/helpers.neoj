@@ -49,6 +49,10 @@
 [!- include section.template_list -!]
 [!- endmacro -!]
 
+[!- macro output_section_with_template(site, page, section, template) -!]
+[!- include template -!]
+[!- endmacro -!]
+
 [!- macro output_sections(site, page, sections) -!]
 [!- for section in sections -!]
 [@- output_section(site, page, section) -@]

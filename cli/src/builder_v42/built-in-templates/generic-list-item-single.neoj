@@ -1,0 +1,3 @@
+[!- import "built-in-helpers" as neo -!]
+[@- neo.output_spans(site, page, section.spans) -@]
+
