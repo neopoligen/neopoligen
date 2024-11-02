@@ -432,15 +432,25 @@ impl BuilderV42<'_> {
         event!(Level::INFO, "Outputting pages");
         for (_, page) in &mut self.pages_v42 {
             if let Some(href) = &page.href {
-                let rel_path = match href.strip_prefix("/") {
+                let rel_output_path = match href.strip_prefix("/") {
                     Ok(p) => p,
                     Err(_) => &href,
                 };
-                let absolute_path = &self.site_config.output_dest_dir().join(rel_path);
-                dbg!(absolute_path);
+                let absolute_output_path =
+                    &self.site_config.output_dest_dir().join(rel_output_path);
+                if let Some(output) = &page.output {
+                    match write_file_with_mkdir(&absolute_output_path, output) {
+                        Ok(()) => {
+                            //event!(Level::INFO, "Making file in output_pages",);
+                        }
+                        Err(_e) => {
+                            dbg!("TODO: Hoist this error in output_page_v42");
+                            ()
+                        }
+                    }
+                }
             }
         }
-
         Ok(())
     }
 
