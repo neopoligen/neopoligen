@@ -82,9 +82,7 @@ async fn run_web_server(engine_config: EngineConfig, site_config: SiteConfigV42)
     build_site(&reloader, &site_config);
     let localhost_domain = format!("localhost:{}", engine_config.port);
     let serve_dir = ServeDir::new(&site_config.output_dest_dir())
-        .not_found_service(ServeFile::new(&site_config.error_page_404()));
-    //.not_found_service(ServeFile::new("/Users/alan/Desktop/404.html"));
-    //.not_found_service(ServeFile::new(".built-in/error-pages/404.html"));
+        .not_found_service(ServeFile::new(&site_config.errors_index_page()));
     let app = Router::new()
         //.nest_service("/built-in", ServeDir::new()))
         .nest_service("/", serve_dir)
@@ -125,6 +123,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             let _ = builder.empty_output_dirs();
             let _ = builder.output_pages();
             let _ = builder.output_errors();
+            let _ = builder.output_errors_index_page();
 
             event!(Level::INFO, "Reloading Browser");
             reloader.reload();

@@ -1,11 +1,14 @@
 pub mod inits;
 
+use crate::error::template_load_error::TemplateLoadError;
 use crate::helpers::*;
 use crate::neo_error::{NeoErrorKind, NeoErrorV42};
 use crate::{
     neo_error::NeoError, page_v42::PageV42, site_config::SiteConfigV42, site_v42::SiteV42,
 };
 use anyhow::Result;
+use html_escape::encode_safe;
+use include_dir::{include_dir, Dir};
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
 use minijinja::{context, Value};
@@ -21,6 +24,7 @@ pub struct BuilderV42 {
     pub site_config: SiteConfigV42,
     pub site: Option<SiteV42>,
     pub templates: BTreeMap<String, String>,
+    pub template_load_errors: Vec<TemplateLoadError>,
 }
 
 impl BuilderV42 {
@@ -29,6 +33,75 @@ impl BuilderV42 {
         event!(Level::DEBUG, "Emptying output dirs");
         let _ = empty_dir(&self.site_config.status_dest_dir());
         let _ = empty_dir(&self.site_config.output_dest_dir());
+    }
+
+    #[instrument(skip(self))]
+    pub fn get_minijinja_environment(&mut self) -> Environment {
+        event!(Level::INFO, "Making Template Environment");
+        let mut env = Environment::new();
+        env.add_function("flatten_spans", flatten_spans_in_template_v42);
+        env.set_syntax(
+            SyntaxConfig::builder()
+                .block_delimiters("[!", "!]")
+                .variable_delimiters("[@", "@]")
+                .comment_delimiters("[#", "#]")
+                .build()
+                .unwrap(),
+        );
+        const BUILT_IN_TEMPLATE_DIR: Dir = include_dir!("src/built_in_templates");
+        let built_in_tempates_list = vec![
+            "css-output",
+            "errors-index-page",
+            "generic-basic",
+            "generic-css",
+            "generic-html",
+            "generic-json5",
+            "generic-list-item-paragraph",
+            "generic-list-item-single",
+            "generic-list-item",
+            "generic-list",
+            "generic-raw",
+            "generic-script",
+            "helpers",
+            "script-output",
+            "section-tree",
+            "span-text",
+            "template-error",
+        ];
+        built_in_tempates_list.iter().for_each(|name| {
+            let data = BUILT_IN_TEMPLATE_DIR.get_file(format!("{}.neoj", name));
+            match env.add_template_owned(
+                format!("built-in/{}.neoj", name),
+                data.expect(format!("Could not open built-in include: {}", name).as_str())
+                    .contents_utf8()
+                    .unwrap()
+                    .to_string(),
+            ) {
+                Ok(()) => (),
+                Err(e) => {
+                    self.template_load_errors.push(TemplateLoadError {
+                        message: e.to_string(),
+                        details: e.display_debug_info().to_string(),
+                    });
+                    event!(Level::ERROR, "{}", e.display_debug_info().to_string());
+                    ()
+                }
+            }
+        });
+        self.templates
+            .iter()
+            .for_each(|(k, v)| match env.add_template_owned(k, v) {
+                Ok(()) => (),
+                Err(e) => {
+                    self.template_load_errors.push(TemplateLoadError {
+                        message: e.to_string(),
+                        details: e.display_debug_info().to_string(),
+                    });
+                    event!(Level::ERROR, "{}", e.display_debug_info().to_string());
+                    ()
+                }
+            });
+        env
     }
 
     #[instrument(skip(self))]
@@ -87,6 +160,59 @@ impl BuilderV42 {
     }
 
     #[instrument(skip(self))]
+    pub fn output_errors_index_page(&mut self) -> Result<()> {
+        let env = self.get_minijinja_environment();
+        match env.get_template("built-in/errors-index-page.neoj") {
+            Ok(template) => {
+                match template.render(context!()) {
+                    Ok(output) => {
+                        match write_file_with_mkdir(
+                            &self.site_config.errors_index_page(),
+                            output.as_str(),
+                        ) {
+                            // TODO: Make dynamic page error here
+                            _ => (),
+                        }
+                    }
+                    Err(e) => {
+                        match write_file_with_mkdir(
+                            &self.site_config.errors_index_page(),
+                            format!(
+                                r#"<!DOCTYPE><html><head>
+<style>body {{ background-color: #200; color: #ffa; }}</style>
+</head><body><p>ERRORS: {}</p><pre>{}</pre></body></html>"#,
+                                e.to_string(),
+                                encode_safe(&e.display_debug_info().to_string().as_str())
+                            )
+                            .as_str(),
+                        ) {
+                            // TODO: Make dynamic page error here
+                            _ => (),
+                        }
+                    }
+                }
+            }
+            Err(e) => {
+                match write_file_with_mkdir(
+                    &self.site_config.errors_index_page(),
+                    format!(
+                        r#"<!DOCTYPE><html><head>
+<style>body {{ background-color: #200; color: #ffa; }}</style>
+</head><body><p>ERRORS: {}</p><pre>{}</pre></body></html>"#,
+                        e.to_string(),
+                        encode_safe(&e.display_debug_info().to_string().as_str())
+                    )
+                    .as_str(),
+                ) {
+                    // TODO: Make dynamic page error here
+                    _ => (),
+                }
+            }
+        }
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn output_errors(&mut self) -> Result<()> {
         Ok(())
     }
@@ -104,71 +230,119 @@ impl BuilderV42 {
                 .build()
                 .unwrap(),
         );
+
+        const BUILT_IN_TEMPLATE_DIR: Dir = include_dir!("src/built_in_templates");
+        let built_in_tempates_list = vec![
+            "css-output",
+            "errors-index-page",
+            "generic-basic",
+            "generic-css",
+            "generic-html",
+            "generic-json5",
+            "generic-list-item-paragraph",
+            "generic-list-item-single",
+            "generic-list-item",
+            "generic-list",
+            "generic-raw",
+            "generic-script",
+            "helpers",
+            "script-output",
+            "section-tree",
+            "span-text",
+            "template-error",
+        ];
+        built_in_tempates_list.iter().for_each(|name| {
+            let data = BUILT_IN_TEMPLATE_DIR.get_file(format!("{}.neoj", name));
+            match env.add_template_owned(
+                name.to_string(),
+                data.expect(format!("Could not open built-in include: {}", name).as_str())
+                    .contents_utf8()
+                    .unwrap()
+                    .to_string(),
+            ) {
+                Ok(()) => (),
+                Err(e) => {
+                    self.template_load_errors.push(TemplateLoadError {
+                        message: e.to_string(),
+                        details: e.display_debug_info().to_string(),
+                    });
+                    event!(Level::ERROR, "{}", e.display_debug_info().to_string());
+                    ()
+                }
+            }
+        });
+
         self.templates.iter().for_each(|(k, v)| {
             let _ = env.add_template_owned(k, v);
         });
-        let _ =
-            env.add_template_owned("axum-404", include_str!("built-in-templates/axum-404.neoj"));
-        let _ = env.add_template_owned(
-            "built-in-generic-basic",
-            include_str!("built-in-templates/generic-basic.neoj"),
-        );
-        let _ = env.add_template_owned(
-            "built-in-generic-css",
-            include_str!("built-in-templates/generic-css.neoj"),
-        );
-        let _ = env.add_template_owned(
-            "built-in-generic-html",
-            include_str!("built-in-templates/generic-html.neoj"),
-        );
-        let _ = env.add_template_owned(
-            "built-in-generic-json5",
-            include_str!("built-in-templates/generic-json5.neoj"),
-        );
-        let _ = env.add_template_owned(
-            "built-in-generic-list",
-            include_str!("built-in-templates/generic-list.neoj"),
-        );
-        let _ = env.add_template_owned(
-            "built-in-generic-list-item",
-            include_str!("built-in-templates/generic-list-item.neoj"),
-        );
-        let _ = env.add_template_owned(
-            "built-in-generic-list-item-paragraph",
-            include_str!("built-in-templates/generic-list-item-paragraph.neoj"),
-        );
-        let _ = env.add_template_owned(
-            "built-in-generic-list-item-single",
-            include_str!("built-in-templates/generic-list-item-single.neoj"),
-        );
-        let _ = env.add_template_owned(
-            "built-in-generic-raw",
-            include_str!("built-in-templates/generic-raw.neoj"),
-        );
-        let _ = env.add_template_owned(
-            "built-in-generic-script",
-            include_str!("built-in-templates/generic-script.neoj"),
-        );
-        let _ = env.add_template_owned(
-            "built-in-css-output",
-            include_str!("built-in-templates/css-output.neoj"),
-        );
-        let _ = env.add_template_owned(
-            "built-in-helpers",
-            include_str!("built-in-templates/helpers.neoj"),
-        );
-        let _ = env.add_template_owned(
-            "built-in-script-output",
-            include_str!("built-in-templates/script-output.neoj"),
-        );
-        let _ = env.add_template_owned(
-            "built-in-span-text",
-            include_str!("built-in-templates/span-text.neoj"),
-        );
-        let _ = env.add_template_owned(
-            "built-in-template-error",
-            include_str!("built-in-templates/template-error.neoj"),
-        );
+
+        // let _ =
+        //     env.add_template_owned("axum-404", include_str!("built-in-templates/axum-404.neoj"));
+        // let _ = env.add_template_owned(
+        //     "built-in-generic-basic",
+        //     include_str!("built-in-templates/generic-basic.neoj"),
+        // );
+        // let _ = env.add_template_owned(
+        //     "built-in-generic-css",
+        //     include_str!("built-in-templates/generic-css.neoj"),
+        // );
+        // let _ = env.add_template_owned(
+        //     "built-in-generic-html",
+        //     include_str!("built-in-templates/generic-html.neoj"),
+        // );
+        // let _ = env.add_template_owned(
+        //     "built-in-generic-json5",
+        //     include_str!("built-in-templates/generic-json5.neoj"),
+        // );
+        // let _ = env.add_template_owned(
+        //     "built-in-generic-list",
+        //     include_str!("built-in-templates/generic-list.neoj"),
+        // );
+        // let _ = env.add_template_owned(
+        //     "built-in-generic-list-item",
+        //     include_str!("built-in-templates/generic-list-item.neoj"),
+        // );
+        // let _ = env.add_template_owned(
+        //     "built-in-generic-list-item-paragraph",
+        //     include_str!("built-in-templates/generic-list-item-paragraph.neoj"),
+        // );
+        // let _ = env.add_template_owned(
+        //     "built-in-generic-list-item-single",
+        //     include_str!("built-in-templates/generic-list-item-single.neoj"),
+        // );
+        // let _ = env.add_template_owned(
+        //     "built-in-generic-raw",
+        //     include_str!("built-in-templates/generic-raw.neoj"),
+        // );
+        // let _ = env.add_template_owned(
+        //     "built-in-generic-script",
+        //     include_str!("built-in-templates/generic-script.neoj"),
+        // );
+        // let _ = env.add_template_owned(
+        //     "built-in-css-output",
+        //     include_str!("built-in-templates/css-output.neoj"),
+        // );
+        // let _ = env.add_template_owned(
+        //     "built-in-helpers",
+        //     include_str!("built-in-templates/helpers.neoj"),
+        // );
+        // let _ = env.add_template_owned(
+        //     "built-in-script-output",
+        //     include_str!("built-in-templates/script-output.neoj"),
+        // );
+        // let _ = env.add_template_owned(
+        //     "built-in-section-tree",
+        //     include_str!("built-in-templates/section-tree.neoj"),
+        // );
+        // let _ = env.add_template_owned(
+        //     "built-in-span-text",
+        //     include_str!("built-in-templates/span-text.neoj"),
+        // );
+        // let _ = env.add_template_owned(
+        //     "built-in-template-error",
+        //     include_str!("built-in-templates/template-error.neoj"),
+        // );
+
         let site_clone = Value::from_object(self.site.clone().unwrap());
         self.site
             .as_ref()
@@ -220,22 +394,24 @@ impl BuilderV42 {
                                 path: page.fs_path.clone(),
                                 err: e.display_debug_info().to_string(),
                             });
-                            if let Ok(tmpl404) = env.get_template("axum-404") {
-                                match tmpl404.render(context!(
-                                    site => &site_clone,
-                                    page => Value::from_object(page.clone()),
-                                    ast => page.raw_ast.clone(),
-                                    error => e.display_debug_info().to_string()))
-                                {
-                                    Ok(output) => {
-                                        let _ = write_file_with_mkdir(
-                                            &self.site_config.error_page_404(),
-                                            output.as_str(),
-                                        );
-                                    }
-                                    Err(_) => {}
-                                }
-                            }
+
+                            // if let Ok(tmpl404) = env.get_template("axum-404") {
+                            //     match tmpl404.render(context!(
+                            //         site => &site_clone,
+                            //         page => Value::from_object(page.clone()),
+                            //         ast => page.raw_ast.clone(),
+                            //         error => e.display_debug_info().to_string(),
+                            //         template_load_errors => &self.template_load_errors.clone(),
+                            //     )) {
+                            //         Ok(output) => {
+                            //             let _ = write_file_with_mkdir(
+                            //                 &self.site_config.error_page_404(),
+                            //                 output.as_str(),
+                            //             );
+                            //         }
+                            //         Err(_) => {}
+                            //     }
+                            // }
 
                             event!(
                                 Level::ERROR,
@@ -257,7 +433,7 @@ impl BuilderV42 {
                                 match template.render(context!(
                                     site => &site_clone,
                                     page => Value::from_object(page.clone()),
-                                        builder_error => Value::from_serialize(builder_error),
+                                    builder_error => Value::from_serialize(builder_error),
                                 )) {
                                     Ok(output) => {
                                         dbg!("222222222222222222222222222");

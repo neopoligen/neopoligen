@@ -3,6 +3,7 @@ pub mod bound;
 pub mod builder_v42;
 pub mod config_lists;
 pub mod engine_config;
+pub mod error;
 pub mod file_watcher;
 pub mod helpers;
 pub mod image;

@@ -13,6 +13,7 @@ impl BuilderV42 {
             site_config: site_config.clone(),
             site: None,
             templates: BTreeMap::new(),
+            template_load_errors: vec![],
         })
     }
 }

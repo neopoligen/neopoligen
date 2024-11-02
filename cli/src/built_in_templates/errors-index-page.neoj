@@ -23,8 +23,13 @@ header, main, footer {
 <body>
 <header><a href="/">Home</a></header>
 <main class="flow">
-<h3>Error</pre>
+<h3>Error---</h3>
 <div class="bordered"><pre>[! autoescape true !][@ error @][! endautoescape !]</pre></div>
+<h3>Template Load Errors</h3>
+<div class="bordered"><ul>
+<pre>[! autoescape true !][@ error @][! endautoescape !]</pre>
+</ul>
+</div>
 <h3>Source</h3>
 <div class="bordered"><pre>[! autoescape true !][@ page.source @][! endautoescape !]</pre></div>
 <h3>Raw Data</h3>

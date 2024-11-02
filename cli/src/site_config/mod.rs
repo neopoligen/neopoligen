@@ -188,11 +188,11 @@ impl SiteConfigV42 {
     }
 
     pub fn errors_dir(&self) -> PathBuf {
-        self.project_dir().join("_errors")
+        self.built_in_dir().join("errors")
     }
 
-    pub fn error_page_404(&self) -> PathBuf {
-        self.built_in_dir().join("error-pages").join("404.html")
+    pub fn errors_index_page(&self) -> PathBuf {
+        self.errors_dir().join("index.html")
     }
 
     pub fn output_dest_dir(&self) -> PathBuf {
