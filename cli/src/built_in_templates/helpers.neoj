@@ -88,7 +88,7 @@
 <li>
 [@ section.kind @] ([@ section.type @] - [@ section.bound @])
 [!- for child in section.children -!]
-[@ output_section_tree(site, page, child @]
+[@ output_section_tree(site, page, child) @]
 [!- endfor -!]
 </li>
 [!- endfor -!]
