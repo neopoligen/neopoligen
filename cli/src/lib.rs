@@ -8,6 +8,7 @@ pub mod file_watcher;
 pub mod helpers;
 pub mod image;
 pub mod neo_error;
+pub mod neo_error_v42;
 pub mod page_v42;
 pub mod section_attr_v42;
 pub mod section_key_value_attr_payload_v42;

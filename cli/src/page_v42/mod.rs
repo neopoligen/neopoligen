@@ -1,8 +1,12 @@
 pub mod inits;
 pub mod mocks;
 
+use crate::ast_v42::parse_ast_v42;
+use crate::helpers::flatten_spans_v42;
 use crate::neo_error::NeoError;
+use crate::neo_error_v42::NeoErrorV42;
 use crate::section_v42::SectionV42;
+use crate::site_config::SiteConfigV42;
 use crate::span_v42::plaintext::PlainTextSpan;
 use crate::span_v42::SpanV42;
 use minijinja::value::Object;
@@ -13,6 +17,102 @@ use serde::Deserialize;
 use serde::Serialize;
 use std::path::PathBuf;
 use std::sync::Arc;
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub struct PageV42b {
+    pub ast: Option<Vec<SectionV42>>,
+    pub ast_error: Option<NeoErrorV42>,
+    pub id: Option<String>,
+    pub sections: Option<Value>,
+    pub source: String,
+    pub source_path: PathBuf,
+}
+
+impl PageV42b {
+    pub fn generate_ast(&mut self, site_config: &SiteConfigV42) {
+        match parse_ast_v42(&self.source, site_config, false) {
+            Ok(ast) => {
+                self.ast = Some(ast.clone());
+                self.sections = Some(Value::from_serialize(ast));
+            }
+            Err(_e) => {
+                self.ast_error = Some(NeoErrorV42::AstParsingError);
+            }
+        }
+    }
+
+    pub fn generate_id_from_ast(&mut self) {
+        match self.get_pagedata_from_ast("id") {
+            Ok(spans) => {
+                self.id = Some(flatten_spans_v42(&spans));
+            }
+            Err(_e) => {}
+        }
+    }
+
+    pub fn get_pagedata_from_ast(&self, key: &str) -> Result<Vec<SpanV42>, NeoErrorV42> {
+        match &self.ast {
+            Some(ast) => {
+                match ast
+                    .iter()
+                    .filter_map(|section| match section {
+                        SectionV42::Json5(sec) => Some(sec),
+                        _ => None,
+                    })
+                    .last()
+                {
+                    Some(s) => match &s.attrs.get(key) {
+                        Some(attr) => Ok(attr.spans.clone()),
+                        None => Ok(vec![]),
+                    },
+                    None => Ok(vec![]),
+                }
+            }
+
+            None => Ok(vec![]),
+        }
+    }
+
+    // pub fn get_pagedata(&self, args: &[Value]) -> Result<String, Error> {
+    //     if args.len() == 0 {
+    //         Err(Error::new(
+    //             minijinja::ErrorKind::MissingArgument,
+    //             "get_pagedata requires an argument with an item to search for",
+    //         ))
+    //     } else if args.len() == 1 {
+    //         match &self
+    //             .ast
+    //             .iter()
+    //             .filter_map(|section| match section {
+    //                 SectionV42::Json5(s) => Some(s),
+    //                 _ => None,
+    //             })
+    //             .find_map(|section| match section.kind.as_str() {
+    //                 "pagedata" => Some(&section.attrs),
+    //                 _ => None,
+    //             }) {
+    //             Some(x) => match x.get(&args[0].to_string()) {
+    //                 Some(v) => Ok(v.text.clone()),
+    //                 None => Err(Error::new(
+    //                     minijinja::ErrorKind::InvalidOperation,
+    //                     format!("Could not find {} in pagedata", &args[0]),
+    //                 )),
+    //             },
+    //             None => Err(Error::new(
+    //                 minijinja::ErrorKind::InvalidOperation,
+    //                 format!("Could not find {} in pagedata", &args[0]),
+    //             )),
+    //         }
+    //     } else {
+    //         Err(Error::new(
+    //             minijinja::ErrorKind::TooManyArguments,
+    //             "get_pagedata take only one argument for things to look for but more than one was passed in",
+    //         ))
+    //     }
+    // }
+
+    //
+}
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PageV42 {

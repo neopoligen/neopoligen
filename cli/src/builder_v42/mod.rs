@@ -6,7 +6,9 @@ pub mod inits;
 use crate::error::page_error::PageError;
 use crate::error::template_load_error::TemplateLoadError;
 use crate::helpers::*;
-use crate::neo_error::{NeoErrorKind, NeoErrorV42};
+use crate::neo_error::NeoErrorKind;
+use crate::neo_error_v42::NeoErrorV42;
+use crate::page_v42::PageV42b;
 use crate::{
     neo_error::NeoError, page_v42::PageV42, site_config::SiteConfigV42, site_v42::SiteV42,
 };
@@ -31,7 +33,9 @@ pub struct BuilderV42<'a> {
     pub errors_v42: Vec<NeoErrorV42>,
     pub generated_pages: BTreeMap<PathBuf, PageV42>,
     pub page_errors: Vec<PageError>,
+    // TODO: Deprecate pages in favor of pages_v42
     pub pages: Vec<PageV42>,
+    pub pages_v42: BTreeMap<PathBuf, PageV42b>,
     pub site_config: SiteConfigV42,
     pub site: Option<SiteV42>,
     pub templates: BTreeMap<String, String>,
@@ -47,8 +51,26 @@ impl BuilderV42<'_> {
     }
 
     #[instrument(skip(self))]
-    pub fn generate_pages(&mut self) -> Result<()> {
-        // let env = &self.get_minijinja_environment();
+    pub fn generate_asts(&mut self) -> Result<()> {
+        for (_, page) in &mut self.pages_v42 {
+            page.generate_ast(&self.site_config);
+        }
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn generate_ids_from_ast(&mut self) -> Result<()> {
+        for (_, page) in &mut self.pages_v42 {
+            page.generate_id_from_ast();
+        }
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn generate_outputs(&mut self) -> Result<()> {
+        for (_, page) in &mut self.pages_v42 {
+            // TODO:
+        }
         Ok(())
     }
 
@@ -121,6 +143,36 @@ impl BuilderV42<'_> {
                 }
             });
         env
+    }
+
+    #[instrument(skip(self))]
+    pub fn ingest_source_files(&mut self) -> Result<()> {
+        event!(Level::INFO, "Loading Content From Files");
+        for entry in WalkDir::new(&self.site_config.content_source_dir()) {
+            let path = entry?.path().to_path_buf();
+            if path.is_file() {
+                if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
+                    if ext.to_ascii_lowercase() == "neo"
+                        && !filename.to_str().unwrap().starts_with(".")
+                    {
+                        match fs::read_to_string(path.clone()) {
+                            Ok(source) => {
+                                let page = PageV42b::new_from_str_v42(&path, &source);
+                                self.pages_v42.insert(path.clone(), page);
+                                ()
+                            }
+                            Err(e) => {
+                                // TODO: Output to main error page if there's problems
+                                // reading files
+                                dbg!(e);
+                                ()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Ok(())
     }
 
     #[instrument(skip(self))]
@@ -210,6 +262,7 @@ impl BuilderV42<'_> {
         Ok(())
     }
 
+    // TODO: Deprecate in favor of load_source_from_files
     #[instrument(skip(self))]
     pub fn load_pages_from_file_system(&mut self) -> Result<()> {
         event!(Level::INFO, "Loading Pages From FS");

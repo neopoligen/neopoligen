@@ -1,4 +1,5 @@
 use super::PageV42;
+use super::PageV42b;
 use crate::ast_v42::parse_ast_v42;
 use crate::bound::Bound;
 use crate::neo_error::NeoError;
@@ -29,9 +30,22 @@ use std::fs;
 use std::path::PathBuf;
 use tracing::{event, instrument, Level};
 
-impl PageV42 {
-    //
+impl PageV42b {
+    #[instrument(skip(source))]
+    pub fn new_from_str_v42(source_path: &PathBuf, source: &str) -> PageV42b {
+        PageV42b {
+            ast: None,
+            ast_error: None,
+            id: None,
+            sections: None,
+            source: source.to_string(),
+            source_path: source_path.clone(),
+        }
+    }
+}
 
+impl PageV42 {
+    // TODO: Deprecate in favor of new_from_str_v42
     #[instrument(skip(site_config))]
     pub fn new_from_fs_path(
         path: &PathBuf,
@@ -49,6 +63,7 @@ impl PageV42 {
         }
     }
 
+    // TODO: Deprecate in favor of new_from_str_v42
     #[instrument(skip(source, site_config))]
     pub fn new_from_str(
         source: &str,
@@ -136,7 +151,6 @@ impl PageV42 {
                                 })
                             }
                         }
-
                         // event!(
                         //     Level::ERROR,
                         //     "Could not get ID for:{}",
@@ -161,7 +175,6 @@ impl PageV42 {
                     fs_path: source_path.to_path_buf(),
                     error: Some(e.clone()),
                 };
-
                 match &e.kind {
                     NeoErrorKind::ParserErrorV42 {
                         line,
@@ -219,7 +232,6 @@ impl PageV42 {
                     }
                     _ => (),
                 };
-
                 // page.raw_ast = vec![
                 //     SectionV42::Basic(BasicSectionV42 {
                 //         attrs: BTreeMap::new(),
@@ -255,7 +267,6 @@ impl PageV42 {
                 //         message: "TODO".to_string(),
                 //     }),
                 // ];
-
                 page.sections = Value::from_serialize(page.clone().raw_ast);
                 match parse_value_from_pagedata(source, "id") {
                     Ok((_, ids)) => match ids.last() {

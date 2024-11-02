@@ -24,6 +24,7 @@ impl BuilderV42<'_> {
             generated_pages: BTreeMap::new(),
             page_errors: vec![],
             pages: vec![],
+            pages_v42: BTreeMap::new(),
             site_config: site_config.clone(),
             site: None,
             templates: BTreeMap::new(),
