@@ -27,6 +27,7 @@ pub struct PageV42b {
     pub href: Option<PathBuf>,
     pub id: Option<String>,
     pub language: Option<String>,
+    pub output: Option<String>,
     pub sections: Option<Value>,
     pub source: String,
     pub source_path: PathBuf,

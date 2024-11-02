@@ -127,6 +127,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             let _ = builder.generate_hrefs_from_ast();
             let _ = builder.generate_fallback_hrefs();
             let _ = builder.generate_outputs();
+            let _ = builder.output_pages_v42();
             // let _ = builder.generate_base_pages();
             //let _ = builder.empty_output_dirs();
             //let _ = builder.output_pages();

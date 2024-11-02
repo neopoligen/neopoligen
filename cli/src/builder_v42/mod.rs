@@ -78,7 +78,6 @@ impl BuilderV42<'_> {
     pub fn generate_hrefs_from_ast(&mut self) -> Result<()> {
         for (_, page) in &mut self.pages_v42 {
             page.generate_href_from_ast();
-            dbg!(&page.href);
         }
         Ok(())
     }
@@ -91,10 +90,30 @@ impl BuilderV42<'_> {
         Ok(())
     }
 
+    // let skeleton = env.get_template("hello").unwrap();
+    // let output = skeleton.render(context!(name => "World")).unwrap();
+    // println!("{}", output);
+    // }
+
     #[instrument(skip(self))]
     pub fn generate_outputs(&mut self) -> Result<()> {
         for (_, page) in &mut self.pages_v42 {
-            // TODO:
+            match self.env.get_template("built-in/backup-page-template.neoj") {
+                Ok(template) => match template.render(context!()) {
+                    Ok(output) => {
+                        page.output = Some(output);
+                        ()
+                    }
+                    Err(e) => {
+                        dbg!("TODO: Hoist this error from generate_outputs");
+                        ()
+                    }
+                },
+                Err(e) => {
+                    dbg!("TODO: Hoist this error from generate_outputs");
+                    ()
+                }
+            }
         }
         Ok(())
     }
@@ -408,6 +427,24 @@ impl BuilderV42<'_> {
         Ok(())
     }
 
+    #[instrument(skip(self))]
+    pub fn output_pages_v42(&mut self) -> Result<()> {
+        event!(Level::INFO, "Outputting pages");
+        for (_, page) in &mut self.pages_v42 {
+            if let Some(href) = &page.href {
+                let rel_path = match href.strip_prefix("/") {
+                    Ok(p) => p,
+                    Err(_) => &href,
+                };
+                let absolute_path = &self.site_config.output_dest_dir().join(rel_path);
+                dbg!(absolute_path);
+            }
+        }
+
+        Ok(())
+    }
+
+    // TODO: Deprecate in favor of output_pages_v42
     #[instrument(skip(self))]
     pub fn output_pages(&mut self) -> Result<()> {
         event!(Level::INFO, "Outputting pages");

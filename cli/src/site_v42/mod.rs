@@ -1,3 +1,5 @@
+pub mod b;
+
 use crate::helpers::flatten_spans_in_template_v42;
 use crate::helpers::highlight_span_v42;
 use crate::page_v42::PageV42;

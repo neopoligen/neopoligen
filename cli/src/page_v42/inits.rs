@@ -39,6 +39,7 @@ impl PageV42b {
             href: None,
             id: None,
             language: None,
+            output: None,
             sections: None,
             source: source.to_string(),
             source_path: source_path.clone(),
