@@ -32,6 +32,41 @@ pub struct BasicSectionV42 {
     pub template_list: Vec<String>,
 }
 
+pub fn basic_section_full_v42<'a>(
+    source: &'a str,
+    site_config: &'a SiteConfigV42,
+    parent: SectionParent,
+    debug: bool,
+) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
+    // let debug = true;
+    let dbg_header = "BASIC_SECTION_FULL";
+    dump_parser_if_debug(debug, dbg_header, source, 1);
+    let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 2);
+    let (source, kind) = terminated(is_not("/ \t\r\n"), space0_line_ending_or_eof)
+        .context("")
+        .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 3);
+    let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 4);
+    let (source, _) = multispace0.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 5);
+    let (source, children) =
+        many0(|src| paragraph_block_section_v42(src, site_config, parent.clone(), debug))
+            .context("")
+            .parse(source)?;
+    let section = SectionV42::Basic(BasicSectionV42 {
+        attrs,
+        bound: Bound::Full,
+        children,
+        end_section: None,
+        kind: kind.to_string(),
+        flags,
+        template_list: make_template_list("basic", kind, "default"),
+    });
+    Ok((source, section))
+}
+
 pub fn basic_section_start_v42<'a>(
     source: &'a str,
     site_config: &'a SiteConfigV42,
@@ -71,41 +106,6 @@ pub fn basic_section_start_v42<'a>(
         bound: Bound::Start,
         children,
         end_section: Some(Box::new(end_section)),
-        kind: kind.to_string(),
-        flags,
-        template_list: make_template_list("basic", kind, "default"),
-    });
-    Ok((source, section))
-}
-
-pub fn basic_section_full_v42<'a>(
-    source: &'a str,
-    site_config: &'a SiteConfigV42,
-    parent: SectionParent,
-    debug: bool,
-) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
-    // let debug = true;
-    let dbg_header = "BASIC_SECTION_FULL";
-    dump_parser_if_debug(debug, dbg_header, source, 1);
-    let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
-    dump_parser_if_debug(debug, dbg_header, source, 2);
-    let (source, kind) = terminated(is_not("/ \t\r\n"), space0_line_ending_or_eof)
-        .context("")
-        .parse(source)?;
-    dump_parser_if_debug(debug, dbg_header, source, 3);
-    let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
-    dump_parser_if_debug(debug, dbg_header, source, 4);
-    let (source, _) = multispace0.context("").parse(source)?;
-    dump_parser_if_debug(debug, dbg_header, source, 5);
-    let (source, children) =
-        many0(|src| paragraph_block_section_v42(src, site_config, parent.clone(), debug))
-            .context("")
-            .parse(source)?;
-    let section = SectionV42::Basic(BasicSectionV42 {
-        attrs,
-        bound: Bound::Full,
-        children,
-        end_section: None,
         kind: kind.to_string(),
         flags,
         template_list: make_template_list("basic", kind, "default"),

@@ -1,3 +1,4 @@
+use super::SectionParent;
 use crate::helpers::dump_parser_if_debug;
 use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
@@ -5,7 +6,9 @@ use crate::span_v42::SpanV42;
 use crate::spans_v42::generic_block_content::spans_of_generic_block_content;
 use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;
+use nom::character::complete::space1;
 use nom::combinator::not;
+use nom::sequence::pair;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -13,16 +16,39 @@ use nom_supreme::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
 
-use super::SectionParent;
-
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct BlockSectionV42 {
     // Reminder: there won't be children for a block, but having
     // the field keeps the API consistent which is most important
+    // because it makes looping easier
     pub children: Vec<SectionV42>,
     pub kind: String,
     pub spans: Vec<SpanV42>,
     pub template_list: Vec<String>,
+}
+
+pub fn list_item_paragraph_block<'a>(
+    source: &'a str,
+    _site_config: &'a SiteConfigV42,
+    _parent: SectionParent,
+    debug: bool,
+) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
+    // let debug = true;
+    let dbg_header = "LIST_ITEM_PARAGRAPH_BLOCK";
+    dump_parser_if_debug(debug, dbg_header, source, 1);
+    let (source, _) = not(pair(tag("-"), space1)).context("").parse(source)?;
+    let (source, spans) = spans_of_generic_block_content.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 2);
+    let (source, _) = multispace0.context("").parse(source)?;
+    Ok((
+        source,
+        SectionV42::Block(BlockSectionV42 {
+            children: vec![],
+            kind: "block-list-item-paragraph".to_string(),
+            spans,
+            template_list: vec!["sections/block-list-item-paragraph/default.neoj".to_string()],
+        }),
+    ))
 }
 
 pub fn paragraph_block_section_v42<'a>(
@@ -117,6 +143,33 @@ mod test {
         );
         let right =
             paragraph_block_section_v42(&source, &site_config, SectionParent::Page, false).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn list_item_single_line() {
+        let site_config = SiteConfigV42::mock1_basic();
+        let source = SAMPLE_DIR
+            .get_file("003-list-item-single.neo")
+            .unwrap()
+            .contents_utf8()
+            .unwrap()
+            .trim()
+            .to_string();
+        let template_list = vec!["sections/block-list-item-paragraph/default.neoj".to_string()];
+        let left = (
+            "",
+            SectionV42::Block(BlockSectionV42 {
+                children: vec![],
+                kind: "block-list-item-paragraph".to_string(),
+                spans: vec![SpanV42::PlainText(PlainTextSpan {
+                    text: "alfa bravo".to_string(),
+                })],
+                template_list,
+            }),
+        );
+        let right =
+            list_item_paragraph_block(&source, &site_config, SectionParent::Page, false).unwrap();
         assert_eq!(left, right);
     }
 

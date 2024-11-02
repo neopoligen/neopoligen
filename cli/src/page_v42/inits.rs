@@ -88,18 +88,66 @@ impl PageV42 {
                         Ok(page)
                     }
                     Err(e) => {
-                        event!(
-                            Level::ERROR,
-                            "Could not get ID for:{}",
-                            page.fs_path.display()
-                        );
-
-                        Err(NeoError {
-                            kind: NeoErrorKind::ForwardErrorWithSourcePath {
-                                source_path: source_path.clone(),
-                                msg: e.to_string(),
+                        match parse_value_from_pagedata(source, "id") {
+                            Ok((_, ids)) => match ids.last() {
+                                Some(id) => {
+                                    page.id = Some(id.to_string());
+                                    match page.get_pagedata(&[Value::from("href")]) {
+                                        Ok(html_output_path) => {
+                                            page.html_output_path = Some(
+                                                html_output_path.trim_start_matches("/").into(),
+                                            )
+                                        }
+                                        Err(_e) => {
+                                            page.html_output_path = Some(PathBuf::from(format!(
+                                                "{}/{}/index.html",
+                                                site_config.default_language().unwrap(),
+                                                page.id.as_ref().unwrap()
+                                            )));
+                                        }
+                                    }
+                                    Ok(page.clone())
+                                }
+                                _ => {
+                                    event!(
+                                        Level::ERROR,
+                                        "Could not get ID for:{}",
+                                        page.fs_path.display()
+                                    );
+                                    Err(NeoError {
+                                        kind: NeoErrorKind::ForwardErrorWithSourcePath {
+                                            source_path: source_path.clone(),
+                                            msg: e.to_string(),
+                                        },
+                                    })
+                                }
                             },
-                        })
+                            _ => {
+                                event!(
+                                    Level::ERROR,
+                                    "Could not get ID for:{}",
+                                    page.fs_path.display()
+                                );
+                                Err(NeoError {
+                                    kind: NeoErrorKind::ForwardErrorWithSourcePath {
+                                        source_path: source_path.clone(),
+                                        msg: e.to_string(),
+                                    },
+                                })
+                            }
+                        }
+
+                        // event!(
+                        //     Level::ERROR,
+                        //     "Could not get ID for:{}",
+                        //     page.fs_path.display()
+                        // );
+                        // Err(NeoError {
+                        //     kind: NeoErrorKind::ForwardErrorWithSourcePath {
+                        //         source_path: source_path.clone(),
+                        //         msg: e.to_string(),
+                        //     },
+                        // })
                     }
                 }
             }
