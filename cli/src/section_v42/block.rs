@@ -36,7 +36,7 @@ pub fn list_item_paragraph_block<'a>(
     // let debug = true;
     let dbg_header = "LIST_ITEM_PARAGRAPH_BLOCK";
     dump_parser_if_debug(debug, dbg_header, source, 1);
-    let (source, _) = not(pair(tag("-"), space1)).context("").parse(source)?;
+    let (source, _) = not(tag("-")).context("").parse(source)?;
     let (source, spans) = spans_of_generic_block_content.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, _) = multispace0.context("").parse(source)?;

@@ -134,7 +134,7 @@ mod test {
             "sections/generic-list/default.neoj".to_string(),
         ];
         let left = (
-            "",
+            "-- p\n\nasdf\n",
             SectionV42::List(ListSectionV42 {
                 attrs,
                 bound: Bound::Full,
@@ -238,4 +238,3 @@ mod test {
 
     //
 }
-

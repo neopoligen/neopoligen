@@ -150,7 +150,7 @@ fn test_footnote_shorthands() {
 
 #[test]
 #[ignore]
-fn solo_test_strong_shorthands() {
+fn test_strong_shorthands() {
     let (valid, invalid) = load_tests("strong-shorthand.neo");
     valid.iter().for_each(|ti| {
         let parsed = strong_shorthand_span(&ti.source);
