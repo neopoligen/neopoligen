@@ -24,6 +24,7 @@ use std::sync::Arc;
 pub struct PageV42b {
     pub ast: Option<Vec<SectionV42>>,
     pub ast_error: Option<NeoErrorV42>,
+    pub errors: Vec<NeoErrorV42>,
     pub href: Option<PathBuf>,
     pub id: Option<String>,
     pub language: Option<String>,

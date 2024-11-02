@@ -48,6 +48,25 @@ pub struct BuilderV42<'a> {
 }
 
 impl BuilderV42<'_> {
+    // #[instrument(skip(self))]
+    // pub fn add_pages_to_site(&mut self) -> Result<()> {
+    //     for (_, page) in &mut self.pages_v42 {
+    //         match &page.id {
+    //             Some(id) => {
+    //                 self.site_v42b.pages.insert(id.to_string(), page.clone());
+    //                 dbg!(&id);
+    //                 ()
+    //             }
+    //             None => {
+    //                 dbg!("noid");
+    //                 ()
+    //             }
+    //         }
+    //         // page.generate_href_from_ast();
+    //     }
+    //     Ok(())
+    // }
+
     #[instrument(skip(self))]
     pub fn empty_output_dirs(&self) {
         event!(Level::DEBUG, "Emptying output dirs");
@@ -117,7 +136,7 @@ impl BuilderV42<'_> {
                                     message: Some(e.to_string()),
                                     details: Some(e.display_debug_info().to_string()),
                                 };
-                                self.page_errors.push(err);
+                                page.errors.push(err);
                                 dbg!("TODO: Alfa Hoist this error from generate_outputs");
                                 ()
                             }
@@ -137,11 +156,7 @@ impl BuilderV42<'_> {
 
     #[instrument(skip(self))]
     pub fn generate_site(&mut self) -> Result<()> {
-        let site = SiteV42b {
-            config: self.site_config.clone(),
-            pages: BTreeMap::new(),
-            generated_at: Some(chrono::prelude::Local::now()),
-        };
+        let site = SiteV42b::new_with_pages(&self.site_config, &self.pages_v42);
         self.site_v42b = Some(site);
         // for (_, page) in &mut self.pages_v42 {
         //     page.generate_id_from_ast();
@@ -398,7 +413,7 @@ impl BuilderV42<'_> {
     }
 
     #[instrument(skip(self))]
-    pub fn output_errors_index_page(&self) -> Result<()> {
+    pub fn output_issues_index_page(&self) -> Result<()> {
         // let env = &self.get_minijinja_environment();
         // self.template_load_errors = template_load_errors;
         match self
@@ -408,7 +423,7 @@ impl BuilderV42<'_> {
             Ok(template) => {
                 match template.render(context!(
                     site => Value::from_object(self.site_v42b.clone().unwrap()),
-                    page_errors => self.page_errors.clone(),
+                    // page_errors => self.page_errors.clone(),
                      // template_load_errors => self.template_load_errors.clone(),
                 )) {
                     Ok(output) => {
@@ -459,7 +474,11 @@ impl BuilderV42<'_> {
     }
 
     #[instrument(skip(self))]
-    pub fn output_errors(&mut self) -> Result<()> {
+    pub fn output_individual_error_pages(&mut self) -> Result<()> {
+        // for (_, page) in &mut self.pages_v42 {
+        //     if let (None, Some(errors)) = (&page.output, &page.errors) {}
+        // }
+
         Ok(())
     }
 

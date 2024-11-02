@@ -133,8 +133,8 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             // let _ = builder.generate_base_pages();
             //let _ = builder.output_pages();
             //let _ = builder.prep_site(&site_config);
-            // let _ = builder.output_errors();
-            let _ = builder.output_errors_index_page();
+            let _ = builder.output_individual_error_pages();
+            let _ = builder.output_issues_index_page();
             event!(Level::INFO, "Reloading Browser");
             reloader.reload();
         }
