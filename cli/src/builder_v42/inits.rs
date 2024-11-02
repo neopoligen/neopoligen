@@ -25,7 +25,7 @@ impl BuilderV42<'_> {
         let built_in_tempates_list = vec![
             "backup-page-template",
             "css-output",
-            "errors-index-page",
+            "errors-page-error",
             "generic-basic",
             "generic-css",
             "generic-html",
@@ -37,6 +37,7 @@ impl BuilderV42<'_> {
             "generic-raw",
             "generic-script",
             "helpers",
+            "pages-problems-index-page",
             "script-output",
             "section-tree",
             "span-text",

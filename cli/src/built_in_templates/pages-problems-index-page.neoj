@@ -35,12 +35,9 @@ pre {
 <h2>Pages</h2>
             <ul>
             [! for page_error in page_errors !]
-                <li>[@ page_error @]</li>
+                <li>[! include "built-in/errors-page-error.neoj" !]</li>
             [! endfor !]
-
             </ul>
-
-
 
 [! for template_load_error in template_load_errors !]
 [! if loop.first !]
@@ -67,7 +64,6 @@ pre {
 <div class="bordered"><pre>[! autoescape true !][@ ast|tojson(true) @][! endautoescape !]</pre></div>
             #]
 </main>
-        <pre>This is built-in/error-index-page.neoj</pre>
         <footer>
         <div>[@ site.generated_at("Generated on %a. %B %-d at %-I:%M:%S%p") @]</div>
         </footer>

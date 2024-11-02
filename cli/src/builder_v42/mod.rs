@@ -112,10 +112,10 @@ impl BuilderV42<'_> {
                             Err(e) => {
                                 let err = NeoErrorV42::PageError {
                                     id: page.id.clone(),
-                                    href: None,
-                                    source_path: None,
-                                    message: None,
-                                    details: None,
+                                    href: page.href.clone(),
+                                    rel_path: page.source_path.clone(),
+                                    message: Some(e.to_string()),
+                                    details: Some(e.display_debug_info().to_string()),
                                 };
                                 self.page_errors.push(err);
                                 dbg!("TODO: Alfa Hoist this error from generate_outputs");
@@ -167,7 +167,6 @@ impl BuilderV42<'_> {
         const BUILT_IN_TEMPLATE_DIR: Dir = include_dir!("src/built_in_templates");
         let built_in_tempates_list = vec![
             "css-output",
-            "errors-index-page",
             "generic-basic",
             "generic-css",
             "generic-html",
@@ -179,6 +178,7 @@ impl BuilderV42<'_> {
             "generic-raw",
             "generic-script",
             "helpers",
+            "pages-problems-index-page",
             "script-output",
             "section-tree",
             "span-text",
@@ -257,7 +257,6 @@ impl BuilderV42<'_> {
         const BUILT_IN_TEMPLATE_DIR: Dir = include_dir!("src/built_in_templates");
         let built_in_tempates_list = vec![
             "css-output",
-            "errors-index-page",
             "generic-basic",
             "generic-css",
             "generic-html",
@@ -269,6 +268,7 @@ impl BuilderV42<'_> {
             "generic-raw",
             "generic-script",
             "helpers",
+            "pages-problems-index-page",
             "script-output",
             "section-tree",
             "span-text",
@@ -401,7 +401,10 @@ impl BuilderV42<'_> {
     pub fn output_errors_index_page(&self) -> Result<()> {
         // let env = &self.get_minijinja_environment();
         // self.template_load_errors = template_load_errors;
-        match self.env.get_template("built-in/errors-index-page.neoj") {
+        match self
+            .env
+            .get_template("built-in/pages-problems-index-page.neoj")
+        {
             Ok(template) => {
                 match template.render(context!(
                     site => Value::from_object(self.site_v42b.clone().unwrap()),

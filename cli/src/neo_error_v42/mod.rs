@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[serde(tag = "template", rename_all = "lowercase")]
 pub enum NeoErrorV42 {
     AstParsingError,
     NoParsedPageDataForKey(String),
@@ -10,10 +11,11 @@ pub enum NeoErrorV42 {
         message: String,
         details: String,
     }, // FullPathWith { path: PathBuf, err: String },
+    #[serde(rename = "built-in/errors-page-error.neoj")]
     PageError {
         id: Option<String>,
         href: Option<PathBuf>,
-        source_path: Option<PathBuf>,
+        rel_path: PathBuf,
         message: Option<String>,
         details: Option<String>,
     },
