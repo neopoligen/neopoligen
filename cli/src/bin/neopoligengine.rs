@@ -120,6 +120,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             let _ = builder.load_built_in_templates();
             let _ = builder.load_file_system_templates();
             let _ = builder.ingest_source_files();
+            let _ = builder.set_languages_from_site_config();
             let _ = builder.generate_asts();
             let _ = builder.generate_ids_from_ast();
             let _ = builder.generate_fallback_ids();

@@ -26,6 +26,7 @@ pub struct PageV42b {
     pub ast_error: Option<NeoErrorV42>,
     pub href: Option<PathBuf>,
     pub id: Option<String>,
+    pub language: Option<String>,
     pub sections: Option<Value>,
     pub source: String,
     pub source_path: PathBuf,
@@ -64,19 +65,12 @@ impl PageV42b {
         if let Ok(spans) = self.get_pagedata_from_ast("href") {
             self.href = Some(flatten_spans_v42(&spans).into());
         } else if let Some(id) = &self.id {
-            self.href = Some(PathBuf::from(format!("/en/{}/index.html", id)));
+            self.href = Some(PathBuf::from(format!(
+                "/{}/{}/index.html",
+                self.language.as_ref().unwrap(),
+                id
+            )));
         }
-
-        // match self.get_pagedata_from_ast("href") {
-        //     Ok(spans) => {
-        //         self.href = Some(flatten_spans_v42(&spans).into());
-        //     }
-        //     Err(e) => {
-        //         dbg!("TODO: Hoist Error");
-        //         dbg!(e);
-        //         ()
-        //     }
-        // }
     }
 
     pub fn generate_id_from_ast(&mut self) {
@@ -114,43 +108,9 @@ impl PageV42b {
         }
     }
 
-    // pub fn get_pagedata(&self, args: &[Value]) -> Result<String, Error> {
-    //     if args.len() == 0 {
-    //         Err(Error::new(
-    //             minijinja::ErrorKind::MissingArgument,
-    //             "get_pagedata requires an argument with an item to search for",
-    //         ))
-    //     } else if args.len() == 1 {
-    //         match &self
-    //             .ast
-    //             .iter()
-    //             .filter_map(|section| match section {
-    //                 SectionV42::Json5(s) => Some(s),
-    //                 _ => None,
-    //             })
-    //             .find_map(|section| match section.kind.as_str() {
-    //                 "pagedata" => Some(&section.attrs),
-    //                 _ => None,
-    //             }) {
-    //             Some(x) => match x.get(&args[0].to_string()) {
-    //                 Some(v) => Ok(v.text.clone()),
-    //                 None => Err(Error::new(
-    //                     minijinja::ErrorKind::InvalidOperation,
-    //                     format!("Could not find {} in pagedata", &args[0]),
-    //                 )),
-    //             },
-    //             None => Err(Error::new(
-    //                 minijinja::ErrorKind::InvalidOperation,
-    //                 format!("Could not find {} in pagedata", &args[0]),
-    //             )),
-    //         }
-    //     } else {
-    //         Err(Error::new(
-    //             minijinja::ErrorKind::TooManyArguments,
-    //             "get_pagedata take only one argument for things to look for but more than one was passed in",
-    //         ))
-    //     }
-    // }
+    pub fn set_language_from_site_config(&mut self, site_config: &SiteConfigV42) {
+        self.language = Some(site_config.default_language.clone());
+    }
 
     //
 }

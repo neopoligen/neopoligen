@@ -699,5 +699,13 @@ impl BuilderV42<'_> {
         Ok(())
     }
 
+    #[instrument(skip(self))]
+    pub fn set_languages_from_site_config(&mut self) -> Result<()> {
+        for (_, page) in &mut self.pages_v42 {
+            page.set_language_from_site_config(&self.site_config);
+        }
+        Ok(())
+    }
+
     //
 }

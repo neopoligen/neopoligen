@@ -38,6 +38,7 @@ impl PageV42b {
             ast_error: None,
             href: None,
             id: None,
+            language: None,
             sections: None,
             source: source.to_string(),
             source_path: source_path.clone(),
