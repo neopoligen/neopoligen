@@ -17,17 +17,22 @@ use std::sync::Arc;
 pub struct SiteV42b {
     pub config: SiteConfigV42,
     pub pages: BTreeMap<String, PageV42b>,
+    pub generated_at: Option<DateTime<Local>>,
 }
 
 impl SiteV42b {
     pub fn generated_at(&self, args: &[Value]) -> Result<Value, Error> {
-        let timestamp = chrono::prelude::Local::now();
         if args.len() == 1 {
             Ok(Value::from(
-                timestamp.format(&args[0].to_string()).to_string(),
+                self.generated_at
+                    .unwrap()
+                    .format(&args[0].to_string())
+                    .to_string(),
             ))
         } else {
-            Ok(Value::from(timestamp.format("%B").to_string()))
+            Ok(Value::from(
+                self.generated_at.unwrap().format("%B").to_string(),
+            ))
         }
     }
 }

@@ -28,9 +28,19 @@ pre {
 <header><a href="/">Home</a></header>
 <main class="flow">
             <h1>Something unexpected happened</h1>
-            <p>There was a problem making this page. Not a big deal. 
+            <p>There were some problems making the site. Not a big deal. 
                 That happens sometimes and we can fix it. Here's
             what we know to get started:</p>
+
+<h2>Pages</h2>
+            <ul>
+            [! for page_error in page_errors !]
+                <li>[@ page_error @]</li>
+            [! endfor !]
+
+            </ul>
+
+
 
 [! for template_load_error in template_load_errors !]
 [! if loop.first !]
@@ -58,5 +68,9 @@ pre {
             #]
 </main>
         <pre>This is built-in/error-index-page.neoj</pre>
+        <footer>
+        <div>[@ site.generated_at("Generated on %a. %B %-d at %-I:%M:%S%p") @]</div>
+        </footer>
+
 </body>
 </html>

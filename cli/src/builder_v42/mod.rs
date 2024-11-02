@@ -14,6 +14,8 @@ use crate::{
     neo_error::NeoError, page_v42::PageV42, site_config::SiteConfigV42, site_v42::SiteV42,
 };
 use anyhow::Result;
+use chrono::Local;
+use chrono::{DateTime, TimeZone};
 use html_escape::encode_safe;
 use include_dir::{include_dir, Dir};
 use minijinja::syntax::SyntaxConfig;
@@ -33,7 +35,7 @@ pub struct BuilderV42<'a> {
     pub errors: Vec<NeoError>,
     pub errors_v42: Vec<NeoErrorV42>,
     pub generated_pages: BTreeMap<PathBuf, PageV42>,
-    pub page_errors: Vec<PageError>,
+    pub page_errors: Vec<NeoErrorV42>,
     // TODO: Deprecate pages in favor of pages_v42
     pub pages: Vec<PageV42>,
     pub pages_v42: BTreeMap<PathBuf, PageV42b>,
@@ -97,25 +99,37 @@ impl BuilderV42<'_> {
     pub fn generate_outputs(&mut self) -> Result<()> {
         let site_clone = Value::from_object(self.site_v42b.clone().unwrap());
         for (_, page) in &mut self.pages_v42 {
-            match self.env.get_template("built-in/backup-page-template.neoj") {
-                Ok(template) => {
-                    match template.render(
-                        context!(page => Value::from_object(page.clone()), site => site_clone),
-                    ) {
-                        Ok(output) => {
-                            page.output = Some(output);
-                            ()
-                        }
-                        Err(e) => {
-                            dbg!("TODO: Hoist this error from generate_outputs");
-                            ()
+            if let Some(href) = &page.href {
+                match self.env.get_template("built-in/backup-page-template.neoj") {
+                    Ok(template) => {
+                        match template.render(
+                            context!(page => Value::from_object(page.clone()), site => site_clone),
+                        ) {
+                            Ok(output) => {
+                                page.output = Some(output);
+                                ()
+                            }
+                            Err(e) => {
+                                let err = NeoErrorV42::PageError {
+                                    id: page.id.clone(),
+                                    href: None,
+                                    source_path: None,
+                                    message: None,
+                                    details: None,
+                                };
+                                self.page_errors.push(err);
+                                dbg!("TODO: Alfa Hoist this error from generate_outputs");
+                                ()
+                            }
                         }
                     }
+                    Err(e) => {
+                        dbg!("TODO: Bravo Hoist this error from generate_outputs");
+                        ()
+                    }
                 }
-                Err(e) => {
-                    dbg!("TODO: Hoist this error from generate_outputs");
-                    ()
-                }
+            } else {
+                dbg!("TODO: ERROR For no href for page");
             }
         }
         Ok(())
@@ -126,6 +140,7 @@ impl BuilderV42<'_> {
         let site = SiteV42b {
             config: self.site_config.clone(),
             pages: BTreeMap::new(),
+            generated_at: Some(chrono::prelude::Local::now()),
         };
         self.site_v42b = Some(site);
         // for (_, page) in &mut self.pages_v42 {
@@ -389,7 +404,9 @@ impl BuilderV42<'_> {
         match self.env.get_template("built-in/errors-index-page.neoj") {
             Ok(template) => {
                 match template.render(context!(
-                     template_load_errors => self.template_load_errors.clone(),
+                    site => Value::from_object(self.site_v42b.clone().unwrap()),
+                    page_errors => self.page_errors.clone(),
+                     // template_load_errors => self.template_load_errors.clone(),
                 )) {
                     Ok(output) => {
                         match write_file_with_mkdir(
@@ -631,6 +648,7 @@ impl BuilderV42<'_> {
         let mut site = SiteV42 {
             config: site_config.clone(),
             pages: BTreeMap::new(),
+            // generated_at: Some(chrono::prelude::Local::now()),
         };
         self.pages.iter().for_each(|p| match &p.id {
             Some(id) => {
