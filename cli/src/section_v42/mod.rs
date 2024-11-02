@@ -87,7 +87,7 @@ pub fn start_or_full_section_v42<'a>(
         |src| html_section_full_v42(src, &site_config, SectionParent::Page, debug),
         |src| json5_section_start_v42(src, &site_config, SectionParent::Page, debug),
         |src| json5_section_full_v42(src, &site_config, SectionParent::Page, debug),
-        // |src| list_section_start_v42(src, &site_config, SectionParent::Page, debug),
+        |src| list_section_start_v42(src, &site_config, SectionParent::Page, debug),
         |src| list_section_full_v42(src, &site_config, SectionParent::Page, debug),
         // |src| ordered_list_section_start_v42(src, &site_config, SectionParent::Page, debug),
         // |src| ordered_list_section_full_v42(src, &site_config, SectionParent::Page, debug),

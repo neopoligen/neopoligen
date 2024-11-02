@@ -6,11 +6,13 @@ use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
 use crate::section_v42::list_item::*;
 use crate::section_v42::*;
 use crate::site_config::SiteConfigV42;
+use crate::span_v42::space0_line_ending_or_eof::space0_line_ending_or_eof;
 use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;
 use nom::character::complete::space1;
 use nom::multi::many0;
 use nom::sequence::pair;
+use nom::sequence::terminated;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -18,9 +20,6 @@ use nom_supreme::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::BTreeMap;
-// use crate::span_v42::space0_line_ending_or_eof::space0_line_ending_or_eof;
-// use nom::bytes::complete::is_not;
-// use nom::sequence::terminated;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct ListSectionV42 {
@@ -45,7 +44,9 @@ pub fn list_section_full_v42<'a>(
     let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     // TODO: Get the list types dynamically
-    let (source, kind) = tag("list").context("").parse(source)?;
+    let (source, kind) = terminated(tag("list"), space0_line_ending_or_eof)
+        .context("")
+        .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);
@@ -67,47 +68,50 @@ pub fn list_section_full_v42<'a>(
     Ok((source, section))
 }
 
-// pub fn list_section_start_v42<'a>(
-//     source: &'a str,
-//     site_config: &'a SiteConfigV42,
-//     parent: SectionParent,
-//     debug: bool,
-// ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
-//     let dbg_header = "LIST_SECTION_START";
-//     dump_parser_if_debug(debug, dbg_header, source, 1);
-//     let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
-//     dump_parser_if_debug(debug, dbg_header, source, 2);
-//     // TODO: Get the list types dynamically
-//     let (source, kind) = tag("list").context("").parse(source)?;
-//     dump_parser_if_debug(debug, dbg_header, source, 3);
-//     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
-//     dump_parser_if_debug(debug, dbg_header, source, 4);
-//     let (source, _) = multispace0.context("").parse(source)?;
-//     dump_parser_if_debug(debug, dbg_header, source, 5);
-//     // TODO: Handle if you're in a list or a checklist here.
-//     let (source, children) = many0(alt((
-//         |src| paragraph_block_section_v42(src, site_config, SectionParent::List, debug),
-//         |src| start_or_full_section_v42(src, site_config, SectionParent::List, debug),
-//     )))
-//     .context("")
-//     .parse(source)?;
-//     dump_parser_if_debug(debug, dbg_header, source, 6);
-//     let (source, end_section) =
-//         (|src| end_section_basic_v42(src, site_config, parent.clone(), kind, debug))
-//             .context("")
-//             .parse(source)?;
-//     dump_parser_if_debug(debug, dbg_header, source, 7);
-//     let section = SectionV42::List(ListSectionV42 {
-//         attrs,
-//         bound: Bound::Start,
-//         children,
-//         end_section: Some(Box::new(end_section)),
-//         kind: kind.to_string(),
-//         flags,
-//         template_list: make_template_list("list", kind, "default"),
-//     });
-//     Ok((source, section))
-// }
+pub fn list_section_start_v42<'a>(
+    source: &'a str,
+    site_config: &'a SiteConfigV42,
+    parent: SectionParent,
+    debug: bool,
+) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
+    let dbg_header = "LIST_SECTION_START";
+    dump_parser_if_debug(debug, dbg_header, source, 1);
+    let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 2);
+    // TODO: Get the list types dynamically
+    let (source, kind) = tag("list").context("").parse(source)?;
+    let (source, _) = terminated(tag("/"), space0_line_ending_or_eof)
+        .context("")
+        .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 3);
+    let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 4);
+    let (source, _) = multispace0.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 5);
+    // TODO: Handle if you're in a list or a checklist here.
+    let (source, children) = many0(alt((
+        |src| list_item_section_full_v42(src, site_config, parent.clone(), debug),
+        |src| start_or_full_section_v42(src, site_config, SectionParent::List, debug),
+    )))
+    .context("")
+    .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 6);
+    let (source, end_section) =
+        (|src| end_section_basic_v42(src, site_config, parent.clone(), kind, debug))
+            .context("")
+            .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 7);
+    let section = SectionV42::List(ListSectionV42 {
+        attrs,
+        bound: Bound::Start,
+        children,
+        end_section: Some(Box::new(end_section)),
+        kind: kind.to_string(),
+        flags,
+        template_list: make_template_list("list", kind, "default"),
+    });
+    Ok((source, section))
+}
 
 #[cfg(test)]
 mod test {
@@ -131,7 +135,7 @@ mod test {
         let attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
         let template_list = vec![
             "sections/list/default.neoj".to_string(),
-            "sections/generic-list/default.neoj".to_string(),
+            "built-in-generic-list".to_string(),
         ];
         let left = (
             "-- p\n\npost list\n",
@@ -145,16 +149,14 @@ mod test {
                             children: vec![],
                             kind: "block-list-item-paragraph".to_string(),
                             spans: vec![SpanV42::PlainText(PlainTextSpan {
-                                text: "alfa".to_string(),
+                                text: "charlie".to_string(),
                             })],
-                            template_list: vec![
-                                "sections/block-list-item-paragraph/default.neoj".to_string()
-                            ],
+                            template_list: vec!["built-in-generic-list-item-paragraph".to_string()],
                         })],
                         kind: "list-item".to_string(),
                         template_list: vec![
                             "sections/list-item/default.neoj".to_string(),
-                            "sections/generic-list-item/default.neoj".to_string(),
+                            "built-in-generic-list-item".to_string(),
                         ],
                     }),
                     SectionV42::ListItem(ListItemSectionV42 {
@@ -163,16 +165,14 @@ mod test {
                             children: vec![],
                             kind: "block-list-item-paragraph".to_string(),
                             spans: vec![SpanV42::PlainText(PlainTextSpan {
-                                text: "bravo".to_string(),
+                                text: "delta".to_string(),
                             })],
-                            template_list: vec![
-                                "sections/block-list-item-paragraph/default.neoj".to_string()
-                            ],
+                            template_list: vec!["built-in-generic-list-item-paragraph".to_string()],
                         })],
                         kind: "list-item".to_string(),
                         template_list: vec![
                             "sections/list-item/default.neoj".to_string(),
-                            "sections/generic-list-item/default.neoj".to_string(),
+                            "built-in-generic-list-item".to_string(),
                         ],
                     }),
                 ],
@@ -187,54 +187,134 @@ mod test {
         assert_eq!(left, right);
     }
 
-    // #[test]
-    // #[ignore]
-    // fn basic_start_end() {
-    //     let site_config = SiteConfigV42::mock1_basic();
-    //     let source = SAMPLE_DIR
-    //         .get_file("002-start-end.neo")
-    //         .unwrap()
-    //         .contents_utf8()
-    //         .unwrap()
-    //         .to_string();
-    //     let attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
-    //     let template_list = vec![
-    //         "sections/list/default.neoj".to_string(),
-    //         "sections/generic-list/default.neoj".to_string(),
-    //     ];
-    //     let left = (
-    //         "",
-    //         SectionV42::List(ListSectionV42 {
-    //             attrs,
-    //             bound: Bound::Start,
-    //             children: vec![],
-    //             end_section: Some(Box::new(SectionV42::End(EndSectionV42 {
-    //                 attrs: BTreeMap::new(),
-    //                 flags: vec![],
-    //                 bound: Bound::End,
-    //                 children: vec![SectionV42::Block(BlockSectionV42 {
-    //                     children: vec![],
-    //                     kind: "block-paragraph".to_string(),
-    //                     spans: vec![SpanV42::PlainText(PlainTextSpan {
-    //                         text: "Post List".to_string(),
-    //                     })],
-    //                     template_list: vec!["sections/block-paragraph/default.neoj".to_string()],
-    //                 })],
-    //                 kind: "list-end".to_string(),
-    //                 template_list: vec![
-    //                     "sections/list-end/default.neoj".to_string(),
-    //                     "sections/generic-end/default.neoj".to_string(),
-    //                 ],
-    //             }))),
-    //             flags: vec![],
-    //             kind: "list".to_string(),
-    //             template_list,
-    //         }),
-    //     );
-    //     let right =
-    //         list_section_start_v42(&source, &site_config, SectionParent::Page, false).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn basic_full_with_attr() {
+        let site_config = SiteConfigV42::mock1_basic();
+        let source = SAMPLE_DIR
+            .get_file("004-attr-test.neo")
+            .unwrap()
+            .contents_utf8()
+            .unwrap()
+            .to_string();
+        let mut attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
+        attrs.insert(
+            "title".to_string(),
+            SectionKeyValueAttrPayloadV42 {
+                text: "links".to_string(),
+                spans: vec![SpanV42::PlainText(PlainTextSpan {
+                    text: "links".to_string(),
+                })],
+            },
+        );
+        let template_list = vec![
+            "sections/list/default.neoj".to_string(),
+            "built-in-generic-list".to_string(),
+        ];
+        let left = (
+            "",
+            SectionV42::List(ListSectionV42 {
+                attrs,
+                bound: Bound::Full,
+                children: vec![SectionV42::ListItem(ListItemSectionV42 {
+                    bound: Bound::Full,
+                    children: vec![SectionV42::Block(BlockSectionV42 {
+                        children: vec![],
+                        kind: "block-list-item-paragraph".to_string(),
+                        spans: vec![SpanV42::PlainText(PlainTextSpan {
+                            text: "delta hotel".to_string(),
+                        })],
+                        template_list: vec!["built-in-generic-list-item-paragraph".to_string()],
+                    })],
+                    kind: "list-item".to_string(),
+                    template_list: vec![
+                        "sections/list-item/default.neoj".to_string(),
+                        "built-in-generic-list-item".to_string(),
+                    ],
+                })],
+                end_section: None,
+                flags: vec![],
+                kind: "list".to_string(),
+                template_list,
+            }),
+        );
+        let right =
+            list_section_full_v42(&source, &site_config, SectionParent::Page, false).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_check_start_end() {
+        let site_config = SiteConfigV42::mock1_basic();
+        let source = SAMPLE_DIR
+            .get_file("002-start-end.neo")
+            .unwrap()
+            .contents_utf8()
+            .unwrap()
+            .to_string();
+        let attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
+        let template_list = vec![
+            "sections/list/default.neoj".to_string(),
+            "built-in-generic-list".to_string(),
+        ];
+        let left = (
+            "",
+            SectionV42::List(ListSectionV42 {
+                attrs,
+                bound: Bound::Start,
+                children: vec![
+                    SectionV42::ListItem(ListItemSectionV42 {
+                        bound: Bound::Full,
+                        children: vec![SectionV42::Block(BlockSectionV42 {
+                            children: vec![],
+                            kind: "block-list-item-paragraph".to_string(),
+                            spans: vec![SpanV42::PlainText(PlainTextSpan {
+                                text: "charlie".to_string(),
+                            })],
+                            template_list: vec!["built-in-generic-list-item-paragraph".to_string()],
+                        })],
+                        kind: "list-item".to_string(),
+                        template_list: vec![
+                            "sections/list-item/default.neoj".to_string(),
+                            "built-in-generic-list-item".to_string(),
+                        ],
+                    }),
+                    SectionV42::ListItem(ListItemSectionV42 {
+                        bound: Bound::Full,
+                        children: vec![SectionV42::Block(BlockSectionV42 {
+                            children: vec![],
+                            kind: "block-list-item-paragraph".to_string(),
+                            spans: vec![SpanV42::PlainText(PlainTextSpan {
+                                text: "delta".to_string(),
+                            })],
+                            template_list: vec!["built-in-generic-list-item-paragraph".to_string()],
+                        })],
+                        kind: "list-item".to_string(),
+                        template_list: vec![
+                            "sections/list-item/default.neoj".to_string(),
+                            "built-in-generic-list-item".to_string(),
+                        ],
+                    }),
+                ],
+                end_section: Some(Box::new(SectionV42::End(EndSectionV42 {
+                    attrs: BTreeMap::new(),
+                    bound: Bound::End,
+                    children: vec![],
+                    flags: vec![],
+                    kind: "list-end".to_string(),
+                    template_list: vec![
+                        "sections/list-end/default.neoj".to_string(),
+                        "sections/generic-end/default.neoj".to_string(),
+                    ],
+                }))),
+                flags: vec![],
+                kind: "list".to_string(),
+                template_list,
+            }),
+        );
+        let right =
+            list_section_start_v42(&source, &site_config, SectionParent::Page, false).unwrap();
+        assert_eq!(left, right);
+    }
 
     //
 }

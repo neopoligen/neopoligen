@@ -1,28 +1,16 @@
 use super::helpers::make_template_list::*;
 use crate::bound::Bound;
 use crate::helpers::dump_parser_if_debug;
-use crate::section_attr_v42::section_attr_v42;
-use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
 use crate::section_v42::*;
 use crate::site_config::SiteConfigV42;
-use crate::span_v42::space0_line_ending_or_eof::space0_line_ending_or_eof;
-use nom::branch::alt;
 use nom::bytes::complete::tag;
-use nom::bytes::complete::take_until;
-use nom::character::complete::line_ending;
-use nom::character::complete::space0;
-use nom::character::complete::space1;
-use nom::combinator::rest;
 use nom::multi::many1;
-use nom::sequence::preceded;
-use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
-use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct ListItemSectionV42 {
@@ -108,7 +96,7 @@ mod test {
     const SAMPLE_DIR: Dir = include_dir!("src/section_v42/samples/list-item");
 
     #[test]
-    fn solo_basic_full() {
+    fn basic_full() {
         let site_config = SiteConfigV42::mock1_basic();
         let source = SAMPLE_DIR
             .get_file("001-basic-full.neo")

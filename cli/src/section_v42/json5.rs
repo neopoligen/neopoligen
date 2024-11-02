@@ -217,7 +217,7 @@ mod test {
     }
 
     #[test]
-    fn solo_basic_start_end() {
+    fn basic_start_end() {
         let site_config = SiteConfigV42::mock1_basic();
         let source = SAMPLE_DIR
             .get_file("003-start-end.neo")
