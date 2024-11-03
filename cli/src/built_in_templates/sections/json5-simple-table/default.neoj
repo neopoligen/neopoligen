@@ -4,8 +4,7 @@
   [@- site.get_section_attrs(site, page, section, "json5-simple-table-section built-in flow") -@]>
 
 [!- if section.error -!]
-<pre>Problem in json5-advanced-table
-
+<pre>Problem in json5-advanced-table[@- "\n\n" -@]
 [@ section.error @]</pre>
 [!- else -!]
 <table>
