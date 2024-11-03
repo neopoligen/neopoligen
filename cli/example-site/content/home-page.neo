@@ -2,12 +2,6 @@
 
 This is a thing
 
--- css
-
-body {
-  color: green;
-}
-
 -- json5-simple-table/
 -- class: red
 -- id: pingx
@@ -28,26 +22,6 @@ body {
 }
 
 -- /json5-simple-table
-
-
-And another thing
-
--- list/
-
-- alfa 
-
--- pre/
-
-asdfoiuoiuiouo
-
--- /pre
-
-asdf
-
-
-- bravo 
-
--- /list
 
 
 
