@@ -66,8 +66,8 @@ impl PageV42b {
     pub fn generate_ast(&mut self, site_config: &SiteConfigV42) {
         match parse_ast_v42(&self.source, site_config, false) {
             Ok(ast) => {
-                self.ast = Some(ast.clone());
-                self.sections = Some(Value::from_serialize(ast));
+                self.sections = Some(Value::from_serialize(&ast));
+                self.ast = Some(ast);
             }
             Err(_e) => {
                 self.ast_error = Some(NeoErrorV42::AstParsingError);
