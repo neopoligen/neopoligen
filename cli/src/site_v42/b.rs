@@ -67,8 +67,8 @@ impl SiteV42b {
     }
 
     pub fn get_section_attrs(&self, args: &[Value]) -> Result<Value, Error> {
-        dbg!(&args);
         let mut attr_collection: BTreeMap<String, Vec<String>> = BTreeMap::new();
+        let mut classes = vec![];
         if args.len() >= 3 {
             let attrs = args[2].get_item(&Value::from("attrs")).unwrap();
             for key in attrs.try_iter()? {
@@ -77,11 +77,19 @@ impl SiteV42b {
                         .get_item(&key)?
                         .get_item(&Value::from("spans"))
                         .unwrap();
-                    // dbg!(&spans);
                     let flattened = flatten_spans_in_template_v42(&[spans]).unwrap().to_string();
                     let escaped_value = encode_quoted_attribute(&flattened);
-                    //dbg!(escaped_value);
                     attr_collection.insert(key.to_string(), vec![escaped_value.to_string()]);
+                }
+
+                if key.to_string() == "class".to_string() {
+                    let spans = attrs
+                        .get_item(&key)?
+                        .get_item(&Value::from("spans"))
+                        .unwrap();
+                    let flattened = flatten_spans_in_template_v42(&[spans]).unwrap().to_string();
+                    let escaped_value = encode_quoted_attribute(&flattened);
+                    classes.push(escaped_value.to_string());
                 }
 
                 //let spans = attrs.get_item(&key)?.get_item(&Value::from("spans"));
@@ -126,6 +134,10 @@ impl SiteV42b {
             //     // TODO: Pull the rest of the attrs and flags here
             //     Ok(Value::from(""))
             // }
+
+            if classes.len() > 0 {
+                attr_collection.insert("class".to_string(), vec![classes.join(" ").to_string()]);
+            }
 
             let attr_items = attr_collection
                 .iter()
@@ -310,4 +322,39 @@ mod test {
             .unwrap();
         assert_eq!(left, right);
     }
+
+    #[test]
+    fn solo_get_section_attrs_with_attr_class() {
+        let site = SiteV42b {
+            config: SiteConfigV42::mock1_basic(),
+            generated_at: None,
+            pages: BTreeMap::new(),
+            pages_without_ids: BTreeMap::new(),
+        };
+        let mut attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
+        attrs.insert(
+            "class".to_string(),
+            SectionKeyValueAttrPayloadV42 {
+                spans: vec![SpanV42::PlainText(PlainTextSpan {
+                    text: "bravo".to_string(),
+                })],
+            },
+        );
+        let section = Value::from_serialize(BasicSectionV42 {
+            attrs,
+            bound: Bound::Full,
+            children: vec![],
+            end_section: None,
+            flags: vec![],
+            kind: "generic-basic".to_string(),
+            template_list: vec![],
+        });
+        let left = Value::from(r#" class="bravo""#);
+        let right = site
+            .get_section_attrs(&[Value::from(""), Value::from(""), section])
+            .unwrap();
+        assert_eq!(left, right);
+    }
+
+    //
 }
