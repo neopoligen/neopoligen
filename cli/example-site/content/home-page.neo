@@ -5,10 +5,22 @@ This is a thing
 
 -- json5-simple-table/
 
-{}
+{
+  "headers": [
+    "alfa", "bravo", "charlie",
+  ], 
+  "rows": [
+  [ "1.1", "1.2", "1.3" ],
+  [ "2.1", "2.2", "3.3" ],
+  [ "3.1", "3.2", "3.3" ],
+  [ "4.1", "4.2", "4.3" ],
+  ],
+  "footers": [
+    "delta", "echo", "foxtrot",
+  ]
+}
 
 -- /json5-simple-table
-
 
 
 And another thing

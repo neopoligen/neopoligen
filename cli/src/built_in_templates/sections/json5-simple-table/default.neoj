@@ -1,2 +1,35 @@
-This is json5-simple-table 
+[!- import "built-in/helpers.neoj" as neo -!]
 
+<table>
+  [!- if section.data.headers -!]
+    <thead>
+      <tr>
+        [!- for th in section.data.headers -!]
+          <th>[@- th -@]</th>
+        [!- endfor -!]
+      </tr>
+    </thead>
+  [!- endif -!]
+  [!- if section.data.rows-!]
+    <tbody>
+      [!- for row in section.data.rows -!]
+        <tr>
+          [!- for td in row -!]
+            <td>[@- td -@]</td>
+          [!- endfor -!]
+        </tr>
+      [!- endfor -!]
+    </tbody>
+  [!- endif -!]
+  [!- if section.data.footers -!]
+    <tfoot>
+      <tr>
+        [!- for th in section.data.footers -!]
+          <th>[@- th -@]</th>
+        [!- endfor -!]
+      </tr>
+    </tfoot>
+  [!- endif -!]
+</table>
+
+[@- neo.output_end_section(site, page, section) -@]
