@@ -1,6 +1,0 @@
-[@- '' -@]
-
-<span [@- site.get_span_attrs(span) -@] style="text-decoration: underline;">[@- span.text -@]</span>
-
-[@- '' -@]
-
