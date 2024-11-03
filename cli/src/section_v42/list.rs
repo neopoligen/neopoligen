@@ -200,7 +200,6 @@ mod test {
         attrs.insert(
             "title".to_string(),
             SectionKeyValueAttrPayloadV42 {
-                text: "links".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "links".to_string(),
                 })],
@@ -243,7 +242,7 @@ mod test {
     }
 
     #[test]
-    fn solo_check_start_end() {
+    fn check_start_end() {
         let site_config = SiteConfigV42::mock1_basic();
         let source = SAMPLE_DIR
             .get_file("002-start-end.neo")

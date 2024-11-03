@@ -356,34 +356,34 @@ impl BuilderV42<'_> {
         Ok(())
     }
 
-    // TODO: Deprecate in favor of load_source_from_files
-    #[instrument(skip(self))]
-    pub fn load_pages_from_file_system(&mut self) -> Result<()> {
-        event!(Level::INFO, "Loading Pages From FS");
-        for entry in WalkDir::new(&self.site_config.content_source_dir()) {
-            let path = entry?.path().to_path_buf();
-            if path.is_file() {
-                if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
-                    if ext.to_ascii_lowercase() == "neo"
-                        && !filename.to_str().unwrap().starts_with(".")
-                    {
-                        match PageV42::new_from_fs_path(&path, &self.site_config) {
-                            Ok(p) => {
-                                //dbg!(&p.ast());
-                                //event![Level::INFO, "Added raw page: {}", path.display()];
-                                self.pages.push(p)
-                            }
-                            Err(e) => {
-                                // event![Level::ERROR, "Error loading raw page: {}", path.display()];
-                                self.errors.push(e)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        Ok(())
-    }
+    //// TODO: Deprecate in favor of load_source_from_files
+    //#[instrument(skip(self))]
+    //pub fn load_pages_from_file_system(&mut self) -> Result<()> {
+    //    event!(Level::INFO, "Loading Pages From FS");
+    //    for entry in WalkDir::new(&self.site_config.content_source_dir()) {
+    //        let path = entry?.path().to_path_buf();
+    //        if path.is_file() {
+    //            if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
+    //                if ext.to_ascii_lowercase() == "neo"
+    //                    && !filename.to_str().unwrap().starts_with(".")
+    //                {
+    //                    match PageV42::new_from_fs_path(&path, &self.site_config) {
+    //                        Ok(p) => {
+    //                            //dbg!(&p.ast());
+    //                            //event![Level::INFO, "Added raw page: {}", path.display()];
+    //                            self.pages.push(p)
+    //                        }
+    //                        Err(e) => {
+    //                            // event![Level::ERROR, "Error loading raw page: {}", path.display()];
+    //                            self.errors.push(e)
+    //                        }
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
+    //    Ok(())
+    //}
 
     #[instrument(skip(self))]
     pub fn load_templates(&mut self) -> Result<()> {

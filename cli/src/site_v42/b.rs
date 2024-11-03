@@ -68,8 +68,6 @@ impl SiteV42b {
 
     pub fn get_section_attrs(&self, args: &[Value]) -> Result<Value, Error> {
         let mut attr_collection: BTreeMap<String, Vec<String>> = BTreeMap::new();
-
-        // let mut classes: Vec<String> = vec![];
         if args.len() >= 3 {
             let attrs = args[2].get_item(&Value::from("attrs")).unwrap();
             for key in attrs.try_iter()? {
@@ -125,12 +123,6 @@ impl SiteV42b {
             //     Ok(Value::from(format!(r#" class="{}""#, classes.join(" "))))
             // } else {
             //     // TODO: Pull the rest of the attrs and flags here
-            //     Ok(Value::from(""))
-            // }
-
-            // if attr_collection.len() > 0 {
-            //     Ok(Value::from(format!(r#" {}"#, attr_collection.join(" "))))
-            // } else {
             //     Ok(Value::from(""))
             // }
 
@@ -245,5 +237,74 @@ impl Object for SiteV42b {
             "get_section_attrs" => self.get_section_attrs(args),
             _ => Ok(Value::from("")),
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use crate::{
+        bound::Bound,
+        section_attr_v42::SectionAttrV42,
+        section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42,
+        section_v42::{basic::BasicSectionV42, SectionV42},
+        span_v42::{named_span::KeyValueSpanAttrV42, plaintext::PlainTextSpan, SpanV42},
+    };
+
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn solo_get_section_attrs_empty_test() {
+        let site = SiteV42b {
+            config: SiteConfigV42::mock1_basic(),
+            generated_at: None,
+            pages: BTreeMap::new(),
+            pages_without_ids: BTreeMap::new(),
+        };
+        let section = Value::from_serialize(BasicSectionV42 {
+            attrs: BTreeMap::new(),
+            bound: Bound::Full,
+            children: vec![],
+            end_section: None,
+            flags: vec![],
+            kind: "generic-basic".to_string(),
+            template_list: vec![],
+        });
+        let expected = Value::from(r#""#);
+        let got = site
+            .get_section_attrs(&[Value::from(""), Value::from(""), section])
+            .unwrap();
+        assert_eq!(expected, got);
+    }
+
+    #[test]
+    fn solo_get_section_attrs_with_id() {
+        let site = SiteV42b {
+            config: SiteConfigV42::mock1_basic(),
+            generated_at: None,
+            pages: BTreeMap::new(),
+            pages_without_ids: BTreeMap::new(),
+        };
+        let mut attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
+
+        attrs.insert(
+            "id".to_string(),
+            SectionKeyValueAttrPayloadV42 { spans: vec![] },
+        );
+
+        let section = Value::from_serialize(BasicSectionV42 {
+            attrs: BTreeMap::new(),
+            bound: Bound::Full,
+            children: vec![],
+            end_section: None,
+            flags: vec![],
+            kind: "generic-basic".to_string(),
+            template_list: vec![],
+        });
+        let expected = Value::from(r#""#);
+        let got = site
+            .get_section_attrs(&[Value::from(""), Value::from(""), section])
+            .unwrap();
+        assert_eq!(expected, got);
     }
 }

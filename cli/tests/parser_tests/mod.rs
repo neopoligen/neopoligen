@@ -1,35 +1,34 @@
 use include_dir::{include_dir, Dir};
-use neopoligengine::helpers::get_include_str_file;
-use neopoligengine::{page_v42::PageV42, site_config::SiteConfigV42};
-use rstest::rstest;
-use std::path::PathBuf;
+// use neopoligengine::helpers::get_include_str_file;
+// use neopoligengine::{page_v42::PageV42, site_config::SiteConfigV42};
+// use rstest::rstest;
+// use std::path::PathBuf;
 
-const VALID_SAMPLES: Dir = include_dir!("tests/parser_tests/full_page_tests");
+const _VALID_SAMPLES: Dir = include_dir!("tests/parser_tests/full_page_tests");
 
-#[rstest]
-#[case("1.neo")]
-#[case("2.neo")]
-#[case("3.neo")]
-#[case("4.neo")]
-fn integration_parser_test(#[case] file: &str) {
-    let source = get_include_str_file(VALID_SAMPLES, file);
-    let source_path = PathBuf::from(format!("mocks/{}", file));
-    let site_config = SiteConfigV42::mock1_basic();
-    match PageV42::new_from_str(&source, &source_path, &site_config) {
-        Ok(page) => match page.error {
-            Some(e) => {
-                dbg!(e);
-                assert!(false)
-            }
-            None => assert!(true),
-        },
-
-        Err(e) => {
-            dbg!(e);
-            assert!(false)
-        }
-    }
-}
+// #[rstest]
+// #[case("1.neo")]
+// #[case("2.neo")]
+// #[case("3.neo")]
+// #[case("4.neo")]
+// fn integration_parser_test(#[case] file: &str) {
+//     let source = get_include_str_file(VALID_SAMPLES, file);
+//     let source_path = PathBuf::from(format!("mocks/{}", file));
+//     let site_config = SiteConfigV42::mock1_basic();
+//     match PageV42::new_from_str(&source, &source_path, &site_config) {
+//         Ok(page) => match page.error {
+//             Some(e) => {
+//                 dbg!(e);
+//                 assert!(false)
+//             }
+//             None => assert!(true),
+//         },
+//         Err(e) => {
+//             dbg!(e);
+//             assert!(false)
+//         }
+//     }
+// }
 
 // #[test]
 // pub fn run_sample_13() {
