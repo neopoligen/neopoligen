@@ -79,8 +79,13 @@ impl PageV42b {
         if let None = &self.href {
             match get_value_from_raw_pagedata_parsing(&self.source, "href") {
                 Ok(v) => {
-                    dbg!("TODO: Hoist message that this href came from direct parsing and not ast");
                     self.href = Some(v.1.join("").trim().to_string().into());
+                    let _ = &self
+                        .issues
+                        .push(NeoErrorV42::new_page_issue(&self, vec![
+                            "Warning: This pages is using a fallback href because one couldn't be found properly in the source file.".to_string(),
+                            "If this page is showing up in an expected location that's probably why. Fixing whatever issues are happening in the source file should fix this as well.".to_string(),
+                        ]));
                 }
                 Err(e) => {
                     dbg!("TODO: Add this error to the page stack");
