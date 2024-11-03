@@ -57,6 +57,11 @@ pub fn basic_section_full_v42<'a>(
                 .context("")
                 .parse(source)?
         }
+        SectionParent::ListItem => {
+            many0(|src| list_item_paragraph_block(src, site_config, parent.clone(), debug))
+                .context("")
+                .parse(source)?
+        }
         _ => many0(|src| paragraph_block_section_v42(src, site_config, parent.clone(), debug))
             .context("")
             .parse(source)?,
@@ -98,7 +103,13 @@ pub fn basic_section_start_v42<'a>(
     let (source, children) = match parent {
         SectionParent::ListItem => many0(alt((
             |src| list_item_paragraph_block(src, site_config, parent.clone(), debug),
-            |src| start_or_full_section_v42(src, site_config, SectionParent::Basic, debug),
+            |src| start_or_full_section_v42(src, site_config, parent.clone(), debug),
+        )))
+        .context("")
+        .parse(source)?,
+        SectionParent::List => many0(alt((
+            |src| list_item_paragraph_block(src, site_config, parent.clone(), debug),
+            |src| start_or_full_section_v42(src, site_config, parent.clone(), debug),
         )))
         .context("")
         .parse(source)?,

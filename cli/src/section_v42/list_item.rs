@@ -44,6 +44,32 @@ pub fn list_item_section_full_v42<'a>(
     Ok((source, section))
 }
 
+pub fn list_item_section_start_v42<'a>(
+    source: &'a str,
+    site_config: &'a SiteConfigV42,
+    _parent: SectionParent,
+    debug: bool,
+) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
+    // let debug = true;
+    let dbg_header = "LISTITEM_SECTION_FULL";
+    dump_parser_if_debug(debug, dbg_header, source, 1);
+    let (source, _) = tag("- ").context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 2);
+    let (source, paragraphs) = many1(alt((
+        |src| list_item_paragraph_block(src, site_config, SectionParent::ListItem, debug),
+        |src| start_or_full_section_v42(src, site_config, SectionParent::ListItem, debug),
+    )))
+    .context("")
+    .parse(source)?;
+    let section = SectionV42::ListItem(ListItemSectionV42 {
+        bound: Bound::Full,
+        children: paragraphs,
+        kind: "list-item".to_string(),
+        template_list: make_template_list("list-item", "list-item", "default"),
+    });
+    Ok((source, section))
+}
+
 #[cfg(test)]
 mod test {
 

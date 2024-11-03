@@ -62,10 +62,26 @@ pub fn end_section_basic_v42<'a>(
     //     .parse(source)?,
     // };
 
-    let (source, children) =
-        many0(|src| paragraph_block_section_v42(src, site_config, parent.clone(), debug))
+    // let (source, children) =
+    //     many0(|src| paragraph_block_section_v42(src, site_config, parent.clone(), debug))
+    //         .context("")
+    //         .parse(source)?;
+
+    let (source, children) = match parent {
+        SectionParent::List => {
+            many0(|src| list_item_paragraph_block(src, site_config, parent.clone(), debug))
+                .context("")
+                .parse(source)?
+        }
+        SectionParent::ListItem => {
+            many0(|src| list_item_paragraph_block(src, site_config, parent.clone(), debug))
+                .context("")
+                .parse(source)?
+        }
+        _ => many0(|src| paragraph_block_section_v42(src, site_config, parent.clone(), debug))
             .context("")
-            .parse(source)?;
+            .parse(source)?,
+    };
 
     let section = SectionV42::End(EndSectionV42 {
         attrs,

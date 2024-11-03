@@ -35,7 +35,7 @@ pub struct ListSectionV42 {
 pub fn list_section_full_v42<'a>(
     source: &'a str,
     site_config: &'a SiteConfigV42,
-    parent: SectionParent,
+    _parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let debug = true;
@@ -53,7 +53,7 @@ pub fn list_section_full_v42<'a>(
     let (source, _) = multispace0.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, children) =
-        many0(|src| list_item_section_full_v42(src, site_config, parent.clone(), debug))
+        many0(|src| list_item_section_full_v42(src, site_config, SectionParent::List, debug))
             .context("")
             .parse(source)?;
     let section = SectionV42::List(ListSectionV42 {
@@ -71,7 +71,7 @@ pub fn list_section_full_v42<'a>(
 pub fn list_section_start_v42<'a>(
     source: &'a str,
     site_config: &'a SiteConfigV42,
-    parent: SectionParent,
+    _parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     let dbg_header = "LIST_SECTION_START";
@@ -97,7 +97,7 @@ pub fn list_section_start_v42<'a>(
     .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 6);
     let (source, end_section) =
-        (|src| end_section_basic_v42(src, site_config, parent.clone(), kind, debug))
+        (|src| end_section_basic_v42(src, site_config, SectionParent::List, kind, debug))
             .context("")
             .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 7);

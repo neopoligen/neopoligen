@@ -68,7 +68,7 @@ pub fn raw_section_full_v42<'a>(
 pub fn raw_section_start_v42<'a>(
     source: &'a str,
     site_config: &'a SiteConfigV42,
-    _parent: SectionParent,
+    parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let debug = true;
@@ -87,7 +87,7 @@ pub fn raw_section_start_v42<'a>(
         .context("")
         .parse(source)?;
     let (source, end_section) =
-        (|src| end_section_basic_v42(src, site_config, SectionParent::Basic, kind, debug))
+        (|src| end_section_basic_v42(src, site_config, parent.clone(), kind, debug))
             .context("")
             .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
