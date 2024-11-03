@@ -1,4 +1,8 @@
 [!- macro debug_issues(site, page) -!]
+[!- if page.parsing_issue -!]
+[! include "built-in/issues/parsing-issue/default.neoj" -!]
+[!- endif -!]
+
 [!- if page.issues -!]
 <section class="built-in-page-issues built-in built-in-flow">
 <div>This page has some issues. Not a big deal. That happens and we 

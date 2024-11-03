@@ -4,6 +4,7 @@ pub mod mocks;
 
 use crate::ast_v42::parse_ast_v42;
 use crate::helpers::flatten_spans_v42;
+// use crate::helpers::get_minijinja_error_text;
 use crate::neo_error::NeoError;
 use crate::neo_error_v42::NeoErrorV42;
 use crate::page_v42::helpers::*;
@@ -15,6 +16,12 @@ use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::ErrorKind;
 use minijinja::Value;
+// use nom_supreme::error::ErrorTree;
+use nom_supreme::error::GenericErrorTree;
+//use nom_supreme::final_parser::final_parser;
+use nom_supreme::final_parser::Location;
+use nom_supreme::final_parser::RecreateContext;
+// use nom_supreme::parser_ext::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
 use std::path::PathBuf;
@@ -23,7 +30,7 @@ use std::sync::Arc;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PageV42b {
     pub ast: Option<Vec<SectionV42>>,
-    pub ast_error: Option<NeoErrorV42>,
+    pub parsing_issue: Option<NeoErrorV42>,
     pub href: Option<PathBuf>,
     pub id: Option<String>,
     pub issues: Vec<NeoErrorV42>,
@@ -34,34 +41,6 @@ pub struct PageV42b {
     pub source_path: PathBuf,
 }
 
-impl Object for PageV42b {
-    fn get_value(self: &Arc<Self>, key: &Value) -> Option<Value> {
-        match key.as_str()? {
-            "issues" => Some(Value::from_serialize(self.issues.clone())),
-            "sections" => self.sections.clone(),
-            "source" => Some(Value::from(self.source.clone())),
-            _ => None,
-        }
-    }
-
-    // fn call_method(
-    //     self: &Arc<PageV42>,
-    //     _state: &minijinja::State,
-    //     name: &str,
-    //     args: &[Value],
-    // ) -> Result<Value, Error> {
-    //     match name {
-    //         // "sections" => self.ast(),
-    //         "get_pagedata" => self.make_value_from_string(self.get_pagedata(args)),
-    //         // "sections" => self.sections(),
-    //         "title" => self.title(),
-    //         _ => Ok(Value::from("")),
-    //     }
-    // }
-
-    //
-}
-
 impl PageV42b {
     pub fn generate_ast(&mut self, site_config: &SiteConfigV42) {
         match parse_ast_v42(&self.source, site_config, false) {
@@ -69,8 +48,30 @@ impl PageV42b {
                 self.sections = Some(Value::from_serialize(&ast));
                 self.ast = Some(ast);
             }
-            Err(_e) => {
-                self.ast_error = Some(NeoErrorV42::AstParsingError);
+            // line: details.line,
+            // column: details.column,
+            // source: content.to_string(),
+            // remainder: location.to_string(),
+            // message: kind.to_string(),
+            Err(e) => {
+                match e {
+                    GenericErrorTree::Base { location, kind } => {
+                        let details = Location::recreate_context(self.source.as_str(), location);
+                        self.parsing_issue = Some(NeoErrorV42::ParsingIssue {
+                            column: details.column,
+                            line: details.line,
+                            source: self.source.as_str().to_string(),
+                            completed: self.source.trim_end_matches(location).to_string(),
+                            remainder: location.to_string(),
+                            message: kind.to_string(),
+                            template_list: vec![
+                                "issues/parsing-issue/default.neoj".to_string(),
+                                "built-in/issues/parsing-issue/default.neoj".to_string(),
+                            ],
+                        });
+                    }
+                    _ => (),
+                };
             }
         }
     }
@@ -162,6 +163,33 @@ impl PageV42b {
         self.language = Some(site_config.default_language.clone());
     }
 
+    //
+}
+
+impl Object for PageV42b {
+    fn get_value(self: &Arc<Self>, key: &Value) -> Option<Value> {
+        match key.as_str()? {
+            "issues" => Some(Value::from_serialize(self.issues.clone())),
+            "parsing_issue" => Some(Value::from_serialize(self.parsing_issue.clone())),
+            "sections" => self.sections.clone(),
+            "source" => Some(Value::from(self.source.clone())),
+            _ => None,
+        }
+    }
+    // fn call_method(
+    //     self: &Arc<PageV42>,
+    //     _state: &minijinja::State,
+    //     name: &str,
+    //     args: &[Value],
+    // ) -> Result<Value, Error> {
+    //     match name {
+    //         // "sections" => self.ast(),
+    //         "get_pagedata" => self.make_value_from_string(self.get_pagedata(args)),
+    //         // "sections" => self.sections(),
+    //         "title" => self.title(),
+    //         _ => Ok(Value::from("")),
+    //     }
+    // }
     //
 }
 

@@ -1,0 +1,5 @@
+<section class="built-in-parsing-issue built-in built-in-flow">
+<div>Parsing Issue</div>
+<div>Issue: [@ page.parsing_issue.message @]</div>
+<div><pre>[@ page.parsing_issue.completed @]<mark>[@ page.parsing_issue.remainder @]</mark></pre></div>
+</section>

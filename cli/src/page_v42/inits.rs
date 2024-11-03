@@ -35,7 +35,7 @@ impl PageV42b {
         event!(Level::DEBUG, "{}", "Making page");
         PageV42b {
             ast: None,
-            ast_error: None,
+            parsing_issue: None,
             href: None,
             id: None,
             issues: vec![],
