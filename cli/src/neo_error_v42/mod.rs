@@ -16,7 +16,6 @@ pub enum NeoErrorV42 {
         id: Option<String>,
         href: Option<PathBuf>,
         rel_path: PathBuf,
-        message: Option<String>,
-        details: Option<String>,
+        parts: Vec<String>,
     },
 }

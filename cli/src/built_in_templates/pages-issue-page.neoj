@@ -32,15 +32,18 @@ pre {
             <p>There were some problems making this page. Not a big deal. 
                 That happens sometimes and we can fix it. Here's
             what we know to get started:</p>
-
-            <ul>
+            <ul class="flow">
             [! for issue in page.issues !]
                 <li class="flow">
-                    <p>[@ issue.message @]</p>
-                    <div><pre>[@ issue.details @]</pre></div>
+                    <ul class="flow">
+                        [! for part in issue.parts|reverse !]
+                        <li class="flow"><pre>[@ part @]</pre></li>
+                        [! endfor !]
+                    </ul>
+
+                        
                 </li>
             [! endfor !]
             </ul>
-
 </body>
 </html>

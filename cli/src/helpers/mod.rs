@@ -277,6 +277,17 @@ pub fn get_include_str_file(dir: Dir, name: &str) -> String {
     }
 }
 
+pub fn get_minijinja_error_text(err: &minijinja::Error) -> Vec<String> {
+    let mut parts: Vec<String> = vec![];
+    parts.push(format!("{:#}", err));
+    let mut err = &err as &dyn std::error::Error;
+    while let Some(next_err) = err.source() {
+        parts.push(format!("{:#}", next_err));
+        err = next_err;
+    }
+    parts
+}
+
 pub fn get_neo_files_in_dir_recursively(dir: &PathBuf) -> Vec<PathBuf> {
     WalkDir::new(dir)
         .into_iter()

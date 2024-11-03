@@ -130,12 +130,21 @@ impl BuilderV42<'_> {
                                 ()
                             }
                             Err(e) => {
+                                // eprintln!();
+                                // eprintln!("caused by: {:#}", &e);
+                                // let mut err = &e as &dyn std::error::Error;
+                                // while let Some(next_err) = err.source() {
+                                //     eprintln!();
+                                //     eprintln!("caused by: {:#}", next_err);
+                                //     err = next_err;
+                                // }
+
                                 let err = NeoErrorV42::PageError {
                                     id: page.id.clone(),
                                     href: page.href.clone(),
                                     rel_path: page.source_path.clone(),
-                                    message: Some(e.to_string()),
-                                    details: Some(e.display_debug_info().to_string()),
+                                    parts: get_minijinja_error_text(&e), //message: Some(e.to_string()),
+                                                                         //details: Some(e.display_debug_info().to_string()),
                                 };
                                 page.issues.push(err);
                                 dbg!("TODO: Alfa Hoist this error from generate_outputs");
