@@ -20,10 +20,13 @@
 </ul>
 [!- endmacro -!]
 
-[!- macro output_css(site, page) -!]
+[!- macro output_css(site, page, template="default.neoj") -!]
 [!- for section in page.sections -!]
 [!- if section.kind == "css" -!]
-[!- include "built-in/misc/css-output.neoj" -!]
+[!- include [
+  "misc/css-output/" + template,
+  "built-in/misc/css-output/" + template
+  ]-!]
 [!- endif -!]
 [!- endfor -!]
 [!- endmacro -!]
@@ -59,10 +62,13 @@
 [!- endfor -!]
 [!- endmacro -!]
 
-[!- macro output_scripts(site, page) -!]
+[!- macro output_scripts(site, page, template="default.neoj") -!]
 [!- for section in page.sections -!]
 [!- if section.kind == "script" -!]
-[!- include "built-in/misc/script-output.neoj" -!]
+[!- include [
+  "misc/script-output/" + template,
+  "built-in/misc/script-output/" + template
+  ] -!]
 [!- endif -!]
 [!- endfor -!]
 [!- endmacro -!]
@@ -91,9 +97,21 @@
 
 [!- macro output_span(site, page, span) -!]
 [!- if span.kind -!]
-[!- include ["spans/" + span.kind + ".neoj", "spans/" + span.type + ".neoj","spans/plain-text.neoj",  "built-in/spans/plain-text.neoj"] -!]
+[!- include [
+  "spans/" + span.kind + "/default.neoj", 
+  "spans/" + span.type + "/default.neoj",
+  "spans/plain-text/default.neoj",  
+  "built-in/spans/" + span.kind + "/default.neoj", 
+  "built-in/spans/" + span.type + "/default.neoj",
+  "built-in/spans/plain-text/default.neoj"
+  ] -!]
 [!- else -!]
-[!- include ["spans/" + span.type + ".neoj", "spans/plain-text.neoj", "built-in/spans/plain-text.neoj"] -!]
+[!- include [
+  "spans/" + span.type + "/default.neoj", 
+  "spans/plain-text/default.neoj", 
+  "built-in/spans/" + span.type + "/default.neoj", 
+  "built-in/spans/plain-text/default.neoj"
+  ] -!]
 [!- endif -!]
 [!- endmacro -!]
 

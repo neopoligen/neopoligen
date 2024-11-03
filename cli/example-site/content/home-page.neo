@@ -2,6 +2,18 @@
 
 This is a thing
 
+-- script
+
+console.log("asdf")
+
+
+-- css
+
+body {
+color: gree;
+}
+
+
 -- json5-simple-table/
 -- class: red
 -- id: pingx
