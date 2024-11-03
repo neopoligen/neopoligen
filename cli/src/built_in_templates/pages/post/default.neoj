@@ -8,8 +8,8 @@ body {
   background-color: #0d1229;
   color: #f0e5d8;
 }
-
 </style>
+[@ neo.output_css(site, page) @]
 </head>
 <body>
 <main class="flow">
@@ -17,7 +17,6 @@ body {
 <div>[@ site.generated_at("Generated on %a. %B %-d at %-I:%M:%S%p") @]</div>
 </main>
 <footer>
-
 <div>
   <details>
     <summary>Source</summary>
@@ -32,7 +31,6 @@ body {
     <div><pre>[@ page.sections|tojson(true) @]</pre></div>
   </details>
 </div>
-
 </footer>
 </body>
 </html>
