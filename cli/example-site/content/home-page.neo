@@ -7,28 +7,34 @@ Home Page
 {
   header_rows: [
     {
+      attrs: {},
+      flags: [],
       cells: [
-        { text: "golf" },
-        { text: "hotel" },
-        { text: "india" },
+        { text: "golf", attrs: {}, flags: [] },
+        { text: "hotel", attrs: {}, flags: [] },
+        { text: "india", attrs: {}, flags: [] },
       ]
     }
   ],
   body_rows: [
     {
+      attrs: {},
+      flags: [],
       cells: [
-        { text: "juliet" },
-        { text: "kilo" },
-        { text: "lima" },
+        { text: "juliet", attrs: {}, flags: [] },
+        { text: "kilo", attrs: {}, flags: [] },
+        { text: "lima", attrs: {}, flags: [] },
       ]
     }
   ],
   footer_rows: [
     {
+      attrs: {},
+      flags: [],
       cells: [
-        { text: "mike" },
-        { text: "november" },
-        { text: "oscar" },
+        { text: "mike", attrs: {}, flags: [] },
+        { text: "november", attrs: {}, flags: [] },
+        { text: "oscar", attrs: {}, flags: [] },
       ]
     }
   ]
