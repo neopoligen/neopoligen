@@ -1,2 +1,3 @@
-[!- import "built-in-helpers" as neo -!]
+[!- import "built-in/helpers.neoj" as neo -!]
+
 <p>[@- neo.output_spans(site, page, section.spans) -@]</p>

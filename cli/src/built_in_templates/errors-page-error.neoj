@@ -1,8 +1,0 @@
-
-<details>
-  <summary>file: [@ page_error.rel_path @]</summary>
-<div>id: [@ page_error.id @]</div>
-<div>href: [@ page_error.href @]</div>
-<div>[@ page_error.message @]</div>
-<div><pre>[@ page_error.details @]</div>
-</details>

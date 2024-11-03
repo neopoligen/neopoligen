@@ -76,6 +76,7 @@ pub fn end_section_basic_v42<'a>(
         template_list: vec![
             format!("sections/{}-end/default.neoj", kind),
             "sections/generic-end/default.neoj".to_string(),
+            "built-in/generic-end.neoj".to_string(),
         ],
     });
     Ok((source, section))
