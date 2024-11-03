@@ -358,7 +358,7 @@ mod test {
     }
 
     #[test]
-    fn solo_get_section_attrs_with_extra_class() {
+    fn get_section_attrs_with_extra_class() {
         let site = SiteV42b {
             config: SiteConfigV42::mock1_basic(),
             generated_at: None,
@@ -390,6 +390,52 @@ mod test {
                 Value::from(""),
                 section,
                 Value::from("charlie"),
+            ])
+            .unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_get_section_attrs_with_attr_class_and_extra_class_and_id() {
+        let site = SiteV42b {
+            config: SiteConfigV42::mock1_basic(),
+            generated_at: None,
+            pages: BTreeMap::new(),
+            pages_without_ids: BTreeMap::new(),
+        };
+        let mut attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
+        attrs.insert(
+            "id".to_string(),
+            SectionKeyValueAttrPayloadV42 {
+                spans: vec![SpanV42::PlainText(PlainTextSpan {
+                    text: "delta".to_string(),
+                })],
+            },
+        );
+        attrs.insert(
+            "class".to_string(),
+            SectionKeyValueAttrPayloadV42 {
+                spans: vec![SpanV42::PlainText(PlainTextSpan {
+                    text: "echo".to_string(),
+                })],
+            },
+        );
+        let section = Value::from_serialize(BasicSectionV42 {
+            attrs,
+            bound: Bound::Full,
+            children: vec![],
+            end_section: None,
+            flags: vec![],
+            kind: "generic-basic".to_string(),
+            template_list: vec![],
+        });
+        let left = Value::from(r#" class="echo foxtrot" id="delta""#);
+        let right = site
+            .get_section_attrs(&[
+                Value::from(""),
+                Value::from(""),
+                section,
+                Value::from("foxtrot"),
             ])
             .unwrap();
         assert_eq!(left, right);
