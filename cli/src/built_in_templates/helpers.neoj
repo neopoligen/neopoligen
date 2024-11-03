@@ -1,3 +1,18 @@
+[!- macro debug_section_tree(site, page, sections) -!]
+<ul>
+[!- for section in sections -!]
+<li>
+[@ section.kind @]
+[@ debug_section_tree(site, page, section.children) @]
+[! if section.end_section !] 
+[@ section.end_section.kind @]
+[@ debug_section_tree(site, page, section.end_section.children) @]
+[! endif !]
+</li>
+[!- endfor -!]
+</ul>
+[!- endmacro -!]
+
 [!- macro output_css(site, page) -!]
 [!- for section in page.sections -!]
 [!- if section.kind == "css" -!]
@@ -81,16 +96,3 @@
 [!- endfor -!]
 [!- endmacro -!]
 
-
-[!- macro output_section_tree(site, page, sections) -!]
-<ul>
-[!- for section in sections -!]
-<li>
-[@ section.kind @] ([@ section.type @] - [@ section.bound @])
-[!- for child in section.children -!]
-[@ output_section_tree(site, page, child) @]
-[!- endfor -!]
-</li>
-[!- endfor -!]
-</ul>
-[!- endmacro -!]

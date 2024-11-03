@@ -23,6 +23,7 @@ impl BuilderV42<'_> {
         );
         const BUILT_IN_TEMPLATE_DIR: Dir = include_dir!("src/built_in_templates");
         let built_in_tempates_list = vec![
+            "blocks/paragraph",
             "css-output",
             "generic-basic",
             "generic-css",
@@ -39,7 +40,6 @@ impl BuilderV42<'_> {
             "pages-default-post",
             "pages-problems-index-page",
             "pages-issue-page",
-            "paragraph-block",
             "script-output",
             "span-text",
             "template-error",

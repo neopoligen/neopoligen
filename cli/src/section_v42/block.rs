@@ -71,8 +71,8 @@ pub fn paragraph_block_section_v42<'a>(
             kind: "block-paragraph".to_string(),
             spans,
             template_list: vec![
-                "sections/paragraph-block/default.neoj".to_string(),
-                "built-in/paragraph-block.neoj".to_string(),
+                "blocks/paragraph/default.neoj".to_string(),
+                "built-in/blocks/paragraph.neoj".to_string(),
             ],
         }),
     ))
