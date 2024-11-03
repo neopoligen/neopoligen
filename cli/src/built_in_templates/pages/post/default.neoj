@@ -8,6 +8,12 @@ body {
   background-color: #0d1229;
   color: #f0e5d8;
 }
+
+.built-in-flow > :where(:not(:first-child)) {
+  margin-top: var(--flow-space, 1em);
+}
+
+
 </style>
 [@ neo.output_css(site, page) @]
 </head>
@@ -18,6 +24,7 @@ body {
 </main>
 <footer>
 <div>
+  [@- neo.debug_issues(site, page) -@]
   <details>
     <summary>Source</summary>
     <div><pre>[@ page.source @]</pre></div>

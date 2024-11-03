@@ -12,6 +12,7 @@ shorthands = [
         ("{{", "}}", "image", "Image", "close_brace", "}"),
         ("__", "__", "underline", "Underline", "underscore", "_"),
         ("@@", "@@", "mark", "Mark", "ampersand", "@"),
+        (">>", ">>", "link", "Link", "greater_than", ">"),
         ]
 
 skeleton = """use super::single_characters::*;

@@ -97,6 +97,19 @@ impl PageV42b {
                 Ok(v) => {
                     dbg!("TODO: Hoist message that ID came from direct parsing and not ast");
                     self.id = Some(v.1.join("").trim().to_string());
+                    let _ = &self.issues.push(NeoErrorV42::PageError {
+                        id: self.id.clone(),
+                        href: None,
+                        rel_path: self.source_path.clone(),
+                        parts: vec![r#"Warning: This pages is using a fallback ID because 
+one couldn't be found properly in the source file.
+
+If this page is showing up in an expected location
+that's probably why. Fixing whatever issues are 
+happening in the source file should fix this as well.
+                            "#
+                        .to_string()],
+                    });
                 }
                 Err(e) => {
                     dbg!("TODO: Add this error to the page stack");
@@ -110,12 +123,6 @@ impl PageV42b {
     pub fn generate_href_from_ast(&mut self) {
         if let Ok(spans) = self.get_pagedata_from_ast("href") {
             self.href = Some(flatten_spans_v42(&spans).into());
-        } else if let Some(id) = &self.id {
-            self.href = Some(PathBuf::from(format!(
-                "/{}/{}/index.html",
-                self.language.as_ref().unwrap(),
-                id
-            )));
         }
     }
 
