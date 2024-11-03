@@ -2,13 +2,15 @@
 <ul>
 [!- for section in sections -!]
 <li>
-[@ section.kind @]
+[@ section.kind @] [[! if section.spans !][@ output_spans(site, page, section.spans) @][! endif !]]
 [@ debug_section_tree(site, page, section.children) @]
+</li>
 [! if section.end_section !] 
+<li>
 [@ section.end_section.kind @]
 [@ debug_section_tree(site, page, section.end_section.children) @]
-[! endif !]
 </li>
+[! endif !]
 [!- endfor -!]
 </ul>
 [!- endmacro -!]
