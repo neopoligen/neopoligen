@@ -67,6 +67,7 @@ impl SiteV42b {
     }
 
     pub fn get_section_attrs(&self, args: &[Value]) -> Result<Value, Error> {
+        dbg!(&args);
         let mut attr_collection: BTreeMap<String, Vec<String>> = BTreeMap::new();
         if args.len() >= 3 {
             let attrs = args[2].get_item(&Value::from("attrs")).unwrap();
@@ -148,72 +149,72 @@ impl SiteV42b {
         }
     }
 
-    // TODO: Test this, it was copied over direction from the prior version, but hopefully still
-    // works out of the box
-    // TODO: Add tests to this and error handling
-    // TODO: escape for html
-    // TODO: Set up config of specific attrs/flags to hoist
-    //       and only add those to the output
-    pub fn get_span_attrs(&self, args: &[Value]) -> Result<Value, Error> {
-        //let mut classes: Vec<String> = vec![];
-        let mut attr_string: Vec<String> = vec![];
-        if args.len() > 0 {
-            let attrs = args[0].get_item(&Value::from("attrs")).unwrap();
-            for key in attrs.try_iter()? {
-                let spans = attrs.get_item(&key)?;
-                let values = spans
-                    .try_iter()?
-                    .filter_map(|v| {
-                        if key.to_string() != "class".to_string() {
-                            Some(
-                                encode_quoted_attribute(
-                                    &v.get_item(&Value::from("text")).unwrap().to_string(),
-                                )
-                                .to_string(),
-                            )
-                        } else {
-                            None
-                        }
-                    })
-                    .collect::<Vec<String>>();
-                if values.len() > 0 {
-                    attr_string.push(format!(r#"{}="{}""#, key.to_string(), values.join(" ")));
-                }
-            }
-            let mut classes: Vec<String> = vec![];
-            for key in attrs.try_iter()? {
-                let spans = attrs.get_item(&key)?;
-                classes = spans
-                    .try_iter()?
-                    .filter_map(|v| {
-                        if key.to_string() == "class".to_string() {
-                            Some(
-                                encode_quoted_attribute(
-                                    &v.get_item(&Value::from("text")).unwrap().to_string(),
-                                )
-                                .to_string(),
-                            )
-                        } else {
-                            None
-                        }
-                    })
-                    .collect::<Vec<String>>();
-            }
-            if args.len() == 2 {
-                classes.push(args[1].to_string());
-            }
-            if classes.len() > 0 {
-                attr_string.push(format!(r#"class="{}""#, classes.join(" ")));
-            }
-            let flags = args[0].get_item(&Value::from("flags")).unwrap();
-            for flag in flags.try_iter()? {
-                attr_string.push(format!(r#"{}"#, flag));
-            }
-            Ok(Value::from(format!(" {}", attr_string.join(" "))))
-        } else {
-            Ok(Value::from(""))
-        }
-    }
+    //// TODO: Test this, it was copied over direction from the prior version, but hopefully still
+    //// works out of the box
+    //// TODO: Add tests to this and error handling
+    //// TODO: escape for html
+    //// TODO: Set up config of specific attrs/flags to hoist
+    ////       and only add those to the output
+    //pub fn get_span_attrs(&self, args: &[Value]) -> Result<Value, Error> {
+    //    //let mut classes: Vec<String> = vec![];
+    //    let mut attr_string: Vec<String> = vec![];
+    //    if args.len() > 0 {
+    //        let attrs = args[0].get_item(&Value::from("attrs")).unwrap();
+    //        for key in attrs.try_iter()? {
+    //            let spans = attrs.get_item(&key)?;
+    //            let values = spans
+    //                .try_iter()?
+    //                .filter_map(|v| {
+    //                    if key.to_string() != "class".to_string() {
+    //                        Some(
+    //                            encode_quoted_attribute(
+    //                                &v.get_item(&Value::from("text")).unwrap().to_string(),
+    //                            )
+    //                            .to_string(),
+    //                        )
+    //                    } else {
+    //                        None
+    //                    }
+    //                })
+    //                .collect::<Vec<String>>();
+    //            if values.len() > 0 {
+    //                attr_string.push(format!(r#"{}="{}""#, key.to_string(), values.join(" ")));
+    //            }
+    //        }
+    //        let mut classes: Vec<String> = vec![];
+    //        for key in attrs.try_iter()? {
+    //            let spans = attrs.get_item(&key)?;
+    //            classes = spans
+    //                .try_iter()?
+    //                .filter_map(|v| {
+    //                    if key.to_string() == "class".to_string() {
+    //                        Some(
+    //                            encode_quoted_attribute(
+    //                                &v.get_item(&Value::from("text")).unwrap().to_string(),
+    //                            )
+    //                            .to_string(),
+    //                        )
+    //                    } else {
+    //                        None
+    //                    }
+    //                })
+    //                .collect::<Vec<String>>();
+    //        }
+    //        if args.len() == 2 {
+    //            classes.push(args[1].to_string());
+    //        }
+    //        if classes.len() > 0 {
+    //            attr_string.push(format!(r#"class="{}""#, classes.join(" ")));
+    //        }
+    //        let flags = args[0].get_item(&Value::from("flags")).unwrap();
+    //        for flag in flags.try_iter()? {
+    //            attr_string.push(format!(r#"{}"#, flag));
+    //        }
+    //        Ok(Value::from(format!(" {}", attr_string.join(" "))))
+    //    } else {
+    //        Ok(Value::from(""))
+    //    }
+    //}
 
     //
 }
@@ -254,7 +255,7 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn solo_get_section_attrs_empty_test() {
+    fn get_section_attrs_empty_test() {
         let site = SiteV42b {
             config: SiteConfigV42::mock1_basic(),
             generated_at: None,
@@ -286,14 +287,16 @@ mod test {
             pages_without_ids: BTreeMap::new(),
         };
         let mut attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
-
         attrs.insert(
             "id".to_string(),
-            SectionKeyValueAttrPayloadV42 { spans: vec![] },
+            SectionKeyValueAttrPayloadV42 {
+                spans: vec![SpanV42::PlainText(PlainTextSpan {
+                    text: "alfa".to_string(),
+                })],
+            },
         );
-
         let section = Value::from_serialize(BasicSectionV42 {
-            attrs: BTreeMap::new(),
+            attrs,
             bound: Bound::Full,
             children: vec![],
             end_section: None,
@@ -301,10 +304,10 @@ mod test {
             kind: "generic-basic".to_string(),
             template_list: vec![],
         });
-        let expected = Value::from(r#""#);
-        let got = site
+        let left = Value::from(r#" id="alfa""#);
+        let right = site
             .get_section_attrs(&[Value::from(""), Value::from(""), section])
             .unwrap();
-        assert_eq!(expected, got);
+        assert_eq!(left, right);
     }
 }
