@@ -16,7 +16,7 @@ body {
 [@ neo.output_sections(site, page, page.sections) @]
 <div>[@ site.generated_at("Generated on %a. %B %-d at %-I:%M:%S%p") @]</div>
 <h3>Section Tree</h3>
-<div><pre>[@ neo.debug_section_tree(site, page, page.sections) @]</pre></div>
+<div>[@ neo.debug_section_tree(site, page, page.sections) @]</div>
 </main>
 </body>
 </html>
