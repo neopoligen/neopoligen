@@ -3,18 +3,20 @@
 <section
   [@- site.get_section_attrs(site, page, section, "json5-simple-table-section built-in flow") -@]>
 <table>
-  [!- if section.data.headers -!]
+  [!- if section.data.header_rows -!]
     <thead>
-      <tr>
-        [!- for th in section.data.headers -!]
-          <th>[@- th -@]</th>
-        [!- endfor -!]
-      </tr>
+      [!- for row in section.data.header_rows -!]
+        <tr>
+          [!- for cell in row -!]
+            <th>[@- cell -@]</th>
+          [!- endfor -!]
+        </tr>
+      [!- endfor -!]
     </thead>
   [!- endif -!]
-  [!- if section.data.rows-!]
+  [!- if section.data.body_rows -!]
     <tbody>
-      [!- for row in section.data.rows -!]
+      [!- for row in section.data.body_rows -!]
         <tr>
           [!- for td in row -!]
             <td>[@- td -@]</td>
@@ -23,13 +25,15 @@
       [!- endfor -!]
     </tbody>
   [!- endif -!]
-  [!- if section.data.footers -!]
+  [!- if section.data.footer_rows -!]
     <tfoot>
-      <tr>
-        [!- for th in section.data.footers -!]
-          <th>[@- th -@]</th>
-        [!- endfor -!]
-      </tr>
+      [!- for row in section.data.footer_rows -!]
+        <tr>
+          [!- for cell in row -!]
+            <th>[@- cell -@]</th>
+          [!- endfor -!]
+        </tr>
+      [!- endfor -!]
     </tfoot>
   [!- endif -!]
 </table>

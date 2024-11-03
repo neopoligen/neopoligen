@@ -1,17 +1,28 @@
 -- title
 
-This is a thing
+Home Page
 
--- script
+-- json5-advanced-table/
 
-console.log("asdf")
+asdf
 
-
--- css
-
-body {
-color: gree;
+{
+  header_rows: [
+    {
+      attrs: {},
+      flags: [],
+      cells: [
+        {
+          attrs: {},
+          flags: []
+          data: header1
+        }
+      ]
+    }
+  ],
 }
+
+-- /json5-advanced-table
 
 
 -- json5-simple-table/
@@ -19,17 +30,17 @@ color: gree;
 -- id: pingx
 
 {
-  "headers": [
-    "alfa", "bravo", "charlie",
+  "header_rows": [
+    ["alfa", "bravo", "charlie"]
   ], 
-  "rows": [
-  [ "1.1", "1.2", "1.3" ],
-  [ "2.1", "2.2", "3.3" ],
-  [ "3.1", "3.2", "3.3" ],
-  [ "4.1", "4.2", "4.3" ],
+  "body_rows": [
+    [ "1.1", "1.2", "1.3" ],
+    [ "2.1", "2.2", "3.3" ],
+    [ "3.1", "3.2", "3.3" ],
+    [ "4.1", "4.2", "4.3" ],
   ],
-  "footers": [
-    "delta", "echo", "foxtrot",
+  "footer_rows": [
+    ["delta", "echo", "foxtrot"]
   ]
 }
 
