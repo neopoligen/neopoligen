@@ -1,6 +1,7 @@
 [!- import "built-in/helpers.neoj" as neo -!]
 
-<li class="generic-list-item flow">
+<li 
+  [@- site.get_section_attrs(site, page, section, "generic-list-item-section built-in flow") -@]>
 [!- for child in section.children -!] 
 [!- if loop.length == 1 -!]
 [@- neo.output_section_with_template(site, page, child, "built-in/sections/generic-list-item-single/default.neoj") -@]
