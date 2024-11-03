@@ -159,7 +159,7 @@ impl BuilderV42<'_> {
     }
 
     #[instrument(skip(self))]
-    pub fn generate_site(&mut self) -> Result<()> {
+    pub fn initialize_site(&mut self) -> Result<()> {
         let site = SiteV42b::new_with_pages(&self.site_config, &self.pages_v42);
         self.site_v42b = Some(site);
         Ok(())
@@ -286,7 +286,6 @@ impl BuilderV42<'_> {
             "helpers",
             "pages-problems-index-page",
             "script-output",
-            "section-tree",
             "span-text",
             "template-error",
         ];

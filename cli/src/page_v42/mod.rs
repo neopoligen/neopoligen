@@ -37,8 +37,9 @@ pub struct PageV42b {
 impl Object for PageV42b {
     fn get_value(self: &Arc<Self>, key: &Value) -> Option<Value> {
         match key.as_str()? {
-            "sections" => self.sections.clone(),
             "issues" => Some(Value::from_serialize(self.issues.clone())),
+            "sections" => self.sections.clone(),
+            "source" => Some(Value::from(self.source.clone())),
             _ => None,
         }
     }

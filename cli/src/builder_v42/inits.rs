@@ -41,7 +41,6 @@ impl BuilderV42<'_> {
             "pages-issue-page",
             "paragraph-block",
             "script-output",
-            "section-tree",
             "span-text",
             "template-error",
         ];

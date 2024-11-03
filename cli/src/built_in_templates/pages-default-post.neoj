@@ -12,12 +12,13 @@ body {
 </style>
 </head>
 <body>
+<main class="flow">
 <div>Head's up: this page is missing it's main page templates.</div>
-<hr>
-[@ site @]
-<hr>
 [@ neo.output_sections(site, page, page.sections) @]
 <div>[@ site.generated_at("Generated on %a. %B %-d at %-I:%M:%S%p") @]</div>
+<h3>Section Tree</h3>
+<div><pre>[@ neo.output_section_tree(site, page, page.sections) @]</pre></div>
+</main>
 </body>
 </html>
 

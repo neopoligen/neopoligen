@@ -117,7 +117,6 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
     match BuilderV42::new_from_site_config(site_config) {
         Ok(mut builder) => {
             // Build Site
-            let _ = builder.load_built_in_templates();
             // let _ = builder.load_file_system_templates();
             let _ = builder.ingest_source_files();
             let _ = builder.set_languages_from_site_config();
@@ -126,7 +125,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             let _ = builder.generate_fallback_ids();
             let _ = builder.generate_hrefs_from_ast();
             let _ = builder.generate_fallback_hrefs();
-            let _ = builder.generate_site();
+            let _ = builder.initialize_site();
             let _ = builder.generate_outputs();
             let _ = builder.empty_output_dirs();
             let _ = builder.output_issue_pages();
