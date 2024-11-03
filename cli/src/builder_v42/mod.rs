@@ -21,6 +21,7 @@ use include_dir::{include_dir, Dir};
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
 use minijinja::{context, Value};
+use rusqlite::ffi::sqlite3_table_column_metadata;
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
@@ -136,7 +137,7 @@ impl BuilderV42<'_> {
                                     message: Some(e.to_string()),
                                     details: Some(e.display_debug_info().to_string()),
                                 };
-                                page.errors.push(err);
+                                page.issues.push(err);
                                 dbg!("TODO: Alfa Hoist this error from generate_outputs");
                                 ()
                             }
@@ -476,8 +477,10 @@ impl BuilderV42<'_> {
 
     #[instrument(skip(self))]
     pub fn output_issue_pages(&mut self) -> Result<()> {
+        event!(Level::INFO, "Making Issue Pages");
+        let site_clone = Value::from_object(self.site_v42b.clone().unwrap());
         for (_, page) in &mut self.pages_v42 {
-            if page.errors.len() > 0 {
+            if page.issues.len() > 0 {
                 if let Some(href) = &page.href {
                     let rel_output_path = match href.strip_prefix("/") {
                         Ok(p) => p,
@@ -486,7 +489,10 @@ impl BuilderV42<'_> {
                     let absolute_output_path =
                         &self.site_config.output_dest_dir().join(rel_output_path);
                     match self.env.get_template("built-in/pages-issue-page.neoj") {
-                        Ok(template) => match template.render(context!()) {
+                        Ok(template) => match template.render(context!(
+                            site => site_clone,
+                            page => Value::from_object(page.clone()),
+                        )) {
                             Ok(output) => {
                                 match write_file_with_mkdir(&absolute_output_path, &output) {
                                     Ok(()) => {

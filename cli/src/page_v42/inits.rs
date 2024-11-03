@@ -36,9 +36,9 @@ impl PageV42b {
         PageV42b {
             ast: None,
             ast_error: None,
-            errors: vec![],
             href: None,
             id: None,
+            issues: vec![],
             language: None,
             output: None,
             sections: None,

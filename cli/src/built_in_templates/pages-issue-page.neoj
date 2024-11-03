@@ -33,6 +33,14 @@ pre {
                 That happens sometimes and we can fix it. Here's
             what we know to get started:</p>
 
+            <ul>
+            [! for issue in page.issues !]
+                <li class="flow">
+                    <p>[@ issue.message @]</p>
+                    <div><pre>[@ issue.details @]</pre></div>
+                </li>
+            [! endfor !]
+            </ul>
 
 </body>
 </html>

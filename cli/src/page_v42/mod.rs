@@ -24,9 +24,9 @@ use std::sync::Arc;
 pub struct PageV42b {
     pub ast: Option<Vec<SectionV42>>,
     pub ast_error: Option<NeoErrorV42>,
-    pub errors: Vec<NeoErrorV42>,
     pub href: Option<PathBuf>,
     pub id: Option<String>,
+    pub issues: Vec<NeoErrorV42>,
     pub language: Option<String>,
     pub output: Option<String>,
     pub sections: Option<Value>,
@@ -38,6 +38,7 @@ impl Object for PageV42b {
     fn get_value(self: &Arc<Self>, key: &Value) -> Option<Value> {
         match key.as_str()? {
             "sections" => self.sections.clone(),
+            "issues" => Some(Value::from_serialize(self.issues.clone())),
             _ => None,
         }
     }
