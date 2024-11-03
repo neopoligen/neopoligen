@@ -97,7 +97,7 @@ impl PageV42b {
                 Ok(v) => {
                     dbg!("TODO: Hoist message that ID came from direct parsing and not ast");
                     self.id = Some(v.1.join("").trim().to_string());
-                    let _ = &self.issues.push(NeoErrorV42::PageError {
+                    let _ = &self.issues.push(NeoErrorV42::PageIssue {
                         id: self.id.clone(),
                         href: None,
                         rel_path: self.source_path.clone(),
@@ -109,6 +109,10 @@ that's probably why. Fixing whatever issues are
 happening in the source file should fix this as well.
                             "#
                         .to_string()],
+                        template_list: vec![
+                            "issues/page-issue/default.neoj".to_string(),
+                            "built-in/issues/page-issue/default.neoj".to_string(),
+                        ],
                     });
                 }
                 Err(e) => {

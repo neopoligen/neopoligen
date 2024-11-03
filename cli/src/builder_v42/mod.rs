@@ -130,22 +130,30 @@ impl BuilderV42<'_> {
                                 ()
                             }
                             Err(e) => {
-                                let err = NeoErrorV42::PageError {
+                                let err = NeoErrorV42::PageIssue {
                                     id: page.id.clone(),
                                     href: page.href.clone(),
                                     rel_path: page.source_path.clone(),
                                     parts: get_minijinja_error_text(&e),
+                                    template_list: vec![
+                                        "issues/page-issue/default.neoj".to_string(),
+                                        "built-in/issues/page-issue/default.neoj".to_string(),
+                                    ],
                                 };
                                 page.issues.push(err);
                             }
                         }
                     }
                     Err(e) => {
-                        let err = NeoErrorV42::PageError {
+                        let err = NeoErrorV42::PageIssue {
                             id: page.id.clone(),
                             href: page.href.clone(),
                             rel_path: page.source_path.clone(),
                             parts: get_minijinja_error_text(&e),
+                            template_list: vec![
+                                "issues/page-issue/default.neoj".to_string(),
+                                "built-in/issues/page-issue/default.neoj".to_string(),
+                            ],
                         };
                         page.issues.push(err);
                         ()

@@ -6,13 +6,7 @@ can fix it. Here's what we know to get started</div>
 <ul class="built-in-flow">
 [!- for issue in page.issues -!]
 <li class="built-in-flow">
-[!- for part in issue.parts-!]
-<div class="built-in-page-issue-note built-in">[@ part @]</div>
-[!- endfor -!]
-<div>source_file: [! if issue.rel_path !][@ issue.rel_path @][! else !]unknown at this point[! endif !]</div>
-<div>href: [! if issue.href !][@ issue.href @][! else !]unknown at this point[! endif !]</div>
-<div>id: [@ issue.id @]</div>
-[@ issue @]
+[!- include issue.template_list ignore missing -!]
 </li>
 [!- endfor -!]
 </ul>
