@@ -46,7 +46,7 @@ pub fn list_item_paragraph_block<'a>(
             children: vec![],
             kind: "block-list-item-paragraph".to_string(),
             spans,
-            template_list: vec!["built-in/generic-list-item-paragraph".to_string()],
+            template_list: vec!["built-in/generic-list-item-paragraph.neoj".to_string()],
         }),
     ))
 }
