@@ -1,5 +1,6 @@
 #![allow(unused_imports)]
 use crate::helpers::flatten_spans_in_template_v42;
+use crate::helpers::flatten_spans_v42;
 use crate::helpers::highlight_span_v42;
 use crate::page_v42::PageV42b;
 use crate::site_config::SiteConfigV42;
@@ -41,14 +42,12 @@ impl SiteV42b {
                 }
             }
         }
-
         let site = SiteV42b {
             config: config.clone(),
             pages,
             pages_without_ids,
             generated_at: Some(chrono::prelude::Local::now()),
         };
-
         site
     }
 
@@ -68,17 +67,163 @@ impl SiteV42b {
     }
 
     pub fn get_section_attrs(&self, args: &[Value]) -> Result<Value, Error> {
-        let mut classes: Vec<String> = vec![];
-        if args.len() >= 4 {
-            classes.push(args[3].to_string());
-        };
-        if classes.len() > 0 {
-            Ok(Value::from(format!(r#" class="{}""#, classes.join(" "))))
+        let mut attr_collection: BTreeMap<String, Vec<String>> = BTreeMap::new();
+
+        // let mut classes: Vec<String> = vec![];
+        if args.len() >= 3 {
+            let attrs = args[2].get_item(&Value::from("attrs")).unwrap();
+            for key in attrs.try_iter()? {
+                if key.to_string() != "class".to_string() {
+                    let spans = attrs
+                        .get_item(&key)?
+                        .get_item(&Value::from("spans"))
+                        .unwrap();
+                    // dbg!(&spans);
+                    let flattened = flatten_spans_in_template_v42(&[spans]).unwrap().to_string();
+                    let escaped_value = encode_quoted_attribute(&flattened);
+                    //dbg!(escaped_value);
+                    attr_collection.insert(key.to_string(), vec![escaped_value.to_string()]);
+                }
+
+                //let spans = attrs.get_item(&key)?.get_item(&Value::from("spans"));
+                //let values = spans
+                //    .iter()
+                //    .filter_map(|v| {
+                //        if key.to_string() != "class".to_string() {
+                //            dbg!(key.to_string());
+                //            //let internal_spans = &v.get_item(&Value::from("spans")).unwrap();
+                //            //dbg!(internal_spans);
+                //            dbg!(&spans);
+                //            // let thing = encode_quoted_attribute(
+                //            //     &flatten_spans_in_template_v42(&[v
+                //            //         .get_item(&Value::from("spans"))
+                //            //         .unwrap()])
+                //            //     .expect("unwrapping")
+                //            //     .as_str()
+                //            //     .unwrap()
+                //            //     .to_string(),
+                //            // )
+                //            // .to_string();
+                //            //dbg!(&thing);
+                //            //Some(thing)
+                //        } else {
+                //            None
+                //        }
+                //    })
+                //    .collect::<Vec<String>>();
+                //if values.len() > 0 {
+                //    attr_collection.push(format!(r#"{}="{}""#, key.to_string(), values.join(" ")));
+                //}
+
+                //
+            }
+
+            // if args.len() >= 4 {
+            //     classes.push(args[3].to_string());
+            // };
+            // if classes.len() > 0 {
+            //     Ok(Value::from(format!(r#" class="{}""#, classes.join(" "))))
+            // } else {
+            //     // TODO: Pull the rest of the attrs and flags here
+            //     Ok(Value::from(""))
+            // }
+
+            // if attr_collection.len() > 0 {
+            //     Ok(Value::from(format!(r#" {}"#, attr_collection.join(" "))))
+            // } else {
+            //     Ok(Value::from(""))
+            // }
+
+            let attr_items = attr_collection
+                .iter()
+                .map(|(k, v)| format!(r#"{}="{}""#, k.to_string(), v.join(" ")))
+                .collect::<Vec<String>>();
+
+            if attr_items.len() > 0 {
+                Ok(Value::from(format!(r#" {}"#, attr_items.join(" "))))
+            } else {
+                Ok(Value::from(""))
+            }
+
+            // dbg!(&attr_items);
+            // dbg!(&attr_collection);
+            // Ok(Value::from(r#" class="TODO""#))
+
+            //
         } else {
-            // TODO: Pull the rest of the attrs and flags here
+            // TODO: Turn this into an error and hoist it.
             Ok(Value::from(""))
         }
     }
+
+    // TODO: Test this, it was copied over direction from the prior version, but hopefully still
+    // works out of the box
+    // TODO: Add tests to this and error handling
+    // TODO: escape for html
+    // TODO: Set up config of specific attrs/flags to hoist
+    //       and only add those to the output
+    pub fn get_span_attrs(&self, args: &[Value]) -> Result<Value, Error> {
+        //let mut classes: Vec<String> = vec![];
+        let mut attr_string: Vec<String> = vec![];
+        if args.len() > 0 {
+            let attrs = args[0].get_item(&Value::from("attrs")).unwrap();
+            for key in attrs.try_iter()? {
+                let spans = attrs.get_item(&key)?;
+                let values = spans
+                    .try_iter()?
+                    .filter_map(|v| {
+                        if key.to_string() != "class".to_string() {
+                            Some(
+                                encode_quoted_attribute(
+                                    &v.get_item(&Value::from("text")).unwrap().to_string(),
+                                )
+                                .to_string(),
+                            )
+                        } else {
+                            None
+                        }
+                    })
+                    .collect::<Vec<String>>();
+                if values.len() > 0 {
+                    attr_string.push(format!(r#"{}="{}""#, key.to_string(), values.join(" ")));
+                }
+            }
+            let mut classes: Vec<String> = vec![];
+            for key in attrs.try_iter()? {
+                let spans = attrs.get_item(&key)?;
+                classes = spans
+                    .try_iter()?
+                    .filter_map(|v| {
+                        if key.to_string() == "class".to_string() {
+                            Some(
+                                encode_quoted_attribute(
+                                    &v.get_item(&Value::from("text")).unwrap().to_string(),
+                                )
+                                .to_string(),
+                            )
+                        } else {
+                            None
+                        }
+                    })
+                    .collect::<Vec<String>>();
+            }
+            if args.len() == 2 {
+                classes.push(args[1].to_string());
+            }
+            if classes.len() > 0 {
+                attr_string.push(format!(r#"class="{}""#, classes.join(" ")));
+            }
+            let flags = args[0].get_item(&Value::from("flags")).unwrap();
+            for flag in flags.try_iter()? {
+                attr_string.push(format!(r#"{}"#, flag));
+            }
+            Ok(Value::from(format!(" {}", attr_string.join(" "))))
+        } else {
+            Ok(Value::from(""))
+        }
+    }
+
+    //
 }
 
 impl Object for SiteV42b {

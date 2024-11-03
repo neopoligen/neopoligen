@@ -2,8 +2,9 @@
 
 This is a thing
 
-
 -- json5-simple-table/
+-- class: red
+-- id: pingx
 
 {
   "headers": [

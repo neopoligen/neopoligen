@@ -52,7 +52,6 @@ impl SiteV42 {
                     attr_string.push(format!(r#"{}="{}""#, key.to_string(), values.join(" ")));
                 }
             }
-
             let mut classes: Vec<String> = vec![];
             for key in attrs.try_iter()? {
                 let spans = attrs.get_item(&key)?;
