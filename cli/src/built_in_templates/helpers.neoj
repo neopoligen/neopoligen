@@ -2,7 +2,12 @@
 <ul>
 [!- for section in sections -!]
 <li>
-[@ section.kind @] [[! if section.spans !][@ output_spans(site, page, section.spans) @][! endif !]]
+[@ section.kind @] 
+[! if section.spans !]
+  [[@ output_spans(site, page, section.spans) @]]
+[! else !]
+- [@ section.type @]
+[! endif !]
 [@ debug_section_tree(site, page, section.children) @]
 </li>
 [! if section.end_section !] 

@@ -4,7 +4,8 @@ pub fn make_template_list(r#type: &str, kind: &str, template: &str) -> Vec<Strin
     let templates = vec![
         format!("sections/{}/{}.neoj", kind, template),
         format!("sections/{}/default.neoj", kind),
-        format!("built-in/generic-{}.neoj", r#type),
+        format!("built-in/sections/{}/default.neoj", kind),
+        format!("built-in/sections/generic-{}/default.neoj", r#type),
     ];
     templates.into_iter().unique().collect()
 }

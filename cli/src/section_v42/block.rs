@@ -46,7 +46,10 @@ pub fn list_item_paragraph_block<'a>(
             children: vec![],
             kind: "block-list-item-paragraph".to_string(),
             spans,
-            template_list: vec!["built-in/generic-list-item-paragraph.neoj".to_string()],
+            template_list: vec![
+                "sections/generic-list-item-paragraph/default.neoj".to_string(),
+                "built-in/sections/generic-list-item-paragraph/default.neoj".to_string(),
+            ],
         }),
     ))
 }
@@ -71,8 +74,8 @@ pub fn paragraph_block_section_v42<'a>(
             kind: "block-paragraph".to_string(),
             spans,
             template_list: vec![
-                "blocks/paragraph/default.neoj".to_string(),
-                "built-in/blocks/paragraph.neoj".to_string(),
+                "sections/generic-block-paragraph/default.neoj".to_string(),
+                "built-in/sections/generic-block-paragraph/default.neoj".to_string(),
             ],
         }),
     ))

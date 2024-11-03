@@ -120,7 +120,7 @@ impl BuilderV42<'_> {
         let site_clone = Value::from_object(self.site_v42b.clone().unwrap());
         for (_, page) in &mut self.pages_v42 {
             if let Some(href) = &page.href {
-                match self.env.get_template("built-in/pages-default-post.neoj") {
+                match self.env.get_template("built-in/pages/post/default.neoj") {
                     Ok(template) => {
                         match template.render(
                             context!(page => Value::from_object(page.clone()), site => site_clone),

@@ -17,6 +17,8 @@ use serde::Deserialize;
 use serde::Serialize;
 use std::collections::BTreeMap;
 
+use self::helpers::make_template_list::make_template_list;
+
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct EndSectionV42 {
     pub attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42>,
@@ -89,11 +91,7 @@ pub fn end_section_basic_v42<'a>(
         children,
         kind: format!("{}-end", kind.to_string()),
         flags,
-        template_list: vec![
-            format!("sections/{}-end/default.neoj", kind),
-            "sections/generic-end/default.neoj".to_string(),
-            "built-in/generic-end.neoj".to_string(),
-        ],
+        template_list: make_template_list("end", format!("{}-end", kind).as_str(), "default"),
     });
     Ok((source, section))
 }

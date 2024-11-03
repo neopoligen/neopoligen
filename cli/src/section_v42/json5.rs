@@ -56,6 +56,8 @@ pub fn json5_section_full_v42<'a>(
         // to match the other "built-in-" style namespaced stuff
         tag("pagedata"),
         tag("json5-test"),
+        tag("json5-simple-table"),
+        tag("json5-advanced-table"),
         tag("dev"),
         tag("neopoligen-spec-test"),
     ))
@@ -107,6 +109,8 @@ pub fn json5_section_start_v42<'a>(
         alt((
             tag("pagedata"),
             tag("json5-test"),
+            tag("json5-simple-table"),
+            tag("json5-advanced-table"),
             tag("dev"),
             tag("neopoligen-spec-test"),
         )),
@@ -156,15 +160,16 @@ pub fn json5_section_start_v42<'a>(
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use crate::{
-        bound::Bound,
-        span_v42::{plaintext::PlainTextSpan, SpanV42},
-    };
-    use include_dir::{include_dir, Dir};
-    use pretty_assertions::assert_eq;
 
-    const SAMPLE_DIR: Dir = include_dir!("src/section_v42/samples/json5");
+    // use super::*;
+    // use crate::{
+    //     bound::Bound,
+    //     span_v42::{plaintext::PlainTextSpan, SpanV42},
+    // };
+    // use include_dir::{include_dir, Dir};
+    // use pretty_assertions::assert_eq;
+
+    //const SAMPLE_DIR: Dir = include_dir!("src/section_v42/samples/json5");
 
     // #[test]
     // fn pagedata_with_extra_data() {
