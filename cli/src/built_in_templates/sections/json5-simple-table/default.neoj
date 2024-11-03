@@ -2,6 +2,12 @@
 
 <section
   [@- site.get_section_attrs(site, page, section, "json5-simple-table-section built-in flow") -@]>
+
+[!- if section.error -!]
+<pre>Problem in json5-advanced-table
+
+[@ section.error @]</pre>
+[!- else -!]
 <table>
   [!- if section.data.header_rows -!]
     <thead>
@@ -37,6 +43,7 @@
     </tfoot>
   [!- endif -!]
 </table>
+[!- endif -!]
 </section>
 
 [@- neo.output_end_section(site, page, section) -@]
