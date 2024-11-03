@@ -4,22 +4,34 @@ Home Page
 
 -- json5-advanced-table/
 
-asdf
-
 {
   header_rows: [
     {
-      attrs: {},
-      flags: [],
       cells: [
-        {
-          attrs: {},
-          flags: []
-          data: header1
-        }
+        { text: "golf" },
+        { text: "hotel" },
+        { text: "india" },
       ]
     }
   ],
+  body_rows: [
+    {
+      cells: [
+        { text: "juliet" },
+        { text: "kilo" },
+        { text: "lima" },
+      ]
+    }
+  ],
+  footer_rows: [
+    {
+      cells: [
+        { text: "mike" },
+        { text: "november" },
+        { text: "oscar" },
+      ]
+    }
+  ]
 }
 
 -- /json5-advanced-table
