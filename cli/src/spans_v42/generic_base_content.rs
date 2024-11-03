@@ -6,6 +6,7 @@ use crate::span_v42::shorthand_emphasis::*;
 use crate::span_v42::shorthand_footnote::*;
 use crate::span_v42::shorthand_html::*;
 use crate::span_v42::shorthand_image::*;
+use crate::span_v42::shorthand_link::*;
 use crate::span_v42::shorthand_mark::*;
 use crate::span_v42::shorthand_strikethrough::*;
 use crate::span_v42::shorthand_strong::*;
@@ -27,6 +28,7 @@ pub fn generic_base_content<'a>(source: &'a str) -> IResult<&'a str, SpanV42, Er
             footnote_shorthand_span,
             html_shorthand_span,
             image_shorthand_span,
+            link_shorthand_span,
             mark_shorthand_span,
             named_span,
             strikethrough_shorthand_span,
