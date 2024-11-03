@@ -17,11 +17,17 @@ body {
 </style>
 [@ neo.output_css(site, page) @]
 </head>
-<body>
+<body class="built-in-flow">
+<header>
+<div>Head's up: This is the built-in fallback page for posts. 
+If you're seeing it, it means something happened to the main
+template. Some things here might not look right as a result.</div>
+</header>
+
 <main class="flow">
 [@ neo.output_sections(site, page, page.sections) @]
-<div>[@ site.generated_at("Generated on %a. %B %-d at %-I:%M:%S%p") @]</div>
 </main>
+
 <footer>
 <div>
   [@- neo.debug_issues(site, page) -@]
@@ -38,6 +44,7 @@ body {
     <div><pre>[@ page.sections|tojson(true) @]</pre></div>
   </details>
 </div>
+<div>[@ site.generated_at("Generated on %a. %B %-d at %-I:%M:%S%p") @]</div>
 </footer>
 [@- neo.output_scripts(site, page) -@]
 </body>

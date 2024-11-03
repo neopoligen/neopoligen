@@ -95,25 +95,13 @@ impl PageV42b {
         if let None = &self.id {
             match get_value_from_raw_pagedata_parsing(&self.source, "id") {
                 Ok(v) => {
-                    dbg!("TODO: Hoist message that ID came from direct parsing and not ast");
                     self.id = Some(v.1.join("").trim().to_string());
-                    let _ = &self.issues.push(NeoErrorV42::PageIssue {
-                        id: self.id.clone(),
-                        href: None,
-                        rel_path: self.source_path.clone(),
-                        parts: vec![r#"Warning: This pages is using a fallback ID because 
-one couldn't be found properly in the source file.
-
-If this page is showing up in an expected location
-that's probably why. Fixing whatever issues are 
-happening in the source file should fix this as well.
-                            "#
-                        .to_string()],
-                        template_list: vec![
-                            "issues/page-issue/default.neoj".to_string(),
-                            "built-in/issues/page-issue/default.neoj".to_string(),
-                        ],
-                    });
+                    let _ = &self
+                        .issues
+                        .push(NeoErrorV42::new_page_issue(&self, vec![
+                            "Warning: This pages is using a fallback ID because one couldn't be found properly in the source file.".to_string(),
+                            "If this page is showing up in an expected location that's probably why. Fixing whatever issues are happening in the source file should fix this as well.".to_string(),
+                        ]));
                 }
                 Err(e) => {
                     dbg!("TODO: Add this error to the page stack");
