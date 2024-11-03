@@ -1,5 +1,7 @@
 [!- import "built-in/helpers.neoj" as neo -!]
 
+<section
+[@- site.get_section_attrs(site, page, section, "json5-simple-table-section built-in") -@]>
 <table>
   [!- if section.data.headers -!]
     <thead>
@@ -31,5 +33,6 @@
     </tfoot>
   [!- endif -!]
 </table>
+</section>
 
 [@- neo.output_end_section(site, page, section) -@]

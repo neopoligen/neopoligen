@@ -66,6 +66,19 @@ impl SiteV42b {
             ))
         }
     }
+
+    pub fn get_section_attrs(&self, args: &[Value]) -> Result<Value, Error> {
+        let mut classes: Vec<String> = vec![];
+        if args.len() >= 4 {
+            classes.push(args[3].to_string());
+        };
+        if classes.len() > 0 {
+            Ok(Value::from(format!(r#" class="{}""#, classes.join(" "))))
+        } else {
+            // TODO: Pull the rest of the attrs and flags here
+            Ok(Value::from(""))
+        }
+    }
 }
 
 impl Object for SiteV42b {
@@ -84,6 +97,7 @@ impl Object for SiteV42b {
     ) -> Result<Value, Error> {
         match name {
             "generated_at" => self.generated_at(args),
+            "get_section_attrs" => self.get_section_attrs(args),
             _ => Ok(Value::from("")),
         }
     }
