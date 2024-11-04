@@ -1,3 +1,4 @@
+use super::helpers::make_template_list::make_template_list;
 use super::SectionParent;
 use crate::helpers::dump_parser_if_debug;
 use crate::section_v42::SectionV42;
@@ -46,10 +47,11 @@ pub fn list_item_paragraph_block<'a>(
             children: vec![],
             kind: "block-list-item-paragraph".to_string(),
             spans,
-            template_list: vec![
-                "sections/generic-list-item-paragraph/default.neoj".to_string(),
-                "built-in/sections/generic-list-item-paragraph/default.neoj".to_string(),
-            ],
+            template_list: make_template_list(
+                "list-item-paragraph",
+                "list-item-paragraph",
+                "default",
+            ),
         }),
     ))
 }

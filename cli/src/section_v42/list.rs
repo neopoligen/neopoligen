@@ -135,7 +135,9 @@ mod test {
         let attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
         let template_list = vec![
             "sections/list/default.neoj".to_string(),
-            "built-in-generic-list".to_string(),
+            "sections/generic-list/default.neoj".to_string(),
+            "built-in/sections/list/default.neoj".to_string(),
+            "built-in/sections/generic-list/default.neoj".to_string(),
         ];
         let left = (
             "-- p\n\npost list\n",
@@ -149,15 +151,16 @@ mod test {
                             children: vec![],
                             kind: "block-list-item-paragraph".to_string(),
                             spans: vec![SpanV42::PlainText(PlainTextSpan {
-                                text: "charlie".to_string(),
+                                text: "alfa".to_string(),
                             })],
-                            template_list: vec!["built-in-generic-list-item-paragraph".to_string()],
+                            template_list: vec![
+                                "sections/generic-list-item-paragraph/default.neoj".to_string(),
+                                "built-in/sections/generic-list-item-paragraph/default.neoj"
+                                    .to_string(),
+                            ],
                         })],
                         kind: "list-item".to_string(),
-                        template_list: vec![
-                            "sections/list-item/default.neoj".to_string(),
-                            "built-in-generic-list-item".to_string(),
-                        ],
+                        template_list: make_template_list("list-item", "list-item", "default"),
                     }),
                     SectionV42::ListItem(ListItemSectionV42 {
                         bound: Bound::Full,
@@ -165,15 +168,16 @@ mod test {
                             children: vec![],
                             kind: "block-list-item-paragraph".to_string(),
                             spans: vec![SpanV42::PlainText(PlainTextSpan {
-                                text: "delta".to_string(),
+                                text: "bravo".to_string(),
                             })],
-                            template_list: vec!["built-in-generic-list-item-paragraph".to_string()],
+                            template_list: vec![
+                                "sections/generic-list-item-paragraph/default.neoj".to_string(),
+                                "built-in/sections/generic-list-item-paragraph/default.neoj"
+                                    .to_string(),
+                            ],
                         })],
                         kind: "list-item".to_string(),
-                        template_list: vec![
-                            "sections/list-item/default.neoj".to_string(),
-                            "built-in-generic-list-item".to_string(),
-                        ],
+                        template_list: make_template_list("list-item", "list-item", "default"),
                     }),
                 ],
                 end_section: None,
@@ -205,10 +209,6 @@ mod test {
                 })],
             },
         );
-        let template_list = vec![
-            "sections/list/default.neoj".to_string(),
-            "built-in-generic-list".to_string(),
-        ];
         let left = (
             "",
             SectionV42::List(ListSectionV42 {
@@ -222,18 +222,19 @@ mod test {
                         spans: vec![SpanV42::PlainText(PlainTextSpan {
                             text: "delta hotel".to_string(),
                         })],
-                        template_list: vec!["built-in-generic-list-item-paragraph".to_string()],
+                        template_list: make_template_list(
+                            "list-item-paragraph",
+                            "list-item-paragraph",
+                            "default",
+                        ),
                     })],
                     kind: "list-item".to_string(),
-                    template_list: vec![
-                        "sections/list-item/default.neoj".to_string(),
-                        "built-in-generic-list-item".to_string(),
-                    ],
+                    template_list: make_template_list("list-item", "list-item", "default"),
                 })],
                 end_section: None,
                 flags: vec![],
                 kind: "list".to_string(),
-                template_list,
+                template_list: make_template_list("list", "list", "default"),
             }),
         );
         let right =
@@ -251,10 +252,6 @@ mod test {
             .unwrap()
             .to_string();
         let attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
-        let template_list = vec![
-            "sections/list/default.neoj".to_string(),
-            "built-in-generic-list".to_string(),
-        ];
         let left = (
             "",
             SectionV42::List(ListSectionV42 {
@@ -269,13 +266,14 @@ mod test {
                             spans: vec![SpanV42::PlainText(PlainTextSpan {
                                 text: "charlie".to_string(),
                             })],
-                            template_list: vec!["built-in-generic-list-item-paragraph".to_string()],
+                            template_list: make_template_list(
+                                "list-item-paragraph",
+                                "list-item-paragraph",
+                                "default",
+                            ),
                         })],
                         kind: "list-item".to_string(),
-                        template_list: vec![
-                            "sections/list-item/default.neoj".to_string(),
-                            "built-in-generic-list-item".to_string(),
-                        ],
+                        template_list: make_template_list("list-item", "list-item", "default"),
                     }),
                     SectionV42::ListItem(ListItemSectionV42 {
                         bound: Bound::Full,
@@ -285,13 +283,14 @@ mod test {
                             spans: vec![SpanV42::PlainText(PlainTextSpan {
                                 text: "delta".to_string(),
                             })],
-                            template_list: vec!["built-in-generic-list-item-paragraph".to_string()],
+                            template_list: make_template_list(
+                                "list-item-paragraph",
+                                "list-item-paragraph",
+                                "default",
+                            ),
                         })],
                         kind: "list-item".to_string(),
-                        template_list: vec![
-                            "sections/list-item/default.neoj".to_string(),
-                            "built-in-generic-list-item".to_string(),
-                        ],
+                        template_list: make_template_list("list-item", "list-item", "default"),
                     }),
                 ],
                 end_section: Some(Box::new(SectionV42::End(EndSectionV42 {
@@ -300,14 +299,11 @@ mod test {
                     children: vec![],
                     flags: vec![],
                     kind: "list-end".to_string(),
-                    template_list: vec![
-                        "sections/list-end/default.neoj".to_string(),
-                        "sections/generic-end/default.neoj".to_string(),
-                    ],
+                    template_list: make_template_list("end", "list-end", "default"),
                 }))),
                 flags: vec![],
                 kind: "list".to_string(),
-                template_list,
+                template_list: make_template_list("list", "list", "default"),
             }),
         );
         let right =

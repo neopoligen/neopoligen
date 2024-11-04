@@ -129,6 +129,8 @@ mod test {
         let template_list = vec![
             "sections/script/default.neoj".to_string(),
             "sections/generic-script/default.neoj".to_string(),
+            "built-in/sections/script/default.neoj".to_string(),
+            "built-in/sections/generic-script/default.neoj".to_string(),
         ];
         let left = (
             "",
