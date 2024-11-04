@@ -160,6 +160,8 @@ mod test {
         let template_list = vec![
             "sections/script/default.neoj".to_string(),
             "sections/generic-script/default.neoj".to_string(),
+            "built-in/sections/script/default.neoj".to_string(),
+            "built-in/sections/generic-script/default.neoj".to_string(),
         ];
         let left = (
             "",
@@ -176,12 +178,17 @@ mod test {
                         spans: vec![SpanV42::PlainText(PlainTextSpan {
                             text: "Post Script".to_string(),
                         })],
-                        template_list: vec!["sections/block-paragraph/default.neoj".to_string()],
+                        template_list: vec![
+                            "sections/generic-block-paragraph/default.neoj".to_string(),
+                            "built-in/sections/generic-block-paragraph/default.neoj".to_string(),
+                        ],
                     })],
                     kind: "script-end".to_string(),
                     template_list: vec![
                         "sections/script-end/default.neoj".to_string(),
                         "sections/generic-end/default.neoj".to_string(),
+                        "built-in/sections/script-end/default.neoj".to_string(),
+                        "built-in/sections/generic-end/default.neoj".to_string(),
                     ],
                 }))),
                 flags: vec![],
