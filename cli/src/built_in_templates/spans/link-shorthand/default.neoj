@@ -1,6 +1,5 @@
 [@- '' -@]
 
-[@ span @]
-[TODO: Link Shorthand]
+<a href="[@ span.url @]">[@ span.text @]</a>
 
 [@- '' -@]
