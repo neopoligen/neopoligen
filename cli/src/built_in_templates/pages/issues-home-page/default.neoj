@@ -30,46 +30,35 @@ pre {
 </head>
 <body>
         <header>
-            <a href="/">Home</a></header>
+            <a href="/">Home</a>
+        </header>
         <main>
             <h1>Something unexpected happened</h1>
             <p>There were some problems making the site. Not a big deal. 
                 That happens sometimes and we can fix it. Here's
             what we know to get started:</p>
 
-            <h2>TODO</h2>
-            <ul>
-                <li>Output errors from pages with IDs</li>
-                <li>Out paths for files that don't have IDs</li>
-            </ul>
-
-        <h2>Issues On Pages With Ids</h2>
+        <h2>Issues On Pages</h2>
             <ul>
         [! for id in site.get_page_ids(site, page) !]
             [! set check_page = site.get_page_with_id(site, page, id) !]
             [! if check_page.issues !]
                 <li class="built-in built-in-flow">
-                    <details><summary>[@ check_page.source_display_path -@]</summary>
-                    <ul>
+                    <details class="built-in built-in-flow"><summary>[@ check_page.source_display_path -@]</summary>
+                    <ul class="built-in built-in-flow">
                     [@- neo.debug_page_issues(site, check_page) -@]
                     </ul>
                     </details>
                 </li>
             [! endif !]
         [! endfor !]
-            </ul>
 
-
-        <h2>Issues On Pages Without Ids</h2>
-            <ul>
         [! for display_path in site.get_keys_for_pages_without_ids(site, page) !]
-                [@ display_path @]
             [! set check_page = site.get_page_with_display_path(site, page, display_path) !]
-                [@ check_page @]
             [! if check_page.issues !]
                 <li class="built-in built-in-flow">
-                    <details><summary>[@ check_page.source_display_path -@]</summary>
-                    <ul>
+                    <details class="built-in built-in-flow"><summary>[@ check_page.source_display_path -@]</summary>
+                    <ul class="built-in built-in-flow">
                     [@- neo.debug_page_issues(site, check_page) -@]
                     </ul>
                     </details>
@@ -78,12 +67,6 @@ pre {
         [! endfor !]
             </ul>
 
-<h2>Pages</h2>
-            <ul>
-            [! for page_error in page_errors !]
-                <li>[! include "built-in/errors-page-error.neoj" !]</li>
-            [! endfor !]
-            </ul>
 [! for template_load_error in template_load_errors !]
 [! if loop.first !]
 <h3>Problems Loading Templates</h3>

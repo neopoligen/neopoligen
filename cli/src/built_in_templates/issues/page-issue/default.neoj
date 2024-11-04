@@ -2,5 +2,4 @@
 [!- for note in issue.notes -!]
 <div class="built-in-page-issue-note built-in">[@ note @]</div>
 [!- endfor -!]
-<div>id: [@ issue.id @]</div>
 </li>

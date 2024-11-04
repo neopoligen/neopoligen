@@ -153,9 +153,6 @@ impl PageV42b {
                             "This could mean that there is no '-- id: ...' in the '-- pagedata' section of the file.".to_string(),
                             "It could also mean that no '-- pagedata' section was found in the file.".to_string()
                         ]));
-                dbg!("TODO: Hoist Error for not being able to get id from ast");
-                dbg!(e);
-                ()
             }
         }
     }
