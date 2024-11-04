@@ -182,7 +182,7 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn solo_link_shorthand_basic_test() {
+    fn link_shorthand_basic_test() {
         let source = ">>text to link|https://www.example.com/>>";
         let left = SpanV42::LinkShorthand(LinkShorthandV42 {
             attrs: BTreeMap::new(),
@@ -195,7 +195,7 @@ mod test {
     }
 
     #[test]
-    fn solo_link_shorthand_basic_test_with_attrs_and_flags() {
+    fn link_shorthand_basic_test_with_attrs_and_flags() {
         let source = ">>text to link|https://www.example.com/|class: alfa|bravo>>";
         let mut attrs: BTreeMap<String, Vec<SpanV42>> = BTreeMap::new();
         attrs.insert(
@@ -215,7 +215,7 @@ mod test {
     }
 
     #[test]
-    fn solo_link_shorthand_url_only() {
+    fn link_shorthand_url_only() {
         let source = ">>https://www.example.com/>>";
         let left = SpanV42::LinkShorthand(LinkShorthandV42 {
             attrs: BTreeMap::new(),

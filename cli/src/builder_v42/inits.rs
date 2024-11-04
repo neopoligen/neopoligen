@@ -100,14 +100,14 @@ impl BuilderV42<'_> {
 
         Ok(BuilderV42 {
             env,
-            errors: vec![],
+            // errors: vec![],
             errors_v42: vec![],
-            generated_pages: BTreeMap::new(),
+            //generated_pages: BTreeMap::new(),
             page_errors: vec![],
-            pages: vec![],
+            // pages: vec![],
             pages_v42: BTreeMap::new(),
             site_config: site_config.clone(),
-            site: None,
+            // site: None,
             site_v42b: None,
             templates: BTreeMap::new(),
             template_load_errors,

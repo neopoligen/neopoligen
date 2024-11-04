@@ -9,10 +9,8 @@ use crate::helpers::*;
 use crate::neo_error::NeoErrorKind;
 use crate::neo_error_v42::NeoErrorV42;
 use crate::page_v42::PageV42b;
-use crate::site_v42::b::SiteV42b;
-use crate::{
-    neo_error::NeoError, page_v42::PageV42, site_config::SiteConfigV42, site_v42::SiteV42,
-};
+use crate::site_v42::SiteV42b;
+use crate::{neo_error::NeoError, site_config::SiteConfigV42};
 use anyhow::Result;
 use chrono::Local;
 use chrono::{DateTime, TimeZone};
@@ -33,16 +31,16 @@ pub struct BuilderV42<'a> {
     // TODO: Deprecate, errors and errors_v42 in favor of
     // page_errors and template_load_errors (and anything
     // else that needs to be created)
-    pub errors: Vec<NeoError>,
+    // pub errors: Vec<NeoError>,
     pub errors_v42: Vec<NeoErrorV42>,
-    pub generated_pages: BTreeMap<PathBuf, PageV42>,
+    // pub generated_pages: BTreeMap<PathBuf, PageV42>,
     pub page_errors: Vec<NeoErrorV42>,
     // TODO: Deprecate pages in favor of pages_v42
-    pub pages: Vec<PageV42>,
+    //pub pages: Vec<PageV42>,
     pub pages_v42: BTreeMap<PathBuf, PageV42b>,
     pub site_config: SiteConfigV42,
     // TODO: Deprecate in favor of StiV42b
-    pub site: Option<SiteV42>,
+    // pub site: Option<SiteV42>,
     pub site_v42b: Option<SiteV42b>,
     pub templates: BTreeMap<String, String>,
     pub template_load_errors: Vec<NeoErrorV42>,
@@ -167,7 +165,7 @@ impl BuilderV42<'_> {
     }
 
     #[instrument(skip(self))]
-    pub fn initialize_site(&mut self) -> Result<()> {
+    pub fn initialize_site_and_built_in_templates(&mut self) -> Result<()> {
         let site = SiteV42b::new_with_pages(&self.site_config, &self.pages_v42);
         self.site_v42b = Some(site);
         Ok(())
@@ -426,7 +424,7 @@ impl BuilderV42<'_> {
         // self.template_load_errors = template_load_errors;
         match self
             .env
-            .get_template("built-in/pages-problems-index-page.neoj")
+            .get_template("built-in/pages/issues-home-page/default.neoj")
         {
             Ok(template) => {
                 match template.render(context!(
@@ -498,7 +496,10 @@ impl BuilderV42<'_> {
                     };
                     let absolute_output_path =
                         &self.site_config.output_dest_dir().join(rel_output_path);
-                    match self.env.get_template("built-in/pages-issue-page.neoj") {
+                    match self
+                        .env
+                        .get_template("built-in/pages/page-with-issues/default.neoj")
+                    {
                         Ok(template) => match template.render(context!(
                             site => site_clone,
                             page => Value::from_object(page.clone()),
@@ -718,27 +719,27 @@ impl BuilderV42<'_> {
         Ok(())
     }
 
-    #[instrument(skip(self, site_config))]
-    pub fn prep_site(&mut self, site_config: &SiteConfigV42) -> Result<()> {
-        event!(Level::INFO, "Prepping Site");
-        let mut site = SiteV42 {
-            config: site_config.clone(),
-            pages: BTreeMap::new(),
-            // generated_at: Some(chrono::prelude::Local::now()),
-        };
-        self.pages.iter().for_each(|p| match &p.id {
-            Some(id) => {
-                site.pages.insert(id.to_string(), p.clone());
-                ()
-            }
-            None => {
-                // event!(Level::ERROR, "prep_site Error: {}", e);
-                //self.errors.push(e)
-            }
-        });
-        self.site = Some(site);
-        Ok(())
-    }
+    //#[instrument(skip(self, site_config))]
+    //pub fn prep_site(&mut self, site_config: &SiteConfigV42) -> Result<()> {
+    //    event!(Level::INFO, "Prepping Site");
+    //    let mut site = SiteV42 {
+    //        config: site_config.clone(),
+    //        pages: BTreeMap::new(),
+    //        // generated_at: Some(chrono::prelude::Local::now()),
+    //    };
+    //    self.pages.iter().for_each(|p| match &p.id {
+    //        Some(id) => {
+    //            site.pages.insert(id.to_string(), p.clone());
+    //            ()
+    //        }
+    //        None => {
+    //            // event!(Level::ERROR, "prep_site Error: {}", e);
+    //            //self.errors.push(e)
+    //        }
+    //    });
+    //    self.site = Some(site);
+    //    Ok(())
+    //}
 
     #[instrument(skip(self))]
     pub fn set_languages_from_site_config(&mut self) -> Result<()> {
