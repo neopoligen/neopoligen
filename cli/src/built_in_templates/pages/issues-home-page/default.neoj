@@ -34,34 +34,16 @@ pre {
         </header>
         <main class="built-in-flow flow">
             <h1>Something unexpected happened</h1>
-            <p>This page shows up when you try to go to a 
-                page that doesn't exist. That's not a big
-                deal. It can happen a lot when you're working
-                on your site and we can use the info below
-                to figure out how to fix it.</p>
-
-            <p>There are two main causes for a page
-                not showing up here:
-            </p>
-            <ol class="built-in-flow flow">
-                <li>Something tried to link to a page that really 
-                    doesn't exist. If that's the case, the next
-                    step is to figure out where the link came from. If
-                    you just clicked a link to get to this page then
-                    that link is a good place to start. 
-                </li>
-                <li>A page was supposed to be here, but something
-                    happened that prevented it from being output
-                    properly. If that's the case, check out the
-                    &quot;Issues On Pages&quot; section below
-                    to find the source page that should have 
-                    output here to figure out what issues
-                    are happening with it. 
-                </li>
-            </ol>
+            [!- if site.get_issue_count(site, page) != 0 -!]
+            <p>There are some issues that are preventing this 
+                page from showing up. That's not a big deal. 
+                It can happen a lot when working on a site. 
+                Check the 'Issues On Pages' list below to 
+                get more info about what's going on to
+                start getting things working properly.</p>
 
         <h2>Issues On Pages</h2>
-            <ul>
+            <ul class="built-in-flow flow">
         [! for id in site.get_page_ids(site, page) !]
             [! set check_page = site.get_page_with_id(site, page, id) !]
             [! if check_page.issues !]
@@ -74,7 +56,6 @@ pre {
                 </li>
             [! endif !]
         [! endfor !]
-
         [! for display_path in site.get_keys_for_pages_without_ids(site, page) !]
             [! set check_page = site.get_page_with_display_path(site, page, display_path) !]
             [! if check_page.issues !]
@@ -88,6 +69,19 @@ pre {
             [! endif !]
         [! endfor !]
             </ul>
+
+            [!- else -!]
+            <p>This page doesn't appear to exist.
+                There aren't any known issues with the overall site
+                or pages right now. That probably means
+                that whatever tried to link to this page
+                isn't set up properly. Check any links
+                you clicked to get here to see why they
+                might have pointed here instead of a page
+                that exists.</p>
+            [!- endif -!]
+
+
 
 [! for template_load_error in template_load_errors !]
 [! if loop.first !]

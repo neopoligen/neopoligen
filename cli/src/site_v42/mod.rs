@@ -222,6 +222,16 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
         }
     }
 
+    pub fn get_issue_count(&self, _args: &[Value]) -> usize {
+        let mut count = 0;
+        for (_, page) in &self.pages {
+            if page.issues.len() > 0 {
+                count += 1;
+            }
+        }
+        count
+    }
+
     //// TODO: Test this, it was copied over direction from the prior version, but hopefully still
     //// works out of the box
     //// TODO: Add tests to this and error handling
@@ -307,11 +317,12 @@ impl Object for SiteV42b {
     ) -> Result<Value, Error> {
         match name {
             "generated_at" => self.generated_at(args),
-            "get_section_attrs" => self.get_section_attrs(args),
+            "get_keys_for_pages_without_ids" => self.get_keys_for_pages_without_ids(args),
+            "get_issue_count" => Ok(Value::from(self.get_issue_count(args))),
             "get_page_ids" => self.get_page_ids(args),
             "get_page_with_id" => self.get_page_with_id(args),
             "get_page_with_display_path" => self.get_page_with_display_path(args),
-            "get_keys_for_pages_without_ids" => self.get_keys_for_pages_without_ids(args),
+            "get_section_attrs" => self.get_section_attrs(args),
             _ => Ok(Value::from(format!(
                 "[Warning: tried to use 'site.{}(site, page, ...)' which does not exist]",
                 name
