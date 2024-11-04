@@ -52,14 +52,7 @@ impl PageV42b {
                 self.sections = Some(Value::from_serialize(&ast));
                 self.ast = Some(ast);
             }
-            // line: details.line,
-            // column: details.column,
-            // source: content.to_string(),
-            // remainder: location.to_string(),
-            // message: kind.to_string(),
             Err(e) => {
-                dbg!("HERERER");
-                dbg!(&self.source_display_path);
                 match e {
                     GenericErrorTree::Base { location, kind } => {
                         let details = Location::recreate_context(self.source.as_str(), location);
@@ -76,15 +69,13 @@ impl PageV42b {
                             ],
                         });
                     }
-                    _ => self.issues.push(NeoErrorV42::ParsingIssue {
-                        column: 0,
-                        completed: "WORK_IN_PROGRESS".to_string(),
-                        line: 0,
-                        message: "WORK_IN_PROGRESS".to_string(),
-                        remainder: "WIP".to_string(),
-                        source: "WORK_IN_PROGRESS".to_string(),
-                        template_list: vec![],
-                    }),
+                    _ => {
+                        // NOTE: The rest of the errors are for the
+                        // tree. I'm not using them right now because it's a lot
+                        // of info that mostly is overwhelming. The top level
+                        // BASE error above has been what I've need every
+                        // time so far. So, sticking with just it.
+                    }
                 };
             }
         }
