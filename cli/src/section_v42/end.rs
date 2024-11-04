@@ -114,7 +114,6 @@ mod test {
         let source = get_include_str_file(SAMPLES, "001-basic-unknown.neo");
         let attrs = BTreeMap::new();
         let bound = Bound::End;
-        let block_templates = vec!["sections/block-paragraph/default.neoj".to_string()];
         let children = vec![
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
@@ -122,7 +121,7 @@ mod test {
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "Tango".to_string(),
                 })],
-                template_list: block_templates.clone(),
+                template_list: make_template_list("block-paragraph", "block-paragraph", "default"),
             }),
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
@@ -130,15 +129,11 @@ mod test {
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "Foxtrot".to_string(),
                 })],
-                template_list: block_templates.clone(),
+                template_list: make_template_list("block-paragraph", "block-paragraph", "default"),
             }),
         ];
         let kind = "unknown-test-section".to_string();
         let flags = vec![];
-        let template_list = vec![
-            "sections/unknown-test-section-end/default.neoj".to_string(),
-            "sections/generic-end/default.neoj".to_string(),
-        ];
         let left = (
             "",
             SectionV42::End(EndSectionV42 {
@@ -147,7 +142,7 @@ mod test {
                 children,
                 kind: format!("{}-end", kind.clone()),
                 flags,
-                template_list,
+                template_list: make_template_list("end", "unknown-test-section-end", "default"),
             }),
         );
         let right = end_section_basic_v42(

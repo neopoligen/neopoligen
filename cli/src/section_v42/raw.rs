@@ -131,12 +131,6 @@ mod test {
             .unwrap()
             .to_string();
         let attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
-        let template_list = vec![
-            "sections/pre/default.neoj".to_string(),
-            "sections/generic-raw/default.neoj".to_string(),
-            "built-in/sections/pre/default.neoj".to_string(),
-            "built-in/sections/generic-raw/default.neoj".to_string(),
-        ];
         let left = (
             "",
             SectionV42::Raw(RawSectionV42 {
@@ -145,7 +139,7 @@ mod test {
                 end_section: None,
                 flags: vec![],
                 kind: "pre".to_string(),
-                template_list,
+                template_list: make_template_list("raw", "pre", "default"),
                 text: "This is pre text".to_string(),
             }),
         );
@@ -164,12 +158,6 @@ mod test {
             .unwrap()
             .to_string();
         let attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
-        let template_list = vec![
-            "sections/pre/default.neoj".to_string(),
-            "sections/generic-raw/default.neoj".to_string(),
-            "built-in/sections/pre/default.neoj".to_string(),
-            "built-in/sections/generic-raw/default.neoj".to_string(),
-        ];
         let left = (
             "",
             SectionV42::Raw(RawSectionV42 {
@@ -185,22 +173,18 @@ mod test {
                         spans: vec![SpanV42::PlainText(PlainTextSpan {
                             text: "After end pre".to_string(),
                         })],
-                        template_list: vec![
-                            "sections/generic-block-paragraph/default.neoj".to_string(),
-                            "built-in/sections/generic-block-paragraph/default.neoj".to_string(),
-                        ],
+                        template_list: make_template_list(
+                            "block-paragraph",
+                            "block-paragraph",
+                            "default",
+                        ),
                     })],
                     kind: "pre-end".to_string(),
-                    template_list: vec![
-                        "sections/pre-end/default.neoj".to_string(),
-                        "sections/generic-end/default.neoj".to_string(),
-                        "built-in/sections/pre-end/default.neoj".to_string(),
-                        "built-in/sections/generic-end/default.neoj".to_string(),
-                    ],
+                    template_list: make_template_list("end", "pre-end", "default"),
                 }))),
                 flags: vec![],
                 kind: "pre".to_string(),
-                template_list,
+                template_list: make_template_list("raw", "pre", "default"),
                 text: "Inside start pre".to_string(),
             }),
         );

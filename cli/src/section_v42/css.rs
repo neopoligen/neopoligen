@@ -126,10 +126,6 @@ mod test {
             .unwrap()
             .to_string();
         let attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
-        let template_list = vec![
-            "sections/css/default.neoj".to_string(),
-            "sections/generic-css/default.neoj".to_string(),
-        ];
         let left = (
             "",
             SectionV42::Css(CssSectionV42 {
@@ -138,7 +134,7 @@ mod test {
                 end_section: None,
                 flags: vec![],
                 kind: "css".to_string(),
-                template_list,
+                template_list: make_template_list("css", "css", "default"),
                 text: "body { color: red; }".to_string(),
             }),
         );
@@ -157,10 +153,6 @@ mod test {
             .unwrap()
             .to_string();
         let attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
-        let template_list = vec![
-            "sections/css/default.neoj".to_string(),
-            "sections/generic-css/default.neoj".to_string(),
-        ];
         let left = (
             "",
             SectionV42::Css(CssSectionV42 {
@@ -176,17 +168,18 @@ mod test {
                         spans: vec![SpanV42::PlainText(PlainTextSpan {
                             text: "After CSS".to_string(),
                         })],
-                        template_list: vec!["sections/block-paragraph/default.neoj".to_string()],
+                        template_list: make_template_list(
+                            "block-paragraph",
+                            "block-paragraph",
+                            "default",
+                        ),
                     })],
                     kind: "css-end".to_string(),
-                    template_list: vec![
-                        "sections/css-end/default.neoj".to_string(),
-                        "sections/generic-end/default.neoj".to_string(),
-                    ],
+                    template_list: make_template_list("end", "css-end", "default"),
                 }))),
                 flags: vec![],
                 kind: "css".to_string(),
-                template_list,
+                template_list: make_template_list("css", "css", "default"),
                 text: "body { color: blue; }".to_string(),
             }),
         );

@@ -99,7 +99,6 @@ mod test {
             .unwrap()
             .trim()
             .to_string();
-        let template_list = vec!["sections/block-paragraph/default.neoj".to_string()];
         let left = (
             "",
             SectionV42::Block(BlockSectionV42 {
@@ -108,7 +107,7 @@ mod test {
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "this is some text".to_string(),
                 })],
-                template_list,
+                template_list: make_template_list("block-paragraph", "block-paragraph", "default"),
             }),
         );
         let right =
@@ -126,7 +125,6 @@ mod test {
             .unwrap()
             .trim()
             .to_string();
-        let template_list = vec!["sections/block-paragraph/default.neoj".to_string()];
         let left = (
             "",
             SectionV42::Block(BlockSectionV42 {
@@ -143,7 +141,7 @@ mod test {
                         text: "lines".to_string(),
                     }),
                 ],
-                template_list,
+                template_list: make_template_list("block-paragraph", "block-paragraph", "default"),
             }),
         );
         let right =
@@ -161,7 +159,6 @@ mod test {
             .unwrap()
             .trim()
             .to_string();
-        let template_list = vec!["sections/block-list-item-paragraph/default.neoj".to_string()];
         let left = (
             "",
             SectionV42::Block(BlockSectionV42 {
@@ -170,7 +167,11 @@ mod test {
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "alfa bravo".to_string(),
                 })],
-                template_list,
+                template_list: make_template_list(
+                    "list-item-paragraph",
+                    "list-item-paragraph",
+                    "default",
+                ),
             }),
         );
         let right =

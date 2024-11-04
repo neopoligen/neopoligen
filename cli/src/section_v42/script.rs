@@ -126,12 +126,6 @@ mod test {
             .unwrap()
             .to_string();
         let attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
-        let template_list = vec![
-            "sections/script/default.neoj".to_string(),
-            "sections/generic-script/default.neoj".to_string(),
-            "built-in/sections/script/default.neoj".to_string(),
-            "built-in/sections/generic-script/default.neoj".to_string(),
-        ];
         let left = (
             "",
             SectionV42::Script(ScriptSectionV42 {
@@ -140,7 +134,7 @@ mod test {
                 end_section: None,
                 flags: vec![],
                 kind: "script".to_string(),
-                template_list,
+                template_list: make_template_list("script", "script", "default"),
                 text: "console.log('alfa')".to_string(),
             }),
         );
@@ -159,12 +153,6 @@ mod test {
             .unwrap()
             .to_string();
         let attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
-        let template_list = vec![
-            "sections/script/default.neoj".to_string(),
-            "sections/generic-script/default.neoj".to_string(),
-            "built-in/sections/script/default.neoj".to_string(),
-            "built-in/sections/generic-script/default.neoj".to_string(),
-        ];
         let left = (
             "",
             SectionV42::Script(ScriptSectionV42 {
@@ -180,22 +168,18 @@ mod test {
                         spans: vec![SpanV42::PlainText(PlainTextSpan {
                             text: "Post Script".to_string(),
                         })],
-                        template_list: vec![
-                            "sections/generic-block-paragraph/default.neoj".to_string(),
-                            "built-in/sections/generic-block-paragraph/default.neoj".to_string(),
-                        ],
+                        template_list: make_template_list(
+                            "block-paragraph",
+                            "block-paragraph",
+                            "default",
+                        ),
                     })],
                     kind: "script-end".to_string(),
-                    template_list: vec![
-                        "sections/script-end/default.neoj".to_string(),
-                        "sections/generic-end/default.neoj".to_string(),
-                        "built-in/sections/script-end/default.neoj".to_string(),
-                        "built-in/sections/generic-end/default.neoj".to_string(),
-                    ],
+                    template_list: make_template_list("end", "script-end", "default"),
                 }))),
                 flags: vec![],
                 kind: "script".to_string(),
-                template_list,
+                template_list: make_template_list("script", "script", "default"),
                 text: "console.log('bravo')".to_string(),
             }),
         );
