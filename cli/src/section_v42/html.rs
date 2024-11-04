@@ -126,10 +126,6 @@ mod test {
             .unwrap()
             .to_string();
         let attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
-        let template_list = vec![
-            "sections/html/default.neoj".to_string(),
-            "sections/generic-html/default.neoj".to_string(),
-        ];
         let left = (
             "",
             SectionV42::Html(HtmlSectionV42 {
@@ -138,7 +134,7 @@ mod test {
                 end_section: None,
                 flags: vec![],
                 kind: "html".to_string(),
-                template_list,
+                template_list: make_template_list("html", "html", "default"),
                 text: "<div>ping</div>".to_string(),
             }),
         );
@@ -157,10 +153,6 @@ mod test {
             .unwrap()
             .to_string();
         let attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
-        let template_list = vec![
-            "sections/html/default.neoj".to_string(),
-            "sections/generic-html/default.neoj".to_string(),
-        ];
         let left = (
             "",
             SectionV42::Html(HtmlSectionV42 {
@@ -176,17 +168,18 @@ mod test {
                         spans: vec![SpanV42::PlainText(PlainTextSpan {
                             text: "Post Html".to_string(),
                         })],
-                        template_list: vec!["sections/block-paragraph/default.neoj".to_string()],
+                        template_list: make_template_list(
+                            "block-paragraph",
+                            "block-paragraph",
+                            "default",
+                        ),
                     })],
                     kind: "html-end".to_string(),
-                    template_list: vec![
-                        "sections/html-end/default.neoj".to_string(),
-                        "sections/generic-end/default.neoj".to_string(),
-                    ],
+                    template_list: make_template_list("end", "html-end", "default"),
                 }))),
                 flags: vec![],
                 kind: "html".to_string(),
-                template_list,
+                template_list: make_template_list("html", "html", "default"),
                 text: "<div>pong</div>".to_string(),
             }),
         );
