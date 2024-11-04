@@ -34,7 +34,7 @@ mod test {
 
     #[rstest]
     #[case(" alfa", "alfa")]
-    fn solo_valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
+    fn valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
         let results = space1_not_at_line_ending_or_eof(source);
         match results {
             Ok(result) => {
@@ -57,7 +57,7 @@ mod test {
     #[rstest]
     #[case(" ")]
     #[case(" \n")]
-    fn solo_invalid_cases(#[case] source: &str) {
+    fn invalid_cases(#[case] source: &str) {
         let results = space1_not_at_line_ending_or_eof(source);
         match results {
             Ok(_) => {

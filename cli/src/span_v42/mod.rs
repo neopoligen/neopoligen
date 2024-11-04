@@ -6,7 +6,6 @@ pub mod not_pipe_or_greater_than_or_less_than_or_escape;
 pub mod plaintext;
 pub mod plaintext_base_v42;
 pub mod plaintext_with_spaces_v42;
-pub mod plaintext_without_spaces;
 pub mod shorthand_code;
 pub mod shorthand_emphasis;
 pub mod shorthand_footnote;

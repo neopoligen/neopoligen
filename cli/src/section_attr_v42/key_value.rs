@@ -1,5 +1,4 @@
 use self::plaintext_with_spaces_v42::plaintext_with_spaces_v42;
-use self::plaintext_without_spaces::plaintext_without_spaces;
 use self::shorthand_code::code_shorthand_span;
 use self::shorthand_emphasis::emphasis_shorthand_span;
 use self::shorthand_footnote::footnote_shorthand_span;
@@ -10,21 +9,17 @@ use self::shorthand_mark::mark_shorthand_span;
 use self::shorthand_strikethrough::strikethrough_shorthand_span;
 use self::shorthand_strong::strong_shorthand_span;
 use self::shorthand_underline::underline_shorthand_span;
-use self::single_characters::single_colon;
 use self::space0_line_ending_or_eof::space0_line_ending_or_eof;
 use crate::helpers::dump_parser_if_debug;
 use crate::helpers::flatten_spans_v42;
 use crate::section_attr_v42::SectionAttrV42;
 use crate::span_v42::any_characters::*;
 use crate::span_v42::*;
-use crate::spans_v42::generic_base_content::generic_base_content;
 use crate::spans_v42::generic_span_attr_content::generic_span_attr_content;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
-use nom::character::complete::line_ending;
-use nom::character::complete::space0;
+use nom::character::complete::alphanumeric1;
 use nom::character::complete::space1;
-use nom::combinator::eof;
 use nom::multi::many1;
 use nom::sequence::terminated;
 use nom::IResult;
@@ -49,13 +44,9 @@ pub fn section_key_value_attr_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, _) = space1.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
-    let (source, key_parts) = many1(alt((
-        plaintext_without_spaces,
-        any_hyphens,
-        any_underscores,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, key_parts) = many1(alt((alphanumeric1, tag("-"), tag("_"))))
+        .context("")
+        .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, _) = tag(":").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
@@ -80,10 +71,12 @@ pub fn section_key_value_attr_v42<'a>(
     .context("")
     .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 7);
-    let key = flatten_spans_v42(&key_parts);
     Ok((
         source,
-        SectionAttrV42::KeyValueV42(SectionKeyValueAttrV42 { key, value }),
+        SectionAttrV42::KeyValueV42(SectionKeyValueAttrV42 {
+            key: key_parts.join("").to_string(),
+            value,
+        }),
     ))
 }
 
@@ -135,7 +128,7 @@ mod test {
     #[case("--    leading_key_spaces_are_okay: alfa", "")]
     #[case("-- alfa:   leading_value_spaces_are_okay", "")]
     #[case("-- alfa: ``can contain code, etc...``", "")]
-    fn solo_valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
+    fn valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
         let results = section_key_value_attr_v42(source);
         match results {
             Ok(result) => {
@@ -176,7 +169,7 @@ mod test {
     #[case("-- alfa: bravo charlie ")]
     #[case("-- alfa: bravo charlie\n")]
     #[case("-- alfa: bravo charlie \n")]
-    fn solo_section_key_value_attr_make_sure_ending_space_is_trimmed(#[case] source: &str) {
+    fn section_key_value_attr_make_sure_ending_space_is_trimmed(#[case] source: &str) {
         let left = (
             "",
             SectionAttrV42::KeyValueV42(SectionKeyValueAttrV42 {

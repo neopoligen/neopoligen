@@ -327,26 +327,6 @@ pub fn any_backticks(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     ))
 }
 
-pub fn any_spaces(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, result) = is_a(" ").context("").parse(source)?;
-    Ok((
-        source,
-        SpanV42::PlainText(PlainTextSpan {
-            text: encode_quoted_attribute(&result).to_string(),
-        }),
-    ))
-}
-
-pub fn any_tabs(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, result) = is_a("\t").context("").parse(source)?;
-    Ok((
-        source,
-        SpanV42::PlainText(PlainTextSpan {
-            text: encode_quoted_attribute(&result).to_string(),
-        }),
-    ))
-}
-
 
 #[cfg(test)]
 mod test {
@@ -1183,58 +1163,6 @@ mod test {
             }),
         );
         let right = any_backticks(source).unwrap();
-        assert_eq!(left, right);
-    }
-
-    #[test]
-    fn single_character_space() {
-        let source = "  alfa";
-        let left = (
-            " alfa",
-            SpanV42::PlainText(PlainTextSpan {
-                text: encode_quoted_attribute(" ").to_string(),
-            }),
-        );
-        let right = any_spaces(source).unwrap();
-        assert_eq!(left, right);
-    }
-
-    #[test]
-    fn allow_multiple_space() {
-        let source = "   bravo";
-        let left = (
-            " bravo",
-            SpanV42::PlainText(PlainTextSpan {
-                text: encode_quoted_attribute("  ").to_string(),
-            }),
-        );
-        let right = any_spaces(source).unwrap();
-        assert_eq!(left, right);
-    }
-
-    #[test]
-    fn single_character_tag() {
-        let source = "\t alfa";
-        let left = (
-            " alfa",
-            SpanV42::PlainText(PlainTextSpan {
-                text: encode_quoted_attribute("\t").to_string(),
-            }),
-        );
-        let right = any_tabs(source).unwrap();
-        assert_eq!(left, right);
-    }
-
-    #[test]
-    fn allow_multiple_tag() {
-        let source = "\t\t bravo";
-        let left = (
-            " bravo",
-            SpanV42::PlainText(PlainTextSpan {
-                text: encode_quoted_attribute("\t\t").to_string(),
-            }),
-        );
-        let right = any_tabs(source).unwrap();
         assert_eq!(left, right);
     }
 

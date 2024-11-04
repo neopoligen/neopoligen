@@ -334,26 +334,6 @@ pub fn escaped_backtick(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>>
     ))
 }
 
-pub fn escaped_space(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, _) = tag("\\ ").context("").parse(source)?;
-    Ok((
-        source,
-        SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: encode_quoted_attribute(" ").to_string(),
-        }),
-    ))
-}
-
-pub fn escaped_tag(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, _) = tag("\\\t").context("").parse(source)?;
-    Ok((
-        source,
-        SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-            text: encode_quoted_attribute("\t").to_string(),
-        }),
-    ))
-}
-
 
 #[cfg(test)]
 mod test {
@@ -773,32 +753,6 @@ mod test {
             }),
         );
         let right = escaped_backtick(source).unwrap();
-        assert_eq!(left, right);
-    }
-
-    #[test]
-    fn check_escaped_space() {
-        let source = "\\  alfa";
-        let left = (
-            " alfa",
-            SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: encode_quoted_attribute(" ").to_string(),
-            }),
-        );
-        let right = escaped_space(source).unwrap();
-        assert_eq!(left, right);
-    }
-
-    #[test]
-    fn check_escaped_tag() {
-        let source = "\\\t alfa";
-        let left = (
-            " alfa",
-            SpanV42::EscapedCharacter(EscapedCharacterSpanV42 {
-                text: encode_quoted_attribute("\t").to_string(),
-            }),
-        );
-        let right = escaped_tag(source).unwrap();
         assert_eq!(left, right);
     }
 

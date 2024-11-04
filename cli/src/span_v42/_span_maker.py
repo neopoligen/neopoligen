@@ -39,8 +39,6 @@ characters = [
         ("/", "forward_slash", "forward_slashes"), 
         ("?", "question_mark", "question_marks"), 
         ("`", "backtick", "backticks"), 
-        (" ", "space", "spaces"),
-        ("\\t", "tag", "tabs"),
         ]
 
 ###################################################################

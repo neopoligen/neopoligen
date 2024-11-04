@@ -58,7 +58,7 @@ mod test {
     #[case("alfa<bravo", "")]
     #[case("alfa>bravo", "")]
     #[case("alfa_bravo", "")]
-    fn solo_valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
+    fn valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
         let results = plaintext_base_v42(source);
         match results {
             Ok(result) => {
