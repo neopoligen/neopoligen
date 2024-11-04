@@ -42,13 +42,18 @@ pre {
         <h2>Issues On Pages With Ids</h2>
             [@ site @]
             <ul>
-        [! for page in site.get_page_ids(site, page) !]
-                [@ page @]
-        [! if page.issues !]
+        [! for id in site.get_page_ids(site, page) !]
+                [@ id @]
+                [! set pg = site.get_page_with_id(site, page, id) !]
+                [@ pg @]
+                [#
+        [! if site.get_page_with_id(.issues !]
                 <li>
-        [@ page.issues @]
+                    ---
+        [@ pg.issues @]
                 </li>
         [! endif !]
+                #]
         [! endfor !]
             </ul>
 

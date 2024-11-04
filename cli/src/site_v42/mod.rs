@@ -73,8 +73,17 @@ impl SiteV42b {
     }
 
     pub fn get_page_with_id(&self, args: &[Value]) -> Result<Value, Error> {
-        if args.len() > 3 {
-            Ok(Value::from("TODO: Get page by id"))
+        if args.len() >= 3 {
+            match &self.pages.get(&args[2].to_string()) {
+                Some(p) => {
+                    let p2 = *p;
+                    Ok(Value::from_object(p2.clone()))
+                }
+                None => Err(Error::new(
+                    ErrorKind::InvalidOperation,
+                    r#"Could not get page with id. TODO: Add requested id here"#.to_string(),
+                )),
+            }
         } else {
             Err(Error::new(
                 ErrorKind::InvalidOperation,
@@ -268,7 +277,10 @@ impl Object for SiteV42b {
             "generated_at" => self.generated_at(args),
             "get_section_attrs" => self.get_section_attrs(args),
             "get_page_ids" => self.get_page_ids(args),
-            _ => Ok(Value::from("")),
+            "get_page_with_id" => self.get_page_with_id(args),
+            _ => Ok(Value::from(
+                "[Warning: tried to call non existaing method on site]",
+            )),
         }
     }
 }
