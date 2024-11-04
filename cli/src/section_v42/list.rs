@@ -133,12 +133,6 @@ mod test {
             .unwrap()
             .to_string();
         let attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
-        let template_list = vec![
-            "sections/list/default.neoj".to_string(),
-            "sections/generic-list/default.neoj".to_string(),
-            "built-in/sections/list/default.neoj".to_string(),
-            "built-in/sections/generic-list/default.neoj".to_string(),
-        ];
         let left = (
             "-- p\n\npost list\n",
             SectionV42::List(ListSectionV42 {
@@ -153,11 +147,11 @@ mod test {
                             spans: vec![SpanV42::PlainText(PlainTextSpan {
                                 text: "alfa".to_string(),
                             })],
-                            template_list: vec![
-                                "sections/generic-list-item-paragraph/default.neoj".to_string(),
-                                "built-in/sections/generic-list-item-paragraph/default.neoj"
-                                    .to_string(),
-                            ],
+                            template_list: make_template_list(
+                                "list-item-paragraph",
+                                "list-item-paragraph",
+                                "default",
+                            ),
                         })],
                         kind: "list-item".to_string(),
                         template_list: make_template_list("list-item", "list-item", "default"),
@@ -170,11 +164,11 @@ mod test {
                             spans: vec![SpanV42::PlainText(PlainTextSpan {
                                 text: "bravo".to_string(),
                             })],
-                            template_list: vec![
-                                "sections/generic-list-item-paragraph/default.neoj".to_string(),
-                                "built-in/sections/generic-list-item-paragraph/default.neoj"
-                                    .to_string(),
-                            ],
+                            template_list: make_template_list(
+                                "list-item-paragraph",
+                                "list-item-paragraph",
+                                "default",
+                            ),
                         })],
                         kind: "list-item".to_string(),
                         template_list: make_template_list("list-item", "list-item", "default"),
@@ -183,7 +177,7 @@ mod test {
                 end_section: None,
                 flags: vec![],
                 kind: "list".to_string(),
-                template_list,
+                template_list: make_template_list("list", "list", "default"),
             }),
         );
         let right =
