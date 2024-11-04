@@ -32,11 +32,33 @@ pre {
         <header>
             <a href="/">Home</a>
         </header>
-        <main>
+        <main class="built-in-flow flow">
             <h1>Something unexpected happened</h1>
-            <p>There were some problems making the site. Not a big deal. 
-                That happens sometimes and we can fix it. Here's
-            what we know to get started:</p>
+            <p>This page shows up when you try to go to a 
+                page that doesn't exist. That's not a big
+                deal. It can happen a lot when you're working
+                on your site and we can use the info below
+                to figure out how to fix it.</p>
+
+            <p>There are two main causes for a page
+                not showing up here:
+            </p>
+            <ol class="built-in-flow flow">
+                <li>Something tried to link to a page that really 
+                    doesn't exist. If that's the case, the next
+                    step is to figure out where the link came from. If
+                    you just clicked a link to get to this page then
+                    that link is a good place to start. 
+                </li>
+                <li>A page was supposed to be here, but something
+                    happened that prevented it from being output
+                    properly. If that's the case, check out the
+                    &quot;Issues On Pages&quot; section below
+                    to find the source page that should have 
+                    output here to figure out what issues
+                    are happening with it. 
+                </li>
+            </ol>
 
         <h2>Issues On Pages</h2>
             <ul>

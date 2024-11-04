@@ -33,6 +33,8 @@ pre {
             That happens sometimes and we can fix it. Here's
         what we know to get started:</p>
         <ul class="flow">
+            [@- neo.debug_page_issues(site, page) -@]
+                [#
         [! for issue in page.issues !]
             <li class="flow">
                     [! include [
@@ -41,6 +43,7 @@ pre {
                     ]!]
             </li>
         [! endfor !]
+                #]
         </ul>
 </body>
 </html>

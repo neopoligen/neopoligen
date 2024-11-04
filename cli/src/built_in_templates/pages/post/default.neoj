@@ -30,7 +30,13 @@ template. Some things here might not look right as a result.</div>
 
 <footer>
 <div>
-  [@- neo.debug_issues(site, page) -@]
+  [! if page.issues !]
+    <h3>Issues</h3>
+    <ul class="built-in-flow flow>
+      [@- neo.debug_page_issues(site, page) -@]
+    </ul>
+  [! endif !]
+
   <details>
     <summary>Source</summary>
     <div><pre>[@ page.source @]</pre></div>

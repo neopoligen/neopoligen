@@ -1,4 +1,4 @@
-<li class="built-in-parsing-issue built-in built-in-flow">
+<li class="built-in-parsing-issue built-in built-in-flow flow">
 <div><strong>Parsing Issue:</strong> [@ page.parsing_issue.message @]</div>
 <div><pre>[@ page.parsing_issue.completed @]<mark>[@ page.parsing_issue.remainder @]</mark></pre></div>
 </li>
