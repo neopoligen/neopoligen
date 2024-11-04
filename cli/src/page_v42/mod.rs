@@ -5,24 +5,16 @@ pub mod mocks;
 
 use crate::ast_v42::parse_ast_v42;
 use crate::helpers::flatten_spans_v42;
-// use crate::helpers::get_minijinja_error_text;
-// use crate::neo_error::NeoError;
 use crate::neo_error_v42::NeoErrorV42;
 use crate::page_v42::helpers::*;
 use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
-// use crate::span_v42::plaintext::PlainTextSpan;
 use crate::span_v42::SpanV42;
 use minijinja::value::Object;
-// use minijinja::Error;
-// use minijinja::ErrorKind;
 use minijinja::Value;
-// use nom_supreme::error::ErrorTree;
 use nom_supreme::error::GenericErrorTree;
-//use nom_supreme::final_parser::final_parser;
 use nom_supreme::final_parser::Location;
 use nom_supreme::final_parser::RecreateContext;
-// use nom_supreme::parser_ext::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
 use std::path::PathBuf;
@@ -213,7 +205,7 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn id_basic_check() {
+    fn solo_id_basic_check() {
         let page = PageV42b::test_from_sample_file("001-pagedata-only.neo");
         let left = "001-pagedata-only.neo".to_string();
         let right = page.id.unwrap();
