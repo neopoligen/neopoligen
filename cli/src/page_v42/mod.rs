@@ -1,3 +1,4 @@
+#![allow(unused)]
 pub mod helpers;
 pub mod inits;
 pub mod mocks;
@@ -196,17 +197,17 @@ impl Object for PageV42b {
 #[cfg(test)]
 mod test {
 
-    // use super::*;
-    // use crate::span_v42::{plaintext::PlainTextSpan, SpanV42};
-    // use pretty_assertions::assert_eq;
+    use super::*;
+    use crate::span_v42::{plaintext::PlainTextSpan, SpanV42};
+    use pretty_assertions::assert_eq;
 
-    // #[test]
-    // fn id_basic_check() {
-    //     let page = PageV42::test_from_sample_file("001-pagedata-only.neo");
-    //     let left = "001-pagedata-only.neo".to_string();
-    //     let right = page.id.unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn id_basic_check() {
+        let page = PageV42b::test_from_sample_file("001-pagedata-only.neo");
+        let left = "001-pagedata-only.neo".to_string();
+        let right = page.id.unwrap();
+        assert_eq!(left, right);
+    }
 
     // #[test]
     // fn id_from_invalid_page() {
