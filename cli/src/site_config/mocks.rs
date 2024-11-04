@@ -25,7 +25,7 @@ impl SiteConfigV42 {
             default_language: "en".to_string(),
             base_url: "testsite.localhost:1999".to_string(),
             output_directory_name: "site".to_string(),
-            project_root: Some(PathBuf::from("/test/mocks")),
+            project_root: Some(PathBuf::from("/site_config_mock/project_root")),
             sections,
             attr_flag_lists: Some(ConfigLists {
                 basic: BTreeMap::new(),

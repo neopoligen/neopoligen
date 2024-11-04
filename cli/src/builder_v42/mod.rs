@@ -131,8 +131,8 @@ impl BuilderV42<'_> {
                                 let err = NeoErrorV42::PageIssue {
                                     id: page.id.clone(),
                                     href: page.href.clone(),
-                                    rel_path: page.source_path.clone(),
                                     notes: get_minijinja_error_text(&e),
+                                    source_relative_path: page.source_relative_path.clone(),
                                     template_list: vec![
                                         "issues/page-issue/default.neoj".to_string(),
                                         "built-in/issues/page-issue/default.neoj".to_string(),
@@ -146,8 +146,8 @@ impl BuilderV42<'_> {
                         let err = NeoErrorV42::PageIssue {
                             id: page.id.clone(),
                             href: page.href.clone(),
-                            rel_path: page.source_path.clone(),
                             notes: get_minijinja_error_text(&e),
+                            source_relative_path: page.source_relative_path.clone(),
                             template_list: vec![
                                 "issues/page-issue/default.neoj".to_string(),
                                 "built-in/issues/page-issue/default.neoj".to_string(),
@@ -256,7 +256,11 @@ impl BuilderV42<'_> {
                     {
                         match fs::read_to_string(path.clone()) {
                             Ok(source) => {
-                                let page = PageV42b::new_from_str_v42(&path, &source);
+                                let page = PageV42b::new_from_str_v42(
+                                    &path,
+                                    &source,
+                                    &self.site_config.project_dir(),
+                                );
                                 self.pages_v42.insert(path.clone(), page);
                                 ()
                             }

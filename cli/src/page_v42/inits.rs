@@ -31,7 +31,11 @@ use tracing::{event, instrument, Level};
 
 impl PageV42b {
     #[instrument(skip(source))]
-    pub fn new_from_str_v42(source_path: &PathBuf, source: &str) -> PageV42b {
+    pub fn new_from_str_v42(
+        source_path: &PathBuf,
+        source: &str,
+        project_dir: &PathBuf,
+    ) -> PageV42b {
         event!(Level::DEBUG, "{}", "Making page");
         PageV42b {
             ast: None,
@@ -43,7 +47,8 @@ impl PageV42b {
             output: None,
             sections: None,
             source: source.to_string(),
-            source_path: source_path.clone(),
+            source_absolute_path: source_path.clone(),
+            source_relative_path: source_path.clone(),
         }
     }
 }

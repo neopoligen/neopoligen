@@ -16,7 +16,7 @@ pub enum NeoErrorV42 {
     PageIssue {
         id: Option<String>,
         href: Option<PathBuf>,
-        rel_path: PathBuf,
+        source_relative_path: PathBuf,
         notes: Vec<String>,
         template_list: Vec<String>,
     },
@@ -37,7 +37,7 @@ impl NeoErrorV42 {
         NeoErrorV42::PageIssue {
             id: page.id.clone(),
             href: page.href.clone(),
-            rel_path: page.source_path.clone(),
+            source_relative_path: page.source_relative_path.clone(),
             notes,
             template_list: vec![
                 "issues/page-issue/default.neoj".to_string(),

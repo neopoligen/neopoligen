@@ -25,12 +25,34 @@ pre {
 </style>
 </head>
 <body>
-<header><a href="/">Home</a></header>
-<main class="flow">
+        <header>
+            <a href="/">Home</a></header>
+        <main>
             <h1>Something unexpected happened</h1>
             <p>There were some problems making the site. Not a big deal. 
                 That happens sometimes and we can fix it. Here's
             what we know to get started:</p>
+
+            <h2>TODO</h2>
+            <ul>
+                <li>Output errors from pages with IDs</li>
+                <li>Out paths for files that don't have IDs</li>
+            </ul>
+
+        <h2>Issues On Pages With Ids</h2>
+        [#
+        [! for page in site.get_page_ids(site, page) !]
+        [! if page.issues !]
+        [@ page.issues @]
+        [! endif !]
+        [! endfor !]
+
+        [@ site.get_keys_for_pages_without_ids(site, page) @]
+        #]
+
+
+
+
 <h2>Pages</h2>
             <ul>
             [! for page_error in page_errors !]
@@ -61,6 +83,7 @@ pre {
 <h3>Tree</h3>
 <div class="bordered"><pre>[! autoescape true !][@ ast|tojson(true) @][! endautoescape !]</pre></div>
             #]
+
 </main>
         <footer>
         <div>[@ site.generated_at("Generated on %a. %B %-d at %-I:%M:%S%p") @]</div>

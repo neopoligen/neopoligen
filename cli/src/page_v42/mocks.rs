@@ -11,9 +11,10 @@ const SAMPLES: Dir = include_dir!("src/page_v42/samples");
 impl PageV42b {
     pub fn test_from_sample_file(file: &str) -> PageV42b {
         let source = get_include_str_file(SAMPLES, file);
-        let source_path = PathBuf::from(format!("mocks/{}", file));
         let site_config = SiteConfigV42::mock1_basic();
-        PageV42b::new_from_str_v42(&source_path, &source)
+        let source_path =
+            PathBuf::from(format!("{}/{}", &site_config.project_dir().display(), file));
+        PageV42b::new_from_str_v42(&source_path, &source, &site_config.project_dir())
     }
 
     // // TODO: Load this thru the new_from_str method because

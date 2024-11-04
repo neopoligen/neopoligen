@@ -39,7 +39,8 @@ pub struct PageV42b {
     pub output: Option<String>,
     pub sections: Option<Value>,
     pub source: String,
-    pub source_path: PathBuf,
+    pub source_absolute_path: PathBuf,
+    pub source_relative_path: PathBuf,
 }
 
 impl PageV42b {
@@ -78,6 +79,8 @@ impl PageV42b {
     }
 
     pub fn generate_fallback_href(&mut self) {
+        // TODO: Don't create the href if there's no ID
+        // otherwise you won't be able to link to the page properly
         if let None = &self.href {
             match get_value_from_raw_pagedata_parsing(&self.source, "href") {
                 Ok(v) => {

@@ -37,7 +37,7 @@ impl SiteV42b {
                     ()
                 }
                 None => {
-                    pages_without_ids.insert(page.source_path.clone(), page.clone());
+                    pages_without_ids.insert(page.source_absolute_path.clone(), page.clone());
                     ()
                 }
             }
@@ -233,12 +233,11 @@ impl SiteV42b {
 }
 
 impl Object for SiteV42b {
-    // fn get_value(self: &Arc<Self>, key: &Value) -> Option<Value> {
-    //     match key.as_str()? {
-    //         "sections" => self.sections.clone(),
-    //         _ => None,
-    //     }
-    // }
+    fn get_value(self: &Arc<Self>, key: &Value) -> Option<Value> {
+        match key.as_str()? {
+            _ => None,
+        }
+    }
 
     fn call_method(
         self: &Arc<SiteV42b>,
