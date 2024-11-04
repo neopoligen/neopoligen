@@ -1,5 +1,15 @@
 use self::plaintext_with_spaces_v42::plaintext_with_spaces_v42;
 use self::plaintext_without_spaces::plaintext_without_spaces;
+use self::shorthand_code::code_shorthand_span;
+use self::shorthand_emphasis::emphasis_shorthand_span;
+use self::shorthand_footnote::footnote_shorthand_span;
+use self::shorthand_html::html_shorthand_span;
+use self::shorthand_image::image_shorthand_span;
+use self::shorthand_link::link_shorthand_span;
+use self::shorthand_mark::mark_shorthand_span;
+use self::shorthand_strikethrough::strikethrough_shorthand_span;
+use self::shorthand_strong::strong_shorthand_span;
+use self::shorthand_underline::underline_shorthand_span;
 use self::single_characters::single_colon;
 use self::space0_line_ending_or_eof::space0_line_ending_or_eof;
 use crate::helpers::dump_parser_if_debug;
@@ -51,9 +61,24 @@ pub fn section_key_value_attr_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, _) = space1.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 6);
-    let (source, value) = terminated(many1(plaintext_with_spaces_v42), space0_line_ending_or_eof)
-        .context("")
-        .parse(source)?;
+    let (source, value) = terminated(
+        many1(alt((
+            plaintext_with_spaces_v42,
+            code_shorthand_span,
+            emphasis_shorthand_span,
+            footnote_shorthand_span,
+            html_shorthand_span,
+            image_shorthand_span,
+            link_shorthand_span,
+            mark_shorthand_span,
+            strikethrough_shorthand_span,
+            strong_shorthand_span,
+            underline_shorthand_span,
+        ))),
+        space0_line_ending_or_eof,
+    )
+    .context("")
+    .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 7);
     let key = flatten_spans_v42(&key_parts);
     Ok((
@@ -109,6 +134,7 @@ mod test {
     #[case("-- alfa: value_underscores_are_okay", "")]
     #[case("--    leading_key_spaces_are_okay: alfa", "")]
     #[case("-- alfa:   leading_value_spaces_are_okay", "")]
+    #[case("-- alfa: ``can contain code, etc...``", "")]
     fn solo_valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
         let results = section_key_value_attr_v42(source);
         match results {
@@ -146,56 +172,23 @@ mod test {
         }
     }
 
-    // #[rstest]
-    // fn solo_section_key_value_attr_v42_valid_attrs(#[case] source: &str) {
-    //     match section_key_value_attr_v42(source) {
-    //         Ok((remainder, _)) => {
-    //             assert!(
-    //                 remainder == "",
-    //                 "Remainder is not empty. Got: '{}'",
-    //                 &source
-    //             );
-    //             assert!(true)
-    //         }
-    //         Err(e) => {
-    //             assert!(false, "{}", e);
-    //         }
-    //     }
-    // }
-
-    // #[rstest]
-    // #[case("-- alfa: bravo charlie ")]
-    // #[case("-- alfa: bravo charlie\n")]
-    // #[case("-- alfa: bravo charlie \n")]
-    // fn solo_section_key_value_attr_make_sure_ending_space_is_trimmed(#[case] source: &str) {
-    //     let left = (
-    //         "",
-    //         SectionAttrV42::KeyValueV42(SectionKeyValueAttrV42 {
-    //             key: "alfa".to_string(),
-    //             value: vec![SpanV42::PlainText(plaintext::PlainTextSpan {
-    //                 text: "bravo charlie".to_string(),
-    //             })],
-    //         }),
-    //     );
-    //     let right = section_key_value_attr_v42(source).unwrap();
-    //     assert_eq!(left, right);
-    // }
-
-    // #[rstest]
-    // #[case("-- alfa")]
-    // #[case("-- alfa*bravo: charlie")]
-    // #[case("-- https://www.example.com/")]
-    // #[case("-- key-must-connect-to-colon : alfa")]
-    // fn solo_section_key_value_attr_v42_invalid_attrs(#[case] source: &str) {
-    //     match section_key_value_attr_v42(source) {
-    //         Ok((_, _)) => {
-    //             assert!(false, "This should have failed: {}", &source);
-    //         }
-    //         Err(_) => {
-    //             assert!(true);
-    //         }
-    //     }
-    // }
+    #[rstest]
+    #[case("-- alfa: bravo charlie ")]
+    #[case("-- alfa: bravo charlie\n")]
+    #[case("-- alfa: bravo charlie \n")]
+    fn solo_section_key_value_attr_make_sure_ending_space_is_trimmed(#[case] source: &str) {
+        let left = (
+            "",
+            SectionAttrV42::KeyValueV42(SectionKeyValueAttrV42 {
+                key: "alfa".to_string(),
+                value: vec![SpanV42::PlainText(plaintext::PlainTextSpan {
+                    text: "bravo charlie".to_string(),
+                })],
+            }),
+        );
+        let right = section_key_value_attr_v42(source).unwrap();
+        assert_eq!(left, right);
+    }
 
     // #[rstest]
     // #[case("alfa", "bravo")]
