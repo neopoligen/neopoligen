@@ -19,9 +19,11 @@ body {
 </head>
 <body class="built-in-flow">
 <header>
-<div>Head's up: This is the built-in fallback page for posts. 
+<div>Head's up: This is the built-in fallback template for posts. 
 If you're seeing it, it means something happened to the main
-template. Some things here might not look right as a result.</div>
+template which should be at &quot;pages/post/default.neoj&quot;
+in your themes folder. Things on this page probably won't
+look quite right until that template is back in place.</div>
 </header>
 
 <main class="flow">

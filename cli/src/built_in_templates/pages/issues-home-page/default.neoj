@@ -41,6 +41,8 @@ pre {
                 Check the 'Issues On Pages' list below to 
                 get more info about what's going on to
                 start getting things working properly.</p>
+          
+          <h2>Issue Count: [@ site.get_issue_count(site, page) @]</h2>
 
         <h2>Issues On Pages</h2>
             <ul class="built-in-flow flow">
