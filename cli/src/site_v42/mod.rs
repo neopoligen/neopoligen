@@ -72,6 +72,28 @@ impl SiteV42b {
         ))
     }
 
+    pub fn get_page_with_display_path(&self, args: &[Value]) -> Result<Value, Error> {
+        if args.len() >= 3 {
+            match &self.pages_without_ids.get(&PathBuf::from(&args[2].to_string())) {
+                Some(p) => {
+                    let p2 = *p;
+                    Ok(Value::from_object(p2.clone()))
+                }
+                None => Err(Error::new(
+                    ErrorKind::InvalidOperation,
+                    r#"Could not get page with display_path. TODO: Add requested display_path here"#.to_string(),
+                )),
+            }
+        } else {
+            Err(Error::new(
+                ErrorKind::InvalidOperation,
+                r#"Not enough values pased to site.get_page_with_display_path.
+Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
+                    .to_string(),
+            ))
+        }
+    }
+
     pub fn get_page_with_id(&self, args: &[Value]) -> Result<Value, Error> {
         if args.len() >= 3 {
             match &self.pages.get(&args[2].to_string()) {
@@ -92,6 +114,16 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
                     .to_string(),
             ))
         }
+    }
+
+    pub fn get_keys_for_pages_without_ids(&self, _args: &[Value]) -> Result<Value, Error> {
+        Ok(Value::from_serialize(
+            &self
+                .pages_without_ids
+                .keys()
+                .cloned()
+                .collect::<Vec<PathBuf>>(),
+        ))
     }
 
     pub fn get_section_attrs(&self, args: &[Value]) -> Result<Value, Error> {
@@ -278,6 +310,8 @@ impl Object for SiteV42b {
             "get_section_attrs" => self.get_section_attrs(args),
             "get_page_ids" => self.get_page_ids(args),
             "get_page_with_id" => self.get_page_with_id(args),
+            "get_page_with_display_path" => self.get_page_with_display_path(args),
+            "get_keys_for_pages_without_ids" => self.get_keys_for_pages_without_ids(args),
             _ => Ok(Value::from(format!(
                 "[Warning: tried to use 'site.{}(site, page, ...)' which does not exist]",
                 name

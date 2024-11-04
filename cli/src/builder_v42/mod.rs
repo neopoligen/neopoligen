@@ -132,7 +132,7 @@ impl BuilderV42<'_> {
                                     id: page.id.clone(),
                                     href: page.href.clone(),
                                     notes: get_minijinja_error_text(&e),
-                                    source_relative_path: page.source_relative_path.clone(),
+                                    source_display_path: page.source_display_path.clone(),
                                     template_list: vec![
                                         "issues/page-issue/default.neoj".to_string(),
                                         "built-in/issues/page-issue/default.neoj".to_string(),
@@ -147,7 +147,7 @@ impl BuilderV42<'_> {
                             id: page.id.clone(),
                             href: page.href.clone(),
                             notes: get_minijinja_error_text(&e),
-                            source_relative_path: page.source_relative_path.clone(),
+                            source_display_path: page.source_display_path.clone(),
                             template_list: vec![
                                 "issues/page-issue/default.neoj".to_string(),
                                 "built-in/issues/page-issue/default.neoj".to_string(),
@@ -429,7 +429,7 @@ impl BuilderV42<'_> {
         for (source_absolute_path, page) in &self.pages_v42 {
             match &page.id {
                 Some(id) => pages_with_ids.insert(id.to_string(), page.clone()),
-                None => pages_without_ids.insert(source_absolute_path.clone(), page.clone()),
+                None => pages_without_ids.insert(page.source_display_path.clone(), page.clone()),
             };
         }
         self.site_v42b.as_mut().unwrap().pages = pages_with_ids;

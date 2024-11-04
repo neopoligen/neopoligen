@@ -37,6 +37,10 @@ impl PageV42b {
         project_dir: &PathBuf,
     ) -> PageV42b {
         event!(Level::DEBUG, "{}", "Making page");
+        let source_display_path = source_path
+            .strip_prefix(project_dir.parent().unwrap())
+            .unwrap()
+            .to_path_buf();
         PageV42b {
             ast: None,
             parsing_issue: None,
@@ -48,7 +52,7 @@ impl PageV42b {
             sections: None,
             source: source.to_string(),
             source_absolute_path: source_path.clone(),
-            source_relative_path: source_path.clone(),
+            source_display_path,
         }
     }
 }

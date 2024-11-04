@@ -40,7 +40,7 @@ pub struct PageV42b {
     pub sections: Option<Value>,
     pub source: String,
     pub source_absolute_path: PathBuf,
-    pub source_relative_path: PathBuf,
+    pub source_display_path: PathBuf,
 }
 
 impl PageV42b {
@@ -176,8 +176,8 @@ impl Object for PageV42b {
             "issues" => Some(Value::from_serialize(self.issues.clone())),
             "parsing_issue" => Some(Value::from_serialize(self.parsing_issue.clone())),
             "sections" => self.sections.clone(),
-            "source_relative_path" => {
-                Some(Value::from(self.source_relative_path.display().to_string()))
+            "source_display_path" => {
+                Some(Value::from(self.source_display_path.display().to_string()))
             }
             _ => None,
         }

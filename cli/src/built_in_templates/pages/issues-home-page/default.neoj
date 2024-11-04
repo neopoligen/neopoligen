@@ -49,7 +49,7 @@ pre {
             [! set check_page = site.get_page_with_id(site, page, id) !]
             [! if check_page.issues !]
                 <li class="built-in built-in-flow">
-                    <details><summary>[@ check_page.source_relative_path -@]</summary>
+                    <details><summary>[@ check_page.source_display_path -@]</summary>
                     <ul>
                     [@- neo.debug_page_issues(site, check_page) -@]
                     </ul>
@@ -59,10 +59,24 @@ pre {
         [! endfor !]
             </ul>
 
-        [@ site.get_paths_for_pages_without_ids(site, page) @]
 
-
-
+        <h2>Issues On Pages Without Ids</h2>
+            <ul>
+        [! for display_path in site.get_keys_for_pages_without_ids(site, page) !]
+                [@ display_path @]
+            [! set check_page = site.get_page_with_display_path(site, page, display_path) !]
+                [@ check_page @]
+            [! if check_page.issues !]
+                <li class="built-in built-in-flow">
+                    <details><summary>[@ check_page.source_display_path -@]</summary>
+                    <ul>
+                    [@- neo.debug_page_issues(site, check_page) -@]
+                    </ul>
+                    </details>
+                </li>
+            [! endif !]
+        [! endfor !]
+            </ul>
 
 <h2>Pages</h2>
             <ul>
