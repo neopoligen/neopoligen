@@ -31,8 +31,6 @@ use std::sync::Arc;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PageV42b {
     pub ast: Option<Vec<SectionV42>>,
-    // TODO: Deprecate parsing_issue and push it into general issue list
-    // if it's not there already
     pub parsing_issue: Option<NeoErrorV42>,
     pub href: Option<PathBuf>,
     pub id: Option<String>,

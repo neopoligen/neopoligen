@@ -1,8 +1,8 @@
 <li class="built-in-parsing-issue built-in built-in-flow flow">
 <p><strong>Parsing Issue:</strong> The file has a problem that 
-prevented it from being read in properly. The specific code is
-[@ page.parsing_issue.message @] (NEOPOLIGEN_TODO: add notes about what
-the different errors mean)</p>
+prevented it from being read in properly. The specific code is:
+</p>
+<p>[@ page.parsing_issue.message @]</p>
 <p>The place where the problem occurred is highlighted below.
 It's the place to start getting things fixed</p>
 <div><pre>[@ page.parsing_issue.completed @]<mark>[@ page.parsing_issue.remainder @]</mark></pre></div>

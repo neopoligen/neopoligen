@@ -1,25 +1,11 @@
 [!- macro debug_page_issues(site, page) -!]
-[!- if page.parsing_issue -!]
-[! include "built-in/issues/parsing-issue/default.neoj" -!]
-[!- endif -!]
-[!- if page.issues -!]
-[!- for issue in page.issues -!]
-[! include "built-in/issues/page-issue/default.neoj" -!]
-[!- endfor -!]
-[#
-<section class="built-in-page-issues built-in built-in-flow">
-<div>This page has some issues. Not a big deal. That happens and we 
-can fix it. Here's what we know to get started</div>
-<ul class="built-in-flow">
-[!- for issue in page.issues -!]
-<li class="built-in-flow">
-[!- include issue.template_list ignore missing -!]
-</li>
-[!- endfor -!]
-</ul>
-</section>
-#]
-[!- endif -!]
+  [!- if page.parsing_issue -!]
+    [! include "built-in/issues/parsing-issue/default.neoj" -!]
+  [!- elif page.issues -!]
+    [!- for issue in page.issues -!]
+      [!- include "built-in/issues/page-issue/default.neoj" -!]
+    [!- endfor -!]
+  [!- endif -!]
 [!- endmacro -!]
 
 [!- macro debug_section_tree(site, page, sections) -!]
