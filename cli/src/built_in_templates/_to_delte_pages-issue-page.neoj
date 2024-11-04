@@ -28,7 +28,7 @@ pre {
     <header>
             <a href="/">Home</a></header>
 <main class="flow">
-            <h1>Something unexpected happened</h1>
+            <h1>---Something unexpected happened</h1>
             <p>There were some problems making this page. Not a big deal. 
                 That happens sometimes and we can fix it. Here's
             what we know to get started:</p>
