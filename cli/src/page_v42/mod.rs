@@ -31,6 +31,8 @@ use std::sync::Arc;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PageV42b {
     pub ast: Option<Vec<SectionV42>>,
+    // TODO: Deprecate parsing_issue and push it into general issue list
+    // if it's not there already
     pub parsing_issue: Option<NeoErrorV42>,
     pub href: Option<PathBuf>,
     pub id: Option<String>,
@@ -56,6 +58,8 @@ impl PageV42b {
             // remainder: location.to_string(),
             // message: kind.to_string(),
             Err(e) => {
+                dbg!("HERERER");
+                dbg!(&self.source_display_path);
                 match e {
                     GenericErrorTree::Base { location, kind } => {
                         let details = Location::recreate_context(self.source.as_str(), location);
@@ -72,7 +76,15 @@ impl PageV42b {
                             ],
                         });
                     }
-                    _ => (),
+                    _ => self.issues.push(NeoErrorV42::ParsingIssue {
+                        column: 0,
+                        completed: "WORK_IN_PROGRESS".to_string(),
+                        line: 0,
+                        message: "WORK_IN_PROGRESS".to_string(),
+                        remainder: "WIP".to_string(),
+                        source: "WORK_IN_PROGRESS".to_string(),
+                        template_list: vec![],
+                    }),
                 };
             }
         }
@@ -134,7 +146,14 @@ impl PageV42b {
                 self.id = Some(flatten_spans_v42(&spans));
             }
             Err(e) => {
-                dbg!("TODO: Hoist Error");
+                let _ = &self
+                        .issues
+                        .push(NeoErrorV42::new_page_issue(&self, vec![
+                            "Could not get id from parsed filed".to_string(),
+                            "This could mean that there is no '-- id: ...' in the '-- pagedata' section of the file.".to_string(),
+                            "It could also mean that no '-- pagedata' section was found in the file.".to_string()
+                        ]));
+                dbg!("TODO: Hoist Error for not being able to get id from ast");
                 dbg!(e);
                 ()
             }

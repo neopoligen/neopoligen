@@ -2,7 +2,5 @@
 [!- for note in issue.notes -!]
 <div class="built-in-page-issue-note built-in">[@ note @]</div>
 [!- endfor -!]
-<div>source_file: [! if issue.rel_path !][@ issue.rel_path @][! else !]unknown at this point[! endif !]</div>
-<div>href: [! if issue.href !][@ issue.href @][! else !]unknown at this point[! endif !]</div>
 <div>id: [@ issue.id @]</div>
 </li>
