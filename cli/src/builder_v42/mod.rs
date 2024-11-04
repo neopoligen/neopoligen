@@ -423,6 +423,21 @@ impl BuilderV42<'_> {
     }
 
     #[instrument(skip(self))]
+    pub fn move_updated_pages_into_site(&mut self) -> Result<()> {
+        let mut pages_with_ids: BTreeMap<String, PageV42b> = BTreeMap::new();
+        let mut pages_without_ids: BTreeMap<PathBuf, PageV42b> = BTreeMap::new();
+        for (source_absolute_path, page) in &self.pages_v42 {
+            match &page.id {
+                Some(id) => pages_with_ids.insert(id.to_string(), page.clone()),
+                None => pages_without_ids.insert(source_absolute_path.clone(), page.clone()),
+            };
+        }
+        self.site_v42b.as_mut().unwrap().pages = pages_with_ids;
+        self.site_v42b.as_mut().unwrap().pages_without_ids = pages_without_ids;
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn output_issues_index_page(&self) -> Result<()> {
         // let env = &self.get_minijinja_environment();
         // self.template_load_errors = template_load_errors;

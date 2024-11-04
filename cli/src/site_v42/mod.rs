@@ -66,6 +66,25 @@ impl SiteV42b {
         }
     }
 
+    pub fn get_page_ids(&self, _args: &[Value]) -> Result<Value, Error> {
+        Ok(Value::from_serialize(
+            &self.pages.keys().cloned().collect::<Vec<String>>(),
+        ))
+    }
+
+    pub fn get_page_with_id(&self, args: &[Value]) -> Result<Value, Error> {
+        if args.len() > 3 {
+            Ok(Value::from("TODO: Get page by id"))
+        } else {
+            Err(Error::new(
+                ErrorKind::InvalidOperation,
+                r#"Not enough values pased to site.get_page_with_id
+Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
+                    .to_string(),
+            ))
+        }
+    }
+
     pub fn get_section_attrs(&self, args: &[Value]) -> Result<Value, Error> {
         let mut attr_collection: BTreeMap<String, Vec<String>> = BTreeMap::new();
         let mut classes = vec![];
@@ -248,6 +267,7 @@ impl Object for SiteV42b {
         match name {
             "generated_at" => self.generated_at(args),
             "get_section_attrs" => self.get_section_attrs(args),
+            "get_page_ids" => self.get_page_ids(args),
             _ => Ok(Value::from("")),
         }
     }

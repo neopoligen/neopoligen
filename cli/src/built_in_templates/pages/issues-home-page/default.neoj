@@ -40,15 +40,19 @@ pre {
             </ul>
 
         <h2>Issues On Pages With Ids</h2>
-        [#
+            [@ site @]
+            <ul>
         [! for page in site.get_page_ids(site, page) !]
+                [@ page @]
         [! if page.issues !]
+                <li>
         [@ page.issues @]
+                </li>
         [! endif !]
         [! endfor !]
+            </ul>
 
         [@ site.get_keys_for_pages_without_ids(site, page) @]
-        #]
 
 
 
