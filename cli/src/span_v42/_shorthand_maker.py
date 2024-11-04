@@ -2,6 +2,9 @@
 
 from string import Template
 
+# Reminder: don't do named_span or link-shorthand in this
+# file as they work a little differently. 
+
 shorthands = [
         ("~~", "~~", "strikethrough", "Strikethrough", "tilde", "~"),
         ("``", "``", "code", "Code", "backtick", "`"),
@@ -12,7 +15,6 @@ shorthands = [
         ("{{", "}}", "image", "Image", "close_brace", "}"),
         ("__", "__", "underline", "Underline", "underscore", "_"),
         ("@@", "@@", "mark", "Mark", "ampersand", "@"),
-        (">>", ">>", "link", "Link", "greater_than", ">"),
         ]
 
 skeleton = """use super::single_characters::*;

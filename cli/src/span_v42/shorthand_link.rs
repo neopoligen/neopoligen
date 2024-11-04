@@ -12,6 +12,7 @@ use nom::character::complete::alphanumeric1;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::not;
+use nom::combinator::opt;
 use nom::multi::many0;
 use nom::multi::many1;
 use nom::sequence::pair;
@@ -30,24 +31,46 @@ pub struct LinkShorthandV42 {
     attrs: BTreeMap<String, Vec<SpanV42>>,
     flags: Vec<String>,
     text: String,
+    url: String,
 }
 
 pub fn link_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, tokens) = preceded(pair(tag(">>"), space0), many1(link_shorthand_content))
+    let (source, tokens1) = preceded(pair(tag(">>"), space0), many1(link_shorthand_content))
         .context("")
         .parse(source)?;
+    let (source, tokens2) = opt(preceded(
+        pair(tag("|"), space0),
+        many1(link_shorthand_content),
+    ))
+    .context("")
+    .parse(source)?;
     let (source, (attrs, flags)) = get_link_shorthand_attrs_and_flags
         .context("")
         .parse(source)?;
     let (source, _) = tag(">>").context("").parse(source)?;
-    Ok((
-        source,
-        SpanV42::LinkShorthand(LinkShorthandV42 {
-            attrs,
-            flags,
-            text: flatten_spans_v42(&tokens),
-        }),
-    ))
+
+    match tokens2 {
+        Some(url_tokens) => Ok((
+            source,
+            SpanV42::LinkShorthand(LinkShorthandV42 {
+                attrs,
+                flags,
+                text: flatten_spans_v42(&tokens1),
+                url: flatten_spans_v42(&url_tokens),
+            }),
+        )),
+        None => Ok((
+            source,
+            SpanV42::LinkShorthand(LinkShorthandV42 {
+                attrs,
+                flags,
+                text: flatten_spans_v42(&tokens1),
+                url: flatten_spans_v42(&tokens1),
+            }),
+        )),
+    }
+
+    //
 }
 
 pub fn get_link_shorthand_attrs_and_flags(
@@ -75,12 +98,10 @@ pub fn link_shorthand_attr_or_flag(
 ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
     // Reminder: Make sure to look for key_value first so flags work properly
-    let (source, attr_or_flag) = alt((
-        link_shorthand_key_value_attr,
-        link_shorthand_span_flag_attr,
-    ))
-    .context("")
-    .parse(source)?;
+    let (source, attr_or_flag) =
+        alt((link_shorthand_key_value_attr, link_shorthand_span_flag_attr))
+            .context("")
+            .parse(source)?;
     Ok((source, attr_or_flag))
 }
 
@@ -156,4 +177,53 @@ pub fn link_shorthand_key_value_attr(
 
 #[cfg(test)]
 mod test {
+    use super::*;
+    use crate::span_v42::SpanV42;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn solo_link_shorthand_basic_test() {
+        let source = ">>text to link|https://www.example.com/>>";
+        let left = SpanV42::LinkShorthand(LinkShorthandV42 {
+            attrs: BTreeMap::new(),
+            flags: vec![],
+            text: "text to link".to_string(),
+            url: "https://www.example.com/".to_string(),
+        });
+        let right = link_shorthand_span(source).unwrap().1;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_link_shorthand_basic_test_with_attrs_and_flags() {
+        let source = ">>text to link|https://www.example.com/|class: alfa|bravo>>";
+        let mut attrs: BTreeMap<String, Vec<SpanV42>> = BTreeMap::new();
+        attrs.insert(
+            "class".to_string(),
+            vec![SpanV42::PlainText(PlainTextSpan {
+                text: "alfa".to_string(),
+            })],
+        );
+        let left = SpanV42::LinkShorthand(LinkShorthandV42 {
+            attrs,
+            flags: vec!["bravo".to_string()],
+            text: "text to link".to_string(),
+            url: "https://www.example.com/".to_string(),
+        });
+        let right = link_shorthand_span(source).unwrap().1;
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn solo_link_shorthand_url_only() {
+        let source = ">>https://www.example.com/>>";
+        let left = SpanV42::LinkShorthand(LinkShorthandV42 {
+            attrs: BTreeMap::new(),
+            flags: vec![],
+            text: "https://www.example.com/".to_string(),
+            url: "https://www.example.com/".to_string(),
+        });
+        let right = link_shorthand_span(source).unwrap().1;
+        assert_eq!(left, right);
+    }
 }
