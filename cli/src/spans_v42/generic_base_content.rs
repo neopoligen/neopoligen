@@ -30,10 +30,10 @@ pub fn generic_base_content<'a>(source: &'a str) -> IResult<&'a str, SpanV42, Er
             image_shorthand_span,
             link_shorthand_span,
             mark_shorthand_span,
-            named_span,
             strikethrough_shorthand_span,
             strong_shorthand_span,
             underline_shorthand_span,
+            named_span,
         )),
         alt((
             // Reminder: don't do single_pipe or single_colon

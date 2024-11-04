@@ -64,7 +64,7 @@ pub enum SpanV42 {
     PlainText(PlainTextSpan),
     #[serde(rename = "strong-shorthand")]
     StrongShorthand(StrongShorthandV42),
-    #[serde(rename = "strikethrough-shorthand")]
+    #[serde(rename = "strike-shorthand")]
     StrikethroughShorthand(StrikethroughShorthandV42),
     #[serde(rename = "underline-shorthand")]
     UnderlineShorthand(UnderlineShorthandV42),
