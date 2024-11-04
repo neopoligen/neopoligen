@@ -1,3 +1,4 @@
+[!- import "built-in/helpers.neoj" as neo -!]
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,6 +16,9 @@ header, main, footer {
     border-bottom: 1px solid #dfd;
     border-top: 1px solid #dfd;
     padding: 1rem;
+}
+.built-in-flow > :where(:not(:first-child)) {
+  margin-top: var(--flow-space, 1em);
 }
 .flow > :where(:not(:first-child)) {
   margin-top: var(--flow-space, 1em);
@@ -40,24 +44,22 @@ pre {
             </ul>
 
         <h2>Issues On Pages With Ids</h2>
-            [@ site @]
             <ul>
         [! for id in site.get_page_ids(site, page) !]
-                [@ id @]
-                [! set pg = site.get_page_with_id(site, page, id) !]
-                [@ pg @]
-                [#
-        [! if site.get_page_with_id(.issues !]
-                <li>
-                    ---
-        [@ pg.issues @]
+            [! set check_page = site.get_page_with_id(site, page, id) !]
+            [! if check_page.issues !]
+                <li class="built-in built-in-flow">
+                    <details><summary>[@ check_page.source_relative_path -@]</summary>
+                    <ul>
+                    [@- neo.debug_page_issues(site, check_page) -@]
+                    </ul>
+                    </details>
                 </li>
-        [! endif !]
-                #]
+            [! endif !]
         [! endfor !]
             </ul>
 
-        [@ site.get_keys_for_pages_without_ids(site, page) @]
+        [@ site.get_paths_for_pages_without_ids(site, page) @]
 
 
 

@@ -278,9 +278,10 @@ impl Object for SiteV42b {
             "get_section_attrs" => self.get_section_attrs(args),
             "get_page_ids" => self.get_page_ids(args),
             "get_page_with_id" => self.get_page_with_id(args),
-            _ => Ok(Value::from(
-                "[Warning: tried to call non existaing method on site]",
-            )),
+            _ => Ok(Value::from(format!(
+                "[Warning: tried to use 'site.{}(site, page, ...)' which does not exist]",
+                name
+            ))),
         }
     }
 }

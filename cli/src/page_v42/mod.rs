@@ -176,7 +176,9 @@ impl Object for PageV42b {
             "issues" => Some(Value::from_serialize(self.issues.clone())),
             "parsing_issue" => Some(Value::from_serialize(self.parsing_issue.clone())),
             "sections" => self.sections.clone(),
-            "source" => Some(Value::from(self.source.clone())),
+            "source_relative_path" => {
+                Some(Value::from(self.source_relative_path.display().to_string()))
+            }
             _ => None,
         }
     }

@@ -1,9 +1,12 @@
-[!- macro debug_issues(site, page) -!]
+[!- macro debug_page_issues(site, page) -!]
 [!- if page.parsing_issue -!]
 [! include "built-in/issues/parsing-issue/default.neoj" -!]
 [!- endif -!]
-
 [!- if page.issues -!]
+[!- for issue in page.issues -!]
+[! include "built-in/issues/page-issue/default.neoj" -!]
+[!- endfor -!]
+[#
 <section class="built-in-page-issues built-in built-in-flow">
 <div>This page has some issues. Not a big deal. That happens and we 
 can fix it. Here's what we know to get started</div>
@@ -15,9 +18,9 @@ can fix it. Here's what we know to get started</div>
 [!- endfor -!]
 </ul>
 </section>
+#]
 [!- endif -!]
 [!- endmacro -!]
-
 
 [!- macro debug_section_tree(site, page, sections) -!]
 <ul>
