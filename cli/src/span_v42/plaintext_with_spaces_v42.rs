@@ -1,7 +1,4 @@
-use super::any_characters::*;
 use super::plaintext_base_v42::plaintext_base_v42;
-use super::single_characters::*;
-use super::space0_line_ending_or_eof::space0_line_ending_or_eof;
 use super::space1_not_at_line_ending_or_eof::space1_not_at_line_ending_or_eof;
 use crate::helpers::flatten_spans_v42;
 use crate::span_v42::plaintext::PlainTextSpan;
@@ -17,14 +14,8 @@ use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
 pub fn plaintext_with_spaces_v42(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    // " \t\r\n~`*^![]{}<>|:_-\\"
     let (source, spans) = terminated(
-        many1(alt((
-            plaintext_base_v42,
-            any_hyphens,
-            any_tabs,
-            space1_not_at_line_ending_or_eof,
-        ))),
+        many1(alt((plaintext_base_v42, space1_not_at_line_ending_or_eof))),
         alt((eof, space0)),
     )
     .context("")

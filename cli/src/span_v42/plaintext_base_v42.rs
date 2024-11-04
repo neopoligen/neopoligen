@@ -13,9 +13,20 @@ use nom_supreme::parser_ext::ParserExt;
 
 pub fn plaintext_base_v42(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, results) = many1(alt((
-        is_not(" \t\r\n~`*^![]{}<>|:_-\\"),
-        pair(tag("~"), not(tag("~"))).map(|x| x.0),
+        is_not(" \t\r\n~`!#^*[]{}<>_|:\\"),
         pair(tag("`"), not(tag("`"))).map(|x| x.0),
+        pair(tag("~"), not(tag("~"))).map(|x| x.0),
+        pair(tag("!"), not(tag("!"))).map(|x| x.0),
+        pair(tag("#"), not(tag("#"))).map(|x| x.0),
+        pair(tag("^"), not(tag("^"))).map(|x| x.0),
+        pair(tag("*"), not(tag("*"))).map(|x| x.0),
+        pair(tag("["), not(tag("["))).map(|x| x.0),
+        pair(tag("]"), not(tag("]"))).map(|x| x.0),
+        pair(tag("{"), not(tag("{"))).map(|x| x.0),
+        pair(tag("}"), not(tag("}"))).map(|x| x.0),
+        pair(tag("<"), not(tag("<"))).map(|x| x.0),
+        pair(tag(">"), not(tag(">"))).map(|x| x.0),
+        pair(tag("_"), not(tag("_"))).map(|x| x.0),
     )))
     .context("")
     .parse(source)?;
@@ -34,8 +45,19 @@ mod test {
 
     #[rstest]
     #[case("alfa", "")]
-    #[case("alfa~bravo", "")]
     #[case("alfa`bravo", "")]
+    #[case("alfa~bravo", "")]
+    #[case("alfa!bravo", "")]
+    #[case("alfa#bravo", "")]
+    #[case("alfa^bravo", "")]
+    #[case("alfa*bravo", "")]
+    #[case("alfa[bravo", "")]
+    #[case("alfa]bravo", "")]
+    #[case("alfa{bravo", "")]
+    #[case("alfa}bravo", "")]
+    #[case("alfa<bravo", "")]
+    #[case("alfa>bravo", "")]
+    #[case("alfa_bravo", "")]
     fn solo_valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
         let results = plaintext_base_v42(source);
         match results {

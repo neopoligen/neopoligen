@@ -2,6 +2,10 @@
 
 from string import Template
 
+# NOTE: I think this can go away. Might still 
+# need the escapes, but the new plaintext_base_v42
+# covers most of this
+
 characters = [
         ("~", "tilde", "tildies"),
         ("!", "exclamation", "exclamations"),
