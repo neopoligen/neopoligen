@@ -10,14 +10,13 @@ pub fn plaintext_without_spaces(source: &str) -> IResult<&str, SpanV42, ErrorTre
     // Remember: some of these characters aren't used in
     // shortcodes but are here to prevent them being used in
     // things that might touch file paths.
-    let (source, output) = is_not(" \t\r\n<>`-|:_!@#$^&*()\\")
+    let (source, output) = is_not(" \t\r\n~`*^![]{}<>|:_\\")
         .context("")
         .parse(source)?;
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
             text: output.to_string(),
-            
         }),
     ))
 }

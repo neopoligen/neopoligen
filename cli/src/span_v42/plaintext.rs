@@ -12,6 +12,8 @@ pub struct PlainTextSpan {
     pub text: String,
 }
 
+// TODO: Switch this to plaintext_without_spaced the combine with space
+// and package it up
 pub fn plaintext(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, output) = is_not("\r\n~`*^![]{}<>|:_\\").context("").parse(source)?;
     Ok((

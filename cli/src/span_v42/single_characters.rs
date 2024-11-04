@@ -392,6 +392,30 @@ pub fn single_backtick(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> 
     ))
 }
 
+pub fn single_space(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+    let (source, output) = terminated(tag(" "), not(tag(" ")))
+        .context("")
+        .parse(source)?;
+    Ok((
+        source,
+        SpanV42::PlainText(PlainTextSpan {
+            text: encode_quoted_attribute(&output).to_string(),
+        }),
+    ))
+}
+
+pub fn single_tag(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+    let (source, output) = terminated(tag("\t"), not(tag("\t")))
+        .context("")
+        .parse(source)?;
+    Ok((
+        source,
+        SpanV42::PlainText(PlainTextSpan {
+            text: encode_quoted_attribute(&output).to_string(),
+        }),
+    ))
+}
+
 
 #[cfg(test)]
 mod test {
@@ -1452,6 +1476,72 @@ mod test {
     fn prevent_mutiple_backticks() {
         let source = "``";
         assert!(single_backtick(source).is_err());
+    }
+
+
+    #[test]
+    fn single_at_eof_space() {
+        let source = " ";
+        let left = (
+            "",
+            SpanV42::PlainText(PlainTextSpan {
+                text: encode_quoted_attribute(" ").to_string(),
+            }),
+        );
+        let right = single_space(source).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn single_with_more_content_space() {
+        let source = "  alfa";
+        let left = (
+            " alfa",
+            SpanV42::PlainText(PlainTextSpan {
+                text: encode_quoted_attribute(" ").to_string(),
+            }),
+        );
+        let right = single_space(source).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn prevent_mutiple_spaces() {
+        let source = "  ";
+        assert!(single_space(source).is_err());
+    }
+
+
+    #[test]
+    fn single_at_eof_tag() {
+        let source = "\t";
+        let left = (
+            "",
+            SpanV42::PlainText(PlainTextSpan {
+                text: encode_quoted_attribute("\t").to_string(),
+            }),
+        );
+        let right = single_tag(source).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn single_with_more_content_tag() {
+        let source = "\t alfa";
+        let left = (
+            " alfa",
+            SpanV42::PlainText(PlainTextSpan {
+                text: encode_quoted_attribute("\t").to_string(),
+            }),
+        );
+        let right = single_tag(source).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[test]
+    fn prevent_mutiple_tabs() {
+        let source = "\t\t";
+        assert!(single_tag(source).is_err());
     }
 
 

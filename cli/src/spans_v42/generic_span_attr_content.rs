@@ -8,6 +8,7 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::ParserExt;
 
+// TODO: Deprecate this in favor of calling closer to the source
 pub fn generic_span_attr_content<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Vec<SpanV42>, ErrorTree<&'a str>> {

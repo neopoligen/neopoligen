@@ -1,9 +1,11 @@
+use self::plaintext_without_spaces::plaintext_without_spaces;
+use self::single_characters::single_colon;
 use crate::helpers::dump_parser_if_debug;
 use crate::helpers::flatten_spans_v42;
 use crate::section_attr_v42::SectionAttrV42;
 use crate::span_v42::any_characters::*;
-use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::*;
+use crate::spans_v42::generic_base_content::generic_base_content;
 use crate::spans_v42::generic_span_attr_content::generic_span_attr_content;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
@@ -34,37 +36,28 @@ pub fn section_key_value_attr_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, _) = space1.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
-    let (source, key_parts) = many1(alt((plaintext, any_hyphens, any_underscores)))
-        .context("")
-        .parse(source)?;
-
-    // let (source, key_parts) = many1(alt((
-    //     is_not(": \n\t"),
-    //     pair(tag(":"), not(alt((space1, eof)))).map(|x| x.0),
-    // )))
-    // .context("")
-    // .parse(source)?;
+    let (source, key_parts) = many1(alt((
+        plaintext_without_spaces,
+        any_hyphens,
+        any_underscores,
+    )))
+    .context("")
+    .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, _) = tag(":").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, _) = space1.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 6);
-    let (source, value) = spans_of_section_key_value_attr_value
+    let (source, value) = many1(alt((generic_base_content, single_colon)))
         .context("")
         .parse(source)?;
+    // let (source, value) = spans_of_section_key_value_attr_value
+    //     .context("")
+    //     .parse(source)?;
     let (source, _) = space0.context("").parse(source)?;
     let (source, _) = alt((line_ending, eof)).context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 7);
     let key = flatten_spans_v42(&key_parts);
-
-    // let key = key_parts
-    //     .iter()
-    //     .map(|part| part.to_string())
-    //     .collect::<Vec<String>>()
-    //     .join("")
-    //     .trim()
-    //     .to_string();
-
     Ok((
         source,
         SectionAttrV42::KeyValueV42(SectionKeyValueAttrV42 { key, value }),
@@ -113,32 +106,90 @@ mod test {
     use rstest::rstest;
 
     #[rstest]
-    #[case("alfa", "bravo")]
-    #[case("charlie", "delta-echo")]
-    #[case("  leading_spaces", "are_ok")]
-    #[case("test_value", "    value_leading_spaces_are_ok")]
-    #[case("test_value", "value_trailing_spaces_are_ok    ")]
-    // #[case("test_value", "<<link|named_span|https://www.example.com/>>")]
-    // #[case("test_value", "``code shorthand``")]
-    // #[case("test_value", "``code shorthand|with_flag``")]
-    // TODO: do a character check of all the stuff that should work
-
-    // #[case("https://www.example.com/")]
-    // #[case("  leading_spaces_are_okay")]
-    // #[case("trailing_spaces_are_okay   ")]
-    // #[case("these_characters_are_okay:!@#$%^&*()[]<>|-")]
-    fn section_flag_attr_v42_valid_flags(#[case] left_key: &str, #[case] left_value: &str) {
-        let source = format!("-- {}: {}", left_key, left_value);
-        let response = section_key_value_attr_v42(source.as_str()).unwrap();
-        let right = match response.1 {
-            // NOTE: Only checking keys here which means the
-            // parsing worked. Specific value checks are done
-            // in other tests
-            SectionAttrV42::KeyValueV42(data) => data.key,
-            _ => "".to_string(),
-        };
-        assert_eq!(left_key.trim(), right);
+    #[case("-- alfa: bravo")]
+    #[case("-- key-hyphens-are-okay: alfa")]
+    #[case("-- alfa: value-hyphens-are-okay")]
+    #[case("-- key_underscores_are_okay: alfa")]
+    #[case("-- alfa: value_underscores_are_okay")]
+    #[case("--    leading_key_spaces_are_okay: alfa")]
+    #[case("-- alfa:   leading_value_spaces_are_okay")]
+    fn solo_section_key_value_attr_v42_valid_attrs(#[case] source: &str) {
+        match section_key_value_attr_v42(source) {
+            Ok((remainder, _)) => {
+                assert!(
+                    remainder == "",
+                    "Remainder is not empty. Got: '{}'",
+                    &source
+                );
+                assert!(true)
+            }
+            Err(e) => {
+                assert!(false, "{}", e);
+            }
+        }
     }
+
+    #[rstest]
+    #[case("-- alfa: bravo charlie ")]
+    #[case("-- alfa: bravo charlie\n")]
+    #[case("-- alfa: bravo charlie \n")]
+    fn solo_section_key_value_attr_make_sure_ending_space_is_trimmed(#[case] source: &str) {
+        let left = (
+            "",
+            SectionAttrV42::KeyValueV42(SectionKeyValueAttrV42 {
+                key: "alfa".to_string(),
+                value: vec![SpanV42::PlainText(plaintext::PlainTextSpan {
+                    text: "bravo charlie".to_string(),
+                })],
+            }),
+        );
+        let right = section_key_value_attr_v42(source).unwrap();
+        assert_eq!(left, right);
+    }
+
+    #[rstest]
+    #[case("-- alfa")]
+    #[case("-- alfa*bravo: charlie")]
+    #[case("-- https://www.example.com/")]
+    #[case("-- key-must-connect-to-colon : alfa")]
+    fn solo_section_key_value_attr_v42_invalid_attrs(#[case] source: &str) {
+        match section_key_value_attr_v42(source) {
+            Ok((_, _)) => {
+                assert!(false, "This should have failed: {}", &source);
+            }
+            Err(_) => {
+                assert!(true);
+            }
+        }
+    }
+
+    // #[rstest]
+    // #[case("alfa", "bravo")]
+    // #[case("charlie", "delta-echo")]
+    // #[case("  leading_spaces", "are_ok")]
+    // #[case("test_value", "    value_leading_spaces_are_ok")]
+    // #[case("test_value", "value_trailing_spaces_are_ok    ")]
+    // // #[case("test_value", "<<link|named_span|https://www.example.com/>>")]
+    // // #[case("test_value", "``code shorthand``")]
+    // // #[case("test_value", "``code shorthand|with_flag``")]
+    // // TODO: do a character check of all the stuff that should work
+
+    // // #[case("https://www.example.com/")]
+    // // #[case("  leading_spaces_are_okay")]
+    // // #[case("trailing_spaces_are_okay   ")]
+    // // #[case("these_characters_are_okay:!@#$%^&*()[]<>|-")]
+    // fn section_flag_attr_v42_valid_flags(#[case] left_key: &str, #[case] left_value: &str) {
+    //     let source = format!("-- {}: {}", left_key, left_value);
+    //     let response = section_key_value_attr_v42(source.as_str()).unwrap();
+    //     let right = match response.1 {
+    //         // NOTE: Only checking keys here which means the
+    //         // parsing worked. Specific value checks are done
+    //         // in other tests
+    //         SectionAttrV42::KeyValueV42(data) => data.key,
+    //         _ => "".to_string(),
+    //     };
+    //     assert_eq!(left_key.trim(), right);
+    // }
 
     // Add to failing case
     // #[case("trailing_spaces_after_key_before_colon_fail   ", "x")]

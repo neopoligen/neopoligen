@@ -23,6 +23,7 @@ pub fn generic_base_content<'a>(source: &'a str) -> IResult<&'a str, SpanV42, Er
     let (source, output) = alt((
         alt((
             plaintext,
+            named_span,
             code_shorthand_span,
             emphasis_shorthand_span,
             footnote_shorthand_span,
@@ -33,7 +34,6 @@ pub fn generic_base_content<'a>(source: &'a str) -> IResult<&'a str, SpanV42, Er
             strikethrough_shorthand_span,
             strong_shorthand_span,
             underline_shorthand_span,
-            named_span,
         )),
         alt((
             // Reminder: don't do single_pipe or single_colon
