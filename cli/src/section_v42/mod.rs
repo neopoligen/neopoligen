@@ -88,7 +88,7 @@ pub fn start_or_full_section_v42<'a>(
         // |src| checklist_section_full_v42(src, &site_config, parent.clone(), debug),
         |src| css_section_start_v42(src, &site_config, parent.clone(), debug),
         |src| css_section_full_v42(src, &site_config, parent.clone(), debug),
-        // |src| csv_section_start_v42(src, &site_config, parent.clone(), debug),
+        |src| csv_section_v42(src, &site_config, parent.clone(), debug),
         // |src| csv_section_full_v42(src, &site_config, parent.clone(), debug),
         |src| html_section_start_v42(src, &site_config, parent.clone(), debug),
         |src| html_section_full_v42(src, &site_config, parent.clone(), debug),

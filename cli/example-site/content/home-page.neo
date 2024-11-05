@@ -4,6 +4,15 @@ Ping
 
 >>this is text|https://www.example.com/>>
 
+-- csv-basic-table/
+
+alfa, bravo, charlie
+delta, echo, foxtrot
+
+-- /csv-basic-table
+
+
+
 -- pagedata
 -- created: 2024-10-27T09:27:27-04:00
 -- updated: 2024-10-27T09:27:27-04:00

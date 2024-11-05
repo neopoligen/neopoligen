@@ -32,6 +32,21 @@ pub struct BasicSectionV42 {
     pub template_list: Vec<String>,
 }
 
+pub fn basic_section_v42<'a>(
+    source: &'a str,
+    site_config: &'a SiteConfigV42,
+    parent: SectionParent,
+    debug: bool,
+) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
+    let (source, result) = alt((
+        |src| basic_section_full_v42(src, &site_config, parent.clone(), debug),
+        |src| basic_section_start_v42(src, &site_config, parent.clone(), debug),
+    ))
+    .context("")
+    .parse(source)?;
+    Ok((source, result))
+}
+
 pub fn basic_section_full_v42<'a>(
     source: &'a str,
     site_config: &'a SiteConfigV42,
@@ -146,158 +161,107 @@ pub fn basic_section_start_v42<'a>(
 
 #[cfg(test)]
 mod test {
-    // use super::*;
-    // use crate::{
-    //     helpers::get_include_str_file,
-    //     span_v42::{plaintext::PlainTextSpan, SpanV42},
-    // };
-    // use include_dir::{include_dir, Dir};
-    // use pretty_assertions::assert_eq;
-    // use rstest::rstest;
+    use super::*;
+    use include_dir::{include_dir, Dir};
+    use lazy_static::lazy_static;
+    use minijinja::Value;
+    use pretty_assertions::assert_eq;
+    use serde_json::Value as SerdeValue;
+    use serde_json5;
+    use std::collections::BTreeMap;
 
-    // const VALID_SAMPLES: Dir = include_dir!("src/section_v42/samples/unknown/valid");
+    const INPUT_DIR: Dir = include_dir!("src/section_v42/test_files/basic/valid/input");
 
-    // #[rstest]
-    // #[case("003-check-preview.neo", "")]
-    // fn integration_run_for_unknown_sections(#[case] file: &str, #[case] remainder: &str) {
-    //     let debug = false;
-    //     let site_config = SiteConfigV42::mock1_basic();
-    //     let source = get_include_str_file(VALID_SAMPLES, file);
-    //     let result =
-    //         start_or_full_section_v42(&source, &site_config, SectionParent::Page, debug).unwrap();
-    //     if result.clone().0 == remainder {
-    //         assert!(true);
-    //     } else {
-    //         dbg!(result);
-    //         assert!(false);
-    //     }
-    // }
+    lazy_static! {
+        static ref INPUT_FILES: BTreeMap<String, String> = {
+            let glob = "**/*.neo";
+            let mut btm = BTreeMap::new();
+            for entry in INPUT_DIR.find(glob).unwrap() {
+                let data = INPUT_DIR.get_file(entry.path());
+                btm.insert(
+                    entry
+                        .path()
+                        .display()
+                        .to_string()
+                        .trim_end_matches(".neo")
+                        .to_string(),
+                    data.expect(
+                        format!(
+                            "Could not open built-in include: {}",
+                            entry.path().display().to_string()
+                        )
+                        .as_str(),
+                    )
+                    .contents_utf8()
+                    .unwrap()
+                    .to_string(),
+                );
+            }
+            btm
+        };
+    }
 
-    // #[test]
-    // fn solo_integration_001_basic_full() {
-    //     let site_config = SiteConfigV42::mock1_basic();
-    //     let source = get_include_str_file(VALID_SAMPLES, "001-basic-full.neo");
-    //     let attrs = BTreeMap::new();
-    //     let bound = Bound::Full;
-    //     let block_templates = vec!["sections/block-paragraph/default.neoj".to_string()];
-    //     let children = vec![
-    //         SectionV42::Block(BlockSectionV42 {
-    //             children: vec![],
-    //             kind: "paragraph".to_string(),
-    //             spans: vec![SpanV42::PlainText(PlainTextSpan {
-    //                 text: "Content".to_string(),
-    //             })],
-    //             template_list: block_templates.clone(),
-    //         }),
-    //         SectionV42::Block(BlockSectionV42 {
-    //             children: vec![],
-    //             kind: "paragraph".to_string(),
-    //             spans: vec![SpanV42::PlainText(PlainTextSpan {
-    //                 text: "Blocks".to_string(),
-    //             })],
-    //             template_list: block_templates.clone(),
-    //         }),
-    //     ];
-    //     let end_section = None;
-    //     let kind = "unknown-test-section".to_string();
-    //     let flags = vec![];
-    //     let template_list = vec!["sections/generic-basic/default.neoj".to_string()];
-    //     let left = (
-    //         "",
-    //         SectionV42::Unknown(UnknownSectionV42 {
-    //             attrs,
-    //             bound,
-    //             children,
-    //             end_section,
-    //             kind,
-    //             flags,
-    //             template_list,
-    //         }),
-    //     );
-    //     let right =
-    //         unknown_section_full_v42(&source, &site_config, SectionParent::Page, false).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    const OUTPUT_DIR: Dir = include_dir!("src/section_v42/test_files/basic/valid/output");
 
-    // #[test]
-    // fn integration_002_basic_start_end() {
-    //     let site_config = SiteConfigV42::mock1_basic();
-    //     let source = get_include_str_file(VALID_SAMPLES, "002-basic-start-end.neo");
-    //     let attrs = BTreeMap::new();
-    //     let bound = Bound::Start;
-    //     let block_templates = vec!["sections/block-paragraph/default.neoj".to_string()];
-    //     let children = vec![
-    //         SectionV42::Block(BlockSectionV42 {
-    //             children: vec![],
-    //             kind: "paragraph".to_string(),
-    //             spans: vec![SpanV42::PlainText(PlainTextSpan {
-    //                 text: "Delta".to_string(),
-    //             })],
-    //             template_list: block_templates.clone(),
-    //         }),
-    //         SectionV42::Block(BlockSectionV42 {
-    //             children: vec![],
-    //             kind: "paragraph".to_string(),
-    //             spans: vec![SpanV42::PlainText(PlainTextSpan {
-    //                 text: "Tango".to_string(),
-    //             })],
-    //             template_list: block_templates.clone(),
-    //         }),
-    //     ];
-    //     let end_section = Some(Box::new(SectionV42::End(EndSectionV42 {
-    //         attrs: BTreeMap::new(),
-    //         bound: Bound::End,
-    //         children: vec![],
-    //         flags: vec![],
-    //         kind: "unknown-test-section".to_string(),
-    //         template_list: vec!["sections/generic-end/default.neoj".to_string()],
-    //     })));
-    //     let kind = "unknown-test-section".to_string();
-    //     let flags = vec![];
-    //     let template_list = vec!["sections/generic-basic/default.neoj".to_string()];
-    //     let left = (
-    //         "",
-    //         SectionV42::Unknown(UnknownSectionV42 {
-    //             attrs,
-    //             bound,
-    //             children,
-    //             end_section,
-    //             kind,
-    //             flags,
-    //             template_list,
-    //         }),
-    //     );
-    //     let right =
-    //         unknown_section_start_v42(&source, &site_config, SectionParent::Page, false).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    lazy_static! {
+        static ref OUTPUT_FILES: BTreeMap<String, String> = {
+            let glob = "**/*.json5";
+            let mut btm = BTreeMap::new();
+            for entry in OUTPUT_DIR.find(glob).unwrap() {
+                let data = OUTPUT_DIR.get_file(entry.path());
+                btm.insert(
+                    entry
+                        .path()
+                        .display()
+                        .to_string()
+                        .trim_end_matches(".json5")
+                        .to_string(),
+                    data.expect(
+                        format!(
+                            "Could not open built-in include: {}",
+                            entry.path().display().to_string()
+                        )
+                        .as_str(),
+                    )
+                    .contents_utf8()
+                    .unwrap()
+                    .to_string(),
+                );
+            }
+            btm
+        };
+    }
 
-    // #[test]
-    // fn solo_attrs_and_flags_test() {
-    //     let site_config = SiteConfigV42::mock1_basic();
-    //     let source = SAMPLE_DIR
-    //         .get_file("002-attrs-and-flags.neo")
-    //         .unwrap()
-    //         .contents_utf8()
-    //         .unwrap()
-    //         .to_string();
-    //     let left = (
-    //         "",
-    //         SectionV42::Basic(BasicSectionV42 {
-    //             attrs: vec![SectionKeyValueAttrV42 {
-    //                 key: "test-key".to_string(),
-    //                 value: vec![SpanV42::PlainText(PlainTextSpan {
-    //                     text: "testValue".to_string(),
-    //                 })],
-    //             }],
-    //             children: vec![],
-    //             kind: "title".to_string(),
-    //             flags: vec!["test-flag".to_string()],
-    //         }),
-    //     );
-    //     let right = basic_section_full_v42(&source, &site_config, 0, 0, 0).unwrap();
-    //     assert_eq!(left, right);
-    // }
+    #[test]
+    fn solo_basic_section_tests() {
+        for (id, source) in INPUT_FILES.iter() {
+            match OUTPUT_FILES.get(id) {
+                Some(output) => {
+                    match serde_json5::from_str::<SerdeValue>(output) {
+                        Ok(json5) => {
+                            let site_config = SiteConfigV42::mock1_basic();
+                            let parent = SectionParent::Page;
+                            let debug = false;
+                            let left = Value::from_serialize(json5);
+                            let right = Value::from_serialize(
+                                basic_section_v42(source, &site_config, parent, debug)
+                                    .unwrap()
+                                    .1,
+                            );
+                            assert_eq!(left, right);
+                        }
+                        Err(e) => {
+                            dbg!(e);
+                            assert!(false)
+                        }
+                    };
+                }
+                None => {
+                    assert!(false);
+                }
+            }
+        }
+    }
 
     //
 }
