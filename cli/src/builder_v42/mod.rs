@@ -106,6 +106,14 @@ impl BuilderV42<'_> {
     }
 
     #[instrument(skip(self))]
+    pub fn generate_hrefs_from_ids(&mut self) -> Result<()> {
+        for (_, page) in &mut self.pages_v42 {
+            page.generate_href_from_id();
+        }
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn generate_ids_from_ast(&mut self) -> Result<()> {
         for (_, page) in &mut self.pages_v42 {
             page.generate_id_from_ast();

@@ -116,6 +116,12 @@ impl PageV42b {
         }
     }
 
+    pub fn generate_href_from_id(&mut self) {
+        if let Some(id) = &self.id {
+            self.href = Some(PathBuf::from(format!("/en/{}/index.html", id)));
+        }
+    }
+
     pub fn generate_href_from_ast(&mut self) {
         if let Ok(spans) = self.get_pagedata_from_ast("href") {
             self.href = Some(flatten_spans_v42(&spans).into());

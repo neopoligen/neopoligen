@@ -20,6 +20,7 @@ impl PageV42b {
         page.generate_ast(&site_config);
         page.generate_id_from_ast();
         page.generate_fallback_id();
+        page.generate_href_from_id();
         page.generate_href_from_ast();
         page.generate_fallback_href();
         page

@@ -122,6 +122,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             let _ = builder.generate_asts();
             let _ = builder.generate_ids_from_ast();
             let _ = builder.generate_fallback_ids();
+            let _ = builder.generate_hrefs_from_ids();
             let _ = builder.generate_hrefs_from_ast();
             let _ = builder.generate_fallback_hrefs();
             let _ = builder.initialize_site_and_built_in_templates();

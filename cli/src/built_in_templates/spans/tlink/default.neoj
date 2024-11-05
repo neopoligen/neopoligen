@@ -1,10 +1,11 @@
 [!- import "built-in/helpers.neoj" as neo -!]
 
-[TODO_HANDLE_IF_PAGE_DOES_NOT_EXIST]
-
+[TODO_tlink]
+[#
 <a href="[@ site.get_page_href_from_span(span) @]">
 [@- neo.output_spans(site, page, site.get_page_title_from_span(span)) -@]
 </a>
+#]
 
 [@- '' -@]
 
