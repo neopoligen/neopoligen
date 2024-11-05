@@ -1,0 +1,51 @@
+{
+  "attrs": {}, 
+  "bound": "start", 
+  "data": [
+    ["a", "b", "c"], 
+    ["d", "e", "f"]
+  ],
+  "end_section": {
+    "attrs": {},
+    "bound": "end",
+    "children": [
+      {
+        "children": [],
+        "kind": "block-paragraph",
+        "spans": [
+          {
+            "text": "alfa bravo",
+            "type": "plain-text"
+          }
+        ],
+        "template_list": [
+          "sections/block-paragraph/default.neoj",
+          "sections/generic-block-paragraph/default.neoj",
+          "built-in/sections/block-paragraph/default.neoj",
+          "built-in/sections/generic-block-paragraph/default.neoj",
+        ],
+        "type": "block",
+      }
+    ],
+    "flags": [],
+    "kind": "csv-end", 
+    "template_list": [
+      "sections/csv-end/default.neoj",
+      "sections/generic-end/default.neoj",
+      "built-in/sections/csv-end/default.neoj",
+      "built-in/sections/generic-end/default.neoj",
+    ],
+    "type": "end",
+  }, 
+  "error": null, 
+  "flags": [], 
+  "kind": "csv", 
+  "type": "csv",
+  "template_list": [
+    "sections/csv/default.neoj", 
+    "sections/generic-csv/default.neoj",
+    "built-in/sections/csv/default.neoj", 
+    "built-in/sections/generic-csv/default.neoj"
+   ],
+}
+
