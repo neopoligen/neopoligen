@@ -47,8 +47,7 @@ pub fn list_section_full_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
-    // TODO: Get the list types dynamically
-    let (source, kind) = terminated(tag("list"), space0_line_ending_or_eof)
+    let (source, kind) = alt((terminated(tag("list"), space0_line_ending_or_eof),))
         .context("")
         .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);

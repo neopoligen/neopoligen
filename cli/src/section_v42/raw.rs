@@ -47,10 +47,13 @@ pub fn raw_section_full_v42<'a>(
     let (source, _) = tag("-- ").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     // TODO: Pull in keys dynamically
-    let (source, kind) = alt((tag("pre"), tag("code"), tag("results")))
-        .context("")
-        .parse(source)?;
-    let (source, _) = space0_line_ending_or_eof.context("").parse(source)?;
+    let (source, kind) = alt((
+        terminated(tag("pre"), space0_line_ending_or_eof),
+        terminated(tag("code"), space0_line_ending_or_eof),
+        terminated(tag("results"), space0_line_ending_or_eof),
+    ))
+    .context("")
+    .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);

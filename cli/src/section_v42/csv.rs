@@ -72,7 +72,6 @@ pub fn csv_section_full_v42<'a>(
     ))
     .context("")
     .parse(source)?;
-    // let (source, _) = space0_line_ending_or_eof.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);

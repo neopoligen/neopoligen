@@ -50,21 +50,15 @@ pub fn json5_section_full_v42<'a>(
     let (source, _) = tag("-- ").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, kind) = alt((
-        // make sure to keep "pagadata" here so that
-        // even if there isn't a template for it it
-        // still gets picked up. Same for "neopoligen-spec-test"
-        // which maybe should be renamed to "built-in-spec-test"
-        // to match the other "built-in-" style namespaced stuff
-        tag("pagedata"),
-        tag("json5-test"),
-        tag("json5-simple-table"),
-        tag("json5-advanced-table"),
-        tag("dev"),
-        tag("neopoligen-spec-test"),
+        terminated(tag("pagedata"), space0_line_ending_or_eof),
+        terminated(tag("json5-test"), space0_line_ending_or_eof),
+        terminated(tag("json5-basic-table"), space0_line_ending_or_eof),
+        terminated(tag("json5-advanced-table"), space0_line_ending_or_eof),
+        terminated(tag("dev"), space0_line_ending_or_eof),
+        terminated(tag("neopoliten-spec-test"), space0_line_ending_or_eof),
     ))
     .context("")
     .parse(source)?;
-    let (source, _) = space0_line_ending_or_eof.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);
