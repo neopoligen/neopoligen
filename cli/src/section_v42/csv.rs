@@ -39,6 +39,21 @@ pub struct CsvSectionV42 {
     pub template_list: Vec<String>,
 }
 
+pub fn csv_section_v42<'a>(
+    source: &'a str,
+    site_config: &'a SiteConfigV42,
+    parent: SectionParent,
+    debug: bool,
+) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
+    let (source, result) = alt((
+        |src| csv_section_full_v42(src, &site_config, parent.clone(), debug),
+        |src| csv_section_start_v42(src, &site_config, parent.clone(), debug),
+    ))
+    .context("")
+    .parse(source)?;
+    Ok((source, result))
+}
+
 pub fn csv_section_full_v42<'a>(
     source: &'a str,
     _site_config: &'a SiteConfigV42,
@@ -61,19 +76,6 @@ pub fn csv_section_full_v42<'a>(
     let data;
     if csv_text.trim() != "" {
         data = parse_csv(csv_text)
-
-        // let mut rdr = ReaderBuilder::new()
-        //     .delimiter(b';')
-        //     .from_reader(csv_text.as_bytes());
-
-        //data = serde_json5::from_str::<Value>(r#"[]"#).unwrap()
-        // data = match serde_json5::from_str::<Value>(json_text) {
-        //     Ok(d) => d,
-        //     Err(e) => {
-        //         error = Some(e.to_string());
-        //         serde_json5::from_str::<Value>(r#"{}"#).unwrap()
-        //     }
-        // };
     } else {
         data = serde_json5::from_str::<Value>(r#"[]"#).unwrap()
     }
@@ -247,7 +249,7 @@ mod test {
                             let debug = false;
                             let left = Value::from_serialize(json5);
                             let right = Value::from_serialize(
-                                csv_section_full_v42(source, &site_config, parent, debug)
+                                csv_section_v42(source, &site_config, parent, debug)
                                     .unwrap()
                                     .1,
                             );
