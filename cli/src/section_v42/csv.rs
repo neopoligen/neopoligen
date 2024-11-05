@@ -164,43 +164,144 @@ fn parse_csv(source: &str) -> Value {
 
 #[cfg(test)]
 mod test {
-
     use super::*;
-    use crate::section_v42::SectionParent;
-    use crate::{
-        bound::Bound,
-        span_v42::{plaintext::PlainTextSpan, SpanV42},
-    };
     use include_dir::{include_dir, Dir};
+    use lazy_static::lazy_static;
+    use minijinja::Value;
     use pretty_assertions::assert_eq;
+    use serde_json::Value as SerdeValue;
+    use serde_json5;
+    use std::collections::BTreeMap;
 
-    const SAMPLE_DIR: Dir = include_dir!("src/section_v42/samples/csv/valid");
+    const INPUT_DIR: Dir = include_dir!("src/section_v42/test_files/csv/valid/input");
+
+    lazy_static! {
+        static ref INPUT_FILES: BTreeMap<String, String> = {
+            let glob = "**/*.neo";
+            let mut btm = BTreeMap::new();
+            for entry in INPUT_DIR.find(glob).unwrap() {
+                let data = INPUT_DIR.get_file(entry.path());
+                btm.insert(
+                    entry
+                        .path()
+                        .display()
+                        .to_string()
+                        .trim_end_matches(".neo")
+                        .to_string(),
+                    data.expect(
+                        format!(
+                            "Could not open built-in include: {}",
+                            entry.path().display().to_string()
+                        )
+                        .as_str(),
+                    )
+                    .contents_utf8()
+                    .unwrap()
+                    .to_string(),
+                );
+            }
+            btm
+        };
+    }
+
+    const OUTPUT_DIR: Dir = include_dir!("src/section_v42/test_files/csv/valid/output");
+
+    lazy_static! {
+        static ref OUTPUT_FILES: BTreeMap<String, String> = {
+            let glob = "**/*.json5";
+            let mut btm = BTreeMap::new();
+            for entry in OUTPUT_DIR.find(glob).unwrap() {
+                let data = OUTPUT_DIR.get_file(entry.path());
+                btm.insert(
+                    entry
+                        .path()
+                        .display()
+                        .to_string()
+                        .trim_end_matches(".json5")
+                        .to_string(),
+                    data.expect(
+                        format!(
+                            "Could not open built-in include: {}",
+                            entry.path().display().to_string()
+                        )
+                        .as_str(),
+                    )
+                    .contents_utf8()
+                    .unwrap()
+                    .to_string(),
+                );
+            }
+            btm
+        };
+    }
 
     #[test]
-    fn solo_basic_csv() {
-        let site_config = SiteConfigV42::mock1_basic();
-        let parent = SectionParent::Page;
-        let debug = false;
-        let source = SAMPLE_DIR
-            .get_file("001-basic-csv.neo")
-            .unwrap()
-            .contents_utf8()
-            .unwrap()
-            .to_string();
-        let parsed = csv_section_full_v42(&source, &site_config, parent, debug).unwrap();
-        let left = serde_json5::from_str::<serde_json::Value>(
-            r#"{
-"attrs": {}, "bound": "full", "end_section": null, "error": null, "flags": [], "kind": "csv", "type": "csv",
-"template_list": ["sections/csv/default.neoj", "sections/generic-csv/default.neoj",
-"built-in/sections/csv/default.neoj", "built-in/sections/generic-csv/default.neoj"
-],
-"data": [["a", "b", "c"], ["d", "e", "f"]]
-        }"#,
-        )
-        .unwrap();
-        let right = json!(parsed.1);
-        assert_eq!(left, right);
+    fn solo_csv_section_tests() {
+        for (id, source) in INPUT_FILES.iter() {
+            match OUTPUT_FILES.get(id) {
+                Some(output) => {
+                    match serde_json5::from_str::<SerdeValue>(output) {
+                        Ok(json5) => {
+                            let site_config = SiteConfigV42::mock1_basic();
+                            let parent = SectionParent::Page;
+                            let debug = false;
+                            let left = Value::from_serialize(json5);
+                            let right = Value::from_serialize(
+                                csv_section_full_v42(source, &site_config, parent, debug)
+                                    .unwrap()
+                                    .1,
+                            );
+                            assert_eq!(left, right);
+                        }
+                        Err(e) => {
+                            dbg!(e);
+                            assert!(false)
+                        }
+                    };
+                }
+                None => {
+                    assert!(false);
+                }
+            }
+        }
     }
+
+    // use super::*;
+    // use crate::section_v42::SectionParent;
+    // use crate::{
+    //     bound::Bound,
+    //     span_v42::{plaintext::PlainTextSpan, SpanV42},
+    // };
+    // use include_dir::{include_dir, Dir};
+    // use pretty_assertions::assert_eq;
+
+    //const SAMPLE_DIR: Dir = include_dir!("src/section_v42/samples/csv/valid");
+
+    // #[test]
+    // fn solo_basic_csv() {
+    //     let site_config = SiteConfigV42::mock1_basic();
+    //     let parent = SectionParent::Page;
+    //     let debug = false;
+    //     let source = SAMPLE_DIR
+    //         .get_file("001-basic-csv.neo")
+    //         .unwrap()
+    //         .contents_utf8()
+    //         .unwrap()
+    //         .to_string();
+    //     let parsed = csv_section_full_v42(&source, &site_config, parent, debug).unwrap();
+    //     let left = serde_json5::from_str::<serde_json::Value>(
+    //         r#"{
+    // "attrs": {}, "bound": "full", "end_section": null, "error": null, "flags": [], "kind": "csv", "type": "csv",
+    // "template_list": ["sections/csv/default.neoj", "sections/generic-csv/default.neoj",
+    // "built-in/sections/csv/default.neoj", "built-in/sections/generic-csv/default.neoj"
+    // ],
+    // "data": [["a", "b", "c"], ["d", "e", "f"]]
+    //     }"#,
+    //     )
+    //     .unwrap();
+    //     let right = json!(parsed.1);
+    //     assert_eq!(left, right);
+    // }
 
     // #[test]
     // fn pagedata_with_extra_data() {
