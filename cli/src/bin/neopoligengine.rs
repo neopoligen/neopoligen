@@ -84,7 +84,7 @@ async fn run_web_server(engine_config: EngineConfig, site_config: SiteConfigV42)
     let serve_dir = ServeDir::new(&site_config.output_dest_dir())
         .not_found_service(ServeFile::new(&site_config.errors_index_page()));
     let app = Router::new()
-        //.nest_service("/built-in", ServeDir::new()))
+        .nest_service("/neo-status", ServeDir::new(&site_config.errors_dir()))
         .nest_service("/", serve_dir)
         .layer(livereload);
     let (tx, rx) = mpsc::channel(1);
