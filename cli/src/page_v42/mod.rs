@@ -275,7 +275,7 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn solo_id_basic_check() {
+    fn id_basic_check() {
         let page = PageV42b::test_from_sample_file("001-pagedata-only.neo");
         let left = "001-pagedata-only.neo".to_string();
         let right = page.id.unwrap();
@@ -311,7 +311,7 @@ mod test {
     }
 
     #[test]
-    fn solo_title_from_title_section() {
+    fn title_from_title_section() {
         let page = PageV42b::test_from_sample_file("002-basic-sample.neo");
         let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
             text: "Basic Sample".to_string(),
