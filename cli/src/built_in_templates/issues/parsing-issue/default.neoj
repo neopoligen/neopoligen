@@ -5,5 +5,5 @@ prevented it from being read in properly. The specific code is:
 <p>[@ page.parsing_issue.message @]</p>
 <p>The place where the problem occurred is highlighted below.
 It's the place to start getting things fixed</p>
-<div><pre>[@ page.parsing_issue.completed @]<mark>[@ page.parsing_issue.remainder @]</mark></pre></div>
+<div><pre>[! autoescape true !][@ page.parsing_issue.completed @][! endautoescape !]<mark>[! autoescape true !][@ page.parsing_issue.remainder @][! endautoescape !]</mark></pre></div>
 </li>
