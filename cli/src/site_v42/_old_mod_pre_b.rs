@@ -87,71 +87,75 @@ impl SiteV42 {
         }
     }
 
-    // TODO: Add error handling here
-    pub fn get_page_href_from_id(&self, args: &[Value]) -> Result<Value, Error> {
-        if args.len() == 1 {
-            let page_id = &args[0].to_string().trim().to_string();
-            match self.pages.get(page_id) {
-                Some(page) => page.href(),
-                None => Ok(Value::from("/")),
-            }
-        } else {
-            Err(Error::new(
-                ErrorKind::InvalidOperation,
-                "ERROR_COULD_NOT_GET_HREF",
-            ))
-        }
-    }
+    // // MIGRATED
+    // // TODO: Add error handling here
+    // pub fn get_page_href_from_id(&self, args: &[Value]) -> Result<Value, Error> {
+    //     if args.len() == 1 {
+    //         let page_id = &args[0].to_string().trim().to_string();
+    //         match self.pages.get(page_id) {
+    //             Some(page) => page.href(),
+    //             None => Ok(Value::from("/")),
+    //         }
+    //     } else {
+    //         Err(Error::new(
+    //             ErrorKind::InvalidOperation,
+    //             "ERROR_COULD_NOT_GET_HREF",
+    //         ))
+    //     }
+    // }
 
-    // TODO: Add error handling here
-    pub fn get_page_href_from_span(&self, args: &[Value]) -> Result<Value, Error> {
-        if args.len() == 1 {
-            let x = &args[0].get_item(&Value::from("spans")).unwrap();
-            let page_id = flatten_spans_in_template_v42(&[x.to_owned()]).unwrap();
-            match self.pages.get(&page_id.to_string()) {
-                Some(page) => page.href(),
-                None => Ok(Value::from("/")),
-            }
-        } else {
-            Err(Error::new(
-                ErrorKind::InvalidOperation,
-                "NO_ID_FOR_PAGE_TITLE",
-            ))
-        }
-    }
+    // // MIGRATED
+    // // TODO: Add error handling here
+    // pub fn get_page_href_from_span(&self, args: &[Value]) -> Result<Value, Error> {
+    //     if args.len() == 1 {
+    //         let x = &args[0].get_item(&Value::from("spans")).unwrap();
+    //         let page_id = flatten_spans_in_template_v42(&[x.to_owned()]).unwrap();
+    //         match self.pages.get(&page_id.to_string()) {
+    //             Some(page) => page.href(),
+    //             None => Ok(Value::from("/")),
+    //         }
+    //     } else {
+    //         Err(Error::new(
+    //             ErrorKind::InvalidOperation,
+    //             "NO_ID_FOR_PAGE_TITLE",
+    //         ))
+    //     }
+    // }
 
-    // TODO: Add error handling here
-    pub fn get_page_title_from_id(&self, args: &[Value]) -> Result<Value, Error> {
-        if args.len() == 1 {
-            let page_id = &args[0].to_string().trim().to_string();
-            match self.pages.get(page_id) {
-                Some(page) => page.title(),
-                None => Ok(Value::from(page_id)),
-            }
-        } else {
-            Err(Error::new(
-                ErrorKind::InvalidOperation,
-                "NO_ID_FOR_PAGE_TITLE",
-            ))
-        }
-    }
+    // // MIGRATED
+    // // TODO: Add error handling here
+    // pub fn get_page_title_from_id(&self, args: &[Value]) -> Result<Value, Error> {
+    //     if args.len() == 1 {
+    //         let page_id = &args[0].to_string().trim().to_string();
+    //         match self.pages.get(page_id) {
+    //             Some(page) => page.title(),
+    //             None => Ok(Value::from(page_id)),
+    //         }
+    //     } else {
+    //         Err(Error::new(
+    //             ErrorKind::InvalidOperation,
+    //             "NO_ID_FOR_PAGE_TITLE",
+    //         ))
+    //     }
+    // }
 
-    // TODO: Add error handling here
-    pub fn get_page_title_from_span(&self, args: &[Value]) -> Result<Value, Error> {
-        if args.len() == 1 {
-            let x = &args[0].get_item(&Value::from("spans")).unwrap();
-            let page_id = flatten_spans_in_template_v42(&[x.to_owned()]).unwrap();
-            match self.pages.get(&page_id.to_string()) {
-                Some(page) => page.title(),
-                None => Ok(Value::from(page_id)),
-            }
-        } else {
-            Err(Error::new(
-                ErrorKind::InvalidOperation,
-                "NO_ID_FOR_PAGE_TITLE",
-            ))
-        }
-    }
+    // // MIGRATED
+    // // TODO: Add error handling here
+    // pub fn get_page_title_from_span(&self, args: &[Value]) -> Result<Value, Error> {
+    //     if args.len() == 1 {
+    //         let x = &args[0].get_item(&Value::from("spans")).unwrap();
+    //         let page_id = flatten_spans_in_template_v42(&[x.to_owned()]).unwrap();
+    //         match self.pages.get(&page_id.to_string()) {
+    //             Some(page) => page.title(),
+    //             None => Ok(Value::from(page_id)),
+    //         }
+    //     } else {
+    //         Err(Error::new(
+    //             ErrorKind::InvalidOperation,
+    //             "NO_ID_FOR_PAGE_TITLE",
+    //         ))
+    //     }
+    // }
 
     pub fn highlight_syntax(&self, args: &[Value]) -> Result<Value, Error> {
         if args.len() == 1 {

@@ -271,43 +271,38 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
         }
     }
 
-    // // TODO: Add error handling here
-    // pub fn get_page_title_from_id(&self, args: &[Value]) -> Result<Value, Error> {
-    //     if args.len() == 1 {
-    //         let page_id = &args[0].to_string().trim().to_string();
-    //         match self.pages.get(page_id) {
-    //             Some(page) => match &page.title() {
-    //                 Some(href) => Ok(Value::from(href.display().to_string())),
-    //                 None => Err(Error::new(ErrorKind::InvalidOperation, "NO_HREF_FOR_SPAN")),
-    //             },
-    //             None => Err(Error::new(ErrorKind::InvalidOperation, "NO_HREF_FOR_SPAN")),
-    //         }
-    //     } else {
-    //         Err(Error::new(
-    //             ErrorKind::InvalidOperation,
-    //             "NO_ID_FOR_PAGE_TITLE",
-    //         ))
-    //     }
-    // }
+    // TODO: Add error handling here
+    pub fn get_page_title_from_id(&self, args: &[Value]) -> Result<Value, Error> {
+        if args.len() == 1 {
+            let page_id = &args[0].to_string().trim().to_string();
+            match self.pages.get(page_id) {
+                Some(page) => page.title(),
+                None => Err(Error::new(ErrorKind::InvalidOperation, "NO_HREF_FOR_SPAN")),
+            }
+        } else {
+            Err(Error::new(
+                ErrorKind::InvalidOperation,
+                "NO_ID_FOR_PAGE_TITLE",
+            ))
+        }
+    }
 
-    // // TODO: Add error handling here
-    // pub fn get_page_title_from_span(&self, args: &[Value]) -> Result<Value, Error> {
-    //     if args.len() == 1 {
-    //         let x = &args[0].get_item(&Value::from("spans")).unwrap();
-    //         let page_id = flatten_spans_in_template_v42(&[x.to_owned()]).unwrap();
-    //         match self.pages.get(&page_id.to_string()) {
-    //             Some(page) => match &page.title() {
-    //                 Some(href) => Ok(Value::from(href.display().to_string())),
-    //                 None => Err(Error::new(ErrorKind::InvalidOperation, "NO_HREF_FOR_SPAN")),
-    //             },
-    //         }
-    //     } else {
-    //         Err(Error::new(
-    //             ErrorKind::InvalidOperation,
-    //             "NO_ID_FOR_PAGE_TITLE",
-    //         ))
-    //     }
-    // }
+    // TODO: Add error handling here
+    pub fn get_page_title_from_span(&self, args: &[Value]) -> Result<Value, Error> {
+        if args.len() == 1 {
+            let x = &args[0].get_item(&Value::from("spans")).unwrap();
+            let page_id = flatten_spans_in_template_v42(&[x.to_owned()]).unwrap();
+            match self.pages.get(&page_id.to_string()) {
+                Some(page) => page.title(),
+                None => Err(Error::new(ErrorKind::InvalidOperation, "NO_HREF_FOR_SPAN")),
+            }
+        } else {
+            Err(Error::new(
+                ErrorKind::InvalidOperation,
+                "NO_ID_FOR_PAGE_TITLE",
+            ))
+        }
+    }
 
     //// TODO: Test this, it was copied over direction from the prior version, but hopefully still
     //// works out of the box
@@ -396,8 +391,11 @@ impl Object for SiteV42b {
             "generated_at" => self.generated_at(args),
             "get_keys_for_pages_without_ids" => self.get_keys_for_pages_without_ids(args),
             "get_issue_count" => Ok(Value::from(self.get_issue_count(args))),
+            "get_page_href_from_id" => self.get_page_href_from_id(args),
             "get_page_href_from_span" => self.get_page_href_from_span(args),
             "get_page_ids" => self.get_page_ids(args),
+            "get_page_title_from_id" => self.get_page_title_from_id(args),
+            "get_page_title_from_span" => self.get_page_title_from_span(args),
             "get_page_with_id" => self.get_page_with_id(args),
             "get_page_with_display_path" => self.get_page_with_display_path(args),
             "get_section_attrs" => self.get_section_attrs(args),
