@@ -9,10 +9,6 @@ Ping
 alfa, bravo, charlie
 delta, echo, foxtrot
 
--- script
-
-console.log("asdf")
-
 
 
 -- pagedata

@@ -52,8 +52,8 @@ pub fn json5_section_full_v42<'a>(
     let (source, kind) = alt((
         terminated(tag("pagedata"), space0_line_ending_or_eof),
         terminated(tag("json5-test"), space0_line_ending_or_eof),
-        terminated(tag("json5-basic-table"), space0_line_ending_or_eof),
-        terminated(tag("json5-advanced-table"), space0_line_ending_or_eof),
+        terminated(tag("json5-table"), space0_line_ending_or_eof),
+        terminated(tag("json5-table-2"), space0_line_ending_or_eof),
         terminated(tag("dev"), space0_line_ending_or_eof),
         terminated(tag("neopoliten-spec-test"), space0_line_ending_or_eof),
     ))
@@ -104,14 +104,8 @@ pub fn json5_section_start_v42<'a>(
         alt((
             terminated(tag("pagedata"), tuple((tag("/"), space0, line_ending))),
             terminated(tag("json5-test"), tuple((tag("/"), space0, line_ending))),
-            terminated(
-                tag("json5-basic-table"),
-                tuple((tag("/"), space0, line_ending)),
-            ),
-            terminated(
-                tag("json5-advanced-table"),
-                tuple((tag("/"), space0, line_ending)),
-            ),
+            terminated(tag("json5-table"), tuple((tag("/"), space0, line_ending))),
+            terminated(tag("json5-table-2"), tuple((tag("/"), space0, line_ending))),
             terminated(tag("dev"), tuple((tag("/"), space0, line_ending))),
             terminated(
                 tag("neopolige-spec-test"),
