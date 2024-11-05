@@ -1,0 +1,35 @@
+[
+     {
+         "attrs": {
+             "id": {
+                 "spans": [
+                    {
+                        "text": "2or2ogbr",
+                        "type": "plain-text",
+                    },
+                 ],
+             },
+            "status": {
+                "spans": [
+                    {
+                        "text": "scratch",
+                        "type": "plain-text",
+                    },
+                ],
+            },
+         },
+        "bound": "full",
+        "data": {},
+        "end_section": null,
+        "error": null,
+        "flags": [],
+        "kind": "pagedata",
+        "template_list": [
+            "sections/pagedata/default.neoj",
+            "sections/generic-json5/default.neoj",
+            "built-in/sections/pagedata/default.neoj",
+            "built-in/sections/generic-json5/default.neoj",
+        ],
+        "type": "json5",
+     },
+ ]

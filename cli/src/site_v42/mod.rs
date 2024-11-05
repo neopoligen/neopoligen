@@ -234,8 +234,8 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
 
     // TODO: Add error handling here
     pub fn get_page_href_from_id(&self, args: &[Value]) -> Result<Value, Error> {
-        if args.len() == 1 {
-            let page_id = &args[0].to_string().trim().to_string();
+        if args.len() >= 3 {
+            let page_id = &args[2].to_string().trim().to_string();
             match self.pages.get(page_id) {
                 Some(page) => match &page.href {
                     Some(href) => Ok(Value::from(href.display().to_string())),
@@ -253,28 +253,34 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
 
     // TODO: Add tests and error handling
     pub fn get_page_href_from_span(&self, args: &[Value]) -> Result<Value, Error> {
-        if args.len() == 1 {
-            let x = &args[0].get_item(&Value::from("spans")).unwrap();
+        if args.len() >= 3 {
+            let x = &args[2].get_item(&Value::from("spans")).unwrap();
             let page_id = flatten_spans_in_template_v42(&[x.to_owned()]).unwrap();
             match self.pages.get(&page_id.to_string()) {
                 Some(page) => match &page.href {
                     Some(href) => Ok(Value::from(href.display().to_string())),
-                    None => Err(Error::new(ErrorKind::InvalidOperation, "NO_HREF_FOR_SPAN")),
+                    None => Err(Error::new(
+                        ErrorKind::InvalidOperation,
+                        format!("<p>Could not get href from span for page with id: {}</p><p>Check 'tlink' items as a possible location where the issue occurs.</p>", page_id),
+                    )),
                 },
-                None => Err(Error::new(ErrorKind::InvalidOperation, "NO_HREF_FOR_SPAN")),
+                None => Err(Error::new(
+                    ErrorKind::InvalidOperation,
+                        format!("<p>Could not get href from span for page with id: {}</p><p>Check 'tlink' items as a possible location where the issue occurs.</p>", page_id),
+                )),
             }
         } else {
             Err(Error::new(
                 ErrorKind::InvalidOperation,
-                "NO_ID_FOR_PAGE_TITLE",
+                format!("<p>Did not pass enough values to site.get_page_href_for_span(site, page, SPAN)</p><p>Check 'tlink' items as a possible location where the issue occurs</p>")
             ))
         }
     }
 
     // TODO: Add error handling here
     pub fn get_page_title_from_id(&self, args: &[Value]) -> Result<Value, Error> {
-        if args.len() == 1 {
-            let page_id = &args[0].to_string().trim().to_string();
+        if args.len() >= 3 {
+            let page_id = &args[2].to_string().trim().to_string();
             match self.pages.get(page_id) {
                 Some(page) => page.title(),
                 None => Err(Error::new(ErrorKind::InvalidOperation, "NO_HREF_FOR_SPAN")),
@@ -289,8 +295,8 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
 
     // TODO: Add error handling here
     pub fn get_page_title_from_span(&self, args: &[Value]) -> Result<Value, Error> {
-        if args.len() == 1 {
-            let x = &args[0].get_item(&Value::from("spans")).unwrap();
+        if args.len() >= 3 {
+            let x = &args[2].get_item(&Value::from("spans")).unwrap();
             let page_id = flatten_spans_in_template_v42(&[x.to_owned()]).unwrap();
             match self.pages.get(&page_id.to_string()) {
                 Some(page) => page.title(),

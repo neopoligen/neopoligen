@@ -26,8 +26,6 @@ impl BuilderV42<'_> {
         static BUILT_IN_TEMPLATE_DIR: Dir = include_dir!("src/built_in_templates");
         let glob = "**/*.neoj";
         for entry in BUILT_IN_TEMPLATE_DIR.find(glob).unwrap() {
-            // dbg!("Found {}", entry.path().display());
-
             let data = BUILT_IN_TEMPLATE_DIR.get_file(entry.path());
             match env.add_template_owned(
                 format!("built-in/{}", entry.path().display().to_string()),

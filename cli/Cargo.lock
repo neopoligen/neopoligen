@@ -1598,6 +1598,7 @@ dependencies = [
  "image",
  "include_dir",
  "itertools",
+ "lazy_static",
  "miette",
  "minijinja",
  "nom",

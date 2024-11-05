@@ -26,6 +26,25 @@ impl PageV42b {
         page
     }
 
+    pub fn new_mock_from_source(source: &str) -> PageV42b {
+        let site_config = SiteConfigV42::mock_for_files_in_test_samples_dir();
+        let source_path = PathBuf::from(format!(
+            "{}/{}",
+            &site_config.project_dir().display(),
+            "mock-file.neo"
+        ));
+        let mut page =
+            PageV42b::new_from_str_v42(&source_path, &source, &site_config.project_dir());
+        page.set_language_from_site_config(&site_config);
+        page.generate_ast(&site_config);
+        page.generate_id_from_ast();
+        page.generate_fallback_id();
+        page.generate_href_from_id();
+        page.generate_href_from_ast();
+        page.generate_fallback_href();
+        page
+    }
+
     // // TODO: Load this thru the new_from_str method because
     // // that sets stuff up that will be needed for testing
     // pub fn valid_sample_mock(name: &str) -> PageV42 {

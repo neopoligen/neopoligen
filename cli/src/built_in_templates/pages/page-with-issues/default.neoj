@@ -32,6 +32,9 @@ pre {
         <p>There were some problems making this page. Not a big deal. 
             That happens sometimes and we can fix it. Here's
         what we know to get started:</p>
+            <aside>SIDENOTE: These issues can be very cryptic to read. 
+                I'm working on making that better. I'm also working
+                on a video with some help digging into them</aside>
         <ul class="flow">
             [@- neo.debug_page_issues(site, page) -@]
                 [#

@@ -44,6 +44,10 @@ pre {
           
           <h2>Issue Count: [@ site.get_issue_count(site, page) @]</h2>
 
+            <aside>SIDENOTE: These issues can be very cryptic to read. 
+                I'm working on making that better. I'm also working
+                on a video with some help digging into them</aside>
+
         <h2>Issues On Pages</h2>
             <ul class="built-in-flow flow">
         [! for id in site.get_page_ids(site, page) !]
