@@ -1,6 +1,7 @@
 pub mod basic;
 pub mod block;
 pub mod css;
+pub mod csv;
 pub mod end;
 pub mod helpers;
 pub mod html;
@@ -14,6 +15,7 @@ pub mod script;
 use crate::section_v42::basic::*;
 use crate::section_v42::block::*;
 use crate::section_v42::css::*;
+use crate::section_v42::csv::*;
 use crate::section_v42::end::*;
 use crate::section_v42::html::*;
 use crate::section_v42::json5::*;
@@ -49,6 +51,7 @@ pub enum SectionV42 {
     Basic(BasicSectionV42),
     Block(BlockSectionV42),
     Css(CssSectionV42),
+    Csv(CsvSectionV42),
     End(EndSectionV42),
     Html(HtmlSectionV42),
     Json5(Json5SectionV42),
@@ -83,8 +86,8 @@ pub fn start_or_full_section_v42<'a>(
         // |src| checklist_section_full_v42(src, &site_config, parent.clone(), debug),
         |src| css_section_start_v42(src, &site_config, parent.clone(), debug),
         |src| css_section_full_v42(src, &site_config, parent.clone(), debug),
-        // |src| detail_list_section_start_v42(src, &site_config, parent.clone(), debug),
-        // |src| detail_list_section_full_v42(src, &site_config, parent.clone(), debug),
+        // |src| csv_section_start_v42(src, &site_config, parent.clone(), debug),
+        // |src| csv_section_full_v42(src, &site_config, parent.clone(), debug),
         |src| html_section_start_v42(src, &site_config, parent.clone(), debug),
         |src| html_section_full_v42(src, &site_config, parent.clone(), debug),
         |src| json5_section_start_v42(src, &site_config, parent.clone(), debug),

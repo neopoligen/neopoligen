@@ -70,7 +70,7 @@ lazy_static! {
 }
 
 #[test]
-fn solo_integration_tests() {
+fn integration_tests() {
     for (id, source) in SOURCE_FILES.iter() {
         match OUTPUT_FILES.get(id) {
             Some(output) => {
