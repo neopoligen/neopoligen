@@ -86,9 +86,10 @@ impl PageV42b {
                         ]));
                 }
                 Err(e) => {
-                    dbg!("TODO: Add this error to the page stack");
-                    dbg!(e);
-                    ()
+                    let _ = &self.issues.push(NeoErrorV42::new_page_issue(
+                        &self,
+                        vec!["Error: Could not get fallback href from page".to_string()],
+                    ));
                 }
             }
         }
