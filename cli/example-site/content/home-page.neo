@@ -4,12 +4,10 @@ Ping
 
 >>this is text|https://www.example.com/>>
 
--- csv-basic-table/
+-- csv-basic-table
 
 alfa, bravo, charlie
 delta, echo, foxtrot
-
--- /csv-basic-table
 
 
 

@@ -66,10 +66,13 @@ pub fn csv_section_full_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
-    let (source, kind) = alt((tag("csv"), tag("csv-basic-table")))
-        .context("")
-        .parse(source)?;
-    let (source, _) = space0_line_ending_or_eof.context("").parse(source)?;
+    let (source, kind) = alt((
+        terminated(tag("csv"), space0_line_ending_or_eof),
+        terminated(tag("csv-basic-table"), space0_line_ending_or_eof),
+    ))
+    .context("")
+    .parse(source)?;
+    // let (source, _) = space0_line_ending_or_eof.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);
