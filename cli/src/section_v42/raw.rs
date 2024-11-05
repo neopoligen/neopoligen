@@ -14,6 +14,7 @@ use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::rest;
 use nom::sequence::preceded;
+use nom::sequence::terminated;
 use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
@@ -76,16 +77,17 @@ pub fn raw_section_start_v42<'a>(
     // let debug = true;
     let dbg_header = "RAW_SECTION_START";
     dump_parser_if_debug(debug, dbg_header, source, 1);
-    // TODO: Get section kind list dynamically
+    //alt((tag("pre"), tag("code"), tag("results"))),
     let (source, kind) = preceded(
         tuple((tag("--"), space1)),
-        alt((tag("pre"), tag("code"), tag("results"))),
+        alt((
+            terminated(tag("pre"), tuple((tag("/"), space0, line_ending))),
+            terminated(tag("code"), tuple((tag("/"), space0, line_ending))),
+            terminated(tag("results"), tuple((tag("/"), space0, line_ending))),
+        )),
     )
     .context("")
     .parse(source)?;
-    let (source, _) = tuple((tag("/"), space0, line_ending))
-        .context("")
-        .parse(source)?;
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, text) = take_until(format!("-- /{}", kind).as_str())

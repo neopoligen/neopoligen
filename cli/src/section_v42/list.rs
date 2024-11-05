@@ -8,11 +8,15 @@ use crate::section_v42::*;
 use crate::site_config::SiteConfigV42;
 use crate::span_v42::space0_line_ending_or_eof::space0_line_ending_or_eof;
 use nom::bytes::complete::tag;
+use nom::character::complete::line_ending;
 use nom::character::complete::multispace0;
+use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::multi::many0;
 use nom::sequence::pair;
+use nom::sequence::preceded;
 use nom::sequence::terminated;
+use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -78,11 +82,15 @@ pub fn list_section_start_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
-    // TODO: Get the list types dynamically
-    let (source, kind) = tag("list").context("").parse(source)?;
-    let (source, _) = terminated(tag("/"), space0_line_ending_or_eof)
-        .context("")
-        .parse(source)?;
+    let (source, kind) = preceded(
+        tuple((tag("--"), space1)),
+        alt((terminated(
+            tag("list"),
+            tuple((tag("/"), space0, line_ending)),
+        ),)),
+    )
+    .context("")
+    .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);
