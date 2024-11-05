@@ -1,3 +1,5 @@
+use self::any_characters::any_colons;
+use self::any_characters::any_pipes;
 use self::plaintext_with_spaces_v42::plaintext_with_spaces_v42;
 use self::shorthand_code::code_shorthand_span;
 use self::shorthand_emphasis::emphasis_shorthand_span;
@@ -53,6 +55,8 @@ pub fn section_key_value_attr_v42<'a>(
     let (source, value) = terminated(
         many1(alt((
             plaintext_with_spaces_v42,
+            any_colons,
+            any_pipes,
             code_shorthand_span,
             emphasis_shorthand_span,
             footnote_shorthand_span,
