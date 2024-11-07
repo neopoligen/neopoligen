@@ -1,4 +1,4 @@
-[!- import "helpers/neopoligen/default.neoj" as neo -!]
+[!- import "built-in/macro-loader.neoj" as neo -!]
 
 <!DOCTYPE html>
 <html lang="en">
@@ -74,9 +74,6 @@ a {
 <div>IDx: [@ page.id @]</div>
 
 <div>Page Title: [@ site.get_page_title_from_id(site, page, page.id) @]</div>
-
-
-[@- neo.debug_ping() -@]
 
 
 [#

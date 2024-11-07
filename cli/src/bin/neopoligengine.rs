@@ -122,6 +122,10 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             let _ = builder.generate_macro_loader();
             let _ = builder.set_languages_from_site_config();
             let _ = builder.generate_asts();
+            // Reminder that these "generated_" methods are done
+            // up front instead of being method calls so the
+            // errors can be tracked and used for error
+            // reporting at the page level
             let _ = builder.generate_ids_from_ast();
             let _ = builder.generate_fallback_ids();
             let _ = builder.generate_hrefs_from_ids();

@@ -230,7 +230,7 @@ impl BuilderV42<'_> {
     }
 
     #[instrument(skip(self))]
-    pub fn generate_macro_loader(&self) -> Result<()> {
+    pub fn generate_macro_loader(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating Macro Loader");
         let mut macros: Vec<String> = vec![];
         for entry in WalkDir::new(&self.site_config.macros_dir()) {
@@ -247,6 +247,14 @@ impl BuilderV42<'_> {
                     }
                 }
             }
+        }
+        let template_name = "built-in/macro-loader.neoj";
+        let content = macros.join("\n");
+        match self
+            .env
+            .add_template_owned(template_name.to_string(), content)
+        {
+            _ => (),
         }
         Ok(())
     }
