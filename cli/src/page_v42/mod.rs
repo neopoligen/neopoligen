@@ -17,6 +17,7 @@ use minijinja::Value;
 use nom_supreme::error::GenericErrorTree;
 use nom_supreme::final_parser::Location;
 use nom_supreme::final_parser::RecreateContext;
+// use serde::de::Error;
 use serde::Deserialize;
 use serde::Serialize;
 use std::path::PathBuf;
@@ -180,57 +181,64 @@ impl PageV42b {
         // --section--title attr on first block if it has one
         // first number of n words from first block
         // pagedata--id
-        if let Some(page_title) = match &self
-            .ast
-            .as_ref()
-            .unwrap()
-            .iter()
-            .filter_map(|section| match section {
-                SectionV42::Json5(s) => Some(s),
-                _ => None,
-            })
-            .find_map(|section| match section.kind.as_str() {
-                "pagedata" => {
-                    //dbg!(&section.attrs);
-                    Some(&section.attrs)
-                }
-                _ => None,
-            }) {
-            Some(attrs) => match attrs.get("title") {
-                Some(attr) => Some(Ok(Value::from_serialize(attr.spans.clone()))),
-                None => None,
-            },
-            None => None,
-        } {
-            page_title
-        } else if let Some(spans) =
-            &self
+        if let Some(ast) = &self.ast.as_ref() {
+            if let Some(page_title) = match &self
                 .ast
                 .as_ref()
                 .unwrap()
                 .iter()
-                .find_map(|section| match section {
-                    SectionV42::Basic(sec) => match sec.kind.as_str() {
-                        "title" => sec.children.iter().find_map(|child| match child {
-                            SectionV42::Block(c) => match c.kind.as_str() {
-                                "block-paragraph" => Some(c.spans.clone()),
-                                _ => None,
-                            },
-                            _ => None,
-                        }),
-                        _ => None,
-                    },
+                .filter_map(|section| match section {
+                    SectionV42::Json5(s) => Some(s),
                     _ => None,
                 })
-        {
-            //dbg!(spans);
-            Ok(Value::from_serialize(spans))
-        } else if let Some(id) = &self.id.clone() {
-            Ok(Value::from_serialize(vec![SpanV42::PlainText(
-                PlainTextSpan { text: id.clone() },
-            )]))
+                .find_map(|section| match section.kind.as_str() {
+                    "pagedata" => {
+                        //dbg!(&section.attrs);
+                        Some(&section.attrs)
+                    }
+                    _ => None,
+                }) {
+                Some(attrs) => match attrs.get("title") {
+                    Some(attr) => Some(Ok(Value::from_serialize(attr.spans.clone()))),
+                    None => None,
+                },
+                None => None,
+            } {
+                page_title
+            } else if let Some(spans) =
+                &self
+                    .ast
+                    .as_ref()
+                    .unwrap()
+                    .iter()
+                    .find_map(|section| match section {
+                        SectionV42::Basic(sec) => match sec.kind.as_str() {
+                            "title" => sec.children.iter().find_map(|child| match child {
+                                SectionV42::Block(c) => match c.kind.as_str() {
+                                    "block-paragraph" => Some(c.spans.clone()),
+                                    _ => None,
+                                },
+                                _ => None,
+                            }),
+                            _ => None,
+                        },
+                        _ => None,
+                    })
+            {
+                //dbg!(spans);
+                Ok(Value::from_serialize(spans))
+            } else if let Some(id) = &self.id.clone() {
+                Ok(Value::from_serialize(vec![SpanV42::PlainText(
+                    PlainTextSpan { text: id.clone() },
+                )]))
+            } else {
+                Ok(Value::from("[NEO_TODO_PAGE_TITLE]"))
+            }
         } else {
-            Ok(Value::from("[NEO_TODO_PAGE_TITLE]"))
+            Err(Error::new(
+                minijinja::ErrorKind::InvalidOperation,
+                "could not figure out title",
+            ))
         }
     }
 
@@ -240,6 +248,7 @@ impl PageV42b {
 impl Object for PageV42b {
     fn get_value(self: &Arc<Self>, key: &Value) -> Option<Value> {
         match key.as_str()? {
+            "id" => Some(Value::from(self.id.clone().unwrap().clone())),
             "issues" => Some(Value::from_serialize(self.issues.clone())),
             "parsing_issue" => Some(Value::from_serialize(self.parsing_issue.clone())),
             "sections" => self.sections.clone(),
@@ -250,21 +259,21 @@ impl Object for PageV42b {
             _ => None,
         }
     }
+
     // fn call_method(
-    //     self: &Arc<PageV42>,
+    //     self: &Arc<PageV42b>,
     //     _state: &minijinja::State,
     //     name: &str,
     //     args: &[Value],
     // ) -> Result<Value, Error> {
     //     match name {
     //         // "sections" => self.ast(),
-    //         "get_pagedata" => self.make_value_from_string(self.get_pagedata(args)),
+    //         // "get_pagedata" => self.make_value_from_string(self.get_pagedata(args)),
     //         // "sections" => self.sections(),
     //         "title" => self.title(),
     //         _ => Ok(Value::from("")),
     //     }
     // }
-    //
 }
 
 #[cfg(test)]

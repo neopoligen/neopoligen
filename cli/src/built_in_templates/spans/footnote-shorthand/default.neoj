@@ -1,5 +1,6 @@
 [@- '' -@]
-
-<sup><a href="#">[@- span.text -@]</a></sup>
-
+<sup><a 
+    href="#footnote-[@- span.text -@]-text"
+    id="footnote-[@- span.text -@]-link"
+    >[@- span.text -@]</a></sup>
 [@- '' -@]

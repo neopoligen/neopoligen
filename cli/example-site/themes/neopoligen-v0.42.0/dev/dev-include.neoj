@@ -1,0 +1,7 @@
+[!- import "dev/macro-test.neoj" as mt -!]
+
+<h2>Start Dev Include</h2>
+this is dev include
+
+<h2>End Dev Include</h2>
+

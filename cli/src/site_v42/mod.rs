@@ -1,5 +1,5 @@
 #![allow(unused_imports)]
-use crate::helpers::flatten_spans_in_template_v42;
+use crate::helpers::flatten_spans_from_template_v42;
 use crate::helpers::flatten_spans_v42;
 use crate::helpers::highlight_span_v42;
 use crate::page_v42::PageV42b;
@@ -137,7 +137,9 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
                         .get_item(&key)?
                         .get_item(&Value::from("spans"))
                         .unwrap();
-                    let flattened = flatten_spans_in_template_v42(&[spans]).unwrap().to_string();
+                    let flattened = flatten_spans_from_template_v42(&[spans])
+                        .unwrap()
+                        .to_string();
                     let escaped_value = encode_quoted_attribute(&flattened);
                     attr_collection.insert(key.to_string(), vec![escaped_value.to_string()]);
                 }
@@ -147,7 +149,9 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
                         .get_item(&key)?
                         .get_item(&Value::from("spans"))
                         .unwrap();
-                    let flattened = flatten_spans_in_template_v42(&[spans]).unwrap().to_string();
+                    let flattened = flatten_spans_from_template_v42(&[spans])
+                        .unwrap()
+                        .to_string();
                     let escaped_value = encode_quoted_attribute(&flattened);
                     classes.push(escaped_value.to_string());
                 }
@@ -162,7 +166,7 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
                 //            //dbg!(internal_spans);
                 //            dbg!(&spans);
                 //            // let thing = encode_quoted_attribute(
-                //            //     &flatten_spans_in_template_v42(&[v
+                //            //     &flatten_spans_from_template_v42(&[v
                 //            //         .get_item(&Value::from("spans"))
                 //            //         .unwrap()])
                 //            //     .expect("unwrapping")
@@ -255,7 +259,7 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
     pub fn get_page_href_from_span(&self, args: &[Value]) -> Result<Value, Error> {
         if args.len() >= 3 {
             let x = &args[2].get_item(&Value::from("spans")).unwrap();
-            let page_id = flatten_spans_in_template_v42(&[x.to_owned()]).unwrap();
+            let page_id = flatten_spans_from_template_v42(&[x.to_owned()]).unwrap();
             match self.pages.get(&page_id.to_string()) {
                 Some(page) => match &page.href {
                     Some(href) => Ok(Value::from(href.display().to_string())),
@@ -288,7 +292,7 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
         } else {
             Err(Error::new(
                 ErrorKind::InvalidOperation,
-                "NO_ID_FOR_PAGE_TITLE",
+                "NOT_ENOUGH_VALUES_SENT_TO: get_page_title_from_id. make sure you have site.get_page_title_from_id(site, page, ID)",
             ))
         }
     }
@@ -297,7 +301,7 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
     pub fn get_page_title_from_span(&self, args: &[Value]) -> Result<Value, Error> {
         if args.len() >= 3 {
             let x = &args[2].get_item(&Value::from("spans")).unwrap();
-            let page_id = flatten_spans_in_template_v42(&[x.to_owned()]).unwrap();
+            let page_id = flatten_spans_from_template_v42(&[x.to_owned()]).unwrap();
             match self.pages.get(&page_id.to_string()) {
                 Some(page) => page.title(),
                 None => Err(Error::new(ErrorKind::InvalidOperation, "NO_HREF_FOR_SPAN")),
@@ -377,6 +381,18 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
     //    }
     //}
 
+    pub fn template_spans_to_text(&self, args: &[Value]) -> Result<Value, Error> {
+        if args.len() >= 3 {
+            let x: &String = &args[0]
+                .try_iter()?
+                .map(|v| v.get_item(&Value::from("text")).unwrap().to_string())
+                .collect::<Vec<_>>()
+                .join("");
+            Ok(Value::from(x))
+        } else {
+            Err(Error::new(ErrorKind::InvalidOperation, "".to_string()))
+        }
+    }
     //
 }
 

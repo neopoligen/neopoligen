@@ -1,0 +1,36 @@
+-- start-theme-test
+
+-- blockquote/
+
+Alfa bravo charlie 
+
+Delta echo foxtrot
+
+-- /blockquote
+
+Golf hotel india
+
+
+-- expected-output/
+
+<section class="blockquote-section flow">
+    <blockquote>
+        <p>Alfa bravo charlie</p>
+        <p>Delta echo foxtrot</p>
+    </blockquote>
+</section>
+
+<section class="p-section flow">
+<p>Golf hotel india</p>
+</section>
+
+
+-- /expected-output
+
+
+
+-- metadata
+-- updated: 2024-06-08T16:44:58-04:00
+-- id: 2hc3nv3_blockquote
+
+

@@ -1,0 +1,32 @@
+-- start-theme-test 
+
+-- h3
+-- subtitle: This is a subtitle
+-- subtitle: across two lines of attrs
+
+Alfa Bravo Charlie
+
+-- expected-output/
+
+<section class="h3-section flow">
+<hgroup>
+  <h3 class="section-heading">
+    Alfa Bravo Charlie
+  </h3>
+  <p class="section-subtitle">
+    This is a subtitle across two lines of attrs
+  </p>
+</hgroup>
+</section>
+
+
+-- /expected-output
+
+
+
+
+-- metadata
+-- updated: 2024-06-12T19:51:48-04:00
+-- id: 2hniaxa3_h3
+
+

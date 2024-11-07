@@ -68,7 +68,7 @@ pub fn csv_section_full_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, kind) = alt((
         terminated(tag("csv"), space0_line_ending_or_eof),
-        terminated(tag("csv-basic-table"), space0_line_ending_or_eof),
+        terminated(tag("csv-table"), space0_line_ending_or_eof),
     ))
     .context("")
     .parse(source)?;
@@ -77,6 +77,7 @@ pub fn csv_section_full_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, csv_text) = alt((take_until("-- "), rest)).context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
+    // TODO: Handle Errors here
     let error = None;
     let data;
     if csv_text.trim() != "" {
@@ -110,10 +111,7 @@ pub fn csv_section_start_v42<'a>(
         tuple((tag("--"), space1)),
         alt((
             terminated(tag("csv"), tuple((tag("/"), space0, line_ending))),
-            terminated(
-                tag("csv-basic-table"),
-                tuple((tag("/"), space0, line_ending)),
-            ),
+            terminated(tag("csv-table"), tuple((tag("/"), space0, line_ending))),
         )),
     )
     .context("")
@@ -128,6 +126,7 @@ pub fn csv_section_start_v42<'a>(
             .context("")
             .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
+    // TODO: Handle Errors here
     let error = None;
     let data;
     if csv_text.trim() != "" {

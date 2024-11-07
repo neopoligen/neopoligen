@@ -126,7 +126,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             let _ = builder.generate_hrefs_from_ast();
             let _ = builder.generate_fallback_hrefs();
             let _ = builder.initialize_site_and_built_in_templates();
-            // let _ = builder.load_file_system_templates();
+            let _ = builder.load_file_system_templates();
             let _ = builder.generate_outputs();
             let _ = builder.move_updated_pages_into_site();
             let _ = builder.empty_output_dirs();

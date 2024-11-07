@@ -97,7 +97,7 @@ pub fn flatten_spans_v42(spans: &Vec<SpanV42>) -> String {
 
 // TODO: Fix this so it won't crash if you send in something
 // other than spans
-pub fn flatten_spans_in_template_v42(args: &[Value]) -> Result<Value, Error> {
+pub fn flatten_spans_from_template_v42(args: &[Value]) -> Result<Value, Error> {
     if args.len() == 1 {
         let x: &String = &args[0]
             .try_iter()?

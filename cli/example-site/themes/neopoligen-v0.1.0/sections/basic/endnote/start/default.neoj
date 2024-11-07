@@ -1,0 +1,10 @@
+<li class="xendnote-item">
+  <div>
+    [!- if section.attrs.url -!]<a href="[@- section.attrs.url -@]">[!- endif -!]
+    [!- if section.attrs.title -!][@- section.attrs.title -@][!- endif -!]
+    [!- if section.attrs.url -!]</a>[!- endif -!]
+  </div>
+  <div class="flow">
+  [!- include "subsections/content-all-blocks.neoj" -!]
+  </div>
+

@@ -185,7 +185,8 @@ impl BuilderV42<'_> {
         let mut env = Environment::new();
         // TODO: Deprecate this flatten_spans and move it to
         // the site struct/object
-        env.add_function("flatten_spans", flatten_spans_in_template_v42);
+        // env.add_function("spans_to_text", flatten_spans_from_template_v42);
+        // env.add_function("spans_to_number", flatten_spans_from_template_v42);
         env.set_syntax(
             SyntaxConfig::builder()
                 .block_delimiters("[!", "!]")
