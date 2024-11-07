@@ -1,4 +1,4 @@
-[!- import "helpers/theme/default.neoj" as neo -!]
+[!- import "helpers/neopoligen/default.neoj" as neo -!]
 
 <!DOCTYPE html>
 <html>
@@ -38,8 +38,8 @@ pre {
                 I'm working on making that better. I'm also working
                 on a video with some help digging into them</aside>
         <ul class="flow">
-                [#
             [@- neo.debug_page_issues(site, page) -@]
+                [#
         [! for issue in page.issues !]
             <li class="flow">
                     [! include [

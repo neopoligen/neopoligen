@@ -237,7 +237,7 @@ impl PageV42b {
         } else {
             Err(Error::new(
                 minijinja::ErrorKind::InvalidOperation,
-                "could not figure out title",
+                "no ast to build title from",
             ))
         }
     }
@@ -260,20 +260,21 @@ impl Object for PageV42b {
         }
     }
 
-    // fn call_method(
-    //     self: &Arc<PageV42b>,
-    //     _state: &minijinja::State,
-    //     name: &str,
-    //     args: &[Value],
-    // ) -> Result<Value, Error> {
-    //     match name {
-    //         // "sections" => self.ast(),
-    //         // "get_pagedata" => self.make_value_from_string(self.get_pagedata(args)),
-    //         // "sections" => self.sections(),
-    //         "title" => self.title(),
-    //         _ => Ok(Value::from("")),
-    //     }
-    // }
+    fn call_method(
+        self: &Arc<PageV42b>,
+        state: &minijinja::State,
+        name: &str,
+        args: &[Value],
+    ) -> Result<Value, Error> {
+        match name {
+            "title_flattened" => Ok(Value::from("title flattened")),
+            // "sections" => self.ast(),
+            // "get_pagedata" => self.make_value_from_string(self.get_pagedata(args)),
+            // "sections" => self.sections(),
+            //"title" => self.title(),
+            _ => Ok(Value::from("")),
+        }
+    }
 }
 
 #[cfg(test)]

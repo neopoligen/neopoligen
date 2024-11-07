@@ -1,0 +1,3 @@
+[!- macro current_page_title_flattened() -!]
+[@- page.title_flattened() -@]
+[!- endmacro -!]

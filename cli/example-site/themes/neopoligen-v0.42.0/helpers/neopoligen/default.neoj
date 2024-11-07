@@ -1,14 +1,50 @@
-[#
+[!- include "macros/current_page_title_flattened.neoj" -!]
+
+[!- macro debug_ping() -!]
+<hr />
+<h2>Start Debug Ping</h2>
+<div>Page ID: [@ page.id @]</div>
+<div>Page Dev Test: [@ page.dev_test() @]</div>
+<div>Page Dev Test2: [@ page.dev_test2() @]</div>
+<h2>End Debug Ping</h2>
+<hr />
+[!- endmacro -!]
+
+
+
+
+[!- macro ping_site() -!]
+<h3>Start Ping Site</h3>
+[@ site.get_page_title_from_id(site, page, page.id) @]
+
+---
+
+[@ page.id @]
+<h3>End Ping Site</h3>
+[!- endmacro -!]
+
+
+
+
+
 [!- macro debug_page_issues(site, page) -!]
   [!- if page.parsing_issue -!]
-    [! include "built-in/issues/parsing-issue/default.neoj" -!]
+    [! include "helpers/issue-0001-parsing/default.neoj" -!]
   [!- elif page.issues -!]
     [!- for issue in page.issues -!]
-      [!- include "built-in/issues/page-issue/default.neoj" -!]
+      [!- include "helpers/issue-0002-page/default.neoj" -!]
     [!- endfor -!]
   [!- endif -!]
 [!- endmacro -!]
 
+
+
+
+
+
+
+
+[#
 [!- macro debug_section_tree(site, page, sections) -!]
 <ul>
 [!- for section in sections -!]

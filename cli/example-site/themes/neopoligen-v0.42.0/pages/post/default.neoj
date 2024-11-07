@@ -1,5 +1,4 @@
-[!- import "theme/helpers.neoj" as neo -!]
-
+[!- import "helpers/neopoligen/default.neoj" as neo -!]
 
 <!DOCTYPE html>
 <html lang="en">
@@ -59,21 +58,30 @@ a {
 }
 
 </style>
+[#
 [@ neo.output_css(site, page) @]
+#]
 </head>
 <body class="built-in-flow">
 <header class="medium-width">
 <a href="/">Home</a>
 </header>
 
-[!- include "dev/dev-include.neoj" -!]
+<main class="medium-width flow">
+
+<div>Page Title Flattened: [@- neo.current_page_title_flattened() -@]
 
 <div>IDx: [@ page.id @]</div>
 
 <div>Page Title: [@ site.get_page_title_from_id(site, page, page.id) @]</div>
 
-<main class="medium-width flow">
+
+[@- neo.debug_ping() -@]
+
+
+[#
 [@ neo.output_sections(site, page, page.sections) @]
+#]
 </main>
 
 <footer class="medium-width">
@@ -88,7 +96,9 @@ that makes the page if you're into that type of thing.
   [! if page.issues !]
     <h3>Issues</h3>
     <ul class="built-in-flow flow">
+    [#
       [@- neo.debug_page_issues(site, page) -@]
+      #]
     </ul>
   [! endif !]
   <details>
@@ -97,16 +107,23 @@ that makes the page if you're into that type of thing.
   </details>
   <details>
     <summary>Section Tree</summary>
+    [#
     <div>[@ neo.debug_section_tree(site, page, page.sections) @]</div>
+    #]
   </details>
   <details>
     <summary>Sections</summary>
-    <div><pre>[@ page.sections|tojson(true) @]</pre></div>
+    [#
+        <div><pre>[@ page.sections|tojson(true) @]</pre></div>
+        #]
   </details>
 </div>
 <div>[@ site.generated_at("Generated on %a. %B %-d at %-I:%M:%S%p") @]</div>
 </footer>
-[@- neo.output_scripts(site, page) -@]
+
+[#
+[@- theme.output_scripts(site, page) -@]
+#]
 </body>
 </html>
 
