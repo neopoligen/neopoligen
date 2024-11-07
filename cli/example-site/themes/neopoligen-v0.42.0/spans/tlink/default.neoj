@@ -1,0 +1,12 @@
+[!- import "theme/helpers.neoj" as neo -!]
+[!- set href = site.get_page_href_from_span(site, page, span) -!]
+[!- set title_spans = site.get_page_title_from_span(site, page, span) -!]
+[!- if href and title_spans -!]
+<a href="[@ href @]">
+[@- neo.output_spans(site, page, title_spans) -@]
+</a>
+[!- else -!]
+[issue: could not make tlink]
+[!- endif -!]
+[@- '' -@]
+

@@ -1,0 +1,20 @@
+[!- import "theme/helpers.neoj" as neo -!]
+
+<section 
+  [@- site.get_section_attrs(site, page, section, "title-section flow") -@]>
+
+<h1>[@- neo.output_just_first_block_spans(site, page, section) -@]</h1>
+
+<div class="warning">Head's up: I'm actively overhauling my site builder
+right now. Images are broken and formatting is off. You should still be 
+able to read most everything though. Please excuse the mess while I put things 
+back together.</div>
+
+[@- neo.output_skip_first_block(site, page, section) -@]
+
+</section>
+
+[@- neo.output_end_section(site, page, section) -@]
+
+
+

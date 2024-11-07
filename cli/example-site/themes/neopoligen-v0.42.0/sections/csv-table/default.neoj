@@ -1,0 +1,38 @@
+[!- import "theme/helpers.neoj" as neo -!]
+
+<section
+  [@- site.get_section_attrs(site, page, section, "csv-table-section built-in flow") -@]>
+[!- if section.error -!]
+<pre>Problem in csv-table[@- "\n\n" -@]
+[@ section.error @]</pre>
+[!- else -!]
+
+
+
+  <table>
+    [! if "header" in section.attrs !]
+      <thead>
+        [!- for row in section.data -!]
+          <tr>
+            [!- for th in row -!]
+              <th>[@- th -@]</th>
+            [!- endfor -!]
+          </tr>
+        [!- endfor -!]
+      </thead>
+    [! else !]
+      <tbody>
+        [!- for row in section.data -!]
+          <tr>
+            [!- for td in row -!]
+              <td>[@- td -@]</td>
+            [!- endfor -!]
+          </tr>
+        [!- endfor -!]
+      </tbody>
+    [! endif !]
+  </table>
+[!- endif -!]
+</section>
+
+[@- neo.output_end_section(site, page, section) -@]

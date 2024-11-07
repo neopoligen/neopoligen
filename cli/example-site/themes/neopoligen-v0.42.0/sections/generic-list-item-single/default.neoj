@@ -1,0 +1,4 @@
+[!- import "theme/helpers.neoj" as neo -!]
+
+[@- neo.output_spans(site, page, section.spans) -@]
+

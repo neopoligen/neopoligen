@@ -1,0 +1,5 @@
+[!- import "theme/helpers.neoj" as neo -!]
+
+[# no output by default #]
+
+[@- neo.output_end_section(site, page, section) -@]

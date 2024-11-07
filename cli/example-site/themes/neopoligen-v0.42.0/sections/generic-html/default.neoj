@@ -1,0 +1,8 @@
+[!- import "theme/helpers.neoj" as neo -!]
+
+<section 
+  [@- site.get_section_attrs(site, page, section, "generic-html-section built-in flow") -@]>
+[@ section.text @]
+</section>
+
+[@- neo.output_end_section(site, page, section) -@]

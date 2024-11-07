@@ -1,0 +1,9 @@
+[!- import "theme/helpers.neoj" as neo -!]
+
+
+<section 
+  [@- site.get_section_attrs(site, page, section, "generic-list-section built-in flow") -@]>
+<ul class="flow">
+[@- neo.output_sections(site, page, section.children) -@]
+</ul>
+</section>
