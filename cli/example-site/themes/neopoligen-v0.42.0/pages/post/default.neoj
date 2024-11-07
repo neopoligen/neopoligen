@@ -69,7 +69,7 @@ a {
 
 <main class="medium-width flow">
 
-<div>Page Title Flattened: [@- neo.current_page_title_flattened() -@]
+<div>Page Title Text: [@- neo.current_page_title_as_text() -@]
 
 <div>IDx: [@ page.id @]</div>
 

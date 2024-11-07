@@ -195,6 +195,10 @@ impl SiteConfigV42 {
         self.errors_dir().join("index.html")
     }
 
+    pub fn macros_dir(&self) -> PathBuf {
+        self.theme_dir().join("macros")
+    }
+
     pub fn output_dest_dir(&self) -> PathBuf {
         self.project_dir().join(self.output_directory_name.clone())
     }

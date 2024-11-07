@@ -119,6 +119,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             // Build Site
             let _ = builder.ingest_source_files();
             let _ = builder.load_file_system_templates();
+            let _ = builder.generate_macro_loader();
             let _ = builder.set_languages_from_site_config();
             let _ = builder.generate_asts();
             let _ = builder.generate_ids_from_ast();
@@ -126,7 +127,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             let _ = builder.generate_hrefs_from_ids();
             let _ = builder.generate_hrefs_from_ast();
             let _ = builder.generate_fallback_hrefs();
-            let _ = builder.initialize_site_and_built_in_templates();
+            let _ = builder.initialize_site_with_pages();
             let _ = builder.generate_outputs();
             let _ = builder.move_updated_pages_into_site();
             let _ = builder.empty_output_dirs();

@@ -1,4 +1,4 @@
-[!- include "macros/current_page_title_flattened.neoj" -!]
+[!- include "macros/current_page_title_as_text.neoj" -!]
 
 [!- macro debug_ping() -!]
 <hr />
