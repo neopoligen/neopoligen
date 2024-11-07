@@ -2,4 +2,4 @@
 
 [# no output by default #]
 
-[@- neo.output_end_section(site, page, section) -@]
+[@- neo.output_end_section(section) -@]
