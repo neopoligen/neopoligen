@@ -232,6 +232,7 @@ impl BuilderV42<'_> {
     #[instrument(skip(self))]
     pub fn generate_macro_loader(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating Macro Loader");
+        // TODO: Handle error if the macros directory gets deleted
         let mut macros: Vec<String> = vec![];
         for entry in WalkDir::new(&self.site_config.macros_dir()) {
             let path = entry?.path().to_path_buf();

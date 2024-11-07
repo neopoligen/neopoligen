@@ -1,0 +1,3 @@
+[!- macro output_section(section) -!]
+[!- include section.template_list -!]
+[!- endmacro -!]

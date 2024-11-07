@@ -1,0 +1,99 @@
+[!- import "built-in/macro-loader.neoj" as neo -!]
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+
+[#
+<title>[@ page.title @]</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta property="og:title" content="[@ page.title @]" />
+<meta property="og:description" content="a post from alan w. smith" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="[@ site.config.base_url @][@ page.absolute_url @]" />
+<meta property="og:image" content="https://res.cloudinary.com/awsimages/image/upload/og-image-no-title-white-on-black.jpg" />
+#]
+
+<style>
+body {
+  background-color: #0d1229;
+  color: #f0e5d8;
+  font-size: 15px;
+  font-family: Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
+  font-weight: normal;
+  line-height: 1.5;
+}
+
+a {
+  text-decoration: none;
+  color: #ccb147;
+}
+
+.align-bottom {
+  display: flex;
+  align-items: flex-end;
+}
+
+.built-in-flow > :where(:not(:first-child)) {
+  margin-top: var(--flow-space, 1em);
+}
+
+.footnote-section {
+  display: grid;
+  grid-template-columns: 4ch 1fr;
+  gap: 10px;
+}
+
+.medium-width {
+  max-width: 64ch;
+  margin-inline: auto;
+}
+
+.warning {
+  padding: 1.3rem;
+  margin: 0.4rem;
+  border: 1px solid #777;
+  border-radius: 0.3rem;
+}
+
+</style>
+[#
+[@ neo.output_css(site, page) @]
+#]
+</head>
+<body class="built-in-flow">
+<header class="medium-width">
+<a href="/">Home</a>
+</header>
+
+<main class="medium-width flow">
+    [!- block body_main -!][!- endblock -!]
+
+
+
+[#
+
+<div>Page Title Text: [@- neo.current_page_title_as_text() -@]
+
+<div>IDx: [@ page.id @]</div>
+
+<div>Page Title: [@ site.get_page_title_from_id(site, page, page.id) @]</div>
+
+
+[@ neo.output_sections(site, page, page.sections) @]
+#]
+
+</main>
+
+<footer class="medium-width">
+    [!- block body_footer -!][!- endblock -!]
+
+
+</footer>
+
+[#
+[@- theme.output_scripts(site, page) -@]
+#]
+</body>
+</html>

@@ -1,0 +1,4 @@
+[!- macro output_child_sections_skipping_first(section) -!]
+asdf
+
+[!- endmacro -!]
