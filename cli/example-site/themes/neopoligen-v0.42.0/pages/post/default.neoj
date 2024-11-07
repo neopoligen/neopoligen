@@ -2,7 +2,7 @@
 [!- import "built-in/macro-loader.neoj" as neo -!]
 
 [!- block body_main -!]
-[@- neo.all_sections_except(["footnote"]) -@]
+[@- neo.output_all_sections_except(["footnote"]) -@]
 [!- endblock -!]
 
 

@@ -1,4 +1,4 @@
-[!- import "theme/helpers.neoj" as neo -!]
+[!- import "built-in/macro-loader.neoj" as neo -!]
 
 [# no output by default #]
 

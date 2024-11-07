@@ -1,4 +1,4 @@
-[!- import "theme/helpers.neoj" as neo -!]
+[!- import "built-in/macro-loader.neoj" as neo -!]
 [!- set href = site.get_page_href_from_span(site, page, span) -!]
 [!- set title_spans = site.get_page_title_from_span(site, page, span) -!]
 [!- if href and title_spans -!]

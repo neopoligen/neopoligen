@@ -1,9 +1,9 @@
-[!- import "theme/helpers.neoj" as neo -!]
+[!- import "built-in/macro-loader.neoj" as neo -!]
 
 <section 
   [@- site.get_section_attrs(site, page, section, "generic-basic-section built-in flow") -@]>
 
-[@- neo.output_sections(site, page, section.children) -@]
+[@- neo.output_all_child_sections(section) -@]
 
 </section>
 

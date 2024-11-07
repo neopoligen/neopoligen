@@ -1,4 +1,4 @@
-[!- import "theme/helpers.neoj" as neo -!]
+[!- import "built-in/macro-loader.neoj" as neo -!]
 
 <section 
   [@- site.get_section_attrs(site, page, section, "generic-html-section built-in flow") -@]>
