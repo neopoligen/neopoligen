@@ -15,7 +15,7 @@ pub enum NeoErrorV42 {
     #[serde(rename = "page_issue")]
     PageIssue {
         id: Option<String>,
-        href: Option<PathBuf>,
+        rel_output_path: Option<PathBuf>,
         source_display_path: PathBuf,
         notes: Vec<String>,
         template_list: Vec<String>,
@@ -36,7 +36,7 @@ impl NeoErrorV42 {
     pub fn new_page_issue(page: &PageV42b, notes: Vec<String>) -> NeoErrorV42 {
         NeoErrorV42::PageIssue {
             id: page.id.clone(),
-            href: page.href.clone(),
+            rel_output_path: page.rel_output_path.clone(),
             source_display_path: page.source_display_path.clone(),
             notes,
             template_list: vec![

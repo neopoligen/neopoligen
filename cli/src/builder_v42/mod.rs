@@ -72,14 +72,14 @@ impl BuilderV42<'_> {
         Ok(())
     }
 
-    #[instrument(skip(self))]
-    pub fn generate_fallback_ids(&mut self) -> Result<()> {
-        event!(Level::INFO, "Generating Fallback IDs");
-        for (_, page) in &mut self.pages_v42 {
-            page.generate_fallback_id();
-        }
-        Ok(())
-    }
+    // #[instrument(skip(self))]
+    // pub fn generate_fallback_ids(&mut self) -> Result<()> {
+    //     event!(Level::INFO, "Generating Fallback IDs");
+    //     for (_, page) in &mut self.pages_v42 {
+    //         page.generate_fallback_id();
+    //     }
+    //     Ok(())
+    // }
 
     #[instrument(skip(self))]
     pub fn generate_hrefs_from_ast(&mut self) -> Result<()> {
@@ -99,21 +99,21 @@ impl BuilderV42<'_> {
         Ok(())
     }
 
-    #[instrument(skip(self))]
-    pub fn generate_ids_from_ast(&mut self) -> Result<()> {
-        event!(Level::INFO, "Generating IDs From AST");
-        for (_, page) in &mut self.pages_v42 {
-            page.generate_id_from_ast();
-        }
-        Ok(())
-    }
+    // #[instrument(skip(self))]
+    // pub fn generate_ids_from_ast(&mut self) -> Result<()> {
+    //     event!(Level::INFO, "Generating IDs From AST");
+    //     for (_, page) in &mut self.pages_v42 {
+    //         page.generate_id_from_ast();
+    //     }
+    //     Ok(())
+    // }
 
     #[instrument(skip(self))]
     pub fn generate_outputs(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating Outputs");
         let site_clone = Value::from_object(self.site_v42b.clone().unwrap());
         for (_, page) in &mut self.pages_v42 {
-            if let Some(href) = &page.href {
+            if let Some(rel_output_path) = &page.rel_output_path {
                 match self.env.get_template("pages/post/default.neoj") {
                     Ok(template) => {
                         match template.render(
@@ -126,7 +126,7 @@ impl BuilderV42<'_> {
                             Err(e) => {
                                 let err = NeoErrorV42::PageIssue {
                                     id: page.id.clone(),
-                                    href: page.href.clone(),
+                                    rel_output_path: page.rel_output_path.clone(),
                                     notes: get_minijinja_error_text(&e),
                                     source_display_path: page.source_display_path.clone(),
                                     template_list: vec![
@@ -140,17 +140,16 @@ impl BuilderV42<'_> {
                     Err(e) => {
                         let err = NeoErrorV42::PageIssue {
                             id: page.id.clone(),
-                            href: page.href.clone(),
+                            rel_output_path: page.rel_output_path.clone(),
                             notes: get_minijinja_error_text(&e),
                             source_display_path: page.source_display_path.clone(),
                             template_list: vec!["issues/page-issue/default.neoj".to_string()],
                         };
                         page.issues.push(err);
-                        ()
                     }
                 }
             } else {
-                dbg!("TODO: ERROR For no href for page");
+                dbg!("TODO: ERROR For no rel_output_path for page");
             }
         }
         Ok(())
@@ -402,11 +401,7 @@ impl BuilderV42<'_> {
     pub fn output_pages_v42(&mut self) -> Result<()> {
         event!(Level::INFO, "Outputting pages");
         for (_, page) in &mut self.pages_v42 {
-            if let Some(href) = &page.href {
-                let rel_output_path = match href.strip_prefix("/") {
-                    Ok(p) => p,
-                    Err(_) => &href,
-                };
+            if let Some(rel_output_path) = &page.rel_output_path {
                 let absolute_output_path =
                     &self.site_config.output_dest_dir().join(rel_output_path);
                 if let Some(output) = &page.output {
@@ -426,9 +421,27 @@ impl BuilderV42<'_> {
     }
 
     #[instrument(skip(self))]
+    pub fn set_ids(&mut self) -> Result<()> {
+        event!(Level::INFO, "Setting Page IDs");
+        for (_, page) in &mut self.pages_v42 {
+            page.set_id();
+        }
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn set_languages_from_site_config(&mut self) -> Result<()> {
         for (_, page) in &mut self.pages_v42 {
             page.set_language_from_site_config(&self.site_config);
+        }
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn set_rel_output_paths(&mut self) -> Result<()> {
+        event!(Level::INFO, "Setting Page IDs");
+        for (_, page) in &mut self.pages_v42 {
+            page.set_rel_output_path();
         }
         Ok(())
     }
