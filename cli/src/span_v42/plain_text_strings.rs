@@ -5,6 +5,7 @@ use nom::character::complete::space1;
 use nom::combinator::not;
 use nom::multi::many1;
 use nom::sequence::pair;
+use nom::sequence::terminated;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -24,9 +25,24 @@ pub fn plain_text_string_with_line_spaces_and_single_newlines(
 }
 
 pub fn plain_text_string_base(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
-    let (source, result) = is_not(" \t\r\n~`*^![]{}<>|:_\\")
-        .context("")
-        .parse(source)?;
+    let (source, result) = alt((
+        is_not(" \t\r\n~`*^![]{}<>_#|:\\"),
+        terminated(tag("`"), not(tag("`"))),
+        terminated(tag("~"), not(tag("~"))),
+        terminated(tag("!"), not(tag("!"))),
+        terminated(tag("#"), not(tag("#"))),
+        terminated(tag("^"), not(tag("^"))),
+        terminated(tag("*"), not(tag("*"))),
+        terminated(tag("["), not(tag("["))),
+        terminated(tag("]"), not(tag("]"))),
+        terminated(tag("{"), not(tag("{"))),
+        terminated(tag("}"), not(tag("}"))),
+        terminated(tag("<"), not(tag("<"))),
+        terminated(tag(">"), not(tag(">"))),
+        terminated(tag("_"), not(tag("_"))),
+    ))
+    .context("")
+    .parse(source)?;
     Ok((source, result))
 }
 
@@ -55,7 +71,7 @@ mod test {
     #[case("alfa bravo", &["alfa", " ", "bravo"], "")]
     #[case("alfa bravo\ncharlie", &["alfa", " ", "bravo", " ", "charlie"], "")]
     #[case("alfa bravo\n\ncharlie", &["alfa", " ", "bravo"], "\n\ncharlie")]
-    //#[case("  ", "  ", "")]
+    #[case("alfa~bravo", &["alfa", "~", "bravo"], "")]
     fn solo_plain_text_string_with_line_spaces_and_single_newlines(
         #[case] source: &str,
         #[case] got: &[&str],
@@ -70,6 +86,19 @@ mod test {
     #[case("alfa", "alfa", "")]
     #[case("alfa bravo", "alfa", " bravo")]
     #[case("alfa\nbravo", "alfa", "\nbravo")]
+    #[case("`bravo", "`", "bravo")]
+    #[case("~bravo", "~", "bravo")]
+    #[case("!bravo", "!", "bravo")]
+    #[case("#bravo", "#", "bravo")]
+    #[case("^bravo", "^", "bravo")]
+    #[case("*bravo", "*", "bravo")]
+    #[case("[bravo", "[", "bravo")]
+    #[case("]bravo", "]", "bravo")]
+    #[case("{bravo", "{", "bravo")]
+    #[case("}bravo", "}", "bravo")]
+    #[case("<bravo", "<", "bravo")]
+    #[case(">bravo", ">", "bravo")]
+    #[case("_bravo", "_", "bravo")]
     fn solo_plain_text_string_base_tests(
         #[case] source: &str,
         #[case] got: &str,
