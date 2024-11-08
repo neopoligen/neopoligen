@@ -50,7 +50,7 @@ pub fn json5_section_full_v42<'a>(
     let (source, _) = tag("-- ").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, kind) = alt((
-        terminated(tag("pagedata"), space0_line_ending_or_eof),
+        terminated(tag("page"), space0_line_ending_or_eof),
         terminated(tag("json5-test"), space0_line_ending_or_eof),
         terminated(tag("json5-table"), space0_line_ending_or_eof),
         terminated(tag("json5-table-2"), space0_line_ending_or_eof),
@@ -102,7 +102,7 @@ pub fn json5_section_start_v42<'a>(
     let (source, kind) = preceded(
         tuple((tag("--"), space1)),
         alt((
-            terminated(tag("pagedata"), tuple((tag("/"), space0, line_ending))),
+            terminated(tag("page"), tuple((tag("/"), space0, line_ending))),
             terminated(tag("json5-test"), tuple((tag("/"), space0, line_ending))),
             terminated(tag("json5-table"), tuple((tag("/"), space0, line_ending))),
             terminated(tag("json5-table-2"), tuple((tag("/"), space0, line_ending))),

@@ -212,7 +212,9 @@ impl PageV42b {
     }
 
     pub fn set_rel_output_path(&mut self) {
-        if let (Some(language), Some(id)) = (&self.language, &self.id) {
+        if let Ok(attr) = &self.get_page_attr_from_ast("path") {
+            self.rel_output_path = Some(PathBuf::from(format!("{}", attr.text)));
+        } else if let (Some(language), Some(id)) = (&self.language, &self.id) {
             self.rel_output_path = Some(PathBuf::from(format!("{}/{}/index.html", language, id)));
         }
     }
