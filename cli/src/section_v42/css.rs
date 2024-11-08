@@ -148,13 +148,14 @@ mod test {
     }
 
     #[test]
-    fn basic_start_end() {
+    fn solo_basic_start_end() {
         let site_config = SiteConfigV42::mock1_basic();
         let source = SAMPLE_DIR
             .get_file("002-start-end.neo")
             .unwrap()
             .contents_utf8()
             .unwrap()
+            .trim()
             .to_string();
         let attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
         let left = (
