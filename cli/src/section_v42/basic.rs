@@ -233,7 +233,7 @@ mod test {
     }
 
     #[test]
-    fn basic_section_tests() {
+    fn solo_basic_section_tests() {
         for (id, source) in INPUT_FILES.iter() {
             match OUTPUT_FILES.get(id) {
                 Some(output) => {
@@ -244,7 +244,7 @@ mod test {
                             let debug = false;
                             let left = Value::from_serialize(json5);
                             let right = Value::from_serialize(
-                                basic_section_v42(source, &site_config, parent, debug)
+                                basic_section_v42(source.trim(), &site_config, parent, debug)
                                     .unwrap()
                                     .1,
                             );
