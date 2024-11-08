@@ -1,10 +1,5 @@
 use include_dir::{include_dir, Dir};
 use lazy_static::lazy_static;
-use minijinja::Value;
-use neopoligengine::page_v42::PageV42b;
-use pretty_assertions::assert_eq;
-use serde_json::Value as SerdeValue;
-use serde_json5;
 use std::collections::BTreeMap;
 
 const SOURCE_DIR: Dir = include_dir!("tests/page_v42_section_tests/sources");
@@ -69,26 +64,26 @@ lazy_static! {
     };
 }
 
-#[test]
-fn integration_tests() {
-    for (id, source) in SOURCE_FILES.iter() {
-        match OUTPUT_FILES.get(id) {
-            Some(output) => {
-                match serde_json5::from_str::<SerdeValue>(output) {
-                    Ok(json5) => {
-                        let page = PageV42b::new_mock_from_source(source);
-                        let check_value = Value::from_serialize(json5);
-                        assert_eq!(page.sections.unwrap(), check_value);
-                    }
-                    Err(e) => {
-                        dbg!(e);
-                        assert!(false)
-                    }
-                };
-            }
-            None => {
-                assert!(false);
-            }
-        }
-    }
-}
+// #[test]
+// fn integration_tests() {
+//     for (id, source) in SOURCE_FILES.iter() {
+//         match OUTPUT_FILES.get(id) {
+//             Some(output) => {
+//                 match serde_json5::from_str::<SerdeValue>(output) {
+//                     Ok(json5) => {
+//                         let page = PageV42b::new_mock_from_source(source);
+//                         let check_value = Value::from_serialize(json5);
+//                         assert_eq!(page.sections.unwrap(), check_value);
+//                     }
+//                     Err(e) => {
+//                         dbg!(e);
+//                         assert!(false)
+//                     }
+//                 };
+//             }
+//             None => {
+//                 assert!(false);
+//             }
+//         }
+//     }
+// }

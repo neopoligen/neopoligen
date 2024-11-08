@@ -27,6 +27,7 @@ use std::sync::Arc;
 pub struct PageV42b {
     pub ast: Option<Vec<SectionV42>>,
     pub parsing_issue: Option<NeoErrorV42>,
+    // TODO: Deprecate .href field in favor of .href() method
     pub href: Option<PathBuf>,
     pub id: Option<String>,
     pub issues: Vec<NeoErrorV42>,
@@ -208,6 +209,12 @@ impl PageV42b {
 
     pub fn set_language_from_site_config(&mut self, site_config: &SiteConfigV42) {
         self.language = Some(site_config.default_language.clone());
+    }
+
+    pub fn set_rel_output_path(&mut self) {
+        if let (Some(language), Some(id)) = (&self.language, &self.id) {
+            self.rel_output_path = Some(PathBuf::from(format!("{}/{}/index.html", language, id)));
+        }
     }
 
     pub fn title(&self) -> Result<Value, Error> {
