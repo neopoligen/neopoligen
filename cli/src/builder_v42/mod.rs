@@ -49,13 +49,14 @@ pub struct BuilderV42<'a> {
 impl BuilderV42<'_> {
     #[instrument(skip(self))]
     pub fn empty_output_dirs(&self) {
-        event!(Level::DEBUG, "Emptying output dirs");
+        event!(Level::INFO, "Emptying Output Dirs");
         let _ = empty_dir(&self.site_config.status_dest_dir());
         let _ = empty_dir(&self.site_config.output_dest_dir());
     }
 
     #[instrument(skip(self))]
     pub fn generate_asts(&mut self) -> Result<()> {
+        event!(Level::INFO, "Generating ASTs");
         for (_, page) in &mut self.pages_v42 {
             page.generate_ast(&self.site_config);
         }
@@ -64,6 +65,7 @@ impl BuilderV42<'_> {
 
     #[instrument(skip(self))]
     pub fn generate_fallback_hrefs(&mut self) -> Result<()> {
+        event!(Level::INFO, "Generating Fallback hrefs");
         for (_, page) in &mut self.pages_v42 {
             page.generate_fallback_href();
         }
@@ -72,6 +74,7 @@ impl BuilderV42<'_> {
 
     #[instrument(skip(self))]
     pub fn generate_fallback_ids(&mut self) -> Result<()> {
+        event!(Level::INFO, "Generating Fallback IDs");
         for (_, page) in &mut self.pages_v42 {
             page.generate_fallback_id();
         }
@@ -80,6 +83,7 @@ impl BuilderV42<'_> {
 
     #[instrument(skip(self))]
     pub fn generate_hrefs_from_ast(&mut self) -> Result<()> {
+        event!(Level::INFO, "Generating hrefs From AST");
         for (_, page) in &mut self.pages_v42 {
             page.generate_href_from_ast();
         }
@@ -88,6 +92,7 @@ impl BuilderV42<'_> {
 
     #[instrument(skip(self))]
     pub fn generate_hrefs_from_ids(&mut self) -> Result<()> {
+        event!(Level::INFO, "Generating hrefs From IDs");
         for (_, page) in &mut self.pages_v42 {
             page.generate_href_from_id();
         }
@@ -96,6 +101,7 @@ impl BuilderV42<'_> {
 
     #[instrument(skip(self))]
     pub fn generate_ids_from_ast(&mut self) -> Result<()> {
+        event!(Level::INFO, "Generating IDs From AST");
         for (_, page) in &mut self.pages_v42 {
             page.generate_id_from_ast();
         }
@@ -104,6 +110,7 @@ impl BuilderV42<'_> {
 
     #[instrument(skip(self))]
     pub fn generate_outputs(&mut self) -> Result<()> {
+        event!(Level::INFO, "Generating Outputs");
         let site_clone = Value::from_object(self.site_v42b.clone().unwrap());
         for (_, page) in &mut self.pages_v42 {
             if let Some(href) = &page.href {
