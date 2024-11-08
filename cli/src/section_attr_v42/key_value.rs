@@ -15,7 +15,6 @@ use self::space0_line_ending_or_eof::space0_line_ending_or_eof;
 use crate::helpers::dump_parser_if_debug;
 use crate::section_attr_v42::SectionAttrV42;
 use crate::span_v42::*;
-use crate::spans_v42::generic_span_attr_content::generic_span_attr_content;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::character::complete::alphanumeric1;
@@ -82,12 +81,12 @@ pub fn section_key_value_attr_v42<'a>(
     ))
 }
 
-pub fn spans_of_section_key_value_attr_value<'a>(
-    source: &'a str,
-) -> IResult<&'a str, Vec<SpanV42>, ErrorTree<&'a str>> {
-    let (source, output) = generic_span_attr_content.context("").parse(source)?;
-    Ok((source, output))
-}
+// pub fn spans_of_section_key_value_attr_value<'a>(
+//     source: &'a str,
+// ) -> IResult<&'a str, Vec<SpanV42>, ErrorTree<&'a str>> {
+//     let (source, results) = .context("").parse(source)?;
+//     Ok((source, results))
+// }
 
 // pub fn section_flag_attr_v42<'a>(
 //     source: &'a str,

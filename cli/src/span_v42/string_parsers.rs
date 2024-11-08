@@ -16,6 +16,19 @@ use nom_supreme::parser_ext::ParserExt;
 use super::PlainTextSpan;
 use super::SpanV42;
 
+// TODO: Make this
+// pub fn span_of_plain_text_for_section_key_value_attr_value(
+//     source: &str,
+// ) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+//     let (source, result) = plain_text_string_base.context("").parse(source)?;
+//     Ok((
+//         source,
+//         SpanV42::PlainText(PlainTextSpan {
+//             text: result.to_string(),
+//         }),
+//     ))
+// }
+
 pub fn span_of_plain_text_for_block_paragraph(
     source: &str,
 ) -> IResult<&str, SpanV42, ErrorTree<&str>> {
