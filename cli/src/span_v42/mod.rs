@@ -3,7 +3,6 @@ pub mod block_line_ending;
 pub mod escaped_characters;
 pub mod named_span;
 pub mod not_pipe_or_greater_than_or_less_than_or_escape;
-pub mod plain_text_strings;
 pub mod plaintext;
 pub mod plaintext_base_v42;
 pub mod plaintext_with_spaces_and_single_newlines_v42;
@@ -22,6 +21,7 @@ pub mod single_characters;
 pub mod single_newline_as_space;
 pub mod space0_line_ending_or_eof;
 pub mod space1_not_at_line_ending_or_eof;
+pub mod string_parsers;
 
 use self::named_span::NamedSpanV42;
 use crate::span_v42::escaped_characters::*;
