@@ -1,4 +1,3 @@
-use super::generic_base_content::generic_base_content;
 use super::generic_base_content_v42::generic_base_content_v42;
 use crate::span_v42::any_characters::*;
 use crate::span_v42::block_line_ending::block_line_ending;
