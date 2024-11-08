@@ -7,6 +7,7 @@ use crate::ast_v42::parse_ast_v42;
 use crate::helpers::flatten_spans_v42;
 use crate::neo_error_v42::NeoErrorV42;
 use crate::page_v42::helpers::*;
+use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
 use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
 use crate::span_v42::plaintext::PlainTextSpan;
@@ -129,8 +130,8 @@ impl PageV42b {
 
     // TODO: Update to be rel_output_path
     pub fn generate_href_from_ast(&mut self) {
-        if let Ok(spans) = self.get_pagedata_from_ast("href") {
-            self.href = Some(flatten_spans_v42(&spans).into());
+        if let Ok(attr) = self.get_pagedata_from_ast("href") {
+            self.href = Some(PathBuf::from(&attr.text));
         }
     }
 
@@ -142,8 +143,8 @@ impl PageV42b {
 
     pub fn generate_id_from_ast(&mut self) {
         match self.get_pagedata_from_ast("id") {
-            Ok(spans) => {
-                self.id = Some(flatten_spans_v42(&spans));
+            Ok(attr) => {
+                self.id = Some(attr.text.to_string());
             }
             Err(e) => {
                 let _ = &self
@@ -157,7 +158,10 @@ impl PageV42b {
         }
     }
 
-    pub fn get_pagedata_from_ast(&self, key: &str) -> Result<Vec<SpanV42>, NeoErrorV42> {
+    pub fn get_pagedata_from_ast(
+        &self,
+        key: &str,
+    ) -> Result<&SectionKeyValueAttrPayloadV42, NeoErrorV42> {
         match &self.ast {
             Some(ast) => {
                 match ast
@@ -168,8 +172,8 @@ impl PageV42b {
                     })
                     .last()
                 {
-                    Some(s) => match &s.attrs.get(key) {
-                        Some(attr) => Ok(attr.spans.clone()),
+                    Some(s) => match s.attrs.get(key) {
+                        Some(attr) => Ok(attr),
                         None => Err(NeoErrorV42::NoParsedPageDataForKey(key.to_string())),
                     },
                     None => Err(NeoErrorV42::NoParsedPageDataForKey(key.to_string())),
@@ -179,8 +183,12 @@ impl PageV42b {
         }
     }
 
-    // pub fn set_id(&mut self) {
-    // }
+    pub fn set_id(&mut self) {
+        match self.get_pagedata_from_ast("id") {
+            Ok(attr) => self.id = Some(attr.text.to_string()),
+            Err(e) => (),
+        }
+    }
 
     pub fn set_language_from_site_config(&mut self, site_config: &SiteConfigV42) {
         self.language = Some(site_config.default_language.clone());

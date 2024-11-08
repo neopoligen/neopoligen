@@ -18,7 +18,7 @@ impl PageV42b {
             PageV42b::new_from_str_v42(&source_path, &source, &site_config.project_dir());
         page.set_language_from_site_config(&site_config);
         page.generate_ast(&site_config);
-        //page.set_id();
+        page.set_id();
 
         // // TODO: Combine these
         // page.generate_id_from_ast();
