@@ -1,25 +1,14 @@
-#![allow(unused_imports)]
-#![allow(unused_variables)]
-
 pub mod inits;
 
-use crate::error::page_error::PageError;
-use crate::error::template_load_error::TemplateLoadError;
 use crate::helpers::*;
-use crate::neo_error::NeoErrorKind;
 use crate::neo_error_v42::NeoErrorV42;
 use crate::page_v42::PageV42b;
+use crate::site_config::SiteConfigV42;
 use crate::site_v42::SiteV42b;
-use crate::{neo_error::NeoError, site_config::SiteConfigV42};
 use anyhow::Result;
-use chrono::Local;
-use chrono::{DateTime, TimeZone};
 use html_escape::encode_safe;
-use include_dir::{include_dir, Dir};
-use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
 use minijinja::{context, Value};
-use rusqlite::ffi::sqlite3_table_column_metadata;
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
@@ -64,56 +53,11 @@ impl BuilderV42<'_> {
     }
 
     #[instrument(skip(self))]
-    pub fn generate_fallback_hrefs(&mut self) -> Result<()> {
-        event!(Level::INFO, "Generating Fallback hrefs");
-        for (_, page) in &mut self.pages_v42 {
-            page.generate_fallback_href();
-        }
-        Ok(())
-    }
-
-    // #[instrument(skip(self))]
-    // pub fn generate_fallback_ids(&mut self) -> Result<()> {
-    //     event!(Level::INFO, "Generating Fallback IDs");
-    //     for (_, page) in &mut self.pages_v42 {
-    //         page.generate_fallback_id();
-    //     }
-    //     Ok(())
-    // }
-
-    #[instrument(skip(self))]
-    pub fn generate_hrefs_from_ast(&mut self) -> Result<()> {
-        event!(Level::INFO, "Generating hrefs From AST");
-        for (_, page) in &mut self.pages_v42 {
-            page.generate_href_from_ast();
-        }
-        Ok(())
-    }
-
-    #[instrument(skip(self))]
-    pub fn generate_hrefs_from_ids(&mut self) -> Result<()> {
-        event!(Level::INFO, "Generating hrefs From IDs");
-        for (_, page) in &mut self.pages_v42 {
-            page.generate_href_from_id();
-        }
-        Ok(())
-    }
-
-    // #[instrument(skip(self))]
-    // pub fn generate_ids_from_ast(&mut self) -> Result<()> {
-    //     event!(Level::INFO, "Generating IDs From AST");
-    //     for (_, page) in &mut self.pages_v42 {
-    //         page.generate_id_from_ast();
-    //     }
-    //     Ok(())
-    // }
-
-    #[instrument(skip(self))]
     pub fn generate_outputs(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating Outputs");
         let site_clone = Value::from_object(self.site_v42b.clone().unwrap());
         for (_, page) in &mut self.pages_v42 {
-            if let Some(rel_output_path) = &page.rel_output_path {
+            if let Some(_rel_output_path) = &page.rel_output_path {
                 match self.env.get_template("pages/post/default.neoj") {
                     Ok(template) => {
                         match template.render(
@@ -270,7 +214,7 @@ impl BuilderV42<'_> {
     pub fn move_updated_pages_into_site(&mut self) -> Result<()> {
         let mut pages_with_ids: BTreeMap<String, PageV42b> = BTreeMap::new();
         let mut pages_without_ids: BTreeMap<PathBuf, PageV42b> = BTreeMap::new();
-        for (source_absolute_path, page) in &self.pages_v42 {
+        for (_source_absolute_path, page) in &self.pages_v42 {
             match &page.id {
                 Some(id) => pages_with_ids.insert(id.to_string(), page.clone()),
                 None => pages_without_ids.insert(page.source_display_path.clone(), page.clone()),

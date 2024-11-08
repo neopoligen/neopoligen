@@ -6,7 +6,6 @@ use include_dir::{include_dir, Dir};
 use minijinja::syntax::SyntaxConfig;
 use minijinja::Environment;
 use std::collections::BTreeMap;
-use std::path::Path;
 use tracing::{event, instrument, Level};
 
 impl BuilderV42<'_> {

@@ -76,88 +76,88 @@ impl PageV42b {
         }
     }
 
-    // TODO: Update to be rel_output_path
-    pub fn generate_fallback_href(&mut self) {
-        // TODO: Don't create the href if there's no ID
-        // otherwise you won't be able to link to the page properly
-        if let None = &self.href {
-            match get_value_from_raw_page_section_parsing(&self.source, "href") {
-                Ok(v) => {
-                    self.href = Some(v.1.join("").trim().to_string().into());
-                    let _ = &self
-                        .issues
-                        .push(NeoErrorV42::new_page_issue(&self, vec![
-                            "Warning: This pages is using a fallback href because one couldn't be found properly in the source file.".to_string(),
-                            "If this page is showing up in an expected location that's probably why. Fixing whatever issues are happening in the source file should fix this as well.".to_string(),
-                        ]));
-                }
-                Err(e) => {
-                    let _ = &self.issues.push(NeoErrorV42::new_page_issue(
-                        &self,
-                        vec!["Error: Could not get fallback href from page".to_string()],
-                    ));
-                }
-            }
-        }
-    }
+    // // TODO: Update to be rel_output_path
+    // pub fn generate_fallback_href(&mut self) {
+    //     // TODO: Don't create the href if there's no ID
+    //     // otherwise you won't be able to link to the page properly
+    //     if let None = &self.href {
+    //         match get_value_from_raw_page_section_parsing(&self.source, "href") {
+    //             Ok(v) => {
+    //                 self.href = Some(v.1.join("").trim().to_string().into());
+    //                 let _ = &self
+    //                     .issues
+    //                     .push(NeoErrorV42::new_page_issue(&self, vec![
+    //                         "Warning: This pages is using a fallback href because one couldn't be found properly in the source file.".to_string(),
+    //                         "If this page is showing up in an expected location that's probably why. Fixing whatever issues are happening in the source file should fix this as well.".to_string(),
+    //                     ]));
+    //             }
+    //             Err(e) => {
+    //                 let _ = &self.issues.push(NeoErrorV42::new_page_issue(
+    //                     &self,
+    //                     vec!["Error: Could not get fallback href from page".to_string()],
+    //                 ));
+    //             }
+    //         }
+    //     }
+    // }
 
-    pub fn generate_fallback_id(&mut self) {
-        if let None = &self.id {
-            match get_value_from_raw_page_section_parsing(&self.source, "id") {
-                Ok(v) => {
-                    self.id = Some(v.1.join("").trim().to_string());
-                    let _ = &self
-                        .issues
-                        .push(NeoErrorV42::new_page_issue(&self, vec![
-                            "Warning: This pages is using a fallback ID because one couldn't be found properly in the source file.".to_string(),
-                            "If this page is showing up in an expected location that's probably why. Fixing whatever issues are happening in the source file should fix this as well.".to_string(),
-                        ]));
-                }
-                Err(e) => {
-                    dbg!("TODO: Add this error to the page stack");
-                    dbg!(e);
-                    ()
-                }
-            }
-        }
-    }
+    // pub fn generate_fallback_id(&mut self) {
+    //     if let None = &self.id {
+    //         match get_value_from_raw_page_section_parsing(&self.source, "id") {
+    //             Ok(v) => {
+    //                 self.id = Some(v.1.join("").trim().to_string());
+    //                 let _ = &self
+    //                     .issues
+    //                     .push(NeoErrorV42::new_page_issue(&self, vec![
+    //                         "Warning: This pages is using a fallback ID because one couldn't be found properly in the source file.".to_string(),
+    //                         "If this page is showing up in an expected location that's probably why. Fixing whatever issues are happening in the source file should fix this as well.".to_string(),
+    //                     ]));
+    //             }
+    //             Err(e) => {
+    //                 dbg!("TODO: Add this error to the page stack");
+    //                 dbg!(e);
+    //                 ()
+    //             }
+    //         }
+    //     }
+    // }
 
-    // TODO: Update to be rel_output_path
-    pub fn generate_href_from_id(&mut self) {
-        if let Some(id) = &self.id {
-            self.href = Some(PathBuf::from(format!("/en/{}/index.html", id)));
-        }
-    }
+    // // TODO: Update to be rel_output_path
+    // pub fn generate_href_from_id(&mut self) {
+    //     if let Some(id) = &self.id {
+    //         self.href = Some(PathBuf::from(format!("/en/{}/index.html", id)));
+    //     }
+    // }
 
-    // TODO: Update to be rel_output_path
-    pub fn generate_href_from_ast(&mut self) {
-        if let Ok(attr) = self.get_page_attr_from_ast("href") {
-            self.href = Some(PathBuf::from(&attr.text));
-        }
-    }
+    // // TODO: Update to be rel_output_path
+    // pub fn generate_href_from_ast(&mut self) {
+    //     if let Ok(attr) = self.get_page_attr_from_ast("href") {
+    //         self.href = Some(PathBuf::from(&attr.text));
+    //     }
+    // }
 
-    pub fn generate_rel_output_path(&mut self) {
-        if let Some(id) = &self.id {
-            self.rel_output_path = Some(PathBuf::from(format!("en/{}/index.html", id)));
-        }
-    }
+    // pub fn generate_rel_output_path(&mut self) {
+    //     if let Some(id) = &self.id {
+    //         self.rel_output_path = Some(PathBuf::from(format!("en/{}/index.html", id)));
+    //     }
+    // }
 
-    pub fn generate_id_from_ast(&mut self) {
-        match self.get_page_attr_from_ast("id") {
-            Ok(attr) => {
-                self.id = Some(attr.text.to_string());
-            }
-            Err(e) => {
-                let _ = &self
-                        .issues
-                        .push(NeoErrorV42::new_page_issue(&self, vec![
-                            "Could not get id from parsed filed".to_string(),
-                            "This could mean that there is no '-- id: ...' in the '-- page' section of the file.".to_string(),
-                            "It could also mean that no '-- page' section was found in the file.".to_string()
-                        ]));
-            }
-        }
-    }
+    // pub fn generate_id_from_ast(&mut self) {
+    //     match self.get_page_attr_from_ast("id") {
+    //         Ok(attr) => {
+    //             self.id = Some(attr.text.to_string());
+    //         }
+    //         Err(e) => {
+    //             let _ = &self
+    //                     .issues
+    //                     .push(NeoErrorV42::new_page_issue(&self, vec![
+    //                         "Could not get id from parsed filed".to_string(),
+    //                         "This could mean that there is no '-- id: ...' in the '-- page' section of the file.".to_string(),
+    //                         "It could also mean that no '-- page' section was found in the file.".to_string()
+    //                     ]));
+    //         }
+    //     }
+    // }
 
     pub fn get_page_attr_from_ast(
         &self,
