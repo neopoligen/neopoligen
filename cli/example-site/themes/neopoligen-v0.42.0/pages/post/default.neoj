@@ -2,12 +2,17 @@
 [!- import "built-in/macro-loader.neoj" as neo -!]
 
 [!- block body_main -!]
+
 [@- neo.output_all_sections_except(["footnote"]) -@]
+
+[@ neo.output_footnotes() @]
+
 [!- endblock -!]
 
-
 [!- block body_footer -!]
+
 <h2>Development And Debugging Stuff</h2>
+
 <div>This section is where I'm working on Neopoligen. 
 It's kind of a behind-the-scenes look at the code
 that makes the page if you're into that type of thing.

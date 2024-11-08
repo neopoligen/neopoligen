@@ -60,7 +60,7 @@ pub enum SpanV42 {
     LinkShorthand(LinkShorthandV42),
     #[serde(rename = "mark-shorthand")]
     MarkShorthand(MarkShorthandV42),
-    #[serde(rename = "span-shorthand")]
+    #[serde(rename = "named-span")]
     NamedSpan(NamedSpanV42),
     #[serde(rename = "plain-text")]
     PlainText(PlainTextSpan),

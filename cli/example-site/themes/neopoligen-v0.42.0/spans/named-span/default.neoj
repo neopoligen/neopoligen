@@ -1,8 +1,8 @@
-[!- import "built-in-helpers" as neo -!]
+[!- import "built-in/macro-loader.neoj" as neo -!]
 [@- '' -@]
 
 <[@ span.kind @]>
-[@- neo.output_spans(site, page, span.spans) -@]
+[@- neo.output_spans(span.spans) -@]
 </[@ span.kind @]>
 
 [@- '' -@]

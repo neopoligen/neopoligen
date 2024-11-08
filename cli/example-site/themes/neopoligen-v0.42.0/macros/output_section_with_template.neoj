@@ -1,0 +1,3 @@
+[!- macro output_section_with_template(section, template) -!]
+[!- include template -!]
+[!- endmacro -!]

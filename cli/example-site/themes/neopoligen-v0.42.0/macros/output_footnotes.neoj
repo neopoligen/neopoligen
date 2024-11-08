@@ -1,0 +1,17 @@
+[!- from "macros/output_section.neoj" import output_section -!]
+[!- macro output_footnotes() -!]
+    [! set footnote_header_has_been_output = false !]
+    [!- for section in page.sections -!]
+    [!- if section.kind == "footnote"  -!]
+        [! if footnote_header_has_been_output == false !]
+        <section class="footnotes-section flow">
+            <h2>Footnotes</h2>
+        [! set footnote_header_has_been_output = true !]
+        [! endif !]
+        [@- output_section(section) -@]
+    [!- endif -!]
+    [! if loop.last and footnote_header_has_been_output == true !]
+        </section>
+    [! endif !]
+    [!- endfor -!]
+[!- endmacro -!]

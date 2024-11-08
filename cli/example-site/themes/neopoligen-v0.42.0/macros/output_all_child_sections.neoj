@@ -1,3 +1,6 @@
+[!- from "macros/output_section.neoj" import output_section -!]
 [!- macro output_all_child_sections(section) -!]
-output all child sections
+[!- for child in section.children -!]
+[@ output_section(child) @]
+[!- endfor -!]
 [!- endmacro -!]
