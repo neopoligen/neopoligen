@@ -1,11 +1,14 @@
 use nom::branch::alt;
+use nom::bytes::complete::escaped;
 use nom::bytes::complete::is_a;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
+use nom::character::complete::one_of;
 use nom::character::complete::space1;
 use nom::combinator::not;
 use nom::multi::many1;
 use nom::sequence::pair;
+use nom::sequence::preceded;
 use nom::sequence::terminated;
 use nom::IResult;
 use nom::Parser;
@@ -108,11 +111,60 @@ pub fn plain_text_space1_as_single_space(source: &str) -> IResult<&str, &str, Er
     Ok((source, " "))
 }
 
+pub fn escaped_character(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
+    let (source, result) = alt((
+        preceded(tag("\\"), tag(":")),
+        preceded(tag("\\"), tag("|")),
+        preceded(tag("\\"), tag("`")),
+        preceded(tag("\\"), tag("~")),
+        preceded(tag("\\"), tag("!")),
+        preceded(tag("\\"), tag("#")),
+        preceded(tag("\\"), tag("^")),
+        preceded(tag("\\"), tag("*")),
+        preceded(tag("\\"), tag("[")),
+        preceded(tag("\\"), tag("]")),
+        preceded(tag("\\"), tag("{")),
+        preceded(tag("\\"), tag("}")),
+        preceded(tag("\\"), tag("<")),
+        preceded(tag("\\"), tag(">")),
+        preceded(tag("\\"), tag("_")),
+    ))
+    .context("")
+    .parse(source)?;
+    Ok((source, result))
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
     use pretty_assertions::assert_eq;
     use rstest::rstest;
+
+    #[rstest]
+    #[case("\\:bravo", ":", "bravo")]
+    #[case("\\|bravo", "|", "bravo")]
+    #[case("\\`bravo", "`", "bravo")]
+    #[case("\\~bravo", "~", "bravo")]
+    #[case("\\!bravo", "!", "bravo")]
+    #[case("\\#bravo", "#", "bravo")]
+    #[case("\\^bravo", "^", "bravo")]
+    #[case("\\*bravo", "*", "bravo")]
+    #[case("\\[bravo", "[", "bravo")]
+    #[case("\\]bravo", "]", "bravo")]
+    #[case("\\{bravo", "{", "bravo")]
+    #[case("\\}bravo", "}", "bravo")]
+    #[case("\\<bravo", "<", "bravo")]
+    #[case("\\>bravo", ">", "bravo")]
+    #[case("\\_bravo", "_", "bravo")]
+    fn solo_escaped_character_tests(
+        #[case] source: &str,
+        #[case] got: &str,
+        #[case] remainder: &str,
+    ) {
+        let matcher = (remainder, got);
+        let parsed = escaped_character(source).unwrap();
+        assert_eq!(matcher, parsed);
+    }
 
     #[rstest]
     #[case("alfa", &["alfa"], "")]
@@ -127,7 +179,7 @@ mod test {
     #[case("alfa::bravo", &["alfa", "::", "bravo"], "")]
     #[case("alfa~~bravo~~", &["alfa"], "~~bravo~~")]
     #[case("alfa ~~bravo~~", &["alfa", " "], "~~bravo~~")]
-    fn solo_plain_text_span_for_block(
+    fn plain_text_span_for_block(
         #[case] source: &str,
         #[case] got: &[&str],
         #[case] remainder: &str,
