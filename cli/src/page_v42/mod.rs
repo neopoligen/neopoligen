@@ -106,7 +106,16 @@ impl PageV42b {
             Some(path) => match &path.file_name() {
                 Some(file_name) => {
                     if file_name.to_str() == Some("index.html") {
-                        Some(format!("/{}/", path.parent().unwrap().display()))
+                        match &path.parent() {
+                            Some(p) => {
+                                if p.to_str() == Some("") {
+                                    Some(format!("/"))
+                                } else {
+                                    Some(format!("/{}/", path.parent().unwrap().display()))
+                                }
+                            }
+                            None => Some(format!("/{}/", path.parent().unwrap().display())),
+                        }
                     } else {
                         Some(format!("/{}", path.display()))
                     }

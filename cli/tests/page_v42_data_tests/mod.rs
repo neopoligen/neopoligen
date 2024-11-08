@@ -84,6 +84,14 @@ fn solo_href_basic_test() {
     assert_eq!(left, right);
 }
 
+#[test]
+fn solo_href_homepage_without_file() {
+    let page = PageV42b::test_from_sample_file("005-homepage-path-without-file.neo");
+    let left = Some("/".to_string());
+    let right = page.href();
+    assert_eq!(left, right);
+}
+
 // #[test]
 // fn rel_output_path_basic_check() {
 //     let page = PageV42b::test_from_sample_file("001-pagedata-only.neo");
