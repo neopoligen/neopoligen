@@ -1,9 +1,7 @@
 use nom::branch::alt;
-use nom::bytes::complete::escaped;
 use nom::bytes::complete::is_a;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
-use nom::character::complete::one_of;
 use nom::character::complete::space1;
 use nom::combinator::not;
 use nom::multi::many1;
@@ -14,6 +12,33 @@ use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
+
+use super::PlainTextSpan;
+use super::SpanV42;
+
+pub fn span_of_plain_text_for_block_paragraph(
+    source: &str,
+) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+    let (source, results) = plain_text_span_for_block_paragraph
+        .context("")
+        .parse(source)?;
+    Ok((
+        source,
+        SpanV42::PlainText(PlainTextSpan {
+            text: results.join(""),
+        }),
+    ))
+}
+
+pub fn span_of_escaped_character(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+    let (source, result) = escaped_character.context("").parse(source)?;
+    Ok((
+        source,
+        SpanV42::EscapedCharacter(super::EscapedCharacterSpanV42 {
+            text: result.to_string(),
+        }),
+    ))
+}
 
 pub fn plain_text_span_for_block_paragraph(
     source: &str,
@@ -156,11 +181,7 @@ mod test {
     #[case("\\<bravo", "<", "bravo")]
     #[case("\\>bravo", ">", "bravo")]
     #[case("\\_bravo", "_", "bravo")]
-    fn solo_escaped_character_tests(
-        #[case] source: &str,
-        #[case] got: &str,
-        #[case] remainder: &str,
-    ) {
+    fn escaped_character_tests(#[case] source: &str, #[case] got: &str, #[case] remainder: &str) {
         let matcher = (remainder, got);
         let parsed = escaped_character(source).unwrap();
         assert_eq!(matcher, parsed);

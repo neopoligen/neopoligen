@@ -248,16 +248,16 @@ mod test {
                                     .unwrap()
                                     .1,
                             );
-                            assert_eq!(left, right);
+                            assert_eq!(left, right, "Error in: {}", id);
                         }
                         Err(e) => {
                             dbg!(e);
-                            assert!(false)
+                            assert!(false, "Error in: {}", id);
                         }
                     };
                 }
                 None => {
-                    assert!(false);
+                    assert!(false, "Error in: {}", id);
                 }
             }
         }

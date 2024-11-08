@@ -3,6 +3,19 @@ use super::SectionParent;
 use crate::helpers::dump_parser_if_debug;
 use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
+use crate::span_v42::named_span::named_span;
+use crate::span_v42::shorthand_code::code_shorthand_span;
+use crate::span_v42::shorthand_emphasis::emphasis_shorthand_span;
+use crate::span_v42::shorthand_footnote::footnote_shorthand_span;
+use crate::span_v42::shorthand_html::html_shorthand_span;
+use crate::span_v42::shorthand_image::image_shorthand_span;
+use crate::span_v42::shorthand_link::link_shorthand_span;
+use crate::span_v42::shorthand_mark::mark_shorthand_span;
+use crate::span_v42::shorthand_strikethrough::strikethrough_shorthand_span;
+use crate::span_v42::shorthand_strong::strong_shorthand_span;
+use crate::span_v42::shorthand_underline::underline_shorthand_span;
+use crate::span_v42::string_parsers::span_of_escaped_character;
+use crate::span_v42::string_parsers::span_of_plain_text_for_block_paragraph;
 use crate::span_v42::SpanV42;
 //use crate::spans_v42::generic_block_content::spans_of_generic_block_content;
 use crate::spans_v42::generic_block_content_v42::generic_block_content_v42;
@@ -11,6 +24,8 @@ use nom::character::complete::multispace0;
 //use nom::character::complete::space1;
 use nom::combinator::not;
 // use nom::sequence::pair;
+use nom::branch::alt;
+use nom::multi::many1;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -67,7 +82,23 @@ pub fn paragraph_block_section_v42<'a>(
     let dbg_header = "PARAGRAPH_BLOCK_SECTION";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = not(tag("--")).context("").parse(source)?;
-    let (source, spans) = generic_block_content_v42.context("").parse(source)?;
+    let (source, spans) = many1(alt((
+        span_of_plain_text_for_block_paragraph,
+        span_of_escaped_character,
+        named_span,
+        code_shorthand_span,
+        emphasis_shorthand_span,
+        footnote_shorthand_span,
+        html_shorthand_span,
+        image_shorthand_span,
+        link_shorthand_span,
+        mark_shorthand_span,
+        strikethrough_shorthand_span,
+        strong_shorthand_span,
+        underline_shorthand_span,
+    )))
+    .context("")
+    .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, _) = multispace0.context("").parse(source)?;
     Ok((
@@ -117,7 +148,7 @@ mod test {
     }
 
     #[test]
-    fn multiple_lines() {
+    fn solo_multiple_lines() {
         let site_config = SiteConfigV42::mock1_basic();
         let source = SAMPLE_DIR
             .get_file("002-multiple-lines.neo")
@@ -131,17 +162,9 @@ mod test {
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
                 kind: "block-paragraph".to_string(),
-                spans: vec![
-                    SpanV42::PlainText(PlainTextSpan {
-                        text: "multiple".to_string(),
-                    }),
-                    SpanV42::PlainText(PlainTextSpan {
-                        text: " ".to_string(),
-                    }),
-                    SpanV42::PlainText(PlainTextSpan {
-                        text: "lines".to_string(),
-                    }),
-                ],
+                spans: vec![SpanV42::PlainText(PlainTextSpan {
+                    text: "multiple lines".to_string(),
+                })],
                 template_list: make_template_list("block-paragraph", "block-paragraph", "default"),
             }),
         );

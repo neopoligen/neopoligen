@@ -1,6 +1,8 @@
 use super::generic_base_content_v42::generic_base_content_v42;
 use crate::span_v42::any_characters::*;
 use crate::span_v42::block_line_ending::block_line_ending;
+use crate::span_v42::string_parsers::span_of_escaped_character;
+use crate::span_v42::string_parsers::span_of_plain_text_for_block_paragraph;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
 use nom::multi::many1;
@@ -12,15 +14,21 @@ use nom_supreme::ParserExt;
 pub fn generic_block_content_v42<'a>(
     source: &'a str,
 ) -> IResult<&'a str, Vec<SpanV42>, ErrorTree<&'a str>> {
-    let (source, output) = many1(alt((
-        generic_base_content_v42,
-        block_line_ending,
-        any_pipes,
-        any_colons,
+    let (source, results) = many1(alt((
+        span_of_plain_text_for_block_paragraph,
+        span_of_escaped_character,
     )))
     .context("")
     .parse(source)?;
-    Ok((source, output))
+    // let (source, results) = many1(alt((
+    //     generic_base_content_v42,
+    //     block_line_ending,
+    //     any_pipes,
+    //     any_colons,
+    // )))
+    // .context("")
+    // .parse(source)?;
+    Ok((source, results))
 }
 
 #[cfg(test)]
