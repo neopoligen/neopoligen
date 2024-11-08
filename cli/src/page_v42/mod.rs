@@ -181,7 +181,7 @@ impl PageV42b {
     pub fn title_as_spans(&self) -> Result<Value, Error> {
         match &self.get_page_attr_from_ast("title") {
             Ok(attr) => Ok(Value::from_serialize(attr.spans.clone())),
-            Err(_) => Ok(Value::from("TODO: Get Title")),
+            Err(_) => Ok(Value::from_serialize::<Vec<SpanV42>>(vec![])),
         }
     }
 
@@ -286,6 +286,8 @@ impl Object for PageV42b {
     ) -> Result<Value, Error> {
         match name {
             "href" => self.href(),
+            "title_as_spans" => self.title_as_spans(),
+            "title_as_text" => self.title_as_text(),
             // TODO: Deprecate: title_flattened
             "title_flattened" => Ok(Value::from("title flattened")),
             // "sections" => self.ast(),
