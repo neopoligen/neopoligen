@@ -27,7 +27,7 @@ fn no_id_in_page() {
 }
 
 #[test]
-fn solo_rel_output_path_basic_from_id_test() {
+fn rel_output_path_basic_from_id_test() {
     let page = PageV42b::test_from_sample_file("001-only-page-section.neo");
     let left = Some(PathBuf::from(
         "en/001-pagedata-only.neo/index.html".to_string(),
@@ -37,7 +37,7 @@ fn solo_rel_output_path_basic_from_id_test() {
 }
 
 #[test]
-fn solo_rel_output_path_basic_from_custom_path_with_file() {
+fn rel_output_path_basic_from_custom_path_with_file() {
     let page = PageV42b::test_from_sample_file("004-homepage-path-with-file.neo");
     let left = Some(PathBuf::from("index.html".to_string()));
     let right = page.rel_output_path;
@@ -45,7 +45,7 @@ fn solo_rel_output_path_basic_from_custom_path_with_file() {
 }
 
 #[test]
-fn solo_rel_output_path_basic_from_custom_path_without_file() {
+fn rel_output_path_basic_from_custom_path_without_file() {
     let page = PageV42b::test_from_sample_file("005-homepage-path-without-file.neo");
     let left = Some(PathBuf::from("index.html".to_string()));
     let right = page.rel_output_path;
@@ -53,7 +53,7 @@ fn solo_rel_output_path_basic_from_custom_path_without_file() {
 }
 
 #[test]
-fn solo_rel_output_path_basic_from_custom_path_not_homepage_without_file() {
+fn rel_output_path_basic_from_custom_path_not_homepage_without_file() {
     let page = PageV42b::test_from_sample_file("006-custom-path-without-file.neo");
     let left = Some(PathBuf::from("some/path/index.html".to_string()));
     let right = page.rel_output_path;
@@ -61,7 +61,7 @@ fn solo_rel_output_path_basic_from_custom_path_not_homepage_without_file() {
 }
 
 #[test]
-fn solo_rel_output_path_basic_from_custom_path_not_homepage_without_slash() {
+fn rel_output_path_basic_from_custom_path_not_homepage_without_slash() {
     let page = PageV42b::test_from_sample_file("007-custom-path-no-slash.neo");
     let left = Some(PathBuf::from("custom/path/alfa/index.html".to_string()));
     let right = page.rel_output_path;
@@ -69,7 +69,7 @@ fn solo_rel_output_path_basic_from_custom_path_not_homepage_without_slash() {
 }
 
 #[test]
-fn solo_rel_output_path_basic_from_custom_path_with_non_html_extension() {
+fn rel_output_path_basic_from_custom_path_with_non_html_extension() {
     let page = PageV42b::test_from_sample_file("008-custom-txt-path.neo");
     let left = Some(PathBuf::from("somewhere/file.txt".to_string()));
     let right = page.rel_output_path;
@@ -79,13 +79,13 @@ fn solo_rel_output_path_basic_from_custom_path_with_non_html_extension() {
 #[test]
 fn solo_href_basic_test() {
     let page = PageV42b::test_from_sample_file("001-only-page-section.neo");
-    let left = Some("en/001-pagedata-only.neo/index.html".to_string());
+    let left = Some("/en/001-pagedata-only.neo/".to_string());
     let right = page.href();
     assert_eq!(left, right);
 }
 
 // #[test]
-// fn solo_rel_output_path_basic_check() {
+// fn rel_output_path_basic_check() {
 //     let page = PageV42b::test_from_sample_file("001-pagedata-only.neo");
 //     let left = Some(PathBuf::from("en/001-pagedata-only.neo/index.html"));
 //     let right = page.rel_output_path;
@@ -95,7 +95,7 @@ fn solo_href_basic_test() {
 // Tests copied over to check
 
 // #[test]
-// fn solo_rel_output_path_basic_check() {
+// fn rel_output_path_basic_check() {
 //     let page = PageV42b::test_from_sample_file("001-pagedata-only.neo");
 //     let left = Some(PathBuf::from("en/001-pagedata-only.neo/index.html"));
 //     let right = page.rel_output_path;
