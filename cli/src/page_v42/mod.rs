@@ -215,9 +215,13 @@ impl PageV42b {
         match &self.get_page_attr_from_ast("path") {
             Ok(attr) => {
                 let path = PathBuf::from(attr.text.to_string());
+                let path_stripped = match path.strip_prefix("/") {
+                    Ok(p) => p.into(),
+                    Err(_) => path.clone(),
+                };
                 match &path.extension() {
-                    Some(_) => self.rel_output_path = Some(path),
-                    None => self.rel_output_path = Some(path.join("index.html")),
+                    Some(_) => self.rel_output_path = Some(path_stripped),
+                    None => self.rel_output_path = Some(path_stripped.join("index.html")),
                 }
             }
             Err(_) => {
