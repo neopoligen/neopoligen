@@ -17,7 +17,6 @@ use minijinja::Value;
 use nom_supreme::error::GenericErrorTree;
 use nom_supreme::final_parser::Location;
 use nom_supreme::final_parser::RecreateContext;
-// use serde::de::Error;
 use serde::Deserialize;
 use serde::Serialize;
 use std::path::PathBuf;
@@ -32,6 +31,7 @@ pub struct PageV42b {
     pub issues: Vec<NeoErrorV42>,
     pub language: Option<String>,
     pub output: Option<String>,
+    pub rel_output_path: Option<PathBuf>,
     pub sections: Option<Value>,
     pub source: String,
     pub source_absolute_path: PathBuf,
@@ -74,6 +74,7 @@ impl PageV42b {
         }
     }
 
+    // TODO: Update to be rel_output_path
     pub fn generate_fallback_href(&mut self) {
         // TODO: Don't create the href if there's no ID
         // otherwise you won't be able to link to the page properly
@@ -119,15 +120,23 @@ impl PageV42b {
         }
     }
 
+    // TODO: Update to be rel_output_path
     pub fn generate_href_from_id(&mut self) {
         if let Some(id) = &self.id {
             self.href = Some(PathBuf::from(format!("/en/{}/index.html", id)));
         }
     }
 
+    // TODO: Update to be rel_output_path
     pub fn generate_href_from_ast(&mut self) {
         if let Ok(spans) = self.get_pagedata_from_ast("href") {
             self.href = Some(flatten_spans_v42(&spans).into());
+        }
+    }
+
+    pub fn generate_rel_output_path(&mut self) {
+        if let Some(id) = &self.id {
+            self.rel_output_path = Some(PathBuf::from(format!("en/{}/index.html", id)));
         }
     }
 
@@ -283,6 +292,14 @@ mod test {
     use super::*;
     use crate::span_v42::{plaintext::PlainTextSpan, SpanV42};
     use pretty_assertions::assert_eq;
+
+    #[test]
+    fn solo_rel_output_path_basic_check() {
+        let page = PageV42b::test_from_sample_file("001-pagedata-only.neo");
+        let left = Some(PathBuf::from("en/001-pagedata-only.neo/index.html"));
+        let right = page.rel_output_path;
+        assert_eq!(left, right);
+    }
 
     #[test]
     fn id_basic_check() {

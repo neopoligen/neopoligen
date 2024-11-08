@@ -50,6 +50,7 @@ impl PageV42b {
             issues: vec![],
             language: None,
             output: None,
+            rel_output_path: None,
             sections: None,
             source: source.to_string(),
             source_absolute_path: source_path.clone(),
