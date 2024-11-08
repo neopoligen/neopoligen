@@ -1,3 +1,4 @@
+use minijinja::Value;
 use neopoligengine::page_v42::PageV42b;
 use pretty_assertions::assert_eq;
 use std::path::PathBuf;
@@ -79,16 +80,16 @@ fn rel_output_path_basic_from_custom_path_with_non_html_extension() {
 #[test]
 fn solo_href_basic_test() {
     let page = PageV42b::test_from_sample_file("001-only-page-section.neo");
-    let left = Some("/en/001-pagedata-only.neo/".to_string());
-    let right = page.href();
+    let left = Value::from("/en/001-pagedata-only.neo/".to_string());
+    let right = page.href().unwrap();
     assert_eq!(left, right);
 }
 
 #[test]
 fn solo_href_homepage_without_file() {
     let page = PageV42b::test_from_sample_file("005-homepage-path-without-file.neo");
-    let left = Some("/".to_string());
-    let right = page.href();
+    let left = Value::from("/".to_string());
+    let right = page.href().unwrap();
     assert_eq!(left, right);
 }
 

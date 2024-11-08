@@ -101,7 +101,7 @@ impl PageV42b {
         }
     }
 
-    pub fn href(&self) -> Option<String> {
+    pub fn href(&self) -> Result<Value, Error> {
         match &self.rel_output_path {
             Some(path) => match &path.file_name() {
                 Some(file_name) => {
@@ -109,20 +109,23 @@ impl PageV42b {
                         match &path.parent() {
                             Some(p) => {
                                 if p.to_str() == Some("") {
-                                    Some(format!("/"))
+                                    Ok(format!("/").into())
                                 } else {
-                                    Some(format!("/{}/", path.parent().unwrap().display()))
+                                    Ok(format!("/{}/", path.parent().unwrap().display()).into())
                                 }
                             }
-                            None => Some(format!("/{}/", path.parent().unwrap().display())),
+                            None => Ok(format!("/{}/", path.parent().unwrap().display()).into()),
                         }
                     } else {
-                        Some(format!("/{}", path.display()))
+                        Ok(format!("/{}", path.display()).into())
                     }
                 }
-                None => Some(format!("/{}", path.display())),
+                None => Ok(format!("/{}", path.display()).into()),
             },
-            None => None,
+            None => Err(Error::new(
+                minijinja::ErrorKind::InvalidOperation,
+                "could not get href",
+            )),
         }
     }
 
@@ -268,6 +271,8 @@ impl Object for PageV42b {
         args: &[Value],
     ) -> Result<Value, Error> {
         match name {
+            "href" => self.href(),
+            // TODO: Deprecate: title_flattened
             "title_flattened" => Ok(Value::from("title flattened")),
             // "sections" => self.ast(),
             // "get_pagedata" => self.make_value_from_string(self.get_pagedata(args)),
