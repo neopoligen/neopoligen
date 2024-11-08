@@ -261,17 +261,25 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
             let x = &args[2].get_item(&Value::from("spans")).unwrap();
             let page_id = flatten_spans_from_template_v42(&[x.to_owned()]).unwrap();
             match self.pages.get(&page_id.to_string()) {
-                Some(page) => match &page.href {
-                    Some(href) => Ok(Value::from(href.display().to_string())),
-                    None => Err(Error::new(
-                        ErrorKind::InvalidOperation,
-                        format!("<p>Could not get href from span for page with id: {}</p><p>Check 'tlink' items as a possible location where the issue occurs.</p>", page_id),
-                    )),
-                },
+                Some(page) => page.href(),
                 None => Err(Error::new(
                     ErrorKind::InvalidOperation,
                         format!("<p>Could not get href from span for page with id: {}</p><p>Check 'tlink' items as a possible location where the issue occurs.</p>", page_id),
                 )),
+                
+
+               // Some(page) => match &page.href() {
+                //     Some(href) => Ok(Value::from(href.display().to_string())),
+                //     None => Err(Error::new(
+                //         ErrorKind::InvalidOperation,
+                //         format!("<p>Could not get href from span for page with id: {}</p><p>Check 'tlink' items as a possible location where the issue occurs.</p>", page_id),
+                //     )),
+                // },
+                // None => Err(Error::new(
+                //     ErrorKind::InvalidOperation,
+                //         format!("<p>Could not get href from span for page with id: {}</p><p>Check 'tlink' items as a possible location where the issue occurs.</p>", page_id),
+                // )),
+
             }
         } else {
             Err(Error::new(
