@@ -1,4 +1,4 @@
-[!- import "built-in/helpers.neoj" as neo -!]
+[!- import "built-in/macro-loader.neoj" as neo -!]
 <!DOCTYPE html>
 <html>
 <head>
@@ -56,7 +56,7 @@ pre {
                 <li class="built-in built-in-flow">
                     <details class="built-in built-in-flow"><summary>[@ check_page.source_display_path -@]</summary>
                     <ul class="built-in built-in-flow">
-                    [@- neo.debug_page_issues(site, check_page) -@]
+                    [@- neo.debug_page_issues(check_page) -@]
                     </ul>
                     </details>
                 </li>

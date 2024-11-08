@@ -287,7 +287,7 @@ impl BuilderV42<'_> {
         // self.template_load_errors = template_load_errors;
         match self
             .env
-            .get_template("built-in/issues/pages/issues-home-page/default.neoj")
+            .get_template("helpers/issues-home-page/default.neoj")
         {
             Ok(template) => {
                 match template.render(context!(

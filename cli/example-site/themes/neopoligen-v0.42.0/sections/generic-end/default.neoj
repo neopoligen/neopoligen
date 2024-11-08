@@ -3,7 +3,7 @@
 <section 
   [@- site.get_section_attrs(site, page, section, "generic-end-section built-in flow") -@]>
 [! for child in section.children !]
-[@ neo.output_section(site, page, child) @]
+[@ neo.output_section(child) @]
 [! endfor !]
 </section>
 
