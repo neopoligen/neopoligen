@@ -52,13 +52,29 @@ fn solo_rel_output_path_basic_from_custom_path_without_file() {
     assert_eq!(left, right);
 }
 
-// #[test]
-// fn solo_rel_output_path_basic_from_custom_path_not_homepage_without_file() {
-//     let page = PageV42b::test_from_sample_file("006-custom-path-without-file.neo");
-//     let left = Some(PathBuf::from("/index.html".to_string()));
-//     let right = page.rel_output_path;
-//     assert_eq!(left, right);
-// }
+#[test]
+fn solo_rel_output_path_basic_from_custom_path_not_homepage_without_file() {
+    let page = PageV42b::test_from_sample_file("006-custom-path-without-file.neo");
+    let left = Some(PathBuf::from("some/path/index.html".to_string()));
+    let right = page.rel_output_path;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn solo_rel_output_path_basic_from_custom_path_not_homepage_without_slash() {
+    let page = PageV42b::test_from_sample_file("007-custom-path-no-slash.neo");
+    let left = Some(PathBuf::from("custom/path/alfa/index.html".to_string()));
+    let right = page.rel_output_path;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn solo_rel_output_path_basic_from_custom_path_with_non_html_extension() {
+    let page = PageV42b::test_from_sample_file("008-custom-txt-path.neo");
+    let left = Some(PathBuf::from("somewhere/file.txt".to_string()));
+    let right = page.rel_output_path;
+    assert_eq!(left, right);
+}
 
 // #[test]
 // fn solo_rel_output_path_basic_check() {
