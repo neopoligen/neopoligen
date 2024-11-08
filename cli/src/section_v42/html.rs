@@ -190,7 +190,8 @@ mod test {
             }),
         );
         let right =
-            html_section_start_v42(&source, &site_config, SectionParent::Page, false).unwrap();
+            html_section_start_v42(&source.trim(), &site_config, SectionParent::Page, false)
+                .unwrap();
         assert_eq!(left, right);
     }
 

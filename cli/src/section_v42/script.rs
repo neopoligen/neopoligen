@@ -189,7 +189,8 @@ mod test {
             }),
         );
         let right =
-            script_section_start_v42(&source, &site_config, SectionParent::Page, false).unwrap();
+            script_section_start_v42(&source.trim(), &site_config, SectionParent::Page, false)
+                .unwrap();
         assert_eq!(left, right);
     }
 

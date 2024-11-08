@@ -249,7 +249,7 @@ mod test {
                             let debug = false;
                             let left = Value::from_serialize(json5);
                             let right = Value::from_serialize(
-                                csv_section_v42(source, &site_config, parent, debug)
+                                csv_section_v42(source.trim(), &site_config, parent, debug)
                                     .unwrap()
                                     .1,
                             );

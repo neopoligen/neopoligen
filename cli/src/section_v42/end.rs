@@ -146,7 +146,7 @@ mod test {
             }),
         );
         let right = end_section_basic_v42(
-            &source,
+            &source.trim(),
             &site_config,
             SectionParent::Page,
             kind.as_str(),

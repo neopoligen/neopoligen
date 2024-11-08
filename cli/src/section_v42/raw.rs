@@ -193,8 +193,8 @@ mod test {
                 text: "Inside start pre".to_string(),
             }),
         );
-        let right =
-            raw_section_start_v42(&source, &site_config, SectionParent::Page, false).unwrap();
+        let right = raw_section_start_v42(&source.trim(), &site_config, SectionParent::Page, false)
+            .unwrap();
         assert_eq!(left, right);
     }
 
