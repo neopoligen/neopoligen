@@ -17,14 +17,10 @@ use crate::span_v42::shorthand_underline::underline_shorthand_span;
 use crate::span_v42::string_parsers::span_of_escaped_character;
 use crate::span_v42::string_parsers::span_of_plain_text_for_block_paragraph;
 use crate::span_v42::SpanV42;
-//use crate::spans_v42::generic_block_content::spans_of_generic_block_content;
-use crate::spans_v42::generic_block_content_v42::generic_block_content_v42;
+use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;
-//use nom::character::complete::space1;
 use nom::combinator::not;
-// use nom::sequence::pair;
-use nom::branch::alt;
 use nom::multi::many1;
 use nom::IResult;
 use nom::Parser;
@@ -54,7 +50,23 @@ pub fn list_item_paragraph_block<'a>(
     let dbg_header = "LIST_ITEM_PARAGRAPH_BLOCK";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = not(tag("-")).context("").parse(source)?;
-    let (source, spans) = generic_block_content_v42.context("").parse(source)?;
+    let (source, spans) = many1(alt((
+        span_of_plain_text_for_block_paragraph,
+        span_of_escaped_character,
+        named_span,
+        code_shorthand_span,
+        emphasis_shorthand_span,
+        footnote_shorthand_span,
+        html_shorthand_span,
+        image_shorthand_span,
+        link_shorthand_span,
+        mark_shorthand_span,
+        strikethrough_shorthand_span,
+        strong_shorthand_span,
+        underline_shorthand_span,
+    )))
+    .context("")
+    .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, _) = multispace0.context("").parse(source)?;
     Ok((
