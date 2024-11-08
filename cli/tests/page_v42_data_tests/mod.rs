@@ -93,6 +93,14 @@ fn solo_href_homepage_without_file() {
     assert_eq!(left, right);
 }
 
+#[test]
+fn solo_href_file_with_extension() {
+    let page = PageV42b::test_from_sample_file("008-custom-txt-path.neo");
+    let left = Value::from("/somewhere/file.txt".to_string());
+    let right = page.href().unwrap();
+    assert_eq!(left, right);
+}
+
 // #[test]
 // fn rel_output_path_basic_check() {
 //     let page = PageV42b::test_from_sample_file("001-pagedata-only.neo");
