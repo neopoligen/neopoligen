@@ -1,3 +1,3 @@
 [!- import "built-in/macro-loader.neoj" as neo -!]
 
-<p>[@ neo.output_spans(site, page, section.spans) @]</p>
+<p>[@ neo.output_section_spans(section) @]</p>

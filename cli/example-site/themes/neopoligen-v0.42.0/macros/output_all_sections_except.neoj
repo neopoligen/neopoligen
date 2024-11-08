@@ -1,7 +1,7 @@
 [!- macro output_all_sections_except(exclude_sections=[]) -!]
 [!- for section in page.sections -!]
 [!- if section.kind not in exclude_sections -!]
-[@ neo.output_section(section) @]
+[!- include section.template_list -!]
 [!- endif -!]
 [!- endfor -!]
 [!- endmacro -!]

@@ -13,8 +13,8 @@ back together.</div>
 [@- neo.output_child_sections_skipping_first(section) -@]
 
 </section>
-
+[#
 [@- neo.output_end_section(section) -@]
-
+#]
 
 

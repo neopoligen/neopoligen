@@ -1,3 +1,0 @@
-[!- for span in child.spans -!]
-[!- include "spans/" + span.type + "/default.neoj" -!]
-[!- endfor -!]
