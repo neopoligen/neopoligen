@@ -181,7 +181,14 @@ impl PageV42b {
     pub fn title_as_spans(&self) -> Result<Value, Error> {
         match &self.get_page_attr_from_ast("title") {
             Ok(attr) => Ok(Value::from_serialize(attr.spans.clone())),
-            Err(_) => Ok(Value::from("asdf")),
+            Err(_) => Ok(Value::from("TODO: Get Title")),
+        }
+    }
+
+    pub fn title_as_text(&self) -> Result<Value, Error> {
+        match &self.get_page_attr_from_ast("title") {
+            Ok(attr) => Ok(Value::from(attr.text.clone())),
+            Err(_) => Ok(Value::from("TODO: Get Title")),
         }
     }
 
