@@ -80,7 +80,7 @@ impl PageV42b {
         // TODO: Don't create the href if there's no ID
         // otherwise you won't be able to link to the page properly
         if let None = &self.href {
-            match get_value_from_raw_pagedata_parsing(&self.source, "href") {
+            match get_value_from_raw_page_section_parsing(&self.source, "href") {
                 Ok(v) => {
                     self.href = Some(v.1.join("").trim().to_string().into());
                     let _ = &self
@@ -102,7 +102,7 @@ impl PageV42b {
 
     pub fn generate_fallback_id(&mut self) {
         if let None = &self.id {
-            match get_value_from_raw_pagedata_parsing(&self.source, "id") {
+            match get_value_from_raw_page_section_parsing(&self.source, "id") {
                 Ok(v) => {
                     self.id = Some(v.1.join("").trim().to_string());
                     let _ = &self
@@ -130,7 +130,7 @@ impl PageV42b {
 
     // TODO: Update to be rel_output_path
     pub fn generate_href_from_ast(&mut self) {
-        if let Ok(attr) = self.get_pagedata_from_ast("href") {
+        if let Ok(attr) = self.get_page_attr_from_ast("href") {
             self.href = Some(PathBuf::from(&attr.text));
         }
     }
@@ -142,7 +142,7 @@ impl PageV42b {
     }
 
     pub fn generate_id_from_ast(&mut self) {
-        match self.get_pagedata_from_ast("id") {
+        match self.get_page_attr_from_ast("id") {
             Ok(attr) => {
                 self.id = Some(attr.text.to_string());
             }
@@ -151,14 +151,14 @@ impl PageV42b {
                         .issues
                         .push(NeoErrorV42::new_page_issue(&self, vec![
                             "Could not get id from parsed filed".to_string(),
-                            "This could mean that there is no '-- id: ...' in the '-- pagedata' section of the file.".to_string(),
-                            "It could also mean that no '-- pagedata' section was found in the file.".to_string()
+                            "This could mean that there is no '-- id: ...' in the '-- page' section of the file.".to_string(),
+                            "It could also mean that no '-- page' section was found in the file.".to_string()
                         ]));
             }
         }
     }
 
-    pub fn get_pagedata_from_ast(
+    pub fn get_page_attr_from_ast(
         &self,
         key: &str,
     ) -> Result<&SectionKeyValueAttrPayloadV42, NeoErrorV42> {
@@ -184,9 +184,24 @@ impl PageV42b {
     }
 
     pub fn set_id(&mut self) {
-        match self.get_pagedata_from_ast("id") {
+        match self.get_page_attr_from_ast("id") {
             Ok(attr) => self.id = Some(attr.text.to_string()),
-            Err(e) => (),
+            Err(_) => match get_value_from_raw_page_section_parsing(&self.source, "id") {
+                Ok(v) => {
+                    self.id = Some(v.1.join("").trim().to_string());
+                    let _ = &self
+                        .issues
+                        .push(NeoErrorV42::new_page_issue(&self, vec![
+                            "Warning: This pages is using a fallback ID because one couldn't be found properly in the source file.".to_string(),
+                            "If this page is showing up in an expected location that's probably why. Fixing whatever issues are happening in the source file should fix this as well.".to_string(),
+                        ]));
+                }
+                Err(e) => {
+                    dbg!("TODO: Add this error to the page stack");
+                    dbg!(e);
+                    ()
+                }
+            },
         }
     }
 

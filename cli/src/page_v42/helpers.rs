@@ -11,12 +11,12 @@ use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
 
-pub fn get_value_from_raw_pagedata_parsing<'a>(
+pub fn get_value_from_raw_page_section_parsing<'a>(
     source: &'a str,
     target: &'a str,
 ) -> IResult<&'a str, Vec<&'a str>> {
     let (source, _) =
-        many1(|src| move_parser_to_last_instance_of_section(src, "pagedata")).parse(source)?;
+        many1(|src| move_parser_to_last_instance_of_section(src, "page")).parse(source)?;
     let (source, things) = many1(|src| parse_pagedata_attr(src, target)).parse(source)?;
     Ok((source, things))
 }

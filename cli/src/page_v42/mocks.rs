@@ -24,7 +24,7 @@ impl PageV42b {
         // page.generate_id_from_ast();
         // page.generate_fallback_id();
 
-        page.generate_rel_output_path();
+        // page.generate_rel_output_path();
 
         // TODO: Deprecate these
         // page.generate_href_from_id();
