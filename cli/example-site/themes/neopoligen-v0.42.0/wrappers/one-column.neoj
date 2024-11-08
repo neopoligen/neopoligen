@@ -87,9 +87,8 @@ a {
 </main>
 
 <footer class="medium-width">
-    [!- block body_footer -!][!- endblock -!]
-
-
+  [!- include "includes/debugging.neoj" -!]
+  <div>[@ site.generated_at("Generated on %a. %B %-d at %-I:%M:%S%p") @]</div>
 </footer>
 
 [#

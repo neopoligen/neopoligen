@@ -1,0 +1,15 @@
+[!- import "built-in/macro-loader.neoj" as neo -!]
+[! set reference_header_has_been_output = false !]
+[!- for section in page.sections -!]
+    [!- if section.kind == "reference"  -!]
+        [! if reference_header_has_been_output == false !]
+        <section class="references-section flow">
+            <h2>References</h2>
+        [! set reference_header_has_been_output = true !]
+        [! endif !]
+        [@- neo.output_section(section) -@]
+    [!- endif -!]
+    [! if loop.last and reference_header_has_been_output == true !]
+        </section>
+    [! endif !]
+[!- endfor -!]

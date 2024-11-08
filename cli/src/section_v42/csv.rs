@@ -238,7 +238,7 @@ mod test {
     }
 
     #[test]
-    fn solo_csv_section_tests() {
+    fn csv_section_tests() {
         for (id, source) in INPUT_FILES.iter() {
             match OUTPUT_FILES.get(id) {
                 Some(output) => {

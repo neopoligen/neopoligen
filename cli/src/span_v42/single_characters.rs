@@ -7,7 +7,6 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 
-
 pub fn single_tilde(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, output) = terminated(tag("~"), not(tag("~")))
         .context("")
@@ -392,12 +391,10 @@ pub fn single_backtick(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> 
     ))
 }
 
-
 #[cfg(test)]
 mod test {
     use super::*;
     use pretty_assertions::assert_eq;
-
 
     #[test]
     fn single_at_eof_tilde() {
@@ -431,7 +428,6 @@ mod test {
         assert!(single_tilde(source).is_err());
     }
 
-
     #[test]
     fn single_at_eof_exclamation() {
         let source = "!";
@@ -463,7 +459,6 @@ mod test {
         let source = "!!";
         assert!(single_exclamation(source).is_err());
     }
-
 
     #[test]
     fn single_at_eof_at() {
@@ -497,7 +492,6 @@ mod test {
         assert!(single_at(source).is_err());
     }
 
-
     #[test]
     fn single_at_eof_pound_sign() {
         let source = "#";
@@ -529,7 +523,6 @@ mod test {
         let source = "##";
         assert!(single_pound_sign(source).is_err());
     }
-
 
     #[test]
     fn single_at_eof_dollar_sign() {
@@ -563,7 +556,6 @@ mod test {
         assert!(single_dollar_sign(source).is_err());
     }
 
-
     #[test]
     fn single_at_eof_percent_sign() {
         let source = "%";
@@ -595,7 +587,6 @@ mod test {
         let source = "%%";
         assert!(single_percent_sign(source).is_err());
     }
-
 
     #[test]
     fn single_at_eof_caret() {
@@ -629,7 +620,6 @@ mod test {
         assert!(single_caret(source).is_err());
     }
 
-
     #[test]
     fn single_at_eof_ampersand() {
         let source = "&";
@@ -661,7 +651,6 @@ mod test {
         let source = "&&";
         assert!(single_ampersand(source).is_err());
     }
-
 
     #[test]
     fn single_at_eof_asterisk() {
@@ -695,7 +684,6 @@ mod test {
         assert!(single_asterisk(source).is_err());
     }
 
-
     #[test]
     fn single_at_eof_open_paren() {
         let source = "(";
@@ -727,7 +715,6 @@ mod test {
         let source = "((";
         assert!(single_open_paren(source).is_err());
     }
-
 
     #[test]
     fn single_at_eof_close_paren() {
@@ -761,7 +748,6 @@ mod test {
         assert!(single_close_paren(source).is_err());
     }
 
-
     #[test]
     fn single_at_eof_underscore() {
         let source = "_";
@@ -793,7 +779,6 @@ mod test {
         let source = "__";
         assert!(single_underscore(source).is_err());
     }
-
 
     #[test]
     fn single_at_eof_hyphen() {
@@ -827,7 +812,6 @@ mod test {
         assert!(single_hyphen(source).is_err());
     }
 
-
     #[test]
     fn single_at_eof_plus_sign() {
         let source = "+";
@@ -859,7 +843,6 @@ mod test {
         let source = "++";
         assert!(single_plus_sign(source).is_err());
     }
-
 
     #[test]
     fn single_at_eof_equal_sign() {
@@ -893,7 +876,6 @@ mod test {
         assert!(single_equal_sign(source).is_err());
     }
 
-
     #[test]
     fn single_at_eof_open_brace() {
         let source = "{";
@@ -925,7 +907,6 @@ mod test {
         let source = "{{";
         assert!(single_open_brace(source).is_err());
     }
-
 
     #[test]
     fn single_at_eof_close_brace() {
@@ -959,7 +940,6 @@ mod test {
         assert!(single_close_brace(source).is_err());
     }
 
-
     #[test]
     fn single_at_eof_open_bracket() {
         let source = "[";
@@ -991,7 +971,6 @@ mod test {
         let source = "[[";
         assert!(single_open_bracket(source).is_err());
     }
-
 
     #[test]
     fn single_at_eof_close_bracket() {
@@ -1025,7 +1004,6 @@ mod test {
         assert!(single_close_bracket(source).is_err());
     }
 
-
     #[test]
     fn single_at_eof_pipe() {
         let source = "|";
@@ -1057,7 +1035,6 @@ mod test {
         let source = "||";
         assert!(single_pipe(source).is_err());
     }
-
 
     #[test]
     fn single_at_eof_backslash() {
@@ -1091,7 +1068,6 @@ mod test {
         assert!(single_backslash(source).is_err());
     }
 
-
     #[test]
     fn single_at_eof_colon() {
         let source = ":";
@@ -1123,7 +1099,6 @@ mod test {
         let source = "::";
         assert!(single_colon(source).is_err());
     }
-
 
     #[test]
     fn single_at_eof_semicolon() {
@@ -1157,7 +1132,6 @@ mod test {
         assert!(single_semicolon(source).is_err());
     }
 
-
     #[test]
     fn single_at_eof_double_quote() {
         let source = "\"";
@@ -1189,7 +1163,6 @@ mod test {
         let source = "\"\"";
         assert!(single_double_quote(source).is_err());
     }
-
 
     #[test]
     fn single_at_eof_single_quote() {
@@ -1223,7 +1196,6 @@ mod test {
         assert!(single_single_quote(source).is_err());
     }
 
-
     #[test]
     fn single_at_eof_comma() {
         let source = ",";
@@ -1255,7 +1227,6 @@ mod test {
         let source = ",,";
         assert!(single_comma(source).is_err());
     }
-
 
     #[test]
     fn single_at_eof_less_than() {
@@ -1289,7 +1260,6 @@ mod test {
         assert!(single_less_than(source).is_err());
     }
 
-
     #[test]
     fn single_at_eof_greater_than() {
         let source = ">";
@@ -1321,7 +1291,6 @@ mod test {
         let source = ">>";
         assert!(single_greater_than(source).is_err());
     }
-
 
     #[test]
     fn single_at_eof_period() {
@@ -1355,7 +1324,6 @@ mod test {
         assert!(single_period(source).is_err());
     }
 
-
     #[test]
     fn single_at_eof_forward_slash() {
         let source = "/";
@@ -1387,7 +1355,6 @@ mod test {
         let source = "//";
         assert!(single_forward_slash(source).is_err());
     }
-
 
     #[test]
     fn single_at_eof_question_mark() {
@@ -1421,7 +1388,6 @@ mod test {
         assert!(single_question_mark(source).is_err());
     }
 
-
     #[test]
     fn single_at_eof_backtick() {
         let source = "`";
@@ -1453,7 +1419,5 @@ mod test {
         let source = "``";
         assert!(single_backtick(source).is_err());
     }
-
-
-
 }
+

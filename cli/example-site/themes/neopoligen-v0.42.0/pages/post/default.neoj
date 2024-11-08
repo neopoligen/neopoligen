@@ -2,45 +2,9 @@
 [!- import "built-in/macro-loader.neoj" as neo -!]
 
 [!- block body_main -!]
-
 [@- neo.output_all_sections_except(["footnote"]) -@]
-
-[@ neo.output_footnotes() @]
-
-[!- endblock -!]
-
-[!- block body_footer -!]
-
-<h2>Development And Debugging Stuff</h2>
-
-<div>This section is where I'm working on Neopoligen. 
-It's kind of a behind-the-scenes look at the code
-that makes the page if you're into that type of thing.
-</div>
-
-<div>
-  [! if page.issues !]
-    <h3>Issues</h3>
-    <ul class="built-in-flow flow">
-    [#
-      [@- neo.debug_page_issues(site, page) -@]
-      #]
-    </ul>
-  [! endif !]
-  <details>
-    <summary>Source</summary>
-    <div><pre>[! autoescape true !][@ page.source @][! endautoescape !]</pre></div>
-  </details>
-  <details>
-    <summary>Section Tree</summary>
-    [#
-    <div>[@ neo.debug_section_tree(site, page, page.sections) @]</div>
-    #]
-  </details>
-  <details>
-    <summary>Sections</summary>
-    <div><pre>[@ neo.debug_sections_as_json() @]</pre></div>
-  </details>
-</div>
-<div>[@ site.generated_at("Generated on %a. %B %-d at %-I:%M:%S%p") @]</div>
+<div class="fin-token">~ fin ~</div>
+[!- include "includes/endnotes.neoj" -!]
+[!- include "includes/footnotes.neoj" -!]
+[!- include "includes/references.neoj" -!]
 [!- endblock -!]

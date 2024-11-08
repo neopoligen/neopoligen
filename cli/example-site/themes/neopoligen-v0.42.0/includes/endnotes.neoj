@@ -1,0 +1,15 @@
+[!- import "built-in/macro-loader.neoj" as neo -!]
+[! set endnote_header_has_been_output = false !]
+[!- for section in page.sections -!]
+    [!- if section.kind == "endnote"  -!]
+        [! if endnote_header_has_been_output == false !]
+        <section class="endnotes-section flow">
+            <h2>Endnotes</h2>
+        [! set endnote_header_has_been_output = true !]
+        [! endif !]
+        [@- neo.output_section(section) -@]
+    [!- endif -!]
+    [! if loop.last and endnote_header_has_been_output == true !]
+        </section>
+    [! endif !]
+[!- endfor -!]

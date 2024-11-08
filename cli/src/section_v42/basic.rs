@@ -233,7 +233,7 @@ mod test {
     }
 
     #[test]
-    fn solo_basic_section_tests() {
+    fn basic_section_tests() {
         for (id, source) in INPUT_FILES.iter() {
             match OUTPUT_FILES.get(id) {
                 Some(output) => {

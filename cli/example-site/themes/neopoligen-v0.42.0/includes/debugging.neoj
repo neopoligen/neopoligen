@@ -1,0 +1,30 @@
+[!- import "built-in/macro-loader.neoj" as neo -!]
+<h2>Development And Debugging Stuff</h2>
+
+<div>This section is where I'm working on Neopoligen. 
+It's kind of a behind-the-scenes look at the code
+that makes the page if you're into that type of thing.
+</div>
+
+<div>
+  [! if page.issues !]
+    <h3>Issues</h3>
+    <ul class="built-in-flow flow">
+    [#
+      [@- neo.debug_page_issues(site, page) -@]
+      #]
+    </ul>
+  [! endif !]
+  <details>
+    <summary>Source</summary>
+    <div><pre>[! autoescape true !][@ page.source @][! endautoescape !]</pre></div>
+  </details>
+  <details>
+    <summary>Section Tree</summary>
+    [@ neo.debug_section_tree(page.sections) @]
+  </details>
+  <details>
+    <summary>Sections</summary>
+    [@ neo.debug_sections_as_json() @]
+  </details>
+</div>

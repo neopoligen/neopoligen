@@ -77,10 +77,9 @@ pub fn list_section_start_v42<'a>(
     _parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
+    // let debug = true;
     let dbg_header = "LIST_SECTION_START";
     dump_parser_if_debug(debug, dbg_header, source, 1);
-    let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
-    dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, kind) = preceded(
         tuple((tag("--"), space1)),
         alt((terminated(
@@ -90,11 +89,11 @@ pub fn list_section_start_v42<'a>(
     )
     .context("")
     .parse(source)?;
-    dump_parser_if_debug(debug, dbg_header, source, 3);
+    dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
-    dump_parser_if_debug(debug, dbg_header, source, 4);
+    dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, _) = multispace0.context("").parse(source)?;
-    dump_parser_if_debug(debug, dbg_header, source, 5);
+    dump_parser_if_debug(debug, dbg_header, source, 4);
     // TODO: Handle if you're in a list or a checklist here.
     let (source, children) = many0(alt((
         |src| list_item_section_full_v42(src, site_config, SectionParent::List, debug),
@@ -102,12 +101,12 @@ pub fn list_section_start_v42<'a>(
     )))
     .context("")
     .parse(source)?;
-    dump_parser_if_debug(debug, dbg_header, source, 6);
+    dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, end_section) =
         (|src| end_section_basic_v42(src, site_config, SectionParent::List, kind, debug))
             .context("")
             .parse(source)?;
-    dump_parser_if_debug(debug, dbg_header, source, 7);
+    dump_parser_if_debug(debug, dbg_header, source, 6);
     let section = SectionV42::List(ListSectionV42 {
         attrs,
         bound: Bound::Start,
@@ -244,7 +243,7 @@ mod test {
     }
 
     #[test]
-    fn check_start_end() {
+    fn solo_check_start_end() {
         let site_config = SiteConfigV42::mock1_basic();
         let source = SAMPLE_DIR
             .get_file("002-start-end.neo")

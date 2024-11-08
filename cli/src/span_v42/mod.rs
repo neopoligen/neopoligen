@@ -5,6 +5,7 @@ pub mod named_span;
 pub mod not_pipe_or_greater_than_or_less_than_or_escape;
 pub mod plaintext;
 pub mod plaintext_base_v42;
+pub mod plaintext_with_spaces_and_single_newlines_v42;
 pub mod plaintext_with_spaces_v42;
 pub mod shorthand_code;
 pub mod shorthand_emphasis;
@@ -17,6 +18,7 @@ pub mod shorthand_strikethrough;
 pub mod shorthand_strong;
 pub mod shorthand_underline;
 pub mod single_characters;
+pub mod single_newline_as_space;
 pub mod space0_line_ending_or_eof;
 pub mod space1_not_at_line_ending_or_eof;
 

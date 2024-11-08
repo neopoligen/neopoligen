@@ -4,7 +4,8 @@ use crate::helpers::dump_parser_if_debug;
 use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
 use crate::span_v42::SpanV42;
-use crate::spans_v42::generic_block_content::spans_of_generic_block_content;
+//use crate::spans_v42::generic_block_content::spans_of_generic_block_content;
+use crate::spans_v42::generic_block_content_v42::generic_block_content_v42;
 use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;
 //use nom::character::complete::space1;
@@ -38,7 +39,7 @@ pub fn list_item_paragraph_block<'a>(
     let dbg_header = "LIST_ITEM_PARAGRAPH_BLOCK";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = not(tag("-")).context("").parse(source)?;
-    let (source, spans) = spans_of_generic_block_content.context("").parse(source)?;
+    let (source, spans) = generic_block_content_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, _) = multispace0.context("").parse(source)?;
     Ok((
@@ -66,7 +67,7 @@ pub fn paragraph_block_section_v42<'a>(
     let dbg_header = "PARAGRAPH_BLOCK_SECTION";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = not(tag("--")).context("").parse(source)?;
-    let (source, spans) = spans_of_generic_block_content.context("").parse(source)?;
+    let (source, spans) = generic_block_content_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, _) = multispace0.context("").parse(source)?;
     Ok((
