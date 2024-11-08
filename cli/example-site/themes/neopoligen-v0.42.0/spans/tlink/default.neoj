@@ -3,7 +3,7 @@
 [!- set title_spans = site.get_page_title_from_span(site, page, span) -!]
 [!- if href and title_spans -!]
 <a href="[@ href @]">
-[@- neo.output_spans(site, page, title_spans) -@]
+[@- neo.output_spans(title_spans) -@]
 </a>
 [!- else -!]
 [issue: could not make tlink]

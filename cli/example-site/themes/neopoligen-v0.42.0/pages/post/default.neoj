@@ -24,7 +24,7 @@ that makes the page if you're into that type of thing.
   [! endif !]
   <details>
     <summary>Source</summary>
-    <div><pre>[@ page.source @]</pre></div>
+    <div><pre>[! autoescape true !][@ page.source @][! endautoescape !]</pre></div>
   </details>
   <details>
     <summary>Section Tree</summary>
