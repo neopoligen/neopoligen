@@ -7,7 +7,7 @@ use serde_json::Value as SerdeValue;
 use serde_json5;
 use std::collections::BTreeMap;
 
-const SOURCE_DIR: Dir = include_dir!("tests/page_v42_tests/sources");
+const SOURCE_DIR: Dir = include_dir!("tests/page_v42_section_tests/sources");
 
 lazy_static! {
     static ref SOURCE_FILES: BTreeMap<String, String> = {
@@ -38,7 +38,7 @@ lazy_static! {
     };
 }
 
-const OUTPUT_DIR: Dir = include_dir!("tests/page_v42_tests/outputs");
+const OUTPUT_DIR: Dir = include_dir!("tests/page_v42_section_tests/outputs");
 
 lazy_static! {
     static ref OUTPUT_FILES: BTreeMap<String, String> = {

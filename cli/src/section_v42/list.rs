@@ -204,6 +204,7 @@ mod test {
         attrs.insert(
             "title".to_string(),
             SectionKeyValueAttrPayloadV42 {
+                text: "links".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "links".to_string(),
                 })],

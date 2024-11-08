@@ -478,6 +478,7 @@ mod test {
         attrs.insert(
             "id".to_string(),
             SectionKeyValueAttrPayloadV42 {
+                text: "alfa".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "alfa".to_string(),
                 })],
@@ -511,6 +512,7 @@ mod test {
         attrs.insert(
             "class".to_string(),
             SectionKeyValueAttrPayloadV42 {
+                text: "bravo".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "bravo".to_string(),
                 })],
@@ -582,6 +584,7 @@ mod test {
         attrs.insert(
             "id".to_string(),
             SectionKeyValueAttrPayloadV42 {
+                text: "delta".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "delta".to_string(),
                 })],
@@ -590,6 +593,7 @@ mod test {
         attrs.insert(
             "class".to_string(),
             SectionKeyValueAttrPayloadV42 {
+                text: "echo".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     text: "echo".to_string(),
                 })],

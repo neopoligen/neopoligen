@@ -6,7 +6,7 @@ use include_dir::{include_dir, Dir};
 use minijinja::Value;
 use std::path::PathBuf;
 
-const SAMPLES: Dir = include_dir!("src/page_v42/samples");
+const SAMPLES: Dir = include_dir!("tests/page_v42_data_tests/sources");
 
 impl PageV42b {
     pub fn test_from_sample_file(file: &str) -> PageV42b {
@@ -18,10 +18,11 @@ impl PageV42b {
             PageV42b::new_from_str_v42(&source_path, &source, &site_config.project_dir());
         page.set_language_from_site_config(&site_config);
         page.generate_ast(&site_config);
+        //page.set_id();
 
-        // TODO: Combine these
-        page.generate_id_from_ast();
-        page.generate_fallback_id();
+        // // TODO: Combine these
+        // page.generate_id_from_ast();
+        // page.generate_fallback_id();
 
         page.generate_rel_output_path();
 

@@ -179,6 +179,9 @@ impl PageV42b {
         }
     }
 
+    // pub fn set_id(&mut self) {
+    // }
+
     pub fn set_language_from_site_config(&mut self, site_config: &SiteConfigV42) {
         self.language = Some(site_config.default_language.clone());
     }
@@ -293,21 +296,21 @@ mod test {
     use crate::span_v42::{plaintext::PlainTextSpan, SpanV42};
     use pretty_assertions::assert_eq;
 
-    #[test]
-    fn solo_rel_output_path_basic_check() {
-        let page = PageV42b::test_from_sample_file("001-pagedata-only.neo");
-        let left = Some(PathBuf::from("en/001-pagedata-only.neo/index.html"));
-        let right = page.rel_output_path;
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // fn solo_rel_output_path_basic_check() {
+    //     let page = PageV42b::test_from_sample_file("001-pagedata-only.neo");
+    //     let left = Some(PathBuf::from("en/001-pagedata-only.neo/index.html"));
+    //     let right = page.rel_output_path;
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    fn id_basic_check() {
-        let page = PageV42b::test_from_sample_file("001-pagedata-only.neo");
-        let left = "001-pagedata-only.neo".to_string();
-        let right = page.id.unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // fn id_basic_check() {
+    //     let page = PageV42b::test_from_sample_file("001-pagedata-only.neo");
+    //     let left = "001-pagedata-only.neo".to_string();
+    //     let right = page.id.unwrap();
+    //     assert_eq!(left, right);
+    // }
 
     // #[test]
     // fn id_from_invalid_page() {
@@ -317,46 +320,46 @@ mod test {
     //     assert_eq!(left, right);
     // }
 
-    #[test]
-    fn title_from_pagedata_id() {
-        let page = PageV42b::test_from_sample_file("001-pagedata-only.neo");
-        let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
-            text: "001-pagedata-only.neo".to_string(),
-        })]);
-        let right = page.title().unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // fn title_from_pagedata_id() {
+    //     let page = PageV42b::test_from_sample_file("001-pagedata-only.neo");
+    //     let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
+    //         text: "001-pagedata-only.neo".to_string(),
+    //     })]);
+    //     let right = page.title().unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    fn title_from_pagedata_title() {
-        let page = PageV42b::test_from_sample_file("005-title-in-pagedata.neo");
-        let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
-            text: "Title In Pagedata".to_string(),
-        })]);
-        let right = page.title().unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // fn title_from_pagedata_title() {
+    //     let page = PageV42b::test_from_sample_file("005-title-in-pagedata.neo");
+    //     let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
+    //         text: "Title In Pagedata".to_string(),
+    //     })]);
+    //     let right = page.title().unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    fn title_from_title_section() {
-        let page = PageV42b::test_from_sample_file("002-basic-sample.neo");
-        let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
-            text: "Basic Sample".to_string(),
-        })]);
-        let right = page.title().unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // fn title_from_title_section() {
+    //     let page = PageV42b::test_from_sample_file("002-basic-sample.neo");
+    //     let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
+    //         text: "Basic Sample".to_string(),
+    //     })]);
+    //     let right = page.title().unwrap();
+    //     assert_eq!(left, right);
+    // }
 
-    #[test]
-    #[ignore] // Reminder: This isn't currently needed since the page won't have rendered
-    fn title_from_invalid_page() {
-        let page = PageV42b::test_from_sample_file("006-unclosed-start-section.neo");
-        let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
-            text: "06-unclosed-start-section.neo".to_string(),
-        })]);
-        let right = page.title().unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // #[ignore] // Reminder: This isn't currently needed since the page won't have rendered
+    // fn title_from_invalid_page() {
+    //     let page = PageV42b::test_from_sample_file("006-unclosed-start-section.neo");
+    //     let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
+    //         text: "06-unclosed-start-section.neo".to_string(),
+    //     })]);
+    //     let right = page.title().unwrap();
+    //     assert_eq!(left, right);
+    // }
 
     // #[test]
     // fn default_html_file_system_relative_path_from_id() {

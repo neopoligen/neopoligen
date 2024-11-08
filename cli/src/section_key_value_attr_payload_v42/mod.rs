@@ -5,4 +5,5 @@ use serde::Serialize;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SectionKeyValueAttrPayloadV42 {
     pub spans: Vec<SpanV42>,
+    pub text: String,
 }
