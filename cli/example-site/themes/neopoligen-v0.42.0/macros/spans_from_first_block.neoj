@@ -1,3 +1,19 @@
 [!- macro spans_from_first_block(section) -!]
-asdf
+[!- for child in section.children -!]
+[!- if loop.first -!]
+[!- include "includes/output_child_spans.neoj" -!]
+[!- endif -!]
+[!- endfor -!]
 [!- endmacro -!]
+
+
+
+[#
+[!- macro output_just_first_block_spans(site, page, section) -!]
+[!- for child in section.children -!]
+[!- if loop.first -!]
+[@- output_spans(site, page, child.spans) -@]
+[!- endif -!]
+[!- endfor -!]
+[!- endmacro -!]
+#]
