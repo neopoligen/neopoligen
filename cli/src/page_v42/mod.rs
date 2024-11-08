@@ -178,6 +178,13 @@ impl PageV42b {
         };
     }
 
+    pub fn title_as_spans(&self) -> Result<Value, Error> {
+        match &self.get_page_attr_from_ast("title") {
+            Ok(attr) => Ok(Value::from_serialize(attr.spans.clone())),
+            Err(_) => Ok(Value::from("asdf")),
+        }
+    }
+
     pub fn title(&self) -> Result<Value, Error> {
         // ORDER:
         // pagedata--title
@@ -281,4 +288,6 @@ impl Object for PageV42b {
             _ => Ok(Value::from("")),
         }
     }
+
+    //
 }

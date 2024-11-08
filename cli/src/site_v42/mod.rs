@@ -1,7 +1,6 @@
-#![allow(unused_imports)]
 use crate::helpers::flatten_spans_from_template_v42;
-use crate::helpers::flatten_spans_v42;
-use crate::helpers::highlight_span_v42;
+// use crate::helpers::flatten_spans_v42;
+// use crate::helpers::highlight_span_v42;
 use crate::page_v42::PageV42b;
 use crate::site_config::SiteConfigV42;
 use chrono::prelude::*;
@@ -64,6 +63,24 @@ impl SiteV42b {
                 self.generated_at.unwrap().format("%B").to_string(),
             ))
         }
+    }
+
+    pub fn get_page_from_span(&self, args: &[Value]) -> Result<Value, Error> {
+        if args.len() == 1 {
+            let x = &args[0].get_item(&Value::from("spans")).unwrap();
+            let page_id = flatten_spans_from_template_v42(&[x.to_owned()]).unwrap();
+            match self.pages.get(&page_id.to_string()) {
+                Some(page) => Ok(Value::from_object(page.clone())),
+                None => Err(Error::new(ErrorKind::InvalidOperation, "Could not get page from get_page_from_span")),
+            }
+        } else {
+            Err(Error::new(
+                ErrorKind::InvalidOperation,
+                "Could not get page from get_page_from_span",
+            ))
+        }
+
+        //Ok(Value::from("asdf"))
     }
 
     pub fn get_page_ids(&self, _args: &[Value]) -> Result<Value, Error> {
@@ -421,6 +438,10 @@ impl Object for SiteV42b {
             "generated_at" => self.generated_at(args),
             "get_keys_for_pages_without_ids" => self.get_keys_for_pages_without_ids(args),
             "get_issue_count" => Ok(Value::from(self.get_issue_count(args))),
+            // Deprecate the ones of these that go to a page 
+            // in favor of pulling in the page as an object 
+            // and accessing things that way to start
+            "get_page_from_span" => self.get_page_from_span(args),
             "get_page_href_from_id" => self.get_page_href_from_id(args),
             "get_page_href_from_span" => self.get_page_href_from_span(args),
             "get_page_ids" => self.get_page_ids(args),
@@ -441,10 +462,9 @@ impl Object for SiteV42b {
 mod test {
     use crate::{
         bound::Bound,
-        section_attr_v42::SectionAttrV42,
         section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42,
-        section_v42::{basic::BasicSectionV42, SectionV42},
-        span_v42::{named_span::KeyValueSpanAttrV42, plaintext::PlainTextSpan, SpanV42},
+        section_v42::basic::BasicSectionV42,
+        span_v42::plaintext::PlainTextSpan, span_v42::SpanV42,
     };
 
     use super::*;

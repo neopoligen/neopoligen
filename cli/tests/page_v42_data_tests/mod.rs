@@ -1,5 +1,8 @@
 use minijinja::Value;
-use neopoligengine::page_v42::PageV42b;
+use neopoligengine::{
+    page_v42::PageV42b,
+    span_v42::{plaintext::PlainTextSpan, SpanV42},
+};
 use pretty_assertions::assert_eq;
 use std::path::PathBuf;
 
@@ -78,7 +81,7 @@ fn rel_output_path_basic_from_custom_path_with_non_html_extension() {
 }
 
 #[test]
-fn solo_href_basic_test() {
+fn href_basic_test() {
     let page = PageV42b::test_from_sample_file("001-only-page-section.neo");
     let left = Value::from("/en/001-pagedata-only.neo/".to_string());
     let right = page.href().unwrap();
@@ -86,7 +89,7 @@ fn solo_href_basic_test() {
 }
 
 #[test]
-fn solo_href_homepage_without_file() {
+fn href_homepage_without_file() {
     let page = PageV42b::test_from_sample_file("005-homepage-path-without-file.neo");
     let left = Value::from("/".to_string());
     let right = page.href().unwrap();
@@ -94,10 +97,20 @@ fn solo_href_homepage_without_file() {
 }
 
 #[test]
-fn solo_href_file_with_extension() {
+fn href_file_with_extension() {
     let page = PageV42b::test_from_sample_file("008-custom-txt-path.neo");
     let left = Value::from("/somewhere/file.txt".to_string());
     let right = page.href().unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn solo_title_as_spans_from_page_section() {
+    let page = PageV42b::test_from_sample_file("009-title-in-page-section.neo");
+    let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
+        text: "This is a title".to_string(),
+    })]);
+    let right = page.title_as_spans().unwrap();
     assert_eq!(left, right);
 }
 
