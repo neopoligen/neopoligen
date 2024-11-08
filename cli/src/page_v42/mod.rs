@@ -212,11 +212,21 @@ impl PageV42b {
     }
 
     pub fn set_rel_output_path(&mut self) {
-        if let Ok(attr) = &self.get_page_attr_from_ast("path") {
-            self.rel_output_path = Some(PathBuf::from(format!("{}", attr.text)));
-        } else if let (Some(language), Some(id)) = (&self.language, &self.id) {
-            self.rel_output_path = Some(PathBuf::from(format!("{}/{}/index.html", language, id)));
-        }
+        match &self.get_page_attr_from_ast("path") {
+            Ok(attr) => {
+                let path = PathBuf::from(attr.text.to_string());
+                match &path.extension() {
+                    Some(_) => self.rel_output_path = Some(path),
+                    None => self.rel_output_path = Some(path.join("index.html")),
+                }
+            }
+            Err(_) => {
+                if let (Some(language), Some(id)) = (&self.language, &self.id) {
+                    self.rel_output_path =
+                        Some(PathBuf::from(format!("{}/{}/index.html", language, id)));
+                }
+            }
+        };
     }
 
     pub fn title(&self) -> Result<Value, Error> {

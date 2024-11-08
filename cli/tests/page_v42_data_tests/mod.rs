@@ -37,8 +37,16 @@ fn solo_rel_output_path_basic_from_id_test() {
 }
 
 #[test]
-fn solo_rel_output_path_basic_from_custom_path() {
+fn solo_rel_output_path_basic_from_custom_path_with_file() {
     let page = PageV42b::test_from_sample_file("004-homepage-path-with-file.neo");
+    let left = Some(PathBuf::from("/index.html".to_string()));
+    let right = page.rel_output_path;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn solo_rel_output_path_basic_from_custom_path_without_file() {
+    let page = PageV42b::test_from_sample_file("005-homepage-path-without-file.neo");
     let left = Some(PathBuf::from("/index.html".to_string()));
     let right = page.rel_output_path;
     assert_eq!(left, right);
