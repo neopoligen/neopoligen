@@ -11,6 +11,7 @@ use self::shorthand_underline::underline_shorthand_span;
 use crate::helpers::dump_parser_if_debug;
 use crate::section_attr_v42::SectionAttrV42;
 use crate::span_v42::space0_line_ending_or_eof::*;
+use crate::span_v42::string_parsers::*;
 use crate::span_v42::*;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
@@ -23,7 +24,6 @@ use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
-use crate::span_v42::string_parsers::*;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SectionKeyValueAttrV42 {
@@ -114,8 +114,8 @@ pub fn section_key_value_attr_v42<'a>(
 #[cfg(test)]
 mod test {
     use super::*;
-    use rstest::rstest;
     use pretty_assertions::assert_eq;
+    use rstest::rstest;
 
     #[rstest]
     #[case("-- alfa: bravo", "")]
@@ -127,7 +127,7 @@ mod test {
     #[case("-- alfa:   leading_value_spaces_are_okay", "")]
     #[case("-- alfa: ``can contain code, etc...``", "")]
     #[case("-- alfa: bravo\n-- charlie: delta", "-- charlie: delta")]
-    fn solo_valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
+    fn valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
         let results = section_key_value_attr_v42(source);
         match results {
             Ok(result) => {

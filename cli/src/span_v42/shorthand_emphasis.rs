@@ -1,12 +1,16 @@
+
+#![allow(unused)]
 use super::PlainTextSpan;
 use crate::helpers::flatten_spans_v42;
 use crate::span_attrs_v42::*;
+use crate::span_v42::string_parsers::*;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
 use nom::bytes::complete::is_a;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::character::complete::alphanumeric1;
+use nom::character::complete::multispace0;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::not;
@@ -27,11 +31,16 @@ use std::collections::BTreeMap;
 pub struct EmphasisShorthandV42 {
     attrs: BTreeMap<String, Vec<SpanV42>>,
     flags: Vec<String>,
+    kind: String,
     text: String,
 }
 
 pub fn emphasis_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, tokens) = preceded(pair(tag("__"), space0), many1(emphasis_shorthand_content))
+    let (source, tokens) = preceded(pair(tag("__"), multispace0), many1(alt((
+            plain_text_string_base,
+            plain_text_space1_as_single_space,
+            plain_text_single_newline_as_space,
+        ))))
         .context("")
         .parse(source)?;
     let (source, (attrs, flags)) = get_emphasis_shorthand_attrs_and_flags
@@ -41,9 +50,10 @@ pub fn emphasis_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree
     Ok((
         source,
         SpanV42::EmphasisShorthand(EmphasisShorthandV42 {
+            kind: "emphasis-shorthand".to_string(),
             attrs,
             flags,
-            text: flatten_spans_v42(&tokens),
+            text: tokens.join(""),
         }),
     ))
 }

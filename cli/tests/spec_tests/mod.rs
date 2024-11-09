@@ -7,7 +7,7 @@ use include_dir::{include_dir, Dir};
 // use neopoligengine::span_v42::shorthand_emphasis::emphasis_shorthand_span;
 // use neopoligengine::span_v42::shorthand_footnote::footnote_shorthand_span;
 // use neopoligengine::span_v42::shorthand_strong::strong_shorthand_span;
-// use neopoligengine::{page_v42::PageV42, site_config::SiteConfigV42};
+// use neopoligengine::{page_v42::PageV42b, site_config::SiteConfigV42};
 // use pretty_assertions::assert_eq;
 // use serde::Deserialize;
 // use std::path::PathBuf;
@@ -25,7 +25,7 @@ const _TEST_FILES: Dir = include_dir!("tests/spec_tests/tests");
 //     let source = get_include_str_file(TEST_FILES, file_name);
 //     let path = PathBuf::from("mock/path.neo");
 //     let site_config = SiteConfigV42::config_for_spec_tests();
-//     let page = PageV42::new_from_str(&source, &path, &site_config).unwrap();
+//     let page = PageV42b::new_from_str(&source, &path, &site_config).unwrap();
 //     if let Some(data) = page
 //         .raw_ast
 //         .iter()
@@ -94,8 +94,7 @@ const _TEST_FILES: Dir = include_dir!("tests/spec_tests/tests");
 // }
 
 // #[test]
-// #[ignore]
-// fn test_code_shorthands() {
+// fn solo_test_code_shorthands() {
 //     let (valid, invalid) = load_tests("code-shorthand.neo");
 //     valid.iter().for_each(|ti| {
 //         dbg!(&ti.description);

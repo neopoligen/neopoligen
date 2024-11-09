@@ -1,12 +1,16 @@
+
+#![allow(unused)]
 use super::PlainTextSpan;
 use crate::helpers::flatten_spans_v42;
 use crate::span_attrs_v42::*;
+use crate::span_v42::string_parsers::*;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
 use nom::bytes::complete::is_a;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::character::complete::alphanumeric1;
+use nom::character::complete::multispace0;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::not;
@@ -27,11 +31,16 @@ use std::collections::BTreeMap;
 pub struct HtmlShorthandV42 {
     attrs: BTreeMap<String, Vec<SpanV42>>,
     flags: Vec<String>,
+    kind: String,
     text: String,
 }
 
 pub fn html_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, tokens) = preceded(pair(tag("[["), space0), many1(html_shorthand_content))
+    let (source, tokens) = preceded(pair(tag("[["), multispace0), many1(alt((
+            plain_text_string_base,
+            plain_text_space1_as_single_space,
+            plain_text_single_newline_as_space,
+        ))))
         .context("")
         .parse(source)?;
     let (source, (attrs, flags)) = get_html_shorthand_attrs_and_flags
@@ -41,9 +50,10 @@ pub fn html_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&st
     Ok((
         source,
         SpanV42::HtmlShorthand(HtmlShorthandV42 {
+            kind: "html-shorthand".to_string(),
             attrs,
             flags,
-            text: flatten_spans_v42(&tokens),
+            text: tokens.join(""),
         }),
     ))
 }
@@ -73,23 +83,25 @@ pub fn html_shorthand_attr_or_flag(
 ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
     // Reminder: Make sure to look for key_value first so flags work properly
-    let (source, attr_or_flag) =
-        alt((html_shorthand_key_value_attr, html_shorthand_span_flag_attr))
-            .context("")
-            .parse(source)?;
+    let (source, attr_or_flag) = alt((
+        html_shorthand_key_value_attr,
+        html_shorthand_span_flag_attr,
+    ))
+    .context("")
+    .parse(source)?;
     Ok((source, attr_or_flag))
 }
 
 pub fn html_shorthand_content(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, token) = alt((not_close_bracket_or_pipe_or_escape,))
-        .context("")
-        .parse(source)?;
+    let (source, token) = alt((
+        not_close_bracket_or_pipe_or_escape,
+    ))
+    .context("")
+    .parse(source)?;
     Ok((source, token))
 }
 
-pub fn not_close_bracket_or_pipe_or_escape(
-    source: &str,
-) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+pub fn not_close_bracket_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, result) = is_not("]\\|").context("").parse(source)?;
     Ok((
         source,
@@ -103,9 +115,11 @@ pub fn not_close_bracket_or_pipe_or_escape(
 pub fn html_shorthand_span_flag_attr(
     source: &str,
 ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
-    let (source, spans) = many1(alt((not_close_bracket_or_pipe_or_escape,)))
-        .context("")
-        .parse(source)?;
+    let (source, spans) = many1(alt((
+        not_close_bracket_or_pipe_or_escape,
+    )))
+    .context("")
+    .parse(source)?;
     let (source, _) = not(tag(":")).context("").parse(source)?;
     Ok((
         source,
@@ -124,9 +138,11 @@ pub fn html_shorthand_key_value_attr(
     )
     .context("")
     .parse(source)?;
-    let (source, spans) = many1(alt((not_close_bracket_or_pipe_or_escape,)))
-        .context("")
-        .parse(source)?;
+    let (source, spans) = many1(alt((
+        not_close_bracket_or_pipe_or_escape,
+    )))
+    .context("")
+    .parse(source)?;
     Ok((
         source,
         SpanBaseAttrV42::KeyValue {
@@ -137,4 +153,5 @@ pub fn html_shorthand_key_value_attr(
 }
 
 #[cfg(test)]
-mod test {}
+mod test {
+}
