@@ -26,7 +26,6 @@ impl SiteV42b {
     // TODO: Set up config of specific attrs/flags to hoist
     //       and only add those to the output
     pub fn get_span_attrs(&self, args: &[Value]) -> Result<Value, Error> {
-        //let mut classes: Vec<String> = vec![];
         let mut attr_string: Vec<String> = vec![];
         if args.len() > 0 {
             let attrs = args[0].get_item(&Value::from("attrs")).unwrap();
@@ -54,21 +53,14 @@ impl SiteV42b {
             let mut classes: Vec<String> = vec![];
             for key in attrs.try_iter()? {
                 let spans = attrs.get_item(&key)?;
-                classes = spans
-                    .try_iter()?
-                    .filter_map(|v| {
-                        if key.to_string() == "class".to_string() {
-                            Some(
-                                encode_quoted_attribute(
-                                    &v.get_item(&Value::from("text")).unwrap().to_string(),
-                                )
-                                .to_string(),
-                            )
-                        } else {
-                            None
-                        }
-                    })
-                    .collect::<Vec<String>>();
+                if key.to_string() == "class".to_string() {
+                    classes.push(
+                        encode_quoted_attribute(
+                            &spans.get_item(&Value::from("text")).unwrap().to_string(),
+                        )
+                        .to_string(),
+                    )
+                }
             }
             if args.len() == 2 {
                 classes.push(args[1].to_string());
