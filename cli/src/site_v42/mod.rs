@@ -23,7 +23,6 @@ pub struct SiteV42b {
 }
 
 impl SiteV42b {
-
     // TODO: Add tests to this and error handling
     // TODO: escape for html
     // TODO: Set up config of specific attrs/flags to hoist
@@ -110,7 +109,10 @@ impl SiteV42b {
             let page_id = flatten_spans_from_template_v42(&[x.to_owned()]).unwrap();
             match self.pages.get(&page_id.to_string()) {
                 Some(page) => Ok(Value::from_object(page.clone())),
-                None => Err(Error::new(ErrorKind::InvalidOperation, "Could not get page from get_page_from_span")),
+                None => Err(Error::new(
+                    ErrorKind::InvalidOperation,
+                    "Could not get page from get_page_from_span",
+                )),
             }
         } else {
             Err(Error::new(
@@ -118,8 +120,6 @@ impl SiteV42b {
                 "Could not get page from get_page_from_span",
             ))
         }
-
-        //Ok(Value::from("asdf"))
     }
 
     pub fn get_page_ids(&self, _args: &[Value]) -> Result<Value, Error> {
@@ -292,91 +292,88 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
         count
     }
 
-    // TODO: Add error handling here
-    pub fn get_page_href_from_id(&self, args: &[Value]) -> Result<Value, Error> {
-        if args.len() >= 3 {
-            let page_id = &args[2].to_string().trim().to_string();
-            match self.pages.get(page_id) {
-                Some(page) => match &page.href {
-                    Some(href) => Ok(Value::from(href.display().to_string())),
-                    None => Err(Error::new(ErrorKind::InvalidOperation, "NO_HREF_FOR_ID")),
-                },
-                None => Err(Error::new(ErrorKind::InvalidOperation, "NO_HREF_FOR_ID")),
-            }
-        } else {
-            Err(Error::new(
-                ErrorKind::InvalidOperation,
-                "ERROR_COULD_NOT_GET_HREF",
-            ))
-        }
-    }
+    // // TODO: Add error handling here
+    // pub fn get_page_href_from_id(&self, args: &[Value]) -> Result<Value, Error> {
+    //     if args.len() >= 3 {
+    //         let page_id = &args[2].to_string().trim().to_string();
+    //         match self.pages.get(page_id) {
+    //             Some(page) => match &page.href {
+    //                 Some(href) => Ok(Value::from(href.display().to_string())),
+    //                 None => Err(Error::new(ErrorKind::InvalidOperation, "NO_HREF_FOR_ID")),
+    //             },
+    //             None => Err(Error::new(ErrorKind::InvalidOperation, "NO_HREF_FOR_ID")),
+    //         }
+    //     } else {
+    //         Err(Error::new(
+    //             ErrorKind::InvalidOperation,
+    //             "ERROR_COULD_NOT_GET_HREF",
+    //         ))
+    //     }
+    // }
 
-    // TODO: Add tests and error handling
-    pub fn get_page_href_from_span(&self, args: &[Value]) -> Result<Value, Error> {
-        if args.len() >= 3 {
-            let x = &args[2].get_item(&Value::from("spans")).unwrap();
-            let page_id = flatten_spans_from_template_v42(&[x.to_owned()]).unwrap();
-            match self.pages.get(&page_id.to_string()) {
-                Some(page) => page.href(),
-                None => Err(Error::new(
-                    ErrorKind::InvalidOperation,
-                        format!("<p>Could not get href from span for page with id: {}</p><p>Check 'tlink' items as a possible location where the issue occurs.</p>", page_id),
-                )),
-                
+    // // TODO: Add tests and error handling
+    // pub fn get_page_href_from_span(&self, args: &[Value]) -> Result<Value, Error> {
+    //     if args.len() >= 3 {
+    //         let x = &args[2].get_item(&Value::from("spans")).unwrap();
+    //         let page_id = flatten_spans_from_template_v42(&[x.to_owned()]).unwrap();
+    //         match self.pages.get(&page_id.to_string()) {
+    //             Some(page) => page.href(),
+    //             None => Err(Error::new(
+    //                 ErrorKind::InvalidOperation,
+    //                     format!("<p>Could not get href from span for page with id: {}</p><p>Check 'tlink' items as a possible location where the issue occurs.</p>", page_id),
+    //             )),
+    //            // Some(page) => match &page.href() {
+    //             //     Some(href) => Ok(Value::from(href.display().to_string())),
+    //             //     None => Err(Error::new(
+    //             //         ErrorKind::InvalidOperation,
+    //             //         format!("<p>Could not get href from span for page with id: {}</p><p>Check 'tlink' items as a possible location where the issue occurs.</p>", page_id),
+    //             //     )),
+    //             // },
+    //             // None => Err(Error::new(
+    //             //     ErrorKind::InvalidOperation,
+    //             //         format!("<p>Could not get href from span for page with id: {}</p><p>Check 'tlink' items as a possible location where the issue occurs.</p>", page_id),
+    //             // )),
+    //         }
+    //     } else {
+    //         Err(Error::new(
+    //             ErrorKind::InvalidOperation,
+    //             format!("<p>Did not pass enough values to site.get_page_href_for_span(site, page, SPAN)</p><p>Check 'tlink' items as a possible location where the issue occurs</p>")
+    //         ))
+    //     }
+    // }
 
-               // Some(page) => match &page.href() {
-                //     Some(href) => Ok(Value::from(href.display().to_string())),
-                //     None => Err(Error::new(
-                //         ErrorKind::InvalidOperation,
-                //         format!("<p>Could not get href from span for page with id: {}</p><p>Check 'tlink' items as a possible location where the issue occurs.</p>", page_id),
-                //     )),
-                // },
-                // None => Err(Error::new(
-                //     ErrorKind::InvalidOperation,
-                //         format!("<p>Could not get href from span for page with id: {}</p><p>Check 'tlink' items as a possible location where the issue occurs.</p>", page_id),
-                // )),
+    // // TODO: Add error handling here
+    // pub fn get_page_title_from_id(&self, args: &[Value]) -> Result<Value, Error> {
+    //     if args.len() >= 3 {
+    //         let page_id = &args[2].to_string().trim().to_string();
+    //         match self.pages.get(page_id) {
+    //             Some(page) => page.title(),
+    //             None => Err(Error::new(ErrorKind::InvalidOperation, "NO_HREF_FOR_SPAN")),
+    //         }
+    //     } else {
+    //         Err(Error::new(
+    //             ErrorKind::InvalidOperation,
+    //             "NOT_ENOUGH_VALUES_SENT_TO: get_page_title_from_id. make sure you have site.get_page_title_from_id(site, page, ID)",
+    //         ))
+    //     }
+    // }
 
-            }
-        } else {
-            Err(Error::new(
-                ErrorKind::InvalidOperation,
-                format!("<p>Did not pass enough values to site.get_page_href_for_span(site, page, SPAN)</p><p>Check 'tlink' items as a possible location where the issue occurs</p>")
-            ))
-        }
-    }
-
-    // TODO: Add error handling here
-    pub fn get_page_title_from_id(&self, args: &[Value]) -> Result<Value, Error> {
-        if args.len() >= 3 {
-            let page_id = &args[2].to_string().trim().to_string();
-            match self.pages.get(page_id) {
-                Some(page) => page.title(),
-                None => Err(Error::new(ErrorKind::InvalidOperation, "NO_HREF_FOR_SPAN")),
-            }
-        } else {
-            Err(Error::new(
-                ErrorKind::InvalidOperation,
-                "NOT_ENOUGH_VALUES_SENT_TO: get_page_title_from_id. make sure you have site.get_page_title_from_id(site, page, ID)",
-            ))
-        }
-    }
-
-    // TODO: Add error handling here
-    pub fn get_page_title_from_span(&self, args: &[Value]) -> Result<Value, Error> {
-        if args.len() >= 3 {
-            let x = &args[2].get_item(&Value::from("spans")).unwrap();
-            let page_id = flatten_spans_from_template_v42(&[x.to_owned()]).unwrap();
-            match self.pages.get(&page_id.to_string()) {
-                Some(page) => page.title(),
-                None => Err(Error::new(ErrorKind::InvalidOperation, "NO_HREF_FOR_SPAN")),
-            }
-        } else {
-            Err(Error::new(
-                ErrorKind::InvalidOperation,
-                "NO_ID_FOR_PAGE_TITLE",
-            ))
-        }
-    }
+    // // TODO: Add error handling here
+    // pub fn get_page_title_from_span(&self, args: &[Value]) -> Result<Value, Error> {
+    //     if args.len() >= 3 {
+    //         let x = &args[2].get_item(&Value::from("spans")).unwrap();
+    //         let page_id = flatten_spans_from_template_v42(&[x.to_owned()]).unwrap();
+    //         match self.pages.get(&page_id.to_string()) {
+    //             Some(page) => page.title(),
+    //             None => Err(Error::new(ErrorKind::InvalidOperation, "NO_HREF_FOR_SPAN")),
+    //         }
+    //     } else {
+    //         Err(Error::new(
+    //             ErrorKind::InvalidOperation,
+    //             "NO_ID_FOR_PAGE_TITLE",
+    //         ))
+    //     }
+    // }
 
     pub fn new_with_pages(
         config: &SiteConfigV42,
@@ -504,16 +501,12 @@ impl Object for SiteV42b {
             "generated_at" => self.generated_at(args),
             "get_keys_for_pages_without_ids" => self.get_keys_for_pages_without_ids(args),
             "get_issue_count" => Ok(Value::from(self.get_issue_count(args))),
-            "get_span_attrs"=> self.get_span_attrs(args),
-            // Deprecate the ones of these that go to a page 
-            // in favor of pulling in the page as an object 
+            "get_span_attrs" => self.get_span_attrs(args),
+            // Deprecate the ones of these that go to a page
+            // in favor of pulling in the page as an object
             // and accessing things that way to start
             "get_page_from_span" => self.get_page_from_span(args),
-            "get_page_href_from_id" => self.get_page_href_from_id(args),
-            "get_page_href_from_span" => self.get_page_href_from_span(args),
             "get_page_ids" => self.get_page_ids(args),
-            "get_page_title_from_id" => self.get_page_title_from_id(args),
-            "get_page_title_from_span" => self.get_page_title_from_span(args),
             "get_page_with_id" => self.get_page_with_id(args),
             "get_page_with_display_path" => self.get_page_with_display_path(args),
             "get_section_attrs" => self.get_section_attrs(args),
@@ -528,10 +521,8 @@ impl Object for SiteV42b {
 #[cfg(test)]
 mod test {
     use crate::{
-        bound::Bound,
-        section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42,
-        section_v42::basic::BasicSectionV42,
-        span_v42::plaintext::PlainTextSpan, span_v42::SpanV42,
+        bound::Bound, section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42,
+        section_v42::basic::BasicSectionV42, span_v42::plaintext::PlainTextSpan, span_v42::SpanV42,
     };
 
     use super::*;
