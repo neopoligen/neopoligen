@@ -58,13 +58,13 @@ pub fn ${NAME1}_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree
     let (source, tokens) = preceded(pair(tag("${OPEN}"), multispace0), many1(alt((
             plain_text_string_base,
             plain_text_space1_as_single_space,
-            is_a("~*^![]{}<>_#|:"),
+            is_a("~*^![]{}<>_#:"),
             plain_text_single_newline_as_space,
-
+            escaped_character,
         ))))
         .context("")
         .parse(source)?;
-    let (source, (attrs, flags)) = get_${NAME1}_shorthand_attrs_and_flags
+    let (source, (attrs, flags)) = ${NAME1}_shorthand_attrs_and_flags
         .context("")
         .parse(source)?;
     let (source, _) = tag("${CLOSE}").context("").parse(source)?;
@@ -79,49 +79,40 @@ pub fn ${NAME1}_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree
     ))
 }
 
-pub fn get_${NAME1}_shorthand_attrs_and_flags(
+pub fn ${NAME1}_shorthand_attrs_and_flags(
     source: &str,
 ) -> IResult<&str, (BTreeMap<String, Vec<SpanV42>>, Vec<String>), ErrorTree<&str>> {
-    let (source, attrs_and_flags) = many0(${NAME1}_shorthand_attr_or_flag)
-        .context("")
-        .parse(source)?;
-    let mut attrs = BTreeMap::new();
-    let flags = attrs_and_flags
-        .iter()
-        .filter_map(|af| match af {
-            SpanBaseAttrV42::Flag(f) => Some(f.text.clone()),
-            SpanBaseAttrV42::KeyValue { key, spans } => {
-                attrs.insert(key.to_string(), spans.clone());
-                None
-            }
-        })
-        .collect::<Vec<String>>();
+    let (source, attrs_and_flags) = many0(alt((
+        // ${NAME1}_shorthand_key_value_attr,
+        ${NAME1}_shorthand_flag,
+    )))
+    .context("")
+    .parse(source)?;
+    let attrs = BTreeMap::new();
+    let flags = vec![];
     Ok((source, (attrs, flags)))
 }
 
-pub fn ${NAME1}_shorthand_attr_or_flag(
-    source: &str,
-) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
+pub fn ${NAME1}_shorthand_flag(source: &str) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
-    // Reminder: Make sure to look for key_value first so flags work properly
-    let (source, attr_or_flag) = alt((
-        ${NAME1}_shorthand_key_value_attr,
-        ${NAME1}_shorthand_span_flag_attr,
-    ))
+    let (source, parts) = many1(alt((
+        plain_text_string_base,
+        is_a("~*^![]{}<>_#:"),
+        escaped_character,
+    )))
     .context("")
     .parse(source)?;
-    Ok((source, attr_or_flag))
-}
-
-pub fn ${NAME1}_shorthand_content(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, token) = alt((
-        not_${CHARNAME1}_or_pipe_or_escape,
+    let (source, _) = not(tag(":")).context("").parse(source)?;
+    Ok((
+        source,
+        SpanBaseAttrV42::Flag(SpanFlagAttrV42 {
+            text: parts.join(""),
+        }),
     ))
-    .context("")
-    .parse(source)?;
-    Ok((source, token))
 }
 
+
+// TODO: Deprecate this
 pub fn not_${CHARNAME1}_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, result) = is_not("${CHAR}\\\\|").context("").parse(source)?;
     Ok((

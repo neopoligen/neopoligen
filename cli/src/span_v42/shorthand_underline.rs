@@ -39,13 +39,13 @@ pub fn underline_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTre
     let (source, tokens) = preceded(pair(tag("!!"), multispace0), many1(alt((
             plain_text_string_base,
             plain_text_space1_as_single_space,
-            is_a("~*^![]{}<>_#|:"),
+            is_a("~*^![]{}<>_#:"),
             plain_text_single_newline_as_space,
-
+            escaped_character,
         ))))
         .context("")
         .parse(source)?;
-    let (source, (attrs, flags)) = get_underline_shorthand_attrs_and_flags
+    let (source, (attrs, flags)) = underline_shorthand_attrs_and_flags
         .context("")
         .parse(source)?;
     let (source, _) = tag("!!").context("").parse(source)?;
@@ -60,49 +60,40 @@ pub fn underline_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTre
     ))
 }
 
-pub fn get_underline_shorthand_attrs_and_flags(
+pub fn underline_shorthand_attrs_and_flags(
     source: &str,
 ) -> IResult<&str, (BTreeMap<String, Vec<SpanV42>>, Vec<String>), ErrorTree<&str>> {
-    let (source, attrs_and_flags) = many0(underline_shorthand_attr_or_flag)
-        .context("")
-        .parse(source)?;
-    let mut attrs = BTreeMap::new();
-    let flags = attrs_and_flags
-        .iter()
-        .filter_map(|af| match af {
-            SpanBaseAttrV42::Flag(f) => Some(f.text.clone()),
-            SpanBaseAttrV42::KeyValue { key, spans } => {
-                attrs.insert(key.to_string(), spans.clone());
-                None
-            }
-        })
-        .collect::<Vec<String>>();
+    let (source, attrs_and_flags) = many0(alt((
+        // underline_shorthand_key_value_attr,
+        underline_shorthand_flag,
+    )))
+    .context("")
+    .parse(source)?;
+    let attrs = BTreeMap::new();
+    let flags = vec![];
     Ok((source, (attrs, flags)))
 }
 
-pub fn underline_shorthand_attr_or_flag(
-    source: &str,
-) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
+pub fn underline_shorthand_flag(source: &str) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
-    // Reminder: Make sure to look for key_value first so flags work properly
-    let (source, attr_or_flag) = alt((
-        underline_shorthand_key_value_attr,
-        underline_shorthand_span_flag_attr,
-    ))
+    let (source, parts) = many1(alt((
+        plain_text_string_base,
+        is_a("~*^![]{}<>_#:"),
+        escaped_character,
+    )))
     .context("")
     .parse(source)?;
-    Ok((source, attr_or_flag))
-}
-
-pub fn underline_shorthand_content(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, token) = alt((
-        not_underscore_or_pipe_or_escape,
+    let (source, _) = not(tag(":")).context("").parse(source)?;
+    Ok((
+        source,
+        SpanBaseAttrV42::Flag(SpanFlagAttrV42 {
+            text: parts.join(""),
+        }),
     ))
-    .context("")
-    .parse(source)?;
-    Ok((source, token))
 }
 
+
+// TODO: Deprecate this
 pub fn not_underscore_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, result) = is_not("!\\|").context("").parse(source)?;
     Ok((

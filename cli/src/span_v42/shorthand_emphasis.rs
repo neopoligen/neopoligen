@@ -39,13 +39,13 @@ pub fn emphasis_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree
     let (source, tokens) = preceded(pair(tag("__"), multispace0), many1(alt((
             plain_text_string_base,
             plain_text_space1_as_single_space,
-            is_a("~*^![]{}<>_#|:"),
+            is_a("~*^![]{}<>_#:"),
             plain_text_single_newline_as_space,
-
+            escaped_character,
         ))))
         .context("")
         .parse(source)?;
-    let (source, (attrs, flags)) = get_emphasis_shorthand_attrs_and_flags
+    let (source, (attrs, flags)) = emphasis_shorthand_attrs_and_flags
         .context("")
         .parse(source)?;
     let (source, _) = tag("__").context("").parse(source)?;
@@ -60,49 +60,40 @@ pub fn emphasis_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree
     ))
 }
 
-pub fn get_emphasis_shorthand_attrs_and_flags(
+pub fn emphasis_shorthand_attrs_and_flags(
     source: &str,
 ) -> IResult<&str, (BTreeMap<String, Vec<SpanV42>>, Vec<String>), ErrorTree<&str>> {
-    let (source, attrs_and_flags) = many0(emphasis_shorthand_attr_or_flag)
-        .context("")
-        .parse(source)?;
-    let mut attrs = BTreeMap::new();
-    let flags = attrs_and_flags
-        .iter()
-        .filter_map(|af| match af {
-            SpanBaseAttrV42::Flag(f) => Some(f.text.clone()),
-            SpanBaseAttrV42::KeyValue { key, spans } => {
-                attrs.insert(key.to_string(), spans.clone());
-                None
-            }
-        })
-        .collect::<Vec<String>>();
+    let (source, attrs_and_flags) = many0(alt((
+        // emphasis_shorthand_key_value_attr,
+        emphasis_shorthand_flag,
+    )))
+    .context("")
+    .parse(source)?;
+    let attrs = BTreeMap::new();
+    let flags = vec![];
     Ok((source, (attrs, flags)))
 }
 
-pub fn emphasis_shorthand_attr_or_flag(
-    source: &str,
-) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
+pub fn emphasis_shorthand_flag(source: &str) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
-    // Reminder: Make sure to look for key_value first so flags work properly
-    let (source, attr_or_flag) = alt((
-        emphasis_shorthand_key_value_attr,
-        emphasis_shorthand_span_flag_attr,
-    ))
+    let (source, parts) = many1(alt((
+        plain_text_string_base,
+        is_a("~*^![]{}<>_#:"),
+        escaped_character,
+    )))
     .context("")
     .parse(source)?;
-    Ok((source, attr_or_flag))
-}
-
-pub fn emphasis_shorthand_content(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, token) = alt((
-        not_asterisk_or_pipe_or_escape,
+    let (source, _) = not(tag(":")).context("").parse(source)?;
+    Ok((
+        source,
+        SpanBaseAttrV42::Flag(SpanFlagAttrV42 {
+            text: parts.join(""),
+        }),
     ))
-    .context("")
-    .parse(source)?;
-    Ok((source, token))
 }
 
+
+// TODO: Deprecate this
 pub fn not_asterisk_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, result) = is_not("_\\|").context("").parse(source)?;
     Ok((
