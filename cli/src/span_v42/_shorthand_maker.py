@@ -6,15 +6,16 @@ from string import Template
 # file as they work a little differently. 
 
 shorthands = [
-        ("~~", "~~", "strikethrough", "Strikethrough", "tilde", "~"),
-        ("``", "``", "code", "Code", "backtick", "`"),
-        ("__", "__", "emphasis", "Emphasis", "asterisk", "_"),
-        ("^^", "^^", "footnote", "Footnote", "caret", "^"),
-        ("**", "**", "strong", "Strong", "exclamation", "*"),
-        ("[[", "]]", "html", "Html", "close_bracket", "]"),
-        ("{{", "}}", "image", "Image", "close_brace", "}"),
-        ("!!", "!!", "underline", "Underline", "underscore", "!"),
-        ("@@", "@@", "mark", "Mark", "ampersand", "@"),
+        ("~~", "~~", "strikethrough", "Strikethrough", "tilde", "~", "@`~*^![]{}<>_#:"),
+        ("``", "``", "code", "Code", "backtick", "`", "@`~*^![]{}<>_#:"),
+        ("__", "__", "emphasis", "Emphasis", "asterisk", "_", "@`~*^![]{}<>_#:"),
+        ("^^", "^^", "footnote", "Footnote", "caret", "^", "@`~*^![]{}<>_#:"),
+        ("**", "**", "strong", "Strong", "exclamation", "*", "@`~*^![]{}<>_#:"),
+        ("[[", "]]", "link", "Link", "close_bracket", "]", "@`~*^![]{}<>_#:"),
+        ("{{", "}}", "image", "Image", "close_brace", "}", "@`~*^![]{}<>_#:"),
+        ("!!", "!!", "underline", "Underline", "underscore", "!", "@`~*^![]{}<>_#:"),
+        ("@@", "@@", "mark", "Mark", "ampersand", "@", "@`~*^![]{}<>_#:"),
+        ("##", "##", "comment", "Comment", "backtick", "`", "@`~*^![]{}<>_#:"),
         ]
 
 skeleton = """
