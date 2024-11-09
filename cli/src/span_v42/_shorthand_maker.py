@@ -84,8 +84,7 @@ pub fn ${NAME1}_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree
 pub fn ${NAME1}_shorthand_flags_and_attrs(
     source: &str,
 ) -> IResult<&str, (Vec<String>, BTreeMap<String, Vec<SpanV42>>), ErrorTree<&str>> {
-    // Reminder: check for attrs first otherwise things go wrong
-    // with this setup
+    // Reminder: attrs first otherwise things go wrong with this setup
     let (source, flags_and_attrs) = many0(alt((
         ${NAME1}_shorthand_attr,
         ${NAME1}_shorthand_flag,
@@ -173,6 +172,7 @@ pub fn ${NAME1}_shorthand_attr(
     .parse(source)?;
     let (source, spans) = many1(alt((
         span_of_shorthand_attr_value,
+        ${NAME1}_span_of_extra_shorthand_attr_value,
     )))
     .context("")
     .parse(source)?;
@@ -184,6 +184,22 @@ pub fn ${NAME1}_shorthand_attr(
         },
     ))
 }
+
+pub fn ${NAME1}_span_of_extra_shorthand_attr_value (
+    source: &str,
+) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+    let (source, result) = is_a("~*^![]{}<>_#:")
+    .context("")
+    .parse(source)?;
+    Ok((
+        source,
+        SpanV42::PlainText(PlainTextSpan {
+            kind: "plain-text".to_string(),
+            text: result.to_string(),
+        }),
+    ))
+}
+
 """
 
 

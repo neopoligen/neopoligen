@@ -25,6 +25,28 @@ use rstest::rstest;
     }, flags: [], kind: "code-shorthand", text: "alfa", type: "code-shorthand" }"#
 )]
 #[case(
+    "``alfa|bravo: __charlie__``",
+    r#"{ attrs: {
+        bravo: [
+            {
+                kind: "plain-text",
+                text: "__",
+                type: "plain-text",
+            },
+            {
+                kind: "plain-text",
+                text: "charlie",
+                type: "plain-text",
+            },
+            {
+                kind: "plain-text",
+                text: "__",
+                type: "plain-text",
+            },
+        ]
+    }, flags: [], kind: "code-shorthand", text: "alfa", type: "code-shorthand" }"#
+)]
+#[case(
     "``alfa|bravo|charlie: delta``",
     r#"{ 
     attrs: {

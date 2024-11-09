@@ -65,8 +65,7 @@ pub fn footnote_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree
 pub fn footnote_shorthand_flags_and_attrs(
     source: &str,
 ) -> IResult<&str, (Vec<String>, BTreeMap<String, Vec<SpanV42>>), ErrorTree<&str>> {
-    // Reminder: check for attrs first otherwise things go wrong
-    // with this setup
+    // Reminder: attrs first otherwise things go wrong with this setup
     let (source, flags_and_attrs) = many0(alt((
         footnote_shorthand_attr,
         footnote_shorthand_flag,
@@ -154,6 +153,7 @@ pub fn footnote_shorthand_attr(
     .parse(source)?;
     let (source, spans) = many1(alt((
         span_of_shorthand_attr_value,
+        footnote_span_of_extra_shorthand_attr_value,
     )))
     .context("")
     .parse(source)?;
@@ -165,3 +165,19 @@ pub fn footnote_shorthand_attr(
         },
     ))
 }
+
+pub fn footnote_span_of_extra_shorthand_attr_value (
+    source: &str,
+) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+    let (source, result) = is_a("~*^![]{}<>_#:")
+    .context("")
+    .parse(source)?;
+    Ok((
+        source,
+        SpanV42::PlainText(PlainTextSpan {
+            kind: "plain-text".to_string(),
+            text: result.to_string(),
+        }),
+    ))
+}
+
