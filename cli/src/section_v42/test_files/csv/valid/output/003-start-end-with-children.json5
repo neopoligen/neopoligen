@@ -22,8 +22,6 @@
         "template_list": [
           "sections/block-paragraph/default.neoj",
           "sections/generic-block-paragraph/default.neoj",
-          "built-in/sections/block-paragraph/default.neoj",
-          "built-in/sections/generic-block-paragraph/default.neoj",
         ],
         "type": "block",
       }
@@ -33,8 +31,6 @@
     "template_list": [
       "sections/csv-end/default.neoj",
       "sections/generic-end/default.neoj",
-      "built-in/sections/csv-end/default.neoj",
-      "built-in/sections/generic-end/default.neoj",
     ],
     "type": "end",
   }, 
@@ -45,8 +41,6 @@
   "template_list": [
     "sections/csv/default.neoj", 
     "sections/generic-csv/default.neoj",
-    "built-in/sections/csv/default.neoj", 
-    "built-in/sections/generic-csv/default.neoj"
    ],
 }
 

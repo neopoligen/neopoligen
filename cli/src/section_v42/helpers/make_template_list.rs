@@ -5,8 +5,6 @@ pub fn make_template_list(r#type: &str, kind: &str, template: &str) -> Vec<Strin
         format!("sections/{}/{}.neoj", kind, template),
         format!("sections/{}/default.neoj", kind),
         format!("sections/generic-{}/default.neoj", r#type),
-        format!("built-in/sections/{}/default.neoj", kind),
-        format!("built-in/sections/generic-{}/default.neoj", r#type),
     ];
     templates.into_iter().unique().collect()
 }
@@ -23,8 +21,6 @@ mod test {
         let left = vec![
             "sections/title/custom.neoj".to_string(),
             "sections/title/default.neoj".to_string(),
-            "sections/generic-basic/custom.neoj".to_string(),
-            "sections/generic-basic/default.neoj".to_string(),
         ];
         let right = make_template_list("basic", "title", "custom");
         assert_eq!(left, right);

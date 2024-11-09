@@ -13,7 +13,5 @@
   "template_list": [
     "sections/csv/default.neoj", 
     "sections/generic-csv/default.neoj",
-    "built-in/sections/csv/default.neoj", 
-    "built-in/sections/generic-csv/default.neoj"
    ],
 }
