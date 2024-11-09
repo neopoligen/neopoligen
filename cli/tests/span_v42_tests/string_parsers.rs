@@ -2,6 +2,18 @@ use neopoligengine::span_v42::string_parsers::*;
 use pretty_assertions::assert_eq;
 use rstest::rstest;
 
+#[rstest]
+#[case(" foxtrot", "foxtrot")]
+#[case("    foxtrot", "foxtrot")]
+fn solo_plain_text_space1_as_single_space_valid_tests(
+    #[case] source: &str,
+    #[case] remainder: &str,
+) {
+    let matcher = (remainder, " ");
+    let parsed = plain_text_space1_as_single_space(source).unwrap();
+    assert_eq!(matcher, parsed);
+}
+
 // NOTE: Not sure if this is needed, might be able
 // to do it just by making sure the spaces don't kick
 // past empty lines with only whitespace
