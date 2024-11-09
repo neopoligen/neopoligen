@@ -136,7 +136,8 @@ fn plain_text_string_base_tests(#[case] source: &str, #[case] got: &str, #[case]
 
 #[rstest]
 #[case("\n", " ", "")]
-fn plain_text_single_line_ending_as_space_valid_tests(
+#[case(" \nx", " ", "x")]
+fn solo_plain_text_single_line_ending_as_space_valid_tests(
     #[case] source: &str,
     #[case] got: &str,
     #[case] remainder: &str,

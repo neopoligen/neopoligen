@@ -38,6 +38,7 @@ fn solo_named_span_integration_tests(
 #[case("<<alfa|bravo|charlie-delta>>etc...", "etc...", 1, 0)]
 #[case("<<alfa|bravo|charlie--delta>>etc...", "etc...", 1, 0)]
 #[case("<<alfa|bravo|charlie_delta>>etc...", "etc...", 1, 0)]
+#[case("<<em|Incidentally, if you don't have Dropbox and want to give it a spin, \nyou can [use this referral link][2] to sign up. We'll each get an\nextra 500MB of storage space.>>", "", 0, 0)]
 #[case(
     "<<link|text|https://www.example.com/?ping=pong>>etc...",
     "etc...",
@@ -47,6 +48,21 @@ fn solo_named_span_integration_tests(
 #[case(
     "<<link|text|\nhttps://www.example.com/?ping=pong>>etc...",
     "etc...",
+    1,
+    0
+)]
+#[case(
+    "<<em|dedicated to <<link|Merlin Mann|https://mastodon.social/@hotdogsladies/>> who put the idea of the clicky sound in my head|class: clicky>>",
+    "",
+    0,
+    1
+)]
+#[case(
+    r#"<<ilink|
+I think I'm going to call "YAGINP JS" for "You Ain't Gonna Need
+It Philosophy JS"
+|2fblbzh9>>"#,
+    "",
     1,
     0
 )]

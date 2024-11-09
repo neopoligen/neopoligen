@@ -73,16 +73,15 @@ pub fn named_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, _) = not(tuple((tag("|"), multispace0, tag(">"))))
         .context("")
         .parse(source)?;
-    let (source, spans) = opt(preceded(tag("|"), many0(named_span_content_span)))
-        .context("")
-        .parse(source)?;
+    let (source, spans) = opt(preceded(
+        tag("|"),
+        many0(alt((span_of_plain_text_for_named_span_content, named_span))),
+    ))
+    .context("")
+    .parse(source)?;
     let (source, (attrs, flags)) = named_span_attrs_and_flags.context("").parse(source)?;
     let (source, _) = tag(">>").context("").parse(source)?;
     let kind = tokens.iter().join("");
-    // let flattened_text = match &spans {
-    //     Some(spns) => Some(flatten_spans_v42(spns)),
-    //     None => None,
-    // };
     Ok((
         source,
         SpanV42::NamedSpan(NamedSpanV42 {

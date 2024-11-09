@@ -14,6 +14,7 @@ use nom::multi::many1;
 use nom::sequence::pair;
 use nom::sequence::preceded;
 use nom::sequence::terminated;
+use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -66,6 +67,7 @@ pub fn span_of_plain_text_for_named_span_content(
         plain_text_space1_as_single_space,
         plain_text_single_line_ending_as_space,
         plain_text_any_colons,
+        escaped_character,
     )))
     .context("")
     .parse(source)?;
@@ -189,7 +191,7 @@ pub fn plain_text_string_base(source: &str) -> IResult<&str, &str, ErrorTree<&st
 pub fn plain_text_single_line_ending_as_space(
     source: &str,
 ) -> IResult<&str, &str, ErrorTree<&str>> {
-    let (source, _) = pair(tag("\n"), not(pair(space0, tag("\n"))))
+    let (source, _) = tuple((space0, tag("\n"), not(pair(space0, tag("\n")))))
         .context("")
         .parse(source)?;
     Ok((source, " "))
