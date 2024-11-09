@@ -105,7 +105,7 @@ fn href_file_with_extension() {
 }
 
 #[test]
-fn solo_title_as_spans_from_page_section() {
+fn title_as_spans_from_page_section() {
     let page = PageV42b::test_from_sample_file("009-title-in-page-section.neo");
     let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
         kind: "plain-text".to_string(),
@@ -116,7 +116,7 @@ fn solo_title_as_spans_from_page_section() {
 }
 
 #[test]
-fn solo_title_as_text_from_page_section() {
+fn title_as_text_from_page_section() {
     let page = PageV42b::test_from_sample_file("009-title-in-page-section.neo");
     let left = Value::from("This is a title");
     let right = page.title_as_text().unwrap();
@@ -124,7 +124,7 @@ fn solo_title_as_text_from_page_section() {
 }
 
 #[test]
-fn solo_title_as_spans_from_title_section() {
+fn title_as_spans_from_title_section() {
     let page = PageV42b::test_from_sample_file("010-title-in-title-section.neo");
     let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
         kind: "plain-text".to_string(),
@@ -135,7 +135,7 @@ fn solo_title_as_spans_from_title_section() {
 }
 
 #[test]
-fn solo_title_as_text_from_title_section() {
+fn title_as_text_from_title_section() {
     let page = PageV42b::test_from_sample_file("010-title-in-title-section.neo");
     let left = Value::from("Alfa Bravo Title".to_string());
     let right = page.title_as_text().unwrap();

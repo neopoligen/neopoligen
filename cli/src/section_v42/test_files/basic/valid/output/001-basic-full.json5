@@ -7,6 +7,7 @@
             "kind": "block-paragraph",
             "spans": [
                 {
+                    "kind": "plain-text",
                     "text": "alfa bravo",
                     "type": "plain-text",
                 },
