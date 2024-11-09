@@ -291,7 +291,7 @@ impl PageV42b {
 
     pub fn title(&self) -> Result<Value, Error> {
         // ORDER:
-        // pagedata--title
+        // page--title
         // -- title section first block
         // --section--title attr on first block if it has one
         // first number of n words from first block
