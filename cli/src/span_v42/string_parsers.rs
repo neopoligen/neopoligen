@@ -4,8 +4,8 @@ use nom::branch::alt;
 use nom::bytes::complete::is_a;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
-//use nom::character::complete::multispace1;
 use nom::character::complete::line_ending;
+use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::eof;
 use nom::combinator::not;
@@ -24,7 +24,7 @@ pub fn span_of_plain_text_for_shorthand_attr_value(
     let (source, results) = many1(alt((
         plain_text_string_base,
         plain_text_space1_as_single_space,
-        plain_text_single_newline_as_space,
+        plain_text_single_line_ending_as_space,
         plain_text_any_colons,
     )))
     .context("")
@@ -63,7 +63,7 @@ pub fn span_of_plain_text_for_named_span_content(
     let (source, results) = many1(alt((
         plain_text_string_base,
         plain_text_space1_as_single_space,
-        plain_text_single_newline_as_space,
+        plain_text_single_line_ending_as_space,
         plain_text_any_colons,
     )))
     .context("")
@@ -129,7 +129,7 @@ pub fn plain_text_span_for_block_paragraph(
     let (source, results) = many1(alt((
         plain_text_string_base,
         plain_text_space1_as_single_space,
-        plain_text_single_newline_as_space,
+        plain_text_single_line_ending_as_space,
         plain_text_any_pipes,
         plain_text_any_colons,
     )))
@@ -184,8 +184,12 @@ pub fn plain_text_string_base(source: &str) -> IResult<&str, &str, ErrorTree<&st
     Ok((source, result))
 }
 
-pub fn plain_text_single_newline_as_space(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
-    let (source, _) = pair(tag("\n"), not(tag("\n"))).context("").parse(source)?;
+pub fn plain_text_single_line_ending_as_space(
+    source: &str,
+) -> IResult<&str, &str, ErrorTree<&str>> {
+    let (source, _) = pair(tag("\n"), not(pair(space0, tag("\n"))))
+        .context("")
+        .parse(source)?;
     Ok((source, " "))
 }
 

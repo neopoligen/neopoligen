@@ -152,24 +152,28 @@ fn plain_text_string_base_tests(#[case] source: &str, #[case] got: &str, #[case]
 
 #[rstest]
 #[case("\n", " ", "")]
-fn plain_text_single_newline_as_space_tests(
+fn solo_plain_text_single_line_ending_as_space_valid_tests(
     #[case] source: &str,
     #[case] got: &str,
     #[case] remainder: &str,
 ) {
     let matcher = (remainder, got);
-    let parsed = plain_text_single_newline_as_space(source).unwrap();
+    let parsed = plain_text_single_line_ending_as_space(source).unwrap();
     assert_eq!(matcher, parsed);
 }
 
 #[rstest]
-#[case("\n\n")]
-fn invalid_plain_text_single_newline_as_space_tests(#[case] source: &str) {
-    let parsed = plain_text_single_newline_as_space(source);
+#[case("\n\n", "Two Newlines In A Row")]
+#[case("\n  \n", "Two Newlines Separated By Whitespace")]
+fn solo_plain_text_single_newline_as_space_invalid_tests(
+    #[case] source: &str,
+    #[case] description: &str,
+) {
+    let parsed = plain_text_single_line_ending_as_space(source);
     if parsed.is_err() {
         assert!(true);
     } else {
-        assert!(false);
+        assert!(false, "##### ERROR ##### {}", description);
     }
 }
 

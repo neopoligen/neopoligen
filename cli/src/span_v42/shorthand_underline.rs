@@ -43,7 +43,7 @@ pub fn underline_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTre
             plain_text_string_base,
             plain_text_space1_as_single_space,
             is_a("~*^![]{}<>_#:"),
-            plain_text_single_newline_as_space,
+            plain_text_single_line_ending_as_space,
             escaped_character,
         ))))
         .context("")
