@@ -22,7 +22,6 @@ pub struct SiteV42b {
 
 impl SiteV42b {
     // TODO: Add tests to this and error handling
-    // TODO: escape for html
     // TODO: Set up config of specific attrs/flags to hoist
     //       and only add those to the output
     pub fn get_span_attrs(&self, args: &[Value]) -> Result<Value, Error> {
@@ -31,23 +30,15 @@ impl SiteV42b {
             let attrs = args[0].get_item(&Value::from("attrs")).unwrap();
             for key in attrs.try_iter()? {
                 let spans = attrs.get_item(&key)?;
-                let values = spans
-                    .try_iter()?
-                    .filter_map(|v| {
-                        if key.to_string() != "class".to_string() {
-                            Some(
-                                encode_quoted_attribute(
-                                    &v.get_item(&Value::from("text")).unwrap().to_string(),
-                                )
-                                .to_string(),
-                            )
-                        } else {
-                            None
-                        }
-                    })
-                    .collect::<Vec<String>>();
-                if values.len() > 0 {
-                    attr_string.push(format!(r#"{}="{}""#, key.to_string(), values.join(" ")));
+                if key.to_string() != "class".to_string() {
+                    attr_string.push(format!(
+                        r#"{}="{}""#,
+                        key.to_string(),
+                        encode_quoted_attribute(
+                            &spans.get_item(&Value::from("text")).unwrap().to_string(),
+                        )
+                        .to_string()
+                    ));
                 }
             }
             let mut classes: Vec<String> = vec![];
