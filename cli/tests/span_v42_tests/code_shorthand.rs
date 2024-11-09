@@ -18,6 +18,14 @@ use rstest::rstest;
 #[case("``alfa::bravo``", "", 0, 0)]
 #[case("``alfa~~bravo~~``", "", 0, 0)]
 #[case("``alfa|bravo``", "", 1, 0)]
+#[case("``alfa|https://www.example.com/``", "", 1, 0)]
+#[case("``alfa|  bravo``", "", 1, 0)]
+#[case("``alfa|\nbravo``", "", 1, 0)]
+#[case("``alfa|bravo\n``", "", 1, 0)]
+#[case("``alfa| \n bravo``", "", 1, 0)]
+#[case("``alfa|bravo \n ``", "", 1, 0)]
+#[case("``alfa|bravo\\:charlie``", "", 1, 0)]
+#[case("``alfa|bravo\\|charlie``", "", 1, 0)]
 fn solo_code_shorthand_valid_tests(
     #[case] source: &str,
     #[case] remainder: &str,
@@ -53,6 +61,8 @@ fn solo_code_shorthand_valid_tests(
 
 #[rstest]
 #[case("``alfa\n\nbravo``")]
+#[case("``alfa|\n\nbravo``")]
+#[case("``alfa|bravo\n\n``")]
 fn solo_code_shorthand_invalid_tests(#[case] source: &str) {
     let parsed = code_shorthand_span(source);
     if parsed.is_err() {

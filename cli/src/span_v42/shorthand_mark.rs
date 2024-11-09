@@ -10,10 +10,12 @@ use nom::bytes::complete::is_a;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::character::complete::alphanumeric1;
+use nom::character::complete::line_ending;
 use nom::character::complete::multispace0;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::not;
+use nom::combinator::opt;
 use nom::multi::many0;
 use nom::multi::many1;
 use nom::sequence::pair;
@@ -80,6 +82,9 @@ pub fn mark_shorthand_flags_and_attrs(
 
 pub fn mark_shorthand_flag(source: &str) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
+    let (source, _) = space0.context("").parse(source)?;
+    let (source, _) = opt(line_ending).context("").parse(source)?;
+    let (source, _) = space0.context("").parse(source)?;
     let (source, parts) = many1(alt((
         plain_text_string_base,
         is_a("~*^![]{}<>_#:"),
@@ -87,7 +92,9 @@ pub fn mark_shorthand_flag(source: &str) -> IResult<&str, SpanBaseAttrV42, Error
     )))
     .context("")
     .parse(source)?;
-    let (source, _) = not(tag(":")).context("").parse(source)?;
+    let (source, _) = space0.context("").parse(source)?;
+    let (source, _) = opt(line_ending).context("").parse(source)?;
+    let (source, _) = space0.context("").parse(source)?;
     Ok((
         source,
         SpanBaseAttrV42::Flag(SpanFlagAttrV42 {
