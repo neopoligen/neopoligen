@@ -45,7 +45,7 @@ pub fn emphasis_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree
         ))))
         .context("")
         .parse(source)?;
-    let (source, (attrs, flags)) = emphasis_shorthand_attrs_and_flags
+    let (source, (flags, attrs)) = emphasis_shorthand_flags_and_attrs
         .context("")
         .parse(source)?;
     let (source, _) = tag("__").context("").parse(source)?;
@@ -60,18 +60,22 @@ pub fn emphasis_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree
     ))
 }
 
-pub fn emphasis_shorthand_attrs_and_flags(
+pub fn emphasis_shorthand_flags_and_attrs(
     source: &str,
-) -> IResult<&str, (BTreeMap<String, Vec<SpanV42>>, Vec<String>), ErrorTree<&str>> {
-    let (source, attrs_and_flags) = many0(alt((
-        // emphasis_shorthand_key_value_attr,
+) -> IResult<&str, (Vec<String>, BTreeMap<String, Vec<SpanV42>>), ErrorTree<&str>> {
+    let (source, flags_and_attrs) = many0(alt((
+        // code_shorthand_key_value_attr,
         emphasis_shorthand_flag,
     )))
     .context("")
     .parse(source)?;
     let attrs = BTreeMap::new();
-    let flags = vec![];
-    Ok((source, (attrs, flags)))
+    let mut flags = vec![];
+    flags_and_attrs.iter().for_each(|af| match &af {
+        SpanBaseAttrV42::Flag(f) => flags.push(f.text.to_string()),
+        _ => (),
+    });
+    Ok((source, (flags, attrs)))
 }
 
 pub fn emphasis_shorthand_flag(source: &str) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
@@ -143,8 +147,4 @@ pub fn emphasis_shorthand_key_value_attr(
             spans,
         },
     ))
-}
-
-#[cfg(test)]
-mod test {
 }

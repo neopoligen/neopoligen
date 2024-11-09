@@ -17,7 +17,7 @@ use rstest::rstest;
 #[case("``alfa:bravo``", "", 0, 0)]
 #[case("``alfa::bravo``", "", 0, 0)]
 #[case("``alfa~~bravo~~``", "", 0, 0)]
-// #[case("``alfa|bravo``", "", 1, 0)]
+#[case("``alfa|bravo``", "", 1, 0)]
 fn solo_code_shorthand_valid_tests(
     #[case] source: &str,
     #[case] remainder: &str,

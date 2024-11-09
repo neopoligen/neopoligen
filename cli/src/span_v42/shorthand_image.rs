@@ -45,7 +45,7 @@ pub fn image_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&s
         ))))
         .context("")
         .parse(source)?;
-    let (source, (attrs, flags)) = image_shorthand_attrs_and_flags
+    let (source, (flags, attrs)) = image_shorthand_flags_and_attrs
         .context("")
         .parse(source)?;
     let (source, _) = tag("}}").context("").parse(source)?;
@@ -60,18 +60,22 @@ pub fn image_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&s
     ))
 }
 
-pub fn image_shorthand_attrs_and_flags(
+pub fn image_shorthand_flags_and_attrs(
     source: &str,
-) -> IResult<&str, (BTreeMap<String, Vec<SpanV42>>, Vec<String>), ErrorTree<&str>> {
-    let (source, attrs_and_flags) = many0(alt((
-        // image_shorthand_key_value_attr,
+) -> IResult<&str, (Vec<String>, BTreeMap<String, Vec<SpanV42>>), ErrorTree<&str>> {
+    let (source, flags_and_attrs) = many0(alt((
+        // code_shorthand_key_value_attr,
         image_shorthand_flag,
     )))
     .context("")
     .parse(source)?;
     let attrs = BTreeMap::new();
-    let flags = vec![];
-    Ok((source, (attrs, flags)))
+    let mut flags = vec![];
+    flags_and_attrs.iter().for_each(|af| match &af {
+        SpanBaseAttrV42::Flag(f) => flags.push(f.text.to_string()),
+        _ => (),
+    });
+    Ok((source, (flags, attrs)))
 }
 
 pub fn image_shorthand_flag(source: &str) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
@@ -143,8 +147,4 @@ pub fn image_shorthand_key_value_attr(
             spans,
         },
     ))
-}
-
-#[cfg(test)]
-mod test {
 }
