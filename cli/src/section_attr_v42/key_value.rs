@@ -115,7 +115,7 @@ pub fn section_key_value_attr_v42<'a>(
 mod test {
     use super::*;
     use rstest::rstest;
-    // use pretty_assertions::assert_eq;
+    use pretty_assertions::assert_eq;
 
     #[rstest]
     #[case("-- alfa: bravo", "")]
@@ -126,19 +126,12 @@ mod test {
     #[case("--    leading_key_spaces_are_okay: alfa", "")]
     #[case("-- alfa:   leading_value_spaces_are_okay", "")]
     #[case("-- alfa: ``can contain code, etc...``", "")]
-    fn valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
+    #[case("-- alfa: bravo\n-- charlie: delta", "-- charlie: delta")]
+    fn solo_valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
         let results = section_key_value_attr_v42(source);
         match results {
             Ok(result) => {
-                if result.0 == remainder {
-                    assert!(true);
-                } else {
-                    assert!(
-                        false,
-                        "Remainder should have been '{}' but got '{}'",
-                        &remainder, result.0
-                    );
-                }
+                assert_eq!(result.0, remainder);
             }
             Err(e) => {
                 assert!(false, "{}", e)

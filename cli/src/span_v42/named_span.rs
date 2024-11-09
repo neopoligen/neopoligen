@@ -103,6 +103,7 @@ pub fn named_span_attrs_and_flags(
     ErrorTree<&str>,
 > {
     let (source, attr_flags) = many0(named_span_attr_flag).context("").parse(source)?;
+
     let mut attrs = BTreeMap::new();
     let flags = attr_flags
         .iter()
@@ -125,6 +126,7 @@ pub fn named_span_attrs_and_flags(
 
 pub fn named_span_attr_flag(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
+    let (source, _) = multispace0.context("").parse(source)?;
     // NOTE: key/value must come first so that flags with any
     // content including colons will work as expected. It's
     // only a key/value if the initial string is alphanumeric
@@ -137,19 +139,19 @@ pub fn named_span_attr_flag(source: &str) -> IResult<&str, NamedSpanAttrV42, Err
 
 // TODO: Add tests for this
 pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
-    let (source, key_spans) = terminated(
-        many1(alt((span_of_escaped_character,))),
+    let (source, key_parts) = terminated(
+        many1(alt((alphanumeric1, tag("-"), tag("_")))),
         pair(tag(":"), space1),
     )
     .context("")
     .parse(source)?;
-    let (source, spans) = many1(alt((span_of_escaped_character,)))
+    let (source, spans) = many1(alt((span_of_plain_text_for_named_span_content,)))
         .context("")
         .parse(source)?;
     Ok((
         source,
         NamedSpanAttrV42::KeyValue(KeyValueSpanAttrV42 {
-            key: flatten_spans_v42(&key_spans),
+            key: key_parts.join("").to_string(),
             value: spans.clone(),
             text: flatten_spans_v42(&spans),
         }),
@@ -158,7 +160,7 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42
 
 // TODO: Add tests for this
 pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
-    let (source, spans) = many1(alt((span_of_escaped_character,)))
+    let (source, spans) = many1(alt((span_of_plain_text_for_named_span_flag,)))
         .context("")
         .parse(source)?;
     let (source, _) = not(tag(":")).context("").parse(source)?;
@@ -186,7 +188,7 @@ mod test {
     use rstest::rstest;
 
     #[test]
-    fn solo_basic_test() {
+    fn basic_test() {
         let source = "<<sierra|tango>>";
         let left = (
             "",
@@ -265,7 +267,7 @@ mod test {
     #[case("<<alfa|bravo|charlie_delta>>etc...", "etc...")]
     #[case("<<link|text|https://www.example.com/?ping=pong>>etc...", "etc...")]
     #[case("<<link|text|\nhttps://www.example.com/?ping=pong>>etc...", "etc...")]
-    fn valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
+    fn solo_valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
         match named_span(source) {
             Ok(data) => {
                 if data.0 == remainder {
