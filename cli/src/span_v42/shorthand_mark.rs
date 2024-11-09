@@ -1,4 +1,3 @@
-
 #![allow(unused)]
 use super::PlainTextSpan;
 use crate::helpers::flatten_spans_v42;

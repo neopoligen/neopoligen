@@ -218,14 +218,61 @@ impl PageV42b {
             Ok(attr) => Ok(Value::from_serialize(attr.spans.clone())),
             // Err(_) => Ok(Value::from_serialize::<Vec<SpanV42>>(vec![])),
             Err(_) => {
-                //
-
                 match &self.ast {
-                    Some(_ast) => Ok(Value::from("TODO_GET_TITLE")),
+                    Some(ast) => {
+                        if let Some(t) = ast.iter().find_map(|section| match section {
+                            SectionV42::Basic(sec) => match sec.kind.as_str() {
+                                "title" => sec.children.iter().find_map(|child| match child {
+                                    SectionV42::Block(c) => match c.kind.as_str() {
+                                        "block-paragraph" => {
+                                            Some(Ok(Value::from_serialize(c.spans.clone())))
+                                        }
+                                        _ => None,
+                                    },
+                                    _ => None,
+                                }),
+                                _ => None,
+                            },
+                            _ => None,
+                        }) {
+                            t
+                        } else {
+                            Err(Error::new(
+                                minijinja::ErrorKind::InvalidOperation,
+                                "Could not get title",
+                            ))
+                        }
+                    }
                     None => Err(Error::new(
                         minijinja::ErrorKind::InvalidOperation,
                         "Could not get title",
-                    )),
+                    )), // if let Some(spans) =
+                        //     &self
+                        //         .ast
+                        //         .as_ref()
+                        //         .unwrap()
+                        //         .iter()
+                        //         .find_map(|section| match section {
+                        //             SectionV42::Basic(sec) => match sec.kind.as_str() {
+                        //                 "title" => sec.children.iter().find_map(|child| match child {
+                        //                     SectionV42::Block(c) => match c.kind.as_str() {
+                        //                         "block-paragraph" => Some(c.spans.clone()),
+                        //                         _ => None,
+                        //                     },
+                        //                     _ => None,
+                        //                 }),
+                        //                 _ => None,
+                        //             },
+                        //             _ => None,
+                        //         })
+                        // {
+                        //     Ok(Value::from_serialize(spans))
+                        // } else {
+                        //     Err(Error::new(
+                        //         minijinja::ErrorKind::InvalidOperation,
+                        //         "no title section title available".to_string(),
+                        //     ))
+                        // }
                 }
 
                 // if let Some(spans) =

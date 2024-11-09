@@ -6,7 +6,9 @@ use nom::branch::alt;
 use nom::bytes::complete::is_a;
 use nom::bytes::complete::tag;
 use nom::character::complete::alphanumeric1;
+use nom::character::complete::line_ending;
 use nom::character::complete::multispace0;
+use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::not;
 use nom::combinator::opt;
@@ -102,10 +104,11 @@ pub fn named_span_attrs_and_flags(
     ),
     ErrorTree<&str>,
 > {
-    let (source, attr_flags) = many0(named_span_attr_flag).context("").parse(source)?;
-
+    let (source, attr_and_flags) = many0(alt((named_span_attr, named_span_flag)))
+        .context("")
+        .parse(source)?;
     let mut attrs = BTreeMap::new();
-    let flags = attr_flags
+    let flags = attr_and_flags
         .iter()
         .filter_map(|af| match af {
             NamedSpanAttrV42::Flag(f) => Some(f.value.clone()),
@@ -124,21 +127,25 @@ pub fn named_span_attrs_and_flags(
     Ok((source, (attrs, flags)))
 }
 
-pub fn named_span_attr_flag(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
-    let (source, _) = tag("|").context("").parse(source)?;
-    let (source, _) = multispace0.context("").parse(source)?;
-    // NOTE: key/value must come first so that flags with any
-    // content including colons will work as expected. It's
-    // only a key/value if the initial string is alphanumeric
-    // plus hyphen plus underscore
-    let (source, attr) = alt((named_span_key_value_attr, named_span_flag_attr))
-        .context("")
-        .parse(source)?;
-    Ok((source, attr))
-}
+// pub fn named_span_attr_or_flag(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
+//     let (source, _) = tag("|").context("").parse(source)?;
+//     let (source, _) = multispace0.context("").parse(source)?;
+//     // NOTE: key/value must come first so that flags with any
+//     // content including colons will work as expected. It's
+//     // only a key/value if the initial string is alphanumeric
+//     // plus hyphen plus underscore
+//     let (source, attr) = alt((named_span_key_value_attr, named_span_flag_attr))
+//         .context("")
+//         .parse(source)?;
+//     Ok((source, attr))
+// }
 
 // TODO: Add tests for this
-pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
+pub fn named_span_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
+    let (source, _) = tag("|").context("").parse(source)?;
+    let (source, _) = space0.context("").parse(source)?;
+    let (source, _) = opt(line_ending).context("").parse(source)?;
+    let (source, _) = space0.context("").parse(source)?;
     let (source, key_parts) = terminated(
         many1(alt((alphanumeric1, tag("-"), tag("_")))),
         pair(tag(":"), space1),
@@ -159,7 +166,11 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42
 }
 
 // TODO: Add tests for this
-pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
+pub fn named_span_flag(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
+    let (source, _) = tag("|").context("").parse(source)?;
+    let (source, _) = space0.context("").parse(source)?;
+    let (source, _) = opt(line_ending).context("").parse(source)?;
+    let (source, _) = space0.context("").parse(source)?;
     let (source, spans) = many1(alt((span_of_plain_text_for_named_span_flag,)))
         .context("")
         .parse(source)?;
@@ -285,4 +296,6 @@ mod test {
             }
         }
     }
+
+    //
 }

@@ -24,6 +24,33 @@ fn solo_named_span_integration_tests(
 #[case("<<alfa>>", "", 0, 0)]
 #[case("<<alfa-bravo>>", "", 0, 0)]
 #[case("<<alfa_bravo>>", "", 0, 0)]
+#[case("<<em|alfa>>etc...", "etc...", 0, 0)]
+#[case("<<em|alfa-bravo>>etc...", "etc...", 0, 0)]
+#[case("<<em|charlie -- delta>>etc...", "etc...", 0, 0)]
+#[case("<<\nalfa>>", "", 0, 0)]
+#[case("<< alfa>>", "", 0, 0)]
+#[case("<<alfa\n>>", "", 0, 0)]
+#[case("<<alfa >>", "", 0, 0)]
+#[case("<<alfa\n|bravo>>", "", 0, 0)]
+#[case("<<alfa|\nbravo>>", "", 0, 0)]
+#[case("<<alfa|bravo\n>>", "", 0, 0)]
+#[case("<<alfa|bravo|charlie>>etc...", "etc...", 1, 0)]
+#[case("<<alfa|bravo|charlie-delta>>etc...", "etc...", 1, 0)]
+#[case("<<alfa|bravo|charlie--delta>>etc...", "etc...", 1, 0)]
+#[case("<<alfa|bravo|charlie_delta>>etc...", "etc...", 1, 0)]
+#[case(
+    "<<link|text|https://www.example.com/?ping=pong>>etc...",
+    "etc...",
+    1,
+    0
+)]
+#[case(
+    "<<link|text|\nhttps://www.example.com/?ping=pong>>etc...",
+    "etc...",
+    1,
+    0
+)]
+
 // #[case("``alfa``", "", 0, 0)]
 // #[case("``alfa bravo``", "", 0, 0)]
 // #[case("``alfa     bravo``", "", 0, 0)]

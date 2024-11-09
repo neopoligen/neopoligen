@@ -18,8 +18,7 @@ shorthands = [
         ("##", "##", "comment", "Comment", "hashtag", "#", "@`~*^![]{}<>_:"),
         ]
 
-skeleton = """
-#![allow(unused)]
+skeleton = """#![allow(unused)]
 use super::PlainTextSpan;
 use crate::helpers::flatten_spans_v42;
 use crate::span_attrs_v42::*;
