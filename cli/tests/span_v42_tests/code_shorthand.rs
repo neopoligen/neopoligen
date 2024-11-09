@@ -41,6 +41,36 @@ use rstest::rstest;
     text: "alfa", 
     type: "code-shorthand" }"#
 )]
+#[case(
+    "``alfa|bravo: charlie <<delta|echo>>``",
+    r#"{ 
+    attrs: {
+        bravo: [
+            {
+                kind: "plain-text",
+                text: "charlie ",
+                type: "plain-text",
+            },
+            {
+                attrs: {},
+                flags: [],
+                kind: "delta",
+                spans: [
+                    {
+                        kind: "plain-text",
+                        text: "echo",
+                        type: "plain-text",
+                    }
+                ],
+                type: "named-span",
+            }
+        ]
+    }, 
+    flags: [], 
+    kind: "code-shorthand", 
+    text: "alfa", 
+    type: "code-shorthand" }"#
+)]
 
 fn solo_code_integration_tests(#[case] source: &str, #[case] json5_string: &str) {
     let left = serde_json5::from_str::<Value>(json5_string).unwrap();
