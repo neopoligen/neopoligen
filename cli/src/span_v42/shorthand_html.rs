@@ -153,6 +153,7 @@ pub fn html_shorthand_attr(
     .parse(source)?;
     let (source, spans) = many1(alt((
         span_of_shorthand_attr_value,
+        span_of_escaped_character,
         html_span_of_extra_shorthand_attr_value,
     )))
     .context("")

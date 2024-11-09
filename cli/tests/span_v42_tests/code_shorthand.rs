@@ -5,14 +5,17 @@ use rstest::rstest;
 
 #[rstest]
 #[case(
+    "Basic Test",
     "``alfa``",
     r#"{ attrs: {}, flags: [], kind: "code-shorthand", text: "alfa", type: "code-shorthand" }"#
 )]
 #[case(
+    "Single Flag",
     "``alfa|bravo``",
     r#"{ attrs: {}, flags: ["bravo"], kind: "code-shorthand", text: "alfa", type: "code-shorthand" }"#
 )]
 #[case(
+    "Single Attr",
     "``alfa|bravo: charlie``",
     r#"{ attrs: {
         bravo: [
@@ -25,6 +28,43 @@ use rstest::rstest;
     }, flags: [], kind: "code-shorthand", text: "alfa", type: "code-shorthand" }"#
 )]
 #[case(
+    "Attr With Single Shorthand Character",
+    "``alfa|bravo: charlie ` delta``",
+    r#"{ attrs: {
+        bravo: [
+            {
+                kind: "plain-text",
+                text: "charlie ` delta",
+                type: "plain-text",
+            }
+        ]
+    }, flags: [], kind: "code-shorthand", text: "alfa", type: "code-shorthand" }"#
+)]
+#[case(
+    "Attr With Escaped Shorthand Character",
+    "``alfa|bravo: charlie `\\` delta``",
+    r#"{ attrs: {
+        bravo: [
+            {
+                kind: "plain-text",
+                text: "charlie `",
+                type: "plain-text",
+            },
+            {
+                kind: "escaped-character",
+                text: "`",
+                type: "escaped-character",
+            },
+            {
+                kind: "plain-text",
+                text: " delta",
+                type: "plain-text",
+            },
+        ]
+    }, flags: [], kind: "code-shorthand", text: "alfa", type: "code-shorthand" }"#
+)]
+#[case(
+    "Attr With Shorthand String That Stays Text",
     "``alfa|bravo: __charlie__``",
     r#"{ attrs: {
         bravo: [
@@ -47,6 +87,7 @@ use rstest::rstest;
     }, flags: [], kind: "code-shorthand", text: "alfa", type: "code-shorthand" }"#
 )]
 #[case(
+    "Both Flag And Attr",
     "``alfa|bravo|charlie: delta``",
     r#"{ 
     attrs: {
@@ -64,6 +105,7 @@ use rstest::rstest;
     type: "code-shorthand" }"#
 )]
 #[case(
+    "Attr With Named_Span",
     "``alfa|bravo: charlie <<delta|echo>>``",
     r#"{ 
     attrs: {
@@ -94,11 +136,15 @@ use rstest::rstest;
     type: "code-shorthand" }"#
 )]
 
-fn solo_code_integration_tests(#[case] source: &str, #[case] json5_string: &str) {
+fn solo_code_integration_tests(
+    #[case] description: &str,
+    #[case] source: &str,
+    #[case] json5_string: &str,
+) {
     let left = serde_json5::from_str::<Value>(json5_string).unwrap();
     let parsed = code_shorthand_span(source);
     let right = Value::from_serialize(&parsed.unwrap().1);
-    assert_eq!(left, right);
+    assert_eq!(left, right, "Test: {}", description);
 }
 
 #[rstest]
