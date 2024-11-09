@@ -2,7 +2,6 @@ use minijinja::Value;
 use neopoligengine::span_v42::{shorthand_code::code_shorthand_span, SpanV42};
 use pretty_assertions::assert_eq;
 use rstest::rstest;
-// use std::collections::BTreeMap;
 
 #[rstest]
 #[case(
@@ -15,27 +14,6 @@ fn solo_code_integration_tests(#[case] source: &str, #[case] json5_string: &str)
     let right = Value::from_serialize(&parsed.unwrap().1);
     assert_eq!(left, right);
 }
-
-// #[test]
-// fn solo_code_shorthand_integration_test_1() {
-//     let source = "``alfa|bravo|charlie: delta``";
-//     let mut attrs = BTreeMap::new();
-//     attrs.insert(
-//         "charlie".to_string(),
-//         vec![SpanV42::PlainText(PlainTextSpan {
-//             kind: "plain-text".to_string(),
-//             text: "delta".to_string(),
-//         })],
-//     );
-//     let left = SpanV42::CodeShorthand(CodeShorthandV42 {
-//         attrs,
-//         flags: vec!["bravo".to_string()],
-//         kind: "code-shorthand".to_string(),
-//         text: "alfa".to_string(),
-//     });
-//     let right = code_shorthand_span(source).unwrap().1;
-//     assert_eq!(left, right);
-// }
 
 #[rstest]
 #[case("``alfa``", "", 0, 0)]
