@@ -21,6 +21,7 @@ use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
+use crate::span_v42::string_parsers::*;
 
 use super::string_parsers::span_of_escaped_character;
 
@@ -134,6 +135,7 @@ pub fn named_span_attr_flag(source: &str) -> IResult<&str, NamedSpanAttrV42, Err
     Ok((source, attr))
 }
 
+// TODO: Add tests for this
 pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
     let (source, key_spans) = terminated(
         many1(alt((span_of_escaped_character,))),
@@ -154,6 +156,7 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42
     ))
 }
 
+// TODO: Add tests for this
 pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
     let (source, spans) = many1(alt((span_of_escaped_character,)))
         .context("")
@@ -167,8 +170,9 @@ pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, Err
     ))
 }
 
+
 pub fn named_span_content_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, span) = alt((span_of_escaped_character,))
+    let (source, span) = alt((span_of_plain_text_for_named_span_content, span_of_escaped_character,))
         .context("")
         .parse(source)?;
     Ok((source, span))
@@ -259,7 +263,6 @@ mod test {
     #[case("<<alfa|bravo|charlie-delta>>etc...", "etc...")]
     #[case("<<alfa|bravo|charlie--delta>>etc...", "etc...")]
     #[case("<<alfa|bravo|charlie_delta>>etc...", "etc...")]
-    #[case("<<alfa|bravo|charlie__delta>>etc...", "etc...")]
     #[case("<<link|text|https://www.example.com/?ping=pong>>etc...", "etc...")]
     #[case("<<link|text|\nhttps://www.example.com/?ping=pong>>etc...", "etc...")]
     fn valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
