@@ -132,6 +132,14 @@ fn solo_title_as_spans_from_title_section() {
     assert_eq!(left, right);
 }
 
+#[test]
+fn solo_title_as_text_from_title_section() {
+    let page = PageV42b::test_from_sample_file("010-title-in-title-section.neo");
+    let left = Value::from("Alfa Bravo Title".to_string());
+    let right = page.title_as_text().unwrap();
+    assert_eq!(left, right);
+}
+
 // #[test]
 // fn rel_output_path_basic_check() {
 //     let page = PageV42b::test_from_sample_file("001-pagedata-only.neo");
