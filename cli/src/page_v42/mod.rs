@@ -76,6 +76,42 @@ impl PageV42b {
         }
     }
 
+    // TODO: Check if this works
+    pub fn get_attr_from_last_section_of_type(
+        &self,
+        section_kind: &str,
+        key: &str,
+    ) -> Result<&SectionKeyValueAttrPayloadV42, NeoErrorV42> {
+        match &self.ast {
+            Some(ast) => {
+                match ast
+                    .iter()
+                    .filter_map(|section| match section {
+                        SectionV42::Basic(sec) => {
+                            if sec.kind == section_kind {
+                                Some(sec)
+                            } else {
+                                None
+                            }
+                        }
+                        _ => None,
+                    })
+                    .last()
+                {
+                    Some(s) => match s.attrs.get(key) {
+                        Some(attr) => Ok(attr),
+                        // TODO: Update this error to be generic for section
+                        None => Err(NeoErrorV42::NoParsedPageDataForKey(key.to_string())),
+                    },
+                    // TODO: Update this error to be generic for section
+                    None => Err(NeoErrorV42::NoParsedPageDataForKey(key.to_string())),
+                }
+            }
+            // TODO: Update this error to be generic for section
+            None => Err(NeoErrorV42::NoParsedPageDataForKey(key.to_string())),
+        }
+    }
+
     pub fn get_page_attr_from_ast(
         &self,
         key: &str,
@@ -181,7 +217,40 @@ impl PageV42b {
     pub fn title_as_spans(&self) -> Result<Value, Error> {
         match &self.get_page_attr_from_ast("title") {
             Ok(attr) => Ok(Value::from_serialize(attr.spans.clone())),
-            Err(_) => Ok(Value::from_serialize::<Vec<SpanV42>>(vec![])),
+            // Err(_) => Ok(Value::from_serialize::<Vec<SpanV42>>(vec![])),
+            Err(_) => {
+                //
+
+                if let Some(spans) =
+                    &self
+                        .ast
+                        .as_ref()
+                        .unwrap()
+                        .iter()
+                        .find_map(|section| match section {
+                            SectionV42::Basic(sec) => match sec.kind.as_str() {
+                                "title" => sec.children.iter().find_map(|child| match child {
+                                    SectionV42::Block(c) => match c.kind.as_str() {
+                                        "block-paragraph" => Some(c.spans.clone()),
+                                        _ => None,
+                                    },
+                                    _ => None,
+                                }),
+                                _ => None,
+                            },
+                            _ => None,
+                        })
+                {
+                    Ok(Value::from_serialize(spans))
+                } else {
+                    Err(Error::new(
+                        minijinja::ErrorKind::InvalidOperation,
+                        "no title section title available".to_string(),
+                    ))
+                }
+
+                //
+            }
         }
     }
 

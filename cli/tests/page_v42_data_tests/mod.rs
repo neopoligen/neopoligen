@@ -122,6 +122,16 @@ fn solo_title_as_text_from_page_section() {
     assert_eq!(left, right);
 }
 
+#[test]
+fn solo_title_as_spans_from_title_section() {
+    let page = PageV42b::test_from_sample_file("010-title-in-title-section.neo");
+    let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
+        text: "Alfa Bravo Title".to_string(),
+    })]);
+    let right = page.title_as_spans().unwrap();
+    assert_eq!(left, right);
+}
+
 // #[test]
 // fn rel_output_path_basic_check() {
 //     let page = PageV42b::test_from_sample_file("001-pagedata-only.neo");
