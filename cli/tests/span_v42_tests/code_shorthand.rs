@@ -219,7 +219,7 @@ fn solo_code_shorthand_valid_tests(
 #[case("``alfa|\n\nbravo: charle``")]
 #[case("``alfa|bravo:\n\ncharle``")]
 #[case("``alfa|bravo: charle\n\n``")]
-// #[case("``alfa\n \nbravo``")]
+#[case("``alfa\n \nbravo``")]
 fn solo_code_shorthand_invalid_tests(#[case] source: &str) {
     let parsed = code_shorthand_span(source);
     if parsed.is_err() {

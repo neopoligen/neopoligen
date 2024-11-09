@@ -5,6 +5,7 @@ use nom::bytes::complete::is_a;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::character::complete::line_ending;
+// use nom::character::complete::multispace1;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::eof;
@@ -222,12 +223,14 @@ pub fn escaped_character(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
     Ok((source, result))
 }
 
-// NOTE: Not sure if this is needed, might be able
-// to do it just by making sure the spaces don't kick
-// past empty lines with only whitespace
+// NOTE: NOTE SURE IF THIS IS NEEDED
 // pub fn plain_text_end_of_block(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
-//     let (source, _) = alt((eof, terminated(multispace1, eof)))
-//         .context("")
-//         .parse(source)?;
+//     let (source, _) = alt((
+//         eof,
+//         terminated(space1, eof),
+//         terminated(space1, not(pair(line_ending, line_ending))),
+//     ))
+//     .context("")
+//     .parse(source)?;
 //     Ok((source, ""))
 // }

@@ -26,17 +26,31 @@ fn solo_plain_text_space1_as_single_space_invalid_tests(
     assert!(parsed.is_err(), "{}", description);
 }
 
-// NOTE: Not sure if this is needed, might be able
-// to do it just by making sure the spaces don't kick
-// past empty lines with only whitespace
+// NOT SURE IF THIS IS NEEDED
 // #[rstest]
-// #[case("", "And End Of File")]
-// #[case(" ", "Space And End Of File")]
-// #[case("\n", "Line Ending And End Of File")]
-// fn solo_plain_text_end_of_block(#[case] source: &str, #[case] description: &str) {
-//     let left = "";
+// #[case("", "", "And End Of File")]
+// #[case(" ", "", "Space And End Of File")]
+// #[case("\n", "", "Line Ending And End Of File")]
+// #[case(" \n\n", "\n", "Line Ending And End Of File")]
+// fn solo_plain_text_end_of_block_valid(
+//     #[case] source: &str,
+//     #[case] remainder: &str,
+//     #[case] description: &str,
+// ) {
+//     let left = remainder;
 //     let right = plain_text_end_of_block(source).unwrap().1;
 //     assert_eq!(left, right, "{}", description);
+// }
+
+// NOT SURE IF THIS IS NEEDED
+// #[rstest]
+// #[case("", "And End Of File")]
+// fn solo_plain_text_end_of_block_invalid(#[case] source: &str, #[case] description: &str) {
+//     if plain_text_end_of_block(source).is_err() {
+//         assert!(true);
+//     } else {
+//         assert!(false, "##### ERROR ##### {}", description);
+//     }
 // }
 
 #[rstest]
@@ -97,22 +111,6 @@ fn plain_text_single_pipe_tests(#[case] source: &str, #[case] got: &str, #[case]
     assert_eq!(matcher, parsed);
 }
 
-// #[rstest]
-// #[case("alfa", &["alfa"], "")]
-// #[case("alfa bravo", &["alfa", " ", "bravo"], "")]
-// #[case("alfa bravo\ncharlie", &["alfa", " ", "bravo", " ", "charlie"], "")]
-// #[case("alfa bravo\n\ncharlie", &["alfa", " ", "bravo"], "\n\ncharlie")]
-// #[case("alfa~bravo", &["alfa", "~", "bravo"], "")]
-// fn plain_text_string_with_line_spaces_and_single_newlines_tests(
-//     #[case] source: &str,
-//     #[case] got: &[&str],
-//     #[case] remainder: &str,
-// ) {
-//     let matcher = (remainder, got.to_vec());
-//     let parsed = plain_text_string_with_line_spaces_and_single_newlines(source).unwrap();
-//     assert_eq!(matcher, parsed);
-// }
-
 #[rstest]
 #[case("alfa", "alfa", "")]
 #[case("alfa bravo", "alfa", " bravo")]
@@ -136,23 +134,9 @@ fn plain_text_string_base_tests(#[case] source: &str, #[case] got: &str, #[case]
     assert_eq!(matcher, parsed);
 }
 
-// #[rstest]
-// #[case("alfa", &["alfa"], "")]
-// #[case("alfa bravo", &["alfa", " ", "bravo"], "")]
-// #[case("alfa bravo\ncharlie", &["alfa", " ", "bravo"], "\ncharlie")]
-// fn plain_text_string_with_line_spaces_tests(
-//     #[case] source: &str,
-//     #[case] got: &[&str],
-//     #[case] remainder: &str,
-// ) {
-//     let matcher = (remainder, got.to_vec());
-//     let parsed = plain_text_string_with_line_spaces(source).unwrap();
-//     assert_eq!(matcher, parsed);
-// }
-
 #[rstest]
 #[case("\n", " ", "")]
-fn solo_plain_text_single_line_ending_as_space_valid_tests(
+fn plain_text_single_line_ending_as_space_valid_tests(
     #[case] source: &str,
     #[case] got: &str,
     #[case] remainder: &str,
@@ -165,7 +149,7 @@ fn solo_plain_text_single_line_ending_as_space_valid_tests(
 #[rstest]
 #[case("\n\n", "Two Newlines In A Row")]
 #[case("\n  \n", "Two Newlines Separated By Whitespace")]
-fn solo_plain_text_single_newline_as_space_invalid_tests(
+fn plain_text_single_newline_as_space_invalid_tests(
     #[case] source: &str,
     #[case] description: &str,
 ) {
