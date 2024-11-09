@@ -1,4 +1,5 @@
 use crate::helpers::flatten_spans_v42;
+use crate::span_v42::string_parsers::*;
 use crate::span_v42::SpanV42;
 use itertools::Itertools;
 use nom::branch::alt;
@@ -21,7 +22,6 @@ use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
-use crate::span_v42::string_parsers::*;
 
 use super::string_parsers::span_of_escaped_character;
 
@@ -172,11 +172,13 @@ pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, Err
     ))
 }
 
-
 pub fn named_span_content_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, span) = alt((span_of_plain_text_for_named_span_content, span_of_escaped_character,))
-        .context("")
-        .parse(source)?;
+    let (source, span) = alt((
+        span_of_plain_text_for_named_span_content,
+        span_of_escaped_character,
+    ))
+    .context("")
+    .parse(source)?;
     Ok((source, span))
 }
 

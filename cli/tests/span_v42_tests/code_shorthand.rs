@@ -1,6 +1,33 @@
-use neopoligengine::span_v42::{shorthand_code::code_shorthand_span, SpanV42};
+use std::collections::BTreeMap;
+
+use neopoligengine::span_v42::{
+    plaintext::PlainTextSpan,
+    shorthand_code::{code_shorthand_span, CodeShorthandV42},
+    SpanV42,
+};
 use pretty_assertions::assert_eq;
 use rstest::rstest;
+
+#[test]
+fn solo_code_shorthand_integration_test_1() {
+    let source = "``alfa|bravo|charlie: delta``";
+    let mut attrs = BTreeMap::new();
+    attrs.insert(
+        "charlie".to_string(),
+        vec![SpanV42::PlainText(PlainTextSpan {
+            kind: "plain-text".to_string(),
+            text: "delta".to_string(),
+        })],
+    );
+    let left = SpanV42::CodeShorthand(CodeShorthandV42 {
+        attrs,
+        flags: vec!["bravo".to_string()],
+        kind: "code-shorthand".to_string(),
+        text: "alfa".to_string(),
+    });
+    let right = code_shorthand_span(source).unwrap().1;
+    assert_eq!(left, right);
+}
 
 #[rstest]
 #[case("``alfa``", "", 0, 0)]
@@ -26,6 +53,7 @@ use rstest::rstest;
 #[case("``alfa|bravo \n ``", "", 1, 0)]
 #[case("``alfa|bravo\\:charlie``", "", 1, 0)]
 #[case("``alfa|bravo\\|charlie``", "", 1, 0)]
+#[case("``alfa|bravo: charlie``", "", 0, 1)]
 fn solo_code_shorthand_valid_tests(
     #[case] source: &str,
     #[case] remainder: &str,

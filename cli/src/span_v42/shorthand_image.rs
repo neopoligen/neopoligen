@@ -65,17 +65,22 @@ pub fn image_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&s
 pub fn image_shorthand_flags_and_attrs(
     source: &str,
 ) -> IResult<&str, (Vec<String>, BTreeMap<String, Vec<SpanV42>>), ErrorTree<&str>> {
+    // Reminder: check for attrs first otherwise things go wrong
+    // with this setup
     let (source, flags_and_attrs) = many0(alt((
-        // code_shorthand_key_value_attr,
+        image_shorthand_attr,
         image_shorthand_flag,
     )))
     .context("")
     .parse(source)?;
-    let attrs = BTreeMap::new();
+    let mut attrs = BTreeMap::new();
     let mut flags = vec![];
     flags_and_attrs.iter().for_each(|af| match &af {
         SpanBaseAttrV42::Flag(f) => flags.push(f.text.to_string()),
-        _ => (),
+        SpanBaseAttrV42::KeyValue{ key, spans } => {
+            attrs.insert(key.to_string(), spans.clone());
+            ()
+        }
     });
     Ok((source, (flags, attrs)))
 }
@@ -116,6 +121,7 @@ pub fn not_close_brace_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV42,
     ))
 }
 
+// TODO: Deprecate this
 pub fn image_shorthand_span_flag_attr(
     source: &str,
 ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
@@ -133,9 +139,13 @@ pub fn image_shorthand_span_flag_attr(
     ))
 }
 
-pub fn image_shorthand_key_value_attr(
+pub fn image_shorthand_attr(
     source: &str,
 ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
+    let (source, _) = tag("|").context("").parse(source)?;
+    let (source, _) = space0.context("").parse(source)?;
+    let (source, _) = opt(line_ending).context("").parse(source)?;
+    let (source, _) = space0.context("").parse(source)?;
     let (source, key_spans) = terminated(
         many1(alt((alphanumeric1, is_a("-_")))),
         pair(tag(":"), space1),
@@ -143,7 +153,7 @@ pub fn image_shorthand_key_value_attr(
     .context("")
     .parse(source)?;
     let (source, spans) = many1(alt((
-        not_close_brace_or_pipe_or_escape,
+        span_of_shorthand_attr_value,
     )))
     .context("")
     .parse(source)?;
