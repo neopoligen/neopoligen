@@ -54,6 +54,11 @@ fn solo_code_shorthand_integration_test_1() {
 #[case("``alfa|bravo\\:charlie``", "", 1, 0)]
 #[case("``alfa|bravo\\|charlie``", "", 1, 0)]
 #[case("``alfa|bravo: charlie``", "", 0, 1)]
+#[case("``alfa|\nbravo: charlie``", "", 0, 1)]
+#[case("``alfa|bravo: charlie\n``", "", 0, 1)]
+#[case("``alfa|  bravo: charlie``", "", 0, 1)]
+#[case("``alfa|bravo: charlie  ``", "", 0, 1)]
+#[case("``alfa|bravo: <<link|ping>>``", "", 0, 1)]
 fn solo_code_shorthand_valid_tests(
     #[case] source: &str,
     #[case] remainder: &str,
