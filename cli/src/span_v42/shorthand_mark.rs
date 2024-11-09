@@ -1,4 +1,3 @@
-#![allow(unused)]
 use super::PlainTextSpan;
 use crate::helpers::flatten_spans_v42;
 use crate::span_attrs_v42::*;
@@ -11,7 +10,6 @@ use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::character::complete::alphanumeric1;
 use nom::character::complete::line_ending;
-use nom::character::complete::multispace0;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
 use nom::combinator::not;
