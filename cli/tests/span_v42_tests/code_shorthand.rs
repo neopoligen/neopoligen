@@ -1,21 +1,47 @@
-use neopoligengine::span_v42::shorthand_code::code_shorthand_span;
+use neopoligengine::span_v42::{shorthand_code::code_shorthand_span, SpanV42};
 
 use pretty_assertions::assert_eq;
 use rstest::rstest;
 
 #[rstest]
-#[case("``alfa``", "")]
-#[case("``alfa bravo``", "")]
-#[case("``alfa     bravo``", "")]
-#[case("``  alfa     bravo  ``", "")]
-#[case("``\nalfa bravo``", "")]
-#[case("``alfa\nbravo``", "")]
-fn solo_code_shorthand_valid_tests(#[case] source: &str, #[case] remainder: &str) {
-    let left = remainder;
+#[case("``alfa``", "", 0, 0)]
+#[case("``alfa bravo``", "", 0, 0)]
+#[case("``alfa     bravo``", "", 0, 0)]
+#[case("``  alfa     bravo  ``", "", 0, 0)]
+#[case("``\nalfa bravo``", "", 0, 0)]
+#[case("``alfa\nbravo``", "", 0, 0)]
+#[case("``alfa <<bravo>>``", "", 0, 0)]
+#[case("``alfa ` bravo``", "", 0, 0)]
+// #[case("``alfa \\| bravo``", "", 0, 0)]
+
+fn solo_code_shorthand_valid_tests(
+    #[case] source: &str,
+    #[case] remainder: &str,
+    #[case] attrs: usize,
+    #[case] flags: usize,
+) {
     let parsed = code_shorthand_span(source).unwrap();
-    dbg!(&parsed.1);
-    let right = parsed.0;
-    assert_eq!(left, right);
+    if &remainder == &parsed.0 {
+        match &parsed.1 {
+            SpanV42::CodeShorthand(span) => {
+                assert_eq!(
+                    attrs,
+                    span.attrs.len(),
+                    "Incorrect number of attrs. Expected: {} - Got: {}",
+                    &attrs,
+                    span.attrs.len()
+                );
+                assert!(true);
+            }
+            _ => assert!(false, "Did not get CodeShorthand span"),
+        };
+    } else {
+        assert!(
+            false,
+            "Incorrect remainder. Expected: '{}', Got: '{}'",
+            remainder, &parsed.0
+        );
+    }
 }
 
 // #[rstest]

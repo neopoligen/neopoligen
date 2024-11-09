@@ -1,3 +1,5 @@
+use super::PlainTextSpan;
+use super::SpanV42;
 use nom::branch::alt;
 use nom::bytes::complete::is_a;
 use nom::bytes::complete::is_not;
@@ -12,20 +14,17 @@ use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-use super::PlainTextSpan;
-use super::SpanV42;
-
 
 pub fn span_of_plain_text_for_named_span_flag(
     source: &str,
-) -> IResult<&str, SpanV42, ErrorTree<&str>> {    
+) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, results) = many1(alt((
-    plain_text_string_base,
-    plain_text_space1_as_single_space,
-    plain_text_any_colons,
-)))
-.context("")
-.parse(source)?;
+        plain_text_string_base,
+        plain_text_space1_as_single_space,
+        plain_text_any_colons,
+    )))
+    .context("")
+    .parse(source)?;
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
@@ -34,8 +33,6 @@ pub fn span_of_plain_text_for_named_span_flag(
         }),
     ))
 }
-
-
 
 pub fn span_of_plain_text_for_named_span_content(
     source: &str,
@@ -76,8 +73,6 @@ pub fn span_of_plain_text_for_section_key_value_attr_value(
         }),
     ))
 }
-
-
 
 pub fn span_of_plain_text_for_block_paragraph(
     source: &str,

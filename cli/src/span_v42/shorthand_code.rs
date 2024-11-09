@@ -29,17 +29,19 @@ use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct CodeShorthandV42 {
-    attrs: BTreeMap<String, Vec<SpanV42>>,
-    flags: Vec<String>,
-    kind: String,
-    text: String,
+    pub attrs: BTreeMap<String, Vec<SpanV42>>,
+    pub flags: Vec<String>,
+    pub kind: String,
+    pub text: String,
 }
 
 pub fn code_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, tokens) = preceded(pair(tag("``"), multispace0), many1(alt((
             plain_text_string_base,
             plain_text_space1_as_single_space,
+            is_a("~*^![]{}<>_#|:"),
             plain_text_single_newline_as_space,
+
         ))))
         .context("")
         .parse(source)?;
