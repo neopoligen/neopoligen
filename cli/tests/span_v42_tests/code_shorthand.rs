@@ -212,8 +212,13 @@ fn solo_code_shorthand_valid_tests(
 
 #[rstest]
 #[case("``alfa\n\nbravo``")]
+#[case("``alfa\n\n|bravo``")]
 #[case("``alfa|\n\nbravo``")]
 #[case("``alfa|bravo\n\n``")]
+#[case("``alfa\n\n|bravo: charle``")]
+#[case("``alfa|\n\nbravo: charle``")]
+#[case("``alfa|bravo:\n\ncharle``")]
+#[case("``alfa|bravo: charle\n\n``")]
 fn solo_code_shorthand_invalid_tests(#[case] source: &str) {
     let parsed = code_shorthand_span(source);
     if parsed.is_err() {
