@@ -36,6 +36,21 @@ pub struct ListSectionV42 {
     pub template_list: Vec<String>,
 }
 
+pub fn list_section_v42<'a>(
+    source: &'a str,
+    site_config: &'a SiteConfigV42,
+    parent: SectionParent,
+    debug: bool,
+) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
+    let (source, result) = alt((
+        |src| list_section_full_v42(src, &site_config, parent.clone(), debug),
+        |src| list_section_start_v42(src, &site_config, parent.clone(), debug),
+    ))
+    .context("")
+    .parse(source)?;
+    Ok((source, result))
+}
+
 pub fn list_section_full_v42<'a>(
     source: &'a str,
     site_config: &'a SiteConfigV42,
