@@ -5,6 +5,7 @@ use nom::bytes::complete::is_a;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::character::complete::space1;
+use nom::combinator::eof;
 use nom::combinator::not;
 use nom::multi::many1;
 use nom::sequence::pair;
@@ -159,19 +160,6 @@ pub fn plain_text_single_colon(source: &str) -> IResult<&str, &str, ErrorTree<&s
     Ok((source, result))
 }
 
-// pub fn plain_text_string_with_line_spaces_and_single_newlines(
-//     source: &str,
-// ) -> IResult<&str, Vec<&str>, ErrorTree<&str>> {
-//     let (source, results) = many1(alt((
-//         plain_text_string_base,
-//         space1,
-//         plain_text_single_newline_as_space,
-//     )))
-//     .context("")
-//     .parse(source)?;
-//     Ok((source, results))
-// }
-
 pub fn plain_text_string_base(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
     let (source, result) = alt((
         is_not(" \t\r\n~`*^![]{}<>_#|:\\"),
@@ -193,18 +181,6 @@ pub fn plain_text_string_base(source: &str) -> IResult<&str, &str, ErrorTree<&st
     .parse(source)?;
     Ok((source, result))
 }
-
-// pub fn plain_text_string_with_line_spaces(
-//     source: &str,
-// ) -> IResult<&str, Vec<&str>, ErrorTree<&str>> {
-//     let (source, results) = many1(alt((
-//         plain_text_string_base,
-//         plain_text_space1_as_single_space,
-//     )))
-//     .context("")
-//     .parse(source)?;
-//     Ok((source, results))
-// }
 
 pub fn plain_text_single_newline_as_space(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
     let (source, _) = pair(tag("\n"), not(tag("\n"))).context("").parse(source)?;
@@ -239,11 +215,27 @@ pub fn escaped_character(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
     Ok((source, result))
 }
 
+pub fn plain_text_end_of_block(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
+    let (source, _) = alt((eof, terminated(space1, eof)))
+        .context("")
+        .parse(source)?;
+    Ok((source, ""))
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
     use pretty_assertions::assert_eq;
     use rstest::rstest;
+
+    #[rstest]
+    #[case("", "And End Of File")]
+    #[case(" ", "Space And End Of File")]
+    fn solo_plain_text_end_of_block(#[case] source: &str, #[case] description: &str) {
+        let left = "";
+        let right = plain_text_end_of_block(source).unwrap().1;
+        assert_eq!(left, right, "{}", description);
+    }
 
     #[rstest]
     #[case("\\:bravo", ":", "bravo")]
