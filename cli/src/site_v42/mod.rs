@@ -481,6 +481,7 @@ mod test {
             SectionKeyValueAttrPayloadV42 {
                 text: "alfa".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
+                    kind: "plain-text".to_string(),
                     text: "alfa".to_string(),
                 })],
             },
@@ -515,6 +516,7 @@ mod test {
             SectionKeyValueAttrPayloadV42 {
                 text: "bravo".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
+                    kind: "plain-text".to_string(),
                     text: "bravo".to_string(),
                 })],
             },
@@ -548,6 +550,7 @@ mod test {
         //     "class".to_string(),
         //     SectionKeyValueAttrPayloadV42 {
         //         spans: vec![SpanV42::PlainText(PlainTextSpan {
+        //kind: "plain-text".to_string(),
         //             text: "bravo".to_string(),
         //         })],
         //     },
@@ -587,6 +590,7 @@ mod test {
             SectionKeyValueAttrPayloadV42 {
                 text: "delta".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
+                    kind: "plain-text".to_string(),
                     text: "delta".to_string(),
                 })],
             },
@@ -596,6 +600,7 @@ mod test {
             SectionKeyValueAttrPayloadV42 {
                 text: "echo".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
+                    kind: "plain-text".to_string(),
                     text: "echo".to_string(),
                 })],
             },

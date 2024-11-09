@@ -1,8 +1,6 @@
-use super::single_characters::*;
 use super::PlainTextSpan;
 use crate::helpers::flatten_spans_v42;
 use crate::span_attrs_v42::*;
-use crate::span_v42::escaped_characters::*;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
 use nom::bytes::complete::is_a;
@@ -33,13 +31,13 @@ pub struct UnderlineShorthandV42 {
 }
 
 pub fn underline_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, tokens) = preceded(pair(tag("__"), space0), many1(underline_shorthand_content))
+    let (source, tokens) = preceded(pair(tag("!!"), space0), many1(underline_shorthand_content))
         .context("")
         .parse(source)?;
     let (source, (attrs, flags)) = get_underline_shorthand_attrs_and_flags
         .context("")
         .parse(source)?;
-    let (source, _) = tag("__").context("").parse(source)?;
+    let (source, _) = tag("!!").context("").parse(source)?;
     Ok((
         source,
         SpanV42::UnderlineShorthand(UnderlineShorthandV42 {
@@ -87,10 +85,6 @@ pub fn underline_shorthand_attr_or_flag(
 pub fn underline_shorthand_content(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, token) = alt((
         not_underscore_or_pipe_or_escape,
-        single_underscore,
-        escaped_underscore,
-        escaped_pipe,
-        escaped_backslash,
     ))
     .context("")
     .parse(source)?;
@@ -98,10 +92,11 @@ pub fn underline_shorthand_content(source: &str) -> IResult<&str, SpanV42, Error
 }
 
 pub fn not_underscore_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, result) = is_not("_\\|").context("").parse(source)?;
+    let (source, result) = is_not("!\\|").context("").parse(source)?;
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
+            kind: "plain-text".to_string(),
             text: result.to_string(),
         }),
     ))
@@ -112,9 +107,6 @@ pub fn underline_shorthand_span_flag_attr(
 ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
     let (source, spans) = many1(alt((
         not_underscore_or_pipe_or_escape,
-        escaped_pipe,
-        escaped_underscore,
-        single_underscore,
     )))
     .context("")
     .parse(source)?;
@@ -138,10 +130,6 @@ pub fn underline_shorthand_key_value_attr(
     .parse(source)?;
     let (source, spans) = many1(alt((
         not_underscore_or_pipe_or_escape,
-        single_underscore,
-        escaped_underscore,
-        escaped_pipe,
-        escaped_backslash,
     )))
     .context("")
     .parse(source)?;

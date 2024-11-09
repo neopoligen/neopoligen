@@ -171,6 +171,7 @@ mod test {
                         children: vec![],
                         kind: "block-paragraph".to_string(),
                         spans: vec![SpanV42::PlainText(PlainTextSpan {
+                            kind: "plain-text".to_string(),
                             text: "Post Script".to_string(),
                         })],
                         template_list: make_template_list(

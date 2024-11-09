@@ -1,6 +1,3 @@
-use self::any_characters::any_colons;
-use self::any_characters::any_pipes;
-use self::plaintext_with_spaces_v42::plaintext_with_spaces_v42;
 use self::shorthand_code::code_shorthand_span;
 use self::shorthand_emphasis::emphasis_shorthand_span;
 use self::shorthand_footnote::footnote_shorthand_span;
@@ -11,9 +8,9 @@ use self::shorthand_mark::mark_shorthand_span;
 use self::shorthand_strikethrough::strikethrough_shorthand_span;
 use self::shorthand_strong::strong_shorthand_span;
 use self::shorthand_underline::underline_shorthand_span;
-use self::space0_line_ending_or_eof::space0_line_ending_or_eof;
 use crate::helpers::dump_parser_if_debug;
 use crate::section_attr_v42::SectionAttrV42;
+use crate::span_v42::space0_line_ending_or_eof::*;
 use crate::span_v42::*;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
@@ -53,9 +50,6 @@ pub fn section_key_value_attr_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 6);
     let (source, value) = terminated(
         many1(alt((
-            plaintext_with_spaces_v42,
-            any_colons,
-            any_pipes,
             code_shorthand_span,
             emphasis_shorthand_span,
             footnote_shorthand_span,
@@ -176,6 +170,7 @@ mod test {
             SectionAttrV42::KeyValueV42(SectionKeyValueAttrV42 {
                 key: "alfa".to_string(),
                 value: vec![SpanV42::PlainText(plaintext::PlainTextSpan {
+                    kind: "plain-text".to_string(),
                     text: "bravo charlie".to_string(),
                 })],
             }),

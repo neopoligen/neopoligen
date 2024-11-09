@@ -1,8 +1,6 @@
-use super::single_characters::*;
 use super::PlainTextSpan;
 use crate::helpers::flatten_spans_v42;
 use crate::span_attrs_v42::*;
-use crate::span_v42::escaped_characters::*;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
 use nom::bytes::complete::is_a;
@@ -75,33 +73,28 @@ pub fn html_shorthand_attr_or_flag(
 ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
     // Reminder: Make sure to look for key_value first so flags work properly
-    let (source, attr_or_flag) = alt((
-        html_shorthand_key_value_attr,
-        html_shorthand_span_flag_attr,
-    ))
-    .context("")
-    .parse(source)?;
+    let (source, attr_or_flag) =
+        alt((html_shorthand_key_value_attr, html_shorthand_span_flag_attr))
+            .context("")
+            .parse(source)?;
     Ok((source, attr_or_flag))
 }
 
 pub fn html_shorthand_content(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, token) = alt((
-        not_close_bracket_or_pipe_or_escape,
-        single_close_bracket,
-        escaped_close_bracket,
-        escaped_pipe,
-        escaped_backslash,
-    ))
-    .context("")
-    .parse(source)?;
+    let (source, token) = alt((not_close_bracket_or_pipe_or_escape,))
+        .context("")
+        .parse(source)?;
     Ok((source, token))
 }
 
-pub fn not_close_bracket_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+pub fn not_close_bracket_or_pipe_or_escape(
+    source: &str,
+) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, result) = is_not("]\\|").context("").parse(source)?;
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
+            kind: "plain-text".to_string(),
             text: result.to_string(),
         }),
     ))
@@ -110,14 +103,9 @@ pub fn not_close_bracket_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV4
 pub fn html_shorthand_span_flag_attr(
     source: &str,
 ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
-    let (source, spans) = many1(alt((
-        not_close_bracket_or_pipe_or_escape,
-        escaped_pipe,
-        escaped_close_bracket,
-        single_close_bracket,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, spans) = many1(alt((not_close_bracket_or_pipe_or_escape,)))
+        .context("")
+        .parse(source)?;
     let (source, _) = not(tag(":")).context("").parse(source)?;
     Ok((
         source,
@@ -136,15 +124,9 @@ pub fn html_shorthand_key_value_attr(
     )
     .context("")
     .parse(source)?;
-    let (source, spans) = many1(alt((
-        not_close_bracket_or_pipe_or_escape,
-        single_close_bracket,
-        escaped_close_bracket,
-        escaped_pipe,
-        escaped_backslash,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, spans) = many1(alt((not_close_bracket_or_pipe_or_escape,)))
+        .context("")
+        .parse(source)?;
     Ok((
         source,
         SpanBaseAttrV42::KeyValue {
@@ -155,5 +137,4 @@ pub fn html_shorthand_key_value_attr(
 }
 
 #[cfg(test)]
-mod test {
-}
+mod test {}

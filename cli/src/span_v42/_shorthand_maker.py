@@ -8,20 +8,18 @@ from string import Template
 shorthands = [
         ("~~", "~~", "strikethrough", "Strikethrough", "tilde", "~"),
         ("``", "``", "code", "Code", "backtick", "`"),
-        ("**", "**", "emphasis", "Emphasis", "asterisk", "*"),
+        ("__", "__", "emphasis", "Emphasis", "asterisk", "_"),
         ("^^", "^^", "footnote", "Footnote", "caret", "^"),
-        ("!!", "!!", "strong", "Strong", "exclamation", "!"),
+        ("**", "**", "strong", "Strong", "exclamation", "*"),
         ("[[", "]]", "html", "Html", "close_bracket", "]"),
         ("{{", "}}", "image", "Image", "close_brace", "}"),
-        ("__", "__", "underline", "Underline", "underscore", "_"),
+        ("!!", "!!", "underline", "Underline", "underscore", "!"),
         ("@@", "@@", "mark", "Mark", "ampersand", "@"),
         ]
 
-skeleton = """use super::single_characters::*;
-use super::PlainTextSpan;
+skeleton = """use super::PlainTextSpan;
 use crate::helpers::flatten_spans_v42;
 use crate::span_attrs_v42::*;
-use crate::span_v42::escaped_characters::*;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
 use nom::bytes::complete::is_a;
@@ -106,10 +104,6 @@ pub fn ${NAME1}_shorthand_attr_or_flag(
 pub fn ${NAME1}_shorthand_content(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, token) = alt((
         not_${CHARNAME1}_or_pipe_or_escape,
-        single_${CHARNAME1},
-        escaped_${CHARNAME1},
-        escaped_pipe,
-        escaped_backslash,
     ))
     .context("")
     .parse(source)?;
@@ -121,6 +115,7 @@ pub fn not_${CHARNAME1}_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV42
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
+            kind: "plain-text".to_string(),
             text: result.to_string(),
         }),
     ))
@@ -131,9 +126,6 @@ pub fn ${NAME1}_shorthand_span_flag_attr(
 ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
     let (source, spans) = many1(alt((
         not_${CHARNAME1}_or_pipe_or_escape,
-        escaped_pipe,
-        escaped_${CHARNAME1},
-        single_${CHARNAME1},
     )))
     .context("")
     .parse(source)?;
@@ -157,10 +149,6 @@ pub fn ${NAME1}_shorthand_key_value_attr(
     .parse(source)?;
     let (source, spans) = many1(alt((
         not_${CHARNAME1}_or_pipe_or_escape,
-        single_${CHARNAME1},
-        escaped_${CHARNAME1},
-        escaped_pipe,
-        escaped_backslash,
     )))
     .context("")
     .parse(source)?;

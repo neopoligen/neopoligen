@@ -1,8 +1,6 @@
-use super::single_characters::*;
 use super::PlainTextSpan;
 use crate::helpers::flatten_spans_v42;
 use crate::span_attrs_v42::*;
-use crate::span_v42::escaped_characters::*;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
 use nom::bytes::complete::is_a;
@@ -106,15 +104,9 @@ pub fn link_shorthand_attr_or_flag(
 }
 
 pub fn link_shorthand_content(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, token) = alt((
-        not_greater_than_or_pipe_or_escape,
-        single_greater_than,
-        escaped_greater_than,
-        escaped_pipe,
-        escaped_backslash,
-    ))
-    .context("")
-    .parse(source)?;
+    let (source, token) = alt((not_greater_than_or_pipe_or_escape,))
+        .context("")
+        .parse(source)?;
     Ok((source, token))
 }
 
@@ -123,6 +115,7 @@ pub fn not_greater_than_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV42
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
+            kind: "plain-text".to_string(),
             text: result.to_string(),
         }),
     ))
@@ -131,14 +124,9 @@ pub fn not_greater_than_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV42
 pub fn link_shorthand_span_flag_attr(
     source: &str,
 ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
-    let (source, spans) = many1(alt((
-        not_greater_than_or_pipe_or_escape,
-        escaped_pipe,
-        escaped_greater_than,
-        single_greater_than,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, spans) = many1(alt((not_greater_than_or_pipe_or_escape,)))
+        .context("")
+        .parse(source)?;
     let (source, _) = not(tag(":")).context("").parse(source)?;
     Ok((
         source,
@@ -157,15 +145,9 @@ pub fn link_shorthand_key_value_attr(
     )
     .context("")
     .parse(source)?;
-    let (source, spans) = many1(alt((
-        not_greater_than_or_pipe_or_escape,
-        single_greater_than,
-        escaped_greater_than,
-        escaped_pipe,
-        escaped_backslash,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, spans) = many1(alt((not_greater_than_or_pipe_or_escape,)))
+        .context("")
+        .parse(source)?;
     Ok((
         source,
         SpanBaseAttrV42::KeyValue {
@@ -201,6 +183,7 @@ mod test {
         attrs.insert(
             "class".to_string(),
             vec![SpanV42::PlainText(PlainTextSpan {
+                kind: "plain-text".to_string(),
                 text: "alfa".to_string(),
             })],
         );

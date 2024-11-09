@@ -104,6 +104,7 @@ mod test {
                     children: vec![],
                     kind: "block-list-item-paragraph".to_string(),
                     spans: vec![SpanV42::PlainText(PlainTextSpan {
+                        kind: "plain-text".to_string(),
                         text: "some text".to_string(),
                     })],
                     template_list: vec![
@@ -147,6 +148,7 @@ mod test {
     //                     children: vec![],
     //                     kind: "block-paragraph".to_string(),
     //                     spans: vec![SpanV42::PlainText(PlainTextSpan {
+    //kind: "plain-text".to_string(),
     //                         text: "Post ListItem".to_string(),
     //                     })],
     //                     template_list: vec!["sections/block-paragraph/default.neoj".to_string()],

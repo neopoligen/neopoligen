@@ -26,7 +26,7 @@ use super::PageV42b;
 // use nom::Parser;
 // use std::collections::BTreeMap;
 // use std::fs;
-use html_escape::encode_safe;
+// use html_escape::encode_safe;
 use std::path::PathBuf;
 use tracing::{event, instrument, Level};
 

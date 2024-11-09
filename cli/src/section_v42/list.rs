@@ -6,7 +6,7 @@ use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
 use crate::section_v42::list_item::*;
 use crate::section_v42::*;
 use crate::site_config::SiteConfigV42;
-use crate::span_v42::space0_line_ending_or_eof::space0_line_ending_or_eof;
+use crate::span_v42::space0_line_ending_or_eof::*;
 use nom::bytes::complete::tag;
 use nom::character::complete::line_ending;
 use nom::character::complete::multispace0;
@@ -151,6 +151,7 @@ mod test {
                             children: vec![],
                             kind: "block-list-item-paragraph".to_string(),
                             spans: vec![SpanV42::PlainText(PlainTextSpan {
+                                kind: "plain-text".to_string(),
                                 text: "alfa".to_string(),
                             })],
                             template_list: make_template_list(
@@ -168,6 +169,7 @@ mod test {
                             children: vec![],
                             kind: "block-list-item-paragraph".to_string(),
                             spans: vec![SpanV42::PlainText(PlainTextSpan {
+                                kind: "plain-text".to_string(),
                                 text: "bravo".to_string(),
                             })],
                             template_list: make_template_list(
@@ -206,6 +208,7 @@ mod test {
             SectionKeyValueAttrPayloadV42 {
                 text: "links".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
+                    kind: "plain-text".to_string(),
                     text: "links".to_string(),
                 })],
             },
@@ -221,6 +224,7 @@ mod test {
                         children: vec![],
                         kind: "block-list-item-paragraph".to_string(),
                         spans: vec![SpanV42::PlainText(PlainTextSpan {
+                            kind: "plain-text".to_string(),
                             text: "delta hotel".to_string(),
                         })],
                         template_list: make_template_list(
@@ -265,6 +269,7 @@ mod test {
                             children: vec![],
                             kind: "block-list-item-paragraph".to_string(),
                             spans: vec![SpanV42::PlainText(PlainTextSpan {
+                                kind: "plain-text".to_string(),
                                 text: "charlie".to_string(),
                             })],
                             template_list: make_template_list(
@@ -282,6 +287,7 @@ mod test {
                             children: vec![],
                             kind: "block-list-item-paragraph".to_string(),
                             spans: vec![SpanV42::PlainText(PlainTextSpan {
+                                kind: "plain-text".to_string(),
                                 text: "delta".to_string(),
                             })],
                             template_list: make_template_list(

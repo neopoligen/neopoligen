@@ -1,9 +1,4 @@
-use super::not_pipe_or_greater_than_or_less_than_or_escape::not_pipe_or_greater_than_or_less_than_or_escape;
-use super::single_characters::*;
 use crate::helpers::flatten_spans_v42;
-use crate::span_v42::any_characters::*;
-use crate::span_v42::escaped_characters::*;
-use crate::span_v42::plaintext::plaintext;
 use crate::span_v42::SpanV42;
 use itertools::Itertools;
 use nom::branch::alt;
@@ -26,6 +21,8 @@ use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
+
+use super::string_parsers::span_of_escaped_character;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct NamedSpanV42 {
@@ -139,12 +136,12 @@ pub fn named_span_attr_flag(source: &str) -> IResult<&str, NamedSpanAttrV42, Err
 
 pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
     let (source, key_spans) = terminated(
-        many1(alt((plaintext, any_hyphens, any_underscores))),
+        many1(alt((span_of_escaped_character,))),
         pair(tag(":"), space1),
     )
     .context("")
     .parse(source)?;
-    let (source, spans) = many1(alt((not_pipe_or_greater_than_or_less_than_or_escape,)))
+    let (source, spans) = many1(alt((span_of_escaped_character,)))
         .context("")
         .parse(source)?;
     Ok((
@@ -158,15 +155,9 @@ pub fn named_span_key_value_attr(source: &str) -> IResult<&str, NamedSpanAttrV42
 }
 
 pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, ErrorTree<&str>> {
-    let (source, spans) = many1(alt((
-        not_pipe_or_greater_than_or_less_than_or_escape,
-        single_greater_than,
-        escaped_pipe,
-        escaped_greater_than,
-        escaped_backslash,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, spans) = many1(alt((span_of_escaped_character,)))
+        .context("")
+        .parse(source)?;
     let (source, _) = not(tag(":")).context("").parse(source)?;
     Ok((
         source,
@@ -177,18 +168,9 @@ pub fn named_span_flag_attr(source: &str) -> IResult<&str, NamedSpanAttrV42, Err
 }
 
 pub fn named_span_content_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, span) = alt((
-        not_pipe_or_greater_than_or_less_than_or_escape,
-        single_greater_than,
-        single_less_than,
-        escaped_greater_than,
-        escaped_less_than,
-        escaped_pipe,
-        escaped_backslash,
-        named_span,
-    ))
-    .context("")
-    .parse(source)?;
+    let (source, span) = alt((span_of_escaped_character,))
+        .context("")
+        .parse(source)?;
     Ok((source, span))
 }
 
@@ -209,6 +191,7 @@ mod test {
                 flags: vec![],
                 kind: "sierra".to_string(),
                 spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
+                    kind: "plain-text".to_string(),
                     text: "tango".to_string(),
                 })]),
             }),
@@ -227,6 +210,7 @@ mod test {
                 flags: vec!["foxtrot".to_string()],
                 kind: "delta".to_string(),
                 spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
+                    kind: "plain-text".to_string(),
                     text: "echo".to_string(),
                 })]),
             }),
@@ -243,6 +227,7 @@ mod test {
             "class".to_string(),
             NamedSpanKeyValueAttrPayloadV42 {
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
+                    kind: "plain-text".to_string(),
                     text: "red".to_string(),
                 })],
                 text: "red".to_string(),
@@ -255,6 +240,7 @@ mod test {
                 flags: vec![],
                 kind: "delta".to_string(),
                 spans: Some(vec![SpanV42::PlainText(PlainTextSpan {
+                    kind: "plain-text".to_string(),
                     text: "echo".to_string(),
                 })]),
             }),

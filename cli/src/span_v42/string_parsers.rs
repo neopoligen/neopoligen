@@ -38,6 +38,7 @@ pub fn span_of_plain_text_for_block_paragraph(
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
+            kind: "plain-text".to_string(),
             text: results.join(""),
         }),
     ))
@@ -48,6 +49,7 @@ pub fn span_of_escaped_character(source: &str) -> IResult<&str, SpanV42, ErrorTr
     Ok((
         source,
         SpanV42::EscapedCharacter(super::EscapedCharacterSpanV42 {
+            kind: "escaped-character".to_string(),
             text: result.to_string(),
         }),
     ))

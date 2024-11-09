@@ -1,4 +1,3 @@
-#![allow(unused)]
 pub mod helpers;
 pub mod inits;
 pub mod mocks;
@@ -178,7 +177,7 @@ impl PageV42b {
                             "If this page is showing up in an expected location that's probably why. Fixing whatever issues are happening in the source file should fix this as well.".to_string(),
                         ]));
                 }
-                Err(e) => {
+                Err(_e) => {
                     let _ = &self.issues.push(NeoErrorV42::new_page_issue(
                         &self,
                         vec!["Could not get an ID for the page".to_string()],
@@ -296,7 +295,7 @@ impl PageV42b {
         // --section--title attr on first block if it has one
         // first number of n words from first block
         // pagedata--id
-        if let Some(ast) = &self.ast.as_ref() {
+        if let Some(_ast) = &self.ast.as_ref() {
             if let Some(page_title) = match &self
                 .ast
                 .as_ref()
@@ -344,7 +343,10 @@ impl PageV42b {
                 Ok(Value::from_serialize(spans))
             } else if let Some(id) = &self.id.clone() {
                 Ok(Value::from_serialize(vec![SpanV42::PlainText(
-                    PlainTextSpan { text: id.clone() },
+                    PlainTextSpan {
+                        kind: "plain-text".to_string(),
+                        text: id.clone(),
+                    },
                 )]))
             } else {
                 Ok(Value::from("[NEO_TODO_PAGE_TITLE]"))
@@ -377,16 +379,16 @@ impl Object for PageV42b {
 
     fn call_method(
         self: &Arc<PageV42b>,
-        state: &minijinja::State,
+        _state: &minijinja::State,
         name: &str,
-        args: &[Value],
+        _args: &[Value],
     ) -> Result<Value, Error> {
         match name {
             "href" => self.href(),
             "title_as_spans" => self.title_as_spans(),
             "title_as_text" => self.title_as_text(),
             // TODO: Deprecate: title_flattened
-            "title_flattened" => Ok(Value::from("title flattened")),
+            // "title_flattened" => Ok(Value::from("title flattened")),
             // "sections" => self.ast(),
             // "get_pagedata" => self.make_value_from_string(self.get_pagedata(args)),
             // "sections" => self.sections(),

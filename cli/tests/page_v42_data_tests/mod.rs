@@ -108,6 +108,7 @@ fn href_file_with_extension() {
 fn solo_title_as_spans_from_page_section() {
     let page = PageV42b::test_from_sample_file("009-title-in-page-section.neo");
     let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
+        kind: "plain-text".to_string(),
         text: "This is a title".to_string(),
     })]);
     let right = page.title_as_spans().unwrap();
@@ -126,6 +127,7 @@ fn solo_title_as_text_from_page_section() {
 fn solo_title_as_spans_from_title_section() {
     let page = PageV42b::test_from_sample_file("010-title-in-title-section.neo");
     let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
+        kind: "plain-text".to_string(),
         text: "Alfa Bravo Title".to_string(),
     })]);
     let right = page.title_as_spans().unwrap();

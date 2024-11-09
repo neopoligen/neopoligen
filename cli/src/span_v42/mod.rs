@@ -1,12 +1,6 @@
-pub mod any_characters;
-pub mod block_line_ending;
-pub mod escaped_characters;
+pub mod escaped_character;
 pub mod named_span;
-pub mod not_pipe_or_greater_than_or_less_than_or_escape;
 pub mod plaintext;
-pub mod plaintext_base_v42;
-pub mod plaintext_with_spaces_and_single_newlines_v42;
-pub mod plaintext_with_spaces_v42;
 pub mod shorthand_code;
 pub mod shorthand_emphasis;
 pub mod shorthand_footnote;
@@ -17,14 +11,11 @@ pub mod shorthand_mark;
 pub mod shorthand_strikethrough;
 pub mod shorthand_strong;
 pub mod shorthand_underline;
-pub mod single_characters;
-pub mod single_newline_as_space;
 pub mod space0_line_ending_or_eof;
-pub mod space1_not_at_line_ending_or_eof;
 pub mod string_parsers;
 
 use self::named_span::NamedSpanV42;
-use crate::span_v42::escaped_characters::*;
+use crate::span_v42::escaped_character::EscapedCharacterSpanV42;
 use crate::span_v42::plaintext::*;
 use crate::span_v42::shorthand_code::CodeShorthandV42;
 use crate::span_v42::shorthand_emphasis::EmphasisShorthandV42;
@@ -36,12 +27,6 @@ use crate::span_v42::shorthand_mark::MarkShorthandV42;
 use crate::span_v42::shorthand_strikethrough::StrikethroughShorthandV42;
 use crate::span_v42::shorthand_strong::StrongShorthandV42;
 use crate::span_v42::shorthand_underline::UnderlineShorthandV42;
-use nom::branch::alt;
-use nom::combinator::not;
-use nom::IResult;
-use nom::Parser;
-use nom_supreme::error::ErrorTree;
-use nom_supreme::parser_ext::ParserExt;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -73,17 +58,4 @@ pub enum SpanV42 {
     StrikethroughShorthand(StrikethroughShorthandV42),
     #[serde(rename = "underline-shorthand")]
     UnderlineShorthand(UnderlineShorthandV42),
-}
-
-pub fn span_v42<'a>(source: &'a str) -> IResult<&'a str, SpanV42, ErrorTree<&'a str>> {
-    let (source, span) = alt((plaintext,)).context("").parse(source)?;
-    Ok((source, span))
-}
-
-#[cfg(test)]
-mod test {
-
-    // use super::*;
-    // use pretty_assertions::assert_eq;
-    // use rstest::rstest;
 }

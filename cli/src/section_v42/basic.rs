@@ -5,7 +5,7 @@ use crate::section_attr_v42::section_attr_v42;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
 use crate::section_v42::*;
 use crate::site_config::SiteConfigV42;
-use crate::span_v42::space0_line_ending_or_eof::space0_line_ending_or_eof;
+use crate::span_v42::space0_line_ending_or_eof::*;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 use nom::character::complete::multispace0;

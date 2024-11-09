@@ -1,8 +1,6 @@
-use super::single_characters::*;
 use super::PlainTextSpan;
 use crate::helpers::flatten_spans_v42;
 use crate::span_attrs_v42::*;
-use crate::span_v42::escaped_characters::*;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
 use nom::bytes::complete::is_a;
@@ -87,10 +85,6 @@ pub fn strikethrough_shorthand_attr_or_flag(
 pub fn strikethrough_shorthand_content(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, token) = alt((
         not_tilde_or_pipe_or_escape,
-        single_tilde,
-        escaped_tilde,
-        escaped_pipe,
-        escaped_backslash,
     ))
     .context("")
     .parse(source)?;
@@ -102,6 +96,7 @@ pub fn not_tilde_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV42, Error
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
+            kind: "plain-text".to_string(),
             text: result.to_string(),
         }),
     ))
@@ -112,9 +107,6 @@ pub fn strikethrough_shorthand_span_flag_attr(
 ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
     let (source, spans) = many1(alt((
         not_tilde_or_pipe_or_escape,
-        escaped_pipe,
-        escaped_tilde,
-        single_tilde,
     )))
     .context("")
     .parse(source)?;
@@ -138,10 +130,6 @@ pub fn strikethrough_shorthand_key_value_attr(
     .parse(source)?;
     let (source, spans) = many1(alt((
         not_tilde_or_pipe_or_escape,
-        single_tilde,
-        escaped_tilde,
-        escaped_pipe,
-        escaped_backslash,
     )))
     .context("")
     .parse(source)?;

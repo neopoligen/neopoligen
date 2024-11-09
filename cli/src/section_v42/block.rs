@@ -149,6 +149,7 @@ mod test {
                 children: vec![],
                 kind: "block-paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
+                    kind: "plain-text".to_string(),
                     text: "this is some text".to_string(),
                 })],
                 template_list: make_template_list("block-paragraph", "block-paragraph", "default"),
@@ -175,6 +176,7 @@ mod test {
                 children: vec![],
                 kind: "block-paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
+                    kind: "plain-text".to_string(),
                     text: "multiple lines".to_string(),
                 })],
                 template_list: make_template_list("block-paragraph", "block-paragraph", "default"),
@@ -201,6 +203,7 @@ mod test {
                 children: vec![],
                 kind: "block-list-item-paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
+                    kind: "plain-text".to_string(),
                     text: "alfa bravo".to_string(),
                 })],
                 template_list: make_template_list(
