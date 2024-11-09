@@ -1,6 +1,6 @@
 [!- import "built-in/macro-loader.neoj" as neo -!]
 [!- set remote_page = site.get_page_from_span(span) -!]
-<a href="[@ remote_page.href() @]">
+<a href="[@ remote_page.href() @]" [@- site.get_span_attrs(span) -@]>
 [@- neo.output_spans(remote_page.title_as_spans()) -@]
 </a>
 [@- '' -@]
