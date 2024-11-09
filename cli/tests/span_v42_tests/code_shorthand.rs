@@ -136,7 +136,7 @@ use rstest::rstest;
     type: "code-shorthand" }"#
 )]
 
-fn solo_code_integration_tests(
+fn code_integration_tests(
     #[case] description: &str,
     #[case] source: &str,
     #[case] json5_string: &str,
@@ -177,7 +177,7 @@ fn solo_code_integration_tests(
 #[case("``alfa|  bravo: charlie``", "", 0, 1)]
 #[case("``alfa|bravo: charlie  ``", "", 0, 1)]
 #[case("``alfa|bravo: <<link|ping>>``", "", 0, 1)]
-fn solo_code_shorthand_valid_tests(
+fn code_shorthand_valid_tests(
     #[case] source: &str,
     #[case] remainder: &str,
     #[case] flags: usize,
@@ -235,7 +235,7 @@ fn solo_code_shorthand_valid_tests(
 #[case("``alfa|\n \nbravo: charle``")]
 #[case("``alfa|bravo:\n \ncharle``")]
 #[case("``alfa|bravo: charle\n \n``")]
-fn solo_code_shorthand_invalid_tests(#[case] source: &str) {
+fn code_shorthand_invalid_tests(#[case] source: &str) {
     let parsed = code_shorthand_span(source);
     if parsed.is_err() {
         assert!(true);

@@ -1,9 +1,7 @@
 [!- import "built-in/macro-loader.neoj" as neo -!]
 [@- '' -@]
-
 <[@ span.kind @]
 [@- site.get_span_attrs(span) -@]>
 [@- neo.output_spans(span.spans) -@]
 </[@ span.kind @]>
-
 [@- '' -@]

@@ -84,6 +84,51 @@ pub fn list_item_paragraph_block<'a>(
     ))
 }
 
+
+pub fn olist_item_paragraph_block<'a>(
+    source: &'a str,
+    _site_config: &'a SiteConfigV42,
+    _parent: SectionParent,
+    debug: bool,
+) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
+    // let debug = true;
+    let dbg_header = "OLIST_ITEM_PARAGRAPH_BLOCK";
+    dump_parser_if_debug(debug, dbg_header, source, 1);
+    let (source, _) = not(tag("-")).context("").parse(source)?;
+    let (source, spans) = many1(alt((
+        span_of_plain_text_for_block_paragraph,
+        span_of_escaped_character,
+        named_span,
+        code_shorthand_span,
+        emphasis_shorthand_span,
+        footnote_shorthand_span,
+        html_shorthand_span,
+        image_shorthand_span,
+        link_shorthand_span,
+        mark_shorthand_span,
+        strikethrough_shorthand_span,
+        strong_shorthand_span,
+        underline_shorthand_span,
+    )))
+    .context("")
+    .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 2);
+    let (source, _) = multispace0.context("").parse(source)?;
+    Ok((
+        source,
+        SectionV42::Block(BlockSectionV42 {
+            children: vec![],
+            kind: "block-olist-item-paragraph".to_string(),
+            spans,
+            template_list: make_template_list(
+                "olist-item-paragraph",
+                "olist-item-paragraph",
+                "default",
+            ),
+        }),
+    ))
+}
+
 pub fn paragraph_block_section_v42<'a>(
     source: &'a str,
     _site_config: &'a SiteConfigV42,

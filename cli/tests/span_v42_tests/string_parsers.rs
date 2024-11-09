@@ -5,10 +5,7 @@ use rstest::rstest;
 #[rstest]
 #[case(" foxtrot", "foxtrot")]
 #[case("    foxtrot", "foxtrot")]
-fn solo_plain_text_space1_as_single_space_valid_tests(
-    #[case] source: &str,
-    #[case] remainder: &str,
-) {
+fn plain_text_space1_as_single_space_valid_tests(#[case] source: &str, #[case] remainder: &str) {
     let matcher = (remainder, " ");
     let parsed = plain_text_space1_as_single_space(source).unwrap();
     assert_eq!(matcher, parsed);
@@ -18,7 +15,7 @@ fn solo_plain_text_space1_as_single_space_valid_tests(
 #[case("\n", "Don't Trigger On Newline")]
 #[case(" \n", "Don't Trigger In Front Of Newline")]
 #[case(" ", "Don't Trigger At End Of File")]
-fn solo_plain_text_space1_as_single_space_invalid_tests(
+fn plain_text_space1_as_single_space_invalid_tests(
     #[case] source: &str,
     #[case] description: &str,
 ) {
@@ -32,7 +29,7 @@ fn solo_plain_text_space1_as_single_space_invalid_tests(
 // #[case(" ", "", "Space And End Of File")]
 // #[case("\n", "", "Line Ending And End Of File")]
 // #[case(" \n\n", "\n", "Line Ending And End Of File")]
-// fn solo_plain_text_end_of_block_valid(
+// fn plain_text_end_of_block_valid(
 //     #[case] source: &str,
 //     #[case] remainder: &str,
 //     #[case] description: &str,
@@ -45,7 +42,7 @@ fn solo_plain_text_space1_as_single_space_invalid_tests(
 // NOT SURE IF THIS IS NEEDED
 // #[rstest]
 // #[case("", "And End Of File")]
-// fn solo_plain_text_end_of_block_invalid(#[case] source: &str, #[case] description: &str) {
+// fn plain_text_end_of_block_invalid(#[case] source: &str, #[case] description: &str) {
 //     if plain_text_end_of_block(source).is_err() {
 //         assert!(true);
 //     } else {
@@ -69,7 +66,7 @@ fn solo_plain_text_space1_as_single_space_invalid_tests(
 #[case("\\<bravo", "<", "bravo")]
 #[case("\\>bravo", ">", "bravo")]
 #[case("\\_bravo", "_", "bravo")]
-fn solo_escaped_character_tests(#[case] source: &str, #[case] got: &str, #[case] remainder: &str) {
+fn escaped_character_tests(#[case] source: &str, #[case] got: &str, #[case] remainder: &str) {
     let matcher = (remainder, got);
     let parsed = escaped_character(source).unwrap();
     assert_eq!(matcher, parsed);
@@ -137,7 +134,7 @@ fn plain_text_string_base_tests(#[case] source: &str, #[case] got: &str, #[case]
 #[rstest]
 #[case("\n", " ", "")]
 #[case(" \nx", " ", "x")]
-fn solo_plain_text_single_line_ending_as_space_valid_tests(
+fn plain_text_single_line_ending_as_space_valid_tests(
     #[case] source: &str,
     #[case] got: &str,
     #[case] remainder: &str,
@@ -164,7 +161,7 @@ fn plain_text_single_newline_as_space_invalid_tests(
 
 // #[rstest]
 // #[case(" ", " ", "")]
-// fn solo_plain_text_space1_not_newline_tests(
+// fn plain_text_space1_not_newline_tests(
 //     #[case] source: &str,
 //     #[case] got: &str,
 //     #[case] remainder: &str,

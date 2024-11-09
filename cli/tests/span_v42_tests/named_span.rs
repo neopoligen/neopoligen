@@ -9,7 +9,7 @@ use rstest::rstest;
     "<<br>>",
     r#"{ attrs: {}, flags: [], kind: "br", spans: null, type: "named-span" }"#
 )]
-fn solo_named_span_integration_tests(
+fn named_span_integration_tests(
     #[case] description: &str,
     #[case] source: &str,
     #[case] json5_string: &str,
@@ -97,7 +97,7 @@ It Philosophy JS"
 // #[case("``alfa|bravo: charlie  ``", "", 0, 1)]
 // #[case("``alfa|bravo: <<link|ping>>``", "", 0, 1)]
 
-fn solo_named_span_valid_tests(
+fn named_span_valid_tests(
     #[case] source: &str,
     #[case] remainder: &str,
     #[case] flags: usize,
@@ -144,7 +144,7 @@ fn solo_named_span_valid_tests(
     "<<hr\\>>",
     "back slaches not allowed to prevent issues wtih file paths for templates"
 )]
-fn solo_named_span_invalid_tests(#[case] source: &str, #[case] description: &str) {
+fn named_span_invalid_tests(#[case] source: &str, #[case] description: &str) {
     let parsed = named_span(source);
     if parsed.is_err() {
         assert!(true);

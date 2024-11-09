@@ -1,16 +1,15 @@
-use neopoligengine::section_v42::basic::*;
 use include_dir::{include_dir, Dir};
 use lazy_static::lazy_static;
 use minijinja::Value;
+use neopoligengine::section_v42::basic::*;
+use neopoligengine::section_v42::*;
+use neopoligengine::site_config::*;
 use pretty_assertions::assert_eq;
 use serde_json::Value as SerdeValue;
 use serde_json5;
 use std::collections::BTreeMap;
-use neopoligengine::section_v42::*;
-use neopoligengine::site_config::*;
 
 const INPUT_DIR: Dir = include_dir!("tests/section_v42_tests/basic/valid/input");
-
 
 lazy_static! {
     static ref INPUT_FILES: BTreeMap<String, String> = {
@@ -73,7 +72,7 @@ lazy_static! {
 }
 
 #[test]
-fn solo_basic_section_tests() {
+fn basic_section_tests() {
     for (id, source) in INPUT_FILES.iter() {
         match OUTPUT_FILES.get(id) {
             Some(output) => {
@@ -102,4 +101,3 @@ fn solo_basic_section_tests() {
         }
     }
 }
-

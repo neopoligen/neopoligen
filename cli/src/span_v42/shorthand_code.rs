@@ -36,18 +36,19 @@ pub struct CodeShorthandV42 {
 }
 
 pub fn code_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, tokens) = preceded(pair(tag("``"), opt(plain_text_space1_as_single_space)), many1(alt((
+    let (source, tokens) = preceded(
+        pair(tag("``"), opt(plain_text_space1_as_single_space)),
+        many1(alt((
             plain_text_string_base,
             plain_text_space1_as_single_space,
             is_a("@~*^![]{}<>_#:"),
             plain_text_single_line_ending_as_space,
             escaped_character,
-        ))))
-        .context("")
-        .parse(source)?;
-    let (source, (flags, attrs)) = code_shorthand_flags_and_attrs
-        .context("")
-        .parse(source)?;
+        ))),
+    )
+    .context("")
+    .parse(source)?;
+    let (source, (flags, attrs)) = code_shorthand_flags_and_attrs.context("").parse(source)?;
     let (source, _) = tag("``").context("").parse(source)?;
     Ok((
         source,
@@ -64,17 +65,14 @@ pub fn code_shorthand_flags_and_attrs(
     source: &str,
 ) -> IResult<&str, (Vec<String>, BTreeMap<String, Vec<SpanV42>>), ErrorTree<&str>> {
     // Reminder: attrs first otherwise things go wrong with this setup
-    let (source, flags_and_attrs) = many0(alt((
-        code_shorthand_attr,
-        code_shorthand_flag,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, flags_and_attrs) = many0(alt((code_shorthand_attr, code_shorthand_flag)))
+        .context("")
+        .parse(source)?;
     let mut attrs = BTreeMap::new();
     let mut flags = vec![];
     flags_and_attrs.iter().for_each(|af| match &af {
         SpanBaseAttrV42::Flag(f) => flags.push(f.text.to_string()),
-        SpanBaseAttrV42::KeyValue{ key, spans } => {
+        SpanBaseAttrV42::KeyValue { key, spans } => {
             attrs.insert(key.to_string(), spans.clone());
             ()
         }
@@ -105,7 +103,6 @@ pub fn code_shorthand_flag(source: &str) -> IResult<&str, SpanBaseAttrV42, Error
     ))
 }
 
-
 // TODO: Deprecate this
 pub fn not_backtick_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
     let (source, result) = is_not("`\\|").context("").parse(source)?;
@@ -122,11 +119,9 @@ pub fn not_backtick_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV42, Er
 pub fn code_shorthand_span_flag_attr(
     source: &str,
 ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
-    let (source, spans) = many1(alt((
-        not_backtick_or_pipe_or_escape,
-    )))
-    .context("")
-    .parse(source)?;
+    let (source, spans) = many1(alt((not_backtick_or_pipe_or_escape,)))
+        .context("")
+        .parse(source)?;
     let (source, _) = not(tag(":")).context("").parse(source)?;
     Ok((
         source,
@@ -136,9 +131,7 @@ pub fn code_shorthand_span_flag_attr(
     ))
 }
 
-pub fn code_shorthand_attr(
-    source: &str,
-) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
+pub fn code_shorthand_attr(source: &str) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
     let (source, _) = tag("|").context("").parse(source)?;
     let (source, _) = space0.context("").parse(source)?;
     let (source, _) = opt(line_ending).context("").parse(source)?;
@@ -150,7 +143,7 @@ pub fn code_shorthand_attr(
     .context("")
     .parse(source)?;
     let (source, spans) = many1(alt((
-        span_of_plain_text_for_shorthand_attr_value, 
+        span_of_plain_text_for_shorthand_attr_value,
         named_span,
         span_of_escaped_character,
         code_span_of_extra_shorthand_attr_value,
@@ -166,12 +159,10 @@ pub fn code_shorthand_attr(
     ))
 }
 
-pub fn code_span_of_extra_shorthand_attr_value (
+pub fn code_span_of_extra_shorthand_attr_value(
     source: &str,
 ) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, result) = is_a("~*^![]{}<>_#:")
-    .context("")
-    .parse(source)?;
+    let (source, result) = is_a("~*^![]{}<>_#:").context("").parse(source)?;
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
@@ -180,4 +171,3 @@ pub fn code_span_of_extra_shorthand_attr_value (
         }),
     ))
 }
-
