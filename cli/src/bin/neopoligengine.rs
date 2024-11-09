@@ -122,15 +122,8 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             let _ = builder.generate_asts();
             let _ = builder.set_ids();
             let _ = builder.set_rel_output_paths();
-
             let _ = builder.load_file_system_templates();
             let _ = builder.generate_macro_loader();
-
-            // Reminder that these "generated_" methods are done
-            // up front instead of being method calls so the
-            // errors can be tracked and used for error
-            // reporting at the page level
-
             let _ = builder.initialize_site_with_pages();
             let _ = builder.generate_outputs();
             let _ = builder.move_updated_pages_into_site();

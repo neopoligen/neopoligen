@@ -19,9 +19,12 @@ use crate::span_v42::string_parsers::span_of_plain_text_for_block_paragraph;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
+use nom::character::complete::digit1;
 use nom::character::complete::multispace0;
 use nom::combinator::not;
 use nom::multi::many1;
+use nom::sequence::pair;
+use nom::sequence::terminated;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
@@ -84,7 +87,6 @@ pub fn list_item_paragraph_block<'a>(
     ))
 }
 
-
 pub fn olist_item_paragraph_block<'a>(
     source: &'a str,
     _site_config: &'a SiteConfigV42,
@@ -94,7 +96,9 @@ pub fn olist_item_paragraph_block<'a>(
     // let debug = true;
     let dbg_header = "OLIST_ITEM_PARAGRAPH_BLOCK";
     dump_parser_if_debug(debug, dbg_header, source, 1);
-    let (source, _) = not(tag("-")).context("").parse(source)?;
+    let (source, _) = pair(not(tag("-")), not(terminated(digit1, tag(". "))))
+        .context("")
+        .parse(source)?;
     let (source, spans) = many1(alt((
         span_of_plain_text_for_block_paragraph,
         span_of_escaped_character,
