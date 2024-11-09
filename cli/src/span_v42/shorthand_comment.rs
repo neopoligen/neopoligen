@@ -42,7 +42,7 @@ pub fn comment_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<
     let (source, tokens) = preceded(pair(tag("##"), opt(plain_text_space1_as_single_space)), many1(alt((
             plain_text_string_base,
             plain_text_space1_as_single_space,
-            is_a("~*^![]{}<>_#:"),
+            is_a("@`~*^![]{}<>_:"),
             plain_text_single_line_ending_as_space,
             escaped_character,
         ))))
@@ -92,7 +92,7 @@ pub fn comment_shorthand_flag(source: &str) -> IResult<&str, SpanBaseAttrV42, Er
     let (source, _) = space0.context("").parse(source)?;
     let (source, parts) = many1(alt((
         plain_text_string_base,
-        is_a("~*^![]{}<>_#:"),
+        is_a("@`~*^![]{}<>_:"),
         escaped_character,
     )))
     .context("")
@@ -110,8 +110,8 @@ pub fn comment_shorthand_flag(source: &str) -> IResult<&str, SpanBaseAttrV42, Er
 
 
 // TODO: Deprecate this
-pub fn not_backtick_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, result) = is_not("`\\|").context("").parse(source)?;
+pub fn not_hashtag_or_pipe_or_escape(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+    let (source, result) = is_not("#\\|").context("").parse(source)?;
     Ok((
         source,
         SpanV42::PlainText(PlainTextSpan {
@@ -126,7 +126,7 @@ pub fn comment_shorthand_span_flag_attr(
     source: &str,
 ) -> IResult<&str, SpanBaseAttrV42, ErrorTree<&str>> {
     let (source, spans) = many1(alt((
-        not_backtick_or_pipe_or_escape,
+        not_hashtag_or_pipe_or_escape,
     )))
     .context("")
     .parse(source)?;

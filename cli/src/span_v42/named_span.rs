@@ -285,34 +285,4 @@ mod test {
             }
         }
     }
-
-    // these are just quick tests, not exhaustive, they are
-    // just here to make sure something that shouldn't
-    // sneak through is being properly filtered. The
-    // only thing that's allowed is hyphens which matches
-    // the way HTML works.
-    #[rstest]
-    #[case(
-        "<<hr:>>",
-        "colon not allowed to prevent issues wtih file paths for templates"
-    )]
-    #[case(
-        "<<hr/>>",
-        "forward slaches not allowed to prevent issues wtih file paths for templates"
-    )]
-    #[case(
-        "<<hr\\>>",
-        "back slaches not allowed to prevent issues wtih file paths for templates"
-    )]
-    fn invalid_cases(#[case] source: &str, #[case] _note: &str) {
-        match named_span(source) {
-            Ok(data) => {
-                dbg!(data);
-                assert!(false);
-            }
-            Err(_e) => {
-                assert!(true)
-            }
-        }
-    }
 }

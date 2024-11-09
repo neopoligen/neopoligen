@@ -6,16 +6,16 @@ from string import Template
 # file as they work a little differently. 
 
 shorthands = [
-        ("~~", "~~", "strikethrough", "Strikethrough", "tilde", "~", "@`~*^![]{}<>_#:"),
-        ("``", "``", "code", "Code", "backtick", "`", "@`~*^![]{}<>_#:"),
-        ("__", "__", "emphasis", "Emphasis", "asterisk", "_", "@`~*^![]{}<>_#:"),
-        ("^^", "^^", "footnote", "Footnote", "caret", "^", "@`~*^![]{}<>_#:"),
-        ("**", "**", "strong", "Strong", "exclamation", "*", "@`~*^![]{}<>_#:"),
-        ("[[", "]]", "link", "Link", "close_bracket", "]", "@`~*^![]{}<>_#:"),
-        ("{{", "}}", "image", "Image", "close_brace", "}", "@`~*^![]{}<>_#:"),
-        ("!!", "!!", "underline", "Underline", "underscore", "!", "@`~*^![]{}<>_#:"),
-        ("@@", "@@", "mark", "Mark", "ampersand", "@", "@`~*^![]{}<>_#:"),
-        ("##", "##", "comment", "Comment", "backtick", "`", "@`~*^![]{}<>_#:"),
+        ("~~", "~~", "strikethrough", "Strikethrough", "tilde", "~", "@`*^![]{}<>_#:"),
+        ("``", "``", "code", "Code", "backtick", "`", "@~*^![]{}<>_#:"),
+        ("__", "__", "emphasis", "Emphasis", "underscore", "_", "@`~*^![]{}<>#:"),
+        ("^^", "^^", "footnote", "Footnote", "caret", "^", "@`~*![]{}<>_#:"),
+        ("**", "**", "strong", "Strong", "asterisk", "*", "@`~^![]{}<>_#:"),
+        ("[[", "]]", "link", "Link", "close_bracket", "]", "@`~*^!{}<>_#:"),
+        ("{{", "}}", "image", "Image", "close_brace", "}", "@`~*^![]<>_#:"),
+        ("!!", "!!", "underline", "Underline", "exclamation", "!", "@`~*^[]{}<>_#:"),
+        ("@@", "@@", "mark", "Mark", "ampersand", "@", "`~*^![]{}<>_#:"),
+        ("##", "##", "comment", "Comment", "hashtag", "#", "@`~*^![]{}<>_:"),
         ]
 
 skeleton = """
@@ -62,7 +62,7 @@ pub fn ${NAME1}_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree
     let (source, tokens) = preceded(pair(tag("${OPEN}"), opt(plain_text_space1_as_single_space)), many1(alt((
             plain_text_string_base,
             plain_text_space1_as_single_space,
-            is_a("~*^![]{}<>_#:"),
+            is_a("${EXTRAS}"),
             plain_text_single_line_ending_as_space,
             escaped_character,
         ))))
@@ -112,7 +112,7 @@ pub fn ${NAME1}_shorthand_flag(source: &str) -> IResult<&str, SpanBaseAttrV42, E
     let (source, _) = space0.context("").parse(source)?;
     let (source, parts) = many1(alt((
         plain_text_string_base,
-        is_a("~*^![]{}<>_#:"),
+        is_a("${EXTRAS}"),
         escaped_character,
     )))
     .context("")
@@ -216,6 +216,7 @@ for shorthand in shorthands:
                 "NAME2": shorthand[3],
                 "CHARNAME1": shorthand[4],
                 "CHAR": shorthand[5],
+                "EXTRAS": shorthand[6],
                 }
         template = Template(skeleton)
         output = template.substitute(data)

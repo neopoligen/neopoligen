@@ -218,6 +218,7 @@ pub fn escaped_character(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
         preceded(tag("\\"), tag("<")),
         preceded(tag("\\"), tag(">")),
         preceded(tag("\\"), tag("_")),
+        preceded(tag("\\"), tag("\\")),
     ))
     .context("")
     .parse(source)?;

@@ -220,33 +220,41 @@ impl PageV42b {
             Err(_) => {
                 //
 
-                if let Some(spans) =
-                    &self
-                        .ast
-                        .as_ref()
-                        .unwrap()
-                        .iter()
-                        .find_map(|section| match section {
-                            SectionV42::Basic(sec) => match sec.kind.as_str() {
-                                "title" => sec.children.iter().find_map(|child| match child {
-                                    SectionV42::Block(c) => match c.kind.as_str() {
-                                        "block-paragraph" => Some(c.spans.clone()),
-                                        _ => None,
-                                    },
-                                    _ => None,
-                                }),
-                                _ => None,
-                            },
-                            _ => None,
-                        })
-                {
-                    Ok(Value::from_serialize(spans))
-                } else {
-                    Err(Error::new(
+                match &self.ast {
+                    Some(_ast) => Ok(Value::from("TODO_GET_TITLE")),
+                    None => Err(Error::new(
                         minijinja::ErrorKind::InvalidOperation,
-                        "no title section title available".to_string(),
-                    ))
+                        "Could not get title",
+                    )),
                 }
+
+                // if let Some(spans) =
+                //     &self
+                //         .ast
+                //         .as_ref()
+                //         .unwrap()
+                //         .iter()
+                //         .find_map(|section| match section {
+                //             SectionV42::Basic(sec) => match sec.kind.as_str() {
+                //                 "title" => sec.children.iter().find_map(|child| match child {
+                //                     SectionV42::Block(c) => match c.kind.as_str() {
+                //                         "block-paragraph" => Some(c.spans.clone()),
+                //                         _ => None,
+                //                     },
+                //                     _ => None,
+                //                 }),
+                //                 _ => None,
+                //             },
+                //             _ => None,
+                //         })
+                // {
+                //     Ok(Value::from_serialize(spans))
+                // } else {
+                //     Err(Error::new(
+                //         minijinja::ErrorKind::InvalidOperation,
+                //         "no title section title available".to_string(),
+                //     ))
+                // }
 
                 //
             }
