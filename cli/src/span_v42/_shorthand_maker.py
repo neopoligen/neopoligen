@@ -22,6 +22,7 @@ skeleton = """
 use super::PlainTextSpan;
 use crate::helpers::flatten_spans_v42;
 use crate::span_attrs_v42::*;
+use crate::span_v42::named_span::named_span;
 use crate::span_v42::string_parsers::*;
 use crate::span_v42::SpanV42;
 use nom::branch::alt;
@@ -171,7 +172,8 @@ pub fn ${NAME1}_shorthand_attr(
     .context("")
     .parse(source)?;
     let (source, spans) = many1(alt((
-        span_of_shorthand_attr_value,
+        span_of_plain_text_for_shorthand_attr_value, 
+        named_span,
         span_of_escaped_character,
         ${NAME1}_span_of_extra_shorthand_attr_value,
     )))

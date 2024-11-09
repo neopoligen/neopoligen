@@ -1,4 +1,3 @@
-use super::named_span::named_span;
 use super::PlainTextSpan;
 use super::SpanV42;
 use nom::branch::alt;
@@ -15,13 +14,6 @@ use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-
-pub fn span_of_shorthand_attr_value(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, result) = alt((span_of_plain_text_for_shorthand_attr_value, named_span))
-        .context("")
-        .parse(source)?;
-    Ok((source, result))
-}
 
 pub fn span_of_plain_text_for_shorthand_attr_value(
     source: &str,
