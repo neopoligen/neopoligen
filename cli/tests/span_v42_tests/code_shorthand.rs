@@ -8,6 +8,40 @@ use rstest::rstest;
     "``alfa``",
     r#"{ attrs: {}, flags: [], kind: "code-shorthand", text: "alfa", type: "code-shorthand" }"#
 )]
+#[case(
+    "``alfa|bravo``",
+    r#"{ attrs: {}, flags: ["bravo"], kind: "code-shorthand", text: "alfa", type: "code-shorthand" }"#
+)]
+#[case(
+    "``alfa|bravo: charlie``",
+    r#"{ attrs: {
+        bravo: [
+            {
+                kind: "plain-text",
+                text: "charlie",
+                type: "plain-text",
+            }
+        ]
+    }, flags: [], kind: "code-shorthand", text: "alfa", type: "code-shorthand" }"#
+)]
+#[case(
+    "``alfa|bravo|charlie: delta``",
+    r#"{ 
+    attrs: {
+        charlie: [
+            {
+                kind: "plain-text",
+                text: "delta",
+                type: "plain-text",
+            }
+        ]
+    }, 
+    flags: ["bravo"], 
+    kind: "code-shorthand", 
+    text: "alfa", 
+    type: "code-shorthand" }"#
+)]
+
 fn solo_code_integration_tests(#[case] source: &str, #[case] json5_string: &str) {
     let left = serde_json5::from_str::<Value>(json5_string).unwrap();
     let parsed = code_shorthand_span(source);
