@@ -57,7 +57,7 @@ pub fn olist_section_full_v42<'a>(
     _parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
-    let debug = true;
+    // let debug = true;
     let dbg_header = "OLIST_SECTION_FULL";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = pair(tag("--"), space1).context("").parse(source)?;

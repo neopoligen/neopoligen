@@ -1,0 +1,11 @@
+[!- import "built-in/macro-loader.neoj" as neo -!]
+
+<section 
+  [@- site.get_section_attrs(site, page, section, "generic-olist-section flow") -@]>
+<ol class="flow">
+[@- neo.output_all_child_sections(section) -@]
+</ol>
+</section>
+
+[@- neo.output_end_section(section) -@]
+

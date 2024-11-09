@@ -1,0 +1,3 @@
+[!- import "built-in/macro-loader.neoj" as neo -!]
+
+[@- neo.output_spans(section.spans) -@]
