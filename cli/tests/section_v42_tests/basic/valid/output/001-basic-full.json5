@@ -1,0 +1,34 @@
+{
+    "attrs": {},
+    "bound": "full",
+    "children": [
+        {
+            "children": [],
+            "kind": "block-paragraph",
+            "spans": [
+                {
+                    "kind": "plain-text",
+                    "text": "alfa bravo",
+                    "type": "plain-text",
+                },
+            ],
+            "template_list": [
+                "sections/block-paragraph/default.neoj",
+                "sections/generic-block-paragraph/default.neoj",
+                "built-in/sections/block-paragraph/default.neoj",
+                "built-in/sections/generic-block-paragraph/default.neoj",
+            ],
+            "type": "block",
+        },
+    ],
+    "end_section": null,
+    "flags": [],
+    "kind": "title",
+    "template_list": [
+        "sections/title/default.neoj",
+        "sections/generic-basic/default.neoj",
+        "built-in/sections/title/default.neoj",
+        "built-in/sections/generic-basic/default.neoj",
+    ],
+    "type": "basic",
+}

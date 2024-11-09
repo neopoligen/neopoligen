@@ -9,7 +9,8 @@ use std::collections::BTreeMap;
 use neopoligengine::section_v42::*;
 use neopoligengine::site_config::*;
 
-const INPUT_DIR: Dir = include_dir!("src/section_v42/test_files/basic/valid/input");
+const INPUT_DIR: Dir = include_dir!("tests/section_v42_tests/basic/valid/input");
+
 
 lazy_static! {
     static ref INPUT_FILES: BTreeMap<String, String> = {
@@ -40,7 +41,7 @@ lazy_static! {
     };
 }
 
-const OUTPUT_DIR: Dir = include_dir!("src/section_v42/test_files/basic/valid/output");
+const OUTPUT_DIR: Dir = include_dir!("tests/section_v42_tests/basic/valid/output");
 
 lazy_static! {
     static ref OUTPUT_FILES: BTreeMap<String, String> = {

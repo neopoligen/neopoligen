@@ -182,7 +182,7 @@ mod test {
     use rstest::rstest;
 
     #[test]
-    fn basic_test() {
+    fn solo_basic_test() {
         let source = "<<sierra|tango>>";
         let left = (
             "",

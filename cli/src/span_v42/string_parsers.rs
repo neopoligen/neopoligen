@@ -12,22 +12,38 @@ use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
 use nom_supreme::parser_ext::ParserExt;
-
 use super::PlainTextSpan;
 use super::SpanV42;
 
-// TODO: Make this
-// pub fn span_of_plain_text_for_section_key_value_attr_value(
-//     source: &str,
-// ) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-//     let (source, result) = plain_text_string_base.context("").parse(source)?;
-//     Ok((
-//         source,
-//         SpanV42::PlainText(PlainTextSpan {
-//             text: result.to_string(),
-//         }),
-//     ))
-// }
+pub fn plain_text_span_for_section_key_value_attr(
+    source: &str,
+) -> IResult<&str, Vec<&str>, ErrorTree<&str>> {
+    let (source, results) = many1(alt((
+        plain_text_string_base,
+        plain_text_space1_as_single_space,
+        plain_text_any_pipes,
+        plain_text_any_colons,
+    )))
+    .context("")
+    .parse(source)?;
+    Ok((source, results))
+}
+
+
+pub fn span_of_plain_text_for_section_key_value_attr_value(
+    source: &str,
+) -> IResult<&str, SpanV42, ErrorTree<&str>> {
+    let (source, result) = plain_text_span_for_section_key_value_attr.context("").parse(source)?;
+    Ok((
+        source,
+        SpanV42::PlainText(PlainTextSpan {
+            kind: "plain-text".to_string(),
+            text: result.join("").to_string(),
+        }),
+    ))
+}
+
+
 
 pub fn span_of_plain_text_for_block_paragraph(
     source: &str,

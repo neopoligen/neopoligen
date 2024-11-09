@@ -1,0 +1,100 @@
+{
+    "attrs": {},
+    "bound": "start",
+    "children": [
+        {
+            "children": [],
+            "kind": "block-paragraph",
+            "spans": [
+                {
+                    "kind": "plain-text",
+                    "text": "alfa bravo",
+                    "type": "plain-text",
+                },
+            ],
+            "template_list": [
+                "sections/block-paragraph/default.neoj",
+                "sections/generic-block-paragraph/default.neoj",
+                "built-in/sections/block-paragraph/default.neoj",
+                "built-in/sections/generic-block-paragraph/default.neoj",
+            ],
+            "type": "block",
+        },
+        {
+            "attrs": {},
+            "bound": "full",
+            "children": [
+                {
+                    "children": [],
+                    "kind": "block-paragraph",
+                    "spans": [
+                        {
+                            "kind": "plain-text",
+                            "text": "charlie delta",
+                            "type": "plain-text",
+                        },
+                    ],
+                    "template_list": [
+                        "sections/block-paragraph/default.neoj",
+                        "sections/generic-block-paragraph/default.neoj",
+                        "built-in/sections/block-paragraph/default.neoj",
+                        "built-in/sections/generic-block-paragraph/default.neoj",
+                    ],
+                    "type": "block",
+                },
+            ],
+            "end_section": null,
+            "flags": [],
+            "kind": "div",
+            "template_list": [
+                "sections/div/default.neoj",
+                "sections/generic-basic/default.neoj",
+                "built-in/sections/div/default.neoj",
+                "built-in/sections/generic-basic/default.neoj",
+            ],
+            "type": "basic",
+        },
+    ],
+    "end_section": {
+        "attrs": {},
+        "bound": "end",
+        "children": [
+            {
+                "children": [],
+                "kind": "block-paragraph",
+                "spans": [
+                    {
+                        "kind": "plain-text",
+                        "text": "echo foxtrot",
+                        "type": "plain-text",
+                    },
+                ],
+                "template_list": [
+                    "sections/block-paragraph/default.neoj",
+                    "sections/generic-block-paragraph/default.neoj",
+                    "built-in/sections/block-paragraph/default.neoj",
+                    "built-in/sections/generic-block-paragraph/default.neoj",
+                ],
+                "type": "block",
+            },
+        ],
+        "flags": [],
+        "kind": "div-end",
+        "template_list": [
+            "sections/div-end/default.neoj",
+            "sections/generic-end/default.neoj",
+            "built-in/sections/div-end/default.neoj",
+            "built-in/sections/generic-end/default.neoj",
+        ],
+        "type": "end",
+    },
+    "flags": [],
+    "kind": "div",
+    "template_list": [
+        "sections/div/default.neoj",
+        "sections/generic-basic/default.neoj",
+        "built-in/sections/div/default.neoj",
+        "built-in/sections/generic-basic/default.neoj",
+    ],
+    "type": "basic",
+}
