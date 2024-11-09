@@ -14,6 +14,18 @@ fn solo_plain_text_space1_as_single_space_valid_tests(
     assert_eq!(matcher, parsed);
 }
 
+#[rstest]
+#[case("\n", "Don't Trigger On Newline")]
+#[case(" \n", "Don't Trigger In Front Of Newline")]
+#[case(" ", "Don't Trigger At End Of File")]
+fn solo_plain_text_space1_as_single_space_invalid_tests(
+    #[case] source: &str,
+    #[case] description: &str,
+) {
+    let parsed = plain_text_space1_as_single_space(source);
+    assert!(parsed.is_err(), "{}", description);
+}
+
 // NOTE: Not sure if this is needed, might be able
 // to do it just by making sure the spaces don't kick
 // past empty lines with only whitespace

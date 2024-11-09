@@ -5,8 +5,9 @@ use nom::bytes::complete::is_a;
 use nom::bytes::complete::is_not;
 use nom::bytes::complete::tag;
 //use nom::character::complete::multispace1;
+use nom::character::complete::line_ending;
 use nom::character::complete::space1;
-//use nom::combinator::eof;
+use nom::combinator::eof;
 use nom::combinator::not;
 use nom::multi::many1;
 use nom::sequence::pair;
@@ -190,6 +191,7 @@ pub fn plain_text_single_newline_as_space(source: &str) -> IResult<&str, &str, E
 
 pub fn plain_text_space1_as_single_space(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
     let (source, _) = space1.context("").parse(source)?;
+    let (source, _) = not(alt((line_ending, eof))).context("").parse(source)?;
     Ok((source, " "))
 }
 
