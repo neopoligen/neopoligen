@@ -39,7 +39,7 @@ pub struct EmphasisShorthandV42 {
 }
 
 pub fn emphasis_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, tokens) = preceded(pair(tag("__"), multispace0), many1(alt((
+    let (source, tokens) = preceded(pair(tag("__"), opt(plain_text_space1_as_single_space)), many1(alt((
             plain_text_string_base,
             plain_text_space1_as_single_space,
             is_a("~*^![]{}<>_#:"),

@@ -58,7 +58,7 @@ pub struct ${NAME2}ShorthandV42 {
 }
 
 pub fn ${NAME1}_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, tokens) = preceded(pair(tag("${OPEN}"), multispace0), many1(alt((
+    let (source, tokens) = preceded(pair(tag("${OPEN}"), opt(plain_text_space1_as_single_space)), many1(alt((
             plain_text_string_base,
             plain_text_space1_as_single_space,
             is_a("~*^![]{}<>_#:"),

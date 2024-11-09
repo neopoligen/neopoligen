@@ -39,7 +39,7 @@ pub struct UnderlineShorthandV42 {
 }
 
 pub fn underline_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<&str>> {
-    let (source, tokens) = preceded(pair(tag("!!"), multispace0), many1(alt((
+    let (source, tokens) = preceded(pair(tag("!!"), opt(plain_text_space1_as_single_space)), many1(alt((
             plain_text_string_base,
             plain_text_space1_as_single_space,
             is_a("~*^![]{}<>_#:"),
