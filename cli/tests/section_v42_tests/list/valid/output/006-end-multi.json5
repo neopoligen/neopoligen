@@ -1,0 +1,128 @@
+{
+  "attrs": {},
+  "bound": "start",
+  "children": [
+    {
+      "bound": "full",
+      "children": [
+        {
+          "children": [],
+          "kind": "block-list-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "alfa",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": [
+            "sections/list-item-paragraph/default.neoj",
+            "sections/generic-list-item-paragraph/default.neoj"
+          ],
+          "type": "block"
+        },
+        {
+          "children": [],
+          "kind": "block-list-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "bravo",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": [
+            "sections/list-item-paragraph/default.neoj",
+            "sections/generic-list-item-paragraph/default.neoj"
+          ],
+          "type": "block"
+        }
+      ],
+      "kind": "list-item",
+      "template_list": [
+        "sections/list-item/default.neoj",
+        "sections/generic-list-item/default.neoj"
+      ],
+      "type": "listitem"
+    },
+    {
+      "bound": "full",
+      "children": [
+        {
+          "children": [],
+          "kind": "block-list-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "charlie",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": [
+            "sections/list-item-paragraph/default.neoj",
+            "sections/generic-list-item-paragraph/default.neoj"
+          ],
+          "type": "block"
+        },
+        {
+          "children": [],
+          "kind": "block-list-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "delta",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": [
+            "sections/list-item-paragraph/default.neoj",
+            "sections/generic-list-item-paragraph/default.neoj"
+          ],
+          "type": "block"
+        }
+      ],
+      "kind": "list-item",
+      "template_list": [
+        "sections/list-item/default.neoj",
+        "sections/generic-list-item/default.neoj"
+      ],
+      "type": "listitem"
+    }
+  ],
+  "end_section": {
+    "attrs": {},
+    "bound": "end",
+    "children": [
+      {
+        "children": [],
+        "kind": "block-list-item-paragraph",
+        "spans": [
+          {
+            "kind": "plain-text",
+            "text": "echo",
+            "type": "plain-text"
+          }
+        ],
+        "template_list": [
+          "sections/list-item-paragraph/default.neoj",
+          "sections/generic-list-item-paragraph/default.neoj"
+        ],
+        "type": "block"
+      }
+    ],
+    "flags": [],
+    "kind": "list-end",
+    "template_list": [
+      "sections/list-end/default.neoj",
+      "sections/generic-end/default.neoj"
+    ],
+    "type": "end"
+  },
+  "flags": [],
+  "kind": "list",
+  "template_list": [
+    "sections/list/default.neoj",
+    "sections/generic-list/default.neoj"
+  ],
+  "type": "list"
+}

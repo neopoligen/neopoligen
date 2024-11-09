@@ -1,10 +1,14 @@
 [! import "built-in/macro-loader.neoj" as neo !]
 
-<section 
-  [@- site.get_section_attrs(site, page, section, "generic-end-section built-in flow") -@]>
-[! for child in section.children !]
+
+[!- for child in section.children -!]
+[!- if loop.first -!]
+<section [@- site.get_section_attrs(site, page, section, "generic-end-section flow") -@]>
+[!- endif -!]
 [@ neo.output_section(child) @]
-[! endfor !]
+[!- if loop.last-!]
 </section>
+[!- endif -!]
+[! endfor !]
 
 
