@@ -21,7 +21,7 @@ that makes the page if you're into that type of thing.
   </details>
   <details>
     <summary>Section Tree</summary>
-    [@ neo.debug_section_tree(page.sections) @]
+    [@ neo.debug_section_tree(sections) @]
   </details>
   <details>
     <summary>Sections</summary>
