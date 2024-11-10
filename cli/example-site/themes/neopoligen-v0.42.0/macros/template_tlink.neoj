@@ -10,11 +10,13 @@ of a content file
 ARGS:
 
 - page_id: The ID of the page to get the title
-link for
+link for. The page_id can be either a string
+or array of spans where the first span is
+a plain-text span that has the ID in it
 
 USAGE:
 
-[@- neo.template_link(SOME_PAGE_ID) -@]
+[@- neo.template_link(page_id) -@]
 
 -#]
 

@@ -80,8 +80,6 @@ a {
   <div>[@ site.generated_at("Generated on %a. %B %-d at %-I:%M:%S%p") @]</div>
 </footer>
 
-[#
-[@- theme.output_scripts(site, page) -@]
-#]
+[@- neo.output_scripts() -@]
 </body>
 </html>

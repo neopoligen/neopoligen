@@ -1,0 +1,19 @@
+[#- DOCS:
+
+- Output all the sections on the page. 
+
+- I don't use this most of the time. I use
+``output_all_sections_except(SECTION_KINDS)`` 
+instead. That lets me do things like controlling
+how I output the footnotes and references
+
+NOARGS:
+
+-#]
+
+[!- macro output_all_sections_() -!]
+[!- for section in sections -!]
+[!- include section.template_list -!]
+[!- endfor -!]
+[!- endmacro -!]
+

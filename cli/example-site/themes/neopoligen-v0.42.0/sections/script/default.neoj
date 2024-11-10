@@ -1,5 +1,3 @@
 [!- import "built-in/macro-loader.neoj" as neo -!]
-
 [# No output by default #]
-
 [@- neo.output_end_section(section) -@]

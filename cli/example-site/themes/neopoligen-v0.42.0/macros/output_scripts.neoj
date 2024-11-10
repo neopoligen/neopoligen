@@ -1,0 +1,19 @@
+[#- DOCS:
+
+- shortcut macro to outputs all the 
+script sections for the page
+
+NOARGS:
+
+
+-#]
+
+[!- macro output_scripts() -!]
+[!- for section in sections -!]
+  [!- if section.kind == "script" -!]
+<script>
+[@ section.body @]
+</script>
+  [!- endif -!]
+[!- endfor -!]
+[!- endmacro -!]
