@@ -111,7 +111,15 @@ fn solo_title_as_spans_from_page_section() {
         kind: "plain-text".to_string(),
         text: "This is a title".to_string(),
     })];
-    let right = page.title_as_spans_dev().unwrap();
+    let right = page.title_as_spans.unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn solo_title_as_text_from_page_section() {
+    let page = PageV42b::mock_from_data_tests("009-title-in-page-section.neo");
+    let left = "This is a title".to_string();
+    let right = page.title.unwrap();
     assert_eq!(left, right);
 }
 

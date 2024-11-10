@@ -28,6 +28,7 @@ pub struct PageV42b {
     pub parsing_issue: Option<NeoErrorV42>,
     // TODO: Deprecate .href() method in favor of
     // of this .href field which should be prepopulated
+    // TODO: Make .href a String
     pub href: Option<PathBuf>,
     pub id: Option<String>,
     pub issues: Vec<NeoErrorV42>,
@@ -39,7 +40,7 @@ pub struct PageV42b {
     pub source_absolute_path: PathBuf,
     pub source_display_path: PathBuf,
     pub title: Option<String>,
-    pub title_as_spans: Option<String>,
+    pub title_as_spans: Option<Vec<SpanV42>>,
 }
 
 impl PageV42b {
@@ -217,13 +218,45 @@ impl PageV42b {
     }
 
     pub fn set_titles(&mut self) {
-        self.title = Some("TODO: SET_TITLES".to_string());
+        self.title_as_spans = match &self.get_page_attr_from_ast("title") {
+            Ok(attr) => Some(attr.spans.clone()),
+            Err(_) => {
+                match &self.ast {
+                    Some(ast) => {
+                        if let Some(t) = ast.iter().find_map(|section| match section {
+                            SectionV42::Basic(sec) => match sec.kind.as_str() {
+                                "title" => sec.children.iter().find_map(|child| match child {
+                                    SectionV42::Block(c) => match c.kind.as_str() {
+                                        "block-paragraph" => Some(c.spans.clone()),
+                                        _ => None,
+                                    },
+                                    _ => None,
+                                }),
+                                _ => None,
+                            },
+                            _ => None,
+                        }) {
+                            Some(t)
+                        } else {
+                            // TODO: Hoist Error
+                            None
+                        }
+                    }
+                    None => {
+                        // TODO: Hoist Error
+                        None
+                    }
+                }
+            }
+        };
+        if let Some(spans) = &self.title_as_spans {
+            self.title = Some(flatten_spans_v42(&spans));
+        }
     }
 
     pub fn title_as_spans_dev(&self) -> Option<Vec<SpanV42>> {
         match &self.get_page_attr_from_ast("title") {
             Ok(attr) => Some(attr.spans.clone()),
-            // Err(_) => Ok(Value::from_serialize::<Vec<SpanV42>>(vec![])),
             Err(_) => {
                 match &self.ast {
                     Some(ast) => {
