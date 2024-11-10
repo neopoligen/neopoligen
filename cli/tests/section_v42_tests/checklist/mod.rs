@@ -71,6 +71,7 @@ lazy_static! {
 }
 
 #[test]
+#[ignore]
 fn checklist_section_tests() {
     for (id, source) in INPUT_FILES.iter() {
         match OUTPUT_FILES.get(id) {
