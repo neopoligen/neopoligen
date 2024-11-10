@@ -74,20 +74,10 @@ pub fn flatten_spans_v42(spans: &Vec<SpanV42>) -> String {
                 Some(spans) => flatten_spans_v42(spans),
                 None => "".to_string(),
             },
-            SpanV42::CodeShorthand(_s) => {
-                "NEO_TODO: Cover CodeShorthand in flatten_spans_v42 in helpers/mod.rs".to_string()
-            }
-            SpanV42::EmphasisShorthand(_s) => {
-                "NEO_TODO: Cover EmphasisShorthand in flatten_spans_v42 in helpers/mod.rs"
-                    .to_string()
-            }
-            SpanV42::FootnoteShorthand(_s) => {
-                "NEO_TODO: Cover FootnoteShorthand in flatten_spans_v42 in helpers/mod.rs"
-                    .to_string()
-            }
-            SpanV42::StrongShorthand(_s) => {
-                "NEO_TODO: Cover StrongShorthand in flatten_spans_v42 in helpers/mod.rs".to_string()
-            }
+            SpanV42::CodeShorthand(s) => s.text.to_string(),
+            SpanV42::EmphasisShorthand(s) => s.text.to_string(),
+            SpanV42::FootnoteShorthand(s) => s.text.to_string(),
+            SpanV42::StrongShorthand(s) => s.text.to_string(),
             SpanV42::EscapedCharacter(s) => s.text.to_string(),
             _ => "TODO_IN_HELPERS_MOD".to_string(),
         })
