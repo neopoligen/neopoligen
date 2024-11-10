@@ -77,9 +77,11 @@ pub fn basic_section_full_v42<'a>(
                 .context("")
                 .parse(source)?
         }
-        _ => many0(|src| paragraph_block_section_v42(src, site_config, parent.clone(), debug))
-            .context("")
-            .parse(source)?,
+        _ => {
+            many0(|src| paragraph_block_section_v42(src, site_config, SectionParent::Basic, debug))
+                .context("")
+                .parse(source)?
+        }
     };
     let section = SectionV42::Basic(BasicSectionV42 {
         attrs,
@@ -129,8 +131,8 @@ pub fn basic_section_start_v42<'a>(
         .context("")
         .parse(source)?,
         _ => many0(alt((
-            |src| paragraph_block_section_v42(src, site_config, parent.clone(), debug),
-            |src| start_or_full_section_v42(src, site_config, parent.clone(), debug),
+            |src| paragraph_block_section_v42(src, site_config, SectionParent::Basic, debug),
+            |src| start_or_full_section_v42(src, site_config, SectionParent::Basic, debug),
         )))
         .context("")
         .parse(source)?,
