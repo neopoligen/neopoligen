@@ -1,5 +1,0 @@
-[!- import "helpers/neopoligen/default.neoj" as neo -!]
-
-This is dev include
-
-[@ neo.ping_site() @]

@@ -288,10 +288,6 @@ impl BuilderV42<'_> {
         Ok(())
     }
 
-    // let skeleton = env.get_template("hello").unwrap();
-    // let output = skeleton.render(context!(name => "World")).unwrap();
-    // println!("{}", output);
-
     #[instrument(skip(self))]
     pub fn output_issue_pages(&mut self) -> Result<()> {
         event!(Level::INFO, "Making Issue Pages");
@@ -332,10 +328,6 @@ impl BuilderV42<'_> {
                 }
                 ()
             }
-
-            // if let (None, Some(errors)) = (&page.output, &page.errors) {
-            //     dbg!(errors);
-            // }
         }
 
         Ok(())
@@ -641,146 +633,3 @@ impl BuilderV42<'_> {
 //    }
 //    Ok(())
 //}
-
-// #[instrument(skip(self))]
-// pub fn load_built_in_templates(&mut self) -> Result<()> {
-//     const BUILT_IN_TEMPLATE_DIR: Dir = include_dir!("src/built_in_templates");
-//     let built_in_tempates_list = vec![
-//         "css-output",
-//         "generic-basic",
-//         "generic-css",
-//         "generic-html",
-//         "generic-json5",
-//         "generic-list-item-paragraph",
-//         "generic-list-item-single",
-//         "generic-list-item",
-//         "generic-list",
-//         "generic-raw",
-//         "generic-script",
-//         "helpers",
-//         "pages-problems-index-page",
-//         "script-output",
-//         "span-text",
-//         "template-error",
-//     ];
-//     built_in_tempates_list.iter().for_each(|name| {
-//         let data = BUILT_IN_TEMPLATE_DIR.get_file(format!("{}.neoj", name));
-//         match self.env.add_template_owned(
-//             format!("built-in/{}.neoj", name),
-//             data.expect(format!("Could not open built-in template: {}", name).as_str())
-//                 .contents_utf8()
-//                 .unwrap()
-//                 .to_string(),
-//         ) {
-//             Ok(()) => (),
-//             Err(e) => {
-//                 event!(
-//                     Level::ERROR,
-//                     "{}\n{}",
-//                     e.to_string(),
-//                     e.display_debug_info().to_string()
-//                 );
-//                 self.template_load_errors
-//                     .push(NeoErrorV42::TemplateLoadError {
-//                         message: e.to_string(),
-//                         details: e.display_debug_info().to_string(),
-//                     });
-//                 ()
-//             }
-//         }
-//     });
-//     Ok(())
-// }
-
-// #[instrument(skip(self))]
-// pub fn get_minijinja_environment(&mut self) -> Environment {
-//     event!(Level::INFO, "Making Template Environment");
-//     let mut env = Environment::new();
-//     // TODO: Deprecate this flatten_spans and move it to
-//     // the site struct/object
-//     // env.add_function("spans_to_text", flatten_spans_from_template_v42);
-//     // env.add_function("spans_to_number", flatten_spans_from_template_v42);
-//     env.set_syntax(
-//         SyntaxConfig::builder()
-//             .block_delimiters("[!", "!]")
-//             .variable_delimiters("[@", "@]")
-//             .comment_delimiters("[#", "#]")
-//             .build()
-//             .unwrap(),
-//     );
-//     const BUILT_IN_TEMPLATE_DIR: Dir = include_dir!("src/built_in_templates");
-//     let built_in_tempates_list = vec![
-//         "css-output",
-//         "generic-basic",
-//         "generic-css",
-//         "generic-html",
-//         "generic-json5",
-//         "generic-list-item-paragraph",
-//         "generic-list-item-single",
-//         "generic-list-item",
-//         "generic-list",
-//         "generic-raw",
-//         "generic-script",
-//         "helpers",
-//         "pages-problems-index-page",
-//         "script-output",
-//         "section-tree",
-//         "span-text",
-//         "template-error",
-//     ];
-//     built_in_tempates_list.iter().for_each(|name| {
-//         let data = BUILT_IN_TEMPLATE_DIR.get_file(format!("{}.neoj", name));
-//         match env.add_template_owned(
-//             format!("built-in/{}.neoj", name),
-//             data.expect(format!("Could not open built-in include: {}", name).as_str())
-//                 .contents_utf8()
-//                 .unwrap()
-//                 .to_string(),
-//         ) {
-//             Ok(()) => (),
-//             Err(e) => {
-//                 self.template_load_errors
-//                     .push(NeoErrorV42::TemplateLoadError {
-//                         message: e.to_string(),
-//                         details: e.display_debug_info().to_string(),
-//                     });
-//                 event!(Level::ERROR, "{}", e.display_debug_info().to_string());
-//                 ()
-//             }
-//         }
-//     });
-//     self.templates
-//         .iter()
-//         .for_each(|(k, v)| match env.add_template_owned(k, v) {
-//             Ok(()) => (),
-//             Err(e) => {
-//                 self.template_load_errors
-//                     .push(NeoErrorV42::TemplateLoadError {
-//                         message: e.to_string(),
-//                         details: e.display_debug_info().to_string(),
-//                     });
-//                 event!(Level::ERROR, "{}", e.display_debug_info().to_string());
-//                 ()
-//             }
-//         });
-//     env
-// }
-
-// #[instrument(skip(self))]
-// pub fn add_pages_to_site(&mut self) -> Result<()> {
-//     for (_, page) in &mut self.pages_v42 {
-//         match &page.id {
-//             Some(id) => {
-//                 self.site_v42b.pages.insert(id.to_string(), page.clone());
-//                 dbg!(&id);
-//                 ()
-//             }
-//             None => {
-//                 dbg!("noid");
-//                 ()
-//             }
-//         }
-//         // page.generate_href_from_ast();
-//     }
-//     Ok(())
-// }
