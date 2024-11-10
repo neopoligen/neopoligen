@@ -24,6 +24,7 @@ use nom::character::complete::multispace0;
 use nom::combinator::not;
 use nom::multi::many1;
 use nom::sequence::pair;
+use nom::sequence::preceded;
 use nom::sequence::terminated;
 use nom::IResult;
 use nom::Parser;
@@ -41,6 +42,52 @@ pub struct BlockSectionV42 {
     pub kind: String,
     pub spans: Vec<SpanV42>,
     pub template_list: Vec<String>,
+}
+
+pub fn checklist_item_paragraph_block<'a>(
+    source: &'a str,
+    _site_config: &'a SiteConfigV42,
+    _parent: SectionParent,
+    debug: bool,
+) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
+    // let debug = true;
+    let dbg_header = "CHECKLIST_ITEM_PARAGRAPH_BLOCK";
+    // dump_parser_if_debug(debug, dbg_header, source, 1);
+    // let (source, _) = not(tag("[")).context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 1);
+    let (source, spans) = preceded(
+        not(tag("[")),
+        many1(alt((
+            span_of_plain_text_for_block_paragraph,
+            span_of_escaped_character,
+            named_span,
+            code_shorthand_span,
+            emphasis_shorthand_span,
+            footnote_shorthand_span,
+            html_shorthand_span,
+            image_shorthand_span,
+            link_shorthand_span,
+            mark_shorthand_span,
+            strikethrough_shorthand_span,
+            strong_shorthand_span,
+            underline_shorthand_span,
+        ))),
+    )
+    .context("")
+    .parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 2);
+    dump_parser_if_debug(debug, dbg_header, source, 3);
+    let (source, _) = multispace0.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 4);
+    Ok((
+        source,
+        SectionV42::Block(BlockSectionV42 {
+            children: vec![],
+            kind: "block-list-item-paragraph".to_string(),
+            spans,
+            template_list: vec!["sections/checklist-item-paragraph/default.neoj".to_string()],
+        }),
+    ))
 }
 
 pub fn list_item_paragraph_block<'a>(

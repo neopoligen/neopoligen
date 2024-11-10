@@ -1,5 +1,6 @@
 use self::helpers::make_template_list::make_template_list;
 use crate::bound::Bound;
+use crate::helpers::dump_parser_if_debug;
 use crate::section_attr_v42::section_attr_v42;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
 use crate::section_v42::*;
@@ -35,7 +36,9 @@ pub fn end_section_basic_v42<'a>(
     kind: &str,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
-    // let _dbg_header = "END_SECTION_BASIC";
+    // let debug = true;
+    let dbg_header = "END_SECTION_BASIC";
+    dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = tuple((
         tag("--"),
         space1,
@@ -46,58 +49,29 @@ pub fn end_section_basic_v42<'a>(
     .context("")
     .parse(source)?;
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
+    dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, _) = multispace0.context("").parse(source)?;
-
-    // let (source, children) = match parent {
-    //     SectionParent::ListItem => many0(alt((
-    //         |src| list_item_paragraph_block(src, site_config, parent.clone(), debug),
-    //         |src| start_or_full_section_v42(src, site_config, parent.clone(), debug),
-    //     )))
-    //     .context("")
-    //     .parse(source)?,
-    //     _ => many0(alt((
-    //         |src| paragraph_block_section_v42(src, site_config, parent.clone(), debug),
-    //         |src| start_or_full_section_v42(src, site_config, parent.clone(), debug),
-    //     )))
-    //     .context("")
-    //     .parse(source)?,
-    // };
-
-    // let (source, children) =
-    //     many0(|src| paragraph_block_section_v42(src, site_config, parent.clone(), debug))
-    //         .context("")
-    //         .parse(source)?;
-
+    dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, children) = match parent {
         SectionParent::List => {
             many0(|src| list_item_paragraph_block(src, site_config, parent.clone(), debug))
                 .context("")
                 .parse(source)?
         }
-        SectionParent::ListItem => {
-            (source, vec![])
-            // many0(|src| list_item_paragraph_block(src, site_config, parent.clone(), debug))
-            //     .context("")
-            //     .parse(source)?
-        }
+        SectionParent::ListItem => (source, vec![]),
         SectionParent::SubList => (source, vec![]),
         SectionParent::Olist => {
             many0(|src| olist_item_paragraph_block(src, site_config, parent.clone(), debug))
                 .context("")
                 .parse(source)?
         }
-        SectionParent::OlistItem => {
-            (source, vec![])
-            // many0(|src| olist_item_paragraph_block(src, site_config, parent.clone(), debug))
-            //     .context("")
-            //     .parse(source)?
-        }
+        SectionParent::OlistItem => (source, vec![]),
         SectionParent::SubOlist => (source, vec![]),
         _ => many0(|src| paragraph_block_section_v42(src, site_config, parent.clone(), debug))
             .context("")
             .parse(source)?,
     };
-
+    dump_parser_if_debug(debug, dbg_header, source, 4);
     let section = SectionV42::End(EndSectionV42 {
         attrs,
         bound: Bound::End,

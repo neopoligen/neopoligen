@@ -4,6 +4,7 @@ use crate::site_config::SiteConfigV42;
 use chrono::prelude::*;
 use html_escape::*;
 use minijinja::value::Object;
+use minijinja::value::ValueKind;
 use minijinja::Error;
 use minijinja::ErrorKind;
 use minijinja::Value;
@@ -84,6 +85,48 @@ impl SiteV42b {
         }
     }
 
+    // TODO: Add tests for this
+    // Takes in either text or spans. If it's text, it's
+    // returned directly. If it's spans the first plain-text
+    // span is pulled out and it's text is returned.
+    pub fn get_page_id(&self, args: &[Value]) -> Result<Value, Error> {
+        if args.len() == 1 {
+            match &args[0].kind() {
+                ValueKind::Map => {
+                    match &args[0].get_attr("spans") {
+                        Ok(spans) => match spans.get_item_by_index(0) {
+                            Ok(span) => match span.get_attr("text") {
+                                Ok(text) => Ok(text),
+                                Err(_e) => {
+                                    // TODO: Hoist Error Here
+                                    Ok(Value::from(None::<String>))
+                                }
+                            },
+                            Err(_e) => {
+                                // TODO: Hoist Error Here
+                                Ok(Value::from(None::<String>))
+                            }
+                        },
+                        Err(_e) => {
+                            // TODO: Hoist Error Here
+                            Ok(Value::from(None::<String>))
+                        }
+                    }
+                    //Ok(Value::from("VALUEKIND: MAP"))
+                }
+                ValueKind::String => Ok(args[0].clone()),
+                // TODO: Hoist Error Here
+                _ => Ok(Value::from(None::<String>)),
+            }
+        } else {
+            // TODO: Hoist Error Here
+            Ok(Value::from(None::<String>))
+        }
+    }
+
+    // TODO: Deprecate this in favor of just getting IDs and
+    // calling the pages from the site object without having
+    // to clone in a new page
     pub fn get_page_from_span(&self, args: &[Value]) -> Result<Value, Error> {
         if args.len() == 1 {
             let x = &args[0].get_item(&Value::from("spans")).unwrap();
@@ -404,12 +447,13 @@ impl Object for SiteV42b {
             // in favor of pulling in the page as an object
             // and accessing things that way to start
             "get_page_from_span" => self.get_page_from_span(args),
+            "get_page_id" => self.get_page_id(args),
             "get_page_ids" => self.get_page_ids(args),
             "get_page_with_id" => self.get_page_with_id(args),
             "get_page_with_display_path" => self.get_page_with_display_path(args),
             "get_section_attrs" => self.get_section_attrs(args),
             _ => Ok(Value::from(format!(
-                "[Warning: tried to use 'site.{}(site, page, ...)' which does not exist]",
+                "[Warning: tried to use 'site.{}(...)' which does not exist]",
                 name
             ))),
         }

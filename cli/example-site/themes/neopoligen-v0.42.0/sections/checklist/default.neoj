@@ -1,0 +1,12 @@
+[!- import "built-in/macro-loader.neoj" as neo -!]
+
+<section 
+  [@- site.get_section_attrs(site, page, section, "checklist-section flow") -@]>
+<ul class="flow">
+[@- neo.output_all_child_sections(section) -@]
+</ul>
+</section>
+
+[@- neo.output_end_section(section) -@]
+
+

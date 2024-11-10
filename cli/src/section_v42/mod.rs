@@ -1,5 +1,7 @@
 pub mod basic;
 pub mod block;
+pub mod checklist;
+pub mod checklist_item;
 pub mod css;
 pub mod csv;
 pub mod end;
@@ -16,6 +18,8 @@ pub mod script;
 
 use crate::section_v42::basic::*;
 use crate::section_v42::block::*;
+use crate::section_v42::checklist::*;
+use crate::section_v42::checklist_item::*;
 use crate::section_v42::css::*;
 use crate::section_v42::csv::*;
 use crate::section_v42::end::*;
@@ -43,12 +47,14 @@ use serde::Serialize;
 pub enum SectionParent {
     Basic,
     Checklist,
+    ChecklistItem,
     List,
     ListItem,
     None,
     Olist,
     OlistItem,
     Page,
+    SubChecklist,
     SubList,
     SubOlist,
 }
@@ -58,6 +64,8 @@ pub enum SectionParent {
 pub enum SectionV42 {
     Basic(BasicSectionV42),
     Block(BlockSectionV42),
+    Checklist(ChecklistSectionV42),
+    ChecklistItem(ChecklistItemSectionV42),
     Css(CssSectionV42),
     Csv(CsvSectionV42),
     End(EndSectionV42),

@@ -72,9 +72,8 @@ a {
 </header>
 
 <main class="medium-width flow">
+  <div>TMP_DEV: [@ neo.template_tlink("2zpdkpkw") @]</div>
     [!- block body_main -!][!- endblock -!]
-
-
 
 [#
 
@@ -89,6 +88,7 @@ a {
 #]
 
 </main>
+
 
 <footer class="medium-width">
   [!- include "includes/debugging.neoj" -!]

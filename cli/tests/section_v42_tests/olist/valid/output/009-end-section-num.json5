@@ -36,7 +36,7 @@
     "children": [
       {
         "children": [],
-        "kind": "block-olist-item-paragraph",
+        "kind": "block-paragraph",
         "spans": [
           {
             "kind": "plain-text",
@@ -45,8 +45,8 @@
           }
         ],
         "template_list": [
-          "sections/olist-item-paragraph/default.neoj",
-          "sections/generic-olist-item-paragraph/default.neoj"
+          "sections/block-paragraph/default.neoj",
+          "sections/generic-block-paragraph/default.neoj"
         ],
         "type": "block"
       }

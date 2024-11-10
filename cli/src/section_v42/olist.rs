@@ -126,7 +126,7 @@ pub fn olist_section_start_v42<'a>(
     .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, end_section) =
-        (|src| end_section_basic_v42(src, site_config, next_parent.clone(), kind, debug))
+        (|src| end_section_basic_v42(src, site_config, parent.clone(), kind, debug))
             .context("")
             .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 6);

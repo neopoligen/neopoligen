@@ -76,6 +76,13 @@ fn solo_page_section_integration_tests() {
                 match serde_json5::from_str::<SerdeValue>(output) {
                     Ok(json5) => {
                         let page = PageV42b::mock_from_section_tests(id);
+                        match page.parsing_issue {
+                            Some(issue) => {
+                                dbg!(issue);
+                                ()
+                            }
+                            None => (),
+                        };
                         let check_value = Value::from_serialize(json5);
                         assert_eq!(
                             page.sections.unwrap(),

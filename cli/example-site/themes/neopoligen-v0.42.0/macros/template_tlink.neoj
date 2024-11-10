@@ -1,0 +1,26 @@
+[#- DOCS:
+
+- This is for using tlink (aka Title Link)
+functionality from inside a template instead
+of a content file
+
+- All it does is forwards the ID to the 
+"spans/tlink/default.neoj" template
+
+ARGS:
+
+- page_id: The ID of the page to get the title
+link for
+
+USAGE:
+
+[@- neo.template_link(SOME_PAGE_ID) -@]
+
+-#]
+
+[!- macro template_tlink(page_id) -!]
+---
+[@ site.get_page_id(page_id) @]
+---
+[@ page_id @]
+[!- endmacro -!]
