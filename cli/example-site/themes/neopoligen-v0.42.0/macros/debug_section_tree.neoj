@@ -1,8 +1,7 @@
 [!- macro debug_section_tree(sections) -!]
 <ul>
 [!- for section in sections -!]
-<li>
-[@ section.kind @] 
+<li>[@ section.kind @] 
 [! if section.spans !]
 [[@ output_spans(section.spans) @]]
 [! else !]
