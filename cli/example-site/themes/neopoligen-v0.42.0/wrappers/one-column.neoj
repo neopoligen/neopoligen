@@ -16,6 +16,16 @@
 #]
 
 <style>
+*, 
+*::before, 
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
 body {
   background-color: #0d1229;
   color: #f0e5d8;
@@ -35,8 +45,13 @@ a {
   align-items: flex-end;
 }
 
-.built-in-flow > :where(:not(:first-child)) {
-  margin-top: var(--flow-space, 1em);
+.checklist-section {
+  display: grid;
+  grid-template-columns: 3ch 1fr;
+}
+
+.checklist-section > div {
+  margin-top: 1.5rem;
 }
 
 .flow > :where(:not(:first-child)) {
@@ -60,7 +75,6 @@ a {
   border: 1px solid #777;
   border-radius: 0.3rem;
 }
-
 </style>
 [@ neo.output_css() @]
 </head>
@@ -78,6 +92,6 @@ a {
   <div>[@ site.generated_at("Generated on %a. %B %-d at %-I:%M:%S%p") @]</div>
 </footer>
 
-[@- neo.output_scripts() -@]
+[@ neo.output_scripts() @]
 </body>
 </html>

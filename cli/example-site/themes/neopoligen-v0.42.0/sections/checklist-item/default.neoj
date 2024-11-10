@@ -1,13 +1,13 @@
 [!- import "built-in/macro-loader.neoj" as neo -!]
 
-<li 
-  [@- site.get_section_attrs(site, page, section, "checklist-item-section flow") -@]>
-[!- for child in section.children -!] 
-[!- if loop.length == 1 -!]
-[@- neo.output_section_with_template(child, "sections/checklist-item-single/default.neoj") -@]
+[!- if section.checked -!]
+  <div>&#x2611</div>
 [!- else -!]
-[@- neo.output_section(child) -@]
+  <div>&#x2610</div>
 [!- endif -!]
+<div class="flow">
+[!- for child in section.children -!] 
+  [@- neo.output_section(child) -@]
 [!- endfor -!]
-</li>
+</div>
 

@@ -2,16 +2,29 @@
 
 Ping
 
--- checklist
+-- checklist/
 
 [] alfa
 
-[] bravo
+[x] bravo
 
--- p
+  -- checklist/
+
+  [x] delta 
+
+  echo2
+
+  -- /checklist
+
+[] foxtrot 
+
+golf
+
+-- /checklist
+
+hotel
 
 
-x [[this is text|https://www.example.com/]]
 
 -- csv-table
 -- header: 1
