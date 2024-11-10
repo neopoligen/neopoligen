@@ -1,6 +1,6 @@
 [!- import "built-in/macro-loader.neoj" as neo -!]
 [! set footnote_header_has_been_output = false !]
-[!- for section in page.sections -!]
+[!- for section in sections -!]
     [!- if section.kind == "footnote"  -!]
         [! if footnote_header_has_been_output == false !]
         <section class="footnotes-section flow">

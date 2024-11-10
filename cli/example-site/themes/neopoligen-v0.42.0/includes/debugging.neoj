@@ -7,6 +7,7 @@ that makes the page if you're into that type of thing.
 </div>
 
 <div>
+  <div>Page ID: [@ page.id @]</div>
   [! if page.issues !]
     <h3>Issues</h3>
     <ul class="built-in-flow flow">
@@ -15,8 +16,10 @@ that makes the page if you're into that type of thing.
       #]
     </ul>
   [! endif !]
-  <h3>Section Tree</h3>
-  [@ neo.debug_section_tree(sections) @]
+  <details>
+    <summary>Section Tree</summary>
+    [@ neo.debug_section_tree(sections) @]
+  </details>
   <details>
     <summary>Source</summary>
     <div><pre>[! autoescape true !][@ page.source @][! endautoescape !]</pre></div>

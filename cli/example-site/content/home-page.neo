@@ -8,6 +8,8 @@ Ping
 
 [x] bravo
 
+charlie
+
   -- checklist/
 
   [x] delta 
@@ -15,6 +17,8 @@ Ping
   echo2
 
   -- /checklist
+
+ping here
 
 [] foxtrot 
 

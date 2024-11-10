@@ -1,6 +1,6 @@
 [!- import "built-in/macro-loader.neoj" as neo -!]
 [! set endnote_header_has_been_output = false !]
-[!- for section in page.sections -!]
+[!- for section in sections -!]
     [!- if section.kind == "endnote"  -!]
         [! if endnote_header_has_been_output == false !]
         <section class="endnotes-section flow">
