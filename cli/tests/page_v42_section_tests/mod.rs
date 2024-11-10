@@ -2,7 +2,7 @@ use include_dir::{include_dir, Dir};
 use lazy_static::lazy_static;
 use std::collections::BTreeMap;
 
-const SOURCE_DIR: Dir = include_dir!("tests/page_v42_section_tests/sources");
+const SOURCE_DIR: Dir = include_dir!("tests/page_v42_section_tests/valid/input");
 
 lazy_static! {
     static ref SOURCE_FILES: BTreeMap<String, String> = {
@@ -33,7 +33,7 @@ lazy_static! {
     };
 }
 
-const OUTPUT_DIR: Dir = include_dir!("tests/page_v42_section_tests/outputs");
+const OUTPUT_DIR: Dir = include_dir!("tests/page_v42_section_tests/valid/output");
 
 lazy_static! {
     static ref OUTPUT_FILES: BTreeMap<String, String> = {

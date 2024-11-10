@@ -6,7 +6,7 @@ use include_dir::{include_dir, Dir};
 use minijinja::Value;
 use std::path::PathBuf;
 
-const SAMPLES: Dir = include_dir!("tests/page_v42_data_tests/sources");
+const SAMPLES: Dir = include_dir!("tests/page_v42_data_tests/valid/input");
 
 impl PageV42b {
     pub fn test_from_sample_file(file: &str) -> PageV42b {
