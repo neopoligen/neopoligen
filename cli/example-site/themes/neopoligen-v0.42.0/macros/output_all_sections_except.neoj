@@ -1,5 +1,5 @@
 [!- macro output_all_sections_except(exclude_sections=[]) -!]
-[!- for section in page.sections -!]
+[!- for section in sections -!]
 [!- if section.kind not in exclude_sections -!]
 [!- include section.template_list -!]
 [!- endif -!]

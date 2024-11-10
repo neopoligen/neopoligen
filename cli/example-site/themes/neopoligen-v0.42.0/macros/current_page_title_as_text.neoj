@@ -1,3 +1,0 @@
-[!- macro current_page_title_as_text() -!]
-[@- page.title_as_text() -@]
-[!- endmacro -!]

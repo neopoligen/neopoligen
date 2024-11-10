@@ -60,9 +60,11 @@ impl BuilderV42<'_> {
             if let Some(_rel_output_path) = &page.rel_output_path {
                 match self.env.get_template("pages/post/default.neoj") {
                     Ok(template) => {
-                        match template.render(
-                            context!(page => Value::from_object(page.clone()), site => site_clone),
-                        ) {
+                        match template.render(context!(
+                            page => Value::from_object(page.clone()),
+                            site => &site_clone,
+                            sections => &page.sections,
+                        )) {
                             Ok(output) => {
                                 page.output = Some(output);
                                 ()
