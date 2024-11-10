@@ -1,9 +1,9 @@
 use super::PageV42b;
 use std::path::PathBuf;
-use tracing::{event, instrument, Level};
+// use tracing::{event, instrument, Level};
 
 impl PageV42b {
-    #[instrument(skip(source))]
+    //#[instrument(skip(source))]
     pub fn new_from_str_v42(
         source_path: &PathBuf,
         source: &str,

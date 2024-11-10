@@ -88,7 +88,7 @@ impl SiteV42b {
     pub fn page_title(&self, args: &[Value]) -> Option<String> {
         match &self.get_page_id(args) {
             Some(id) => match &self.pages.get(id) {
-                Some(page) => page.title(),
+                Some(page) => page.title.clone(),
                 None => None,
             },
             None => {
@@ -238,7 +238,6 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
                     let escaped_value = encode_quoted_attribute(&flattened);
                     attr_collection.insert(key.to_string(), vec![escaped_value.to_string()]);
                 }
-
                 if key.to_string() == "class".to_string() {
                     let spans = attrs
                         .get_item(&key)?
@@ -250,7 +249,6 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
                     let escaped_value = encode_quoted_attribute(&flattened);
                     classes.push(escaped_value.to_string());
                 }
-
                 //let spans = attrs.get_item(&key)?.get_item(&Value::from("spans"));
                 //let values = spans
                 //    .iter()
@@ -280,40 +278,32 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
                 //if values.len() > 0 {
                 //    attr_collection.push(format!(r#"{}="{}""#, key.to_string(), values.join(" ")));
                 //}
-
                 //
             }
-
             if args.len() >= 4 {
                 classes.push(args[3].to_string());
             };
-
             // if classes.len() > 0 {
             //     Ok(Value::from(format!(r#" class="{}""#, classes.join(" "))))
             // } else {
             //     // TODO: Pull the rest of the attrs and flags here
             //     Ok(Value::from(""))
             // }
-
             if classes.len() > 0 {
                 attr_collection.insert("class".to_string(), vec![classes.join(" ").to_string()]);
             }
-
             let attr_items = attr_collection
                 .iter()
                 .map(|(k, v)| format!(r#"{}="{}""#, k.to_string(), v.join(" ")))
                 .collect::<Vec<String>>();
-
             if attr_items.len() > 0 {
                 Ok(Value::from(format!(r#" {}"#, attr_items.join(" "))))
             } else {
                 Ok(Value::from(""))
             }
-
             // dbg!(&attr_items);
             // dbg!(&attr_collection);
             // Ok(Value::from(r#" class="TODO""#))
-
             //
         } else {
             // TODO: Turn this into an error and hoist it.
@@ -437,6 +427,7 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
             Err(Error::new(ErrorKind::InvalidOperation, "".to_string()))
         }
     }
+
     //
 }
 
