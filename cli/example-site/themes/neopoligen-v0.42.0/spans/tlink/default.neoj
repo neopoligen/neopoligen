@@ -1,20 +1,14 @@
+[# DOCS: 
+
+#]
 [!- import "built-in/macro-loader.neoj" as neo -!]
-
-<div>TITLE: [@ site.title_for_page(span) @]</div>
-<div>HREF: [@ site.href_for_page(span) @]</div>
-
-
-[#
-[!- set remote_page_id = site.get_page_id(span) -!]
-<div>REMOTE PAGE ID: [@ remote_page_id @]</div>
-<div>PING: [@ site.pages[remote_page_id].href @]</div>
-#]
-
-TODO: TLINK
-[#
-[!- set remote_page = site.get_page_from_span(span) -!]
-<a href="[@ remote_page.href() @]" [@- site.get_span_attrs(span) -@]>
-[@- neo.output_spans(remote_page.title_as_spans()) -@]
-</a>
-#]
+[!- set title = site.title_for_page(span) -!]
+[!- set href = site.href_for_page(span) -!]
+[!- if title and href -!]
+  <a href="[@- href -@]" [@- site.get_span_attrs(span) -@]>
+    [@- title -@]
+  </a>
+[!- else -!]
+  [issue: could not generate tlink]
+[!- endif -!]
 [@- '' -@]
