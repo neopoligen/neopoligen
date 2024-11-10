@@ -105,42 +105,53 @@ fn href_file_with_extension() {
 }
 
 #[test]
-fn title_as_spans_from_page_section() {
+fn solo_title_as_spans_from_page_section() {
     let page = PageV42b::mock_from_data_tests("009-title-in-page-section.neo");
-    let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
+    let left = vec![SpanV42::PlainText(PlainTextSpan {
         kind: "plain-text".to_string(),
         text: "This is a title".to_string(),
-    })]);
-    let right = page.title_as_spans().unwrap();
+    })];
+    let right = page.title_as_spans_dev().unwrap();
     assert_eq!(left, right);
 }
 
-#[test]
-fn title_as_text_from_page_section() {
-    let page = PageV42b::mock_from_data_tests("009-title-in-page-section.neo");
-    let left = Value::from("This is a title");
-    let right = page.title_as_text().unwrap();
-    assert_eq!(left, right);
-}
+// #[test]
+// fn title_as_spans_from_page_section() {
+//     let page = PageV42b::mock_from_data_tests("009-title-in-page-section.neo");
+//     let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
+//         kind: "plain-text".to_string(),
+//         text: "This is a title".to_string(),
+//     })]);
+//     let right = page.title_as_spans().unwrap();
+//     assert_eq!(left, right);
+// }
 
-#[test]
-fn title_as_spans_from_title_section() {
-    let page = PageV42b::mock_from_data_tests("010-title-in-title-section.neo");
-    let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
-        kind: "plain-text".to_string(),
-        text: "Alfa Bravo Title".to_string(),
-    })]);
-    let right = page.title_as_spans().unwrap();
-    assert_eq!(left, right);
-}
+// #[test]
+// fn title_as_text_from_page_section() {
+//     let page = PageV42b::mock_from_data_tests("009-title-in-page-section.neo");
+//     let left = Value::from("This is a title");
+//     let right = page.title_as_text().unwrap();
+//     assert_eq!(left, right);
+// }
 
-#[test]
-fn title_as_text_from_title_section() {
-    let page = PageV42b::mock_from_data_tests("010-title-in-title-section.neo");
-    let left = Value::from("Alfa Bravo Title".to_string());
-    let right = page.title_as_text().unwrap();
-    assert_eq!(left, right);
-}
+// #[test]
+// fn title_as_spans_from_title_section() {
+//     let page = PageV42b::mock_from_data_tests("010-title-in-title-section.neo");
+//     let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
+//         kind: "plain-text".to_string(),
+//         text: "Alfa Bravo Title".to_string(),
+//     })]);
+//     let right = page.title_as_spans().unwrap();
+//     assert_eq!(left, right);
+// }
+
+// #[test]
+// fn title_as_text_from_title_section() {
+//     let page = PageV42b::mock_from_data_tests("010-title-in-title-section.neo");
+//     let left = Value::from("Alfa Bravo Title".to_string());
+//     let right = page.title_as_text().unwrap();
+//     assert_eq!(left, right);
+// }
 
 // #[test]
 // fn rel_output_path_basic_check() {

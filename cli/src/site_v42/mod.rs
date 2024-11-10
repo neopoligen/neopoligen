@@ -85,42 +85,57 @@ impl SiteV42b {
         }
     }
 
+    pub fn page_title(&self, args: &[Value]) -> Option<String> {
+        match &self.get_page_id(args) {
+            Some(id) => match &self.pages.get(id) {
+                Some(page) => page.title(),
+                None => None,
+            },
+            None => {
+                // TODO: Hoist Error
+                None
+            }
+        }
+    }
+
     // TODO: Add tests for this
     // Takes in either text or spans. If it's text, it's
     // returned directly. If it's spans the first plain-text
     // span is pulled out and it's text is returned.
-    pub fn get_page_id(&self, args: &[Value]) -> Result<Value, Error> {
+    pub fn get_page_id(&self, args: &[Value]) -> Option<String> {
         if args.len() == 1 {
             match &args[0].kind() {
                 ValueKind::Map => {
                     match &args[0].get_attr("spans") {
                         Ok(spans) => match spans.get_item_by_index(0) {
                             Ok(span) => match span.get_attr("text") {
-                                Ok(text) => Ok(text),
+                                Ok(text) => Some(text.to_string()),
                                 Err(_e) => {
                                     // TODO: Hoist Error Here
-                                    Ok(Value::from(None::<String>))
+                                    None
                                 }
                             },
                             Err(_e) => {
                                 // TODO: Hoist Error Here
-                                Ok(Value::from(None::<String>))
+                                None
                             }
                         },
                         Err(_e) => {
                             // TODO: Hoist Error Here
-                            Ok(Value::from(None::<String>))
+                            None
                         }
                     }
                     //Ok(Value::from("VALUEKIND: MAP"))
                 }
-                ValueKind::String => Ok(args[0].clone()),
-                // TODO: Hoist Error Here
-                _ => Ok(Value::from(None::<String>)),
+                ValueKind::String => Some(args[0].to_string()),
+                _ => {
+                    // TODO: Hoist Error Here
+                    None
+                }
             }
         } else {
             // TODO: Hoist Error Here
-            Ok(Value::from(None::<String>))
+            None
         }
     }
 
@@ -447,11 +462,12 @@ impl Object for SiteV42b {
             // in favor of pulling in the page as an object
             // and accessing things that way to start
             "get_page_from_span" => self.get_page_from_span(args),
-            "get_page_id" => self.get_page_id(args),
+            //"get_page_id" => self.get_page_id(args),
             "get_page_ids" => self.get_page_ids(args),
             "get_page_with_id" => self.get_page_with_id(args),
             "get_page_with_display_path" => self.get_page_with_display_path(args),
             "get_section_attrs" => self.get_section_attrs(args),
+            "page_title" => Ok(Value::from(self.page_title(args))),
             _ => Ok(Value::from(format!(
                 "[Warning: tried to use 'site.{}(...)' which does not exist]",
                 name

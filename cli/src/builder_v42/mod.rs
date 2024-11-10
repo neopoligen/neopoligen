@@ -390,6 +390,15 @@ impl BuilderV42<'_> {
         Ok(())
     }
 
+    #[instrument(skip(self))]
+    pub fn set_titles(&mut self) -> Result<()> {
+        event!(Level::INFO, "Setting Page Titles");
+        for (_, page) in &mut self.pages_v42 {
+            page.set_titles();
+        }
+        Ok(())
+    }
+
     //
 }
 

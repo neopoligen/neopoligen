@@ -26,7 +26,8 @@ use std::sync::Arc;
 pub struct PageV42b {
     pub ast: Option<Vec<SectionV42>>,
     pub parsing_issue: Option<NeoErrorV42>,
-    // TODO: Deprecate .href field in favor of .href() method
+    // TODO: Deprecate .href() method in favor of
+    // of this .href field which should be prepopulated
     pub href: Option<PathBuf>,
     pub id: Option<String>,
     pub issues: Vec<NeoErrorV42>,
@@ -37,6 +38,8 @@ pub struct PageV42b {
     pub source: String,
     pub source_absolute_path: PathBuf,
     pub source_display_path: PathBuf,
+    pub title: Option<String>,
+    pub title_as_spans: Option<String>,
 }
 
 impl PageV42b {
@@ -213,6 +216,45 @@ impl PageV42b {
         };
     }
 
+    pub fn set_titles(&mut self) {
+        self.title = Some("TODO: SET_TITLES".to_string());
+    }
+
+    pub fn title_as_spans_dev(&self) -> Option<Vec<SpanV42>> {
+        match &self.get_page_attr_from_ast("title") {
+            Ok(attr) => Some(attr.spans.clone()),
+            // Err(_) => Ok(Value::from_serialize::<Vec<SpanV42>>(vec![])),
+            Err(_) => {
+                match &self.ast {
+                    Some(ast) => {
+                        if let Some(t) = ast.iter().find_map(|section| match section {
+                            SectionV42::Basic(sec) => match sec.kind.as_str() {
+                                "title" => sec.children.iter().find_map(|child| match child {
+                                    SectionV42::Block(c) => match c.kind.as_str() {
+                                        "block-paragraph" => Some(c.spans.clone()),
+                                        _ => None,
+                                    },
+                                    _ => None,
+                                }),
+                                _ => None,
+                            },
+                            _ => None,
+                        }) {
+                            Some(t)
+                        } else {
+                            // TODO: Hoist Error
+                            None
+                        }
+                    }
+                    None => {
+                        // TODO: Hoist Error
+                        None
+                    }
+                }
+            }
+        }
+    }
+
     pub fn title_as_spans(&self) -> Result<Value, Error> {
         match &self.get_page_attr_from_ast("title") {
             Ok(attr) => Ok(Value::from_serialize(attr.spans.clone())),
@@ -240,14 +282,12 @@ impl PageV42b {
                             // TODO: Add error message to list that this
                             // can't be found, but don't send a minijinja
                             // error since that stops the page from rendering
-
                             Ok(Value::from_serialize(vec![SpanV42::PlainText(
                                 PlainTextSpan {
                                     kind: "plain-text".to_string(),
                                     text: "could_not_get_title".to_string(),
                                 },
                             )]))
-
                             // Err(Error::new(
                             //     minijinja::ErrorKind::InvalidOperation,
                             //     "Could not get title",
@@ -269,7 +309,6 @@ impl PageV42b {
                       //     minijinja::ErrorKind::InvalidOperation,
                       //     "Could not get title",
                       // )), //
-
                       // if let Some(spans) =
                       //     &self
                       //         .ast
@@ -298,7 +337,6 @@ impl PageV42b {
                       //     ))
                       // }
                 }
-
                 // if let Some(spans) =
                 //     &self
                 //         .ast
@@ -326,117 +364,124 @@ impl PageV42b {
                 //         "no title section title available".to_string(),
                 //     ))
                 // }
-
                 //
             }
         }
     }
 
-    pub fn title_as_text(&self) -> Result<Value, Error> {
-        match &self.get_page_attr_from_ast("title") {
-            Ok(attr) => Ok(Value::from(attr.text.clone())),
-            Err(_) => {
-                if let Some(spans) =
-                    &self
-                        .ast
-                        .as_ref()
-                        .unwrap()
-                        .iter()
-                        .find_map(|section| match section {
-                            SectionV42::Basic(sec) => match sec.kind.as_str() {
-                                "title" => sec.children.iter().find_map(|child| match child {
-                                    SectionV42::Block(c) => match c.kind.as_str() {
-                                        "block-paragraph" => Some(c.spans.clone()),
-                                        _ => None,
-                                    },
-                                    _ => None,
-                                }),
-                                _ => None,
-                            },
-                            _ => None,
-                        })
-                {
-                    Ok(Value::from(flatten_spans_v42(spans)))
-                } else {
-                    Err(Error::new(
-                        minijinja::ErrorKind::InvalidOperation,
-                        "no title section title available".to_string(),
-                    ))
-                }
-            }
+    // // TODO: Deprecated in favor of .title()
+    // pub fn title_as_text(&self) -> Result<Value, Error> {
+    //     match &self.get_page_attr_from_ast("title") {
+    //         Ok(attr) => Ok(Value::from(attr.text.clone())),
+    //         Err(_) => {
+    //             if let Some(spans) =
+    //                 &self
+    //                     .ast
+    //                     .as_ref()
+    //                     .unwrap()
+    //                     .iter()
+    //                     .find_map(|section| match section {
+    //                         SectionV42::Basic(sec) => match sec.kind.as_str() {
+    //                             "title" => sec.children.iter().find_map(|child| match child {
+    //                                 SectionV42::Block(c) => match c.kind.as_str() {
+    //                                     "block-paragraph" => Some(c.spans.clone()),
+    //                                     _ => None,
+    //                                 },
+    //                                 _ => None,
+    //                             }),
+    //                             _ => None,
+    //                         },
+    //                         _ => None,
+    //                     })
+    //             {
+    //                 Ok(Value::from(flatten_spans_v42(spans)))
+    //             } else {
+    //                 Err(Error::new(
+    //                     minijinja::ErrorKind::InvalidOperation,
+    //                     "no title section title available".to_string(),
+    //                 ))
+    //             }
+    //         }
+    //     }
+    // }
+
+    pub fn title(&self) -> Option<String> {
+        match &self.title_as_spans_dev() {
+            Some(spans) => Some(flatten_spans_v42(&spans)),
+            None => None,
         }
     }
 
-    pub fn title(&self) -> Result<Value, Error> {
-        // ORDER:
-        // page--title
-        // -- title section first block
-        // --section--title attr on first block if it has one
-        // first number of n words from first block
-        // pagedata--id
-        if let Some(_ast) = &self.ast.as_ref() {
-            if let Some(page_title) = match &self
-                .ast
-                .as_ref()
-                .unwrap()
-                .iter()
-                .filter_map(|section| match section {
-                    SectionV42::Json5(s) => Some(s),
-                    _ => None,
-                })
-                .find_map(|section| match section.kind.as_str() {
-                    "page" => {
-                        //dbg!(&section.attrs);
-                        Some(&section.attrs)
-                    }
-                    _ => None,
-                }) {
-                Some(attrs) => match attrs.get("title") {
-                    Some(attr) => Some(Ok(Value::from_serialize(attr.spans.clone()))),
-                    None => None,
-                },
-                None => None,
-            } {
-                page_title
-            } else if let Some(spans) =
-                &self
-                    .ast
-                    .as_ref()
-                    .unwrap()
-                    .iter()
-                    .find_map(|section| match section {
-                        SectionV42::Basic(sec) => match sec.kind.as_str() {
-                            "title" => sec.children.iter().find_map(|child| match child {
-                                SectionV42::Block(c) => match c.kind.as_str() {
-                                    "block-paragraph" => Some(c.spans.clone()),
-                                    _ => None,
-                                },
-                                _ => None,
-                            }),
-                            _ => None,
-                        },
-                        _ => None,
-                    })
-            {
-                //dbg!(spans);
-                Ok(Value::from_serialize(spans))
-            } else if let Some(id) = &self.id.clone() {
-                Ok(Value::from_serialize(vec![SpanV42::PlainText(
-                    PlainTextSpan {
-                        kind: "plain-text".to_string(),
-                        text: id.clone(),
-                    },
-                )]))
-            } else {
-                Ok(Value::from("[NEO_TODO_PAGE_TITLE]"))
-            }
-        } else {
-            Err(Error::new(
-                minijinja::ErrorKind::InvalidOperation,
-                "no ast to build title from",
-            ))
-        }
-    }
+    //pub fn title_as_text(&self) -> Result<Value, Error> {
+    //    // ORDER:
+    //    // page--title
+    //    // -- title section first block
+    //    // --section--title attr on first block if it has one
+    //    // first number of n words from first block
+    //    // pagedata--id
+    //    if let Some(_ast) = &self.ast.as_ref() {
+    //        if let Some(page_title) = match &self
+    //            .ast
+    //            .as_ref()
+    //            .unwrap()
+    //            .iter()
+    //            .filter_map(|section| match section {
+    //                SectionV42::Json5(s) => Some(s),
+    //                _ => None,
+    //            })
+    //            .find_map(|section| match section.kind.as_str() {
+    //                "page" => {
+    //                    //dbg!(&section.attrs);
+    //                    Some(&section.attrs)
+    //                }
+    //                _ => None,
+    //            }) {
+    //            Some(attrs) => match attrs.get("title") {
+    //                Some(attr) => Some(Ok(Value::from_serialize(attr.spans.clone()))),
+    //                None => None,
+    //            },
+    //            None => None,
+    //        } {
+    //            page_title
+    //        } else if let Some(spans) =
+    //            &self
+    //                .ast
+    //                .as_ref()
+    //                .unwrap()
+    //                .iter()
+    //                .find_map(|section| match section {
+    //                    SectionV42::Basic(sec) => match sec.kind.as_str() {
+    //                        "title" => sec.children.iter().find_map(|child| match child {
+    //                            SectionV42::Block(c) => match c.kind.as_str() {
+    //                                "block-paragraph" => Some(c.spans.clone()),
+    //                                _ => None,
+    //                            },
+    //                            _ => None,
+    //                        }),
+    //                        _ => None,
+    //                    },
+    //                    _ => None,
+    //                })
+    //        {
+    //            //dbg!(spans);
+    //            Ok(Value::from_serialize(spans))
+    //        } else if let Some(id) = &self.id.clone() {
+    //            Ok(Value::from_serialize(vec![SpanV42::PlainText(
+    //                PlainTextSpan {
+    //                    kind: "plain-text".to_string(),
+    //                    text: id.clone(),
+    //                },
+    //            )]))
+    //        } else {
+    //            Ok(Value::from("[NEO_TODO_PAGE_TITLE]"))
+    //        }
+    //    } else {
+    //        Err(Error::new(
+    //            minijinja::ErrorKind::InvalidOperation,
+    //            "no ast to build title from",
+    //        ))
+    //    }
+    //}
 
     //
 }
@@ -465,14 +510,14 @@ impl Object for PageV42b {
         match name {
             "href" => self.href(),
             "title_as_spans" => self.title_as_spans(),
-            "title_as_text" => self.title_as_text(),
+            "title" => Ok(Value::from(self.title())),
             // TODO: Deprecate: title_flattened
             // "title_flattened" => Ok(Value::from("title flattened")),
             // "sections" => self.ast(),
             // "get_pagedata" => self.make_value_from_string(self.get_pagedata(args)),
             // "sections" => self.sections(),
             //"title" => self.title(),
-            _ => Ok(Value::from("")),
+            _ => Ok(Value::from(format!("Could not get page.{}", name))),
         }
     }
 
