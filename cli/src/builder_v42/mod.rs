@@ -298,13 +298,11 @@ impl BuilderV42<'_> {
         let site_clone = Value::from_object(self.site_v42b.clone().unwrap());
         for (_, page) in &mut self.pages_v42 {
             if page.issues.len() > 0 {
-                if let Some(href) = &page.href {
-                    let rel_output_path = match href.strip_prefix("/") {
-                        Ok(p) => p,
-                        Err(_) => &href,
-                    };
-                    let absolute_output_path =
-                        &self.site_config.output_dest_dir().join(rel_output_path);
+                if let Some(_href) = &page.href {
+                    let absolute_output_path = &self
+                        .site_config
+                        .output_dest_dir()
+                        .join(page.rel_output_path.as_ref().unwrap());
                     match self.env.get_template("helpers/issue-page/default.neoj") {
                         Ok(template) => match template.render(context!(
                             site => site_clone,
@@ -362,6 +360,15 @@ impl BuilderV42<'_> {
                     }
                 }
             }
+        }
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn set_hrefs(&mut self) -> Result<()> {
+        event!(Level::INFO, "Setting Page hrefs");
+        for (_, page) in &mut self.pages_v42 {
+            page.set_href();
         }
         Ok(())
     }

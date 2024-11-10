@@ -85,7 +85,7 @@ impl SiteV42b {
         }
     }
 
-    pub fn page_title(&self, args: &[Value]) -> Option<String> {
+    pub fn title_for_page(&self, args: &[Value]) -> Option<String> {
         match &self.get_page_id(args) {
             Some(id) => match &self.pages.get(id) {
                 Some(page) => page.title.clone(),
@@ -458,7 +458,7 @@ impl Object for SiteV42b {
             "get_page_with_id" => self.get_page_with_id(args),
             "get_page_with_display_path" => self.get_page_with_display_path(args),
             "get_section_attrs" => self.get_section_attrs(args),
-            "page_title" => Ok(Value::from(self.page_title(args))),
+            "title_for_page" => Ok(Value::from(self.title_for_page(args))),
             _ => Ok(Value::from(format!(
                 "[Warning: tried to use 'site.{}(...)' which does not exist]",
                 name

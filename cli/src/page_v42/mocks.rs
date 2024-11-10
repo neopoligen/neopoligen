@@ -19,6 +19,7 @@ impl PageV42b {
         page.generate_ast(&site_config);
         page.set_id();
         page.set_rel_output_path();
+        page.set_href();
         page.set_titles();
         page
     }

@@ -28,7 +28,7 @@ pub struct PageV42b {
     // TODO: Deprecate .href() method in favor of
     // of this .href field which should be prepopulated
     // TODO: Make .href a String
-    pub href: Option<PathBuf>,
+    pub href: Option<String>,
     pub id: Option<String>,
     pub issues: Vec<NeoErrorV42>,
     pub language: Option<String>,
@@ -139,31 +139,31 @@ impl PageV42b {
         }
     }
 
-    pub fn href(&self) -> Result<Value, Error> {
-        match &self.rel_output_path {
+    pub fn set_href(&mut self) {
+        self.href = match &self.rel_output_path {
             Some(path) => match &path.file_name() {
                 Some(file_name) => {
                     if file_name.to_str() == Some("index.html") {
                         match &path.parent() {
                             Some(p) => {
                                 if p.to_str() == Some("") {
-                                    Ok(format!("/").into())
+                                    Some(format!("/").into())
                                 } else {
-                                    Ok(format!("/{}/", path.parent().unwrap().display()).into())
+                                    Some(format!("/{}/", path.parent().unwrap().display()).into())
                                 }
                             }
-                            None => Ok(format!("/{}/", path.parent().unwrap().display()).into()),
+                            None => Some(format!("/{}/", path.parent().unwrap().display()).into()),
                         }
                     } else {
-                        Ok(format!("/{}", path.display()).into())
+                        Some(format!("/{}", path.display()).into())
                     }
                 }
-                None => Ok(format!("/{}", path.display()).into()),
+                None => Some(format!("/{}", path.display()).into()),
             },
-            None => Err(Error::new(
-                minijinja::ErrorKind::InvalidOperation,
-                "could not get href",
-            )),
+            None => {
+                // TODO: Hoist Error
+                None
+            }
         }
     }
 
@@ -262,14 +262,17 @@ impl Object for PageV42b {
             "id" => Some(Value::from(self.id.clone().unwrap().clone())),
             "issues" => Some(Value::from_serialize(self.issues.clone())),
             "parsing_issue" => Some(Value::from_serialize(self.parsing_issue.clone())),
-            "sections" => self.sections.clone(),
+            // "sections" => self.sections.clone(),
             "source" => Some(Value::from(self.source.clone())),
             "source_display_path" => {
                 Some(Value::from(self.source_display_path.display().to_string()))
             }
             "title" => Some(Value::from(self.title.clone())),
             "title_as_spans" => Some(Value::from_serialize(self.title_as_spans.clone())),
-            _ => None,
+            _ => Some(Value::from(format!(
+                "ISSUE: No field for page.{}",
+                key.to_string()
+            ))),
         }
     }
 
@@ -280,11 +283,11 @@ impl Object for PageV42b {
         _args: &[Value],
     ) -> Result<Value, Error> {
         match name {
-            "href" => self.href(),
+            // "href" => self.href(),
             // "sections" => self.ast(),
             // "get_pagedata" => self.make_value_from_string(self.get_pagedata(args)),
             // "sections" => self.sections(),
-            _ => Ok(Value::from(format!("Could not get page.{}", name))),
+            _ => Ok(Value::from(format!("ISSUE: no method: page.{}", name))),
         }
     }
 

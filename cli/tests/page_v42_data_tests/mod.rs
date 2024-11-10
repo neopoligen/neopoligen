@@ -83,24 +83,24 @@ fn rel_output_path_basic_from_custom_path_with_non_html_extension() {
 #[test]
 fn href_basic_test() {
     let page = PageV42b::mock_from_data_tests("001-only-page-section.neo");
-    let left = Value::from("/en/001-pagedata-only.neo/".to_string());
-    let right = page.href().unwrap();
+    let left = "/en/001-pagedata-only.neo/".to_string();
+    let right = page.href.unwrap();
     assert_eq!(left, right);
 }
 
 #[test]
 fn href_homepage_without_file() {
     let page = PageV42b::mock_from_data_tests("005-homepage-path-without-file.neo");
-    let left = Value::from("/".to_string());
-    let right = page.href().unwrap();
+    let left = "/".to_string();
+    let right = page.href.unwrap();
     assert_eq!(left, right);
 }
 
 #[test]
 fn href_file_with_extension() {
     let page = PageV42b::mock_from_data_tests("008-custom-txt-path.neo");
-    let left = Value::from("/somewhere/file.txt".to_string());
-    let right = page.href().unwrap();
+    let left = "/somewhere/file.txt".to_string();
+    let right = page.href.unwrap();
     assert_eq!(left, right);
 }
 

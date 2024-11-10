@@ -1,10 +1,12 @@
 [!- import "built-in/macro-loader.neoj" as neo -!]
 
-[@ site.page_title(span) @]
+<div>TITLE: [@ site.title_for_page(span) @]</div>
+<div>HREF: [@ site.href_for_page(span) @]</div>
 
+
+[#
 [!- set remote_page_id = site.get_page_id(span) -!]
 <div>REMOTE PAGE ID: [@ remote_page_id @]</div>
-[#
 <div>PING: [@ site.pages[remote_page_id].href @]</div>
 #]
 
