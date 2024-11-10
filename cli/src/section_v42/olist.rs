@@ -3,7 +3,7 @@ use crate::bound::Bound;
 use crate::helpers::dump_parser_if_debug;
 use crate::section_attr_v42::section_attr_v42;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
-use crate::section_v42::list_item::*;
+use crate::section_v42::olist_item::*;
 use crate::section_v42::*;
 use crate::site_config::SiteConfigV42;
 use crate::span_v42::space0_line_ending_or_eof::*;
@@ -111,7 +111,7 @@ pub fn olist_section_start_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 4);
     // TODO: Handle if you're in a list or a checklist here.
     let (source, children) = many0(alt((
-        |src| olist_item_section_full_v42(src, site_config, SectionParent::Olist, debug),
+        |src| olist_item_section_start_v42(src, site_config, SectionParent::Olist, debug),
         |src| start_or_full_section_v42(src, site_config, SectionParent::Olist, debug),
     )))
     .context("")

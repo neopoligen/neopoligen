@@ -1,3 +1,4 @@
+use self::helpers::make_template_list::make_template_list;
 use crate::bound::Bound;
 use crate::section_attr_v42::section_attr_v42;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
@@ -16,8 +17,6 @@ use nom_supreme::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::BTreeMap;
-
-use self::helpers::make_template_list::make_template_list;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct EndSectionV42 {
@@ -76,9 +75,10 @@ pub fn end_section_basic_v42<'a>(
                 .parse(source)?
         }
         SectionParent::ListItem => {
-            many0(|src| list_item_paragraph_block(src, site_config, parent.clone(), debug))
-                .context("")
-                .parse(source)?
+            (source, vec![])
+            // many0(|src| list_item_paragraph_block(src, site_config, parent.clone(), debug))
+            //     .context("")
+            //     .parse(source)?
         }
         SectionParent::Olist => {
             many0(|src| olist_item_paragraph_block(src, site_config, parent.clone(), debug))
@@ -86,9 +86,10 @@ pub fn end_section_basic_v42<'a>(
                 .parse(source)?
         }
         SectionParent::OlistItem => {
-            many0(|src| olist_item_paragraph_block(src, site_config, parent.clone(), debug))
-                .context("")
-                .parse(source)?
+            (source, vec![])
+            // many0(|src| olist_item_paragraph_block(src, site_config, parent.clone(), debug))
+            //     .context("")
+            //     .parse(source)?
         }
         _ => many0(|src| paragraph_block_section_v42(src, site_config, parent.clone(), debug))
             .context("")
