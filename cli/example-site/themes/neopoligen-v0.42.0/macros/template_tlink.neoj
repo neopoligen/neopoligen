@@ -19,8 +19,6 @@ USAGE:
 -#]
 
 [!- macro template_tlink(page_id) -!]
----
-[@ site.get_page_id(page_id) @]
----
-[@ page_id @]
+[!- set span = page_id -!]
+[!- include "spans/tlink/default.neoj" -!]
 [!- endmacro -!]
