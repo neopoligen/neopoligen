@@ -1,0 +1,20 @@
+[#- DOCS:
+
+- shortcut macro to outputs all the 
+css sections for the page
+
+NOARGS:
+
+
+-#]
+
+[!- macro output_css() -!]
+[!- for section in sections -!]
+  [!- if section.kind == "css" -!]
+<style>
+[@ section.body @]
+</style>
+  [!- endif -!]
+[!- endfor -!]
+[!- endmacro -!]
+

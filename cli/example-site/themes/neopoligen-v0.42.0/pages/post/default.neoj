@@ -2,9 +2,10 @@
 [!- import "built-in/macro-loader.neoj" as neo -!]
 
 [!- block body_main -!]
-[@- neo.output_all_sections_except(["footnote"]) -@]
-<div class="fin-token">~ fin ~</div>
-[!- include "includes/endnotes.neoj" -!]
-[!- include "includes/footnotes.neoj" -!]
-[!- include "includes/references.neoj" -!]
+  [@- neo.output_all_sections_except(["endnote", "footnote", "ref"]) -@]
+  <div class="fin-token">~ fin ~</div>
+  [!- include "includes/endnotes.neoj" -!]
+  [!- include "includes/footnotes.neoj" -!]
+  [!- include "includes/refs.neoj" -!]
 [!- endblock -!]
+

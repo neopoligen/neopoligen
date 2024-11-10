@@ -27,12 +27,12 @@ use std::collections::BTreeMap;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct CssSectionV42 {
     pub attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42>,
+    pub body: String,
     pub bound: Bound,
     pub end_section: Option<Box<SectionV42>>,
     pub flags: Vec<String>,
     pub kind: String,
     pub template_list: Vec<String>,
-    pub text: String,
 }
 
 pub fn css_section_full_v42<'a>(
@@ -53,16 +53,16 @@ pub fn css_section_full_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);
-    let (source, text) = alt((take_until("-- "), rest)).context("").parse(source)?;
+    let (source, body) = alt((take_until("-- "), rest)).context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
     let section = SectionV42::Css(CssSectionV42 {
         attrs,
+        body: body.trim().to_string(),
         bound: Bound::Full,
         end_section: None,
         flags,
         kind: kind.to_string(),
         template_list: make_template_list("css", kind, "default"),
-        text: text.trim().to_string(),
     });
     Ok((source, section))
 }
@@ -87,7 +87,7 @@ pub fn css_section_start_v42<'a>(
     .parse(source)?;
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
-    let (source, text) = take_until(format!("-- /{}", kind).as_str())
+    let (source, body) = take_until(format!("-- /{}", kind).as_str())
         .context("")
         .parse(source)?;
     let (source, end_section) =
@@ -99,12 +99,12 @@ pub fn css_section_start_v42<'a>(
         source,
         SectionV42::Css(CssSectionV42 {
             attrs,
+            body: body.trim().to_string(),
             flags,
             bound: Bound::Start,
             end_section: Some(Box::new(end_section)),
             kind: kind.to_string(),
             template_list: make_template_list("css", kind, "default"),
-            text: text.trim().to_string(),
         }),
     ))
 }
@@ -134,12 +134,12 @@ mod test {
             "",
             SectionV42::Css(CssSectionV42 {
                 attrs,
+                body: "body { color: red; }".to_string(),
                 bound: Bound::Full,
                 end_section: None,
                 flags: vec![],
                 kind: "css".to_string(),
                 template_list: make_template_list("css", "css", "default"),
-                text: "body { color: red; }".to_string(),
             }),
         );
         let right =
@@ -162,6 +162,7 @@ mod test {
             "",
             SectionV42::Css(CssSectionV42 {
                 attrs,
+                body: "body { color: blue; }".to_string(),
                 bound: Bound::Start,
                 end_section: Some(Box::new(SectionV42::End(EndSectionV42 {
                     attrs: BTreeMap::new(),
@@ -186,7 +187,6 @@ mod test {
                 flags: vec![],
                 kind: "css".to_string(),
                 template_list: make_template_list("css", "css", "default"),
-                text: "body { color: blue; }".to_string(),
             }),
         );
         let right =

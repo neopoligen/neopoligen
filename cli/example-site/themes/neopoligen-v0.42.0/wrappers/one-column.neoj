@@ -62,9 +62,7 @@ a {
 }
 
 </style>
-[#
-[@ neo.output_css(site, page) @]
-#]
+[@ neo.output_css() @]
 </head>
 <body class="built-in-flow">
 <header class="medium-width">
