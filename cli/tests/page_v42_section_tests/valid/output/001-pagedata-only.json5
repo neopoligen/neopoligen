@@ -4,18 +4,22 @@
              "id": {
                  "spans": [
                     {
+                        "kind": "plain-text",
                         "text": "2or2ogbr",
                         "type": "plain-text",
                     },
                  ],
+                "text": "2or2ogbr",
              },
             "status": {
                 "spans": [
                     {
+                        "kind": "plain-text",
                         "text": "scratch",
                         "type": "plain-text",
                     },
                 ],
+                "text": "scratch",
             },
          },
         "bound": "full",
@@ -23,12 +27,10 @@
         "end_section": null,
         "error": null,
         "flags": [],
-        "kind": "pagedata",
+        "kind": "page",
         "template_list": [
-            "sections/pagedata/default.neoj",
+            "sections/page/default.neoj",
             "sections/generic-json5/default.neoj",
-            "built-in/sections/pagedata/default.neoj",
-            "built-in/sections/generic-json5/default.neoj",
         ],
         "type": "json5",
      },
