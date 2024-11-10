@@ -1,2 +1,144 @@
 {
+  "attrs": {},
+  "bound": "full",
+  "children": [
+    {
+      "bound": "full",
+      "checked": false,
+      "checked_string": null,
+      "children": [
+        {
+          "children": [],
+          "kind": "block-checklist-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "alfa",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": ["sections/checklist-item-paragraph/default.neoj"],
+          "type": "block"
+        }
+      ],
+      "kind": "checklist-item",
+      "template_list": [
+        "sections/checklist-item/default.neoj",
+        "sections/generic-checklist-item/default.neoj"
+      ],
+      "type": "checklistitem"
+    },
+    {
+      "bound": "full",
+      "checked": false,
+      "checked_string": null,
+      "children": [
+        {
+          "children": [],
+          "kind": "block-checklist-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "bravo",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": ["sections/checklist-item-paragraph/default.neoj"],
+          "type": "block"
+        },
+        {
+          "children": [],
+          "kind": "block-checklist-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "charlie",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": ["sections/checklist-item-paragraph/default.neoj"],
+          "type": "block"
+        }
+      ],
+      "kind": "checklist-item",
+      "template_list": [
+        "sections/checklist-item/default.neoj",
+        "sections/generic-checklist-item/default.neoj"
+      ],
+      "type": "checklistitem"
+    },
+    {
+      "bound": "full",
+      "checked": true,
+      "checked_string": "x",
+      "children": [
+        {
+          "children": [],
+          "kind": "block-checklist-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "delta",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": ["sections/checklist-item-paragraph/default.neoj"],
+          "type": "block"
+        }
+      ],
+      "kind": "checklist-item",
+      "template_list": [
+        "sections/checklist-item/default.neoj",
+        "sections/generic-checklist-item/default.neoj"
+      ],
+      "type": "checklistitem"
+    },
+    {
+      "bound": "full",
+      "checked": true,
+      "checked_string": "x",
+      "children": [
+        {
+          "children": [],
+          "kind": "block-checklist-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "echo",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": ["sections/checklist-item-paragraph/default.neoj"],
+          "type": "block"
+        },
+        {
+          "children": [],
+          "kind": "block-checklist-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "foxtrot",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": ["sections/checklist-item-paragraph/default.neoj"],
+          "type": "block"
+        }
+      ],
+      "kind": "checklist-item",
+      "template_list": [
+        "sections/checklist-item/default.neoj",
+        "sections/generic-checklist-item/default.neoj"
+      ],
+      "type": "checklistitem"
+    }
+  ],
+  "end_section": null,
+  "flags": [],
+  "kind": "checklist",
+  "template_list": [
+    "sections/checklist/default.neoj",
+    "sections/generic-checklist/default.neoj"
+  ],
+  "type": "checklist"
 }
