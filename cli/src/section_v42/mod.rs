@@ -80,18 +80,7 @@ pub enum SectionV42 {
     Script(ScriptSectionV42),
 }
 
-impl Object for SectionV42 {
-    // fn call_method(
-    //     self: &Arc<SectionV42>,
-    //     _state: &minijinja::State,
-    //     name: &str,
-    //     _args: &[Value],
-    // ) -> Result<Value, Error> {
-    //     match name {
-    //         _ => Ok(Value::from("")),
-    //     }
-    // }
-}
+impl Object for SectionV42 {}
 
 pub fn start_or_full_section_v42<'a>(
     source: &'a str,
@@ -101,9 +90,7 @@ pub fn start_or_full_section_v42<'a>(
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     let (source, section) = alt((
         //TODO: Move sections to single calls here for easier testing
-        //
-        // |src| checklist_section_start_v42(src, &site_config, parent.clone(), debug),
-        // |src| checklist_section_full_v42(src, &site_config, parent.clone(), debug),
+        |src| checklist_section_v42(src, &site_config, parent.clone(), debug),
         |src| css_section_start_v42(src, &site_config, parent.clone(), debug),
         |src| css_section_full_v42(src, &site_config, parent.clone(), debug),
         |src| csv_section_v42(src, &site_config, parent.clone(), debug),

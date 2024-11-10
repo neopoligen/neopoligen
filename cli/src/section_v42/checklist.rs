@@ -57,7 +57,7 @@ pub fn checklist_section_full_v42<'a>(
     parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
-    let debug = true;
+    // let debug = true;
     let next_parent = match &parent {
         SectionParent::Page => SectionParent::Checklist,
         _ => SectionParent::SubChecklist,

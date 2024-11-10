@@ -29,11 +29,11 @@ pub fn checklist_item_section_full_v42<'a>(
     _parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
-    let debug = true;
+    // let debug = true;
     let dbg_header = "CHECKLISTITEM_SECTION_FULL";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = tag("[").context("").parse(source)?;
-    let (source, mark) = terminated(opt(is_not("]")), tag("]"))
+    let (source, _mark) = terminated(opt(is_not("]")), tag("]"))
         .context("")
         .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
