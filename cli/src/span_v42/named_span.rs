@@ -279,7 +279,7 @@ mod test {
     #[case("<<alfa|bravo|charlie_delta>>etc...", "etc...")]
     #[case("<<link|text|https://www.example.com/?ping=pong>>etc...", "etc...")]
     #[case("<<link|text|\nhttps://www.example.com/?ping=pong>>etc...", "etc...")]
-    fn solo_valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
+    fn valid_cases_with_remainders(#[case] source: &str, #[case] remainder: &str) {
         match named_span(source) {
             Ok(data) => {
                 if data.0 == remainder {
