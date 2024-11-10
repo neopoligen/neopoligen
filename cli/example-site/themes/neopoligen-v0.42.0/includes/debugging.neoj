@@ -7,7 +7,6 @@ that makes the page if you're into that type of thing.
 </div>
 
 <div>
-  <div>[@ neo.template_tlink("2zpdkpkw") @]</div>
   [! if page.issues !]
     <h3>Issues</h3>
     <ul class="built-in-flow flow">
@@ -28,4 +27,5 @@ that makes the page if you're into that type of thing.
     <summary>Sections</summary>
     [@ neo.debug_sections_as_json() @]
   </details>
+  <div>[@ neo.template_tlink("2zpdkpkw") @]</div>
 </div>

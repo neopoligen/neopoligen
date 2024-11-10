@@ -72,23 +72,8 @@ a {
 </header>
 
 <main class="medium-width flow">
-  <div>TMP_DEV: [@ neo.template_tlink("2zpdkpkw") @]</div>
     [!- block body_main -!][!- endblock -!]
-
-[#
-
-<div>Page Title Text: [@- neo.current_page_title_as_text() -@]
-
-<div>IDx: [@ page.id @]</div>
-
-<div>Page Title: [@ site.get_page_title_from_id(site, page, page.id) @]</div>
-
-
-[@ neo.output_sections(site, page, page.sections) @]
-#]
-
 </main>
-
 
 <footer class="medium-width">
   [!- include "includes/debugging.neoj" -!]
