@@ -80,6 +80,7 @@ pub fn end_section_basic_v42<'a>(
             //     .context("")
             //     .parse(source)?
         }
+        SectionParent::SubList => (source, vec![]),
         SectionParent::Olist => {
             many0(|src| olist_item_paragraph_block(src, site_config, parent.clone(), debug))
                 .context("")
@@ -91,6 +92,7 @@ pub fn end_section_basic_v42<'a>(
             //     .context("")
             //     .parse(source)?
         }
+        SectionParent::SubOlist => (source, vec![]),
         _ => many0(|src| paragraph_block_section_v42(src, site_config, parent.clone(), debug))
             .context("")
             .parse(source)?,

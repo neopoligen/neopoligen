@@ -54,10 +54,14 @@ pub fn olist_section_v42<'a>(
 pub fn olist_section_full_v42<'a>(
     source: &'a str,
     site_config: &'a SiteConfigV42,
-    _parent: SectionParent,
+    parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let debug = true;
+    let next_parent = match &parent {
+        SectionParent::Page => SectionParent::Olist,
+        _ => SectionParent::SubOlist,
+    };
     let dbg_header = "OLIST_SECTION_FULL";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
@@ -71,7 +75,7 @@ pub fn olist_section_full_v42<'a>(
     let (source, _) = multispace0.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, children) =
-        many0(|src| olist_item_section_full_v42(src, site_config, SectionParent::Olist, debug))
+        many0(|src| olist_item_section_full_v42(src, site_config, next_parent.clone(), debug))
             .context("")
             .parse(source)?;
     let section = SectionV42::Olist(OlistSectionV42 {
@@ -89,10 +93,14 @@ pub fn olist_section_full_v42<'a>(
 pub fn olist_section_start_v42<'a>(
     source: &'a str,
     site_config: &'a SiteConfigV42,
-    _parent: SectionParent,
+    parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let debug = true;
+    let next_parent = match &parent {
+        SectionParent::Page => SectionParent::Olist,
+        _ => SectionParent::SubOlist,
+    };
     let dbg_header = "OLIST_SECTION_START";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, kind) = preceded(
@@ -111,14 +119,14 @@ pub fn olist_section_start_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 4);
     // TODO: Handle if you're in a list or a checklist here.
     let (source, children) = many0(alt((
-        |src| olist_item_section_start_v42(src, site_config, SectionParent::Olist, debug),
-        |src| start_or_full_section_v42(src, site_config, SectionParent::Olist, debug),
+        |src| olist_item_section_start_v42(src, site_config, next_parent.clone(), debug),
+        |src| start_or_full_section_v42(src, site_config, next_parent.clone(), debug),
     )))
     .context("")
     .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, end_section) =
-        (|src| end_section_basic_v42(src, site_config, SectionParent::Olist, kind, debug))
+        (|src| end_section_basic_v42(src, site_config, next_parent.clone(), kind, debug))
             .context("")
             .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 6);

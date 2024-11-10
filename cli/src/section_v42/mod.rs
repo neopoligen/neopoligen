@@ -49,6 +49,8 @@ pub enum SectionParent {
     Olist,
     OlistItem,
     Page,
+    SubList,
+    SubOlist,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
