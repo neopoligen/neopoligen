@@ -142,6 +142,14 @@ fn title_as_text_from_title_section() {
     assert_eq!(left, right);
 }
 
+#[test]
+fn title_as_text_flattened() {
+    let page = PageV42b::mock_from_data_tests("011-title-spans-flattened.neo");
+    let left = "With SPAN NESTED And CODE_SHORTHAND".to_string();
+    let right = page.title.unwrap();
+    assert_eq!(left, right);
+}
+
 // #[test]
 // fn rel_output_path_basic_check() {
 //     let page = PageV42b::mock_from_data_tests("001-pagedata-only.neo");
