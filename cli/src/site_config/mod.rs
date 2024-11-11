@@ -57,6 +57,7 @@ fn empty_section_types() -> BTreeMap<String, Vec<String>> {
     types.insert("html".to_string(), vec![]);
     types.insert("json5".to_string(), vec![]);
     types.insert("list".to_string(), vec![]);
+    types.insert("none".to_string(), vec![]);
     types.insert("olist".to_string(), vec![]);
     types.insert("raw".to_string(), vec![]);
     types.insert("script".to_string(), vec![]);
@@ -108,15 +109,19 @@ impl SiteConfigV42 {
                                         if let Some(types) = self.section_types.get_mut(t) {
                                             types.push(name.to_string_lossy().to_string());
                                             ()
+                                        } else {
+                                            // TODO: Log an error if the type isn't valid
                                         }
                                     }
                                     ()
                                 }
-                                Err(_) => (),
+                                Err(_) => {
+                                    // TODO: Log an error if there's no type
+                                    ()
+                                }
                             }
                         }
                     }
-                    ()
                 });
             }
             Err(_e) => {

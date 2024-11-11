@@ -6,7 +6,8 @@ use std::collections::BTreeMap;
 impl SiteConfigV42 {
     pub fn config_for_spec_tests() -> SiteConfigV42 {
         let mut section_types = BTreeMap::new();
-        section_types.insert("checklist".to_string(), vec!["checklist".to_string()]);
+        let checklist_kinds = vec!["checklist".to_string(), "todos".to_string()];
+        section_types.insert("checklist".to_string(), checklist_kinds);
         let config = SiteConfigV42 {
             debug_parser: false,
             language_default: "en".to_string(),
@@ -34,6 +35,10 @@ impl SiteConfigV42 {
         let mut section_types = BTreeMap::new();
         let checklist_kinds = vec!["checklist".to_string(), "todos".to_string()];
         section_types.insert("checklist".to_string(), checklist_kinds);
+        let olist_kinds = vec!["olist".to_string(), "devtest-olist".to_string()];
+        section_types.insert("olist".to_string(), olist_kinds);
+        let list_kinds = vec!["list".to_string(), "devtest-list".to_string()];
+        section_types.insert("list".to_string(), list_kinds);
         let config = SiteConfigV42 {
             debug_parser: false,
             language_default: "en".to_string(),
@@ -59,7 +64,8 @@ impl SiteConfigV42 {
 
     pub fn mock_for_files_in_test_samples_folder() -> SiteConfigV42 {
         let mut section_types = BTreeMap::new();
-        section_types.insert("checklist".to_string(), vec!["checklist".to_string()]);
+        let checklist_kinds = vec!["checklist".to_string(), "todos".to_string()];
+        section_types.insert("checklist".to_string(), checklist_kinds);
         let config = SiteConfigV42 {
             debug_parser: false,
             language_default: "en".to_string(),
