@@ -7,6 +7,5 @@
   [@- neo.output_all_child_sections(section) -@]
 </section>
 
-
 [@- neo.output_end_section(section) -@]
 

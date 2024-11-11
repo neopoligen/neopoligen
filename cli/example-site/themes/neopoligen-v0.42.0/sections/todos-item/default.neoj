@@ -1,0 +1,13 @@
+[!- import "built-in/macro-loader.neoj" as neo -!]
+
+[!- if section.checked -!]
+  <div>&#x2611</div>
+[!- else -!]
+  <div>&#x2610</div>
+[!- endif -!]
+
+<div class="flow">
+  [!- for child in section.children -!] 
+    [@- neo.output_section(child) -@]
+  [!- endfor -!]
+</div>
