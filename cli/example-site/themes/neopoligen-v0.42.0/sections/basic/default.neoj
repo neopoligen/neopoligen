@@ -3,7 +3,7 @@
 [# TYPE: none #]
 [# HOIST: [] #]
 
-<section [@- site.get_section_attrs(section, "flow") -@]>
+<section [@- neo.section_attrs("flow") -@]>
   [@- neo.output_all_child_sections(section) -@]
 </section>
 

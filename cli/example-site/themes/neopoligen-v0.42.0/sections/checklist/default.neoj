@@ -3,7 +3,7 @@
 [# TYPE: checklist #]
 [# HOIST: [] #]
 
-<section [@- site.get_section_attrs(section) -@]>
+<section [@- neo.section_attrs() -@]>
   [@- neo.output_all_child_sections(section) -@]
 </section>
 

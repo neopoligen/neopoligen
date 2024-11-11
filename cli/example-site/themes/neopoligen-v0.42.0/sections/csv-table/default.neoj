@@ -3,7 +3,7 @@
 [# TYPE: csv #]
 [# HOIST: [] #]
 
-<section [@- site.get_section_attrs(section) -@]>
+<section [@- neo.section_attrs() -@]>
   [!- if section.error -!]
 
     <pre>Problem in csv-table[@- "\n\n" -@]

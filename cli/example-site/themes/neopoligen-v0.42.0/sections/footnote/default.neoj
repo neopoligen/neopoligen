@@ -3,7 +3,7 @@
 [# TYPE: basic #]
 [# HOIST: [] #]
 
-<section [@- site.get_section_attrs(section, "flow") -@]>
+<section [@- neo.section_attrs("flow") -@]>
 
   <div>
     [!- if "id" in section.attrs -!]

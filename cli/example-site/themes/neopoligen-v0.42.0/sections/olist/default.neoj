@@ -3,7 +3,7 @@
 [# TYPE: olist #]
 [# HOIST: [] #]
 
-<section [@- site.get_section_attrs(section, "flow") -@]>
+<section [@- neo.section_attrs("flow") -@]>
   <ol class="flow">
     [@- neo.output_all_child_sections(section) -@]
   </ol>
