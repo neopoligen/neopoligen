@@ -12,9 +12,9 @@ impl PageV42b {
         let source = get_include_str_file(DATA_SAMPLES, file);
         let site_config = SiteConfigV42::mock1_basic();
         let source_path =
-            PathBuf::from(format!("{}/{}", &site_config.project_dir().display(), file));
+            PathBuf::from(format!("{}/{}", &site_config.project_folder().display(), file));
         let mut page =
-            PageV42b::new_from_str_v42(&source_path, &source, &site_config.project_dir());
+            PageV42b::new_from_str_v42(&source_path, &source, &site_config.project_folder());
         page.set_language_from_site_config(&site_config);
         page.generate_ast(&site_config);
         page.set_id();
@@ -28,9 +28,9 @@ impl PageV42b {
         let source = get_include_str_file(SECTION_SAMPLES, &format!("{}.neo", file));
         let site_config = SiteConfigV42::mock1_basic();
         let source_path =
-            PathBuf::from(format!("{}/{}", &site_config.project_dir().display(), file));
+            PathBuf::from(format!("{}/{}", &site_config.project_folder().display(), file));
         let mut page =
-            PageV42b::new_from_str_v42(&source_path, &source, &site_config.project_dir());
+            PageV42b::new_from_str_v42(&source_path, &source, &site_config.project_folder());
         page.set_language_from_site_config(&site_config);
         page.generate_ast(&site_config);
         page.set_id();
