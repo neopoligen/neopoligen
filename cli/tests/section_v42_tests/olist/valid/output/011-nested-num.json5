@@ -27,7 +27,7 @@
           "children": [
             {
               "children": [],
-              "kind": "block-paragraph",
+              "kind": "paragraph",
               "spans": [
                 {
                   "kind": "plain-text",
@@ -36,8 +36,8 @@
                 }
               ],
               "template_list": [
-                "sections/block-paragraph/default.neoj",
-                "sections/generic-block-paragraph/default.neoj"
+                "sections/paragraph/default.neoj",
+                
               ],
               "type": "block"
             }
@@ -50,7 +50,7 @@
             "kind": "div-end",
             "template_list": [
               "sections/div-end/default.neoj",
-              "sections/generic-end/default.neoj"
+              "sections/end/default.neoj"
             ],
             "type": "end"
           },
@@ -58,7 +58,7 @@
           "kind": "div",
           "template_list": [
             "sections/div/default.neoj",
-            "sections/generic-basic/default.neoj"
+            "sections/basic/default.neoj"
           ],
           "type": "basic"
         }
@@ -104,7 +104,7 @@
     "children": [
       {
         "children": [],
-        "kind": "block-paragraph",
+        "kind": "paragraph",
         "spans": [
           {
             "kind": "plain-text",
@@ -113,8 +113,8 @@
           }
         ],
         "template_list": [
-          "sections/block-paragraph/default.neoj",
-          "sections/generic-block-paragraph/default.neoj"
+          "sections/paragraph/default.neoj",
+          
         ],
         "type": "block"
       }
@@ -123,7 +123,7 @@
     "kind": "olist-end",
     "template_list": [
       "sections/olist-end/default.neoj",
-      "sections/generic-end/default.neoj"
+      "sections/end/default.neoj"
     ],
     "type": "end"
   },

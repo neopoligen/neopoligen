@@ -61,7 +61,7 @@
         "kind": "olist-end",
         "template_list": [
             "sections/olist-end/default.neoj",
-            "sections/generic-end/default.neoj",
+            "sections/end/default.neoj",
         ],
         "type": "end",
     },
