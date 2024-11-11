@@ -94,7 +94,6 @@ mod test {
             .to_string();
         let template_list = vec![
             "sections/list-item/default.neoj".to_string(),
-            "sections/generic-list-item/default.neoj".to_string(),
         ];
         let left = (
             "",

@@ -62,7 +62,7 @@
               "kind": "list-end",
               "template_list": [
                 "sections/list-end/default.neoj",
-                "sections/generic-end/default.neoj"
+                "sections/end/default.neoj"
               ],
               "type": "end"
             },
@@ -135,7 +135,7 @@
       "kind": "list-end",
       "template_list": [
         "sections/list-end/default.neoj",
-        "sections/generic-end/default.neoj"
+        "sections/end/default.neoj"
       ],
       "type": "end"
     },
@@ -178,7 +178,7 @@
     "kind": "page",
     "template_list": [
       "sections/page/default.neoj",
-      "sections/generic-json5/default.neoj"
+      "sections/json5/default.neoj"
     ],
     "type": "json5"
   }

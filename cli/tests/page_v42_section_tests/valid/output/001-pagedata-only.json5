@@ -30,7 +30,7 @@
         "kind": "page",
         "template_list": [
             "sections/page/default.neoj",
-            "sections/generic-json5/default.neoj",
+            "sections/json5/default.neoj",
         ],
         "type": "json5",
      },

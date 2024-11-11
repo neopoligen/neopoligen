@@ -69,7 +69,7 @@ lazy_static! {
 }
 
 #[test]
-fn page_section_integration_tests() {
+fn solo_page_section_integration_tests() {
     for (id, _source) in SOURCE_FILES.iter() {
         match OUTPUT_FILES.get(id) {
             Some(output) => {

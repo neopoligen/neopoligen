@@ -5,7 +5,7 @@
         "children": [
             {
                 "children": [],
-                "kind": "block-paragraph",
+                "kind": "paragraph",
                 "spans": [
                     {
                         "kind": "plain-text",
@@ -14,8 +14,8 @@
                     },
                 ],
                 "template_list": [
-                    "sections/block-paragraph/default.neoj",
-                    "sections/generic-block-paragraph/default.neoj",
+                    "sections/paragraph/default.neoj",
+                    
                 ],
                 "type": "block",
             },
@@ -25,7 +25,7 @@
         "kind": "title",
         "template_list": [
             "sections/title/default.neoj",
-            "sections/generic-basic/default.neoj",
+            "sections/basic/default.neoj",
         ],
         "type": "basic",
     },
@@ -60,7 +60,7 @@
         "kind": "page",
         "template_list": [
             "sections/page/default.neoj",
-            "sections/generic-json5/default.neoj",
+            "sections/json5/default.neoj",
         ],
         "type": "json5",
     },

@@ -78,7 +78,7 @@
       "children": [
         {
           "children": [],
-          "kind": "block-paragraph",
+          "kind": "paragraph",
           "spans": [
             {
               "kind": "plain-text",
@@ -87,8 +87,8 @@
             }
           ],
           "template_list": [
-            "sections/block-paragraph/default.neoj",
-            "sections/generic-block-paragraph/default.neoj"
+            "sections/paragraph/default.neoj",
+            "sections/generic-paragraph/default.neoj"
           ],
           "type": "block"
         }
@@ -97,7 +97,7 @@
       "kind": "olist-end",
       "template_list": [
         "sections/olist-end/default.neoj",
-        "sections/generic-end/default.neoj"
+        "sections/end/default.neoj"
       ],
       "type": "end"
     },
@@ -140,7 +140,7 @@
     "kind": "page",
     "template_list": [
       "sections/page/default.neoj",
-      "sections/generic-json5/default.neoj"
+      "sections/json5/default.neoj"
     ],
     "type": "json5"
   }
