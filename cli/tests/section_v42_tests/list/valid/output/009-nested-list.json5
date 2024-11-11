@@ -48,7 +48,7 @@
               "kind": "list-item",
               "template_list": [
                 "sections/list-item/default.neoj",
-                "sections/generic-list-item/default.neoj"
+                
               ],
               "type": "listitem"
             }
@@ -69,7 +69,7 @@
           "kind": "list",
           "template_list": [
             "sections/list/default.neoj",
-            "sections/generic-list/default.neoj"
+            
           ],
           "type": "list"
         },
@@ -93,7 +93,7 @@
       "kind": "list-item",
       "template_list": [
         "sections/list-item/default.neoj",
-        "sections/generic-list-item/default.neoj"
+        
       ],
       "type": "listitem"
     },
@@ -120,7 +120,7 @@
       "kind": "list-item",
       "template_list": [
         "sections/list-item/default.neoj",
-        "sections/generic-list-item/default.neoj"
+        
       ],
       "type": "listitem"
     }
@@ -158,7 +158,7 @@
   "kind": "list",
   "template_list": [
     "sections/list/default.neoj",
-    "sections/generic-list/default.neoj"
+    
   ],
   "type": "list"
 }
