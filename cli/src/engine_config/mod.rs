@@ -22,5 +22,5 @@ impl EngineConfig {
 }
 
 fn default_sites_folder() -> PathBuf {
-    document_folder().unwrap().join("Neopoligen")
+    document_dir().unwrap().join("Neopoligen")
 }

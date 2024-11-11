@@ -44,7 +44,7 @@ async fn main() {
         .with(file_layer)
         .with(stdout_layer);
     tracing::subscriber::set_global_default(subscriber).expect("unable to set global subscriber");
-    let engine_config_folder = config_folder().unwrap().join("Neopoligen");
+    let engine_config_folder = config_dir().unwrap().join("Neopoligen");
     // TODO: Document this for debug set up.
     let engine_config_path = match std::env::var("NEOENV") {
         Ok(val) => engine_config_folder.join(PathBuf::from(format!("config-{}.json", val))),

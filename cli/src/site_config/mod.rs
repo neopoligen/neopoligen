@@ -52,7 +52,7 @@ impl SiteConfigV42 {
             Ok(text) => match serde_json5::from_str::<SiteConfigV42>(&text) {
                 Ok(mut config) => {
                     config.project_root = Some(project_root.clone());
-                    if !config.theme_input_root_folder().is_folder() {
+                    if !config.theme_input_root_folder().is_dir() {
                         Err(NeoError {
                             kind: NeoErrorKind::MissingThemeDirectory {
                                 path: config.theme_input_root_folder().clone(),

@@ -22,8 +22,8 @@ pub fn copy_folder(source_folder: &PathBuf, dest_folder: &PathBuf) -> Result<(),
     for entry in WalkDir::new(source_folder) {
         let source_path = entry?.into_path();
         let dest_path = dest_folder.join(source_path.strip_prefix(source_folder).unwrap());
-        if source_path.is_folder() {
-            fs::create_folder_all(dest_path)?;
+        if source_path.is_dir() {
+            fs::create_dir_all(dest_path)?;
         } else {
             let data = std::fs::read(source_path)?;
             std::fs::write(dest_path, &data)?;
@@ -53,11 +53,11 @@ pub fn dump_parser_if_debug(debug: bool, dbg_header: &str, source: &str, count: 
 }
 
 pub fn empty_folder(dir: &PathBuf) -> std::io::Result<()> {
-    for entry in dir.read_folder()? {
+    for entry in dir.read_dir()? {
         let entry = entry?;
         let path = entry.path();
-        if path.is_folder() {
-            fs::remove_folder_all(path)?;
+        if path.is_dir() {
+            fs::remove_dir_all(path)?;
         } else {
             fs::remove_file(path)?;
         }
@@ -140,11 +140,11 @@ pub fn get_folders_in_folder(dir: &PathBuf) -> Result<Vec<PathBuf>, NeoError> {
             },
         })
     } else {
-        if let Ok(the_folder) = fs::read_folder(dir) {
+        if let Ok(the_folder) = fs::read_dir(dir) {
             Ok(the_folder
                 .filter_map(|e| {
                     let path = e.unwrap().path().to_path_buf();
-                    if path.is_folder() {
+                    if path.is_dir() {
                         Some(path)
                     } else {
                         None
@@ -209,11 +209,8 @@ pub fn get_folders_in_folder(dir: &PathBuf) -> Result<Vec<PathBuf>, NeoError> {
     // )
 }
 
-pub fn get_files_with_extension_in_a_single_folder(
-    dir: &PathBuf,
-    extension: &str,
-) -> Vec<PathBuf> {
-    fs::read_folder(dir)
+pub fn get_files_with_extension_in_a_single_folder(dir: &PathBuf, extension: &str) -> Vec<PathBuf> {
+    fs::read_dir(dir)
         .unwrap()
         .into_iter()
         .filter(|p| {
@@ -595,7 +592,7 @@ pub fn url_from_string(source: &str) -> String {
 // TODO: Switch to NeoError
 pub fn write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
     match path.parent() {
-        Some(parent_folder) => match fs::create_folder_all(parent_folder) {
+        Some(parent_folder) => match fs::create_dir_all(parent_folder) {
             Ok(_) => match fs::write(path, content) {
                 Ok(_) => Ok(()),
                 Err(e) => Err(e.to_string()),
