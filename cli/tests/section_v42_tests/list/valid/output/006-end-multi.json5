@@ -7,7 +7,7 @@
       "children": [
         {
           "children": [],
-          "kind": "block-list-item-paragraph",
+          "kind": "list-item-paragraph",
           "spans": [
             {
               "kind": "plain-text",
@@ -17,13 +17,13 @@
           ],
           "template_list": [
             "sections/list-item-paragraph/default.neoj",
-            "sections/generic-list-item-paragraph/default.neoj"
+            
           ],
           "type": "block"
         },
         {
           "children": [],
-          "kind": "block-list-item-paragraph",
+          "kind": "list-item-paragraph",
           "spans": [
             {
               "kind": "plain-text",
@@ -33,7 +33,7 @@
           ],
           "template_list": [
             "sections/list-item-paragraph/default.neoj",
-            "sections/generic-list-item-paragraph/default.neoj"
+            
           ],
           "type": "block"
         }
@@ -50,7 +50,7 @@
       "children": [
         {
           "children": [],
-          "kind": "block-list-item-paragraph",
+          "kind": "list-item-paragraph",
           "spans": [
             {
               "kind": "plain-text",
@@ -60,13 +60,13 @@
           ],
           "template_list": [
             "sections/list-item-paragraph/default.neoj",
-            "sections/generic-list-item-paragraph/default.neoj"
+            
           ],
           "type": "block"
         },
         {
           "children": [],
-          "kind": "block-list-item-paragraph",
+          "kind": "list-item-paragraph",
           "spans": [
             {
               "kind": "plain-text",
@@ -76,7 +76,7 @@
           ],
           "template_list": [
             "sections/list-item-paragraph/default.neoj",
-            "sections/generic-list-item-paragraph/default.neoj"
+            
           ],
           "type": "block"
         }
@@ -95,7 +95,7 @@
     "children": [
       {
         "children": [],
-        "kind": "block-list-item-paragraph",
+        "kind": "list-item-paragraph",
         "spans": [
           {
             "kind": "plain-text",
@@ -105,7 +105,7 @@
         ],
         "template_list": [
           "sections/list-item-paragraph/default.neoj",
-          "sections/generic-list-item-paragraph/default.neoj"
+          
         ],
         "type": "block"
       }
