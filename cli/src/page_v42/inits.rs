@@ -7,10 +7,10 @@ impl PageV42b {
     pub fn new_from_str_v42(
         source_path: &PathBuf,
         source: &str,
-        project_dir: &PathBuf,
+        project_folder: &PathBuf,
     ) -> PageV42b {
         let source_display_path = source_path
-            .strip_prefix(project_dir.parent().unwrap())
+            .strip_prefix(project_folder.parent().unwrap())
             .unwrap()
             .to_path_buf();
         PageV42b {

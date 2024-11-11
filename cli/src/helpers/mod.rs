@@ -18,12 +18,12 @@ use syntect::parsing::SyntaxSet;
 use syntect::util::LinesWithEndings;
 use walkdir::WalkDir;
 
-pub fn copy_dir(source_dir: &PathBuf, dest_dir: &PathBuf) -> Result<(), std::io::Error> {
-    for entry in WalkDir::new(source_dir) {
+pub fn copy_folder(source_folder: &PathBuf, dest_folder: &PathBuf) -> Result<(), std::io::Error> {
+    for entry in WalkDir::new(source_folder) {
         let source_path = entry?.into_path();
-        let dest_path = dest_dir.join(source_path.strip_prefix(source_dir).unwrap());
-        if source_path.is_dir() {
-            fs::create_dir_all(dest_path)?;
+        let dest_path = dest_folder.join(source_path.strip_prefix(source_folder).unwrap());
+        if source_path.is_folder() {
+            fs::create_folder_all(dest_path)?;
         } else {
             let data = std::fs::read(source_path)?;
             std::fs::write(dest_path, &data)?;
@@ -52,12 +52,12 @@ pub fn dump_parser_if_debug(debug: bool, dbg_header: &str, source: &str, count: 
     }
 }
 
-pub fn empty_dir(dir: &PathBuf) -> std::io::Result<()> {
-    for entry in dir.read_dir()? {
+pub fn empty_folder(dir: &PathBuf) -> std::io::Result<()> {
+    for entry in dir.read_folder()? {
         let entry = entry?;
         let path = entry.path();
-        if path.is_dir() {
-            fs::remove_dir_all(path)?;
+        if path.is_folder() {
+            fs::remove_folder_all(path)?;
         } else {
             fs::remove_file(path)?;
         }
@@ -131,7 +131,7 @@ pub fn format_html_for_theme_test_display(code: &str) -> String {
     assembler.join("").to_string()
 }
 
-pub fn get_dirs_in_dir(dir: &PathBuf) -> Result<Vec<PathBuf>, NeoError> {
+pub fn get_folders_in_folder(dir: &PathBuf) -> Result<Vec<PathBuf>, NeoError> {
     if !dir.exists() {
         Err(NeoError {
             kind: NeoErrorKind::GenericErrorWithSourcePath {
@@ -140,11 +140,11 @@ pub fn get_dirs_in_dir(dir: &PathBuf) -> Result<Vec<PathBuf>, NeoError> {
             },
         })
     } else {
-        if let Ok(the_dir) = fs::read_dir(dir) {
-            Ok(the_dir
+        if let Ok(the_folder) = fs::read_folder(dir) {
+            Ok(the_folder
                 .filter_map(|e| {
                     let path = e.unwrap().path().to_path_buf();
-                    if path.is_dir() {
+                    if path.is_folder() {
                         Some(path)
                     } else {
                         None
@@ -159,14 +159,14 @@ pub fn get_dirs_in_dir(dir: &PathBuf) -> Result<Vec<PathBuf>, NeoError> {
                 },
             })
         }
-        //         fs::read_dir(dir)?
+        //         fs::read_folder(dir)?
         //            .map(|entry| {
         //                let entry = entry?;
         //               Ok(entry)
         //         })
         //         .filter_map(|entry: Result<DirEntry, io::Error>| {
         //             let path = entry.unwrap().path();
-        //             if path.is_dir() {
+        //             if path.is_folder() {
         //                 match path.file_name() {
         //                     Some(file_name) => {
         //                         if file_name.to_string_lossy().starts_with(".") {
@@ -184,14 +184,14 @@ pub fn get_dirs_in_dir(dir: &PathBuf) -> Result<Vec<PathBuf>, NeoError> {
         // )
     }
     // Result::from_iter(
-    //     fs::read_dir(dir)?
+    //     fs::read_folder(dir)?
     //         .map(|entry| {
     //             let entry = entry?;
     //             Ok(entry)
     //         })
     //         .filter_map(|entry: Result<DirEntry, io::Error>| {
     //             let path = entry.unwrap().path();
-    //             if path.is_dir() {
+    //             if path.is_folder() {
     //                 match path.file_name() {
     //                     Some(file_name) => {
     //                         if file_name.to_string_lossy().starts_with(".") {
@@ -209,11 +209,11 @@ pub fn get_dirs_in_dir(dir: &PathBuf) -> Result<Vec<PathBuf>, NeoError> {
     // )
 }
 
-pub fn get_files_with_extension_in_a_single_directory(
+pub fn get_files_with_extension_in_a_single_folder(
     dir: &PathBuf,
     extension: &str,
 ) -> Vec<PathBuf> {
-    fs::read_dir(dir)
+    fs::read_folder(dir)
         .unwrap()
         .into_iter()
         .filter(|p| {
@@ -234,8 +234,8 @@ pub fn get_files_with_extension_in_a_single_directory(
         .collect()
 }
 
-pub fn get_image_paths(source_dir: &PathBuf) -> Vec<PathBuf> {
-    let walker = WalkDir::new(source_dir).into_iter();
+pub fn get_image_paths(source_folder: &PathBuf) -> Vec<PathBuf> {
+    let walker = WalkDir::new(source_folder).into_iter();
     walker
         .filter_map(|path_result| match path_result {
             Ok(path) => match path.path().extension() {
@@ -278,7 +278,7 @@ pub fn get_minijinja_error_text(err: &minijinja::Error) -> Vec<String> {
     parts
 }
 
-pub fn get_neo_files_in_dir_recursively(dir: &PathBuf) -> Vec<PathBuf> {
+pub fn get_neo_files_in_folder_recursively(dir: &PathBuf) -> Vec<PathBuf> {
     WalkDir::new(dir)
         .into_iter()
         .filter_map(|entry| {
@@ -595,7 +595,7 @@ pub fn url_from_string(source: &str) -> String {
 // TODO: Switch to NeoError
 pub fn write_file_with_mkdir(path: &PathBuf, content: &str) -> Result<(), String> {
     match path.parent() {
-        Some(parent_dir) => match fs::create_dir_all(parent_dir) {
+        Some(parent_folder) => match fs::create_folder_all(parent_folder) {
             Ok(_) => match fs::write(path, content) {
                 Ok(_) => Ok(()),
                 Err(e) => Err(e.to_string()),

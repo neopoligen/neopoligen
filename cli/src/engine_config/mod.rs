@@ -9,8 +9,8 @@ use std::path::PathBuf;
 pub struct EngineConfig {
     pub active_site: String,
     pub port: usize,
-    #[serde(default = "default_sites_dir")]
-    pub sites_dir: PathBuf,
+    #[serde(default = "default_sites_folder")]
+    pub sites_folder: PathBuf,
 }
 
 impl EngineConfig {
@@ -21,6 +21,6 @@ impl EngineConfig {
     }
 }
 
-fn default_sites_dir() -> PathBuf {
-    document_dir().unwrap().join("Neopoligen")
+fn default_sites_folder() -> PathBuf {
+    document_folder().unwrap().join("Neopoligen")
 }
