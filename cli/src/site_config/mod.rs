@@ -37,8 +37,8 @@ pub struct SiteConfigV42 {
     pub project_root: Option<PathBuf>,
     #[serde(default = "site_output_folder_name")]
     pub site_output_folder_name: String,
-    #[serde(default = "empty_section_kinds")]
-    pub section_kinds: BTreeMap<String, Vec<String>>,
+    #[serde(default = "empty_section_types")]
+    pub section_types: BTreeMap<String, Vec<String>>,
     #[serde(default = "debug_parser_default")]
     pub debug_parser: bool,
 }
@@ -47,21 +47,21 @@ fn debug_parser_default() -> bool {
     false
 }
 
-fn empty_section_kinds() -> BTreeMap<String, Vec<String>> {
-    let mut kinds = BTreeMap::new();
-    kinds.insert("basic".to_string(), vec![]);
-    kinds.insert("checklist".to_string(), vec![]);
-    kinds.insert("css".to_string(), vec![]);
-    kinds.insert("csv".to_string(), vec![]);
-    kinds.insert("html".to_string(), vec![]);
-    kinds.insert("json5".to_string(), vec![]);
-    kinds.insert("list".to_string(), vec![]);
-    kinds.insert("olist".to_string(), vec![]);
-    kinds.insert("raw".to_string(), vec![]);
-    kinds.insert("script".to_string(), vec![]);
-    kinds.insert("toml".to_string(), vec![]);
-    kinds.insert("yaml".to_string(), vec![]);
-    kinds
+fn empty_section_types() -> BTreeMap<String, Vec<String>> {
+    let mut types = BTreeMap::new();
+    types.insert("basic".to_string(), vec![]);
+    types.insert("checklist".to_string(), vec![]);
+    types.insert("css".to_string(), vec![]);
+    types.insert("csv".to_string(), vec![]);
+    types.insert("html".to_string(), vec![]);
+    types.insert("json5".to_string(), vec![]);
+    types.insert("list".to_string(), vec![]);
+    types.insert("olist".to_string(), vec![]);
+    types.insert("raw".to_string(), vec![]);
+    types.insert("script".to_string(), vec![]);
+    types.insert("toml".to_string(), vec![]);
+    types.insert("yaml".to_string(), vec![]);
+    types
 }
 
 fn site_output_folder_name() -> String {
@@ -104,8 +104,8 @@ impl SiteConfigV42 {
                                 Ok((_, t)) => {
                                     if let Some(name) = &default_path.parent().unwrap().file_name()
                                     {
-                                        if let Some(kinds) = self.section_kinds.get_mut(t) {
-                                            kinds.push(name.to_string_lossy().to_string());
+                                        if let Some(types) = self.section_types.get_mut(t) {
+                                            types.push(name.to_string_lossy().to_string());
                                             ()
                                         }
                                     }

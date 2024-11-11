@@ -22,7 +22,7 @@ impl SiteConfigV42 {
             base_url: "testsite.localhost:1999".to_string(),
             site_output_folder_name: "site".to_string(),
             project_root: Some(PathBuf::from("/site_config_mock/project_root")),
-            section_kinds: BTreeMap::new(),
+            section_types: BTreeMap::new(),
             attr_flag_lists: Some(ConfigLists {
                 basic: BTreeMap::new(),
                 block: BTreeMap::new(),
@@ -57,7 +57,7 @@ impl SiteConfigV42 {
             base_url: "testsite.localhost:1999".to_string(),
             site_output_folder_name: "site".to_string(),
             project_root: Some(PathBuf::from("/test/mocks")),
-            section_kinds: BTreeMap::new(),
+            section_types: BTreeMap::new(),
             attr_flag_lists: Some(ConfigLists {
                 basic: BTreeMap::new(),
                 block: BTreeMap::new(),
@@ -106,7 +106,7 @@ impl SiteConfigV42 {
             base_url: "testsite.localhost:1999".to_string(),
             site_output_folder_name: "site".to_string(),
             project_root: Some(PathBuf::from("/test/mocks")),
-            section_kinds: BTreeMap::new(),
+            section_types: BTreeMap::new(),
             attr_flag_lists: Some(ConfigLists {
                 basic: BTreeMap::new(),
                 block: BTreeMap::new(),
