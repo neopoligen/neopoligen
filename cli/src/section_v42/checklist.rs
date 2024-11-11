@@ -73,7 +73,9 @@ pub fn checklist_section_full_v42<'a>(
         .iter()
         .fold(fail(source), |acc, item| match acc {
             Ok(v) => Ok(v),
-            Err(_) => tag(item.as_str()).context("").parse(source),
+            Err(_) => terminated(tag(item.as_str()), space0_line_ending_or_eof)
+                .context("")
+                .parse(source),
         })?;
     let (source, _) = space0_line_ending_or_eof.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);

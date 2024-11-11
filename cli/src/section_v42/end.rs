@@ -68,7 +68,7 @@ pub fn end_section_basic_v42<'a>(
         SectionParent::ListItem => (source, vec![]),
         SectionParent::SubList => (source, vec![]),
         SectionParent::Olist => {
-            many0(|src| olist_item_paragraph_block(src, site_config, parent.clone(), debug))
+            many0(|src| olist_item_paragraph_block(src, site_config, parent.clone(), debug, &kind))
                 .context("")
                 .parse(source)?
         }

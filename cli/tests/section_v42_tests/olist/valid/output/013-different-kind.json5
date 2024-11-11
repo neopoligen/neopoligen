@@ -1,0 +1,75 @@
+{
+  "attrs": {},
+  "bound": "full",
+  "children": [
+    {
+      "bound": "full",
+      "children": [
+        {
+          "children": [],
+          "template_list": [],
+          "kind": "devtest-olist-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "alfa",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": [
+            "sections/devtest-olist-item-paragraph/default.neoj",
+            "sections/olist-item-paragraph/default.neoj",
+          ],
+          "type": "block"
+        },
+      ],
+      "kind": "devtest-olist-item",
+      "template_list": [
+        "sections/devtest-olist-item/default.neoj",
+        "sections/olist-item/default.neoj",
+        
+      ],
+      "type": "olistitem"
+    },
+    {
+      "bound": "full",
+      "children": [
+        {
+          "children": [],
+          "template_list": [],
+          "kind": "devtest-olist-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "bravo",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": [
+            "sections/devtest-olist-item-paragraph/default.neoj",
+            "sections/olist-item-paragraph/default.neoj",
+            
+          ],
+          "type": "block"
+        },
+      ],
+      "kind": "devtest-olist-item",
+      "template_list": [
+        "sections/devtest-olist-item/default.neoj",
+        "sections/olist-item/default.neoj",
+        
+      ],
+      "type": "olistitem"
+    },
+
+  ],
+  "end_section": null,
+  "flags": [],
+  "kind": "devtest-olist",
+  "template_list": [
+    "sections/devtest-olist/default.neoj",
+    "sections/olist/default.neoj",
+    
+  ],
+  "type": "olist"
+}

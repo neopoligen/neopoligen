@@ -142,6 +142,7 @@ pub fn olist_item_paragraph_block<'a>(
     _site_config: &'a SiteConfigV42,
     _parent: SectionParent,
     debug: bool,
+    kind: &str,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let debug = true;
     let dbg_header = "OLIST_ITEM_PARAGRAPH_BLOCK";
@@ -167,18 +168,15 @@ pub fn olist_item_paragraph_block<'a>(
     .context("")
     .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
+    let kind_tag = format!("{}-item-paragraph", kind);
     let (source, _) = multispace0.context("").parse(source)?;
     Ok((
         source,
         SectionV42::Block(BlockSectionV42 {
             children: vec![],
-            kind: "olist-item-paragraph".to_string(),
+            kind: kind_tag.clone(),
             spans,
-            template_list: make_template_list(
-                "olist-item-paragraph",
-                "olist-item-paragraph",
-                "default",
-            ),
+            template_list: make_template_list("olist-item-paragraph", &kind_tag, "default"),
         }),
     ))
 }
