@@ -50,7 +50,7 @@ pub fn basic_section_v42<'a>(
 pub fn basic_section_full_v42<'a>(
     source: &'a str,
     site_config: &'a SiteConfigV42,
-    parent: SectionParent,
+    _parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let debug = true;
@@ -66,23 +66,10 @@ pub fn basic_section_full_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, _) = multispace0.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
-    let (source, children) = match parent {
-        // SectionParent::List => {
-        //     many0(|src| list_item_paragraph_block(src, site_config, parent.clone(), debug, &kind))
-        //         .context("")
-        //         .parse(source)?
-        // }
-        // SectionParent::ListItem => {
-        //     many0(|src| list_item_paragraph_block(src, site_config, parent.clone(), debug, &kind))
-        //         .context("")
-        //         .parse(source)?
-        // }
-        _ => {
-            many0(|src| paragraph_block_section_v42(src, site_config, SectionParent::Basic, debug))
-                .context("")
-                .parse(source)?
-        }
-    };
+    let (source, children) =
+        many0(|src| paragraph_block_section_v42(src, site_config, SectionParent::Basic, debug))
+            .context("")
+            .parse(source)?;
     let section = SectionV42::Basic(BasicSectionV42 {
         attrs,
         bound: Bound::Full,
@@ -116,34 +103,12 @@ pub fn basic_section_start_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, _) = multispace0.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
-    // TODO: Handle if you're in a list or a checklist here.
-    let (source, children) = match parent {
-        // SectionParent::ListItem => many0(alt((
-        //     |src| list_item_paragraph_block(src, site_config, parent.clone(), debug, &kind),
-        //     |src| start_or_full_section_v42(src, site_config, parent.clone(), debug),
-        // )))
-        // .context("")
-        // .parse(source)?,
-        // SectionParent::List => many0(alt((
-        //     |src| list_item_paragraph_block(src, site_config, parent.clone(), debug, &kind),
-        //     |src| start_or_full_section_v42(src, site_config, parent.clone(), debug),
-        // )))
-        // .context("")
-        // .parse(source)?,
-        _ => many0(alt((
+    let (source, children) =  many0(alt((
             |src| paragraph_block_section_v42(src, site_config, SectionParent::Basic, debug),
             |src| start_or_full_section_v42(src, site_config, SectionParent::Basic, debug),
         )))
         .context("")
-        .parse(source)?,
-    };
-
-    // let (source, children) = many0(alt((
-    //     |src| paragraph_block_section_v42(src, site_config, SectionParent::Basic, debug),
-    //     |src| start_or_full_section_v42(src, site_config, SectionParent::Basic, debug),
-    // )))
-    // .context("")
-    // .parse(source)?;
+        .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 6);
     let (source, end_section) =
         (|src| end_section_basic_v42(src, site_config, parent.clone(), kind, debug))
