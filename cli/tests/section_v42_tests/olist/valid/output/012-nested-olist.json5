@@ -69,7 +69,7 @@
           "kind": "olist",
           "template_list": [
             "sections/olist/default.neoj",
-            "sections/generic-olist/default.neoj"
+            
           ],
           "type": "olist"
         },
@@ -158,7 +158,7 @@
   "kind": "olist",
   "template_list": [
     "sections/olist/default.neoj",
-    "sections/generic-olist/default.neoj"
+    
   ],
   "type": "olist"
 }
