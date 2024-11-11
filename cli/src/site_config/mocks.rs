@@ -22,9 +22,9 @@ impl SiteConfigV42 {
         };
         let config = SiteConfigV42 {
             debug_parser: false,
-            default_language: "en".to_string(),
+            language_default: "en".to_string(),
             base_url: "testsite.localhost:1999".to_string(),
-            output_directory_name: "site".to_string(),
+            site_output_directory_name: "site".to_string(),
             project_root: Some(PathBuf::from("/site_config_mock/project_root")),
             sections,
             attr_flag_lists: Some(ConfigLists {
@@ -56,9 +56,9 @@ impl SiteConfigV42 {
         };
         let config = SiteConfigV42 {
             debug_parser: false,
-            default_language: "en".to_string(),
+            language_default: "en".to_string(),
             base_url: "testsite.localhost:1999".to_string(),
-            output_directory_name: "site".to_string(),
+            site_output_directory_name: "site".to_string(),
             project_root: Some(PathBuf::from("/test/mocks")),
             sections,
             attr_flag_lists: Some(ConfigLists {
@@ -104,9 +104,9 @@ impl SiteConfigV42 {
         };
         let config = SiteConfigV42 {
             debug_parser: false,
-            default_language: "en".to_string(),
+            language_default: "en".to_string(),
             base_url: "testsite.localhost:1999".to_string(),
-            output_directory_name: "site".to_string(),
+            site_output_directory_name: "site".to_string(),
             project_root: Some(PathBuf::from("/test/mocks")),
             sections,
             attr_flag_lists: Some(ConfigLists {
@@ -156,7 +156,7 @@ impl SiteConfigV42 {
     //        ],
     //    };
     //    let config = SiteConfig {
-    //        default_language: "en".to_string(),
+    //        language_default: "en".to_string(),
     //        base_url_raw: "testsite.localhost:1999".to_string(),
     //        output_directory: "_site".to_string(),
     //        project_root: Some(PathBuf::from("/test/mocks")),
@@ -195,7 +195,7 @@ impl SiteConfigV42 {
     //     // );
     //     SiteConfig {
     //         base_url_raw: "https://www.example.com".to_string(),
-    //         default_language: "en".to_string(),
+    //         language_default: "en".to_string(),
     //         theme_name: "mock-theme-name".to_string(),
     //         theme_options: None,
     //         // options: serde_json::Value::from_str(r#"{}"#).unwrap(),
@@ -278,7 +278,7 @@ impl SiteConfigV42 {
 //        ],
 //    };
 //    let config = SiteConfig {
-//        default_language: "en".to_string(),
+//        language_default: "en".to_string(),
 //        base_url_raw: "testsite.localhost:1999".to_string(),
 //        output_directory: "_site".to_string(),
 //        project_root: Some(PathBuf::from("/test/mocks")),
@@ -332,7 +332,7 @@ impl SiteConfigV42 {
 //         ],
 //     };
 //     let config = SiteConfig {
-//         default_language: "en".to_string(),
+//         language_default: "en".to_string(),
 //         base_url_raw: "testsite.localhost:1999".to_string(),
 //         output_directory: "_site".to_string(),
 //         project_root: Some(PathBuf::from("/test/mocks")),
@@ -371,7 +371,7 @@ impl SiteConfigV42 {
 //     // );
 //     SiteConfig {
 //         base_url_raw: "https://www.example.com".to_string(),
-//         default_language: "en".to_string(),
+//         language_default: "en".to_string(),
 //         theme_name: "mock-theme-name".to_string(),
 //         theme_options: None,
 //         // options: serde_json::Value::from_str(r#"{}"#).unwrap(),

@@ -277,7 +277,7 @@ fn empty_sections_v41() -> ConfigSections {
 //pub struct SiteConfig {
 //    #[serde(rename = "base_url")]
 //    pub base_url_raw: String,
-//    pub default_language: String,
+//    pub language_default: String,
 //    #[serde(default = "output_dir_name")]
 //    pub output_directory: String,
 //    pub theme_name: String,
@@ -327,10 +327,10 @@ pub struct ConfigSections {
 //             Ok(text) => match serde_json5::from_str::<SiteConfig>(&text) {
 //                 Ok(mut config) => {
 //                     config.project_root = Some(project_root.clone());
-//                     if !config.theme_dir().is_dir() {
+//                     if !config.theme_input_root_dir().is_dir() {
 //                         Err(NeoError {
 //                             kind: NeoErrorKind::MissingThemeDirectory {
-//                                 path: config.theme_dir().clone(),
+//                                 path: config.theme_input_root_dir().clone(),
 //                             },
 //                         })
 //                     } else {
@@ -375,11 +375,11 @@ pub struct ConfigSections {
 // pub fn cache_dir(&self) -> PathBuf {
 //     self.admin_dir().join("cache")
 // }
-// pub fn content_source_dir(&self) -> PathBuf {
+// pub fn content_input_root_dir(&self) -> PathBuf {
 //     self.project_dir().join("content")
 // }
-// pub fn default_language(&self) -> Result<String> {
-//     Ok(self.default_language.clone())
+// pub fn language_default(&self) -> Result<String> {
+//     Ok(self.language_default.clone())
 // }
 
 // pub fn feeds_dest_dir(&self) -> PathBuf {
@@ -393,7 +393,7 @@ pub struct ConfigSections {
 //     self.cache_dir().join("neo-images")
 // }
 // pub fn image_dest_dir(&self) -> PathBuf {
-//     self.output_dest_dir().join("neo-images")
+//     self.site_output_root_dir().join("neo-images")
 // }
 // pub fn image_source_dir(&self) -> PathBuf {
 //     self.project_dir().join("images")
@@ -425,7 +425,7 @@ pub struct ConfigSections {
 //     self.cache_dir().clone().join("og-images")
 // }
 
-// pub fn output_dest_dir(&self) -> PathBuf {
+// pub fn site_output_root_dir(&self) -> PathBuf {
 //     self.project_dir().join("docs")
 // }
 
@@ -444,7 +444,7 @@ pub struct ConfigSections {
 // pub fn themes_dir(&self) -> PathBuf {
 //     self.project_dir().join("themes")
 // }
-// pub fn theme_dir(&self) -> PathBuf {
+// pub fn theme_input_root_dir(&self) -> PathBuf {
 //     self.themes_dir().join(self.theme_name.clone())
 // }
 
@@ -462,13 +462,13 @@ pub struct ConfigSections {
 //     }
 // }
 // pub fn templates_dir(&self) -> PathBuf {
-//     self.theme_dir().join("templates")
+//     self.theme_input_root_dir().join("templates")
 // }
 // pub fn theme_tests_dest_dir(&self) -> PathBuf {
 //     self.status_dir().join("theme-tests")
 // }
 // pub fn theme_tests_source_dir(&self) -> PathBuf {
-//     self.theme_dir().join("tests")
+//     self.theme_input_root_dir().join("tests")
 // }
 
 // pub fn project_dir(&self) -> PathBuf {
@@ -524,7 +524,7 @@ pub struct ConfigSections {
 // }
 
 //pub fn load_sections(&mut self) {
-//    let section_root = self.theme_dir().join("sections");
+//    let section_root = self.theme_input_root_dir().join("sections");
 //    //let section_root = self.templates_dir().join("sections");
 //    let section_categories = [
 //        "basic",

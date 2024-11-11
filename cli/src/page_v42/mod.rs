@@ -191,7 +191,7 @@ impl PageV42b {
     }
 
     pub fn set_language_from_site_config(&mut self, site_config: &SiteConfigV42) {
-        self.language = Some(site_config.default_language.clone());
+        self.language = Some(site_config.language_default.clone());
     }
 
     pub fn set_rel_output_path(&mut self) {

@@ -81,15 +81,19 @@ async fn run_web_server(engine_config: EngineConfig, site_config: SiteConfigV42)
     let reloader = livereload.reloader();
     build_site(&reloader, &site_config);
     let localhost_domain = format!("localhost:{}", engine_config.port);
-    let serve_dir = ServeDir::new(&site_config.output_dest_dir())
-        .not_found_service(ServeFile::new(&site_config.errors_index_page()));
+    let serve_dir = ServeDir::new(&site_config.site_output_root_dir())
+        .not_found_service(ServeFile::new(&site_config.errors_output_index_page()));
     let app = Router::new()
-        .nest_service("/neo-status", ServeDir::new(&site_config.errors_dir()))
+        .nest_service(
+            "/neo-status",
+            ServeDir::new(&site_config.errors_output_root_dir()),
+        )
         .nest_service("/", serve_dir)
         .layer(livereload);
     let (tx, rx) = mpsc::channel(1);
-    let _content_watcher = FileWatcher::new(&site_config.content_source_dir(), tx.clone()).await;
-    let _theme_watcher = FileWatcher::new(&site_config.theme_dir(), tx.clone()).await;
+    let _content_watcher =
+        FileWatcher::new(&site_config.content_input_root_dir(), tx.clone()).await;
+    let _theme_watcher = FileWatcher::new(&site_config.theme_input_root_dir(), tx.clone()).await;
     tokio::spawn(async move {
         catch_file_changes(reloader, rx, &site_config).await;
     });
@@ -281,7 +285,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
 //         .layer(livereload);
 //     event!(Level::INFO, "Starting web server");
 //     let (tx, rx) = mpsc::channel(1);
-//     let _theme_watcher = FileWatcher::new(&site_config.theme_dir(), tx.clone()).await;
+//     let _theme_watcher = FileWatcher::new(&site_config.theme_input_root_dir(), tx.clone()).await;
 //     let _content_watcher = FileWatcher::new(&site_config.content_dir(), tx.clone()).await;
 //     tokio::spawn(async move {
 //         catch_file_changes(reloader, site_config, rx).await;

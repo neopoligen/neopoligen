@@ -40,12 +40,12 @@ impl BuilderV42<'_> {
     pub fn deploy_theme_files(&self) {
         event!(Level::DEBUG, "Deploying Theme Files");
 
-        // let source_dir = self.config.as_ref().unwrap().theme_dir().join("files");
+        // let source_dir = self.config.as_ref().unwrap().theme_input_root_dir().join("files");
         // let dest_dir = self
         //     .config
         //     .as_ref()
         //     .unwrap()
-        //     .output_dest_dir()
+        //     .site_output_root_dir()
         //     .join("theme");
         // // TODO: handle the result from copy_dir which
         // // is an error.
@@ -56,7 +56,7 @@ impl BuilderV42<'_> {
     pub fn empty_output_dirs(&self) {
         event!(Level::INFO, "Emptying Output Dirs");
         let _ = empty_dir(&self.site_config.status_dest_dir());
-        let _ = empty_dir(&self.site_config.output_dest_dir());
+        let _ = empty_dir(&self.site_config.site_output_root_dir());
     }
 
     #[instrument(skip(self))]
@@ -128,7 +128,7 @@ impl BuilderV42<'_> {
     #[instrument(skip(self))]
     pub fn ingest_source_files(&mut self) -> Result<()> {
         event!(Level::INFO, "Loading Content From Files");
-        for entry in WalkDir::new(&self.site_config.content_source_dir()) {
+        for entry in WalkDir::new(&self.site_config.content_input_root_dir()) {
             let path = entry?.path().to_path_buf();
             if path.is_file() {
                 if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
@@ -162,14 +162,14 @@ impl BuilderV42<'_> {
     #[instrument(skip(self))]
     pub fn load_file_system_templates(&mut self) -> Result<()> {
         event!(Level::INFO, "Loading Templates");
-        for entry in WalkDir::new(&self.site_config.theme_dir()) {
+        for entry in WalkDir::new(&self.site_config.theme_input_root_dir()) {
             let path = entry?.path().to_path_buf();
             if path.is_file() {
                 if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
                     if ext.to_ascii_lowercase() == "neoj"
                         && !filename.to_str().unwrap().starts_with(".")
                     {
-                        let template_name = &path.strip_prefix(&self.site_config.theme_dir());
+                        let template_name = &path.strip_prefix(&self.site_config.theme_input_root_dir());
                         let content = fs::read_to_string(&path)?;
                         match self.env.add_template_owned(
                             template_name.clone().unwrap().display().to_string(),
@@ -202,7 +202,7 @@ impl BuilderV42<'_> {
         event!(Level::INFO, "Generating Macro Loader");
         // TODO: Handle error if the macros directory gets deleted
         let mut macros: Vec<String> = vec![];
-        for entry in WalkDir::new(&self.site_config.macros_dir()) {
+        for entry in WalkDir::new(&self.site_config.macros_input_root_dir()) {
             let path = entry?.path().to_path_buf();
             if path.is_file() {
                 if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
@@ -259,7 +259,7 @@ impl BuilderV42<'_> {
                 )) {
                     Ok(output) => {
                         match write_file_with_mkdir(
-                            &self.site_config.errors_index_page(),
+                            &self.site_config.errors_output_index_page(),
                             output.as_str(),
                         ) {
                             // TODO: Make dynamic page error here
@@ -268,7 +268,7 @@ impl BuilderV42<'_> {
                     }
                     Err(e) => {
                         match write_file_with_mkdir(
-                            &self.site_config.errors_index_page(),
+                            &self.site_config.errors_output_index_page(),
                             format!(
                                 r#"<!DOCTYPE><html><head>
 <style>body {{ background-color: #200; color: #ffa; }}</style>
@@ -286,7 +286,7 @@ impl BuilderV42<'_> {
             }
             Err(e) => {
                 match write_file_with_mkdir(
-                    &self.site_config.errors_index_page(),
+                    &self.site_config.errors_output_index_page(),
                     format!(
                         r#"<!DOCTYPE><html><head>
 <style>body {{ background-color: #200; color: #ffa; }}</style>
@@ -313,7 +313,7 @@ impl BuilderV42<'_> {
                 if let Some(_href) = &page.href {
                     let absolute_output_path = &self
                         .site_config
-                        .output_dest_dir()
+                        .site_output_root_dir()
                         .join(page.rel_output_path.as_ref().unwrap());
                     match self.env.get_template("helpers/issue-page/default.neoj") {
                         Ok(template) => match template.render(context!(
@@ -355,7 +355,7 @@ impl BuilderV42<'_> {
         for (_, page) in &mut self.pages_v42 {
             if let Some(rel_output_path) = &page.rel_output_path {
                 let absolute_output_path =
-                    &self.site_config.output_dest_dir().join(rel_output_path);
+                    &self.site_config.site_output_root_dir().join(rel_output_path);
                 if let Some(output) = &page.output {
                     match write_file_with_mkdir(&absolute_output_path, output) {
                         Ok(()) => {
@@ -422,14 +422,14 @@ impl BuilderV42<'_> {
 // #[instrument(skip(self))]
 // pub fn load_templates(&mut self) -> Result<()> {
 //     event!(Level::INFO, "Loading Templates");
-//     for entry in WalkDir::new(&self.site_config.theme_dir()) {
+//     for entry in WalkDir::new(&self.site_config.theme_input_root_dir()) {
 //         let path = entry?.path().to_path_buf();
 //         if path.is_file() {
 //             if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
 //                 if ext.to_ascii_lowercase() == "neoj"
 //                     && !filename.to_str().unwrap().starts_with(".")
 //                 {
-//                     let template_name = &path.strip_prefix(&self.site_config.theme_dir());
+//                     let template_name = &path.strip_prefix(&self.site_config.theme_input_root_dir());
 //                     let content = fs::read_to_string(&path)?;
 //                     self.templates.insert(
 //                         template_name
@@ -474,7 +474,7 @@ impl BuilderV42<'_> {
 //    event!(Level::INFO, "Outputting pages");
 //    //site_clone2.pages.iter().for_each(|(_id, page)| {
 //    //    let builder_error: Option<NeoError>;
-//    //    //let base_rel_path = PathBuf::from(self.site_config.default_language().unwrap());
+//    //    //let base_rel_path = PathBuf::from(self.site_config.language_default().unwrap());
 //    //    let file_rel_path = page.html_output_path.clone();
 //    //    let absolute_output_path = site_config
 //    //        .project_dir()
@@ -625,7 +625,7 @@ impl BuilderV42<'_> {
 //#[instrument(skip(self))]
 //pub fn load_pages_from_file_system(&mut self) -> Result<()> {
 //    event!(Level::INFO, "Loading Pages From FS");
-//    for entry in WalkDir::new(&self.site_config.content_source_dir()) {
+//    for entry in WalkDir::new(&self.site_config.content_input_root_dir()) {
 //        let path = entry?.path().to_path_buf();
 //        if path.is_file() {
 //            if let (Some(filename), Some(ext)) = (path.file_name(), path.extension()) {
