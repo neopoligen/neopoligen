@@ -39,17 +39,9 @@ impl BuilderV42<'_> {
     #[instrument(skip(self))]
     pub fn deploy_theme_files(&self) {
         event!(Level::DEBUG, "Deploying Theme Files");
-
-        // let source_folder = self.config.as_ref().unwrap().theme_input_root_folder().join("files");
-        // let dest_folder = self
-        //     .config
-        //     .as_ref()
-        //     .unwrap()
-        //     .site_output_root_folder()
-        //     .join("theme");
-        // // TODO: handle the result from copy_folder which
-        // // is an error.
-        // let _ = copy_folder(&source_folder, &dest_folder);
+        let source_folder = self.site_config.theme_files_input_folder();
+        let dest_folder = self.site_config.theme_files_output_folder();
+        let _ = copy_folder(&source_folder, &dest_folder);
     }
 
     #[instrument(skip(self))]
@@ -169,7 +161,8 @@ impl BuilderV42<'_> {
                     if ext.to_ascii_lowercase() == "neoj"
                         && !filename.to_str().unwrap().starts_with(".")
                     {
-                        let template_name = &path.strip_prefix(&self.site_config.theme_input_root_folder());
+                        let template_name =
+                            &path.strip_prefix(&self.site_config.theme_input_root_folder());
                         let content = fs::read_to_string(&path)?;
                         match self.env.add_template_owned(
                             template_name.clone().unwrap().display().to_string(),
@@ -354,8 +347,10 @@ impl BuilderV42<'_> {
         event!(Level::INFO, "Outputting pages");
         for (_, page) in &mut self.pages_v42 {
             if let Some(rel_output_path) = &page.rel_output_path {
-                let absolute_output_path =
-                    &self.site_config.site_output_root_folder().join(rel_output_path);
+                let absolute_output_path = &self
+                    .site_config
+                    .site_output_root_folder()
+                    .join(rel_output_path);
                 if let Some(output) = &page.output {
                     match write_file_with_mkdir(&absolute_output_path, output) {
                         Ok(()) => {

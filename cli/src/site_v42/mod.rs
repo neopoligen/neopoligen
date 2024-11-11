@@ -98,6 +98,18 @@ impl SiteV42b {
         }
     }
 
+    pub fn neo_files_href(&self) -> Option<String> {
+        Some(format!("/{}", &self.config.neo_files_output_folder_name()))
+    }
+
+    pub fn theme_files_href(&self) -> Option<String> {
+        Some(format!(
+            "/{}/{}",
+            &self.config.neo_files_output_folder_name(),
+            &self.config.theme_files_output_folder_name()
+        ))
+    }
+
     pub fn title_for_page(&self, args: &[Value]) -> Option<String> {
         match &self.get_page_id(args) {
             Some(id) => match &self.pages.get(id) {
@@ -472,6 +484,8 @@ impl Object for SiteV42b {
             "get_page_with_display_path" => self.get_page_with_display_path(args),
             "get_section_attrs" => self.get_section_attrs(args),
             "href_for_page" => Ok(Value::from(self.href_for_page(args))),
+            "neo_files_href" => Ok(Value::from(self.neo_files_href())),
+            "theme_files_href" => Ok(Value::from(self.theme_files_href())),
             "title_for_page" => Ok(Value::from(self.title_for_page(args))),
             _ => Ok(Value::from(format!(
                 "[Warning: tried to use 'site.{}(...)' which does not exist]",

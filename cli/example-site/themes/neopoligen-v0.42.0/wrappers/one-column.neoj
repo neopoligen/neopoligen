@@ -4,6 +4,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<link rel="stylesheet" href="[@ neo.theme_stylesheets_folder() @]/theme.css" />
 
 [#
 <title>[@ page.title @]</title>
@@ -15,79 +16,19 @@
 <meta property="og:image" content="https://res.cloudinary.com/awsimages/image/upload/og-image-no-title-white-on-black.jpg" />
 #]
 
-<style>
-*, 
-*::before, 
-*::after {
-  box-sizing: border-box;
-}
-
-* {
-  margin: 0;
-}
-
-body {
-  background-color: #0d1229;
-  color: #f0e5d8;
-  font-size: 15px;
-  font-family: Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
-  font-weight: normal;
-  line-height: 1.5;
-}
-
-a {
-  text-decoration: none;
-  color: #ccb147;
-}
-
-.align-bottom {
-  display: flex;
-  align-items: flex-end;
-}
-
-.checklist-section {
-  display: grid;
-  grid-template-columns: 3ch 1fr;
-}
-
-.checklist-section > div {
-  margin-top: 1.5rem;
-}
-
-.flow > :where(:not(:first-child)) {
-  margin-top: var(--flow-space, 1em);
-}
-
-.footnote-section {
-  display: grid;
-  grid-template-columns: 4ch 1fr;
-  gap: 10px;
-}
-
-.medium-width {
-  max-width: 64ch;
-  margin-inline: auto;
-}
-
-.warning {
-  padding: 1.3rem;
-  margin: 0.4rem;
-  border: 1px solid #777;
-  border-radius: 0.3rem;
-}
-</style>
 [@ neo.output_css() @]
 </head>
-<body class="built-in-flow">
-<header class="medium-width">
-<a href="/">Home</a>
+<body>
+
+<header class="wrapper-base">
+  <a href="/">Home</a>
 </header>
 
-<main class="medium-width flow">
+<main class="wrapper-base flow">
     [!- block body_main -!][!- endblock -!]
 </main>
 
-<footer class="medium-width">
+<footer class="wrapper-base">
   [!- include "includes/debugging.neoj" -!]
   <div>[@ site.generated_at("Generated on %a. %B %-d at %-I:%M:%S%p") @]</div>
 </footer>
