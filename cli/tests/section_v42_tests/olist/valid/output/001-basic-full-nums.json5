@@ -18,7 +18,7 @@
           ],
           "template_list": [
             "sections/olist-item-paragraph/default.neoj",
-            "sections/generic-olist-item-paragraph/default.neoj"
+            
           ],
           "type": "block"
         },
@@ -46,7 +46,7 @@
           ],
           "template_list": [
             "sections/olist-item-paragraph/default.neoj",
-            "sections/generic-olist-item-paragraph/default.neoj"
+            
           ],
           "type": "block"
         },
