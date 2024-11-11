@@ -7,11 +7,13 @@ use crate::section_v42::checklist_item::*;
 use crate::section_v42::*;
 use crate::site_config::SiteConfigV42;
 use crate::span_v42::space0_line_ending_or_eof::*;
+use itertools::Itertools;
 use nom::bytes::complete::tag;
 use nom::character::complete::line_ending;
 use nom::character::complete::multispace0;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
+use nom::combinator::fail;
 use nom::multi::many0;
 use nom::sequence::pair;
 use nom::sequence::preceded;
@@ -20,6 +22,7 @@ use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
+use nom_supreme::error::GenericErrorTree;
 use nom_supreme::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
@@ -51,6 +54,9 @@ pub fn checklist_section_v42<'a>(
     Ok((source, result))
 }
 
+//fn run_parse(value: &str) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
+//}
+
 pub fn checklist_section_full_v42<'a>(
     source: &'a str,
     site_config: &'a SiteConfigV42,
@@ -67,7 +73,44 @@ pub fn checklist_section_full_v42<'a>(
     let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
 
-    let (source, kind) = tag("checklist").context("").parse(source)?;
+    //    let (source, kind) = tag("checklist").context("").parse(source)?;
+
+    // let (source, kind) = site_config
+    //     .section_types
+    //     .iter()
+    //     .map(|f| tag("checklist").context("").parse(source))
+    //     .collect();
+
+    let (source, kind) = site_config
+        .section_types
+        .get("checklist")
+        .unwrap()
+        .iter()
+        .fold(fail.context("").parse(source), |acc, item| match acc {
+            Ok(v) => Ok(v),
+            _ => tag(item.as_str()).context("").parse(source),
+        })?;
+
+    // {
+    //     site_config
+    //         .section_types
+    //         .get("checklist")
+    //         .unwrap()
+    //         .iter()
+    //         .find_map(|t| {
+    //             dbg!("------------------------");
+    //             dbg!(&t);
+    //             match tag::<&str, &str, nom::error::Error<&str>>(t.as_str())
+    //                 .context("")
+    //                 .parse(source)
+    //             {
+    //                 Ok(v) => Some(Ok(v)),
+    //                 Err(e) => Some(Err(GenericErrorTree)),
+    //             }
+    //         })
+    //         .unwrap()
+    // }?;
+
     let (source, _) = space0_line_ending_or_eof.context("").parse(source)?;
 
     // let (source, kind) = alt((terminated(tag("checklist"), space0_line_ending_or_eof),))

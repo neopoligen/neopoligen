@@ -30,6 +30,7 @@ use tracing::{event, instrument, Level};
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SiteConfigV42 {
+    // TODO: Switch this to section_attrs_to_hoist and make a BTreeMap
     pub attr_flag_lists: Option<ConfigLists>,
     pub base_url: String,
     pub language_default: String,

@@ -5,24 +5,15 @@ use std::collections::BTreeMap;
 
 impl SiteConfigV42 {
     pub fn config_for_spec_tests() -> SiteConfigV42 {
-        // let sections = ConfigSections {
-        //     basic: vec!["title".to_string(), "previews".to_string()],
-        //     block: vec![],
-        //     checklist: vec![],
-        //     checklist_item: vec![],
-        //     json5: vec!["pagedata".to_string()],
-        //     list: vec![],
-        //     list_item: vec![],
-        //     raw: vec![],
-        // };
-
+        let mut section_types = BTreeMap::new();
+        section_types.insert("checklist".to_string(), vec!["checklist".to_string()]);
         let config = SiteConfigV42 {
             debug_parser: false,
             language_default: "en".to_string(),
             base_url: "testsite.localhost:1999".to_string(),
             site_output_folder_name: "site".to_string(),
             project_root: Some(PathBuf::from("/site_config_mock/project_root")),
-            section_types: BTreeMap::new(),
+            section_types,
             attr_flag_lists: Some(ConfigLists {
                 basic: BTreeMap::new(),
                 block: BTreeMap::new(),
@@ -40,24 +31,15 @@ impl SiteConfigV42 {
     }
 
     pub fn mock1_basic() -> SiteConfigV42 {
-        // let sections = ConfigSections {
-        //     basic: vec!["title".to_string(), "previews".to_string()],
-        //     block: vec![],
-        //     checklist: vec![],
-        //     checklist_item: vec![],
-        //     json5: vec!["pagedata".to_string()],
-        //     list: vec![],
-        //     list_item: vec![],
-        //     raw: vec![],
-        // };
-
+        let mut section_types = BTreeMap::new();
+        section_types.insert("checklist".to_string(), vec!["checklist".to_string()]);
         let config = SiteConfigV42 {
             debug_parser: false,
             language_default: "en".to_string(),
             base_url: "testsite.localhost:1999".to_string(),
             site_output_folder_name: "site".to_string(),
             project_root: Some(PathBuf::from("/test/mocks")),
-            section_types: BTreeMap::new(),
+            section_types,
             attr_flag_lists: Some(ConfigLists {
                 basic: BTreeMap::new(),
                 block: BTreeMap::new(),
@@ -75,38 +57,15 @@ impl SiteConfigV42 {
     }
 
     pub fn mock_for_files_in_test_samples_folder() -> SiteConfigV42 {
-        // let sections = ConfigSections {
-        //     basic: vec![
-        //         "title".to_string(),
-        //         "previews".to_string(),
-        //         "tldr".to_string(),
-        //         "div".to_string(),
-        //         // "blurb".to_string(),
-        //         // "youtube".to_string(),
-        //     ],
-        //     block: vec![],
-        //     checklist: vec![],
-        //     checklist_item: vec![],
-        //     json5: vec!["pagedata".to_string()],
-        //     list: vec![],
-        //     list_item: vec![],
-        //     raw: vec![
-        //         "code".to_string(),
-        //         "css".to_string(),
-        //         "html".to_string(),
-        //         "javascript".to_string(),
-        //         "results".to_string(),
-        //         "output".to_string(),
-        //     ],
-        // };
-
+        let mut section_types = BTreeMap::new();
+        section_types.insert("checklist".to_string(), vec!["checklist".to_string()]);
         let config = SiteConfigV42 {
             debug_parser: false,
             language_default: "en".to_string(),
             base_url: "testsite.localhost:1999".to_string(),
             site_output_folder_name: "site".to_string(),
             project_root: Some(PathBuf::from("/test/mocks")),
-            section_types: BTreeMap::new(),
+            section_types,
             attr_flag_lists: Some(ConfigLists {
                 basic: BTreeMap::new(),
                 block: BTreeMap::new(),
