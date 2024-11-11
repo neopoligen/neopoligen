@@ -103,12 +103,12 @@ pub fn basic_section_start_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, _) = multispace0.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
-    let (source, children) =  many0(alt((
-            |src| paragraph_block_section_v42(src, site_config, SectionParent::Basic, debug),
-            |src| start_or_full_section_v42(src, site_config, SectionParent::Basic, debug),
-        )))
-        .context("")
-        .parse(source)?;
+    let (source, children) = many0(alt((
+        |src| paragraph_block_section_v42(src, site_config, SectionParent::Basic, debug),
+        |src| start_or_full_section_v42(src, site_config, SectionParent::Basic, debug),
+    )))
+    .context("")
+    .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 6);
     let (source, end_section) =
         (|src| end_section_basic_v42(src, site_config, parent.clone(), kind, debug))

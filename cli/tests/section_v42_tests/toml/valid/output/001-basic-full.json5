@@ -1,0 +1,19 @@
+{
+  attrs: {},
+  bound: "full",
+  data: {
+    settings: {
+      alfa: true,
+      bravo: false,
+    }
+  },
+  end_section: null,
+  error: null,
+  flags: [],
+  kind: "devtest-toml",
+  template_list: [
+    "sections/devtest-toml/default.neoj",
+    "sections/toml/default.neoj",
+  ],
+  type: "toml",
+}

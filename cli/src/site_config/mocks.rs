@@ -35,10 +35,12 @@ impl SiteConfigV42 {
         section_types.insert("basic".to_string(), basic_kinds);
         let checklist_kinds = vec!["checklist".to_string(), "todos".to_string()];
         section_types.insert("checklist".to_string(), checklist_kinds);
-        let olist_kinds = vec!["olist".to_string(), "devtest-olist".to_string()];
-        section_types.insert("olist".to_string(), olist_kinds);
         let list_kinds = vec!["list".to_string(), "notes".to_string()];
         section_types.insert("list".to_string(), list_kinds);
+        let olist_kinds = vec!["olist".to_string(), "devtest-olist".to_string()];
+        section_types.insert("olist".to_string(), olist_kinds);
+        let toml_kinds = vec!["devtest-toml".to_string()];
+        section_types.insert("toml".to_string(), toml_kinds);
         let config = SiteConfigV42 {
             debug_parser: false,
             language_default: "en".to_string(),
