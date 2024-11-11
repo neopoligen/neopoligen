@@ -53,11 +53,11 @@ pub fn end_section_basic_v42<'a>(
     let (source, _) = multispace0.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, children) = match parent {
-        SectionParent::Checklist => {
-            many0(|src| checklist_item_paragraph_block(src, site_config, parent.clone(), debug))
-                .context("")
-                .parse(source)?
-        }
+        SectionParent::Checklist => many0(|src| {
+            checklist_item_paragraph_block(src, site_config, parent.clone(), debug, &kind)
+        })
+        .context("")
+        .parse(source)?,
         SectionParent::ChecklistItem => (source, vec![]),
         SectionParent::SubChecklist => (source, vec![]),
         SectionParent::List => {

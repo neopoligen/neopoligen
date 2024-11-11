@@ -33,6 +33,7 @@ pub fn checklist_item_section_full_v42<'a>(
     site_config: &'a SiteConfigV42,
     _parent: SectionParent,
     debug: bool,
+    kind: &str,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let debug = true;
     let dbg_header = "CHECKLISTITEM_SECTION_FULL";
@@ -44,7 +45,7 @@ pub fn checklist_item_section_full_v42<'a>(
         .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, paragraphs) = many1(|src| {
-        checklist_item_paragraph_block(src, site_config, SectionParent::ChecklistItem, debug)
+        checklist_item_paragraph_block(src, site_config, SectionParent::ChecklistItem, debug, &kind)
     })
     .context("")
     .parse(source)?;
@@ -52,13 +53,14 @@ pub fn checklist_item_section_full_v42<'a>(
         Some(value) => (true, Some(value.to_string())),
         None => (false, None),
     };
+    let kind_name = format!("{}-item", kind);
     let section = SectionV42::ChecklistItem(ChecklistItemSectionV42 {
         bound: Bound::Full,
         checked,
         checked_string,
         children: paragraphs,
-        kind: "checklist-item".to_string(),
-        template_list: make_template_list("checklist-item", "checklist-item", "default"),
+        kind: kind_name.clone(),
+        template_list: make_template_list("checklist-item", &kind_name, "default"),
     });
     Ok((source, section))
 }
@@ -68,6 +70,7 @@ pub fn checklist_item_section_start_v42<'a>(
     site_config: &'a SiteConfigV42,
     _parent: SectionParent,
     debug: bool,
+    kind: &str,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let debug = true;
     let dbg_header = "CHECKLISTITEM_SECTION_FULL";
@@ -79,7 +82,15 @@ pub fn checklist_item_section_start_v42<'a>(
         .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, paragraphs) = many1(alt((
-        |src| checklist_item_paragraph_block(src, site_config, SectionParent::ChecklistItem, debug),
+        |src| {
+            checklist_item_paragraph_block(
+                src,
+                site_config,
+                SectionParent::ChecklistItem,
+                debug,
+                &kind,
+            )
+        },
         |src| start_or_full_section_v42(src, site_config, SectionParent::ChecklistItem, debug),
     )))
     .context("")
@@ -88,13 +99,14 @@ pub fn checklist_item_section_start_v42<'a>(
         Some(value) => (true, Some(value.to_string())),
         None => (false, None),
     };
+    let kind_name = format!("{}-item", kind);
     let section = SectionV42::ChecklistItem(ChecklistItemSectionV42 {
         bound: Bound::Full,
         checked,
         checked_string,
         children: paragraphs,
-        kind: "checklist-item".to_string(),
-        template_list: make_template_list("checklist-item", "checklist-item", "default"),
+        kind: kind_name.clone(),
+        template_list: make_template_list("checklist-item", &kind_name, "default"),
     });
     Ok((source, section))
 }

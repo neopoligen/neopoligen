@@ -49,6 +49,7 @@ pub fn checklist_item_paragraph_block<'a>(
     _site_config: &'a SiteConfigV42,
     _parent: SectionParent,
     debug: bool,
+    kind: &str,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let debug = true;
     let dbg_header = "CHECKLIST_ITEM_PARAGRAPH_BLOCK";
@@ -80,13 +81,14 @@ pub fn checklist_item_paragraph_block<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, _) = multispace0.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);
+    let kind_name = format!("{}-item-paragraph", kind);
     Ok((
         source,
         SectionV42::Block(BlockSectionV42 {
             children: vec![],
-            kind: "checklist-item-paragraph".to_string(),
+            kind: kind_name.clone(),
             spans,
-            template_list: vec!["sections/checklist-item-paragraph/default.neoj".to_string()],
+            template_list: make_template_list("checklist-item-paragraph", &kind_name, "default"),
         }),
     ))
 }

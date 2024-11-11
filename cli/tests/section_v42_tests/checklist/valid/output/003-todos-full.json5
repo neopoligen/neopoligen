@@ -9,7 +9,7 @@
       "children": [
         {
           "children": [],
-          "kind": "checklist-item-paragraph",
+          "kind": "todos-item-paragraph",
           "spans": [
             {
               "kind": "plain-text",
@@ -17,12 +17,18 @@
               "type": "plain-text"
             }
           ],
-          "template_list": ["sections/checklist-item-paragraph/default.neoj"],
+          "template_list": [
+            "sections/todos-item-paragraph/default.neoj",
+            "sections/checklist-item-paragraph/default.neoj",
+            ],
           "type": "block"
         }
       ],
-      "kind": "checklist-item",
-      "template_list": ["sections/checklist-item/default.neoj"],
+      "kind": "todos-item",
+      "template_list": [
+        "sections/todos-item/default.neoj",
+        "sections/checklist-item/default.neoj",
+        ],
       "type": "checklistitem"
     }
   ],

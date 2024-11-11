@@ -22,7 +22,6 @@ use nom::sequence::tuple;
 use nom::IResult;
 use nom::Parser;
 use nom_supreme::error::ErrorTree;
-use nom_supreme::error::GenericErrorTree;
 use nom_supreme::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
@@ -81,42 +80,17 @@ pub fn checklist_section_full_v42<'a>(
             Ok(v) => Ok(v),
             Err(_) => tag(item.as_str()).context("").parse(source),
         })?;
-
-    // {
-    //     site_config
-    //         .section_types
-    //         .get("checklist")
-    //         .unwrap()
-    //         .iter()
-    //         .find_map(|t| {
-    //             dbg!("------------------------");
-    //             dbg!(&t);
-    //             match tag::<&str, &str, nom::error::Error<&str>>(t.as_str())
-    //                 .context("")
-    //                 .parse(source)
-    //             {
-    //                 Ok(v) => Some(Ok(v)),
-    //                 Err(e) => Some(Err(GenericErrorTree)),
-    //             }
-    //         })
-    //         .unwrap()
-    // }?;
-
     let (source, _) = space0_line_ending_or_eof.context("").parse(source)?;
-
-    // let (source, kind) = alt((terminated(tag("checklist"), space0_line_ending_or_eof),))
-    //     .context("")
-    //     .parse(source)?;
-
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, _) = multispace0.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
-    let (source, children) =
-        many0(|src| checklist_item_section_full_v42(src, site_config, next_parent.clone(), debug))
-            .context("")
-            .parse(source)?;
+    let (source, children) = many0(|src| {
+        checklist_item_section_full_v42(src, site_config, next_parent.clone(), debug, &kind)
+    })
+    .context("")
+    .parse(source)?;
     let section = SectionV42::Checklist(ChecklistSectionV42 {
         attrs,
         bound: Bound::Full,
@@ -158,7 +132,7 @@ pub fn checklist_section_start_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 4);
     // TODO: Handle if you're in a checklist or a checklist here.
     let (source, children) = many0(alt((
-        |src| checklist_item_section_start_v42(src, site_config, next_parent.clone(), debug),
+        |src| checklist_item_section_start_v42(src, site_config, next_parent.clone(), debug, &kind),
         |src| start_or_full_section_v42(src, site_config, next_parent.clone(), debug),
     )))
     .context("")
