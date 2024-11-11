@@ -44,11 +44,11 @@ async fn main() {
         .with(file_layer)
         .with(stdout_layer);
     tracing::subscriber::set_global_default(subscriber).expect("unable to set global subscriber");
-    let engine_config_dir = config_dir().unwrap().join("Neopoligen");
+    let engine_config_folder = config_folder().unwrap().join("Neopoligen");
     // TODO: Document this for debug set up.
     let engine_config_path = match std::env::var("NEOENV") {
-        Ok(val) => engine_config_dir.join(PathBuf::from(format!("config-{}.json", val))),
-        Err(_) => engine_config_dir.join(PathBuf::from(format!("config.json"))),
+        Ok(val) => engine_config_folder.join(PathBuf::from(format!("config-{}.json", val))),
+        Err(_) => engine_config_folder.join(PathBuf::from(format!("config.json"))),
     };
     match EngineConfig::new_from_file(&engine_config_path) {
         Ok(engine_config) => {
@@ -81,19 +81,19 @@ async fn run_web_server(engine_config: EngineConfig, site_config: SiteConfigV42)
     let reloader = livereload.reloader();
     build_site(&reloader, &site_config);
     let localhost_domain = format!("localhost:{}", engine_config.port);
-    let serve_dir = ServeDir::new(&site_config.site_output_root_dir())
+    let serve_folder = ServeDir::new(&site_config.site_output_root_folder())
         .not_found_service(ServeFile::new(&site_config.errors_output_index_page()));
     let app = Router::new()
         .nest_service(
             "/neo-status",
-            ServeDir::new(&site_config.errors_output_root_dir()),
+            ServeDir::new(&site_config.errors_output_root_folder()),
         )
-        .nest_service("/", serve_dir)
+        .nest_service("/", serve_folder)
         .layer(livereload);
     let (tx, rx) = mpsc::channel(1);
     let _content_watcher =
-        FileWatcher::new(&site_config.content_input_root_dir(), tx.clone()).await;
-    let _theme_watcher = FileWatcher::new(&site_config.theme_input_root_dir(), tx.clone()).await;
+        FileWatcher::new(&site_config.content_input_root_folder(), tx.clone()).await;
+    let _theme_watcher = FileWatcher::new(&site_config.theme_input_root_folder(), tx.clone()).await;
     tokio::spawn(async move {
         catch_file_changes(reloader, rx, &site_config).await;
     });
@@ -133,7 +133,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             let _ = builder.initialize_site_with_pages();
             let _ = builder.generate_outputs();
             let _ = builder.move_updated_pages_into_site();
-            let _ = builder.empty_output_dirs();
+            let _ = builder.empty_output_folders();
             let _ = builder.output_issue_pages();
             let _ = builder.output_pages_v42();
             let _ = builder.output_issues_index_page();
@@ -168,7 +168,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
 
     //// Prep
     ////
-    //let _ = builder.prep_output_dirs();
+    //let _ = builder.prep_output_folders();
     //// TODO: Turn image cache back on when dev is done
     //// let _ = builder.build_image_cache();
     //// Site
@@ -191,8 +191,8 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
     // builder.todo("load_templates");
     // builder.todo("generate_page_output");
     // builder.todo("generated_last_edit_page");
-    // builder.todo("empty_output_dirs");
-    // builder.todo("prep_output_dirs");
+    // builder.todo("empty_output_folders");
+    // builder.todo("prep_output_folders");
     // builder.todo("output_pages");
     // builder.todo("deploy_theme_file_assets");
     // builder.todo("deploy_images");
@@ -280,13 +280,13 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
 //     let livereload = LiveReloadLayer::new();
 //     let reloader = livereload.reloader();
 //     let app = Router::new()
-//         .nest_service("/", ServeDir::new(&site_config.output_dir()))
-//         .nest_service("/neo-status", ServeDir::new(&site_config.status_dir()))
+//         .nest_service("/", ServeDir::new(&site_config.output_folder()))
+//         .nest_service("/neo-status", ServeDir::new(&site_config.status_folder()))
 //         .layer(livereload);
 //     event!(Level::INFO, "Starting web server");
 //     let (tx, rx) = mpsc::channel(1);
-//     let _theme_watcher = FileWatcher::new(&site_config.theme_input_root_dir(), tx.clone()).await;
-//     let _content_watcher = FileWatcher::new(&site_config.content_dir(), tx.clone()).await;
+//     let _theme_watcher = FileWatcher::new(&site_config.theme_input_root_folder(), tx.clone()).await;
+//     let _content_watcher = FileWatcher::new(&site_config.content_folder(), tx.clone()).await;
 //     tokio::spawn(async move {
 //         catch_file_changes(reloader, site_config, rx).await;
 //     });
