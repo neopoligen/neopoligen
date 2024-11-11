@@ -37,6 +37,22 @@ pub struct BuilderV42<'a> {
 
 impl BuilderV42<'_> {
     #[instrument(skip(self))]
+    pub fn deploy_theme_files(&self) {
+        event!(Level::DEBUG, "Deploying Theme Files");
+
+        // let source_dir = self.config.as_ref().unwrap().theme_dir().join("files");
+        // let dest_dir = self
+        //     .config
+        //     .as_ref()
+        //     .unwrap()
+        //     .output_dest_dir()
+        //     .join("theme");
+        // // TODO: handle the result from copy_dir which
+        // // is an error.
+        // let _ = copy_dir(&source_dir, &dest_dir);
+    }
+
+    #[instrument(skip(self))]
     pub fn empty_output_dirs(&self) {
         event!(Level::INFO, "Emptying Output Dirs");
         let _ = empty_dir(&self.site_config.status_dest_dir());
