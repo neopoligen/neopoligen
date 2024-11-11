@@ -25,7 +25,7 @@
       "kind": "olist-item",
       "template_list": [
         "sections/olist-item/default.neoj",
-        "sections/generic-olist-item/default.neoj"
+        
       ],
       "type": "olistitem"
     }
