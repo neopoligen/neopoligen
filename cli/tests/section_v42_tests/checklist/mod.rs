@@ -71,7 +71,7 @@ lazy_static! {
 }
 
 #[test]
-fn solo_checklist_section_tests() {
+fn checklist_section_tests() {
     for (id, source) in INPUT_FILES.iter() {
         match OUTPUT_FILES.get(id) {
             Some(output) => {
