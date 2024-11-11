@@ -106,11 +106,6 @@ input {
   font: inherit;
 }
 
-.medium-width {
-  max-width: 64ch;
-  margin-inline: auto;
-}
-
 picture {
   display: block;
   max-width: 100%;
@@ -132,13 +127,6 @@ textarea {
 video{
   display: block;
   max-width: 100%;
-}
-
-.warning {
-  padding: 1.3rem;
-  margin: 0.4rem;
-  border: 1px solid #777;
-  border-radius: 0.3rem;
 }
 
 .wrapper-tiny {
