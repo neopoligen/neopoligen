@@ -2,7 +2,7 @@ pub mod mocks;
 
 use crate::config_lists::ConfigLists;
 use crate::engine_config::EngineConfig;
-use crate::helpers::get_dirs_in_dir;
+use crate::helpers::get_folders_in_folder;
 use crate::neo_error::NeoError;
 use crate::neo_error::NeoErrorKind;
 use anyhow::Result;
@@ -20,8 +20,8 @@ pub struct SiteConfigV42 {
     pub theme: String,
     // REMINDER: project_root is set internally
     pub project_root: Option<PathBuf>,
-    #[serde(default = "site_output_dir_name")]
-    pub site_output_directory_name: String,
+    #[serde(default = "site_output_folder_name")]
+    pub site_output_folder_name: String,
     #[serde(default = "empty_sections_v41")]
     pub sections: ConfigSections,
     #[serde(default = "debug_parser_default")]
@@ -32,7 +32,7 @@ fn debug_parser_default() -> bool {
     false
 }
 
-fn site_output_dir_name() -> String {
+fn site_output_folder_name() -> String {
     "site".to_string()
 }
 
@@ -45,17 +45,17 @@ pub struct SectionSettings {
 impl SiteConfigV42 {
     pub fn new_from_engine_config(engine_config: &EngineConfig) -> Result<SiteConfigV42, NeoError> {
         let project_root = engine_config
-            .sites_dir
+            .sites_folder
             .join(engine_config.active_site.as_str());
         let config_path = project_root.join("config.json5");
         match fs::read_to_string(&config_path) {
             Ok(text) => match serde_json5::from_str::<SiteConfigV42>(&text) {
                 Ok(mut config) => {
                     config.project_root = Some(project_root.clone());
-                    if !config.theme_input_root_dir().is_dir() {
+                    if !config.theme_input_root_folder().is_folder() {
                         Err(NeoError {
                             kind: NeoErrorKind::MissingThemeDirectory {
-                                path: config.theme_input_root_dir().clone(),
+                                path: config.theme_input_root_folder().clone(),
                             },
                         })
                     } else {
@@ -85,7 +85,7 @@ impl SiteConfigV42 {
     #[instrument(skip(self))]
     pub fn load_sections(&mut self) -> Result<(), NeoError> {
         event!(Level::INFO, "Loading Theme Sections");
-        let section_root = self.theme_input_root_dir().join("sections");
+        let section_root = self.theme_input_root_folder().join("sections");
         let section_categories: Vec<&str> = vec![
             "basic",
             "block",
@@ -97,14 +97,14 @@ impl SiteConfigV42 {
             "raw",
         ];
         section_categories.iter().for_each(|category| {
-            let category_dir = section_root.join(category);
-            if let Ok(section_dirs) = get_dirs_in_dir(&category_dir) {
-                section_dirs.iter().for_each(|section_dir| {
-                    let json5_path = section_dir.join("_settings.json5");
+            let category_folder = section_root.join(category);
+            if let Ok(section_folders) = get_folders_in_folder(&category_folder) {
+                section_folders.iter().for_each(|section_folder| {
+                    let json5_path = section_folder.join("_settings.json5");
                     let _ = match fs::read_to_string(&json5_path) {
                         Ok(text) => match serde_json5::from_str::<SectionSettings>(&text) {
                             Ok(_j) => {
-                                let section_name = section_dir
+                                let section_name = section_folder
                                     .file_stem()
                                     .unwrap()
                                     .to_string_lossy()
@@ -175,81 +175,81 @@ impl SiteConfigV42 {
 }
 
 impl SiteConfigV42 {
-    pub fn cache_root_dir(&self) -> PathBuf {
-        self.project_dir().join("cache")
+    pub fn cache_root_folder(&self) -> PathBuf {
+        self.project_folder().join("cache")
     }
 
-    pub fn content_input_root_dir(&self) -> PathBuf {
-        self.project_dir().join("content")
+    pub fn content_input_root_folder(&self) -> PathBuf {
+        self.project_folder().join("content")
     }
 
     pub fn language_default(&self) -> Result<String> {
         Ok(self.language_default.clone())
     }
 
-    pub fn errors_output_root_dir(&self) -> PathBuf {
-        self.cache_root_dir().join("errors")
+    pub fn errors_output_root_folder(&self) -> PathBuf {
+        self.cache_root_folder().join("errors")
     }
 
     pub fn errors_output_index_page(&self) -> PathBuf {
-        self.errors_output_root_dir().join("index.html")
+        self.errors_output_root_folder().join("index.html")
     }
 
-    pub fn macros_input_root_dir(&self) -> PathBuf {
-        self.theme_input_root_dir().join("macros")
+    pub fn macros_input_root_folder(&self) -> PathBuf {
+        self.theme_input_root_folder().join("macros")
     }
 
-    pub fn neo_files_output_root_dir(&self) -> PathBuf {
-        self.site_output_root_dir()
-            .join(&self.neo_files_output_dir_name())
+    pub fn neo_files_output_root_folder(&self) -> PathBuf {
+        self.site_output_root_folder()
+            .join(&self.neo_files_output_folder_name())
     }
 
-    pub fn neo_files_output_dir_name(&self) -> String {
+    pub fn neo_files_output_folder_name(&self) -> String {
         "neo-files".to_string()
     }
 
-    pub fn site_output_root_dir(&self) -> PathBuf {
-        self.project_dir()
-            .join(self.site_output_directory_name.clone())
+    pub fn site_output_root_folder(&self) -> PathBuf {
+        self.project_folder()
+            .join(self.site_output_folder_name.clone())
     }
 
-    pub fn project_dir(&self) -> PathBuf {
+    pub fn project_folder(&self) -> PathBuf {
         self.project_root.clone().unwrap()
     }
 
-    pub fn source_file_error_dir(&self) -> PathBuf {
-        self.errors_output_root_dir().join("source_files")
+    pub fn source_file_error_folder(&self) -> PathBuf {
+        self.errors_output_root_folder().join("source_files")
     }
 
-    pub fn status_dest_dir(&self) -> PathBuf {
-        self.cache_root_dir().join("status")
+    pub fn status_dest_folder(&self) -> PathBuf {
+        self.cache_root_folder().join("status")
     }
 
-    pub fn theme_input_root_dir(&self) -> PathBuf {
-        self.themes_input_dir().join(self.theme.clone())
+    pub fn theme_input_root_folder(&self) -> PathBuf {
+        self.themes_input_folder().join(self.theme.clone())
     }
 
-    pub fn themes_input_dir(&self) -> PathBuf {
-        self.project_dir().join("themes")
+    pub fn themes_input_folder(&self) -> PathBuf {
+        self.project_folder().join("themes")
     }
 
-    pub fn theme_files_input_dir(&self) -> PathBuf {
-        self.theme_input_root_dir().join("files")
+    pub fn theme_files_input_folder(&self) -> PathBuf {
+        self.theme_input_root_folder().join("files")
     }
 
-    pub fn theme_files_output_dir(&self) -> PathBuf {
-        self.neo_files_output_root_dir()
-            .join(&self.theme_files_output_dir_name())
+    pub fn theme_files_output_folder(&self) -> PathBuf {
+        self.neo_files_output_root_folder()
+            .join(&self.theme_files_output_folder_name())
     }
 
-    pub fn theme_files_output_dir_name(&self) -> String {
+    pub fn theme_files_output_folder_name(&self) -> String {
         "theme-files".to_string()
     }
 
-    pub fn theme_files_dir_href(&self) -> PathBuf {
+    pub fn theme_files_folder_href(&self) -> PathBuf {
         PathBuf::from("/")
-            .join(&self.neo_files_output_dir_name())
-            .join(&self.theme_files_output_dir_name())
+            .join(&self.neo_files_output_folder_name())
+            .join(&self.theme_files_output_folder_name())
     }
 }
 
@@ -278,8 +278,8 @@ fn empty_sections_v41() -> ConfigSections {
 //    #[serde(rename = "base_url")]
 //    pub base_url_raw: String,
 //    pub language_default: String,
-//    #[serde(default = "output_dir_name")]
-//    pub output_directory: String,
+//    #[serde(default = "output_folder_name")]
+//    pub output_folder: String,
 //    pub theme_name: String,
 //    // pub theme_options: Option<serde_json5::Value>,
 //    #[serde(default = "empty_sections")]
@@ -320,17 +320,17 @@ pub struct ConfigSections {
 // impl SiteConfig {
 //     pub fn new_from_engine_config(engine_config: &EngineConfig) -> Result<SiteConfig, NeoError> {
 //         let project_root = engine_config
-//             .sites_dir
+//             .sites_folder
 //             .join(engine_config.active_site.as_str());
 //         let config_path = project_root.join("admin").join("settings.json5");
 //         match fs::read_to_string(&config_path) {
 //             Ok(text) => match serde_json5::from_str::<SiteConfig>(&text) {
 //                 Ok(mut config) => {
 //                     config.project_root = Some(project_root.clone());
-//                     if !config.theme_input_root_dir().is_dir() {
+//                     if !config.theme_input_root_folder().is_folder() {
 //                         Err(NeoError {
 //                             kind: NeoErrorKind::MissingThemeDirectory {
-//                                 path: config.theme_input_root_dir().clone(),
+//                                 path: config.theme_input_root_folder().clone(),
 //                             },
 //                         })
 //                     } else {
@@ -363,40 +363,40 @@ pub struct ConfigSections {
 
 //impl SiteConfig {
 
-// pub fn admin_dir(&self) -> PathBuf {
-//     self.project_dir().join("admin")
+// pub fn admin_folder(&self) -> PathBuf {
+//     self.project_folder().join("admin")
 // }
 // pub fn base_url(&self) -> String {
 //     self.base_url_raw.trim_end_matches("/").to_string()
 // }
 // pub fn cache_db_path(&self) -> PathBuf {
-//     self.cache_dir().join("cache.sqlite")
+//     self.cache_folder().join("cache.sqlite")
 // }
-// pub fn cache_dir(&self) -> PathBuf {
-//     self.admin_dir().join("cache")
+// pub fn cache_folder(&self) -> PathBuf {
+//     self.admin_folder().join("cache")
 // }
-// pub fn content_input_root_dir(&self) -> PathBuf {
-//     self.project_dir().join("content")
+// pub fn content_input_root_folder(&self) -> PathBuf {
+//     self.project_folder().join("content")
 // }
 // pub fn language_default(&self) -> Result<String> {
 //     Ok(self.language_default.clone())
 // }
 
-// pub fn feeds_dest_dir(&self) -> PathBuf {
-//     self.output_dir().join("feeds")
+// pub fn feeds_dest_folder(&self) -> PathBuf {
+//     self.output_folder().join("feeds")
 // }
-// pub fn feeds_source_dir(&self) -> PathBuf {
-//     self.templates_dir().join("feeds")
+// pub fn feeds_source_folder(&self) -> PathBuf {
+//     self.templates_folder().join("feeds")
 // }
 
-// pub fn image_cache_dir(&self) -> PathBuf {
-//     self.cache_dir().join("neo-images")
+// pub fn image_cache_folder(&self) -> PathBuf {
+//     self.cache_folder().join("neo-images")
 // }
-// pub fn image_dest_dir(&self) -> PathBuf {
-//     self.site_output_root_dir().join("neo-images")
+// pub fn image_dest_folder(&self) -> PathBuf {
+//     self.site_output_root_folder().join("neo-images")
 // }
-// pub fn image_source_dir(&self) -> PathBuf {
-//     self.project_dir().join("images")
+// pub fn image_source_folder(&self) -> PathBuf {
+//     self.project_folder().join("images")
 // }
 
 // pub fn image_widths(&self) -> Vec<u32> {
@@ -409,43 +409,43 @@ pub struct ConfigSections {
 //     }
 //     itertools::sorted(tmp).collect()
 // }
-// pub fn mp3_dest_dir(&self) -> PathBuf {
-//     self.output_dir().join("mp3s")
+// pub fn mp3_dest_folder(&self) -> PathBuf {
+//     self.output_folder().join("mp3s")
 // }
-// pub fn mp3_source_dir(&self) -> PathBuf {
-//     self.project_dir().join("mp3s")
+// pub fn mp3_source_folder(&self) -> PathBuf {
+//     self.project_folder().join("mp3s")
 // }
-// pub fn og_images_custom_source_dir(&self) -> PathBuf {
-//     self.project_dir().join("og-images")
+// pub fn og_images_custom_source_folder(&self) -> PathBuf {
+//     self.project_folder().join("og-images")
 // }
-// pub fn og_images_dest_dir(&self) -> PathBuf {
-//     self.output_dir().clone().join("og-images")
+// pub fn og_images_dest_folder(&self) -> PathBuf {
+//     self.output_folder().clone().join("og-images")
 // }
-// pub fn og_images_cache_dir(&self) -> PathBuf {
-//     self.cache_dir().clone().join("og-images")
-// }
-
-// pub fn site_output_root_dir(&self) -> PathBuf {
-//     self.project_dir().join("docs")
+// pub fn og_images_cache_folder(&self) -> PathBuf {
+//     self.cache_folder().clone().join("og-images")
 // }
 
-// pub fn page_cache_dir(&self) -> PathBuf {
-//     self.cache_dir().join("pages")
+// pub fn site_output_root_folder(&self) -> PathBuf {
+//     self.project_folder().join("docs")
 // }
 
-// pub fn status_dest_dir(&self) -> PathBuf {
-//     self.admin_dir().join("status")
+// pub fn page_cache_folder(&self) -> PathBuf {
+//     self.cache_folder().join("pages")
 // }
 
-// pub fn tmp_dir(&self) -> PathBuf {
-//     self.cache_dir().join("tmp")
+// pub fn status_dest_folder(&self) -> PathBuf {
+//     self.admin_folder().join("status")
 // }
 
-// pub fn themes_dir(&self) -> PathBuf {
-//     self.project_dir().join("themes")
+// pub fn tmp_folder(&self) -> PathBuf {
+//     self.cache_folder().join("tmp")
 // }
-// pub fn theme_input_root_dir(&self) -> PathBuf {
-//     self.themes_dir().join(self.theme_name.clone())
+
+// pub fn themes_folder(&self) -> PathBuf {
+//     self.project_folder().join("themes")
+// }
+// pub fn theme_input_root_folder(&self) -> PathBuf {
+//     self.themes_folder().join(self.theme_name.clone())
 // }
 
 // pub fn theme_image_widths(&self) -> Vec<u32> {
@@ -461,22 +461,22 @@ pub struct ConfigSections {
 //         None => vec![],
 //     }
 // }
-// pub fn templates_dir(&self) -> PathBuf {
-//     self.theme_input_root_dir().join("templates")
+// pub fn templates_folder(&self) -> PathBuf {
+//     self.theme_input_root_folder().join("templates")
 // }
-// pub fn theme_tests_dest_dir(&self) -> PathBuf {
-//     self.status_dir().join("theme-tests")
+// pub fn theme_tests_dest_folder(&self) -> PathBuf {
+//     self.status_folder().join("theme-tests")
 // }
-// pub fn theme_tests_source_dir(&self) -> PathBuf {
-//     self.theme_input_root_dir().join("tests")
+// pub fn theme_tests_source_folder(&self) -> PathBuf {
+//     self.theme_input_root_folder().join("tests")
 // }
 
-// pub fn project_dir(&self) -> PathBuf {
+// pub fn project_folder(&self) -> PathBuf {
 //     self.project_root.clone().unwrap()
 // }
 
 // pub fn load_section_attrs(&mut self) {
-//     let section_attrs_path = self.admin_dir().join("attrs").join("sections.txt");
+//     let section_attrs_path = self.admin_folder().join("attrs").join("sections.txt");
 //     match fs::read_to_string(section_attrs_path) {
 //         Ok(data) => {
 //             let re = Regex::new(r"^\s*$").unwrap();
@@ -500,7 +500,7 @@ pub struct ConfigSections {
 // }
 
 // pub fn load_span_attrs(&mut self) {
-//     let span_attrs_path = self.admin_dir().join("attrs").join("spans.txt");
+//     let span_attrs_path = self.admin_folder().join("attrs").join("spans.txt");
 //     match fs::read_to_string(span_attrs_path) {
 //         Ok(data) => {
 //             let re = Regex::new(r"^\s*$").unwrap();
@@ -524,8 +524,8 @@ pub struct ConfigSections {
 // }
 
 //pub fn load_sections(&mut self) {
-//    let section_root = self.theme_input_root_dir().join("sections");
-//    //let section_root = self.templates_dir().join("sections");
+//    let section_root = self.theme_input_root_folder().join("sections");
+//    //let section_root = self.templates_folder().join("sections");
 //    let section_categories = [
 //        "basic",
 //        "block",
@@ -538,10 +538,10 @@ pub struct ConfigSections {
 //        "yaml",
 //    ];
 //    section_categories.iter().for_each(|category| {
-//        let category_dir = section_root.join(category);
-//        let section_dirs = get_dirs_in_dir(&category_dir).unwrap();
-//        section_dirs.iter().for_each(|section_dir| {
-//            let section_name = section_dir
+//        let category_folder = section_root.join(category);
+//        let section_folders = get_folders_in_folder(&category_folder).unwrap();
+//        section_folders.iter().for_each(|section_folder| {
+//            let section_name = section_folder
 //                .file_stem()
 //                .unwrap()
 //                .to_string_lossy()
@@ -636,20 +636,20 @@ pub struct ConfigSections {
 //     vec![]
 // }
 
-// fn output_dir_name() -> String {
+// fn output_folder_name() -> String {
 //     "_site".to_string()
 // }
 
-// fn get_dirs_in_dir(dir: &PathBuf) -> io::Result<Vec<PathBuf>> {
+// fn get_folders_in_folder(dir: &PathBuf) -> io::Result<Vec<PathBuf>> {
 //     Result::from_iter(
-//         fs::read_dir(dir)?
+//         fs::read_folder(dir)?
 //             .map(|entry| {
 //                 let entry = entry?;
 //                 Ok(entry)
 //             })
 //             .filter_map(|entry: Result<DirEntry, io::Error>| {
 //                 let path = entry.unwrap().path();
-//                 if path.is_dir() {
+//                 if path.is_folder() {
 //                     match path.file_name() {
 //                         Some(file_name) => {
 //                             if file_name.to_string_lossy().starts_with(".") {

@@ -24,7 +24,7 @@ impl SiteConfigV42 {
             debug_parser: false,
             language_default: "en".to_string(),
             base_url: "testsite.localhost:1999".to_string(),
-            site_output_directory_name: "site".to_string(),
+            site_output_folder_name: "site".to_string(),
             project_root: Some(PathBuf::from("/site_config_mock/project_root")),
             sections,
             attr_flag_lists: Some(ConfigLists {
@@ -58,7 +58,7 @@ impl SiteConfigV42 {
             debug_parser: false,
             language_default: "en".to_string(),
             base_url: "testsite.localhost:1999".to_string(),
-            site_output_directory_name: "site".to_string(),
+            site_output_folder_name: "site".to_string(),
             project_root: Some(PathBuf::from("/test/mocks")),
             sections,
             attr_flag_lists: Some(ConfigLists {
@@ -77,7 +77,7 @@ impl SiteConfigV42 {
         config
     }
 
-    pub fn mock_for_files_in_test_samples_dir() -> SiteConfigV42 {
+    pub fn mock_for_files_in_test_samples_folder() -> SiteConfigV42 {
         let sections = ConfigSections {
             basic: vec![
                 "title".to_string(),
@@ -106,7 +106,7 @@ impl SiteConfigV42 {
             debug_parser: false,
             language_default: "en".to_string(),
             base_url: "testsite.localhost:1999".to_string(),
-            site_output_directory_name: "site".to_string(),
+            site_output_folder_name: "site".to_string(),
             project_root: Some(PathBuf::from("/test/mocks")),
             sections,
             attr_flag_lists: Some(ConfigLists {
@@ -158,7 +158,7 @@ impl SiteConfigV42 {
     //    let config = SiteConfig {
     //        language_default: "en".to_string(),
     //        base_url_raw: "testsite.localhost:1999".to_string(),
-    //        output_directory: "_site".to_string(),
+    //        output_folder: "_site".to_string(),
     //        project_root: Some(PathBuf::from("/test/mocks")),
     //        section_attrs: vec![
     //            "alt".to_string(),
@@ -280,7 +280,7 @@ impl SiteConfigV42 {
 //    let config = SiteConfig {
 //        language_default: "en".to_string(),
 //        base_url_raw: "testsite.localhost:1999".to_string(),
-//        output_directory: "_site".to_string(),
+//        output_folder: "_site".to_string(),
 //        project_root: Some(PathBuf::from("/test/mocks")),
 //        section_attrs: vec![
 //            "alt".to_string(),
@@ -334,7 +334,7 @@ impl SiteConfigV42 {
 //     let config = SiteConfig {
 //         language_default: "en".to_string(),
 //         base_url_raw: "testsite.localhost:1999".to_string(),
-//         output_directory: "_site".to_string(),
+//         output_folder: "_site".to_string(),
 //         project_root: Some(PathBuf::from("/test/mocks")),
 //         section_attrs: vec![
 //             "alt".to_string(),
