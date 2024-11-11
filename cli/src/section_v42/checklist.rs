@@ -7,7 +7,6 @@ use crate::section_v42::checklist_item::*;
 use crate::section_v42::*;
 use crate::site_config::SiteConfigV42;
 use crate::span_v42::space0_line_ending_or_eof::*;
-use itertools::Itertools;
 use nom::bytes::complete::tag;
 use nom::character::complete::line_ending;
 use nom::character::complete::multispace0;
@@ -52,9 +51,6 @@ pub fn checklist_section_v42<'a>(
     .parse(source)?;
     Ok((source, result))
 }
-
-//fn run_parse(value: &str) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
-//}
 
 pub fn checklist_section_full_v42<'a>(
     source: &'a str,
