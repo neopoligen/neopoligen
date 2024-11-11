@@ -16,19 +16,23 @@ use tracing::{event, instrument, Level};
 pub struct SiteConfigV42 {
     pub attr_flag_lists: Option<ConfigLists>,
     pub base_url: String,
-    pub default_language: String,
+    pub language_default: String,
     pub theme: String,
     // REMINDER: project_root is set internally
     pub project_root: Option<PathBuf>,
-    #[serde(default = "output_dir_name")]
-    pub output_directory_name: String,
+    #[serde(default = "site_output_dir_name")]
+    pub site_output_directory_name: String,
     #[serde(default = "empty_sections_v41")]
     pub sections: ConfigSections,
     #[serde(default = "debug_parser_default")]
     pub debug_parser: bool,
 }
 
-fn output_dir_name() -> String {
+fn debug_parser_default() -> bool {
+    false
+}
+
+fn site_output_dir_name() -> String {
     "site".to_string()
 }
 
@@ -43,15 +47,15 @@ impl SiteConfigV42 {
         let project_root = engine_config
             .sites_dir
             .join(engine_config.active_site.as_str());
-        let config_path = project_root.join("admin").join("settings.json5");
+        let config_path = project_root.join("config.json5");
         match fs::read_to_string(&config_path) {
             Ok(text) => match serde_json5::from_str::<SiteConfigV42>(&text) {
                 Ok(mut config) => {
                     config.project_root = Some(project_root.clone());
-                    if !config.theme_dir().is_dir() {
+                    if !config.theme_input_root_dir().is_dir() {
                         Err(NeoError {
                             kind: NeoErrorKind::MissingThemeDirectory {
-                                path: config.theme_dir().clone(),
+                                path: config.theme_input_root_dir().clone(),
                             },
                         })
                     } else {
@@ -81,7 +85,7 @@ impl SiteConfigV42 {
     #[instrument(skip(self))]
     pub fn load_sections(&mut self) -> Result<(), NeoError> {
         event!(Level::INFO, "Loading Theme Sections");
-        let section_root = self.theme_dir().join("sections");
+        let section_root = self.theme_input_root_dir().join("sections");
         let section_categories: Vec<&str> = vec![
             "basic",
             "block",
@@ -171,36 +175,42 @@ impl SiteConfigV42 {
 }
 
 impl SiteConfigV42 {
-    pub fn admin_dir(&self) -> PathBuf {
-        self.project_dir().join("admin")
+    pub fn cache_root_dir(&self) -> PathBuf {
+        self.project_dir().join("cache")
     }
 
-    pub fn built_in_dir(&self) -> PathBuf {
-        self.project_dir().join(".built-in")
-    }
-
-    pub fn content_source_dir(&self) -> PathBuf {
+    pub fn content_input_root_dir(&self) -> PathBuf {
         self.project_dir().join("content")
     }
 
-    pub fn default_language(&self) -> Result<String> {
-        Ok(self.default_language.clone())
+    pub fn language_default(&self) -> Result<String> {
+        Ok(self.language_default.clone())
     }
 
-    pub fn errors_dir(&self) -> PathBuf {
-        self.built_in_dir().join("errors")
+    pub fn errors_output_root_dir(&self) -> PathBuf {
+        self.cache_root_dir().join("errors")
     }
 
-    pub fn errors_index_page(&self) -> PathBuf {
-        self.errors_dir().join("index.html")
+    pub fn errors_output_index_page(&self) -> PathBuf {
+        self.errors_output_root_dir().join("index.html")
     }
 
-    pub fn macros_dir(&self) -> PathBuf {
-        self.theme_dir().join("macros")
+    pub fn macros_input_root_dir(&self) -> PathBuf {
+        self.theme_input_root_dir().join("macros")
     }
 
-    pub fn output_dest_dir(&self) -> PathBuf {
-        self.project_dir().join(self.output_directory_name.clone())
+    pub fn neo_files_output_root_dir(&self) -> PathBuf {
+        self.site_output_root_dir()
+            .join(&self.neo_files_output_dir_name())
+    }
+
+    pub fn neo_files_output_dir_name(&self) -> String {
+        "neo-files".to_string()
+    }
+
+    pub fn site_output_root_dir(&self) -> PathBuf {
+        self.project_dir()
+            .join(self.site_output_directory_name.clone())
     }
 
     pub fn project_dir(&self) -> PathBuf {
@@ -208,19 +218,38 @@ impl SiteConfigV42 {
     }
 
     pub fn source_file_error_dir(&self) -> PathBuf {
-        self.errors_dir().join("source_files")
+        self.errors_output_root_dir().join("source_files")
     }
 
     pub fn status_dest_dir(&self) -> PathBuf {
-        self.admin_dir().join("status")
+        self.cache_root_dir().join("status")
     }
 
-    pub fn theme_dir(&self) -> PathBuf {
-        self.themes_dir().join(self.theme.clone())
+    pub fn theme_input_root_dir(&self) -> PathBuf {
+        self.themes_input_dir().join(self.theme.clone())
     }
 
-    pub fn themes_dir(&self) -> PathBuf {
+    pub fn themes_input_dir(&self) -> PathBuf {
         self.project_dir().join("themes")
+    }
+
+    pub fn theme_files_input_dir(&self) -> PathBuf {
+        self.theme_input_root_dir().join("files")
+    }
+
+    pub fn theme_files_output_dir(&self) -> PathBuf {
+        self.neo_files_output_root_dir()
+            .join(&self.theme_files_output_dir_name())
+    }
+
+    pub fn theme_files_output_dir_name(&self) -> String {
+        "theme-files".to_string()
+    }
+
+    pub fn theme_files_dir_href(&self) -> PathBuf {
+        PathBuf::from("/")
+            .join(&self.neo_files_output_dir_name())
+            .join(&self.theme_files_output_dir_name())
     }
 }
 
@@ -589,10 +618,6 @@ pub struct ConfigSections {
 
 // }
 
-fn debug_parser_default() -> bool {
-    false
-}
-
 // // TODO: deprecate when v41 is done
 // fn empty_sections() -> ConfigSections {
 //     ConfigSections {
@@ -641,27 +666,3 @@ fn debug_parser_default() -> bool {
 //             }),
 //     )
 // }
-
-#[cfg(test)]
-mod test {
-    // use super::*;
-    // use pretty_assertions::assert_eq;
-
-    // #[test]
-    // fn theme_image_widths_returns_empty_array_if_none_exist() {
-    //     let config = SiteConfig::mock1_basic();
-    //     let left: Vec<u32> = vec![];
-    //     let right = config.theme_image_widths();
-    //     assert_eq!(left, right);
-    // }
-
-    // #[test]
-    // fn theme_image_widths_return_if_there_are_any() {
-    //     let config = SiteConfig::mock2_with_image_widths();
-    //     let left: Vec<u32> = vec![100, 400];
-    //     let right = config.theme_image_widths();
-    //     assert_eq!(left, right);
-    // }
-
-    //
-}
