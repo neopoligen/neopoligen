@@ -72,23 +72,14 @@ pub fn checklist_section_full_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
-
-    //    let (source, kind) = tag("checklist").context("").parse(source)?;
-
-    // let (source, kind) = site_config
-    //     .section_types
-    //     .iter()
-    //     .map(|f| tag("checklist").context("").parse(source))
-    //     .collect();
-
     let (source, kind) = site_config
         .section_types
         .get("checklist")
         .unwrap()
         .iter()
-        .fold(fail.context("").parse(source), |acc, item| match acc {
+        .fold(fail(source), |acc, item| match acc {
             Ok(v) => Ok(v),
-            _ => tag(item.as_str()).context("").parse(source),
+            Err(_) => tag(item.as_str()).context("").parse(source),
         })?;
 
     // {
