@@ -49,7 +49,7 @@
         "children": [
           {
             "children": [],
-            "kind": "block-olist-item-paragraph",
+            "kind": "olist-item-paragraph",
             "spans": [
               {
                 "kind": "plain-text",
@@ -59,7 +59,7 @@
             ],
             "template_list": [
               "sections/olist-item-paragraph/default.neoj",
-              "sections/generic-olist-item-paragraph/default.neoj"
+              
             ],
             "type": "block"
           }
@@ -67,7 +67,6 @@
         "kind": "olist-item",
         "template_list": [
           "sections/olist-item/default.neoj",
-          "sections/generic-olist-item/default.neoj"
         ],
         "type": "olistitem"
       }
@@ -88,7 +87,6 @@
           ],
           "template_list": [
             "sections/paragraph/default.neoj",
-            "sections/generic-paragraph/default.neoj"
           ],
           "type": "block"
         }
@@ -105,7 +103,6 @@
     "kind": "olist",
     "template_list": [
       "sections/olist/default.neoj",
-      "sections/generic-olist/default.neoj"
     ],
     "type": "olist"
   },
