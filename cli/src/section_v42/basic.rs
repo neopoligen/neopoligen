@@ -67,16 +67,16 @@ pub fn basic_section_full_v42<'a>(
     let (source, _) = multispace0.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, children) = match parent {
-        SectionParent::List => {
-            many0(|src| list_item_paragraph_block(src, site_config, parent.clone(), debug))
-                .context("")
-                .parse(source)?
-        }
-        SectionParent::ListItem => {
-            many0(|src| list_item_paragraph_block(src, site_config, parent.clone(), debug))
-                .context("")
-                .parse(source)?
-        }
+        // SectionParent::List => {
+        //     many0(|src| list_item_paragraph_block(src, site_config, parent.clone(), debug, &kind))
+        //         .context("")
+        //         .parse(source)?
+        // }
+        // SectionParent::ListItem => {
+        //     many0(|src| list_item_paragraph_block(src, site_config, parent.clone(), debug, &kind))
+        //         .context("")
+        //         .parse(source)?
+        // }
         _ => {
             many0(|src| paragraph_block_section_v42(src, site_config, SectionParent::Basic, debug))
                 .context("")
@@ -118,18 +118,18 @@ pub fn basic_section_start_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 5);
     // TODO: Handle if you're in a list or a checklist here.
     let (source, children) = match parent {
-        SectionParent::ListItem => many0(alt((
-            |src| list_item_paragraph_block(src, site_config, parent.clone(), debug),
-            |src| start_or_full_section_v42(src, site_config, parent.clone(), debug),
-        )))
-        .context("")
-        .parse(source)?,
-        SectionParent::List => many0(alt((
-            |src| list_item_paragraph_block(src, site_config, parent.clone(), debug),
-            |src| start_or_full_section_v42(src, site_config, parent.clone(), debug),
-        )))
-        .context("")
-        .parse(source)?,
+        // SectionParent::ListItem => many0(alt((
+        //     |src| list_item_paragraph_block(src, site_config, parent.clone(), debug, &kind),
+        //     |src| start_or_full_section_v42(src, site_config, parent.clone(), debug),
+        // )))
+        // .context("")
+        // .parse(source)?,
+        // SectionParent::List => many0(alt((
+        //     |src| list_item_paragraph_block(src, site_config, parent.clone(), debug, &kind),
+        //     |src| start_or_full_section_v42(src, site_config, parent.clone(), debug),
+        // )))
+        // .context("")
+        // .parse(source)?,
         _ => many0(alt((
             |src| paragraph_block_section_v42(src, site_config, SectionParent::Basic, debug),
             |src| start_or_full_section_v42(src, site_config, SectionParent::Basic, debug),
@@ -137,6 +137,7 @@ pub fn basic_section_start_v42<'a>(
         .context("")
         .parse(source)?,
     };
+
     // let (source, children) = many0(alt((
     //     |src| paragraph_block_section_v42(src, site_config, SectionParent::Basic, debug),
     //     |src| start_or_full_section_v42(src, site_config, SectionParent::Basic, debug),
@@ -159,111 +160,4 @@ pub fn basic_section_start_v42<'a>(
         template_list: make_template_list("basic", kind, "default"),
     });
     Ok((source, section))
-}
-
-#[cfg(test)]
-mod test {
-    use super::*;
-    use include_dir::{include_dir, Dir};
-    use lazy_static::lazy_static;
-    use minijinja::Value;
-    use pretty_assertions::assert_eq;
-    use serde_json::Value as SerdeValue;
-    use serde_json5;
-    use std::collections::BTreeMap;
-
-    const INPUT_DIR: Dir = include_dir!("src/section_v42/test_files/basic/valid/input");
-
-    lazy_static! {
-        static ref INPUT_FILES: BTreeMap<String, String> = {
-            let glob = "**/*.neo";
-            let mut btm = BTreeMap::new();
-            for entry in INPUT_DIR.find(glob).unwrap() {
-                let data = INPUT_DIR.get_file(entry.path());
-                btm.insert(
-                    entry
-                        .path()
-                        .display()
-                        .to_string()
-                        .trim_end_matches(".neo")
-                        .to_string(),
-                    data.expect(
-                        format!(
-                            "Could not open built-in include: {}",
-                            entry.path().display().to_string()
-                        )
-                        .as_str(),
-                    )
-                    .contents_utf8()
-                    .unwrap()
-                    .to_string(),
-                );
-            }
-            btm
-        };
-    }
-
-    const OUTPUT_DIR: Dir = include_dir!("src/section_v42/test_files/basic/valid/output");
-
-    lazy_static! {
-        static ref OUTPUT_FILES: BTreeMap<String, String> = {
-            let glob = "**/*.json5";
-            let mut btm = BTreeMap::new();
-            for entry in OUTPUT_DIR.find(glob).unwrap() {
-                let data = OUTPUT_DIR.get_file(entry.path());
-                btm.insert(
-                    entry
-                        .path()
-                        .display()
-                        .to_string()
-                        .trim_end_matches(".json5")
-                        .to_string(),
-                    data.expect(
-                        format!(
-                            "Could not open built-in include: {}",
-                            entry.path().display().to_string()
-                        )
-                        .as_str(),
-                    )
-                    .contents_utf8()
-                    .unwrap()
-                    .to_string(),
-                );
-            }
-            btm
-        };
-    }
-
-    #[test]
-    fn basic_section_tests() {
-        for (id, source) in INPUT_FILES.iter() {
-            match OUTPUT_FILES.get(id) {
-                Some(output) => {
-                    match serde_json5::from_str::<SerdeValue>(output) {
-                        Ok(json5) => {
-                            let site_config = SiteConfigV42::mock1_basic();
-                            let parent = SectionParent::Page;
-                            let debug = false;
-                            let left = Value::from_serialize(json5);
-                            let right = Value::from_serialize(
-                                basic_section_v42(source.trim(), &site_config, parent, debug)
-                                    .unwrap()
-                                    .1,
-                            );
-                            assert_eq!(left, right, "Error in: {}", id);
-                        }
-                        Err(e) => {
-                            dbg!(e);
-                            assert!(false, "Error in: {}", id);
-                        }
-                    };
-                }
-                None => {
-                    assert!(false, "Error in: {}", id);
-                }
-            }
-        }
-    }
-
-    //
 }

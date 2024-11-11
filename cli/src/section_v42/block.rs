@@ -76,7 +76,6 @@ pub fn checklist_item_paragraph_block<'a>(
     )
     .context("")
     .parse(source)?;
-
     dump_parser_if_debug(debug, dbg_header, source, 2);
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, _) = multispace0.context("").parse(source)?;
@@ -98,6 +97,7 @@ pub fn list_item_paragraph_block<'a>(
     _site_config: &'a SiteConfigV42,
     _parent: SectionParent,
     debug: bool,
+    kind: &str,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let debug = true;
     let dbg_header = "LIST_ITEM_PARAGRAPH_BLOCK";
@@ -122,15 +122,16 @@ pub fn list_item_paragraph_block<'a>(
     .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, _) = multispace0.context("").parse(source)?;
+    let kind_tag = format!("{}-item-paragraph", kind);
     Ok((
         source,
         SectionV42::Block(BlockSectionV42 {
             children: vec![],
-            kind: "list-item-paragraph".to_string(),
+            kind: kind_tag.clone(),
             spans,
             template_list: make_template_list(
                 "list-item-paragraph",
-                "list-item-paragraph",
+                &kind_tag,
                 "default",
             ),
         }),
@@ -219,101 +220,4 @@ pub fn paragraph_block_section_v42<'a>(
             template_list: make_template_list("paragraph", "paragraph", "default"),
         }),
     ))
-}
-
-#[cfg(test)]
-mod test {
-    use super::*;
-    use crate::span_v42::plaintext::PlainTextSpan;
-    use include_dir::{include_dir, Dir};
-    use pretty_assertions::assert_eq;
-
-    const SAMPLE_DIR: Dir = include_dir!("src/section_v42/samples/block/valid");
-
-    #[test]
-    fn single_block_test() {
-        let site_config = SiteConfigV42::mock1_basic();
-        let source = SAMPLE_DIR
-            .get_file("001-single-block.neo")
-            .unwrap()
-            .contents_utf8()
-            .unwrap()
-            .trim()
-            .to_string();
-        let left = (
-            "",
-            SectionV42::Block(BlockSectionV42 {
-                children: vec![],
-                kind: "paragraph".to_string(),
-                spans: vec![SpanV42::PlainText(PlainTextSpan {
-                    kind: "plain-text".to_string(),
-                    text: "this is some text".to_string(),
-                })],
-                template_list: make_template_list("paragraph", "paragraph", "default"),
-            }),
-        );
-        let right =
-            paragraph_block_section_v42(&source, &site_config, SectionParent::Page, false).unwrap();
-        assert_eq!(left, right);
-    }
-
-    #[test]
-    fn multiple_lines() {
-        let site_config = SiteConfigV42::mock1_basic();
-        let source = SAMPLE_DIR
-            .get_file("002-multiple-lines.neo")
-            .unwrap()
-            .contents_utf8()
-            .unwrap()
-            .trim()
-            .to_string();
-        let left = (
-            "",
-            SectionV42::Block(BlockSectionV42 {
-                children: vec![],
-                kind: "paragraph".to_string(),
-                spans: vec![SpanV42::PlainText(PlainTextSpan {
-                    kind: "plain-text".to_string(),
-                    text: "multiple lines".to_string(),
-                })],
-                template_list: make_template_list("paragraph", "paragraph", "default"),
-            }),
-        );
-        let right =
-            paragraph_block_section_v42(&source, &site_config, SectionParent::Page, false).unwrap();
-        assert_eq!(left, right);
-    }
-
-    #[test]
-    fn list_item_single_line() {
-        let site_config = SiteConfigV42::mock1_basic();
-        let source = SAMPLE_DIR
-            .get_file("003-list-item-single.neo")
-            .unwrap()
-            .contents_utf8()
-            .unwrap()
-            .trim()
-            .to_string();
-        let left = (
-            "",
-            SectionV42::Block(BlockSectionV42 {
-                children: vec![],
-                kind: "list-item-paragraph".to_string(),
-                spans: vec![SpanV42::PlainText(PlainTextSpan {
-                    kind: "plain-text".to_string(),
-                    text: "alfa bravo".to_string(),
-                })],
-                template_list: make_template_list(
-                    "list-item-paragraph",
-                    "list-item-paragraph",
-                    "default",
-                ),
-            }),
-        );
-        let right =
-            list_item_paragraph_block(&source, &site_config, SectionParent::Page, false).unwrap();
-        assert_eq!(left, right);
-    }
-
-    //
 }

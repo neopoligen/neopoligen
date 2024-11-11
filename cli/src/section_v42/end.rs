@@ -60,13 +60,15 @@ pub fn end_section_basic_v42<'a>(
         .parse(source)?,
         SectionParent::ChecklistItem => (source, vec![]),
         SectionParent::SubChecklist => (source, vec![]),
+        //
         SectionParent::List => {
-            many0(|src| list_item_paragraph_block(src, site_config, parent.clone(), debug))
+            many0(|src| list_item_paragraph_block(src, site_config, parent.clone(), debug, &kind))
                 .context("")
                 .parse(source)?
         }
         SectionParent::ListItem => (source, vec![]),
         SectionParent::SubList => (source, vec![]),
+        //
         SectionParent::Olist => {
             many0(|src| olist_item_paragraph_block(src, site_config, parent.clone(), debug, &kind))
                 .context("")
@@ -74,6 +76,7 @@ pub fn end_section_basic_v42<'a>(
         }
         SectionParent::OlistItem => (source, vec![]),
         SectionParent::SubOlist => (source, vec![]),
+        //
         _ => many0(|src| paragraph_block_section_v42(src, site_config, parent.clone(), debug))
             .context("")
             .parse(source)?,

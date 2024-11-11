@@ -5,9 +5,7 @@ use std::collections::BTreeMap;
 
 impl SiteConfigV42 {
     pub fn config_for_spec_tests() -> SiteConfigV42 {
-        let mut section_types = BTreeMap::new();
-        let checklist_kinds = vec!["checklist".to_string(), "todos".to_string()];
-        section_types.insert("checklist".to_string(), checklist_kinds);
+        let section_types = BTreeMap::new();
         let config = SiteConfigV42 {
             debug_parser: false,
             language_default: "en".to_string(),
@@ -33,11 +31,13 @@ impl SiteConfigV42 {
 
     pub fn mock1_basic() -> SiteConfigV42 {
         let mut section_types = BTreeMap::new();
+        let basic_kinds = vec!["div".to_string(), "title".to_string()];
+        section_types.insert("basic".to_string(), basic_kinds);
         let checklist_kinds = vec!["checklist".to_string(), "todos".to_string()];
         section_types.insert("checklist".to_string(), checklist_kinds);
         let olist_kinds = vec!["olist".to_string(), "devtest-olist".to_string()];
         section_types.insert("olist".to_string(), olist_kinds);
-        let list_kinds = vec!["list".to_string(), "devtest-list".to_string()];
+        let list_kinds = vec!["list".to_string(), "notes".to_string()];
         section_types.insert("list".to_string(), list_kinds);
         let config = SiteConfigV42 {
             debug_parser: false,

@@ -27,7 +27,7 @@
           "children": [
             {
               "children": [],
-              "kind": "list-item-paragraph",
+              "kind": "paragraph",
               "spans": [
                 {
                   "kind": "plain-text",
@@ -36,7 +36,7 @@
                 }
               ],
               "template_list": [
-                "sections/list-item-paragraph/default.neoj",
+                "sections/paragraph/default.neoj",
                 
               ],
               "type": "block"
