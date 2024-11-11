@@ -1,0 +1,11 @@
+[!- import "built-in/macro-loader.neoj" as neo -!]
+
+[# TYPE: checklist #]
+[# HOIST: [] #]
+
+<section [@- site.get_section_attrs(section) -@]>
+  [@- neo.output_all_child_sections(section) -@]
+</section>
+
+[@- neo.output_end_section(section) -@]
+
