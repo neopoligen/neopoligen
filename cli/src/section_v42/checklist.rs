@@ -112,15 +112,40 @@ pub fn checklist_section_start_v42<'a>(
     };
     let dbg_header = "CHECKLIST_SECTION_START";
     dump_parser_if_debug(debug, dbg_header, source, 1);
-    let (source, kind) = preceded(
-        tuple((tag("--"), space1)),
-        alt((terminated(
-            tag("checklist"),
-            tuple((tag("/"), space0, line_ending)),
-        ),)),
-    )
-    .context("")
-    .parse(source)?;
+    //
+
+    let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
+
+    // let (source, kind) = alt((terminated(
+    //     tag("checklist"),
+    //     tuple((tag("/"), space0, line_ending)),
+    // ),))
+    // .context("")
+    // .parse(source)?;
+
+    let (source, kind) = site_config
+        .section_types
+        .get("checklist")
+        .unwrap()
+        .iter()
+        .fold(fail(source), |acc, item| match acc {
+            Ok(v) => Ok(v),
+            Err(_) => terminated(tag(item.as_str()), tuple((tag("/"), space0, line_ending)))
+                .context("")
+                .parse(source),
+        })?;
+
+    // let (source, kind) = preceded(
+    //     tuple((tag("--"), space1)),
+    //     alt((terminated(
+    //         tag("checklist"),
+    //         tuple((tag("/"), space0, line_ending)),
+    //     ),)),
+    // )
+    // .context("")
+    // .parse(source)?;
+
+    //
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
@@ -135,7 +160,7 @@ pub fn checklist_section_start_v42<'a>(
     .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
     let (source, end_section) =
-        (|src| end_section_basic_v42(src, site_config, next_parent.clone(), kind, debug))
+        (|src| end_section_basic_v42(src, site_config, next_parent.clone(), &kind, debug))
             .context("")
             .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 6);

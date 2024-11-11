@@ -1,0 +1,83 @@
+{
+    "attrs": {},
+    "bound": "start",
+    "children": [
+        {
+            "bound": "full",
+            "checked": false,
+            "checked_string": null,
+            "children": [
+                {
+                    "children": [],
+                    "kind": "todos-item-paragraph",
+                    "spans": [
+                        {
+                            "kind": "plain-text",
+                            "text": " alfa",
+                            "type": "plain-text",
+                        },
+                    ],
+                    "template_list": [
+                        "sections/todos-item-paragraph/default.neoj",
+                        "sections/checklist-item-paragraph/default.neoj",
+                    ],
+                    "type": "block",
+                },
+            ],
+            "kind": "todos-item",
+            "template_list": [
+                "sections/todos-item/default.neoj",
+                "sections/checklist-item/default.neoj",
+            ],
+            "type": "checklistitem",
+        },
+        {
+            "bound": "full",
+            "checked": false,
+            "checked_string": null,
+            "children": [
+                {
+                    "children": [],
+                    "kind": "todos-item-paragraph",
+                    "spans": [
+                        {
+                            "kind": "plain-text",
+                            "text": " bravo",
+                            "type": "plain-text",
+                        },
+                    ],
+                    "template_list": [
+                        "sections/todos-item-paragraph/default.neoj",
+                        "sections/checklist-item-paragraph/default.neoj",
+                    ],
+                    "type": "block",
+                },
+            ],
+            "kind": "todos-item",
+            "template_list": [
+                "sections/todos-item/default.neoj",
+                "sections/checklist-item/default.neoj",
+            ],
+            "type": "checklistitem",
+        },
+    ],
+    "end_section": {
+        "attrs": {},
+        "bound": "end",
+        "children": [],
+        "flags": [],
+        "kind": "todos-end",
+        "template_list": [
+            "sections/todos-end/default.neoj",
+            "sections/end/default.neoj",
+        ],
+        "type": "end",
+    },
+    "flags": [],
+    "kind": "todos",
+    "template_list": [
+        "sections/todos/default.neoj",
+        "sections/checklist/default.neoj",
+    ],
+    "type": "checklist",
+}
