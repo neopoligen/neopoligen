@@ -1,7 +1,9 @@
 [!- import "built-in/macro-loader.neoj" as neo -!]
 
-<section 
-  [@- site.get_section_attrs(site, page, section, "title-section flow") -@]>
+[# TYPE: basic #]
+[# HOIST: [] #]
+
+<section [@- site.get_section_attrs(section, "flow") -@]>
 
 <h1>[@- neo.spans_from_first_block(section) -@]</h1>
 
@@ -13,8 +15,7 @@ back together.</div>
 [@- neo.output_child_sections_skipping_first(section) -@]
 
 </section>
-[#
+
 [@- neo.output_end_section(section) -@]
-#]
 
 

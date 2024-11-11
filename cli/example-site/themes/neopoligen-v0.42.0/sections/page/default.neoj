@@ -1,5 +1,8 @@
 [!- import "built-in/macro-loader.neoj" as neo -!]
 
+[# TYPE: json5 #]
+[# HOIST: [] #]
+
 [# no output by default #]
 
 [@- neo.output_end_section(section) -@]

@@ -1,0 +1,10 @@
+[!- import "built-in/macro-loader.neoj" as neo -!]
+
+[# TYPE: html #]
+[# HOIST: [] #]
+
+<section [@- site.get_section_attrs(section, "flow") -@]>
+[@ section.body @]
+</section>
+
+[@- neo.output_end_section(section) -@]

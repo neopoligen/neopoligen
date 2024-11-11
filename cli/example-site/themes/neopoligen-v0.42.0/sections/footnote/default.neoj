@@ -1,64 +1,37 @@
 [!- import "built-in/macro-loader.neoj" as neo -!]
 
-<section class="footnote-section built-in">
+[# TYPE: basic #]
+[# HOIST: [] #]
 
-<div>
-  [!- if "id" in section.attrs -!]
-<a href="#footnote-[@ neo.output_spans(section.attrs.id.spans) @]-link"
-><small id="footnote-[@ neo.output_spans(section.attrs.id.spans) @]-text">
-      [@- neo.output_spans(section.attrs.id.spans) -@]
-      [@- ' ' -@]
-      &#x2934;</a></small>
-  [!- endif -!]
-</div>
+<section [@- site.get_section_attrs(section, "flow") -@]>
 
-<div>
   <div>
-    [!- if "url" in section.attrs -!]
-      <a href="[@- neo.output_spans(section.attrs.url.spans) -@]">
-    [!- endif -!]
-    [!- if "title" in section.attrs -!]
-      [@- neo.output_spans(section.attrs.title.spans) -@]
-    [!- endif -!]
-    [!- if "url" in section.attrs -!]
-      </a>
+    [!- if "id" in section.attrs -!]
+      <a 
+        href="#footnote-[@ neo.output_spans(section.attrs.id.spans) @]-link"
+        ><small id="footnote-[@ neo.output_spans(section.attrs.id.spans) @]-text">
+          [@- neo.output_spans(section.attrs.id.spans) -@]
+          [@- ' ' -@]
+          &#x2934;</a></small>
     [!- endif -!]
   </div>
+
   <div>
-    [@- neo.output_all_child_sections(section) -@]
+    <div>
+      [!- if "url" in section.attrs -!]
+        <a href="[@- neo.output_spans(section.attrs.url.spans) -@]">
+      [!- endif -!]
+      [!- if "title" in section.attrs -!]
+        [@- neo.output_spans(section.attrs.title.spans) -@]
+      [!- endif -!]
+      [!- if "url" in section.attrs -!]
+        </a>
+      [!- endif -!]
+    </div>
+    <div>
+      [@- neo.output_all_child_sections(section) -@]
+    </div>
   </div>
-</div>
-
-
-[#
-<div>
-  [!- if "id" in section.attrs -!]
-<a href="#footnote-[@ neo.output_spans(site, page, section.attrs.id.spans) @]-link"
-><small id="footnote-[@ neo.output_spans(site, page, section.attrs.id.spans) @]-text">
-      [@- neo.output_spans(site, page, section.attrs.id.spans) -@]
-      [@- ' ' -@]
-      &#x2934;</a></small>
-  [!- endif -!]
-</div>
-
-<div>
-  <div>
-    [!- if "url" in section.attrs -!]
-      <a href="[@- neo.output_spans(site, page, section.attrs.url.spans) -@]">
-    [!- endif -!]
-    [!- if "title" in section.attrs -!]
-      [@- neo.output_spans(site, page, section.attrs.title.spans) -@]
-    [!- endif -!]
-    [!- if "url" in section.attrs -!]
-      </a>
-    [!- endif -!]
-  </div>
-  <div>
-    [@- neo.output_sections(site, page, section.children) -@]
-  </div>
-</div>
-
-#]
 
 </section>
 

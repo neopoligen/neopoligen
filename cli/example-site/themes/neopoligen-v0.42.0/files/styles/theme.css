@@ -4,7 +4,7 @@
 }
 
 :root {
-  --base-pixels: 16px;
+  --base-pixels: 15px;
 
   --pad-tiny: 0.1rem;
   --pad-small: 0.3rem;
@@ -22,13 +22,13 @@
   --radius-xlarge: 0.6rem;
   --radius-xxlarge: 0.7rem;
 
-  --size-tiny: 0.564rem;
-  --size-small: 0.75rem;
-  --size-base: var(--base-pixels);
-  --size-medium: 1.333rem;
-  --size-large: 1.777rem;
-  --size-xlarge: 2.369rem;
-  --size-xxlarge: 3.157rem;
+  --size-tiny: clamp(0.78rem, calc(0.77rem + 0.03vw), 0.80rem);
+  --size-small: clamp(0.94rem, calc(0.92rem + 0.11vw), 1.00rem);
+  --size-base: clamp(1.13rem, calc(1.08rem + 0.22vw), 1.25rem);
+  --size-medium: clamp(1.35rem, calc(1.28rem + 0.37vw), 1.56rem);
+  --size-large: clamp(1.62rem, calc(1.50rem + 0.58vw), 1.95rem);
+  --size-xlarge: clamp(1.94rem, calc(1.77rem + 0.87vw), 2.44rem);
+  --size-xxlarge: clamp(2.33rem, calc(2.08rem + 1.25vw), 3.05rem);
 
   --wrapper-tiny: min(22ch, 94%);
   --wrapper-small: min(40ch, 94%);
@@ -62,10 +62,10 @@ a {
 body {
   background-color: #0d1229;
   color: #f0e5d8;
-  font-size: var(--size-base);
+  font-size: var(--size-base-pixels);
   font-family: Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
   font-weight: normal;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 button {
@@ -106,6 +106,70 @@ input {
   font: inherit;
 }
 
+h1 {
+  color: var(--color-heading);
+  font-size: var(--size-xxlarge);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-top: 1em;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+h2 {
+  color: var(--color-heading);
+  font-size: var(--size-large);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-top: 1.3em;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+h3 {
+  color: var(--color-heading);
+  font-size: var(--size-medium);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-top: 1.0em;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+h4 {
+  color: var(--color-heading);
+  font-size: var(--size-base);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-top: 1.0em;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+h5 {
+  color: var(--color-heading);
+  font-size: var(--size-small);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-top: 1.0em;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+h6 {
+  color: var(--color-heading);
+  font-size: var(--size-tiny);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-top: 1.0em;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+p {
+  overflow-wrap: break-word;
+}
+
 picture {
   display: block;
   max-width: 100%;
@@ -118,6 +182,14 @@ select {
 svg {
   display: block;
   max-width: 100%;
+}
+
+td {
+  vertical-align: top;
+}
+
+th {
+  vertical-align: top;
 }
 
 textarea {

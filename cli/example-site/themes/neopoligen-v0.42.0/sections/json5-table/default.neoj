@@ -1,7 +1,9 @@
 [!- import "built-in/macro-loader.neoj" as neo -!]
 
-<section
-  [@- site.get_section_attrs(site, page, section, "json5-simple-table-section built-in flow") -@]>
+[# TYPE: json5 #]
+[# HOIST: [] #]
+
+<section [@- site.get_section_attrs(section, "flow") -@]>
 
 [!- if section.error -!]
 <pre>Problem in json5-advanced-table[@- "\n\n" -@]

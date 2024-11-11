@@ -1,8 +1,0 @@
-[!- import "built-in/macro-loader.neoj" as neo -!]
-
-<section 
-  [@- site.get_section_attrs(site, page, section, "generic-raw-section built-in flow") -@]>
-<pre>[@ section.text @]</pre>
-</section>
-
-[@- neo.output_end_section(section) -@]

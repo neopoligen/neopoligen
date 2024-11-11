@@ -5,9 +5,10 @@
 [!- else -!]
   <div>&#x2610</div>
 [!- endif -!]
+
 <div class="flow">
-[!- for child in section.children -!] 
-  [@- neo.output_section(child) -@]
-[!- endfor -!]
+  [!- for child in section.children -!] 
+    [@- neo.output_section(child) -@]
+  [!- endfor -!]
 </div>
 
