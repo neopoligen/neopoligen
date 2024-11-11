@@ -1,0 +1,6 @@
+-- devtest-toml/
+
+[ping]
+foxtrot = true
+
+-- /devtest-toml

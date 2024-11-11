@@ -155,33 +155,59 @@ pub fn toml_section_start_v42<'a>(
             .context("")
             .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
-    let mut error = None;
-    let data = Value::from_serialize(vec!["asdf"]);
 
-    // if json_text.trim() != "" {
-    //     data = match serde_json5::from_str::<Value>(json_text) {
-    //         Ok(d) => d,
-    //         Err(e) => {
-    //             error = Some(e.to_string());
-    //             serde_json5::from_str::<Value>(r#"{}"#).unwrap()
-    //         }
-    //     };
-    // } else {
-    //     data = serde_json5::from_str::<Value>(r#"{}"#).unwrap()
-    // }
-
-    Ok((
-        source,
-        SectionV42::Toml(TomlSectionV42 {
+    if let Ok(toml_value) = raw_text.parse::<TomlValue>() {
+        if let Ok(data) = toml_value.try_into::<Value>() {
+            let section = SectionV42::Toml(TomlSectionV42 {
+                attrs,
+                bound: Bound::Start,
+                data: Some(data),
+                end_section: Some(Box::new(end_section)),
+                error: None,
+                flags,
+                kind: kind.to_string(),
+                template_list: make_template_list("toml", kind, "default"),
+            });
+            Ok((source, section))
+        } else {
+            let section = SectionV42::Toml(TomlSectionV42 {
+                attrs,
+                bound: Bound::Start,
+                data: None,
+                end_section: Some(Box::new(end_section)),
+                error: Some("Could not parse toml".to_string()),
+                flags,
+                kind: kind.to_string(),
+                template_list: make_template_list("toml", kind, "default"),
+            });
+            Ok((source, section))
+        }
+    } else {
+        let section = SectionV42::Toml(TomlSectionV42 {
             attrs,
-            flags,
             bound: Bound::Start,
             data: None,
             end_section: Some(Box::new(end_section)),
-            error,
+            error: Some("Could not parse toml".to_string()),
+            flags,
             kind: kind.to_string(),
             template_list: make_template_list("toml", kind, "default"),
-        }),
-    ))
+        });
+        Ok((source, section))
+    }
+
+    // Ok((
+    //     source,
+    //     SectionV42::Toml(TomlSectionV42 {
+    //         attrs,
+    //         flags,
+    //         bound: Bound::Start,
+    //         data: None,
+    //         end_section: Some(Box::new(end_section)),
+    //         error,
+    //         kind: kind.to_string(),
+    //         template_list: make_template_list("toml", kind, "default"),
+    //     }),
+    // ))
 }
 
