@@ -15,7 +15,6 @@ use nom::character::complete::space1;
 use nom::combinator::fail;
 use nom::multi::many0;
 use nom::sequence::pair;
-use nom::sequence::preceded;
 use nom::sequence::terminated;
 use nom::sequence::tuple;
 use nom::IResult;
@@ -112,17 +111,7 @@ pub fn checklist_section_start_v42<'a>(
     };
     let dbg_header = "CHECKLIST_SECTION_START";
     dump_parser_if_debug(debug, dbg_header, source, 1);
-    //
-
     let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
-
-    // let (source, kind) = alt((terminated(
-    //     tag("checklist"),
-    //     tuple((tag("/"), space0, line_ending)),
-    // ),))
-    // .context("")
-    // .parse(source)?;
-
     let (source, kind) = site_config
         .section_types
         .get("checklist")
@@ -134,18 +123,6 @@ pub fn checklist_section_start_v42<'a>(
                 .context("")
                 .parse(source),
         })?;
-
-    // let (source, kind) = preceded(
-    //     tuple((tag("--"), space1)),
-    //     alt((terminated(
-    //         tag("checklist"),
-    //         tuple((tag("/"), space0, line_ending)),
-    //     ),)),
-    // )
-    // .context("")
-    // .parse(source)?;
-
-    //
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
