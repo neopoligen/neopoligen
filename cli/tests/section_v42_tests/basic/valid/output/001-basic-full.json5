@@ -24,7 +24,7 @@
     "kind": "title",
     "template_list": [
         "sections/title/default.neoj",
-        "sections/generic-basic/default.neoj",
+        "sections/basic/default.neoj",
     ],
     "type": "basic",
 }
