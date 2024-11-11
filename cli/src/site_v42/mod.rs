@@ -250,6 +250,8 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
         let mut attr_collection: BTreeMap<String, Vec<String>> = BTreeMap::new();
         let mut classes = vec![];
         if args.len() >= 1 {
+            let kind = args[0].get_attr("kind").unwrap();
+            classes.push(format!("{}-section", kind));
             let attrs = args[0].get_item(&Value::from("attrs")).unwrap();
             for key in attrs.try_iter()? {
                 if key.to_string() != "class".to_string() {
@@ -519,10 +521,10 @@ mod test {
             children: vec![],
             end_section: None,
             flags: vec![],
-            kind: "generic-basic".to_string(),
+            kind: "div".to_string(),
             template_list: vec![],
         });
-        let expected = Value::from(r#""#);
+        let expected = Value::from(r#" class="div-section""#);
         let got = site.get_section_attrs(&[section]).unwrap();
         assert_eq!(expected, got);
     }
@@ -552,10 +554,10 @@ mod test {
             children: vec![],
             end_section: None,
             flags: vec![],
-            kind: "generic-basic".to_string(),
+            kind: "div-test".to_string(),
             template_list: vec![],
         });
-        let left = Value::from(r#" id="alfa""#);
+        let left = Value::from(r#" class="div-test-section" id="alfa""#);
         let right = site.get_section_attrs(&[section]).unwrap();
         assert_eq!(left, right);
     }
@@ -585,10 +587,10 @@ mod test {
             children: vec![],
             end_section: None,
             flags: vec![],
-            kind: "generic-basic".to_string(),
+            kind: "title".to_string(),
             template_list: vec![],
         });
-        let left = Value::from(r#" class="bravo""#);
+        let left = Value::from(r#" class="title-section bravo""#);
         let right = site.get_section_attrs(&[section]).unwrap();
         assert_eq!(left, right);
     }
@@ -602,25 +604,16 @@ mod test {
             pages_without_ids: BTreeMap::new(),
         };
         let attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
-        // attrs.insert(
-        //     "class".to_string(),
-        //     SectionKeyValueAttrPayloadV42 {
-        //         spans: vec![SpanV42::PlainText(PlainTextSpan {
-        //kind: "plain-text".to_string(),
-        //             text: "bravo".to_string(),
-        //         })],
-        //     },
-        // );
         let section = Value::from_serialize(BasicSectionV42 {
             attrs,
             bound: Bound::Full,
             children: vec![],
             end_section: None,
             flags: vec![],
-            kind: "generic-basic".to_string(),
+            kind: "p".to_string(),
             template_list: vec![],
         });
-        let left = Value::from(r#" class="charlie""#);
+        let left = Value::from(r#" class="p-section charlie""#);
         let right = site
             .get_section_attrs(&[section, Value::from("charlie")])
             .unwrap();
@@ -662,10 +655,10 @@ mod test {
             children: vec![],
             end_section: None,
             flags: vec![],
-            kind: "generic-basic".to_string(),
+            kind: "aside".to_string(),
             template_list: vec![],
         });
-        let left = Value::from(r#" class="echo foxtrot" id="delta""#);
+        let left = Value::from(r#" class="aside-section echo foxtrot" id="delta""#);
         let right = site
             .get_section_attrs(&[section, Value::from("foxtrot")])
             .unwrap();
