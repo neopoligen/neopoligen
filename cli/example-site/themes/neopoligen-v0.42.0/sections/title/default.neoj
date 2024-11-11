@@ -3,7 +3,10 @@
 [# TYPE: basic #]
 [# HOIST: [] #]
 
-<section [@- site.get_section_attrs(section, "flow") -@]>
+<section [@- neo.section_attrs("flow") -@]>
+<div>
+  [@- neo.section_attrs("flow") -@]
+</div>
 
 <h1>[@- neo.spans_from_first_block(section) -@]</h1>
 

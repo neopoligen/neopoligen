@@ -1,0 +1,7 @@
+[!- macro section_attrs(extra_classes="") -!]
+[!- if extra_classes -!]
+  [@ site.get_section_attrs(section, extra_classes) @]
+[!- else -!]
+  [@ site.get_section_attrs(section) @]
+[!- endif -!]
+[!- endmacro -!]
