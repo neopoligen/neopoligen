@@ -6,7 +6,7 @@
 <li class="flow">
   [!- for child in section.children -!] 
     [!- if loop.length == 1 -!]
-      [@- neo.output_section_with_template(child, "sections/generic-olist-item-single/default.neoj") -@]
+      [@- neo.output_section_with_template(child, "sections/olist-item-single/default.neoj") -@]
     [!- else -!]
       [@- neo.output_section(child) -@]
     [!- endif -!]

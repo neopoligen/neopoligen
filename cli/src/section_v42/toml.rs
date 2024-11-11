@@ -210,4 +210,3 @@ pub fn toml_section_start_v42<'a>(
     //     }),
     // ))
 }
-

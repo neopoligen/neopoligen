@@ -249,8 +249,8 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
     pub fn get_section_attrs(&self, args: &[Value]) -> Result<Value, Error> {
         let mut attr_collection: BTreeMap<String, Vec<String>> = BTreeMap::new();
         let mut classes = vec![];
-        if args.len() >= 3 {
-            let attrs = args[2].get_item(&Value::from("attrs")).unwrap();
+        if args.len() >= 1 {
+            let attrs = args[0].get_item(&Value::from("attrs")).unwrap();
             for key in attrs.try_iter()? {
                 if key.to_string() != "class".to_string() {
                     let spans = attrs
@@ -305,8 +305,8 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
                 //}
                 //
             }
-            if args.len() >= 4 {
-                classes.push(args[3].to_string());
+            if args.len() >= 2 {
+                classes.push(args[1].to_string());
             };
             // if classes.len() > 0 {
             //     Ok(Value::from(format!(r#" class="{}""#, classes.join(" "))))
@@ -523,9 +523,7 @@ mod test {
             template_list: vec![],
         });
         let expected = Value::from(r#""#);
-        let got = site
-            .get_section_attrs(&[Value::from(""), Value::from(""), section])
-            .unwrap();
+        let got = site.get_section_attrs(&[section]).unwrap();
         assert_eq!(expected, got);
     }
 
@@ -558,9 +556,7 @@ mod test {
             template_list: vec![],
         });
         let left = Value::from(r#" id="alfa""#);
-        let right = site
-            .get_section_attrs(&[Value::from(""), Value::from(""), section])
-            .unwrap();
+        let right = site.get_section_attrs(&[section]).unwrap();
         assert_eq!(left, right);
     }
 
@@ -593,9 +589,7 @@ mod test {
             template_list: vec![],
         });
         let left = Value::from(r#" class="bravo""#);
-        let right = site
-            .get_section_attrs(&[Value::from(""), Value::from(""), section])
-            .unwrap();
+        let right = site.get_section_attrs(&[section]).unwrap();
         assert_eq!(left, right);
     }
 
@@ -628,12 +622,7 @@ mod test {
         });
         let left = Value::from(r#" class="charlie""#);
         let right = site
-            .get_section_attrs(&[
-                Value::from(""),
-                Value::from(""),
-                section,
-                Value::from("charlie"),
-            ])
+            .get_section_attrs(&[section, Value::from("charlie")])
             .unwrap();
         assert_eq!(left, right);
     }
@@ -678,12 +667,7 @@ mod test {
         });
         let left = Value::from(r#" class="echo foxtrot" id="delta""#);
         let right = site
-            .get_section_attrs(&[
-                Value::from(""),
-                Value::from(""),
-                section,
-                Value::from("foxtrot"),
-            ])
+            .get_section_attrs(&[section, Value::from("foxtrot")])
             .unwrap();
         assert_eq!(left, right);
     }
