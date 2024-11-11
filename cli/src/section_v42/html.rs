@@ -27,12 +27,12 @@ use std::collections::BTreeMap;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct HtmlSectionV42 {
     pub attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42>,
+    pub body: String,
     pub bound: Bound,
     pub end_section: Option<Box<SectionV42>>,
     pub flags: Vec<String>,
     pub kind: String,
     pub template_list: Vec<String>,
-    pub text: String,
 }
 
 pub fn html_section_full_v42<'a>(
@@ -53,16 +53,16 @@ pub fn html_section_full_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);
-    let (source, text) = alt((take_until("-- "), rest)).context("").parse(source)?;
+    let (source, body) = alt((take_until("-- "), rest)).context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
     let section = SectionV42::Html(HtmlSectionV42 {
         attrs,
+        body: body.trim().to_string(),
         bound: Bound::Full,
         end_section: None,
         flags,
         kind: kind.to_string(),
         template_list: make_template_list("html", kind, "default"),
-        text: text.trim().to_string(),
     });
     Ok((source, section))
 }
@@ -89,7 +89,7 @@ pub fn html_section_start_v42<'a>(
     .parse(source)?;
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
-    let (source, text) = take_until(format!("-- /{}", kind).as_str())
+    let (source, body) = take_until(format!("-- /{}", kind).as_str())
         .context("")
         .parse(source)?;
     let (source, end_section) =
@@ -101,12 +101,12 @@ pub fn html_section_start_v42<'a>(
         source,
         SectionV42::Html(HtmlSectionV42 {
             attrs,
-            flags,
+            body: body.trim().to_string(),
             bound: Bound::Start,
             end_section: Some(Box::new(end_section)),
+            flags,
             kind: kind.to_string(),
             template_list: make_template_list("html", kind, "default"),
-            text: text.trim().to_string(),
         }),
     ))
 }
@@ -136,12 +136,12 @@ mod test {
             "",
             SectionV42::Html(HtmlSectionV42 {
                 attrs,
+                body: "<div>ping</div>".to_string(),
                 bound: Bound::Full,
                 end_section: None,
                 flags: vec![],
                 kind: "html".to_string(),
                 template_list: make_template_list("html", "html", "default"),
-                text: "<div>ping</div>".to_string(),
             }),
         );
         let right =
@@ -163,6 +163,7 @@ mod test {
             "",
             SectionV42::Html(HtmlSectionV42 {
                 attrs,
+                body: "<div>pong</div>".to_string(),
                 bound: Bound::Start,
                 end_section: Some(Box::new(SectionV42::End(EndSectionV42 {
                     attrs: BTreeMap::new(),
@@ -170,14 +171,14 @@ mod test {
                     bound: Bound::End,
                     children: vec![SectionV42::Block(BlockSectionV42 {
                         children: vec![],
-                        kind: "block-paragraph".to_string(),
+                        kind: "paragraph".to_string(),
                         spans: vec![SpanV42::PlainText(PlainTextSpan {
                             kind: "plain-text".to_string(),
                             text: "Post Html".to_string(),
                         })],
                         template_list: make_template_list(
-                            "block-paragraph",
-                            "block-paragraph",
+                            "paragraph",
+                            "paragraph",
                             "default",
                         ),
                     })],
@@ -187,7 +188,6 @@ mod test {
                 flags: vec![],
                 kind: "html".to_string(),
                 template_list: make_template_list("html", "html", "default"),
-                text: "<div>pong</div>".to_string(),
             }),
         );
         let right =

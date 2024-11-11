@@ -111,21 +111,21 @@ mod test {
         let children = vec![
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
-                kind: "block-paragraph".to_string(),
+                kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     kind: "plain-text".to_string(),
                     text: "Tango".to_string(),
                 })],
-                template_list: make_template_list("block-paragraph", "block-paragraph", "default"),
+                template_list: make_template_list("paragraph", "paragraph", "default"),
             }),
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
-                kind: "block-paragraph".to_string(),
+                kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     kind: "plain-text".to_string(),
                     text: "Foxtrot".to_string(),
                 })],
-                template_list: make_template_list("block-paragraph", "block-paragraph", "default"),
+                template_list: make_template_list("paragraph", "paragraph", "default"),
             }),
         ];
         let kind = "unknown-test-section".to_string();

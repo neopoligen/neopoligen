@@ -13,7 +13,7 @@
     "kind": "csv-end", 
     "template_list": [
       "sections/csv-end/default.neoj",
-      "sections/generic-end/default.neoj",
+      "sections/end/default.neoj",
     ],
     "type": "end",
   }, 
@@ -23,6 +23,5 @@
   "type": "csv",
   "template_list": [
     "sections/csv/default.neoj", 
-    "sections/generic-csv/default.neoj",
    ],
 }

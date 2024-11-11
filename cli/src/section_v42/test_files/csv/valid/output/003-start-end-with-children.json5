@@ -11,7 +11,7 @@
     "children": [
       {
         "children": [],
-        "kind": "block-paragraph",
+        "kind": "paragraph",
         "spans": [
           {
             "kind": "plain-text",
@@ -20,8 +20,7 @@
           }
         ],
         "template_list": [
-          "sections/block-paragraph/default.neoj",
-          "sections/generic-block-paragraph/default.neoj",
+          "sections/paragraph/default.neoj",
         ],
         "type": "block",
       }
@@ -30,7 +29,7 @@
     "kind": "csv-end", 
     "template_list": [
       "sections/csv-end/default.neoj",
-      "sections/generic-end/default.neoj",
+      "sections/end/default.neoj",
     ],
     "type": "end",
   }, 
@@ -40,7 +39,6 @@
   "type": "csv",
   "template_list": [
     "sections/csv/default.neoj", 
-    "sections/generic-csv/default.neoj",
    ],
 }
 

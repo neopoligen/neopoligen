@@ -170,14 +170,14 @@ mod test {
                     bound: Bound::End,
                     children: vec![SectionV42::Block(BlockSectionV42 {
                         children: vec![],
-                        kind: "block-paragraph".to_string(),
+                        kind: "paragraph".to_string(),
                         spans: vec![SpanV42::PlainText(PlainTextSpan {
                             kind: "plain-text".to_string(),
                             text: "Post Script".to_string(),
                         })],
                         template_list: make_template_list(
-                            "block-paragraph",
-                            "block-paragraph",
+                            "paragraph",
+                            "paragraph",
                             "default",
                         ),
                     })],

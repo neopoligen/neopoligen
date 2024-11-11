@@ -4,7 +4,7 @@
     "children": [
         {
             "children": [],
-            "kind": "block-paragraph",
+            "kind": "paragraph",
             "spans": [
                 {
                     "kind": "plain-text",
@@ -13,8 +13,8 @@
                 },
             ],
             "template_list": [
-                "sections/block-paragraph/default.neoj",
-                "sections/generic-block-paragraph/default.neoj",
+                "sections/paragraph/default.neoj",
+                
             ],
             "type": "block",
         },
@@ -24,7 +24,7 @@
             "children": [
                 {
                     "children": [],
-                    "kind": "block-paragraph",
+                    "kind": "paragraph",
                     "spans": [
                         {
                             "kind": "plain-text",
@@ -33,8 +33,8 @@
                         },
                     ],
                     "template_list": [
-                        "sections/block-paragraph/default.neoj",
-                        "sections/generic-block-paragraph/default.neoj",
+                        "sections/paragraph/default.neoj",
+                        
                     ],
                     "type": "block",
                 },
@@ -55,7 +55,7 @@
         "children": [
             {
                 "children": [],
-                "kind": "block-paragraph",
+                "kind": "paragraph",
                 "spans": [
                     {
                         "kind": "plain-text",
@@ -64,8 +64,8 @@
                     },
                 ],
                 "template_list": [
-                    "sections/block-paragraph/default.neoj",
-                    "sections/generic-block-paragraph/default.neoj",
+                    "sections/paragraph/default.neoj",
+                    
                 ],
                 "type": "block",
             },

@@ -75,6 +75,7 @@ pub fn checklist_item_paragraph_block<'a>(
     )
     .context("")
     .parse(source)?;
+
     dump_parser_if_debug(debug, dbg_header, source, 2);
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, _) = multispace0.context("").parse(source)?;
@@ -123,7 +124,7 @@ pub fn list_item_paragraph_block<'a>(
         source,
         SectionV42::Block(BlockSectionV42 {
             children: vec![],
-            kind: "block-list-item-paragraph".to_string(),
+            kind: "list-item-paragraph".to_string(),
             spans,
             template_list: make_template_list(
                 "list-item-paragraph",
@@ -169,7 +170,7 @@ pub fn olist_item_paragraph_block<'a>(
         source,
         SectionV42::Block(BlockSectionV42 {
             children: vec![],
-            kind: "block-olist-item-paragraph".to_string(),
+            kind: "olist-item-paragraph".to_string(),
             spans,
             template_list: make_template_list(
                 "olist-item-paragraph",
@@ -213,9 +214,9 @@ pub fn paragraph_block_section_v42<'a>(
         source,
         SectionV42::Block(BlockSectionV42 {
             children: vec![],
-            kind: "block-paragraph".to_string(),
+            kind: "paragraph".to_string(),
             spans,
-            template_list: make_template_list("block-paragraph", "block-paragraph", "default"),
+            template_list: make_template_list("paragraph", "paragraph", "default"),
         }),
     ))
 }
@@ -243,12 +244,12 @@ mod test {
             "",
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
-                kind: "block-paragraph".to_string(),
+                kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     kind: "plain-text".to_string(),
                     text: "this is some text".to_string(),
                 })],
-                template_list: make_template_list("block-paragraph", "block-paragraph", "default"),
+                template_list: make_template_list("paragraph", "paragraph", "default"),
             }),
         );
         let right =
@@ -270,12 +271,12 @@ mod test {
             "",
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
-                kind: "block-paragraph".to_string(),
+                kind: "paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     kind: "plain-text".to_string(),
                     text: "multiple lines".to_string(),
                 })],
-                template_list: make_template_list("block-paragraph", "block-paragraph", "default"),
+                template_list: make_template_list("paragraph", "paragraph", "default"),
             }),
         );
         let right =
@@ -297,7 +298,7 @@ mod test {
             "",
             SectionV42::Block(BlockSectionV42 {
                 children: vec![],
-                kind: "block-list-item-paragraph".to_string(),
+                kind: "list-item-paragraph".to_string(),
                 spans: vec![SpanV42::PlainText(PlainTextSpan {
                     kind: "plain-text".to_string(),
                     text: "alfa bravo".to_string(),

@@ -12,6 +12,5 @@
   "type": "csv",
   "template_list": [
     "sections/csv/default.neoj", 
-    "sections/generic-csv/default.neoj",
    ],
 }
