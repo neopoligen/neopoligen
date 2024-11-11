@@ -6,8 +6,24 @@ use crate::helpers::get_folders_in_folder;
 use crate::neo_error::NeoError;
 use crate::neo_error::NeoErrorKind;
 use anyhow::Result;
+use nom::bytes::complete::tag;
+use nom::bytes::complete::tag_no_case;
+use nom::bytes::complete::take_until;
+use nom::character::complete::alphanumeric1;
+use nom::character::complete::space0;
+use nom::character::complete::space1;
+use nom::combinator::not;
+use nom::combinator::opt;
+use nom::multi::many0;
+use nom::sequence::preceded;
+use nom::sequence::tuple;
+use nom::IResult;
+use nom::Parser;
+use nom_supreme::error::ErrorTree;
+use nom_supreme::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
+use std::collections::BTreeMap;
 use std::fs::{self};
 use std::path::PathBuf;
 use tracing::{event, instrument, Level};
@@ -18,12 +34,11 @@ pub struct SiteConfigV42 {
     pub base_url: String,
     pub language_default: String,
     pub theme: String,
-    // REMINDER: project_root is set internally
     pub project_root: Option<PathBuf>,
     #[serde(default = "site_output_folder_name")]
     pub site_output_folder_name: String,
-    #[serde(default = "empty_sections_v41")]
-    pub sections: ConfigSections,
+    #[serde(default = "empty_section_kinds")]
+    pub section_kinds: BTreeMap<String, Vec<String>>,
     #[serde(default = "debug_parser_default")]
     pub debug_parser: bool,
 }
@@ -32,18 +47,86 @@ fn debug_parser_default() -> bool {
     false
 }
 
+fn empty_section_kinds() -> BTreeMap<String, Vec<String>> {
+    let mut kinds = BTreeMap::new();
+    kinds.insert("basic".to_string(), vec![]);
+    kinds.insert("checklist".to_string(), vec![]);
+    kinds.insert("css".to_string(), vec![]);
+    kinds.insert("csv".to_string(), vec![]);
+    kinds.insert("html".to_string(), vec![]);
+    kinds.insert("json5".to_string(), vec![]);
+    kinds.insert("list".to_string(), vec![]);
+    kinds.insert("olist".to_string(), vec![]);
+    kinds.insert("raw".to_string(), vec![]);
+    kinds.insert("script".to_string(), vec![]);
+    kinds.insert("toml".to_string(), vec![]);
+    kinds.insert("yaml".to_string(), vec![]);
+    kinds
+}
+
 fn site_output_folder_name() -> String {
     "site".to_string()
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub struct SectionSettings {
-    pub attrs: Vec<String>,
-    pub flags: Vec<String>,
+pub fn parse_type<'a>(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
+    let (source, _) = many0(preceded(
+        tuple((take_until("[#"), tag("[#"), opt(tag("-")), space0)),
+        not(tag_no_case("TYPE")),
+    ))
+    .context("")
+    .parse(source)?;
+    let (source, kind) = preceded(
+        tuple((
+            take_until("[#"),
+            tag("[#"),
+            opt(tag("-")),
+            space0,
+            tag_no_case("TYPE:"),
+            space1,
+        )),
+        alphanumeric1,
+    )
+    .context("")
+    .parse(source)?;
+    Ok((source, kind))
 }
 
 impl SiteConfigV42 {
+    #[instrument(skip(self))]
+    pub fn load_sections(&mut self) {
+        match get_folders_in_folder(&self.theme_sections_input_folder()) {
+            Ok(folders) => {
+                folders.iter().for_each(|folder| {
+                    let default_path = folder.join("default.neoj");
+                    if default_path.is_file() {
+                        if let Ok(source) = fs::read_to_string(&default_path) {
+                            match parse_type(&source) {
+                                Ok((_, t)) => {
+                                    if let Some(name) = &default_path.parent().unwrap().file_name()
+                                    {
+                                        if let Some(kinds) = self.section_kinds.get_mut(t) {
+                                            kinds.push(name.to_string_lossy().to_string());
+                                            ()
+                                        }
+                                    }
+                                    ()
+                                }
+                                Err(_) => (),
+                            }
+                        }
+                    }
+                    ()
+                });
+            }
+            Err(_e) => {
+                // TODO: Hoist Error
+            }
+        }
+    }
+
+    #[instrument(skip(engine_config))]
     pub fn new_from_engine_config(engine_config: &EngineConfig) -> Result<SiteConfigV42, NeoError> {
+        event!(Level::INFO, "Loading Site Config");
         let project_root = engine_config
             .sites_folder
             .join(engine_config.active_site.as_str());
@@ -60,9 +143,7 @@ impl SiteConfigV42 {
                         })
                     } else {
                         // TODO: Handle errors here
-                        config.load_sections().unwrap();
-                        //config.load_section_attrs();
-                        //config.load_span_attrs();
+                        config.load_sections();
                         Ok(config)
                     }
                 }
@@ -78,99 +159,6 @@ impl SiteConfigV42 {
                 },
             }),
         }
-    }
-}
-
-impl SiteConfigV42 {
-    #[instrument(skip(self))]
-    pub fn load_sections(&mut self) -> Result<(), NeoError> {
-        event!(Level::INFO, "Loading Theme Sections");
-        let section_root = self.theme_input_root_folder().join("sections");
-        let section_categories: Vec<&str> = vec![
-            "basic",
-            "block",
-            "checklist",
-            "checklist_item",
-            "json5",
-            "list",
-            "list_item",
-            "raw",
-        ];
-        section_categories.iter().for_each(|category| {
-            let category_folder = section_root.join(category);
-            if let Ok(section_folders) = get_folders_in_folder(&category_folder) {
-                section_folders.iter().for_each(|section_folder| {
-                    let json5_path = section_folder.join("_settings.json5");
-                    let _ = match fs::read_to_string(&json5_path) {
-                        Ok(text) => match serde_json5::from_str::<SectionSettings>(&text) {
-                            Ok(_j) => {
-                                let section_name = section_folder
-                                    .file_stem()
-                                    .unwrap()
-                                    .to_string_lossy()
-                                    .to_string();
-                                if !section_name.starts_with(".") {
-                                    // check to see if there's a settings.json5 file
-                                    if category.eq_ignore_ascii_case("basic") {
-                                        self.sections.basic.push(section_name.clone());
-                                    } else if category.eq_ignore_ascii_case("block") {
-                                        self.sections.block.push(section_name.clone());
-                                    } else if category.eq_ignore_ascii_case("checklist") {
-                                        self.sections.checklist.push(section_name.clone());
-                                    } else if category.eq_ignore_ascii_case("checklist-item") {
-                                        self.sections.checklist_item.push(section_name.clone());
-                                    } else if category.eq_ignore_ascii_case("json5") {
-                                        self.sections.json5.push(section_name.clone());
-                                    } else if category.eq_ignore_ascii_case("list") {
-                                        self.sections.list.push(section_name.clone());
-                                    } else if category.eq_ignore_ascii_case("list-item") {
-                                        self.sections.list_item.push(section_name.clone());
-                                    } else if category.eq_ignore_ascii_case("raw") {
-                                        self.sections.raw.push(section_name.clone());
-                                    }
-                                }
-                                Ok(())
-                            }
-                            Err(e) => {
-                                event!(
-                                    Level::ERROR,
-                                    "Could not load _settings.json5 file: {} - {}",
-                                    e,
-                                    json5_path.display()
-                                );
-                                Err(NeoError {
-                                    kind: NeoErrorKind::GenericErrorWithoutSourcePath {
-                                        msg: format!(
-                                            "Could not load _settings.json5 file: {} - {}",
-                                            e,
-                                            json5_path.display(),
-                                        ),
-                                    },
-                                })
-                            }
-                        },
-                        Err(e) => {
-                            event!(
-                                Level::ERROR,
-                                "Could not load _settings.json5 file: {} - {}",
-                                e,
-                                json5_path.display()
-                            );
-                            Err(NeoError {
-                                kind: NeoErrorKind::GenericErrorWithoutSourcePath {
-                                    msg: format!(
-                                        "Could not load _settings.json5 file: {} - {}",
-                                        e,
-                                        json5_path.display(),
-                                    ),
-                                },
-                            })
-                        }
-                    };
-                })
-            }
-        });
-        Ok(())
     }
 }
 
@@ -226,10 +214,10 @@ impl SiteConfigV42 {
     }
 
     pub fn theme_input_root_folder(&self) -> PathBuf {
-        self.themes_input_folder().join(self.theme.clone())
+        self.themes_input_root_folder().join(self.theme.clone())
     }
 
-    pub fn themes_input_folder(&self) -> PathBuf {
+    pub fn themes_input_root_folder(&self) -> PathBuf {
         self.project_folder().join("themes")
     }
 
@@ -251,20 +239,24 @@ impl SiteConfigV42 {
             .join(&self.neo_files_output_folder_name())
             .join(&self.theme_files_output_folder_name())
     }
-}
 
-fn empty_sections_v41() -> ConfigSections {
-    ConfigSections {
-        basic: vec![],
-        block: vec![],
-        checklist: vec![],
-        checklist_item: vec![],
-        json5: vec![],
-        list: vec![],
-        list_item: vec![],
-        raw: vec![],
+    pub fn theme_sections_input_folder(&self) -> PathBuf {
+        self.theme_input_root_folder().join("sections")
     }
 }
+
+// fn empty_sections_v41() -> ConfigSections {
+//     ConfigSections {
+//         basic: vec![],
+//         block: vec![],
+//         checklist: vec![],
+//         checklist_item: vec![],
+//         json5: vec![],
+//         list: vec![],
+//         list_item: vec![],
+//         raw: vec![],
+//     }
+// }
 
 // fn empty_vec_v41() -> Vec<String> {
 //     vec![]
@@ -304,18 +296,6 @@ fn empty_sections_v41() -> ConfigSections {
 //    #[serde(default = "empty_vec")]
 //    pub span_attrs: Vec<String>,
 //}
-
-#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub struct ConfigSections {
-    pub basic: Vec<String>,
-    pub block: Vec<String>,
-    pub checklist: Vec<String>,
-    pub checklist_item: Vec<String>,
-    pub json5: Vec<String>,
-    pub list: Vec<String>,
-    pub list_item: Vec<String>,
-    pub raw: Vec<String>,
-}
 
 // impl SiteConfig {
 //     pub fn new_from_engine_config(engine_config: &EngineConfig) -> Result<SiteConfig, NeoError> {
@@ -665,4 +645,98 @@ pub struct ConfigSections {
 //                 }
 //             }),
 //     )
+// }
+//
+
+// impl SiteConfigV42 {
+//     #[instrument(skip(self))]
+//     pub fn load_sections(&mut self) -> Result<(), NeoError> {
+//         event!(Level::INFO, "Loading Theme Sections");
+//         let section_root = self.theme_input_root_folder().join("sections");
+//         let section_categories: Vec<&str> = vec![
+//             "basic",
+//             "block",
+//             "checklist",
+//             "checklist_item",
+//             "json5",
+//             "list",
+//             "list_item",
+//             "raw",
+//         ];
+//         section_categories.iter().for_each(|category| {
+//             let category_folder = section_root.join(category);
+//             if let Ok(section_folders) = get_folders_in_folder(&category_folder) {
+//                 section_folders.iter().for_each(|section_folder| {
+//                     let json5_path = section_folder.join("_settings.json5");
+//                     let _ = match fs::read_to_string(&json5_path) {
+//                         Ok(text) => match serde_json5::from_str::<SectionSettings>(&text) {
+//                             Ok(_j) => {
+//                                 let section_name = section_folder
+//                                     .file_stem()
+//                                     .unwrap()
+//                                     .to_string_lossy()
+//                                     .to_string();
+//                                 if !section_name.starts_with(".") {
+//                                     // check to see if there's a settings.json5 file
+//                                     if category.eq_ignore_ascii_case("basic") {
+//                                         self.sections.basic.push(section_name.clone());
+//                                     } else if category.eq_ignore_ascii_case("block") {
+//                                         self.sections.block.push(section_name.clone());
+//                                     } else if category.eq_ignore_ascii_case("checklist") {
+//                                         self.sections.checklist.push(section_name.clone());
+//                                     } else if category.eq_ignore_ascii_case("checklist-item") {
+//                                         self.sections.checklist_item.push(section_name.clone());
+//                                     } else if category.eq_ignore_ascii_case("json5") {
+//                                         self.sections.json5.push(section_name.clone());
+//                                     } else if category.eq_ignore_ascii_case("list") {
+//                                         self.sections.list.push(section_name.clone());
+//                                     } else if category.eq_ignore_ascii_case("list-item") {
+//                                         self.sections.list_item.push(section_name.clone());
+//                                     } else if category.eq_ignore_ascii_case("raw") {
+//                                         self.sections.raw.push(section_name.clone());
+//                                     }
+//                                 }
+//                                 Ok(())
+//                             }
+//                             Err(e) => {
+//                                 event!(
+//                                     Level::ERROR,
+//                                     "Could not load _settings.json5 file: {} - {}",
+//                                     e,
+//                                     json5_path.display()
+//                                 );
+//                                 Err(NeoError {
+//                                     kind: NeoErrorKind::GenericErrorWithoutSourcePath {
+//                                         msg: format!(
+//                                             "Could not load _settings.json5 file: {} - {}",
+//                                             e,
+//                                             json5_path.display(),
+//                                         ),
+//                                     },
+//                                 })
+//                             }
+//                         },
+//                         Err(e) => {
+//                             event!(
+//                                 Level::ERROR,
+//                                 "Could not load _settings.json5 file: {} - {}",
+//                                 e,
+//                                 json5_path.display()
+//                             );
+//                             Err(NeoError {
+//                                 kind: NeoErrorKind::GenericErrorWithoutSourcePath {
+//                                     msg: format!(
+//                                         "Could not load _settings.json5 file: {} - {}",
+//                                         e,
+//                                         json5_path.display(),
+//                                     ),
+//                                 },
+//                             })
+//                         }
+//                     };
+//                 })
+//             }
+//         });
+//         Ok(())
+//     }
 // }

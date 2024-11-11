@@ -1,32 +1,28 @@
 #![allow(unused_imports)]
-// use std::collections::BTreeMap;
-// use std::str::FromStr;
 
-//use crate::sections::*;
 use crate::{config_lists::ConfigList, site_config::*};
 use std::collections::BTreeMap;
-//use serde_json::Value;
-// use std::path::PathBuf;
 
 impl SiteConfigV42 {
     pub fn config_for_spec_tests() -> SiteConfigV42 {
-        let sections = ConfigSections {
-            basic: vec!["title".to_string(), "previews".to_string()],
-            block: vec![],
-            checklist: vec![],
-            checklist_item: vec![],
-            json5: vec!["pagedata".to_string()],
-            list: vec![],
-            list_item: vec![],
-            raw: vec![],
-        };
+        // let sections = ConfigSections {
+        //     basic: vec!["title".to_string(), "previews".to_string()],
+        //     block: vec![],
+        //     checklist: vec![],
+        //     checklist_item: vec![],
+        //     json5: vec!["pagedata".to_string()],
+        //     list: vec![],
+        //     list_item: vec![],
+        //     raw: vec![],
+        // };
+
         let config = SiteConfigV42 {
             debug_parser: false,
             language_default: "en".to_string(),
             base_url: "testsite.localhost:1999".to_string(),
             site_output_folder_name: "site".to_string(),
             project_root: Some(PathBuf::from("/site_config_mock/project_root")),
-            sections,
+            section_kinds: BTreeMap::new(),
             attr_flag_lists: Some(ConfigLists {
                 basic: BTreeMap::new(),
                 block: BTreeMap::new(),
@@ -44,23 +40,24 @@ impl SiteConfigV42 {
     }
 
     pub fn mock1_basic() -> SiteConfigV42 {
-        let sections = ConfigSections {
-            basic: vec!["title".to_string(), "previews".to_string()],
-            block: vec![],
-            checklist: vec![],
-            checklist_item: vec![],
-            json5: vec!["pagedata".to_string()],
-            list: vec![],
-            list_item: vec![],
-            raw: vec![],
-        };
+        // let sections = ConfigSections {
+        //     basic: vec!["title".to_string(), "previews".to_string()],
+        //     block: vec![],
+        //     checklist: vec![],
+        //     checklist_item: vec![],
+        //     json5: vec!["pagedata".to_string()],
+        //     list: vec![],
+        //     list_item: vec![],
+        //     raw: vec![],
+        // };
+
         let config = SiteConfigV42 {
             debug_parser: false,
             language_default: "en".to_string(),
             base_url: "testsite.localhost:1999".to_string(),
             site_output_folder_name: "site".to_string(),
             project_root: Some(PathBuf::from("/test/mocks")),
-            sections,
+            section_kinds: BTreeMap::new(),
             attr_flag_lists: Some(ConfigLists {
                 basic: BTreeMap::new(),
                 block: BTreeMap::new(),
@@ -78,37 +75,38 @@ impl SiteConfigV42 {
     }
 
     pub fn mock_for_files_in_test_samples_folder() -> SiteConfigV42 {
-        let sections = ConfigSections {
-            basic: vec![
-                "title".to_string(),
-                "previews".to_string(),
-                "tldr".to_string(),
-                "div".to_string(),
-                // "blurb".to_string(),
-                // "youtube".to_string(),
-            ],
-            block: vec![],
-            checklist: vec![],
-            checklist_item: vec![],
-            json5: vec!["pagedata".to_string()],
-            list: vec![],
-            list_item: vec![],
-            raw: vec![
-                "code".to_string(),
-                "css".to_string(),
-                "html".to_string(),
-                "javascript".to_string(),
-                "results".to_string(),
-                "output".to_string(),
-            ],
-        };
+        // let sections = ConfigSections {
+        //     basic: vec![
+        //         "title".to_string(),
+        //         "previews".to_string(),
+        //         "tldr".to_string(),
+        //         "div".to_string(),
+        //         // "blurb".to_string(),
+        //         // "youtube".to_string(),
+        //     ],
+        //     block: vec![],
+        //     checklist: vec![],
+        //     checklist_item: vec![],
+        //     json5: vec!["pagedata".to_string()],
+        //     list: vec![],
+        //     list_item: vec![],
+        //     raw: vec![
+        //         "code".to_string(),
+        //         "css".to_string(),
+        //         "html".to_string(),
+        //         "javascript".to_string(),
+        //         "results".to_string(),
+        //         "output".to_string(),
+        //     ],
+        // };
+
         let config = SiteConfigV42 {
             debug_parser: false,
             language_default: "en".to_string(),
             base_url: "testsite.localhost:1999".to_string(),
             site_output_folder_name: "site".to_string(),
             project_root: Some(PathBuf::from("/test/mocks")),
-            sections,
+            section_kinds: BTreeMap::new(),
             attr_flag_lists: Some(ConfigLists {
                 basic: BTreeMap::new(),
                 block: BTreeMap::new(),
