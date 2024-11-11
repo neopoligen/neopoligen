@@ -1,5 +1,8 @@
 [!- import "built-in/macro-loader.neoj" as neo -!]
 
+[# TYPE: none #]
+[# HOIST: [] #]
+
 <li class="flow">
   [!- for child in section.children -!] 
     [!- if loop.length == 1 -!]

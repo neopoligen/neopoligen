@@ -1,5 +1,8 @@
 [! import "built-in/macro-loader.neoj" as neo !]
 
+[# TYPE: none #]
+[# HOIST: [] #]
+
 [!- for child in section.children -!]
 
     [!- if loop.first -!]
