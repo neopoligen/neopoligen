@@ -1,0 +1,37 @@
+{
+  "attrs": {},
+  "bound": "full",
+  "children": [
+    {
+      "bound": "full",
+      "checked": false,
+      "checked_string": null,
+      "children": [
+        {
+          "children": [],
+          "kind": "checklist-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "alfa",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": ["sections/checklist-item-paragraph/default.neoj"],
+          "type": "block"
+        }
+      ],
+      "kind": "checklist-item",
+      "template_list": ["sections/checklist-item/default.neoj"],
+      "type": "checklistitem"
+    }
+  ],
+  "end_section": null,
+  "flags": [],
+  "kind": "todos",
+  "template_list": [
+    "sections/todos/default.neoj",
+    "sections/checklist/default.neoj"
+  ],
+  "type": "checklist"
+}

@@ -9,7 +9,7 @@
       "children": [
         {
           "children": [],
-          "kind": "block-checklist-item-paragraph",
+          "kind": "checklist-item-paragraph",
           "spans": [
             {
               "kind": "plain-text",
@@ -34,7 +34,7 @@
       "children": [
         {
           "children": [],
-          "kind": "block-checklist-item-paragraph",
+          "kind": "checklist-item-paragraph",
           "spans": [
             {
               "kind": "plain-text",
@@ -47,7 +47,7 @@
         },
         {
           "children": [],
-          "kind": "block-checklist-item-paragraph",
+          "kind": "checklist-item-paragraph",
           "spans": [
             {
               "kind": "plain-text",
@@ -69,7 +69,7 @@
               "children": [
                 {
                   "children": [],
-                  "kind": "block-checklist-item-paragraph",
+                  "kind": "checklist-item-paragraph",
                   "spans": [
                     {
                       "kind": "plain-text",
@@ -96,7 +96,7 @@
               "children": [
                 {
                   "children": [],
-                  "kind": "block-checklist-item-paragraph",
+                  "kind": "checklist-item-paragraph",
                   "spans": [
                     {
                       "kind": "plain-text",
@@ -111,7 +111,7 @@
                 },
                 {
                   "children": [],
-                  "kind": "block-checklist-item-paragraph",
+                  "kind": "checklist-item-paragraph",
                   "spans": [
                     {
                       "kind": "plain-text",
@@ -165,7 +165,7 @@
       "children": [
         {
           "children": [],
-          "kind": "block-checklist-item-paragraph",
+          "kind": "checklist-item-paragraph",
           "spans": [
             {
               "kind": "plain-text",
@@ -178,7 +178,7 @@
         },
         {
           "children": [],
-          "kind": "block-checklist-item-paragraph",
+          "kind": "checklist-item-paragraph",
           "spans": [
             {
               "kind": "plain-text",
@@ -203,7 +203,7 @@
     "children": [
       {
         "children": [],
-        "kind": "block-checklist-item-paragraph",
+        "kind": "checklist-item-paragraph",
         "spans": [
           {
             "kind": "plain-text",

@@ -83,7 +83,7 @@ pub fn checklist_item_paragraph_block<'a>(
         source,
         SectionV42::Block(BlockSectionV42 {
             children: vec![],
-            kind: "block-checklist-item-paragraph".to_string(),
+            kind: "checklist-item-paragraph".to_string(),
             spans,
             template_list: vec!["sections/checklist-item-paragraph/default.neoj".to_string()],
         }),

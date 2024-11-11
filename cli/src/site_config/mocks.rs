@@ -34,7 +34,6 @@ impl SiteConfigV42 {
         let mut section_types = BTreeMap::new();
         let checklist_kinds = vec!["checklist".to_string(), "todos".to_string()];
         section_types.insert("checklist".to_string(), checklist_kinds);
-
         let config = SiteConfigV42 {
             debug_parser: false,
             language_default: "en".to_string(),
