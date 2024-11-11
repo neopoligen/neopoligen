@@ -24,7 +24,6 @@
       "kind": "checklist-item",
       "template_list": [
         "sections/checklist-item/default.neoj",
-        "sections/generic-checklist-item/default.neoj"
       ],
       "type": "checklistitem"
     },
@@ -63,7 +62,6 @@
       "kind": "checklist-item",
       "template_list": [
         "sections/checklist-item/default.neoj",
-        "sections/generic-checklist-item/default.neoj"
       ],
       "type": "checklistitem"
     },
@@ -89,7 +87,6 @@
       "kind": "checklist-item",
       "template_list": [
         "sections/checklist-item/default.neoj",
-        "sections/generic-checklist-item/default.neoj"
       ],
       "type": "checklistitem"
     },
@@ -128,7 +125,6 @@
       "kind": "checklist-item",
       "template_list": [
         "sections/checklist-item/default.neoj",
-        "sections/generic-checklist-item/default.neoj"
       ],
       "type": "checklistitem"
     }
@@ -138,7 +134,6 @@
   "kind": "checklist",
   "template_list": [
     "sections/checklist/default.neoj",
-    "sections/generic-checklist/default.neoj"
   ],
   "type": "checklist"
 }
