@@ -114,7 +114,7 @@
     "kind": "list-end",
     "template_list": [
       "sections/list-end/default.neoj",
-      "sections/generic-end/default.neoj"
+      "sections/end/default.neoj"
     ],
     "type": "end"
   },

@@ -50,7 +50,7 @@
             "kind": "div-end",
             "template_list": [
               "sections/div-end/default.neoj",
-              "sections/generic-end/default.neoj"
+              "sections/end/default.neoj"
             ],
             "type": "end"
           },
@@ -58,7 +58,7 @@
           "kind": "div",
           "template_list": [
             "sections/div/default.neoj",
-            "sections/generic-basic/default.neoj"
+            "sections/basic/default.neoj"
           ],
           "type": "basic"
         }
@@ -106,7 +106,7 @@
     "kind": "list-end",
     "template_list": [
       "sections/list-end/default.neoj",
-      "sections/generic-end/default.neoj"
+      "sections/end/default.neoj"
     ],
     "type": "end"
   },
