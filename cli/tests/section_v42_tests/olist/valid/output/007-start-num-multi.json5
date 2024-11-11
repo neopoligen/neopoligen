@@ -7,7 +7,7 @@
       "children": [
         {
           "children": [],
-          "kind": "block-olist-item-paragraph",
+          "kind": "olist-item-paragraph",
           "spans": [
             {
               "kind": "plain-text",
@@ -23,7 +23,7 @@
         },
         {
           "children": [],
-          "kind": "block-olist-item-paragraph",
+          "kind": "olist-item-paragraph",
           "spans": [
             {
               "kind": "plain-text",
@@ -50,7 +50,7 @@
       "children": [
         {
           "children": [],
-          "kind": "block-olist-item-paragraph",
+          "kind": "olist-item-paragraph",
           "spans": [
             {
               "kind": "plain-text",
@@ -66,7 +66,7 @@
         },
         {
           "children": [],
-          "kind": "block-olist-item-paragraph",
+          "kind": "olist-item-paragraph",
           "spans": [
             {
               "kind": "plain-text",

@@ -7,7 +7,7 @@
             "children": [
                 {
                     "children": [],
-                    "kind": "block-olist-item-paragraph",
+                    "kind": "olist-item-paragraph",
                     "spans": [
                         {
                             "kind": "plain-text",
@@ -16,14 +16,13 @@
                         },
                     ],
                     "template_list": [
-                        "sections/olist-item-paragraph/default.neoj",
-                        ,
+                        "sections/olist-item-paragraph/default.neoj"
                     ],
                     "type": "block",
                 },
                 {
                     "children": [],
-                    "kind": "block-olist-item-paragraph",
+                    "kind": "olist-item-paragraph",
                     "spans": [
                         {
                             "kind": "plain-text",
@@ -32,16 +31,14 @@
                         },
                     ],
                     "template_list": [
-                        "sections/olist-item-paragraph/default.neoj",
-                        ,
+                        "sections/olist-item-paragraph/default.neoj"
                     ],
                     "type": "block",
                 },
             ],
             "kind": "olist-item",
             "template_list": [
-                "sections/olist-item/default.neoj",
-                ,
+                "sections/olist-item/default.neoj"
             ],
             "type": "olistitem",
         },
@@ -50,7 +47,7 @@
             "children": [
                 {
                     "children": [],
-                    "kind": "block-olist-item-paragraph",
+                    "kind": "olist-item-paragraph",
                     "spans": [
                         {
                             "kind": "plain-text",
@@ -59,14 +56,13 @@
                         },
                     ],
                     "template_list": [
-                        "sections/olist-item-paragraph/default.neoj",
-                        ,
+                        "sections/olist-item-paragraph/default.neoj"
                     ],
                     "type": "block",
                 },
                 {
                     "children": [],
-                    "kind": "block-olist-item-paragraph",
+                    "kind": "olist-item-paragraph",
                     "spans": [
                         {
                             "kind": "plain-text",
@@ -75,16 +71,14 @@
                         },
                     ],
                     "template_list": [
-                        "sections/olist-item-paragraph/default.neoj",
-                        ,
+                        "sections/olist-item-paragraph/default.neoj"
                     ],
                     "type": "block",
                 },
             ],
             "kind": "olist-item",
             "template_list": [
-                "sections/olist-item/default.neoj",
-                ,
+                "sections/olist-item/default.neoj"
             ],
             "type": "olistitem",
         },
@@ -93,8 +87,7 @@
     "flags": [],
     "kind": "olist",
     "template_list": [
-        "sections/olist/default.neoj",
-        ,
+        "sections/olist/default.neoj"
     ],
     "type": "olist",
 }
