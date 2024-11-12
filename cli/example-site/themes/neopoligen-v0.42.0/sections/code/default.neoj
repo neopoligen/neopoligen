@@ -1,0 +1,15 @@
+[!- import "built-in/macro-loader.neoj" as neo -!]
+
+[# TYPE: raw #]
+[# HOIST: [] #]
+
+<section [@- neo.section_attrs() -@]>
+<pre><code>
+[!- autoescape true -!]
+[@- section.body -@]
+[!- endautoescape -!]
+</code></pre>
+</section>
+
+[@- neo.output_end_section(section) -@]
+

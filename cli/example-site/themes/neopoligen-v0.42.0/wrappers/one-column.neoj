@@ -20,15 +20,15 @@
 </head>
 <body class="flow">
 
-<header class="wrapper-base">
+<header class="wrapper-medium">
   <a href="/">Home</a>
 </header>
 
-<main class="wrapper-base flow">
+<main class="wrapper-medium flow">
     [!- block body_main -!][!- endblock -!]
 </main>
 
-<footer class="wrapper-base">
+<footer class="wrapper-medium">
   [!- include "includes/debugging.neoj" -!]
   <div>[@ site.generated_at("Generated on %a. %B %-d at %-I:%M:%S%p") @]</div>
 </footer>

@@ -1,0 +1,42 @@
+[!- import "built-in/macro-loader.neoj" as neo -!]
+
+[# TYPE: basic #]
+[# HOIST: [class, id] #]
+
+<section [@- neo.section_attrs() -@]>
+
+  <div class="demo-bookmark-v1-header">
+    Bookmark
+  </div>
+
+  <div class="demo-bookmark-v1-body">
+
+    <div class="demo-bookmark-v1-title">
+      <a href="[@- neo.output_attr("url") -@]">
+        [@- neo.output_attr("title") -@]
+      </a>
+    </div>
+
+    [!- if "subtitle" in section.attrs -!]
+      <div class="demo-bookmark-v1-subtitle">
+        [@- neo.output_attr("subtitle") -@]
+      </div>
+    [!- endif -!]
+
+    <div class="demo-bookmark-v1-details">
+      [@- neo.output_all_child_sections(section) -@]
+    </div>
+
+    <div class="demo-bookmark-v1-url-wrapper">
+      <div>
+        <a href="[@- neo.output_attr("url") -@]">
+          [@- neo.output_attr("url") -@]
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+[@- neo.output_end_section(section) -@]
+

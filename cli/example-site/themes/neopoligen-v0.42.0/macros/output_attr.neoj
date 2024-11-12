@@ -1,0 +1,6 @@
+[!- from "macros/output_spans.neoj" import output_spans -!]
+[!- macro output_attr(attr) -!]
+[!- if attr in section.attrs -!]
+[@- output_spans(section.attrs[attr].spans) -@]
+[!- endif -!]
+[!- endmacro -!]

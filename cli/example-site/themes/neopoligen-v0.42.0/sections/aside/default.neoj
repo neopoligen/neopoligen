@@ -1,0 +1,13 @@
+[!- import "built-in/macro-loader.neoj" as neo -!]
+
+[# TYPE: basic #]
+[# HOIST: [class, id] #]
+
+<section [@- neo.section_attrs("flow") -@]>
+  <aside>
+    [@- neo.output_all_child_sections(section) -@]
+  </aside>
+</section>
+
+[@- neo.output_end_section(section) -@]
+

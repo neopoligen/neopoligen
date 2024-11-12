@@ -4,7 +4,9 @@
 [# HOIST: [] #]
 
 <section [@- site.get_section_attrs() -@]>
+<pre>
 [@ section.body @]
+</pre>
 </section>
 
 [@- neo.output_end_section(section) -@]
