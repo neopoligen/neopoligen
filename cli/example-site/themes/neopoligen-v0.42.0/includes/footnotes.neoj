@@ -1,4 +1,4 @@
-[!- import "built-in/macro-loader.neoj" as neo -!]
+[!- import "built-in/macros.neoj" as neo -!]
 [! set footnote_header_has_been_output = false !]
 [!- for section in sections -!]
     [!- if section.kind == "footnote"  -!]

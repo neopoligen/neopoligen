@@ -210,7 +210,7 @@ impl BuilderV42<'_> {
                 }
             }
         }
-        let template_name = "built-in/macro-loader.neoj";
+        let template_name = "built-in/macros.neoj";
         let content = macros.join("\n");
         match self
             .env

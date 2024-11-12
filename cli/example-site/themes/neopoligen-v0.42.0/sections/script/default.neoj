@@ -1,4 +1,4 @@
-[!- import "built-in/macro-loader.neoj" as neo -!]
+[!- import "built-in/macros.neoj" as neo -!]
 
 [# TYPE: script #]
 [# HOIST: [] #]

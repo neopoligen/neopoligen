@@ -1,5 +1,5 @@
 [!- extends "wrappers/one-column.neoj" -!]
-[!- import "built-in/macro-loader.neoj" as neo -!]
+[!- import "built-in/macros.neoj" as neo -!]
 
 [!- block body_main -!]
   [@- neo.output_all_sections_except(["endnote", "footnote", "ref"]) -@]

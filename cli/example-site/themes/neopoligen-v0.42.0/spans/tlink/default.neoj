@@ -1,7 +1,7 @@
 [# DOCS: 
 
 #]
-[!- import "built-in/macro-loader.neoj" as neo -!]
+[!- import "built-in/macros.neoj" as neo -!]
 [!- set title = site.title_for_page(span) -!]
 [!- set href = site.href_for_page(span) -!]
 [!- if title and href -!]
