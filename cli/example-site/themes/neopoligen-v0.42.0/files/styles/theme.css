@@ -137,7 +137,7 @@ canvas {
 }
 
 .demo-bookmark-v1-details {
-  padding-top: var(--padding-large);
+  padding-block: var(--padding-large);
 }
 
 .demo-bookmark-v1-header {
@@ -159,6 +159,13 @@ canvas {
   color: var(--color-reverse-60);
 }
 
+.demo-bookmark-v1-tag-wrapper {
+  margin-top: var(--margin-large);
+  padding-block: var(--padding-small);
+  font-size: var(--font-size-xsmall);
+  border-top: 1px solid var(--color-reverse-10);
+}
+
 .demo-bookmark-v1-title {
   font-size: var(--font-size-medium);
   font-weight: 700;
@@ -166,13 +173,17 @@ canvas {
 }
 
 .demo-bookmark-v1-url-wrapper {
-  margin-top: var(--margin-large);
   padding-top: var(--padding-medium);
   font-size: var(--font-size-xsmall);
   border-top: 1px solid var(--color-reverse-10);
   text-align: right;
 }
 
+.fin-token {
+  padding-block: var(--padding-xlarge);
+  color: var(--color-reverse-40);
+  text-align: center;
+}
 
 .flow > :where(:not(:first-child)) {
   margin-top: var(--flow-space, 1em);
