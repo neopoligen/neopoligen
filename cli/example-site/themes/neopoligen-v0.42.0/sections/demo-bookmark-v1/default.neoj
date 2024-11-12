@@ -27,12 +27,16 @@
       [@- neo.output_all_child_sections(section) -@]
     </div>
 
-    <div class="demo-bookmark-v1-url-wrapper">
-      <div>
-        <a href="[@- neo.output_attr("url") -@]">
-          [@- neo.output_attr("url") -@]
-        </a>
+    [!- if "tag" in section.attrs -!]
+      <div class="demo-bookmark-v1-tag-wrapper">
+        tags: [@ neo.output_attr("tag") -@]
       </div>
+    [!- endif -!]
+
+    <div class="demo-bookmark-v1-url-wrapper">
+      <a href="[@- neo.output_attr("url") -@]">
+        [@- neo.output_attr("url") -@]
+      </a>
     </div>
 
   </div>
