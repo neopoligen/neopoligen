@@ -3,6 +3,8 @@ pub mod key_value;
 
 use crate::helpers::flatten_spans_v42;
 // use crate::helpers::flatten_spans_v42;
+use self::flag::section_flag_attr_v42;
+use self::key_value::section_key_value_attr_v42;
 use crate::section_attr_v42::flag::SectionFlagAttrV42;
 use crate::section_attr_v42::key_value::SectionKeyValueAttrV42;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
@@ -16,14 +18,50 @@ use nom_supreme::ParserExt;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
-use self::flag::section_flag_attr_v42;
-use self::key_value::section_key_value_attr_v42;
-
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 // #[serde(tag = "type", rename_all = "lowercase")]
 pub enum SectionAttrV42 {
     FlagV42(SectionFlagAttrV42),
     KeyValueV42(SectionKeyValueAttrV42),
+}
+
+pub fn section_attr_v42_dev<'a>(
+    source: &'a str,
+) -> IResult<
+    &'a str,
+    (
+        BTreeMap<String, Vec<SectionKeyValueAttrPayloadV42>>,
+        Vec<String>,
+    ),
+    ErrorTree<&'a str>,
+> {
+    let (source, raw_attrs) =
+        many0(alt((section_key_value_attr_v42, section_flag_attr_v42)))(source)?;
+    // TODO: Combine multiple attrs into the same one
+    // if they have the same key
+    let mut attrs = BTreeMap::new();
+    raw_attrs.iter().for_each(|attr| match attr {
+        SectionAttrV42::KeyValueV42(kv) => {
+            attrs.insert(
+                kv.key.to_string(),
+                vec![SectionKeyValueAttrPayloadV42 {
+                    text: flatten_spans_v42(&kv.value),
+                    spans: kv.value.clone(),
+                }],
+            );
+            ()
+        }
+        _ => (),
+    });
+    let flags = raw_attrs
+        .iter()
+        .filter_map(|attr| match attr {
+            SectionAttrV42::FlagV42(f) => Some(f.value.clone()),
+            _ => None,
+        })
+        .collect::<Vec<String>>();
+    let (source, _) = multispace0.context("").parse(source)?;
+    Ok((source, (attrs, flags)))
 }
 
 pub fn section_attr_v42<'a>(

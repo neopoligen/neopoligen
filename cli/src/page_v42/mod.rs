@@ -78,41 +78,41 @@ impl PageV42b {
         }
     }
 
-    // TODO: Check if this works
-    pub fn get_attr_from_last_section_of_type(
-        &self,
-        section_kind: &str,
-        key: &str,
-    ) -> Result<&SectionKeyValueAttrPayloadV42, NeoErrorV42> {
-        match &self.ast {
-            Some(ast) => {
-                match ast
-                    .iter()
-                    .filter_map(|section| match section {
-                        SectionV42::Basic(sec) => {
-                            if sec.kind == section_kind {
-                                Some(sec)
-                            } else {
-                                None
-                            }
-                        }
-                        _ => None,
-                    })
-                    .last()
-                {
-                    Some(s) => match s.attrs.get(key) {
-                        Some(attr) => Ok(attr),
-                        // TODO: Update this error to be generic for section
-                        None => Err(NeoErrorV42::NoParsedPageDataForKey(key.to_string())),
-                    },
-                    // TODO: Update this error to be generic for section
-                    None => Err(NeoErrorV42::NoParsedPageDataForKey(key.to_string())),
-                }
-            }
-            // TODO: Update this error to be generic for section
-            None => Err(NeoErrorV42::NoParsedPageDataForKey(key.to_string())),
-        }
-    }
+    // // TODO: Check if this works
+    // pub fn get_attr_from_last_section_of_type(
+    //     &self,
+    //     section_kind: &str,
+    //     key: &str,
+    // ) -> Result<&SectionKeyValueAttrPayloadV42, NeoErrorV42> {
+    //     match &self.ast {
+    //         Some(ast) => {
+    //             match ast
+    //                 .iter()
+    //                 .filter_map(|section| match section {
+    //                     SectionV42::Basic(sec) => {
+    //                         if sec.kind == section_kind {
+    //                             Some(sec)
+    //                         } else {
+    //                             None
+    //                         }
+    //                     }
+    //                     _ => None,
+    //                 })
+    //                 .last()
+    //             {
+    //                 Some(s) => match s.attrs.get(key) {
+    //                     Some(attr) => Ok(attr),
+    //                     // TODO: Update this error to be generic for section
+    //                     None => Err(NeoErrorV42::NoParsedPageDataForKey(key.to_string())),
+    //                 },
+    //                 // TODO: Update this error to be generic for section
+    //                 None => Err(NeoErrorV42::NoParsedPageDataForKey(key.to_string())),
+    //             }
+    //         }
+    //         // TODO: Update this error to be generic for section
+    //         None => Err(NeoErrorV42::NoParsedPageDataForKey(key.to_string())),
+    //     }
+    // }
 
     pub fn get_page_attr_from_ast(
         &self,

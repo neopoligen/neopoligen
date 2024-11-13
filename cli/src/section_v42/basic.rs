@@ -2,6 +2,7 @@ use super::helpers::make_template_list::*;
 use crate::bound::Bound;
 use crate::helpers::dump_parser_if_debug;
 use crate::section_attr_v42::section_attr_v42;
+use crate::section_attr_v42::section_attr_v42_dev;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
 use crate::section_v42::*;
 use crate::site_config::SiteConfigV42;
@@ -23,7 +24,7 @@ use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct BasicSectionV42 {
-    pub attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42>,
+    pub attrs: BTreeMap<String, Vec<SectionKeyValueAttrPayloadV42>>,
     pub bound: Bound,
     pub children: Vec<SectionV42>,
     pub end_section: Option<Box<SectionV42>>,
@@ -62,7 +63,7 @@ pub fn basic_section_full_v42<'a>(
         .context("")
         .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
-    let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
+    let (source, (attrs, flags)) = section_attr_v42_dev.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, _) = multispace0.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
@@ -71,7 +72,7 @@ pub fn basic_section_full_v42<'a>(
             .context("")
             .parse(source)?;
     let section = SectionV42::Basic(BasicSectionV42 {
-        attrs,
+        attrs: BTreeMap::new(),
         bound: Bound::Full,
         children,
         end_section: None,
@@ -116,7 +117,7 @@ pub fn basic_section_start_v42<'a>(
             .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 7);
     let section = SectionV42::Basic(BasicSectionV42 {
-        attrs,
+        attrs: BTreeMap::new(),
         bound: Bound::Start,
         children,
         end_section: Some(Box::new(end_section)),
