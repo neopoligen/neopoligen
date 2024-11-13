@@ -258,29 +258,55 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
         if args.len() >= 1 {
             let kind = args[0].get_attr("kind").unwrap();
             classes.push(format!("{}-section", kind));
-            let attrs = args[0].get_item(&Value::from("attrs")).unwrap();
+            let attrs = args[0].get_attr("attrs").unwrap();
             for key in attrs.try_iter()? {
-                if key.to_string() != "class".to_string() {
-                    let spans = attrs
-                        .get_item(&key)?
-                        .get_item(&Value::from("spans"))
-                        .unwrap();
-                    let flattened = flatten_spans_from_template_v42(&[spans])
-                        .unwrap()
-                        .to_string();
-                    let escaped_value = encode_quoted_attribute(&flattened);
-                    attr_collection.insert(key.to_string(), vec![escaped_value.to_string()]);
-                }
                 if key.to_string() == "class".to_string() {
-                    let spans = attrs
-                        .get_item(&key)?
-                        .get_item(&Value::from("spans"))
-                        .unwrap();
-                    let flattened = flatten_spans_from_template_v42(&[spans])
+                    let items = attrs.get_attr("class").unwrap();
+                    let stuff: Value = items
+                        .try_iter()
                         .unwrap()
-                        .to_string();
-                    let escaped_value = encode_quoted_attribute(&flattened);
-                    classes.push(escaped_value.to_string());
+                        // .flat_map(|s| s.get_attr("spans"))
+                        .flat_map(|t| t.get_attr("text"))
+                        .collect();
+                    let out_string: String = stuff
+                        .try_iter()
+                        .unwrap()
+                        .map(|x| x.to_string())
+                        .collect::<Vec<String>>()
+                        .join(" ");
+                    classes.push(out_string.clone());
+                    // dbg!(&out_string);
+                    // let
+
+                    // let flattened = flatten_spans_from_template_v42(&[stuff])
+                    //     .unwrap()
+                    //     .to_string();
+                    // let escaped_value = encode_quoted_attribute(&flattened);
+                    //classes.push(escaped_value.to_string());
+
+                    // let spans = attrs
+                    //     .get_item(&key)?
+                    //     .get_item(&Value::from("spans"))
+                    //     .unwrap();
+                    // let flattened = flatten_spans_from_template_v42(&[spans])
+                    //     .unwrap()
+                    //     .to_string();
+                    // let escaped_value = encode_quoted_attribute(&flattened);
+                    // classes.push(escaped_value.to_string());
+
+                    //
+                }
+
+                if key.to_string() != "class".to_string() {
+                    // let spans = attrs
+                    //     .get_item(&key)?
+                    //     .get_item(&Value::from("spans"))
+                    //     .unwrap();
+                    // let flattened = flatten_spans_from_template_v42(&[spans])
+                    //     .unwrap()
+                    //     .to_string();
+                    // let escaped_value = encode_quoted_attribute(&flattened);
+                    // attr_collection.insert(key.to_string(), vec![escaped_value.to_string()]);
                 }
             }
             if args.len() >= 2 {
@@ -306,6 +332,62 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
             Ok(Value::from(""))
         }
     }
+
+    // // TODO: Delte this it's the backup version
+    // pub fn get_section_attrs(&self, args: &[Value]) -> Result<Value, Error> {
+    //     let mut attr_collection: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    //     let mut classes = vec![];
+    //     if args.len() >= 1 {
+    //         let kind = args[0].get_attr("kind").unwrap();
+    //         classes.push(format!("{}-section", kind));
+    //         let attrs = args[0].get_item(&Value::from("attrs")).unwrap();
+    //         for key in attrs.try_iter()? {
+    //             if key.to_string() != "class".to_string() {
+    //                 let spans = attrs
+    //                     .get_item(&key)?
+    //                     .get_item(&Value::from("spans"))
+    //                     .unwrap();
+    //                 let flattened = flatten_spans_from_template_v42(&[spans])
+    //                     .unwrap()
+    //                     .to_string();
+    //                 let escaped_value = encode_quoted_attribute(&flattened);
+    //                 attr_collection.insert(key.to_string(), vec![escaped_value.to_string()]);
+    //             }
+    //             if key.to_string() == "class".to_string() {
+    //                 let spans = attrs
+    //                     .get_item(&key)?
+    //                     .get_item(&Value::from("spans"))
+    //                     .unwrap();
+    //                 let flattened = flatten_spans_from_template_v42(&[spans])
+    //                     .unwrap()
+    //                     .to_string();
+    //                 let escaped_value = encode_quoted_attribute(&flattened);
+    //                 classes.push(escaped_value.to_string());
+    //             }
+    //         }
+    //         if args.len() >= 2 {
+    //             if &args[1].to_string() != "" {
+    //                 classes.push(args[1].to_string());
+    //             }
+    //         };
+    //         if classes.len() > 0 {
+    //             attr_collection.insert("class".to_string(), vec![classes.join(" ").to_string()]);
+    //         }
+    //         let attr_items = attr_collection
+    //             .iter()
+    //             .map(|(k, v)| format!(r#"{}="{}""#, k.to_string(), v.join(" ")))
+    //             .collect::<Vec<String>>();
+    //         if attr_items.len() > 0 {
+    //             Ok(Value::from(format!(r#" {}"#, attr_items.join(" "))))
+    //         } else {
+    //             Ok(Value::from(""))
+    //         }
+    //     } else {
+    //         // TODO: Hoist an error here that there wasn't
+    //         // enough arguments passed to the method
+    //         Ok(Value::from(""))
+    //     }
+    // }
 
     // get_span_attrs() used to get the attrs from a span and
     // return them with a possibly added class that comes in
