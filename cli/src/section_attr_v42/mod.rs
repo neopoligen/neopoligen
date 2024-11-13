@@ -39,18 +39,23 @@ pub fn section_attr_v42_dev<'a>(
         many0(alt((section_key_value_attr_v42, section_flag_attr_v42)))(source)?;
     // TODO: Combine multiple attrs into the same one
     // if they have the same key
-    let mut attrs = BTreeMap::new();
+    let mut attrs: BTreeMap<String, Vec<SectionKeyValueAttrPayloadV42>> = BTreeMap::new();
     raw_attrs.iter().for_each(|attr| match attr {
-        SectionAttrV42::KeyValueV42(kv) => {
-            attrs.insert(
-                kv.key.to_string(),
-                vec![SectionKeyValueAttrPayloadV42 {
-                    text: flatten_spans_v42(&kv.value),
-                    spans: kv.value.clone(),
-                }],
-            );
-            ()
-        }
+        SectionAttrV42::KeyValueV42(kv) => match attrs.get_mut(&kv.key.to_string()) {
+            Some(v) => v.push(SectionKeyValueAttrPayloadV42 {
+                text: flatten_spans_v42(&kv.value),
+                spans: kv.value.clone(),
+            }),
+            None => {
+                attrs.insert(
+                    kv.key.to_string(),
+                    vec![SectionKeyValueAttrPayloadV42 {
+                        text: flatten_spans_v42(&kv.value),
+                        spans: kv.value.clone(),
+                    }],
+                );
+            }
+        },
         _ => (),
     });
     let flags = raw_attrs
