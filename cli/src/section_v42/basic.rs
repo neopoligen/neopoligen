@@ -116,7 +116,7 @@ pub fn basic_section_start_v42<'a>(
             .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 7);
     let section = SectionV42::Basic(BasicSectionV42 {
-        attrs: BTreeMap::new(),
+        attrs,
         bound: Bound::Start,
         children,
         end_section: Some(Box::new(end_section)),
