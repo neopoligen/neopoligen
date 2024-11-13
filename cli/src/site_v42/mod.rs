@@ -22,54 +22,36 @@ pub struct SiteV42b {
 }
 
 impl SiteV42b {
-    // TODO: Add tests to this and error handling
-    // TODO: Set up config of specific attrs/flags to hoist
-    //       and only add those to the output
-    pub fn get_span_attrs(&self, args: &[Value]) -> Result<Value, Error> {
-        let mut attr_string: Vec<String> = vec![];
-        if args.len() > 0 {
-            let attrs = args[0].get_item(&Value::from("attrs")).unwrap();
-            for key in attrs.try_iter()? {
-                let spans = attrs.get_item(&key)?;
-                if key.to_string() != "class".to_string() {
-                    attr_string.push(format!(
-                        r#"{}="{}""#,
-                        key.to_string(),
-                        encode_quoted_attribute(
-                            &spans.get_item(&Value::from("text")).unwrap().to_string(),
-                        )
-                        .to_string()
-                    ));
+    pub fn new_with_pages(
+        config: &SiteConfigV42,
+        raw_pages: &BTreeMap<PathBuf, PageV42b>,
+    ) -> SiteV42b {
+        let mut pages: BTreeMap<String, PageV42b> = BTreeMap::new();
+        let mut pages_without_ids: BTreeMap<PathBuf, PageV42b> = BTreeMap::new();
+        for (_, page) in raw_pages {
+            match &page.id {
+                Some(id) => {
+                    pages.insert(id.to_string(), page.clone());
+                    ()
+                }
+                None => {
+                    pages_without_ids.insert(page.source_absolute_path.clone(), page.clone());
+                    ()
                 }
             }
-            let mut classes: Vec<String> = vec![];
-            for key in attrs.try_iter()? {
-                let spans = attrs.get_item(&key)?;
-                if key.to_string() == "class".to_string() {
-                    classes.push(
-                        encode_quoted_attribute(
-                            &spans.get_item(&Value::from("text")).unwrap().to_string(),
-                        )
-                        .to_string(),
-                    )
-                }
-            }
-            if args.len() == 2 {
-                classes.push(args[1].to_string());
-            }
-            if classes.len() > 0 {
-                attr_string.push(format!(r#"class="{}""#, classes.join(" ")));
-            }
-            let flags = args[0].get_item(&Value::from("flags")).unwrap();
-            for flag in flags.try_iter()? {
-                attr_string.push(format!(r#"{}"#, flag));
-            }
-            Ok(Value::from(format!(" {}", attr_string.join(" "))))
-        } else {
-            Ok(Value::from(""))
         }
+        let site = SiteV42b {
+            config: config.clone(),
+            pages,
+            pages_without_ids,
+            generated_at: Some(chrono::prelude::Local::now()),
+        };
+        site
     }
+}
 
+impl SiteV42b {
+    // For time stamp output
     pub fn generated_at(&self, args: &[Value]) -> Result<Value, Error> {
         if args.len() == 1 {
             Ok(Value::from(
@@ -85,6 +67,8 @@ impl SiteV42b {
         }
     }
 
+    // Get the href for a page which is used
+    // for all linking.
     pub fn href_for_page(&self, args: &[Value]) -> Option<String> {
         match &self.get_page_id(args) {
             Some(id) => match &self.pages.get(id) {
@@ -98,11 +82,17 @@ impl SiteV42b {
         }
     }
 
+    // The base href where Neopoligen stores
+    // the files it works with (e.g. theme and image files)
     pub fn neo_files_href(&self) -> Option<String> {
         Some(format!("/{}", &self.config.neo_files_output_folder_name()))
     }
 
-    pub fn theme_files_href(&self) -> Option<String> {
+    // The base href for the current theme. All the
+    // support files from a theme go under here and
+    // this method can be used to construct links
+    // and paths for them
+    pub fn theme_folder_href(&self) -> Option<String> {
         Some(format!(
             "/{}/{}",
             &self.config.neo_files_output_folder_name(),
@@ -110,6 +100,10 @@ impl SiteV42b {
         ))
     }
 
+    // The title for a page based off it's ID. Uses
+    // .get_page_id() which accepts spans whose first
+    // plain-text span has is the text of the id,
+    // or the ID passed in directly
     pub fn title_for_page(&self, args: &[Value]) -> Option<String> {
         match &self.get_page_id(args) {
             Some(id) => match &self.pages.get(id) {
@@ -186,12 +180,18 @@ impl SiteV42b {
         }
     }
 
+    // All the ids for all pages in the site.
+    // TODO: Probably deprecate this
     pub fn get_page_ids(&self, _args: &[Value]) -> Result<Value, Error> {
         Ok(Value::from_serialize(
             &self.pages.keys().cloned().collect::<Vec<String>>(),
         ))
     }
 
+    // TODO: Figure out if this is still needed. It's
+    // what was originally used for error output, but
+    // it might not be needed when the errors are
+    // sent to the builder or an external object
     pub fn get_page_with_display_path(&self, args: &[Value]) -> Result<Value, Error> {
         if args.len() >= 3 {
             match &self.pages_without_ids.get(&PathBuf::from(&args[2].to_string())) {
@@ -236,6 +236,9 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
         }
     }
 
+    // TODO: Should be able to deprecate this when new
+    // error handling at the builder or external object
+    // level is done.
     pub fn get_keys_for_pages_without_ids(&self, _args: &[Value]) -> Result<Value, Error> {
         Ok(Value::from_serialize(
             &self
@@ -246,6 +249,9 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
         ))
     }
 
+    // Gets the attributes for a section.
+    // TODO: Also get flags
+    // TODO: Add tests
     pub fn get_section_attrs(&self, args: &[Value]) -> Result<Value, Error> {
         let mut attr_collection: BTreeMap<String, Vec<String>> = BTreeMap::new();
         let mut classes = vec![];
@@ -276,46 +282,12 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
                     let escaped_value = encode_quoted_attribute(&flattened);
                     classes.push(escaped_value.to_string());
                 }
-                //let spans = attrs.get_item(&key)?.get_item(&Value::from("spans"));
-                //let values = spans
-                //    .iter()
-                //    .filter_map(|v| {
-                //        if key.to_string() != "class".to_string() {
-                //            dbg!(key.to_string());
-                //            //let internal_spans = &v.get_item(&Value::from("spans")).unwrap();
-                //            //dbg!(internal_spans);
-                //            dbg!(&spans);
-                //            // let thing = encode_quoted_attribute(
-                //            //     &flatten_spans_from_template_v42(&[v
-                //            //         .get_item(&Value::from("spans"))
-                //            //         .unwrap()])
-                //            //     .expect("unwrapping")
-                //            //     .as_str()
-                //            //     .unwrap()
-                //            //     .to_string(),
-                //            // )
-                //            // .to_string();
-                //            //dbg!(&thing);
-                //            //Some(thing)
-                //        } else {
-                //            None
-                //        }
-                //    })
-                //    .collect::<Vec<String>>();
-                //if values.len() > 0 {
-                //    attr_collection.push(format!(r#"{}="{}""#, key.to_string(), values.join(" ")));
-                //}
-                //
             }
             if args.len() >= 2 {
-                classes.push(args[1].to_string());
+                if &args[1].to_string() != "" {
+                    classes.push(args[1].to_string());
+                }
             };
-            // if classes.len() > 0 {
-            //     Ok(Value::from(format!(r#" class="{}""#, classes.join(" "))))
-            // } else {
-            //     // TODO: Pull the rest of the attrs and flags here
-            //     Ok(Value::from(""))
-            // }
             if classes.len() > 0 {
                 attr_collection.insert("class".to_string(), vec![classes.join(" ").to_string()]);
             }
@@ -328,16 +300,80 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
             } else {
                 Ok(Value::from(""))
             }
-            // dbg!(&attr_items);
-            // dbg!(&attr_collection);
-            // Ok(Value::from(r#" class="TODO""#))
-            //
         } else {
-            // TODO: Turn this into an error and hoist it.
+            // TODO: Hoist an error here that there wasn't
+            // enough arguments passed to the method
             Ok(Value::from(""))
         }
     }
 
+    // get_span_attrs() used to get the attrs from a span and
+    // return them with a possibly added class that comes in
+    // as a second argument.
+    // TODO: capture flags as well
+    // TODO: hoist errors
+    // TODO: only hoist attrs defined in the HOIST setting
+    pub fn get_span_attrs(&self, args: &[Value]) -> Result<Value, Error> {
+        let mut attr_collection: BTreeMap<String, Vec<String>> = BTreeMap::new();
+        let mut classes = vec![];
+        if args.len() >= 1 {
+            let kind = args[0].get_attr("kind").unwrap();
+            classes.push(format!("{}-span", kind));
+            let attrs = args[0].get_item(&Value::from("attrs")).unwrap();
+            for key in attrs.try_iter()? {
+                if key.to_string() != "class".to_string() {
+                    let spans = attrs
+                        .get_item(&key)?
+                        .get_item(&Value::from("spans"))
+                        .unwrap();
+                    let flattened = flatten_spans_from_template_v42(&[spans])
+                        .unwrap()
+                        .to_string();
+                    let escaped_value = encode_quoted_attribute(&flattened);
+                    attr_collection.insert(key.to_string(), vec![escaped_value.to_string()]);
+                }
+                if key.to_string() == "class".to_string() {
+                    let spans = attrs
+                        .get_item(&key)?
+                        .get_item(&Value::from("spans"))
+                        .unwrap();
+                    let flattened = flatten_spans_from_template_v42(&[spans])
+                        .unwrap()
+                        .to_string();
+                    let escaped_value = encode_quoted_attribute(&flattened);
+                    classes.push(escaped_value.to_string());
+                }
+            }
+            if args.len() >= 2 {
+                if &args[1].to_string() != "" {
+                    classes.push(args[1].to_string());
+                }
+            };
+            if classes.len() > 0 {
+                attr_collection.insert("class".to_string(), vec![classes.join(" ").to_string()]);
+            };
+            let attr_items = attr_collection
+                .iter()
+                .map(|(k, v)| format!(r#"{}="{}""#, k.to_string(), v.join(" ")))
+                .collect::<Vec<String>>();
+            if attr_items.len() > 0 {
+                Ok(Value::from(format!(r#" {}"#, attr_items.join(" "))))
+            } else {
+                Ok(Value::from(""))
+            }
+        } else {
+            // TODO: Hoist an error here that there wasn't
+            // enough arguments passed to the method
+            Ok(Value::from(""))
+        }
+
+        //Ok(Value::from(r#" class="red""#))
+
+        //
+    }
+
+    // TODO: Deprecate this and move error stuff to a builder
+    // or to an independent object
     pub fn get_issue_count(&self, _args: &[Value]) -> usize {
         let mut count = 0;
         for (_, page) in &self.pages {
@@ -348,100 +384,8 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
         count
     }
 
-    pub fn new_with_pages(
-        config: &SiteConfigV42,
-        raw_pages: &BTreeMap<PathBuf, PageV42b>,
-    ) -> SiteV42b {
-        let mut pages: BTreeMap<String, PageV42b> = BTreeMap::new();
-        let mut pages_without_ids: BTreeMap<PathBuf, PageV42b> = BTreeMap::new();
-        for (_, page) in raw_pages {
-            match &page.id {
-                Some(id) => {
-                    pages.insert(id.to_string(), page.clone());
-                    ()
-                }
-                None => {
-                    pages_without_ids.insert(page.source_absolute_path.clone(), page.clone());
-                    ()
-                }
-            }
-        }
-        let site = SiteV42b {
-            config: config.clone(),
-            pages,
-            pages_without_ids,
-            generated_at: Some(chrono::prelude::Local::now()),
-        };
-        site
-    }
-
-    //// TODO: Test this, it was copied over direction from the prior version, but hopefully still
-    //// works out of the box
-    //// TODO: Add tests to this and error handling
-    //// TODO: escape for html
-    //// TODO: Set up config of specific attrs/flags to hoist
-    ////       and only add those to the output
-    //pub fn get_span_attrs(&self, args: &[Value]) -> Result<Value, Error> {
-    //    //let mut classes: Vec<String> = vec![];
-    //    let mut attr_string: Vec<String> = vec![];
-    //    if args.len() > 0 {
-    //        let attrs = args[0].get_item(&Value::from("attrs")).unwrap();
-    //        for key in attrs.try_iter()? {
-    //            let spans = attrs.get_item(&key)?;
-    //            let values = spans
-    //                .try_iter()?
-    //                .filter_map(|v| {
-    //                    if key.to_string() != "class".to_string() {
-    //                        Some(
-    //                            encode_quoted_attribute(
-    //                                &v.get_item(&Value::from("text")).unwrap().to_string(),
-    //                            )
-    //                            .to_string(),
-    //                        )
-    //                    } else {
-    //                        None
-    //                    }
-    //                })
-    //                .collect::<Vec<String>>();
-    //            if values.len() > 0 {
-    //                attr_string.push(format!(r#"{}="{}""#, key.to_string(), values.join(" ")));
-    //            }
-    //        }
-    //        let mut classes: Vec<String> = vec![];
-    //        for key in attrs.try_iter()? {
-    //            let spans = attrs.get_item(&key)?;
-    //            classes = spans
-    //                .try_iter()?
-    //                .filter_map(|v| {
-    //                    if key.to_string() == "class".to_string() {
-    //                        Some(
-    //                            encode_quoted_attribute(
-    //                                &v.get_item(&Value::from("text")).unwrap().to_string(),
-    //                            )
-    //                            .to_string(),
-    //                        )
-    //                    } else {
-    //                        None
-    //                    }
-    //                })
-    //                .collect::<Vec<String>>();
-    //        }
-    //        if args.len() == 2 {
-    //            classes.push(args[1].to_string());
-    //        }
-    //        if classes.len() > 0 {
-    //            attr_string.push(format!(r#"class="{}""#, classes.join(" ")));
-    //        }
-    //        let flags = args[0].get_item(&Value::from("flags")).unwrap();
-    //        for flag in flags.try_iter()? {
-    //            attr_string.push(format!(r#"{}"#, flag));
-    //        }
-    //        Ok(Value::from(format!(" {}", attr_string.join(" "))))
-    //    } else {
-    //        Ok(Value::from(""))
-    //    }
-    //}
-
+    // TODO: Takes spans inside a template (as opposed to
+    // a content file) and renders them to text
     pub fn template_spans_to_text(&self, args: &[Value]) -> Result<Value, Error> {
         if args.len() >= 3 {
             let x: &String = &args[0]
@@ -459,11 +403,15 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
 }
 
 impl Object for SiteV42b {
-    fn get_value(self: &Arc<Self>, key: &Value) -> Option<Value> {
-        match key.as_str()? {
-            _ => None,
-        }
-    }
+    // TODO: Probably don't use this. Try to keep
+    // everything as method calls so the API is
+    // always site.something() with the parens at
+    // the end
+    // fn get_value(self: &Arc<Self>, key: &Value) -> Option<Value> {
+    //     match key.as_str()? {
+    //         _ => None,
+    //     }
+    // }
 
     fn call_method(
         self: &Arc<SiteV42b>,
@@ -475,7 +423,6 @@ impl Object for SiteV42b {
             "generated_at" => self.generated_at(args),
             "get_keys_for_pages_without_ids" => self.get_keys_for_pages_without_ids(args),
             "get_issue_count" => Ok(Value::from(self.get_issue_count(args))),
-            "get_span_attrs" => self.get_span_attrs(args),
             // Deprecate the ones of these that go to a page
             // in favor of pulling in the page as an object
             // and accessing things that way to start
@@ -485,9 +432,11 @@ impl Object for SiteV42b {
             "get_page_with_id" => self.get_page_with_id(args),
             "get_page_with_display_path" => self.get_page_with_display_path(args),
             "get_section_attrs" => self.get_section_attrs(args),
+            "get_span_attrs" => self.get_span_attrs(args),
             "href_for_page" => Ok(Value::from(self.href_for_page(args))),
+            "site_root" => Ok(Value::from(self.config.site_root.clone())),
             "neo_files_href" => Ok(Value::from(self.neo_files_href())),
-            "theme_files_href" => Ok(Value::from(self.theme_files_href())),
+            "theme_folder_href" => Ok(Value::from(self.theme_folder_href())),
             "title_for_page" => Ok(Value::from(self.title_for_page(args))),
             _ => Ok(Value::from(format!(
                 "[Warning: tried to use 'site.{}(...)' which does not exist]",
@@ -497,6 +446,8 @@ impl Object for SiteV42b {
     }
 }
 
+// TODO: Move tests to the top level tests folder
+//
 #[cfg(test)]
 mod test {
     use crate::{
