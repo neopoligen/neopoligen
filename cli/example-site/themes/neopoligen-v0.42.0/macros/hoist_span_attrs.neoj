@@ -1,0 +1,7 @@
+[# TODO: rename site function to site.hoist_span_attrs
+and pick it up here #]
+
+
+[!- macro hoist_span_attrs(extra_classes="") -!]
+
+[!- endmacro -!]

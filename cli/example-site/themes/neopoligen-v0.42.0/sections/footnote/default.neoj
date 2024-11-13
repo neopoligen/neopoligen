@@ -8,9 +8,9 @@
   <div>
     [!- if "id" in section.attrs -!]
       <a 
-        href="#footnote-[@ neo.output_spans(section.attrs.id.spans) @]-link"
-        ><small id="footnote-[@ neo.output_spans(section.attrs.id.spans) @]-text">
-          [@- neo.output_spans(section.attrs.id.spans) -@]
+        href="#footnote-[@ neo.output_spans(section.attrs.id[0].spans) @]-link"
+        ><small id="footnote-[@ neo.output_spans(section.attrs.id[0].spans) @]-text">
+          [@- neo.output_spans(section.attrs.id[0].spans) -@]
           [@- ' ' -@]
           &#x2934;</a></small>
     [!- endif -!]
@@ -19,10 +19,10 @@
   <div>
     <div>
       [!- if "url" in section.attrs -!]
-        <a href="[@- neo.output_spans(section.attrs.url.spans) -@]">
+        <a href="[@- neo.output_spans(section.attrs.url[0].spans) -@]">
       [!- endif -!]
       [!- if "title" in section.attrs -!]
-        [@- neo.output_spans(section.attrs.title.spans) -@]
+        [@- neo.output_spans(section.attrs.title[0].spans) -@]
       [!- endif -!]
       [!- if "url" in section.attrs -!]
         </a>

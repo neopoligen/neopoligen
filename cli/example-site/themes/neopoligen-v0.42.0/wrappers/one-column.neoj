@@ -36,10 +36,9 @@
 <div class="warning-section flow"><p>Head's up: I'm actively overhauling my site builder
 right now. To wit:</p>
 <ul class="flow">
-  <li>Images are broken</li>
+  <li>Most images and lots of links are broken</li>
   <li>Code blocks don't wrap and don't have syntax highlighting</li>
-  <li>Some links are busted</li>
-  <li>Other misc. formatting and functionality is off</li>
+  <li>Other miscellaneous formatting and functionality is off</li>
 </ul>
 <p>Please excuse the mess while I put things 
 back together</p></div>
@@ -54,6 +53,5 @@ back together</p></div>
 
 [@ neo.output_scripts() @]
 
-[@ page.parsing_issue().completed @]
 </body>
 </html>
