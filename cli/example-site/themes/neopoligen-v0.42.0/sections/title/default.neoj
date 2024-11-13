@@ -1,14 +1,11 @@
 [!- import "built-in/macros.neoj" as neo -!]
 
 [# TYPE: basic #]
-[# HOIST: [] #]
+[# HOIST: [class, id] #]
 
 <section [@- neo.section_attrs("flow") -@]>
-
-<h1>[@- neo.spans_from_first_block(section) -@]</h1>
-
-[@- neo.output_child_sections_skipping_first(section) -@]
-
+  <h1>[@- neo.spans_from_first_block(section) -@]</h1>
+  [@- neo.output_child_sections_skipping_first(section) -@]
 </section>
 
 [@- neo.output_end_section(section) -@]
