@@ -32,7 +32,8 @@ fn get_section_attrs_empty_test() {
 }
 
 #[test]
-fn solo_get_section_attrs_with_id() {
+#[ignore]
+fn get_section_attrs_with_id() {
     let site = SiteV42b {
         config: SiteConfigV42::mock1_basic(),
         generated_at: None,

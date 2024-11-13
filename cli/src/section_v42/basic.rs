@@ -72,7 +72,7 @@ pub fn basic_section_full_v42<'a>(
             .context("")
             .parse(source)?;
     let section = SectionV42::Basic(BasicSectionV42 {
-        attrs: BTreeMap::new(),
+        attrs,
         bound: Bound::Full,
         children,
         end_section: None,
