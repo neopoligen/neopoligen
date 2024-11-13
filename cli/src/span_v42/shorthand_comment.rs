@@ -39,7 +39,7 @@ pub fn comment_shorthand_span(source: &str) -> IResult<&str, SpanV42, ErrorTree<
     let (source, tokens) = preceded(pair(tag("##"), opt(plain_text_space1_as_single_space)), many1(alt((
             plain_text_string_base,
             plain_text_space1_as_single_space,
-            is_a("@`~*^![]{}<>_:"),
+            is_a("%@`~*^![]{}<>_:"),
             plain_text_single_line_ending_as_space,
             escaped_character,
         ))))
@@ -89,7 +89,7 @@ pub fn comment_shorthand_flag(source: &str) -> IResult<&str, SpanBaseAttrV42, Er
     let (source, _) = space0.context("").parse(source)?;
     let (source, parts) = many1(alt((
         plain_text_string_base,
-        is_a("@`~*^![]{}<>_:"),
+        is_a("%@`~*^![]{}<>_:"),
         escaped_character,
     )))
     .context("")

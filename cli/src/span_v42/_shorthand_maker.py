@@ -6,16 +6,17 @@ from string import Template
 # file as they work a little differently. 
 
 shorthands = [
-        ("~~", "~~", "strikethrough", "Strikethrough", "tilde", "~", "@`*^![]{}<>_#:"),
-        ("``", "``", "code", "Code", "backtick", "`", "@~*^![]{}<>_#:"),
-        ("__", "__", "emphasis", "Emphasis", "underscore", "_", "@`~*^![]{}<>#:"),
-        ("^^", "^^", "footnote", "Footnote", "caret", "^", "@`~*![]{}<>_#:"),
-        ("**", "**", "strong", "Strong", "asterisk", "*", "@`~^![]{}<>_#:"),
-        ("[[", "]]", "link", "Link", "close_bracket", "]", "@`~*^!{}<>_#:"),
-        ("{{", "}}", "image", "Image", "close_brace", "}", "@`~*^![]<>_#:"),
-        ("!!", "!!", "underline", "Underline", "exclamation", "!", "@`~*^[]{}<>_#:"),
-        ("@@", "@@", "mark", "Mark", "ampersand", "@", "`~*^![]{}<>_#:"),
-        ("##", "##", "comment", "Comment", "hashtag", "#", "@`~*^![]{}<>_:"),
+        ("``", "``", "code", "Code", "backtick", "`", "%@~*^![]{}<>_#:"),
+        ("##", "##", "comment", "Comment", "hashtag", "#", "%@`~*^![]{}<>_:"),
+        ("__", "__", "emphasis", "Emphasis", "underscore", "_", "%@`~*^![]{}<>#:"),
+        ("^^", "^^", "footnote", "Footnote", "caret", "^", "%@`~*![]{}<>_#:"),
+        ("%%", "%%", "html", "Html", "percent", "%", "@`~*^![]{}<>_#:"),
+        ("{{", "}}", "image", "Image", "close_brace", "}", "%@`~*^![]<>_#:"),
+        ("[[", "]]", "link", "Link", "close_bracket", "]", "%@`~*^!{}<>_#:"),
+        ("@@", "@@", "mark", "Mark", "ampersand", "@", "%@`~*^![]{}<>_#:"),
+        ("~~", "~~", "strikethrough", "Strikethrough", "tilde", "~", "%@`*^![]{}<>_#:"),
+        ("**", "**", "strong", "Strong", "asterisk", "*", "%@`~^![]{}<>_#:"),
+        ("!!", "!!", "underline", "Underline", "exclamation", "!", "%@`~*^[]{}<>_#:"),
         ]
 
 skeleton = """use super::PlainTextSpan;

@@ -167,12 +167,13 @@ pub fn plain_text_single_colon(source: &str) -> IResult<&str, &str, ErrorTree<&s
 
 pub fn plain_text_string_base(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
     let (source, result) = alt((
-        is_not(" \t\r\n`~!@#^*[]{}<>_|:\\"),
+        is_not(" \t\r\n`~!@#$^*[]{}<>_|:\\"),
         terminated(tag("`"), not(tag("`"))),
         terminated(tag("~"), not(tag("~"))),
         terminated(tag("!"), not(tag("!"))),
         terminated(tag("@"), not(tag("@"))),
         terminated(tag("#"), not(tag("#"))),
+        terminated(tag("%"), not(tag("%"))),
         terminated(tag("^"), not(tag("^"))),
         terminated(tag("*"), not(tag("*"))),
         terminated(tag("["), not(tag("["))),
@@ -211,6 +212,7 @@ pub fn escaped_character(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
         preceded(tag("\\"), tag("~")),
         preceded(tag("\\"), tag("!")),
         preceded(tag("\\"), tag("#")),
+        preceded(tag("\\"), tag("%")),
         preceded(tag("\\"), tag("^")),
         preceded(tag("\\"), tag("*")),
         preceded(tag("\\"), tag("[")),
