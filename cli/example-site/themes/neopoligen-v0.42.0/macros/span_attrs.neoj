@@ -1,0 +1,3 @@
+[! macro span_attrs(extra_classes="") !]
+class=""
+[! endmacro !]

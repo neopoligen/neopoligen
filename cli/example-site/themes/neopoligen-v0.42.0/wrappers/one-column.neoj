@@ -25,6 +25,17 @@
 </header>
 
 <main class="wrapper-medium flow">
+<div class="warning-section flow"><p>Head's up: I'm actively overhauling my site builder
+right now. To wit:</p>
+<ul class="flow">
+  <li>Images are broken</li>
+  <li>Code blocks don't wrap and don't have syntax highlighting</li>
+  <li>Some links are busted</li>
+  <li>Other misc. formatting and functionality is off</li>
+</ul>
+<p>Please excuse the mess while I put things 
+back together</p></div>
+
     [!- block body_main -!][!- endblock -!]
 </main>
 

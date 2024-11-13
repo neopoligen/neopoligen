@@ -304,6 +304,7 @@ video{
   margin: var(--padding-large);
   border: 1px solid rgb(255 122 127 / .2);
   border-radius: var(--radius-medium);
+  font-size: var(--font-size-xsmall);
 }
 
 .wrapper-xxsmall {

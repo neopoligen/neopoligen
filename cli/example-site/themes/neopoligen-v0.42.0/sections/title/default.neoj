@@ -7,10 +7,6 @@
 
 <h1>[@- neo.spans_from_first_block(section) -@]</h1>
 
-<div class="warning-section">Head's up: I'm actively overhauling my site builder
-right now. Images are broken and formatting is off. You should still be 
-able to read most everything though. Please excuse the mess while I put things 
-back together.</div>
 
 [@- neo.output_child_sections_skipping_first(section) -@]
 
