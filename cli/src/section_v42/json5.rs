@@ -28,7 +28,7 @@ use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Json5SectionV42 {
-    pub attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42>,
+    pub attrs: BTreeMap<String, Vec<SectionKeyValueAttrPayloadV42>>,
     pub bound: Bound,
     pub data: Value,
     pub end_section: Option<Box<SectionV42>>,

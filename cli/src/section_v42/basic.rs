@@ -2,7 +2,6 @@ use super::helpers::make_template_list::*;
 use crate::bound::Bound;
 use crate::helpers::dump_parser_if_debug;
 use crate::section_attr_v42::section_attr_v42;
-use crate::section_attr_v42::section_attr_v42_dev;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
 use crate::section_v42::*;
 use crate::site_config::SiteConfigV42;
@@ -63,7 +62,7 @@ pub fn basic_section_full_v42<'a>(
         .context("")
         .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
-    let (source, (attrs, flags)) = section_attr_v42_dev.context("").parse(source)?;
+    let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, _) = multispace0.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);

@@ -12,6 +12,7 @@ use nom::character::complete::line_ending;
 use nom::character::complete::multispace0;
 use nom::character::complete::space0;
 use nom::character::complete::space1;
+use nom::combinator::fail;
 use nom::multi::many0;
 use nom::sequence::pair;
 use nom::sequence::terminated;
@@ -23,11 +24,10 @@ use nom_supreme::ParserExt;
 use serde::Deserialize;
 use serde::Serialize;
 use std::collections::BTreeMap;
-use nom::combinator::fail;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct ListSectionV42 {
-    pub attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42>,
+    pub attrs: BTreeMap<String, Vec<SectionKeyValueAttrPayloadV42>>,
     pub bound: Bound,
     pub children: Vec<SectionV42>,
     pub end_section: Option<Box<SectionV42>>,
@@ -66,26 +66,28 @@ pub fn list_section_full_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
-    let (source, kind) = site_config
-        .section_types
-        .get("list")
-        .unwrap()
-        .iter()
-        .fold(fail(source), |acc, item| match acc {
-            Ok(v) => Ok(v),
-            Err(_) => terminated(tag(item.as_str()), space0_line_ending_or_eof)
-                .context("")
-                .parse(source),
-        })?;
+    let (source, kind) =
+        site_config
+            .section_types
+            .get("list")
+            .unwrap()
+            .iter()
+            .fold(fail(source), |acc, item| match acc {
+                Ok(v) => Ok(v),
+                Err(_) => terminated(tag(item.as_str()), space0_line_ending_or_eof)
+                    .context("")
+                    .parse(source),
+            })?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, _) = multispace0.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
-    let (source, children) =
-        many0(|src| list_item_section_full_v42(src, site_config, next_parent.clone(), debug, &kind))
-            .context("")
-            .parse(source)?;
+    let (source, children) = many0(|src| {
+        list_item_section_full_v42(src, site_config, next_parent.clone(), debug, &kind)
+    })
+    .context("")
+    .parse(source)?;
     let section = SectionV42::List(ListSectionV42 {
         attrs,
         bound: Bound::Full,
@@ -112,17 +114,18 @@ pub fn list_section_start_v42<'a>(
     let dbg_header = "LIST_SECTION_START";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = pair(tag("--"), space1).context("").parse(source)?;
-    let (source, kind) = site_config
-        .section_types
-        .get("list")
-        .unwrap()
-        .iter()
-        .fold(fail(source), |acc, item| match acc {
-            Ok(v) => Ok(v),
-            Err(_) => terminated(tag(item.as_str()), tuple((tag("/"), space0, line_ending)))
-                .context("")
-                .parse(source),
-        })?;
+    let (source, kind) =
+        site_config
+            .section_types
+            .get("list")
+            .unwrap()
+            .iter()
+            .fold(fail(source), |acc, item| match acc {
+                Ok(v) => Ok(v),
+                Err(_) => terminated(tag(item.as_str()), tuple((tag("/"), space0, line_ending)))
+                    .context("")
+                    .parse(source),
+            })?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     let (source, (attrs, flags)) = section_attr_v42.context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);

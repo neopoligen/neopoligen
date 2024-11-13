@@ -69,7 +69,7 @@ lazy_static! {
 }
 
 #[test]
-fn page_section_integration_tests() {
+fn solo_page_section_integration_tests() {
     for (id, _source) in SOURCE_FILES.iter() {
         match OUTPUT_FILES.get(id) {
             Some(output) => {
@@ -85,8 +85,8 @@ fn page_section_integration_tests() {
                         };
                         let check_value = Value::from_serialize(json5);
                         assert_eq!(
-                            page.sections.unwrap(),
                             check_value,
+                            page.sections.unwrap(),
                             "##### ERROR ##### - {}",
                             &id
                         );

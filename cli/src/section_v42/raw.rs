@@ -26,7 +26,7 @@ use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct RawSectionV42 {
-    pub attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42>,
+    pub attrs: BTreeMap<String, Vec<SectionKeyValueAttrPayloadV42>>,
     pub body: String,
     pub bound: Bound,
     pub end_section: Option<Box<SectionV42>>,
@@ -135,7 +135,7 @@ mod test {
             .contents_utf8()
             .unwrap()
             .to_string();
-        let attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
+        let attrs: BTreeMap<String, Vec<SectionKeyValueAttrPayloadV42>> = BTreeMap::new();
         let left = (
             "",
             SectionV42::Raw(RawSectionV42 {
@@ -162,7 +162,7 @@ mod test {
             .contents_utf8()
             .unwrap()
             .to_string();
-        let attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42> = BTreeMap::new();
+        let attrs: BTreeMap<String, Vec<SectionKeyValueAttrPayloadV42>> = BTreeMap::new();
         let left = (
             "",
             SectionV42::Raw(RawSectionV42 {
@@ -180,11 +180,7 @@ mod test {
                             kind: "plain-text".to_string(),
                             text: "After end pre".to_string(),
                         })],
-                        template_list: make_template_list(
-                            "paragraph",
-                            "paragraph",
-                            "default",
-                        ),
+                        template_list: make_template_list("paragraph", "paragraph", "default"),
                     })],
                     kind: "pre-end".to_string(),
                     template_list: make_template_list("end", "pre-end", "default"),

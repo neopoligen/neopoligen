@@ -27,7 +27,7 @@ use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct OlistSectionV42 {
-    pub attrs: BTreeMap<String, SectionKeyValueAttrPayloadV42>,
+    pub attrs: BTreeMap<String, Vec<SectionKeyValueAttrPayloadV42>>,
     pub bound: Bound,
     pub children: Vec<SectionV42>,
     pub end_section: Option<Box<SectionV42>>,

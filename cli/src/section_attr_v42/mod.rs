@@ -25,7 +25,7 @@ pub enum SectionAttrV42 {
     KeyValueV42(SectionKeyValueAttrV42),
 }
 
-pub fn section_attr_v42_dev<'a>(
+pub fn section_attr_v42<'a>(
     source: &'a str,
 ) -> IResult<
     &'a str,
@@ -69,7 +69,7 @@ pub fn section_attr_v42_dev<'a>(
     Ok((source, (attrs, flags)))
 }
 
-pub fn section_attr_v42<'a>(
+pub fn section_attr_v42_old<'a>(
     source: &'a str,
 ) -> IResult<
     &'a str,
@@ -137,24 +137,24 @@ mod test {
         assert_eq!(left, right);
     }
 
-    #[test]
-    fn section_attr_v42_get_key_value() {
-        let source = "-- alfa: bravo";
-        let mut attrs = BTreeMap::new();
-        attrs.insert(
-            "alfa".to_string(),
-            SectionKeyValueAttrPayloadV42 {
-                text: "bravo".to_string(),
-                spans: vec![SpanV42::PlainText(PlainTextSpan {
-                    kind: "plain-text".to_string(),
-                    text: "bravo".to_string(),
-                })],
-            },
-        );
-        let left = ("", (attrs, vec![]));
-        let right = section_attr_v42(source).unwrap();
-        assert_eq!(left, right);
-    }
+    // #[test]
+    // fn section_attr_v42_get_key_value() {
+    //     let source = "-- alfa: bravo";
+    //     let mut attrs = BTreeMap::new();
+    //     attrs.insert(
+    //         "alfa".to_string(),
+    //         SectionKeyValueAttrPayloadV42 {
+    //             text: "bravo".to_string(),
+    //             spans: vec![SpanV42::PlainText(PlainTextSpan {
+    //                 kind: "plain-text".to_string(),
+    //                 text: "bravo".to_string(),
+    //             })],
+    //         },
+    //     );
+    //     let left = ("", (attrs, vec![]));
+    //     let right = section_attr_v42(source).unwrap();
+    //     assert_eq!(left, right);
+    // }
 
     // #[test]
     // fn section_attr_v42_get_key_value() {

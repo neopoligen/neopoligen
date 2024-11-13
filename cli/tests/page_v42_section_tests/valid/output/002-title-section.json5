@@ -15,7 +15,6 @@
                 ],
                 "template_list": [
                     "sections/paragraph/default.neoj",
-                    
                 ],
                 "type": "block",
             },
@@ -31,26 +30,30 @@
     },
     {
         "attrs": {
-            "id": {
-                "spans": [
-                    {
-                        "kind": "plain-text",
-                        "text": "2or96un9",
-                        "type": "plain-text",
-                    },
-                ],
-                "text": "2or96un9",
-            },
-            "status": {
-                "spans": [
-                    {
-                        "kind": "plain-text",
-                        "text": "scratch",
-                        "type": "plain-text",
-                    },
-                ],
-                "text": "scratch",
-            },
+            "id": [
+                {
+                    "spans": [
+                        {
+                            "kind": "plain-text",
+                            "text": "2or96un9",
+                            "type": "plain-text",
+                        },
+                    ],
+                    "text": "2or96un9",
+                },
+            ],
+            "status": [
+                {
+                    "spans": [
+                        {
+                            "kind": "plain-text",
+                            "text": "scratch",
+                            "type": "plain-text",
+                        },
+                    ],
+                    "text": "scratch",
+                },
+            ],
         },
         "bound": "full",
         "data": {},

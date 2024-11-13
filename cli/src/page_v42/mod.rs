@@ -117,7 +117,7 @@ impl PageV42b {
     pub fn get_page_attr_from_ast(
         &self,
         key: &str,
-    ) -> Result<&SectionKeyValueAttrPayloadV42, NeoErrorV42> {
+    ) -> Result<&Vec<SectionKeyValueAttrPayloadV42>, NeoErrorV42> {
         match &self.ast {
             Some(ast) => {
                 match ast
@@ -169,7 +169,7 @@ impl PageV42b {
 
     pub fn set_id(&mut self) {
         match self.get_page_attr_from_ast("id") {
-            Ok(attr) => self.id = Some(attr.text.to_string()),
+            Ok(attr) => self.id = Some(attr.last().unwrap().text.to_string()),
             Err(_) => match get_value_from_raw_page_section_parsing(&self.source, "id") {
                 Ok(v) => {
                     self.id = Some(v.1.join("").trim().to_string());
@@ -197,7 +197,7 @@ impl PageV42b {
     pub fn set_rel_output_path(&mut self) {
         match &self.get_page_attr_from_ast("path") {
             Ok(attr) => {
-                let path = PathBuf::from(attr.text.to_string());
+                let path = PathBuf::from(attr.last().unwrap().text.to_string());
                 let path_stripped = match path.strip_prefix("/") {
                     Ok(p) => p.into(),
                     Err(_) => path.clone(),
@@ -218,7 +218,10 @@ impl PageV42b {
 
     pub fn set_titles(&mut self) {
         self.title_as_spans = match &self.get_page_attr_from_ast("title") {
-            Ok(attr) => Some(attr.spans.clone()),
+            Ok(attr) => {
+                let the_spans = attr.iter().flat_map(|x| x.spans.clone()).collect();
+                Some(the_spans)
+            }
             Err(_) => {
                 match &self.ast {
                     Some(ast) => {
