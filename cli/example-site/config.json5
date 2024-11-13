@@ -1,5 +1,5 @@
 {
-  "base_url": "http://localhost:1989",
+  "site_root": "http://localhost:1989",
   "language_default": "en",
   "theme": "neopoligen-v0.42.0",
   // todo: add this: "run_theme_tests": "no",
