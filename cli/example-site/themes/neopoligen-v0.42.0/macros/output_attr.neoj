@@ -1,8 +1,8 @@
 [!- from "macros/output_spans.neoj" import output_spans -!]
 [!- macro output_attr(attr) -!]
-ATTR HERE
-[@ section.attrs @]
-[!- if attr in section.attrs -!]
-[@- output_spans(section.attrs[attr].spans) -@]
-[!- endif -!]
+  [!- if attr in section.attrs -!]
+    [!- for slice in section.attrs[attr] -!]
+      [@- output_spans(slice.spans) -@]
+    [!- endfor -!]
+  [!- endif -!]
 [!- endmacro -!]

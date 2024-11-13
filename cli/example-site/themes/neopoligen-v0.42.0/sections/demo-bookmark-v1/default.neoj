@@ -23,13 +23,17 @@
       </div>
     [!- endif -!]
 
-    <div class="demo-bookmark-v1-details">
+    <div class="demo-bookmark-v1-details flow">
       [@- neo.output_all_child_sections(section) -@]
     </div>
 
     [!- if "tag" in section.attrs -!]
       <div class="demo-bookmark-v1-tag-wrapper">
-        tags: [@ neo.output_attr("tag") -@]
+        tags:[@- ' ' -@]
+          [!- for t in section.attrs["tag"] -!]
+            [@ neo.output_spans(t.spans) -@]
+            [!- if not loop.last -!],[@- ' ' -@][!- endif -!]
+          [!- endfor -!]
       </div>
     [!- endif -!]
 
