@@ -259,7 +259,8 @@ impl PageV42b {
 impl Object for PageV42b {
     fn get_value(self: &Arc<Self>, key: &Value) -> Option<Value> {
         match key.as_str()? {
-            "id" => Some(Value::from(self.id.clone().unwrap().clone())),
+            // "href" => Some(Value::from(self.href.as_ref())),
+            // "id" => Some(Value::from(self.id.clone().unwrap().clone())),
             "issues" => Some(Value::from_serialize(self.issues.clone())),
             "parsing_issue" => Some(Value::from_serialize(self.parsing_issue.clone())),
             // "sections" => self.sections.clone(),
@@ -267,7 +268,7 @@ impl Object for PageV42b {
             "source_display_path" => {
                 Some(Value::from(self.source_display_path.display().to_string()))
             }
-            "title" => Some(Value::from(self.title.clone())),
+            //"title" => Some(Value::from(self.title.clone())),
             "title_as_spans" => Some(Value::from_serialize(self.title_as_spans.clone())),
             _ => Some(Value::from(format!(
                 "ISSUE: No field for page.{}",
@@ -283,6 +284,9 @@ impl Object for PageV42b {
         _args: &[Value],
     ) -> Result<Value, Error> {
         match name {
+            "href" => Ok(Value::from(self.href.as_ref())),
+            "id" => Ok(Value::from(self.id.as_ref())),
+            "title" => Ok(Value::from(self.title.as_ref())),
             // "href" => self.href(),
             // "sections" => self.ast(),
             // "get_pagedata" => self.make_value_from_string(self.get_pagedata(args)),

@@ -7,7 +7,6 @@
 
 <h1>[@- neo.spans_from_first_block(section) -@]</h1>
 
-
 [@- neo.output_child_sections_skipping_first(section) -@]
 
 </section>

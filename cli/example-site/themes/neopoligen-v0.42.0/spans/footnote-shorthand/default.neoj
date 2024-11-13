@@ -1,9 +1,21 @@
 [!- import "built-in/macros.neoj" as neo -!]
 
+[#- HOIST: class -#]
+
 <sup><a 
     [@- neo.span_attrs() -@]
     [@- ' ' -@]
     href="#footnote-[@- span.text -@]-text"
     id="footnote-[@- span.text -@]-link"
     >[@- span.text -@]</a></sup>
-[@- '' -@]
+
+[#- DOCS: 
+
+- Used for making footnote marks in text
+with links to corresponding footnote sections.
+
+- Does not hoist any "id" attrs since the id is
+set specifically to allow a back reference
+from the corresponding footnote section
+
+-#]

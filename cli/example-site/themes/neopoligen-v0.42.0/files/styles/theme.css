@@ -36,13 +36,13 @@
   --font-size-xxlarge: clamp(1.94rem, calc(1.77rem + 0.87vw), 2.44rem);
   --font-size-xxxlarge: clamp(2.33rem, calc(2.08rem + 1.25vw), 3.05rem);
 
-  --wrapper-xxsmall: min(12, 94%);
-  --wrapper-xsmall: min(22ch, 94%);
-  --wrapper-small: min(40ch, 94%);
-  --wrapper-medium: min(62ch, 94%);
-  --wrapper-large: min(90ch, 94%);
-  --wrapper-xlarge: min(120ch, 94%);
-  --wrapper-xxlarge: min(180ch, 94%);
+  --wrapper-xxsmall: min(8, 94%);
+  --wrapper-xsmall: min(12, 94%);
+  --wrapper-small: min(24rem, 94%);
+  --wrapper-medium: min(34rem, 94%);
+  --wrapper-large: min(46rem, 94%);
+  --wrapper-xlarge: min(58rem, 94%);
+  --wrapper-xxlarge: min(72rem, 94%);
 }
 
 /* These colors will be for dark mode */
@@ -195,6 +195,14 @@ canvas {
   gap: 10px;
 }
 
+.footnote-shorthand-span {
+  color: var(--color-reverse-40);
+}
+
+.green {
+  color: green;
+}
+
 img {
   display: block;
   max-width: 100%;
@@ -271,6 +279,10 @@ p {
 picture {
   display: block;
   max-width: 100%;
+}
+
+.red {
+  color: red;
 }
 
 select {

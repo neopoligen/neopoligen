@@ -1,3 +1,0 @@
-[!- macro theme_stylesheets_folder() -!]
-[@- site.theme_files_href() -@]/styles
-[!- endmacro -!]

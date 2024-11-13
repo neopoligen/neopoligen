@@ -32,7 +32,7 @@ use tracing::{event, instrument, Level};
 pub struct SiteConfigV42 {
     // TODO: Switch this to section_attrs_to_hoist and make a BTreeMap
     pub attr_flag_lists: Option<ConfigLists>,
-    pub base_url: String,
+    pub site_root: String,
     pub language_default: String,
     pub theme: String,
     pub project_root: Option<PathBuf>,
@@ -62,12 +62,11 @@ fn empty_section_types() -> BTreeMap<String, Vec<String>> {
     types.insert("raw".to_string(), vec![]);
     types.insert("script".to_string(), vec![]);
     types.insert("toml".to_string(), vec![]);
-    types.insert("yaml".to_string(), vec![]);
     types
 }
 
 fn site_output_folder_name() -> String {
-    "site".to_string()
+    "docs".to_string()
 }
 
 pub fn parse_type<'a>(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {

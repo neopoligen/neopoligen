@@ -1,13 +1,21 @@
 [!- import "built-in/macros.neoj" as neo -!]
 <h2>Development And Debugging Stuff</h2>
 
-<div>This section is where I'm working on Neopoligen. 
-It's kind of a behind-the-scenes look at the code
+<div>This section is where I'm working on <a href="https://www.neopoligen.com/">
+Neopoligen</a>. It's kind of a behind-the-scenes look at the code
 that makes the page if you're into that type of thing.
 </div>
 
 <div>
-  <div>Page ID: [@ page.id @]</div>
+  <div>
+    <ul class="flow">
+      <li>Page ID: [@ page.id() @]</li>
+      <li>Page Title: [@ page.title() @]</li>
+      <li>Page href: [@ page.href() @]</li>
+      <li>Site Root: [@ site.site_root() @]</li>
+      <li>Theme Files Folder href: [@ neo.theme_folder() @]</li>
+    </ul>
+  </div>
   [! if page.issues !]
     <h3>Issues</h3>
     <ul class="built-in-flow flow">

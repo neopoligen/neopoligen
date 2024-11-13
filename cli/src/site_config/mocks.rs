@@ -9,7 +9,7 @@ impl SiteConfigV42 {
         let config = SiteConfigV42 {
             debug_parser: false,
             language_default: "en".to_string(),
-            base_url: "testsite.localhost:1999".to_string(),
+            site_root: "testsite.localhost:1999".to_string(),
             site_output_folder_name: "site".to_string(),
             project_root: Some(PathBuf::from("/site_config_mock/project_root")),
             section_types,
@@ -44,7 +44,7 @@ impl SiteConfigV42 {
         let config = SiteConfigV42 {
             debug_parser: false,
             language_default: "en".to_string(),
-            base_url: "testsite.localhost:1999".to_string(),
+            site_root: "testsite.localhost:1999".to_string(),
             site_output_folder_name: "site".to_string(),
             project_root: Some(PathBuf::from("/test/mocks")),
             section_types,
@@ -71,7 +71,7 @@ impl SiteConfigV42 {
         let config = SiteConfigV42 {
             debug_parser: false,
             language_default: "en".to_string(),
-            base_url: "testsite.localhost:1999".to_string(),
+            site_root: "testsite.localhost:1999".to_string(),
             site_output_folder_name: "site".to_string(),
             project_root: Some(PathBuf::from("/test/mocks")),
             section_types,
