@@ -53,5 +53,7 @@ back together</p></div>
 </footer>
 
 [@ neo.output_scripts() @]
+
+[@ page.parsing_issue().completed @]
 </body>
 </html>

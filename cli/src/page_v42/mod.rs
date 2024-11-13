@@ -265,7 +265,6 @@ impl Object for PageV42b {
             // "href" => Some(Value::from(self.href.as_ref())),
             // "id" => Some(Value::from(self.id.clone().unwrap().clone())),
             "issues" => Some(Value::from_serialize(self.issues.clone())),
-            "parsing_issue" => Some(Value::from_serialize(self.parsing_issue.clone())),
             // "sections" => self.sections.clone(),
             "source" => Some(Value::from(self.source.clone())),
             "source_display_path" => {
@@ -289,6 +288,7 @@ impl Object for PageV42b {
         match name {
             "href" => Ok(Value::from(self.href.as_ref())),
             "id" => Ok(Value::from(self.id.as_ref())),
+            "parsing_issue" => Ok(Value::from_serialize(self.parsing_issue.clone())),
             "title" => Ok(Value::from(self.title.as_ref())),
             // "href" => self.href(),
             // "sections" => self.ast(),
