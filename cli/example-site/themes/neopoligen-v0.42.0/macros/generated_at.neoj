@@ -1,0 +1,3 @@
+[!- macro generated_at(format) -!]
+[@- site.generated_at(format) -@]
+[!- endmacro -!]

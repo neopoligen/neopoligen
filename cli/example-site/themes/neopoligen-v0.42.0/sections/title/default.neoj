@@ -5,6 +5,17 @@
 
 <section [@- neo.section_attrs("flow") -@]>
   <h1>[@- neo.spans_from_first_block(section) -@]</h1>
+
+<div class="warning-section flow"><p>Head's up: I'm actively overhauling my site builder
+right now. To wit:</p>
+<ul class="flow">
+  <li>Most images and lots of links are broken</li>
+  <li>Code blocks don't wrap and don't have syntax highlighting</li>
+  <li>Other miscellaneous formatting and functionality is off</li>
+</ul>
+<p>Please excuse the mess while I put things back together</p></div>
+
+
   [@- neo.output_child_sections_skipping_first(section) -@]
 </section>
 

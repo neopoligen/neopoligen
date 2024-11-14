@@ -25,6 +25,7 @@ impl SiteConfigV42 {
                 unknow: BTreeMap::new(),
             }),
             theme: "test-theme".to_string(),
+            time_zone: None,
         };
         config
     }
@@ -60,6 +61,7 @@ impl SiteConfigV42 {
                 unknow: BTreeMap::new(),
             }),
             theme: "test-theme".to_string(),
+            time_zone: None,
         };
         config
     }
@@ -87,6 +89,7 @@ impl SiteConfigV42 {
                 unknow: BTreeMap::new(),
             }),
             theme: "test-theme".to_string(),
+            time_zone: None,
         };
         config
     }

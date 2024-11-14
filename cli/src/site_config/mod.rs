@@ -35,6 +35,7 @@ pub struct SiteConfigV42 {
     pub site_root: String,
     pub language_default: String,
     pub theme: String,
+    pub time_zone: Option<String>,
     pub project_root: Option<PathBuf>,
     #[serde(default = "site_output_folder_name")]
     pub site_output_folder_name: String,

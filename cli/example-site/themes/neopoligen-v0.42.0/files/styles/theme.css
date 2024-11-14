@@ -40,7 +40,11 @@
 /* These colors will be for dark mode */
 
 :root {
-  --color-base-1: #0d1229;
+  /* 
+* REMINDER: --color-background is set directly in
+* the templates to help avoid pages flashing white
+* when loading 
+*/
   --color-primary-1: #f0e5d8;
   --color-primary-2: #ccb147;
 
@@ -85,10 +89,10 @@ a {
 }
 
 body {
-  background-color: var(--color-base-1);
+  background-color: var(--color-background);
   color: var(--color-primary-1);
-  font-size: var(--font-size-small);
   font-family: Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
+  font-size: var(--font-size-small);
   font-weight: normal;
   line-height: 1.5;
 }
@@ -189,6 +193,10 @@ canvas {
   margin-top: var(--flow-space, 1em);
 }
 
+footer {
+  border-top: 1px solid var(--color-reverse-20);
+}
+
 .footnote-section {
   display: grid;
   grid-template-columns: 4ch 1fr;
@@ -197,6 +205,13 @@ canvas {
 
 .footnote-shorthand-span {
   color: var(--color-reverse-40);
+}
+
+.generated-timestamp {
+  font-size: var(--font-size-xsmall);
+  padding-block: var(--pad-medium);
+  color: var(--color-reverse-40);
+  text-align: center;
 }
 
 .green {
@@ -223,13 +238,13 @@ h1 {
 }
 
 h2 {
-  color: var(--color-heading);
   font-size: var(--font-size-large);
   font-weight: 900;
   line-height: 1.1;
   margin-top: 1.3em;
   overflow-wrap: break-word;
   text-wrap: balance;
+  border-bottom: 1px solid var(--color-reverse-40);
 }
 
 h3 {
@@ -354,3 +369,6 @@ video{
   margin-inline: auto;
 }
 
+html {
+    visibility: visible;
+}

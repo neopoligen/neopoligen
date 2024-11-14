@@ -481,6 +481,13 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
         }
     }
 
+    pub fn time_zone(&self) -> Result<Value, Error> {
+        match &self.config.time_zone {
+            Some(tz) => Ok(Value::from(tz)),
+            None => Ok(Value::from(None::<String>)),
+        }
+    }
+
     //
 }
 
@@ -519,6 +526,7 @@ impl Object for SiteV42b {
             "site_root" => Ok(Value::from(self.config.site_root.clone())),
             "neo_files_href" => Ok(Value::from(self.neo_files_href())),
             "theme_folder_href" => Ok(Value::from(self.theme_folder_href())),
+            "time_zone" => self.time_zone(),
             "title_for_page" => Ok(Value::from(self.title_for_page(args))),
             _ => Ok(Value::from(format!(
                 "[Warning: tried to use 'site.{}(...)' which does not exist]",

@@ -4,6 +4,18 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<style>
+  :root {
+    --color-background: #0d1229;
+  }
+  html {
+    visibility: hidden;
+  }
+  body {
+    background-color: var(--color-background);
+    font-display: block;
+  }
+</style>
 <link rel="stylesheet" href="[@ neo.theme_folder() @]/styles/theme.css" />
 
 <!-- TODO: move page.... and site.... to neo.... -->
@@ -33,25 +45,16 @@
 </header>
 
 <main class="wrapper-medium flow">
-<div class="warning-section flow"><p>Head's up: I'm actively overhauling my site builder
-right now. To wit:</p>
-<ul class="flow">
-  <li>Most images and lots of links are broken</li>
-  <li>Code blocks don't wrap and don't have syntax highlighting</li>
-  <li>Other miscellaneous formatting and functionality is off</li>
-</ul>
-<p>Please excuse the mess while I put things 
-back together</p></div>
+
 
     [!- block body_main -!][!- endblock -!]
 </main>
 
 <footer class="wrapper-medium">
+  <div class="generated-timestamp">[@ neo.generated_at("Generated on %a. %B %-d, %Y at %-I:%M%p " + neo.time_zone()) @]</div>
   [!- include "includes/debugging.neoj" -!]
-  <div>[@ site.generated_at("Generated on %a. %B %-d at %-I:%M:%S%p") @]</div>
 </footer>
 
 [@ neo.output_scripts() @]
-
 </body>
 </html>
