@@ -122,7 +122,6 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
         Ok(mut builder) => {
             // Build Site
             let _ = builder.load_source_images();
-            let _ = builder.load_source_image_sizes();
             let _ = builder.ingest_source_files();
             let _ = builder.set_languages_from_site_config();
             let _ = builder.generate_asts();

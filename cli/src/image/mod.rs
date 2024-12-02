@@ -3,8 +3,8 @@ use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Image {
-    pub raw_height: Option<u64>,
-    pub raw_width: Option<u64>,
+    pub raw_height: Option<u32>,
+    pub raw_width: Option<u32>,
     pub source_image_path: PathBuf,
     pub source_image_timestamp: u64,
     // pub extension: String,
@@ -13,11 +13,11 @@ pub struct Image {
 }
 
 impl Image {
-    pub fn new(source_image_path: PathBuf, source_image_timestamp: u64) -> Image {
+    pub fn new(source_image_path: &PathBuf, source_image_timestamp: u64) -> Image {
         Image {
             raw_height: None,
             raw_width: None,
-            source_image_path,
+            source_image_path: source_image_path.clone(),
             source_image_timestamp,
         }
     }

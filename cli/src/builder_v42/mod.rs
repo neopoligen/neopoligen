@@ -73,11 +73,30 @@ impl BuilderV42<'_> {
     // }
 
     #[instrument(skip(self))]
-    pub fn load_source_image_sizes(&mut self) -> Result<()> {
-        let _ = &self.images.iter_mut().for_each(|image| {
-            if let Ok(img_reader) = Reader::open(&image.1.source_image_path) {}
-        });
-        Ok(())
+    pub fn get_image(&mut self, stem: &str, path: &PathBuf) -> Option<Image> {
+        if let Ok(ts) = file_epoch_mod_time(path) {
+            if let Some(ext) = path.extension() {
+                match ext.to_ascii_lowercase().as_os_str().to_str() {
+                    Some("jpg") => {
+                        let _ = &self.images.insert(stem.to_string(), Image::new(path, ts));
+                    }
+                    _ => (),
+                }
+            }
+        };
+
+        None
+        // let _ = &self.images.iter_mut().for_each(|image| {
+        //     dbg!("aaaaaaa");
+        //     if let Ok(img_reader) = Reader::open(&image.1.source_image_path) {
+        //         dbg!("bbbbbbbbbbbbb");
+        //         if let Ok(img) = img_reader.decode() {
+        //             dbg!("ccccccccccccc");
+        //             image.1.raw_height = Some(img.height());
+        //         }
+        //     }
+        // });
+        // dbg!(&self.images);
     }
 
     #[instrument(skip(self))]
@@ -86,27 +105,24 @@ impl BuilderV42<'_> {
         walker.for_each(|path_result| {
             match path_result {
                 Ok(path) => {
-                    if let Ok(ts) = file_epoch_mod_time(&path.clone().into_path()) {
-                        if let Some(stem) = path.path().file_stem() {
-                            if let Some(ext) = path.path().extension() {
-                                match ext.to_ascii_lowercase().as_os_str().to_str() {
-                                    Some("jpg") => {
-                                        let _ = &self.images.insert(
-                                            stem.to_string_lossy().to_string(),
-                                            Image::new(path.clone().into_path(), ts),
-                                        );
-                                    }
-                                    _ => (),
-                                }
+                    // if let Ok(ts) = file_epoch_mod_time(&path.clone().into_path()) {
+                    if let Some(stem) = path.path().file_stem() {
+                        let stem_as_string = stem.to_string_lossy().to_string();
+                        match self.get_image(&stem_as_string, &path.path().to_path_buf()) {
+                            Some(i) => {
+                                let _ = &self.images.insert(stem_as_string, i);
+                                ()
                             }
+                            _ => (),
                         }
+
+                        //    }
                     };
                 }
                 Err(_e) => {
                     // TODO: hoist error here
                 }
             }
-            dbg!(&self.images);
         });
 
         // walker.filter(|path_result| match path_result {
