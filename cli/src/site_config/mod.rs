@@ -30,23 +30,33 @@ use tracing::{event, instrument, Level};
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SiteConfigV42 {
-    // TODO: Switch this to section_attrs_to_hoist and make a BTreeMap
+    // TODO: deprecate attr_flag_lists  and switch this
+    // to section_attrs_to_hoist and make a BTreeMap.
+    // Or, add it to the section itself.
     pub attr_flag_lists: Option<ConfigLists>,
-    pub site_root: String,
+    #[serde(default = "debug_parser_default")]
+    pub debug_parser: bool,
+    #[serde(default = "default_image_maxes")]
+    pub image_maxes: Vec<usize>,
     pub language_default: String,
     pub theme: String,
     pub time_zone: Option<String>,
     pub project_root: Option<PathBuf>,
+    pub site_root: String,
     #[serde(default = "site_output_folder_name")]
     pub site_output_folder_name: String,
     #[serde(default = "empty_section_types")]
     pub section_types: BTreeMap<String, Vec<String>>,
-    #[serde(default = "debug_parser_default")]
-    pub debug_parser: bool,
 }
 
 fn debug_parser_default() -> bool {
     false
+}
+
+fn default_image_maxes() -> Vec<usize> {
+    vec![
+        50, 100, 150, 200, 300, 400, 600, 800, 1000, 1200, 1400, 1800, 2000, 2400, 2800, 3200,
+    ]
 }
 
 fn empty_section_types() -> BTreeMap<String, Vec<String>> {
@@ -175,6 +185,10 @@ impl SiteConfigV42 {
 
     pub fn content_input_root_folder(&self) -> PathBuf {
         self.project_folder().join("content")
+    }
+
+    pub fn images_input_root_folder(&self) -> PathBuf {
+        self.project_folder().join("images")
     }
 
     pub fn language_default(&self) -> Result<String> {

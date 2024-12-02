@@ -239,7 +239,7 @@ pub fn get_image_paths(source_folder: &PathBuf) -> Vec<PathBuf> {
                 Some(ext) => {
                     if ext.to_ascii_lowercase().eq("jpg") {
                         Some(path.path().to_path_buf())
-                    } else if ext.to_ascii_lowercase().eq("jepg") {
+                    } else if ext.to_ascii_lowercase().eq("jpeg") {
                         Some(path.path().to_path_buf())
                     } else if ext.to_ascii_lowercase().eq("png") {
                         Some(path.path().to_path_buf())

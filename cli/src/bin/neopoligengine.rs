@@ -121,6 +121,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
     match BuilderV42::new_from_site_config(site_config) {
         Ok(mut builder) => {
             // Build Site
+            let _ = builder.generate_images();
             let _ = builder.ingest_source_files();
             let _ = builder.set_languages_from_site_config();
             let _ = builder.generate_asts();

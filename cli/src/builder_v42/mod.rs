@@ -1,6 +1,7 @@
 pub mod inits;
 
 use crate::helpers::*;
+use crate::image::Image;
 use crate::neo_error_v42::NeoErrorV42;
 use crate::page_v42::PageV42b;
 use crate::site_config::SiteConfigV42;
@@ -22,6 +23,8 @@ pub struct BuilderV42<'a> {
     // else that needs to be created)
     // pub errors: Vec<NeoError>,
     pub errors_v42: Vec<NeoErrorV42>,
+    pub image_maxes: Vec<usize>,
+    pub images: BTreeMap<String, Image>,
     // pub generated_pages: BTreeMap<PathBuf, PageV42>,
     pub page_errors: Vec<NeoErrorV42>,
     // TODO: Deprecate pages in favor of pages_v42
@@ -57,6 +60,14 @@ impl BuilderV42<'_> {
         for (_, page) in &mut self.pages_v42 {
             page.generate_ast(&self.site_config);
         }
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
+    pub fn generate_images(&mut self) -> Result<()> {
+        let source_images = get_image_paths(&self.site_config.images_input_root_folder());
+        dbg!(source_images);
+        event!(Level::INFO, "Generating Images");
         Ok(())
     }
 

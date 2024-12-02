@@ -51,29 +51,6 @@ impl BuilderV42<'_> {
             }
         }
 
-        // let built_in_tempates_list = vec![
-        //     "blocks/paragraph",
-        //     "css-output",
-        //     "generic-basic",
-        //     "generic-css",
-        //     "generic-end",
-        //     "generic-html",
-        //     "generic-json5",
-        //     "generic-list-item-paragraph",
-        //     "generic-list-item-single",
-        //     "generic-list-item",
-        //     "generic-list",
-        //     "generic-raw",
-        //     "generic-script",
-        //     "helpers",
-        //     "pages-default-post",
-        //     "pages-problems-index-page",
-        //     "pages-issue-page",
-        //     "script-output",
-        //     "span-text",
-        //     "template-error",
-        // ];
-
         // built_in_tempates_list.iter().for_each(|name| {
         //     let data = BUILT_IN_TEMPLATE_DIR.get_file(format!("{}.neoj", name));
         //     match env.add_template_owned(
@@ -99,6 +76,8 @@ impl BuilderV42<'_> {
             env,
             // errors: vec![],
             errors_v42: vec![],
+            image_maxes: site_config.image_maxes.clone(),
+            images: BTreeMap::new(),
             //generated_pages: BTreeMap::new(),
             page_errors: vec![],
             // pages: vec![],
