@@ -84,7 +84,27 @@ impl SiteV42b {
 
     // This returns the attributes for an image tag
     pub fn image(&self, args: &[Value]) -> Result<Value, Error> {
-        Ok(Value::from("asdf"))
+        if args.len() == 2 {
+            let section = args[0].clone();
+            match section.get_attr("flags") {
+                Ok(flags) => {
+                    if flags.len() > Some(0) {
+                        let image_stem = flags.try_iter().unwrap().nth(0);
+                        dbg!(image_stem);
+                    };
+                    Ok(Value::from("asdf"))
+                }
+                Err(_) => Err(Error::new(
+                    ErrorKind::InvalidOperation,
+                    "Could not get name for image",
+                )),
+            }
+        } else {
+            Err(Error::new(
+                ErrorKind::InvalidOperation,
+                "Invalid arguments set for site.image",
+            ))
+        }
     }
 
     // The base href where Neopoligen stores
