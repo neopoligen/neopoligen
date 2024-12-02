@@ -82,6 +82,11 @@ impl SiteV42b {
         }
     }
 
+    // This returns the attributes for an image tag
+    pub fn image(&self, args: &[Value]) -> Result<Value, Error> {
+        Ok(Value::from("asdf"))
+    }
+
     // The base href where Neopoligen stores
     // the files it works with (e.g. theme and image files)
     pub fn neo_files_href(&self) -> Option<String> {
@@ -523,6 +528,7 @@ impl Object for SiteV42b {
             "get_section_attrs" => self.get_section_attrs(args),
             "get_span_attrs" => self.get_span_attrs(args),
             "href_for_page" => Ok(Value::from(self.href_for_page(args))),
+            "image" => self.image(args),
             "site_root" => Ok(Value::from(self.config.site_root.clone())),
             "neo_files_href" => Ok(Value::from(self.neo_files_href())),
             "theme_folder_href" => Ok(Value::from(self.theme_folder_href())),
