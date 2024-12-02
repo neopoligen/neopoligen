@@ -36,8 +36,6 @@ pub struct SiteConfigV42 {
     pub attr_flag_lists: Option<ConfigLists>,
     #[serde(default = "debug_parser_default")]
     pub debug_parser: bool,
-    #[serde(default = "default_image_maxes")]
-    pub image_maxes: Vec<usize>,
     pub language_default: String,
     pub theme: String,
     pub time_zone: Option<String>,
@@ -51,12 +49,6 @@ pub struct SiteConfigV42 {
 
 fn debug_parser_default() -> bool {
     false
-}
-
-fn default_image_maxes() -> Vec<usize> {
-    vec![
-        50, 100, 150, 200, 300, 400, 600, 800, 1000, 1200, 1400, 1800, 2000, 2400, 2800, 3200,
-    ]
 }
 
 fn empty_section_types() -> BTreeMap<String, Vec<String>> {

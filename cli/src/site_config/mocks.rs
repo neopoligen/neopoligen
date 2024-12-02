@@ -8,7 +8,6 @@ impl SiteConfigV42 {
         let section_types = BTreeMap::new();
         let config = SiteConfigV42 {
             debug_parser: false,
-            image_maxes: vec![50, 100, 200, 400],
             language_default: "en".to_string(),
             site_root: "testsite.localhost:1999".to_string(),
             site_output_folder_name: "site".to_string(),
@@ -45,7 +44,6 @@ impl SiteConfigV42 {
         section_types.insert("toml".to_string(), toml_kinds);
         let config = SiteConfigV42 {
             debug_parser: false,
-            image_maxes: vec![50, 100, 200, 400],
             language_default: "en".to_string(),
             site_root: "testsite.localhost:1999".to_string(),
             site_output_folder_name: "site".to_string(),
@@ -74,7 +72,6 @@ impl SiteConfigV42 {
         section_types.insert("checklist".to_string(), checklist_kinds);
         let config = SiteConfigV42 {
             debug_parser: false,
-            image_maxes: vec![50, 100, 200, 400],
             language_default: "en".to_string(),
             site_root: "testsite.localhost:1999".to_string(),
             site_output_folder_name: "site".to_string(),
