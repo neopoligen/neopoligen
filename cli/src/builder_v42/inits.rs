@@ -76,7 +76,7 @@ impl BuilderV42<'_> {
             env,
             // errors: vec![],
             errors_v42: vec![],
-            image_maxes: site_config.image_maxes.clone(),
+            // image_maxes: site_config.image_maxes.clone(),
             images: BTreeMap::new(),
             //generated_pages: BTreeMap::new(),
             page_errors: vec![],

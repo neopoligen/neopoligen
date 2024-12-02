@@ -23,7 +23,7 @@ pub struct BuilderV42<'a> {
     // else that needs to be created)
     // pub errors: Vec<NeoError>,
     pub errors_v42: Vec<NeoErrorV42>,
-    pub image_maxes: Vec<usize>,
+    // pub image_maxes: Vec<usize>,
     pub images: BTreeMap<String, Image>,
     // pub generated_pages: BTreeMap<PathBuf, PageV42>,
     pub page_errors: Vec<NeoErrorV42>,
@@ -63,11 +63,64 @@ impl BuilderV42<'_> {
         Ok(())
     }
 
+    // #[instrument(skip(self))]
+    // pub fn generate_images(&mut self) -> Result<()> {
+    //     let source_images = load_source_images(&self.site_config.images_input_root_folder());
+    //     dbg!(source_images);
+    //     event!(Level::INFO, "Generating Images");
+    //     Ok(())
+    // }
+
     #[instrument(skip(self))]
-    pub fn generate_images(&mut self) -> Result<()> {
-        let source_images = get_image_paths(&self.site_config.images_input_root_folder());
-        dbg!(source_images);
-        event!(Level::INFO, "Generating Images");
+    pub fn load_source_images(&mut self) -> Result<()> {
+        let walker = WalkDir::new(&self.site_config.images_input_root_folder()).into_iter();
+        walker.for_each(|path_result| {
+            match path_result {
+                Ok(path) => {
+                    if let Ok(ts) = file_epoch_mod_time(&path.clone().into_path()) {
+                        if let Some(stem) = path.path().file_stem() {
+                            if let Some(ext) = path.path().extension() {
+                                match ext.to_ascii_lowercase().as_os_str().to_str() {
+                                    Some("jpg") => {
+                                        let _ = &self.images.insert(
+                                            stem.to_string_lossy().to_string(),
+                                            Image {
+                                                source_image_path: path.clone().into_path(),
+                                                source_image_timestamp: ts,
+                                            },
+                                        );
+                                    }
+                                    _ => (),
+                                }
+                            }
+                        }
+                    };
+                }
+                Err(_e) => {
+                    // TODO: hoist error here
+                }
+            }
+            dbg!(&self.images);
+        });
+
+        // walker.filter(|path_result| match path_result {
+        //     Ok(path) => match path.path().extension() {
+        //         Some(ext) => {
+        //             if ext.to_ascii_lowercase().eq("jpg") {
+        //                 Some(path.path().to_path_buf())
+        //             } else if ext.to_ascii_lowercase().eq("jpeg") {
+        //                 Some(path.path().to_path_buf())
+        //             } else if ext.to_ascii_lowercase().eq("png") {
+        //                 Some(path.path().to_path_buf())
+        //             } else {
+        //                 None
+        //             }
+        //         }
+        //         None => None,
+        //     },
+        //     Err(_) => None,
+        // });
+
         Ok(())
     }
 

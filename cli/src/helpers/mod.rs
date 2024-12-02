@@ -13,6 +13,7 @@ use rimage::Encoder;
 use std::fs;
 use std::fs::File;
 use std::path::PathBuf;
+use std::time::UNIX_EPOCH;
 use syntect::html::{ClassStyle, ClassedHTMLGenerator};
 use syntect::parsing::SyntaxSet;
 use syntect::util::LinesWithEndings;
@@ -63,6 +64,14 @@ pub fn empty_folder(dir: &PathBuf) -> std::io::Result<()> {
         }
     }
     Ok(())
+}
+
+pub fn file_epoch_mod_time(path: &PathBuf) -> anyhow::Result<u64> {
+    let base_mod_time = fs::metadata(path)?
+        .modified()?
+        .duration_since(UNIX_EPOCH)?
+        .as_secs();
+    Ok(base_mod_time)
 }
 
 pub fn flatten_spans_v42(spans: &Vec<SpanV42>) -> String {
@@ -227,29 +236,6 @@ pub fn get_files_with_extension_in_a_single_folder(dir: &PathBuf, extension: &st
         .filter_map(|p| match p.as_ref().unwrap().path().strip_prefix(".") {
             Ok(_) => None,
             Err(_) => Some(p.as_ref().unwrap().path()),
-        })
-        .collect()
-}
-
-pub fn get_image_paths(source_folder: &PathBuf) -> Vec<PathBuf> {
-    let walker = WalkDir::new(source_folder).into_iter();
-    walker
-        .filter_map(|path_result| match path_result {
-            Ok(path) => match path.path().extension() {
-                Some(ext) => {
-                    if ext.to_ascii_lowercase().eq("jpg") {
-                        Some(path.path().to_path_buf())
-                    } else if ext.to_ascii_lowercase().eq("jpeg") {
-                        Some(path.path().to_path_buf())
-                    } else if ext.to_ascii_lowercase().eq("png") {
-                        Some(path.path().to_path_buf())
-                    } else {
-                        None
-                    }
-                }
-                None => None,
-            },
-            Err(_) => None,
         })
         .collect()
 }
