@@ -1,5 +1,9 @@
 [@- '' -@]
 
-<code class="code-span" [@- site.get_span_attrs(span) -@]>[@- span.text -@]</code>
+<code class="code-span" [@- site.get_span_attrs(span) -@]>
+  [!- autoescape true -!]
+    [@- span.text -@]
+  [!- endautoescape -!]
+</code>
 
 [@- '' -@]

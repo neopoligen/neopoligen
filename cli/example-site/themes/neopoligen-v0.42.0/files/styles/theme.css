@@ -119,7 +119,7 @@ canvas {
 .code-section {
   margin: var(--pad-large);
   padding: var(--pad-medium);
-  border: 1px solid var(--color-reverse-10);
+  border: 1px solid var(--color-reverse-40);
   border-radius: var(--radius-medium);
   font-size: var(--font-size-xsmall);
 }
@@ -180,6 +180,12 @@ canvas {
   text-align: right;
 }
 
+.endnote-li {
+  border-left: 1px solid var(--color-reverse-40);
+  margin-bottom: var(--pad-xxlarge);
+  padding-left: var(--pad-large);
+}
+
 .fin-token {
   border-bottom: 1px solid var(--color-reverse-20);
   border-top: 1px solid var(--color-reverse-20);
@@ -216,15 +222,6 @@ footer {
 
 .green {
   color: green;
-}
-
-img {
-  display: block;
-  max-width: 100%;
-}
-
-input {
-  font: inherit;
 }
 
 h1 {
@@ -287,6 +284,19 @@ h6 {
   text-wrap: balance;
 }
 
+img {
+  display: block;
+  max-width: 100%;
+}
+
+input {
+  font: inherit;
+}
+
+.no-li-markers {
+  list-style: none;
+}
+
 p {
   overflow-wrap: break-word;
 }
@@ -315,6 +325,15 @@ td {
 
 th {
   vertical-align: top;
+}
+
+.images-are-broken-tmp {
+  color: var(--color-reverse-60);
+  border: 1px solid var(--color-reverse-40);
+  margin: var(--pad-large);
+  padding: var(--pad-large);
+  border-radius: var(--radius-medium);
+  font-size: var(--font-size-xsmall);
 }
 
 textarea {
@@ -372,3 +391,5 @@ video{
 html {
     visibility: visible;
 }
+
+

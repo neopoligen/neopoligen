@@ -1,0 +1,8 @@
+[!- import "built-in/macros.neoj" as neo -!]
+
+[#- ATTRS_TO_HOIST: [class, id] -#]
+
+<a href="[@ span.flags[0] @]" [@ neo.hoist_span_attrs() @]>[@ neo.output_spans(span.spans) @]</a>
+
+[@- '' -@]
+

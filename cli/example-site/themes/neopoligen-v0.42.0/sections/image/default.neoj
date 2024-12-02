@@ -1,0 +1,10 @@
+[!- import "built-in/macros.neoj" as neo -!]
+
+[# TYPE: basic #]
+[# HOIST: [alt, class, id] #]
+
+<section [@- neo.section_attrs("images-are-broken-tmp") -@]>
+  <div>[NOTE: Images are broken right now. Check back soon]</div>
+</section>
+
+[@- neo.output_end_section(section) -@]

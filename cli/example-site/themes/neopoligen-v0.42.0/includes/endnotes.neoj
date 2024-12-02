@@ -3,13 +3,17 @@
 [!- for section in sections -!]
     [!- if section.kind == "endnote"  -!]
         [! if endnote_header_has_been_output == false !]
-        <section class="endnotes-section flow">
+          <section class="endnotes-section flow">
             <h2>Endnotes</h2>
-        [! set endnote_header_has_been_output = true !]
+            <ul class="no-li-markers flow">
+          [! set endnote_header_has_been_output = true !]
         [! endif !]
-        [@- neo.output_section(section) -@]
+        <li class="flow endnote-li">
+          [@- neo.output_section(section) -@]
+        </li>
     [!- endif -!]
     [! if loop.last and endnote_header_has_been_output == true !]
+          </ul>
         </section>
     [! endif !]
 [!- endfor -!]
