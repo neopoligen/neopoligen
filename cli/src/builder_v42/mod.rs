@@ -73,19 +73,34 @@ impl BuilderV42<'_> {
     // }
 
     #[instrument(skip(self))]
+    pub fn get_image_size(&mut self, stem: &str, path: &PathBuf, ts: u64) -> Option<Image> {
+        if let Ok(img_reader) = Reader::open(path) {
+            if let Ok(img) = img_reader.decode() {
+                let _ = &self.images.insert(
+                    stem.to_string(),
+                    Image::new(path, ts, img.width(), img.height()),
+                );
+            }
+        }
+        None
+    }
+
+    #[instrument(skip(self))]
     pub fn get_image(&mut self, stem: &str, path: &PathBuf) -> Option<Image> {
         if let Ok(ts) = file_epoch_mod_time(path) {
             if let Some(ext) = path.extension() {
                 match ext.to_ascii_lowercase().as_os_str().to_str() {
-                    Some("jpg") => {
-                        let _ = &self.images.insert(stem.to_string(), Image::new(path, ts));
-                    }
-                    _ => (),
+                    Some("jpg") => self.get_image_size(stem, path, ts),
+                    _ => None,
                 }
+            } else {
+                None
             }
-        };
+        } else {
+            None
+        }
 
-        None
+        // None
         // let _ = &self.images.iter_mut().for_each(|image| {
         //     dbg!("aaaaaaa");
         //     if let Ok(img_reader) = Reader::open(&image.1.source_image_path) {
@@ -105,7 +120,6 @@ impl BuilderV42<'_> {
         walker.for_each(|path_result| {
             match path_result {
                 Ok(path) => {
-                    // if let Ok(ts) = file_epoch_mod_time(&path.clone().into_path()) {
                     if let Some(stem) = path.path().file_stem() {
                         let stem_as_string = stem.to_string_lossy().to_string();
                         match self.get_image(&stem_as_string, &path.path().to_path_buf()) {
@@ -115,8 +129,6 @@ impl BuilderV42<'_> {
                             }
                             _ => (),
                         }
-
-                        //    }
                     };
                 }
                 Err(_e) => {
@@ -124,6 +136,8 @@ impl BuilderV42<'_> {
                 }
             }
         });
+
+        dbg!(&self.images);
 
         // walker.filter(|path_result| match path_result {
         //     Ok(path) => match path.path().extension() {
