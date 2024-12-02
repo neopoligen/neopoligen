@@ -15,7 +15,6 @@ pub mod olist_item;
 pub mod parsing_error;
 pub mod raw;
 pub mod script;
-pub mod toml;
 
 use crate::section_v42::basic::*;
 use crate::section_v42::block::*;
@@ -33,7 +32,6 @@ use crate::section_v42::olist_item::*;
 use crate::section_v42::parsing_error::*;
 use crate::section_v42::raw::*;
 use crate::section_v42::script::*;
-use crate::section_v42::toml::*;
 use crate::site_config::SiteConfigV42;
 use minijinja::value::Object;
 use nom::branch::alt;
@@ -80,7 +78,6 @@ pub enum SectionV42 {
     ParsingError(ParsingErrorSectionV42),
     Raw(RawSectionV42),
     Script(ScriptSectionV42),
-    Toml(TomlSectionV42),
 }
 
 impl Object for SectionV42 {}
