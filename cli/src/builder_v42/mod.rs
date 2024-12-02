@@ -8,6 +8,7 @@ use crate::site_config::SiteConfigV42;
 use crate::site_v42::SiteV42b;
 use anyhow::Result;
 use html_escape::encode_safe;
+use image::io::Reader;
 use minijinja::Environment;
 use minijinja::{context, Value};
 use std::collections::BTreeMap;
@@ -72,6 +73,14 @@ impl BuilderV42<'_> {
     // }
 
     #[instrument(skip(self))]
+    pub fn load_source_image_sizes(&mut self) -> Result<()> {
+        let _ = &self.images.iter_mut().for_each(|image| {
+            if let Ok(img_reader) = Reader::open(&image.1.source_image_path) {}
+        });
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn load_source_images(&mut self) -> Result<()> {
         let walker = WalkDir::new(&self.site_config.images_input_root_folder()).into_iter();
         walker.for_each(|path_result| {
@@ -84,10 +93,7 @@ impl BuilderV42<'_> {
                                     Some("jpg") => {
                                         let _ = &self.images.insert(
                                             stem.to_string_lossy().to_string(),
-                                            Image {
-                                                source_image_path: path.clone().into_path(),
-                                                source_image_timestamp: ts,
-                                            },
+                                            Image::new(path.clone().into_path(), ts),
                                         );
                                     }
                                     _ => (),
