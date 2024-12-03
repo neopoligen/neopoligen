@@ -107,8 +107,8 @@ impl SiteV42b {
                                             output_dir = output_dir.join(image_stem.to_string());
                                             let output_path =
                                                 output_dir.join(format!("{}w.jpg", size_as_int));
-                                            dbg!(&output_dir);
-                                            dbg!(&output_path);
+                                            //dbg!(&output_dir);
+                                            //dbg!(&output_path);
                                             let _ = mkdir_p(output_dir);
                                             let _ = resize_and_optimize_jpg(
                                                 &i.source_image_path,
@@ -117,7 +117,41 @@ impl SiteV42b {
                                             );
                                         }
                                     });
-                                    Ok(Value::from("FIXME2"))
+
+                                    let mut return_string = String::from(r#"srcset=""#);
+                                    let x = made_sizes
+                                        .iter()
+                                        .map(|sz| {
+                                            // dbg!(s);
+                                            let mut image_href = self
+                                                .config
+                                                .images_href_root_folder()
+                                                .join(image_stem.to_string());
+                                            image_href =
+                                                image_href.join(format!("{}w.jpg {}w", sz, sz));
+                                            image_href.display().to_string()
+                                        })
+                                        .collect::<Vec<String>>();
+                                    return_string.push_str(&x.join(","));
+                                    return_string.push_str(r#"""#);
+                                    return_string.push_str(r#" alt="TODO - Fix Alt Tags""#);
+                                    return_string.push_str(
+                                        format!(
+                                            r#" src="{}/{}/{}w.jpg""#,
+                                            &self
+                                                .config
+                                                .images_href_root_folder()
+                                                .display()
+                                                .to_string(),
+                                            image_stem.to_string(),
+                                            made_sizes.iter().last().unwrap()
+                                        )
+                                        .as_str(),
+                                    );
+
+                                    // src="example-800w.jpg"
+
+                                    Ok(Value::from(return_string))
                                 } else {
                                     Err(Error::new(ErrorKind::InvalidOperation, "Error with image"))
                                 }

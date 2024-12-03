@@ -6,7 +6,7 @@
 <section [@- neo.section_attrs("images-are-broken-tmp") -@]>
   <div>[NOTE: Images are broken right now. Check back soon]</div>
   <div>[@ section.flags[0] @]</div>
-  <div>[@ site.image(section, [400, 800]) @]</div>
+  <div><img [@ site.image(section, [400, 800]) @] /></div>
 </section>
 
 [@- neo.output_end_section(section) -@]
