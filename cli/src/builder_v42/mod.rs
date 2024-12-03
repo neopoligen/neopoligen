@@ -212,7 +212,8 @@ impl BuilderV42<'_> {
     #[instrument(skip(self))]
     pub fn initialize_site_with_pages(&mut self) -> Result<()> {
         event!(Level::INFO, "Initializing site");
-        let site = SiteV42b::new_with_pages(&self.site_config, &self.pages_v42);
+        let mut site = SiteV42b::new_with_pages(&self.site_config, &self.pages_v42);
+        site.images = self.images.clone();
         self.site_v42b = Some(site);
         Ok(())
     }

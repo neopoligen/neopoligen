@@ -179,8 +179,16 @@ impl SiteConfigV42 {
         self.project_folder().join("content")
     }
 
+    pub fn images_cache_root_folder(&self) -> PathBuf {
+        self.cache_root_folder().join("images")
+    }
+
     pub fn images_input_root_folder(&self) -> PathBuf {
         self.project_folder().join("images")
+    }
+
+    pub fn images_output_root_folder(&self) -> PathBuf {
+        self.neo_files_output_root_folder().join("images")
     }
 
     pub fn language_default(&self) -> Result<String> {

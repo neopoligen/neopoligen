@@ -418,6 +418,14 @@ pub fn highlight_span(args: &[Value]) -> String {
     output_html.join("\n")
 }
 
+pub fn mkdir_p(dir: PathBuf) -> std::io::Result<()> {
+    if dir.exists() {
+        Ok(())
+    } else {
+        std::fs::create_dir_all(dir)
+    }
+}
+
 pub fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result<PathBuf, String> {
     match path.strip_prefix(find) {
         Ok(path_part) => Ok(replace.clone().join(path_part)),

@@ -1,4 +1,5 @@
-use crate::helpers::flatten_spans_from_template_v42;
+use crate::helpers::*;
+use crate::image::Image;
 use crate::page_v42::PageV42b;
 use crate::site_config::SiteConfigV42;
 use chrono::prelude::*;
@@ -19,6 +20,7 @@ pub struct SiteV42b {
     pub pages: BTreeMap<String, PageV42b>,
     pub pages_without_ids: BTreeMap<PathBuf, PageV42b>,
     pub generated_at: Option<DateTime<Local>>,
+    pub images: BTreeMap<String, Image>,
 }
 
 impl SiteV42b {
@@ -42,6 +44,7 @@ impl SiteV42b {
         }
         let site = SiteV42b {
             config: config.clone(),
+            images: BTreeMap::new(),
             pages,
             pages_without_ids,
             generated_at: Some(chrono::prelude::Local::now()),
@@ -89,8 +92,36 @@ impl SiteV42b {
             match section.get_attr("flags") {
                 Ok(flags) => {
                     if flags.len() > Some(0) {
-                        let image_stem = flags.try_iter().unwrap().nth(0);
-                        dbg!(image_stem);
+                        let image_stem = flags.try_iter().unwrap().nth(0).unwrap();
+                        match &self.images.get(&image_stem.to_string()) {
+                            Some(i) => {
+                                if let Ok(sizes) = args[1].clone().try_iter() {
+                                    sizes.into_iter().for_each(|size| {
+                                        // TODO: Deal with dir not being made, etc..
+                                        let mut output_dir =
+                                            PathBuf::from(&self.config.images_cache_root_folder());
+                                        output_dir = output_dir.join(image_stem.to_string());
+                                        let output_path = output_dir.join(format!("{}w.jpg", size));
+                                        dbg!(&output_dir);
+                                        dbg!(&output_path);
+                                        let _ = mkdir_p(output_dir);
+                                        let _ = resize_and_optimize_jpg(
+                                            &i.source_image_path,
+                                            size.to_string().parse().expect("getting number"),
+                                            &output_path, // &PathBuf::from("/Users/alan/Desktop/image.jpg"),
+                                        );
+
+                                        dbg!(size);
+                                        ()
+                                    });
+                                }
+                                dbg!(i);
+                                ()
+                            }
+                            None => {
+                                // TODO Handle this as an error
+                            }
+                        }
                     };
                     Ok(Value::from("asdf"))
                 }
