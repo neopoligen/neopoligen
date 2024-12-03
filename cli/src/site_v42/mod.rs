@@ -99,22 +99,39 @@ impl SiteV42b {
                                     let mut made_sizes: Vec<u32> = vec![];
                                     sizes.into_iter().for_each(|size| {
                                         if let Ok(size_as_int) = size.to_string().parse::<u32>() {
-                                            made_sizes.push(size_as_int);
-                                            // TODO: Deal with dir not being made, etc..
-                                            let mut output_dir = PathBuf::from(
-                                                &self.config.images_cache_root_folder(),
-                                            );
-                                            output_dir = output_dir.join(image_stem.to_string());
-                                            let output_path =
-                                                output_dir.join(format!("{}w.jpg", size_as_int));
-                                            //dbg!(&output_dir);
-                                            //dbg!(&output_path);
-                                            let _ = mkdir_p(output_dir);
-                                            let _ = resize_and_optimize_jpg(
-                                                &i.source_image_path,
-                                                size_as_int,
-                                                &output_path, // &PathBuf::from("/Users/alan/Desktop/image.jpg"),
-                                            );
+                                            if i.raw_width > size_as_int {
+                                                made_sizes.push(size_as_int);
+                                                // TODO: Deal with dir not being made, etc..
+                                                let mut output_dir = PathBuf::from(
+                                                    &self.config.images_cache_root_folder(),
+                                                );
+                                                output_dir =
+                                                    output_dir.join(image_stem.to_string());
+                                                let output_path = output_dir
+                                                    .join(format!("{}w.jpg", size_as_int));
+                                                let _ = mkdir_p(output_dir);
+                                                let _ = resize_and_optimize_jpg(
+                                                    &i.source_image_path,
+                                                    size_as_int,
+                                                    &output_path, // &PathBuf::from("/Users/alan/Desktop/image.jpg"),
+                                                );
+                                            } else {
+                                                made_sizes.push(i.raw_width);
+                                                // TODO: Deal with dir not being made, etc..
+                                                let mut output_dir = PathBuf::from(
+                                                    &self.config.images_cache_root_folder(),
+                                                );
+                                                output_dir =
+                                                    output_dir.join(image_stem.to_string());
+                                                let output_path = output_dir
+                                                    .join(format!("{}w.jpg", i.raw_width));
+                                                let _ = mkdir_p(output_dir);
+                                                let _ = resize_and_optimize_jpg(
+                                                    &i.source_image_path,
+                                                    i.raw_width,
+                                                    &output_path, // &PathBuf::from("/Users/alan/Desktop/image.jpg"),
+                                                );
+                                            }
                                         }
                                     });
                                     let mut return_string = String::from(r#"srcset=""#);
