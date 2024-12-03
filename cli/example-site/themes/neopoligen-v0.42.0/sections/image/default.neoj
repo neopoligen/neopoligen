@@ -3,9 +3,7 @@
 [# TYPE: basic #]
 [# HOIST: [alt, class, id] #]
 
-<section [@- neo.section_attrs("images-are-broken-tmp") -@]>
-  <div>[NOTE: Images are broken right now. Check back soon]</div>
-  <div>[@ section.flags[0] @]</div>
+<section [@- neo.section_attrs() -@]>
   <div><img 
     [@ site.image_from_section(section, [400, 800, 1200, 1600, 3000]) @] 
     sizes="(max-width: 500px) 400px,
