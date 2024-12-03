@@ -24,7 +24,6 @@ pub struct BuilderV42<'a> {
     // else that needs to be created)
     // pub errors: Vec<NeoError>,
     pub errors_v42: Vec<NeoErrorV42>,
-    // pub image_maxes: Vec<usize>,
     pub images: BTreeMap<String, Image>,
     // pub generated_pages: BTreeMap<PathBuf, PageV42>,
     pub page_errors: Vec<NeoErrorV42>,
@@ -73,14 +72,6 @@ impl BuilderV42<'_> {
         Ok(())
     }
 
-    // #[instrument(skip(self))]
-    // pub fn generate_images(&mut self) -> Result<()> {
-    //     let source_images = load_source_images(&self.site_config.images_input_root_folder());
-    //     dbg!(source_images);
-    //     event!(Level::INFO, "Generating Images");
-    //     Ok(())
-    // }
-
     #[instrument(skip(self))]
     pub fn get_image_size(&mut self, stem: &str, path: &PathBuf, ts: u64) -> Option<Image> {
         if let Ok(img_reader) = Reader::open(path) {
@@ -108,23 +99,11 @@ impl BuilderV42<'_> {
         } else {
             None
         }
-
-        // None
-        // let _ = &self.images.iter_mut().for_each(|image| {
-        //     dbg!("aaaaaaa");
-        //     if let Ok(img_reader) = Reader::open(&image.1.source_image_path) {
-        //         dbg!("bbbbbbbbbbbbb");
-        //         if let Ok(img) = img_reader.decode() {
-        //             dbg!("ccccccccccccc");
-        //             image.1.raw_height = Some(img.height());
-        //         }
-        //     }
-        // });
-        // dbg!(&self.images);
     }
 
     #[instrument(skip(self))]
     pub fn load_source_images(&mut self) -> Result<()> {
+        event!(Level::INFO, "Loading Images");
         let walker = WalkDir::new(&self.site_config.images_input_root_folder()).into_iter();
         walker.for_each(|path_result| {
             match path_result {
@@ -145,8 +124,6 @@ impl BuilderV42<'_> {
                 }
             }
         });
-
-        dbg!(&self.images);
 
         // walker.filter(|path_result| match path_result {
         //     Ok(path) => match path.path().extension() {

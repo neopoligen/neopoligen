@@ -138,7 +138,6 @@ impl SiteV42b {
                                     let x = made_sizes
                                         .iter()
                                         .map(|sz| {
-                                            // dbg!(s);
                                             let mut image_href = self
                                                 .config
                                                 .images_href_root_folder()
@@ -383,8 +382,6 @@ Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
                         .collect::<Vec<String>>()
                         .join(" ");
                     classes.push(out_string.clone());
-                    // dbg!(&out_string);
-                    // let
 
                     // let flattened = flatten_spans_from_template_v42(&[stuff])
                     //     .unwrap()
