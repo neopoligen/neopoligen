@@ -86,7 +86,7 @@ impl SiteV42b {
     }
 
     // This returns the attributes for an image tag
-    pub fn image(&self, args: &[Value]) -> Result<Value, Error> {
+    pub fn image_from_section(&self, args: &[Value]) -> Result<Value, Error> {
         if args.len() == 2 {
             let section = args[0].clone();
             match section.get_attr("flags") {
@@ -117,7 +117,6 @@ impl SiteV42b {
                                             );
                                         }
                                     });
-
                                     let mut return_string = String::from(r#"srcset=""#);
                                     let x = made_sizes
                                         .iter()
@@ -148,9 +147,6 @@ impl SiteV42b {
                                         )
                                         .as_str(),
                                     );
-
-                                    // src="example-800w.jpg"
-
                                     Ok(Value::from(return_string))
                                 } else {
                                     Err(Error::new(ErrorKind::InvalidOperation, "Error with image"))
@@ -618,7 +614,7 @@ impl Object for SiteV42b {
             "get_section_attrs" => self.get_section_attrs(args),
             "get_span_attrs" => self.get_span_attrs(args),
             "href_for_page" => Ok(Value::from(self.href_for_page(args))),
-            "image" => self.image(args),
+            "image_from_section" => self.image_from_section(args),
             "site_root" => Ok(Value::from(self.config.site_root.clone())),
             "neo_files_href" => Ok(Value::from(self.neo_files_href())),
             "theme_folder_href" => Ok(Value::from(self.theme_folder_href())),
