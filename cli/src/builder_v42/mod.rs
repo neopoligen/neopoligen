@@ -41,6 +41,15 @@ pub struct BuilderV42<'a> {
 
 impl BuilderV42<'_> {
     #[instrument(skip(self))]
+    pub fn deploy_images(&self) {
+        event!(Level::DEBUG, "Deploying Images");
+        let _ = copy_folder(
+            &self.site_config.images_cache_root_folder(),
+            &self.site_config.images_output_root_folder(),
+        );
+    }
+
+    #[instrument(skip(self))]
     pub fn deploy_theme_files(&self) {
         event!(Level::DEBUG, "Deploying Theme Files");
         let source_folder = self.site_config.theme_files_input_folder();

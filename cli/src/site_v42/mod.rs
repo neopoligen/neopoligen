@@ -110,13 +110,8 @@ impl SiteV42b {
                                             size.to_string().parse().expect("getting number"),
                                             &output_path, // &PathBuf::from("/Users/alan/Desktop/image.jpg"),
                                         );
-
-                                        dbg!(size);
-                                        ()
                                     });
                                 }
-                                dbg!(i);
-                                ()
                             }
                             None => {
                                 // TODO Handle this as an error
