@@ -85,6 +85,20 @@ impl SiteV42b {
         }
     }
 
+    pub fn make_jpg(&self, img: &Image, output_path: &PathBuf) {
+        if !output_path.exists() {
+            let _ = mkdir_p(output_path.parent().unwrap().to_path_buf());
+            let _ = resize_and_optimize_jpg(&img.source_image_path, img.raw_width, &output_path);
+        } else {
+            let check_time = file_epoch_mod_time(&output_path).unwrap();
+            if check_time < img.source_image_timestamp {
+                let _ = mkdir_p(output_path.parent().unwrap().to_path_buf());
+                let _ =
+                    resize_and_optimize_jpg(&img.source_image_path, img.raw_width, &output_path);
+            }
+        }
+    }
+
     // This returns the attributes for an image tag
     pub fn image_from_section(&self, args: &[Value]) -> Result<Value, Error> {
         if args.len() == 2 {
@@ -109,12 +123,18 @@ impl SiteV42b {
                                                     output_dir.join(image_stem.to_string());
                                                 let output_path = output_dir
                                                     .join(format!("{}w.jpg", size_as_int));
-                                                let _ = mkdir_p(output_dir);
-                                                let _ = resize_and_optimize_jpg(
-                                                    &i.source_image_path,
-                                                    size_as_int,
-                                                    &output_path, // &PathBuf::from("/Users/alan/Desktop/image.jpg"),
-                                                );
+                                                self.make_jpg(&i, &output_path);
+
+                                                // let check_time =
+                                                //     file_epoch_mod_time(&output_path).unwrap();
+                                                // if check_time < i.source_image_timestamp {
+                                                //     let _ = mkdir_p(output_dir);
+                                                //     // let _ = resize_and_optimize_jpg(
+                                                //     //     &i.source_image_path,
+                                                //     //     size_as_int,
+                                                //     //     &output_path, // &PathBuf::from("/Users/alan/Desktop/image.jpg"),
+                                                //     // );
+                                                // }
                                             } else {
                                                 made_sizes.push(i.raw_width);
                                                 // TODO: Deal with dir not being made, etc..
@@ -125,12 +145,9 @@ impl SiteV42b {
                                                     output_dir.join(image_stem.to_string());
                                                 let output_path = output_dir
                                                     .join(format!("{}w.jpg", i.raw_width));
-                                                let _ = mkdir_p(output_dir);
-                                                let _ = resize_and_optimize_jpg(
-                                                    &i.source_image_path,
-                                                    i.raw_width,
-                                                    &output_path, // &PathBuf::from("/Users/alan/Desktop/image.jpg"),
-                                                );
+                                                self.make_jpg(&i, &output_path);
+
+                                                //
                                             }
                                         }
                                     });
