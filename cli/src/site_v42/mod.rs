@@ -124,17 +124,6 @@ impl SiteV42b {
                                                 let output_path = output_dir
                                                     .join(format!("{}w.jpg", size_as_int));
                                                 self.make_jpg(&i, &output_path);
-
-                                                // let check_time =
-                                                //     file_epoch_mod_time(&output_path).unwrap();
-                                                // if check_time < i.source_image_timestamp {
-                                                //     let _ = mkdir_p(output_dir);
-                                                //     // let _ = resize_and_optimize_jpg(
-                                                //     //     &i.source_image_path,
-                                                //     //     size_as_int,
-                                                //     //     &output_path, // &PathBuf::from("/Users/alan/Desktop/image.jpg"),
-                                                //     // );
-                                                // }
                                             } else {
                                                 made_sizes.push(i.raw_width);
                                                 // TODO: Deal with dir not being made, etc..
@@ -146,8 +135,6 @@ impl SiteV42b {
                                                 let output_path = output_dir
                                                     .join(format!("{}w.jpg", i.raw_width));
                                                 self.make_jpg(&i, &output_path);
-
-                                                //
                                             }
                                         }
                                     });
