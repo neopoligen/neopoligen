@@ -7,6 +7,12 @@ use crate::page_v42::PageV42b;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum NeoErrorV42 {
+    CouldNotGetTemplate {
+        notes: Vec<String>,
+    },
+    CouldNotRenderTemplate {
+        notes: Vec<String>,
+    },
     NoParsedPageDataForKey(String),
     TemplateLoadError {
         message: String,

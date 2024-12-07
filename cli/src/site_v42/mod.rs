@@ -86,111 +86,125 @@ impl SiteV42b {
     }
 
     pub fn make_jpg(&self, img: &Image, output_path: &PathBuf) {
-        if !output_path.exists() {
-            let _ = mkdir_p(output_path.parent().unwrap().to_path_buf());
-            let _ = resize_and_optimize_jpg(&img.source_image_path, img.raw_width, &output_path);
-        } else {
-            let check_time = file_epoch_mod_time(&output_path).unwrap();
-            if check_time < img.source_image_timestamp {
-                let _ = mkdir_p(output_path.parent().unwrap().to_path_buf());
-                let _ =
-                    resize_and_optimize_jpg(&img.source_image_path, img.raw_width, &output_path);
-            }
-        }
+
+        // if !output_path.exists() {
+        //     let _ = mkdir_p(output_path.parent().unwrap().to_path_buf());
+        //     let _ = resize_and_optimize_jpg(&img.source_image_path, img.raw_width, &output_path);
+        // } else {
+        //     let check_time = file_epoch_mod_time(&output_path).unwrap();
+        //     if check_time < img.source_image_timestamp {
+        //         let _ = mkdir_p(output_path.parent().unwrap().to_path_buf());
+        //         let _ =
+        //             resize_and_optimize_jpg(&img.source_image_path, img.raw_width, &output_path);
+        //     }
+        // }
+
+        //
     }
 
     // This returns the attributes for an image tag
     pub fn image_from_section(&self, args: &[Value]) -> Result<Value, Error> {
-        if args.len() == 2 {
-            let section = args[0].clone();
-            match section.get_attr("flags") {
-                Ok(flags) => {
-                    if flags.len() > Some(0) {
-                        let image_stem = flags.try_iter().unwrap().nth(0).unwrap();
-                        match &self.images.get(&image_stem.to_string()) {
-                            Some(i) => {
-                                if let Ok(sizes) = args[1].clone().try_iter() {
-                                    let mut made_sizes: Vec<u32> = vec![];
-                                    sizes.into_iter().for_each(|size| {
-                                        if let Ok(size_as_int) = size.to_string().parse::<u32>() {
-                                            if i.raw_width > size_as_int {
-                                                made_sizes.push(size_as_int);
-                                                // TODO: Deal with dir not being made, etc..
-                                                let mut output_dir = PathBuf::from(
-                                                    &self.config.images_cache_root_folder(),
-                                                );
-                                                output_dir =
-                                                    output_dir.join(image_stem.to_string());
-                                                let output_path = output_dir
-                                                    .join(format!("{}w.jpg", size_as_int));
-                                                self.make_jpg(&i, &output_path);
-                                            } else {
-                                                made_sizes.push(i.raw_width);
-                                                // TODO: Deal with dir not being made, etc..
-                                                let mut output_dir = PathBuf::from(
-                                                    &self.config.images_cache_root_folder(),
-                                                );
-                                                output_dir =
-                                                    output_dir.join(image_stem.to_string());
-                                                let output_path = output_dir
-                                                    .join(format!("{}w.jpg", i.raw_width));
-                                                self.make_jpg(&i, &output_path);
-                                            }
-                                        }
-                                    });
-                                    let mut return_string = String::from(r#"srcset=""#);
-                                    let x = made_sizes
-                                        .iter()
-                                        .map(|sz| {
-                                            let mut image_href = self
-                                                .config
-                                                .images_href_root_folder()
-                                                .join(image_stem.to_string());
-                                            image_href =
-                                                image_href.join(format!("{}w.jpg {}w", sz, sz));
-                                            image_href.display().to_string()
-                                        })
-                                        .collect::<Vec<String>>();
-                                    return_string.push_str(&x.join(","));
-                                    return_string.push_str(r#"""#);
-                                    return_string.push_str(r#" alt="TODO - Fix Alt Tags""#);
-                                    return_string.push_str(
-                                        format!(
-                                            r#" src="{}/{}/{}w.jpg""#,
-                                            &self
-                                                .config
-                                                .images_href_root_folder()
-                                                .display()
-                                                .to_string(),
-                                            image_stem.to_string(),
-                                            made_sizes.iter().last().unwrap()
-                                        )
-                                        .as_str(),
-                                    );
-                                    Ok(Value::from(return_string))
-                                } else {
-                                    Err(Error::new(ErrorKind::InvalidOperation, "Error with image"))
-                                }
-                            }
-                            None => {
-                                Err(Error::new(ErrorKind::InvalidOperation, "Error with image"))
-                            }
-                        }
-                    } else {
-                        Err(Error::new(ErrorKind::InvalidOperation, "Error with image"))
-                    }
-                }
-                Err(_) => Err(Error::new(
-                    ErrorKind::InvalidOperation,
-                    "Could not get name for image",
-                )),
-            }
-        } else {
-            Err(Error::new(
+        if args.len() != 2 {
+            return Err(Error::new(
                 ErrorKind::InvalidOperation,
-                "Invalid arguments set for site.image",
-            ))
+                "Incorrect number of arguments for site.image_from_section",
+            ));
         }
+        let section = args[0].clone();
+        let flags_result = section.get_attr("flags");
+        if let Err(_) = flags_result {
+            return Err(Error::new(
+                ErrorKind::InvalidOperation,
+                "Could not get name for image from site.image_from_section",
+            ));
+        }
+        // let flags = flags_result.unwrap();
+
+        return Err(Error::new(
+            ErrorKind::InvalidOperation,
+            "Could not get name for image from site.image_from_section",
+        ));
+
+        // match section.get_attr("flags") {
+        //     Ok(flags) => {
+        //         if flags.len() > Some(0) {
+        //             let image_stem = flags.try_iter().unwrap().nth(0).unwrap();
+        //             match &self.images.get(&image_stem.to_string()) {
+        //                 Some(i) => {
+        //                     if let Ok(sizes) = args[1].clone().try_iter() {
+        //                         let mut made_sizes: Vec<u32> = vec![];
+        //                         sizes.into_iter().for_each(|size| {
+        //                             if let Ok(size_as_int) = size.to_string().parse::<u32>() {
+        //                                 if i.raw_width > size_as_int {
+        //                                     made_sizes.push(size_as_int);
+        //                                     // TODO: Deal with dir not being made, etc..
+        //                                     let mut output_dir = PathBuf::from(
+        //                                         &self.config.images_cache_root_folder(),
+        //                                     );
+        //                                     output_dir = output_dir.join(image_stem.to_string());
+        //                                     let output_path =
+        //                                         output_dir.join(format!("{}w.jpg", size_as_int));
+        //                                     self.make_jpg(&i, &output_path);
+        //                                 } else {
+        //                                     made_sizes.push(i.raw_width);
+        //                                     // TODO: Deal with dir not being made, etc..
+        //                                     let mut output_dir = PathBuf::from(
+        //                                         &self.config.images_cache_root_folder(),
+        //                                     );
+        //                                     output_dir = output_dir.join(image_stem.to_string());
+        //                                     let output_path =
+        //                                         output_dir.join(format!("{}w.jpg", i.raw_width));
+        //                                     self.make_jpg(&i, &output_path);
+        //                                 }
+        //                             }
+        //                         });
+        //                         let mut return_string = String::from(r#"srcset=""#);
+        //                         let x = made_sizes
+        //                             .iter()
+        //                             .map(|sz| {
+        //                                 let mut image_href = self
+        //                                     .config
+        //                                     .images_href_root_folder()
+        //                                     .join(image_stem.to_string());
+        //                                 image_href =
+        //                                     image_href.join(format!("{}w.jpg {}w", sz, sz));
+        //                                 image_href.display().to_string()
+        //                             })
+        //                             .collect::<Vec<String>>();
+        //                         return_string.push_str(&x.join(","));
+        //                         return_string.push_str(r#"""#);
+        //                         return_string.push_str(r#" alt="TODO - Fix Alt Tags""#);
+        //                         return_string.push_str(
+        //                             format!(
+        //                                 r#" src="{}/{}/{}w.jpg""#,
+        //                                 &self
+        //                                     .config
+        //                                     .images_href_root_folder()
+        //                                     .display()
+        //                                     .to_string(),
+        //                                 image_stem.to_string(),
+        //                                 made_sizes.iter().last().unwrap()
+        //                             )
+        //                             .as_str(),
+        //                         );
+        //                         Ok(Value::from(return_string))
+        //                     } else {
+        //                         Err(Error::new(ErrorKind::InvalidOperation, "Error with image"))
+        //                     }
+        //                 }
+        //                 None => Err(Error::new(ErrorKind::InvalidOperation, "Error with image")),
+        //             }
+        //         } else {
+        //             Err(Error::new(ErrorKind::InvalidOperation, "Error with image"))
+        //         }
+        //     }
+        //     Err(_) => Err(Error::new(
+        //         ErrorKind::InvalidOperation,
+        //         "Could not get name for image",
+        //     )),
+        // }
+
+        //
     }
 
     // The base href where Neopoligen stores

@@ -8,12 +8,13 @@ use crate::site_config::SiteConfigV42;
 use crate::site_v42::SiteV42b;
 use anyhow::Result;
 use html_escape::encode_safe;
-use image::io::Reader;
+// use image::io::Reader;
 use minijinja::Environment;
 use minijinja::{context, Value};
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
+use std::process::Output;
 use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 
@@ -72,25 +73,27 @@ impl BuilderV42<'_> {
         Ok(())
     }
 
-    #[instrument(skip(self))]
-    pub fn get_image_size(&mut self, stem: &str, path: &PathBuf, ts: u64) -> Option<Image> {
-        if let Ok(img_reader) = Reader::open(path) {
-            if let Ok(img) = img_reader.decode() {
-                let _ = &self.images.insert(
-                    stem.to_string(),
-                    Image::new(path, ts, img.width(), img.height()),
-                );
-            }
-        }
-        None
-    }
+    // #[instrument(skip(self))]
+    // pub fn get_image_size(&mut self, stem: &str, path: &PathBuf, ts: u64) -> Option<Image> {
+    //     if let Ok(img_reader) = Reader::open(path) {
+    //         if let Ok(img) = img_reader.decode() {
+    //             let _ = &self.images.insert(
+    //                 stem.to_string(),
+    //                 Image::new(path, ts, img.width(), img.height()),
+    //             );
+    //         }
+    //     }
+    //     None
+    // }
 
     #[instrument(skip(self))]
     pub fn get_image(&mut self, stem: &str, path: &PathBuf) -> Option<Image> {
         if let Ok(ts) = file_epoch_mod_time(path) {
             if let Some(ext) = path.extension() {
                 match ext.to_ascii_lowercase().as_os_str().to_str() {
-                    Some("jpg") => self.get_image_size(stem, path, ts),
+                    Some("jpg") => Some(Image::new(path, ts)),
+                    Some("jpeg") => Some(Image::new(path, ts)),
+                    Some("png") => Some(Image::new(path, ts)),
                     _ => None,
                 }
             } else {
@@ -115,7 +118,9 @@ impl BuilderV42<'_> {
                                 let _ = &self.images.insert(stem_as_string, i);
                                 ()
                             }
-                            _ => (),
+                            _ => {
+                                // TODO: Hoist Error Here
+                            }
                         }
                     };
                 }
@@ -150,46 +155,48 @@ impl BuilderV42<'_> {
     pub fn generate_outputs(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating Outputs");
         let site_clone = Value::from_object(self.site_v42b.clone().unwrap());
+
+        let page_issue_template_result = self.env.get_template("built-in/issues/page.neoj");
+        if let Err(_e) = page_issue_template_result {
+            dbg!("TODO: handle issue with not being able to load the page issue template");
+            // TODO: Switch this to an error
+            return Ok(());
+        }
+        let page_issue_template = page_issue_template_result.unwrap();
+
         for (_, page) in &mut self.pages_v42 {
-            if let Some(_rel_output_path) = &page.rel_output_path {
-                match self.env.get_template("pages/post/default.neoj") {
-                    Ok(template) => {
-                        match template.render(context!(
-                            page => Value::from_object(page.clone()),
-                            site => &site_clone,
-                            sections => &page.sections,
-                        )) {
-                            Ok(output) => {
-                                page.output = Some(output);
-                                ()
-                            }
-                            Err(e) => {
-                                let err = NeoErrorV42::PageIssue {
-                                    id: page.id.clone(),
-                                    rel_output_path: page.rel_output_path.clone(),
-                                    notes: get_minijinja_error_text(&e),
-                                    source_display_path: page.source_display_path.clone(),
-                                    template_list: vec![
-                                        "issues/page-issue/default.neoj".to_string()
-                                    ],
-                                };
-                                page.issues.push(err);
+            // TODO: Get page templates here
+            match self.env.get_template("pages/post/default.neoj") {
+                Ok(template) => {
+                    match template.render(context!(
+                        page => Value::from_object(page.clone()),
+                        site => &site_clone,
+                        sections => &page.sections,
+                    )) {
+                        Ok(output) => {
+                            page.output = Some(output);
+                        }
+                        Err(e) => {
+                            // dbg!(&e);
+                            let err = NeoErrorV42::CouldNotRenderTemplate {
+                                notes: get_minijinja_error_text(&e),
+                            };
+                            page.issues.push(err);
+                            match page_issue_template.render(context!(page => page)) {
+                                Ok(error_output) => page.output = Some(error_output),
+                                Err(_error_e) => {
+                                    dbg!("TODO: Handle not being able to make the error page");
+                                }
                             }
                         }
                     }
-                    Err(e) => {
-                        let err = NeoErrorV42::PageIssue {
-                            id: page.id.clone(),
-                            rel_output_path: page.rel_output_path.clone(),
-                            notes: get_minijinja_error_text(&e),
-                            source_display_path: page.source_display_path.clone(),
-                            template_list: vec!["issues/page-issue/default.neoj".to_string()],
-                        };
-                        page.issues.push(err);
-                    }
                 }
-            } else {
-                dbg!("TODO: ERROR For no rel_output_path for page");
+                Err(e) => {
+                    let err = NeoErrorV42::CouldNotGetTemplate {
+                        notes: get_minijinja_error_text(&e),
+                    };
+                    page.issues.push(err);
+                }
             }
         }
         Ok(())
@@ -325,8 +332,6 @@ impl BuilderV42<'_> {
 
     #[instrument(skip(self))]
     pub fn output_issues_index_page(&self) -> Result<()> {
-        // let env = &self.get_minijinja_environment();
-        // self.template_load_errors = template_load_errors;
         match self
             .env
             .get_template("helpers/issues-home-page/default.neoj")
@@ -385,46 +390,77 @@ impl BuilderV42<'_> {
     }
 
     #[instrument(skip(self))]
+    pub fn output_issue_page(&self, tmpl: &minijinja::Template, page: &PageV42b) -> Result<()> {
+        if page.issues.len() == 0 {
+            return Ok(());
+        }
+        let rel_output_path = &page.rel_output_path;
+        if let None = rel_output_path {
+            return Ok(());
+        }
+        let output_result = tmpl.render(context!(page => page));
+        if let Err(_e) = output_result {
+            dbg!("TODO: handle page issue result error with render");
+            return Ok(());
+        }
+        let output = output_result.unwrap();
+        dbg!(output);
+        Ok(())
+    }
+
+    #[instrument(skip(self))]
     pub fn output_issue_pages(&mut self) -> Result<()> {
         event!(Level::INFO, "Making Issue Pages");
-        let site_clone = Value::from_object(self.site_v42b.clone().unwrap());
-        for (_, page) in &mut self.pages_v42 {
-            if page.issues.len() > 0 {
-                if let Some(_href) = &page.href {
-                    let absolute_output_path = &self
-                        .site_config
-                        .site_output_root_folder()
-                        .join(page.rel_output_path.as_ref().unwrap());
-                    match self.env.get_template("helpers/issue-page/default.neoj") {
-                        Ok(template) => match template.render(context!(
-                            site => site_clone,
-                            page => Value::from_object(page.clone()),
-                        )) {
-                            Ok(output) => {
-                                match write_file_with_mkdir(&absolute_output_path, &output) {
-                                    Ok(()) => {
-                                        //event!(Level::INFO, "Making file in output_pages",);
-                                    }
-                                    Err(_e) => {
-                                        dbg!("TODO: Hoist this error in output_page_v42");
-                                        ()
-                                    }
-                                }
-                            }
-                            Err(e) => {
-                                dbg!(e);
-                                ()
-                            }
-                        },
-                        Err(e) => {
-                            dbg!(e);
-                            ()
-                        }
-                    }
-                }
-                ()
-            }
+
+        let page_issue_template_result = self.env.get_template("built-in/issues/page.neoj");
+        if let Err(_e) = page_issue_template_result {
+            dbg!("TODO: handle issue with not being able to load the page issue template");
+            return Ok(());
         }
+        let page_issue_template = page_issue_template_result.unwrap();
+
+        for (_, page) in &self.pages_v42 {
+            let _ = &self.output_issue_page(&page_issue_template, page);
+        }
+
+        //let site_clone = Value::from_object(self.site_v42b.clone().unwrap());
+        //for (_, page) in &mut self.pages_v42 {
+        //    if page.issues.len() > 0 {
+        //        if let Some(_href) = &page.href {
+        //            let absolute_output_path = &self
+        //                .site_config
+        //                .site_output_root_folder()
+        //                .join(page.rel_output_path.as_ref().unwrap());
+        //            match self.env.get_template("helpers/issue-page/default.neoj") {
+        //                Ok(template) => match template.render(context!(
+        //                    site => site_clone,
+        //                    page => Value::from_object(page.clone()),
+        //                )) {
+        //                    Ok(output) => {
+        //                        match write_file_with_mkdir(&absolute_output_path, &output) {
+        //                            Ok(()) => {
+        //                                //event!(Level::INFO, "Making file in output_pages",);
+        //                            }
+        //                            Err(_e) => {
+        //                                dbg!("TODO: Hoist this error in output_page_v42");
+        //                                ()
+        //                            }
+        //                        }
+        //                    }
+        //                    Err(e) => {
+        //                        dbg!(e);
+        //                        ()
+        //                    }
+        //                },
+        //                Err(e) => {
+        //                    dbg!(e);
+        //                    ()
+        //                }
+        //            }
+        //        }
+        //        ()
+        //    }
+        //}
 
         Ok(())
     }
