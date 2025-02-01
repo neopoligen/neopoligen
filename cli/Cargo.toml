@@ -36,6 +36,7 @@ notify = { version = "6.1.1", default-features = false, features = ["macos_fseve
 notify-debouncer-full = "0.3.1"
 regex = "1.10.4"
 resvg = "0.41.0"
+# todo: deprecate rimage probably in favor of image magick
 rimage = "0.10.3"
 rusqlite = "0.31.0"
 serde = { version = "1.0.200", features = ["derive"] }

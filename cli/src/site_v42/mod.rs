@@ -10,10 +10,10 @@ use minijinja::value::ValueKind;
 use minijinja::Error;
 use minijinja::ErrorKind;
 use minijinja::Value;
-use rimage::config::{Codec, EncoderConfig};
-use rimage::image::imageops::FilterType;
-use rimage::Decoder;
-use rimage::Encoder;
+// use rimage::config::{Codec, EncoderConfig};
+// use rimage::image::imageops::FilterType;
+// use rimage::Decoder;
+// use rimage::Encoder;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::path::PathBuf;
@@ -157,15 +157,10 @@ impl SiteV42b {
                                 .join(image_stem.to_string())
                                 .join(format!("{}.{}", size.to_string(), extension));
                             dbg!(&destination);
-                            if extension == "jpg" {
-                                // resize_and_optimize_jpg(
-                                //     &img.source_image_path,
-                                //     size,
-                                //     &PathBuf::from("/Users/alan/Desktop/image.jpg"),
-                                // );
-                                dbg!(&img);
-                                dbg!(&size);
-                            }
+                            dbg!(&extension);
+                            resize_and_optimize_image(&img.source_image_path, size, &destination);
+                            // dbg!(&img);
+                            // dbg!(&size);
                         });
                     }
                 }

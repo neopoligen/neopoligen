@@ -13,6 +13,7 @@ use rimage::Encoder;
 use std::fs;
 use std::fs::File;
 use std::path::PathBuf;
+use std::process::Command;
 use std::time::UNIX_EPOCH;
 use syntect::html::{ClassStyle, ClassedHTMLGenerator};
 use syntect::parsing::SyntaxSet;
@@ -433,107 +434,139 @@ pub fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result
     }
 }
 
-pub fn resize_and_optimize_jpg(
-    source: &PathBuf,
-    width: u32,
-    dest: &PathBuf,
-) -> Result<(), NeoError> {
-    match Decoder::from_path(source) {
-        Ok(decoder) => match decoder.decode() {
-            Ok(image) => {
-                let height = image.height() * width / image.width();
-                let resized_image = image.resize_to_fill(width, height, FilterType::Lanczos3);
-                let config = EncoderConfig::new(Codec::MozJpeg)
-                    .with_quality(90.0)
-                    .unwrap();
-                match File::create(&dest) {
-                    Ok(file) => {
-                        let encoder =
-                            Encoder::new(file, DynamicImage::ImageRgba8(resized_image.into()))
-                                .with_config(config);
-                        match encoder.encode() {
-                            Ok(_) => Ok(()),
-                            Err(e) => Err(NeoError {
-                                kind: NeoErrorKind::GenericErrorWithSourcePath {
-                                    source_path: source.clone(),
-                                    msg: format!("image processing error: {}", e),
-                                },
-                            }),
-                        }
-                    }
-                    Err(e) => Err(NeoError {
-                        kind: NeoErrorKind::GenericErrorWithSourcePath {
-                            source_path: source.clone(),
-                            msg: format!("image processing error: {}", e),
-                        },
-                    }),
-                }
+pub fn resize_and_optimize_image(source: &PathBuf, width: u32, dest: &PathBuf) {
+    dbg!(&source);
+    dbg!(&dest);
+    match &dest.parent() {
+        Some(parent_folder) => match fs::create_dir_all(parent_folder) {
+            Ok(_) => {
+                let source_image_path = &source.to_string_lossy().to_string();
+                dbg!(&source_image_path);
+                let width_as_string = &width.to_string();
+                let args: Vec<&str> = vec![
+                    source_image_path,
+                    "-resize",
+                    width_as_string,
+                    &dest.to_str().unwrap(), // magick input.jpg -resize 50% output.jpg
+                ];
+                let cmd_output = Command::new("magick").args(args).output().unwrap();
+                dbg!(cmd_output);
             }
-            Err(e) => Err(NeoError {
-                kind: NeoErrorKind::GenericErrorWithSourcePath {
-                    source_path: source.clone(),
-                    msg: format!("image processing error: {}", e),
-                },
-            }),
+            _ => (),
         },
-        Err(e) => Err(NeoError {
-            kind: NeoErrorKind::GenericErrorWithSourcePath {
-                source_path: source.clone(),
-                msg: format!("image processing error: {}", e),
-            },
-        }),
+        _ => (),
     }
 }
 
-pub fn resize_and_optimize_png(
-    source: &PathBuf,
-    width: u32,
-    dest: &PathBuf,
-) -> Result<(), NeoError> {
-    match Decoder::from_path(source) {
-        Ok(decoder) => match decoder.decode() {
-            Ok(image) => {
-                let height = image.height() * width / image.width();
-                let resized_image = image.resize_to_fill(width, height, FilterType::Lanczos3);
-                let config = EncoderConfig::new(Codec::OxiPng);
-                match File::create(&dest) {
-                    Ok(file) => {
-                        let encoder =
-                            Encoder::new(file, DynamicImage::ImageRgba8(resized_image.into()))
-                                .with_config(config);
-                        match encoder.encode() {
-                            Ok(_) => Ok(()),
-                            Err(e) => Err(NeoError {
-                                kind: NeoErrorKind::GenericErrorWithSourcePath {
-                                    source_path: source.clone(),
-                                    msg: format!("image processing error: {}", e),
-                                },
-                            }),
-                        }
-                    }
-                    Err(e) => Err(NeoError {
-                        kind: NeoErrorKind::GenericErrorWithSourcePath {
-                            source_path: source.clone(),
-                            msg: format!("image processing error: {}", e),
-                        },
-                    }),
-                }
-            }
-            Err(e) => Err(NeoError {
-                kind: NeoErrorKind::GenericErrorWithSourcePath {
-                    source_path: source.clone(),
-                    msg: format!("image processing error: {}", e),
-                },
-            }),
-        },
-        Err(e) => Err(NeoError {
-            kind: NeoErrorKind::GenericErrorWithSourcePath {
-                source_path: source.clone(),
-                msg: format!("image processing error: {}", e),
-            },
-        }),
-    }
-}
+// // deprecate in favor of resize and optimize image
+// pub fn resize_and_optimize_jpg(
+//     source: &PathBuf,
+//     width: u32,
+//     dest: &PathBuf,
+// ) -> Result<(), NeoError> {
+//     match Decoder::from_path(source) {
+//         Ok(decoder) => match decoder.decode() {
+//             Ok(image) => {
+//                 let height = image.height() * width / image.width();
+//                 let resized_image = image.resize_to_fill(width, height, FilterType::Lanczos3);
+//                 let config = EncoderConfig::new(Codec::MozJpeg)
+//                     .with_quality(90.0)
+//                     .unwrap();
+//                 match &dest.parent() {
+//                     Some(parent_folder) => match fs::create_dir_all(parent_folder) {
+//                         _ => (),
+//                     },
+//                     _ => (),
+//                 }
+//                 match File::create(&dest) {
+//                     Ok(file) => {
+//                         let encoder =
+//                             Encoder::new(file, DynamicImage::ImageRgba8(resized_image.into()))
+//                                 .with_config(config);
+//                         match encoder.encode() {
+//                             Ok(_) => Ok(()),
+//                             Err(e) => Err(NeoError {
+//                                 kind: NeoErrorKind::GenericErrorWithSourcePath {
+//                                     source_path: source.clone(),
+//                                     msg: format!("image processing error: {}", e),
+//                                 },
+//                             }),
+//                         }
+//                     }
+//                     Err(e) => Err(NeoError {
+//                         kind: NeoErrorKind::GenericErrorWithSourcePath {
+//                             source_path: source.clone(),
+//                             msg: format!("image processing error: {}", e),
+//                         },
+//                     }),
+//                 }
+//             }
+//             Err(e) => Err(NeoError {
+//                 kind: NeoErrorKind::GenericErrorWithSourcePath {
+//                     source_path: source.clone(),
+//                     msg: format!("image processing error: {}", e),
+//                 },
+//             }),
+//         },
+//         Err(e) => Err(NeoError {
+//             kind: NeoErrorKind::GenericErrorWithSourcePath {
+//                 source_path: source.clone(),
+//                 msg: format!("image processing error: {}", e),
+//             },
+//         }),
+//     }
+// }
+
+// // deprecate in favor of resize and optimize image
+// pub fn resize_and_optimize_png(
+//     source: &PathBuf,
+//     width: u32,
+//     dest: &PathBuf,
+// ) -> Result<(), NeoError> {
+//     match Decoder::from_path(source) {
+//         Ok(decoder) => match decoder.decode() {
+//             Ok(image) => {
+//                 let height = image.height() * width / image.width();
+//                 let resized_image = image.resize_to_fill(width, height, FilterType::Lanczos3);
+//                 let config = EncoderConfig::new(Codec::OxiPng);
+//                 match File::create(&dest) {
+//                     Ok(file) => {
+//                         let encoder =
+//                             Encoder::new(file, DynamicImage::ImageRgba8(resized_image.into()))
+//                                 .with_config(config);
+//                         match encoder.encode() {
+//                             Ok(_) => Ok(()),
+//                             Err(e) => Err(NeoError {
+//                                 kind: NeoErrorKind::GenericErrorWithSourcePath {
+//                                     source_path: source.clone(),
+//                                     msg: format!("image processing error: {}", e),
+//                                 },
+//                             }),
+//                         }
+//                     }
+//                     Err(e) => Err(NeoError {
+//                         kind: NeoErrorKind::GenericErrorWithSourcePath {
+//                             source_path: source.clone(),
+//                             msg: format!("image processing error: {}", e),
+//                         },
+//                     }),
+//                 }
+//             }
+//             Err(e) => Err(NeoError {
+//                 kind: NeoErrorKind::GenericErrorWithSourcePath {
+//                     source_path: source.clone(),
+//                     msg: format!("image processing error: {}", e),
+//                 },
+//             }),
+//         },
+//         Err(e) => Err(NeoError {
+//             kind: NeoErrorKind::GenericErrorWithSourcePath {
+//                 source_path: source.clone(),
+//                 msg: format!("image processing error: {}", e),
+//             },
+//         }),
+//     }
+// }
 
 pub fn scrub_rel_file_path(source: &str) -> Result<PathBuf, NeoError> {
     let pb = PathBuf::from(source);
