@@ -115,15 +115,20 @@ impl SiteV42b {
         if let Err(_) = flags_result {
             return Err(Error::new(
                 ErrorKind::InvalidOperation,
-                "Could not get name for image from site.image_from_section",
+                "Could not get flags from site.image_from_section()",
             ));
         }
-        // let flags = flags_result.unwrap();
+        let flags = flags_result.unwrap();
+        if flags.len() == Some(0) {
+            return Err(Error::new(
+                ErrorKind::InvalidOperation,
+                "No flag attirbute available for image name",
+            ));
+        }
+        let mut flags_iter = flags.try_iter()?;
+        let image_stem_option = flags_iter.nth(0);
 
-        return Err(Error::new(
-            ErrorKind::InvalidOperation,
-            "Could not get name for image from site.image_from_section",
-        ));
+        return Err(Error::new(ErrorKind::InvalidOperation, "Placeholder error"));
 
         // match section.get_attr("flags") {
         //     Ok(flags) => {

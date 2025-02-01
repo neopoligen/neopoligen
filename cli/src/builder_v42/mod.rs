@@ -155,7 +155,6 @@ impl BuilderV42<'_> {
     pub fn generate_outputs(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating Outputs");
         let site_clone = Value::from_object(self.site_v42b.clone().unwrap());
-
         let page_issue_template_result = self.env.get_template("built-in/issues/page.neoj");
         if let Err(_e) = page_issue_template_result {
             dbg!("TODO: handle issue with not being able to load the page issue template");
@@ -163,7 +162,6 @@ impl BuilderV42<'_> {
             return Ok(());
         }
         let page_issue_template = page_issue_template_result.unwrap();
-
         for (_, page) in &mut self.pages_v42 {
             // TODO: Get page templates here
             match self.env.get_template("pages/post/default.neoj") {

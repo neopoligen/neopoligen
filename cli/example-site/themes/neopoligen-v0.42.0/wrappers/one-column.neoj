@@ -45,8 +45,6 @@
 </header>
 
 <main class="wrapper-medium flow">
-
-
     [!- block body_main -!][!- endblock -!]
 </main>
 
