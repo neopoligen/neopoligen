@@ -1,3 +1,4 @@
+#![allow(warnings)]
 use crate::helpers::*;
 use crate::image::Image;
 use crate::page_v42::PageV42b;
@@ -9,6 +10,10 @@ use minijinja::value::ValueKind;
 use minijinja::Error;
 use minijinja::ErrorKind;
 use minijinja::Value;
+use rimage::config::{Codec, EncoderConfig};
+use rimage::image::imageops::FilterType;
+use rimage::Decoder;
+use rimage::Encoder;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::path::PathBuf;
@@ -85,6 +90,7 @@ impl SiteV42b {
         }
     }
 
+    // Depcrated?
     pub fn make_jpg(&self, img: &Image, output_path: &PathBuf) {
 
         // if !output_path.exists() {
@@ -129,6 +135,43 @@ impl SiteV42b {
         }
         let mut flags_iter = flags.try_iter()?;
         let image_stem_option = flags_iter.nth(0);
+        // dbg!(&image_stem_option);
+
+        if let Some(image_stem) = image_stem_option {
+            match &self.images.get(&image_stem.to_string()) {
+                Some(img) => {
+                    let extension = img
+                        .source_image_path
+                        .extension()
+                        .unwrap()
+                        .to_string_lossy()
+                        .to_string();
+                    // let decoder = Decoder::from_path(&img.source_image_path).unwrap();
+                    // let data = decoder.decode();
+                    if let Ok(sizes) = args[1].clone().try_iter() {
+                        sizes.for_each(|size_as_value| {
+                            let size: u32 = size_as_value.as_usize().unwrap().try_into().unwrap();
+                            let destination = &self
+                                .config
+                                .images_href_root_folder()
+                                .join(image_stem.to_string())
+                                .join(format!("{}.{}", size.to_string(), extension));
+                            dbg!(&destination);
+                            if extension == "jpg" {
+                                // resize_and_optimize_jpg(
+                                //     &img.source_image_path,
+                                //     size,
+                                //     &PathBuf::from("/Users/alan/Desktop/image.jpg"),
+                                // );
+                                dbg!(&img);
+                                dbg!(&size);
+                            }
+                        });
+                    }
+                }
+                _ => (),
+            }
+        }
 
         return Ok(Value::from_serialize(("ping.jpg", vec![100, 400, 800])));
 

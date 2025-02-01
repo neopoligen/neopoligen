@@ -192,7 +192,8 @@ impl SiteConfigV42 {
     }
 
     pub fn images_href_root_folder(&self) -> PathBuf {
-        PathBuf::from("/neo-files/images")
+        self.neo_files_output_root_folder().join("images")
+        // PathBuf::from("/neo-files/images")
     }
 
     pub fn language_default(&self) -> Result<String> {
