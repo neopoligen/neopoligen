@@ -173,7 +173,12 @@ impl SiteV42b {
                         return_sizes.last().unwrap(),
                         extension.to_string(),
                     );
-                    return Ok(Value::from_serialize((image_src_path, vec![100, 400, 800])));
+                    return Ok(Value::from_serialize((
+                        image_stem,
+                        image_src_path,
+                        return_sizes,
+                        extension.to_string(),
+                    )));
                 }
                 _ => {
                     return Ok(Value::from_serialize((
