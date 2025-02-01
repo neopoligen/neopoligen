@@ -104,6 +104,8 @@ impl SiteV42b {
 
     // This returns the attributes for an image tag
     pub fn image_from_section(&self, args: &[Value]) -> Result<Value, Error> {
+        // takes the section itself which is used to then
+        // pull the image name. And then sizes.
         if args.len() != 2 {
             return Err(Error::new(
                 ErrorKind::InvalidOperation,
@@ -128,7 +130,9 @@ impl SiteV42b {
         let mut flags_iter = flags.try_iter()?;
         let image_stem_option = flags_iter.nth(0);
 
-        return Err(Error::new(ErrorKind::InvalidOperation, "Placeholder error"));
+        return Ok(Value::from_serialize(("ping.jpg", vec![100, 400, 800])));
+
+        // return Err(Error::new(ErrorKind::InvalidOperation, "Placeholder error"));
 
         // match section.get_attr("flags") {
         //     Ok(flags) => {

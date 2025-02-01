@@ -4,6 +4,12 @@
 [# HOIST: [alt, class, id] #]
 
 <section [@- neo.section_attrs() -@]>
+<!-- START: TMP OUTPUT -->
+<div>
+    [@ site.image_from_section(section, [100, 400, 800, 1200, 1600, 3000]) @] 
+</div>
+
+<!-- END: TMP OUTPUT -->
   <div><img 
     [@ site.image_from_section(section, [100, 400, 800, 1200, 1600, 3000]) @] 
     sizes="(max-width: 500px) 400px,
