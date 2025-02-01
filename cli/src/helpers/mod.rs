@@ -5,13 +5,13 @@ use minijinja::Error;
 use minijinja::ErrorKind;
 use minijinja::Value;
 use regex::Regex;
-use rimage::config::{Codec, EncoderConfig};
-use rimage::image::imageops::FilterType;
-use rimage::image::DynamicImage;
-use rimage::Decoder;
-use rimage::Encoder;
+// use rimage::config::{Codec, EncoderConfig};
+// use rimage::image::imageops::FilterType;
+// use rimage::image::DynamicImage;
+// use rimage::Decoder;
+// use rimage::Encoder;
 use std::fs;
-use std::fs::File;
+// use std::fs::File;
 use std::path::PathBuf;
 use std::process::Command;
 use std::time::UNIX_EPOCH;
@@ -441,7 +441,7 @@ pub fn resize_and_optimize_image(source: &PathBuf, width: u32, dest: &PathBuf) {
         Some(parent_folder) => match fs::create_dir_all(parent_folder) {
             Ok(_) => {
                 let source_image_path = &source.to_string_lossy().to_string();
-                dbg!(&source_image_path);
+                // dbg!(&source_image_path);
                 let width_as_string = &width.to_string();
                 let args: Vec<&str> = vec![
                     source_image_path,
@@ -449,8 +449,8 @@ pub fn resize_and_optimize_image(source: &PathBuf, width: u32, dest: &PathBuf) {
                     width_as_string,
                     &dest.to_str().unwrap(), // magick input.jpg -resize 50% output.jpg
                 ];
-                let cmd_output = Command::new("magick").args(args).output().unwrap();
-                dbg!(cmd_output);
+                let _ = Command::new("magick").args(args).output().unwrap();
+                // dbg!(cmd_output);
             }
             _ => (),
         },

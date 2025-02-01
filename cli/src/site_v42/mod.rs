@@ -137,6 +137,8 @@ impl SiteV42b {
         let image_stem_option = flags_iter.nth(0);
         // dbg!(&image_stem_option);
 
+        let mut return_sizes: Vec<String> = vec![];
+
         if let Some(image_stem) = image_stem_option {
             match &self.images.get(&image_stem.to_string()) {
                 Some(img) => {
@@ -151,24 +153,38 @@ impl SiteV42b {
                     if let Ok(sizes) = args[1].clone().try_iter() {
                         sizes.for_each(|size_as_value| {
                             let size: u32 = size_as_value.as_usize().unwrap().try_into().unwrap();
+                            return_sizes.push(size.to_string());
                             let destination = &self
                                 .config
                                 .images_href_root_folder()
                                 .join(image_stem.to_string())
                                 .join(format!("{}.{}", size.to_string(), extension));
-                            dbg!(&destination);
-                            dbg!(&extension);
+                            // dbg!(&destination);
+                            // dbg!(&extension);
+                            // TODO: Put this in when you need images
                             resize_and_optimize_image(&img.source_image_path, size, &destination);
                             // dbg!(&img);
                             // dbg!(&size);
                         });
                     }
+                    let image_src_path = format!(
+                        "/neo-files/images/{}/{}.{}",
+                        image_stem,
+                        return_sizes.last().unwrap(),
+                        extension.to_string(),
+                    );
+                    return Ok(Value::from_serialize((image_src_path, vec![100, 400, 800])));
                 }
-                _ => (),
+                _ => {
+                    return Ok(Value::from_serialize((
+                        "todo make this an error",
+                        vec![100, 400, 800],
+                    )));
+                }
             }
+        } else {
+            return Ok(Value::from_serialize(("ping.jpg", vec![100, 400, 800])));
         }
-
-        return Ok(Value::from_serialize(("ping.jpg", vec![100, 400, 800])));
 
         // return Err(Error::new(ErrorKind::InvalidOperation, "Placeholder error"));
 

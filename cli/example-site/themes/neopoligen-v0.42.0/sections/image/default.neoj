@@ -6,12 +6,13 @@
 <section [@- neo.section_attrs() -@]>
 <!-- START: TMP OUTPUT -->
 <div>
-    [@ site.image_from_section(section, [100, 400, 800, 1200, 1600, 3000]) @] 
+    [@ site.image_from_section(section, [100, 400, 800, 1200, 1600, 3000]) @]
 </div>
 
 <!-- END: TMP OUTPUT -->
   <div><img 
-    [@ site.image_from_section(section, [100, 400, 800, 1200, 1600, 3000]) @] 
+ src="[@ site.image_from_section(section, [100, 400, 800, 1200, 1600, 3000])[0] @]"
+
     sizes="(max-width: 500px) 400px,
          (max-width: 700px) 600px, 
          800px"
