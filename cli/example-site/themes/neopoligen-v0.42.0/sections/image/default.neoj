@@ -3,11 +3,7 @@
 [# TYPE: basic #]
 [# HOIST: [alt, class, id] #]
 
-<section [@- neo.section_attrs() -@]>
-<!-- START: TMP OUTPUT -->
-<div>
-    [@ site.image_from_section(section, [100, 400, 800, 1200, 1600, 3000]) @]
-</div>
+[! set data = site.image_from_section(section, [100, 400, 800, 1200, 1600, 3000]) !]
 
 [! set selectors = [
   "(max-width: 200px)",
@@ -18,47 +14,46 @@
   ""
 ] !]
 
-[! set data = site.image_from_section(section, [100, 400, 800, 1200, 1600, 3000]) !]
-
-[! for size in data[2] !]
-<div>
-/neo-files/images/[@ data[0] @]/[@ size @].[@ data[3] @] [@ size @]w
-[!- if not loop.last -!],[!- endif !]
-</div>
-[! endfor !]
-
-[! for size in data[2] !]
-<div>
-[@ selectors[loop.index0] @]
-[@ size @]w
-[!- if not loop.last -!],[!- endif !]
-</div>
-[! endfor !]
-
-
-<!-- END: TMP OUTPUT -->
+<section [@- neo.section_attrs() -@]>
   <div><img 
   src="[@ data[1] @]"
 
-  srcset="
-[!- for size in data[2] !]
+  srcset="[!- for size in data[2] !]
 /neo-files/images/[@ data[0] @]/[@ size @].[@ data[3] @] [@ size @]w
 [!- if not loop.last -!],[!- endif !]
-[! endfor -!]
-  "
+[! endfor -!]"
 
-  sizes="
-[!- for size in data[2] -!]
+  sizes="[!- for size in data[2] -!]
 [@ selectors[loop.index0] @]
 [@ size @]w
 [!- if not loop.last -!],[!- endif !]
-[! endfor -!]
-  "
+[! endfor -!]"
   /></div>
 </section>
 
 
-    sizes="(max-width: 500px) 400px,
-         (max-width: 700px) 600px, 
-         800px"
 [@- neo.output_end_section(section) -@]
+
+
+
+[#
+<div>
+    [@ site.image_from_section(section, [100, 400, 800, 1200, 1600, 3000]) @]
+</div>
+
+[! for size in data[2] !]
+<div>
+/neo-files/images/[@ data[0] @]/[@ size @].[@ data[3] @] [@ size @]w
+[!- if not loop.last -!],[!- endif !]
+</div>
+[! endfor !]
+
+[! for size in data[2] !]
+<div>
+[@ selectors[loop.index0] @]
+[@ size @]w
+[!- if not loop.last -!],[!- endif !]
+</div>
+[! endfor !]
+#]
+
