@@ -116,13 +116,13 @@ pub fn basic_section_start_v42<'a>(
             .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 7);
     let section = SectionV42::Basic(BasicSectionV42 {
-        attrs,
+        attrs: attrs.clone(),
         bound: Bound::Start,
         children,
         end_section: Some(Box::new(end_section)),
         kind: kind.to_string(),
         flags,
-        template_list: make_template_list("basic", kind, "default"),
+        template_list: make_template_list_v42("basic", kind, attrs.clone()),
     });
     Ok((source, section))
 }
