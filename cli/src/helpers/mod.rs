@@ -435,8 +435,8 @@ pub fn replace_path(path: &PathBuf, find: &PathBuf, replace: &PathBuf) -> Result
 }
 
 pub fn resize_and_optimize_image(source: &PathBuf, width: u32, dest: &PathBuf) {
-    dbg!(&source);
-    dbg!(&dest);
+    // dbg!(&source);
+    // dbg!(&dest);
     match &dest.parent() {
         Some(parent_folder) => match fs::create_dir_all(parent_folder) {
             Ok(_) => {

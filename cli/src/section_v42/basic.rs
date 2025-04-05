@@ -71,13 +71,13 @@ pub fn basic_section_full_v42<'a>(
             .context("")
             .parse(source)?;
     let section = SectionV42::Basic(BasicSectionV42 {
-        attrs,
+        attrs: attrs.clone(),
         bound: Bound::Full,
         children,
         end_section: None,
         kind: kind.to_string(),
         flags,
-        template_list: make_template_list("basic", kind, "default"),
+        template_list: make_template_list_v42("basic", kind, attrs.clone()),
     });
     Ok((source, section))
 }
