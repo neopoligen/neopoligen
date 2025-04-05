@@ -75,6 +75,10 @@ impl SiteV42b {
         }
     }
 
+    pub fn highlight_code(&self, args: &[Value]) -> Result<Value, Error> {
+        Ok(Value::from(highlight_code_section(&args)))
+    }
+
     // Get the href for a page which is used
     // for all linking.
     pub fn href_for_page(&self, args: &[Value]) -> Option<String> {
@@ -713,6 +717,7 @@ impl Object for SiteV42b {
             "get_page_with_display_path" => self.get_page_with_display_path(args),
             "get_section_attrs" => self.get_section_attrs(args),
             "get_span_attrs" => self.get_span_attrs(args),
+            "highlight_code" => self.highlight_code(args),
             "href_for_page" => Ok(Value::from(self.href_for_page(args))),
             "image_from_section" => self.image_from_section(args),
             "site_root" => Ok(Value::from(self.config.site_root.clone())),
