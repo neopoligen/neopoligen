@@ -3,6 +3,7 @@
 [# TYPE: basic #]
 [# HOIST: [alt, class, id] #]
 
+
 [! set data = site.image_from_section(section, [100, 400, 800, 1200, 1600, 3000]) !]
 
 [! set selectors = [
@@ -17,7 +18,6 @@
 <section [@- neo.section_attrs() -@]>
   <div><img 
   src="[@ data[1] @]"
-
   srcset="[!- for size in data[2] !]
 /neo-files/images/[@ data[0] @]/[@ size @].[@ data[3] @] [@ size @]w
 [!- if not loop.last -!],[!- endif !]

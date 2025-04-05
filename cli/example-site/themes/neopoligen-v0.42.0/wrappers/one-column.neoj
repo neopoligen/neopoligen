@@ -41,7 +41,9 @@
 <body class="flow">
 
 <header class="wrapper-medium">
-  <a href="/">Home</a>
+  <a href="/">home</a> ~
+  <a href="https://links.alanwsmith.com/">projects</a> ~
+  <a href="https://socials.alanwsmith.com/">socials</a>
 </header>
 
 <main class="wrapper-medium flow">
@@ -49,8 +51,22 @@
 </main>
 
 <footer class="wrapper-medium">
+  [#
   <div class="generated-timestamp">[@ neo.generated_at("Generated on %a. %B %-d, %Y at %-I:%M%p " + neo.time_zone()) @]</div>
+  #]
+
+  <div class="center">
+    made by alan w smith
+  </div>
+  <div class="center">
+    <a href="https://links.alanwsmith.com/">other projects</a> ~
+    <a href="https://socials.alanwsmith.com/">socials</a>
+  </div>
+
+[#
   [!- include "includes/debugging.neoj" -!]
+  #]
+
 </footer>
 
 [@ neo.output_scripts() @]
