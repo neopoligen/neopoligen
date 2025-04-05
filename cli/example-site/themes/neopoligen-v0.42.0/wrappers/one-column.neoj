@@ -17,6 +17,7 @@
   }
 </style>
 <link rel="stylesheet" href="[@ neo.theme_folder() @]/styles/theme.css" />
+<link rel="stylesheet" href="[@ neo.theme_folder() @]/styles/syntax-highlighting/code-solarized-dark.css" />
 
 <!-- TODO: move page.... and site.... to neo.... -->
 <title>[@ page.title() @]</title>
