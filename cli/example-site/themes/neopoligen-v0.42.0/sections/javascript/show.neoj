@@ -3,12 +3,13 @@
 [# TYPE: javascript #]
 [# HOIST: [] #]
 
-<section [@- neo.section_attrs() -@]>
-<pre><code>
-[!- autoescape true -!]
-[@- section.body -@]
-[!- endautoescape -!]
-</code></pre>
+<section [@- neo.section_attrs("flow") -@]>
+  <div class="javascript-header">JavaScript</div>
+  <div class="javascript-body">
+  <pre><code>
+  [@- site.highlight_code(section.body, "js") -@]
+  </code></pre>
+  </div>
 </section>
 
 [@- neo.output_end_section(section) -@]
