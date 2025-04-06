@@ -299,6 +299,10 @@ h6 {
   text-wrap: balance;
 }
 
+html {
+    visibility: visible;
+}
+
 img {
   display: block;
   max-width: 100%;
@@ -325,6 +329,14 @@ picture {
   color: red;
 }
 
+.results-section {
+  margin: var(--pad-large);
+  padding: var(--pad-medium);
+  border: 1px solid var(--color-reverse-40);
+  border-radius: var(--radius-medium);
+  font-size: var(--font-size-xsmall);
+}
+
 select {
   font: inherit;
 }
@@ -338,21 +350,12 @@ td {
   vertical-align: top;
 }
 
-th {
-  vertical-align: top;
-}
-
-.images-are-broken-tmp {
-  color: var(--color-reverse-60);
-  border: 1px solid var(--color-reverse-40);
-  margin: var(--pad-large);
-  padding: var(--pad-large);
-  border-radius: var(--radius-medium);
-  font-size: var(--font-size-xsmall);
-}
-
 textarea {
   font: inherit;
+}
+
+th {
+  vertical-align: top;
 }
 
 video{
@@ -401,10 +404,6 @@ video{
 .wrapper-xxlarge {
   max-width: var(--wrapper-xxlarge);
   margin-inline: auto;
-}
-
-html {
-    visibility: visible;
 }
 
 
