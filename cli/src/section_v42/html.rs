@@ -55,14 +55,16 @@ pub fn html_section_full_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, body) = alt((take_until("-- "), rest)).context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
+    let template_list = make_template_list_v42("basic", kind, &attrs);
     let section = SectionV42::Html(HtmlSectionV42 {
-        attrs: attrs.clone(),
+        attrs,
         body: body.trim().to_string(),
         bound: Bound::Full,
         end_section: None,
         flags,
         kind: kind.to_string(),
-        template_list: make_template_list_v42("html", kind, attrs.clone()),
+        template_list,
+        // template_list: vec!["sections/html/default.neoj".to_string()],
     });
     Ok((source, section))
 }
@@ -97,16 +99,18 @@ pub fn html_section_start_v42<'a>(
             .context("")
             .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
+    let template_list = make_template_list_v42("basic", kind, &attrs);
     Ok((
         source,
         SectionV42::Html(HtmlSectionV42 {
-            attrs: attrs.clone(),
+            attrs,
             body: body.trim().to_string(),
             bound: Bound::Start,
             end_section: Some(Box::new(end_section)),
             flags,
             kind: kind.to_string(),
-            template_list: make_template_list_v42("html", kind, attrs.clone()),
+            template_list,
+            // template_list: vec!["sections/html/default.neoj".to_string()],
         }),
     ))
 }

@@ -70,14 +70,19 @@ pub fn basic_section_full_v42<'a>(
         many0(|src| paragraph_block_section_v42(src, site_config, SectionParent::Basic, debug))
             .context("")
             .parse(source)?;
+    let template_list = make_template_list_v42("basic", kind, &attrs);
     let section = SectionV42::Basic(BasicSectionV42 {
-        attrs: attrs.clone(),
+        attrs,
         bound: Bound::Full,
         children,
         end_section: None,
         kind: kind.to_string(),
         flags,
-        template_list: make_template_list_v42("basic", kind, attrs.clone()),
+        template_list,
+        // template_list: vec![
+        //     "sections/p/default.neoj".to_string(),
+        //     "sections/basic/default.neoj".to_string(),
+        // ],
     });
     Ok((source, section))
 }
@@ -115,14 +120,16 @@ pub fn basic_section_start_v42<'a>(
             .context("")
             .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 7);
+    let template_list = make_template_list_v42("basic", kind, &attrs);
     let section = SectionV42::Basic(BasicSectionV42 {
-        attrs: attrs.clone(),
+        attrs,
         bound: Bound::Start,
         children,
         end_section: Some(Box::new(end_section)),
         kind: kind.to_string(),
         flags,
-        template_list: make_template_list_v42("basic", kind, attrs.clone()),
+        template_list,
+        // template_list: vec!["sections/basic/default.neoj".to_string()],
     });
     Ok((source, section))
 }

@@ -3,6 +3,7 @@
 [# TYPE: basic #]
 [# HOIST: [alt, class, id] #]
 
+[#
 
 [! set data = site.image_from_section(section, [100, 400, 800, 1200, 1600, 3000]) !]
 
@@ -31,10 +32,9 @@
   /></div>
 </section>
 
-
 [@- neo.output_end_section(section) -@]
 
-
+#]
 
 [#
 <div>

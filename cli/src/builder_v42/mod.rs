@@ -163,6 +163,7 @@ impl BuilderV42<'_> {
         }
         let page_issue_template = page_issue_template_result.unwrap();
         for (_, page) in &mut self.pages_v42 {
+            // dbg!(&page.rel_output_path);
             // TODO: Get page templates here
             match self.env.get_template("pages/post/default.neoj") {
                 Ok(template) => {
