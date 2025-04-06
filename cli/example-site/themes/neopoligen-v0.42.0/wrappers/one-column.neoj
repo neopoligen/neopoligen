@@ -37,7 +37,7 @@
 <meta name="msapplication-config" content="[@ neo.theme_folder() @]/favicons/browserconfig.xml" />
 <meta name="theme-color" content="#000000" />
 <meta name="description" content="A post from alan w. smith" />
-[@ neo.output_css() @]
+[@ neo.output_css(sections) @]
 </head>
 <body class="flow">
 
