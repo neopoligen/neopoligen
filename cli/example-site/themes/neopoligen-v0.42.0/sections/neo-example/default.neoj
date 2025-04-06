@@ -5,12 +5,23 @@
 
 <section [@- neo.section_attrs("flow") -@]>
 <pre><code>
+[!- autoescape true -!]
+[@- section.neo_body -@]
+[!- endautoescape -!]
+</code></pre>
+
+<p>Which outputs:</p>
+  [@- neo.output_all_child_sections(section) -@]
+
+[#
+<div class="testing">
+<pre><code>
 [@- section|tojson(true) -@]
 </code></pre>
+</div>
+#]
 
 </section>
 
 [@- neo.output_end_section(section) -@]
-
-
 
