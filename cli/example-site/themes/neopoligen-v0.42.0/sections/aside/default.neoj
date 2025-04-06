@@ -3,14 +3,13 @@
 [# TYPE: basic #]
 [# HOIST: [class, id] #]
 
-<!-- START: TODO -->
-<div><em>~~ TODO: Format aside ~~</em></div>
-<!-- END: TODO -->
-
 
 <section [@- neo.section_attrs("flow") -@]>
   <aside>
+    <div class="aside-header">aside</div>
+    <div class="aside-body">
     [@- neo.output_all_child_sections(section) -@]
+    </div>
   </aside>
 </section>
 

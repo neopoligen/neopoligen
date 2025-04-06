@@ -82,6 +82,14 @@ a {
   align-items: flex-end;
 }
 
+aside {
+  border: 1px solid var(--color-reverse-30);
+  border-radius: var(--radius-medium);
+  margin-left: 2rem;
+  padding-inline: 2rem;
+  padding-block: 1rem;
+}
+
 .blockquote-section > blockquote {
   margin-block: var(--par-medium);
   margin-inline: var(--pad-xlarge);
