@@ -70,9 +70,9 @@ pub fn make_template_list_v42(
     //     // format!("sections/{}/default.neoj", "p"),
     // ];
 
-    templates
+    // templates
 
-    //templates.into_iter().unique().collect()
+    templates.into_iter().unique().collect()
     // let templates = vec![
     //     format!("sections/{}/{}.neoj", kind, template_name),
     //     format!("sections/{}/default.neoj", kind),
