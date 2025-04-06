@@ -55,14 +55,15 @@ pub fn javascript_section_full_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, body) = alt((take_until("-- "), rest)).context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
+    let template_list = make_template_list_v42("javascript", kind, &attrs);
     let section = SectionV42::JavaScript(JavaScriptSectionV42 {
         attrs,
+        body: body.trim().to_string(),
         bound: Bound::Full,
         end_section: None,
         flags,
         kind: kind.to_string(),
-        template_list: make_template_list("javascript", kind, "default"),
-        body: body.trim().to_string(),
+        template_list,
     });
     Ok((source, section))
 }
@@ -96,16 +97,17 @@ pub fn javascript_section_start_v42<'a>(
             .context("")
             .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
+    let template_list = make_template_list_v42("javascript", kind, &attrs);
     Ok((
         source,
         SectionV42::JavaScript(JavaScriptSectionV42 {
             attrs,
+            body: body.trim().to_string(),
             flags,
             bound: Bound::Start,
             end_section: Some(Box::new(end_section)),
             kind: kind.to_string(),
-            template_list: make_template_list("javascript", kind, "default"),
-            body: body.trim().to_string(),
+            template_list,
         }),
     ))
 }
