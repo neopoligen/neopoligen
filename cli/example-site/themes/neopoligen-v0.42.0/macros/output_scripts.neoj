@@ -8,12 +8,13 @@ NOARGS:
 
 -#]
 
-[!- macro output_scripts() -!]
-[!- for section in sections -!]
-  [!- if section.kind == "script" -!]
-<script>
+[!- macro output_scripts(section_list) -!]
+[!- for section in section_list -!]
+  [!- if section.kind == "javascript" -!]
+<script type="module">
 [@ section.body @]
 </script>
   [!- endif -!]
+  [@- output_scripts(section.children) -@]
 [!- endfor -!]
 [!- endmacro -!]

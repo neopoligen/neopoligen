@@ -70,6 +70,6 @@
 
 </footer>
 
-[@ neo.output_scripts() @]
+[@ neo.output_scripts(sections) @]
 </body>
 </html>
