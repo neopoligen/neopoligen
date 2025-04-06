@@ -25,7 +25,7 @@ use serde::Serialize;
 use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
-pub struct ScriptSectionV42 {
+pub struct JavaScriptSectionV42 {
     pub attrs: BTreeMap<String, Vec<SectionKeyValueAttrPayloadV42>>,
     pub body: String,
     pub bound: Bound,
@@ -35,19 +35,19 @@ pub struct ScriptSectionV42 {
     pub template_list: Vec<String>,
 }
 
-pub fn script_section_full_v42<'a>(
+pub fn javascript_section_full_v42<'a>(
     source: &'a str,
     _site_config: &'a SiteConfigV42,
     _parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let debug = true;
-    let dbg_header = "SCRIPT_SECTION_FULL";
+    let dbg_header = "JAVASCRIPT_SECTION_FULL";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     let (source, _) = tag("-- ").context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 2);
     // TODO: Pull in keys dynamically
-    let (source, kind) = alt((terminated(tag("script"), space0_line_ending_or_eof),))
+    let (source, kind) = alt((terminated(tag("javascript"), space0_line_ending_or_eof),))
         .context("")
         .parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 3);
@@ -55,32 +55,32 @@ pub fn script_section_full_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 4);
     let (source, body) = alt((take_until("-- "), rest)).context("").parse(source)?;
     dump_parser_if_debug(debug, dbg_header, source, 5);
-    let section = SectionV42::Script(ScriptSectionV42 {
+    let section = SectionV42::JavaScript(JavaScriptSectionV42 {
         attrs,
         bound: Bound::Full,
         end_section: None,
         flags,
         kind: kind.to_string(),
-        template_list: make_template_list("script", kind, "default"),
+        template_list: make_template_list("javascript", kind, "default"),
         body: body.trim().to_string(),
     });
     Ok((source, section))
 }
 
-pub fn script_section_start_v42<'a>(
+pub fn javascript_section_start_v42<'a>(
     source: &'a str,
     site_config: &'a SiteConfigV42,
     parent: SectionParent,
     debug: bool,
 ) -> IResult<&'a str, SectionV42, ErrorTree<&'a str>> {
     // let debug = true;
-    let dbg_header = "SCRIPT_SECTION_START";
+    let dbg_header = "JAVASCRIPT_SECTION_START";
     dump_parser_if_debug(debug, dbg_header, source, 1);
     // TODO: Get section kind list dynamically
     let (source, kind) = preceded(
         tuple((tag("--"), space1)),
         alt((terminated(
-            tag("script"),
+            tag("javascript"),
             tuple((tag("/"), space0, line_ending)),
         ),)),
     )
@@ -98,13 +98,13 @@ pub fn script_section_start_v42<'a>(
     dump_parser_if_debug(debug, dbg_header, source, 3);
     Ok((
         source,
-        SectionV42::Script(ScriptSectionV42 {
+        SectionV42::JavaScript(JavaScriptSectionV42 {
             attrs,
             flags,
             bound: Bound::Start,
             end_section: Some(Box::new(end_section)),
             kind: kind.to_string(),
-            template_list: make_template_list("script", kind, "default"),
+            template_list: make_template_list("javascript", kind, "default"),
             body: body.trim().to_string(),
         }),
     ))
@@ -119,7 +119,7 @@ mod test {
     use include_dir::{include_dir, Dir};
     use pretty_assertions::assert_eq;
 
-    const SAMPLE_DIR: Dir = include_dir!("src/section_v42/samples/script");
+    const SAMPLE_DIR: Dir = include_dir!("src/section_v42/samples/javascript");
 
     #[test]
     fn basic_full() {
@@ -133,18 +133,18 @@ mod test {
         let attrs: BTreeMap<String, Vec<SectionKeyValueAttrPayloadV42>> = BTreeMap::new();
         let left = (
             "",
-            SectionV42::Script(ScriptSectionV42 {
+            SectionV42::JavaScript(JavaScriptSectionV42 {
                 attrs,
                 body: "console.log('alfa')".to_string(),
                 bound: Bound::Full,
                 end_section: None,
                 flags: vec![],
-                kind: "script".to_string(),
-                template_list: make_template_list("script", "script", "default"),
+                kind: "javascript".to_string(),
+                template_list: make_template_list("javascript", "javascript", "default"),
             }),
         );
         let right =
-            script_section_full_v42(&source, &site_config, SectionParent::Page, false).unwrap();
+            javascript_section_full_v42(&source, &site_config, SectionParent::Page, false).unwrap();
         assert_eq!(left, right);
     }
 
@@ -160,7 +160,7 @@ mod test {
         let attrs: BTreeMap<String, Vec<SectionKeyValueAttrPayloadV42>> = BTreeMap::new();
         let left = (
             "",
-            SectionV42::Script(ScriptSectionV42 {
+            SectionV42::JavaScript(JavaScriptSectionV42 {
                 attrs,
                 body: "console.log('bravo')".to_string(),
                 bound: Bound::Start,
@@ -177,16 +177,16 @@ mod test {
                         })],
                         template_list: make_template_list("paragraph", "paragraph", "default"),
                     })],
-                    kind: "script-end".to_string(),
-                    template_list: make_template_list("end", "script-end", "default"),
+                    kind: "javascript-end".to_string(),
+                    template_list: make_template_list("end", "javascript-end", "default"),
                 }))),
                 flags: vec![],
-                kind: "script".to_string(),
-                template_list: make_template_list("script", "script", "default"),
+                kind: "javascript".to_string(),
+                template_list: make_template_list("javascript", "javascript", "default"),
             }),
         );
         let right =
-            script_section_start_v42(&source.trim(), &site_config, SectionParent::Page, false)
+            javascript_section_start_v42(&source.trim(), &site_config, SectionParent::Page, false)
                 .unwrap();
         assert_eq!(left, right);
     }

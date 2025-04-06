@@ -7,6 +7,7 @@ pub mod csv;
 pub mod end;
 pub mod helpers;
 pub mod html;
+pub mod javascript;
 pub mod json5;
 pub mod list;
 pub mod list_item;
@@ -14,7 +15,6 @@ pub mod olist;
 pub mod olist_item;
 pub mod parsing_error;
 pub mod raw;
-pub mod script;
 
 use crate::section_v42::basic::*;
 use crate::section_v42::block::*;
@@ -24,6 +24,7 @@ use crate::section_v42::css::*;
 use crate::section_v42::csv::*;
 use crate::section_v42::end::*;
 use crate::section_v42::html::*;
+use crate::section_v42::javascript::*;
 use crate::section_v42::json5::*;
 use crate::section_v42::list::*;
 use crate::section_v42::list_item::*;
@@ -31,7 +32,6 @@ use crate::section_v42::olist::*;
 use crate::section_v42::olist_item::*;
 use crate::section_v42::parsing_error::*;
 use crate::section_v42::raw::*;
-use crate::section_v42::script::*;
 use crate::site_config::SiteConfigV42;
 use minijinja::value::Object;
 use nom::branch::alt;
@@ -70,6 +70,7 @@ pub enum SectionV42 {
     Csv(CsvSectionV42),
     End(EndSectionV42),
     Html(HtmlSectionV42),
+    JavaScript(JavaScriptSectionV42),
     Json5(Json5SectionV42),
     List(ListSectionV42),
     ListItem(ListItemSectionV42),
@@ -77,7 +78,6 @@ pub enum SectionV42 {
     OlistItem(OlistItemSectionV42),
     ParsingError(ParsingErrorSectionV42),
     Raw(RawSectionV42),
-    Script(ScriptSectionV42),
 }
 
 impl Object for SectionV42 {}
@@ -96,6 +96,8 @@ pub fn start_or_full_section_v42<'a>(
         |src| csv_section_v42(src, &site_config, parent.clone(), debug),
         |src| html_section_start_v42(src, &site_config, parent.clone(), debug),
         |src| html_section_full_v42(src, &site_config, parent.clone(), debug),
+        |src| javascript_section_start_v42(src, &site_config, parent.clone(), debug),
+        |src| javascript_section_full_v42(src, &site_config, parent.clone(), debug),
         |src| json5_section_start_v42(src, &site_config, parent.clone(), debug),
         |src| json5_section_full_v42(src, &site_config, parent.clone(), debug),
         |src| list_section_start_v42(src, &site_config, parent.clone(), debug),
@@ -103,8 +105,6 @@ pub fn start_or_full_section_v42<'a>(
         |src| olist_section_v42(src, &site_config, parent.clone(), debug),
         |src| raw_section_start_v42(src, &site_config, parent.clone(), debug),
         |src| raw_section_full_v42(src, &site_config, parent.clone(), debug),
-        |src| script_section_start_v42(src, &site_config, parent.clone(), debug),
-        |src| script_section_full_v42(src, &site_config, parent.clone(), debug),
         |src| basic_section_v42(src, &site_config, parent.clone(), debug),
     ))
     .context("")
