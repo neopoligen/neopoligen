@@ -201,7 +201,9 @@ canvas {
 }
 
 .fin-token {
+  /*
   border-bottom: 1px solid var(--color-reverse-20);
+    */
   border-top: 1px solid var(--color-reverse-20);
   margin-top: var(--pad-large);
   padding-block: var(--pad-large);
