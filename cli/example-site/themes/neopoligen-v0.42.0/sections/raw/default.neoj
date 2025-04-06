@@ -3,10 +3,13 @@
 [# TYPE: raw #]
 [# HOIST: [] #]
 
-<section [@- site.get_section_attrs() -@]>
-<pre>
-[@ section.body @]
-</pre>
+<section [@- neo.section_attrs() -@]>
+<pre><code>
+[!- autoescape true -!]
+[@- section.body -@]
+[!- endautoescape -!]
+</code></pre>
 </section>
 
 [@- neo.output_end_section(section) -@]
+
