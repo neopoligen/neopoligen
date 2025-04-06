@@ -6,7 +6,7 @@
 <section [@- neo.section_attrs("flow") -@]>
 <h4>CSS</h4>
 <pre><code>
-[@ site.highlight_code(section.body, "css") @]
+[@- site.highlight_code(section.body, "css") -@]
 </code></pre>
 </section>
 
