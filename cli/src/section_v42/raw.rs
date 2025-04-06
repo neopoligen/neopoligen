@@ -49,7 +49,6 @@ pub fn raw_section_full_v42<'a>(
     // TODO: Pull in keys dynamically
     let (source, kind) = alt((
         terminated(tag("code"), space0_line_ending_or_eof),
-        terminated(tag("neo-example"), space0_line_ending_or_eof),
         terminated(tag("pre"), space0_line_ending_or_eof),
         terminated(tag("results"), space0_line_ending_or_eof),
     ))
@@ -87,7 +86,6 @@ pub fn raw_section_start_v42<'a>(
         // TODO: Pull in tags dynamically
         alt((
             terminated(tag("code"), tuple((tag("/"), space0, line_ending))),
-            terminated(tag("neo-example"), tuple((tag("/"), space0, line_ending))),
             terminated(tag("pre"), tuple((tag("/"), space0, line_ending))),
             terminated(tag("results"), tuple((tag("/"), space0, line_ending))),
         )),
