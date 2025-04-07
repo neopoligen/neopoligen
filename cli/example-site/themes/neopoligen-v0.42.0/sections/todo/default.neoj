@@ -1,0 +1,12 @@
+[!- import "built-in/macros.neoj" as neo -!]
+
+[# TYPE: checklist #]
+[# HOIST: [] #]
+
+<section [@- neo.section_attrs() -@]>
+  <h2>TODO</h2>
+  [@- neo.output_all_child_sections(section) -@]
+</section>
+
+[@- neo.output_end_section(section) -@]
+
