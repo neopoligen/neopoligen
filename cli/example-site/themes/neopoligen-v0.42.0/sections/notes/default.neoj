@@ -4,9 +4,11 @@
 [# HOIST: [] #]
 
 <section [@- neo.section_attrs("flow") -@]>
+  <h2>Notes</h2>
   <ul class="flow">
     [@- neo.output_all_child_sections(section) -@]
   </ul>
 </section>
 
 [@- neo.output_end_section(section) -@]
+
