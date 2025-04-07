@@ -7,10 +7,4 @@
 [@ section.body @]
 </section>
 
-<div>
-<pre>
-[@ section|tojson(true) @]
-</pre>
-</div>
-
 [@- neo.output_end_section(section) -@]
