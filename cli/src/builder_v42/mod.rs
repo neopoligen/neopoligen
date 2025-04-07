@@ -41,8 +41,17 @@ pub struct BuilderV42<'a> {
 
 impl BuilderV42<'_> {
     #[instrument(skip(self))]
+    pub fn deploy_components(&self) {
+        event!(Level::INFO, "Deploying Components Files");
+        let _ = copy_folder(
+            &self.site_config.components_input_folder(),
+            &self.site_config.components_output_folder(),
+        );
+    }
+
+    #[instrument(skip(self))]
     pub fn deploy_images(&self) {
-        event!(Level::DEBUG, "Deploying Images");
+        event!(Level::INFO, "Deploying Images");
         let _ = copy_folder(
             &self.site_config.images_cache_root_folder(),
             &self.site_config.images_output_root_folder(),
@@ -51,7 +60,7 @@ impl BuilderV42<'_> {
 
     #[instrument(skip(self))]
     pub fn deploy_miscellaneous_files(&self) {
-        event!(Level::DEBUG, "Deploying Miscellaneous Files");
+        event!(Level::INFO, "Deploying Miscellaneous Files");
         let _ = copy_folder(
             &self.site_config.miscellaneous_input_folder(),
             &self.site_config.miscellaneous_output_folder(),

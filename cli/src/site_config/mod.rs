@@ -175,6 +175,14 @@ impl SiteConfigV42 {
         self.project_folder().join("cache")
     }
 
+    pub fn components_input_folder(&self) -> PathBuf {
+        self.project_folder().join("components")
+    }
+
+    pub fn components_output_folder(&self) -> PathBuf {
+        self.site_output_root_folder().join("components")
+    }
+
     pub fn content_input_root_folder(&self) -> PathBuf {
         self.project_folder().join("content")
     }
