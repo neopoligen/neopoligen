@@ -50,6 +50,15 @@ impl BuilderV42<'_> {
     }
 
     #[instrument(skip(self))]
+    pub fn deploy_miscellaneous_files(&self) {
+        event!(Level::DEBUG, "Deploying Miscellaneous Files");
+        let _ = copy_folder(
+            &self.site_config.miscellaneous_input_folder(),
+            &self.site_config.miscellaneous_output_folder(),
+        );
+    }
+
+    #[instrument(skip(self))]
     pub fn deploy_theme_files(&self) {
         event!(Level::DEBUG, "Deploying Theme Files");
         let source_folder = self.site_config.theme_files_input_folder();

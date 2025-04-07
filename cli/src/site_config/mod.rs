@@ -212,6 +212,14 @@ impl SiteConfigV42 {
         self.theme_input_root_folder().join("macros")
     }
 
+    pub fn miscellaneous_input_folder(&self) -> PathBuf {
+        self.project_folder().join("miscellaneous")
+    }
+
+    pub fn miscellaneous_output_folder(&self) -> PathBuf {
+        self.site_output_root_folder().join("miscellaneous")
+    }
+
     pub fn neo_files_output_root_folder(&self) -> PathBuf {
         self.site_output_root_folder()
             .join(&self.neo_files_output_folder_name())
