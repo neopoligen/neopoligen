@@ -1,59 +1,14 @@
 [!- import "built-in/macros.neoj" as neo -!]
 
 [# TYPE: basic #]
-[# HOIST: [alt, class, id] #]
+[# HOIST: [class] #]
 
-[#
-
-[! set data = site.image_from_section(section, [100, 400, 800, 1200, 1600, 3000]) !]
-
-[! set selectors = [
-  "(max-width: 200px)",
-  "(max-width: 500px)",
-  "(max-width: 900px)",
-  "(max-width: 1300px)",
-  "(max-width: 1700px)",
-  ""
-] !]
+[! set image_path = "/neo-files/images/" + section.flags[0] + "/" + section.flags[0] + ".avif" !]
 
 <section [@- neo.section_attrs() -@]>
-  <div><img 
-  src="[@ data[1] @]"
-  srcset="[!- for size in data[2] !]
-/neo-files/images/[@ data[0] @]/[@ size @].[@ data[3] @] [@ size @]w
-[!- if not loop.last -!],[!- endif !]
-[! endfor -!]"
-
-  sizes="[!- for size in data[2] -!]
-[@ selectors[loop.index0] @]
-[@ size @]w
-[!- if not loop.last -!],[!- endif !]
-[! endfor -!]"
-  /></div>
+  <div><img src="[@ image_path @]" alt="Alt text is under development. It will appear here as soon as it's done" /></div>
 </section>
 
 [@- neo.output_end_section(section) -@]
 
-#]
-
-[#
-<div>
-    [@ site.image_from_section(section, [100, 400, 800, 1200, 1600, 3000]) @]
-</div>
-
-[! for size in data[2] !]
-<div>
-/neo-files/images/[@ data[0] @]/[@ size @].[@ data[3] @] [@ size @]w
-[!- if not loop.last -!],[!- endif !]
-</div>
-[! endfor !]
-
-[! for size in data[2] !]
-<div>
-[@ selectors[loop.index0] @]
-[@ size @]w
-[!- if not loop.last -!],[!- endif !]
-</div>
-[! endfor !]
-#]
 
