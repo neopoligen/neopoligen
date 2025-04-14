@@ -72,7 +72,7 @@ lazy_static! {
 }
 
 #[test]
-fn list_section_tests() {
+fn solo_list_section_tests() {
     for (id, source) in INPUT_FILES.iter() {
         match OUTPUT_FILES.get(id) {
             Some(output) => {
