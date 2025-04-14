@@ -26,6 +26,7 @@ impl PageV42b {
             source: source.to_string(),
             source_absolute_path: source_path.clone(),
             source_display_path,
+            status: None,
             title: None,
             title_as_spans: None,
         }

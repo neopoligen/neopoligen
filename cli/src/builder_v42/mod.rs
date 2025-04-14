@@ -85,14 +85,15 @@ impl BuilderV42<'_> {
             .collect::<Vec<PageV42b>>();
 
         rss_pages.sort_by(|a, b| b.date_created().unwrap().cmp(&a.date_created().unwrap()));
-        let rss_pages2: Vec<Value> = rss_pages
-            .iter()
-            .map(|p| Value::from_object(p.clone()))
-            .collect();
+
+        // let rss_pages2: Vec<Value> = rss_pages
+        //     .iter()
+        //     .map(|p| Value::from_object(p.clone()))
+        //     .collect();
 
         if let Ok(template) = self.env.get_template("rss/posts.neoj") {
             if let Ok(output) = template.render(context!(
-                pages => rss_pages2
+                pages => rss_pages
             )) {
                 if let Ok(_) = write_file_with_mkdir(&rss_output_path, &output) {
                     event!(Level::INFO, "Made RSS Feed");
@@ -127,6 +128,7 @@ impl BuilderV42<'_> {
         event!(Level::INFO, "Generating ASTs");
         for (_, page) in &mut self.pages_v42 {
             page.generate_ast(&self.site_config);
+            page.status = page.status();
         }
         Ok(())
     }

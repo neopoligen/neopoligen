@@ -38,6 +38,7 @@ pub struct PageV42b {
     pub output: Option<String>,
     pub rel_output_path: Option<PathBuf>,
     pub sections: Option<Value>,
+    pub status: Option<Value>,
     pub source: String,
     pub source_absolute_path: PathBuf,
     pub source_display_path: PathBuf,
@@ -307,13 +308,14 @@ impl PageV42b {
         }
     }
 
-    pub fn status(&self) -> Result<Value, Error> {
+    pub fn status(&self) -> Option<Value> {
         match self.get_page_attr_from_ast("status") {
-            Ok(v) => Ok(Value::from(v[0].text.clone())),
-            Err(_) => Ok(Value::from("ping")),
+            Ok(v) => Some(Value::from(v[0].text.clone())),
+            // TODO: do something better than call this
+            // unknown
+            Err(_) => Some(Value::from("unknown")),
         }
         //Ok(Value::from(self.get_page_attr_from_ast("status")[0]))
-
         //        Ok(Value::from("asdf"))
     }
 
@@ -326,7 +328,7 @@ impl Object for PageV42b {
             // "href" => Some(Value::from(self.href.as_ref())),
             // "id" => Some(Value::from(self.id.clone().unwrap().clone())),
             "issues" => Some(Value::from_serialize(self.issues.clone())),
-            // "sections" => self.sections.clone(),
+            "sections" => self.sections.clone(),
             "source" => Some(Value::from(self.source.clone())),
             "source_display_path" => {
                 Some(Value::from(self.source_display_path.display().to_string()))
@@ -351,7 +353,7 @@ impl Object for PageV42b {
             "id" => Ok(Value::from(self.id.as_ref())),
             "parsing_issue" => Ok(Value::from_serialize(self.parsing_issue.clone())),
             "rss_date" => Ok(self.rss_date()?),
-            "status" => Ok(self.status()?),
+            // "status" => Ok(self.status()?),
             "title" => Ok(Value::from(self.title.as_ref())),
             // "href" => self.href(),
             // "sections" => self.ast(),

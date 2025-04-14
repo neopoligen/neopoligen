@@ -1,13 +1,20 @@
+[!- import "built-in/macros.neoj" as neo -!]
+
 <rss version="2.0">
 <channel>
 <title>alanwsmith.com</title>
 
 [! for page in pages !]
-[! if page.status() == "done" !]
-<title>[@ page.title() @]</title>
-<link>https://www.alanwsmith.com[@ page.href() @]</link>
-<pubDate>[@ page.rss_date() @]</pubDate>
-<guid>https://www.alanwsmith.com[@ page.href() @]</guid>
+[! if page.status == "done" !]
+
+<title>[@ page.title @]</title>
+<link>https://www.alanwsmith.com[@ page.href @]</link>
+<pubDate>[@ page.rss_date @]</pubDate>
+<guid>https://www.alanwsmith.com[@ page.href @]</guid>
+<description><![CDATA[ 
+
+]]></description> 
+
 [! endif !]
 [! endfor !]
 
