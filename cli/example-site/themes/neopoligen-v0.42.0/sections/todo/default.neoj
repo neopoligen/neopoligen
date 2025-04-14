@@ -9,7 +9,9 @@
   [!- else -!]
     <h2>TODO</h2>
   [!- endif -!]
+  <ul>
   [@- neo.output_all_child_sections(section) -@]
+  </ul>
 </section>
 
 [@- neo.output_end_section(section) -@]
