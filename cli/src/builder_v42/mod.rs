@@ -226,22 +226,15 @@ impl BuilderV42<'_> {
         for (_, page) in &mut self.pages_v42 {
             // dbg!(&page.rel_output_path);
             // TODO: Get page templates here
-
-            dbg!("---------------------------");
             if let Ok(rss_template) = self.env.get_template("pages/post/rss.neoj") {
-                dbg!("xxxxxxxxxxxxxxxxxxxxxxxx");
                 if let Ok(rss_output) = rss_template.render(context!(
-
                             page => Value::from_object(page.clone()),
                             site => &site_clone,
                             sections => &page.sections,
-
                 )) {
-                    dbg!("eeeeeeeeeeeeeeeeeeeeee");
                     page.output_for_rss = Some(rss_output)
                 }
             }
-
             match self.env.get_template("pages/post/default.neoj") {
                 Ok(template) => {
                     match template.render(context!(
