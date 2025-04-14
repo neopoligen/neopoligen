@@ -3,7 +3,7 @@
 [# TYPE: html #]
 [# HOIST: [] #]
 
-<section [@- neo.section_attrs("flow") -@]>
+<section [@- neo.section_attrs("flow show-html") -@]>
 <h4>HTML Source</h4>
 
 <pre><code>
@@ -16,3 +16,4 @@
 </section>
 
 [@- neo.output_end_section(section) -@]
+

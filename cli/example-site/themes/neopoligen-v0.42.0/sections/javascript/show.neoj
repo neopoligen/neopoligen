@@ -3,8 +3,8 @@
 [# TYPE: javascript #]
 [# HOIST: [] #]
 
-<section [@- neo.section_attrs("flow") -@]>
-  <div class="javascript-header">JavaScript</div>
+<section [@- neo.section_attrs("flow show-javascript") -@]>
+  <h4 class="javascript-header">JavaScript</h4>
   <div class="javascript-body">
   <pre><code>
   [@- site.highlight_code(section.body, "js") -@]

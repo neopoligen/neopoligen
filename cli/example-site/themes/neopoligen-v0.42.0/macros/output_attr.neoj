@@ -1,3 +1,13 @@
+[#- 
+
+  Usage: 
+  
+    neo.output_attr('title')
+
+  Automatically looks for the current `section`
+
+-#]
+
 [!- from "macros/output_spans.neoj" import output_spans -!]
 [!- macro output_attr(attr) -!]
   [!- if attr in section.attrs -!]

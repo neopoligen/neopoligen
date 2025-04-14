@@ -1,15 +1,17 @@
 [!- import "built-in/macros.neoj" as neo -!]
 [! set reference_header_has_been_output = false !]
 [!- for section in sections -!]
-    [!- if section.kind == "reference"  -!]
+    [!- if section.kind == "ref"  -!]
         [! if reference_header_has_been_output == false !]
         <section class="references-section flow">
-            <h2>References</h2>
+            <h3 class="back-matter">References</h3>
         [! set reference_header_has_been_output = true !]
+        <ul>
         [! endif !]
         [@- neo.output_section(section) -@]
     [!- endif -!]
     [! if loop.last and reference_header_has_been_output == true !]
+    </ul>
         </section>
     [! endif !]
 [!- endfor -!]

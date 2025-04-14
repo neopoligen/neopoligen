@@ -1,11 +1,16 @@
 [!- extends "wrappers/one-column.neoj" -!]
 [!- import "built-in/macros.neoj" as neo -!]
 
+
 [!- block body_main -!]
-  [@- neo.output_only_sections(["title", "subtitle", "forward"]) -@]
-  [@- neo.output_all_sections_except(["title", "subtitle", "forward", "endnote", "footnote", "ref"]) -@]
-  [!- include "includes/endnotes.neoj" -!]
-  [!- include "includes/footnotes.neoj" -!]
-  [!- include "includes/refs.neoj" -!]
+  <div class="flow body-block">
+    [@- neo.output_only_sections(["title", "subtitle", "forward"]) -@]
+    [@- neo.output_all_sections_except(["title", "subtitle", "forward", "endnote", "footnote", "ref"]) -@]
+  </div>
+  <div class="end-block">
+    [!- include "includes/endnotes.neoj" -!]
+    [!- include "includes/refs.neoj" -!]
+    [!- include "includes/footnotes.neoj" -!]
+  </div>
 [!- endblock -!]
 

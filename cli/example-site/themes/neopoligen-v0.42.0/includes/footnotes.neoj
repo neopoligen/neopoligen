@@ -4,7 +4,7 @@
     [!- if section.kind == "footnote"  -!]
         [! if footnote_header_has_been_output == false !]
         <section class="footnotes-section flow">
-            <h2>Footnotes</h2>
+            <h3 class="back-matter">Footnotes</h3>
         [! set footnote_header_has_been_output = true !]
         [! endif !]
         [@- neo.output_section(section) -@]

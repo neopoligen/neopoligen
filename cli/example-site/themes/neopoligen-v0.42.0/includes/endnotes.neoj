@@ -4,7 +4,7 @@
     [!- if section.kind == "endnote"  -!]
         [! if endnote_header_has_been_output == false !]
           <section class="endnotes-section flow">
-            <h2>Endnotes</h2>
+            <h3 class="back-matter">Endnotes</h3>
             <ul class="no-li-markers flow">
           [! set endnote_header_has_been_output = true !]
         [! endif !]
