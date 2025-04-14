@@ -12,7 +12,7 @@ use crate::site_config::SiteConfigV42;
 use crate::span_v42::SpanV42;
 use chrono::DateTime;
 use chrono::FixedOffset;
-use image::codecs::jpeg::JpegEncoder;
+// use image::codecs::jpeg::JpegEncoder;
 use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::Value;

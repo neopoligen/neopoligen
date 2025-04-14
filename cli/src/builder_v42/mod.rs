@@ -74,8 +74,21 @@ impl BuilderV42<'_> {
             .site_config
             .site_output_root_folder()
             .join("feeds/posts.xml");
+        let mut rss_pages = self
+            .pages_v42
+            .iter()
+            .filter_map(|(_, data)| match data.date_created() {
+                Ok(_) => Some(data.clone()),
+                Err(_) => None,
+            })
+            .collect::<Vec<PageV42b>>();
+
+        rss_pages.sort_by(|a, b| a.date_created().unwrap().cmp(&b.date_created().unwrap()));
+
         if let Ok(template) = self.env.get_template("rss/posts.neoj") {
-            if let Ok(output) = template.render(context!()) {
+            if let Ok(output) = template.render(context!(
+                pages => rss_pages
+            )) {
                 if let Ok(_) = write_file_with_mkdir(&rss_output_path, &output) {
                     event!(Level::INFO, "Made RSS Feed");
                 }
