@@ -42,6 +42,8 @@
             "end_section": null,
             "flags": [],
             "kind": "div",
+            "neo_body": "charlie delta",
+            "neo_source": "-- div\n\ncharlie delta",
             "template_list": [
                 "sections/div/default.neoj",
                 "sections/basic/default.neoj",
@@ -80,6 +82,8 @@
     },
     "flags": [],
     "kind": "div",
+    "neo_body": "alfa bravo\n\n-- div\n\ncharlie delta",
+    "neo_source": "-- div/\n\nalfa bravo\n\n-- div\n\ncharlie delta\n\n-- /div\n\necho foxtrot",
     "template_list": [
         "sections/div/default.neoj",
         "sections/basic/default.neoj",

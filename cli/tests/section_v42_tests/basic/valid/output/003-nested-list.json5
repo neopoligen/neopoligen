@@ -113,6 +113,8 @@
   },
   "flags": [],
   "kind": "div",
+  "neo_body": "alfa\n\n-- list/\n\n- bravo\n\n-- /list\n\ncharlie",
+  "neo_source": "-- div/\n\nalfa\n\n-- list/\n\n- bravo\n\n-- /list\n\ncharlie\n\n-- /div\n\ndelta",
   "template_list": [
     "sections/div/default.neoj",
     "sections/basic/default.neoj"

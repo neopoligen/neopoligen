@@ -25,6 +25,8 @@ fn get_section_attrs_empty_test() {
         end_section: None,
         flags: vec![],
         kind: "div".to_string(),
+        neo_body: "".to_string(),
+        neo_source: "".to_string(),
         template_list: vec![],
     });
     let expected = Value::from(r#" class="div-section""#);
@@ -60,6 +62,8 @@ fn get_section_attrs_with_id() {
         end_section: None,
         flags: vec![],
         kind: "div-test".to_string(),
+        neo_body: "".to_string(),
+        neo_source: "".to_string(),
         template_list: vec![],
     });
     let left = Value::from(r#" class="div-test-section" id="alfa""#);

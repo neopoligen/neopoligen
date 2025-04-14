@@ -56,6 +56,8 @@
           },
           "flags": [],
           "kind": "div",
+          "neo_body": "bravo",
+          "neo_source": "-- div/\n\nbravo\n\n-- /div",
           "template_list": [
             "sections/div/default.neoj",
             "sections/basic/default.neoj"

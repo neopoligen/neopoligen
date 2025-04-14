@@ -42,6 +42,8 @@
   "end_section": null,
   "flags": [],
   "kind": "title",
+  "neo_body": "this is content",
+  "neo_source": "-- title\n-- class: red \n-- class: green\n\nthis is content",
   "template_list": [
     "sections/title/default.neoj",
     "sections/basic/default.neoj"

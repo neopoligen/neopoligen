@@ -22,6 +22,8 @@
     "end_section": null,
     "flags": [],
     "kind": "title",
+    "neo_body": "alfa bravo",
+    "neo_source": "-- title\n\nalfa bravo",
     "template_list": [
         "sections/title/default.neoj",
         "sections/basic/default.neoj",
