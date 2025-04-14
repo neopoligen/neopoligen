@@ -36,7 +36,9 @@ pub struct PageV42b {
     pub issues: Vec<NeoErrorV42>,
     pub language: Option<String>,
     pub output: Option<String>,
+    pub output_for_rss: Option<String>,
     pub rel_output_path: Option<PathBuf>,
+    pub rss_date: Option<Value>,
     pub sections: Option<Value>,
     pub status: Option<Value>,
     pub source: String,
@@ -182,12 +184,12 @@ impl PageV42b {
         //
     }
 
-    pub fn rss_date(&self) -> Result<Value, Error> {
+    pub fn rss_date(&self) -> Option<Value> {
         // TODO: Figure out what to do if date
         // doesn't work
         match self.date_created() {
-            Ok(date) => Ok(Value::from(date.to_rfc2822())),
-            Err(_) => Ok(Value::from("")),
+            Ok(date) => Some(Value::from(date.to_rfc2822())),
+            Err(_) => Some(Value::from("")),
         }
     }
 
@@ -352,7 +354,7 @@ impl Object for PageV42b {
             "href" => Ok(Value::from(self.href.as_ref())),
             "id" => Ok(Value::from(self.id.as_ref())),
             "parsing_issue" => Ok(Value::from_serialize(self.parsing_issue.clone())),
-            "rss_date" => Ok(self.rss_date()?),
+            // "rss_date" => Ok(self.rss_date()?),
             // "status" => Ok(self.status()?),
             "title" => Ok(Value::from(self.title.as_ref())),
             // "href" => self.href(),

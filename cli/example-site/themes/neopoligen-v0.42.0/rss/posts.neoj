@@ -4,20 +4,29 @@
 <channel>
 <title>alanwsmith.com</title>
 
-[! for page in pages !]
-[! if page.status == "done" !]
+[!- for page in pages -!]
+[!- if page.status == "done" -!]
+<description><![CDATA[ 
 
+[@ page.output_for_rss @]
+
+]]></description> 
+[!- endif -!]
+[!- endfor -!]
+
+
+[#
 <title>[@ page.title @]</title>
 <link>https://www.alanwsmith.com[@ page.href @]</link>
 <pubDate>[@ page.rss_date @]</pubDate>
 <guid>https://www.alanwsmith.com[@ page.href @]</guid>
 <description><![CDATA[ 
-
-]]></description> 
-
-[! endif !]
+--- 
+[! for section in page.sections !]
+[! include section.template_list !]
 [! endfor !]
-
+]]></description> 
+#]
 
 </channel>
 </rss>
