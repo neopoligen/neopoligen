@@ -84,7 +84,7 @@ impl BuilderV42<'_> {
             })
             .collect::<Vec<PageV42b>>();
 
-        rss_pages.sort_by(|a, b| a.date_created().unwrap().cmp(&b.date_created().unwrap()));
+        rss_pages.sort_by(|a, b| b.date_created().unwrap().cmp(&a.date_created().unwrap()));
         let rss_pages2: Vec<Value> = rss_pages
             .iter()
             .map(|p| Value::from_object(p.clone()))

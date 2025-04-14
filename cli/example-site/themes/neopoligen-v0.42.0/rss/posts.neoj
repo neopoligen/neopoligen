@@ -3,11 +3,10 @@
 <title>alanwsmith.com</title>
 
 [! for page in pages !]
+[! if page.status() == "done" !]
+[@ page.title() @] 
 [@ page.status() @] 
-[#
-[@ page|tojson(true) @]
-#]
-
+[! endif !]
 [! endfor !]
 
 
