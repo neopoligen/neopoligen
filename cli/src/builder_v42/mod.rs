@@ -68,6 +68,28 @@ impl BuilderV42<'_> {
     }
 
     #[instrument(skip(self))]
+    pub fn deploy_rss(&self) {
+        event!(Level::INFO, "Deploying RSS");
+        let rss_output_path = self
+            .site_config
+            .site_output_root_folder()
+            .join("feeds/posts.xml");
+        if let Ok(template) = self.env.get_template("rss/posts.neoj") {
+            if let Ok(output) = template.render(context!()) {
+                if let Ok(_) = write_file_with_mkdir(&rss_output_path, &output) {
+                    event!(Level::INFO, "Made RSS Feed");
+                }
+            }
+        }
+
+        dbg!(rss_output_path);
+
+        // let source_folder = self.site_config.theme_files_input_folder();
+        //let dest_folder = self.site_config.theme_files_output_folder();
+        // let _ = copy_folder(&source_folder, &dest_folder);
+    }
+
+    #[instrument(skip(self))]
     pub fn deploy_theme_files(&self) {
         event!(Level::DEBUG, "Deploying Theme Files");
         let source_folder = self.site_config.theme_files_input_folder();
