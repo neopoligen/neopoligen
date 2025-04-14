@@ -85,10 +85,14 @@ impl BuilderV42<'_> {
             .collect::<Vec<PageV42b>>();
 
         rss_pages.sort_by(|a, b| a.date_created().unwrap().cmp(&b.date_created().unwrap()));
+        let rss_pages2: Vec<Value> = rss_pages
+            .iter()
+            .map(|p| Value::from_object(p.clone()))
+            .collect();
 
         if let Ok(template) = self.env.get_template("rss/posts.neoj") {
             if let Ok(output) = template.render(context!(
-                pages => rss_pages
+                pages => rss_pages2
             )) {
                 if let Ok(_) = write_file_with_mkdir(&rss_output_path, &output) {
                     event!(Level::INFO, "Made RSS Feed");

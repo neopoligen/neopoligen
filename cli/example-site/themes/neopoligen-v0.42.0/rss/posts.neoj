@@ -3,9 +3,13 @@
 <title>alanwsmith.com</title>
 
 [! for page in pages !]
-[@ page.title @]
+[@ page.status() @] 
+[#
 [@ page|tojson(true) @]
+#]
+
 [! endfor !]
+
 
 </channel>
 </rss>

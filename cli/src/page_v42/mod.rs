@@ -135,6 +135,9 @@ impl PageV42b {
     ) -> Result<&Vec<SectionKeyValueAttrPayloadV42>, NeoErrorV42> {
         match &self.ast {
             Some(ast) => {
+                // TODO: Make this use ``-- page`` or
+                // ``-- metadata`` explicitly and not just
+                // grab the last section like it is now
                 match ast
                     .iter()
                     .filter_map(|section| match section {
@@ -295,6 +298,16 @@ impl PageV42b {
         }
     }
 
+    pub fn status(&self) -> Result<Value, Error> {
+        match self.get_page_attr_from_ast("status") {
+            Ok(v) => Ok(Value::from(v[0].text.clone())),
+            Err(_) => Ok(Value::from("ping")),
+        }
+        //Ok(Value::from(self.get_page_attr_from_ast("status")[0]))
+
+        //        Ok(Value::from("asdf"))
+    }
+
     //
 }
 
@@ -329,6 +342,7 @@ impl Object for PageV42b {
             "id" => Ok(Value::from(self.id.as_ref())),
             "parsing_issue" => Ok(Value::from_serialize(self.parsing_issue.clone())),
             "title" => Ok(Value::from(self.title.as_ref())),
+            "status" => Ok(self.status()?),
             // "href" => self.href(),
             // "sections" => self.ast(),
             // "get_pagedata" => self.make_value_from_string(self.get_pagedata(args)),
@@ -340,15 +354,14 @@ impl Object for PageV42b {
     //
 }
 
-#[cfg(test)]
-mod test {
-    use super::*;
-    use pretty_assertions::assert_eq;
-
-    #[test]
-    fn solo_date_created() {
-        let page = PageV42b::mock_from_data_tests("012-date-created.neo");
-        dbg!(page.date_created());
-        assert_eq!(1, 2);
-    }
-}
+//#[cfg(test)]
+//mod test {
+//    use super::*;
+//    use pretty_assertions::assert_eq;
+//    //#[test]
+//    //fn solo_date_created() {
+//    //    let page = PageV42b::mock_from_data_tests("012-date-created.neo");
+//    //    dbg!(page.date_created());
+//    //    //assert_eq!(1, 2);
+//    //}
+//}
