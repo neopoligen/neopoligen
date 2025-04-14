@@ -181,6 +181,15 @@ impl PageV42b {
         //
     }
 
+    pub fn rss_date(&self) -> Result<Value, Error> {
+        // TODO: Figure out what to do if date
+        // doesn't work
+        match self.date_created() {
+            Ok(date) => Ok(Value::from(date.to_rfc2822())),
+            Err(_) => Ok(Value::from("")),
+        }
+    }
+
     pub fn set_href(&mut self) {
         self.href = match &self.rel_output_path {
             Some(path) => match &path.file_name() {
@@ -341,8 +350,9 @@ impl Object for PageV42b {
             "href" => Ok(Value::from(self.href.as_ref())),
             "id" => Ok(Value::from(self.id.as_ref())),
             "parsing_issue" => Ok(Value::from_serialize(self.parsing_issue.clone())),
-            "title" => Ok(Value::from(self.title.as_ref())),
+            "rss_date" => Ok(self.rss_date()?),
             "status" => Ok(self.status()?),
+            "title" => Ok(Value::from(self.title.as_ref())),
             // "href" => self.href(),
             // "sections" => self.ast(),
             // "get_pagedata" => self.make_value_from_string(self.get_pagedata(args)),

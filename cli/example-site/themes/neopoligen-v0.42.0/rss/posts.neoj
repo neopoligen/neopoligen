@@ -4,8 +4,10 @@
 
 [! for page in pages !]
 [! if page.status() == "done" !]
-[@ page.title() @] 
-[@ page.status() @] 
+<title>[@ page.title() @]</title>
+<link>https://www.alanwsmith.com[@ page.href() @]</link>
+<pubDate>[@ page.rss_date() @]</pubDate>
+<guid>https://www.alanwsmith.com[@ page.href() @]</guid>
 [! endif !]
 [! endfor !]
 
