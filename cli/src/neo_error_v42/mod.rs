@@ -13,6 +13,9 @@ pub enum NeoErrorV42 {
     CouldNotRenderTemplate {
         notes: Vec<String>,
     },
+    GenericError {
+        message: String,
+    },
     NoParsedPageDataForKey(String),
     TemplateLoadError {
         message: String,

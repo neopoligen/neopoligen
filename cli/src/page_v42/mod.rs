@@ -10,6 +10,9 @@ use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
 use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
 use crate::span_v42::SpanV42;
+use chrono::DateTime;
+use chrono::FixedOffset;
+use image::codecs::jpeg::JpegEncoder;
 use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::Value;
@@ -43,6 +46,18 @@ pub struct PageV42b {
 }
 
 impl PageV42b {
+    pub fn date_created(&self) -> Result<DateTime<FixedOffset>, NeoErrorV42> {
+        match self.get_page_attr_from_ast("created") {
+            Ok(date_string) => match DateTime::parse_from_rfc3339(&date_string[0].text) {
+                Ok(date) => Ok(date),
+                Err(_e) => Err(NeoErrorV42::GenericError {
+                    message: "Problem with date".to_string(),
+                }),
+            },
+            Err(e) => Err(e),
+        }
+    }
+
     pub fn generate_ast(&mut self, site_config: &SiteConfigV42) {
         match parse_ast_v42(&self.source, site_config, false) {
             Ok(ast) => {
@@ -299,4 +314,17 @@ impl Object for PageV42b {
     }
 
     //
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn solo_date_created() {
+        let page = PageV42b::mock_from_data_tests("012-date-created.neo");
+        dbg!(page.date_created());
+        assert_eq!(1, 2);
+    }
 }
