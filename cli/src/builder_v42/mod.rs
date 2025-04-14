@@ -74,6 +74,7 @@ impl BuilderV42<'_> {
             .site_config
             .site_output_root_folder()
             .join("feeds/posts.xml");
+
         let mut rss_pages = self
             .pages_v42
             .iter()

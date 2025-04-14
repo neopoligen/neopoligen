@@ -154,6 +154,30 @@ impl PageV42b {
         }
     }
 
+    pub fn does_page_data_have_flag(&self, key: &str) -> bool {
+        match &self.ast {
+            Some(ast) => {
+                // TODO: Make this actually match the
+                // ``-- page`` (soon to be ``-- metadata``
+                // section instead of just pulling the last one.
+                match ast
+                    .iter()
+                    .filter_map(|section| match section {
+                        SectionV42::Json5(sec) => Some(sec),
+                        _ => None,
+                    })
+                    .last()
+                {
+                    Some(s) => s.flags.contains(&key.to_string()),
+                    None => false,
+                }
+            }
+            None => false,
+        }
+
+        //
+    }
+
     pub fn set_href(&mut self) {
         self.href = match &self.rel_output_path {
             Some(path) => match &path.file_name() {
