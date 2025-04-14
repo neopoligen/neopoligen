@@ -26,6 +26,8 @@
                 "end_section": null,
                 "flags": [],
                 "kind": "div",
+                "neo_body": "alfa bravo",
+                "neo_source": "-- div\n\nalfa bravo",
                 "template_list": [
                     "sections/div/default.neoj",
                     "sections/basic/default.neoj",
@@ -63,6 +65,8 @@
         },
         "flags": [],
         "kind": "div",
+        "neo_body": "-- div\n\nalfa bravo",
+        "neo_source": "-- div/\n\n-- div\n\nalfa bravo\n\n-- /div\n\ncharlie delta",
         "template_list": [
             "sections/div/default.neoj",
             "sections/basic/default.neoj",

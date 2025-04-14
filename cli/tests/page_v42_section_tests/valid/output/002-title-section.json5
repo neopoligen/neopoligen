@@ -22,6 +22,8 @@
         "end_section": null,
         "flags": [],
         "kind": "title",
+        "neo_body": "This Is A Title",
+        "neo_source": "-- title\n\nThis Is A Title",
         "template_list": [
             "sections/title/default.neoj",
             "sections/basic/default.neoj",
