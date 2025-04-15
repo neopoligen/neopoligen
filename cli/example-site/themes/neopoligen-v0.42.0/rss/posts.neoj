@@ -4,6 +4,7 @@
 <rss version="2.0">
 <channel>
 <title>alanwsmith.com</title>
+<link>https://www.alanwsmith.com/</link>
 
 [!- for page in pages -!]
 [!- if page.status == "done" and page.title != none -!]
