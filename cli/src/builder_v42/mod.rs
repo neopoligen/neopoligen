@@ -125,6 +125,15 @@ impl BuilderV42<'_> {
                 }
             }
         }
+        let xslt_source_path = &self
+            .site_config
+            .theme_input_root_folder()
+            .join("rss/xsl.neoj");
+        let xslt_destination_path = &self
+            .site_config
+            .site_output_root_folder()
+            .join("feeds/basic.xsl");
+        let _ = copy_file(&xslt_source_path, &xslt_destination_path);
     }
 
     #[instrument(skip(self))]

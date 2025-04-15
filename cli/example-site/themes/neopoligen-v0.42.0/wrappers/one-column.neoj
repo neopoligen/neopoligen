@@ -63,9 +63,9 @@
   </div>
   <div class="center">
     <a href="https://links.alanwsmith.com/">other projects</a> ~
-    <a href="https://socials.alanwsmith.com/">socials</a>
+    <a href="https://socials.alanwsmith.com/">socials</a> ~
+    <a href="/feeds/posts.xml">rss feed</a>
   </div>
-  <div class="center">(RSS feed is busted. I'm working on it)</div>
 
 [#
   [!- include "includes/debugging.neoj" -!]

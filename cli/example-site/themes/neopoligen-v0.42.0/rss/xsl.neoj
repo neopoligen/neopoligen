@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsl:stylesheet version="3.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+    <xsl:output method="html" version="1.0" encoding="UTF-8" indent="yes"/>
+    <xsl:template match="/">
+        <html xmlns="http://www.w3.org/1999/xhtml">
+            <head>
+                <title>Alan's RSS Feed</title>
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <meta property="og:title" content="Alan's RSS Feed" />
+                <meta property="og:description" content="Recent posts from the blog" />
+                <meta property="og:type" content="article" />
+                <meta property="og:url" content="https://www.alanwsmith.com/feeds/posts.xml" />
+                <meta property="og:image" content="https://res.cloudinary.com/awsimages/image/upload/og-image-no-title-white-on-black.jpg" />
+                <meta name="twitter:card" content="summary_large_image" />
+
+                <style type="text/css">
+                    /* Your custom styles can go here! */
+                </style>
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/neo-files/theme-files/favicons/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/neo-files/theme-files/favicons/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/neo-files/theme-files/favicons/favicon-16x16.png" />
+<link rel="manifest" href="/neo-files/theme-files/favicons/site.webmanifest" />
+<link rel="mask-icon" href="/neo-files/theme-files/favicons/safari-pinned-tab.svg" color="#5bbad5" />
+<link rel="shortcut icon" href="/neo-files/theme-files/favicons/favicon.ico" />
+<meta name="msapplication-TileColor" content="#da532c" />
+<meta name="msapplication-config" content="/neo-files/theme-files/favicons/browserconfig.xml" />
+<meta name="theme-color" content="#000000" />
+<meta name="description" content="Recent posts from the blog" />
+
+            </head>
+            <body>
+                <header>
+                    <h1>
+                        <xsl:value-of select="/rss/channel/title"/>
+                    </h1>
+                    <a hreflang="en" target="_blank">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="/rss/channel/link"/>
+                        </xsl:attribute>
+                        Visit Website &#x2192;
+                    </a>
+                </header>
+                <main>
+                    <xsl:for-each select="/rss/channel/item">
+                        <article>
+                            <h3>
+                                <a hreflang="en" target="_blank">
+                                    <xsl:attribute name="href">
+                                        <xsl:value-of select="link"/>
+                                    </xsl:attribute>
+                                    <xsl:value-of select="title"/>
+                                </a>
+                            </h3>
+                            <footer>
+                                Published:
+                                <time>
+                                    <xsl:value-of select="pubDate" />
+                                </time>
+                            </footer>
+                        </article>
+                    </xsl:for-each>
+                </main>
+            </body>
+        </html>
+    </xsl:template>
+</xsl:stylesheet>

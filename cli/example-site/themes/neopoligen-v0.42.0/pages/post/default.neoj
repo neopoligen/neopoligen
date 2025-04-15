@@ -1,10 +1,9 @@
 [!- extends "wrappers/one-column.neoj" -!]
 [!- import "built-in/macros.neoj" as neo -!]
 
-
 [!- block body_main -!]
   <div class="flow body-block">
-    [@- neo.output_only_sections(["title", "subtitle", "forward"]) -@]
+    [@- neo.output_only_sections(["title", "subtitle", "forward"], false) -@]
     [@- neo.output_all_sections_except(["title", "subtitle", "forward", "endnote", "footnote", "ref"]) -@]
   </div>
   <div class="end-block">

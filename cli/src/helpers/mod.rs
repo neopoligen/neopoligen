@@ -20,6 +20,15 @@ use syntect::parsing::SyntaxSet;
 use syntect::util::LinesWithEndings;
 use walkdir::WalkDir;
 
+pub fn copy_file(source_path: &PathBuf, dest_path: &PathBuf) -> Result<(), std::io::Error> {
+    if source_path.is_file() {
+        let dest_dir = dest_path.parent().unwrap();
+        fs::create_dir_all(dest_dir)?;
+        fs::copy(source_path, dest_path)?;
+    }
+    Ok(())
+}
+
 pub fn copy_folder(source_folder: &PathBuf, dest_folder: &PathBuf) -> Result<(), std::io::Error> {
     for entry in WalkDir::new(source_folder) {
         let source_path = entry?.into_path();

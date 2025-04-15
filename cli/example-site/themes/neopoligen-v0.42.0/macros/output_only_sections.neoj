@@ -1,4 +1,4 @@
-[!- macro output_only_sections(include_sections=[]) -!]
+[!- macro output_only_sections(include_sections=[], is_rss=false) -!]
 [!- for section in sections -!]
 [!- if section.kind in include_sections -!]
 [!- include section.template_list -!]
