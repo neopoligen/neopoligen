@@ -1,0 +1,14 @@
+[!- import "built-in/macros.neoj" as neo -!]
+
+[# TYPE: basic #]
+[# HOIST: [class] #]
+
+[! set image_path = "/neo-files/images/" + section.flags[0] + "/" + section.flags[0] + ".avif" !]
+
+<section [@- neo.section_attrs() -@]>
+  <div class="photo-wrapper"><img src="[@ image_path @]" alt="My apologies. The process I use to include alt text is currently broken. I'm working to get it fixed and hope to have it working again soon." /></div>
+</section>
+
+[@- neo.output_end_section(section) -@]
+
+
