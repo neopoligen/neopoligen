@@ -12,7 +12,7 @@
 <title><![CDATA[[@ page.title @]]]></title>
 <link>https://www.alanwsmith.com[@ page.href @]</link>
 <pubDate>[@ page.rss_date @]</pubDate>
-<guid>https://www.alanwsmith.com[@ page.href @]</guid>
+<guid>[@ page.rss_id @]</guid>
 <description><![CDATA[ 
 [@ page.output_for_rss @]
 ]]></description> 

@@ -12,7 +12,6 @@ use crate::site_config::SiteConfigV42;
 use crate::span_v42::SpanV42;
 use chrono::DateTime;
 use chrono::FixedOffset;
-// use image::codecs::jpeg::JpegEncoder;
 use minijinja::value::Object;
 use minijinja::Error;
 use minijinja::Value;
@@ -23,6 +22,7 @@ use serde::Deserialize;
 use serde::Serialize;
 use std::path::PathBuf;
 use std::sync::Arc;
+use uuid::Uuid;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PageV42b {
@@ -39,6 +39,7 @@ pub struct PageV42b {
     pub output_for_rss: Option<String>,
     pub rel_output_path: Option<PathBuf>,
     pub rss_date: Option<Value>,
+    pub rss_id: Option<Value>,
     pub sections: Option<Value>,
     pub status: Option<Value>,
     pub source: String,
@@ -190,6 +191,16 @@ impl PageV42b {
         match self.date_created() {
             Ok(date) => Some(Value::from(date.to_rfc2822())),
             Err(_) => Some(Value::from("")),
+        }
+    }
+
+    pub fn rss_id(&self) -> Option<Value> {
+        match &self.id {
+            Some(id) => {
+                let uuid = Uuid::new_v5(&Uuid::NAMESPACE_DNS, id.as_bytes());
+                Some(Value::from(format!("{}", uuid)))
+            }
+            None => None,
         }
     }
 

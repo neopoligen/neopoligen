@@ -24,6 +24,7 @@ impl PageV42b {
             output_for_rss: None,
             rel_output_path: None,
             rss_date: None,
+            rss_id: None,
             sections: None,
             source: source.to_string(),
             source_absolute_path: source_path.clone(),

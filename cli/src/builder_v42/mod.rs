@@ -601,6 +601,7 @@ impl BuilderV42<'_> {
         event!(Level::INFO, "Setting Page IDs");
         for (_, page) in &mut self.pages_v42 {
             page.set_id();
+            page.rss_id = page.rss_id();
         }
         Ok(())
     }
