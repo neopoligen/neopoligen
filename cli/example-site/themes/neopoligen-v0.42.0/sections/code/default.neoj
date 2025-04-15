@@ -3,7 +3,12 @@
 [# TYPE: raw #]
 [# HOIST: [] #]
 
-<section [@- neo.section_attrs() -@]>
+<section [@- neo.section_attrs("flow") -@]>
+
+  [!- if "title" in section.attrs -!]
+    <h2>[@ neo.output_attr('title') @]</h2>
+  [!- endif -!]
+
 <pre><code>
 [!- autoescape true -!]
 [@- section.body -@]

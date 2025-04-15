@@ -69,6 +69,36 @@ impl BuilderV42<'_> {
     }
 
     #[instrument(skip(self))]
+    pub fn deploy_report(&self) {
+        event!(Level::INFO, "Deploying Report");
+        let site_clone = Value::from_object(self.site_v42b.clone().unwrap());
+        let report_output_path = self
+            .site_config
+            .neo_files_output_root_folder()
+            .join("report.html");
+        let report_pages_with_dates = self
+            .pages_v42
+            .iter()
+            .filter_map(|(_, data)| match data.date_created() {
+                Ok(_) => Some(data.clone()),
+                Err(_) => None,
+            })
+            .sorted_by(|a, b| b.date_created().unwrap().cmp(&a.date_created().unwrap()))
+            .collect::<Vec<PageV42b>>();
+        if let Ok(template) = self.env.get_template("reports/pages.neoj") {
+            if let Ok(output) = template.render(context!(
+                pages_with_dates => report_pages_with_dates,
+                site => &site_clone,
+
+            )) {
+                if let Ok(_) = write_file_with_mkdir(&report_output_path, &output) {
+                    event!(Level::INFO, "Made RSS Feed");
+                }
+            }
+        }
+    }
+
+    #[instrument(skip(self))]
     pub fn deploy_rss(&self) {
         event!(Level::INFO, "Deploying RSS");
         let rss_output_path = self

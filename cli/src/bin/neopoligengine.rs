@@ -143,6 +143,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             let _ = builder.deploy_miscellaneous_files();
             let _ = builder.deploy_theme_files();
             let _ = builder.deploy_rss();
+            let _ = builder.deploy_report();
 
             event!(Level::INFO, "Reloading Browser");
             reloader.reload();
