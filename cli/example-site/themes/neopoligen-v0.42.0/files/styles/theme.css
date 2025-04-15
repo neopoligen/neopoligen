@@ -339,10 +339,21 @@ p {
   overflow-wrap: break-word;
 }
 
+.photo-wrapper {
+  background-color: white;
+  padding: 0.8rem;
+  margin-bottom: 2.8rem;
+}
+
+.photo-wrapper img {
+  border: 2px solid black;
+}
+
 picture {
   display: block;
   max-width: 100%;
 }
+
 
 .red {
   color: red;
