@@ -5,18 +5,23 @@
 <title>alanwsmith.com</title>
 
 [!- for page in pages -!]
-[!- if page.status == "done" -!]
+[!- if page.status == "done" and page.title != none -!]
+<item>
+<title><![CDATA[[@ page.title @]]]></title>
+<link>https://www.alanwsmith.com[@ page.href @]</link>
+<pubDate>[@ page.rss_date @]</pubDate>
+<guid>https://www.alanwsmith.com[@ page.href @]</guid>
 <description><![CDATA[ 
 
 [@ page.output_for_rss @]
 
 ]]></description> 
+</item>
 [!- endif -!]
 [!- endfor -!]
 
 
 [#
-<title>[@ page.title @]</title>
 <link>https://www.alanwsmith.com[@ page.href @]</link>
 <pubDate>[@ page.rss_date @]</pubDate>
 <guid>https://www.alanwsmith.com[@ page.href @]</guid>

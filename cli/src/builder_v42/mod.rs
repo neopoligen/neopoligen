@@ -8,6 +8,7 @@ use crate::site_config::SiteConfigV42;
 use crate::site_v42::SiteV42b;
 use anyhow::Result;
 use html_escape::encode_safe;
+use itertools::Itertools;
 // use image::io::Reader;
 use minijinja::Environment;
 use minijinja::{context, Value};
@@ -75,22 +76,17 @@ impl BuilderV42<'_> {
             .site_output_root_folder()
             .join("feeds/posts.xml");
 
-        let mut rss_pages = self
+        let rss_pages = self
             .pages_v42
             .iter()
             .filter_map(|(_, data)| match data.date_created() {
                 Ok(_) => Some(data.clone()),
                 Err(_) => None,
             })
+            .sorted_by(|a, b| b.date_created().unwrap().cmp(&a.date_created().unwrap()))
+            .take(200) // this prefilters some so not everything
+            // is sent to minijinaj. tough, that probably wouldn't hurt
             .collect::<Vec<PageV42b>>();
-
-        rss_pages.sort_by(|a, b| b.date_created().unwrap().cmp(&a.date_created().unwrap()));
-
-        // let rss_pages2: Vec<Value> = rss_pages
-        //     .iter()
-        //     .map(|p| Value::from_object(p.clone()))
-        //     .collect();
-
         if let Ok(template) = self.env.get_template("rss/posts.neoj") {
             if let Ok(output) = template.render(context!(
                 pages => rss_pages
