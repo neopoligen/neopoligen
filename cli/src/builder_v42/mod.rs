@@ -75,7 +75,6 @@ impl BuilderV42<'_> {
             .site_config
             .site_output_root_folder()
             .join("feeds/posts.xml");
-
         let rss_pages = self
             .pages_v42
             .iter()
@@ -96,12 +95,6 @@ impl BuilderV42<'_> {
                 }
             }
         }
-
-        dbg!(rss_output_path);
-
-        // let source_folder = self.site_config.theme_files_input_folder();
-        //let dest_folder = self.site_config.theme_files_output_folder();
-        // let _ = copy_folder(&source_folder, &dest_folder);
     }
 
     #[instrument(skip(self))]
