@@ -29,7 +29,16 @@
 
 <div class="report_grid flow">
 [!- for page in pages_with_dates -!]
-<div>[@ page.status @]</div>
+[! if page.status == "done" !]
+<div class="green">
+[@ page.status @]
+</div>
+[! else !]
+<div class="red">
+[@ page.status @]
+</div>
+[! endif !]
+
 <div>
 <a href="[@- page.href -@]">[@- page.title -@]<br />[@- page.id -@]</a>
 </div>
