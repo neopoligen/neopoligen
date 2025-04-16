@@ -144,7 +144,7 @@ impl BuilderV42<'_> {
             .site_output_root_folder()
             .join("feeds/shorts.xml");
 
-        let rss_shorts: Vec<Vec<SectionV42>> = self
+        let rss_shorts_to_flatten: Vec<Vec<SectionV42>> = self
             .pages_v42
             .iter()
             .filter_map(|(_, page)| {
@@ -159,6 +159,7 @@ impl BuilderV42<'_> {
                 }
             })
             .collect();
+        let rss_shorts: Vec<&SectionV42> = rss_shorts_to_flatten.iter().flatten().collect();
 
         dbg!(&rss_shorts);
 
@@ -172,15 +173,16 @@ impl BuilderV42<'_> {
         //     .sorted_by(|a, b| b.date_created().unwrap().cmp(&a.date_created().unwrap()))
         //     .take(20)
         //     .collect::<Vec<PageV42b>>();
-        // if let Ok(template) = self.env.get_template("rss/shorts.neoj") {
-        //     if let Ok(output) = template.render(context!(
-        //     shorts => rss_shorts
-        //     )) {
-        //         if let Ok(_) = write_file_with_mkdir(&rss_output_path, &output) {
-        //             event!(Level::INFO, "Made RSS Shorts Feed");
-        //         }
-        //     }
-        // }
+
+        if let Ok(template) = self.env.get_template("rss/shorts.neoj") {
+            if let Ok(output) = template.render(context!(
+            shorts => rss_shorts
+            )) {
+                if let Ok(_) = write_file_with_mkdir(&rss_output_path, &output) {
+                    event!(Level::INFO, "Made RSS Shorts Feed");
+                }
+            }
+        }
 
         // let xslt_source_path = &self
         //     .site_config
