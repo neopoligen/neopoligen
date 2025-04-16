@@ -6,8 +6,8 @@
 <title>Alan's Shorts</title>
 <link>https://www.alanwsmith.com/</link>
 
-[!- for short in shorts -!]
-[@ short|tojson(true) @]
+[!- for section in shorts -!]
+[@ neo.output_all_child_sections(section) @]
 [!- endfor -!]
 
 [#
