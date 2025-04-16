@@ -159,9 +159,23 @@ impl BuilderV42<'_> {
                 }
             })
             .collect();
-        let rss_shorts: Vec<&SectionV42> = rss_shorts_to_flatten.iter().flatten().collect();
 
-        dbg!(&rss_shorts);
+        let rss_shorts_flattened: Vec<&SectionV42> =
+            rss_shorts_to_flatten.iter().flatten().collect();
+
+        let rss_shorts: Vec<SectionV42> = rss_shorts_flattened
+            .iter()
+            .filter_map(|&x| {
+                if x.date_created().is_ok() {
+                    Some(x.clone())
+                } else {
+                    None
+                }
+            })
+            .sorted_by(|a, b| b.date_created().unwrap().cmp(&a.date_created().unwrap()))
+            .collect();
+
+        // dbg!(&rss_shorts);
 
         // let rss_shorts = self
         //     .pages_v42

@@ -34,6 +34,33 @@ pub struct BasicSectionV42 {
     pub template_list: Vec<String>,
 }
 
+impl BasicSectionV42 {
+    pub fn date_created(&self) -> Result<DateTime<FixedOffset>, NeoErrorV42> {
+        let ping = &self.attrs.iter().find_map(|(attr, val)| {
+            if attr == "created" {
+                match &val[0] {
+                    SectionKeyValueAttrPayloadV42 { text, .. } => {
+                        if let Ok(date_thing) = DateTime::parse_from_rfc3339(text) {
+                            Some(date_thing)
+                        } else {
+                            None
+                        }
+                    }
+                }
+            } else {
+                None
+            }
+        });
+        if let Some(d) = &ping {
+            Ok(*d)
+        } else {
+            Err(NeoErrorV42::GenericError {
+                message: "to do".to_string(),
+            })
+        }
+    }
+}
+
 pub fn basic_section_v42<'a>(
     source: &'a str,
     site_config: &'a SiteConfigV42,

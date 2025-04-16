@@ -16,6 +16,7 @@ pub mod olist_item;
 pub mod parsing_error;
 pub mod raw;
 
+use crate::neo_error_v42::NeoErrorV42;
 use crate::section_v42::basic::*;
 use crate::section_v42::block::*;
 use crate::section_v42::checklist::*;
@@ -33,6 +34,9 @@ use crate::section_v42::olist_item::*;
 use crate::section_v42::parsing_error::*;
 use crate::section_v42::raw::*;
 use crate::site_config::SiteConfigV42;
+use anyhow::Result;
+use chrono::DateTime;
+use chrono::FixedOffset;
 use minijinja::value::Object;
 use nom::branch::alt;
 use nom::IResult;
@@ -78,6 +82,18 @@ pub enum SectionV42 {
     OlistItem(OlistItemSectionV42),
     ParsingError(ParsingErrorSectionV42),
     Raw(RawSectionV42),
+}
+
+impl SectionV42 {
+    pub fn date_created(&self) -> Result<DateTime<FixedOffset>, NeoErrorV42> {
+        // dbg!(&self);
+        match &self {
+            SectionV42::Basic(payload) => payload.date_created(),
+            _ => Err(NeoErrorV42::GenericError {
+                message: "to do".to_string(),
+            }),
+        }
+    }
 }
 
 impl Object for SectionV42 {}

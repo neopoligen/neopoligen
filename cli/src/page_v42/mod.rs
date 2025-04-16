@@ -167,7 +167,7 @@ impl PageV42b {
                 .iter()
                 .filter_map(|section| match section {
                     SectionV42::Basic(payload) => {
-                        if payload.kind == "short" {
+                        if &payload.kind == key {
                             Some(section.clone())
                         } else {
                             None
