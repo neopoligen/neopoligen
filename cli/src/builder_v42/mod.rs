@@ -4,6 +4,7 @@ use crate::helpers::*;
 use crate::image::Image;
 use crate::neo_error_v42::NeoErrorV42;
 use crate::page_v42::PageV42b;
+use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
 use crate::site_v42::SiteV42b;
 use anyhow::Result;
@@ -89,18 +90,17 @@ impl BuilderV42<'_> {
             if let Ok(output) = template.render(context!(
                 pages_with_dates => report_pages_with_dates,
                 site => &site_clone,
-
             )) {
                 if let Ok(_) = write_file_with_mkdir(&report_output_path, &output) {
-                    event!(Level::INFO, "Made RSS Feed");
+                    event!(Level::INFO, "Made Report");
                 }
             }
         }
     }
 
     #[instrument(skip(self))]
-    pub fn deploy_rss(&self) {
-        event!(Level::INFO, "Deploying RSS");
+    pub fn deploy_rss_posts(&self) {
+        event!(Level::INFO, "Deploying RSS Posts");
         let rss_output_path = self
             .site_config
             .site_output_root_folder()
@@ -121,7 +121,7 @@ impl BuilderV42<'_> {
                 pages => rss_pages
             )) {
                 if let Ok(_) = write_file_with_mkdir(&rss_output_path, &output) {
-                    event!(Level::INFO, "Made RSS Feed");
+                    event!(Level::INFO, "Made RSS Posts Feed");
                 }
             }
         }
@@ -134,6 +134,65 @@ impl BuilderV42<'_> {
             .site_output_root_folder()
             .join("feeds/basic.xsl");
         let _ = copy_file(&xslt_source_path, &xslt_destination_path);
+    }
+
+    #[instrument(skip(self))]
+    pub fn deploy_rss_shorts(&self) {
+        event!(Level::INFO, "Deploying RSS Shorts");
+        let rss_output_path = self
+            .site_config
+            .site_output_root_folder()
+            .join("feeds/shorts.xml");
+
+        let rss_shorts: Vec<Vec<SectionV42>> = self
+            .pages_v42
+            .iter()
+            .filter_map(|(_, page)| {
+                if let Some(sections) = page.get_sections(&"short".to_string()) {
+                    if sections.len() > 0 {
+                        Some(sections)
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            })
+            .collect();
+
+        dbg!(&rss_shorts);
+
+        // let rss_shorts = self
+        //     .pages_v42
+        //     .iter()
+        //     .filter_map(|(_, data)| match data.date_created() {
+        //         Ok(_) => Some(data.clone()),
+        //         Err(_) => None,
+        //     })
+        //     .sorted_by(|a, b| b.date_created().unwrap().cmp(&a.date_created().unwrap()))
+        //     .take(20)
+        //     .collect::<Vec<PageV42b>>();
+        // if let Ok(template) = self.env.get_template("rss/shorts.neoj") {
+        //     if let Ok(output) = template.render(context!(
+        //     shorts => rss_shorts
+        //     )) {
+        //         if let Ok(_) = write_file_with_mkdir(&rss_output_path, &output) {
+        //             event!(Level::INFO, "Made RSS Shorts Feed");
+        //         }
+        //     }
+        // }
+
+        // let xslt_source_path = &self
+        //     .site_config
+        //     .theme_input_root_folder()
+        //     .join("rss/xsl.neoj");
+        // let xslt_destination_path = &self
+        //     .site_config
+        //     .site_output_root_folder()
+        //     .join("feeds/basic.xsl");
+        // let _ = copy_file(&xslt_source_path, &xslt_destination_path);
+
+        //
     }
 
     #[instrument(skip(self))]

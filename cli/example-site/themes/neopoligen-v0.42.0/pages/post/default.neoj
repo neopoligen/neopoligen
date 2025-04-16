@@ -4,10 +4,12 @@
 [!- block body_main -!]
   <div class="flow body-block">
     [@- neo.output_only_sections(["title", "subtitle", "forward"], false) -@]
-    [@- neo.output_all_sections_except(["title", "subtitle", "forward", "endnote", "footnote", "ref"]) -@]
+    [@- neo.output_all_sections_except(["title", "subtitle", "forward", "endnote", "footnote", "ref", "see-also"]) -@]
   </div>
+  <div class="end-of-line">-- end of line --</div>
   <div class="end-block">
     [!- include "includes/endnotes.neoj" -!]
+    [!- include "includes/see-also.neoj" -!]
     [!- include "includes/refs.neoj" -!]
     [!- include "includes/footnotes.neoj" -!]
   </div>

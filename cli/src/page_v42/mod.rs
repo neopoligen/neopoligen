@@ -161,6 +161,31 @@ impl PageV42b {
         }
     }
 
+    pub fn get_sections(&self, key: &String) -> Option<Vec<SectionV42>> {
+        if let Some(ast) = &self.ast {
+            let section_capture: Vec<SectionV42> = ast
+                .iter()
+                .filter_map(|section| match section {
+                    SectionV42::Basic(payload) => {
+                        if payload.kind == "short" {
+                            Some(section.clone())
+                        } else {
+                            None
+                        }
+                    }
+                    // SectionV42::Json5(paylaod) => true,
+                    _ => {
+                        //dbg!(&section);
+                        None
+                    }
+                })
+                .collect();
+            Some(section_capture)
+        } else {
+            None
+        }
+    }
+
     pub fn does_page_data_have_flag(&self, key: &str) -> bool {
         match &self.ast {
             Some(ast) => {

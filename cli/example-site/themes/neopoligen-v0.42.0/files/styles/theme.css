@@ -93,7 +93,7 @@ aside {
 .back-matter {
   border-top: 1px solid var(--color-reverse-40);
   color: var(--color-reverse-40);
-  margin-top: 4.2rem;
+  margin-top: 3.2rem;
 }
 
 .blockquote-section > blockquote {
@@ -200,11 +200,19 @@ canvas {
   text-align: right;
 }
 
+.end-of-line {
+  color: var(--color-reverse-20);
+  text-align: center;
+  padding-top: 2rem;
+}
+
 .endnote-li {
   border-left: 1px solid var(--color-reverse-40);
   margin-bottom: var(--padding-xxlarge);
   padding-left: var(--padding-large);
 }
+
+
 
 .fin-token {
   /*
@@ -341,8 +349,10 @@ p {
 
 .photo-wrapper {
   background-color: white;
-  padding: 0.8rem;
-  margin-bottom: 2.8rem;
+  padding-inline: 2.8rem;
+  padding-top: 2.8rem;
+  padding-bottom: 3.4rem;
+  margin-bottom: 3.8rem;
 }
 
 .photo-wrapper img {
