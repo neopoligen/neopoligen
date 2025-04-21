@@ -356,7 +356,6 @@ impl BuilderV42<'_> {
             return Ok(());
         }
         let page_issue_template = page_issue_template_result.unwrap();
-
         let db_conn = Connection::open(self.site_config.cache_database_path()).unwrap();
         for (_, page) in &mut self.pages_v42 {
             // TODO: Get page templates here
@@ -377,81 +376,60 @@ impl BuilderV42<'_> {
                     page.output_for_rss = Some(row.as_ref().unwrap().clone().3);
                 }
                 None => { 
-
-                dbg!("NO CACHE");
-                if let Ok(rss_template) = self.env.get_template("pages/post/rss.neoj") {
-                    if let Ok(rss_output) = rss_template.render(context!(
+                    if let Ok(rss_template) = self.env.get_template("pages/post/rss.neoj") {
+                        if let Ok(rss_output) = rss_template.render(context!(
+                                    page => Value::from_object(page.clone()),
+                                    site => &site_clone,
+                                    sections => &page.sections,
+                        )) {
+                            page.output_for_rss = Some(rss_output)
+                        }
+                    }
+                    match self.env.get_template("pages/post/default.neoj") {
+                        Ok(template) => {
+                            match template.render(context!(
                                 page => Value::from_object(page.clone()),
                                 site => &site_clone,
                                 sections => &page.sections,
-                    )) {
-                        page.output_for_rss = Some(rss_output)
-                    }
-                }
-                match self.env.get_template("pages/post/default.neoj") {
-                    Ok(template) => {
-                        match template.render(context!(
-                            page => Value::from_object(page.clone()),
-                            site => &site_clone,
-                            sections => &page.sections,
-                        )) {
-                            Ok(output) => {
-                                page.output = Some(output);
-                            }
-                            Err(e) => {
-                                // dbg!(&e);
-                                let err = NeoErrorV42::CouldNotRenderTemplate {
-                                    notes: get_minijinja_error_text(&e),
-                                };
-                                page.issues.push(err);
-                                match page_issue_template.render(context!(page => page)) {
-                                    Ok(error_output) => page.output = Some(error_output),
-                                    Err(_error_e) => {
-                                        dbg!("TODO: Handle not being able to make the error page");
+                            )) {
+                                Ok(output) => {
+                                    page.output = Some(output);
+                                    let sql = "INSERT INTO page_output_cache(page_id, cache_hash, output, output_for_rss) VALUES (?1, ?2, ?3, ?4)";
+                                        let _ = db_conn.execute(sql,
+                                        (
+                                            &page.id.clone().unwrap(),
+                                            &page.cache_hash.clone().unwrap(),
+                                            &page.output.clone().unwrap(),
+                                            &page.output_for_rss.clone().unwrap(),
+                                        ),
+                                    );
+                                }
+                                Err(e) => {
+                                    // dbg!(&e);
+                                    let err = NeoErrorV42::CouldNotRenderTemplate {
+                                        notes: get_minijinja_error_text(&e),
+                                    };
+                                    page.issues.push(err);
+                                    match page_issue_template.render(context!(page => page)) {
+                                        Ok(error_output) => page.output = Some(error_output),
+                                        Err(_error_e) => {
+                                            dbg!("TODO: Handle not being able to make the error page");
+                                        }
                                     }
                                 }
                             }
                         }
-
-                        // let tx = db_conn.transaction()?;
-                        // let sql = "INSERT INTO page_output_cache(page_id, cache_hash, output, output_for_rss) VALUES (?1, ?2, ?3, ?4)";
-                        // tx.execute(
-                        //     sql,
-                        //     (
-                        //         &page.id,
-                        //         &page.cache_hash,
-                        //         &page.output,
-                        //         &page.output_for_rss,
-                        //     ),
-                        // )?;
-                        // tx.commit()?;
-
-                        // dbg!(&page.id);
-                        // dbg!(&page.cache_hash);
-                        // dbg!(&page.output);
-
-
-                        let sql = "INSERT INTO page_output_cache(page_id, cache_hash, output, output_for_rss) VALUES (?1, ?2, ?3, ?4)";
-                            let _ = db_conn.execute(sql,
-                            (
-                                &page.id.clone().unwrap(),
-                                &page.cache_hash.clone().unwrap(),
-                                &page.output.clone().unwrap(),
-                                &page.output_for_rss.clone().unwrap(),
-                            ),
-                        );
-                    }
-                    Err(e) => {
-                        let err = NeoErrorV42::CouldNotGetTemplate {
-                            notes: get_minijinja_error_text(&e),
-                        };
-                        page.issues.push(err);
+                        Err(e) => {
+                            let err = NeoErrorV42::CouldNotGetTemplate {
+                                notes: get_minijinja_error_text(&e),
+                            };
+                            page.issues.push(err);
+                        }
                     }
                 }
             }
         }
-        }
-            let _ = db_conn.close();
+        let _ = db_conn.close();
         Ok(())
     }
 

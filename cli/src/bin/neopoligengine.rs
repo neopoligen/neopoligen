@@ -135,7 +135,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             let _ = builder.initialize_site_with_pages();
             let _ = builder.generate_outputs();
             let _ = builder.move_updated_pages_into_site();
-            let _ = builder.empty_output_folders();
+            // let _ = builder.empty_output_folders();
             // let _ = builder.output_issue_pages(); // Deprecated. this gets made in generate_pages
             let _ = builder.output_pages_v42();
             let _ = builder.output_issues_index_page();
