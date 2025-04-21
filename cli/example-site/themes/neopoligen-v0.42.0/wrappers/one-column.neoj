@@ -67,6 +67,9 @@
     <a href="/neo-files/report.html">temporary file list</a> ~
     <a href="/feeds/posts.xml">rss feed</a>
   </div>
+  <div class="center">
+    &copy; 1998-2025
+  </div>
 
 [#
   [!- include "includes/debugging.neoj" -!]
@@ -76,5 +79,17 @@
 
 
 [@ neo.output_scripts(sections) @]
+
+<script type="module">
+const url = new URL(window.location.href)
+if (url.hostname === "localhost") {
+  const el = document.createElement('div')
+  el.innerHTML = `<a href="https://www.alanwsmith.com${url.pathname}" target="_blank">prod</a>`
+  el.classList.add("center")
+  document.body.appendChild(el)
+}
+</script>
+
+
 </body>
 </html>

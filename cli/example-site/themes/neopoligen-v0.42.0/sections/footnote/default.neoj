@@ -5,6 +5,7 @@
 
 <section [@- neo.section_attrs() -@]>
 
+
   <div>
     [!- if "id" in section.attrs -!]
       <a 
@@ -17,6 +18,9 @@
   </div>
 
   <div>
+    [! if "strike" in section.flags !]
+    <strike>
+    [! endif !]
     <div>
       [!- if "url" in section.attrs -!]
         <a href="[@- neo.output_spans(section.attrs.url[0].spans) -@]">
@@ -30,10 +34,14 @@
         </a>
       [!- endif -!]
     </div>
-    <div>
+    <div class="flow">
       [@- neo.output_all_child_sections(section) -@]
     </div>
+    [! if "strike" in section.flags !]
+    </strike>
+    [! endif !]
   </div>
+
 
 </section>
 

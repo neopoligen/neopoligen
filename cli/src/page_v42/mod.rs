@@ -27,16 +27,16 @@ use uuid::Uuid;
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct PageV42b {
     pub ast: Option<Vec<SectionV42>>,
-    pub parsing_issue: Option<NeoErrorV42>,
+    pub cache_hash: Option<String>,
     // TODO: Deprecate .href() method in favor of
     // of this .href field which should be prepopulated
-    // TODO: Make .href a String
     pub href: Option<String>,
     pub id: Option<String>,
     pub issues: Vec<NeoErrorV42>,
     pub language: Option<String>,
     pub output: Option<String>,
     pub output_for_rss: Option<String>,
+    pub parsing_issue: Option<NeoErrorV42>,
     pub rel_output_path: Option<PathBuf>,
     pub rss_date: Option<Value>,
     pub rss_id: Option<Value>,

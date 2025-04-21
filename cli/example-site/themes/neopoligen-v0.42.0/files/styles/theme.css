@@ -12,13 +12,15 @@
   --padding-xlarge: 2.1em;
   --padding-xxlarge: 3.2em;
 
-  --radius-xxsmall: 0.1rem;
-  --radius-xsmall: 0.2rem;
-  --radius-small: 0.3rem;
-  --radius-medium: 0.4rem;
-  --radius-large: 0.5rem;
-  --radius-xlarge: 0.6rem;
-  --radius-xxlarge: 0.7rem;
+
+  --border-radius-xxsmall: 0.1rem;
+  --border-radius-xsmall: 0.2rem;
+  --border-radius-small: 0.3rem;
+  --border-radius-medium: 0.4rem;
+  --border-radius-large: 0.5rem;
+  --border-radius-xlarge: 0.6rem;
+  --border-radius-xxlarge: 0.7rem;
+
 
   --font-size-xsmall: clamp(0.78rem, calc(0.77rem + 0.03vw), 0.80rem);
   --font-size-small: clamp(0.94rem, calc(0.92rem + 0.11vw), 1.00rem);
@@ -84,7 +86,7 @@ a {
 
 aside {
   border: 1px solid var(--color-reverse-30);
-  border-radius: var(--radius-medium);
+  border-radius: var(--border-radius-medium);
   margin-left: 2rem;
   padding-inline: 2rem;
   padding-block: 1rem;
@@ -108,9 +110,9 @@ body {
   background-color: var(--color-background);
   color: var(--color-primary-1);
   font-family: Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
-  font-size: var(--font-size-small);
+  font-size: var(--font-size-medium);
   font-weight: normal;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 button {
@@ -140,8 +142,8 @@ canvas {
   margin: var(--padding-large);
   padding: var(--padding-medium);
   border: 1px solid var(--color-reverse-40);
-  border-radius: var(--radius-medium);
-  font-size: var(--font-size-xsmall);
+  border-radius: var(--border-radius-medium);
+  font-size: var(--font-size-small);
 }
 
 .code-span {
@@ -163,17 +165,17 @@ canvas {
 
 .demo-bookmark-v1-header {
   background-color: var(--color-reverse-10);
-  border-top-left-radius: var(--radius-medium);
-  border-top-right-radius: var(--radius-medium);
+  border-top-left-radius: var(--border-radius-medium);
+  border-top-right-radius: var(--border-radius-medium);
   color: var(--color-reverse-50);
-  font-size: var(--font-size-xsmall);
+  font-size: var(--font-size-small);
   padding-block: var(--padding-small);
   padding-inline: var(--padding-large);
 }
 
 .demo-bookmark-v1-section {
   border: 1px solid var(--color-reverse-30);
-  border-radius: var(--radius-medium);
+  border-radius: var(--border-radius-medium);
 }
 
 .demo-bookmark-v1-subtitle {
@@ -183,7 +185,7 @@ canvas {
 .demo-bookmark-v1-tag-wrapper {
   margin-top: var(--padding-large);
   padding-block: var(--padding-small);
-  font-size: var(--font-size-xsmall);
+  font-size: var(--font-size-small);
   border-top: 1px solid var(--color-reverse-10);
 }
 
@@ -195,7 +197,7 @@ canvas {
 
 .demo-bookmark-v1-url-wrapper {
   padding-top: var(--padding-medium);
-  font-size: var(--font-size-xsmall);
+  font-size: var(--font-size-small);
   border-top: 1px solid var(--color-reverse-10);
   text-align: right;
 }
@@ -231,7 +233,7 @@ canvas {
 
 .footer {
   border-top: 1px solid var(--color-reverse-20);
-  font-size: var(--font-size-xsmall);
+  font-size: var(--font-size-small);
   margin-top: 3.4rem;
   margin-bottom: 2.1rem;
   padding-top: 1.4rem;
@@ -248,7 +250,7 @@ canvas {
 }
 
 .generated-timestamp {
-  font-size: var(--font-size-xsmall);
+  font-size: var(--font-size-small);
   padding-block: var(--padding-medium);
   color: var(--color-reverse-40);
   text-align: center;
@@ -374,22 +376,41 @@ picture {
   margin: var(--padding-large);
   padding: var(--padding-medium);
   border: 1px solid var(--color-reverse-40);
-  border-radius: var(--radius-medium);
-  font-size: var(--font-size-xsmall);
+  border-radius: var(--border-radius-medium);
+  font-size: var(--font-size-small);
 }
 
 select {
   font: inherit;
 }
 
+.show-css {
+  border: 1px solid var(--color-reverse-40);
+  border-radius: var(--border-radius-medium);
+  padding: var(--padding-medium);
+}
+
+.show-css-heading {
+  border-bottom: 1px solid var(--color-reverse-40);
+}
+
 .show-html {
   border: 1px solid var(--color-reverse-40);
+  border-radius: var(--border-radius-medium);
   padding: var(--padding-medium);
+}
+
+.show-html-heading {
+  border-bottom: 1px solid var(--color-reverse-40);
 }
 
 .show-javascript {
   border: 1px solid var(--color-reverse-40);
+  border-radius: var(--border-radius-medium);
   padding: var(--padding-medium);
+}
+.show-javascript-heading {
+  border-bottom: 1px solid var(--color-reverse-40);
 }
 
 svg {
@@ -422,8 +443,8 @@ video{
   padding: var(--padding-medium);
   margin: var(--padding-large);
   border: 1px solid rgb(255 122 127 / .2);
-  border-radius: var(--radius-medium);
-  font-size: var(--font-size-xsmall);
+  border-radius: var(--border-radius-medium);
+  font-size: var(--font-size-medium);
 }
 
 .wrapper-xxsmall {

@@ -4,13 +4,13 @@
 [# HOIST: [] #]
 
 <section [@- neo.section_attrs("flow show-html") -@]>
-<h4>HTML Source</h4>
+<h4 class="show-html-heading">HTML</h4>
 
 <pre><code>
 [@- site.highlight_code(section.body, "html") -@]
 </code></pre>
 
-<h4>Output</h4>
+<h4 class="show-html-heading">Output</h4>
 [@ section.body @]
 
 </section>

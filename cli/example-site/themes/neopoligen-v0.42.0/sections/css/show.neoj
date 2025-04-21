@@ -3,8 +3,8 @@
 [# TYPE: css #]
 [# HOIST: [] #]
 
-<section [@- neo.section_attrs("flow") -@]>
-<h4>CSS</h4>
+<section [@- neo.section_attrs("flow show-css") -@]>
+<h4 class="show-css-heading">CSS</h4>
 <pre><code>
 [@- site.highlight_code(section.body, "css") -@]
 </code></pre>

@@ -4,7 +4,13 @@
 [# HOIST: [class, id] #]
 
 <section [@- neo.section_attrs("flow") -@]>
+  [! if "strike" in section.flags !]
+  <strike>
+  [! endif !]
   [@- neo.output_all_child_sections(section) -@]
+  [! if "strike" in section.flags !]
+  </strike>
+  [! endif !]
 </section>
 
 [@- neo.output_end_section(section) -@]

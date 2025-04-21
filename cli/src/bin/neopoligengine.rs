@@ -121,6 +121,7 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
     match BuilderV42::new_from_site_config(site_config) {
         Ok(mut builder) => {
             // Build Site
+            let _ = builder.create_cache_database();
             let _ = builder.load_source_images();
             let _ = builder.ingest_source_files();
             let _ = builder.set_languages_from_site_config();
@@ -143,7 +144,6 @@ fn build_site(reloader: &Reloader, site_config: &SiteConfigV42) {
             let _ = builder.deploy_miscellaneous_files();
             let _ = builder.deploy_theme_files();
             let _ = builder.deploy_rss_posts();
-            let _ = builder.deploy_rss_shorts();
             let _ = builder.deploy_report();
 
             event!(Level::INFO, "Reloading Browser");

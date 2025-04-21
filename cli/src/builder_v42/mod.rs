@@ -10,13 +10,13 @@ use crate::site_v42::SiteV42b;
 use anyhow::Result;
 use html_escape::encode_safe;
 use itertools::Itertools;
-// use image::io::Reader;
 use minijinja::Environment;
 use minijinja::{context, Value};
+use rusqlite::Connection;
+// use rusqlite::Result;
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
-// use std::process::Output;
 use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 
@@ -42,6 +42,34 @@ pub struct BuilderV42<'a> {
 }
 
 impl BuilderV42<'_> {
+    #[instrument(skip(self))]
+    pub fn create_cache_database(&self) -> Result<()> {
+        event!(Level::INFO, "Creating Cache Database");
+        if !self.site_config.cache_database_path().is_file() {
+            let conn = Connection::open(self.site_config.cache_database_path())?;
+            let statements = vec![
+                "CREATE TABLE IF NOT EXISTS
+                  page_output_cache (
+                    db_id INTEGER PRIMARY KEY,
+                    page_id TEXT NOT NULL UNIQUE,
+                    cache_hash TEXT NOT NULL, 
+                    output TEXT NOT NULL,
+                    output_for_rss TEXT NOT NULL
+                  )",
+            ];
+            for sql in statements.iter() {
+                match conn.execute(sql, ()) {
+                    Ok(_) => println!(""),
+                    Err(e) => {
+                        dbg!(e);
+                        ()
+                    }
+                };
+            }
+        }
+        Ok(())
+    }
+
     #[instrument(skip(self))]
     pub fn deploy_components(&self) {
         event!(Level::INFO, "Deploying Components Files");
@@ -136,80 +164,80 @@ impl BuilderV42<'_> {
         let _ = copy_file(&xslt_source_path, &xslt_destination_path);
     }
 
-    #[instrument(skip(self))]
-    pub fn deploy_rss_shorts(&self) {
-        event!(Level::INFO, "Deploying RSS Shorts");
-        let rss_output_path = self
-            .site_config
-            .site_output_root_folder()
-            .join("feeds/shorts.xml");
+    // #[instrument(skip(self))]
+    // pub fn deploy_rss_shorts(&self) {
+    //     event!(Level::INFO, "Deploying RSS Shorts");
+    //     let rss_output_path = self
+    //         .site_config
+    //         .site_output_root_folder()
+    //         .join("feeds/shorts.xml");
 
-        let rss_shorts_to_flatten: Vec<Vec<SectionV42>> = self
-            .pages_v42
-            .iter()
-            .filter_map(|(_, page)| {
-                if let Some(sections) = page.get_sections(&"short".to_string()) {
-                    if sections.len() > 0 {
-                        Some(sections)
-                    } else {
-                        None
-                    }
-                } else {
-                    None
-                }
-            })
-            .collect();
+    // let rss_shorts_to_flatten: Vec<Vec<SectionV42>> = self
+    //     .pages_v42
+    //     .iter()
+    //     .filter_map(|(_, page)| {
+    //         if let Some(sections) = page.get_sections(&"short".to_string()) {
+    //             if sections.len() > 0 {
+    //                 Some(sections)
+    //             } else {
+    //                 None
+    //             }
+    //         } else {
+    //             None
+    //         }
+    //     })
+    //     .collect();
 
-        let rss_shorts_flattened: Vec<&SectionV42> =
-            rss_shorts_to_flatten.iter().flatten().collect();
+    // let rss_shorts_flattened: Vec<&SectionV42> =
+    //     rss_shorts_to_flatten.iter().flatten().collect();
 
-        let rss_shorts: Vec<SectionV42> = rss_shorts_flattened
-            .iter()
-            .filter_map(|&x| {
-                if x.date_created().is_ok() {
-                    Some(x.clone())
-                } else {
-                    None
-                }
-            })
-            .sorted_by(|a, b| b.date_created().unwrap().cmp(&a.date_created().unwrap()))
-            .collect();
+    // let rss_shorts: Vec<SectionV42> = rss_shorts_flattened
+    //     .iter()
+    //     .filter_map(|&x| {
+    //         if x.date_created().is_ok() {
+    //             Some(x.clone())
+    //         } else {
+    //             None
+    //         }
+    //     })
+    //     .sorted_by(|a, b| b.date_created().unwrap().cmp(&a.date_created().unwrap()))
+    //     .collect();
 
-        // dbg!(&rss_shorts);
+    // dbg!(&rss_shorts);
 
-        // let rss_shorts = self
-        //     .pages_v42
-        //     .iter()
-        //     .filter_map(|(_, data)| match data.date_created() {
-        //         Ok(_) => Some(data.clone()),
-        //         Err(_) => None,
-        //     })
-        //     .sorted_by(|a, b| b.date_created().unwrap().cmp(&a.date_created().unwrap()))
-        //     .take(20)
-        //     .collect::<Vec<PageV42b>>();
+    // let rss_shorts = self
+    //     .pages_v42
+    //     .iter()
+    //     .filter_map(|(_, data)| match data.date_created() {
+    //         Ok(_) => Some(data.clone()),
+    //         Err(_) => None,
+    //     })
+    //     .sorted_by(|a, b| b.date_created().unwrap().cmp(&a.date_created().unwrap()))
+    //     .take(20)
+    //     .collect::<Vec<PageV42b>>();
 
-        if let Ok(template) = self.env.get_template("rss/shorts.neoj") {
-            if let Ok(output) = template.render(context!(
-            shorts => rss_shorts
-            )) {
-                if let Ok(_) = write_file_with_mkdir(&rss_output_path, &output) {
-                    event!(Level::INFO, "Made RSS Shorts Feed");
-                }
-            }
-        }
+    // if let Ok(template) = self.env.get_template("rss/shorts.neoj") {
+    //     if let Ok(output) = template.render(context!(
+    //     shorts => rss_shorts
+    //     )) {
+    //         if let Ok(_) = write_file_with_mkdir(&rss_output_path, &output) {
+    //             event!(Level::INFO, "Made RSS Shorts Feed");
+    //         }
+    //     }
+    // }
 
-        // let xslt_source_path = &self
-        //     .site_config
-        //     .theme_input_root_folder()
-        //     .join("rss/xsl.neoj");
-        // let xslt_destination_path = &self
-        //     .site_config
-        //     .site_output_root_folder()
-        //     .join("feeds/basic.xsl");
-        // let _ = copy_file(&xslt_source_path, &xslt_destination_path);
+    // let xslt_source_path = &self
+    //     .site_config
+    //     .theme_input_root_folder()
+    //     .join("rss/xsl.neoj");
+    // let xslt_destination_path = &self
+    //     .site_config
+    //     .site_output_root_folder()
+    //     .join("feeds/basic.xsl");
+    // let _ = copy_file(&xslt_source_path, &xslt_destination_path);
 
-        //
-    }
+    ////
+    //}
 
     #[instrument(skip(self))]
     pub fn deploy_theme_files(&self) {

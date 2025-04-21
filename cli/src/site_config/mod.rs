@@ -174,6 +174,9 @@ impl SiteConfigV42 {
     pub fn cache_root_folder(&self) -> PathBuf {
         self.project_folder().join("cache")
     }
+    pub fn cache_database_path(&self) -> PathBuf {
+        self.cache_root_folder().join("cache.sqlite")
+    }
 
     pub fn components_input_folder(&self) -> PathBuf {
         self.project_folder().join("components")

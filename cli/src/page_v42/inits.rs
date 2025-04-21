@@ -15,13 +15,14 @@ impl PageV42b {
             .to_path_buf();
         PageV42b {
             ast: None,
-            parsing_issue: None,
+            cache_hash: None,
             href: None,
             id: None,
             issues: vec![],
             language: None,
             output: None,
             output_for_rss: None,
+            parsing_issue: None,
             rel_output_path: None,
             rss_date: None,
             rss_id: None,

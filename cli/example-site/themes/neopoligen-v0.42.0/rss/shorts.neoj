@@ -7,7 +7,17 @@
 <link>https://www.alanwsmith.com/</link>
 
 [!- for section in shorts -!]
+
+<item>
+<title></title>
+<link>https://www.alanwsmith.com]</link>
+<pubDate></pubDate>
+<guid></guid>
+<description><![CDATA[ 
 [@ neo.output_all_child_sections(section) @]
+]]></description> 
+</item>
+
 [!- endfor -!]
 
 [#
