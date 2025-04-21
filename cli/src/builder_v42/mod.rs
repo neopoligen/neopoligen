@@ -46,7 +46,6 @@ impl BuilderV42<'_> {
     pub fn create_cache_database(&mut self) -> Result<()> {
         event!(Level::INFO, "Creating Cache Database");
         let db_conn = Connection::open(self.site_config.cache_database_path()).ok();
-        if !self.site_config.cache_database_path().is_file() {
             let statements = vec![
                 "CREATE TABLE IF NOT EXISTS
                   page_output_cache (
@@ -58,18 +57,18 @@ impl BuilderV42<'_> {
                   )",
             ];
             for sql in statements.iter() {
+                dbg!(&sql);
                 match db_conn
                     .as_ref()
                     .expect("need database connection")
                     .execute(sql, ())
                 {
-                    Ok(_) => println!(""),
+                    Ok(_) => println!("HEREHRER"),
                     Err(e) => {
                         dbg!(e);
                         ()
                     }
                 };
-            }
         }
         Ok(())
     }
@@ -364,13 +363,15 @@ impl BuilderV42<'_> {
             // TODO: Get page templates here
             let mut sql = 
                 db_conn
-                .prepare("SELECT page_id, cache_hash, output, output_for_rss FROM page_output_cache WHERE page_id = ? AND cache_hash = ?")?;
+                .prepare("SELECT page_id, cache_hash, output, output_for_rss FROM page_output_cache WHERE page_id = ? AND cache_hash = ?").unwrap();
             let rows_iter = sql
-                .query_map([&page.id, &page.cache_hash], |_row| Ok(()))
+                .query_map([&page.id.clone().unwrap(), &page.cache_hash.clone().unwrap()], |_row| Ok(()))
                 .unwrap();
-            if !rows_iter.count() == 0 {
+            if rows_iter.count() > 0 {
+                dbg!("FOUND CACHE");
                 // TODO: move results to page
             } else {
+                dbg!("NO CACHE");
                 if let Ok(rss_template) = self.env.get_template("pages/post/rss.neoj") {
                     if let Ok(rss_output) = rss_template.render(context!(
                                 page => Value::from_object(page.clone()),
@@ -423,14 +424,13 @@ impl BuilderV42<'_> {
                         // dbg!(&page.output);
 
 
-
                         let sql = "INSERT INTO page_output_cache(page_id, cache_hash, output, output_for_rss) VALUES (?1, ?2, ?3, ?4)";
                             let _ = db_conn.execute(sql,
                             (
-                                &page.id,
-                                &page.cache_hash,
-                                &page.output,
-                                &page.output_for_rss,
+                                &page.id.clone().unwrap(),
+                                &page.cache_hash.clone().unwrap(),
+                                &page.output.clone().unwrap(),
+                                &page.output_for_rss.clone().unwrap(),
                             ),
                         );
                     }
