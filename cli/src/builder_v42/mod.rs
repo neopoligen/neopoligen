@@ -45,7 +45,7 @@ impl BuilderV42<'_> {
     #[instrument(skip(self))]
     pub fn create_cache_database(&mut self) -> Result<()> {
         event!(Level::INFO, "Creating Cache Database");
-        self.db_conn = Connection::open(self.site_config.cache_database_path()).ok();
+        let db_conn = Connection::open(self.site_config.cache_database_path()).ok();
         if !self.site_config.cache_database_path().is_file() {
             let statements = vec![
                 "CREATE TABLE IF NOT EXISTS
@@ -58,8 +58,7 @@ impl BuilderV42<'_> {
                   )",
             ];
             for sql in statements.iter() {
-                match self
-                    .db_conn
+                match db_conn
                     .as_ref()
                     .expect("need database connection")
                     .execute(sql, ())
@@ -359,17 +358,19 @@ impl BuilderV42<'_> {
             return Ok(());
         }
         let page_issue_template = page_issue_template_result.unwrap();
+
+        let db_conn = Connection::open(self.site_config.cache_database_path()).unwrap();
         for (_, page) in &mut self.pages_v42 {
             // TODO: Get page templates here
-            let mut sql = self
-                .db_conn
-                .as_ref()
-                .expect("db conn")
+            let mut sql = 
+                db_conn
                 .prepare("SELECT page_id, cache_hash, output, output_for_rss FROM page_output_cache WHERE page_id = ? AND cache_hash = ?")?;
             let rows_iter = sql
                 .query_map([&page.id, &page.cache_hash], |_row| Ok(()))
                 .unwrap();
-            if rows_iter.count() == 0 {
+            if !rows_iter.count() == 0 {
+                // TODO: move results to page
+            } else {
                 if let Ok(rss_template) = self.env.get_template("pages/post/rss.neoj") {
                     if let Ok(rss_output) = rss_template.render(context!(
                                 page => Value::from_object(page.clone()),
@@ -403,6 +404,35 @@ impl BuilderV42<'_> {
                                 }
                             }
                         }
+
+                        // let tx = db_conn.transaction()?;
+                        // let sql = "INSERT INTO page_output_cache(page_id, cache_hash, output, output_for_rss) VALUES (?1, ?2, ?3, ?4)";
+                        // tx.execute(
+                        //     sql,
+                        //     (
+                        //         &page.id,
+                        //         &page.cache_hash,
+                        //         &page.output,
+                        //         &page.output_for_rss,
+                        //     ),
+                        // )?;
+                        // tx.commit()?;
+
+                        // dbg!(&page.id);
+                        // dbg!(&page.cache_hash);
+                        // dbg!(&page.output);
+
+
+
+                        let sql = "INSERT INTO page_output_cache(page_id, cache_hash, output, output_for_rss) VALUES (?1, ?2, ?3, ?4)";
+                            let _ = db_conn.execute(sql,
+                            (
+                                &page.id,
+                                &page.cache_hash,
+                                &page.output,
+                                &page.output_for_rss,
+                            ),
+                        );
                     }
                     Err(e) => {
                         let err = NeoErrorV42::CouldNotGetTemplate {
@@ -413,6 +443,7 @@ impl BuilderV42<'_> {
                 }
             }
         }
+            let _ = db_conn.close();
         Ok(())
     }
 
