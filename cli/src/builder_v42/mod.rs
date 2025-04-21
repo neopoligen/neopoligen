@@ -258,10 +258,31 @@ impl BuilderV42<'_> {
     #[instrument(skip(self))]
     pub fn generate_asts(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating ASTs");
+        let db_conn = Connection::open(self.site_config.cache_database_path()).unwrap();
         for (_, page) in &mut self.pages_v42 {
-            page.generate_ast(&self.site_config);
-            page.status = page.status();
-            page.rss_date = page.rss_date();
+            // TODO: Get page templates here
+            let mut sql = 
+                db_conn
+                .prepare(
+                    "SELECT source_path, cache_hash, output, output_for_rss FROM page_output_cache WHERE source_path = ? AND cache_hash = ?").unwrap();
+            let mut rows_iter = sql
+                .query_map([&page.source_absolute_path.clone().display().to_string(), &page.cache_hash.clone().unwrap()], |row| Ok(
+                    (row.get::<usize, String>(0).unwrap(),
+                    row.get::<usize, String>(1).unwrap(),
+                    row.get::<usize, String>(2).unwrap(),
+                    row.get::<usize, String>(3).unwrap(),)
+                ))
+                .unwrap();
+            match rows_iter.nth(0) {
+                Some(_) => {
+                    ()
+                },
+                None => {
+                    page.generate_ast(&self.site_config);
+                    page.status = page.status();
+                    page.rss_date = page.rss_date();
+                }
+            }
         }
         Ok(())
     }
