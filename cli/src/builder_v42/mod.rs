@@ -57,7 +57,6 @@ impl BuilderV42<'_> {
                   )",
             ];
             for sql in statements.iter() {
-                dbg!(&sql);
                 match db_conn
                     .as_ref()
                     .expect("need database connection")
