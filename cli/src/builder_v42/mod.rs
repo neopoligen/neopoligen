@@ -4,7 +4,6 @@ use crate::helpers::*;
 use crate::image::Image;
 use crate::neo_error_v42::NeoErrorV42;
 use crate::page_v42::PageV42b;
-use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
 use crate::site_v42::SiteV42b;
 use anyhow::Result;
@@ -21,6 +20,7 @@ use tracing::{event, instrument, Level};
 use walkdir::WalkDir;
 
 pub struct BuilderV42<'a> {
+    pub db_conn: Option<Connection>,
     pub env: Environment<'a>,
     // TODO: Deprecate, errors and errors_v42 in favor of
     // page_errors and template_load_errors (and anything
@@ -43,10 +43,10 @@ pub struct BuilderV42<'a> {
 
 impl BuilderV42<'_> {
     #[instrument(skip(self))]
-    pub fn create_cache_database(&self) -> Result<()> {
+    pub fn create_cache_database(&mut self) -> Result<()> {
         event!(Level::INFO, "Creating Cache Database");
+        self.db_conn = Connection::open(self.site_config.cache_database_path()).ok();
         if !self.site_config.cache_database_path().is_file() {
-            let conn = Connection::open(self.site_config.cache_database_path())?;
             let statements = vec![
                 "CREATE TABLE IF NOT EXISTS
                   page_output_cache (
@@ -58,7 +58,12 @@ impl BuilderV42<'_> {
                   )",
             ];
             for sql in statements.iter() {
-                match conn.execute(sql, ()) {
+                match self
+                    .db_conn
+                    .as_ref()
+                    .expect("need database connection")
+                    .execute(sql, ())
+                {
                     Ok(_) => println!(""),
                     Err(e) => {
                         dbg!(e);
@@ -355,47 +360,56 @@ impl BuilderV42<'_> {
         }
         let page_issue_template = page_issue_template_result.unwrap();
         for (_, page) in &mut self.pages_v42 {
-            // dbg!(&page.rel_output_path);
             // TODO: Get page templates here
-            if let Ok(rss_template) = self.env.get_template("pages/post/rss.neoj") {
-                if let Ok(rss_output) = rss_template.render(context!(
+            let mut sql = self
+                .db_conn
+                .as_ref()
+                .expect("db conn")
+                .prepare("SELECT page_id, cache_hash, output, output_for_rss FROM page_output_cache WHERE page_id = ? AND cache_hash = ?")?;
+            let rows_iter = sql
+                .query_map([&page.id, &page.cache_hash], |_row| Ok(()))
+                .unwrap();
+            if rows_iter.count() == 0 {
+                if let Ok(rss_template) = self.env.get_template("pages/post/rss.neoj") {
+                    if let Ok(rss_output) = rss_template.render(context!(
+                                page => Value::from_object(page.clone()),
+                                site => &site_clone,
+                                sections => &page.sections,
+                    )) {
+                        page.output_for_rss = Some(rss_output)
+                    }
+                }
+                match self.env.get_template("pages/post/default.neoj") {
+                    Ok(template) => {
+                        match template.render(context!(
                             page => Value::from_object(page.clone()),
                             site => &site_clone,
                             sections => &page.sections,
-                )) {
-                    page.output_for_rss = Some(rss_output)
-                }
-            }
-            match self.env.get_template("pages/post/default.neoj") {
-                Ok(template) => {
-                    match template.render(context!(
-                        page => Value::from_object(page.clone()),
-                        site => &site_clone,
-                        sections => &page.sections,
-                    )) {
-                        Ok(output) => {
-                            page.output = Some(output);
-                        }
-                        Err(e) => {
-                            // dbg!(&e);
-                            let err = NeoErrorV42::CouldNotRenderTemplate {
-                                notes: get_minijinja_error_text(&e),
-                            };
-                            page.issues.push(err);
-                            match page_issue_template.render(context!(page => page)) {
-                                Ok(error_output) => page.output = Some(error_output),
-                                Err(_error_e) => {
-                                    dbg!("TODO: Handle not being able to make the error page");
+                        )) {
+                            Ok(output) => {
+                                page.output = Some(output);
+                            }
+                            Err(e) => {
+                                // dbg!(&e);
+                                let err = NeoErrorV42::CouldNotRenderTemplate {
+                                    notes: get_minijinja_error_text(&e),
+                                };
+                                page.issues.push(err);
+                                match page_issue_template.render(context!(page => page)) {
+                                    Ok(error_output) => page.output = Some(error_output),
+                                    Err(_error_e) => {
+                                        dbg!("TODO: Handle not being able to make the error page");
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                Err(e) => {
-                    let err = NeoErrorV42::CouldNotGetTemplate {
-                        notes: get_minijinja_error_text(&e),
-                    };
-                    page.issues.push(err);
+                    Err(e) => {
+                        let err = NeoErrorV42::CouldNotGetTemplate {
+                            notes: get_minijinja_error_text(&e),
+                        };
+                        page.issues.push(err);
+                    }
                 }
             }
         }

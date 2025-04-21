@@ -42,7 +42,7 @@ rusqlite = "0.35.0"
 serde = { version = "1.0.200", features = ["derive"] }
 serde_json = "1.0.116"
 serde_json5 = "0.1.0"
-sha256 = "1.5.0"
+sha2 = "0.10.8"
 syntect = "5.2.0"
 thiserror = "1.0.61"
 tiny-skia = "0.11.4"

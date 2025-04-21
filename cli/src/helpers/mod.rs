@@ -1,17 +1,13 @@
 use crate::neo_error::{NeoError, NeoErrorKind};
 use crate::span_v42::SpanV42;
+use anyhow::Result as AnyResult;
 use include_dir::Dir;
 use minijinja::Error;
 use minijinja::ErrorKind;
 use minijinja::Value;
 use regex::Regex;
-// use rimage::config::{Codec, EncoderConfig};
-// use rimage::image::imageops::FilterType;
-// use rimage::image::DynamicImage;
-// use rimage::Decoder;
-// use rimage::Encoder;
+use sha2::{Digest, Sha256};
 use std::fs;
-// use std::fs::File;
 use std::path::PathBuf;
 use std::process::Command;
 use std::time::UNIX_EPOCH;
@@ -297,6 +293,13 @@ pub fn get_neo_files_in_folder_recursively(dir: &PathBuf) -> Vec<PathBuf> {
             }
         })
         .collect()
+}
+
+pub fn get_string_as_sha256_hash(input: &String) -> AnyResult<String> {
+    let mut hasher = Sha256::new();
+    hasher.update(input.as_bytes());
+    let result: String = format!("{:X}", hasher.finalize());
+    Ok(result)
 }
 
 pub fn highlight_code_section(args: &[Value]) -> String {

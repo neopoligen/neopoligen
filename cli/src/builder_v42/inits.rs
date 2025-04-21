@@ -21,7 +21,6 @@ impl BuilderV42<'_> {
                 .build()
                 .unwrap(),
         );
-
         static BUILT_IN_TEMPLATE_DIR: Dir = include_dir!("src/built_in_templates");
         let glob = "**/*.neoj";
         for entry in BUILT_IN_TEMPLATE_DIR.find(glob).unwrap() {
@@ -73,6 +72,7 @@ impl BuilderV42<'_> {
         // });
 
         Ok(BuilderV42 {
+            db_conn: None,
             env,
             // errors: vec![],
             errors_v42: vec![],

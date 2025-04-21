@@ -1,6 +1,7 @@
 use super::PageV42b;
 use std::path::PathBuf;
 // use tracing::{event, instrument, Level};
+use crate::helpers::*;
 
 impl PageV42b {
     //#[instrument(skip(source))]
@@ -13,9 +14,10 @@ impl PageV42b {
             .strip_prefix(project_folder.parent().unwrap())
             .unwrap()
             .to_path_buf();
+        let cache_hash = get_string_as_sha256_hash(&source.to_string()).ok();
         PageV42b {
             ast: None,
-            cache_hash: None,
+            cache_hash,
             href: None,
             id: None,
             issues: vec![],
