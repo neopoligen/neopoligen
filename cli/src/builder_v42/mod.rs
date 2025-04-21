@@ -12,7 +12,6 @@ use itertools::Itertools;
 use minijinja::Environment;
 use minijinja::{context, Value};
 use rusqlite::Connection;
-// use rusqlite::Result;
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
@@ -50,7 +49,7 @@ impl BuilderV42<'_> {
                 "CREATE TABLE IF NOT EXISTS
                   page_output_cache (
                     db_id INTEGER PRIMARY KEY,
-                    page_id TEXT NOT NULL UNIQUE,
+                    source_path TEXT NOT NULL UNIQUE,
                     cache_hash TEXT NOT NULL, 
                     output TEXT NOT NULL,
                     output_for_rss TEXT NOT NULL
@@ -361,9 +360,10 @@ impl BuilderV42<'_> {
             // TODO: Get page templates here
             let mut sql = 
                 db_conn
-                .prepare("SELECT page_id, cache_hash, output, output_for_rss FROM page_output_cache WHERE page_id = ? AND cache_hash = ?").unwrap();
+                .prepare(
+                    "SELECT source_path, cache_hash, output, output_for_rss FROM page_output_cache WHERE source_path = ? AND cache_hash = ?").unwrap();
             let mut rows_iter = sql
-                .query_map([&page.id.clone().unwrap(), &page.cache_hash.clone().unwrap()], |row| Ok(
+                .query_map([&page.source_absolute_path.clone().display().to_string(), &page.cache_hash.clone().unwrap()], |row| Ok(
                     (row.get::<usize, String>(0).unwrap(),
                     row.get::<usize, String>(1).unwrap(),
                     row.get::<usize, String>(2).unwrap(),
@@ -394,10 +394,10 @@ impl BuilderV42<'_> {
                             )) {
                                 Ok(output) => {
                                     page.output = Some(output);
-                                    let sql = "INSERT INTO page_output_cache(page_id, cache_hash, output, output_for_rss) VALUES (?1, ?2, ?3, ?4)";
+                                    let sql = "INSERT INTO page_output_cache(source_path, cache_hash, output, output_for_rss) VALUES (?1, ?2, ?3, ?4)";
                                         let _ = db_conn.execute(sql,
                                         (
-                                            &page.id.clone().unwrap(),
+                                            &page.source_absolute_path.clone().display().to_string(),
                                             &page.cache_hash.clone().unwrap(),
                                             &page.output.clone().unwrap(),
                                             &page.output_for_rss.clone().unwrap(),
