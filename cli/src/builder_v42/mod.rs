@@ -62,7 +62,7 @@ impl BuilderV42<'_> {
                     .expect("need database connection")
                     .execute(sql, ())
                 {
-                    Ok(_) => println!("HEREHRER"),
+                    Ok(_) => (),
                     Err(e) => {
                         dbg!(e);
                         ()
@@ -363,13 +363,21 @@ impl BuilderV42<'_> {
             let mut sql = 
                 db_conn
                 .prepare("SELECT page_id, cache_hash, output, output_for_rss FROM page_output_cache WHERE page_id = ? AND cache_hash = ?").unwrap();
-            let rows_iter = sql
-                .query_map([&page.id.clone().unwrap(), &page.cache_hash.clone().unwrap()], |_row| Ok(()))
+            let mut rows_iter = sql
+                .query_map([&page.id.clone().unwrap(), &page.cache_hash.clone().unwrap()], |row| Ok(
+                    (row.get::<usize, String>(0).unwrap(),
+                    row.get::<usize, String>(1).unwrap(),
+                    row.get::<usize, String>(2).unwrap(),
+                    row.get::<usize, String>(3).unwrap(),)
+                ))
                 .unwrap();
-            if rows_iter.count() > 0 {
-                dbg!("FOUND CACHE");
-                // TODO: move results to page
-            } else {
+            match rows_iter.nth(0) {
+                Some(row) => {
+                    page.output = Some(row.as_ref().unwrap().clone().2);
+                    page.output_for_rss = Some(row.as_ref().unwrap().clone().3);
+                }
+                None => { 
+
                 dbg!("NO CACHE");
                 if let Ok(rss_template) = self.env.get_template("pages/post/rss.neoj") {
                     if let Ok(rss_output) = rss_template.render(context!(
@@ -441,6 +449,7 @@ impl BuilderV42<'_> {
                     }
                 }
             }
+        }
         }
             let _ = db_conn.close();
         Ok(())
