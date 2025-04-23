@@ -3,8 +3,8 @@
 
 [!- block body_main -!]
   <div class="flow body-block">
-    [@- neo.output_only_sections(["title", "subtitle", "forward"], false) -@]
-    [@- neo.output_all_sections_except(["title", "subtitle", "forward", "endnote", "footnote", "ref", "see-also"]) -@]
+    [@- neo.output_only_sections(["title", "subtitle", "forward", "preface"], false) -@]
+    [@- neo.output_all_sections_except(["title", "subtitle", "forward", "endnote", "footnote", "ref", "see-also", "preface"]) -@]
   </div>
   <div class="end-of-line">-- end of line --</div>
   <div class="end-block">

@@ -54,6 +54,13 @@ impl BuilderV42<'_> {
                     output TEXT NOT NULL,
                     output_for_rss TEXT NOT NULL
                   )",
+                "CREATE TABLE IF NOT EXISTS
+                  ast_cache (
+                    db_id INTEGER PRIMARY KEY,
+                    source_path TEXT NOT NULL UNIQUE,
+                    cache_hash TEXT NOT NULL, 
+                    ast TEXT NOT NULL
+                  )",
             ];
             for sql in statements.iter() {
                 match db_conn
@@ -259,31 +266,43 @@ impl BuilderV42<'_> {
     pub fn generate_asts(&mut self) -> Result<()> {
         event!(Level::INFO, "Generating ASTs");
         let db_conn = Connection::open(self.site_config.cache_database_path()).unwrap();
-        for (_, page) in &mut self.pages_v42 {
-            // TODO: Get page templates here
+         for (_, page) in &mut self.pages_v42 {
             let mut sql = 
                 db_conn
                 .prepare(
-                    "SELECT source_path, cache_hash, output, output_for_rss FROM page_output_cache WHERE source_path = ? AND cache_hash = ?").unwrap();
+                    "SELECT source_path, cache_hash, ast FROM ast_cache WHERE source_path = ? AND cache_hash = ?").unwrap();
             let mut rows_iter = sql
                 .query_map([&page.source_absolute_path.clone().display().to_string(), &page.cache_hash.clone().unwrap()], |row| Ok(
                     (row.get::<usize, String>(0).unwrap(),
                     row.get::<usize, String>(1).unwrap(),
                     row.get::<usize, String>(2).unwrap(),
-                    row.get::<usize, String>(3).unwrap(),)
+                    )
                 ))
                 .unwrap();
             match rows_iter.nth(0) {
-                Some(_) => {
-                    ()
+                Some(row) => {
+                    page.ast = serde_json::from_str(&row.unwrap().2).unwrap();
+                    page.status = page.status();
+                    page.rss_date = page.rss_date();
                 },
                 None => {
                     page.generate_ast(&self.site_config);
                     page.status = page.status();
                     page.rss_date = page.rss_date();
-                }
-            }
-        }
+                    let json = serde_json::to_string(&page.ast);
+
+                        let sql = "INSERT INTO ast_cache(source_path, cache_hash, ast) VALUES (?1, ?2, ?3)";
+                            let _ = db_conn.execute(sql,
+                            (
+                                &page.source_absolute_path.clone().display().to_string(),
+                                &page.cache_hash.clone().unwrap(),
+                            json.unwrap()
+                            ),
+                        );
+                 }
+             }
+
+         }
         Ok(())
     }
 
@@ -367,6 +386,7 @@ impl BuilderV42<'_> {
 
     #[instrument(skip(self))]
     pub fn generate_outputs(&mut self) -> Result<()> {
+        let mut page_count = 0;
         event!(Level::INFO, "Generating Outputs");
         let site_clone = Value::from_object(self.site_v42b.clone().unwrap());
         let page_issue_template_result = self.env.get_template("built-in/issues/page.neoj");
@@ -378,6 +398,7 @@ impl BuilderV42<'_> {
         let page_issue_template = page_issue_template_result.unwrap();
         let db_conn = Connection::open(self.site_config.cache_database_path()).unwrap();
         for (_, page) in &mut self.pages_v42 {
+            page_count += 1;
             // TODO: Get page templates here
             let mut sql = 
                 db_conn
@@ -451,6 +472,7 @@ impl BuilderV42<'_> {
             }
         }
         let _ = db_conn.close();
+        event!(Level::INFO, "Raw page count: {}", page_count);
         Ok(())
     }
 

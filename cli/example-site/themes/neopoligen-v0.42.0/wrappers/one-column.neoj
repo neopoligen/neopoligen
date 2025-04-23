@@ -84,7 +84,7 @@
 const url = new URL(window.location.href)
 if (url.hostname === "localhost") {
   const el = document.createElement('div')
-  el.innerHTML = `<a href="https://www.alanwsmith.com${url.pathname}" target="_blank">prod</a>`
+  el.innerHTML = `[@ page.id() @]<br /><a href="https://www.alanwsmith.com${url.pathname}" target="_blank">prod</a>`
   el.classList.add("center")
   document.body.appendChild(el)
 }
