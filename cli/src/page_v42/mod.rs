@@ -7,7 +7,6 @@ use crate::helpers::flatten_spans_v42;
 use crate::neo_error_v42::NeoErrorV42;
 use crate::page_v42::helpers::*;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
-use crate::section_v42::json5::Json5SectionV42;
 use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
 use crate::span_v42::SpanV42;
