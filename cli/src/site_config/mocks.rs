@@ -36,6 +36,8 @@ impl SiteConfigV42 {
         section_types.insert("basic".to_string(), basic_kinds);
         let checklist_kinds = vec!["checklist".to_string(), "todos".to_string()];
         section_types.insert("checklist".to_string(), checklist_kinds);
+        let json_kinds = vec!["metadata".to_string()];
+        section_types.insert("json".to_string(), json_kinds);
         let list_kinds = vec!["list".to_string(), "notes".to_string()];
         section_types.insert("list".to_string(), list_kinds);
         let olist_kinds = vec!["olist".to_string(), "devtest-olist".to_string()];

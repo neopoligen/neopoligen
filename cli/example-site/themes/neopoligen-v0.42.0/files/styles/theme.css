@@ -436,6 +436,13 @@ th {
   margin-bottom: 2.9rem;
 }
 
+.tldr-section {
+  padding: 1rem;
+  border: 1px solid var(--color-reverse-40);
+  border-radius: var(--border-radius-medium);
+  margin-bottom: 3.8rem;
+}
+
 video{
   display: block;
   max-width: 100%;

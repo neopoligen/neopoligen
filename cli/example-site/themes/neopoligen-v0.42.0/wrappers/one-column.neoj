@@ -50,6 +50,8 @@
 </header>
 
 <main class="wrapper-medium flow">
+  ---[@ page.flags() @]---
+
     [!- block body_main -!][!- endblock -!]
 </main>
 
@@ -90,6 +92,10 @@ if (url.hostname === "localhost") {
 }
 </script>
 
-
+[#
+<pre>
+[@ page.ast|tojson(true) @]
+</pre>
+#]
 </body>
 </html>

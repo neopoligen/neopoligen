@@ -7,6 +7,7 @@ use crate::helpers::flatten_spans_v42;
 use crate::neo_error_v42::NeoErrorV42;
 use crate::page_v42::helpers::*;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
+use crate::section_v42::json5::Json5SectionV42;
 use crate::section_v42::SectionV42;
 use crate::site_config::SiteConfigV42;
 use crate::span_v42::SpanV42;
@@ -59,6 +60,24 @@ impl PageV42b {
                 }),
             },
             Err(e) => Err(e),
+        }
+    }
+
+    pub fn flags(&self) -> Result<Value, Error> {
+        if let Some(sections) = &self.ast {
+            if let Some(flags) = sections.iter().find_map(|section| match section {
+                SectionV42::Json5(s) => {
+                    Some(s.flags.clone())
+                    //None::<Vec<String>>
+                }
+                _ => None,
+            }) {
+                Ok(Value::from_serialize(flags))
+            } else {
+                Ok(Value::from_serialize::<Vec<String>>(vec![]))
+            }
+        } else {
+            Ok(Value::from_serialize::<Vec<String>>(vec![]))
         }
     }
 
@@ -363,6 +382,7 @@ impl PageV42b {
 impl Object for PageV42b {
     fn get_value(self: &Arc<Self>, key: &Value) -> Option<Value> {
         match key.as_str()? {
+            "ast" => Some(Value::from_serialize(self.ast.clone())),
             // "href" => Some(Value::from(self.href.as_ref())),
             // "id" => Some(Value::from(self.id.clone().unwrap().clone())),
             "issues" => Some(Value::from_serialize(self.issues.clone())),
@@ -387,6 +407,7 @@ impl Object for PageV42b {
         _args: &[Value],
     ) -> Result<Value, Error> {
         match name {
+            "flags" => self.flags(),
             "href" => Ok(Value::from(self.href.as_ref())),
             "id" => Ok(Value::from(self.id.as_ref())),
             "parsing_issue" => Ok(Value::from_serialize(self.parsing_issue.clone())),

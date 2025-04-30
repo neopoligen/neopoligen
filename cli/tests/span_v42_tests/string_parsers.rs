@@ -2,6 +2,7 @@ use neopoligengine::span_v42::string_parsers::*;
 use pretty_assertions::assert_eq;
 use rstest::rstest;
 
+// MOVED TO NEOPOLITAN
 #[rstest]
 #[case(" foxtrot", "foxtrot")]
 #[case("    foxtrot", "foxtrot")]
@@ -11,6 +12,7 @@ fn plain_text_space1_as_single_space_valid_tests(#[case] source: &str, #[case] r
     assert_eq!(matcher, parsed);
 }
 
+// MOVED TO NEOPOLITAN
 #[rstest]
 #[case("\n", "Don't Trigger On Newline")]
 #[case(" \n", "Don't Trigger In Front Of Newline")]
@@ -72,6 +74,7 @@ fn escaped_character_tests(#[case] source: &str, #[case] got: &str, #[case] rema
     assert_eq!(matcher, parsed);
 }
 
+// MOVED TO NEOPOLITAN
 #[rstest]
 #[case("alfa", &["alfa"], "")]
 #[case("alfa bravo", &["alfa", " ", "bravo"], "")]
@@ -85,16 +88,17 @@ fn escaped_character_tests(#[case] source: &str, #[case] got: &str, #[case] rema
 #[case("alfa::bravo", &["alfa", "::", "bravo"], "")]
 #[case("alfa~~bravo~~", &["alfa"], "~~bravo~~")]
 #[case("alfa ~~bravo~~", &["alfa", " "], "~~bravo~~")]
-fn plain_text_span_for_block(#[case] source: &str, #[case] got: &[&str], #[case] remainder: &str) {
+fn plain_text_span_for_block_paragraph_valid_tests(#[case] source: &str, #[case] got: &[&str], #[case] remainder: &str) {
     let matcher = (remainder, got.to_vec());
     let parsed = plain_text_span_for_block_paragraph(source).unwrap();
     assert_eq!(matcher, parsed);
 }
 
+// MOVED TO NEOPOLITAN
 #[rstest]
 #[case("|", "|", "")]
 #[case("||", "||", "")]
-fn plain_text_any_pipes_tests(#[case] source: &str, #[case] got: &str, #[case] remainder: &str) {
+fn plain_text_any_pipes_valid_tests(#[case] source: &str, #[case] got: &str, #[case] remainder: &str) {
     let matcher = (remainder, got);
     let parsed = plain_text_any_pipes(source).unwrap();
     assert_eq!(matcher, parsed);
@@ -108,6 +112,7 @@ fn plain_text_single_pipe_tests(#[case] source: &str, #[case] got: &str, #[case]
     assert_eq!(matcher, parsed);
 }
 
+// MOVED TO NEOPOLITAN
 #[rstest]
 #[case("alfa", "alfa", "")]
 #[case("alfa bravo", "alfa", " bravo")]
@@ -125,12 +130,13 @@ fn plain_text_single_pipe_tests(#[case] source: &str, #[case] got: &str, #[case]
 #[case("<bravo", "<", "bravo")]
 #[case(">bravo", ">", "bravo")]
 #[case("_bravo", "_", "bravo")]
-fn plain_text_string_base_tests(#[case] source: &str, #[case] got: &str, #[case] remainder: &str) {
+fn plain_text_string_base_valid_tests(#[case] source: &str, #[case] got: &str, #[case] remainder: &str) {
     let matcher = (remainder, got);
     let parsed = plain_text_string_base(source).unwrap();
     assert_eq!(matcher, parsed);
 }
 
+// MOVED TO NEOPOLITAN
 #[rstest]
 #[case("\n", " ", "")]
 #[case(" \nx", " ", "x")]
@@ -144,6 +150,7 @@ fn plain_text_single_line_ending_as_space_valid_tests(
     assert_eq!(matcher, parsed);
 }
 
+// MOVED TO NEOPOLITAN
 #[rstest]
 #[case("\n\n", "Two Newlines In A Row")]
 #[case("\n  \n", "Two Newlines Separated By Whitespace")]
