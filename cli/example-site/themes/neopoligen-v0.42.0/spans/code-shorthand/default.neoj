@@ -1,8 +1,12 @@
 [@- '' -@]
 
 <code class="code-span" [@- site.get_span_attrs(span) -@]>
-  [!- autoescape true -!]
-    [@- span.text -@]
+  [!- autoescape false -!]
+    [!- if span.flags|length > 0 -!]
+    [@- highlight_span(span.text, span.flags[0]) -@]
+    [!- else -!]
+    [@- highlight_span(span.text, "txt") -@]
+    [!- endif -!]
   [!- endautoescape -!]
 </code>
 
