@@ -4,8 +4,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+
+
 [! if "no-css" not in page.flags() !]
+[# 
+  NOTE: taking this out until a full 
+  solution for dark/light mode is built
 <style>
+
   :root {
     --color-background: #0d1229;
   }
@@ -17,6 +23,7 @@
     font-display: block;
   }
 </style>
+#]
 <link rel="stylesheet" href="[@ neo.theme_folder() @]/styles/theme.css" />
 <link rel="stylesheet" href="[@ neo.theme_folder() @]/styles/syntax-highlighting/code-solarized-dark.css" />
 [! endif !]
@@ -43,7 +50,7 @@
 [@ neo.output_css(sections) @]
 
 </head>
-<body class="flow">
+<body>
 
 <header class="wrapper-medium">
   <a href="/">home</a> ~
@@ -53,35 +60,30 @@
 
 [! if "no-wrapper" not in page.flags() !]
   <main class="wrapper-medium flow">
+[! else !]
+  <main class="flow">
 [! endif !]
     [!- block body_main -!][!- endblock -!]
-[! if "no-wrapper" not in page.flags() !]
   </main>
-[! endif !]
 
-<footer class="wrapper-medium footer">
-  [#
-  <div class="generated-timestamp">[@ neo.generated_at("Generated on %a. %B %-d, %Y at %-I:%M%p " + neo.time_zone()) @]</div>
-  #]
-
-  <div class="center">
-    made by alan w smith
+<footer class="border-top-alt-3-60">
+  <div>
+    made by alan w smith<br />
+    who has  <a href="https://links.alanwsmith.com/">made some other things</a><br />
+    and is on <a href="https://socials.alanwsmith.com/">some social networks</a>
   </div>
-  <div class="center">
-    <a href="https://links.alanwsmith.com/">other projects</a> ~
-    <a href="https://socials.alanwsmith.com/">socials</a> ~
-    <a href="/neo-files/report.html">temporary file list</a> ~
-    <a href="/feeds/posts.xml">rss feed</a>
-  </div>
-  <div class="center">
+  <div>
+    this site has <a href="/feeds/posts.xml">an rss feed</a><br />
+    and <a href="/neo-files/report.html">a giant list of files</a><br />
     &copy; 1998-2025
   </div>
+</footer>
 
 [#
+<div class="wrapper-large">
   [!- include "includes/debugging.neoj" -!]
-  #]
-
-</footer>
+</div>
+#]
 
 
 [@ neo.output_scripts(sections) @]
@@ -89,12 +91,17 @@
 <script type="module">
 const url = new URL(window.location.href)
 if (url.hostname === "localhost") {
-  const el = document.createElement('div')
+  const el = document.createElement('div');
+  el.classList.add('wrapper-medium');
+  el.classList.add('text-align-center');
+  el.classList.add('font-size-small');
+  el.classList.add('color-primary-30');
   el.innerHTML = `[@ page.id() @]<br /><a href="https://www.alanwsmith.com${url.pathname}" target="_blank">prod</a>`
   el.classList.add("center")
   document.body.appendChild(el)
 }
 </script>
+
 
 [#
 <pre>

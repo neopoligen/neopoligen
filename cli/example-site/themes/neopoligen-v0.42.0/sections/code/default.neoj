@@ -10,10 +10,27 @@
   [!- endif -!]
 
 <pre><code>
-[!- autoescape true -!]
-[@- section.body -@]
+[!- autoescape false -!]
+[!- if section.flags|length > 0 -!]
+[@- highlight_code_section(section.body, section.flags[0]) -@]
+[!- else -!]
+[@- highlight_code_section(section.body, "txt") -@]
+[!- endif -!]
 [!- endautoescape -!]
 </code></pre>
+
+  [!- if "figure" in section.attrs -!]
+    <div class="border-top-alt-1-60 
+    text-align-right 
+font-size-xsmall
+        color-primary-40
+        margin-top-medium
+">figure [@ neo.output_attr('figure') @]</div>
+  [!- endif -!]
+
+<div class="border-top-alt-1-60 color-primary-60 no-flow padding-top-medium">NOTE: code block wrapping is broken. Sorry about the long
+lines if they are breaking out of the container. It's on 
+the list of things to fix.</div>
 </section>
 
 [@- neo.output_end_section(section) -@]

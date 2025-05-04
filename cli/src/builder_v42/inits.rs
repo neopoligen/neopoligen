@@ -1,4 +1,5 @@
 use super::BuilderV42;
+use crate::helpers::highlight_code_section;
 use crate::neo_error::NeoError;
 use crate::neo_error_v42::NeoErrorV42;
 use crate::site_config::SiteConfigV42;
@@ -13,6 +14,7 @@ impl BuilderV42<'_> {
     pub fn new_from_site_config(site_config: &SiteConfigV42) -> Result<BuilderV42, NeoError> {
         let mut env = Environment::new();
         let mut template_load_errors = vec![];
+        env.add_function("highlight_code_section", highlight_code_section);
         env.set_syntax(
             SyntaxConfig::builder()
                 .block_delimiters("[!", "!]")
