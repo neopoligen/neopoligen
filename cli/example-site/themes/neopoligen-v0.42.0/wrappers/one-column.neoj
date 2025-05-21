@@ -36,7 +36,6 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="[@ site.site_root() @][@ page.href() @]" />
 <meta property="og:image" content="https://res.cloudinary.com/awsimages/image/upload/og-image-no-title-white-on-black.jpg" />
-<meta name="twitter:card" content="summary_large_image" />
 <link rel="apple-touch-icon" sizes="180x180" href="[@ neo.theme_folder() @]/favicons/apple-touch-icon.png" />
 <link rel="icon" type="image/png" sizes="32x32" href="[@ neo.theme_folder() @]/favicons/favicon-32x32.png" />
 <link rel="icon" type="image/png" sizes="16x16" href="[@ neo.theme_folder() @]/favicons/favicon-16x16.png" />
@@ -75,7 +74,7 @@
   <div>
     this site has <a href="/feeds/posts.xml">an rss feed</a><br />
     and <a href="/neo-files/report.html">a giant list of files</a><br />
-    &copy; 1998-2025
+    &copy; 1999-2025
   </div>
 </footer>
 
@@ -94,6 +93,7 @@ if (url.hostname === "localhost") {
   const el = document.createElement('div');
   el.classList.add('wrapper-medium');
   el.classList.add('text-align-center');
+  el.classList.add('margin-bottom-large');
   el.classList.add('font-size-small');
   el.classList.add('color-primary-30');
   el.innerHTML = `[@ page.id() @]<br /><a href="https://www.alanwsmith.com${url.pathname}" target="_blank">prod</a>`

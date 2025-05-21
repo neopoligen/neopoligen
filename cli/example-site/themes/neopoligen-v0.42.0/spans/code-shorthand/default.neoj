@@ -1,6 +1,6 @@
 [@- '' -@]
 
-<code class="code-span" [@- site.get_span_attrs(span) -@]>
+<code class="code-span color-alt-1-80" [@- site.get_span_attrs(span) -@]>
   [!- autoescape false -!]
     [!- if span.flags|length > 0 -!]
     [@- highlight_span(span.text, span.flags[0]) -@]

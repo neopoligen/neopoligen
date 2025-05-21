@@ -129,11 +129,7 @@ pub fn list_item_paragraph_block<'a>(
             children: vec![],
             kind: kind_tag.clone(),
             spans,
-            template_list: make_template_list(
-                "list-item-paragraph",
-                &kind_tag,
-                "default",
-            ),
+            template_list: make_template_list("list-item-paragraph", &kind_tag, "default"),
         }),
     ))
 }

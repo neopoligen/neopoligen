@@ -5,15 +5,13 @@
         [! if endnote_header_has_been_output == false !]
           <section class="endnotes-section flow">
             <h3 class="back-matter">Endnotes</h3>
-            <ul class="no-li-markers flow">
+            <div class="flow">
           [! set endnote_header_has_been_output = true !]
         [! endif !]
-        <li class="flow endnote-li">
           [@- neo.output_section(section) -@]
-        </li>
     [!- endif -!]
     [! if loop.last and endnote_header_has_been_output == true !]
-          </ul>
+    </div>
         </section>
     [! endif !]
 [!- endfor -!]

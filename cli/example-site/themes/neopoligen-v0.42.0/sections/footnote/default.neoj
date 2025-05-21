@@ -6,14 +6,17 @@
 <section [@- neo.section_attrs() -@]>
 
 
-  <div>
+  <div class="font-size-small border-top-color-alt-1-60 padding-top-small padding-bottom-small">
     [!- if "id" in section.attrs -!]
       <a 
         href="#footnote-[@ neo.output_spans(section.attrs.id[0].spans) @]-link"
-        ><span id="footnote-[@ neo.output_spans(section.attrs.id[0].spans) @]-text">
+        >
+        <span id="footnote-[@ neo.output_spans(section.attrs.id[0].spans) @]-text">
           [@- neo.output_spans(section.attrs.id[0].spans) -@]
           [@- ' ' -@]
-          &#x2934;</a></span>
+          &#x2934;
+          </span>
+      </a>
     [!- endif -!]
   </div>
 

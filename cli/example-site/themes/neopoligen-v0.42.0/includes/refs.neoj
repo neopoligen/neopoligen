@@ -5,13 +5,13 @@
         [! if reference_header_has_been_output == false !]
         <section class="references-section flow">
             <h3 class="back-matter">References</h3>
+            <div class="flow">
         [! set reference_header_has_been_output = true !]
-        <ul>
         [! endif !]
         [@- neo.output_section(section) -@]
     [!- endif -!]
     [! if loop.last and reference_header_has_been_output == true !]
-    </ul>
+      </div>
         </section>
     [! endif !]
 [!- endfor -!]

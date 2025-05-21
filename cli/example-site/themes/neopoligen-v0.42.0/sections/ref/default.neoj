@@ -3,7 +3,7 @@
 [# TYPE: basic #]
 [# HOIST: [class, id] #]
 
-  <li class="flow">
+<section [@- neo.section_attrs() -@]>
     <div>
       [! if "strike" in section.flags !]
       <strike>
@@ -34,8 +34,7 @@
       </strike>
       [! endif !]
     </div>
-  </li>
-
+</section>
 
 [@- neo.output_end_section(section) -@]
 
