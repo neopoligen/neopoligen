@@ -1,0 +1,31 @@
+[!- import "built-in/macros.neoj" as neo -!]
+
+[# TYPE: raw #]
+[# HOIST: [] #]
+
+<section [@- neo.section_attrs("flow") -@]>
+
+  [!- if "title" in section.attrs -!]
+    <h2>[@ neo.output_attr('title') @]</h2>
+  [!- endif -!]
+
+<fieldset>
+<legend>Output</legend>
+<pre><code>[! autoescape true !][@ section.body @][! endautoescape !]</code></pre>
+
+  [!- if "figure" in section.attrs -!]
+    <div class="border-top-color-alt-1-40 
+    text-align-right 
+font-size-xsmall
+        color-primary-40
+        margin-top-medium
+">figure [@ neo.output_attr('figure') @]</div>
+  [!- endif -!]
+</fieldset>
+
+
+</section>
+
+[@- neo.output_end_section(section) -@]
+
+

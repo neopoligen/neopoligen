@@ -6,7 +6,11 @@
 
 <section [@- neo.section_attrs("flow") -@]>
   <aside>
-    <div class="aside-header">aside</div>
+  [!- if "title" in section.attrs -!]
+    <div class="aside-title">[@ neo.output_attr('title') @]</div>
+  [! else !]
+    <div class="aside-title">Aside</div>
+  [!- endif -!]
     <div class="aside-body">
     [@- neo.output_all_child_sections(section) -@]
     </div>

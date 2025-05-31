@@ -270,7 +270,7 @@ font-weight: normal;
   --padding-xlarge: 3.1rem;
   --padding-xxlarge: 5.2rem;
   --width-xxsmall: min(100vw - 1.4rem, 9rem);
-  --width-xsmall: min(100vw - 1.4rem, 19rem);
+  --width-xsmall: min(100vw - 1.4rem, 14rem);
   --width-small: min(100vw - 1.4rem, 29rem);
   --width-medium: min(100vw - 1.4rem, 39rem);
   --width-large: min(100vw - 1.4rem, 50rem);
@@ -301,12 +301,21 @@ a {
 }
 
 aside {
-  border: 1px solid var(--color-bw-reverse-30);
+  border-block: 1px solid var(--color-secondary-60);
+  border-right: 1px solid var(--color-secondary-60);
+  border-left: 20px solid var(--color-secondary-60);
   border-radius: var(--border-radius-medium);
-  margin-left: 2rem;
+  margin-left: 7rem;
+  margin-right: 1.2rem;
   padding-inline: 2rem;
   padding-block: 1rem;
 }
+
+.aside-title {
+  border-bottom: 1px solid var(--color-bw-reverse-30);
+  margin-bottom: 1.2rem;
+}
+
 
 .back-matter {
   border-top: 1px solid var(--color-bw-reverse-40);
@@ -1184,12 +1193,17 @@ canvas {
 }
 
 .endnote-section {
-  border-inline: 1px solid var(--color-bw-reverse-40);
+  border-left: 1px solid var(--color-bw-reverse-40);
   padding-bottom: 0.8rem;
-  padding-inline: 0.8rem;
-  --flow-space: 3rem;
+  margin-left: 1.8rem;
+  padding: 1rem;
+  --flow-space: 1.2rem;
 }
 
+fieldset {
+  border: 1px solid var(--color-bw-reverse-10);
+  border-radius: 0.5rem;
+}
 
 .fin-token {
   /*

@@ -3,7 +3,7 @@
 [# TYPE: html #]
 [# HOIST: [] #]
 
-<section [@- neo.section_attrs("flow") -@]>
+<section [@- neo.section_attrs() -@]>
 [@ section.body @]
 </section>
 

@@ -5,16 +5,23 @@ script sections for the page
 
 NOARGS:
 
+NOTE: This currently moves does everything in a single
+modules. This lets you write functions at the
+top of a page and use them further below.
+TODO: is set up a way to split stuff out
+to independent modules. 
 
 -#]
 
 [!- macro output_scripts(section_list) -!]
+<script type="module">
 [!- for section in section_list -!]
   [!- if section.kind == "javascript" -!]
-<script type="module">
-[@ section.body @]
-</script>
+  [@ section.body @][@- "\n" -@]
   [!- endif -!]
+  [#
   [@- output_scripts(section.children) -@]
+  #]
 [!- endfor -!]
+</script>
 [!- endmacro -!]
