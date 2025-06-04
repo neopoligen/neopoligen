@@ -6,7 +6,7 @@
 <section [@- neo.section_attrs("flow show-javascript") -@]>
   <h4 class="show-javascript-heading">JavaScript</h4>
   <div class="javascript-body">
-  <pre class="font-size-small"><code>
+  <pre class="font-size-xsmall"><code>
   [@- site.highlight_code(section.body, "js") -@]
   </code></pre>
   </div>

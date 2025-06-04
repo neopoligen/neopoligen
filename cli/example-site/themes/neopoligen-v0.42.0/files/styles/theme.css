@@ -1186,6 +1186,12 @@ canvas {
   text-align: right;
 }
 
+details {
+  padding: var(--padding-medium);
+  border: 1px solid var(--color-bw-reverse-40);
+  border-radius: var(--border-radius-medium);
+}
+
 .end-of-line {
   color: var(--color-bw-reverse-20);
   text-align: center;
