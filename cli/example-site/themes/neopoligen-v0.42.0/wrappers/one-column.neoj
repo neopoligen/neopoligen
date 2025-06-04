@@ -110,8 +110,11 @@ if (url.hostname === "localhost") {
 #]
 
 <script type="module">
-class DetailsWatcherTest {
-  #storageName = "openDetailsDataTest";
+// This one saves the state of details elements
+// (either opened or closed) and restores it
+// when the page is reloaded/refreshed. 
+class DetailsWatcher {
+  #storageName = "openDetailsData";
   #data;
 
   initTags() {
@@ -156,11 +159,42 @@ class DetailsWatcherTest {
   }
 }
 
-const dw = new DetailsWatcherTest();    
+const dw = new DetailsWatcher();    
 dw.run();
 
 
+// Change the first word of a details summary
+// between Open/Close based on the state of
+// the details element. Used to make the
+// UI of hiding stories better.
+class DetailsOpenCloseWatcher {
+  constructor () {
+    this.addWatchers();
+  }
+  
+  addWatchers() {
+    const els = document.querySelectorAll("details");
+    els.forEach((el) => {
+      const summary = el.querySelector("summary");
+      if (summary) {
+        this.update(summary, el.open);
+        el.addEventListener("toggle", (event) => {
+          this.update.call(this, summary, event.target.open);
+        });
+      }
+    });
+  }
 
+  update(el, state) {
+    if (state === false) {
+      el.innerHTML = el.innerHTML.replace(/^Close/, "Open");
+    } else  {
+      el.innerHTML = el.innerHTML.replace(/^Open/, "Close");
+    }
+  }
+}
+
+const watcher = new DetailsOpenCloseWatcher();
 </script>
 
 
