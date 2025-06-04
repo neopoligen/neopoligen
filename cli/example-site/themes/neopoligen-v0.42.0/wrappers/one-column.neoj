@@ -108,5 +108,62 @@ if (url.hostname === "localhost") {
 [@ page.ast|tojson(true) @]
 </pre>
 #]
+
+<script type="module">
+class DetailsWatcherTest {
+  #storageName = "openDetailsDataTest";
+  #data;
+
+  initTags() {
+    this.details().forEach((tag, tagIndex) => {
+      if (this.#data.has(tagIndex)) {
+        tag.open = true;
+      }
+      tag.addEventListener("toggle", (event) => {
+        if (event.newState === "open") {
+          this.#data.add(tagIndex);
+        } else {
+          this.#data.delete(tagIndex);
+        }
+        this.saveState();
+      });
+    })
+  }
+
+  details() {
+    return document.querySelectorAll("details");
+  }
+
+  loadState() {
+    const storage = localStorage.getItem(this.#storageName);
+    if (storage === null) {
+      this.#data = new Set();
+    } else {
+      this.#data = new Set(JSON.parse(storage).data);
+    }
+  }
+
+  run() {
+    this.loadState();
+    this.initTags();
+  }
+
+  saveState() {
+    localStorage.setItem(
+      this.#storageName,
+      JSON.stringify({ "data": [...this.#data] })
+    );
+  }
+}
+
+const dw = new DetailsWatcherTest();    
+dw.run();
+
+
+
+</script>
+
+
+
 </body>
 </html>
