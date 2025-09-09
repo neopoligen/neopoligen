@@ -4,6 +4,10 @@
   [!- if "title" in section.attrs -!]
   <div class="highlight-file-title">[@ neo.output_attr('title') @]</div>
   [!- endif -!]
+  [!- if "subtitle" in section.attrs -!]
+  <div class="highlight-file-subtitle">[@ neo.output_attr('subtitle') @]</div>
+  [!- endif -!]
+
 
 <pre class="code-block">
 [@- highlight_file(neo.output_attr("path"), neo.output_attr("format")) -@]

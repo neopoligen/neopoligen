@@ -1060,6 +1060,16 @@ canvas {
   padding: var(--padding-medium);
 }
 
+.code-block {
+  margin: var(--padding-large);
+  padding: var(--padding-medium);
+  border: 1px solid var(--color-bw-reverse-40);
+  border-radius: var(--border-radius-medium);
+  font-size: var(--font-size-small);
+  line-height: 1.4rem;
+  font-family: var(--font-family-primary);
+}
+
 .code-section {
   margin: var(--padding-large);
   padding: var(--padding-medium);
@@ -1659,5 +1669,6 @@ video{
   width: var(--width-full);
   margin-inline: auto;
 }
+
 
 
