@@ -318,7 +318,6 @@ aside {
 
 
 .back-matter {
-  border-top: 1px solid var(--color-bw-reverse-40);
   color: var(--color-bw-reverse-40);
   margin-top: 3.2rem;
 }

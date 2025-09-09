@@ -38,9 +38,28 @@ pub struct BuilderV42<'a> {
     pub site_v42b: Option<SiteV42b>,
     pub templates: BTreeMap<String, String>,
     pub template_load_errors: Vec<NeoErrorV42>,
+
 }
 
+// pub fn highlight_file(content_root: PathBuf, path_string: String, lang: String) -> String {
+//     let file_path = content_root.join(path_string);
+//     if path_exists(&file_path) {
+//         "POAINSDSADLKJASD".to_string()
+//     } else {
+//         format!("COULD NOT FIND FILE: {}", file_path.display())
+//     }
+// }
+
+
 impl BuilderV42<'_> {
+
+    #[instrument(skip(self))]
+    pub fn add_custom_functions(&mut self) -> Result<()> {
+        let content_folder = self.site_config.project_root.as_ref().unwrap().to_path_buf();
+        self.env.add_function("highlight_file", move |path_string: String, lang: String| highlight_file(content_folder.to_owned(), path_string, lang));
+        Ok(())
+    }
+
     #[instrument(skip(self))]
     pub fn create_cache_database(&mut self) -> Result<()> {
         event!(Level::INFO, "Creating Cache Database");
@@ -290,7 +309,6 @@ impl BuilderV42<'_> {
                     page.status = page.status();
                     page.rss_date = page.rss_date();
                     let json = serde_json::to_string(&page.ast);
-
                         let sql = "INSERT INTO ast_cache(source_path, cache_hash, ast) VALUES (?1, ?2, ?3)";
                             let _ = db_conn.execute(sql,
                             (
@@ -301,7 +319,6 @@ impl BuilderV42<'_> {
                         );
                  }
              }
-
          }
         Ok(())
     }
@@ -383,6 +400,9 @@ impl BuilderV42<'_> {
 
         Ok(())
     }
+
+
+
 
     #[instrument(skip(self))]
     pub fn generate_outputs(&mut self) -> Result<()> {

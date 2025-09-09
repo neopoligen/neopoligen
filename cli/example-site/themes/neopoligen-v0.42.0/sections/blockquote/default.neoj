@@ -4,7 +4,7 @@
 [# HOIST: [class, id] #]
 
 <section [@- neo.section_attrs("flow") -@]>
-  <blockquote>
+  <blockquote class="flow default-flow">
     [@- neo.output_all_child_sections(section) -@]
   </blockquote>
 </section>

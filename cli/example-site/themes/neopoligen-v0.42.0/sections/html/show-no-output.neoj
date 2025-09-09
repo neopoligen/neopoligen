@@ -1,0 +1,17 @@
+[!- import "built-in/macros.neoj" as neo -!]
+
+[# TYPE: html #]
+[# HOIST: [] #]
+
+<section [@- neo.section_attrs("flow show-html") -@]>
+<h4 class="show-html-heading">HTML</h4>
+
+<pre><code>
+[@- site.highlight_code(section.body, "html") -@]
+</code></pre>
+
+</section>
+
+[@- neo.output_end_section(section) -@]
+
+

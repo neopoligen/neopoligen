@@ -4,7 +4,6 @@
 [# HOIST: [] #]
 
 <section [@- neo.section_attrs("flow show-html") -@]>
-<h4>Output</h4>
 [@ section.body @]
 
 <h4>HTML</h4>

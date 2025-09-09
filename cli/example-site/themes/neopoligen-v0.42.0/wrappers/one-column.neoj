@@ -53,8 +53,8 @@
 
 <header class="wrapper-medium">
   <a href="/">home</a> ~
-  <a href="https://links.alanwsmith.com/">projects</a> ~
-  <a href="https://socials.alanwsmith.com/">socials</a>
+  <a href="https://socials.alanwsmith.com/">socials</a> ~
+  <a href="https://links.alanwsmith.com/">other projects</a> 
 </header>
 
 [! if "no-wrapper" not in page.flags() !]
@@ -68,8 +68,8 @@
 <footer class="border-top-alt-3-60">
   <div>
     made by alan w smith<br />
-    who has  <a href="https://links.alanwsmith.com/">made some other things</a><br />
-    and is on <a href="https://socials.alanwsmith.com/">some social networks</a>
+    who is on <a href="https://socials.alanwsmith.com/">some social networks</a><br>
+    and has <a href="https://links.alanwsmith.com/">made some other things</a>
   </div>
   <div>
     this site has <a href="/feeds/posts.xml">an rss feed</a><br />
@@ -197,6 +197,8 @@ class DetailsOpenCloseWatcher {
 const watcher = new DetailsOpenCloseWatcher();
 </script>
 
+<script src="/components/youtube-player/youtube-player-v1.js" type="module"></script>
+<script src="/components/bitty-js/bitty-v0.3.0.js" type="module"></script>
 
 
 </body>

@@ -6,7 +6,7 @@
     [@- neo.output_only_sections(["title", "subtitle", "forward", "preface"], false) -@]
     [@- neo.output_all_sections_except(["title", "subtitle", "forward", "endnote", "footnote", "ref", "see-also", "preface"]) -@]
   </div>
-  <div class="wrapper-medium text-align-center color-primary-30 padding-xlarge">-- end of line --</div>
+  <div class="wrapper-medium text-align-center color-primary-30 padding-default">-- end of line --</div>
   <div class="end-block">
     [!- include "includes/endnotes.neoj" -!]
     [!- include "includes/see-also.neoj" -!]
