@@ -4,7 +4,12 @@
 [# HOIST: [] #]
 
 <section [@- neo.section_attrs("flow") -@]>
+  [!- if "title" in section.attrs -!]
+  <h2>[@ neo.output_attr('title') @]</h2>
+  [!- else -!]
   <h2>Notes</h2>
+  [!- endif -!]
+
   <ul class="flow">
     [@- neo.output_all_child_sections(section) -@]
   </ul>

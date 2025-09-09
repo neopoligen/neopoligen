@@ -1,18 +1,13 @@
 [!- import "built-in/macros.neoj" as neo -!]
 
+<section [@- neo.section_attrs("flow") -@]>
+  [!- if "title" in section.attrs -!]
+  <div class="highlight-file-title">[@ neo.output_attr('title') @]</div>
+  [!- endif -!]
 
-<hr>
-
-[@ section.attrs["path"]@]
-
-<hr>
-
-[@ section.attrs["format"]@]
-
-<hr>
-
-[@ highlight_file(neo.output_attr("path"), neo.output_attr("format")) @]
-
-<hr>
+<pre class="code-block">
+[@- highlight_file(neo.output_attr("path"), neo.output_attr("format")) -@]
+</pre>
+</section>
 
 

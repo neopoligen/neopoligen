@@ -30,263 +30,291 @@ use tracing::{event, instrument, Level};
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct SiteConfigV42 {
-    // TODO: deprecate attr_flag_lists  and switch this
-    // to section_attrs_to_hoist and make a BTreeMap.
-    // Or, add it to the section itself.
-    pub attr_flag_lists: Option<ConfigLists>,
-    #[serde(default = "debug_parser_default")]
-    pub debug_parser: bool,
-    pub language_default: String,
-    pub theme: String,
-    pub time_zone: Option<String>,
-    pub project_root: Option<PathBuf>,
-    pub site_root: String,
-    #[serde(default = "site_output_folder_name")]
-    pub site_output_folder_name: String,
-    #[serde(default = "empty_section_types")]
-    pub section_types: BTreeMap<String, Vec<String>>,
+  // TODO: deprecate attr_flag_lists  and switch this
+  // to section_attrs_to_hoist and make a BTreeMap.
+  // Or, add it to the section itself.
+  pub attr_flag_lists: Option<ConfigLists>,
+  #[serde(default = "debug_parser_default")]
+  pub debug_parser: bool,
+  pub language_default: String,
+  pub theme: String,
+  pub time_zone: Option<String>,
+  pub project_root: Option<PathBuf>,
+  pub site_root: String,
+  #[serde(default = "site_output_folder_name")]
+  pub site_output_folder_name: String,
+  #[serde(default = "empty_section_types")]
+  pub section_types: BTreeMap<String, Vec<String>>,
 }
 
 fn debug_parser_default() -> bool {
-    false
+  false
 }
 
 fn empty_section_types() -> BTreeMap<String, Vec<String>> {
-    let mut types = BTreeMap::new();
-    types.insert("basic".to_string(), vec![]);
-    types.insert("checklist".to_string(), vec![]);
-    types.insert("css".to_string(), vec![]);
-    types.insert("csv".to_string(), vec![]);
-    types.insert("html".to_string(), vec![]);
-    types.insert("json5".to_string(), vec![]);
-    types.insert("list".to_string(), vec![]);
-    types.insert("none".to_string(), vec![]);
-    types.insert("olist".to_string(), vec![]);
-    types.insert("raw".to_string(), vec![]);
-    types.insert("script".to_string(), vec![]);
-    types.insert("toml".to_string(), vec![]);
-    types
+  let mut types = BTreeMap::new();
+  types.insert("basic".to_string(), vec![]);
+  types.insert("checklist".to_string(), vec![]);
+  types.insert("css".to_string(), vec![]);
+  types.insert("csv".to_string(), vec![]);
+  types.insert("html".to_string(), vec![]);
+  types.insert("json5".to_string(), vec![]);
+  types.insert("list".to_string(), vec![]);
+  types.insert("none".to_string(), vec![]);
+  types.insert("olist".to_string(), vec![]);
+  types.insert("raw".to_string(), vec![]);
+  types.insert("script".to_string(), vec![]);
+  types.insert("toml".to_string(), vec![]);
+  types
 }
 
 fn site_output_folder_name() -> String {
-    "docs".to_string()
+  "docs".to_string()
 }
 
-pub fn parse_type<'a>(source: &str) -> IResult<&str, &str, ErrorTree<&str>> {
-    let (source, _) = many0(preceded(
-        tuple((take_until("[#"), tag("[#"), opt(tag("-")), space0)),
-        not(tag_no_case("TYPE")),
-    ))
-    .context("")
-    .parse(source)?;
-    let (source, kind) = preceded(
-        tuple((
-            take_until("[#"),
-            tag("[#"),
-            opt(tag("-")),
-            space0,
-            tag_no_case("TYPE:"),
-            space1,
-        )),
-        alphanumeric1,
-    )
-    .context("")
-    .parse(source)?;
-    Ok((source, kind))
+pub fn parse_type<'a>(
+  source: &str
+) -> IResult<&str, &str, ErrorTree<&str>> {
+  let (source, _) = many0(preceded(
+    tuple((take_until("[#"), tag("[#"), opt(tag("-")), space0)),
+    not(tag_no_case("TYPE")),
+  ))
+  .context("")
+  .parse(source)?;
+  let (source, kind) = preceded(
+    tuple((
+      take_until("[#"),
+      tag("[#"),
+      opt(tag("-")),
+      space0,
+      tag_no_case("TYPE:"),
+      space1,
+    )),
+    alphanumeric1,
+  )
+  .context("")
+  .parse(source)?;
+  Ok((source, kind))
 }
 
 impl SiteConfigV42 {
-    #[instrument(skip(self))]
-    pub fn load_sections(&mut self) {
-        match get_folders_in_folder(&self.theme_sections_input_folder()) {
-            Ok(folders) => {
-                folders.iter().for_each(|folder| {
-                    let default_path = folder.join("default.neoj");
-                    if default_path.is_file() {
-                        if let Ok(source) = fs::read_to_string(&default_path) {
-                            match parse_type(&source) {
-                                Ok((_, t)) => {
-                                    if let Some(name) = &default_path.parent().unwrap().file_name()
-                                    {
-                                        if let Some(types) = self.section_types.get_mut(t) {
-                                            types.push(name.to_string_lossy().to_string());
-                                            ()
-                                        } else {
-                                            // TODO: Log an error if the type isn't valid
-                                        }
-                                    }
-                                    ()
-                                }
-                                Err(_) => {
-                                    // TODO: Log an error if there's no type
-                                    ()
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-            Err(_e) => {
-                // TODO: Hoist Error
-            }
-        }
-    }
-
-    #[instrument(skip(engine_config))]
-    pub fn new_from_engine_config(engine_config: &EngineConfig) -> Result<SiteConfigV42, NeoError> {
-        event!(Level::INFO, "Loading Site Config");
-        let project_root = engine_config
-            .sites_folder
-            .join(engine_config.active_site.as_str());
-        let config_path = project_root.join("config.json5");
-        match fs::read_to_string(&config_path) {
-            Ok(text) => match serde_json5::from_str::<SiteConfigV42>(&text) {
-                Ok(mut config) => {
-                    config.project_root = Some(project_root.clone());
-                    if !config.theme_input_root_folder().is_dir() {
-                        Err(NeoError {
-                            kind: NeoErrorKind::MissingThemeDirectory {
-                                path: config.theme_input_root_folder().clone(),
-                            },
-                        })
+  #[instrument(skip(self))]
+  pub fn load_sections(&mut self) {
+    match get_folders_in_folder(
+      &self.theme_sections_input_folder(),
+    ) {
+      Ok(folders) => {
+        folders.iter().for_each(|folder| {
+          let default_path = folder.join("default.neoj");
+          if default_path.is_file() {
+            if let Ok(source) =
+              fs::read_to_string(&default_path)
+            {
+              match parse_type(&source) {
+                Ok((_, t)) => {
+                  if let Some(name) =
+                    &default_path.parent().unwrap().file_name()
+                  {
+                    if let Some(types) =
+                      self.section_types.get_mut(t)
+                    {
+                      types.push(
+                        name.to_string_lossy().to_string(),
+                      );
+                      ()
                     } else {
-                        // TODO: Handle errors here
-                        config.load_sections();
-                        Ok(config)
+                      // TODO: Log an error if the type isn't valid
                     }
+                  }
+                  ()
                 }
-                Err(e) => Err(NeoError {
-                    kind: NeoErrorKind::GenericErrorWithoutSourcePath {
-                        msg: format!("Could not load config: {} - {}", config_path.display(), e),
-                    },
-                }),
-            },
-            Err(e) => Err(NeoError {
-                kind: NeoErrorKind::GenericErrorWithoutSourcePath {
-                    msg: format!("Could not load config: {} - {}", config_path.display(), e),
-                },
-            }),
-        }
+                Err(_) => {
+                  // TODO: Log an error if there's no type
+                  ()
+                }
+              }
+            }
+          }
+        });
+      }
+      Err(_e) => {
+        // TODO: Hoist Error
+      }
     }
+  }
+
+  #[instrument(skip(engine_config))]
+  pub fn new_from_engine_config(
+    engine_config: &EngineConfig
+  ) -> Result<SiteConfigV42, NeoError> {
+    event!(Level::INFO, "Loading Site Config");
+    let project_root = engine_config
+      .sites_folder
+      .join(engine_config.active_site.as_str());
+    let config_path = project_root.join("config.json5");
+    match fs::read_to_string(&config_path) {
+      Ok(text) => {
+        match serde_json5::from_str::<SiteConfigV42>(&text) {
+          Ok(mut config) => {
+            config.project_root = Some(project_root.clone());
+            if !config.theme_input_root_folder().is_dir() {
+              Err(NeoError {
+                kind: NeoErrorKind::MissingThemeDirectory {
+                  path: config
+                    .theme_input_root_folder()
+                    .clone(),
+                },
+              })
+            } else {
+              // TODO: Handle errors here
+              config.load_sections();
+              Ok(config)
+            }
+          }
+          Err(e) => Err(NeoError {
+            kind: NeoErrorKind::GenericErrorWithoutSourcePath {
+              msg: format!(
+                "Could not load config: {} - {}",
+                config_path.display(),
+                e
+              ),
+            },
+          }),
+        }
+      }
+      Err(e) => Err(NeoError {
+        kind: NeoErrorKind::GenericErrorWithoutSourcePath {
+          msg: format!(
+            "Could not load config: {} - {}",
+            config_path.display(),
+            e
+          ),
+        },
+      }),
+    }
+  }
 }
 
 impl SiteConfigV42 {
-    pub fn cache_root_folder(&self) -> PathBuf {
-        self.project_folder().join("cache")
-    }
-    pub fn cache_database_path(&self) -> PathBuf {
-        self.cache_root_folder().join("cache.sqlite")
-    }
+  pub fn cache_root_folder(&self) -> PathBuf {
+    self.project_folder().join("cache")
+  }
+  pub fn cache_database_path(&self) -> PathBuf {
+    self.cache_root_folder().join("cache.sqlite")
+  }
 
-    pub fn components_input_folder(&self) -> PathBuf {
-        self.project_folder().join("components")
-    }
+  pub fn components_input_folder(&self) -> PathBuf {
+    self.project_folder().join("components")
+  }
 
-    pub fn components_output_folder(&self) -> PathBuf {
-        self.site_output_root_folder().join("components")
-    }
+  pub fn components_output_folder(&self) -> PathBuf {
+    self.site_output_root_folder().join("components")
+  }
 
-    pub fn content_input_root_folder(&self) -> PathBuf {
-        self.project_folder().join("content")
-    }
+  pub fn content_input_root_folder(&self) -> PathBuf {
+    self.project_folder().join("content")
+  }
 
-    pub fn images_cache_root_folder(&self) -> PathBuf {
-        self.cache_root_folder().join("images")
-    }
+  pub fn images_cache_root_folder(&self) -> PathBuf {
+    self.cache_root_folder().join("images")
+  }
 
-    pub fn images_input_root_folder(&self) -> PathBuf {
-        self.project_folder().join("images")
-    }
+  pub fn images_input_root_folder(&self) -> PathBuf {
+    self.project_folder().join("images")
+  }
 
-    pub fn images_output_root_folder(&self) -> PathBuf {
-        self.neo_files_output_root_folder().join("images")
-    }
+  pub fn images_output_root_folder(&self) -> PathBuf {
+    self.neo_files_output_root_folder().join("images")
+  }
 
-    pub fn images_href_root_folder(&self) -> PathBuf {
-        self.neo_files_output_root_folder().join("images")
-        // PathBuf::from("/neo-files/images")
-    }
+  pub fn images_href_root_folder(&self) -> PathBuf {
+    self.neo_files_output_root_folder().join("images")
+    // PathBuf::from("/neo-files/images")
+  }
 
-    pub fn language_default(&self) -> Result<String> {
-        Ok(self.language_default.clone())
-    }
+  pub fn language_default(&self) -> Result<String> {
+    Ok(self.language_default.clone())
+  }
 
-    pub fn errors_output_root_folder(&self) -> PathBuf {
-        self.cache_root_folder().join("errors")
-    }
+  pub fn errors_output_root_folder(&self) -> PathBuf {
+    self.cache_root_folder().join("errors")
+  }
 
-    pub fn errors_output_index_page(&self) -> PathBuf {
-        self.errors_output_root_folder().join("index.html")
-    }
+  pub fn errors_output_index_page(&self) -> PathBuf {
+    self.errors_output_root_folder().join("index.html")
+  }
 
-    pub fn macros_input_root_folder(&self) -> PathBuf {
-        self.theme_input_root_folder().join("macros")
-    }
+  pub fn macros_input_root_folder(&self) -> PathBuf {
+    self.theme_input_root_folder().join("macros")
+  }
 
-    pub fn miscellaneous_input_folder(&self) -> PathBuf {
-        self.project_folder().join("miscellaneous")
-    }
+  pub fn miscellaneous_input_folder(&self) -> PathBuf {
+    self.project_folder().join("miscellaneous")
+  }
 
-    pub fn miscellaneous_output_folder(&self) -> PathBuf {
-        self.site_output_root_folder().join("miscellaneous")
-    }
+  pub fn miscellaneous_output_folder(&self) -> PathBuf {
+    self.site_output_root_folder().join("miscellaneous")
+  }
 
-    pub fn neo_files_output_root_folder(&self) -> PathBuf {
-        self.site_output_root_folder()
-            .join(&self.neo_files_output_folder_name())
-    }
+  pub fn neo_files_output_root_folder(&self) -> PathBuf {
+    self
+      .site_output_root_folder()
+      .join(&self.neo_files_output_folder_name())
+  }
 
-    pub fn neo_files_output_folder_name(&self) -> String {
-        "neo-files".to_string()
-    }
+  pub fn neo_files_output_folder_name(&self) -> String {
+    "neo-files".to_string()
+  }
 
-    pub fn site_output_root_folder(&self) -> PathBuf {
-        self.project_folder()
-            .join(self.site_output_folder_name.clone())
-    }
+  pub fn site_output_root_folder(&self) -> PathBuf {
+    self
+      .project_folder()
+      .join(self.site_output_folder_name.clone())
+  }
 
-    pub fn project_folder(&self) -> PathBuf {
-        self.project_root.clone().unwrap()
-    }
+  pub fn project_folder(&self) -> PathBuf {
+    self.project_root.clone().unwrap()
+  }
 
-    pub fn source_file_error_folder(&self) -> PathBuf {
-        self.errors_output_root_folder().join("source_files")
-    }
+  pub fn source_file_error_folder(&self) -> PathBuf {
+    self.errors_output_root_folder().join("source_files")
+  }
 
-    pub fn status_dest_folder(&self) -> PathBuf {
-        self.cache_root_folder().join("status")
-    }
+  pub fn status_dest_folder(&self) -> PathBuf {
+    self.cache_root_folder().join("status")
+  }
 
-    pub fn theme_input_root_folder(&self) -> PathBuf {
-        self.themes_input_root_folder().join(self.theme.clone())
-    }
+  pub fn theme_input_root_folder(&self) -> PathBuf {
+    self.themes_input_root_folder().join(self.theme.clone())
+  }
 
-    pub fn themes_input_root_folder(&self) -> PathBuf {
-        self.project_folder().join("themes")
-    }
+  pub fn themes_input_root_folder(&self) -> PathBuf {
+    self.project_folder().join("themes")
+  }
 
-    pub fn theme_files_input_folder(&self) -> PathBuf {
-        self.theme_input_root_folder().join("files")
-    }
+  pub fn theme_files_input_folder(&self) -> PathBuf {
+    self.theme_input_root_folder().join("files")
+  }
 
-    pub fn theme_files_output_folder(&self) -> PathBuf {
-        self.neo_files_output_root_folder()
-            .join(&self.theme_files_output_folder_name())
-    }
+  pub fn theme_files_output_folder(&self) -> PathBuf {
+    self
+      .neo_files_output_root_folder()
+      .join(&self.theme_files_output_folder_name())
+  }
 
-    pub fn theme_files_output_folder_name(&self) -> String {
-        "theme-files".to_string()
-    }
+  pub fn theme_files_output_folder_name(&self) -> String {
+    "theme-files".to_string()
+  }
 
-    pub fn theme_files_folder_href(&self) -> PathBuf {
-        PathBuf::from("/")
-            .join(&self.neo_files_output_folder_name())
-            .join(&self.theme_files_output_folder_name())
-    }
+  pub fn theme_files_folder_href(&self) -> PathBuf {
+    PathBuf::from("/")
+      .join(&self.neo_files_output_folder_name())
+      .join(&self.theme_files_output_folder_name())
+  }
 
-    pub fn theme_sections_input_folder(&self) -> PathBuf {
-        self.theme_input_root_folder().join("sections")
-    }
+  pub fn theme_sections_input_folder(&self) -> PathBuf {
+    self.theme_input_root_folder().join("sections")
+  }
 }
 
 // fn empty_sections_v41() -> ConfigSections {

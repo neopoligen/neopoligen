@@ -41,14 +41,6 @@ pub struct BuilderV42<'a> {
 
 }
 
-// pub fn highlight_file(content_root: PathBuf, path_string: String, lang: String) -> String {
-//     let file_path = content_root.join(path_string);
-//     if path_exists(&file_path) {
-//         "POAINSDSADLKJASD".to_string()
-//     } else {
-//         format!("COULD NOT FIND FILE: {}", file_path.display())
-//     }
-// }
 
 
 impl BuilderV42<'_> {
