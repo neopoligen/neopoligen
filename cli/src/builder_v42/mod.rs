@@ -47,8 +47,11 @@ impl BuilderV42<'_> {
 
     #[instrument(skip(self))]
     pub fn add_custom_functions(&mut self) -> Result<()> {
-        let content_folder = self.site_config.project_root.as_ref().unwrap().to_path_buf();
-        self.env.add_function("highlight_file", move |path_string: String, lang: String| highlight_file(content_folder.to_owned(), path_string, lang));
+        // gotta be a way to not have to create the content_folder var twice?
+         let content_folder = self.site_config.project_root.as_ref().unwrap().to_path_buf();
+        self.env.add_function("highlight_file", move |path_string: String, lang: String| highlight_file(&content_folder.clone(), path_string, lang));
+         let content_folder = self.site_config.project_root.as_ref().unwrap().to_path_buf();
+        self.env.add_function("include_file", move |path_string: String| include_file(&content_folder.clone(), path_string));
         Ok(())
     }
 

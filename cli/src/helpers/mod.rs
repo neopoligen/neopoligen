@@ -450,11 +450,12 @@ pub fn highlight_code_no_nums(args: &[Value]) -> String {
 }
 
 pub fn highlight_file(
-  content_root: PathBuf,
+  content_root: &PathBuf,
   path_string: String,
   lang: String,
 ) -> String {
-  let path = content_root.join(path_string);
+  let stripped_path = path_string.trim_start_matches("/");
+  let path = content_root.join(stripped_path);
   if path_exists(&path) {
     match fs::read_to_string(&path) {
       Ok(code) => {
@@ -550,6 +551,28 @@ pub fn highlight_span(args: &[Value]) -> String {
     .map(|line| format!(r#"{}"#, line))
     .collect();
   output_html.join("\n")
+}
+
+pub fn include_file(
+  content_root: &PathBuf,
+  path_string: String,
+) -> String {
+  let stripped_path = path_string.trim_start_matches("/");
+  let path = content_root.join(stripped_path);
+
+  if path_exists(&path) {
+    match fs::read_to_string(&path) {
+      Ok(txt) => txt.to_string(),
+      Err(_e) => {
+        format!("could not read file: {}", &path.display())
+      }
+    }
+  } else {
+    format!(
+      "No file exists at: {} - The site dir is currently hard coded",
+      path.display(),
+    )
+  }
 }
 
 pub fn mkdir_p(dir: PathBuf) -> std::io::Result<()> {
