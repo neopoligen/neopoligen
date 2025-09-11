@@ -3,6 +3,9 @@
   src: url('/neo-files/theme-files/fonts/Inter-VariableFont_slnt,wght.ttf') format('opentype');
 }
 
+html {
+  color-scheme: light dark;
+}
 
 :root {
   --color-background: oklch(98.777% 0.03336 90.526);

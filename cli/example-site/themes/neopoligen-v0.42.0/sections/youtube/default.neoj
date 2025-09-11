@@ -4,6 +4,25 @@
 [# HOIST: [] #]
 
 <section [@- neo.section_attrs("flow") -@]>
+
+  [!- if "title" in section.attrs -!]
+  <div class="youtube-player-title">[@ neo.output_attr('title') @]</div>
+  [!- endif -!]
+
+<youtube-player 
+:video="[@ section.flags[0] @]"
+
+  [!- if "start" in section.attrs -!]
+  :start="[@ neo.output_attr('start') @]"
+  [!- endif -!]
+
+  [!- if "end" in section.attrs -!]
+  :start="[@ neo.output_attr('end') @]"
+  [!- endif -!]
+
+></youtube-player>
+
+<noscript>
   <iframe 
     width="560" 
     height="315" 
@@ -12,6 +31,7 @@
     frameborder="0" 
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</noscript>
 </section>
 
 [@- neo.output_end_section(section) -@]
