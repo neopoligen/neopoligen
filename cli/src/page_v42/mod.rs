@@ -265,8 +265,15 @@ impl PageV42b {
       }
       None => false,
     }
+  }
 
-    //
+  pub fn rel_output_path_value(&self) -> Option<Value> {
+    match self.rel_output_path.clone() {
+      Some(path) => {
+        Some(Value::from(path.display().to_string()))
+      }
+      None => None,
+    }
   }
 
   pub fn rss_date(&self) -> Option<Value> {
@@ -477,6 +484,7 @@ impl Object for PageV42b {
       "issues" => {
         Some(Value::from_serialize(self.issues.clone()))
       }
+      "rel_output_path" => self.rel_output_path_value().clone(),
       "sections" => self.sections.clone(),
       "source" => Some(Value::from(self.source.clone())),
       "source_display_path" => Some(Value::from(

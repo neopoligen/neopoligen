@@ -1205,9 +1205,11 @@ details {
 }
 
 .end-of-line {
-  color: var(--color-bw-reverse-20);
-  text-align: center;
-  padding-top: 2rem;
+  border-block: var(--border-alt-3-60);
+  color: var(--color-primary-30);
+  font-size: 0.85rem;
+  text-align: right;
+  margin-top: 2.6rem;
 }
 
 .endnote-section {
@@ -1254,7 +1256,7 @@ footer {
   font-size: var(--font-size-small);
   margin-inline: auto;
   margin-bottom: var(--margin-small);
-  margin-top: var(--margin-xlarge);
+  margin-top: var(--margin-large);
   padding: var(--padding-large);
   width: var(--width-medium);
 }
@@ -1445,6 +1447,13 @@ p {
 .padding-top-xlarge {padding-top: var(--padding-xlarge);}
 .padding-top-xxlarge {padding-top: var(--padding-xxlarge);}
 
+.page-date {
+  border-bottom: var(--border-alt-3-60);
+  color: var(--color-primary-40);
+  font-size: 0.85rem;
+  text-align: right;
+}
+
 .photo-wrapper {
   background-color: white;
   padding-inline: 2.8rem;
@@ -1496,6 +1505,10 @@ pre {
   font-size: var(--font-size-small);
 }
 
+.right {
+  text-align: right;
+}
+
 select {
   font: inherit;
 }
@@ -1529,6 +1542,7 @@ select {
   border-bottom: 1px solid var(--color-bw-reverse-40);
 }
 
+
 svg {
   display: block;
   max-width: 100%;
@@ -1551,7 +1565,7 @@ th {
 }
 
 .title-block {
-  margin-bottom: 2.9rem;
+  margin-bottom: 2.0rem;
 }
 
 .tldr-section {

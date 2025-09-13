@@ -35,7 +35,7 @@
 <meta property="og:description" content="a post from alan w. smith" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="[@ site.site_root() @][@ page.href() @]" />
-<meta property="og:image" content="https://res.cloudinary.com/awsimages/image/upload/og-image-no-title-white-on-black.jpg" />
+<meta property="og:image" content="https://www.alanwsmith.com/neo-files/theme-files/og-images/main-og-image.jpg" />
 <link rel="apple-touch-icon" sizes="180x180" href="[@ neo.theme_folder() @]/favicons/apple-touch-icon.png" />
 <link rel="icon" type="image/png" sizes="32x32" href="[@ neo.theme_folder() @]/favicons/favicon-32x32.png" />
 <link rel="icon" type="image/png" sizes="16x16" href="[@ neo.theme_folder() @]/favicons/favicon-16x16.png" />
@@ -54,7 +54,8 @@
 <header class="wrapper-medium">
   <a href="/">home</a> ~
   <a href="https://socials.alanwsmith.com/">socials</a> ~
-  <a href="https://links.alanwsmith.com/">other projects</a> 
+  <a href="https://links.alanwsmith.com/">projects</a> ~
+  <a href="/feeds/posts.xml">rss</a>
 </header>
 
 [! if "no-wrapper" not in page.flags() !]
@@ -65,7 +66,7 @@
     [!- block body_main -!][!- endblock -!]
   </main>
 
-<footer class="border-top-alt-3-60">
+<footer>
   <div>
     made by alan w smith<br />
     who is on <a href="https://socials.alanwsmith.com/">some social networks</a><br>
