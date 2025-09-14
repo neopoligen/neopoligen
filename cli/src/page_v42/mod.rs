@@ -4,6 +4,7 @@ pub mod mocks;
 
 use crate::ast_v42::parse_ast_v42;
 use crate::helpers::flatten_spans_v42;
+use crate::helpers::url_from_string;
 use crate::neo_error_v42::NeoErrorV42;
 use crate::page_v42::helpers::*;
 use crate::section_key_value_attr_payload_v42::SectionKeyValueAttrPayloadV42;
@@ -469,6 +470,14 @@ impl PageV42b {
     //        Ok(Value::from("asdf"))
   }
 
+  pub fn title_for_url(&self) -> Result<Value, Error> {
+    if let Some(base_title) = self.title.clone() {
+      Ok(Value::from(url_from_string(&base_title)))
+    } else {
+      Ok(Value::from(""))
+    }
+  }
+
   //
 }
 
@@ -479,7 +488,7 @@ impl Object for PageV42b {
   ) -> Option<Value> {
     match key.as_str()? {
       "ast" => Some(Value::from_serialize(self.ast.clone())),
-      // "href" => Some(Value::from(self.href.as_ref())),
+      "href" => Some(Value::from(self.href.as_ref())),
       // "id" => Some(Value::from(self.id.clone().unwrap().clone())),
       "issues" => {
         Some(Value::from_serialize(self.issues.clone()))
@@ -518,6 +527,7 @@ impl Object for PageV42b {
       // "rss_date" => Ok(self.rss_date()?),
       // "status" => Ok(self.status()?),
       "title" => Ok(Value::from(self.title.as_ref())),
+      "title_for_url" => self.title_for_url(),
       // "href" => self.href(),
       // "sections" => self.ast(),
       // "get_pagedata" => self.make_value_from_string(self.get_pagedata(args)),
