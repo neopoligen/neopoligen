@@ -13,15 +13,23 @@ to independent modules.
 
 -#]
 
+[!- from "macros/output_spans.neoj" import output_spans -!]
+
 [!- macro output_scripts(section_list) -!]
-<script type="module">
+
 [!- for section in section_list -!]
   [!- if section.kind == "javascript" -!]
-  [@ section.body @][@- "\n" -@]
+    [!- if "type" in section.attrs -!]
+    <script type="[@ output_spans(section.attrs["type"][0].spans) @]">
+    [!- else -!]
+    <script>
+    [!- endif -!]
+[@- "\n" -@]
+[@- section.body @][@- "\n" -@]
+    </script>
   [!- endif -!]
   [#
   [@- output_scripts(section.children) -@]
   #]
 [!- endfor -!]
-</script>
 [!- endmacro -!]
