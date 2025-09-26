@@ -4,6 +4,15 @@
 [# HOIST: [] #]
 
 <section [@- neo.section_attrs("flow show-html") -@]>
+
+  [!- if "h2" in section.attrs -!]
+    <h2>[@ neo.output_attr('h2') @]</h2>
+  [!- endif -!]
+
+  [!- if "h3" in section.attrs -!]
+    <h3>[@ neo.output_attr('h3') @]</h3>
+  [!- endif -!]
+
 <h4 class="show-html-heading">HTML</h4>
 
 <pre><code>

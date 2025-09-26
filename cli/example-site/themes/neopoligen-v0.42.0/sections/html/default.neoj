@@ -3,7 +3,20 @@
 [# TYPE: html #]
 [# HOIST: [] #]
 
-<section [@- neo.section_attrs() -@]>
+<section [@- neo.section_attrs("flow") -@]>
+
+  [!- if "h2" in section.attrs -!]
+    <h2>[@ neo.output_attr('h2') @]</h2>
+  [!- endif -!]
+
+  [!- if "h3" in section.attrs -!]
+    <h3>[@ neo.output_attr('h3') @]</h3>
+  [!- endif -!]
+
+  [!- if "h4" in section.attrs -!]
+    <h4>[@ neo.output_attr('h4') @]</h4>
+  [!- endif -!]
+
 [@ section.body @]
 </section>
 
