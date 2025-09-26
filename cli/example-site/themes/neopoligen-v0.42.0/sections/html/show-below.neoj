@@ -16,6 +16,15 @@
 [@ section.body @]
 
 <h4>HTML</h4>
+
+    [!- if "title" in section.attrs -!]
+    <div class="code-block-title">[@ neo.output_attr('title') @]</div>
+    [!- endif -!]
+
+    [!- if "subtitle" in section.attrs -!]
+    <div class="code-block-subtitle">[@ neo.output_attr('subtitle') @]</div>
+    [!- endif -!]
+
 <pre><code>
 [@- site.highlight_code(section.body, "html") -@]
 </code></pre>
