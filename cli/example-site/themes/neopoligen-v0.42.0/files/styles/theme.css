@@ -1,7 +1,16 @@
 @font-face {
   font-family: 'Inter';
-  src: url('/neo-files/theme-files/fonts/Inter-VariableFont_slnt,wght.ttf') format('opentype');
+  src: url('/neo-files/theme-files/fonts/Inter-VariableFont_opsz,wght.ttf');
+  font-display: block;
 }
+
+/*
+@font-face {
+  font-family: 'InterItalic';
+  src: url('/neo-files/theme-files/fonts/Inter-Italic-VariableFont_opsz,wght.ttf');
+  font-display: block;
+}
+*/
 
 html {
   color-scheme: light dark;

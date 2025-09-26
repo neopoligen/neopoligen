@@ -3,12 +3,32 @@
 [# TYPE: javascript #]
 [# HOIST: [] #]
 
-<section [@- neo.section_attrs("flow show-javascript") -@]>
-  <h4 class="show-javascript-heading">JavaScript</h4>
-  <div class="javascript-body">
-  <pre class="font-size-xsmall"><code>
-  [@- site.highlight_code(section.body, "js") -@]
-  </code></pre>
+
+<section [@- neo.section_attrs("flow") -@]>
+  [!- if "h2" in section.attrs -!]
+    <h2>[@ neo.output_attr('h2') @]</h2>
+  [!- endif -!]
+
+  [!- if "h3" in section.attrs -!]
+    <h3>[@ neo.output_attr('h3') @]</h3>
+  [!- endif -!]
+
+  <div class="flow show-javascript">
+    <div class="show-javascript-heading">JavaScript</div>
+
+    [!- if "title" in section.attrs -!]
+    <div class="code-block-title">[@ neo.output_attr('title') @]</div>
+    [!- endif -!]
+
+    [!- if "subtitle" in section.attrs -!]
+    <div class="code-block-subtitle">[@ neo.output_attr('subtitle') @]</div>
+    [!- endif -!]
+
+    <div class="javascript-body">
+      <pre class="font-size-xsmall"><code>
+        [@- site.highlight_code(section.body, "js") -@]
+      </code></pre>
+    </div>
   </div>
 </section>
 
