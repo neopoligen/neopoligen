@@ -3,7 +3,15 @@
 [# TYPE: basic #]
 [# HOIST: [] #]
 
-<section [@- neo.section_attrs("flow") -@]>
+
+<section 
+  [! if "no-flow" in section.flags !] 
+    [@- neo.section_attrs()  -@]
+  [! else !]
+    [@- neo.section_attrs("flow") -@]
+  [! endif !]
+>
+
 
   <h2>[@- neo.spans_from_first_block(section) -@]</h2>
   

@@ -20,6 +20,10 @@ a space in them (e.g. <<code|--code>> and
 highlight them as an error
 
 
+- Consider allowing closing tags like
+``-- /div /div`` so you don't have to 
+separate them on different lines. 
+
 
 -- metadata
 -- date: 2024-02-10

@@ -5,19 +5,17 @@
 
 <section [@- neo.section_attrs("flow") -@]>
 
-
 <pre>
-[!- autoescape true -!]
-[@- section.body -@]
+[!- autoescape false -!]
+[@- highlight_code_section(section.body, "bash") -@]
 [!- endautoescape -!]
 </pre>
 
+
   [!- if "figure" in section.attrs -!]
     <div class="border-top-alt-1-60 
-        text-align-right 
-        font-size-xsmall
-        color-primary-40
-        margin-top-medium
+      text-align-right font-size-xsmall
+      color-primary-40 margin-top-medium
 ">figure [@ neo.output_attr('figure') @]</div>
   [!- endif -!]
 

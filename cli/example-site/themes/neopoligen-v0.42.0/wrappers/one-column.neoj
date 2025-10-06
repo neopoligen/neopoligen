@@ -37,8 +37,6 @@
 <meta property="og:image" content="https://www.alanwsmith.com/neo-files/theme-files/og-images/main-og-image.jpg" />
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="675">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://www.alanwsmith.com/neo-files/theme-files/og-images/main-og-image.jpg" />
 <link rel="apple-touch-icon" sizes="180x180" href="[@ neo.theme_folder() @]/favicons/apple-touch-icon.png" />
 <link rel="icon" type="image/png" sizes="32x32" href="[@ neo.theme_folder() @]/favicons/favicon-32x32.png" />
 <link rel="icon" type="image/png" sizes="16x16" href="[@ neo.theme_folder() @]/favicons/favicon-16x16.png" />
@@ -54,7 +52,13 @@
 </head>
 <body>
 
-<bitty-v1-rc4 data-connect="/neo-files/theme-files/components/bitty-page.js">
+<noscript>
+Head's U: JavaScript is either turned off or not
+working properly in your browser. Some 
+parts of this page may not work properly. 
+</noscript>
+
+<bitty-1-1 data-connect="/neo-files/theme-files/components/bitty-page.js">
 
 
 <header class="wrapper-medium">
@@ -88,10 +92,6 @@
 
 <div class="wrapper-medium">
 
-  <bitty-js 
-    class="wrapper-medium share-link flow"
-    data-connect="/components/bitty-stuff/bitty-stuff.js|CopyButton" 
-   >
    <div>
    Share link: <br>
    <span id="share-url">https://www.alanwsmith.com[@ page.href @]?[@ page.title_for_url() @]</span>
@@ -102,7 +102,6 @@
     data-send="copyText">Copy share link</button>
     </div>
     -->
-  </bitty-js>
 
   </div>
 
@@ -136,8 +135,8 @@ if (url.hostname === "localhost") {
 </pre>
 #]
 
+</bitty-1-1>
 
-</bitty-v1-rc4>
 
 <script type="module">
 // This one saves the state of details elements
@@ -228,8 +227,7 @@ const watcher = new DetailsOpenCloseWatcher();
 </script>
 
 <script src="/components/youtube-player/youtube-player-v1.js" type="module"></script>
-<script src="/neo-files/theme-files/components/bitty-1.0.0-rc4.full.js" type="module"></script>
-
+<script src="/neo-files/theme-files/components/bitty-1.2.0-rc1.min.js" type="module"></script>
 
 </body>
 </html>

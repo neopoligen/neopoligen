@@ -1072,6 +1072,18 @@ canvas {
   padding: var(--padding-medium);
 }
 
+.code-section-file {
+  border-bottom: 1px solid var(--color-bw-reverse-40);
+}
+
+.code-section-subtitle {
+  border-bottom: 1px solid var(--color-bw-reverse-40);
+}
+
+.code-section-title {
+  border-bottom: 1px solid var(--color-bw-reverse-40);
+}
+
 .code-block {
   margin: var(--padding-large);
   padding: var(--padding-medium);
@@ -1249,6 +1261,10 @@ fieldset {
   margin-top: var(--flow-space, 1em);
 }
 
+.default-flow > :where(:not(:first-child)) {
+  margin-top: var(--flow-space, 1em);
+}
+
 .font-size-xsmall { font-size: var(--font-size-xsmall); }
 .font-size-small { font-size: var(--font-size-small); }
 .font-size-medium { font-size: var(--font-size-medium); }
@@ -1410,6 +1426,14 @@ li > :where(:not(:first-child)) {
 
 .no-li-markers {
   list-style: none;
+}
+
+noscript {
+  width: var(--width-medium);
+  margin-inline: auto;
+  margin-block: 4rem;
+  padding: 1rem;
+  border: 1px solid red;
 }
 
 ol > :where(:not(:first-child)) {

@@ -4,30 +4,26 @@
 [# HOIST: [] #]
 
 <section [@- neo.section_attrs("flow show-html") -@]>
-
   [!- if "h2" in section.attrs -!]
     <h2>[@ neo.output_attr('h2') @]</h2>
   [!- endif -!]
-
   [!- if "h3" in section.attrs -!]
     <h3>[@ neo.output_attr('h3') @]</h3>
   [!- endif -!]
 
-[@ section.body @]
-
-<h4>HTML</h4>
-
-    [!- if "title" in section.attrs -!]
+  <h4 class="show-html-heading">HTML</h4>
+  [!- if "title" in section.attrs -!]
     <div class="code-block-title">[@ neo.output_attr('title') @]</div>
-    [!- endif -!]
-
-    [!- if "subtitle" in section.attrs -!]
+  [!- endif -!]
+  [!- if "subtitle" in section.attrs -!]
     <div class="code-block-subtitle">[@ neo.output_attr('subtitle') @]</div>
-    [!- endif -!]
+  [!- endif -!]
+  <pre><code>
+    [@- site.highlight_code(section.body, "html") -@]
+  </code></pre>
 
-<pre><code>
-[@- site.highlight_code(section.body, "html") -@]
-</code></pre>
+  <h4 class="show-html-heading">Output</h4>
+  [@ section.body @]
 
 </section>
 

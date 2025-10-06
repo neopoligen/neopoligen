@@ -6,8 +6,17 @@
 <section [@- neo.section_attrs("flow") -@]>
 
   [!- if "title" in section.attrs -!]
-    <h2>[@ neo.output_attr('title') @]</h2>
+    <div class="code-section-title">[@ neo.output_attr('title') @]</div>
   [!- endif -!]
+
+  [!- if "subtitle" in section.attrs -!]
+    <div class="code-section-subtitle">[@ neo.output_attr('subtitle') @]</div>
+  [!- endif -!]
+
+  [!- if "file" in section.attrs -!]
+    <div class="code-section-file">file: [@ neo.output_attr('file') @]</div>
+  [!- endif -!]
+
 
 <pre><code>
 [!- autoescape false -!]
@@ -21,10 +30,8 @@
 
   [!- if "figure" in section.attrs -!]
     <div class="border-top-color-alt-1-40 
-    text-align-right 
-font-size-xsmall
-        color-primary-40
-        margin-top-medium
+    text-align-right  font-size-xsmall
+    color-primary-40 margin-top-medium
 ">figure [@ neo.output_attr('figure') @]</div>
   [!- endif -!]
 

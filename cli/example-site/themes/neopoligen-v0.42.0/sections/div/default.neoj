@@ -1,0 +1,18 @@
+[!- import "built-in/macros.neoj" as neo -!]
+
+[# TYPE: basic #]
+[# HOIST: [] #]
+
+<section 
+  [! if "no-flow" in section.flags !] 
+    [@- neo.section_attrs()  -@]
+  [! else !]
+    [@- neo.section_attrs("flow") -@]
+  [! endif !]
+>
+
+  [@- neo.output_all_child_sections(section) -@]
+</section>
+
+[@- neo.output_end_section(section) -@]
+

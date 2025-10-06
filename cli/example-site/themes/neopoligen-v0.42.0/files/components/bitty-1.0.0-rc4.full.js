@@ -2,6 +2,16 @@ function getUUID() {
   return self.crypto.randomUUID();
 }
 
+const version = [1, 0, 0, "rc5"];
+// BUILD: Sept. 30, 2025
+const tagNameParts = [];
+tagNameParts.push("bitty-v");
+tagNameParts.push(version[0]);
+if (version[3]) {
+  tagNameParts.push(`-${version[3]}`);
+}
+const tagName = tagNameParts.join("");
+
 class BittyJs extends HTMLElement {
   constructor() {
     super();
@@ -12,7 +22,7 @@ class BittyJs extends HTMLElement {
       copyright: "Copyright 2025 - Alan W. Smith",
       license:
         "License at: htttp://bitty.alanwsmith.com/ - 2y1pBoEREr3eWA1ubCCOXdmRCdn",
-      version: [1, 0, 0, "rc4"],
+      version: version,
     };
   }
 
@@ -43,7 +53,7 @@ class BittyJs extends HTMLElement {
       document.addEventListener(listener, (event) => {
         if (
           event.target &&
-          event.target.nodeName.toLowerCase() !== "bitty-js" &&
+          event.target.nodeName.toLowerCase() !== tagName &&
           event.target.dataset && event.target.dataset.send
         ) {
           event.uuid = getUUID();
@@ -190,4 +200,4 @@ class BittyJs extends HTMLElement {
   }
 }
 
-customElements.define("bitty-v1-rc4", BittyJs);
+customElements.define(tagName, BittyJs);
