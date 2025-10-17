@@ -4,6 +4,13 @@
   font-display: block;
 }
 
+
+
+@font-face {
+  font-family: 'Anaheim';
+  src: url('/neo-files/theme-files/fonts/Anaheim-VariableFont_wght.ttf');
+}
+
 /*
 @font-face {
   font-family: 'InterItalic';
@@ -257,8 +264,7 @@ html {
   --border-radius-xlarge: 0.6rem;
   --border-radius-xxlarge: 0.7rem;
   --font-family-primary: system-ui, sans-serif;
-  --font-family-monospace: font-family: Rockwell, 'Rockwell Nova', 'Roboto Slab', 'DejaVu Serif', 'Sitka Small', serif;
-font-weight: normal;
+  --font-family-monospace:  Anaheim, ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
   --font-size-xsmall: clamp(0.78rem, calc(0.77rem + 0.03vw), 0.80rem);
   --font-size-small: clamp(0.94rem, calc(0.92rem + 0.11vw), 1.00rem);
   --font-size-medium: clamp(1.13rem, calc(1.08rem + 0.22vw), 1.25rem);
@@ -1072,6 +1078,10 @@ canvas {
   padding: var(--padding-medium);
 }
 
+code {
+  font-family: var(--font-family-monospace);
+}
+
 .code-section-file {
   border-bottom: 1px solid var(--color-bw-reverse-40);
 }
@@ -1087,11 +1097,11 @@ canvas {
 .code-block {
   margin: var(--padding-large);
   padding: var(--padding-medium);
+  background-color: var(--color-bw-match-80);
   border: 1px solid var(--color-bw-reverse-40);
   border-radius: var(--border-radius-medium);
-  font-size: var(--font-size-small);
-  line-height: 1.4rem;
-  font-family: var(--font-family-primary);
+  line-height: 1.15;
+  font-family: var(--font-family-monospace);
 }
 
 .code-section {
@@ -1509,7 +1519,6 @@ pre {
   overflow-wrap: anywhere;
   overflow-x: auto;
   overscroll-behavior-x: auto;
-  color: var(--color-alt-2-90);
 }
 
 

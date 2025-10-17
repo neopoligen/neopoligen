@@ -77,6 +77,15 @@ impl PageV42b {
     }
   }
 
+  pub fn display_date_created(&self) -> Result<Value, Error> {
+    match self.date_created() {
+      Ok(date) => {
+        Ok(Value::from(date.format("%B %-d, %Y").to_string()))
+      }
+      Err(_) => Ok(Value::from("")),
+    }
+  }
+
   pub fn flags(&self) -> Result<Value, Error> {
     if let Some(sections) = &self.ast {
       if let Some(flags) =
@@ -517,6 +526,7 @@ impl Object for PageV42b {
     _args: &[Value],
   ) -> Result<Value, Error> {
     match name {
+      "display_date_created" => self.display_date_created(),
       "display_date" => self.display_date(),
       "flags" => self.flags(),
       "href" => Ok(Value::from(self.href.as_ref())),

@@ -17,3 +17,4 @@ pub mod site_config;
 pub mod site_v42;
 pub mod span_attrs_v42;
 pub mod span_v42;
+pub mod svg;

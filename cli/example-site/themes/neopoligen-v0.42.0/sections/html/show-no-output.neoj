@@ -23,7 +23,7 @@
     <div class="code-block-subtitle">[@ neo.output_attr('subtitle') @]</div>
     [!- endif -!]
 
-<pre><code>
+<pre class="code-block"><code>
 [@- site.highlight_code(section.body, "html") -@]
 </code></pre>
 

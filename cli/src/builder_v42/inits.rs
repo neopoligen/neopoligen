@@ -105,6 +105,7 @@ impl BuilderV42<'_> {
       site_config: site_config.clone(),
       // site: None,
       site_v42b: None,
+      svgs: BTreeMap::new(),
       templates: BTreeMap::new(),
       template_load_errors,
     })

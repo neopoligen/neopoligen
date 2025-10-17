@@ -25,7 +25,7 @@
     [!- endif -!]
 
     <div class="javascript-body">
-      <pre class="font-size-xsmall"><code>
+      <pre class="code-block"><code>
         [@- site.highlight_code(section.body, "js") -@]
       </code></pre>
     </div>

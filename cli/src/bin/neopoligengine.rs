@@ -161,6 +161,7 @@ fn build_site(
       let _ = builder.add_custom_functions();
       let _ = builder.create_cache_database();
       let _ = builder.load_source_images();
+      let _ = builder.load_source_svgs();
       let _ = builder.ingest_source_files();
       let _ = builder.set_languages_from_site_config();
       let _ = builder.generate_asts();

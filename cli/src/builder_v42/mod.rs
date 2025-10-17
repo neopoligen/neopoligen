@@ -1,5 +1,6 @@
 pub mod inits;
 
+use crate::svg::Svg;
 use crate::helpers::*;
 use crate::image::Image;
 use crate::neo_error_v42::NeoErrorV42;
@@ -36,6 +37,7 @@ pub struct BuilderV42<'a> {
     // TODO: Deprecate in favor of StiV42b
     // pub site: Option<SiteV42>,
     pub site_v42b: Option<SiteV42b>,
+    pub svgs: BTreeMap<String, Svg>,
     pub templates: BTreeMap<String, String>,
     pub template_load_errors: Vec<NeoErrorV42>,
 
@@ -349,6 +351,23 @@ impl BuilderV42<'_> {
         }
     }
 
+
+    #[instrument(skip(self))]
+    pub fn get_svg(&mut self, stem: &str, path: &PathBuf) -> Option<Svg> {
+        if let Ok(_ts) = file_epoch_mod_time(path) {
+            if let Some(ext) = path.extension() {
+                match ext.to_ascii_lowercase().as_os_str().to_str() {
+                    Some("svg") => Some(Svg::new(path)),
+                    _ => None,
+                }
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    }
+
     #[instrument(skip(self))]
     pub fn load_source_images(&mut self) -> Result<()> {
         event!(Level::INFO, "Loading Images");
@@ -374,7 +393,6 @@ impl BuilderV42<'_> {
                 }
             }
         });
-
         // walker.filter(|path_result| match path_result {
         //     Ok(path) => match path.path().extension() {
         //         Some(ext) => {
@@ -392,10 +410,38 @@ impl BuilderV42<'_> {
         //     },
         //     Err(_) => None,
         // });
-
         Ok(())
     }
 
+
+
+    #[instrument(skip(self))]
+    pub fn load_source_svgs(&mut self) -> Result<()> {
+        event!(Level::INFO, "Loading SVGs");
+        let walker = WalkDir::new(&self.site_config.svgs_input_root_folder()).into_iter();
+        walker.for_each(|path_result| {
+            match path_result {
+                Ok(path) => {
+                    if let Some(stem) = path.path().file_stem() {
+                        let stem_as_string = stem.to_string_lossy().to_string();
+                        match self.get_svg(&stem_as_string, &path.path().to_path_buf()) {
+                            Some(i) => {
+                                let _ = &self.svgs.insert(stem_as_string, i);
+                                ()
+                            }
+                            _ => {
+                                // TODO: Hoist Error Here
+                            }
+                        }
+                    };
+                }
+                Err(_e) => {
+                    // TODO: hoist error here
+                }
+            }
+        });
+        Ok(())
+    }
 
 
 
@@ -496,6 +542,7 @@ impl BuilderV42<'_> {
         event!(Level::INFO, "Initializing site");
         let mut site = SiteV42b::new_with_pages(&self.site_config, &self.pages_v42);
         site.images = self.images.clone();
+        site.svgs = self.svgs.clone();
         self.site_v42b = Some(site);
         Ok(())
     }

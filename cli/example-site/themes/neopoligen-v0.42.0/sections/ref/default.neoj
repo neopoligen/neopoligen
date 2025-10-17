@@ -25,7 +25,7 @@
       </strike>
       [! endif !]
     </div>
-    <div>
+    <div class="flow">
       [! if "strike" in section.flags !]
       <strike>
       [! endif !]

@@ -58,7 +58,7 @@ working properly in your browser. Some
 parts of this page may not work properly. 
 </noscript>
 
-<bitty-1-1 data-connect="/neo-files/theme-files/components/bitty-page.js">
+<bitty-1-3 data-connect="/neo-files/theme-files/components/bitty-page.js">
 
 
 <header class="wrapper-medium">
@@ -80,7 +80,8 @@ parts of this page may not work properly.
   <div>
     made by alan w smith<br />
     who is on <a href="https://socials.alanwsmith.com/">some social networks</a><br>
-    and has <a href="https://links.alanwsmith.com/">made some other things</a>
+    and has <a href="https://links.alanwsmith.com/">made some other things</a><br />
+    [@ page.display_date_created() @]
   </div>
   <div>
     this site has <a href="/feeds/posts.xml">an rss feed</a><br />
@@ -135,7 +136,7 @@ if (url.hostname === "localhost") {
 </pre>
 #]
 
-</bitty-1-1>
+</bitty-1-3>
 
 
 <script type="module">
@@ -227,7 +228,8 @@ const watcher = new DetailsOpenCloseWatcher();
 </script>
 
 <script src="/components/youtube-player/youtube-player-v1.js" type="module"></script>
-<script src="/neo-files/theme-files/components/bitty-1.2.0-rc1.min.js" type="module"></script>
+<script src="/neo-files/theme-files/components/bitty-1.3.0.min.js" type="module"></script>
+<script src="/neo-files/theme-files/components/bitty-2.0.0-rc1.full.js" type="module"></script>
 
 </body>
 </html>

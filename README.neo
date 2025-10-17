@@ -11,6 +11,12 @@ main site:
 
 https://www.neopoligen.com/
 
+-- note
+
+To point to a different site, use:
+
+/Users/alan/Library/Application Support/Neopoligen/config.json
+
 
 -- todo
 

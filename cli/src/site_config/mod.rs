@@ -284,6 +284,10 @@ impl SiteConfigV42 {
     self.cache_root_folder().join("status")
   }
 
+  pub fn svgs_input_root_folder(&self) -> PathBuf {
+    self.project_folder().join("svgs")
+  }
+
   pub fn theme_input_root_folder(&self) -> PathBuf {
     self.themes_input_root_folder().join(self.theme.clone())
   }

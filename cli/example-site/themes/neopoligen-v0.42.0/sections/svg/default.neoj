@@ -1,0 +1,5 @@
+[!- import "built-in/macros.neoj" as neo -!]
+
+<section [@- neo.section_attrs() -@]>
+[@ site.svg_from_section(section) @]
+</section>
