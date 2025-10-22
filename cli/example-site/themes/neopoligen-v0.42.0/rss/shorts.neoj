@@ -1,0 +1,40 @@
+[!- import "built-in/macros.neoj" as neo -!]
+
+<?xml-stylesheet href="/feeds/basic.xsl" type="text/xsl"?>
+<rss version="2.0">
+<channel>
+<title>Alan's Shorts</title>
+<link>https://www.alanwsmith.com/</link>
+
+[!- for section in shorts -!]
+
+<item>
+<title></title>
+<link>https://www.alanwsmith.com]</link>
+<pubDate></pubDate>
+<guid></guid>
+<description><![CDATA[ 
+[@ neo.output_all_child_sections(section) @]
+]]></description> 
+</item>
+
+[!- endfor -!]
+
+[#
+[!- for page in pages -!]
+[!- if page.status == "done" and page.title != none -!]
+<item>
+<title><![CDATA[[@ page.title @]]]></title>
+<link>https://www.alanwsmith.com[@ page.href @]</link>
+<pubDate>[@ page.rss_date @]</pubDate>
+<guid>[@ page.rss_id @]</guid>
+<description><![CDATA[ 
+[@ page.output_for_rss @]
+]]></description> 
+</item>
+[!- endif -!]
+[!- endfor -!]
+#]
+
+</channel>
+</rss>

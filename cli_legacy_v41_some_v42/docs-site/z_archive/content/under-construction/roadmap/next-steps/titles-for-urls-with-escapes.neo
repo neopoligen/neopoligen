@@ -1,0 +1,21 @@
+-- title
+
+Titles For URLs With Escapes
+
+-- h2
+
+Overview
+
+-- todo
+-- title: Requirements
+
+[] Provides the title of a page in a string escaped
+for usage in URLs (e.g. for sending to an image 
+processing service)
+
+
+-- metadata
+-- date: 2024-01-24
+-- id: 2bp9zfra
+-- status: scratch
+

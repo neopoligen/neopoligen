@@ -1,0 +1,24 @@
+-- start-theme-test
+
+-- pre
+
+This is a pre section without any attrs
+
+-- expected-output/
+
+<section class="pre-section">
+<pre>This is a pre section without any attrs</pre>
+</section>
+
+
+-- /expected-output
+
+
+
+-- metadata
+-- created: 2024-08-15T12:14:39-04:00
+-- updated: 2024-08-15T12:14:39-04:00
+-- id: 2khatrjw
+
+
+

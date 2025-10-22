@@ -1,0 +1,41 @@
+-- title
+
+TODO~~ Shorthand Spans
+
+These haven't been implemented yet in this version
+of the engine, but they're on the way:
+
+-- code
+
+>a link>https://www.example.com>
+
+>a link>https://www.example.com|class: alfa|id: bravo>
+
+
+]a span]]
+
+]a span]class: alfa|id: bravo]
+
+
+*strong text**
+
+*strong text*class: alfa|id: bravo*
+
+
+_em text__
+
+_em text_class: alfa|id: bravo_
+
+
+~strike text~~
+
+~strike text~class: alfa|id: bravo~~
+
+
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2avtr2fs
+-- status: published
+

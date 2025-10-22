@@ -1,0 +1,15 @@
+-- title
+
+Links (nested spans) 
+
+Links can have other spans nested inside them
+for things like strike thur
+
+<<link|<<strike|Echo Foxtrot>>|/path/2b0vtgfr/>>
+
+
+-- metadata
+-- date: 2024-01-15
+-- id: 2b0wjpvb
+-- status: published
+

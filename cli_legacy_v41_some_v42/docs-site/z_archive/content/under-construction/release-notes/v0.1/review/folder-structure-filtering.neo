@@ -1,0 +1,32 @@
+-- title
+
+Folder Structure Filtering
+
+-- h2
+
+Overview
+
+This feature creates folder structure
+filtering. It allows for matching on any
+folder name above the file. It also
+allows for matching a specific ancestor
+folder (e.g. matching on the first
+folder in the path)
+
+-- todo
+-- title: Details
+
+[x] All folder names are added to the
+`page.folders()`` list
+
+[x] A `page.folders()`` list provides
+access to each path directly (e.g.
+`page.folders()[0]``
+
+
+
+-- metadata
+-- date: 2024-02-12
+-- id: 2cfswjwc
+-- status: draft
+

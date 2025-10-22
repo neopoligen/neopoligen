@@ -1,0 +1,3 @@
+[!- macro time_zone() -!]
+[@- site.time_zone() -@]
+[!- endmacro -!]

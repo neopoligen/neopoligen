@@ -1,0 +1,38 @@
+-- title
+
+JavaScript Blocks 
+
+JavaScript can be added to the head of the document in 
+`script`` tags via the `-- script`` section. This
+example puts a button on the page in a `-- html`` section
+then uses the `-- script`` to add counting functionality
+to it.
+
+
+-- html
+
+<div class="example center">
+  Click me: <button id="clicker">0</button>
+</div>
+
+
+-- script
+
+const increment = () => {
+    let current_num = parseInt(event.target.innerHTML, 10)
+    event.target.innerHTML = current_num + 1
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const the_clicker = document.getElementById("clicker")
+    the_clicker.addEventListener("click", increment)
+})
+
+
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2avp71f0
+-- status: published
+

@@ -1,0 +1,19 @@
+[! import "includes/theme.neoj" as theme !]
+
+<section 
+    [@- theme.section_classes(section, "note-section") -@] 
+    [@- section.attr_string -@]>
+
+<div class="note-title">
+[!- if section.attrs.title -!]
+[@- section.attrs.title -@]
+[! else !]
+Note
+[!- endif -!]
+</div>
+
+<div class="flow">
+[! include "subsections/content-all-blocks.neoj" !]
+</div>
+
+[! include "subsections/end-section.neoj" !]

@@ -1,0 +1,25 @@
+-- title
+
+NeoJinja Syntax Highlighting Editor
+
+-- h2
+
+Overview
+
+NeoJinja templates have automatic
+highlighting applied to them in the editor
+making it easier to read and work with 
+the files.
+
+-- todo
+-- title: Requirements
+
+[] NeoJinja files have syntax highlighting
+in the app editor
+
+
+-- metadata
+-- date: 2024-03-07 20:30:20
+-- id: 2dnvbi5w
+-- status: scratch
+

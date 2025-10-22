@@ -1,0 +1,53 @@
+-- title
+
+Section Category: Preformatted Text
+
+-- h2
+
+Overview
+
+This feature creates the "preformatted" 
+section category. It's for any text 
+that should not otherwise be changed
+when outputting it. (With the exception
+of HTML escaping so that greater than, less
+than, and the related symbols show up 
+properly)
+
+-- todo
+
+
+[x] Full section tags work (e.g. `-- code``) 
+
+[x] Full sections have key value attributes
+
+[x] Full sections have flag attributes
+
+[x] Start section tags work (e.g. `-- code/``)
+
+[x] Start sections have key value attributes
+
+[x] Start sections have flag attributes
+
+[x] End section tags work (e.g. `-- code/``)
+
+[x] End sections have key value attributes
+
+[x] End sections have flag attributes
+
+
+-- related
+-- tlink: 2bpjnza9
+
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 10:44:16
+-- id: 2bpk1fpr
+-- status: published
+

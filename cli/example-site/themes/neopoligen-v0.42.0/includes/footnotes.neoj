@@ -1,0 +1,15 @@
+[!- import "built-in/macros.neoj" as neo -!]
+[! set footnote_header_has_been_output = false !]
+[!- for section in sections -!]
+    [!- if section.kind == "footnote"  -!]
+        [! if footnote_header_has_been_output == false !]
+        <section class="footnotes-section flow">
+            <h3 class="back-matter">Footnotes</h3>
+        [! set footnote_header_has_been_output = true !]
+        [! endif !]
+        [@- neo.output_section(section) -@]
+    [!- endif -!]
+    [! if loop.last and footnote_header_has_been_output == true !]
+        </section>
+    [! endif !]
+[!- endfor -!]

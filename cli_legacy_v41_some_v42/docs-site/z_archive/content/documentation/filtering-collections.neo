@@ -1,0 +1,46 @@
+-- title
+
+Filtering Collections
+
+-- goal
+
+Basic filter format:
+
+[['some-tag']]
+
+Anything that has a tag `some-tag`` will 
+be included
+
+-- goal
+
+"Or" style filters:
+
+[['either-this'], ['or-this']]
+
+
+-- goal
+
+"And" style filters:
+
+[['must', 'match', 'all', 'these']]
+
+-- goal
+
+"Not" style
+
+[['!anything-thats-not-this`]]
+
+
+-- h2
+
+Examples
+
+TKTKTKT
+
+
+
+
+-- metadata
+-- date: 2024-04-19
+-- id: 2fjsgydt
+

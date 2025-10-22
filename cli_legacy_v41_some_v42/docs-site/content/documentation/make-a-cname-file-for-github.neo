@@ -1,0 +1,27 @@
+-- title
+
+Make A CNAME File For GitHub Pages
+
+Use this:
+
+-- code/
+-- neo
+
+-- raw
+
+www.example.com
+
+-- metadata
+-- created: 2024-06-24T16:28:54-04:00
+-- id: abcd1234
+-- type: raw
+
+-- /code
+
+
+-- metadata
+-- created: 2024-06-24T16:28:54-04:00
+-- updated: 2024-06-24T16:28:54-04:00
+-- id: 2ildooka
+-- status: draft
+

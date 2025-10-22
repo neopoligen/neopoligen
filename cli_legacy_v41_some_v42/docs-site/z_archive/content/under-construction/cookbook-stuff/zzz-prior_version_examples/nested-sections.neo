@@ -1,0 +1,63 @@
+-- title
+
+Nested Sections 
+
+Sections can be nested using the "start" and "end"
+versions which use a `/`` to identify them. For example, 
+a `-- div`` start section looks like `-- div/`` and
+and end section looks like this `-- /div``
+
+
+-- div/
+-- class: nested_wrapper
+
+-- div
+
+This is the <<em|red>> div
+
+-- div
+
+This is the green div
+
+-- div
+
+This is the blue div
+
+-- /div
+
+
+
+
+-- list
+-- title: Use Case
+
+- More complex layouts capabilities with
+sections defined directly in the content
+
+
+-- css
+-- template: show
+
+.nested_wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.nested_wrapper div:nth-child(1) {
+    color: red;
+}
+
+.nested_wrapper div:nth-child(2) {
+    color: green;
+}
+
+.nested_wrapper div:nth-child(3) {
+    color: blue;
+}
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2avut0qj
+-- status: published
+

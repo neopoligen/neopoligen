@@ -1,0 +1,55 @@
+-- title
+
+Pretty Print JSON In Python
+
+-- tldr/
+
+Use ``sort_keys``, ``indent``, and ``default`` to pretty
+print JSON from PythonS
+
+-- /tldr
+
+
+-- code
+-- python
+
+import json
+
+json_structure = { 
+  "metadata": { "version": "0.1.0" }
+}
+
+json_string = json.dumps(
+    json_structure, 
+    sort_keys=True, 
+    indent=2, 
+    default=str
+)
+
+print(json_string)
+
+
+-- results/
+
+{
+  "metadata": {
+    "version": "0.1.0"
+  }
+}
+
+-- /results
+
+-- p
+
+
+The ``default=str`` argument prefents issues when converting Date objects.
+
+
+-- pagedata
+-- created: 2017-11-16
+-- id: 0wrnbdkx
+-- site: aws
+-- type: post
+-- status: done
+
+

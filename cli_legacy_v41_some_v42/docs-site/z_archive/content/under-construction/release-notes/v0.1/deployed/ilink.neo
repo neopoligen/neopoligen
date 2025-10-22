@@ -1,0 +1,27 @@
+-- title
+
+ilink - Internal Link
+
+-- h2
+
+Overview
+
+Let's you link to a page by the page_id
+
+-- code
+-- neo
+
+<<ilink: 2ch7uk0v|this is an example link>> 
+
+
+-- todo
+-- title: Requirements
+
+
+
+
+-- metadata
+-- date: 2024-02-29
+-- id: 2d48kmcl
+-- status: scratch
+

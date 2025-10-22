@@ -1,0 +1,5 @@
+[@- '' -@]
+
+<code [@- site.get_span_attrs(span) -@]>[@- site.highlight_syntax(span) -@]</code>
+
+[@- '' -@]

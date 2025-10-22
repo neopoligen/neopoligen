@@ -1,0 +1,39 @@
+-- title
+
+Live Build And Reload Pages When Content Changes
+
+-- h2
+
+Overview
+
+-- todo
+
+[x] When the content of a source file changes
+the page is built automatically
+
+[x] The browser receive a signal to reload
+whatever page on the server it's currently
+on
+
+[x] If the browser is on the page for the file
+that was edited the changes show up
+
+[x] If the browser is on `/last-edit/`` page
+it will update to show the page for the
+last files that was edited
+
+
+-- related
+-- tlink: 2bpbkwsp
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 12:02:41
+-- id: 2bptytsp
+-- status: published
+

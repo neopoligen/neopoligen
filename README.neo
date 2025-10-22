@@ -11,6 +11,12 @@ main site:
 
 https://www.neopoligen.com/
 
+-- note
+
+To point to a different site, use:
+
+/Users/alan/Library/Application Support/Neopoligen/config.json
+
 
 -- todo
 
@@ -19,6 +25,10 @@ section strings that don't have
 a space in them (e.g. <<code|--code>> and
 highlight them as an error
 
+
+- Consider allowing closing tags like
+``-- /div /div`` so you don't have to 
+separate them on different lines. 
 
 
 -- metadata

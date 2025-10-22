@@ -1,0 +1,19 @@
+[!- import "built-in/macros.neoj" as neo -!]
+
+[# TYPE: basic #]
+[# HOIST: [class, id] #]
+
+
+<section [@- neo.section_attrs("flow") -@]>
+  <aside class="flow">
+    [!- if "title" in section.attrs -!]
+      <div class="aside-title">[@ neo.output_attr('title') @]</div>
+    [!- endif -!]
+    <div class="aside-body flow">
+    [@- neo.output_all_child_sections(section) -@]
+    </div>
+  </aside>
+</section>
+
+[@- neo.output_end_section(section) -@]
+

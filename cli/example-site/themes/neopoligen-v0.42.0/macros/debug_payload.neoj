@@ -1,0 +1,3 @@
+[!- macro debug_payload(payload) -!]
+<div><pre>[! autoescape true !][@ payload|tojson(true) @][! endautoescape !]</pre></div>
+[!- endmacro -!]

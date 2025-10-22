@@ -1,0 +1,39 @@
+-- title
+
+App Site Branches
+
+
+-- h2
+
+Overview
+
+This proposal updates the desktop app to provide
+git branching and merging from directly inside
+the app
+
+
+-- todo
+
+[] Handle Branching TKTKTKT
+
+[] Handle Merging TKTKTKT
+
+[] Handle Merge Conflicts TKTKTKT
+
+
+-- h2
+
+Examples
+
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 15:15:20
+-- id: 2bpqz4jm
+-- status: scratch
+

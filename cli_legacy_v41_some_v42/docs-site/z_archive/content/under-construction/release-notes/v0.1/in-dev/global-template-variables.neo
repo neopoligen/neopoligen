@@ -1,0 +1,36 @@
+-- title
+
+Global Template Variables
+
+-- h2
+
+Overview
+
+Neopoligen is designed with a clean separation 
+between the content and the templates that
+output the site. Anything that can be contained
+in one place or the other is moved into
+the appropriate place. There are some items
+that need to span between the content and
+the theme templates. Those values are defined
+in files contained in the `SITE_FOLDER/configuration/`` 
+folder. They are assembled into a global
+variables that are made available in the templates.
+
+This allows for things like defining the default
+language and which attributes should and 
+should not appear in the HTML output tags.
+
+
+-- todo
+-- title: Requirements
+
+[x] Items defined in global variables configuration files
+(e.g. `SITE_FOLDER/configuration/section-attribute-excludes.txt``)
+are loaded into the build environment and made
+available to templates
+
+-- metadata
+-- date: 2024-02-19
+-- id: 2cbjuexc
+

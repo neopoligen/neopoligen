@@ -1,0 +1,18 @@
+[! import "built-in/macros.neoj" as neo !]
+
+[# TYPE: none #]
+[# HOIST: [] #]
+
+[!- for child in section.children -!]
+
+    [!- if loop.first -!]
+        <section [@- neo.section_attrs("flow") -@]>
+    [!- endif -!]
+
+    [@- neo.output_section(child) -@]
+
+    [!- if loop.last-!]
+        </section>
+    [!- endif -!]
+
+[! endfor !]

@@ -1,0 +1,9 @@
+<li class="built-in-parsing-issue built-in built-in-flow flow">
+<p><strong>Parsing Issue:</strong> The file has a problem that 
+prevented it from being read in properly. The specific code is:
+</p>
+<p>[@ page.parsing_issue.message @]</p>
+<p>The place where the problem occurred is highlighted below.
+It's the place to start getting things fixed</p>
+<div><pre>[! autoescape true !][@ page.parsing_issue.completed @][! endautoescape !]<mark>[! autoescape true !][@ page.parsing_issue.remainder @][! endautoescape !]</mark></pre></div>
+</li>

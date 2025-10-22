@@ -1,0 +1,27 @@
+-- title
+
+List Sections 
+
+The `-- list`` sections are one of the most basic
+types. They simply provide a list output but can
+be styled, have different templates, etc... like
+any other section
+
+-- list
+-- class: example
+
+- Alfa
+
+- Bravo
+
+Charlie
+
+- Delta
+
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2avrwclb
+-- status: published
+

@@ -1,0 +1,27 @@
+-- title
+
+Allow More Than Two Dashes To Start Sections
+
+-- h2
+
+Overview
+
+This feature allow sections to start with more than
+two dashes (i.e. `---- div`` works as well as `-- div``)
+
+-- todo
+-- title: Details
+
+[] Starting a section with more than two dashes works
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-30
+-- updated: 2024-01-30 00:33:14
+-- id: 2bf4rtew
+-- status: draft
+

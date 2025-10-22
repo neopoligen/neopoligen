@@ -1,0 +1,9 @@
+[!- import "built-in/macros.neoj" as neo -!]
+
+[#- ATTRS_TO_HOIST: [class, id] -#]
+
+<img src="[@ neo.output_spans(span.spans) @]" [@ neo.hoist_span_attrs() @] alt="Apologies, my alt text is broken. I'm working to get it fixed.">
+
+[@- '' -@]
+
+

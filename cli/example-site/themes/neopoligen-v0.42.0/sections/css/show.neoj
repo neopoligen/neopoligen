@@ -1,0 +1,14 @@
+[!- import "built-in/macros.neoj" as neo -!]
+
+[# TYPE: css #]
+[# HOIST: [] #]
+
+<section [@- neo.section_attrs("flow show-css") -@]>
+<h4 class="show-css-heading">CSS</h4>
+<pre><code>
+[@- site.highlight_code(section.body, "css") -@]
+</code></pre>
+</section>
+
+[@- neo.output_end_section(section) -@]
+

@@ -1,0 +1,20 @@
+[! import "includes/theme.neoj" as theme !]
+
+<div
+[@ theme.section_classes(section, "") @] 
+>
+
+[! if site.images[section.flags[0]] !]
+[! set img = site.images[section.flags[0]] !]
+
+<img 
+src="[@- img.dir -@]/[@- img.raw_width-@]w.[@- img.extension -@]"
+class="preview-thumbnail"
+alt="My apologies. Alt text is currently offline. I'm working on an update to fix it."
+/>
+[! endif !]
+
+
+[! include "subsections/content-all-blocks.neoj" !]
+
+

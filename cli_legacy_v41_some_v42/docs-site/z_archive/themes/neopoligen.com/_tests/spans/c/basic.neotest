@@ -1,0 +1,46 @@
+##################################################################################
+TEMPLATE
+PATH: pages/testing/published.jinja
+##################################################################################
+
+[!- import "includes/macros.jinja" as macros -!]
+[@- macros.main_body(page_id) -@]
+
+
+##################################################################################
+INPUT
+PATH: /Users/alan/Documents/Neopoligen/neopoligen.github.io/content/file-under-test.neo
+##################################################################################
+
+-- p
+
+<<c: alfa bravo|lorem ipsum>>
+
+-- p
+
+
+<<c: charlie delta|random words|id: echo|foxtrot>>
+
+
+-- metadata
+-- id: file-under-test
+-- data: 2024-01-01 01:01:01
+-- type: testing
+-- status: published
+
+
+
+##################################################################################
+EXPECTED_OUTPUT
+##################################################################################
+
+<section class="p_section section_category_standard flow">
+    <div class="content flow">
+    <p><span class="alfa bravo">lorem ipsum</span></p>
+    </div>
+</section>
+<section class="p_section section_category_standard flow">
+    <div class="content flow">
+    <p><span class="charlie delta" id="echo" foxtrot>random words</span></p>
+    </div>
+</section>

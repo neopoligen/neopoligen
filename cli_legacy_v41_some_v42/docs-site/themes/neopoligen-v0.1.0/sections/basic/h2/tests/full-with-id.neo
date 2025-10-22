@@ -1,0 +1,27 @@
+-- start-theme-test 
+
+-- h2
+-- id: some-id 
+
+Alfa Bravo Charlie
+
+-- expected-output/
+
+<section class="h2-section flow" id="some-id">
+<hgroup>
+  <h2 class="section-heading">
+    Alfa Bravo Charlie
+  </h2>
+</hgroup>
+</section>
+
+
+-- /expected-output
+
+
+
+-- metadata
+-- updated: 2024-06-12T21:57:46-04:00
+-- id: 2hnxudf3_h2
+
+

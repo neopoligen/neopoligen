@@ -1,0 +1,28 @@
+[#- type: standard -#]
+[!- import "includes/macros.jinja" as macros -!]
+
+[#- NOTE: This doesn't use the default span_attributes so the 
+url doesn't get pulled in as an attribute -#]
+
+
+[@- macros.link_or_title(
+    current_page = page_id, 
+    target_page = span.content.spans[0].content.text
+) -@]
+
+
+[#
+<a href="[@- site.href_for_page(span.content.spans[0].content.text) -@]"
+[!- for attribute in span.content.key_value_attributes -!]
+[@- ' ' -@]
+[@- attribute -@]="[@- span.content.key_value_attributes[attribute] -@]"
+[!- endfor -!]
+[!- for flag in span.content.flag_attributes -!]
+[!- if loop.first != true -!]
+[@- ' ' -@]
+[@- flag -@]
+[!- endif -!]
+[!- endfor -!]>
+[@- site.title_for_page(span.content.spans[0].content.text) -@]
+</a>
+#]

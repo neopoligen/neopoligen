@@ -1,0 +1,19 @@
+[!- import "built-in/macros.neoj" as neo -!]
+[! set header_has_been_output = false !]
+[!- for section in sections -!]
+    [!- if section.kind == "see-also"  -!]
+        [! if header_has_been_output == false !]
+          <section class="see-also-section flow">
+            <h3 class="back-matter">See Also</h3>
+            <ul class="no-li-markers flow">
+          [! set header_has_been_output = true !]
+        [! endif !]
+        <li class="flow see-also-li">
+          [@- neo.output_section(section) -@]
+        </li>
+    [!- endif -!]
+    [! if loop.last and header_has_been_output == true !]
+          </ul>
+        </section>
+    [! endif !]
+[!- endfor -!]

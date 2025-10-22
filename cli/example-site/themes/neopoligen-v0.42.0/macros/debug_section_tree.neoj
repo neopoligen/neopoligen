@@ -1,0 +1,20 @@
+[!- macro debug_section_tree(sections) -!]
+<ul>
+[!- for section in sections -!]
+<li>[@ section.kind @] 
+[! if section.spans !]
+[[@ output_spans(section.spans) @]]
+[! else !]
+- [@ section.type @]
+[! endif !]
+[@ debug_section_tree(section.children) @]
+</li>
+[! if section.end_section !] 
+<li>
+[@ section.end_section.kind @]
+[@ debug_section_tree(section.end_section.children) @]
+</li>
+[! endif !]
+[!- endfor -!]
+</ul>
+[!- endmacro -!]

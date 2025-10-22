@@ -1,0 +1,43 @@
+{
+  "attrs": {},
+  "bound": "full",
+  "children": [
+    {
+      "bound": "full",
+      "checked": false,
+      "checked_string": null,
+      "children": [
+        {
+          "children": [],
+          "kind": "todos-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "alfa",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": [
+            "sections/todos-item-paragraph/default.neoj",
+            "sections/checklist-item-paragraph/default.neoj",
+            ],
+          "type": "block"
+        }
+      ],
+      "kind": "todos-item",
+      "template_list": [
+        "sections/todos-item/default.neoj",
+        "sections/checklist-item/default.neoj",
+        ],
+      "type": "checklistitem"
+    }
+  ],
+  "end_section": null,
+  "flags": [],
+  "kind": "todos",
+  "template_list": [
+    "sections/todos/default.neoj",
+    "sections/checklist/default.neoj"
+  ],
+  "type": "checklist"
+}

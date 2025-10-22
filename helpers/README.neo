@@ -2,6 +2,12 @@
 
 Helpers README
 
+-- note
+
+To point to a different site, use:
+
+/Users/alan/Library/Application Support/Neopoligen/config.json
+
 -- h2
 
 Syncing

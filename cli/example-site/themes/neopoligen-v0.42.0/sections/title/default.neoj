@@ -1,0 +1,23 @@
+[!- import "built-in/macros.neoj" as neo -!]
+
+[# TYPE: basic #]
+[# HOIST: [class, id] #]
+
+
+<section [@- neo.section_attrs("flow") -@]>
+  [!- if is_rss == false -!]
+  <div class="title-block">
+    <h1>[@- neo.spans_from_first_block(section) -@]</h1>
+    [# only output date when it's not the home page #]
+    [! if page.rel_output_path != "index.html" !]
+    <div class="page-date">[@ page.display_date()  @]</div>
+    [! endif !]
+  </div>
+  [!- endif -!]
+  [@- neo.output_child_sections_skipping_first(section) -@]
+</section>
+
+[@- neo.output_end_section(section) -@]
+
+
+

@@ -1,0 +1,40 @@
+[!- import "built-in/macros.neoj" as neo -!]
+
+[# TYPE: basic #]
+[# HOIST: [class, id] #]
+
+<section [@- neo.section_attrs() -@]>
+    <div>
+      [! if "strike" in section.flags !]
+      <strike>
+      [! endif !]
+      [!- if "url" in section.attrs -!]
+        <a href="[@- neo.output_spans(section.attrs.url[0].spans) -@]">
+      [!- endif -!]
+      [!- if "title" in section.attrs -!]
+        <strong>
+        [@- neo.output_spans(section.attrs.title[0].spans) -@]
+        </strong>
+      [!- else -!]
+        [@- neo.output_spans(section.attrs.url[0].spans) -@]
+      [!- endif -!]
+      [!- if "url" in section.attrs -!]
+        </a>
+      [!- endif -!]
+      [! if "strike" in section.flags !]
+      </strike>
+      [! endif !]
+    </div>
+    <div class="flow">
+      [! if "strike" in section.flags !]
+      <strike>
+      [! endif !]
+      [@- neo.output_all_child_sections(section) -@]
+      [! if "strike" in section.flags !]
+      </strike>
+      [! endif !]
+    </div>
+</section>
+
+[@- neo.output_end_section(section) -@]
+

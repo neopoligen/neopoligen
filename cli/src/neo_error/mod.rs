@@ -1,4 +1,4 @@
-use crate::{payload_section::PayloadSection, section::Section};
+use minijinja::Value;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
@@ -22,16 +22,16 @@ pub enum NeoErrorKind {
         source_path: PathBuf,
         msg: String,
     },
-    GenericErrorWithSourcePathAndAst {
-        source_path: PathBuf,
-        msg: String,
-        ast: Option<Vec<Section>>,
-    },
-    GenericErrorWithSourcePathAndPayloadSections {
-        source_path: PathBuf,
-        msg: String,
-        sections: Option<Vec<PayloadSection>>,
-    },
+    // GenericErrorWithSourcePathAndAst {
+    //     source_path: PathBuf,
+    //     msg: String,
+    //     ast: Option<Vec<Section>>,
+    // },
+    // GenericErrorWithSourcePathAndPayloadSections {
+    //     source_path: PathBuf,
+    //     msg: String,
+    //     sections: Option<Vec<PayloadSection>>,
+    // },
     FileError {
         source_path: PathBuf,
         msg: String,
@@ -46,8 +46,16 @@ pub enum NeoErrorKind {
     MissingThemeDirectory {
         path: PathBuf,
     },
+    // TODO: Deprecate ParseError in favor of ParserErrorV42
     ParserError {
         source_path: Option<PathBuf>,
+        line: usize,
+        column: usize,
+        remainder: String,
+        source: String,
+        message: String,
+    },
+    ParserErrorV42 {
         line: usize,
         column: usize,
         remainder: String,
@@ -57,7 +65,7 @@ pub enum NeoErrorKind {
     ThemeTestError {
         expected: String,
         got: String,
-        sections: Vec<PayloadSection>,
+        sections: Value,
         source_path: PathBuf,
     },
 }
@@ -81,22 +89,22 @@ impl std::fmt::Display for NeoError {
                 fmt.write_str("\n")?;
                 fmt.write_str(msg.as_str())?;
             }
-            NeoErrorKind::GenericErrorWithSourcePathAndAst {
-                source_path, msg, ..
-            } => {
-                fmt.write_str("FileError: ")?;
-                fmt.write_str(source_path.display().to_string().as_str())?;
-                fmt.write_str("\n")?;
-                fmt.write_str(msg.as_str())?;
-            }
-            NeoErrorKind::GenericErrorWithSourcePathAndPayloadSections {
-                source_path, msg, ..
-            } => {
-                fmt.write_str("FileError: ")?;
-                fmt.write_str(source_path.display().to_string().as_str())?;
-                fmt.write_str("\n")?;
-                fmt.write_str(msg.as_str())?;
-            }
+            // NeoErrorKind::GenericErrorWithSourcePathAndAst {
+            //     source_path, msg, ..
+            // } => {
+            //     fmt.write_str("FileError: ")?;
+            //     fmt.write_str(source_path.display().to_string().as_str())?;
+            //     fmt.write_str("\n")?;
+            //     fmt.write_str(msg.as_str())?;
+            // }
+            // NeoErrorKind::GenericErrorWithSourcePathAndPayloadSections {
+            //     source_path, msg, ..
+            // } => {
+            //     fmt.write_str("FileError: ")?;
+            //     fmt.write_str(source_path.display().to_string().as_str())?;
+            //     fmt.write_str("\n")?;
+            //     fmt.write_str(msg.as_str())?;
+            // }
             NeoErrorKind::FileError { source_path, msg } => {
                 fmt.write_str("FileError: ")?;
                 fmt.write_str(source_path.display().to_string().as_str())?;
@@ -115,6 +123,25 @@ impl std::fmt::Display for NeoError {
             NeoErrorKind::ThemeTestError { source_path, .. } => {
                 fmt.write_str("Path: ")?;
                 fmt.write_str(source_path.display().to_string().as_str())?;
+            }
+            NeoErrorKind::ParserErrorV42 {
+                line,
+                column,
+                remainder,
+                message,
+                ..
+            } => {
+                fmt.write_str("Error: ")?;
+                fmt.write_str(message.as_str())?;
+                fmt.write_str("\n")?;
+                fmt.write_str("Line: ")?;
+                fmt.write_str(line.to_string().as_str())?;
+                fmt.write_str(" Column: ")?;
+                fmt.write_str(column.to_string().as_str())?;
+                fmt.write_str(" At: ")?;
+                fmt.write_str("\n")?;
+                fmt.write_str("\n")?;
+                fmt.write_str(remainder.as_str())?;
             }
             NeoErrorKind::ParserError {
                 line,

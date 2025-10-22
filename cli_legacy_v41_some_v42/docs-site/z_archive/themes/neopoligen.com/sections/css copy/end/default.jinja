@@ -1,0 +1,66 @@
+[!- import "includes/macros.jinja" as macros -!]
+
+<section [@- section_attributes(page_id, {"section": section, "classes": "p_section flow" } ) -@]>
+    [#- START_NEOPOLIGEN_SOURCE_EXAMPLE -#]
+    [!- if extra.example == true -!]
+        <div class="neopolitan_source_wrapper">
+            <h3>Source</h3>
+            <pre><code>
+                [!- autoescape true -!][@- section.source | trim -@][!- endautoescape -!]
+            </code></pre>
+            <h3 class="source_output_header">Output</h3>
+            [!- if section_has_flag(section, "example_flag") == "true" -!]
+                <div class="example_flag_note">(Found '--example_flag' section attribute flag)</div>
+            [!- endif -!]
+        </div>
+    [!- endif -!]
+    [#- END_NEOPOLIGEN_SOURCE_EXAMPLE -#]
+
+    [!- if section.key_value_attributes.forward -!]
+        <div class="forward">
+            [@- section.key_value_attributes.forward -@]
+        </div>
+    [!- endif -!]
+
+    [!- if section.key_value_attributes.title or section.key_value_attributes.subtitle -!]
+    <div class="p_heading_group">
+    [!- endif -!]
+        [!- if section.key_value_attributes.title -!]
+        <h2>
+            [@- section.key_value_attributes.title -@]
+        </h2>
+        [!- endif -!]
+        [!- if section.key_value_attributes.subtitle -!]
+        <div class="heading_subtitle">
+            [@- section.key_value_attributes.subtitle -@]
+        </div>
+        [!- endif -!]
+    [!- if section.key_value_attributes.title or section.key_value_attributes.subtitle -!]
+    </div>
+    [!- endif -!]
+
+    [!- if section.key_value_attributes.preface -!]
+        <div class="preface">
+            [@- section.key_value_attributes.preface -@]
+        </div>
+    [!- endif -!]
+
+    [!- if section.category.content.containers[0] -!]
+    <div class="content flow">
+    [!- endif -!]
+        [!- for content in section.category.content.containers -!]
+            <p>[@- output_payload(page_id, content, extras) -@]</p>
+        [!- endfor -!]
+    [!- if section.category.content.containers[0] -!]
+    </div>
+    [!- endif -!]
+
+    [!- if section.key_value_attributes.afterword -!]
+        <div class="afterword">
+            [@- section.key_value_attributes.afterword -@]
+        </div>
+    [!- endif -!]
+
+</section>
+
+[@- '' -@]

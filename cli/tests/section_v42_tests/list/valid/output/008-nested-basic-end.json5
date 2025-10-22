@@ -1,0 +1,138 @@
+{
+  "attrs": {},
+  "bound": "start",
+  "children": [
+    {
+      "bound": "full",
+      "children": [
+        {
+          "children": [],
+          "kind": "list-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "alfa",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": [
+            "sections/list-item-paragraph/default.neoj",
+            
+          ],
+          "type": "block"
+        },
+        {
+          "attrs": {},
+          "bound": "start",
+          "children": [
+            {
+              "children": [],
+              "kind": "paragraph",
+              "spans": [
+                {
+                  "kind": "plain-text",
+                  "text": "bravo",
+                  "type": "plain-text"
+                }
+              ],
+              "template_list": [
+                "sections/paragraph/default.neoj",
+                
+              ],
+              "type": "block"
+            }
+          ],
+          "end_section": {
+            "attrs": {},
+            "bound": "end",
+            "children": [],
+            "flags": [],
+            "kind": "div-end",
+            "template_list": [
+              "sections/div-end/default.neoj",
+              "sections/end/default.neoj"
+            ],
+            "type": "end"
+          },
+          "flags": [],
+          "kind": "div",
+          "neo_body": "bravo",
+          "neo_source": "-- div/\n\nbravo\n\n-- /div",
+          "template_list": [
+            "sections/div/default.neoj",
+            "sections/basic/default.neoj"
+          ],
+          "type": "basic"
+        },
+        {
+          "children": [],
+          "kind": "list-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "charlie",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": [
+            "sections/list-item-paragraph/default.neoj",
+            
+          ],
+          "type": "block"
+        }
+      ],
+      "kind": "list-item",
+      "template_list": [
+        "sections/list-item/default.neoj",
+        
+      ],
+      "type": "listitem"
+    },
+    {
+      "bound": "full",
+      "children": [
+        {
+          "children": [],
+          "kind": "list-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "delta",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": [
+            "sections/list-item-paragraph/default.neoj",
+            
+          ],
+          "type": "block"
+        }
+      ],
+      "kind": "list-item",
+      "template_list": [
+        "sections/list-item/default.neoj",
+        
+      ],
+      "type": "listitem"
+    }
+  ],
+  "end_section": {
+    "attrs": {},
+    "bound": "end",
+    "children": [],
+    "flags": [],
+    "kind": "list-end",
+    "template_list": [
+      "sections/list-end/default.neoj",
+      "sections/end/default.neoj"
+    ],
+    "type": "end"
+  },
+  "flags": [],
+  "kind": "list",
+  "template_list": [
+    "sections/list/default.neoj",
+    
+  ],
+  "type": "list"
+}

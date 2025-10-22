@@ -1,0 +1,36 @@
+-- start-theme-test
+
+-- h6/
+
+Alfa Bravo
+
+charlie delta
+
+-- /h6
+
+echo foxtrot
+
+
+-- expected-output/
+
+<section class="h6-section flow">
+<hgroup>
+<h6 class="section-heading">Alfa Bravo</h6>
+</hgroup>
+<p>charlie delta</p>
+</section>
+
+<section class="p-section flow">
+<p>echo foxtrot</p>
+</section>
+
+-- /expected-output
+
+
+
+-- metadata
+-- updated: 2024-06-08T16:44:58-04:00
+-- id: 2hc3nv33_h6
+
+
+

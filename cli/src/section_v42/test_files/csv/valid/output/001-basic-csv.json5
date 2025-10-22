@@ -1,0 +1,16 @@
+{
+  "attrs": {}, 
+  "bound": "full", 
+  "data": [
+    ["a", "b", "c"], 
+    ["d", "e", "f"]
+  ],
+  "end_section": null, 
+  "error": null, 
+  "flags": [], 
+  "kind": "csv", 
+  "type": "csv",
+  "template_list": [
+    "sections/csv/default.neoj", 
+   ],
+}

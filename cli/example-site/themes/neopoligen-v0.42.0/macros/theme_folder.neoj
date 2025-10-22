@@ -1,0 +1,3 @@
+[!- macro theme_folder() -!]
+[@- site.theme_folder_href() -@]
+[!- endmacro -!]

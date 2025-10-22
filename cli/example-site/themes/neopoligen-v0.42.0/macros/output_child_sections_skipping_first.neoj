@@ -1,0 +1,8 @@
+[! from "macros/output_section.neoj" import output_section !]
+[!- macro output_child_sections_skipping_first(section) -!]
+[!- for child in section.children -!]
+[!- if not loop.first-!]
+[@ output_section(child) @]
+[!- endif -!]
+[!- endfor -!]
+[!- endmacro -!]

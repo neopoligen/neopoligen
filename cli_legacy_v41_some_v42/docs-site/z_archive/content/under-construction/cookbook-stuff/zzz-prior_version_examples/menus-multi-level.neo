@@ -1,0 +1,30 @@
+-- title
+
+Menus 
+
+The `-- menu`` section takes JSON. You can use it to hand 
+craft menus. Including menus with multiple levels. 
+
+They aren't show on the page by default. They get
+placed by including them if you need them in the 
+content or calling them on the page template itself
+via an include
+
+-- menu
+-- id: multi_level_menu_example
+
+[
+    { "name": "Alfa", "link": "", "children": [ 
+        { "name": "Bravo", "link": "", "children": [
+            { "name": "Charlie", "link": "", "children": [] }
+            ]}
+        ] 
+    }
+]
+
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2axztf71
+-- status: published

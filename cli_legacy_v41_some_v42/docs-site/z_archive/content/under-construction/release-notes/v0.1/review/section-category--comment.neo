@@ -1,0 +1,67 @@
+-- title
+
+Section Category: Comment
+
+-- h2
+
+Overview
+
+This feature creates the "comment" section 
+category. It provides a way to add things
+to content files that are not published
+when the site builder runs
+
+See <<tlink|2bnbefrs>> and <<tlink|2bngx1ru>> for 
+examples
+
+
+-- todo
+
+[x] Provides a way to add notes to .neo
+files that don't show up in the output
+
+[x] Full section tags work (e.g. `-- comment``) 
+
+[x] Full section key value attributes are N/A
+
+[x] Full section flag attributes are N/A
+
+[x] Start section tags work (e.g. `-- comment/``)
+
+[x] Start section key value attributes are N/A
+
+[x] Start section flag attributes are N/A
+
+[x] End section tags work (e.g. `-- comment/``)
+
+[x] End sections have key value attributes
+
+[x] End sections have flag attributes
+
+
+-- notes
+
+- Don't put sensitive stuff in comments
+(e.g. passwords). The .neo files themselves 
+still have them which may make them visible
+depending on your system
+
+- It's possible a bug could cause comments
+to become visible accidentally
+
+- Other Neopolitan builders might use
+and make comment sections visible 
+intentionally (e.g. for sharing 
+editorially notes). 
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 10:10:23
+-- id: 2bpfthvk
+-- status: published
+

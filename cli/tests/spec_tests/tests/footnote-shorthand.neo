@@ -1,0 +1,140 @@
+-- title
+
+Footnote Shorthand Spec Tests
+
+-- neopoligen-spec-test/
+
+{
+  "version": "0.42.0",
+  "name": "Valid Footnote Shorthand Spans",
+  "notes": [
+    "This is just getting started, there are more to test that I'll add in the next iteration",
+    "The invalid cases aren't exhaustive (i.e. they don't test every possible character that's not allowed). They're just meant to be representative",
+    "This is the first version of the parse and only deals with English. I'm working on figuring out how to do other character sets", 
+  ],
+  "tests": {
+    "todo_valid": [
+    ],
+    "todo_invalid": [
+    ],
+    "valid": [
+      {
+        "description": "Basic tag",
+        "source": "^^alfa^^",
+        "result": '{ "attrs": {}, "flags": [], "text": "alfa", "type": "shorthand-footnote"}',
+        "notes": [],
+      },
+      {
+        "description": "Can have any content other than unescaped pipes or unescaped carets",
+        "source": "^^alfa ~!@#$ <html> <<named-span>>^^",
+        "result": '{ "attrs": {}, "flags": [], "text": "alfa ~!@#$ <html> <<named-span>>", "type": "shorthand-footnote"}',
+        "notes": [],
+      },
+      {
+        "description": "Can have flags",
+        "source": "^^alfa|bravo^^",
+        "result": '{ "attrs": {}, "flags": ["bravo"], "text": "alfa", "type": "shorthand-footnote"}',
+        "notes": [],
+      },
+      {
+        "description": "Flags can have any content besides unescaped pipes, unescaped carets, and unescaped escapes",
+        "source": "^^alfa|bravo ~!@# : ^^",
+        "result": '{ "attrs": {}, "flags": ["bravo ~!@# : "], "text": "alfa", "type": "shorthand-footnote"}',
+        "notes": [
+          "Note colons followed by whitespace are allowed since key values will have already been parsed based on the intentional order of operation in the parser"
+        ],
+      },
+      {
+        "description": "Flags can have escaped pipes",
+        "source": "^^alfa|bravo \\| charlie^^",
+        "result": '{ "attrs": {}, "flags": ["bravo | charlie"], "text": "alfa", "type": "shorthand-footnote"}',
+        "notes": [],
+      },
+      {
+        "description": "Flags can have escaped carets",
+        "source": "^^alfa|bravo \\^ charlie^^",
+        "result": '{ "attrs": {}, "flags": ["bravo ^ charlie"], "text": "alfa", "type": "shorthand-footnote"}',
+        "notes": [],
+      },
+      {
+        "description": "Flags can have single carets",
+        "source": "^^alfa|bravo ^ charlie^^",
+        "result": '{ "attrs": {}, "flags": ["bravo ^ charlie"], "text": "alfa", "type": "shorthand-footnote"}',
+        "notes": [],
+      },
+      {
+        "description": "Key/value attrs are allowed",
+        "source": "^^alfa|bravo: charlie^^",
+        "result": '{ "attrs": {"bravo": [{"text": "charlie", "type": "plain-text"}]}, "flags": [], "text": "alfa", "type": "shorthand-footnote"}',
+        "notes": [],
+      },
+      {
+        "description": "Key/value keys can have numbers",
+        "source": "^^alfa|bravo1: charlie^^",
+        "result": '{ "attrs": {"bravo1": [{"text": "charlie", "type": "plain-text"}]}, "flags": [], "text": "alfa", "type": "shorthand-footnote"}',
+        "notes": [],
+      },
+      {
+        "description": "Key/value keys can have hyphens",
+        "source": "^^alfa|bravo--charlie: delta^^",
+        "result": '{ "attrs": {"bravo--charlie": [{"text": "delta", "type": "plain-text"}]}, "flags": [], "text": "alfa", "type": "shorthand-footnote"}',
+        "notes": [],
+      },
+      {
+        "description": "Key/value keys can have underscores",
+        "source": "^^alfa|bravo__charlie: delta^^",
+        "result": '{ "attrs": {"bravo__charlie": [{"text": "delta", "type": "plain-text"}]}, "flags": [], "text": "alfa", "type": "shorthand-footnote"}',
+        "notes": [],
+      },
+      {
+        "description": "Key/value values can be anything other than unescaped pipes, unescaped double caret, or unescaped escapes",
+        "source": "^^alfa|bravo: charlie ~!@# <html> <<named-span>>^^",
+        "result": '{ "attrs": {"bravo": [{"text": "charlie ~!@# <html> <<named-span>>", "type": "plain-text"}]}, "flags": [], "text": "alfa", "type": "shorthand-footnote"}',
+        "notes": [],
+      },
+      {
+        "description": "Key/value values can have single caret",
+        "source": "^^alfa|bravo: charlie ^ delta^^",
+        "result": '{ "attrs": {"bravo": [{"text": "charlie ", "type": "plain-text"}, {"text": "^", "type": "plain-text"}, {"text": " delta", "type": "plain-text"}]}, "flags": [], "text": "alfa", "type": "shorthand-footnote"}',
+        "notes": [],
+      },
+      {
+        "description": "Key/value values can have escaped carets",
+        "source": "^^alfa|bravo: charlie \\^^ delta^^",
+        "result": '{ "attrs": {"bravo": [{"text": "charlie ", "type": "plain-text"}, {"text": "^", "type": "escaped-character" }, {"text": "^", "type": "plain-text"}, {"text": " delta", "type": "plain-text"}]}, "flags": [], "text": "alfa", "type": "shorthand-footnote"}',
+        "notes": [],
+      },
+      {
+        "description": "Key/value values can have escaped pipes",
+        "source": "^^alfa|bravo: charlie \\| delta^^",
+        "result": '{ "attrs": {"bravo": [{"text": "charlie ", "type": "plain-text"}, {"text": "|", "type": "escaped-character" }, {"text": " delta", "type": "plain-text"}]}, "flags": [], "text": "alfa", "type": "shorthand-footnote"}',
+        "notes": [],
+      },
+      {
+        "description": "Key/value values can have escaped escapes",
+        "source": "^^alfa|bravo: charlie \\\\ delta^^",
+        "result": '{ "attrs": {"bravo": [{"text": "charlie ", "type": "plain-text"}, {"text": "\\\\", "type": "escaped-character" }, {"text": " delta", "type": "plain-text"}]}, "flags": [], "text": "alfa", "type": "shorthand-footnote"}',
+        "notes": ["Note: I'm not sure this one renders correctly in the output based of the loop I'm testing with. It should just be a single backslash for the text"],
+      },
+    ],
+    "invalid": [
+      {
+        "description": "Can't end with an unescaped pipe",
+        "source": "^^alfa|^^",
+        "notes": [],
+      },
+    ],
+  },
+}
+
+-- /neopoligen-spec-test
+
+
+-- pagedata
+-- created: 2024-10-30T18:26:27-04:00
+-- updated: 2024-10-30T18:26:27-04:00
+-- id: 2oazv2ho
+-- template: post
+-- status: draft 
+
+

@@ -1,0 +1,50 @@
+[!- import "built-in/macros.neoj" as neo -!]
+
+[# TYPE: basic #]
+[# HOIST: [class, id] #]
+
+<section [@- neo.section_attrs() -@]>
+
+  <div class="demo-bookmark-v1-header">
+    Bookmark
+  </div>
+
+  <div class="demo-bookmark-v1-body">
+
+    <div class="demo-bookmark-v1-title">
+      <a href="[@- neo.output_attr("url") -@]">
+        [@- neo.output_attr("title") -@]
+      </a>
+    </div>
+
+    [!- if "subtitle" in section.attrs -!]
+      <div class="demo-bookmark-v1-subtitle">
+        [@- neo.output_attr("subtitle") -@]
+      </div>
+    [!- endif -!]
+
+    <div class="demo-bookmark-v1-details flow">
+      [@- neo.output_all_child_sections(section) -@]
+    </div>
+
+    [!- if "tag" in section.attrs -!]
+      <div class="demo-bookmark-v1-tag-wrapper">
+        tags:[@- ' ' -@]
+          [!- for t in section.attrs["tag"] -!]
+            [@ neo.output_spans(t.spans) -@]
+            [!- if not loop.last -!],[@- ' ' -@][!- endif -!]
+          [!- endfor -!]
+      </div>
+    [!- endif -!]
+
+    <div class="demo-bookmark-v1-url-wrapper">
+      <a href="[@- neo.output_attr("url") -@]">
+        [@- neo.output_attr("url") -@]
+      </a>
+    </div>
+
+  </div>
+</section>
+
+[@- neo.output_end_section(section) -@]
+

@@ -1,0 +1,155 @@
+-- title
+
+v0.1 Launch Checklist
+
+-- p
+
+I've been working on Neopoligen for a couple years. I 
+didn't realize at the start that that's what I was 
+doing. Originally, I thought I was designing a file 
+format to replace the one^md^^ I was using to make my 
+website at the time.
+
+Of course, in order to use the format I needed to make 
+a site builder could understand it and covert it into 
+web pages. The more I worked on that, the more I thought 
+other folks might be interested in playing around with it 
+too. 
+
+Neopoligen is free and open-source^foss^^. Anyone 
+can grab it and use it at any time, but I haven't
+publicized it. The app works and is what's
+building this site, but it's not where I want it
+to be before showing it to other folks. I've got a 
+ton of ideas both on the drawing board and in-flight. 
+The trick is figuring out when to draw a line in 
+the sand and ship the first version. 
+
+That's what this post is about. I'm using it
+to create the launch checklist. 
+
+Once everything is checked off, it's go time. There's 
+also a second list. Stuff I'm explicitly <<em|not>> going 
+to do for launch. This is stuff I'm tempted to wait
+for, but you gotta draw a line somewhere otherwise
+it'll never get out the door. 
+
+So, here's those lists:
+
+-- todo
+-- title: Do Before Launch
+
+[] You can download and run the app on Windows 
+and Macs
+
+[] Auto-generate playground/example site
+
+[] Button to make a new website
+
+[] Create the Quick-Start tutorial and videos
+
+[] Guide to deploying on GitHub
+
+[] Guide to registering a domain name on Hover
+
+[x] Convert format to "neojinja"
+
+[x] Images work with just their filename
+
+[x] Images work from template site.image calls
+
+[x] Blog posts work
+
+[x] Button to neo content show source on every page
+
+[x] Content files parse and render properly
+
+[x] Link collection menus work
+
+[x] Previous/Next links work
+
+
+-- todo
+-- title: Don't Do Before Launch
+
+[] RSS Feeds - As much as I'd like to have them
+for launch there's still work on collections
+that needs to be done first
+
+[] Database Files - I really like <<ilink: 2djkslaj|this 
+idea I had last night>>. Basically, have files with
+content that doesn't get published directly but 
+gets included on other pages. Something clicked when
+I had the idea. I think it's gonna be super useful. 
+The temptation to wait until its ready to launch
+is strong, but we're gonna let it show up in 
+a future version. 
+
+[] Plugins - The architecture foundation for plug-ins is set 
+up. There's enough basic structure to have confidence 
+in the approach. 
+
+[] Linux Version - Part of the app is a command line tool
+that does the actual site build. If you use linux there's
+a good chance you can <<link|dig into the repo|https://github.com/neopoligen/neopoligen>>
+to compile and run it yourself. 
+
+[] Integrated Editor - Okay, there wasn't a big danger of
+waiting for this to launch, but it still tickles my brain
+so I'm putting it on the don't do list. Eventually, 
+you'll be able to edit the website content files directly
+in the app, but that's for a future version.
+
+[] Sitemap - Like feeds, this is something I want to get 
+in place quickly, but the initial set of content loaders have to
+be built first
+
+[] Turn unknown sections into standard sections -
+This one is going to cause some frustration. If 
+you try to add a section to a file and that section
+doesn't exist the page won't render. I'm still going
+back and forth on how I want to handle that. One 
+way would be to just make things a standard section which
+I think is what I'm going to do. That's going to take a decent
+amount of work (I think) so probably won't make initial launch
+
+[] Automatic Alt Text Ingestion From Image Metadata - I'm writing
+a post about this one. This is one of those things where I should
+have just been able to install a package and have it work,
+but that's far from the case. Photoshop doesn't appear to 
+support Alt Text metadata attribute that were added to 
+the official standard (IPTC) two years ago. If Neopoligen 
+gets funded creating an app and let yous read/write/edit
+alt text in metadata is gonna happen
+
+[] The Roadmap - All the stuff on <<ilink: 2cfuahxq|The Roadmap>>
+
+
+-- footnote
+-- id: md
+
+<<link|Markdown|https://en.wikipedia.org/wiki/Markdown>> - 
+This is the format I've been using for my site and 
+my notes for the past couple decades is called
+Markdown. 
+
+-- footnote
+-- id: foss
+
+link|Free and open-source|https://en.wikipedia.org/wiki/Free_and_open-source_software>> software has two key parts:
+
+- "Free", as in you can download and run the app
+without having to pay for it, and,
+
+- "Open-source" which means you're also free to
+download all the code files that are used to make
+the app itself. You can see exactly how everything
+is put together and even change things for yourself.
+Even better, if you make a change you think other
+folks would like, you can <<ilink: 2djscgxe|submit it to the 
+official version of the app>>
+
+
+-- metadata
+-- date: 2024-03-06
+-- id: 2djou38z

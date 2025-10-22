@@ -1,0 +1,13 @@
+[!- import "includes/macros.jinja" as macros -!]
+<div [@- macros.section_attributes(page_id, { "section": section }) -@]><ol>
+[!- for item in section.category.content.object -!]
+<li>
+[@- macros.link_or_title(
+    current_page = page_id, 
+    target_page = item.target_page,
+    exclude_tags = item.exclude_tags,
+    title_override = item.title_override
+) -@]
+</li>
+[!- endfor -!]
+</ol></div>

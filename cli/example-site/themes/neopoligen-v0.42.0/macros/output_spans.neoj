@@ -1,0 +1,5 @@
+[!- macro output_spans(payload) -!]
+[!- for span in payload -!]
+[!- include ["spans/" + span.kind + "/default.neoj", "spans/" + span.type + "/default.neoj"] -!]
+[!- endfor -!]
+[!- endmacro -!]

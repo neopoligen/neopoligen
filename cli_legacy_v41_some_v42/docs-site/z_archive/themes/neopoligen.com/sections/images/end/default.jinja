@@ -1,0 +1,52 @@
+[!- import "includes/macros.jinja" as macros -!]
+
+</section>
+
+<section [@- section_attributes(page_id, {"section": section, "classes": "p_section section_category_standard flow" } ) -@]>
+
+    [!- if section.key_value_attributes.forward -!]
+        <div class="forward flow">
+            [@- section.key_value_attributes.forward -@]
+        </div>
+    [!- endif -!]
+
+    [!- if section.key_value_attributes.title or section.key_value_attributes.subtitle -!]
+    <div class="p_heading_group">
+    [!- endif -!]
+        [!- if section.key_value_attributes.title -!]
+        <h2>
+            [@- section.key_value_attributes.title -@]
+        </h2>
+        [!- endif -!]
+        [!- if section.key_value_attributes.subtitle -!]
+        <div>
+            [@- section.key_value_attributes.subtitle -@]
+        </div>
+        [!- endif -!]
+    [!- if section.key_value_attributes.title or section.key_value_attributes.subtitle -!]
+    </div>
+    [!- endif -!]
+
+    [!- if section.key_value_attributes.preface -!]
+        <div class="preface flow">
+            [@- section.key_value_attributes.preface -@]
+        </div>
+    [!- endif -!]
+
+    [!- if section.category.content.containers[0] -!]
+    <div class="content flow">
+    [!- endif -!]
+        [!- for content in section.category.content.containers -!]
+            <p>[@- output_payload(page_id, content, extras) -@]</p>
+        [!- endfor -!]
+    [!- if section.category.content.containers[0] -!]
+    </div>
+    [!- endif -!]
+
+    [!- if section.key_value_attributes.afterword -!]
+        <div class="afterword flow">
+            [@- section.key_value_attributes.afterword -@]
+        </div>
+    [!- endif -!]
+
+</section>

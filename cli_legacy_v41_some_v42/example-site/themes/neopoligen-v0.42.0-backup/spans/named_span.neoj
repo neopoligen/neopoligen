@@ -1,0 +1,12 @@
+[!- import "helpers/theme.neoj" as theme -!]
+[! if span.type() == "tlink" !]
+<a href="[@ site.page_url(span.value()) @]">
+[@ site.page_title(span.value()) @]
+</a>
+[! else !]
+<[@ span.type() @]>
+[!- for child in span.children() -!]
+[@- theme.output_span(site, page_id, child) -@]
+[!- endfor -!]</[@ span.type() @]>
+[! endif !]
+

@@ -1,0 +1,48 @@
+-- title
+
+Section Categories: Text Plugin
+
+-- h2
+
+Overview
+
+-- todo
+
+[] Return a text string directly from
+a plug in
+
+[] See <<tlink|2bp5ntba>> for more info
+on text plugins and how to set them
+up
+
+
+[x] Full section tags work (e.g. `-- random-color-square``) 
+
+[] Full sections have attributes
+
+[] Start section tags work (e.g. `-- random-color-square/``)
+
+[] Start sections have attributes
+
+[] End section tags work (e.g. `-- random-color-square/``)
+
+[] End sections have attributes
+
+
+
+-- h2
+
+Examples
+
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 10:46:33
+-- id: 2bpkiphj
+-- status: scratch
+

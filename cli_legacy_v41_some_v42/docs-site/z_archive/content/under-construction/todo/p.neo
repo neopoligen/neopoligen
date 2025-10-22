@@ -1,0 +1,63 @@
+-- title
+
+Section Examples: p
+
+-- p
+
+Lorem ipsum dictum condimentum neque nec convallis 
+hendrerit justo. Donec efficitur, orci a aliquet 
+egestas, leo dolor commodo neque, id tristique 
+mi mauris eu ante.
+
+Donec placerat justo quis posuere euismod. Donec efficitur, 
+orci a aliquet egestas, leo dolor commodo neque, id tristique 
+mi mauris eu ante. Proin odio mauris, fringilla non risus a, 
+posuere lacinia quam.
+
+
+-- p
+-- id: alfa
+-- class: green
+
+This "id" attribute doesn't show up visually, 
+but it's in the HTML output for use in 
+accessing the content.
+
+Amet blandit odio, scelerisque leo dolor
+accumsan massa. Morbi ac erat id dui 
+sagittis tincidunt. 
+
+
+-- p
+-- title: This Is A Title
+-- subtitle: This is a subtitle
+
+Aenean eleifend sagittis orci, ut pellentesque 
+lectus pharetra id. Vivamus ac dictum eros. 
+Phasellus a tincidunt augue. Morbi efficitur 
+eros ac scelerisque venenatis. Mauris at 
+hendrerit nisi.
+
+
+-- p
+-- preface: This is some text that can
+-- preface: go at the start of the section
+-- preface: with its own styling
+-- afterword: This is some text that can
+-- afterword: go at the end of the section
+-- afterword: with its own styling
+
+Suspendisse at odio nec velit aliquet laoreet 
+in quis nibh. Duis gravida elementum tortor, 
+id consequat quam. Etiam malesuada blandit 
+mauris dapibus bibendum.
+
+
+
+-- metadata
+-- date: 2024-01-28
+-- updated: 2024-01-28 17:56:02
+-- id: 2bbt1zdo
+-- type: section-examples
+-- status: published
+

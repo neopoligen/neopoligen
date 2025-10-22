@@ -1,0 +1,19 @@
+[!- extends "wrappers/one-column.neoj" -!]
+[!- import "built-in/macros.neoj" as neo -!]
+
+[!- block body_main -!]
+  <div class="flow body-block">
+    [@- neo.output_only_sections(["title", "subtitle", "forward", "preface"], false) -@]
+    [@- neo.output_all_sections_except(["title", "subtitle", "forward", "endnote", "footnote", "ref", "see-also", "preface"]) -@]
+  </div>
+  <div>
+  <div class="end-of-line wrapper-medium">end of line</div>
+  </div>
+  <div class="end-block">
+    [!- include "includes/endnotes.neoj" -!]
+    [!- include "includes/see-also.neoj" -!]
+    [!- include "includes/refs.neoj" -!]
+    [!- include "includes/footnotes.neoj" -!]
+  </div>
+[!- endblock -!]
+

@@ -1,0 +1,19 @@
+-- title
+
+files Directory
+
+The `files`` directory gets copied 
+over directly to the root of the
+output. Can be used for storing 
+any arbitrary stuff. 
+
+-- todo
+
+[] Set up files directory so it copies
+to the root
+
+
+-- metadata
+-- date: 2024-04-19
+-- id: 2fjovb8s
+

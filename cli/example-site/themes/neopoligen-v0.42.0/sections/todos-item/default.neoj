@@ -1,0 +1,20 @@
+[!- import "built-in/macros.neoj" as neo -!]
+
+[# TYPE: none #]
+[# HOIST: [] #]
+
+[#
+TODO: get these checkboxes to show up properly inline
+[!- if section.checked -!]
+  <div>&#x2611</div>
+[!- else -!]
+  <div>&#x2610</div>
+[!- endif -!]
+#]
+
+<li class="flow">
+  [!- for child in section.children -!] 
+    [@- neo.output_section(child) -@]
+  [!- endfor -!]
+</li>
+

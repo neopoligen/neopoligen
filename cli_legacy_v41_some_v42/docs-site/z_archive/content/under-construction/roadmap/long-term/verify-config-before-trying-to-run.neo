@@ -1,0 +1,29 @@
+-- title
+
+Verify Configuration Before Trying To Run
+
+-- h2
+
+Overview
+
+This proposal adds an initial check of
+the all the configuration options to 
+validate values before starting a build
+
+-- todo
+
+[] TKTKTKTKT
+
+-- h2
+
+Examples
+
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 12:24:54
+-- id: 2bpwg3l7
+-- status: draft
+

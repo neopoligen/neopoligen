@@ -1,0 +1,54 @@
+-- title
+
+Pagination Pages
+
+-- h2
+
+Overview
+
+
+
+-- todo
+
+[] A payload for templates that includes
+all page id with their associated titles, 
+types, statuses, tags, date time stamps,
+and updated timestamps 
+
+[] The payload is available from 
+`site.pages()``
+
+[] An example template that uses
+the payload to create a JSON
+object that gets parsed by an
+script on the page to use
+the querystring in the page's
+URL is provided below
+
+[] The script that does the categories
+is included below
+
+[] This page is a live example of
+how the sample categorization works
+with direct links for a few different
+examples as well as selection boxes
+to create custom queries
+
+-- h2
+
+Examples
+
+
+-- related
+-- tlink: 2bpmxvvr
+
+
+-- tags
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 10:58:20
+-- id: 2bpljlbq
+-- status: scratch
+

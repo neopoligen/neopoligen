@@ -1,0 +1,32 @@
+-- title
+
+Clear Leading Empty Space Before The First Section
+
+-- h2
+
+Overview
+
+The parser defines the start of a section as
+`--` followed by a single space followed by 
+the name of the section. Each section is
+responsible for clearing the empty space
+at its end so that's what the parse sees
+for the start of the next section. 
+
+The first section doesn't have anything
+in front of it to clear it so empty space
+could mess with the parser. This feature
+lets the parser deal with that
+
+-- todo
+-- title: Details
+
+[x] The parser can now skip past empty
+space at the start of the file to get
+to the first section without problems
+
+
+-- metadata
+-- date: 2024-01-24
+-- id: 2bpzsvub
+

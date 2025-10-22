@@ -1,0 +1,45 @@
+[!- import "built-in/macros.neoj" as neo -!]
+[!- set data = namespace() -!]
+
+  [! set data.javascript_shown = false !]
+  [! set data.css_shown = false !]
+  [! for section in sections !]
+  [! if section.kind == "javascript" and data.javascript_shown == false !]
+  [! set data.javascript_shown = true !]
+  <hr />
+  <div>
+    <strong>Dear RSS Reader:<br />The original version of this page includes
+    JavaScript. It probably won't run in here. So, any
+    functionality it might have had probably won't work.
+    <a href="https://www.alanwsmith.com[@ page.href() @]">Check out the 
+    original page</a> to see it in action.
+    </strong>
+  </div> 
+  [! endif !]
+  [! if section.kind == "css" and data.css_shown == false !]
+  [! set data.css_shown = true !]
+  <hr />
+  <div>
+    <strong>Dear RSS Reader:<br />The original version of this page includes
+    custom CSS to style the page. It probably won't work in here.
+    <a href="https://www.alanwsmith.com[@ page.href() @]">Check out the 
+    original page</a> to see it in action.
+    </strong>
+  </div> 
+  [! endif !]
+  [! endfor !]
+
+  [! if data.javascript_shown == true or data.css_shown == true !]
+    <hr />
+  [! endif !]
+
+  <div class="flow body-block">
+    [@- neo.output_only_sections(["title", "subtitle", "forward"], true) -@]
+    [@- neo.output_all_sections_except(["title", "subtitle", "forward", "endnote", "footnote", "ref"]) -@]
+  </div>
+  <div class="end-block">
+    [!- include "includes/endnotes.neoj" -!]
+    [!- include "includes/refs.neoj" -!]
+    [!- include "includes/footnotes.neoj" -!]
+  </div>
+

@@ -1,0 +1,27 @@
+{
+  "attrs": {}, 
+  "bound": "start", 
+  "data": [
+    ["a", "b", "c"], 
+    ["d", "e", "f"]
+  ],
+  "end_section": {
+    "attrs": {},
+    "bound": "end",
+    "children": [],
+    "flags": [],
+    "kind": "csv-end", 
+    "template_list": [
+      "sections/csv-end/default.neoj",
+      "sections/end/default.neoj",
+    ],
+    "type": "end",
+  }, 
+  "error": null, 
+  "flags": [], 
+  "kind": "csv", 
+  "type": "csv",
+  "template_list": [
+    "sections/csv/default.neoj", 
+   ],
+}

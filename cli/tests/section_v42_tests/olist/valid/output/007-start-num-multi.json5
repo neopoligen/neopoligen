@@ -1,0 +1,111 @@
+{
+  "attrs": {},
+  "bound": "start",
+  "children": [
+    {
+      "bound": "full",
+      "children": [
+        {
+          "children": [],
+          "kind": "olist-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "alfa",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": [
+            "sections/olist-item-paragraph/default.neoj",
+            
+          ],
+          "type": "block"
+        },
+        {
+          "children": [],
+          "kind": "olist-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "bravo",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": [
+            "sections/olist-item-paragraph/default.neoj",
+            
+          ],
+          "type": "block"
+        }
+      ],
+      "kind": "olist-item",
+      "template_list": [
+        "sections/olist-item/default.neoj",
+        
+      ],
+      "type": "olistitem"
+    },
+    {
+      "bound": "full",
+      "children": [
+        {
+          "children": [],
+          "kind": "olist-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "charlie",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": [
+            "sections/olist-item-paragraph/default.neoj",
+            
+          ],
+          "type": "block"
+        },
+        {
+          "children": [],
+          "kind": "olist-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "delta",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": [
+            "sections/olist-item-paragraph/default.neoj",
+            
+          ],
+          "type": "block"
+        }
+      ],
+      "kind": "olist-item",
+      "template_list": [
+        "sections/olist-item/default.neoj",
+        
+      ],
+      "type": "olistitem"
+    }
+  ],
+  "end_section": {
+    "attrs": {},
+    "bound": "end",
+    "children": [],
+    "flags": [],
+    "kind": "olist-end",
+    "template_list": [
+      "sections/olist-end/default.neoj",
+      "sections/end/default.neoj"
+    ],
+    "type": "end"
+  },
+  "flags": [],
+  "kind": "olist",
+  "template_list": [
+    "sections/olist/default.neoj",
+    
+  ],
+  "type": "olist"
+}

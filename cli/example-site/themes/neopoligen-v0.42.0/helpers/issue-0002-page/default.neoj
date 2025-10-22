@@ -1,0 +1,7 @@
+<li class="built-in-parsing-issue built-in built-in-flow flow">
+<ul class="built-in built-in-flow flow">
+[!- for note in issue.notes -!]
+<li>[@ note @]</li>
+[!- endfor -!]
+</ul>
+</li>

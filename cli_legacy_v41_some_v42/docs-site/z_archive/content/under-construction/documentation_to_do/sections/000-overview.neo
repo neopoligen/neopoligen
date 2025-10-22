@@ -1,0 +1,85 @@
+-- title
+
+Overview
+
+-- notes
+-- title: Overview
+
+- Neopoligen files are made up of sections
+
+- Each section starts with a header that
+has two dashes and the name of the section 
+type. For example:
+
+-- code/
+
+-- title
+
+-- /code
+
+-- list
+
+- Each type of section belongs to one of seven
+different categories that determines the
+overall behavior of the section. (e.g. an
+`-- p`` section provides for basic paragraphs
+while a `-- list`` section provides list
+functionality)
+
+- Each section can have optional attributes
+associated with it
+
+- Attribute lines come immediately after
+the opening section type (i.e. there's
+no empty lines between them). For example:
+
+-- code/
+
+-- title
+-- class: green
+
+-- /code
+
+-- list
+
+- Attributes can be "key/value" attributes like the
+`-- class: green` example above that separates
+the "key" from the "value" with a ":"
+
+- Standard key/value attributes available in
+Neopoligen sections are:
+
+afterword\n
+class\n
+forward\n
+id\n
+preface\n
+title\n
+
+- Attributes can also be "flag" attributes which don't
+have a colon in them. For example, this is a `-- code``
+section with a `-- javascript`` flag attribute that can
+be used to highlight the code block as javascript
+
+-- code/
+
+-- code
+-- javascript
+
+-- /code
+
+-- list
+
+- The templates for each section determine what
+each attribute does for the section. For example, 
+`-- class: SOME_CLASS`` adds a CSS class to 
+the wrapper for a section and `-- id: SOME_ID``
+adds an "id" attribute to the wrapper's HTML
+tag.
+
+
+-- metadata
+-- date: 2024-02-12
+-- id: 2cgceffj
+-- status: draft
+

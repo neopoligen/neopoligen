@@ -1,0 +1,13 @@
+[#- DOCS:
+
+- TODO
+
+ARGS:
+
+- None
+
+-#]
+
+[!- macro page_title() -!]
+[@- page.title -@]
+[!- endmacro -!]

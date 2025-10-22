@@ -1,0 +1,20 @@
+[#- type: standard -#]
+[!- import "includes/macros.jinja" as macros -!]
+
+<a href="[@- span.content.flag_attributes[0] -@]" 
+[#- NOTE: This doesn't use the default span_attributes so the 
+url doesn't get pulled in as an attribute -#]
+[!- for attribute in span.content.key_value_attributes -!]
+[@- ' ' -@]
+[@- attribute -@]="[@- span.content.key_value_attributes[attribute] -@]"
+[!- endfor -!]
+[!- for flag in span.content.flag_attributes -!]
+[!- if loop.first != true -!]
+[@- ' ' -@]
+[@- flag -@]
+[!- endif -!]
+[!- endfor -!]>
+[!- for span in span.content.spans -!]
+[@- macros.output_spans(page_id, span, extra) -@]
+[!- endfor -!]
+</a>

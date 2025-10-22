@@ -1,0 +1,28 @@
+-- start-theme-test
+
+-- ref
+-- title: Some Reference
+-- url: https://www.example.com/
+
+Some Text
+
+-- expected-output/
+
+<li class="ref-item">
+  <div>
+    <a href="https://www.example.com/">Some Reference
+    </a>
+  </div>
+  <div class="flow">
+    <p>Some Text
+    </p>
+  </div>
+</li>
+
+-- /expected-output
+
+
+-- metadata
+-- updated: 2024-06-13T10:26:15-04:00
+-- id: 2hpqwixw
+

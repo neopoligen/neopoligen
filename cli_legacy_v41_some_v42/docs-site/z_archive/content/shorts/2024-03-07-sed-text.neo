@@ -1,0 +1,21 @@
+-- short
+
+I just learned you can string multiple 
+find and replace patterns together in a 
+single `sed`` command. Used it to convert 
+Jinja style template tokens that use `{`` 
+characters into `[`` which are a lot easier 
+for me to read
+
+Looks like a cat stepped on the keyboard:
+
+-- code
+
+sed -i "" 's|{{-|[@|g;s|{{|[@|g;s|-}}|@]|g;s|}}|@]|g;s|{%-|[!|g;s|{%|[!|g;s|-%}|!]|g;s|%}|!]|g;s|{#-|[#|g;s|{#|[#|g;s|-#}|#]|g;s|#}|#]|g'
+
+
+
+-- metadata
+-- date: 2024-03-07
+-- id: 2dn1mxzh
+

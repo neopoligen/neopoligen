@@ -1,0 +1,66 @@
+-- title
+
+Syntax Highlighting
+
+TODO: Set up so that if there is no language things
+don't crash
+
+-- hr
+
+Syntax highlight is applied to code blocks when the
+first attribute is the name of a language. For example
+
+-- code/
+-- neo
+
+-- code
+-- rust
+
+-- /code
+
+The output looks like this:
+
+-- code
+-- javascript
+
+const helloWorld = () => {
+    console.log("Hello, World")
+}
+
+document.addEventListener(
+    "DOMContentLoaded", helloWorld
+)
+
+-- p
+
+Each line is wrapped with a span tag 
+that has the class `code_line``. That's 
+how the line numbers are applied with 
+this CSS:
+
+
+-- css
+-- template: show
+
+.code_lines {
+  counter-reset: line;
+}
+
+.code_line {
+  counter-increment: line;
+}
+
+.code_line:before {
+    content: counter(line);
+    color: green;
+    padding-right: 0.4rem;
+}
+
+
+
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2avqmeqt
+-- status: published
+

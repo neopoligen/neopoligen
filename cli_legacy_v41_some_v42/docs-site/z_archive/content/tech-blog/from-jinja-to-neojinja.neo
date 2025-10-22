@@ -1,0 +1,228 @@
+-- title
+
+From Jinja To MiniJinja To NeoJinja With Pre-Attentive Processing
+
+-- h2
+
+Introduction
+
+Neopoligen combines your content with templates
+to make websites. The templates are called "NeoJinja"
+files. They look like this one which shows every title 
+for a set of blog links:
+
+-- code/
+-- neoj
+-- subtitle: blog-links.neoj
+
+[!- set blog_links = site.collection_from_tags(page_id, [["blog"]]) -!]
+
+[!- for link in blog_links.tree  -!]
+  [@- site.page_title(link.id) -@]
+[!- endfor -!]
+
+-- /code
+
+The `[! ... !]`` snippets are template instructions that set up
+the `blog_links`` variable and tell it to do a `for ... endfor`` 
+loop over the `[@ ... @]`` snippet that outputs each title in turn. 
+
+You can read more about the functionality in the
+<<ilink: 2dmzomyo|template documentation>>. For this
+post, I want to talk about the format itself. 
+
+-- h2
+
+The Origin Format
+
+NeoJinja is based off (and powered by) template processing
+software called MiniJinja^mjinja^^ which is, in turn, based
+off another one called Jinja^jinja^^. The Jinja software is used
+with the Python^python^^ programming language. MiniJinja
+mimics its behavior, but in the Rust^rust^^ language.
+Neopoligen is written mainly in Rust and I would have 
+used MiniJinja directly except for one thing, it
+was hard for me to read the templates. 
+
+Here's the same NeoJinja template followed by the 
+MiniJinja version. Both do exactly the same thing. The
+only difference is the characters used to mark the
+start and end points of the template instruction and
+output snippets. 
+
+-- code
+-- neoj
+-- subtitle: NeoJinja
+
+[!- set blog_links = site.collection_from_tags(page_id, [["blog"]]) -!]
+
+[!- for link in blog_links.tree  -!]
+  [@- site.page_title(link.id) -@]
+[!- endfor -!]
+
+-- code/
+-- neoj
+-- subtitle: MiniJinja
+
+{%- set blog_links = site.collection_from_tags(page_id, [["blog"]]) -%}
+
+{%- for link in blog_links.tree  -%}
+  {{- site.page_title(link.id) -}}
+{%- endfor -%}
+
+-- /code
+
+-- h2
+
+The Differences
+
+So, `{%- ... -%}`` becomes `[!- ... -!]``
+
+And, `{{- ... -}}`` becomes `[@- ... -@]``
+
+Not shown in the example are comments which go from 
+`{#- ... -#}`` to `[#- ... -#]``
+
+There are two reasons I like this. First and foremost I 
+find it a lot easier to scan for the sharp corners of the
+`[]`` brackets compared to `{}``. My guess is this is
+a pre-attentive processing thing^pap^^. I first learned
+about that idea from Stephen Few's book Information
+Dashboard Design^idd^^. Basically, our brains process
+some visual information before we're consciously aware
+of it. 
+
+Here's an example straight from the book to demonstrate. 
+Start by counting the number of times <<em|5>> appears in this block
+as quick as you can:
+
+-- html
+
+<pre id="number_block" class="pre-attention-off">
+<span class="c4">4</span><span class="cD">D</span><span class="cP">P</span><span class="cT">T</span><span class="cD">D</span><span class="c7">7</span><span class="cK">K</span><span class="cW">W</span><span class="cL">L</span><span class="cC">C</span><span class="cJ">J</span><span class="c5">5</span><span class="cF">F</span><span class="cD">D</span><span class="c5">5</span><span class="cC">C</span><span class="cY">Y</span><span class="cN">N</span><span class="c7">7</span><span class="cJ">J</span>
+<span class="cD">D</span><span class="cI">I</span><span class="cP">P</span><span class="cU">U</span><span class="cC">C</span><span class="cU">U</span><span class="cJ">J</span><span class="c3">3</span><span class="cT">T</span><span class="cT">T</span><span class="cQ">Q</span><span class="cZ">Z</span><span class="c1">1</span><span class="c6">6</span><span class="cO">O</span><span class="c1">1</span><span class="c6">6</span><span class="cL">L</span><span class="c8">8</span><span class="cQ">Q</span>
+<span class="cZ">Z</span><span class="cL">L</span><span class="cZ">Z</span><span class="cQ">Q</span><span class="cX">X</span><span class="cF">F</span><span class="cA">A</span><span class="cW">W</span><span class="cI">I</span><span class="cX">X</span><span class="c5">5</span><span class="cF">F</span><span class="c1">1</span><span class="cT">T</span><span class="cI">I</span><span class="c3">3</span><span class="cJ">J</span><span class="cQ">Q</span><span class="cE">E</span><span class="cR">R</span>
+<span class="cM">M</span><span class="cG">G</span><span class="cO">O</span><span class="c6">6</span><span class="cD">D</span><span class="cS">S</span><span class="c4">4</span><span class="cY">Y</span><span class="cZ">Z</span><span class="cS">S</span><span class="c2">2</span><span class="c0">0</span><span class="cU">U</span><span class="c2">2</span><span class="cG">G</span><span class="cW">W</span><span class="cD">D</span><span class="cV">V</span><span class="cN">N</span><span class="cW">W</span>
+<span class="c7">7</span><span class="cJ">J</span><span class="cT">T</span><span class="cA">A</span><span class="c9">9</span><span class="c2">2</span><span class="cU">U</span><span class="cO">O</span><span class="c6">6</span><span class="cH">H</span><span class="cD">D</span><span class="c5">5</span><span class="cN">N</span><span class="cY">Y</span><span class="cI">I</span><span class="cJ">J</span><span class="cL">L</span><span class="c9">9</span><span class="cA">A</span><span class="cU">U</span>
+</pre>
+
+-- p
+
+There are four of them, but finding them all isn't what's interesting
+here. Let's do the same thing but with the aid of some pre-attentive
+processing. Click the Toggle Example button and see how long it takes you to count
+the number of times <<em|7>> appears. 
+
+-- html
+
+<button id="toggle_contrast_button" data-status="off">Toggle Example</button>
+
+
+-- script
+
+function toggle_contract(event) {
+  const el = event.target
+  const ds = el.dataset
+  const number_block = document.getElementById("number_block")
+  if (ds.status === "off") {
+    event.target.dataset.status = "on"
+    number_block.classList.remove("pre-attention-off")
+    number_block.classList.add("pre-attention-on")
+  } else {
+    event.target.dataset.status = "off"
+    number_block.classList.add("pre-attention-off")
+    number_block.classList.remove("pre-attention-on")
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("toggle_contrast_button").addEventListener(
+    "click", toggle_contract
+  )
+})
+
+
+-- css
+
+#number_block {
+    font-family: var(--mono);
+    color: var(--color-4);
+}
+
+.pre-attention-on > .c7 {
+    color: var(--color-1);
+}
+
+-- p 
+
+To quote the book:
+
+-- blockquote
+
+Much easier this time, wasn't it? The sevens could easily
+be distinguished from the other numbers due to their
+differing color intensity...
+
+Why couldn't we easily distinguish the fives in the first
+set of numbers based purely on their unique shape? Because
+the  complex shapes of the numbers are not attributes that we
+perceive pre-attentively. Simple shapes such as circles and
+squares are pre-attentively perceived, but the shapes of numbers
+are too elaborate.
+
+-- p
+
+I expect the effect is different for everyone, but switching 
+to the shaper corner `[]`` brackets feels like it's catching
+some of that pre-attentive processing for me. It doesn't 
+make a big difference in smaller examples like the ones
+that opened this post, but the more there is the nicer it feels.
+
+It would be even better is to add some more/stronger
+pre-attentive power. For example, using syntax highlighting^sh^^
+highlight different parts with color. That's not done 
+yet, but it's <<ilink: 2dnvbi5w|on the roadmap>>.
+
+
+-- footnote
+-- id: idd
+-- title: Information Dashboard Design: Displaying Data for At-a-Glance Monitoring
+-- url: https://www.amazon.com/dp/1938377001/
+
+This is the second version of the book. I read the first
+edition (subtitled "The Effective Visual Communication Of Data"). 
+but I expect it's still just as good. Highly recommended if
+you're at all interested in the topic or even just design
+in general.
+
+
+-- footnote
+-- id: mjinja
+-- title: The MiniJinja Template Engine
+-- url: https://docs.rs/minijinja/latest/minijinja/
+
+-- footnote
+-- id: jinja
+-- title: The Jinja2 Template Engine
+-- url: https://jinja.palletsprojects.com/en/3.1.x/
+
+-- footnote
+-- id: python
+-- title: The Python Programming Language
+-- url: https://www.python.org/
+
+-- footnote
+-- id: rust
+-- title: The Rust Programming Language
+-- url: https://www.rust-lang.org/
+
+-- footnote
+-- id: pap
+-- title: Pre-attentive processing
+-- url: https://en.wikipedia.org/wiki/Pre-attentive_processing
+
+
+-- metadata
+-- date: 2024-03-07
+-- id: 2dn38hs5
+-- status: draft

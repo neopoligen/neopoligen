@@ -1,0 +1,70 @@
+{
+  "attrs": {},
+  "bound": "full",
+  "children": [
+    {
+      "bound": "full",
+      "children": [
+        {
+          "children": [],
+          "kind": "notes-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "alfa",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": [
+            "sections/notes-item-paragraph/default.neoj",
+            "sections/list-item-paragraph/default.neoj",
+          ],
+          "type": "block"
+        }
+      ],
+      "kind": "notes-item",
+      "template_list": [
+        "sections/notes-item/default.neoj",
+        "sections/list-item/default.neoj",
+      ],
+      "type": "listitem"
+    },
+    {
+      "bound": "full",
+      "children": [
+        {
+          "children": [],
+          "kind": "notes-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "bravo",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": [
+            "sections/notes-item-paragraph/default.neoj",
+            "sections/list-item-paragraph/default.neoj",
+            
+          ],
+          "type": "block"
+        }
+      ],
+      "kind": "notes-item",
+      "template_list": [
+        "sections/notes-item/default.neoj",
+        "sections/list-item/default.neoj",
+        
+      ],
+      "type": "listitem"
+    }
+  ],
+  "end_section": null,
+  "flags": [],
+  "kind": "notes",
+  "template_list": [
+    "sections/notes/default.neoj",
+    "sections/list/default.neoj",
+  ],
+  "type": "list"
+}

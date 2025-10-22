@@ -1,0 +1,19 @@
+INPUT:
+
+-- p
+
+<<ilink: id00alfa|this is an ilink>>
+
+
+-- metadata
+-- id: 20source
+-- date: 2024-02-18 13:47:17
+-- type: theme-test
+
+TARGET:
+
+<section class="p_section flow">
+  <div class="content">
+    <p><a href="/en/id00alfa/?alfa-test-file">this is an ilink</a></p>
+  </div>
+</section>

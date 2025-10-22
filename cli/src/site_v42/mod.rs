@@ -1,0 +1,872 @@
+#![allow(warnings)]
+use crate::helpers::*;
+use crate::image::Image;
+use crate::page_v42::PageV42b;
+use crate::site_config::SiteConfigV42;
+use crate::svg::Svg;
+use chrono::prelude::*;
+use html_escape::*;
+use itertools::Itertools;
+use minijinja::value::Object;
+use minijinja::value::ValueKind;
+use minijinja::Error;
+use minijinja::ErrorKind;
+use minijinja::Value;
+use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
+use std::path::PathBuf;
+use std::sync::Arc;
+// use rimage::config::{Codec, EncoderConfig};
+// use rimage::image::imageops::FilterType;
+// use rimage::Decoder;
+// use rimage::Encoder;
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub struct SiteV42b {
+  pub config: SiteConfigV42,
+  pub pages: BTreeMap<String, PageV42b>,
+  pub pages_without_ids: BTreeMap<PathBuf, PageV42b>,
+  pub generated_at: Option<DateTime<Local>>,
+  pub images: BTreeMap<String, Image>,
+  pub svgs: BTreeMap<String, Svg>,
+}
+
+impl SiteV42b {
+  pub fn new_with_pages(
+    config: &SiteConfigV42,
+    raw_pages: &BTreeMap<PathBuf, PageV42b>,
+  ) -> SiteV42b {
+    let mut pages: BTreeMap<String, PageV42b> = BTreeMap::new();
+    let mut pages_without_ids: BTreeMap<PathBuf, PageV42b> =
+      BTreeMap::new();
+    for (_, page) in raw_pages {
+      match &page.id {
+        Some(id) => {
+          pages.insert(id.to_string(), page.clone());
+          ()
+        }
+        None => {
+          pages_without_ids.insert(
+            page.source_absolute_path.clone(),
+            page.clone(),
+          );
+          ()
+        }
+      }
+    }
+    let site = SiteV42b {
+      config: config.clone(),
+      images: BTreeMap::new(),
+      svgs: BTreeMap::new(),
+      pages,
+      pages_without_ids,
+      generated_at: Some(chrono::prelude::Local::now()),
+    };
+    site
+  }
+}
+
+impl SiteV42b {
+  // For time stamp output
+  pub fn generated_at(
+    &self,
+    args: &[Value],
+  ) -> Result<Value, Error> {
+    if args.len() == 1 {
+      Ok(Value::from(
+        self
+          .generated_at
+          .unwrap()
+          .format(&args[0].to_string())
+          .to_string(),
+      ))
+    } else {
+      Ok(Value::from(
+        self.generated_at.unwrap().format("%B").to_string(),
+      ))
+    }
+  }
+
+  pub fn highlight_code(
+    &self,
+    args: &[Value],
+  ) -> Result<Value, Error> {
+    Ok(Value::from(highlight_code_section(&args)))
+  }
+
+  // Get the href for a page which is used
+  // for all linking.
+  pub fn href_for_page(
+    &self,
+    args: &[Value],
+  ) -> Option<String> {
+    match &self.get_page_id(args) {
+      Some(id) => match &self.pages.get(id) {
+        Some(page) => page.href.clone(),
+        None => None,
+      },
+      None => {
+        // TODO: Hoist Error
+        None
+      }
+    }
+  }
+
+  // Depcrated?
+  pub fn make_jpg(
+    &self,
+    img: &Image,
+    output_path: &PathBuf,
+  ) {
+
+    // if !output_path.exists() {
+    //     let _ = mkdir_p(output_path.parent().unwrap().to_path_buf());
+    //     let _ = resize_and_optimize_jpg(&img.source_image_path, img.raw_width, &output_path);
+    // } else {
+    //     let check_time = file_epoch_mod_time(&output_path).unwrap();
+    //     if check_time < img.source_image_timestamp {
+    //         let _ = mkdir_p(output_path.parent().unwrap().to_path_buf());
+    //         let _ =
+    //             resize_and_optimize_jpg(&img.source_image_path, img.raw_width, &output_path);
+    //     }
+    // }
+
+    //
+  }
+
+  pub fn svg_from_section(
+    &self,
+    args: &[Value],
+  ) -> Result<Value, Error> {
+    if args.len() != 1 {
+      return Err(Error::new(
+                ErrorKind::InvalidOperation,
+                "Incorrect number of arguments for site.svg_from_section",
+            ));
+    }
+    let section = args[0].clone();
+    let flags_result = section.get_attr("flags");
+    let flags = flags_result.unwrap();
+    if flags.len() == Some(0) {
+      return Err(Error::new(
+        ErrorKind::InvalidOperation,
+        "No flag attirbute available for image name",
+      ));
+    }
+    let mut flags_iter = flags.try_iter()?;
+    let svg_stem_option = flags_iter.nth(0);
+
+    if let Some(svg_stem) = svg_stem_option {
+      match &self.svgs.get(&svg_stem.to_string()) {
+        Some(code) => {
+          Ok(Value::from_safe_string(code.svg_string.clone()))
+        }
+        None => Ok(Value::from_serialize("could not load svg")),
+      }
+    } else {
+      Ok(Value::from_serialize("could not load svg"))
+    }
+  }
+
+  // This returns the attributes for an image tag
+  pub fn image_from_section(
+    &self,
+    args: &[Value],
+  ) -> Result<Value, Error> {
+    // takes the section itself which is used to then
+    // pull the image name. And then sizes.
+    if args.len() != 2 {
+      return Err(Error::new(
+                ErrorKind::InvalidOperation,
+                "Incorrect number of arguments for site.image_from_section",
+            ));
+    }
+    let section = args[0].clone();
+    let flags_result = section.get_attr("flags");
+    if let Err(_) = flags_result {
+      return Err(Error::new(
+        ErrorKind::InvalidOperation,
+        "Could not get flags from site.image_from_section()",
+      ));
+    }
+    let flags = flags_result.unwrap();
+    if flags.len() == Some(0) {
+      return Err(Error::new(
+        ErrorKind::InvalidOperation,
+        "No flag attirbute available for image name",
+      ));
+    }
+    let mut flags_iter = flags.try_iter()?;
+    let image_stem_option = flags_iter.nth(0);
+    // dbg!(&image_stem_option);
+
+    let mut return_sizes: Vec<String> = vec![];
+
+    if let Some(image_stem) = image_stem_option {
+      match &self.images.get(&image_stem.to_string()) {
+        Some(img) => {
+          let extension = img
+            .source_image_path
+            .extension()
+            .unwrap()
+            .to_string_lossy()
+            .to_string();
+          // let decoder = Decoder::from_path(&img.source_image_path).unwrap();
+          // let data = decoder.decode();
+          if let Ok(sizes) = args[1].clone().try_iter() {
+            sizes.for_each(|size_as_value| {
+              let size: u32 = size_as_value
+                .as_usize()
+                .unwrap()
+                .try_into()
+                .unwrap();
+              return_sizes.push(size.to_string());
+              let destination = &self
+                .config
+                .images_href_root_folder()
+                .join(image_stem.to_string())
+                .join(format!(
+                  "{}.{}",
+                  size.to_string(),
+                  extension
+                ));
+              // dbg!(&destination);
+              // dbg!(&extension);
+              // TODO: Put this in when you need images
+              resize_and_optimize_image(
+                &img.source_image_path,
+                size,
+                &destination,
+              );
+              // dbg!(&img);
+              // dbg!(&size);
+            });
+          }
+          let image_src_path = format!(
+            "/neo-files/images/{}/{}.{}",
+            image_stem,
+            return_sizes.last().unwrap(),
+            extension.to_string(),
+          );
+          return Ok(Value::from_serialize((
+            image_stem,
+            image_src_path,
+            return_sizes,
+            extension.to_string(),
+          )));
+        }
+        _ => {
+          return Ok(Value::from_serialize((
+            "todo make this an error",
+            vec![100, 400, 800],
+          )));
+        }
+      }
+    } else {
+      return Ok(Value::from_serialize((
+        "ping.jpg",
+        vec![100, 400, 800],
+      )));
+    }
+
+    // return Err(Error::new(ErrorKind::InvalidOperation, "Placeholder error"));
+
+    // match section.get_attr("flags") {
+    //     Ok(flags) => {
+    //         if flags.len() > Some(0) {
+    //             let image_stem = flags.try_iter().unwrap().nth(0).unwrap();
+    //             match &self.images.get(&image_stem.to_string()) {
+    //                 Some(i) => {
+    //                     if let Ok(sizes) = args[1].clone().try_iter() {
+    //                         let mut made_sizes: Vec<u32> = vec![];
+    //                         sizes.into_iter().for_each(|size| {
+    //                             if let Ok(size_as_int) = size.to_string().parse::<u32>() {
+    //                                 if i.raw_width > size_as_int {
+    //                                     made_sizes.push(size_as_int);
+    //                                     // TODO: Deal with dir not being made, etc..
+    //                                     let mut output_dir = PathBuf::from(
+    //                                         &self.config.images_cache_root_folder(),
+    //                                     );
+    //                                     output_dir = output_dir.join(image_stem.to_string());
+    //                                     let output_path =
+    //                                         output_dir.join(format!("{}w.jpg", size_as_int));
+    //                                     self.make_jpg(&i, &output_path);
+    //                                 } else {
+    //                                     made_sizes.push(i.raw_width);
+    //                                     // TODO: Deal with dir not being made, etc..
+    //                                     let mut output_dir = PathBuf::from(
+    //                                         &self.config.images_cache_root_folder(),
+    //                                     );
+    //                                     output_dir = output_dir.join(image_stem.to_string());
+    //                                     let output_path =
+    //                                         output_dir.join(format!("{}w.jpg", i.raw_width));
+    //                                     self.make_jpg(&i, &output_path);
+    //                                 }
+    //                             }
+    //                         });
+    //                         let mut return_string = String::from(r#"srcset=""#);
+    //                         let x = made_sizes
+    //                             .iter()
+    //                             .map(|sz| {
+    //                                 let mut image_href = self
+    //                                     .config
+    //                                     .images_href_root_folder()
+    //                                     .join(image_stem.to_string());
+    //                                 image_href =
+    //                                     image_href.join(format!("{}w.jpg {}w", sz, sz));
+    //                                 image_href.display().to_string()
+    //                             })
+    //                             .collect::<Vec<String>>();
+    //                         return_string.push_str(&x.join(","));
+    //                         return_string.push_str(r#"""#);
+    //                         return_string.push_str(r#" alt="TODO - Fix Alt Tags""#);
+    //                         return_string.push_str(
+    //                             format!(
+    //                                 r#" src="{}/{}/{}w.jpg""#,
+    //                                 &self
+    //                                     .config
+    //                                     .images_href_root_folder()
+    //                                     .display()
+    //                                     .to_string(),
+    //                                 image_stem.to_string(),
+    //                                 made_sizes.iter().last().unwrap()
+    //                             )
+    //                             .as_str(),
+    //                         );
+    //                         Ok(Value::from(return_string))
+    //                     } else {
+    //                         Err(Error::new(ErrorKind::InvalidOperation, "Error with image"))
+    //                     }
+    //                 }
+    //                 None => Err(Error::new(ErrorKind::InvalidOperation, "Error with image")),
+    //             }
+    //         } else {
+    //             Err(Error::new(ErrorKind::InvalidOperation, "Error with image"))
+    //         }
+    //     }
+    //     Err(_) => Err(Error::new(
+    //         ErrorKind::InvalidOperation,
+    //         "Could not get name for image",
+    //     )),
+    // }
+
+    //
+  }
+
+  // The base href where Neopoligen stores
+  // the files it works with (e.g. theme and image files)
+  pub fn neo_files_href(&self) -> Option<String> {
+    Some(format!(
+      "/{}",
+      &self.config.neo_files_output_folder_name()
+    ))
+  }
+
+  // The base href for the current theme. All the
+  // support files from a theme go under here and
+  // this method can be used to construct links
+  // and paths for them
+  pub fn theme_folder_href(&self) -> Option<String> {
+    Some(format!(
+      "/{}/{}",
+      &self.config.neo_files_output_folder_name(),
+      &self.config.theme_files_output_folder_name()
+    ))
+  }
+
+  // The title for a page based off it's ID. Uses
+  // .get_page_id() which accepts spans whose first
+  // plain-text span has is the text of the id,
+  // or the ID passed in directly
+  pub fn title_for_page(
+    &self,
+    args: &[Value],
+  ) -> Option<String> {
+    match &self.get_page_id(args) {
+      Some(id) => match &self.pages.get(id) {
+        Some(page) => page.title.clone(),
+        None => None,
+      },
+      None => {
+        // TODO: Hoist Error
+        None
+      }
+    }
+  }
+
+  // TODO: Add tests for this
+  // Takes in either text or spans. If it's text, it's
+  // returned directly. If it's spans the first plain-text
+  // span is pulled out and it's text is returned.
+  pub fn get_page_id(
+    &self,
+    args: &[Value],
+  ) -> Option<String> {
+    if args.len() == 1 {
+      match &args[0].kind() {
+        ValueKind::Map => {
+          match &args[0].get_attr("spans") {
+            Ok(spans) => match spans.get_item_by_index(0) {
+              Ok(span) => match span.get_attr("text") {
+                Ok(text) => Some(text.to_string()),
+                Err(_e) => {
+                  // TODO: Hoist Error Here
+                  None
+                }
+              },
+              Err(_e) => {
+                // TODO: Hoist Error Here
+                None
+              }
+            },
+            Err(_e) => {
+              // TODO: Hoist Error Here
+              None
+            }
+          }
+          //Ok(Value::from("VALUEKIND: MAP"))
+        }
+        ValueKind::String => Some(args[0].to_string()),
+        _ => {
+          // TODO: Hoist Error Here
+          None
+        }
+      }
+    } else {
+      // TODO: Hoist Error Here
+      None
+    }
+  }
+
+  // TODO: Deprecate this in favor of just getting IDs and
+  // calling the pages from the site object without having
+  // to clone in a new page
+  pub fn get_page_from_span(
+    &self,
+    args: &[Value],
+  ) -> Result<Value, Error> {
+    if args.len() == 1 {
+      let x = &args[0].get_item(&Value::from("spans")).unwrap();
+      let page_id =
+        flatten_spans_from_template_v42(&[x.to_owned()])
+          .unwrap();
+      match self.pages.get(&page_id.to_string()) {
+        Some(page) => Ok(Value::from_object(page.clone())),
+        None => Err(Error::new(
+          ErrorKind::InvalidOperation,
+          "Could not get page from get_page_from_span",
+        )),
+      }
+    } else {
+      Err(Error::new(
+        ErrorKind::InvalidOperation,
+        "Could not get page from get_page_from_span",
+      ))
+    }
+  }
+
+  // All the ids for all pages in the site.
+  // TODO: Probably deprecate this
+  pub fn get_page_ids(
+    &self,
+    _args: &[Value],
+  ) -> Result<Value, Error> {
+    Ok(Value::from_serialize(
+      &self.pages.keys().cloned().collect::<Vec<String>>(),
+    ))
+  }
+
+  // TODO: Figure out if this is still needed. It's
+  // what was originally used for error output, but
+  // it might not be needed when the errors are
+  // sent to the builder or an external object
+  pub fn get_page_with_display_path(
+    &self,
+    args: &[Value],
+  ) -> Result<Value, Error> {
+    if args.len() >= 3 {
+      match &self.pages_without_ids.get(&PathBuf::from(&args[2].to_string())) {
+                Some(p) => {
+                    let p2 = *p;
+                    Ok(Value::from_object(p2.clone()))
+                }
+                None => Err(Error::new(
+                    ErrorKind::InvalidOperation,
+                    r#"Could not get page with display_path. TODO: Add requested display_path here"#.to_string(),
+                )),
+            }
+    } else {
+      Err(Error::new(
+                ErrorKind::InvalidOperation,
+                r#"Not enough values pased to site.get_page_with_display_path.
+Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
+                    .to_string(),
+            ))
+    }
+  }
+
+  pub fn get_page_with_id(
+    &self,
+    args: &[Value],
+  ) -> Result<Value, Error> {
+    if args.len() >= 3 {
+      match &self.pages.get(&args[2].to_string()) {
+                Some(p) => {
+                    let p2 = *p;
+                    Ok(Value::from_object(p2.clone()))
+                }
+                None => Err(Error::new(
+                    ErrorKind::InvalidOperation,
+                    r#"Could not get page with id. TODO: Add requested id here"#.to_string(),
+                )),
+            }
+    } else {
+      Err(Error::new(
+        ErrorKind::InvalidOperation,
+        r#"Not enough values pased to site.get_page_with_id
+Needs to be 'site.get_page_with_id(site, page, ID_YOU_WANT)'"#
+          .to_string(),
+      ))
+    }
+  }
+
+  // TODO: Should be able to deprecate this when new
+  // error handling at the builder or external object
+  // level is done.
+  pub fn get_keys_for_pages_without_ids(
+    &self,
+    _args: &[Value],
+  ) -> Result<Value, Error> {
+    Ok(Value::from_serialize(
+      &self
+        .pages_without_ids
+        .keys()
+        .cloned()
+        .collect::<Vec<PathBuf>>(),
+    ))
+  }
+
+  // Gets the attributes for a section.
+  // TODO: Also get flags
+  // TODO: Add tests
+  pub fn get_section_attrs(
+    &self,
+    args: &[Value],
+  ) -> Result<Value, Error> {
+    let mut attr_collection: BTreeMap<String, Vec<String>> =
+      BTreeMap::new();
+    let mut classes = vec![];
+    if args.len() >= 1 {
+      let kind = args[0].get_attr("kind").unwrap();
+      classes.push(format!("{}-section", kind));
+      let attrs = args[0].get_attr("attrs").unwrap();
+      for key in attrs.try_iter()? {
+        if key.to_string() == "class".to_string() {
+          let items = attrs.get_attr("class").unwrap();
+          let stuff: Value = items
+            .try_iter()
+            .unwrap()
+            // .flat_map(|s| s.get_attr("spans"))
+            .flat_map(|t| t.get_attr("text"))
+            .collect();
+          let out_string: String = stuff
+            .try_iter()
+            .unwrap()
+            .map(|x| x.to_string())
+            .collect::<Vec<String>>()
+            .join(" ");
+          classes.push(out_string.clone());
+
+          // let flattened = flatten_spans_from_template_v42(&[stuff])
+          //     .unwrap()
+          //     .to_string();
+          // let escaped_value = encode_quoted_attribute(&flattened);
+          //classes.push(escaped_value.to_string());
+
+          // let spans = attrs
+          //     .get_item(&key)?
+          //     .get_item(&Value::from("spans"))
+          //     .unwrap();
+          // let flattened = flatten_spans_from_template_v42(&[spans])
+          //     .unwrap()
+          //     .to_string();
+          // let escaped_value = encode_quoted_attribute(&flattened);
+          // classes.push(escaped_value.to_string());
+
+          //
+        }
+
+        if key.to_string() != "class".to_string() {
+          // let spans = attrs
+          //     .get_item(&key)?
+          //     .get_item(&Value::from("spans"))
+          //     .unwrap();
+          // let flattened = flatten_spans_from_template_v42(&[spans])
+          //     .unwrap()
+          //     .to_string();
+          // let escaped_value = encode_quoted_attribute(&flattened);
+          // attr_collection.insert(key.to_string(), vec![escaped_value.to_string()]);
+        }
+      }
+      if args.len() >= 2 {
+        if &args[1].to_string() != "" {
+          classes.push(args[1].to_string());
+        }
+      };
+      if classes.len() > 0 {
+        attr_collection.insert(
+          "class".to_string(),
+          vec![classes.join(" ").to_string()],
+        );
+      }
+      let attr_items = attr_collection
+        .iter()
+        .map(|(k, v)| {
+          format!(r#"{}="{}""#, k.to_string(), v.join(" "))
+        })
+        .collect::<Vec<String>>();
+      if attr_items.len() > 0 {
+        Ok(Value::from(format!(r#" {}"#, attr_items.join(" "))))
+      } else {
+        Ok(Value::from(""))
+      }
+    } else {
+      // TODO: Hoist an error here that there wasn't
+      // enough arguments passed to the method
+      Ok(Value::from(""))
+    }
+  }
+
+  // // TODO: Delte this it's the backup version
+  // pub fn get_section_attrs(&self, args: &[Value]) -> Result<Value, Error> {
+  //     let mut attr_collection: BTreeMap<String, Vec<String>> = BTreeMap::new();
+  //     let mut classes = vec![];
+  //     if args.len() >= 1 {
+  //         let kind = args[0].get_attr("kind").unwrap();
+  //         classes.push(format!("{}-section", kind));
+  //         let attrs = args[0].get_item(&Value::from("attrs")).unwrap();
+  //         for key in attrs.try_iter()? {
+  //             if key.to_string() != "class".to_string() {
+  //                 let spans = attrs
+  //                     .get_item(&key)?
+  //                     .get_item(&Value::from("spans"))
+  //                     .unwrap();
+  //                 let flattened = flatten_spans_from_template_v42(&[spans])
+  //                     .unwrap()
+  //                     .to_string();
+  //                 let escaped_value = encode_quoted_attribute(&flattened);
+  //                 attr_collection.insert(key.to_string(), vec![escaped_value.to_string()]);
+  //             }
+  //             if key.to_string() == "class".to_string() {
+  //                 let spans = attrs
+  //                     .get_item(&key)?
+  //                     .get_item(&Value::from("spans"))
+  //                     .unwrap();
+  //                 let flattened = flatten_spans_from_template_v42(&[spans])
+  //                     .unwrap()
+  //                     .to_string();
+  //                 let escaped_value = encode_quoted_attribute(&flattened);
+  //                 classes.push(escaped_value.to_string());
+  //             }
+  //         }
+  //         if args.len() >= 2 {
+  //             if &args[1].to_string() != "" {
+  //                 classes.push(args[1].to_string());
+  //             }
+  //         };
+  //         if classes.len() > 0 {
+  //             attr_collection.insert("class".to_string(), vec![classes.join(" ").to_string()]);
+  //         }
+  //         let attr_items = attr_collection
+  //             .iter()
+  //             .map(|(k, v)| format!(r#"{}="{}""#, k.to_string(), v.join(" ")))
+  //             .collect::<Vec<String>>();
+  //         if attr_items.len() > 0 {
+  //             Ok(Value::from(format!(r#" {}"#, attr_items.join(" "))))
+  //         } else {
+  //             Ok(Value::from(""))
+  //         }
+  //     } else {
+  //         // TODO: Hoist an error here that there wasn't
+  //         // enough arguments passed to the method
+  //         Ok(Value::from(""))
+  //     }
+  // }
+
+  // get_span_attrs() used to get the attrs from a span and
+  // return them with a possibly added class that comes in
+  // as a second argument.
+  // TODO: capture flags as well
+  // TODO: hoist errors
+  // TODO: only hoist attrs defined in the HOIST setting
+  pub fn get_span_attrs(
+    &self,
+    args: &[Value],
+  ) -> Result<Value, Error> {
+    let mut attr_collection: BTreeMap<String, Vec<String>> =
+      BTreeMap::new();
+    let mut classes = vec![];
+    if args.len() >= 1 {
+      let kind = args[0].get_attr("kind").unwrap();
+      classes.push(format!("{}-span", kind));
+      let attrs =
+        args[0].get_item(&Value::from("attrs")).unwrap();
+      for key in attrs.try_iter()? {
+        if key.to_string() != "class".to_string() {
+          let spans = attrs
+            .get_item(&key)?
+            .get_item(&Value::from("spans"))
+            .unwrap();
+          let flattened =
+            flatten_spans_from_template_v42(&[spans])
+              .unwrap()
+              .to_string();
+          let escaped_value =
+            encode_quoted_attribute(&flattened);
+          attr_collection.insert(
+            key.to_string(),
+            vec![escaped_value.to_string()],
+          );
+        }
+        if key.to_string() == "class".to_string() {
+          let spans = attrs
+            .get_item(&key)?
+            .get_item(&Value::from("spans"))
+            .unwrap();
+          let flattened =
+            flatten_spans_from_template_v42(&[spans])
+              .unwrap()
+              .to_string();
+          let escaped_value =
+            encode_quoted_attribute(&flattened);
+          classes.push(escaped_value.to_string());
+        }
+      }
+      if args.len() >= 2 {
+        if &args[1].to_string() != "" {
+          classes.push(args[1].to_string());
+        }
+      };
+      if classes.len() > 0 {
+        attr_collection.insert(
+          "class".to_string(),
+          vec![classes.join(" ").to_string()],
+        );
+      };
+      let attr_items = attr_collection
+        .iter()
+        .map(|(k, v)| {
+          format!(r#"{}="{}""#, k.to_string(), v.join(" "))
+        })
+        .collect::<Vec<String>>();
+      if attr_items.len() > 0 {
+        Ok(Value::from(format!(r#" {}"#, attr_items.join(" "))))
+      } else {
+        Ok(Value::from(""))
+      }
+    } else {
+      // TODO: Hoist an error here that there wasn't
+      // enough arguments passed to the method
+      Ok(Value::from(""))
+    }
+
+    //Ok(Value::from(r#" class="red""#))
+
+    //
+  }
+
+  // TODO: Deprecate this and move error stuff to a builder
+  // or to an independent object
+  pub fn get_issue_count(
+    &self,
+    _args: &[Value],
+  ) -> usize {
+    let mut count = 0;
+    for (_, page) in &self.pages {
+      if page.issues.len() > 0 {
+        count += 1;
+      }
+    }
+    count
+  }
+
+  // TODO: Takes spans inside a template (as opposed to
+  // a content file) and renders them to text
+  pub fn template_spans_to_text(
+    &self,
+    args: &[Value],
+  ) -> Result<Value, Error> {
+    if args.len() >= 3 {
+      let x: &String = &args[0]
+        .try_iter()?
+        .map(|v| {
+          v.get_item(&Value::from("text")).unwrap().to_string()
+        })
+        .collect::<Vec<_>>()
+        .join("");
+      Ok(Value::from(x))
+    } else {
+      Err(Error::new(
+        ErrorKind::InvalidOperation,
+        "".to_string(),
+      ))
+    }
+  }
+
+  pub fn time_zone(&self) -> Result<Value, Error> {
+    match &self.config.time_zone {
+      Some(tz) => Ok(Value::from(tz)),
+      None => Ok(Value::from(None::<String>)),
+    }
+  }
+
+  //
+}
+
+impl Object for SiteV42b {
+  // TODO: Probably don't use this. Try to keep
+  // everything as method calls so the API is
+  // always site.something() with the parens at
+  // the end
+  // fn get_value(self: &Arc<Self>, key: &Value) -> Option<Value> {
+  //     match key.as_str()? {
+  //         _ => None,
+  //     }
+  // }
+
+  fn call_method(
+    self: &Arc<SiteV42b>,
+    _state: &minijinja::State,
+    name: &str,
+    args: &[Value],
+  ) -> Result<Value, Error> {
+    match name {
+            "generated_at" => self.generated_at(args),
+            "get_keys_for_pages_without_ids" => self.get_keys_for_pages_without_ids(args),
+            "get_issue_count" => Ok(Value::from(self.get_issue_count(args))),
+            // Deprecate the ones of these that go to a page
+            // in favor of pulling in the page as an object
+            // and accessing things that way to start
+            "get_page_from_span" => self.get_page_from_span(args),
+            //"get_page_id" => self.get_page_id(args),
+            "get_page_ids" => self.get_page_ids(args),
+            "get_page_with_id" => self.get_page_with_id(args),
+            "get_page_with_display_path" => self.get_page_with_display_path(args),
+            "get_section_attrs" => self.get_section_attrs(args),
+            "get_span_attrs" => self.get_span_attrs(args),
+            "highlight_code" => self.highlight_code(args),
+            "href_for_page" => Ok(Value::from(self.href_for_page(args))),
+            "image_from_section" => self.image_from_section(args),
+            "site_root" => Ok(Value::from(self.config.site_root.clone())),
+            "svg_from_section" => self.svg_from_section(args),
+            "neo_files_href" => Ok(Value::from(self.neo_files_href())),
+            "theme_folder_href" => Ok(Value::from(self.theme_folder_href())),
+            "time_zone" => self.time_zone(),
+            "title_for_page" => Ok(Value::from(self.title_for_page(args))),
+            _ => Ok(Value::from(format!(
+                "[Warning: tried to use 'site.{}(...)' which does not exist]",
+                name
+            ))),
+        }
+  }
+}

@@ -1,0 +1,7 @@
+[# DOCS: 
+
+#]
+[!- import "built-in/macros.neoj" as neo -!]
+
+<code class="color-alt-1-80">[@- neo.output_spans(span.spans) -@]</code>
+

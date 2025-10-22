@@ -1,0 +1,30 @@
+[#- 
+
+  Usage: 
+  
+    neo.output_alt_text()
+
+    ``section`` is not required. It should
+    be available already
+
+  TODO:
+
+    handle quote and things that need
+    to be escaped
+
+-#]
+
+[!- from "macros/output_spans.neoj" import output_spans -!]
+
+[!- macro output_alt_text() -!]
+  [!- if 'alt' in section.attrs -!]
+    [!- for slice in section.attrs['alt'] -!]
+      [@- output_spans(slice.spans) -@]
+      [! if not loop.last !]
+      [@- ' ' -@]
+      [! endif !]
+    [!- endfor -!]
+  [!- else -!]
+  My apologies. I haven't added alt text to this image yet. 
+  [!- endif -!]
+[!- endmacro -!]

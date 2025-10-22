@@ -1,0 +1,23 @@
+-- title
+
+CSS Examples 
+
+Alternate templates can be used to show CSS 
+examples on the page as well as putting them 
+in the header. The CSS below is what's changing 
+the color on the page.
+
+-- css
+-- template: show
+-- class: example
+
+body {
+    color: red;
+}
+
+
+-- metadata
+-- date: 2024-01-13
+-- id: 2avlsmyk
+-- status: published
+

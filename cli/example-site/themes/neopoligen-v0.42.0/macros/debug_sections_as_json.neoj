@@ -1,0 +1,3 @@
+[!- macro debug_sections_as_json() -!]
+<div><pre>[@- sections|tojson(true) -@]</pre></div>
+[!- endmacro -!]

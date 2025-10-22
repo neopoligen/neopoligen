@@ -1,0 +1,52 @@
+{
+  "attrs": {
+    "class": [
+      {
+        "spans": [
+          {
+            "kind": "plain-text",
+            "text": "red",
+            "type": "plain-text"
+          }
+        ],
+        "text": "red"
+      },
+      {
+        "spans": [
+          {
+            "kind": "plain-text",
+            "text": "green",
+            "type": "plain-text"
+          }
+        ],
+        "text": "green"
+      }
+    ]
+  },
+  "bound": "full",
+  "children": [
+    {
+      "children": [],
+      "kind": "paragraph",
+      "spans": [
+        {
+          "kind": "plain-text",
+          "text": "this is content",
+          "type": "plain-text"
+        }
+      ],
+      "template_list": ["sections/paragraph/default.neoj"],
+      "type": "block"
+    }
+  ],
+  "end_section": null,
+  "flags": [],
+  "kind": "title",
+  "neo_body": "this is content",
+  "neo_source": "-- title\n-- class: red \n-- class: green\n\nthis is content",
+  "template_list": [
+    "sections/title/default.neoj",
+    "sections/basic/default.neoj"
+  ],
+  "type": "basic"
+}

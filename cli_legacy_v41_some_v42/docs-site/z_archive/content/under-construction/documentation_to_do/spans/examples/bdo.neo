@@ -1,0 +1,25 @@
+-- title
+
+Span: bdo 
+
+-- subtitle
+
+The Bidirectional Text Override Span
+
+-- p
+
+Basic Example: 
+
+<<bdo|Lorem ipsum>>
+
+
+Attribute Example: 
+
+<<bdo|Lorem ipsum|class: green>>
+
+
+-- metadata
+-- date: 2024-02-03
+-- id: 2bql3gdk
+-- status: published
+

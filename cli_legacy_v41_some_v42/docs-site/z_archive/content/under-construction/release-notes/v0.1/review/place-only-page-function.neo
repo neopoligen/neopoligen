@@ -1,0 +1,56 @@
+-- title
+
+Place Only Specific Sections
+
+-- h2
+
+Overview
+
+This feature provides a function called `page.place_only()``.
+It outputs only the specific sections passed to it.
+
+It takes either a single section (e.g. `page.place_only("title")``)
+that is passed with just quotes around it.
+
+Or multiple sections (e.g. `page.place_only("title", "p")``)
+each with quotes around them and separated by commas
+
+-- note
+-- title: Note
+
+This `page.place_only()`` works different than
+the `place_only()`` macro (i.e. the version that
+doesn't start with `page.``. This one accepts
+multiple sections. The macro does not.
+
+To use this, the results have to be looped through
+until a new macro is made to deal with it more
+directly
+
+
+-- todo
+
+[x] The `page.place_only()`` function exists
+
+[x] The function works with a single section
+parameter e.g. `page.place_only("title")``
+
+[x] The function works with multiple sections
+ e.g. `page.place_only("title", "p")``
+
+[x] The data comes back as an array that can be 
+looped over with `for``
+
+[x] If there are multiple instances of
+the section they are all returned for looping
+through (e.g. if `page.place_only("p")``) is
+called, all the `p`` sections on the
+page are returned 
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- id: 2bp935yu
+-- status: published
+

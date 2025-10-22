@@ -1,0 +1,40 @@
+-- title
+
+Section Attributes Exclude List
+
+-- h2
+
+Overview
+
+The `{%- set section_attribute_excludes = [] -%}`` in 
+`SITE/configuration/globals/jinja`` to defines a list of section
+attributes to exclude when outputting the `<section>`` HTML tag.
+
+For example, the default templates support outputting content
+directly from `-- forward``, `-- preface``, and `-- afterword``
+sections. This is what prevents them from showing up in the
+`<section>`` as well (e.g. you get `<section>`` instead of
+`<section preface="lorem ipsum">``
+
+-- warning
+
+Don't use "section_attribute_excludes" for any 
+security related or sensitive storage needs. For example, 
+don't store passwords in attributes and then
+exclude the attribute in the configuration file. Neopoligen
+is not designed for secure storage and should not be
+used in that way. 
+
+
+-- todo
+-- title: Requirements
+
+
+
+
+-- metadata
+-- date: 2024-02-19 12:03:52
+-- id: 2cauurdr
+-- type: release-notes
+-- status: scratch
+

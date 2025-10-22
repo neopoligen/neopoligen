@@ -6,5 +6,5 @@ watchexec\
   --workdir "../cli"\
   -c\
   -r\
-  -e rs,neo\
-  "bash -c 'cargo test solo -- --nocapture'"
+  -e rs,neo,json5\
+  "bash -c 'cargo test solo -- --nocapture --test-threads=1'"

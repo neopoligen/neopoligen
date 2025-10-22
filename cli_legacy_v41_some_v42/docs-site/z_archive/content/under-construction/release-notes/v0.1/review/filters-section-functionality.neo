@@ -1,0 +1,24 @@
+-- title
+
+Filters Section Functionality
+
+-- h2
+
+Overview
+
+This feature pulls values from 
+a "-- filters" section into `page.filters()``
+
+-- todo
+-- title: Requirements
+
+[x] Values from `-- filters`` are passed
+into `{{ page.filters() }}``
+
+
+
+-- metadata
+-- date: 2024-02-12
+-- id: 2cgspnia
+-- status: draft
+

@@ -1,0 +1,30 @@
+DESCRIPTION:
+
+This checks to make sure that calling "title" in the
+template doesn't output anything if there's not
+a title section in the source file
+
+This test won't function until "full_match" 
+functionality is in place which ensures
+that stuff not shown in the match will 
+fail if it shows up
+
+INPUT:
+
+-- p
+
+There is no title section above this paragraph
+
+-- metadata
+-- date: 2024-02-19 23:16:48
+-- id: 2cceku0c
+-- type: theme-test
+
+TARGET:
+
+
+<section class="p_section flow">
+  <div class="content">
+    <p>There is no title section above this paragraph</p>
+  </div>
+</section>

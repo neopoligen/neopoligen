@@ -1,0 +1,3 @@
+[@- '' -@]
+<em [@- site.get_span_attrs(span) -@]>[@ span.text @]</em>
+[@- '' -@]

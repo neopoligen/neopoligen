@@ -1,0 +1,43 @@
+-- title
+
+Section Categories: YAML
+
+-- h2
+
+Overview
+
+-- todo
+
+[] Serialize YAML into an
+object that can be used in templates
+
+
+[x] Full section tags work (e.g. `-- yaml-widget``) 
+
+[] Full sections have attributes
+
+[] Start section tags work (e.g. `-- yaml-widget/``)
+
+[] Start sections have attributes
+
+[] End section tags work (e.g. `-- yaml-widget/``)
+
+[] End sections have attributes
+
+
+-- h2
+
+Examples
+
+
+
+-- tags
+
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 10:48:20
+-- id: 2bpkvula
+-- status: scratch
+

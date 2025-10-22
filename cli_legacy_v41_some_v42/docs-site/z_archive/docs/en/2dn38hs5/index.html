@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta property="og:type" content="article" /><link rel="stylesheet" href="/theme/styles.css" />
+<link rel="stylesheet" href="/theme/highlighting/code-solarized-dark.css" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/theme/favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/theme/favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/theme/favicons/favicon-16x16.png">
+<link rel="manifest" href="/theme/favicons/site.webmanifest">
+<link rel="mask-icon" href="/theme/favicons/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="/theme/favicons/favicon.ico">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="msapplication-config" content="/theme/favicons/browserconfig.xml">
+<meta name="theme-color" content="#000000">
+<script type="module" src="/theme/theme.js"></script><style>#number_block {
+    font-family: var(--mono);
+    color: var(--color-4);
+}
+
+.pre-attention-on > .c7 {
+    color: var(--color-1);
+}</style><script><script>function toggle_contract(event) {
+  const el = event.target
+  const ds = el.dataset
+  const number_block = document.getElementById("number_block")
+  if (ds.status === "off") {
+    event.target.dataset.status = "on"
+    number_block.classList.remove("pre-attention-off")
+    number_block.classList.add("pre-attention-on")
+  } else {
+    event.target.dataset.status = "off"
+    number_block.classList.add("pre-attention-off")
+    number_block.classList.remove("pre-attention-on")
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("toggle_contrast_button").addEventListener(
+    "click", toggle_contract
+  )
+})</script></script></head>
+<body><header></header><main><div class="sidebar">
+
+<h4>Details</h4><nav id="nav_menu"><ol><li id="nav_menu_2auhjdnh" class="page_inactive"><a href="/">Neopoligen</a></li><li id="nav_menu_2dcmgjan" class="page_inactive"><a href="/download/">Download</a></li><li id="nav_menu_2dom5zxe" class="index_folder_closed"><a href="/en/2dom5zxe/?under-construction">Under Construction</a></li></ol></nav><h4>Blog</h4><nav><ul><li><a href="/en/2dcgvrpe/?introducing-neopoligen---a-website-builder-for-everyone">Introducing Neopoligen - A Website Builder For Everyone</a></li></ul></nav><h4>Tech Blog</h4><nav><ul><li><a href="/en/2cpwqhh7/?hello%2C-world">Hello, World</a></li><li><a href="/en/2djkslaj/?the-database-idea">The Database Idea</a></li><li>From Jinja To MiniJinja To NeoJinja With Pre-Attentive Processing</li><li><a href="/en/2dsrh9bo/?vanilla-javascript-button-toggler">Vanilla JavaScript Button Toggler</a></li></ul></nav><h4><a href="/en/2dpcupti/?shorts">Shorts</a></h4><nav><ul><li><a href="/en/2dn1mxzh/?i-just-learned-you-can-string-multiple-find-and-replace-patterns-together...">I just learned you can string multiple find and replace patterns together...</a></li><li><a href="/en/2dpcg7fp/?instead-of-%22let-the-market-decide%22%2C-how-about-%22let-the-culture-decide%22...">Instead of "let the market decide", how about "let the culture decide"...</a></li><li><a href="/en/2dpcupti/?shorts">Shorts</a></li></ul></nav></div><article class="flow"><nav class="breadcrumbs"><ol>
+<li><a href="/">Home</a></li>
+<li><a href="/download/">Download</a></li></ol>
+</nav><section class="title_section flow"><div class="title_heading_group"><h1>From Jinja To MiniJinja To NeoJinja With Pre-Attentive Processing</h1></div></section><section class="h2_section flow"><div class="h2_heading_group"><h2>Introduction</h2></div><div class="content flow"><p>Neopoligen combines your content with templates to make websites. The templates are called "NeoJinja" files. They look like this one which shows every title  for a set of blog links:</p></div></section>
+<section class="code_section section_category_raw flow" subtitle="blog-links.neoj"><div class="code_heading_group"><div>blog-links.neoj</div></div><div class="content">
+        <pre><code>[!- set blog_links = site.collection_from_tags(page_id, [[&quot;blog&quot;]]) -!]
+
+[!- for link in blog_links.tree  -!]
+  [@- site.page_title(link.id) -@]
+[!- endfor -!]</code></pre>
+    </div></section>
+
+<section class="p_section section_category_standard flow"><div class="content flow"><p>The `[! ... !]`` snippets are template instructions that set up the `blog_links`` variable and tell it to do a `for ... endfor``  loop over the `[@ ... @]`` snippet that outputs each title in turn. </p><p>You can read more about the functionality in the <a href="/en/2dmzomyo/?templates">template documentation</a>. For this post, I want to talk about the format itself. </p></div></section><section class="h2_section flow"><div class="h2_heading_group"><h2>The Origin Format</h2></div><div class="content flow"><p>NeoJinja is based off (and powered by) template processing software called MiniJinja^mjinja^^ which is, in turn, based off another one called Jinja^jinja^^. The Jinja software is used with the Python^python^^ programming language. MiniJinja mimics its behavior, but in the Rust^rust^^ language. Neopoligen is written mainly in Rust and I would have  used MiniJinja directly except for one thing, it was hard for me to read the templates. </p><p>Here's the same NeoJinja template followed by the  MiniJinja version. Both do exactly the same thing. The only difference is the characters used to mark the start and end points of the template instruction and output snippets. </p></div></section>
+<section class="code_section section_category_raw flow" subtitle="NeoJinja"><div class="code_heading_group"><div>NeoJinja</div></div><div class="content">
+        <pre><code>[!- set blog_links = site.collection_from_tags(page_id, [[&quot;blog&quot;]]) -!]
+
+[!- for link in blog_links.tree  -!]
+  [@- site.page_title(link.id) -@]
+[!- endfor -!]</code></pre>
+    </div></section><section class="code_section section_category_raw flow" subtitle="MiniJinja"><div class="code_heading_group"><div>MiniJinja</div></div><div class="content">
+        <pre><code>{%- set blog_links = site.collection_from_tags(page_id, [[&quot;blog&quot;]]) -%}
+
+{%- for link in blog_links.tree  -%}
+  {{- site.page_title(link.id) -}}
+{%- endfor -%}</code></pre>
+    </div></section>
+
+<section class="p_section section_category_standard flow"></section><section class="h2_section flow"><div class="h2_heading_group"><h2>The Differences</h2></div><div class="content flow"><p>So, `{%- ... -%}`` becomes `[!- ... -!]``</p><p>And, `{{- ... -}}`` becomes `[@- ... -@]``</p><p>Not shown in the example are comments which go from  `{#- ... -#}`` to `[#- ... -#]``</p><p>There are two reasons I like this. First and foremost I  find it a lot easier to scan for the sharp corners of the `[]`` brackets compared to `{}``. My guess is this is a pre-attentive processing thing^pap^^. I first learned about that idea from Stephen Few's book Information Dashboard Design^idd^^. Basically, our brains process some visual information before we're consciously aware of it. </p><p>Here's an example straight from the book to demonstrate.  Start by counting the number of times <em>5</em> appears in this block as quick as you can:</p></div></section>
+<section class="html_section flow"><div class="content flow"><pre id="number_block" class="pre-attention-off">
+<span class="c4">4</span><span class="cD">D</span><span class="cP">P</span><span class="cT">T</span><span class="cD">D</span><span class="c7">7</span><span class="cK">K</span><span class="cW">W</span><span class="cL">L</span><span class="cC">C</span><span class="cJ">J</span><span class="c5">5</span><span class="cF">F</span><span class="cD">D</span><span class="c5">5</span><span class="cC">C</span><span class="cY">Y</span><span class="cN">N</span><span class="c7">7</span><span class="cJ">J</span>
+<span class="cD">D</span><span class="cI">I</span><span class="cP">P</span><span class="cU">U</span><span class="cC">C</span><span class="cU">U</span><span class="cJ">J</span><span class="c3">3</span><span class="cT">T</span><span class="cT">T</span><span class="cQ">Q</span><span class="cZ">Z</span><span class="c1">1</span><span class="c6">6</span><span class="cO">O</span><span class="c1">1</span><span class="c6">6</span><span class="cL">L</span><span class="c8">8</span><span class="cQ">Q</span>
+<span class="cZ">Z</span><span class="cL">L</span><span class="cZ">Z</span><span class="cQ">Q</span><span class="cX">X</span><span class="cF">F</span><span class="cA">A</span><span class="cW">W</span><span class="cI">I</span><span class="cX">X</span><span class="c5">5</span><span class="cF">F</span><span class="c1">1</span><span class="cT">T</span><span class="cI">I</span><span class="c3">3</span><span class="cJ">J</span><span class="cQ">Q</span><span class="cE">E</span><span class="cR">R</span>
+<span class="cM">M</span><span class="cG">G</span><span class="cO">O</span><span class="c6">6</span><span class="cD">D</span><span class="cS">S</span><span class="c4">4</span><span class="cY">Y</span><span class="cZ">Z</span><span class="cS">S</span><span class="c2">2</span><span class="c0">0</span><span class="cU">U</span><span class="c2">2</span><span class="cG">G</span><span class="cW">W</span><span class="cD">D</span><span class="cV">V</span><span class="cN">N</span><span class="cW">W</span>
+<span class="c7">7</span><span class="cJ">J</span><span class="cT">T</span><span class="cA">A</span><span class="c9">9</span><span class="c2">2</span><span class="cU">U</span><span class="cO">O</span><span class="c6">6</span><span class="cH">H</span><span class="cD">D</span><span class="c5">5</span><span class="cN">N</span><span class="cY">Y</span><span class="cI">I</span><span class="cJ">J</span><span class="cL">L</span><span class="c9">9</span><span class="cA">A</span><span class="cU">U</span>
+</pre></div></section><section class="p_section standard_category_section flow"><div class="content flow"><p>There are four of them, but finding them all isn't what's interesting here. Let's do the same thing but with the aid of some pre-attentive processing. Click the Toggle Example button and see how long it takes you to count the number of times <em>7</em> appears. </p></div></section><section class="html_section flow"><div class="content flow"><button id="toggle_contrast_button" data-status="off">Toggle Example</button></div></section><section class="p_section standard_category_section flow"><div class="content flow"><p>To quote the book:</p></div></section><section class="blockquote_section standard_category_section flow"><div class="content flow"><p>Much easier this time, wasn't it? The sevens could easily be distinguished from the other numbers due to their differing color intensity...</p><p>Why couldn't we easily distinguish the fives in the first set of numbers based purely on their unique shape? Because the complex shapes of the numbers are not attributes that we perceive pre-attentively. Simple shapes such as circles and squares are pre-attentively perceived, but the shapes of numbers are too elaborate.</p></div></section><section class="p_section standard_category_section flow"><div class="content flow"><p>I expect the effect is different for everyone, but switching  to the shaper corner `[]`` brackets feels like it's catching some of that pre-attentive processing for me. It doesn't  make a big difference in smaller examples like the ones that opened this post, but the more there is the nicer it feels.</p><p>It would be even better is to add some more/stronger pre-attentive power. For example, using syntax highlighting^sh^^ highlight different parts with color. That's not done  yet, but it's <a href="/en/2dnvbi5w/?neojinja-syntax-highlighting-editor">on the roadmap</a>.</p></div></section><section class="original_content flow">
+    <div class="original_content_toggle_wrapper">
+        <button class="original_content_toggle" data-toggle_text="Hide original content file">Show original content file</button>
+    </div>
+    <div id="original_content_display" class="hidden flow">
+        <h3>Original Content File</h3>
+        <p class="border-bottom-4">This is the file that produced this page</p>
+        <pre ><code>-- title
+
+From Jinja To MiniJinja To NeoJinja With Pre-Attentive Processing
+
+-- h2
+
+Introduction
+
+Neopoligen combines your content with templates
+to make websites. The templates are called &quot;NeoJinja&quot;
+files. They look like this one which shows every title 
+for a set of blog links:
+
+-- code&#x2f;
+-- neoj
+-- subtitle: blog-links.neoj
+
+[!- set blog_links = site.collection_from_tags(page_id, [[&quot;blog&quot;]]) -!]
+
+[!- for link in blog_links.tree  -!]
+  [@- site.page_title(link.id) -@]
+[!- endfor -!]
+
+-- &#x2f;code
+
+The `[! ... !]`` snippets are template instructions that set up
+the `blog_links`` variable and tell it to do a `for ... endfor`` 
+loop over the `[@ ... @]`` snippet that outputs each title in turn. 
+
+You can read more about the functionality in the
+&lt;&lt;ilink: 2dmzomyo|template documentation&gt;&gt;. For this
+post, I want to talk about the format itself. 
+
+-- h2
+
+The Origin Format
+
+NeoJinja is based off (and powered by) template processing
+software called MiniJinja^mjinja^^ which is, in turn, based
+off another one called Jinja^jinja^^. The Jinja software is used
+with the Python^python^^ programming language. MiniJinja
+mimics its behavior, but in the Rust^rust^^ language.
+Neopoligen is written mainly in Rust and I would have 
+used MiniJinja directly except for one thing, it
+was hard for me to read the templates. 
+
+Here&#x27;s the same NeoJinja template followed by the 
+MiniJinja version. Both do exactly the same thing. The
+only difference is the characters used to mark the
+start and end points of the template instruction and
+output snippets. 
+
+-- code
+-- neoj
+-- subtitle: NeoJinja
+
+[!- set blog_links = site.collection_from_tags(page_id, [[&quot;blog&quot;]]) -!]
+
+[!- for link in blog_links.tree  -!]
+  [@- site.page_title(link.id) -@]
+[!- endfor -!]
+
+-- code&#x2f;
+-- neoj
+-- subtitle: MiniJinja
+
+{%- set blog_links = site.collection_from_tags(page_id, [[&quot;blog&quot;]]) -%}
+
+{%- for link in blog_links.tree  -%}
+  {{- site.page_title(link.id) -}}
+{%- endfor -%}
+
+-- &#x2f;code
+
+-- h2
+
+The Differences
+
+So, `{%- ... -%}`` becomes `[!- ... -!]``
+
+And, `{{- ... -}}`` becomes `[@- ... -@]``
+
+Not shown in the example are comments which go from 
+`{#- ... -#}`` to `[#- ... -#]``
+
+There are two reasons I like this. First and foremost I 
+find it a lot easier to scan for the sharp corners of the
+`[]`` brackets compared to `{}``. My guess is this is
+a pre-attentive processing thing^pap^^. I first learned
+about that idea from Stephen Few&#x27;s book Information
+Dashboard Design^idd^^. Basically, our brains process
+some visual information before we&#x27;re consciously aware
+of it. 
+
+Here&#x27;s an example straight from the book to demonstrate. 
+Start by counting the number of times &lt;&lt;em|5&gt;&gt; appears in this block
+as quick as you can:
+
+-- html
+
+&lt;pre id=&quot;number_block&quot; class=&quot;pre-attention-off&quot;&gt;
+&lt;span class=&quot;c4&quot;&gt;4&lt;&#x2f;span&gt;&lt;span class=&quot;cD&quot;&gt;D&lt;&#x2f;span&gt;&lt;span class=&quot;cP&quot;&gt;P&lt;&#x2f;span&gt;&lt;span class=&quot;cT&quot;&gt;T&lt;&#x2f;span&gt;&lt;span class=&quot;cD&quot;&gt;D&lt;&#x2f;span&gt;&lt;span class=&quot;c7&quot;&gt;7&lt;&#x2f;span&gt;&lt;span class=&quot;cK&quot;&gt;K&lt;&#x2f;span&gt;&lt;span class=&quot;cW&quot;&gt;W&lt;&#x2f;span&gt;&lt;span class=&quot;cL&quot;&gt;L&lt;&#x2f;span&gt;&lt;span class=&quot;cC&quot;&gt;C&lt;&#x2f;span&gt;&lt;span class=&quot;cJ&quot;&gt;J&lt;&#x2f;span&gt;&lt;span class=&quot;c5&quot;&gt;5&lt;&#x2f;span&gt;&lt;span class=&quot;cF&quot;&gt;F&lt;&#x2f;span&gt;&lt;span class=&quot;cD&quot;&gt;D&lt;&#x2f;span&gt;&lt;span class=&quot;c5&quot;&gt;5&lt;&#x2f;span&gt;&lt;span class=&quot;cC&quot;&gt;C&lt;&#x2f;span&gt;&lt;span class=&quot;cY&quot;&gt;Y&lt;&#x2f;span&gt;&lt;span class=&quot;cN&quot;&gt;N&lt;&#x2f;span&gt;&lt;span class=&quot;c7&quot;&gt;7&lt;&#x2f;span&gt;&lt;span class=&quot;cJ&quot;&gt;J&lt;&#x2f;span&gt;
+&lt;span class=&quot;cD&quot;&gt;D&lt;&#x2f;span&gt;&lt;span class=&quot;cI&quot;&gt;I&lt;&#x2f;span&gt;&lt;span class=&quot;cP&quot;&gt;P&lt;&#x2f;span&gt;&lt;span class=&quot;cU&quot;&gt;U&lt;&#x2f;span&gt;&lt;span class=&quot;cC&quot;&gt;C&lt;&#x2f;span&gt;&lt;span class=&quot;cU&quot;&gt;U&lt;&#x2f;span&gt;&lt;span class=&quot;cJ&quot;&gt;J&lt;&#x2f;span&gt;&lt;span class=&quot;c3&quot;&gt;3&lt;&#x2f;span&gt;&lt;span class=&quot;cT&quot;&gt;T&lt;&#x2f;span&gt;&lt;span class=&quot;cT&quot;&gt;T&lt;&#x2f;span&gt;&lt;span class=&quot;cQ&quot;&gt;Q&lt;&#x2f;span&gt;&lt;span class=&quot;cZ&quot;&gt;Z&lt;&#x2f;span&gt;&lt;span class=&quot;c1&quot;&gt;1&lt;&#x2f;span&gt;&lt;span class=&quot;c6&quot;&gt;6&lt;&#x2f;span&gt;&lt;span class=&quot;cO&quot;&gt;O&lt;&#x2f;span&gt;&lt;span class=&quot;c1&quot;&gt;1&lt;&#x2f;span&gt;&lt;span class=&quot;c6&quot;&gt;6&lt;&#x2f;span&gt;&lt;span class=&quot;cL&quot;&gt;L&lt;&#x2f;span&gt;&lt;span class=&quot;c8&quot;&gt;8&lt;&#x2f;span&gt;&lt;span class=&quot;cQ&quot;&gt;Q&lt;&#x2f;span&gt;
+&lt;span class=&quot;cZ&quot;&gt;Z&lt;&#x2f;span&gt;&lt;span class=&quot;cL&quot;&gt;L&lt;&#x2f;span&gt;&lt;span class=&quot;cZ&quot;&gt;Z&lt;&#x2f;span&gt;&lt;span class=&quot;cQ&quot;&gt;Q&lt;&#x2f;span&gt;&lt;span class=&quot;cX&quot;&gt;X&lt;&#x2f;span&gt;&lt;span class=&quot;cF&quot;&gt;F&lt;&#x2f;span&gt;&lt;span class=&quot;cA&quot;&gt;A&lt;&#x2f;span&gt;&lt;span class=&quot;cW&quot;&gt;W&lt;&#x2f;span&gt;&lt;span class=&quot;cI&quot;&gt;I&lt;&#x2f;span&gt;&lt;span class=&quot;cX&quot;&gt;X&lt;&#x2f;span&gt;&lt;span class=&quot;c5&quot;&gt;5&lt;&#x2f;span&gt;&lt;span class=&quot;cF&quot;&gt;F&lt;&#x2f;span&gt;&lt;span class=&quot;c1&quot;&gt;1&lt;&#x2f;span&gt;&lt;span class=&quot;cT&quot;&gt;T&lt;&#x2f;span&gt;&lt;span class=&quot;cI&quot;&gt;I&lt;&#x2f;span&gt;&lt;span class=&quot;c3&quot;&gt;3&lt;&#x2f;span&gt;&lt;span class=&quot;cJ&quot;&gt;J&lt;&#x2f;span&gt;&lt;span class=&quot;cQ&quot;&gt;Q&lt;&#x2f;span&gt;&lt;span class=&quot;cE&quot;&gt;E&lt;&#x2f;span&gt;&lt;span class=&quot;cR&quot;&gt;R&lt;&#x2f;span&gt;
+&lt;span class=&quot;cM&quot;&gt;M&lt;&#x2f;span&gt;&lt;span class=&quot;cG&quot;&gt;G&lt;&#x2f;span&gt;&lt;span class=&quot;cO&quot;&gt;O&lt;&#x2f;span&gt;&lt;span class=&quot;c6&quot;&gt;6&lt;&#x2f;span&gt;&lt;span class=&quot;cD&quot;&gt;D&lt;&#x2f;span&gt;&lt;span class=&quot;cS&quot;&gt;S&lt;&#x2f;span&gt;&lt;span class=&quot;c4&quot;&gt;4&lt;&#x2f;span&gt;&lt;span class=&quot;cY&quot;&gt;Y&lt;&#x2f;span&gt;&lt;span class=&quot;cZ&quot;&gt;Z&lt;&#x2f;span&gt;&lt;span class=&quot;cS&quot;&gt;S&lt;&#x2f;span&gt;&lt;span class=&quot;c2&quot;&gt;2&lt;&#x2f;span&gt;&lt;span class=&quot;c0&quot;&gt;0&lt;&#x2f;span&gt;&lt;span class=&quot;cU&quot;&gt;U&lt;&#x2f;span&gt;&lt;span class=&quot;c2&quot;&gt;2&lt;&#x2f;span&gt;&lt;span class=&quot;cG&quot;&gt;G&lt;&#x2f;span&gt;&lt;span class=&quot;cW&quot;&gt;W&lt;&#x2f;span&gt;&lt;span class=&quot;cD&quot;&gt;D&lt;&#x2f;span&gt;&lt;span class=&quot;cV&quot;&gt;V&lt;&#x2f;span&gt;&lt;span class=&quot;cN&quot;&gt;N&lt;&#x2f;span&gt;&lt;span class=&quot;cW&quot;&gt;W&lt;&#x2f;span&gt;
+&lt;span class=&quot;c7&quot;&gt;7&lt;&#x2f;span&gt;&lt;span class=&quot;cJ&quot;&gt;J&lt;&#x2f;span&gt;&lt;span class=&quot;cT&quot;&gt;T&lt;&#x2f;span&gt;&lt;span class=&quot;cA&quot;&gt;A&lt;&#x2f;span&gt;&lt;span class=&quot;c9&quot;&gt;9&lt;&#x2f;span&gt;&lt;span class=&quot;c2&quot;&gt;2&lt;&#x2f;span&gt;&lt;span class=&quot;cU&quot;&gt;U&lt;&#x2f;span&gt;&lt;span class=&quot;cO&quot;&gt;O&lt;&#x2f;span&gt;&lt;span class=&quot;c6&quot;&gt;6&lt;&#x2f;span&gt;&lt;span class=&quot;cH&quot;&gt;H&lt;&#x2f;span&gt;&lt;span class=&quot;cD&quot;&gt;D&lt;&#x2f;span&gt;&lt;span class=&quot;c5&quot;&gt;5&lt;&#x2f;span&gt;&lt;span class=&quot;cN&quot;&gt;N&lt;&#x2f;span&gt;&lt;span class=&quot;cY&quot;&gt;Y&lt;&#x2f;span&gt;&lt;span class=&quot;cI&quot;&gt;I&lt;&#x2f;span&gt;&lt;span class=&quot;cJ&quot;&gt;J&lt;&#x2f;span&gt;&lt;span class=&quot;cL&quot;&gt;L&lt;&#x2f;span&gt;&lt;span class=&quot;c9&quot;&gt;9&lt;&#x2f;span&gt;&lt;span class=&quot;cA&quot;&gt;A&lt;&#x2f;span&gt;&lt;span class=&quot;cU&quot;&gt;U&lt;&#x2f;span&gt;
+&lt;&#x2f;pre&gt;
+
+-- p
+
+There are four of them, but finding them all isn&#x27;t what&#x27;s interesting
+here. Let&#x27;s do the same thing but with the aid of some pre-attentive
+processing. Click the Toggle Example button and see how long it takes you to count
+the number of times &lt;&lt;em|7&gt;&gt; appears. 
+
+-- html
+
+&lt;button id=&quot;toggle_contrast_button&quot; data-status=&quot;off&quot;&gt;Toggle Example&lt;&#x2f;button&gt;
+
+
+-- script
+
+function toggle_contract(event) {
+  const el = event.target
+  const ds = el.dataset
+  const number_block = document.getElementById(&quot;number_block&quot;)
+  if (ds.status === &quot;off&quot;) {
+    event.target.dataset.status = &quot;on&quot;
+    number_block.classList.remove(&quot;pre-attention-off&quot;)
+    number_block.classList.add(&quot;pre-attention-on&quot;)
+  } else {
+    event.target.dataset.status = &quot;off&quot;
+    number_block.classList.add(&quot;pre-attention-off&quot;)
+    number_block.classList.remove(&quot;pre-attention-on&quot;)
+  }
+}
+
+document.addEventListener(&quot;DOMContentLoaded&quot;, () =&gt; {
+  document.getElementById(&quot;toggle_contrast_button&quot;).addEventListener(
+    &quot;click&quot;, toggle_contract
+  )
+})
+
+
+-- css
+
+#number_block {
+    font-family: var(--mono);
+    color: var(--color-4);
+}
+
+.pre-attention-on &gt; .c7 {
+    color: var(--color-1);
+}
+
+-- p 
+
+To quote the book:
+
+-- blockquote
+
+Much easier this time, wasn&#x27;t it? The sevens could easily
+be distinguished from the other numbers due to their
+differing color intensity...
+
+Why couldn&#x27;t we easily distinguish the fives in the first
+set of numbers based purely on their unique shape? Because
+the  complex shapes of the numbers are not attributes that we
+perceive pre-attentively. Simple shapes such as circles and
+squares are pre-attentively perceived, but the shapes of numbers
+are too elaborate.
+
+-- p
+
+I expect the effect is different for everyone, but switching 
+to the shaper corner `[]`` brackets feels like it&#x27;s catching
+some of that pre-attentive processing for me. It doesn&#x27;t 
+make a big difference in smaller examples like the ones
+that opened this post, but the more there is the nicer it feels.
+
+It would be even better is to add some more&#x2f;stronger
+pre-attentive power. For example, using syntax highlighting^sh^^
+highlight different parts with color. That&#x27;s not done 
+yet, but it&#x27;s &lt;&lt;ilink: 2dnvbi5w|on the roadmap&gt;&gt;.
+
+
+-- footnote
+-- id: idd
+-- title: Information Dashboard Design: Displaying Data for At-a-Glance Monitoring
+-- url: https:&#x2f;&#x2f;www.amazon.com&#x2f;dp&#x2f;1938377001&#x2f;
+
+This is the second version of the book. I read the first
+edition (subtitled &quot;The Effective Visual Communication Of Data&quot;). 
+but I expect it&#x27;s still just as good. Highly recommended if
+you&#x27;re at all interested in the topic or even just design
+in general.
+
+
+-- footnote
+-- id: mjinja
+-- title: The MiniJinja Template Engine
+-- url: https:&#x2f;&#x2f;docs.rs&#x2f;minijinja&#x2f;latest&#x2f;minijinja&#x2f;
+
+-- footnote
+-- id: jinja
+-- title: The Jinja2 Template Engine
+-- url: https:&#x2f;&#x2f;jinja.palletsprojects.com&#x2f;en&#x2f;3.1.x&#x2f;
+
+-- footnote
+-- id: python
+-- title: The Python Programming Language
+-- url: https:&#x2f;&#x2f;www.python.org&#x2f;
+
+-- footnote
+-- id: rust
+-- title: The Rust Programming Language
+-- url: https:&#x2f;&#x2f;www.rust-lang.org&#x2f;
+
+-- footnote
+-- id: pap
+-- title: Pre-attentive processing
+-- url: https:&#x2f;&#x2f;en.wikipedia.org&#x2f;wiki&#x2f;Pre-attentive_processing
+
+
+-- metadata
+-- date: 2024-03-07
+-- id: 2dn38hs5
+-- status: draft</pre></code>
+        <div class="original_content_toggle_wrapper">
+            <button class="original_content_toggle" data-toggle_text="Hide original content file">Show original content file</button>
+        </div>
+    </div>
+</section></article>
+  </main><footer></footer></body>
+</html>

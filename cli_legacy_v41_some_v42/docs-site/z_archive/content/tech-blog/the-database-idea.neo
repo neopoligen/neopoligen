@@ -1,0 +1,62 @@
+-- title
+
+The Database Idea
+
+I had what feels like an interesting idea last night:
+A database.
+
+Sure, not that novel, but maybe not what you'd
+initially think of. The thought isn't to integrate
+database software. That's already gonna happen. Instead, 
+it's to make a new folder called "database" and throw 
+files in there. 
+
+Files in the "database" folder wouldn't output
+to the site directly as pages. Instead, you'd
+pull their content in from other pages. For example, 
+you could make some files with `-- book`` sections 
+in them. Using something like this on a page would 
+output all the books from your database:
+
+-- code/
+-- neojinja
+ 
+[! for book in db.get("book") !]
+[[ book ]] 
+[! endfor !]
+
+-- /code
+
+Of course, you're probably want some control over
+the sorting. Assuming each book has a `-- title``
+attribute like:
+
+-- code/
+-- neo
+
+-- book
+-- title: Stranger In A Strange Land
+
+-- /code
+
+you could do something like:
+
+-- code/
+-- neojinja
+
+[! for book in db.get_sort("book", "title") !]
+[[ book ]]
+[! endfor !]
+
+-- /code
+
+The goal here is not to replicate a full set
+of database software features. You can always
+call out to an actual database if you need to do
+that. Instead, the goal is to be able to do 
+basic database collections from inside content 
+files.
+
+-- metadata
+-- date: 2024-03-06
+-- id: 2djkslaj

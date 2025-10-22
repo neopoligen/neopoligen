@@ -1,0 +1,44 @@
+{
+  "attrs": {}, 
+  "bound": "start", 
+  "data": [
+    ["a", "b", "c"], 
+    ["d", "e", "f"]
+  ],
+  "end_section": {
+    "attrs": {},
+    "bound": "end",
+    "children": [
+      {
+        "children": [],
+        "kind": "paragraph",
+        "spans": [
+          {
+            "kind": "plain-text",
+            "text": "alfa bravo",
+            "type": "plain-text"
+          }
+        ],
+        "template_list": [
+          "sections/paragraph/default.neoj",
+        ],
+        "type": "block",
+      }
+    ],
+    "flags": [],
+    "kind": "csv-end", 
+    "template_list": [
+      "sections/csv-end/default.neoj",
+      "sections/end/default.neoj",
+    ],
+    "type": "end",
+  }, 
+  "error": null, 
+  "flags": [], 
+  "kind": "csv", 
+  "type": "csv",
+  "template_list": [
+    "sections/csv/default.neoj", 
+   ],
+}
+

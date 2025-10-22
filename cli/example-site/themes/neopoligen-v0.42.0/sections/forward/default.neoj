@@ -1,0 +1,13 @@
+[!- import "built-in/macros.neoj" as neo -!]
+
+[# TYPE: none #]
+[# HOIST: [class, id] #]
+
+<section [@- neo.section_attrs("flow") -@]>
+  [!- if "title" in section.attrs -!]
+  <h2>[@ neo.output_attr('title') @]</h2>
+  [!- endif -!]
+  [@- neo.output_all_child_sections(section) -@]
+</section>
+
+[@- neo.output_end_section(section) -@]

@@ -1,0 +1,59 @@
+-- title
+
+Place Everything Except
+
+-- h2
+
+Overview
+
+This feature creates a function that outputs
+every section on a page except for the
+ones defined in the request. The function is:
+
+
+-- code
+-- jinja
+
+page.place_everything_except()
+
+-- p
+
+It takes either single section name inside
+quotes. For example:
+
+-- code
+-- jinja
+
+page.place_everything_except("title")
+
+-- p
+
+Or multiple parameters in quotes separated
+by commas
+
+-- code
+-- jinja
+
+page.place_everything_except("title", "p")
+
+
+-- todo
+
+[x] The `page.place_everything_except()`` 
+function exists
+
+[x] Passing a single section name as a string
+works (e.g. `page.place_everything_except("title")``)
+
+[x] Passing an array of section names
+works (e.g. `page.place_everything_except("title", "p")``)
+
+[x] Everything except the defined sections
+is returned for output on the page
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 13:08:53
+-- id: 2bpbbeyb
+-- status: published
+

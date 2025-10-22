@@ -1,0 +1,40 @@
+-- title
+
+Unlimited Undo In The App
+
+-- notes
+-- title: Ideas
+
+- Use a git repo to store all the changes
+for the content
+
+- Every time a page is built it would
+be saved in it's own branch? To make
+it easier to walk?
+
+
+
+-- h2
+
+Overview
+
+
+-- todo
+
+[] TKTKTKTK
+
+-- h2
+
+Examples
+
+
+
+-- tags
+
+
+-- metadata
+-- date: 2024-01-24
+-- updated: 2024-01-24 13:54:24
+-- id: 2bph90uh
+-- status: scratch
+

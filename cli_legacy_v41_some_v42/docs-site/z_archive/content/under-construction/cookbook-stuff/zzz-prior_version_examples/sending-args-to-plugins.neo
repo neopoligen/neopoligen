@@ -1,0 +1,23 @@
+-- title
+
+Sending Parameters To Plugins
+
+Use:
+
+-- code/
+
+-- args: --key
+-- args: value
+
+or whatever
+
+-- /code
+
+
+
+-- metadata
+-- date: 2024-01-21
+-- id: 2bhzivfz
+-- type: example
+-- status: published
+

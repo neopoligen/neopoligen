@@ -1,0 +1,19 @@
+-- div/
+
+This is for checking to make sure you get
+the id from pagedata and not from an earlier
+section like a refernce:
+
+
+-- ref
+-- id: incorrect-id
+
+
+-- pagedata
+-- created: 2024-10-28T10:15:42-04:00
+-- updated: 2024-10-28T10:15:42-04:00
+-- id: 008-unclosed-with-other-id.neo 
+-- template: post
+-- status: scratch
+
+

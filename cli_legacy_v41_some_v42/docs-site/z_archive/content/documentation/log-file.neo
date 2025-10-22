@@ -1,0 +1,21 @@
+-- title
+
+The Log File
+
+-- h2
+
+Overview
+
+Every time Neopoligen builds pages it produces a log file
+with details about the process (including any errors)
+
+The file is in the main "Neopoligen" folder and it's
+called `log.log``. 
+
+
+
+
+-- metadata
+-- date: 2024-03-09
+-- id: 2dsxkh81
+

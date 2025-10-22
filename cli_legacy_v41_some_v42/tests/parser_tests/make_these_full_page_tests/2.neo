@@ -1,0 +1,116 @@
+-- title
+
+Run A Command When A File Changes
+
+-- todo
+
+[] Look into ``--no-defer`` when it's not a background process to speed things up
+
+[] Look at: ``--event`` Updated to see if that helps remove duplicate fires
+
+
+-- tldr
+
+Running this on the command line will execute a command whenever a file 
+changes in the current directory:
+
+-- code/
+-- bash
+
+fswatch -o -r . | xargs -I{} echo "do something here"
+
+-- /code
+
+-- p
+
+I use it during development to trigger build scripts when source files change.
+
+It can be limited to specific file extensions like this:
+
+-- code/
+-- bash
+
+fswatch -e ".*" -i "\.css$" -i "\.html$" . \
+    | xargs -I{} echo "do something here"
+
+-- /code
+
+-- p
+
+Using the regex will watch for new files (which doesn't happen if you just do ``./*.rs`` for example)
+
+-- h2
+
+Details - First Example
+
+-- list
+
+- ``fswatch`` - this is the command that does the watching. Instructions for installing it on Mac, Windows, and *nix are on the [[https://emcrisostomo.github.io/fswatch/][fswatch site]]
+
+- ``-o`` - (lowercase letter "o") send only one signal per batch of changes ``fswatch`` sees
+
+- ``-r`` - sets the process to be recursive so files in sub-directories are watched as well
+
+- ``.`` - tells the process to start watching in the current directory. This could also be another path like ``~/Desktop``
+
+- ``\|`` - pipes the output of ``fswatch`` to ``xargs``
+
+- ``xargs`` - receives the signal from ``fswatch`` and executes commands based on it's parameters
+
+- ``I{}`` - tells ``xargs`` to replace any occurrence of the string ``{}`` with the value that it received from ``fswatch``. Without this, ``xargs`` would pipe the output from ``fswatch`` directly to the ``echo`` command. That's useful in some instances, but not what I'm looking for in most of the time
+
+- ``echo "do something here"`` - The command that gets run when ``xargs`` receives a signal from ``fswatch``. Switch this out with whatever you need to have run. My main use case is to replace this with a script to automatically build whatever it is that I'm working on
+
+
+-- h2
+
+Details - Second Example
+
+-- list
+
+- This example uses regular expressions to filter that paths that ``fswatch`` keeps an eye on
+
+- The example is split to multiple lines with the ``\\`` at the end of the first line. I'm doing that to help get everything visible for the sample. In practice, I run everything on one line like the first example
+
+- The methodology is to start by excluding everything with ``-e ".*"`` and then setting up the patters to include via the ``-i`` flag
+
+- You can setup multiple include statements to watch for multiple patters (e.g. this example which watching for both ``.css`` and ``.html`` files)
+
+- The ``-r`` flag does not appear to be necessary when using regular expressions like this
+
+-- notes
+
+- I use ``-o`` because the way files are saved can result in multiple triggers for a single save. I'm generally looking for a single signal for each time I press save. This helps reduce the number of multiple triggers, but does not eliminate it
+
+- The value that's sent when the ``-o`` flag is in place is the number of paths that changed in the batch
+
+- Removing ``-o`` will send one message for every change it sees with the path that changed
+
+- In [[https://stackoverflow.com/a/37237681][this StackOverflow answer]] some folks mention problems with the regex matching in 2019-2020. It's unclear if that was resolved
+
+- My original notes included running the commands from ``xargs`` like this ``xargs -n1 /bin/bash -lc 'echo "hit"``. The ``-l`` flag on bash is to use it as if there's a login shell and the ``-c`` flag is how you pass in a command. The specific command was ``xargs -n1 /bin/bash -lc 'vagrant ssh -c ls'`` which would send a command to a vagrant instance. I haven't checked if that can be done with the ``I{}`` approach. Leaving that here as note in case it turns out to be useful
+
+- Check out [[https://emcrisostomo.github.io/fswatch/doc/][the official docs]] if you need more info
+
+- I also have this in my notes for a multi-line approach in a script. Need to check it out a little more and write it up after verifying the functionality
+
+
+-- code/
+-- bash
+
+#!/bin/bash
+
+fswatch -0 . | while read -d "" event
+do 
+    echo $event
+done
+
+-- /code
+
+
+-- pagedata
+-- created: 2017-10-11T15:48:41-04:00
+-- id: 01bw6fpq
+-- status: done 
+-- type: post
+-- tag: cli 

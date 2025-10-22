@@ -1,0 +1,4 @@
+[!- import "helpers/theme.neoj" as theme -!]
+
+<p>[@- theme.output_spans(site, page, section.spans()) -@]</p>
+

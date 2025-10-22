@@ -1,0 +1,327 @@
+-- title
+
+Valid Named Spans
+
+-- neopoligen-spec-test/
+
+{
+  "version": "0.42.0",
+  "name": "Valid Named Spans",
+  "notes": [
+    "This is just getting started, there are more to test that I'll add in the next iteration",
+    "The invalid cases aren't exhaustive (i.e. they don't test every possible character that's not allowed). They're just meant to be representative",
+    "This is the first version of the parse and only deals with English. I'm working on figuring out how to do other character sets", 
+  ],
+  "tests": {
+    "todo_valid": [
+    ],
+    "todo_invalid": [
+    ],
+
+    "valid": [
+      {
+        "description": "Basic tag",
+        "source": "<<alfa>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "type": "named-span"}',
+        "notes": [],
+      },
+      {
+        "description": "Tag names can have numbers",
+        "source": "<<alfa1>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa1", "spans": null, "type": "named-span"}',
+        "notes": [],
+      },
+      {
+        "description": "Tag names can have hyphens",
+        "source": "<<alfa-bravo>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa-bravo", "spans": null, "type": "named-span" }',
+        "notes": [],
+      },
+      {
+        "description": "Tag names can have multiple hyphens",
+        "source": "<<alfa--bravo>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa--bravo", "spans": null, "type": "named-span" }',
+        "notes": [],
+      },
+      {
+        "description": "Tag names can have underscores",
+        "source": "<<alfa_bravo>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa_bravo", "spans": null, "type": "named-span" }',
+        "notes": [],
+      },
+      {
+        "description": "Tag names can have multiple underscores",
+        "source": "<<alfa__bravo>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa__bravo", "spans": null, "type": "named-span" }',
+        "notes": [],
+      },
+      {
+        "description": "Tag names can have leading spaces",
+        "source": "<< alfa>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "type": "named-span" }',
+        "notes": [],
+      },
+      {
+        "description": "Tag names can have trailing spaces",
+        "source": "<<alfa >>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "type": "named-span" }',
+        "notes": [],
+      },
+      {
+        "description": "Tag names can have leading newlines",
+        "source": "<<\nalfa>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "type": "named-span" }',
+        "notes": [],
+      },
+      {
+        "description": "There can be trailing newlines",
+        "source": "<<alfa\n>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": null, "type": "named-span" }',
+        "notes": [],
+      },
+      {
+        "description": "Basic content is separated by a pipe",
+        "source": "<<alfa|bravo>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo", "type": "plain-text"}], "type": "named-span" }',
+        "notes": [],
+      },
+      {
+        "description": "Content can have any regular characters except pipes or double greater thans or doulbe less thans or single backslashes",
+        "source": "<<alfa|bravo ~!@#$%^&*(),.?:;>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo ~!@#$%^&*(),.?:;", "type": "plain-text"}],  "type": "named-span" }',
+        "notes": [
+          "this is not an exaustive list (i.e. not ever possible character is tested). It's meant only to be representative",
+          "Doulbe '<' are allowed as long as they are the start of a new, nested named span",
+        ],
+      },
+      {
+        "description": "Content can have single less thans",
+        "source": "<<alfa|bravo < charlie>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo ", "type": "plain-text"}, {"text": "<", "type": "plain-text"}, {"text": " charlie", "type": "plain-text"}], "type": "named-span" }',
+        "notes": [
+        ],
+      },
+      {
+        "description": "Content can have single greater thans",
+        "source": "<<alfa|bravo > charlie>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo ", "type": "plain-text"}, {"text": ">", "type": "plain-text"}, {"text": " charlie", "type": "plain-text"}], "type": "named-span" }',
+        "notes": [
+          "Since both single greater than and less than characters can be used it's easy to make example of HTML <elements>", 
+        ],
+      },
+      {
+        "description": "Content can have escaped less thans (which allows output to have double or more)",
+        "source": "<<alfa|bravo \\<< charlie>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo ", "type": "plain-text"}, {"text": "<", "type": "escaped-character" }, {"text": "<", "type": "plain-text"}, {"text": " charlie", "type": "plain-text"}], "type": "named-span" }',
+        "notes": [
+          "Since both single greater than and less than characters can be used it's easy to make example of HTML <elements>", 
+        ],
+      },
+      {
+        "description": "Content can have escaped greater thans (which allows output to have double or more)",
+        "source": "<<alfa|bravo \\>> charlie>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo ", "type": "plain-text"}, {"text": ">", "type": "escaped-character" }, {"text": ">", "type": "plain-text"}, {"text": " charlie", "type": "plain-text"}], "type": "named-span" }',
+        "notes": [
+          "Since both single greater than and less than characters can be used it's easy to make example of HTML <elements>", 
+        ],
+      },
+      {
+        "description": "Content can have escaped pipes",
+        "source": "<<alfa|bravo \\| charlie>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo ", "type": "plain-text"}, {"text": "|", "type": "escaped-character" }, {"text": " charlie", "type": "plain-text"}], "type": "named-span" }',
+        "notes": [
+        ],
+      },
+      {
+        "description": "Content can have escaped backslahes",
+        "source": "<<alfa|bravo \\\\ charlie>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo ", "type": "plain-text"}, {"text": "\\\\", "type": "escaped-character" }, {"text": " charlie", "type": "plain-text"}], "type": "named-span" }',
+        "notes": [
+        ],
+      },
+      {
+        "description": "Flags can come after content",
+        "source": "<<alfa|bravo|charlie>>",
+        "result": '{ "attrs": {}, "flags": ["charlie"], "kind": "alfa", "spans": [{"text": "bravo", "type": "plain-text"}], "type": "named-span" }',
+        "notes": [],
+      },
+      {
+        "description": "Flags can have any basic content",
+        "source": "<<alfa|bravo|charlie ~!@#$:x>>",
+        "result": '{ "attrs": {}, "flags": ["charlie ~!@#$:x"], "kind": "alfa", "spans": [{"text": "bravo", "type": "plain-text"}], "type": "named-span" }',
+        "notes": [],
+      },
+      {
+        "description": "Flags can have escaped pipes",
+        "source": "<<alfa|bravo|charlie\\|delta>>",
+        "result": '{ "attrs": {}, "flags": ["charlie|delta"], "kind": "alfa", "spans": [{"text": "bravo", "type": "plain-text"}], "type": "named-span" }',
+        "notes": [],
+      },
+      {
+        "description": "Flags can have single greater thans",
+        "source": "<<alfa|bravo|charlie>delta>>",
+        "result": '{ "attrs": {}, "flags": ["charlie>delta"], "kind": "alfa", "spans": [{"text": "bravo", "type": "plain-text"}], "type": "named-span" }',
+        "notes": [],
+      },
+      {
+        "description": "Flags can have escaped greater thans",
+        "source": "<<alfa|bravo|charlie\\>>delta>>",
+        "result": '{ "attrs": {}, "flags": ["charlie>>delta"], "kind": "alfa", "spans": [{"text": "bravo", "type": "plain-text"}], "type": "named-span" }',
+        "notes": [],
+      },
+      {
+        "description": "Flags can have escaped backslashes",
+        "source": "<<alfa|bravo|charlie\\\\delta>>",
+        "result": '{ "attrs": {}, "flags": ["charlie\\\\delta"], "kind": "alfa", "spans": [{"text": "bravo", "type": "plain-text"}], "type": "named-span" }',
+        "notes": [],
+      },
+      {
+        "description": "Key value attributes can come after content",
+        "source": "<<alfa|bravo|charlie: delta>>",
+        "result": '{ "attrs": { "charlie": { "text": "delta", "spans": [{"text": "delta", "type": "plain-text"}]}}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo", "type": "plain-text"}], "type": "named-span" }',
+        "notes": [
+          "Key/value attributes are identified by having a string that ends with a ':' followed by whitespace then a string of content",
+          "The same rules that apply for the names of the spans themselves as well as the flags applie to the keys too",
+          ],
+      },
+      {
+        "description": "Key value keys can be be alphanumeric",
+        "source": "<<alfa|bravo|charlie1: delta>>",
+        "result": '{ "attrs": { "charlie1": { "text": "delta", "spans": [{"text": "delta", "type": "plain-text"}]}}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo", "type": "plain-text"}], "type": "named-span" }',
+        "notes": [],
+      },
+      {
+        "description": "Key value keys can have hyphens",
+        "source": "<<alfa|bravo|charlie-delta: echo>>",
+        "result": '{ "attrs": { "charlie-delta": { "text": "echo", "spans": [{"text": "echo", "type": "plain-text"}]}}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo", "type": "plain-text"}], "type": "named-span" }',
+        "notes": [],
+      },
+
+      {
+        "description": "Key value attribute values can have any content except pipes or double greater thans",
+        "source": "<<alfa|bravo|charlie: ~!@#$%>>",
+        "result": '{ "attrs": { "charlie": { "text": "~!@#$%", "spans": [{"text": "~!@#$%", "type": "plain-text"}]}}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo", "type": "plain-text"}], "type": "named-span" }',
+        "notes": [],
+      },
+
+      {
+        "description": "Named spans can nest",
+        "source": "<<alfa|bravo <<charlie|delta>> echo>>",
+        "result": '{ "attrs": {}, "flags": [], "kind": "alfa", "spans": [{"text": "bravo ", "type": "plain-text"}, {"attrs": {}, "flags": [], "kind": "charlie", "spans": [{"text": "delta", "type": "plain-text"}], "type": "named-span" }, { "text": " echo", "type": "plain-text" }], "type": "named-span" }',
+        "notes": [],
+      },
+
+    ],
+
+    "invalid": [
+      {
+        "description": "No spaces in name",
+        "source": "<<alfa bravo>>",
+        "notes": [],
+      },
+      {
+        "description": "No trailing pipes",
+        "source": "<<alfa|>>",
+        "notes": [],
+      },
+      {
+        "description": "No colons in name",
+        "source": "<<alfa:bravo>>",
+        "notes": [],
+      },
+      {
+        "description": "No forward slashes in name",
+        "source": "<<alfa/bravo>>",
+        "notes": [],
+      },
+      {
+        "description": "No '~' in name",
+        "source": "<<alfa~bravo>>",
+        "notes": [],
+      },
+      {
+        "description": "No '!' in name",
+        "source": "<<alfa!bravo>>",
+        "notes": [],
+      },
+      {
+        "description": "No '@' in name",
+        "source": "<<alfa@bravo>>",
+        "notes": [],
+      },
+      {
+        "description": "No '#' in name",
+        "source": "<<alfa#bravo>>",
+        "notes": [],
+      },
+      {
+        "description": "No '$' in name",
+        "source": "<<alfa$bravo>>",
+        "notes": [],
+      },
+      {
+        "description": "No '%' in name",
+        "source": "<<alfa%bravo>>",
+        "notes": [],
+      },
+      {
+        "description": "No '^' in name",
+        "source": "<<alfa^bravo>>",
+        "notes": [],
+      },
+      {
+        "description": "No '&' in name",
+        "source": "<<alfa&bravo>>",
+        "notes": [],
+      },
+      {
+        "description": "No '*' in name",
+        "source": "<<alfa*bravo>>",
+        "notes": [],
+      },
+      {
+        "description": "No '(' in name",
+        "source": "<<alfa(bravo>>",
+        "notes": [],
+      },
+      {
+        "description": "No ')' in name",
+        "source": "<<alfa)bravo>>",
+        "notes": [],
+      },
+      {
+        "description": "No ',' in name",
+        "source": "<<alfa,bravo>>",
+        "notes": [],
+      },
+      {
+        "description": "No '.' in name",
+        "source": "<<alfa.bravo>>",
+        "notes": [],
+      },
+      {
+        "description": "No '?' in name",
+        "source": "<<alfa?bravo>>",
+        "notes": [],
+      },
+      {
+        "description": "No ';' in name",
+        "source": "<<alfa;bravo>>",
+        "notes": [],
+      },
+    ]
+
+  }
+}
+
+-- /neopoligen-spec-test
+
+
+-- pagedata
+-- created: 2024-10-30T18:25:52-04:00
+-- updated: 2024-10-30T18:25:52-04:00
+-- id: 2oazqy05
+-- template: post
+-- status: draft 
+
+

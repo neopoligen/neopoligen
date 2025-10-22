@@ -1,0 +1,10 @@
+#!/bin/bash
+
+watchexec\
+  --project-origin .\
+  -w "../cli"\
+  --workdir "../cli"\
+  -c\
+  -r\
+  -e rs,neo,neoj\
+  "bash -c 'cargo run -- --nocapture'"

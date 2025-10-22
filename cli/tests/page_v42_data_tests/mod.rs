@@ -1,0 +1,260 @@
+// use minijinja::Value;
+use neopoligengine::{
+    page_v42::PageV42b,
+    span_v42::{plaintext::PlainTextSpan, SpanV42},
+};
+use pretty_assertions::assert_eq;
+use std::path::PathBuf;
+
+#[test]
+fn id_basic_test() {
+    let page = PageV42b::mock_from_data_tests("001-only-page-section.neo");
+    let left = Some("001-pagedata-only.neo".to_string());
+    let right = page.id;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn id_via_fallback_test() {
+    let page = PageV42b::mock_from_data_tests("002-fallback-id.neo");
+    let left = Some("002-fallback-id.neo".to_string());
+    let right = page.id;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn no_id_in_page() {
+    let page = PageV42b::mock_from_data_tests("003-no-id-available.neo");
+    let left = None;
+    let right = page.id;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn rel_output_path_basic_from_id_test() {
+    let page = PageV42b::mock_from_data_tests("001-only-page-section.neo");
+    let left = Some(PathBuf::from(
+        "en/001-pagedata-only.neo/index.html".to_string(),
+    ));
+    let right = page.rel_output_path;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn rel_output_path_basic_from_custom_path_with_file() {
+    let page = PageV42b::mock_from_data_tests("004-homepage-path-with-file.neo");
+    let left = Some(PathBuf::from("index.html".to_string()));
+    let right = page.rel_output_path;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn rel_output_path_basic_from_custom_path_without_file() {
+    let page = PageV42b::mock_from_data_tests("005-homepage-path-without-file.neo");
+    let left = Some(PathBuf::from("index.html".to_string()));
+    let right = page.rel_output_path;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn rel_output_path_basic_from_custom_path_not_homepage_without_file() {
+    let page = PageV42b::mock_from_data_tests("006-custom-path-without-file.neo");
+    let left = Some(PathBuf::from("some/path/index.html".to_string()));
+    let right = page.rel_output_path;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn rel_output_path_basic_from_custom_path_not_homepage_without_slash() {
+    let page = PageV42b::mock_from_data_tests("007-custom-path-no-slash.neo");
+    let left = Some(PathBuf::from("custom/path/alfa/index.html".to_string()));
+    let right = page.rel_output_path;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn rel_output_path_basic_from_custom_path_with_non_html_extension() {
+    let page = PageV42b::mock_from_data_tests("008-custom-txt-path.neo");
+    let left = Some(PathBuf::from("somewhere/file.txt".to_string()));
+    let right = page.rel_output_path;
+    assert_eq!(left, right);
+}
+
+#[test]
+fn href_basic_test() {
+    let page = PageV42b::mock_from_data_tests("001-only-page-section.neo");
+    let left = "/en/001-pagedata-only.neo/".to_string();
+    let right = page.href.unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn href_homepage_without_file() {
+    let page = PageV42b::mock_from_data_tests("005-homepage-path-without-file.neo");
+    let left = "/".to_string();
+    let right = page.href.unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn href_file_with_extension() {
+    let page = PageV42b::mock_from_data_tests("008-custom-txt-path.neo");
+    let left = "/somewhere/file.txt".to_string();
+    let right = page.href.unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn title_as_spans_from_page_section() {
+    let page = PageV42b::mock_from_data_tests("009-title-in-page-section.neo");
+    let left = vec![SpanV42::PlainText(PlainTextSpan {
+        kind: "plain-text".to_string(),
+        text: "This is a title".to_string(),
+    })];
+    let right = page.title_as_spans.unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn title_as_text_from_page_section() {
+    let page = PageV42b::mock_from_data_tests("009-title-in-page-section.neo");
+    let left = "This is a title".to_string();
+    let right = page.title.unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn title_as_spans_from_title_section() {
+    let page = PageV42b::mock_from_data_tests("010-title-in-title-section.neo");
+    let left = vec![SpanV42::PlainText(PlainTextSpan {
+        kind: "plain-text".to_string(),
+        text: "Alfa Bravo Title".to_string(),
+    })];
+    let right = page.title_as_spans.unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn title_as_text_from_title_section() {
+    let page = PageV42b::mock_from_data_tests("010-title-in-title-section.neo");
+    let left = "Alfa Bravo Title".to_string();
+    let right = page.title.unwrap();
+    assert_eq!(left, right);
+}
+
+#[test]
+fn title_as_text_flattened() {
+    let page = PageV42b::mock_from_data_tests("011-title-spans-flattened.neo");
+    let left = "With SPAN NESTED And CODE_SHORTHAND".to_string();
+    let right = page.title.unwrap();
+    assert_eq!(left, right);
+}
+
+// #[test]
+// fn rel_output_path_basic_check() {
+//     let page = PageV42b::mock_from_data_tests("001-pagedata-only.neo");
+//     let left = Some(PathBuf::from("en/001-pagedata-only.neo/index.html"));
+//     let right = page.rel_output_path;
+//     assert_eq!(left, right);
+// }
+
+// Tests copied over to check
+
+// #[test]
+// fn rel_output_path_basic_check() {
+//     let page = PageV42b::mock_from_data_tests("001-pagedata-only.neo");
+//     let left = Some(PathBuf::from("en/001-pagedata-only.neo/index.html"));
+//     let right = page.rel_output_path;
+//     assert_eq!(left, right);
+// }
+
+// #[test]
+// fn id_basic_check() {
+//     let page = PageV42b::mock_from_data_tests("001-pagedata-only.neo");
+//     let left = "001-pagedata-only.neo".to_string();
+//     let right = page.id.unwrap();
+//     assert_eq!(left, right);
+// }
+
+// #[test]
+// fn title_from_pagedata_id() {
+//     let page = PageV42b::mock_from_data_tests("001-pagedata-only.neo");
+//     let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
+//         text: "001-pagedata-only.neo".to_string(),
+//     })]);
+//     let right = page.title().unwrap();
+//     assert_eq!(left, right);
+// }
+
+// #[test]
+// fn title_from_pagedata_title() {
+//     let page = PageV42b::mock_from_data_tests("005-title-in-pagedata.neo");
+//     let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
+//         text: "Title In Pagedata".to_string(),
+//     })]);
+//     let right = page.title().unwrap();
+//     assert_eq!(left, right);
+// }
+
+// #[test]
+// fn title_from_title_section() {
+//     let page = PageV42b::mock_from_data_tests("002-basic-sample.neo");
+//     let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
+//         text: "Basic Sample".to_string(),
+//     })]);
+//     let right = page.title().unwrap();
+//     assert_eq!(left, right);
+// }
+
+// #[test]
+// #[ignore] // Reminder: This isn't currently needed since the page won't have rendered
+// fn title_from_invalid_page() {
+//     let page = PageV42b::mock_from_data_tests("006-unclosed-start-section.neo");
+//     let left = Value::from_serialize(vec![SpanV42::PlainText(PlainTextSpan {
+//         text: "06-unclosed-start-section.neo".to_string(),
+//     })]);
+//     let right = page.title().unwrap();
+//     assert_eq!(left, right);
+// }
+
+// #[test]
+// fn default_html_file_system_relative_path_from_id() {
+//     let page = PageV42::mock_from_data_tests("001-pagedata-only.neo");
+//     let left = PathBuf::from("en/001-pagedata-only.neo/index.html");
+//     let right = page.html_output_path.unwrap();
+//     assert_eq!(left, right);
+// }
+
+// #[test]
+// fn custom_path_in_pagedata() {
+//     let page = PageV42::mock_from_data_tests("003-custom-href-in-pagedata.neo");
+//     let left = PathBuf::from("index.html");
+//     let right = page.html_output_path.unwrap();
+//     assert_eq!(left, right);
+// }
+
+// #[test]
+// fn href_from_id_default() {
+//     let page = PageV42::mock_from_data_tests("001-pagedata-only.neo");
+//     let left = Value::from("/en/001-pagedata-only.neo/".to_string());
+//     let right = page.href().unwrap();
+//     assert_eq!(left, right);
+// }
+
+// #[test]
+// fn href_from_pagedata() {
+//     let page = PageV42::mock_from_data_tests("003-custom-href-in-pagedata.neo");
+//     let left = Value::from("/".to_string());
+//     let right = page.href().unwrap();
+//     assert_eq!(left, right);
+// }
+
+// #[test]
+// fn href_for_non_index_html_file() {
+//     let page = PageV42::mock_from_data_tests("009-non-index-custom-href.neo");
+//     let left = Value::from("/somewhere/custom.html".to_string());
+//     let right = page.href().unwrap();
+//     assert_eq!(left, right);
+// }
+
+//

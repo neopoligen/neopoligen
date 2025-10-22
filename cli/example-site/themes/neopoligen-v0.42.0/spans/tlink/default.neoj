@@ -1,0 +1,14 @@
+[# DOCS: 
+
+#]
+[!- import "built-in/macros.neoj" as neo -!]
+[!- set title = site.title_for_page(span) -!]
+[!- set href = site.href_for_page(span) -!]
+[!- if title and href -!]
+  <a href="[@- href -@]" [@- site.get_span_attrs(span) -@]>
+    [@- title -@]
+  </a>
+[!- else -!]
+  [issue: could not generate tlink]
+[!- endif -!]
+[@- '' -@]

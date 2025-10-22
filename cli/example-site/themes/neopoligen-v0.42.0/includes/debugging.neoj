@@ -1,0 +1,46 @@
+[!- import "built-in/macros.neoj" as neo -!]
+<details>
+  <summary>Debugging</summary>
+
+<div class="debug-section">
+  <h2>Development And Debugging Stuff</h2>
+
+  <div>This section is where I'm working on <a href="https://www.neopoligen.com/">
+  Neopoligen</a>. It's kind of a behind-the-scenes look at the code
+  that makes the page if you're into that type of thing.
+  </div>
+
+  <div>
+    <div>
+      <ul class="flow">
+        <li>Page ID: [@ page.id() @]</li>
+        <li>Page Title: [@ page.title() @]</li>
+        <li>Page href: [@ page.href() @]</li>
+        <li>Site Root: [@ site.site_root() @]</li>
+        <li>Theme Files Folder href: [@ neo.theme_folder() @]</li>
+      </ul>
+    </div>
+    [! if page.issues !]
+      <h3>Issues</h3>
+      <ul class="built-in-flow flow">
+      [#
+        [@- neo.debug_page_issues(site, page) -@]
+        #]
+      </ul>
+    [! endif !]
+    <details>
+      <summary>Section Tree</summary>
+      [@ neo.debug_section_tree(sections) @]
+    </details>
+    <details>
+      <summary>Source</summary>
+      <div><pre>[! autoescape true !][@ page.source @][! endautoescape !]</pre></div>
+    </details>
+    <details>
+      <summary>Sections</summary>
+      [@ neo.debug_sections_as_json() @]
+    </details>
+    <div>[@ neo.template_tlink("2zpdkpkw") @]</div>
+  </div>
+</div>
+</details>

@@ -1,0 +1,35 @@
+[#- DOCS:
+
+- shortcut macro to outputs all the 
+script sections for the page
+
+NOARGS:
+
+NOTE: This currently moves does everything in a single
+modules. This lets you write functions at the
+top of a page and use them further below.
+TODO: is set up a way to split stuff out
+to independent modules. 
+
+-#]
+
+[!- from "macros/output_spans.neoj" import output_spans -!]
+
+[!- macro output_scripts(section_list) -!]
+
+[!- for section in section_list -!]
+  [!- if section.kind == "javascript" -!]
+    [!- if "type" in section.attrs -!]
+    <script type="[@ output_spans(section.attrs["type"][0].spans) @]">
+    [!- else -!]
+    <script>
+    [!- endif -!]
+[@- "\n" -@]
+[@- section.body @][@- "\n" -@]
+    </script>
+  [!- endif -!]
+  [#
+  [@- output_scripts(section.children) -@]
+  #]
+[!- endfor -!]
+[!- endmacro -!]

@@ -1,0 +1,4 @@
+[!- macro span_attrs(extra_classes="") -!]
+[@- site.get_span_attrs(span, extra_classes) -@]
+[!- endmacro -!]
+

@@ -1,0 +1,232 @@
+{
+  "attrs": {},
+  "bound": "start",
+  "children": [
+    {
+      "bound": "full",
+      "checked": false,
+      "checked_string": null,
+      "children": [
+        {
+          "children": [],
+          "kind": "checklist-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": " alfa",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": ["sections/checklist-item-paragraph/default.neoj"],
+          "type": "block"
+        }
+      ],
+      "kind": "checklist-item",
+      "template_list": [
+        "sections/checklist-item/default.neoj",
+      ],
+      "type": "checklistitem"
+    },
+    {
+      "bound": "full",
+      "checked": true,
+      "checked_string": "x",
+      "children": [
+        {
+          "children": [],
+          "kind": "checklist-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": " bravo",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": ["sections/checklist-item-paragraph/default.neoj"],
+          "type": "block"
+        },
+        {
+          "children": [],
+          "kind": "checklist-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "charlie",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": ["sections/checklist-item-paragraph/default.neoj"],
+          "type": "block"
+        },
+        {
+          "attrs": {},
+          "bound": "start",
+          "children": [
+            {
+              "bound": "full",
+              "checked": true,
+              "checked_string": "x",
+              "children": [
+                {
+                  "children": [],
+                  "kind": "checklist-item-paragraph",
+                  "spans": [
+                    {
+                      "kind": "plain-text",
+                      "text": " delta",
+                      "type": "plain-text"
+                    }
+                  ],
+                  "template_list": [
+                    "sections/checklist-item-paragraph/default.neoj"
+                  ],
+                  "type": "block"
+                }
+              ],
+              "kind": "checklist-item",
+              "template_list": [
+                "sections/checklist-item/default.neoj",
+              ],
+              "type": "checklistitem"
+            },
+            {
+              "bound": "full",
+              "checked": false,
+              "checked_string": null,
+              "children": [
+                {
+                  "children": [],
+                  "kind": "checklist-item-paragraph",
+                  "spans": [
+                    {
+                      "kind": "plain-text",
+                      "text": " echo",
+                      "type": "plain-text"
+                    }
+                  ],
+                  "template_list": [
+                    "sections/checklist-item-paragraph/default.neoj"
+                  ],
+                  "type": "block"
+                },
+                {
+                  "children": [],
+                  "kind": "checklist-item-paragraph",
+                  "spans": [
+                    {
+                      "kind": "plain-text",
+                      "text": "foxtrot",
+                      "type": "plain-text"
+                    }
+                  ],
+                  "template_list": [
+                    "sections/checklist-item-paragraph/default.neoj"
+                  ],
+                  "type": "block"
+                }
+              ],
+              "kind": "checklist-item",
+              "template_list": [
+                "sections/checklist-item/default.neoj",
+              ],
+              "type": "checklistitem"
+            }
+          ],
+          "end_section": {
+            "attrs": {},
+            "bound": "end",
+            "children": [],
+            "flags": [],
+            "kind": "checklist-end",
+            "template_list": [
+              "sections/checklist-end/default.neoj",
+              "sections/end/default.neoj"
+            ],
+            "type": "end"
+          },
+          "flags": [],
+          "kind": "checklist",
+          "template_list": [
+            "sections/checklist/default.neoj",
+          ],
+          "type": "checklist"
+        }
+      ],
+      "kind": "checklist-item",
+      "template_list": [
+        "sections/checklist-item/default.neoj",
+      ],
+      "type": "checklistitem"
+    },
+    {
+      "bound": "full",
+      "checked": false,
+      "checked_string": null,
+      "children": [
+        {
+          "children": [],
+          "kind": "checklist-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": " golf",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": ["sections/checklist-item-paragraph/default.neoj"],
+          "type": "block"
+        },
+        {
+          "children": [],
+          "kind": "checklist-item-paragraph",
+          "spans": [
+            {
+              "kind": "plain-text",
+              "text": "hotel",
+              "type": "plain-text"
+            }
+          ],
+          "template_list": ["sections/checklist-item-paragraph/default.neoj"],
+          "type": "block"
+        }
+      ],
+      "kind": "checklist-item",
+      "template_list": [
+        "sections/checklist-item/default.neoj",
+      ],
+      "type": "checklistitem"
+    }
+  ],
+  "end_section": {
+    "attrs": {},
+    "bound": "end",
+    "children": [
+      {
+        "children": [],
+        "kind": "checklist-item-paragraph",
+        "spans": [
+          {
+            "kind": "plain-text",
+            "text": "india",
+            "type": "plain-text"
+          }
+        ],
+        "template_list": ["sections/checklist-item-paragraph/default.neoj"],
+        "type": "block"
+      }
+    ],
+    "flags": [],
+    "kind": "checklist-end",
+    "template_list": [
+      "sections/checklist-end/default.neoj",
+      "sections/end/default.neoj"
+    ],
+    "type": "end"
+  },
+  "flags": [],
+  "kind": "checklist",
+  "template_list": [
+    "sections/checklist/default.neoj",
+  ],
+  "type": "checklist"
+}

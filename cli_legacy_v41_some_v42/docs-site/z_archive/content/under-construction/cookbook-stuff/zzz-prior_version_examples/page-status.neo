@@ -1,0 +1,18 @@
+-- title
+
+Page Statuses
+
+The `-- status`` in the `-- metadata`` attribute defines
+the status for the page. The status is combined with
+the `-- type`` attribute to determined the template
+to use to render the page. 
+
+For example, this page is defined as a draft so
+that template is used which is what's putting 
+the "Draft" watermark on it
+
+-- metadata
+-- date: 2024-01-14
+-- id: 2avshxkv
+-- status: draft
+

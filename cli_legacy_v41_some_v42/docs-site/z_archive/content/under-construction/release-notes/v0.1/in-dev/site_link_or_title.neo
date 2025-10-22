@@ -1,0 +1,31 @@
+-- title
+
+link_or_title
+
+-- h2
+
+Overview
+
+
+
+-- todo
+-- title: Requirements
+
+[] Delivers text only back if you're on the
+page already
+
+[] Delivers a link if you're on the page
+and it's not filtered out via a tag
+
+[] Delivers text only back if you're not
+on the page, but the page is filtered out
+via a tagfi
+
+
+
+-- metadata
+-- date: 2024-02-29
+-- id: 2d4tvskc
+-- type: release-notes
+-- status: scratch
+

@@ -1,0 +1,6 @@
+[!- from "macros/output_section.neoj" import output_section -!]
+[!- macro output_end_section(section) -!]
+[!- if section.end_section -!]
+[@ output_section(section.end_section) @]
+[!- endif -!]
+[!- endmacro -!]

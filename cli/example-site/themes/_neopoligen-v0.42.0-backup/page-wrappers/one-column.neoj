@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+body {
+  background-color: #333;
+  color: #aaa;
+}
+
+.unknown-section {
+  background-color: green;
+}
+
+*, 
+*::before, 
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+</style>
+</head>
+<body>
+  <header class="wrapper-medium">
+    <nav class="global-nav----------------------">
+      <ol>
+        <li><a href="/">Home</a></li>
+      </ol>
+    </nav>
+  </header>
+  <main class="wrapper-medium flow">
+    [!- block body -!][!- endblock -!]
+    [!- block endmatter -!][!- endblock -!]
+  </main>
+  <footer class="wrapper-medium">
+      <pre>
+        Debug: page id: [@ page.id() @]
+        [@ page.ast()|tojson(true) @]
+      </pre>
+  </footer>
+</body>
+</html>
+
