@@ -1100,7 +1100,7 @@ code {
   background-color: var(--color-bw-match-80);
   border: 1px solid var(--color-bw-reverse-40);
   border-radius: var(--border-radius-medium);
-  line-height: 1.15;
+  line-height: 1.16;
   font-family: var(--font-family-monospace);
 }
 
@@ -1383,6 +1383,7 @@ html {
 img {
   display: block;
   max-width: 100%;
+  border-radius: var(--border-radius-medium);
 }
 
 input {
@@ -1593,6 +1594,7 @@ select {
 svg {
   display: block;
   max-width: 100%;
+  height: auto;
 }
 
 td {
@@ -1734,5 +1736,7 @@ video{
   margin-inline: auto;
 }
 
-
+.svg-writing {
+  stroke: var(--color-primary);
+}
 

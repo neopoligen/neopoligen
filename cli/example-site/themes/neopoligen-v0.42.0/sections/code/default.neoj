@@ -17,8 +17,7 @@
     <div class="code-section-file">file: [@ neo.output_attr('file') @]</div>
   [!- endif -!]
 
-
-<pre><code>
+<pre class="code-block"><code>
 [!- autoescape false -!]
 [!- if section.flags|length > 0 -!]
 [@- highlight_code_section(section.body, section.flags[0]) -@]
